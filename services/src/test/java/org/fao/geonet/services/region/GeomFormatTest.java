@@ -23,10 +23,9 @@
 
 package org.fao.geonet.services.region;
 
-import org.locationtech.jts.geom.Geometry;
-
-import org.geotools.xml.Encoder;
+import org.geotools.xsd.Encoder;
 import org.junit.Test;
+import org.locationtech.jts.geom.Geometry;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URLEncoder;

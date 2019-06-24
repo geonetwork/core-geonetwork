@@ -170,7 +170,7 @@
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-api</artifactId>
+      <artifactId>gt-main</artifactId>
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
@@ -191,6 +191,10 @@
     <dependency>
       <groupId>org.geotools.xsd</groupId>
       <artifactId>gt-xsd-filter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools.xsd</groupId>
+      <artifactId>gt-xsd-fes</artifactId>
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>

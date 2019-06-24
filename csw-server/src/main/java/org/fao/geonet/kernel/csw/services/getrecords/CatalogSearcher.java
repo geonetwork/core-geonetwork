@@ -23,23 +23,14 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
-import org.locationtech.jts.geom.Geometry;
-
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.FieldType.NumericType;
 import org.apache.lucene.facet.taxonomy.TaxonomyReader;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queries.ChainedFilter;
-import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.queryparser.flexible.core.QueryNodeException;
-import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser;
-import org.apache.lucene.queryparser.flexible.standard.config.NumericConfig;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
@@ -67,8 +58,6 @@ import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.search.DuplicateDocFilter;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneConfig;
-import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
-import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.MetadataRecordSelector;
@@ -79,19 +68,19 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.gml2.GMLConfiguration;
-import org.geotools.xml.Encoder;
+import org.geotools.xsd.Encoder;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.locationtech.jts.geom.Geometry;
 import org.springframework.context.ApplicationContext;
 
+import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -100,8 +89,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-
-import javax.annotation.Nonnull;
 
 import static org.fao.geonet.kernel.search.LuceneSearcher.parseLuceneQuery;
 

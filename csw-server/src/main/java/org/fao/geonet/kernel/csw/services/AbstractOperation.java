@@ -23,8 +23,6 @@
 
 package org.fao.geonet.kernel.csw.services;
 
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -33,12 +31,14 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.filter.v1_1.OGC;
 import org.geotools.filter.v1_1.OGCConfiguration;
-import org.geotools.xml.Configuration;
-import org.geotools.xml.Encoder;
+import org.geotools.xsd.Configuration;
+import org.geotools.xsd.Encoder;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.opengis.filter.Filter;

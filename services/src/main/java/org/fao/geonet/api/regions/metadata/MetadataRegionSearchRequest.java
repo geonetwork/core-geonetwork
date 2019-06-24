@@ -23,12 +23,9 @@
 
 package org.fao.geonet.api.regions.metadata;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -43,17 +40,18 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.region.MetadataRegion;
 import org.fao.geonet.utils.Xml;
-import org.geotools.xml.Parser;
+import org.geotools.xsd.Parser;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
-
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 
-import jeeves.server.context.ServiceContext;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class MetadataRegionSearchRequest extends Request {
 

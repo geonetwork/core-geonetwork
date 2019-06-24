@@ -23,14 +23,6 @@
 
 package org.fao.geonet.kernel.search.spatial;
 
-import org.locationtech.jts.geom.Envelope;
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.MultiPolygon;
-import org.locationtech.jts.geom.Polygon;
-import org.locationtech.jts.index.SpatialIndex;
-import org.locationtech.jts.index.strtree.STRtree;
-
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
@@ -43,15 +35,22 @@ import org.geotools.data.FeatureStore;
 import org.geotools.data.Transaction;
 import org.geotools.data.memory.MemoryFeatureCollection;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.util.factory.GeoTools;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.geotools.xml.Parser;
+import org.geotools.util.factory.GeoTools;
+import org.geotools.xsd.Parser;
 import org.jdom.Element;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.index.SpatialIndex;
+import org.locationtech.jts.index.strtree.STRtree;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
@@ -63,6 +62,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Path;
@@ -74,8 +74,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.logging.Level;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * This class is responsible for extracting geographic information from metadata and writing that
