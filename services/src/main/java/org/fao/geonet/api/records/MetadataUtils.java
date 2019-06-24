@@ -233,7 +233,7 @@ public class MetadataUtils {
     static {
         relatedIndexFields = ImmutableMap.<String, String>builder()
             .put("children", "parentUuid")
-            .put("services", "operatesOn")
+            .put("services", "recordOperateOn")
             .put("hasfeaturecats", "hasfeaturecat")
             .put("hassources", "hassources")
             .put("associated", "agg_associated")

@@ -57,7 +57,9 @@
   );
 
 
-
+  /**
+   * https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-mlt-query.html
+   */
   module.directive('gnMoreLikeThis', [
     '$http', 'gnSearchSettings', function($http, gnSearchSettings) {
       return {
@@ -77,12 +79,16 @@
             }
             $http.post('../api/search/records/_search', {
               "query": {
-                "more_like_this" : {
-                  "fields" : ["resourceTitle", "resourceAbstract", "tag.raw"],
-                  "like" : scope.md.resourceTitle,
-                  "min_term_freq" : 1,
-                  "max_query_terms" : 12
-                }
+                "bool": {
+                  "must": [
+                    {"more_like_this" : {
+                      "fields" : ["resourceTitle", "resourceAbstract", "tag.raw"],
+                      "like" : scope.md.resourceTitle,
+                      "min_term_freq" : 1,
+                      "max_query_terms" : 12
+                    }},
+                    {"terms": {"isTemplate": ["n"]}}
+                ]}
               }
             }).then(function (r) {
               scope.similarDocuments = r.data.hits;

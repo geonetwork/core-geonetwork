@@ -335,7 +335,7 @@
                 scope.searchObj = {
                   internal: true,
                   params: {
-                    sortBy: 'title'
+                    sortBy: 'resourceTitle.keyword'
                   }
                 };
 
@@ -409,11 +409,9 @@
                 scope.generateThumbnail = function() {
                   //Added mandatory custom params here to avoid
                   //changing other printing services
-                  jsonSpec = angular.extend(
-                		  scope.jsonSpec,
-                		  {
-                			  hasNoTitle: true
-                		  });
+                  jsonSpec = angular.extend(scope.jsonSpec, {
+                    hasNoTitle: true
+                  });
 
                   return $http.put('../api/0.1/records/' +
                       scope.gnCurrentEdit.uuid +
@@ -1074,7 +1072,9 @@
                 pre: function preLink(scope) {
                   scope.searchObj = {
                     internal: true,
-                    params: {}
+                    params: {
+                      isTemplate: 'n'
+                    }
                   };
                   scope.modelOptions =
                       angular.copy(gnGlobalSettings.modelOptions);
@@ -1093,7 +1093,9 @@
                     // parameters of the online resource form
                     scope.srcParams = {selectedLayers: []};
 
-                    var searchParams = {};
+                    var searchParams = {
+                      isTemplate: 'n'
+                    };
                     if (scope.mode === 'service') {
                       searchParams.type = scope.mode;
                     } else {
@@ -1322,7 +1324,8 @@
                     var searchParams = {};
                     if (scope.mode === 'fcats') {
                       searchParams = {
-                        _schema: 'iso19110'
+                        schema: 'iso19110',
+                        isTemplate: 'n'
                       };
                       scope.btn = {
                         label: $translate.instant('linkToFeatureCatalog')
@@ -1330,7 +1333,7 @@
                     }
                     else if (scope.mode === 'parent') {
                       searchParams = {
-                        hitsPerPage: 10
+                        isTemplate: 'n'
                       };
                       scope.btn = {
                         label: $translate.instant('linkToParent')
@@ -1338,7 +1341,7 @@
                     }
                     else if (scope.mode === 'source') {
                       searchParams = {
-                        hitsPerPage: 10
+                        isTemplate: 'n'
                       };
                       scope.btn = {
                         label: $translate.instant('linkToSource')
@@ -1387,11 +1390,11 @@
                     any: '',
                     defaultParams: {
                       any: '',
+                      isTemplate: 'n',
                       from: 1,
                       to: 50,
-                      sortBy: 'title',
+                      sortBy: 'resourceTitle.keyword',
                       sortOrder: 'reverse'
-                      // resultType: 'hits'
                     }
                   };
                   scope.searchObj.params = angular.extend({},
