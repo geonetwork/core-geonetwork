@@ -23,13 +23,12 @@
 
 package org.fao.geonet.domain;
 
-import com.vividsolutions.jts.util.Assert;
+import org.springframework.util.Assert;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-
 import java.io.Serializable;
 
 /**

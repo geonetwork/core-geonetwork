@@ -24,7 +24,6 @@
 package org.fao.geonet;
 
 import com.google.common.util.concurrent.Callables;
-import com.vividsolutions.jts.util.Assert;
 import jeeves.server.sources.http.ServletPathFinder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
@@ -38,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.util.Assert;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.ServletContext;

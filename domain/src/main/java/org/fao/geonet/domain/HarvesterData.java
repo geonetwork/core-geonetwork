@@ -23,9 +23,15 @@
 
 package org.fao.geonet.domain;
 
-import com.vividsolutions.jts.util.Assert;
+import org.springframework.util.Assert;
 
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Represents data used by a particular harvester to ensure that only the minimum required data is

@@ -30,11 +30,8 @@ import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
-import com.vividsolutions.jts.util.Assert;
-
 import groovy.util.slurpersupport.GPathResult;
-
+import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.records.formatters.groovy.CurrentLanguageHolder;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -46,9 +43,11 @@ import org.fao.geonet.repository.IsoLanguageRepository;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -57,14 +56,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-
-import jeeves.server.dispatchers.guiservices.XmlFile;
-import jeeves.server.sources.ServiceRequestFactory;
-
-import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicationContextFromServletContext;
 
 /**
  * Contains methods for efficiently accessing the translations in a schema's labels and codelists

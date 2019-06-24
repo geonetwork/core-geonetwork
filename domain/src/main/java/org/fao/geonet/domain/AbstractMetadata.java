@@ -49,8 +49,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.springframework.util.Assert;
 
-import com.vividsolutions.jts.util.Assert;
 
 /**
  * An entity representing a metadata object in the database. The xml, groups and operations are lazily loaded so accessing then will need to

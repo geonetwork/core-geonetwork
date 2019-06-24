@@ -24,9 +24,6 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import com.google.common.collect.Maps;
-
-import com.vividsolutions.jts.util.Assert;
-
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -43,6 +40,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;

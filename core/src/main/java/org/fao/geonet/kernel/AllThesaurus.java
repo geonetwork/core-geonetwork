@@ -28,8 +28,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import com.vividsolutions.jts.util.Assert;
-
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.TermNotFoundException;
@@ -44,6 +42,7 @@ import org.openrdf.sesame.query.MalformedQueryException;
 import org.openrdf.sesame.query.QueryEvaluationException;
 import org.openrdf.sesame.query.QueryResultsTable;
 import org.openrdf.sesame.repository.local.LocalRepository;
+import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -418,7 +417,7 @@ public class AllThesaurus extends Thesaurus {
 
         public DecomposedAllUri(String allUri) {
             final Matcher matcher = URI_DECOMPOSER.matcher(allUri);
-            Assert.isTrue(matcher.matches(), allUri + "is not an 'all' keyword");
+            Assert.isTrue(matcher.matches(), allUri + " is not an 'all' keyword");
             try {
                 thesaurusKey = URLDecoder.decode(matcher.group(1), Constants.ENCODING);
                 keywordUri = URLDecoder.decode(matcher.group(2), Constants.ENCODING);
