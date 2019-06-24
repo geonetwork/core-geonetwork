@@ -165,10 +165,8 @@
             <xsl:apply-templates mode="superBrief" select="."/>
           </xsl:variable>
 
-          <xsl:variable name="uuid"
-                        select="if ($metadata/uuid != '') then $metadata/uuid else geonet:info/uuid"/>
-          <xsl:variable name="id"
-                        select="if ($metadata/id != '') then $metadata/id else geonet:info/id"/>
+          <xsl:variable name="uuid" select="$metadata/uuid"/>
+          <xsl:variable name="id" select="$metadata/id"/>
 
           <item>
             <id>

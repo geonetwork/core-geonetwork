@@ -53,6 +53,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -104,10 +106,13 @@ public class EsHTTPProxy {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        final String url = client.getServerUrl() + "/" + defaultIndex + "/" + endPoint + "?";
-
         // Retrieve request body with ElasticSearch query and parse JSON
         String body = IOUtils.toString(request.getReader());
+        call(context, request, response, endPoint, body);
+    }
+
+    public void call(ServiceContext context, HttpServletRequest request, HttpServletResponse response, String endPoint, String body) throws Exception {
+        final String url = client.getServerUrl() + "/" + defaultIndex + "/" + endPoint + "?";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode nodeQuery = objectMapper.readTree(body);
 

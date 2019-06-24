@@ -24,6 +24,10 @@
 package org.fao.geonet.api.records;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import io.searchbox.client.JestResult;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.ApplicationContextHolder;
@@ -47,7 +51,6 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Content;
 import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,7 +60,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -78,19 +86,12 @@ public class MetadataUtils {
         DataManager dm = gc.getBean(DataManager.class);
         Element relatedRecords = new Element("relations");
 
-        if(type == null || type.length == 0) {
+        if (type == null || type.length == 0) {
             type = RelatedItemType.class.getEnumConstants();
         }
         List<RelatedItemType> listOfTypes = new ArrayList<RelatedItemType>(Arrays.asList(type));
 
-        // Get the cached version (use by classic GUI)
-        // TODOES ?
-//        Element md = Show.getCached(context.getUserSession(), id);
-//        if (md == null) {
-            // Get from DB
-           Element md = dm.getMetadata(context, id, forEditing, withValidationErrors,
-                keepXlinkAttributes);
-//        }
+        Element md = dm.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
         String schemaIdentifier = dm.getMetadataSchema(id);
         SchemaPlugin instance = SchemaManager.getSchemaPlugin(schemaIdentifier);
@@ -227,62 +228,62 @@ public class MetadataUtils {
     }
 
 
+    private static Map<String, String> relatedIndexFields;
+
+    static {
+        relatedIndexFields = ImmutableMap.<String, String>builder()
+            .put("children", "parentUuid")
+            .put("services", "operatesOn")
+            .put("hasfeaturecats", "hasfeaturecat")
+            .put("hassources", "hassources")
+            .put("associated", "agg_associated")
+            .put("datasets", "uuid")
+            .put("fcats", "uuid")
+            .put("sources", "uuid")
+            .put("parent", "uuid")
+            .build();
+    }
+
     private static Element search(String uuid, String type, ServiceContext context, String from, String to, String fast) throws Exception {
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        EsSearchManager searchMan = gc.getBean(EsSearchManager.class);
-        throw new NotImplementedException("Not implemented in ES");
-        // perform the search
-        // TODOES
-//        if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-//            Log.debug(Geonet.SEARCH_ENGINE, "Searching for: " + type);
-//
-//        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-//            // Creating parameters for search, fast only to retrieve uuid
-//            Element parameters = new Element(Jeeves.Elem.REQUEST);
-//            if ("children".equals(type))
-//                parameters.addContent(new Element("parentUuid").setText(uuid));
-//            else if ("services".equals(type))
-//                parameters.addContent(new Element("operatesOn").setText(uuid));
-//            else if ("hasfeaturecats".equals(type))
-//                parameters.addContent(new Element("hasfeaturecat").setText(uuid));
-//            else if ("hassources".equals(type))
-//                parameters.addContent(new Element("hassource").setText(uuid));
-//            else if ("associated".equals(type)) {
-//                parameters.addContent(new Element("agg_associated").setText(uuid));
-//                parameters.addContent(new Element(Geonet.SearchResult.EXTRA_DUMP_FIELDS).setText("agg_*"));
-//            }
-//            else if ("datasets".equals(type) || "fcats".equals(type) ||
-//                "sources".equals(type) || "siblings".equals(type) ||
-//                "parent".equals(type))
-//                parameters.addContent(new Element("uuid").setText(uuid));
-//
-//            parameters.addContent(new Element("fast").addContent("index"));
-//            parameters.addContent(new Element("sortBy").addContent("title"));
-//            parameters.addContent(new Element("sortOrder").addContent("reverse"));
-//            parameters.addContent(new Element("buildSummary").addContent("false"));
-//            parameters.addContent(new Element("from").addContent(from));
-//            parameters.addContent(new Element("to").addContent(to));
-//
-//            ServiceConfig config = new ServiceConfig();
-//            searcher.search(context, parameters, config);
-//
-//            Element response = new Element(type);
-//            Element relatedElement = searcher.present(context, parameters, config);
-//            response.addContent(relatedElement);
-//            return response;
-//        }
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
+
+        if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "Searching for: " + type);
+
+        // TODOES Limit fields in the response
+        final JestResult jestResult = searchMan.query(
+            String.format("+%s:%s", relatedIndexFields.get(type), uuid));
+
+        Element typeResponse = new Element(type);
+        if (jestResult.isSucceeded()) {
+            // Build the old search service response format
+            Element response = new Element("response");
+            jestResult.getJsonObject().get("hits").getAsJsonObject().get("hits").getAsJsonArray().forEach(e -> {
+                Element record = new Element("metadata");
+                final JsonObject source = e.getAsJsonObject().get("_source").getAsJsonObject();
+                record.addContent(new Element("id").setText(source.get("id").getAsString()));
+                record.addContent(new Element("uuid").setText(source.get("uuid").getAsString()));
+                record.addContent(new Element("title").setText(source.get("resourceTitle").getAsString()));
+                record.addContent(new Element("abstract").setText(source.get("resourceAbstract").getAsString()));
+                response.addContent(record);
+            });
+            typeResponse.addContent(response);
+        } else {
+        }
+        return typeResponse;
     }
 
     /**
      * Run an XML query and return a list of UUIDs.
      *
-     * @param uuid    Metadata identifier
+     * @param uuid  Metadata identifier
      * @param query XML Request to run which will search for related metadata records to export
      * @return List of related UUIDs to export
      */
     public static Set<String> getUuidsToExport(String uuid,
-                                         HttpServletRequest request,
-                                         Element query) throws Exception {
+                                               HttpServletRequest request,
+                                               Element query) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
 // TODOES
@@ -336,7 +337,7 @@ public class MetadataUtils {
     }
 
     public static void backupRecord(AbstractMetadata metadata, ServiceContext context) {
-    	Log.trace(Geonet.DATA_MANAGER, "Backing up record " + metadata.getId());
+        Log.trace(Geonet.DATA_MANAGER, "Backing up record " + metadata.getId());
         Path outDir = Lib.resource.getRemovedDir(metadata.getId());
         Path outFile;
         try {

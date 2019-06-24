@@ -516,6 +516,10 @@ public class EsSearchManager implements ISearchManager {
         return true;
     }
 
+    public JestResult query(String luceneQuery) throws Exception {
+        return client.query(defaultIndex,luceneQuery);
+    }
+
     public void clearIndex() throws Exception {
         client.deleteByQuery(defaultIndex,"*:*");
     }

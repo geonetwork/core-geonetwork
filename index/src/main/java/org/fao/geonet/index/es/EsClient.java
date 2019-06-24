@@ -35,6 +35,7 @@ import io.searchbox.core.Bulk;
 import io.searchbox.core.BulkResult;
 import io.searchbox.core.DeleteByQuery;
 import io.searchbox.core.Index;
+import io.searchbox.core.Search;
 import io.searchbox.indices.Analyze;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
@@ -252,6 +253,31 @@ public class EsClient implements InitializingBean {
 
     public BulkResult bulkRequestSync(Bulk.Builder bulk) throws IOException {
         return client.execute(bulk.build());
+    }
+
+
+    public JestResult query(String index, String luceneQuery) throws Exception {
+        if (!activated) {
+            return null;
+        }
+
+        // TODOES: Add permission if index is gn-records
+        // See EsHTTPProxy#addUserInfo
+        String searchQuery = "{\"query\": {\"query_string\": {" +
+            "\"query\": \"" + luceneQuery + "\"" +
+            "}}}";
+
+        final Search search = new Search.Builder(searchQuery)
+            .addIndex(index)
+            .build();
+        final JestResult result = client.execute(search);
+        if (result.isSucceeded()) {
+            return result;
+        } else {
+            throw new IOException(String.format(
+                "Error during removal. Errors is '%s'.", result.getErrorMessage()
+            ));
+        }
     }
 
     public String deleteByQuery(String index, String query) throws Exception {

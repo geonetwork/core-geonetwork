@@ -564,7 +564,7 @@
 
       // TODOES Check if we can define in ES which fields
       // to always return as an array.
-      var listOfArrayFields = ['topicCat', 'category', 'keyword', 'resourceCredit',
+      var listOfArrayFields = ['topic', 'cat', 'keyword', 'resourceCredit',
         'resolutionScaleDenominator', 'resolutionDistance', 'extentDescription', 'geom',
         'inspireTheme', 'inspireTheme_syn', 'inspireAnnex',
         'status', 'status_text', 'coordinateSystem', 'identifier', 'responsibleParty',

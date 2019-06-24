@@ -86,10 +86,7 @@
     };
   }]);
   module
-      .directive(
-        // TODOES
-          'gnRelatedDISABLED',
-          [
+      .directive('gnRelated', [
         'gnRelatedService',
         'gnGlobalSettings',
         'gnSearchSettings',
@@ -114,8 +111,6 @@
             },
             require: '?^gnRelatedObserver',
             link: function(scope, element, attrs, controller) {
-              return;
-              // TODOES
               var promise;
               var elem = element[0];
               scope.lang = scope.lang || scope.$parent.lang;
