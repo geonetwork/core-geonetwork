@@ -75,7 +75,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/api/usersearches")
+        this.mockMvc.perform(get("/srv/api/usersearches")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
@@ -87,7 +87,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
     public void getFeaturedUserSearches() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(get("/api/usersearches/featured")
+        this.mockMvc.perform(get("/srv/api/usersearches/featured")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
@@ -103,7 +103,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(delete("/api/usersearches/" + userSearchToDelete.getId())
+        this.mockMvc.perform(delete("/srv/api/usersearches/" + userSearchToDelete.getId())
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -130,7 +130,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        MvcResult result = this.mockMvc.perform(put("/api/usersearches")
+        MvcResult result = this.mockMvc.perform(put("/srv/api/usersearches")
             .content(json)
             .contentType(MediaType.APPLICATION_JSON)
             .session(this.mockHttpSession)
@@ -162,7 +162,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(put("/api/usersearches/" + userSearchId)
+        this.mockMvc.perform(put("/srv/api/usersearches/" + userSearchId)
             .content(json)
             .contentType(MediaType.APPLICATION_JSON)
             .session(this.mockHttpSession)
