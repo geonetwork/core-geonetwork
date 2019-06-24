@@ -98,7 +98,7 @@
     <xsl:variable name="lines"
                   select="tokenize($listOfValuesAsCsv, '\n')"/>
 
-    <xsl:for-each select="$lines">
+    <xsl:for-each select="$lines[normalize-space(.) != '']">
       <xsl:variable name="line"
                     select="."/>
       <xsl:variable name="columns"

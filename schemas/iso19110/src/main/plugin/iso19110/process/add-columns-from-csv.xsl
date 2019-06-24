@@ -67,7 +67,7 @@
       <params>{
         "replaceColumns":{"type":"boolean", "defaultValue":"1"},
         "columnListSeparator":{"type":"string", "defaultValue":"<xsl:value-of select="$columnListSeparator"/>"},
-        "columnListAsCsv":{"type":"textarea", "defaultValue":"SHORT_NAME;DESCRIPTION;TYPE;CARDINALITY_MIN;;CARDINALITY_MAX"}
+        "columnListAsCsv":{"type":"textarea", "defaultValue":"SHORT_NAME;DESCRIPTION;TYPE;CARDINALITY_MIN;CARDINALITY_MAX"}
       }</params>
     </suggestion>
   </xsl:template>
@@ -85,7 +85,7 @@
       <xsl:variable name="lines"
                     select="tokenize($columnListAsCsv, '\n')"/>
 
-      <xsl:for-each select="$lines">
+      <xsl:for-each select="$lines[normalize-space(.) != '']">
         <xsl:variable name="line"
                       select="."/>
         <xsl:variable name="columns"
