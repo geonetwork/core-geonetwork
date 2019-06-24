@@ -71,6 +71,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -517,7 +518,10 @@ public class EsSearchManager implements ISearchManager {
     }
 
     public JestResult query(String luceneQuery) throws Exception {
-        return client.query(defaultIndex,luceneQuery);
+        return client.query(defaultIndex,luceneQuery, new HashSet<String>());
+    }
+    public JestResult query(String luceneQuery, Set<String> includedFields) throws Exception {
+        return client.query(defaultIndex,luceneQuery, includedFields);
     }
 
     public void clearIndex() throws Exception {

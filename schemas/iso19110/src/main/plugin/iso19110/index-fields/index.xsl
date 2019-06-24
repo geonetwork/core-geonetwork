@@ -48,10 +48,6 @@
         /gfc:FC_FeatureType/gfc:definition/gco:CharacterString"/>
       </resourceAbstract>
 
-      <uuid>
-        <xsl:value-of select="/gfc:FC_FeatureCatalogue/@uuid|/gfc:FC_FeatureType/@uuid"/>
-      </uuid>
-
       <xsl:for-each select="/gfc:FC_FeatureCatalogue/gmx:versionDate/gco:Date|
         /gfc:FC_FeatureCatalogue/gfc:versionDate/gco:Date">
         <Field name="revisionDate" string="{string(.)}" store="true" index="true"/>

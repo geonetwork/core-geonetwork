@@ -25,6 +25,7 @@ package org.fao.geonet.api.records;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.searchbox.client.JestResult;
@@ -229,6 +230,7 @@ public class MetadataUtils {
 
 
     private static Map<String, String> relatedIndexFields;
+    private static Set<String> documentFields;
 
     static {
         relatedIndexFields = ImmutableMap.<String, String>builder()
@@ -242,6 +244,12 @@ public class MetadataUtils {
             .put("sources", "uuid")
             .put("parent", "uuid")
             .build();
+
+        documentFields = ImmutableSet.<String>builder()
+            .add(Geonet.IndexFieldNames.ID)
+            .add(Geonet.IndexFieldNames.UUID)
+            .add(Geonet.IndexFieldNames.RESOURCETITLE)
+            .add(Geonet.IndexFieldNames.RESOURCEABSTRACT).build();
     }
 
     private static Element search(String uuid, String type, ServiceContext context, String from, String to, String fast) throws Exception {
@@ -253,7 +261,7 @@ public class MetadataUtils {
 
         // TODOES Limit fields in the response
         final JestResult jestResult = searchMan.query(
-            String.format("+%s:%s", relatedIndexFields.get(type), uuid));
+            String.format("+%s:%s", relatedIndexFields.get(type), uuid), documentFields);
 
         Element typeResponse = new Element(type);
         if (jestResult.isSucceeded()) {
@@ -262,10 +270,10 @@ public class MetadataUtils {
             jestResult.getJsonObject().get("hits").getAsJsonObject().get("hits").getAsJsonArray().forEach(e -> {
                 Element record = new Element("metadata");
                 final JsonObject source = e.getAsJsonObject().get("_source").getAsJsonObject();
-                record.addContent(new Element("id").setText(source.get("id").getAsString()));
-                record.addContent(new Element("uuid").setText(source.get("uuid").getAsString()));
-                record.addContent(new Element("title").setText(source.get("resourceTitle").getAsString()));
-                record.addContent(new Element("abstract").setText(source.get("resourceAbstract").getAsString()));
+                record.addContent(new Element("id").setText(source.get(Geonet.IndexFieldNames.ID).getAsString()));
+                record.addContent(new Element("uuid").setText(source.get(Geonet.IndexFieldNames.UUID).getAsString()));
+                record.addContent(new Element("title").setText(source.get(Geonet.IndexFieldNames.RESOURCETITLE).getAsString()));
+                record.addContent(new Element("abstract").setText(source.get(Geonet.IndexFieldNames.RESOURCEABSTRACT).getAsString()));
                 response.addContent(record);
             });
             typeResponse.addContent(response);

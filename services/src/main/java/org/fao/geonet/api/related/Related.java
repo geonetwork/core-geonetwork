@@ -142,6 +142,8 @@ public class Related implements ApplicationContextAware {
             } catch (SecurityException e) {
                 Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
                 throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+            } catch (Exception exception) {
+                Log.debug(API.LOG_MODULE_NAME, exception.getMessage(), exception);
             }
 
         }

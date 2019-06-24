@@ -81,9 +81,6 @@
       <document>
         <!--<xsl:value-of select="saxon:serialize(., 'default-serialize-mode')"/>-->
       </document>
-      <uuid>
-        <xsl:value-of select="$identifier"/>
-      </uuid>
       <metadataIdentifier>
         <xsl:value-of select="$identifier"/>
       </metadataIdentifier>

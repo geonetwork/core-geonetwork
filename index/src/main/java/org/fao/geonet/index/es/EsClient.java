@@ -55,6 +55,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -256,7 +257,7 @@ public class EsClient implements InitializingBean {
     }
 
 
-    public JestResult query(String index, String luceneQuery) throws Exception {
+    public JestResult query(String index, String luceneQuery, Set<String> includedFields) throws Exception {
         if (!activated) {
             return null;
         }
@@ -267,9 +268,12 @@ public class EsClient implements InitializingBean {
             "\"query\": \"" + luceneQuery + "\"" +
             "}}}";
 
-        final Search search = new Search.Builder(searchQuery)
-            .addIndex(index)
-            .build();
+        Search.Builder searchBuilder = new Search.Builder(searchQuery)
+            .addIndex(index);
+
+        includedFields.forEach(f -> searchBuilder.addSourceIncludePattern(f));
+
+        Search search = searchBuilder.build();
         final JestResult result = client.execute(search);
         if (result.isSucceeded()) {
             return result;
