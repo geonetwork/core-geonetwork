@@ -129,6 +129,9 @@
               element.parents('gn-features-table').find('.clearfix')
               .addClass('sxt-clearfix')
               .removeClass('clearfix');
+
+              // trigger an async digest loop to make the table appear
+              setTimeout(function() { scope.$apply(); });
             }.bind(this),
             onPostHeader: function() { // avoid resizing issue on page change
               if (!once) { return; }
@@ -171,9 +174,6 @@
         element.bootstrapTable('resetWidth');
         element.bootstrapTable('resetView');
       });
-
-      // trigger an async digest loop to make the table appear
-      setTimeout(function() { scope.$apply(); });
     }.bind(this));
   };
 
