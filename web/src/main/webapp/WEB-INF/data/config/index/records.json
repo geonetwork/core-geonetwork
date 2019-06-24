@@ -1070,6 +1070,9 @@
       "documentType": {
         "type": "keyword"
       },
+      "sourceCatalogue": {
+        "type": "keyword"
+      },
       "geom": {
         "type": "geo_shape",
         "tree": "quadtree",

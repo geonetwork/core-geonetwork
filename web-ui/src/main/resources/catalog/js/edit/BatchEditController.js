@@ -61,10 +61,10 @@
         callback();
       };
       var setOwner = function() {
-        $scope.searchObj.params['_owner'] = $scope.user.id;
+        $scope.searchObj.params['owner'] = $scope.user.id;
       };
       var unsetOwner = function() {
-        delete $scope.searchObj.params['_owner'];
+        delete $scope.searchObj.params['owner'];
       };
       $scope.$watch('user.id', function(newId) {
         if (angular.isDefined(newId) && $scope.onlyMyRecord.is) {

@@ -47,8 +47,8 @@
 
       $scope.searchObj = {
         params: {
-          template: 'y or n or s or t',
-          sortBy: 'title'
+          isTemplate: ['y', 'n', 's', 't'],
+          sortBy: 'resourceTitle.keyword'
         }
       };
 
@@ -275,9 +275,9 @@
 
         // Retrieve records in that group
         $scope.$broadcast('resetSearch', {
-          template: 'y or n or s or t',
-          _owner: u.id,
-          sortBy: 'title'
+          isTemplate: ['y', 'n', 's', 't'],
+          owner: u.id,
+          sortBy: 'resourceTitle.keyword'
         });
 
         $scope.userUpdated = false;
@@ -690,9 +690,9 @@
 
         // Retrieve records in that group
         $scope.$broadcast('resetSearch', {
-          template: 'y or n or s or t',
+          isTemplate: ['y', 'n', 's', 't'],
           group: g.id,
-          sortBy: 'title'
+          sortBy: 'resourceTitle.keyword'
         });
 
         loadGroupUsers($scope.groupSelected.id);
