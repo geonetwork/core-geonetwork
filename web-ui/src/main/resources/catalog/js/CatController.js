@@ -152,10 +152,10 @@ goog.require('gn_alert');
             'sortBy': 'relevance',
             'sortOrder': ''
           }, {
-            'sortBy': 'changeDate',
+            'sortBy': 'dateStamp',
             'sortOrder': ''
           }, {
-            'sortBy': 'title',
+            'sortBy': 'resourceTitle.keyword',
             'sortOrder': 'reverse'
           }, {
             'sortBy': 'rating',
