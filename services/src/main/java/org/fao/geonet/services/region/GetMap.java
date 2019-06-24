@@ -25,10 +25,10 @@ package org.fao.geonet.services.region;
 
 import com.google.common.base.Optional;
 
-import com.vividsolutions.jts.awt.ShapeWriter;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
+import org.locationtech.jts.awt.ShapeWriter;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Params;

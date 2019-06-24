@@ -25,8 +25,6 @@ package org.fao.geonet;
 
 import com.google.common.base.Function;
 
-import com.vividsolutions.jts.util.Assert;
-
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.ClientProtocolException;
@@ -45,6 +43,7 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.mock.http.client.MockClientHttpResponse;
+import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.net.URI;

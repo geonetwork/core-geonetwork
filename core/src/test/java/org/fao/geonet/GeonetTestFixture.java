@@ -25,7 +25,7 @@ package org.fao.geonet;
 
 import com.google.common.collect.Lists;
 
-import com.vividsolutions.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.MultiPolygon;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;

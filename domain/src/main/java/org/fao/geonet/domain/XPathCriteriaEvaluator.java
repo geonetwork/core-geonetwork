@@ -23,8 +23,6 @@
 
 package org.fao.geonet.domain;
 
-import com.vividsolutions.jts.util.Assert;
-
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -32,6 +30,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.Text;
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.Assert;
 
 import java.util.List;
 

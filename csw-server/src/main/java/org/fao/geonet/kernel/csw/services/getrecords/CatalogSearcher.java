@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
