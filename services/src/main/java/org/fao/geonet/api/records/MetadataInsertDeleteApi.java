@@ -79,7 +79,9 @@ import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.Schema;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
@@ -97,6 +99,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.input.JDOMParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specifications;
@@ -127,12 +130,28 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
 
-@RequestMapping(value = { "/api/records", "/api/" + API.VERSION_0_1 + "/records" })
+@RequestMapping(value = { "/{portal}/api/records", "/{portal}/api/" + API.VERSION_0_1 + "/records" })
 @Api(value = API_CLASS_RECORD_TAG, tags = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
 @Controller("recordInsertOrDelete")
 @PreAuthorize("hasRole('Editor')")
 @ReadWriteController
 public class MetadataInsertDeleteApi {
+
+    @Autowired
+    DataManager dataManager;
+
+    @Autowired
+    AccessManager accessManager;
+
+    @Autowired
+    SettingManager settingManager;
+
+    @Autowired
+    SchemaManager schemaManager;
+
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
+
 
     public static final String API_PARAM_REPORT_ABOUT_IMPORTED_RECORDS = "Report about imported records.";
     public static final String API_PARAP_RECORD_GROUP = "The group the record is attached to.";
@@ -160,7 +179,6 @@ public class MetadataInsertDeleteApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
-        DataManager dataManager = appContext.getBean(DataManager.class);
         SearchManager searchManager = appContext.getBean(SearchManager.class);
 
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
@@ -191,19 +209,17 @@ public class MetadataInsertDeleteApi {
             @ApiIgnore HttpSession session, HttpServletRequest request) throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
-        DataManager dataManager = appContext.getBean(DataManager.class);
-        AccessManager accessMan = appContext.getBean(AccessManager.class);
         SearchManager searchManager = appContext.getBean(SearchManager.class);
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
 
-        final IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
+        final MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         for (String uuid : records) {
             AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
             if (metadata == null) {
                 report.incrementNullRecords();
-            } else if (!accessMan.canEdit(context, String.valueOf(metadata.getId()))) {
+            } else if (!accessManager.canEdit(context, String.valueOf(metadata.getId()))) {
                 report.addNotEditableMetadataId(metadata.getId());
             } else {
                 if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
@@ -323,7 +339,6 @@ public class MetadataInsertDeleteApi {
                 throw new Exception(
                         String.format("No XML or MEF or ZIP file found in server folder '%s'.", serverFolder));
             }
-            SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
             ServiceContext context = ApiUtils.createServiceContext(request);
             for (Path f : files) {
                 if (MEFLib.isValidArchiveExtensionForMEF(f.getFileName().toString())) {
@@ -394,8 +409,7 @@ public class MetadataInsertDeleteApi {
         AbstractMetadata sourceMetadata = ApiUtils.getRecord(sourceUuid);
         ApplicationContext applicationContext = ApplicationContextHolder.get();
 
-        SettingManager sm = applicationContext.getBean(SettingManager.class);
-        boolean generateUuid = sm.getValueAsBool(Settings.SYSTEM_METADATACREATE_GENERATE_UUID);
+        boolean generateUuid = settingManager.getValueAsBool(Settings.SYSTEM_METADATACREATE_GENERATE_UUID);
 
         // User assigned uuid: check if already exists
         String metadataUuid = null;
@@ -437,10 +451,9 @@ public class MetadataInsertDeleteApi {
             }
         }
 
-        DataManager dataManager = applicationContext.getBean(DataManager.class);
         ServiceContext context = ApiUtils.createServiceContext(request);
         String newId = dataManager.createMetadata(context, String.valueOf(sourceMetadata.getId()), group,
-                sm.getSiteId(), context.getUserSession().getUserIdAsInt(),
+                settingManager.getSiteId(), context.getUserSession().getUserIdAsInt(),
                 isChildOfSource ? sourceMetadata.getUuid() : null, metadataType.toString(), isVisibleByAllGroupMembers,
                 metadataUuid);
 
@@ -524,8 +537,6 @@ public class MetadataInsertDeleteApi {
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         if (file != null) {
             ServiceContext context = ApiUtils.createServiceContext(request);
-            ApplicationContext applicationContext = ApplicationContextHolder.get();
-            SettingManager settingManager = applicationContext.getBean(SettingManager.class);
             for (MultipartFile f : file) {
                 if (MEFLib.isValidArchiveExtensionForMEF(f.getOriginalFilename())) {
                     Path tempFile = Files.createTempFile("mef-import", ".zip");
@@ -606,7 +617,6 @@ public class MetadataInsertDeleteApi {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
         String styleSheetWmc = dataDirectory.getWebappDir() + File.separator + Geonet.Path.IMPORT_STYLESHEETS
                 + File.separator + "OGCWMC-OR-OWSC-to-ISO19139.xsl";
 
@@ -640,9 +650,6 @@ public class MetadataInsertDeleteApi {
         // 4. Inserts the metadata (does basically the same as the metadata.insert.paste
         // service (see Insert.java)
         String uuid = UUID.randomUUID().toString();
-        SettingManager sm = applicationContext.getBean(SettingManager.class);
-        DataManager dm = applicationContext.getBean(DataManager.class);
-        SchemaManager schemaMan = applicationContext.getBean(SchemaManager.class);
 
         String date = new ISODate().toString();
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
@@ -653,7 +660,8 @@ public class MetadataInsertDeleteApi {
         md.add(transformedMd);
 
         // Import record
-        Importer.importRecord(uuid, uuidProcessing, md, "iso19139", 0, sm.getSiteId(), sm.getSiteName(), null, context,
+        Importer.importRecord(uuid, uuidProcessing, md, "iso19139", 0,
+            settingManager.getSiteId(), settingManager.getSiteName(), null, context,
                 id, date, date, group, MetadataType.METADATA);
 
         // Save the context if no context-url provided
@@ -668,13 +676,13 @@ public class MetadataInsertDeleteApi {
             Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
             onlineSrcParams.put("protocol", "WWW:DOWNLOAD-OGC:OWS-C");
             onlineSrcParams.put("url",
-                    sm.getNodeURL() + String.format("api/records/%s/attachments/%s", uuid, filename));
+                    settingManager.getNodeURL() + String.format("api/records/%s/attachments/%s", uuid, filename));
             onlineSrcParams.put("name", filename);
             onlineSrcParams.put("desc", title);
             transformedMd = Xml.transform(transformedMd,
-                    schemaMan.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"),
+                    schemaManager.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"),
                     onlineSrcParams);
-            dm.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(), null, true);
+            dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(), null, true);
         }
 
         if (StringUtils.isNotEmpty(overview) && StringUtils.isNotEmpty(overviewFilename)) {
@@ -688,14 +696,14 @@ public class MetadataInsertDeleteApi {
             // Update the MD
             Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
             onlineSrcParams.put("thumbnail_url",
-                    sm.getNodeURL() + String.format("api/records/%s/attachments/%s", uuid, overviewFilename));
+                    settingManager.getNodeURL() + String.format("api/records/%s/attachments/%s", uuid, overviewFilename));
             transformedMd = Xml.transform(transformedMd,
-                    schemaMan.getSchemaDir("iso19139").resolve("process").resolve("thumbnail-add.xsl"),
+                    schemaManager.getSchemaDir("iso19139").resolve("process").resolve("thumbnail-add.xsl"),
                     onlineSrcParams);
-            dm.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(), null, true);
+            dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(), null, true);
         }
 
-        dm.indexMetadata(id);
+        dataManager.indexMetadata(id);
         report.addMetadataInfos(Integer.parseInt(id.get(0)), uuid);
 
         triggerCreationEvent(request, uuid);
@@ -707,7 +715,7 @@ public class MetadataInsertDeleteApi {
 
     /**
      * This triggers a metadata created event (after save)
-     * 
+     *
      * @param request
      * @param uuid    or id of metadata
      * @throws Exception
@@ -725,7 +733,7 @@ public class MetadataInsertDeleteApi {
 
     /**
      * This triggers a metadata created event (after save)
-     * 
+     *
      * @param request
      * @param uuid    or id of metadata
      * @throws Exception
@@ -749,7 +757,6 @@ public class MetadataInsertDeleteApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         if (!transformWith.equals("_none_")) {
-            GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
             Path folder = dataDirectory.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS);
             FilePathChecker.verify(transformWith);
             Path xslFile = folder.resolve(transformWith + ".xsl");
@@ -760,9 +767,8 @@ public class MetadataInsertDeleteApi {
             }
         }
 
-        DataManager dataMan = appContext.getBean(DataManager.class);
         if (schema == null) {
-            schema = dataMan.autodetectSchema(xmlElement);
+            schema = dataManager.autodetectSchema(xmlElement);
             if (schema == null) {
                 throw new IllegalArgumentException("Can't detect schema for metadata automatically. "
                         + "You could try to force the schema with the schema parameter.");
@@ -785,10 +791,10 @@ public class MetadataInsertDeleteApi {
         if (metadataType == MetadataType.SUB_TEMPLATE || metadataType == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
             uuid = UUID.randomUUID().toString();
         } else {
-            uuid = dataMan.extractUUID(schema, xmlElement);
+            uuid = dataManager.extractUUID(schema, xmlElement);
             if (uuid.length() == 0) {
                 uuid = UUID.randomUUID().toString();
-                xmlElement = dataMan.setUUID(schema, uuid, xmlElement);
+                xmlElement = dataManager.setUUID(schema, uuid, xmlElement);
             }
         }
 
@@ -810,7 +816,6 @@ public class MetadataInsertDeleteApi {
         md.add(xmlElement);
 
         // Import record
-        SettingManager settingManager = appContext.getBean(SettingManager.class);
         Map<String, String> sourceTranslations = Maps.newHashMap();
         try {
             Importer.importRecord(uuid, uuidProcessing, md, schema, 0, settingManager.getSiteId(),
@@ -824,24 +829,24 @@ public class MetadataInsertDeleteApi {
         int iId = Integer.parseInt(id.get(0));
 
         // Set template
-        dataMan.setTemplate(iId, metadataType, null);
+        dataManager.setTemplate(iId, metadataType, null);
 
         if (publishToAll) {
-            dataMan.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.view.getId());
-            dataMan.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.download.getId());
-            dataMan.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.dynamic.getId());
+            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.view.getId());
+            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.download.getId());
+            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.dynamic.getId());
         }
 
-        dataMan.activateWorkflowIfConfigured(context, id.get(0), group);
+        dataManager.activateWorkflowIfConfigured(context, id.get(0), group);
 
         if (category != null) {
             for (String c : category) {
-                dataMan.setCategory(context, id.get(0), c);
+                dataManager.setCategory(context, id.get(0), c);
             }
         }
 
         if (extra != null) {
-            context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
+            context.getBean(IMetadataManager.class).update(iId, new Updater<Metadata>() {
                 @Override
                 public void apply(@Nonnull Metadata metadata) {
                     if (extra != null) {
@@ -851,7 +856,7 @@ public class MetadataInsertDeleteApi {
             });
         }
 
-        dataMan.indexMetadata(id.get(0), true, null);
+        dataManager.indexMetadata(id.get(0), true, null);
         return Pair.read(Integer.valueOf(id.get(0)), uuid);
     }
 }

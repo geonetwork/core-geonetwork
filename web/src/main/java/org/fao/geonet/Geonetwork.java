@@ -352,7 +352,7 @@ public class Geonetwork implements ApplicationHandler {
                 new Source(settingMan.getSiteId(),
                     settingMan.getSiteName(),
                     null,
-                    true));
+                    SourceType.portal));
         }
 
         // Creates a default site logo, only if the logo image doesn't exists

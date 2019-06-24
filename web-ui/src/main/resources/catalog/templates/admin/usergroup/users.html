@@ -65,9 +65,8 @@
           >saveUser</span></button>
           <button type="button" class="btn pull-right btn-danger"
                   data-ng-disabled="searchResults.count > 0"
-                  data-ng-show="user.isUserAdminOrMore()"
+                  data-ng-show="user.isUserAdminOrMore() && (userSelected.id && userSelected.id >= 0)"
                   data-gn-confirm-click="{{'userDeleteConfirm' | translate}}"
-                  data-ng-hide="!userSelected.id || userSelected.id<0"
                   data-ng-click="deleteUser(userSelected.id)" id="gn-btn-user-delete">
             <i class="fa fa-times"></i> <span data-translate=""
           >deleteUser</span></button>

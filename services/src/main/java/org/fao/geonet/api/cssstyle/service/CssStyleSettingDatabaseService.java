@@ -24,19 +24,19 @@ package org.fao.geonet.api.cssstyle.service;
 
 import java.util.List;
 
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.CssStyleSetting;
 import org.fao.geonet.repository.CssStyleSettingsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CssStyleSettingDatabaseService implements ICssStyleSettingService {
 
+    @Autowired
+    CssStyleSettingsRepository cssStyleSettingRepository;
+
     @Override
     public void saveSettings(List<CssStyleSetting> cssStyleSettings) {
-        final CssStyleSettingsRepository cssStyleSettingRepository = ApplicationContextHolder.get()
-                .getBean(CssStyleSettingsRepository.class);
-
         cssStyleSettingRepository.deleteAll();
 
         for (final CssStyleSetting cssStyleSetting : cssStyleSettings) {
@@ -46,8 +46,6 @@ public class CssStyleSettingDatabaseService implements ICssStyleSettingService {
 
     @Override
     public List<CssStyleSetting> getCustomCssSettings() {
-        final CssStyleSettingsRepository cssStyleSettingRepository = ApplicationContextHolder.get()
-                .getBean(CssStyleSettingsRepository.class);
         final List<CssStyleSetting> values = cssStyleSettingRepository.findAll();
 
         return values;

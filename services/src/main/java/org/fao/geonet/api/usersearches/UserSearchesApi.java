@@ -39,6 +39,7 @@ import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.UserSearchRepository;
 import org.fao.geonet.repository.specification.UserSearchSpecs;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -58,8 +59,8 @@ import java.util.*;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-    "/api/usersearches",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/usersearches",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/usersearches"
 })
 @Api(value = "usersearches",
@@ -71,6 +72,9 @@ public class UserSearchesApi {
     public static final String API_PARAM_USERSEARCH_IDENTIFIER = "User search identifier";
     public static final String MSG_USERSEARCH_WITH_IDENTIFIER_NOT_FOUND = "User search with identifier '%d' not found";
 
+
+    @Autowired
+    UserSearchRepository userSearchRepository;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -92,8 +96,6 @@ public class UserSearchesApi {
             HttpSession httpSession
     ) {
         UserSession session = ApiUtils.getUserSession(httpSession);
-
-        UserSearchRepository userSearchRepository = ApplicationContextHolder.get().getBean(UserSearchRepository.class);
 
         List<UserSearch> userSearchesList =
             userSearchRepository.findAllByCreator(session.getPrincipal());
@@ -121,7 +123,6 @@ public class UserSearchesApi {
             value = "Featured type search."
         )
         @RequestParam(required = false) UserSearchFeaturedType featuredType) {
-        UserSearchRepository userSearchRepository = ApplicationContextHolder.get().getBean(UserSearchRepository.class);
 
         List<UserSearch> userSearchesList;
 
@@ -164,8 +165,6 @@ public class UserSearchesApi {
         @RequestParam(required = false, defaultValue = "10")
             Integer limit
     ) {
-        UserSearchRepository userSearchRepository = ApplicationContextHolder.get().getBean(UserSearchRepository.class);
-
         PaginatedUserSearchResponse response = new PaginatedUserSearchResponse();
 
         List<UserSearch> userSearchesList;
@@ -219,9 +218,6 @@ public class UserSearchesApi {
         @RequestParam(required = false)
             UserSearchFeaturedType type
     ) {
-        UserSearchRepository userSearchRepository =
-            ApplicationContextHolder.get().getBean(UserSearchRepository.class);
-
         if (type == null) {
             // Default value
             type = UserSearchFeaturedType.HOME;
@@ -259,7 +255,6 @@ public class UserSearchesApi {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
 
-        UserSearchRepository userSearchRepository = ApplicationContextHolder.get().getBean(UserSearchRepository.class);
         UserSearch userSearch = retrieveUserSearch(userSearchRepository, searchIdentifier);
 
         if (myProfile.equals(Profile.Administrator)) {
@@ -299,8 +294,6 @@ public class UserSearchesApi {
     ) {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
-
-        UserSearchRepository userSearchRepository = ApplicationContextHolder.get().getBean(UserSearchRepository.class);
 
         // TODO: Validate parameters
 
@@ -354,9 +347,6 @@ public class UserSearchesApi {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
 
-        UserSearchRepository userSearchRepository = ApplicationContextHolder.get().getBean(UserSearchRepository.class);
-
-
         final UserSearch existing = userSearchRepository.findOne(searchIdentifier);
         if (existing == null) {
             throw new ResourceNotFoundException(String.format(
@@ -404,7 +394,6 @@ public class UserSearchesApi {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
 
-        UserSearchRepository userSearchRepository = ApplicationContextHolder.get().getBean(UserSearchRepository.class);
         UserSearch userSearch = retrieveUserSearch(userSearchRepository, searchIdentifier);
 
         if (myProfile.equals(Profile.Administrator)) {

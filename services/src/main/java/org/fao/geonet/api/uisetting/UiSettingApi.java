@@ -35,7 +35,7 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.UiSetting;
 import org.fao.geonet.repository.UiSettingsRepository;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,8 +51,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.List;
 
 @RequestMapping(value = {
-    "/api/ui",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/ui",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/ui"
 })
 @Api(value = "ui",
@@ -60,6 +60,9 @@ import java.util.List;
     description = "User interface configuration operations")
 @Controller("ui")
 public class UiSettingApi {
+
+    @Autowired
+    UiSettingsRepository uiSettingsRepository;
 
     @ApiOperation(
         value = "Get UI configuration",
@@ -75,10 +78,7 @@ public class UiSettingApi {
     @ResponseBody
     public List<UiSetting> getUiConfigurations(
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        UiSettingsRepository uiSettingList =
-            appContext.getBean(UiSettingsRepository.class);
-        return uiSettingList.findAll();
+        return uiSettingsRepository.findAll();
     }
 
 
@@ -108,10 +108,6 @@ public class UiSettingApi {
         @RequestBody
             UiSetting uiConfiguration
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        UiSettingsRepository uiSettingsRepository =
-            appContext.getBean(UiSettingsRepository.class);
-
         if (StringUtils.isEmpty(uiConfiguration.getId())) {
             throw new IllegalArgumentException(String.format(
                 "A UI configuration MUST have an id. The id could be a string to easily identify the configuration.", uiConfiguration.getId()
@@ -155,9 +151,6 @@ public class UiSettingApi {
         @PathVariable
             String uiIdentifier
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        UiSettingsRepository uiSettingsRepository =
-            appContext.getBean(UiSettingsRepository.class);
         UiSetting uiConfiguration = uiSettingsRepository.findOne(uiIdentifier);
         if (uiConfiguration == null) {
             throw new ResourceNotFoundException(String.format(
@@ -196,10 +189,6 @@ public class UiSettingApi {
         @RequestBody
         UiSetting uiConfiguration
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        UiSettingsRepository uiSettingsRepository =
-            appContext.getBean(UiSettingsRepository.class);
-
         UiSetting one = uiSettingsRepository.findOne(uiIdentifier);
         if (one != null) {
             uiSettingsRepository.save(uiConfiguration);
@@ -236,10 +225,6 @@ public class UiSettingApi {
         @PathVariable
         String uiIdentifier
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        UiSettingsRepository uiSettingsRepository =
-            appContext.getBean(UiSettingsRepository.class);
-
         UiSetting one = uiSettingsRepository.findOne(uiIdentifier);
         if (one != null) {
             uiSettingsRepository.delete(uiIdentifier);

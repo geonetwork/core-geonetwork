@@ -48,6 +48,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -89,8 +90,8 @@ import springfox.documentation.annotations.ApiIgnore;
  * @author fxprunayre
  */
 @RequestMapping(value = {
-    "/api/processes",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/processes",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/processes"
 })
 @Api(value = "processes",
@@ -100,6 +101,11 @@ import springfox.documentation.annotations.ApiIgnore;
 @ReadWriteController
 public class XslProcessApi {
 
+    @Autowired
+    DataManager dataMan;
+
+    @Autowired
+    SchemaManager schemaMan;
 
     @ApiOperation(
         value = "Preview process result applied to one or more records",
@@ -166,9 +172,6 @@ public class XslProcessApi {
 
         try {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
-            ApplicationContext context = ApplicationContextHolder.get();
-            DataManager dataMan = context.getBean(DataManager.class);
-            SchemaManager schemaMan = context.getBean(SchemaManager.class);
 
             final String siteURL = request.getRequestURL().toString() + "?" + request.getQueryString();
             Element mergedDocuments = new Element("records");
@@ -293,8 +296,6 @@ public class XslProcessApi {
 
         try {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
-            ApplicationContext context = ApplicationContextHolder.get();
-            DataManager dataMan = context.getBean(DataManager.class);
             UserSession userSession = ApiUtils.getUserSession(httpSession);
 
             final String siteURL = request.getRequestURL().toString() + "?" + request.getQueryString();

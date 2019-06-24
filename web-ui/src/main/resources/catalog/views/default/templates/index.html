@@ -6,7 +6,7 @@
         <a data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
           <img class="{{gnCfg.mods.header.logoInHeaderPosition}}"
                alt="{{'siteLogo' | translate}}"
-               data-ng-src="{{gnUrl}}../images/logos/{{info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
+               data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
           </a>
       </div>
     </div>
@@ -36,7 +36,9 @@
            data-ng-include="'../../catalog/views/default/templates/map.html'"
            data-ng-show="activeTab == '/map'"/>
       <div data-ng-include="'../../catalog/views/default/templates/recordView.html'"
-           data-ng-show="activeTab == '/metadata'"/>
+           data-ng-show="activeTab == '/metadata'" class="gn-view-approved"/>
+      <div data-ng-include="'../../catalog/views/default/templates/recordView.html'"
+           data-ng-show="activeTab == '/metadraf'" class="gn-view-not-approved"/>
       <div data-ng-include="'../../catalog/views/default/templates/page.html'"
            data-ng-if="activeTab == '/page'"/>
     </div>

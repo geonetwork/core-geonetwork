@@ -54,6 +54,7 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.XmlRequest;
@@ -61,6 +62,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.util.StringUtils;
 
 import com.google.common.collect.Sets;
 
@@ -108,36 +110,39 @@ public class ApiUtils {
     /**
      * Search if a record match the UUID on its UUID or an internal identifier
      */
-    public static String getInternalId(String uuidOrInternalId)
+    public static String getInternalId(String uuidOrInternalId, Boolean approved)
         throws Exception {
-        String id;
-        DataManager dm = ApplicationContextHolder.get().getBean(DataManager.class);
 
-        id = dm.getMetadataId(uuidOrInternalId);
-        if (id == null) {
-            String checkingId = dm.getMetadataUuid(id);
-            if (checkingId == null) {
-                throw new ResourceNotFoundException(String.format(
-                    "Record with UUID '%s' not found in this catalog",
-                    uuidOrInternalId));
-            }
+    	IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
+        String id = String.valueOf(metadataUtils.findOneByUuid(uuidOrInternalId).getId());
+        
+        if(StringUtils.isEmpty(id)) {
+        	//It wasn't a UUID
+        	id = String.valueOf(metadataUtils.findOne(uuidOrInternalId).getId());
+        } else if(approved) {
+        	//It was a UUID, check if draft or approved version
+        	id = String.valueOf(ApplicationContextHolder.get().getBean(MetadataRepository.class)
+        			 				.findOneByUuid(uuidOrInternalId).getId());
+        }
+        
+        if (StringUtils.isEmpty(id)) {
+            throw new ResourceNotFoundException(String.format(
+                "Record with UUID '%s' not found in this catalog",
+                uuidOrInternalId));
         }
         return id;
     }
+
     public static AbstractMetadata getRecord(String uuidOrInternalId)
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
         AbstractMetadata metadata = null;
-        try {
-            metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
-        } catch (IncorrectResultSizeDataAccessException e){
-            Log.warning(Geonet.GEONETWORK, String.format(
-                "More than one record found with UUID '%s'. Error is '%s'.",
-                uuidOrInternalId, e.getMessage()));
-        }
+
+        metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
 
         if (metadata == null) {
+            Log.trace(Geonet.DATA_MANAGER, uuidOrInternalId + " not recognized as UUID. Trying ID.");
             try {
                 metadata = metadataRepository.findOne(uuidOrInternalId);
             } catch (InvalidDataAccessApiUsageException e) {
@@ -146,20 +151,21 @@ public class ApiUtils {
                     uuidOrInternalId));
             }
             if (metadata == null) {
+                Log.trace(Geonet.DATA_MANAGER, "Record identified by " + uuidOrInternalId + " not found.");
                 throw new ResourceNotFoundException(String.format(
                     "Record with UUID '%s' not found in this catalog",
                     uuidOrInternalId));
-            } else {
-                return metadata;
             }
-        } else {
-            return metadata;
         }
+
+        Log.trace(Geonet.DATA_MANAGER, "ApiUtils.getRecord(" + uuidOrInternalId + ") -> " + metadata);
+
+        return metadata;
     }
 
     /**
      * Return the Jeeves user session.
-     *
+     * <p>
      * If session is null, it's probably a bot due to {@link AllRequestsInterceptor#createSessionForAllButNotCrawlers(HttpServletRequest)}.
      * In such case return an exception.
      */
@@ -235,6 +241,34 @@ public class ApiUtils {
     }
 
     /**
+     * Check if the current user can review this record.
+     */
+    static public AbstractMetadata canReviewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        AbstractMetadata metadata = getRecord(metadataUuid);
+        AccessManager accessManager = appContext.getBean(AccessManager.class);
+        if (!accessManager.canReview(createServiceContext(request), String.valueOf(metadata.getId()))) {
+            throw new SecurityException(String.format(
+                "You can't review or edit record with UUID %s", metadataUuid));
+        }
+        return metadata;
+    }
+
+    /**
+     * Check if the current user can change status of this record.
+     */
+    static public AbstractMetadata canChangeStatusRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        AbstractMetadata metadata = getRecord(metadataUuid);
+        AccessManager accessManager = appContext.getBean(AccessManager.class);
+        if (!accessManager.canChangeStatus(createServiceContext(request), String.valueOf(metadata.getId()))) {
+            throw new SecurityException(String.format(
+                "You can't change status of record with UUID %s", metadataUuid));
+        }
+        return metadata;
+    }
+
+    /**
      * Check if the current user can view this record.
      */
     public static AbstractMetadata canViewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
@@ -249,7 +283,6 @@ public class ApiUtils {
     }
 
     /**
-     *
      * @param img
      * @param outFile
      * @throws IOException

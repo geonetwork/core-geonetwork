@@ -557,6 +557,14 @@ form.gn-tab-inspire {
     padding-left: 10px;
     padding-right: 5px;
     // background-color: #fbfcfb;
+    .row > div.col-md-10 {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .row > div.col-md-10:hover {
+      white-space: unset;
+    }
     .row > div {
       padding-left: 1px;
       padding-right: 1px;
@@ -614,6 +622,12 @@ form.gn-tab-inspire {
         color: @gray-darker;
       }
     }
+  }
+}
+// margin for a validation block in a date row
+.gn-date {
+  .gn-validation-report {
+    margin-top: 10px;
   }
 }
 .onlinesrc-container, [gn-directory-entry-list-selector] {
@@ -910,6 +924,50 @@ gn-md-type-widget {
     }
   }
 }
+
+
+// md type widget (used only in editor for now)
+gn-draft-validation-widget {
+  display: inline-block;
+  small small {
+    border-radius: 1000px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 14px;
+    position: relative;
+    color: white;
+    margin-top: -0.2em;
+    margin-bottom: -0.4em;
+    background-color: @gray-light;
+    overflow: hidden;
+
+    &.valid-status-1 {
+      background-color: @gray-light;
+    }
+    &.valid-status0 {
+      background-color: @btn-danger-bg;
+    }
+    &.valid-status1 {
+      background-color: @btn-success-bg;
+    }
+    &.md-type-t {
+      background-color: @btn-primary-bg;
+    }
+
+    &::after {
+      content: '';
+      background-color: rgba(255, 255, 255, 0.25);
+      position: absolute;
+      top: 0px;
+      height: 50%;
+      left: 0px;
+      right: 0px;
+    }
+  }
+}
+
 .gn-editor-board {
   .table.gn-results-editor td {
     gn-md-type-widget {

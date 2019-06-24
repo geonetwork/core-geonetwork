@@ -47,96 +47,96 @@ public final class MetadataSpecs {
         // no instantiation
     }
 
-    public static Specification<Metadata> hasSchemaId(final String schemaId) {
-        return new Specification<Metadata>() {
+    public static Specification<? extends AbstractMetadata> hasSchemaId(final String schemaId) {
+        return new Specification<AbstractMetadata>() {
             @Override
-            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<String> schemaIdPath = root.get(Metadata_.dataInfo).get(MetadataDataInfo_.schemaId);
+            public Predicate toPredicate(Root<AbstractMetadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<String> schemaIdPath = root.get(AbstractMetadata_.dataInfo).get(MetadataDataInfo_.schemaId);
                 return cb.equal(schemaIdPath, cb.literal(schemaId));
             }
         };
     }
 
 
-    public static Specification<Metadata> hasOwner(final int owner) {
-        return new Specification<Metadata>() {
+    public static Specification<? extends AbstractMetadata> hasOwner(final int owner) {
+        return new Specification<AbstractMetadata>() {
             @Override
-            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Integer> ownerPath = root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.owner);
+            public Predicate toPredicate(Root<AbstractMetadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<Integer> ownerPath = root.get(AbstractMetadata_.sourceInfo).get(MetadataSourceInfo_.owner);
                 return cb.equal(ownerPath, cb.literal(owner));
             }
         };
     }
 
-    public static Specification<Metadata> hasMetadataId(final int metadataId) {
-        return new Specification<Metadata>() {
+    public static Specification<? extends AbstractMetadata> hasMetadataId(final int metadataId) {
+        return new Specification<AbstractMetadata>() {
             @Override
-            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Integer> userIdAttributePath = root.get(Metadata_.id);
+            public Predicate toPredicate(Root<AbstractMetadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<Integer> userIdAttributePath = root.get(AbstractMetadata_.id);
                 return cb.equal(userIdAttributePath, cb.literal(metadataId));
             }
         };
     }
 
-    public static Specification<Metadata> hasMetadataUuid(final String uuid) {
-        return new Specification<Metadata>() {
+    public static Specification<? extends AbstractMetadata> hasMetadataUuid(final String uuid) {
+        return new Specification<AbstractMetadata>() {
             @Override
-            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<String> userNameAttributePath = root.get(Metadata_.uuid);
+            public Predicate toPredicate(Root<AbstractMetadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<String> userNameAttributePath = root.get(AbstractMetadata_.uuid);
                 return cb.equal(userNameAttributePath, cb.literal(uuid));
             }
         };
     }
 
-    public static Specification<Metadata> hasHarvesterUuid(final String harvesterUuid) {
-        return new Specification<Metadata>() {
+    public static Specification<? extends AbstractMetadata> hasHarvesterUuid(final String harvesterUuid) {
+        return new Specification<AbstractMetadata>() {
             @Override
-            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<String> userNameAttributePath = root.get(Metadata_.harvestInfo).get(MetadataHarvestInfo_.uuid);
+            public Predicate toPredicate(Root<AbstractMetadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<String> userNameAttributePath = root.get(AbstractMetadata_.harvestInfo).get(MetadataHarvestInfo_.uuid);
                 Predicate uuidEqualPredicate = cb.equal(userNameAttributePath, cb.literal(harvesterUuid));
                 return uuidEqualPredicate;
             }
         };
     }
 
-    public static Specification<Metadata> isOwnedByUser(final int userId) {
-        return new Specification<Metadata>() {
+    public static Specification<? extends AbstractMetadata> isOwnedByUser(final int userId) {
+        return new Specification<AbstractMetadata>() {
             @Override
-            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Integer> ownerPath = root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.owner);
+            public Predicate toPredicate(Root<AbstractMetadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<Integer> ownerPath = root.get(AbstractMetadata_.sourceInfo).get(MetadataSourceInfo_.owner);
                 Predicate equalUserIdPredicate = cb.equal(ownerPath, cb.literal(userId));
                 return equalUserIdPredicate;
             }
         };
     }
 
-    public static Specification<Metadata> hasSource(final String sourceUuid) {
-        return new Specification<Metadata>() {
+    public static Specification<? extends AbstractMetadata> hasSource(final String sourceUuid) {
+        return new Specification<AbstractMetadata>() {
             @Override
-            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<String> sourceAttributePath = root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.sourceId);
+            public Predicate toPredicate(Root<AbstractMetadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<String> sourceAttributePath = root.get(AbstractMetadata_.sourceInfo).get(MetadataSourceInfo_.sourceId);
                 Predicate equalSourceIdPredicate = cb.equal(sourceAttributePath, cb.literal(sourceUuid));
                 return equalSourceIdPredicate;
             }
         };
     }
 
-    public static Specification<Metadata> isType(final MetadataType type) {
-        return new Specification<Metadata>() {
+    public static Specification<? extends AbstractMetadata> isType(final MetadataType type) {
+        return new Specification<AbstractMetadata>() {
             @Override
-            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Character> templateAttributePath = root.get(Metadata_.dataInfo).get(MetadataDataInfo_.type_JPAWorkaround);
+            public Predicate toPredicate(Root<AbstractMetadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<Character> templateAttributePath = root.get(AbstractMetadata_.dataInfo).get(MetadataDataInfo_.type_JPAWorkaround);
                 Predicate equalTemplatePredicate = cb.equal(templateAttributePath, cb.literal(type.code));
                 return equalTemplatePredicate;
             }
         };
     }
 
-    public static Specification<Metadata> isHarvested(final boolean isHarvested) {
-        return new Specification<Metadata>() {
+    public static Specification<? extends AbstractMetadata> isHarvested(final boolean isHarvested) {
+        return new Specification<AbstractMetadata>() {
             @Override
-            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Character> userNameAttributePath = root.get(Metadata_.harvestInfo).get(MetadataHarvestInfo_.harvested_JPAWorkaround);
+            public Predicate toPredicate(Root<AbstractMetadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<Character> userNameAttributePath = root.get(AbstractMetadata_.harvestInfo).get(MetadataHarvestInfo_.harvested_JPAWorkaround);
                 Predicate equalHarvestPredicate = cb.equal(userNameAttributePath, cb.literal(Constants.toYN_EnabledChar(isHarvested)));
                 return equalHarvestPredicate;
             }
@@ -144,39 +144,39 @@ public final class MetadataSpecs {
     }
 
 
-    public static Specification<Metadata> hasMetadataIdIn(final Collection<Integer> mdIds) {
-        return new Specification<Metadata>() {
+    public static Specification<? extends AbstractMetadata> hasMetadataIdIn(final Collection<Integer> mdIds) {
+        return new Specification<AbstractMetadata>() {
             @Override
-            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                return root.get(Metadata_.id).in(mdIds);
+            public Predicate toPredicate(Root<AbstractMetadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return root.get(AbstractMetadata_.id).in(mdIds);
             }
         };
     }
 
-    public static Specification<Metadata> hasMetadataUuidIn(final Collection<String> uuids) {
-        return new Specification<Metadata>() {
+    public static Specification<? extends AbstractMetadata> hasMetadataUuidIn(final Collection<String> uuids) {
+        return new Specification<AbstractMetadata>() {
             @Override
-            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                return root.get(Metadata_.uuid).in(uuids);
+            public Predicate toPredicate(Root<AbstractMetadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return root.get(AbstractMetadata_.uuid).in(uuids);
             }
         };
     }
 
-    public static Specification<Metadata> hasType(final MetadataType metadataType) {
-        return new Specification<Metadata>() {
+    public static Specification<? extends AbstractMetadata> hasType(final MetadataType metadataType) {
+        return new Specification<AbstractMetadata>() {
             @Override
-            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                final Path<Character> typeChar = root.get(Metadata_.dataInfo).get(MetadataDataInfo_.type_JPAWorkaround);
+            public Predicate toPredicate(Root<AbstractMetadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                final Path<Character> typeChar = root.get(AbstractMetadata_.dataInfo).get(MetadataDataInfo_.type_JPAWorkaround);
                 return cb.equal(typeChar, metadataType.code);
             }
         };
     }
 
-    public static Specification<Metadata> isOwnedByOneOfFollowingGroups(final List<Integer> groups) {
-        return new Specification<Metadata>() {
+    public static Specification<? extends AbstractMetadata> isOwnedByOneOfFollowingGroups(final List<Integer> groups) {
+        return new Specification<AbstractMetadata>() {
             @Override
-            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                return root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.groupOwner).in(groups);
+            public Predicate toPredicate(Root<AbstractMetadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return root.get(AbstractMetadata_.sourceInfo).get(MetadataSourceInfo_.groupOwner).in(groups);
             }
         };
     }
@@ -189,7 +189,7 @@ public final class MetadataSpecs {
      * @return a specification for finding all metadata containing a {@link MetadataCategory} with
      * the provided category
      */
-    public static Specification<Metadata> hasCategory(final MetadataCategory category) {
+    public static Specification<? extends AbstractMetadata> hasCategory(final MetadataCategory category) {
         return new Specification<Metadata>() {
             @Override
             public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -200,21 +200,21 @@ public final class MetadataSpecs {
         };
     }
 
-    public static Specification<Metadata> hasExtra(final String extra) {
-        return new Specification<Metadata>() {
+    public static Specification<? extends AbstractMetadata> hasExtra(final String extra) {
+        return new Specification<AbstractMetadata>() {
             @Override
-            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                return cb.equal(root.get(Metadata_.dataInfo).get(MetadataDataInfo_.extra), extra);
+            public Predicate toPredicate(Root<AbstractMetadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return cb.equal(root.get(AbstractMetadata_.dataInfo).get(MetadataDataInfo_.extra), extra);
             }
         };
     }
 
 
-    public static Specification<Metadata> isIso19139Schema() {
-        return new Specification<Metadata>() {
+    public static Specification<? extends AbstractMetadata> isIso19139Schema() {
+        return new Specification<AbstractMetadata>() {
             @Override
-            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<String> schemaIdAttributePath = root.get(Metadata_.dataInfo).get(MetadataDataInfo_.schemaId);
+            public Predicate toPredicate(Root<AbstractMetadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<String> schemaIdAttributePath = root.get(AbstractMetadata_.dataInfo).get(MetadataDataInfo_.schemaId);
                 Predicate likeSchemaIdPredicate = cb.like(schemaIdAttributePath, cb.literal("iso19139"));
                 return likeSchemaIdPredicate;
             }

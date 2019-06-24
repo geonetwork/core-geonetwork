@@ -385,11 +385,11 @@ public class Aligner extends BaseAligner<CswParams> {
 		}
 
 		OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-		repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
+		repository.deleteAllByMetadataId(Integer.parseInt(id));
 
 		addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-		metadata.getMetadataCategories().clear();
+		metadata.getCategories().clear();
 		addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 		
 		return true;

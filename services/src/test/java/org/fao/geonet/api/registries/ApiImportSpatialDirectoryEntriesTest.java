@@ -87,7 +87,7 @@ public class ApiImportSpatialDirectoryEntriesTest extends AbstractServiceIntegra
         HttpSession session = loginAs(user);
 
         MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest(session.getServletContext());
-        request.setRequestURI("/api/0.1/registries/actions/entries/import/spatial");
+        request.setRequestURI("/srv/api/0.1/registries/actions/entries/import/spatial");
         MockMultipartFile file = new MockMultipartFile(
                 "file",
                 "layers.zip",

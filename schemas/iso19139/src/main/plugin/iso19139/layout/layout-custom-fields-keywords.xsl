@@ -84,6 +84,13 @@
           <xsl:value-of select="$thesaurusTitleEl/gmd:PT_FreeText/gmd:textGroup/
                                   gmd:LocalisedCharacterString[normalize-space(text()) != ''][1]"/>
         </xsl:when>
+        <xsl:when test="normalize-space($thesaurusTitleEl/gmx:Anchor) != ''">
+          <xsl:value-of select="if ($overrideLabel != '')
+              then $overrideLabel
+              else concat(
+                      $iso19139strings/keywordFrom,
+                      normalize-space($thesaurusTitleEl/gmx:Anchor))"/>
+        </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="gmd:MD_Keywords/gmd:thesaurusName/
                                   gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code"/>
@@ -117,7 +124,7 @@
                           else $listOfThesaurus/thesaurus[title=$thesaurusTitle]"/>
 
     <xsl:choose>
-      <xsl:when test="$thesaurusConfig/@fieldset = 'false'">
+      <xsl:when test="($isFlatMode and not($thesaurusConfig/@fieldset)) or $thesaurusConfig/@fieldset = 'false'">
         <xsl:apply-templates mode="mode-iso19139" select="*">
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="labels" select="$labels"/>
@@ -153,7 +160,7 @@
                   select="normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text())"/>
 
     <xsl:variable name="thesaurusTitle"
-                  select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString)"/>
+                  select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString|gmx:Anchor)"/>
 
 
     <xsl:variable name="thesaurusConfig"
@@ -246,7 +253,7 @@
         <div data-gn-keyword-selector="{$widgetMode}"
              data-metadata-id="{$metadataId}"
              data-element-ref="{concat('_X', ../gn:element/@ref, '_replace')}"
-             data-thesaurus-title="{if ($thesaurusConfig/@fieldset = 'false') then $thesaurusTitle else ''}"
+             data-thesaurus-title="{if (($isFlatMode and not($thesaurusConfig/@fieldset)) or $thesaurusConfig/@fieldset = 'false') then $thesaurusTitle else ''}"
              data-thesaurus-key="{$thesaurusKey}"
              data-keywords="{$keywords}"
              data-transformations="{$transformations}"

@@ -74,22 +74,22 @@
         label: 'contentStatistics',
         icon: 'fa-bar-chart',
         href: '#/dashboard/statistics?dashboard=' +
-            encodeURIComponent('../../dashboards/app/kibana#/dashboard/' +
-            'cf5d74b0-2c25-11e7-8cd9-338183f2da0f?embed=true&_g=()')
-      }, {
-        type: 'statistics',
-        label: 'validationStatistics',
-        icon: 'fa-bar-chart',
-        href: '#/dashboard/statistics?dashboard=' +
-            encodeURIComponent('../../dashboards/app/kibana#/dashboard/' +
-            '915983d0-2c2e-11e7-a889-7bfa00c573d3?embed=true&_g=()')
-      }, {
-        type: 'statistics',
-        label: 'searchStatistics',
-        icon: 'fa-search',
-        href: '#/dashboard/statistics?dashboard=' +
-            encodeURIComponent('../../dashboards/app/kibana#/dashboard/' +
-            '5b407790-4fa1-11e7-a577-3197d1592a1d?embed=true&_g=()')
+            encodeURIComponent('../../dashboards/s/geonetwork/app/kibana#/dashboard/853fef90-8dce-11e9-9bb7-5db216293bad?_g=(refreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3Anow-15y%2Cto%3Anow))&embed=true')
+      // TODO: The following dashboards need a rework
+      // }, {
+      //   type: 'statistics',
+      //   label: 'validationStatistics',
+      //   icon: 'fa-bar-chart',
+      //   href: '#/dashboard/statistics?dashboard=' +
+      //       encodeURIComponent('../../dashboards/app/kibana#/dashboard/' +
+      //       '915983d0-2c2e-11e7-a889-7bfa00c573d3?embed=true&_g=()')
+      // }, {
+      //   type: 'statistics',
+      //   label: 'searchStatistics',
+      //   icon: 'fa-search',
+      //   href: '#/dashboard/statistics?dashboard=' +
+      //       encodeURIComponent('../../dashboards/app/kibana#/dashboard/' +
+      //       '5b407790-4fa1-11e7-a577-3197d1592a1d?embed=true&_g=()')
       }];
 
       if ($scope.healthCheck.DashboardAppHealthCheck === true) {

@@ -248,11 +248,32 @@
             src.lUrl = src.url[lang] ||
               src.url[mdLanguage] ||
               src.url[Object.keys(src.url)[0]];
+            
+              //Is it a draft?
+              if(src.lUrl.indexOf("/api/records/") >= 0 
+                  &&  src.lUrl.indexOf("/api/records/")< src.lUrl.indexOf("/attachments/")) {
+                if(src.lUrl.indexOf("?") > 0) {
+                  src.lUrl  += "&approved=false";
+                } else {
+                  src.lUrl  += "?approved=false";
+                }
+              }
+                
           });
           angular.forEach(data.thumbnails, function(img) {
             img.lUrl = img.url[lang] ||
               img.url[mdLanguage] ||
               img.url[Object.keys(img.url)[0]];
+            
+              //Is it a draft?
+              if(img.lUrl.indexOf("/api/records/") >= 0 
+                  &&  img.lUrl.indexOf("/api/records/")< img.lUrl.indexOf("/attachments/")) {
+                if(img.lUrl.indexOf("?") > 0) {
+                  img.lUrl  += "&approved=false";
+                } else {
+                  img.lUrl  += "?approved=false";
+                }
+              }
           });
           if (data.siblings) {
             for (var i = 0; i < data.siblings.length; i++) {
@@ -468,7 +489,11 @@
             var qParams = setParams('dataset-add', params);
 
             return runProcess(scope, {
-              scopedName: qParams.name,
+              // names are equal if no selected layers
+              // See #setLayersParams
+              // In this case, dataset-add.xsl MUST not add coupledResource
+              // So setting it to empty
+              scopedName: params.name === qParams.name ? '' : qParams.name,
               uuidref: qParams.uuidDS,
               uuid: qParams.uuidSrv,
               source: qParams.identifier || '',
