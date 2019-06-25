@@ -338,7 +338,6 @@
         if(params.query_string && !$scope.searchObj.lucene.facets) {
           $scope.searchObj.lucene.facets = gnESService.luceneQueryToFacets(params.query_string);
         }
-        console.log($scope.searchObj.lucene)
 
         // delete params.query_string
 

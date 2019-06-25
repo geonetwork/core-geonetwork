@@ -107,6 +107,10 @@
    */
   var FacetController = function($scope) {
     this.$scope = $scope;
+
+    $scope.$on('beforeSearchReset', function() {
+      this.facetsCtrl.state[this.facet.name] = this.state = []
+    }.bind(this))
   };
 
   FacetController.prototype.$onInit = function() {
