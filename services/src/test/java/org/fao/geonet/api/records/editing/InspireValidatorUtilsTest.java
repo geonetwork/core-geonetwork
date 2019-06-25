@@ -4,11 +4,13 @@ import static org.junit.Assert.assertEquals;
 
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import javassist.NotFoundException;
 
+@Ignore
 public class InspireValidatorUtilsTest {
 
     private SettingManager sm = Mockito.mock(SettingManager.class);
