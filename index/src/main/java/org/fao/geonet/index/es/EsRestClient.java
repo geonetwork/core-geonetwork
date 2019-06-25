@@ -23,27 +23,31 @@
 
 package org.fao.geonet.index.es;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import io.searchbox.client.JestClient;
-import io.searchbox.client.JestClientFactory;
-import io.searchbox.client.JestResult;
-import io.searchbox.client.JestResultHandler;
-import io.searchbox.client.config.HttpClientConfig;
-import io.searchbox.cluster.Health;
-import io.searchbox.core.Bulk;
-import io.searchbox.core.BulkResult;
-import io.searchbox.core.DeleteByQuery;
-import io.searchbox.core.Index;
-import io.searchbox.core.Search;
-import io.searchbox.indices.Analyze;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpHost;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequest;
+import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.QueryStringQueryBuilder;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.index.reindex.DeleteByQueryRequest;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,17 +59,18 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 
 /**
- * JEST Client to connect to Elasticsearch
+ * Client to connect to Elasticsearch
  */
-public class EsClient implements InitializingBean {
-    private static EsClient instance;
+public class EsRestClient implements InitializingBean {
+    private static EsRestClient instance;
 
-    private JestClient client;
+    private RestHighLevelClient client;
 
     @Value("${es.url}")
     private String serverUrl;
@@ -78,11 +83,11 @@ public class EsClient implements InitializingBean {
 
     private boolean activated = false;
 
-    public static EsClient get() {
+    public static EsRestClient get() {
         return instance;
     }
 
-    public JestClient getClient() throws Exception {
+    public RestHighLevelClient getClient() throws Exception {
         return client;
     }
 
@@ -101,8 +106,6 @@ public class EsClient implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         if (StringUtils.isNotEmpty(serverUrl)) {
-            JestClientFactory factory = new JestClientFactory();
-
             if (serverUrl.startsWith("https://")) {
                 SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(
                     null, new TrustStrategy() {
@@ -116,36 +119,27 @@ public class EsClient implements InitializingBean {
 
                 SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
                 SchemeIOSessionStrategy httpsIOSessionStrategy = new SSLIOSessionStrategy(sslContext, hostnameVerifier);
-                factory.setHttpClientConfig(new HttpClientConfig
-                    .Builder(this.serverUrl)
-                    .defaultCredentials(username, password)
-                    .multiThreaded(true)
-                    .sslSocketFactory(sslSocketFactory) // this only affects sync calls
-                    .httpsIOSessionStrategy(httpsIOSessionStrategy) // this only affects async calls
-                    .readTimeout(-1)
-                    .build());
-            } else {
-                factory.setHttpClientConfig(new HttpClientConfig
-                    .Builder(this.serverUrl)
-                    .multiThreaded(true)
-                    .readTimeout(-1)
-                    .build());
-            }
-            client = factory.getObject();
-            // TODOES Migrate to RestHighLevelClient
-//            RestHighLevelClient client = new RestHighLevelClient(
-//                RestClient.builder(
-//                    new HttpHost("localhost", 9200, "http"),
-//                    new HttpHost("localhost", 9201, "http")));
 
-            synchronized (EsClient.class) {
+                // TODOES: Https
+                client = new RestHighLevelClient(
+                    RestClient.builder(
+                        new HttpHost(this.serverUrl)
+                    ));
+            } else {
+                client = new RestHighLevelClient(
+                    RestClient.builder(
+                        new HttpHost(this.serverUrl)
+                    ));
+            }
+
+            synchronized (EsRestClient.class) {
                 instance = this;
             }
             activated = true;
         } else {
             Log.debug("geonetwork.index", String.format(
                 "No Elasticsearch URL defined '%s'. "
-                    + "Check bean configuration. Statistics and dasboard will not be available.", this.serverUrl));
+                    + "Check configuration.", this.serverUrl));
         }
     }
 
@@ -153,7 +147,7 @@ public class EsClient implements InitializingBean {
         return serverUrl;
     }
 
-    public EsClient setServerUrl(String serverUrl) {
+    public EsRestClient setServerUrl(String serverUrl) {
         this.serverUrl = serverUrl;
         return this;
     }
@@ -162,7 +156,7 @@ public class EsClient implements InitializingBean {
         return username;
     }
 
-    public EsClient setUsername(String username) {
+    public EsRestClient setUsername(String username) {
         this.username = username;
         return this;
     }
@@ -171,28 +165,26 @@ public class EsClient implements InitializingBean {
         return password;
     }
 
-    public EsClient setPassword(String password) {
+    public EsRestClient setPassword(String password) {
         this.password = password;
         return this;
     }
 
-    public BulkResult bulkRequest(String index, Map<String, String> docs) throws IOException {
+    public BulkResponse bulkRequest(String index, Map<String, String> docs) throws IOException {
         if (!activated) {
             throw new IOException("Index not yet activated.");
         }
-        Bulk.Builder bulk = new Bulk.Builder()
-            .defaultIndex(index);
+
+        BulkRequest request = new BulkRequest();
 
         Iterator iterator = docs.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, String> entry = (Map.Entry) iterator.next();
-            bulk.addAction(
-                new Index.Builder(entry.getValue()).id(entry.getKey()).build()
-            );
+            request.add(new IndexRequest(index).id(entry.getKey())
+                .source(XContentType.JSON, entry.getValue()));
         }
         try {
-            BulkResult result = client.execute(bulk.build());
-            return result;
+            return client.bulk(request, RequestOptions.DEFAULT);
         } catch (IOException e) {
             e.printStackTrace();
             throw e;
@@ -247,40 +239,40 @@ public class EsClient implements InitializingBean {
 //        }
     }
 
+//
+//    public void bulkRequestAsync(Bulk.Builder bulk , JestResultHandler<BulkResult> handler) {
+//        client.executeAsync(bulk.build(), handler);
+//
+//    }
+//
+//    public BulkResult bulkRequestSync(Bulk.Builder bulk) throws IOException {
+//        return client.execute(bulk.build());
+//    }
 
-    public void bulkRequestAsync(Bulk.Builder bulk , JestResultHandler<BulkResult> handler) {
-        client.executeAsync(bulk.build(), handler);
 
-    }
-
-    public BulkResult bulkRequestSync(Bulk.Builder bulk) throws IOException {
-        return client.execute(bulk.build());
-    }
-
-
-    public JestResult query(String index, String luceneQuery, Set<String> includedFields) throws Exception {
+    public SearchResponse query(String index, String luceneQuery, Set<String> includedFields) throws Exception {
         if (!activated) {
             return null;
         }
 
         // TODOES: Add permission if index is gn-records
         // See EsHTTPProxy#addUserInfo
-        String searchQuery = "{\"query\": {\"query_string\": {" +
-            "\"query\": \"" + luceneQuery + "\"" +
-            "}}}";
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices(index);
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.queryStringQuery(luceneQuery));
+        searchSourceBuilder.fetchSource(includedFields.toArray(new String[includedFields.size()]), null);
+        searchSourceBuilder.from(0);
+        searchSourceBuilder.size(1000); // TODOES limit & paging
+//        searchSourceBuilder.sort(new FieldSortBuilder("_id").order(SortOrder.ASC));
+        searchRequest.source(searchSourceBuilder);
 
-        Search.Builder searchBuilder = new Search.Builder(searchQuery)
-            .addIndex(index);
-
-        includedFields.forEach(f -> searchBuilder.addSourceIncludePattern(f));
-
-        Search search = searchBuilder.build();
-        final JestResult result = client.execute(search);
-        if (result.isSucceeded()) {
-            return result;
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        if (searchResponse.status().getStatus() == 200) {
+            return searchResponse;
         } else {
             throw new IOException(String.format(
-                "Error during querying index. Errors is '%s'.", result.getErrorMessage()
+                "Error during querying index. Errors is '%s'.", searchResponse.status().toString()
             ));
         }
     }
@@ -290,57 +282,55 @@ public class EsClient implements InitializingBean {
             return "";
         }
 
-        String searchQuery = "{\"query\": {\"query_string\": {" +
-            "\"query\": \"" + query + "\"" +
-            "}}}";
+        DeleteByQueryRequest request = new DeleteByQueryRequest(index);
+        request.setQuery(new QueryStringQueryBuilder(query));
 
-        DeleteByQuery deleteAll = new DeleteByQuery.Builder(searchQuery)
-            .addIndex(index)
-            .build();
-        final JestResult result = client.execute(deleteAll);
-        if (result.isSucceeded()) {
-            return String.format("Record removed. %s.", result.getJsonString());
+        final BulkByScrollResponse deleteByQueryResponse = client.deleteByQuery(request, RequestOptions.DEFAULT);
+
+        if (deleteByQueryResponse.getStatus().getDeleted() > 0) {
+            return String.format("Record removed. %s.", deleteByQueryResponse.getStatus().getDeleted());
         } else {
             throw new IOException(String.format(
-                "Error during removal. Errors is '%s'.", result.getErrorMessage()
+                "Error during removal. Errors is '%s'.", deleteByQueryResponse.getStatus().getReasonCancelled()
             ));
         }
     }
 
     /**
      * Query the index for a specific record and return values for a set of fields.
-     *
      */
     public Map<String, String> getFieldsValues(String index, String id, Set<String> fields) throws IOException {
         if (!activated) {
             return null;
         }
 
-        // TODOES: Add permission if index is gn-records
-        // See EsHTTPProxy#addUserInfo
-        String searchQuery = "{\"query\": {\"query_string\": {" +
-            "\"query\": \"_id:" + id + " uuid:" + id + "\"" +
-            "}}}";
-
-        Search.Builder searchBuilder = new Search.Builder(searchQuery)
-            .addIndex(index);
-        fields.forEach(f -> searchBuilder.addSourceIncludePattern(f));
-        Search search = searchBuilder.build();
-
-
         Map<String, String> fieldValues = new HashMap<>(fields.size());
         try {
-            final JestResult result = client.execute(search);
-            if (result.isSucceeded()) {
-                final JsonArray elements = result.getJsonObject().get("hits").getAsJsonObject().get("hits").getAsJsonArray();
-                fields.forEach(f -> fieldValues.put(f, elements.get(0).getAsJsonObject().get("_source").getAsJsonObject().get(f).getAsString()));
+            String query = String.format("_id:%s uuid:%s", id, id);
+            final SearchResponse searchResponse = this.query(index, query, fields);
+            if (searchResponse.status().getStatus() == 200) {
+                if (searchResponse.getHits().getTotalHits().value == 1) {
+                    final SearchHit[] hits = searchResponse.getHits().getHits();
 
+                    fields.forEach(f -> {
+                        final Object o = hits[0].getSourceAsMap().get(f);
+                        if (o instanceof String) {
+                            fieldValues.put(f, (String) o);
+                        }
+                    });
+                } else {
+                    throw new IOException(String.format(
+                        "Your query '%s' returned more than one record, %d in fact. Can't retrieve field values for more than one record.",
+                        query,
+                        searchResponse.getHits().getTotalHits()
+                    ));
+                }
             } else {
                 throw new IOException(String.format(
-                    "Error during fields value retrival. Errors is '%s'.", result.getErrorMessage()
+                    "Error during fields value retrival. Status is '%s'.", searchResponse.status().getStatus()
                 ));
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new IOException(String.format(
                 "Error during fields value retrival. Errors is '%s'.", e.getMessage()
             ));
@@ -354,56 +344,54 @@ public class EsClient implements InitializingBean {
      * or query phase and return the first value generated
      * by the specified analyzer. For now mainly used for
      * synonyms analysis.
-     *
+     * <p>
      * See https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-analyze.html
-     *{
-     *   "tokens" : [
-     *     {
-     *       "token" : "area management/restriction/regulation zones and reporting units",
-     *       "start_offset" : 0,
-     *       "end_offset" : 64,
-     *       "type" : "word",
-     *       "position" : 0
-     *     }
-     *   ]
+     * {
+     * "tokens" : [
+     * {
+     * "token" : "area management/restriction/regulation zones and reporting units",
+     * "start_offset" : 0,
+     * "end_offset" : 64,
+     * "type" : "word",
+     * "position" : 0
+     * }
+     * ]
      * }
      * or when a synonym is found
      * {
-     *   "tokens" : [
-     *     {
-     *       "token" : "elevation",
-     *       "start_offset" : 0,
-     *       "end_offset" : 8,
-     *       "type" : "SYNONYM",
-     *       "position" : 0
-     *     }
-     *   ]
+     * "tokens" : [
+     * {
+     * "token" : "elevation",
+     * "start_offset" : 0,
+     * "end_offset" : 8,
+     * "type" : "SYNONYM",
+     * "position" : 0
      * }
-     * @param fieldValue    The field value to analyze
+     * ]
+     * }
      *
+     * @param fieldValue The field value to analyze
      * @return The analyzed string value if found or empty text if not found or if an exception occurred.
      */
     public static String analyzeField(String collection,
                                       String analyzer,
                                       String fieldValue) {
-        Analyze analyze = new Analyze.Builder()
-            .index(collection)
-            .analyzer(analyzer)
-            // Replace , as it is meaningful in synonym map format
-            .text(fieldValue.replaceAll(",", ""))
-            .build();
+
+        AnalyzeRequest request = new AnalyzeRequest();
+        request.index(collection);
+        // Replace , as it is meaningful in synonym map format
+        request.text(fieldValue.replace(",", ""));
+        request.analyzer(analyzer);
+
         String analyzedValue = "";
         try {
-            JestResult result = EsClient.get().getClient().execute(analyze);
+            AnalyzeResponse response = EsRestClient.get().client.indices().analyze(request, RequestOptions.DEFAULT);
 
-            if (result.isSucceeded()) {
-                JsonArray tokens = result.getJsonObject().getAsJsonArray("tokens");
-                if (tokens != null && tokens.size() == 1) {
-                    JsonObject token = tokens.get(0).getAsJsonObject();
-                    String type = token.get("type").getAsString();
-                    if ("SYNONYM".equals(type) || "word".equals(type)) {
-                        return token.get("token").getAsString();
-                    }
+            final List<AnalyzeResponse.AnalyzeToken> tokens = response.getTokens();
+            if (tokens.size() == 1) {
+                final String type = tokens.get(0).getType();
+                if ("SYNONYM".equals(type) || "word".equals(type)) {
+                    return tokens.get(0).getTerm();
                 }
                 return "";
             } else {
@@ -416,13 +404,15 @@ public class EsClient implements InitializingBean {
 
 
     protected void finalize() {
-        client.shutdownClient();
+        try {
+            client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // TODO: check index exist too
-    public String getServerStatus() throws Exception {
-        JestResult result = getClient().execute(new Health.Builder().build());
-        return result.getJsonObject().get("status").getAsString();
+    public boolean getServerStatus() throws Exception {
+        return getClient().ping(RequestOptions.DEFAULT);
     }
-
 }
