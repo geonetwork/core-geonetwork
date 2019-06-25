@@ -78,6 +78,15 @@ public class MapServersApi {
     @Autowired
     MapServerRepository mapServerRepository;
 
+    @Autowired
+    FilesystemStore store;
+
+    @Autowired
+    SettingManager settingManager;
+
+    @Autowired
+    GeonetHttpRequestFactory requestFactory;
+
     @ApiOperation(
         value = "Get mapservers",
         notes = "Mapservers are used by the catalog to publish record attachements " +
@@ -515,20 +524,14 @@ public class MapServersApi {
         metadataAbstract = metadataAbstract.replace("\\n", "");
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        MapServerRepository repo =
-            applicationContext.getBean(MapServerRepository.class);
-        FilesystemStore store = applicationContext.getBean(FilesystemStore.class);
-        MapServer m = repo.findOneById(mapserverId);
+        MapServer m = mapServerRepository.findOneById(mapserverId);
         GeoServerNode g = new GeoServerNode(m);
 
 
         ServiceContext context = ApiUtils.createServiceContext(request);
         context.setAsThreadLocal();
 
-        SettingManager settingManager = applicationContext.getBean(SettingManager.class);
         String baseUrl = settingManager.getSiteURL(context);
-        final GeonetHttpRequestFactory requestFactory =
-            applicationContext.getBean(GeonetHttpRequestFactory.class);
         GeoServerRest gs = new GeoServerRest(requestFactory, g.getUrl(),
             g.getUsername(), g.getUserpassword(),
             g.getNamespacePrefix(), baseUrl, settingManager.getNodeURL(),

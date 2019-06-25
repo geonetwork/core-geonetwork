@@ -70,6 +70,9 @@ public class ProcessApi {
     @Autowired
     IProcessingReportRegistry registry;
 
+    @Autowired
+    DataManager dataMan;
+
     @ApiOperation(
         value = "Get current process reports",
         notes = "When processing, the report is stored in memory and allows to retrieve " +
@@ -184,9 +187,6 @@ public class ProcessApi {
         MetadataReplacementProcessingReport report =
             new MetadataReplacementProcessingReport("massive-content-update");
         try {
-            ApplicationContext applicationContext = ApplicationContextHolder.get();
-            DataManager dataMan = applicationContext.getBean(DataManager.class);
-
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, userSession);
 
             report.setTotalRecords(records.size());

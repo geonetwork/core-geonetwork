@@ -1,0 +1,7 @@
+<button type="button" class="btn btn-default"
+        data-ng-disabled="sugg === undefined"
+        title="{{sugg === undefined ? 'processNotFound' : ''}}"
+        data-ng-click="gnSuggestion.onSuggestionClick(sugg)">
+  <i class="fa {{icon || 'fa-cog'}}"/>
+  <span>{{sugg.name}}</span>
+</button>

@@ -50,8 +50,6 @@ import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -90,6 +88,9 @@ import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_NAME_PATH;
     description = "User feedback")
 @Controller("userfeedback")
 public class UserFeedbackAPI {
+
+    @Autowired
+    LanguageUtils languageUtils;
 
     @Autowired
     SettingManager settingManager;
@@ -433,9 +434,6 @@ public class UserFeedbackAPI {
     private IUserFeedbackService getUserFeedbackService() {
         return (IUserFeedbackService) ApplicationContextHolder.get().getBean("userFeedbackService");
     }
-
-    @Autowired
-    LanguageUtils languageUtils;
 
     /**
      * New user feedback.

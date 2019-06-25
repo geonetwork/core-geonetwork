@@ -249,6 +249,8 @@
     "saveMetadataError": "Fout tijdens het opslaan van metadata. U moet de editor herladen .",
     "saveMetadataSuccess": "Alle wijzigingen opgeslagen .",
     "saveMetadata": "Bewaar metadata",
+    "saveDraft": "Save draft",
+    "draftCanNoBeATemplateOrMinorEdit": "A draft cannot be a template and cannot use minor edit mode.",
     "saveTemplate": "Bewaar template",
     "saveAsMetadata": "Bewaar als metadata",
     "saveAsTemplate": "Bewaar als template",
@@ -334,6 +336,7 @@
     "moreSpecificConcept": "Meer specifieke concepten",
     "associatedConcept": "Geassocieerde concepten",
     "xsd": "Schema validatie",
+    "youAreNotMemberOfAnyGroup": "You are not editor of any groups, so you can't create new records. Ask the catalogue administrator to set your role to editor in at least one group.",
     "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}?tab=xml\">XML editor</a>.",
     "directoryManagerSubtitle": "Dit scherm stelt u in staat om snippet entries zoals, contactgegevens, formaten, etc. te beheren, inclusief template beheer",
     "directoryManagerSubtitleImport": "Vul hier de XML inhoud van een snippet in om het te in de database te importeren",
@@ -382,5 +385,7 @@
     "accessManager": "Toegangs rechten",
     "accessManagerTitle": "Toegangs rechten voor records",
     "accessManagerChooseGroups": "Kies één of meerdere records",
-    "accessManagerChooseOperations": "Kies één of meerdere operatie typen"
+    "accessManagerChooseOperations": "Kies één of meerdere operatie typen",
+    "status-no-status": "Workflow not active",
+    "draft": "Working copy"
 }

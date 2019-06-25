@@ -50,6 +50,8 @@
     "refresh": "Endurnýja",
     "mapLegend": "Skýringatexti",
     "kmlFile": "{{layer}} (KML)",
+    "noRecordFoundWithResourceRegistered": "No record found with one or more WMS layers registered.",
+    "noRecordFoundWithResourceRegisteredmap": "No record found with one or more maps registered.",
     "tmsLinkDetails": "Þetta gagnasett er birt í skoðunarþjónustunni (TMS) sem finna má hér  <a href='{{url}}' target='_blank'>{{url}}</a> with identifier <strong>{{layer}}</strong>.",
     "wmsLinkDetails": "Þetta gagnasett er birt í skoðunarþjónustunni (WMS) sem finna má hér<a href='{{url}}' target='_blank'>{{url}}</a> with layer name <strong>{{layer}}</strong>.",
     "wmsServiceLinkDetails": "Þetta gagnasett er birt í skoðunarþjónustunni (WMS) sem finna má hér <a href='{{url}}' target='_blank'> {{url}}</a>.",
@@ -488,5 +490,7 @@
     "userSearchUpdateUrl": "Uppfæra",
     "userSearchFeaturedDisplayInHomePage": "Upphafssíða",
     "userSearchUpdated": "Notendaleit vistuð",
-    "userSearchUpdatedError": "Villa við að vista notendaleit"
+    "userSearchUpdatedError": "Villa við að vista notendaleit",
+    "seeDraft": "This record has a working copy version. Click here to see it.",
+    "seeNoDraft": "This record has an approved and published version. Click here to see it."
 }

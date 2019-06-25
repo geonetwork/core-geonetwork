@@ -215,6 +215,7 @@ goog.require('gn_alert');
           'isSaveMapInCatalogAllowed': true,
           'isExportMapAsImageEnabled': false,
           'storage': 'sessionStorage',
+          'bingKey': '',
           'listOfServices': {
             'wms': [],
             'wmts': []

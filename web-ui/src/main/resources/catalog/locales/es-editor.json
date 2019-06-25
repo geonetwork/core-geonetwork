@@ -249,6 +249,8 @@
     "saveMetadataError": "Error guardando el metadato. Deberías recargar el editor.",
     "saveMetadataSuccess": "Cambios guardados.",
     "saveMetadata": "Guardar metadato",
+    "saveDraft": "Save draft",
+    "draftCanNoBeATemplateOrMinorEdit": "A draft cannot be a template and cannot use minor edit mode.",
     "saveTemplate": "Guardar plantilla",
     "saveAsMetadata": "Guardar como metadato",
     "saveAsTemplate": "Guardar como plantilla",
@@ -334,6 +336,7 @@
     "moreSpecificConcept": "Conceptos más específicos",
     "associatedConcept": "Conceptos asociados",
     "xsd": "Validación del esquema",
+    "youAreNotMemberOfAnyGroup": "You are not editor of any groups, so you can't create new records. Ask the catalogue administrator to set your role to editor in at least one group.",
     "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}?tab=xml\">XML editor</a>.",
     "directoryManagerSubtitle": "Esta pantalla te permite editar entradas del directorio como contactos, formatos, etc... incluyendo la administración de plantillas.",
     "directoryManagerSubtitleImport": "Introducir aquí el contenido XML completo de una entrada a importar a la base de datos.",
@@ -382,5 +385,7 @@
     "accessManager": "Permisos",
     "accessManagerTitle": "Permisos por registros",
     "accessManagerChooseGroups": "Selecciona uno o más grupos",
-    "accessManagerChooseOperations": "Selecciona una o más tipos de operaciones"
+    "accessManagerChooseOperations": "Selecciona una o más tipos de operaciones",
+    "status-no-status": "Workflow not active",
+    "draft": "Working copy"
 }

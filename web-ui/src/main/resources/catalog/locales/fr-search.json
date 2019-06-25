@@ -50,6 +50,8 @@
     "refresh": "Rafraîchir",
     "mapLegend": "Légende",
     "kmlFile": "{{layer}} (KML)",
+    "noRecordFoundWithResourceRegistered": "Aucune fiche trouvée avec une ou plusieurs couches WMS.",
+    "noRecordFoundWithResourceRegisteredmap": "Aucune fiche de métadonnée de carte trouvée.",
     "tmsLinkDetails": "Cette donnée est publiée dans le service de visualisation (TMS) disponible à l'adresse {{url}} avec l'identifiant {{layer}}.",
     "wmsLinkDetails": "Cette donnée est publiée dans le service de visualisation (WMS) disponible à l'adresse <a href='{{url}}'>{{url}}</a>, couche <strong>{{layer}}</strong>.",
     "wmsServiceLinkDetails": "Cette donnée est publiée dans le service de visualisation (WMS) disponible à l'adresse<a href='{{url}}' target='_blank'>{{url}}</a>.",
@@ -488,5 +490,7 @@
     "userSearchUpdateUrl": "Mise à jour de",
     "userSearchFeaturedDisplayInHomePage": "Page d'accueil",
     "userSearchUpdated": "Recherche utilisateur sauvegardée",
-    "userSearchUpdatedError": "Erreur lors de la sauvegarde de la recherche"
+    "userSearchUpdatedError": "Erreur lors de la sauvegarde de la recherche",
+    "seeDraft": "Cette fiche a une version brouillon en cours de rédaction. Cliquer ici pour la voir.",
+    "seeNoDraft": "Cette fiche a une version approuvée. Cliquer ici pour la voir."
 }

@@ -50,6 +50,8 @@
     "refresh": "새로고치기",
     "mapLegend": "범례",
     "kmlFile": "{{layer}} (KML)",
+    "noRecordFoundWithResourceRegistered": "No record found with one or more WMS layers registered.",
+    "noRecordFoundWithResourceRegisteredmap": "No record found with one or more maps registered.",
     "tmsLinkDetails": "이 데이터셋은 <a href='{{url}}' target='_blank'>{{url}}</a>에서 <strong>{{layer}}</strong> 레이어 이름으로 뷰 서비스 (TMS)에 발행됩니다.",
     "wmsLinkDetails": "이 데이터셋은 <a href='{{url}}' target='_blank'>{{url}}</a>에서 <strong>{{layer}}</strong> 레이어 이름으로 뷰 서비스 (WMS)에  발행됩니다.",
     "wmsServiceLinkDetails": "이 데이터셋은 <a href='{{url}}' target='_blank'>{{url}}</a>에서 뷰 서비스 (WMS)에 발행됩니다.",
@@ -488,5 +490,7 @@
     "userSearchUpdateUrl": "갱신",
     "userSearchFeaturedDisplayInHomePage": "홈 페이지",
     "userSearchUpdated": "사용자 검색을 저장하였습니다",
-    "userSearchUpdatedError": "사용자 검색을 저장하는 중 오류 발생"
+    "userSearchUpdatedError": "사용자 검색을 저장하는 중 오류 발생",
+    "seeDraft": "This record has a working copy version. Click here to see it.",
+    "seeNoDraft": "This record has an approved and published version. Click here to see it."
 }

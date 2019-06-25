@@ -45,7 +45,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.services.metadata.BatchOpsMetadataReindexer;
-import org.jdom.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -82,6 +81,17 @@ public class ValidateApi {
     @Autowired
     IProcessingReportRegistry registry;
 
+    @Autowired
+    IMetadataValidator validator;
+
+    @Autowired
+    AccessManager accessMan;
+
+    @Autowired
+    DataManager dataMan;
+
+    @Autowired
+    IMetadataUtils metadataRepository;
 
     @ApiOperation(value = "Validate one or more records",
         nickname = "validateRecords",
@@ -124,14 +134,10 @@ public class ValidateApi {
             new SimpleMetadataProcessingReport();
         try {
             ApplicationContext applicationContext = ApplicationContextHolder.get();
-            DataManager dataMan = applicationContext.getBean(DataManager.class);
-            AccessManager accessMan = applicationContext.getBean(AccessManager.class);
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-            IMetadataValidator validator = applicationContext.getBean(IMetadataValidator.class);
 
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, userSession);
 
-            final IMetadataUtils metadataRepository = applicationContext.getBean(IMetadataUtils.class);
             for (String uuid : records) {
                 if (!metadataRepository.existsMetadataUuid(uuid)) {
                     report.incrementNullRecords();
