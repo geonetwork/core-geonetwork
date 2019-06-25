@@ -31,11 +31,29 @@
    * All facet panel
    * @constructor
    */
-  var FacetsController = function() {
+  var FacetsController = function($scope) {
     this.fLvlCollapse = {};
+    this.currentFacet;
+    this.$scope = $scope;
+
+    $scope.$watch(
+      function() { return this.list}.bind(this),
+      function(newValue) {
+        if(!newValue) return;
+        if( this.lastUpdatedFacet && this.state[this.lastUpdatedFacet.name].length) {
+          this.list.forEach(function(f) {
+            if(f.name === this.lastUpdatedFacet.name) {
+              f.items = this.lastUpdatedFacet.items
+            }
+          }.bind(this))
+          this.lastUpdatedFacet = null
+        }
+      }.bind(this)
+    )
   };
 
   FacetsController.prototype.$onInit = function() {
+    this.state = this.lucene.facets || {}
   };
 
   FacetsController.prototype.collapseAll = function() {
@@ -49,6 +67,15 @@
     }.bind(this));
   };
 
+  FacetsController.prototype.updateSearch = function() {
+    this.lucene.facets = this.state
+    this.$scope.$emit('resetSearch', this.sParams);
+  };
+
+  FacetsController.$inject = [
+    '$scope'
+  ];
+
   module.directive('esFacets', [
     'gnFacetConfigService', 'gnLangs',
     function(gnFacetConfigService, gnLangs) {
@@ -60,6 +87,7 @@
         scope: {
           list: '<esFacets',
           sParams: '<params',
+          lucene: '<',
           type: '<facetType'
         },
         templateUrl: function(elem, attrs) {
@@ -82,29 +110,22 @@
   };
 
   FacetController.prototype.$onInit = function() {
+    this.facetsCtrl.state[this.facet.name] = this.state = this.facetsCtrl.state[this.facet.name] || [];
   };
 
   FacetController.prototype.filter = function(facet, item) {
-    var params = this.facetsCtrl.sParams;
-    var value = params[facet.name];
-    if(value) {
-      if(!angular.isArray(value)) {
-        params[facet.name] = [value];
-      }
+    var index = this.state.indexOf(item.name);
+    if(index > -1 ) {
+      this.state.splice(index, 1)
+    } else {
+      this.state.push(item.name)
     }
-    else {
-      params[facet.name] = [];
-    }
-    params[facet.name].push(item.name);
-    this.$scope.$emit('resetSearch', params);
+    this.facetsCtrl.lastUpdatedFacet = facet;
+    this.facetsCtrl.updateSearch();
   };
 
   FacetController.prototype.isInSearch = function(facet, item) {
-      var p = this.facetsCtrl.sParams[facet.name];
-      if (angular.isString(p)) {
-        p = [p];
-      }
-      return p && p.indexOf(item.name) >= 0;
+    return (this.facetsCtrl.state[facet.name].indexOf(item.name) >= 0)
   };
 
   FacetController.$inject = [

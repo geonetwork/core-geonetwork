@@ -58,6 +58,7 @@
     var self = this;
 
     var hiddenParams = $scope.searchObj.hiddenParams;
+    $scope.searchObj.lucene = {}
 
     /** State of the facets of the current search */
     $scope.currentFacets = [];
@@ -189,7 +190,7 @@
       var finalParams = angular.extend(params, hiddenParams);
       $scope.finalParams = finalParams;
 
-      var esParams = gnESService.convertLuceneParams(finalParams);
+      var esParams = gnESService.convertLuceneParams(finalParams, $scope.searchObj.lucene);
       gnESClient.search(esParams, $scope.searchResults.selectionBucket || 'metadata').then(function(data) {
         // data is not an object: this is an error
         if (typeof data !== 'object') {
@@ -298,18 +299,25 @@
      */
     if ($scope.searchObj.permalink) {
       var triggerSearchFn = self.triggerSearchFn;
-      var facetsParams;
 
       self.triggerSearch = function(keepPagination) {
         if (!keepPagination) {
           self.resetPagination();
         }
 
-        facetsParams = gnFacetService.getParamsFromFacets($scope.currentFacets);
         $scope.$broadcast('beforesearch');
+
         var params = angular.copy($scope.searchObj.params);
         cleanSearchParams(params);
-        angular.extend(params, facetsParams);
+
+        if($scope.searchObj.lucene.facets) {
+          var query_string = gnESService.facetsToLuceneQuery($scope.searchObj.lucene.facets);
+          if(query_string) {
+            params.query_string = query_string
+          } else {
+            delete params.query_string
+          }
+        }
 
         if (angular.equals(params, $location.search())) {
           triggerSearchFn(false);
@@ -326,11 +334,13 @@
         if (newUrl == gnSearchLocation.lastSearchUrl) return;
 
         var params = angular.copy($location.search());
-        gnFacetService.removeFacetsFromParams($scope.currentFacets, params);
 
-        for (var o in facetsParams) {
-          delete params[o];
+        if(params.query_string && !$scope.searchObj.lucene.facets) {
+          $scope.searchObj.lucene.facets = gnESService.luceneQueryToFacets(params.query_string);
         }
+        console.log($scope.searchObj.lucene)
+
+        // delete params.query_string
 
         $scope.searchObj.params = params;
         triggerSearchFn();
@@ -406,8 +416,8 @@
    *  * waitForUser: wait until a user id is available to trigger the search.
    */
   module.directive('ngSearchForm', [
-    'gnSearchLocation',
-    function(gnSearchLocation) {
+    'gnSearchLocation', 'gnESService',
+    function(gnSearchLocation, gnESService) {
       return {
         restrict: 'A',
         scope: true,
@@ -448,6 +458,11 @@
             if (scope.searchObj.permalink) {
               angular.extend(scope.searchObj.params,
                   gnSearchLocation.getParams());
+
+              if(scope.searchObj.params.query_string && !scope.searchObj.lucene.facets) {
+                scope.searchObj.lucene.facets = gnESService.luceneQueryToFacets(scope.searchObj.params.query_string);
+              }
+
             }
 
             if (attrs.waitForUser === "true") {

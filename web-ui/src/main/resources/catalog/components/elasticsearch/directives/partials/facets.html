@@ -15,7 +15,7 @@
   </div>
 
   <div data-ng-if="!isTabMode"
-       data-ng-repeat="facet in ctrl.list"
+       data-ng-repeat="facet in ctrl.list track by facet.name"
        class="gn-facet">
 
     <h4 data-gn-collapsible="ctrl.fLvlCollapse[facet.name]">

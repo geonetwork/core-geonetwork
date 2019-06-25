@@ -26,10 +26,20 @@
 
   var module = angular.module('gn_es_service', []);
 
-  module.service('gnESService', ['gnESFacet', function(gnESFacet) {
+  module.service('gnESService', ['gnESFacet', 'gnEsLuceneQueryParser', function(gnESFacet, gnEsLuceneQueryParser) {
 
-    this.convertLuceneParams = function(p) {
+
+    this.facetsToLuceneQuery = function(facetsState) {
+      return gnEsLuceneQueryParser.facetsToLuceneQuery(facetsState);
+    }
+
+    this.luceneQueryToFacets = function(query_string) {
+      return gnEsLuceneQueryParser.luceneQueryToFacets(query_string);
+    }
+
+    this.convertLuceneParams = function(p, luceneConfig) {
       var params = {};
+      var luceneQueryString = this.facetsToLuceneQuery(luceneConfig.facets);
       var query = {
         bool: {
           must: []
@@ -38,7 +48,7 @@
       var query_string;
 
       var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',
-        'sortBy', 'sortOrder', 'resultType', 'facet.q', 'any',
+        'sortBy', 'sortOrder', 'resultType', 'facet.q', 'any', 'geometry', 'query_string',
         'creationDateFrom', 'creationDateTo', 'dateFrom', 'dateTo'];
       var mappingFields = {
         title: 'resourceTitle',
@@ -53,9 +63,9 @@
       if(p.to) {
         params.size = p.to - p.from;
       }
-      if(p.any) {
+      if(p.any || luceneQueryString) {
         query_string = {
-          query: p.any
+          query: ((p.any || '') + ' ' + luceneQueryString).trim()
         };
       }
       if(p.sortBy) {
