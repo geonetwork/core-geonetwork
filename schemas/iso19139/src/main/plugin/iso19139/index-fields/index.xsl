@@ -946,6 +946,10 @@
         </xsl:if>
       </xsl:for-each>
 
+      <xsl:for-each select="gmd:parentIdentifier/gco:CharacterString">
+        <parentUuid><xsl:value-of select="."/></parentUuid>
+      </xsl:for-each>
+
       <!-- Index more fields in this element -->
       <xsl:apply-templates mode="index-extra-fields" select="."/>
     </doc>

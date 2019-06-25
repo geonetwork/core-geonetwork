@@ -26,6 +26,7 @@ package org.fao.geonet.api.records;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.searchbox.client.JestResult;
@@ -34,6 +35,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -64,6 +66,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -283,49 +286,23 @@ public class MetadataUtils {
     }
 
     /**
-     * Run an XML query and return a list of UUIDs.
+     * Run a Lucene query expression and return a list of UUIDs.
      *
-     * @param uuid  Metadata identifier
-     * @param query XML Request to run which will search for related metadata records to export
-     * @return List of related UUIDs to export
+     * @param query
+     * @return List of UUIDs to export
      */
-    public static Set<String> getUuidsToExport(String uuid,
-                                               HttpServletRequest request,
-                                               Element query) throws Exception {
+    public static Set<String> getUuidsToExport(String query) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
-// TODOES
-        throw new NotImplementedException("Not implemented in ES");
-//        ServiceContext context = ApiUtils.createServiceContext(request);
-//        ServiceConfig _config = new ServiceConfig();
-//        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-//
-//            Set<String> uuids = new HashSet<>();
-//
-//            // perform the search
-//            searcher.search(context, query, _config);
-//
-//            // If element type found, then get their uuid
-//            if (searcher.getSize() != 0) {
-//                Element elt = searcher.present(context, query, _config);
-//
-//                // Get ISO records only
-//                @SuppressWarnings("unchecked")
-//                List<Element> isoElt = elt.getChildren();
-//                for (Element md : isoElt) {
-//                    // -- Only metadata record should be processed
-//                    if (!md.getName().equals("summary")) {
-//                        String mdUuid = md.getChild(Edit.RootChild.INFO,
-//                            Edit.NAMESPACE).getChildText(Edit.Info.Elem.UUID);
-//                        if (Log.isDebugEnabled(Geonet.MEF))
-//                            Log.debug(Geonet.MEF, "    Adding: " + mdUuid);
-//                        uuids.add(mdUuid);
-//                    }
-//                }
-//            }
-//            Log.info(Geonet.MEF, "  Found " + uuids.size() + " record(s).");
-//            return uuids;
-//        }
+
+        Set<String> uuids = new HashSet<>();
+        final JestResult result = searchMan.query(query);
+        if (result.isSucceeded()) {
+            final JsonArray elements = result.getJsonObject().get("hits").getAsJsonObject().get("hits").getAsJsonArray();
+            elements.forEach(e -> uuids.add(e.getAsJsonObject().get("_source").getAsJsonObject().get(Geonet.IndexFieldNames.UUID).getAsString()));
+        }
+        Log.info(Geonet.MEF, "  Found " + uuids.size() + " record(s).");
+        return uuids;
     }
 
     /**

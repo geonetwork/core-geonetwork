@@ -438,30 +438,16 @@ public class MetadataApi {
             if (withRelated) {
                 // Adding children in MEF file
 
-                // Creating request for services search
-                Element childRequest = new Element("request");
-                childRequest.addContent(new Element("parentUuid").setText(metadataUuid));
-                childRequest.addContent(new Element("to").setText("1000"));
-
                 // Get children to export - It could be better to use GetRelated service TODO
                 Set<String> childs = MetadataUtils.getUuidsToExport(
-                    metadataUuid, request, childRequest);
+                    String.format("+%s:%s", Geonet.IndexFieldNames.PARENTUUID, metadataUuid));
                 if (childs.size() != 0) {
                     tmpUuid.addAll(childs);
                 }
 
-                // Creating request for services search
-                Element servicesRequest = new Element(Jeeves.Elem.REQUEST);
-                servicesRequest.addContent(new Element(
-                    org.fao.geonet.constants.Params.OPERATES_ON)
-                    .setText(metadataUuid));
-                servicesRequest.addContent(new Element(
-                    org.fao.geonet.constants.Params.TYPE)
-                    .setText("service"));
-
                 // Get linked services for export
                 Set<String> services = MetadataUtils.getUuidsToExport(
-                    metadataUuid, request, servicesRequest);
+                    String.format("+%s:%s", Geonet.IndexFieldNames.RECORDOPERATESON, metadataUuid));
                 if (services.size() != 0) {
                     tmpUuid.addAll(services);
                 }

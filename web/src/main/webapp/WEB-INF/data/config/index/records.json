@@ -1074,9 +1074,7 @@
         "type": "keyword"
       },
       "geom": {
-        "type": "geo_shape",
-        "tree": "quadtree",
-        "precision": "10km"
+        "type": "geo_shape"
       },
       "location": {
         "type": "geo_point"
@@ -1193,6 +1191,9 @@
         "type": "text"
       },
       "recordOperateOn": {
+        "type": "keyword"
+      },
+      "parentUuid": {
         "type": "keyword"
       },
       "resolutionDistance": {

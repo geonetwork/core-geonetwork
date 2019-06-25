@@ -23,6 +23,9 @@
 
 package org.fao.geonet.kernel.mef;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import io.searchbox.client.JestResult;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.lucene.document.Document;
@@ -39,6 +42,7 @@ import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataRelation;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
@@ -124,133 +128,69 @@ class MEF2Exporter {
             html.addContent(body);
             for (Object uuid1 : uuids) {
                 String uuid = (String) uuid1;
-//                final String cleanUUID = cleanForCsv(uuid);
-                // TODOES
-                throw new NotImplementedException("MEF2 not implemented in ES");
+                final String cleanUUID = cleanForCsv(uuid);
+
+                AbstractMetadata md = context.getBean(IMetadataUtils.class).findOneByUuid(uuid);
+
+                //Here we just care if we need the approved version explicitly.
+                //IMetadataUtils already filtered draft for non editors.
+                if(approved) {
+                    md = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
+                }
+                String id = String.valueOf(md.getId());
+
+                final JestResult result = searchManager.query("+id:" + id);
+
+                String mdSchema = null, mdTitle = null, mdAbstract = null, isHarvested = null;
+                MetadataType mdType = null;
+
+                JsonArray hits = result.getJsonObject().get("hits").getAsJsonObject().get("hits").getAsJsonArray();
+                final JsonObject source = hits.get(0).getAsJsonObject().get("_source").getAsJsonObject();
+                mdSchema = source.get(Geonet.IndexFieldNames.SCHEMA).getAsString();
+                mdTitle = source.get(Geonet.IndexFieldNames.RESOURCETITLE).getAsString();
+                mdAbstract = source.get(Geonet.IndexFieldNames.RESOURCEABSTRACT).getAsString();
+                isHarvested = source.get(Geonet.IndexFieldNames.IS_HARVESTED).getAsString();
+                mdType = MetadataType.lookup(source.get(Geonet.IndexFieldNames.IS_TEMPLATE).getAsString().charAt(0));
+
+                csvBuilder.append('"').
+                        append(cleanForCsv(mdSchema)).append("\";\"").
+                        append(cleanUUID).append("\";\"").
+                        append(cleanForCsv(id)).append("\";\"").
+                        append(mdType.toString()).append("\";\"").
+                        append(cleanForCsv(isHarvested)).append("\";\"").
+                        append(cleanForCsv(mdTitle)).append("\";\"").
+                        append(cleanForCsv(mdAbstract)).append("\"\n");
+
+                body.addContent(new Element("div").setAttribute("class", "entry").addContent(Arrays.asList(
+                    new Element("h4").setAttribute("class", "title").addContent(
+                        new Element("a").setAttribute("href", uuid).setText(cleanXml(mdTitle))),
+                    new Element("p").setAttribute("class", "abstract").setText(cleanXml(mdAbstract)),
+                    new Element("table").setAttribute("class", "table").addContent(Arrays.asList(
+                        new Element("thead").addContent(
+                            new Element("tr").addContent(Arrays.asList(
+                                new Element("th").setText("Internal ID"),
+                                new Element("th").setText("UUID"),
+                                new Element("th").setText("Type"),
+                                new Element("th").setText("Is harvested?")
+                            ))),
+                        new Element("tbody").addContent(
+                            new Element("tr").addContent(Arrays.asList(
+                                new Element("td").setAttribute("class", "id").setText(id),
+                                new Element("td").setAttribute("class", "uuid").setText(xmlContentEscaper().escape
+                                    (uuid)),
+                                new Element("td").setAttribute("class", "type").setText(mdType.toString()),
+                                new Element("td").setAttribute("class", "isHarvested").setText(isHarvested)
+                            )))
+                    ))
+                )));
+
+                createMetadataFolder(context, md, zipFs, skipUUID, stylePath,
+                    format, resolveXlink, removeXlinkAttribute, addSchemaLocation);
+
             }
+            Files.write(zipFs.getPath("/index.csv"), csvBuilder.toString().getBytes(Constants.CHARSET));
+            Files.write(zipFs.getPath("/index.html"), Xml.getString(html).getBytes(Constants.CHARSET));
         }
-//
-//                    IndexSearcher searcher = new IndexSearcher(indexReaderAndTaxonomy.indexReader);
-//                    BooleanQuery query = new BooleanQuery();
-//
-//                    AbstractMetadata md = context.getBean(IMetadataUtils.class).findOneByUuid(uuid);
-//
-//                    //Here we just care if we need the approved version explicitly.
-//                    //IMetadataUtils already filtered draft for non editors.
-//
-//                    if(approved) {
-//                    	md = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
-//                    }
-//                    String id = String.valueOf(md.getId());
-//
-//                    query.add(new BooleanClause(new TermQuery(new Term(LuceneIndexField.ID, id)), BooleanClause.Occur.MUST));
-//                    query.add(new BooleanClause(new TermQuery(new Term(LOCALE, contextLang)), BooleanClause.Occur.SHOULD));
-//                    TopDocs topDocs = searcher.search(query, NoFilterFilter.instance(), 5);
-//                    String mdSchema = null, mdTitle = null, mdAbstract = null, isHarvested = null;
-//                    MetadataType mdType = null;
-//
-//                    for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
-//                        Document doc = searcher.doc(scoreDoc.doc);
-//                        String locale = doc.get(Geonet.IndexFieldNames.LOCALE);
-//                        if (mdSchema == null) {
-//                            mdSchema = doc.get(Geonet.IndexFieldNames.SCHEMA);
-//                        }
-//                        if (mdTitle == null || contextLang.equals(locale)) {
-//                            mdTitle = doc.get(LuceneIndexField.TITLE);
-//                        }
-//                        if (mdAbstract == null || contextLang.equals(locale)) {
-//                            mdAbstract = doc.get(LuceneIndexField.ABSTRACT);
-//                        }
-//                        if (isHarvested == null) {
-//                            isHarvested = doc.get(Geonet.IndexFieldNames.IS_HARVESTED);
-//                        }
-//                        if (mdType == null) {
-//                            String tmp = doc.get(LuceneIndexField.IS_TEMPLATE);
-//                            mdType = MetadataType.lookup(tmp.charAt(0));
-//                        }
-//
-//                    }
-//
-//                    if (mdType == null) {
-//                        mdType = MetadataType.METADATA;
-//                    }
-//					csvBuilder.append('"').append(cleanForCsv(mdSchema)).append("\";\"").
-//                        append(cleanUUID).append("\";\"").
-//                        append(cleanForCsv(id)).append("\";\"").
-//                        append(mdType.toString()).append("\";\"").
-//                        append(cleanForCsv(isHarvested)).append("\";\"").
-//                        append(cleanForCsv(mdTitle)).append("\";\"").
-//                        append(cleanForCsv(mdAbstract)).append("\"\n");
-//
-//                    body.addContent(new Element("div").setAttribute("class", "entry").addContent(Arrays.asList(
-//                        new Element("h4").setAttribute("class", "title").addContent(
-//                            new Element("a").setAttribute("href", uuid).setText(cleanXml(mdTitle))),
-//                        new Element("p").setAttribute("class", "abstract").setText(cleanXml(mdAbstract)),
-//                        new Element("table").setAttribute("class", "table").addContent(Arrays.asList(
-//                            new Element("thead").addContent(
-//                                new Element("tr").addContent(Arrays.asList(
-//                                    new Element("th").setText("ID"),
-//                                    new Element("th").setText("UUID"),
-//                                    new Element("th").setText("Type"),
-//                                    new Element("th").setText("isHarvested")
-//                                ))),
-//                            new Element("tbody").addContent(
-//                                new Element("tr").addContent(Arrays.asList(
-//                                    new Element("td").setAttribute("class", "id").setText(id),
-//                                    new Element("td").setAttribute("class", "uuid").setText(xmlContentEscaper().escape
-//                                        (uuid)),
-//                                    new Element("td").setAttribute("class", "type").setText(mdType.toString()),
-//                                    new Element("td").setAttribute("class", "isHarvested").setText(isHarvested)
-//                                )))
-//                        ))
-//                    )));
-//                    csvBuilder.append('"').append(cleanForCsv(mdSchema)).append("\";\"").
-//                    append(cleanUUID).append("\";\"").
-//                    append(cleanForCsv(id)).append("\";\"").
-//                    append(mdType.toString()).append("\";\"").
-//                    append(cleanForCsv(isHarvested)).append("\";\"").
-//                    append(cleanForCsv(mdTitle)).append("\";\"").
-//                    append(cleanForCsv(mdAbstract)).append("\"\n");
-//
-//                    body.addContent(new Element("div").setAttribute("class", "entry").addContent(Arrays.asList(
-//                        new Element("h4").setAttribute("class", "title").addContent(
-//                            new Element("a").setAttribute("href", uuid).setText(cleanXml(mdTitle))),
-//                        new Element("p").setAttribute("class", "abstract").setText(cleanXml(mdAbstract)),
-//                        new Element("table").setAttribute("class", "table").addContent(Arrays.asList(
-//                            new Element("thead").addContent(
-//                                new Element("tr").addContent(Arrays.asList(
-//                                    new Element("th").setText("ID"),
-//                                    new Element("th").setText("UUID"),
-//                                    new Element("th").setText("Type"),
-//                                    new Element("th").setText("isHarvested")
-//                                ))),
-//                            new Element("tbody").addContent(
-//                                new Element("tr").addContent(Arrays.asList(
-//                                    new Element("td").setAttribute("class", "id").setText(id),
-//                                    new Element("td").setAttribute("class", "uuid").setText(xmlContentEscaper().escape
-//                                        (uuid)),
-//                                    new Element("td").setAttribute("class", "type").setText(mdType.toString()),
-//                                    new Element("td").setAttribute("class", "isHarvested").setText(isHarvested)
-//                                )))
-//                        ))
-//                    )));
-//                    createMetadataFolder(context, md, zipFs, skipUUID, stylePath,
-//                    format, resolveXlink, removeXlinkAttribute, addSchemaLocation);                } catch (Throwable t) {
-//                    if (skipError) {
-//                        Log.error(Geonet.MEF, "Error exporting metadata to MEF file: " + uuid1, t);
-//                    } else {
-//                        if (t instanceof RuntimeException) {
-//                            throw (RuntimeException) t;
-//                        }
-//                        throw new RuntimeException(t);
-//                    }
-//                }
-//                }
-//            }
-//            Files.write(zipFs.getPath("/index.csv"), csvBuilder.toString().getBytes(Constants.CHARSET));
-//            Files.write(zipFs.getPath("/index.html"), Xml.getString(html).getBytes(Constants.CHARSET));
-//        }
-//        return file;
         return file;
     }
 

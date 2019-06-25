@@ -647,9 +647,8 @@ public final class Geonet {
         public static final String SOURCE = "_source";
         public static final String IS_TEMPLATE = "isTemplate";
         public static final String UUID = "uuid";
-        public static final String IS_HARVESTED = "_isHarvested";
-        public static final String OWNER = "_owner";
-        public static final String DUMMY = "_dummy";
+        public static final String IS_HARVESTED = "isHarvested";
+        public static final String OWNER = "owner";
         public static final String POPULARITY = "_popularity";
         public static final String RATING = "_rating";
         public static final String DISPLAY_ORDER = "_displayOrder";
@@ -672,5 +671,7 @@ public final class Geonet {
         public static final String DRAFT = "draft";
         public static final String RESOURCETITLE = "resourceTitle";
         public static final String RESOURCEABSTRACT = "resourceAbstract";
+        public static final String PARENTUUID = "parentUuid";
+        public static final String RECORDOPERATESON = "recordOperateOn";
     }
 }
