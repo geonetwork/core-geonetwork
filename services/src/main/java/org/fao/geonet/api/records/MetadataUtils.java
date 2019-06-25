@@ -26,16 +26,12 @@ package org.fao.geonet.api.records;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import io.searchbox.client.JestResult;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.lang.NotImplementedException;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -56,7 +52,6 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -263,20 +258,20 @@ public class MetadataUtils {
             Log.debug(Geonet.SEARCH_ENGINE, "Searching for: " + type);
 
         // TODOES Limit fields in the response
-        final JestResult jestResult = searchMan.query(
+        final SearchResponse result = searchMan.query(
             String.format("+%s:%s", relatedIndexFields.get(type), uuid), documentFields);
 
         Element typeResponse = new Element(type);
-        if (jestResult.isSucceeded()) {
+        if (result.getHits().getTotalHits().value > 0) {
             // Build the old search service response format
             Element response = new Element("response");
-            jestResult.getJsonObject().get("hits").getAsJsonObject().get("hits").getAsJsonArray().forEach(e -> {
+            Arrays.asList(result.getHits().getHits()).forEach(e -> {
                 Element record = new Element("metadata");
-                final JsonObject source = e.getAsJsonObject().get("_source").getAsJsonObject();
-                record.addContent(new Element("id").setText(source.get(Geonet.IndexFieldNames.ID).getAsString()));
-                record.addContent(new Element("uuid").setText(source.get(Geonet.IndexFieldNames.UUID).getAsString()));
-                record.addContent(new Element("title").setText(source.get(Geonet.IndexFieldNames.RESOURCETITLE).getAsString()));
-                record.addContent(new Element("abstract").setText(source.get(Geonet.IndexFieldNames.RESOURCEABSTRACT).getAsString()));
+                final Map<String, Object> source = e.getSourceAsMap();
+                record.addContent(new Element("id").setText((String)source.get(Geonet.IndexFieldNames.ID)));
+                record.addContent(new Element("uuid").setText((String)source.get(Geonet.IndexFieldNames.UUID)));
+                record.addContent(new Element("title").setText((String)source.get(Geonet.IndexFieldNames.RESOURCETITLE)));
+                record.addContent(new Element("abstract").setText((String)source.get(Geonet.IndexFieldNames.RESOURCEABSTRACT)));
                 response.addContent(record);
             });
             typeResponse.addContent(response);
@@ -296,10 +291,12 @@ public class MetadataUtils {
         EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
 
         Set<String> uuids = new HashSet<>();
-        final JestResult result = searchMan.query(query);
-        if (result.isSucceeded()) {
-            final JsonArray elements = result.getJsonObject().get("hits").getAsJsonObject().get("hits").getAsJsonArray();
-            elements.forEach(e -> uuids.add(e.getAsJsonObject().get("_source").getAsJsonObject().get(Geonet.IndexFieldNames.UUID).getAsString()));
+        Set<String> field = new HashSet<>(1);
+        field.add(Geonet.IndexFieldNames.UUID);
+        final SearchResponse result = searchMan.query(query);
+        if (result.getHits().getTotalHits().value > 0) {
+            final SearchHit[] elements = result.getHits().getHits();
+            Arrays.asList(elements).forEach(e -> uuids.add((String) e.getSourceAsMap().get(Geonet.IndexFieldNames.UUID)));
         }
         Log.info(Geonet.MEF, "  Found " + uuids.size() + " record(s).");
         return uuids;

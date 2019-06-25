@@ -22,7 +22,6 @@
  */
 package org.fao.geonet.index.es;
 
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.index.IServerStatusChecker;
 import org.fao.geonet.index.State;
 import org.fao.geonet.index.Status;
@@ -49,7 +48,7 @@ public class EsServerStatusChecker
     }
 
     @Autowired
-    EsClient client;
+    EsRestClient client;
 
     @Override
     public Status checkState() {
@@ -79,7 +78,7 @@ public class EsServerStatusChecker
 
     @Override
     public Status checkIndexState() {
-        if(!indexChecked) {
+        if (!indexChecked) {
 
             indexChecked = true;
         }
@@ -90,6 +89,7 @@ public class EsServerStatusChecker
     public Status getStatus() {
         return status;
     }
+
     public void setStatus(Status status) {
         this.status = status;
     }

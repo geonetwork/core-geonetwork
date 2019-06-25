@@ -24,18 +24,12 @@
 package org.fao.geonet.monitor.health;
 
 import com.yammer.metrics.core.HealthCheck;
-import io.searchbox.core.Search;
-import io.searchbox.core.SearchResult;
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
+import org.elasticsearch.action.search.SearchResponse;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 /**
  * Checks to ensure that the Elasticsearch index is up and running.
@@ -48,16 +42,11 @@ public class IndexHealthCheck implements HealthCheckFactory {
                 try {
                     ApplicationContext applicationContext = ApplicationContextHolder.get();
                     EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
-
-                    Search search = new Search.Builder("")
-                        .addIndex(searchMan.getDefaultIndex())
-                        .build();
-                    final SearchResult result = searchMan.getClient().getClient().execute(search);
-
-                    if (result.isSucceeded()) {
+                    final SearchResponse result = searchMan.query("*");
+                    if (result.status().getStatus() == 200) {
                         return Result.healthy(String.format(
                             "%s records indexed in remote index currently.",
-                            result.getJsonObject().get("hits").getAsJsonObject().get("total").getAsJsonObject().get("value").getAsLong()
+                            result.getHits().getTotalHits().value
                         ));
                     } else {
                         return Result.unhealthy(

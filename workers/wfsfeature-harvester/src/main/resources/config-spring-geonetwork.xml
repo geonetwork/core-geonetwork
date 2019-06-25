@@ -51,8 +51,6 @@
     <property name="numberOfDecimals" value="\${es.index.features.numberOfDecimals}"/>
   </bean>
 
-  <bean id="esClient"
-        class="org.fao.geonet.index.es.EsClient"/>
 
 
   <cm:camelContext id="harvest-wfs"

@@ -23,19 +23,9 @@
 
 package org.fao.geonet.kernel.mef;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import io.searchbox.client.JestResult;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.lang.NotImplementedException;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopDocs;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.ZipUtil;
@@ -62,11 +52,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
 import static org.fao.geonet.Constants.CHARSET;
-import static org.fao.geonet.constants.Geonet.IndexFieldNames.LOCALE;
 import static org.fao.geonet.kernel.mef.MEFConstants.*;
 
 class MEF2Exporter {
@@ -80,9 +70,9 @@ class MEF2Exporter {
     public static Path doExport(ServiceContext context, Set<String> uuids,
                                 Format format, boolean skipUUID, Path stylePath, boolean resolveXlink,
                                 boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation) throws Exception {
-    	return doExport(context, uuids, format, skipUUID, stylePath, resolveXlink, removeXlinkAttribute, skipError, addSchemaLocation, false);
+        return doExport(context, uuids, format, skipUUID, stylePath, resolveXlink, removeXlinkAttribute, skipError, addSchemaLocation, false);
     }
-    
+
     /**
      * Create a MEF2 file in ZIP format.
      *
@@ -134,32 +124,32 @@ class MEF2Exporter {
 
                 //Here we just care if we need the approved version explicitly.
                 //IMetadataUtils already filtered draft for non editors.
-                if(approved) {
+                if (approved) {
                     md = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
                 }
                 String id = String.valueOf(md.getId());
 
-                final JestResult result = searchManager.query("+id:" + id);
+                final SearchResponse result = searchManager.query("+id:" + id);
 
                 String mdSchema = null, mdTitle = null, mdAbstract = null, isHarvested = null;
                 MetadataType mdType = null;
 
-                JsonArray hits = result.getJsonObject().get("hits").getAsJsonObject().get("hits").getAsJsonArray();
-                final JsonObject source = hits.get(0).getAsJsonObject().get("_source").getAsJsonObject();
-                mdSchema = source.get(Geonet.IndexFieldNames.SCHEMA).getAsString();
-                mdTitle = source.get(Geonet.IndexFieldNames.RESOURCETITLE).getAsString();
-                mdAbstract = source.get(Geonet.IndexFieldNames.RESOURCEABSTRACT).getAsString();
-                isHarvested = source.get(Geonet.IndexFieldNames.IS_HARVESTED).getAsString();
-                mdType = MetadataType.lookup(source.get(Geonet.IndexFieldNames.IS_TEMPLATE).getAsString().charAt(0));
+                SearchHit[] hits = result.getHits().getHits();
+                final Map<String, Object> source = hits[0].getSourceAsMap();
+                mdSchema = (String) source.get(Geonet.IndexFieldNames.SCHEMA);
+                mdTitle = (String) source.get(Geonet.IndexFieldNames.RESOURCETITLE);
+                mdAbstract = (String) source.get(Geonet.IndexFieldNames.RESOURCEABSTRACT);
+                isHarvested = (String) source.get(Geonet.IndexFieldNames.IS_HARVESTED);
+                mdType = MetadataType.lookup(((String) source.get(Geonet.IndexFieldNames.IS_TEMPLATE)).charAt(0));
 
                 csvBuilder.append('"').
-                        append(cleanForCsv(mdSchema)).append("\";\"").
-                        append(cleanUUID).append("\";\"").
-                        append(cleanForCsv(id)).append("\";\"").
-                        append(mdType.toString()).append("\";\"").
-                        append(cleanForCsv(isHarvested)).append("\";\"").
-                        append(cleanForCsv(mdTitle)).append("\";\"").
-                        append(cleanForCsv(mdAbstract)).append("\"\n");
+                    append(cleanForCsv(mdSchema)).append("\";\"").
+                    append(cleanUUID).append("\";\"").
+                    append(cleanForCsv(id)).append("\";\"").
+                    append(mdType.toString()).append("\";\"").
+                    append(cleanForCsv(isHarvested)).append("\";\"").
+                    append(cleanForCsv(mdTitle)).append("\";\"").
+                    append(cleanForCsv(mdAbstract)).append("\"\n");
 
                 body.addContent(new Element("div").setAttribute("class", "entry").addContent(Arrays.asList(
                     new Element("h4").setAttribute("class", "title").addContent(

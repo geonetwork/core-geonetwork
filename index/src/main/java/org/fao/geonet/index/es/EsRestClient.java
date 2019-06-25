@@ -36,6 +36,8 @@ import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequest;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -81,6 +83,15 @@ public class EsRestClient implements InitializingBean {
     @Value("${es.url}")
     private String serverUrl;
 
+    @Value("${es.protocol}")
+    private String serverProtocol;
+
+    @Value("${es.host}")
+    private String serverHost;
+
+    @Value("${es.port}")
+    private String serverPort;
+
     @Value("${es.username}")
     private String username;
 
@@ -112,7 +123,7 @@ public class EsRestClient implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         if (StringUtils.isNotEmpty(serverUrl)) {
-            RestClientBuilder builder = RestClient.builder(new HttpHost("localhost", 9200, "http"));
+            RestClientBuilder builder = RestClient.builder(new HttpHost(serverHost, Integer.parseInt(serverPort), serverProtocol));
 
             if (serverUrl.startsWith("https://")) {
                 SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(
@@ -441,7 +452,11 @@ public class EsRestClient implements InitializingBean {
     }
 
     // TODO: check index exist too
-    public boolean getServerStatus() throws Exception {
-        return getClient().ping(RequestOptions.DEFAULT);
+    public String getServerStatus() throws Exception {
+        ClusterHealthRequest request = new ClusterHealthRequest();
+        ClusterHealthResponse response = client.cluster().health(request, RequestOptions.DEFAULT);
+
+        return response.getStatus().toString();
+//        return getClient().ping(RequestOptions.DEFAULT);
     }
 }

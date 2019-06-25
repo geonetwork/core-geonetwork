@@ -81,7 +81,7 @@
   </bean>
 
   <bean id="esClient"
-        class="org.fao.geonet.index.es.EsClient"/>
+        class="org.fao.geonet.index.es.EsRestClient"/>
 
   <bean id="forceInitRepositoriesForTestingBean"
         class="org.fao.geonet.kernel.ForceInitRepositoriesForTestingBean" lazy-init="false"/>

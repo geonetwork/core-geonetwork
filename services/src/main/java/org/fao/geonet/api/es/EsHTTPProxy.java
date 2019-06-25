@@ -48,7 +48,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.Source;
-import org.fao.geonet.index.es.EsClient;
+import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.repository.SourceRepository;
@@ -107,7 +107,7 @@ public class EsHTTPProxy {
     private String defaultIndex;
 
     @Autowired
-    private EsClient client;
+    private EsRestClient client;
 
     @Autowired
     AccessManager accessManager;
