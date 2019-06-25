@@ -104,7 +104,7 @@
           // or by duplicating an existing record
           var query = [];
           if ($routeParams.childOf || $routeParams.from) {
-            query.push({"terms": {"id": ($routeParams.childOf || $routeParams.from)}});
+            query.push({"term": {"id": ($routeParams.childOf || $routeParams.from)}});
           } else {
             query.push({"terms": {"isTemplate": ["y"]}});
           }
