@@ -28,40 +28,41 @@ import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 /**
  * Checks to ensure that the Elasticsearch index is up and running.
  */
 public class IndexHealthCheck implements HealthCheckFactory {
-
-    @Autowired
-    EsSearchManager searchMan;
-
     public HealthCheck create(final ServiceContext context) {
         return new HealthCheck(this.getClass().getSimpleName()) {
             @Override
             protected Result check() {
                 try {
+                    ApplicationContext applicationContext = ApplicationContextHolder.get();
+                    EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
+
                     Search search = new Search.Builder("")
                         .addIndex(searchMan.getDefaultIndex())
-                        .addType(searchMan.getIndexType())
                         .build();
                     final SearchResult result = searchMan.getClient().getClient().execute(search);
 
                     if (result.isSucceeded()) {
                         return Result.healthy(String.format(
-                            "%s records indexed in remote index currently.", result.getTotal()
+                            "%s records indexed in remote index currently.",
+                            result.getJsonObject().get("hits").getAsJsonObject().get("total").getAsJsonObject().get("value").getAsLong()
                         ));
                     } else {
                         return Result.unhealthy(
                             "Index storing records is not available currently. " +
-                                "This component is only required if you use WFS features indexing " +
-                                "and dashboards.");
+                                "This component is required. Check your installation.");
                     }
                 } catch (Throwable e) {
                     return Result.unhealthy(e);
