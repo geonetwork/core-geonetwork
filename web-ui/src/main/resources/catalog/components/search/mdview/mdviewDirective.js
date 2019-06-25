@@ -87,7 +87,8 @@
                       "min_term_freq" : 1,
                       "max_query_terms" : 12
                     }},
-                    {"terms": {"isTemplate": ["n"]}} // TODO: We may want to use it for subtemplate
+                    {"terms": {"isTemplate": ["n"]}}, // TODO: We may want to use it for subtemplate
+                    {"terms": {"draft": ["n", "e"]}}
                 ]}
               }
             }).then(function (r) {
