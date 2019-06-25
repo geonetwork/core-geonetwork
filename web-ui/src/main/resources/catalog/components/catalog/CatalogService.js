@@ -761,28 +761,27 @@
         if (this.linksCache[key] && !groupId) {
           return this.linksCache[key];
         }
-        // angular.forEach(this.link, function(link) {
-        //   var linkInfo = formatLink(link);
-        //   if (types.length > 0) {
-        //     types.forEach(function(type) {
-        //       if (type.substr(0, 1) == '#') {
-        //         if (linkInfo.protocol == type.substr(1, type.length - 1) &&
-        //             (!groupId || groupId == linkInfo.group)) {
-        //           ret.push(linkInfo);
-        //         }
-        //       }
-        //       else {
-        //         if (linkInfo.protocol.toLowerCase().indexOf(
-        //             type.toLowerCase()) >= 0 &&
-        //             (!groupId || groupId == linkInfo.group)) {
-        //           ret.push(linkInfo);
-        //         }
-        //       }
-        //     });
-        //   } else {
-        //     ret.push(linkInfo);
-        //   }
-        // });
+        angular.forEach(this.link, function(link) {
+          if (types.length > 0) {
+            types.forEach(function(type) {
+              if (type.substr(0, 1) == '#') {
+                if (link.protocol == type.substr(1, type.length - 1) &&
+                    (!groupId || groupId == link.group)) {
+                  ret.push(link);
+                }
+              }
+              else {
+                if (link.protocol.toLowerCase().indexOf(
+                    type.toLowerCase()) >= 0 &&
+                    (!groupId || groupId == link.group)) {
+                  ret.push(link);
+                }
+              }
+            });
+          } else {
+            ret.push(link);
+          }
+        });
         this.linksCache[key] = ret;
         return ret;
       },
