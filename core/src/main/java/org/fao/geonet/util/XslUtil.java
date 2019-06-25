@@ -58,6 +58,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.Translator;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -85,6 +86,7 @@ import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.client.ClientHttpResponse;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -103,10 +105,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -519,18 +523,20 @@ public final class XslUtil {
         String id = uuid.toString();
         String fieldname = field.toString();
         String language = (lang.toString().equals("") ? null : lang.toString());
-        throw new NotImplementedException("getIndexField not implemented in ES");
-//        try {
-//            String fieldValue = LuceneSearcher.getMetadataFromIndex(language, id, fieldname);
-//            if (fieldValue == null) {
-//                return getIndexFieldById(appName, uuid, field, lang);
-//            } else {
-//                return fieldValue;
-//            }
-//        } catch (Exception e) {
-//            Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
-//            return "";
-//        }
+        final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+        final EsSearchManager searchManager = applicationContext.getBean(EsSearchManager.class);
+
+        try {
+            Set<String> fields = new HashSet<>();
+            fields.add(fieldname);
+            // TODO: Multilingual fields
+            final Map<String, String> values = searchManager.getFieldsValues(id, fields);
+            return values.get(fieldname);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
+        }
+        return "";
     }
 
     public static String getIndexFieldById(Object appName, Object id, Object field, Object lang) {

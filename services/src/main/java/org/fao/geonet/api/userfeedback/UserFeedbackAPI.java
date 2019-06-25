@@ -611,7 +611,7 @@ public class UserFeedbackAPI {
             }
         }
 
-        String title = XslUtil.getIndexField(null, metadataUuid, "title", "");
+        String title = XslUtil.getIndexField(null, metadataUuid, "resourceTitle", "");
 
         MailUtil.sendMail(toAddress,
             String.format(

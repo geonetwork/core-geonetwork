@@ -53,6 +53,7 @@ import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -279,7 +280,7 @@ public class EsClient implements InitializingBean {
             return result;
         } else {
             throw new IOException(String.format(
-                "Error during removal. Errors is '%s'.", result.getErrorMessage()
+                "Error during querying index. Errors is '%s'.", result.getErrorMessage()
             ));
         }
     }
@@ -305,6 +306,48 @@ public class EsClient implements InitializingBean {
             ));
         }
     }
+
+    /**
+     * Query the index for a specific record and return values for a set of fields.
+     *
+     */
+    public Map<String, String> getFieldsValues(String index, String id, Set<String> fields) throws IOException {
+        if (!activated) {
+            return null;
+        }
+
+        // TODOES: Add permission if index is gn-records
+        // See EsHTTPProxy#addUserInfo
+        String searchQuery = "{\"query\": {\"query_string\": {" +
+            "\"query\": \"_id:" + id + " uuid:" + id + "\"" +
+            "}}}";
+
+        Search.Builder searchBuilder = new Search.Builder(searchQuery)
+            .addIndex(index);
+        fields.forEach(f -> searchBuilder.addSourceIncludePattern(f));
+        Search search = searchBuilder.build();
+
+
+        Map<String, String> fieldValues = new HashMap<>(fields.size());
+        try {
+            final JestResult result = client.execute(search);
+            if (result.isSucceeded()) {
+                final JsonArray elements = result.getJsonObject().get("hits").getAsJsonObject().get("hits").getAsJsonArray();
+                fields.forEach(f -> fieldValues.put(f, elements.get(0).getAsJsonObject().get("_source").getAsJsonObject().get(f).getAsString()));
+
+            } else {
+                throw new IOException(String.format(
+                    "Error during fields value retrival. Errors is '%s'.", result.getErrorMessage()
+                ));
+            }
+        } catch (IOException e) {
+            throw new IOException(String.format(
+                "Error during fields value retrival. Errors is '%s'.", e.getMessage()
+            ));
+        }
+        return fieldValues;
+    }
+
 
     /**
      * Analyze a field and a value against the index
@@ -381,4 +424,5 @@ public class EsClient implements InitializingBean {
         JestResult result = getClient().execute(new Health.Builder().build());
         return result.getJsonObject().get("status").getAsString();
     }
+
 }
