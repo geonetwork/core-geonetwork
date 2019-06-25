@@ -665,7 +665,7 @@ public class EsSearchManager implements ISearchManager {
             "}", query);
         Search search = new Search.Builder(searchQuery).addIndex(defaultIndex).build();
         SearchResult searchResult = client.getClient().execute(search);
-        return searchResult.getTotal();
+        return searchResult.getJsonObject().get("hits").getAsJsonObject().get("total").getAsJsonObject().get("value").getAsLong();
     }
 
 //    public List<FacetField.Count> getDocFieldValues(String indexField,
