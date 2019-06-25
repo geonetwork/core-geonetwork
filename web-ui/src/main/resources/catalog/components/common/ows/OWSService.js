@@ -91,10 +91,13 @@
       'gnUrlUtils', 'gnGlobalSettings',
       function($http, $q, $translate,
                gnUrlUtils, gnGlobalSettings) {
-
-        var displayFileContent = function(data) {
-          var parser = new ol.format.WMSCapabilities();
-          var result = parser.read(data);
+        var cachedGetCapabilitiesUrls = {};
+        var displayFileContent = function(data, getCapabilitiesUrl) {
+          if (!cachedUrls.hasOwnProperty(getCapabilitiesUrl)) {
+            var parser = new ol.format.WMSCapabilities();
+            cachedGetCapabilitiesUrls[getCapabilitiesUrl] = parser.read(data);
+          }
+          var result = cachedGetCapabilitiesUrls[getCapabilitiesUrl];
 
           var layers = [];
           var url = result.Capability.Request.GetMap.
@@ -269,7 +272,7 @@
                 })
                     .success(function(data) {
                       try {
-                        defer.resolve(displayFileContent(data));
+                        defer.resolve(displayFileContent(data, url));
                       } catch (e) {
                         defer.reject(
                         $translate.instant('failedToParseCapabilities'));
