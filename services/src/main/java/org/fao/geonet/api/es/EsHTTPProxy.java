@@ -36,8 +36,9 @@ import io.swagger.annotations.ApiOperation;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
-
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Constants;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.constants.Edit;
@@ -46,23 +47,40 @@ import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.index.es.EsClient;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.repository.SourceRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.DeflaterInputStream;
 import java.util.zip.DeflaterOutputStream;
@@ -79,6 +97,8 @@ import java.util.zip.GZIPOutputStream;
     description = "Proxy for ElasticSearch catalog search operations")
 @Controller
 public class EsHTTPProxy {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.INDEX_ENGINE);
+
     public static final String[] _validContentTypes = {
         "application/json", "text/plain"
     };
@@ -92,6 +112,12 @@ public class EsHTTPProxy {
     @Autowired
     AccessManager accessManager;
 
+    @Autowired
+    NodeInfo node;
+
+    @Autowired
+    SourceRepository sourceRepository;
+    
     public EsHTTPProxy() {
     }
 
@@ -103,7 +129,7 @@ public class EsHTTPProxy {
     @ResponseBody
     public void handlePOSTMetadata(
         @RequestParam(defaultValue = SelectionManager.SELECTION_METADATA)
-        String bucket,
+            String bucket,
         @PathVariable String endPoint,
         @ApiIgnore
             HttpSession httpSession,
@@ -139,7 +165,7 @@ public class EsHTTPProxy {
                                   JsonNode esQuery) throws Exception {
 
         // Build filter node
-        String esFilter = buildQueryFilter(context,  "metadata");
+        String esFilter = buildQueryFilter(context, "metadata");
         JsonNode nodeFilter = objectMapper.readTree(esFilter);
 
         JsonNode queryNode = esQuery.get("query");
@@ -182,11 +208,29 @@ public class EsHTTPProxy {
      * Add search privilege criteria to a query.
      */
     private String buildQueryFilter(ServiceContext context, String type) throws Exception {
-        // https://github.com/geonetwork/core-geonetwork/blob/master/core/src/main/java/org/fao/geonet/kernel/search/LuceneQueryBuilder.java#L1000
-        // TODOES buildPortalFilter
-        return String.format(filterTemplate,
-            buildPermissionsFilter(context));
+        StringBuilder query = new StringBuilder();
+        query.append(buildPermissionsFilter(context).trim());
+        final String portalFilter = buildPortalFilter();
+        if (!"".equals(portalFilter)) {
+            query.append(" ").append(portalFilter);
+        }
+        return String.format(filterTemplate, query);
 
+    }
+
+    private String buildPortalFilter() {
+        // If the requested portal define a filter
+        // Add it to the request.
+        if (node != null && !NodeInfo.DEFAULT_NODE.equals(node.getId())) {
+            final Source portal = sourceRepository.findOne(node.getId());
+            if (portal == null) {
+                LOGGER.warn("Null portal " + node);
+            } else if (StringUtils.isNotEmpty(portal.getFilter())) {
+                LOGGER.debug("Applying portal filter: {}", portal.getFilter());
+                return portal.getFilter();
+            }
+        }
+        return "";
     }
 
 
@@ -355,6 +399,7 @@ public class EsHTTPProxy {
         final JsonNode sub = node.get(name);
         return sub != null ? sub.asText() : null;
     }
+
     private static String getSourceString(ObjectNode node, String name) {
         final JsonNode sub = node.get("_source").get(name);
         return sub != null ? sub.asText() : null;
