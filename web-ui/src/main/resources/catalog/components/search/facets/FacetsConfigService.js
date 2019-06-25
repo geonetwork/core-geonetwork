@@ -42,8 +42,8 @@
             return;
           }
           if (!data.data.hasOwnProperty(summaryType)) {
-            alert('ERROR: The config-summary.xml file does ' +
-                "not declare a summary type of: '" + summaryType + "'");
+            // alert('ERROR: The config-summary.xml file does ' +
+            //     "not declare a summary type of: '" + summaryType + "'");
           }
           return data.data[summaryType];
         });
