@@ -7,7 +7,7 @@
     <a data-ng-if="mdView.current.record.draft == 'e'"
       class="see-draft see-draft-not-approved"
       title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
-      data-ng-href="#/metadraf/{{md.getUuid()}}"
+      data-ng-href="#/metadraf/{{md.uuid}}"
       data-ng-show="user.canEditRecord(mdView.current.record)">
       {{'seeDraft' | translate}}
     </a>

@@ -193,7 +193,7 @@
                       //and the trace of where in the search result we are
                       // TODOES: Review
                       that.feedMd(gnMdViewObj.current.index, 
-                          data.metadata[i], gnMdViewObj.records);
+                          data.metadata[0], gnMdViewObj.records);
                     } else {
                       gnMdViewObj.loadDetailsFinished = true;
                     }
