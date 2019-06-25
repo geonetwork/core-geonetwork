@@ -26,21 +26,26 @@ package org.fao.geonet.harvester.wfsfeatures;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONObject;
-import org.apache.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
-import org.fao.geonet.index.es.EsClient;
 import org.fao.geonet.harvester.wfsfeatures.event.WFSHarvesterEvent;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.harvester.wfsfeatures.worker.EsWFSFeatureIndexer;
 import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder;
+import org.fao.geonet.index.es.EsRestClient;
 import org.geonetwork.messaging.JMSMessager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.HashMap;
 
@@ -81,7 +86,7 @@ public class WFSHarvesterApi {
     }
 
     @Autowired
-    EsClient client;
+    EsRestClient client;
 
     @ApiOperation(value = "Delete a WFS feature type",
         nickname = "deleteWfsFeatureType")

@@ -1231,7 +1231,7 @@
         </file>
       </activation>
       <modules>
-	<module>slave</module>
+        <module>slave</module>
         <module>schemas-test</module>
         <module>web-ui</module>
         <module>web-ui-docs</module>

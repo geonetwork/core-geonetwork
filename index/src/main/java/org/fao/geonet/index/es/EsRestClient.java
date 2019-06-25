@@ -25,9 +25,14 @@ package org.fao.geonet.index.es;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
@@ -40,6 +45,7 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -106,6 +112,8 @@ public class EsRestClient implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         if (StringUtils.isNotEmpty(serverUrl)) {
+            RestClientBuilder builder = RestClient.builder(new HttpHost("localhost", 9200, "http"));
+
             if (serverUrl.startsWith("https://")) {
                 SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(
                     null, new TrustStrategy() {
@@ -115,22 +123,43 @@ public class EsRestClient implements InitializingBean {
                     }).build();
                 // skip hostname checks
                 HostnameVerifier hostnameVerifier = NoopHostnameVerifier.INSTANCE;
-
-
                 SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
                 SchemeIOSessionStrategy httpsIOSessionStrategy = new SSLIOSessionStrategy(sslContext, hostnameVerifier);
 
-                // TODOES: Https
-                client = new RestHighLevelClient(
-                    RestClient.builder(
-                        new HttpHost(this.serverUrl)
-                    ));
+                if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
+                    final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                    credentialsProvider.setCredentials(AuthScope.ANY,
+                        new UsernamePasswordCredentials(username, password));
+
+                    builder.setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
+                        @Override
+                        public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
+                            return httpClientBuilder.setSSLContext(sslContext).setDefaultCredentialsProvider(credentialsProvider);
+                        }
+                    });
+                } else {
+                    builder.setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
+                        @Override
+                        public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
+                            return httpClientBuilder.setSSLContext(sslContext);
+                        }
+                    });
+                }
             } else {
-                client = new RestHighLevelClient(
-                    RestClient.builder(
-                        new HttpHost(this.serverUrl)
-                    ));
+                if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
+                    final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                    credentialsProvider.setCredentials(AuthScope.ANY,
+                        new UsernamePasswordCredentials(username, password));
+
+                    builder.setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
+                        @Override
+                        public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
+                            return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                        }
+                    });
+                }
             }
+            client = new RestHighLevelClient(builder);
 
             synchronized (EsRestClient.class) {
                 instance = this;
@@ -181,7 +210,7 @@ public class EsRestClient implements InitializingBean {
         while (iterator.hasNext()) {
             Map.Entry<String, String> entry = (Map.Entry) iterator.next();
             request.add(new IndexRequest(index).id(entry.getKey())
-                .source(XContentType.JSON, entry.getValue()));
+                .source(entry.getValue(), XContentType.JSON));
         }
         try {
             return client.bulk(request, RequestOptions.DEFAULT);
@@ -287,7 +316,7 @@ public class EsRestClient implements InitializingBean {
 
         final BulkByScrollResponse deleteByQueryResponse = client.deleteByQuery(request, RequestOptions.DEFAULT);
 
-        if (deleteByQueryResponse.getStatus().getDeleted() > 0) {
+        if (deleteByQueryResponse.getStatus().getDeleted() >= 0) {
             return String.format("Record removed. %s.", deleteByQueryResponse.getStatus().getDeleted());
         } else {
             throw new IOException(String.format(
