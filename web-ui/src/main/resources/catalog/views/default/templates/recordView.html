@@ -68,38 +68,7 @@
           </button>
         </div>
 
-      <div class="gn-md-actions-btn pull-right"
-          data-gn-md-actions-menu="mdView.current.record"/>
-      
-      <div class="btn-group pull-right" role="group">
-        <a class="btn btn-default"
-          data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
-          data-gn-click-and-spin="deleteRecord(mdView.current.record)"
-          data-gn-confirm-click="{{'deleteRecordConfirm' | translate:mdView.current.record}}"
-          title="{{'delete' | translate}}">
-          <i class="fa fa-fw fa-times"></i>
-          <span data-translate="" class="hidden-sm hidden-xs">delete</span>
-        </a>
-      </div>
-
-      <div class="btn-group pull-right" role="group">
-        <a class="btn btn-default gn-md-edit-btn"
-          data-ng-show="user.canEditRecord(mdView.current.record) && mdView.current.record.mdStatus == 2 && (user.isReviewerOrMore() || !isMdWorkflowEnable)"
-          data-gn-confirm-click="{{'cofirmEditApproved' | translate}}"
-          data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.getUuid()}}"
-          title="{{'edit' | translate}}">
-          <i class="fa fa-fw fa-pencil"></i>
-          <span data-translate="" class="hidden-sm hidden-xs">edit</span>
-        </a>
-        <a class="btn btn-default gn-md-edit-btn"
-          data-ng-show="user.canEditRecord(mdView.current.record) && mdView.current.record.mdStatus != 2 && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
-          data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.getUuid()}}"
-          title="{{'edit' | translate}}">
-          <i class="fa fa-fw fa-pencil"></i>
-          <span data-translate="" class="hidden-sm hidden-xs">edit</span>
-        </a>
-      </div>
-        <div class="btn-group pull-right gn-view-menu-button">
+      <div class="btn-group pull-right gn-view-menu-button">
           <button type="button" class="btn btn-default dropdown-toggle"
                   data-toggle="dropdown"
                   aria-label="{{'chooseAView' | translate}}"
@@ -130,7 +99,7 @@
         
         <div class="btn-group pull-right" role="group">
           <a class="btn btn-default"
-            data-ng-show="user.canEditRecord(mdView.current.record)"
+            data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
             data-gn-click-and-spin="deleteRecord(mdView.current.record)"
             data-gn-confirm-click="{{(mdView.current.record.draft != 'y') ? 'deleteRecordConfirm' : 'deleteWorkingCopyRecordConfirm' | translate:mdView.current.record}}"
             title="{{(mdView.current.record.draft != 'y') ? 'delete' : 'canceWorkingCopy' | translate}}">
@@ -142,7 +111,7 @@
 
         <div class="btn-group pull-right" role="group">
           <a class="btn btn-default gn-md-edit-btn"
-            data-ng-show="user.canEditRecord(mdView.current.record)"
+            data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
             data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.getUuid()}}"
             title="{{'edit' | translate}}">
             <i class="fa fa-fw fa-pencil"></i>
@@ -482,18 +451,18 @@
 
           <div data-gn-userfeedback='mdView.current.record'
               data-gn-user={{user.username}}
-              data-ng-if="isUserFeedbackEnabled">
+              data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
           </div>
           <div class="gn-md-feedback-buttons clearfix">
             <div class="pull-left"
                     data-gn-userfeedbackfull='mdView.current.record'
                     data-gn-user={{user.username}}
-                    data-ng-if="isUserFeedbackEnabled">
+                    data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
             </div>
             <div class="pull-left"
                     data-gn-userfeedbacknew='mdView.current.record'
                     data-gn-user={{user.username}}
-                    data-ng-if="isUserFeedbackEnabled">
+                    data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
             </div>
 
           </div>
@@ -658,7 +627,7 @@
             <div data-gn-metadata-rate="mdView.current.record"/>
           </section>
 
-          <div data-ng-show="isRecordHistoryEnabled && user.isEditorOrMore()"
+          <div data-ng-show="isRecordHistoryEnabled && user.isEditorOrMore() && mdView.current.record.draft != 'y'"
               data-gn-record-history="mdView.current.record"></div>
         </div>
 

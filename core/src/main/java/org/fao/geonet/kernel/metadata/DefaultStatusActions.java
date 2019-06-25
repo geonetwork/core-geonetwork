@@ -48,6 +48,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
@@ -176,11 +177,7 @@ public class DefaultStatusActions implements StatusActions {
             // --- For the workflow, if the status is already set to value
             // of status then do nothing. This does not apply to task and event.
             if (status.getStatusValue().getType().equals(StatusValueType.workflow) &&
-<<<<<<< HEAD
                (statusId).equals(currentStatusId)) {
-=======
-                (statusId).equals(currentStatus)) {
->>>>>>> origin/master
                 if (context.isDebugEnabled())
                     context.debug(String.format("Metadata %s already has status %s ",
                         status.getId().getMetadataId(), status.getId().getStatusId()));
@@ -217,9 +214,6 @@ public class DefaultStatusActions implements StatusActions {
         return unchanged;
     }
 
-<<<<<<< HEAD
-=======
-
     /**
      * This apply specific rules depending on status change.
      * The default rules are:
@@ -241,13 +235,11 @@ public class DefaultStatusActions implements StatusActions {
                     "You can't edit record with ID %s",
                     String.valueOf(status.getId().getMetadataId())));
             }
-        } else if (statusId.equals(StatusValue.Status.DRAFT) ||
-            statusId.equals(StatusValue.Status.REJECTED)) {
+        } else if (statusId.equals(StatusValue.Status.DRAFT)) {
             unsetAllOperations(status.getId().getMetadataId());
         }
     }
 
-    >>>>>>>origin/master
 
     /**
      * Send email to a list of users. The list of users is defined based on the
@@ -356,7 +348,7 @@ public class DefaultStatusActions implements StatusActions {
     }
 
     /**
-     * <<<<<<< HEAD ======= Unset all operations on 'All' Group. Used when status
+     * Unset all operations on 'All' Group. Used when status
      * changes from approved to something else.
      *
      * @param mdId The metadata id to unset privileges on
@@ -371,8 +363,6 @@ public class DefaultStatusActions implements StatusActions {
     }
 
     /**
-     * >>>>>>> origin/master Substitute lucene index field values in message. Lucene
-     * field are identified using {{index:fieldName}} tag.
      *
      * @param message  The message to work on
      * @param uuid     The record UUID
@@ -421,9 +411,13 @@ public class DefaultStatusActions implements StatusActions {
         } else {
             ApplicationContext applicationContext = ApplicationContextHolder.get();
             SettingManager sm = applicationContext.getBean(SettingManager.class);
-            List<String> to = new ArrayList<>();
-            to.add(sendTo);
-            MailUtil.sendMail(to, subject, message, null, sm, replyTo, replyToDescr);
+            // Doesn't make sense go further without any mailserver set...
+            if(StringUtils.isNotBlank(sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME)) &&
+               StringUtils.isNotBlank(sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST))) {
+                List<String> to = new ArrayList<>();
+                to.add(sendTo);
+                MailUtil.sendMail(to, subject, message, null, sm, replyTo, replyToDescr);
+            }
         }
     }
 }
