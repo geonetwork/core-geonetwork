@@ -174,7 +174,7 @@
         sortBy: 'changeDate',
         sortOrder: ''
       }, {
-        sortBy: 'title',
+        sortBy: 'resourceTitle.keyword',
         sortOrder: 'reverse'
       }];
 

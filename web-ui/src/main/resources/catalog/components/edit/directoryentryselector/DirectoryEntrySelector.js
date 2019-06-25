@@ -101,11 +101,11 @@
                       any: '',
                       from: 1,
                       to: 20,
-                      _root: 'gmd:CI_ResponsibleParty',
-                      sortBy: 'title',
+                      root: 'gmd:CI_ResponsibleParty',
+                      sortBy: 'resourceTitle.keyword',
                       sortOrder: 'reverse',
                       resultType: 'subtemplates',
-                      _valid: scope.$eval(scope.showValidOnly) ? 1 : undefined
+                      valid: scope.$eval(scope.showValidOnly) ? 1 : undefined
                     }
                   };
 
@@ -343,15 +343,15 @@
                  scope.searchObj = {
                    internal: true,
                    defaultParams: {
-                     _isTemplate: 's',
+                     isTemplate: 's',
                      any: '',
                      from: 1,
                      to: 10,
                      _root: 'gmd:CI_ResponsibleParty',
-                     sortBy: 'title',
+                     sortBy: 'resourceTitle.keyword',
                      sortOrder: 'reverse',
                      resultType: 'contact',
-                     _valid:
+                     valid:
                      scope.$eval(tAttrs['showValidOnly']) ? 1 : undefined
                    }
                  };

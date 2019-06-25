@@ -59,7 +59,7 @@
                      any: '',
                      from: 1,
                      to: 50,
-                     sortBy: 'title',
+                     sortBy: 'resourceTitle.keyword',
                      sortOrder: 'reverse'
                    }
                  };

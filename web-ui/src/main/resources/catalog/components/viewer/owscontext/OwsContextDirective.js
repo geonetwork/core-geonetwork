@@ -39,11 +39,11 @@
       $scope.searchObj = {
         permalink: false,
         filters: {
-          type: 'interactiveMap'
+          type: 'map/interactive'
         },
         hitsperpageValues: 2,
         params: {
-          sortBy: 'title',
+          sortBy: 'resourceTitle.keyword',
           from: 1,
           to: 2
         }

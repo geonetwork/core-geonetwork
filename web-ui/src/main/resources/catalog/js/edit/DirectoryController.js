@@ -97,13 +97,13 @@
           _isTemplate: 's',
           any: '',
           _root: '',
-          sortBy: 'title',
+          sortBy: 'resourceTitle.keyword',
           sortOrder: 'reverse',
           resultType: 'subtemplates'
         },
         sortbyValues: [
           {
-            sortBy: 'title',
+            sortBy: 'resourceTitle.keyword',
             sortOrder: 'reverse'
           },
           {
@@ -115,7 +115,7 @@
             sortOrder: ''
           },
           {
-            sortBy: '_valid',
+            sortBy: 'valid',
             sortOrder: 'reverse'
           }
         ]

@@ -47,15 +47,15 @@
           function($scope, gnGlobalSettings) {
             $scope.searchObj = {
               params: {
-                isTemplate: 'y or n',
+                isTemplate: ['y', 'n'],
                 any: '',
-                sortBy: 'title',
+                sortBy: 'resourceTitle.keyword',
                 _xlink: '*'
               },
               internal: true,
               sortbyValues: [
                 {
-                  sortBy: 'title'
+                  sortBy: 'resourceTitle.keyword'
                 },
                 {
                   sortBy: 'owner'
