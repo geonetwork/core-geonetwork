@@ -1665,6 +1665,11 @@
                   OperationsMetadata: capabilities.operationsMetadata
               };
 
+              //OpenLayers expects an array of style objects having isDefault property
+              angular.forEach(cap.Contents.Layer,function(l){
+                if (!angular.isArray(l.Style)){ l.Style=[{Identifier:l.Style,isDefault:true}] };
+              });
+
               var options = ol.source.WMTS.optionsFromCapabilities(cap, {
                 layer: getCapLayer.Identifier,
                 matrixSet: map.getView().getProjection().getCode(),
