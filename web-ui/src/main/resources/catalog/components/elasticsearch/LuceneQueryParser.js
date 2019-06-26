@@ -39,7 +39,14 @@
     this.facetsToLuceneQuery = function(facetsState) {
       var query = [];
       for (var indexKey in facetsState) {
-        query.push(this.facetGroupToLuceneQuery(indexKey, facetsState[indexKey]))
+        var state = facetsState[indexKey]
+        if(Array.isArray(state)) {
+          query.push(this.facetGroupToLuceneQuery(indexKey, state))
+        } else {
+          for (var p in state) {
+            query.push(state[p])
+          }
+        }
       }
       return this.combineQueryGroups(query)
     }

@@ -122,6 +122,23 @@ goog.require('gn_alert');
               // TODOES: Add INSPIRE
             },
             'mainsearch': {
+              'availableInServices': {
+                'filters': {
+                  'filters': {
+                    'availableInViewService': {
+                      'query_string': {
+                        'query': '+linkProtocol:/OGC:WMS.*/'
+                      }
+                    },
+                    'availableInDownloadService': {
+                      'query_string': {
+                        'query': '+linkProtocol:/OGC:WFS.*/'
+                      }
+                    }
+                  }
+                }
+              },
+
               'codelist_spatialRepresentationType': {
                 'terms': {
                   'field': 'codelist_spatialRepresentationType',

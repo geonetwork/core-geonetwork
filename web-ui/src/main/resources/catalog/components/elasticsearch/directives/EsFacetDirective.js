@@ -105,35 +105,51 @@
    * @param $scope
    * @constructor
    */
-  var FacetController = function($scope) {
+  var FacetController = function($scope, gnESFacet) {
     this.$scope = $scope;
+    this.defaultState = this.facet.type == 'terms' ? [] : {}
+    this.config = gnESFacet[this.facet.name];
 
     $scope.$on('beforeSearchReset', function() {
-      this.facetsCtrl.state[this.facet.name] = this.state = []
+      this.facetsCtrl.state[this.facet.name] = this.state = this.defaultState
     }.bind(this))
   };
 
   FacetController.prototype.$onInit = function() {
-    this.facetsCtrl.state[this.facet.name] = this.state = this.facetsCtrl.state[this.facet.name] || [];
+    this.facetsCtrl.state[this.facet.name] = this.state = this.facetsCtrl.state[this.facet.name] || this.defaultState;
   };
 
   FacetController.prototype.filter = function(facet, item) {
-    var index = this.state.indexOf(item.name);
-    if(index > -1 ) {
-      this.state.splice(index, 1)
-    } else {
-      this.state.push(item.name)
+    if(facet.type === 'terms') {
+      var index = this.state.indexOf(item.name);
+      if(index > -1 ) {
+        this.state.splice(index, 1)
+      } else {
+        this.state.push(item.name)
+      }
+      this.facetsCtrl.lastUpdatedFacet = facet;
     }
-    this.facetsCtrl.lastUpdatedFacet = facet;
+    else if (facet.type === 'filters') {
+      if(this.state[item.name]) {
+        delete this.state[item.name]
+      } else {
+        this.state[item.name] = item.query_string.query_string.query
+      }
+    }
     this.facetsCtrl.updateSearch();
   };
 
   FacetController.prototype.isInSearch = function(facet, item) {
-    return (this.facetsCtrl.state[facet.name].indexOf(item.name) >= 0)
+    if(facet.type === 'terms') {
+      return (this.state.indexOf(item.name) >= 0)
+    } else if (facet.type === 'filters') {
+      return this.state.hasOwnProperty(item.name)
+    }
   };
 
   FacetController.$inject = [
-    '$scope'
+    '$scope',
+    'gnESFacet'
   ];
 
   module.directive('esFacet', [

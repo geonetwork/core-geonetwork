@@ -66,6 +66,17 @@
             }
           });
         }
+        else if(reqAgg.hasOwnProperty('filters')) {
+          facetModel.type = 'filters';
+          facetModel.size = DEFAULT_SIZE;
+          for(var p in respAgg.buckets) {
+            facetModel.items.push({
+              name: p,
+              query_string: reqAgg.filters.filters[p],
+              count: respAgg.buckets[p].doc_count
+            });
+          }
+        }
 
         listModel.push(facetModel);
 

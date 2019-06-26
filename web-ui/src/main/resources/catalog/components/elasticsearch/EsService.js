@@ -39,7 +39,7 @@
 
     this.convertLuceneParams = function(p, luceneConfig) {
       var params = {};
-      var luceneQueryString = this.facetsToLuceneQuery(luceneConfig.facets);
+      var luceneQueryString = gnEsLuceneQueryParser.facetsToLuceneQuery(luceneConfig.facets);
       var query = {
         bool: {
           must: []
