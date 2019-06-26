@@ -4,7 +4,7 @@
     data-ng-click="openRecord($index, md, searchResults.records)"
     id="gn-info-list-mw-{{md.uuid}}">
     <section class="resultcard clearfix"
-             data-ng-class="md.overviewUrl[0] ? 'hasThumbnail' : 'noThumbnail'">
+             data-ng-class="md.overview.length > 0 ? 'hasThumbnail' : 'noThumbnail'">
 
       <div class="title">
         <h4>{{md.resourceTitle}}&nbsp;</h4>
@@ -12,7 +12,7 @@
 
       <div class="gn-md-thumbnail">
         <div class="gn-img-thumbnail"
-             style="background-image: url({{md.getThumbnails().list[0].url}})">
+             style="background-image: url({{md.overview[0].url}})">
         </div>
       </div>
 
