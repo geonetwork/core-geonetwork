@@ -77,7 +77,7 @@ public class ResourceLib {
         return mdDir.resolve(subDir);
     }
 
-    private Path getMetadataDir(GeonetworkDataDirectory dataDirectory, int id) {
+    public Path getMetadataDir(GeonetworkDataDirectory dataDirectory, int id) {
         return getMetadataDir(dataDirectory, id + "");
     }
 
