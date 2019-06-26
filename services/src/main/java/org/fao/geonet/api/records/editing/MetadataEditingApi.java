@@ -121,8 +121,7 @@ public class MetadataEditingApi {
         @ApiResponse(code = 200, message = "The editor form."),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
-    @ResponseBody
-    public Element startEditing(
+    public void startEditing(
         @ApiParam(value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
@@ -193,11 +192,10 @@ public class MetadataEditingApi {
                 context,
                 String.valueOf(metadata.getId()),
                 true, showValidationErrors);
-        return buildEditorForm(
+        buildEditorForm(
             currTab, session, allRequestParams,
-            request, metadata.getId(), elMd, metadata.getDataInfo().getSchemaId(),
-            showValidationErrors,
-            context, applicationContext, false, false);
+            request, elMd, metadata.getDataInfo().getSchemaId(),
+            context, applicationContext, false, false, response);
     }
 
 
@@ -218,8 +216,7 @@ public class MetadataEditingApi {
         @ApiResponse(code = 200, message = "The editor form."),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
-    @ResponseBody
-    public Element saveEdits(
+    public void saveEdits(
         @ApiParam(value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
@@ -269,6 +266,7 @@ public class MetadataEditingApi {
         @RequestParam
             Map<String,String> allRequestParams,
         HttpServletRequest request,
+        HttpServletResponse response,
         @ApiIgnore
         @ApiParam(hidden = true)
             HttpSession httpSession
@@ -358,7 +356,7 @@ public class MetadataEditingApi {
 
         //--- if finished then remove the XML from the session
         if ((commit) && (!terminate)) {
-            return null;
+            return;
         }
         if (terminate) {
     		Log.trace(Geonet.DATA_MANAGER, " > Closing editor");
@@ -414,7 +412,7 @@ public class MetadataEditingApi {
                         "the editing session. The public record '%s' was unpublished.",
                 metadata.getUuid()));
             } else {
-                return null;
+                return;
             }
         }
 
@@ -426,11 +424,13 @@ public class MetadataEditingApi {
                 context,
                 String.valueOf(id),
                 true, withValidationErrors);
-        return buildEditorForm(
-            tab, httpSession, forwardedParams,
-            request, metadata.getId(), elMd, metadata.getDataInfo().getSchemaId(),
-            withValidationErrors,
-            context, applicationContext, false, false);
+
+
+        buildEditorForm(
+                tab, httpSession, forwardedParams,
+                request, elMd, metadata.getDataInfo().getSchemaId(),
+                context, applicationContext, false, false, response);
+
     }
 
 
@@ -494,8 +494,7 @@ public class MetadataEditingApi {
         @ApiResponse(code = 200, message = "Element added."),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
-    @ResponseBody
-    public Element addElement(
+    public void addElement(
         @ApiParam(value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
@@ -529,6 +528,7 @@ public class MetadataEditingApi {
         @RequestParam
             Map<String,String> allRequestParams,
         HttpServletRequest request,
+        HttpServletResponse response,
         @ApiIgnore
         @ApiParam(hidden = true)
             HttpSession httpSession
@@ -558,11 +558,10 @@ public class MetadataEditingApi {
         Element md = (Element) findRoot(elResp).clone();
         EditLib.removeDisplayTag(elResp);
 
-        return buildEditorForm(
+        buildEditorForm(
             allRequestParams.get("currTab"), httpSession, allRequestParams,
-            request, metadata.getId(), md, metadata.getDataInfo().getSchemaId(),
-            false,
-            context, applicationContext, true, true);
+            request, md, metadata.getDataInfo().getSchemaId(),
+            context, applicationContext, true, true, response);
     }
 
 
@@ -750,17 +749,15 @@ public class MetadataEditingApi {
      * legacy Jeeves XML processed by XSLT. Only
      * element required for the editor are created.
      */
-    private Element buildEditorForm(
-        String tab,
-        HttpSession session,
-        Map<String, String> allRequestParams,
-        HttpServletRequest request,
-        int id,
-        Element xml,
-        String schema,
-        boolean showValidationErrors,
-        ServiceContext context,
-        ApplicationContext applicationContext, boolean isEmbedded, boolean embedded) throws Exception {
+    private void buildEditorForm(
+            String tab,
+            HttpSession session,
+            Map<String, String> allRequestParams,
+            HttpServletRequest request,
+            Element xml,
+            String schema,
+            ServiceContext context,
+            ApplicationContext applicationContext, boolean isEmbedded, boolean embedded, HttpServletResponse response) throws Exception {
 
 
         UserSession userSession = ApiUtils.getUserSession(session);
@@ -768,15 +765,15 @@ public class MetadataEditingApi {
         root.addContent(xml);
         Element gui = root.getChild("gui");
         gui.addContent(
-            new Element("currTab").setText(tab));
+                new Element("currTab").setText(tab));
         // This flag is used to generate top tool bar or not
         gui.addContent(
-            new Element("reqService").setText(embedded ? "embedded" : "md.edit"));
+                new Element("reqService").setText(embedded ? "embedded" : "md.edit"));
         String iso3langCode = languageUtils.getIso3langCode(request.getLocales());
         gui.addContent(
-            new Element("language").setText(iso3langCode));
+                new Element("language").setText(iso3langCode));
         gui.addContent(
-            getSchemaStrings(schema, context)
+                getSchemaStrings(schema, context)
         );
 
         Element requestParams = new Element ("request");
@@ -787,12 +784,11 @@ public class MetadataEditingApi {
 
         GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
         Path xslt = dataDirectory.getWebappDir().resolve(
-            isEmbedded ?
-                "xslt/ui-metadata/edit/edit-embedded.xsl" :
-                "xslt/ui-metadata/edit/edit.xsl");
-        return Xml.transform(root, xslt);
+                isEmbedded ?
+                        "xslt/ui-metadata/edit/edit-embedded.xsl" :
+                        "xslt/ui-metadata/edit/edit.xsl");
+        Xml.transformXml(root, xslt, response.getOutputStream());
     }
-
 
 
     private Element buildResourceDocument(
