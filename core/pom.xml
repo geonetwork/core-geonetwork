@@ -399,8 +399,12 @@
           <artifactId>xalan</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.locationtech.jts</groupId>
+          <groupId>com.vividsolutions.jts</groupId>
           <artifactId>jts-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.geotools</groupId>
+          <artifactId>gt-render</artifactId>
         </exclusion>
         <exclusion>
           <groupId>org.apache.xmlgraphics</groupId>

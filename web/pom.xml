@@ -326,6 +326,12 @@
       <groupId>org.mapfish.print</groupId>
       <artifactId>print-lib</artifactId>
       <version>${print-lib.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.geotools</groupId>
+          <artifactId>gt-render</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- ====================== -->
