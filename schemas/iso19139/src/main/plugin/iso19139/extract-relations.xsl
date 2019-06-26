@@ -42,9 +42,10 @@
   <xsl:function name="gn-fn-rel:translate">
     <xsl:param name="el"/>
     <xsl:param name="lang"/>
+    <xsl:variable name="textVal" select="$el/gco:CharacterString|$el/gmx:Anchor/text()"/>
     <xsl:choose>
-      <xsl:when test="$el/gco:CharacterString!=''">
-        <xsl:value-of select="$el/gco:CharacterString"/>
+      <xsl:when test="$textVal!=''">
+        <xsl:value-of select="$textVal"/>
       </xsl:when>
       <xsl:when
         test="($el/gmd:PT_FreeText//gmd:LocalisedCharacterString[@locale = $lang][text() != ''])[1]">
