@@ -106,6 +106,21 @@ goog.require('gn_alert');
           },
           'facetTabField': '',
           'facetConfig': {
+            'home': {
+              'resourceType': {
+                'terms': {
+                  'field': 'resourceType',
+                  'size': 10
+                }
+              },
+              'topic': {
+                'terms': {
+                  'field': 'topic',
+                  'size': 20
+                }
+              }
+              // TODOES: Add INSPIRE
+            },
             'mainsearch': {
               'codelist_spatialRepresentationType': {
                 'terms': {
@@ -750,7 +765,7 @@ goog.require('gn_alert');
             //   });
             return $http.post('../api/search/records/_search',
               {"size": 0, "query": {"match_all": {}},
-                "aggs": gnGlobalSettings.gnCfg.mods.search.facetConfig.mainsearch}).
+                "aggs": gnGlobalSettings.gnCfg.mods.search.facetConfig.home}).
             then(function(r) {
               $scope.searchInfo = r.data;
             });

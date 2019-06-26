@@ -252,32 +252,6 @@
           active: false
         }};
 
-      var themesFacets = [{
-        field: 'inspireTheme',
-        size: 40
-      }, {
-        field: 'topic',
-        size: 15
-      }, {
-        field: 'resourceType',
-        size: 15
-      }];
-
-      var params = {
-        size: 100,
-        aggregations: gnESFacet.getAggregationFromConfig(themesFacets)
-      };
-
-      gnESClient.search(params).then(function(response) {
-        $scope.themes = response.facets.reduce(function(themes, facet) {
-          themes[facet.name] = facet.items;
-          return themes;
-        }, {});
-        $scope.themes._total = response.hits.total;
-        $scope.browse = $scope.themes['inspireTheme'] ? 'inspire' : 'topics';
-        console.log($scope.themes)
-      });
-
       $scope.$on('layerAddedFromContext', function(e,l) {
         var md = l.get('md');
         if(md) {
