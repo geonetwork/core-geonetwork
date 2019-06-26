@@ -60,7 +60,7 @@ public class MeApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAnonymous();
 
-        this.mockMvc.perform(get("/api/me")
+        this.mockMvc.perform(get("/srv/api/me")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -72,7 +72,7 @@ public class MeApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        MvcResult result = this.mockMvc.perform(get("/api/me")
+        MvcResult result = this.mockMvc.perform(get("/srv/api/me")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())

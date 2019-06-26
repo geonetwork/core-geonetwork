@@ -433,6 +433,9 @@
           var bucket = attrs['selectionBucket'];
           var mdUuid = attrs['gnTransferOwnership'];
           scope.selectedUserGroup = null;
+          scope.groupsLoaded = false;
+          scope.userGroupDefined = false;
+          scope.userGroups = null;
 
           scope.selectUser = function(user) {
             scope.selectedUser = user;
@@ -470,9 +473,14 @@
                 } else {
                   scope.userGroupDefined = false;
                 }
-              });
+              }).finally(function() {
+                scope.groupsLoaded = true;
+          });
 
           scope.save = function() {
+            if (!scope.selectedUserGroup) {
+              return;
+            }
             var url = '../api/records/';
             if (bucket != 'null') {
               url += 'ownership?bucket=' + bucket + '&';

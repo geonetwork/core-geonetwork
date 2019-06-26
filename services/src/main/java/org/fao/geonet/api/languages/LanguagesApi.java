@@ -35,6 +35,7 @@ import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.LanguageRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -63,8 +64,8 @@ import jeeves.server.dispatchers.ServiceManager;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RequestMapping(value = {
-    "/api/languages",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/languages",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/languages"
 })
 @Api(value = "languages",
@@ -72,6 +73,12 @@ import springfox.documentation.annotations.ApiIgnore;
     description = "Languages operations")
 @Controller("languages")
 public class LanguagesApi {
+
+    @Autowired
+    private LanguageRepository languageRepository;
+
+    @Autowired
+    private GeonetworkDataDirectory dataDirectory;
 
     @ApiOperation(
         value = "Get languages",
@@ -85,7 +92,7 @@ public class LanguagesApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<Language> getLanguages() throws Exception {
-        return ApplicationContextHolder.get().getBean(LanguageRepository.class).findAll();
+        return languageRepository.findAll();
     }
 
 
@@ -118,11 +125,8 @@ public class LanguagesApi {
             HttpServletRequest request
     ) throws IOException, ResourceNotFoundException {
 
-        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        LanguageRepository languageRepository = applicationContext.getBean(LanguageRepository.class);
         Language lang = languageRepository.findOne(langCode);
         if (lang == null) {
-            GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
             String languageDataFile = "loc-" + langCode + "-default.sql";
             Path templateFile = dataDirectory.getWebappDir().resolve("WEB-INF")
                 .resolve("classes").resolve("setup").resolve("sql").resolve("data")
@@ -178,17 +182,12 @@ public class LanguagesApi {
             String langCode,
             HttpServletRequest request
     ) throws IOException, ResourceNotFoundException {
-        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-
-        LanguageRepository languageRepository = applicationContext.getBean(LanguageRepository.class);
         Language lang = languageRepository.findOne(langCode);
         if (lang == null) {
             throw new ResourceNotFoundException(String.format(
                 "Language '%s' not found.", langCode
             ));
         } else {
-            GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
-
             final String LANGUAGE_DELETE_SQL = "language-delete.sql";
 
             Path templateFile = dataDirectory.getWebappDir().resolve("WEB-INF")

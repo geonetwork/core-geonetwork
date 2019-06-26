@@ -922,356 +922,366 @@
     }
   },
   "mappings": {
-    "_default_": {
-      "dynamic_templates": [
-        {
-          "codelist": {
-            "match": "codelist_*",
-            "mapping": {
-              "type": "keyword"
-            }
-          }
-        },{
-          "codelist": {
-            "match": "linkUrlProtocol*",
-            "mapping": {
-              "type": "keyword"
-            }
-          }
-        },
-        {
-          "org": {
-            "match": "*Org*",
-            "mapping": {
-              "type": "keyword"
-            }
-          }
-        },
-        {
-          "contact": {
-            "match": "*contact*",
-            "mapping": {
-              "type": "keyword"
-            }
-          }
-        },
-        {
-          "date": {
-            "match": "*Date*",
-            "mapping": {
-              "type": "date"
-            }
-          }
-        },
-        {
-          "dateMonth": {
-            "match": "*Month*",
-            "mapping": {
-              "type": "keyword"
-            }
-          }
-        },
-        {
-          "dateYear": {
-            "match": "*Year*",
-            "mapping": {
-              "type": "short"
-            }
-          }
-        },
-        {
-          "measure": {
-            "match": "measure_*",
-            "mapping": {
-              "type": "keyword"
-            }
-          }
-        },
-        {
-          "operationAllowed": {
-            "match": "op*",
-            "mapping": {
-              "type": "keyword"
-            }
-          }
-        },
-        {
-          "validationStatus": {
-            "match": "valid*",
-            "mapping": {
-              "type": "keyword"
-            }
-          }
-        },
-        {
-          "synInspireAnnexesType": {
-            "match": "inspireAnnex*",
-            "mapping": {
-              "type":     "keyword",
-              "fielddata": true,
-              "analyzer": "synInspireAnnexes",
-              "search_analyzer": "keyword"
-            }
-          }
-        },
-        {
-          "synInspireThemeType": {
-            "match": "inspireTheme*",
-            "mapping": {
-              "type":     "keyword",
-              "fielddata": true,
-              "analyzer": "synInspireThemes",
-              "search_analyzer": "keyword"
-            }
-          }
-        },
-        {
-          "inspireServiceType": {
-            "match": "inspireServiceType",
-            "mapping": {
-              "type":     "keyword",
-              "fielddata": true,
-              "analyzer": "keepInspireServiceTypes",
-              "search_analyzer": "keyword"
-            }
+    "dynamic_templates": [
+      {
+        "codelist": {
+          "match": "codelist_*",
+          "mapping": {
+            "type": "keyword"
           }
         }
-      ],
-      "properties": {
-        "accessConstraints": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
-            }
+      },{
+        "codelist": {
+          "match": "linkUrlProtocol*",
+          "mapping": {
+            "type": "keyword"
           }
-        },
-        "coordinateSystem": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
-            }
-          }
-        },
-        "dateStamp": {
-          "type": "date"
-        },
-        "document": {
-          "type" : "text",
-          "index" : false,
-          "doc_values": false
-        },
-        "documentStandard": {
-          "type": "keyword"
-        },
-        "documentType": {
-          "type": "keyword"
-        },
-        "geom": {
-          "type": "geo_shape",
-          "tree": "quadtree",
-          "precision": "10km"
-        },
-        "location": {
-          "type": "geo_point"
-        },
-        "harvesterId": {
-          "type": "keyword"
-        },
-        "harvesterUuid": {
-          "type": "keyword"
-        },
-        "id": {
-          "type": "keyword"
-        },
-        "hasInspireTheme": {
-          "type": "boolean"
-        },
-        "hasOverview": {
-          "type": "boolean"
-        },
-        "isValid": {
-          "type": "boolean"
-        },
-        "isSchemaValid": {
-          "type": "boolean"
-        },
-        "isAboveThreshold": {
-          "type": "boolean"
-        },
-        "isOpenData": {
-          "type": "keyword"
-        },
-        "lineage": {
-          "type": "text"
-        },
-        "resolutionScaleDenominator": {
-          "type": "integer"
-        },
-        "link": {
-          "type": "nested",
-          "properties": {
-            "protocol": {"type": "keyword"},
-            "link": {"type": "text"},
-            "name": {"type": "text"},
-            "description": {"type": "text"}
-          }
-        },
-        "linkProtocol": {
-          "type": "keyword"
-        },
-        "linkUrl": {
-          "type": "keyword"
-        },
-        "mainLanguage": {
-          "type": "keyword"
-        },
-        "metadataIdentifier": {
-          "type": "keyword"
-        },
-        "inspireThemeNumber": {
-          "type": "short"
-        },
-        "otherConstraints": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
-            }
-          }
-        },
-        "overviewUrl": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
-            }
-          }
-        },
-        "pointOfTruthURL": {
-          "type": "text"
-        },
-        "recordOperateOn": {
-          "type": "keyword"
-        },
-        "resolutionDistance": {
-          "type": "keyword"
-        },
-        "resourceAbstract": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
-            }
-          }
-        },
-        "resourceAltTitle": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
-            }
-          }
-        },
-        "resourceCredit": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
-            }
-          }
-        },
-        "resourceLanguage": {
-          "type": "keyword"
-        },
-        "resourceTitle": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
-            }
-          }
-        },
-        "resourceType": {
-          "type": "keyword"
-        },
-        "serviceType": {
-          "type": "keyword"
-        },
-        "spatialRepresentationType": {
-          "type": "keyword"
-        },
-        "standardName": {
-          "type": "keyword"
-        },
-        "tagNumber": {
-          "type": "short"
-        },
-        "tag": {
-          "type": "keyword"
-        },
-        "scope": {
-          "type": "keyword"
-        },
-        "topic": {
-          "type": "keyword"
-        },
-        "validReport": {
-          "type" : "text",
-          "index" : false,
-          "doc_values": false
-        },
-        "useLimitation": {
-          "type": "text",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
-            }
-          }
-        },
-        "groupPublished": {
-          "type": "keyword"
-        },
-        "groupOwner": {
-          "type": "keyword"
-        },
-        "hasxlinks": {
-          "type": "boolean"
-        },
-        "isTemplate": {
-          "type": "keyword"
-        },
-        "isHarvested": {
-          "type": "boolean"
-        },
-        "popularity": {
-          "type": "short"
-        },
-        "rating": {
-          "type": "short"
-        },
-        "status": {
-          "type": "short"
-        },
-        "owner": {
-          "type": "keyword"
-        },
-        "xlink": {
-          "type": "keyword"
-        },
-        "root": {
-          "type": "keyword"
         }
+      },
+      {
+        "org": {
+          "match": "*Org*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "contact": {
+          "match": "*contact*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "date": {
+          "match": "*Date*",
+          "mapping": {
+            "type": "date"
+          }
+        }
+      },
+      {
+        "dateMonth": {
+          "match": "*Month*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "dateYear": {
+          "match": "*Year*",
+          "mapping": {
+            "type": "short"
+          }
+        }
+      },
+      {
+        "measure": {
+          "match": "measure_*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "operationAllowed": {
+          "match": "op*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "validationStatus": {
+          "match": "valid*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "synInspireAnnexesType": {
+          "match": "inspireAnnex*",
+          "mapping": {
+            "type":     "keyword",
+            "fielddata": true,
+            "analyzer": "synInspireAnnexes",
+            "search_analyzer": "keyword"
+          }
+        }
+      },
+      {
+        "synInspireThemeType": {
+          "match": "inspireTheme*",
+          "mapping": {
+            "type":     "keyword",
+            "fielddata": true,
+            "analyzer": "synInspireThemes",
+            "search_analyzer": "keyword"
+          }
+        }
+      },
+      {
+        "inspireServiceType": {
+          "match": "inspireServiceType",
+          "mapping": {
+            "type":     "keyword",
+            "fielddata": true,
+            "analyzer": "keepInspireServiceTypes",
+            "search_analyzer": "keyword"
+          }
+        }
+      }
+    ],
+    "properties": {
+      "accessConstraints": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "coordinateSystem": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "dateStamp": {
+        "type": "date"
+      },
+      "document": {
+        "type" : "text",
+        "index" : false,
+        "doc_values": false
+      },
+      "documentStandard": {
+        "type": "keyword"
+      },
+      "documentType": {
+        "type": "keyword"
+      },
+      "geom": {
+        "type": "geo_shape",
+        "tree": "quadtree",
+        "precision": "10km"
+      },
+      "location": {
+        "type": "geo_point"
+      },
+      "bbox_xmin": {
+        "type": "double"
+      },
+      "bbox_xmax": {
+        "type": "double"
+      },
+      "bbox_ymin": {
+        "type": "double"
+      },
+      "bbox_ymax": {
+        "type": "double"
+      },
+      "harvesterId": {
+        "type": "keyword"
+      },
+      "harvesterUuid": {
+        "type": "keyword"
+      },
+      "id": {
+        "type": "keyword"
+      },
+      "hasInspireTheme": {
+        "type": "boolean"
+      },
+      "hasOverview": {
+        "type": "boolean"
+      },
+      "isValid": {
+        "type": "boolean"
+      },
+      "isSchemaValid": {
+        "type": "boolean"
+      },
+      "isAboveThreshold": {
+        "type": "boolean"
+      },
+      "isOpenData": {
+        "type": "keyword"
+      },
+      "lineage": {
+        "type": "text"
+      },
+      "resolutionScaleDenominator": {
+        "type": "integer"
+      },
+      "link": {
+        "type": "nested",
+        "properties": {
+          "protocol": {"type": "keyword"},
+          "link": {"type": "text"},
+          "name": {"type": "text"},
+          "description": {"type": "text"}
+        }
+      },
+      "linkProtocol": {
+        "type": "keyword"
+      },
+      "linkUrl": {
+        "type": "keyword"
+      },
+      "mainLanguage": {
+        "type": "keyword"
+      },
+      "metadataIdentifier": {
+        "type": "keyword"
+      },
+      "inspireThemeNumber": {
+        "type": "short"
+      },
+      "otherConstraints": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "overviewUrl": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "pointOfTruthURL": {
+        "type": "text"
+      },
+      "recordOperateOn": {
+        "type": "keyword"
+      },
+      "resolutionDistance": {
+        "type": "keyword"
+      },
+      "resourceAbstract": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "resourceAltTitle": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "resourceCredit": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "resourceLanguage": {
+        "type": "keyword"
+      },
+      "resourceTitle": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "resourceType": {
+        "type": "keyword"
+      },
+      "serviceType": {
+        "type": "keyword"
+      },
+      "spatialRepresentationType": {
+        "type": "keyword"
+      },
+      "standardName": {
+        "type": "keyword"
+      },
+      "tagNumber": {
+        "type": "short"
+      },
+      "tag": {
+        "type": "keyword"
+      },
+      "scope": {
+        "type": "keyword"
+      },
+      "topic": {
+        "type": "keyword"
+      },
+      "validReport": {
+        "type" : "text",
+        "index" : false,
+        "doc_values": false
+      },
+      "useLimitation": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "groupPublished": {
+        "type": "keyword"
+      },
+      "groupOwner": {
+        "type": "keyword"
+      },
+      "hasxlinks": {
+        "type": "boolean"
+      },
+      "isTemplate": {
+        "type": "keyword"
+      },
+      "isHarvested": {
+        "type": "boolean"
+      },
+      "popularity": {
+        "type": "short"
+      },
+      "rating": {
+        "type": "short"
+      },
+      "status": {
+        "type": "short"
+      },
+      "owner": {
+        "type": "keyword"
+      },
+      "xlink": {
+        "type": "keyword"
+      },
+      "root": {
+        "type": "keyword"
       }
     }
   }

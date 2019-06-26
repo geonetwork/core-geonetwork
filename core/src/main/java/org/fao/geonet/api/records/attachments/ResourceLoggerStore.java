@@ -33,6 +33,7 @@ import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataFileDownloadRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.util.ThreadPool;
@@ -66,25 +67,25 @@ public class ResourceLoggerStore implements Store {
     }
 
     @Override
-    public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, Sort sort, String filter) throws Exception {
+    public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, Sort sort, String filter, Boolean approved) throws Exception {
         if (decoratedStore != null) {
-            return decoratedStore.getResources(context, metadataUuid, sort, filter);
+            return decoratedStore.getResources(context, metadataUuid, sort, filter, approved);
         }
         return null;
     }
 
     @Override
-    public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility metadataResourceVisibility, String filter) throws Exception {
+    public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility metadataResourceVisibility, String filter, Boolean approved) throws Exception {
         if (decoratedStore != null) {
-            return decoratedStore.getResources(context, metadataUuid, metadataResourceVisibility, filter);
+            return decoratedStore.getResources(context, metadataUuid, metadataResourceVisibility, filter, approved);
         }
         return null;
     }
 
     @Override
-    public Path getResource(ServiceContext context, String metadataUuid, String resourceId) throws Exception {
+    public Path getResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception {
         if (decoratedStore != null) {
-            Path filePath = decoratedStore.getResource(context, metadataUuid, resourceId);
+            Path filePath = decoratedStore.getResource(context, metadataUuid, resourceId, approved);
             if (filePath != null) {
                 // TODO: Add Requester details which may have been provided by a form ?
                 storeGetRequest(context, metadataUuid, resourceId,
@@ -97,9 +98,9 @@ public class ResourceLoggerStore implements Store {
     }
 
     @Override
-    public MetadataResource putResource(ServiceContext context, String metadataUuid, MultipartFile file, MetadataResourceVisibility metadataResourceVisibility) throws Exception {
+    public MetadataResource putResource(ServiceContext context, String metadataUuid, MultipartFile file, MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception {
         if (decoratedStore != null) {
-            MetadataResource resource = decoratedStore.putResource(context, metadataUuid, file, metadataResourceVisibility);
+            MetadataResource resource = decoratedStore.putResource(context, metadataUuid, file, metadataResourceVisibility, approved);
             if (resource != null) {
                 storePutRequest(context, metadataUuid,
                     resource.getId(),
@@ -111,41 +112,41 @@ public class ResourceLoggerStore implements Store {
     }
 
     @Override
-    public MetadataResource putResource(ServiceContext context, String metadataUuid, Path filePath, MetadataResourceVisibility metadataResourceVisibility) throws Exception {
+    public MetadataResource putResource(ServiceContext context, String metadataUuid, Path filePath, MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception {
         if (decoratedStore != null) {
-            return decoratedStore.putResource(context, metadataUuid, filePath, metadataResourceVisibility);
+            return decoratedStore.putResource(context, metadataUuid, filePath, metadataResourceVisibility, approved);
         }
         return null;
     }
 
     @Override
-    public MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl, MetadataResourceVisibility metadataResourceVisibility) throws Exception {
+    public MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl, MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception {
         if (decoratedStore != null) {
-            return decoratedStore.putResource(context, metadataUuid, fileUrl, metadataResourceVisibility);
+            return decoratedStore.putResource(context, metadataUuid, fileUrl, metadataResourceVisibility, approved);
         }
         return null;
     }
 
     @Override
-    public MetadataResource patchResourceStatus(ServiceContext context, String metadataUuid, String resourceId, MetadataResourceVisibility metadataResourceVisibility) throws Exception {
+    public MetadataResource patchResourceStatus(ServiceContext context, String metadataUuid, String resourceId, MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception {
         if (decoratedStore != null) {
-            return decoratedStore.patchResourceStatus(context, metadataUuid, resourceId, metadataResourceVisibility);
+            return decoratedStore.patchResourceStatus(context, metadataUuid, resourceId, metadataResourceVisibility, approved);
         }
         return null;
     }
 
     @Override
-    public String delResource(ServiceContext context, String metadataUuid) throws Exception {
+    public String delResource(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
         if (decoratedStore != null) {
-            return decoratedStore.delResource(context, metadataUuid);
+            return decoratedStore.delResource(context, metadataUuid, approved);
         }
         return null;
     }
 
     @Override
-    public String delResource(ServiceContext context, String metadataUuid, String resourceId) throws Exception {
+    public String delResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception {
         if (decoratedStore != null) {
-            String response = decoratedStore.delResource(context, metadataUuid, resourceId);
+            String response = decoratedStore.delResource(context, metadataUuid, resourceId, approved);
             if (response != null) {
                 storeDeleteRequest(metadataUuid, resourceId);
             }
@@ -165,7 +166,7 @@ public class ResourceLoggerStore implements Store {
                                  final String requesterComments,
                                  final String downloadDate) throws Exception {
         final int metadataId =
-            Integer.valueOf(context.getBean(DataManager.class).getMetadataId(metadataUuid));
+            Integer.valueOf(context.getBean(IMetadataUtils.class).getMetadataId(metadataUuid));
         final MetadataFileUploadRepository uploadRepository =
             context.getBean(MetadataFileUploadRepository.class);
         final MetadataFileDownloadRepository repo =
@@ -217,7 +218,7 @@ public class ResourceLoggerStore implements Store {
                                     final String fileName) throws Exception {
         final ConfigurableApplicationContext context = ApplicationContextHolder.get();
         final int metadataId =
-            Integer.valueOf(context.getBean(DataManager.class).getMetadataId(metadataUuid));
+            Integer.valueOf(context.getBean(IMetadataUtils.class).getMetadataId(metadataUuid));
 
         MetadataFileUploadRepository repo = context.getBean(MetadataFileUploadRepository.class);
 
@@ -242,7 +243,7 @@ public class ResourceLoggerStore implements Store {
         final MetadataFileUploadRepository repo =
             context.getBean(MetadataFileUploadRepository.class);
         final int metadataId =
-            Integer.valueOf(context.getBean(DataManager.class).getMetadataId(metadataUuid));
+            Integer.valueOf(context.getBean(IMetadataUtils.class).getMetadataId(metadataUuid));
 
         MetadataFileUpload metadataFileUpload = new MetadataFileUpload();
 
@@ -254,4 +255,55 @@ public class ResourceLoggerStore implements Store {
 
         repo.save(metadataFileUpload);
     }
+
+	@Override
+	public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, Sort sort, String filter)
+			throws Exception {
+		return getResources(context, metadataUuid, sort, filter, true);
+	}
+
+	@Override
+	public List<MetadataResource> getResources(ServiceContext context, String metadataUuid,
+			MetadataResourceVisibility metadataResourceVisibility, String filter) throws Exception {
+		return getResources(context, metadataUuid, metadataResourceVisibility, filter, true);
+	}
+
+	@Override
+	public Path getResource(ServiceContext context, String metadataUuid, String resourceId) throws Exception {
+		return getResource(context, metadataUuid, resourceId, true);
+	}
+
+	@Override
+	public MetadataResource putResource(ServiceContext context, String metadataUuid, MultipartFile file,
+			MetadataResourceVisibility metadataResourceVisibility) throws Exception {
+		return putResource(context, metadataUuid, file, metadataResourceVisibility, true);
+	}
+
+	@Override
+	public MetadataResource putResource(ServiceContext context, String metadataUuid, Path filePath,
+			MetadataResourceVisibility metadataResourceVisibility) throws Exception {
+		return putResource(context, metadataUuid, filePath, metadataResourceVisibility, true);
+	}
+
+	@Override
+	public MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl,
+			MetadataResourceVisibility metadataResourceVisibility) throws Exception {
+		return putResource(context, metadataUuid, fileUrl, metadataResourceVisibility, true);
+	}
+
+	@Override
+	public MetadataResource patchResourceStatus(ServiceContext context, String metadataUuid, String resourceId,
+			MetadataResourceVisibility metadataResourceVisibility) throws Exception {
+		return patchResourceStatus(context, metadataUuid, resourceId, metadataResourceVisibility, true);
+	}
+
+	@Override
+	public String delResource(ServiceContext context, String metadataUuid) throws Exception {
+		return delResource(context, metadataUuid, true);
+	}
+
+	@Override
+	public String delResource(ServiceContext context, String metadataUuid, String resourceId) throws Exception {
+		return delResource(context, metadataUuid, resourceId, true);
+	}
 }

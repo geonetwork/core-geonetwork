@@ -100,7 +100,6 @@
     <plugins>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.5</version>
         <executions>
           <execution>
             <id>test-jar</id>
@@ -133,7 +132,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.9.1</version>
         <executions>
           <execution>
             <id>add-source</id>

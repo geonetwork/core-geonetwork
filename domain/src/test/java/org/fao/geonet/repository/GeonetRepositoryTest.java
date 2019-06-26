@@ -23,6 +23,17 @@
 
 package org.fao.geonet.repository;
 
+import static junit.framework.Assert.assertNull;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataId;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.data.jpa.domain.Specifications.where;
+
+import javax.annotation.Nullable;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
+
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo_;
 import org.fao.geonet.domain.Metadata_;
@@ -32,19 +43,9 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
-
-import javax.annotation.Nullable;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
-
-import static junit.framework.Assert.assertNull;
-import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataId;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Test class for GeonetRepository.
@@ -91,7 +92,7 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
         Metadata md3 = _repo.save(MetadataRepositoryTest.newMetadata(_inc));
 
 
-        final Specifications<Metadata> spec = where(hasMetadataId(md2.getId())).or(hasMetadataId(md3.getId()));
+        final Specifications<Metadata> spec = where((Specification<Metadata>)hasMetadataId(md2.getId())).or((Specification<Metadata>)hasMetadataId(md3.getId()));
         PathSpec<Metadata, String> dataPathSpec = new PathSpec<Metadata, String>() {
             @Override
             public Path<String> getPath(Root<Metadata> root) {
@@ -136,7 +137,7 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
         Metadata md3 = _repo.save(MetadataRepositoryTest.newMetadata(_inc));
 
 
-        final Specifications<Metadata> spec = where(hasMetadataId(md2.getId())).or(hasMetadataId(md3.getId()));
+        final Specifications<Metadata> spec = where((Specification<Metadata>)hasMetadataId(md2.getId())).or((Specification<Metadata>)hasMetadataId(md3.getId()));
 
         final int deleted = _repo.deleteAll(spec);
 
@@ -157,7 +158,7 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
         Metadata md3 = _repo.save(MetadataRepositoryTest.newMetadata(_inc));
 
 
-        final Specifications<Metadata> spec = where(hasMetadataId(md2.getId())).or(hasMetadataId(md3.getId()));
+        final Specifications<Metadata> spec = where((Specification<Metadata>)hasMetadataId(md2.getId())).or((Specification<Metadata>)hasMetadataId(md3.getId()));
 
         Element xmlResponse = _repo.findAllAsXml();
         assertEquals(3, Xml.selectNodes(xmlResponse, "record").size());

@@ -41,6 +41,9 @@ import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicatio
 import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getServletContext;
 
 /**
+ * When user sign out, user is redirected to main /logout page
+ * which then needs to redirect the user to the last portal accessed.
+ *
  * Created by Jesse on 2/17/14.
  */
 public class JeevesNodeAwareLogoutSuccessHandler extends AbstractAuthenticationTargetUrlRequestHandler implements LogoutSuccessHandler {

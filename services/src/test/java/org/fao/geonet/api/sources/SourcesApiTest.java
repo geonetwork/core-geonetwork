@@ -27,7 +27,9 @@ import com.google.gson.GsonBuilder;
 import junit.framework.Assert;
 import org.fao.geonet.api.FieldNameExclusionStrategy;
 import org.fao.geonet.api.JsonFieldNamingStrategy;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Before;
@@ -73,7 +75,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
         Long sourcesCount = sourceRepo.count();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(get("/api/sources")
+        this.mockMvc.perform(get("/srv/api/sources")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -89,7 +91,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
-            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations"))
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations", "creationDate"))
             .create();
         String json = gson.toJson(source);
 
@@ -97,11 +99,11 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(put("/api/sources/" + source.getUuid())
+        this.mockMvc.perform(put("/srv/api/sources/" + source.getUuid())
             .content(json)
             .contentType(MediaType.APPLICATION_JSON)
             .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+            .accept(MediaType.parseMediaType("text/plain")))
             .andExpect(status().is(204));
     }
 
@@ -113,11 +115,11 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
         sourceToUpdate = new Source();
         sourceToUpdate.setName("source-test-2");
         sourceToUpdate.setUuid(UUID.randomUUID().toString());
-        sourceToUpdate.setLocal(false);
+        sourceToUpdate.setType(SourceType.harvester);
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
-            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations"))
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations", "creationDate"))
             .create();
         String json = gson.toJson(sourceToUpdate);
 
@@ -125,11 +127,11 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(put("/api/sources/" + sourceToUpdate.getUuid())
+        this.mockMvc.perform(put("/srv/api/sources/" + sourceToUpdate.getUuid())
             .content(json)
             .contentType(MediaType.APPLICATION_JSON)
             .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+            .accept(MediaType.parseMediaType("text/plain")))
             .andExpect(status().is(404));
     }
 
@@ -137,7 +139,8 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
         Source source = new Source();
         source.setName("source-test");
         source.setUuid("source-uuid");
-        source.setLocal(false);
+        source.setCreationDate(new ISODate());
+        source.setType(SourceType.harvester);
         sourceRepo.save(source);
     }
 }

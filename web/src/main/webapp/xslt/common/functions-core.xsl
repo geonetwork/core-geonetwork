@@ -52,7 +52,7 @@
                   select="$map/entry[@key = $type]/@value"/>
     <xsl:value-of select="if ($match != '')
                           then $match
-                          else 'http://schema.org/Thing'"/>
+                          else 'http://schema.org/Dataset'"/>
   </xsl:function>
 
   <xsl:function name="gn-fn-core:translate" as="xs:string">

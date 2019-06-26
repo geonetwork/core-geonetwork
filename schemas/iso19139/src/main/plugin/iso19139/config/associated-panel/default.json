@@ -12,16 +12,24 @@
         "protocol": {
           "value": "WWW:LINK-1.0-http--link",
           "isMultilingual": false,
-          "required": true
+          "required": true,
+          "tooltip": "gmd:protocol"
         },
         "url": {
           "isMultilingual": false,
-          "required": true
+          "required": true,
+          "tooltip": "gmd:URL"
         },
-        "name": {},
-        "desc": {},
-        "function": {"isMultilingual": false},
-        "applicationProfile": {"isMultilingual": false}
+        "name": {"tooltip": "gmd:name"},
+        "desc": {"tooltip": "gmd:description"},
+        "function": {
+          "isMultilingual": false,
+          "tooltip": "gmd:function"
+        },
+        "applicationProfile": {
+          "isMultilingual": false,
+          "tooltip": "gmd:applicationProfile"
+        }
       }
     }, {
       "label": "addThumbnail",

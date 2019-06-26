@@ -23,22 +23,24 @@
 
 package org.fao.geonet.api.categories;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import java.util.List;
+import java.util.Map;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Language;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,12 +53,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.List;
-import java.util.Map;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RequestMapping(value = {
-    "/api/tags",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/tags",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/tags"
 })
 @Api(value = "tags",
@@ -64,6 +69,15 @@ import java.util.Map;
     description = "Tags operations")
 @Controller("tags")
 public class TagsApi {
+
+    @Autowired
+    private MetadataCategoryRepository categoryRepository;
+
+    @Autowired
+    private LanguageRepository langRepository;
+
+    @Autowired
+    private MetadataRepository metadataRepository;
 
     @ApiOperation(
         value = "Get tags",
@@ -79,9 +93,6 @@ public class TagsApi {
     @ResponseBody
     public List<org.fao.geonet.domain.MetadataCategory> getTags(
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        MetadataCategoryRepository categoryRepository =
-            appContext.getBean(MetadataCategoryRepository.class);
         return categoryRepository.findAll();
     }
 
@@ -110,10 +121,6 @@ public class TagsApi {
         @RequestBody
             MetadataCategory category
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        MetadataCategoryRepository categoryRepository =
-            appContext.getBean(MetadataCategoryRepository.class);
-
         MetadataCategory existingCategory = categoryRepository.findOne(category.getId());
         if (existingCategory != null) {
             throw new IllegalArgumentException(String.format(
@@ -121,7 +128,6 @@ public class TagsApi {
             ));
         } else {
             // Populate languages if not already set
-            LanguageRepository langRepository = appContext.getBean(LanguageRepository.class);
             java.util.List<Language> allLanguages = langRepository.findAll();
             Map<String, String> labelTranslations = category.getLabelTranslations();
             for (Language l : allLanguages) {
@@ -158,9 +164,6 @@ public class TagsApi {
         @PathVariable
             Integer tagIdentifier
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        MetadataCategoryRepository categoryRepository =
-            appContext.getBean(MetadataCategoryRepository.class);
         org.fao.geonet.domain.MetadataCategory category = categoryRepository.findOne(tagIdentifier);
         if (category == null) {
             throw new ResourceNotFoundException("Category not found");
@@ -195,13 +198,9 @@ public class TagsApi {
         @RequestBody
             MetadataCategory category
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        MetadataCategoryRepository categoryRepository =
-            appContext.getBean(MetadataCategoryRepository.class);
-
         MetadataCategory existingCategory = categoryRepository.findOne(tagIdentifier);
         if (existingCategory != null) {
-            updateCategory(tagIdentifier, category, categoryRepository);
+            updateCategory(tagIdentifier, category);
         } else {
             throw new ResourceNotFoundException(String.format(
                 "Category with id '%d' does not exist.",
@@ -213,8 +212,7 @@ public class TagsApi {
 
     private void updateCategory(
         int categoryIdentifier,
-        final MetadataCategory category,
-        MetadataCategoryRepository categoryRepository) {
+        final MetadataCategory category) {
         categoryRepository.update(categoryIdentifier, entity -> {
             entity.setName(category.getName());
             Map<String, String> labelTranslations = category.getLabelTranslations();
@@ -247,15 +245,9 @@ public class TagsApi {
         @PathVariable
             Integer tagIdentifier
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        MetadataCategoryRepository categoryRepository =
-            appContext.getBean(MetadataCategoryRepository.class);
-        MetadataRepository metadataRepository =
-            appContext.getBean(MetadataRepository.class);
-
         MetadataCategory category = categoryRepository.findOne(tagIdentifier);
         if (category != null) {
-            long recordsCount = metadataRepository.count(MetadataSpecs.hasCategory(category));
+            long recordsCount = metadataRepository.count((Specification<Metadata>)MetadataSpecs.hasCategory(category));
             if (recordsCount > 0l) {
                 throw new IllegalArgumentException(String.format(
                     "Tag '%s' is assigned to %d records. Update records first in order to remove that tag.",

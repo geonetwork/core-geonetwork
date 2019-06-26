@@ -31,7 +31,7 @@
             <div class="row">
               <p data-translate="">gnCssStyleIntroMessage</p>
             </div>
-            <div class="row">
+            <div class="row gn-margin-bottom">
               <div class="col-md-12">
                 <legend >
                   <span data-translate="">gnBackgroundCss</span>
@@ -50,7 +50,7 @@
                 </div>
               </div>
             </div>
-            <div class="row">
+            <div class="row gn-margin-bottom">
               <div class="col-md-12">
                 <legend>
                   <span data-translate="">gnHeaderCss</span>
@@ -64,7 +64,7 @@
                 </div>
               </div>
             </div>
-            <div class="row">
+            <div class="row gn-margin-bottom">
               <div class="col-md-12">
                 <legend>
                   <span data-translate="">gnMenubarCss</span>
@@ -84,8 +84,20 @@
                     color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
                 </div>
                 <div class="col-md-3">
+                    <label for="gnCssStyle.gn-menubarColorActive"
+                      data-translate="">styleVariable-gnMenubarColorActive</label>
+                    <color-picker
+                      data-ng-model="gnCssStyle.gnMenubarColorActive"
+                      color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
+                  </div>
+                <div class="col-md-3">
                   <label for="gnCssStyle.gnMenubarColor" data-translate="">styleVariable-gnMenubarColor</label>
                   <color-picker data-ng-model="gnCssStyle.gnMenubarColor"
+                    color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
+                </div>
+                <div class="col-md-3">
+                  <label for="gnCssStyle.gnMenubarBackgroundHover" data-translate="">styleVariable-gnMenubarBackgroundHover</label>
+                  <color-picker data-ng-model="gnCssStyle.gnMenubarBackgroundHover"
                     color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
                 </div>
                 <div class="col-md-3">
@@ -100,7 +112,31 @@
                 </div>
               </div>
             </div>
-            <div class="row">
+            <div class="row gn-margin-bottom">
+              <div class="col-md-12">
+                <legend>
+                  <span data-translate="">gnSearchCss</span>
+                </legend>
+              </div>
+              <div class="form-row">
+                <div class="col-md-3">
+                  <label for="gnCssStyle.gnSearchOutlineColor" data-translate="">styleVariable-gnSearchOutlineColor</label>
+                  <color-picker data-ng-model="gnCssStyle.gnSearchOutlineColor"
+                    color-picker-format="'hex'" color-picker-alpha="true"></color-picker>
+                </div>
+                <div class="col-md-3">
+                  <label for="gnCssStyle.gnSearchButtonBackgroundColor" data-translate="">styleVariable-gnSearchButtonBackgroundColor</label>
+                  <color-picker data-ng-model="gnCssStyle.gnSearchButtonBackgroundColor"
+                    color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
+                </div>
+                <div class="col-md-3">
+                  <label for="gnCssStyle.gnSearchButtonColor" data-translate="">styleVariable-gnSearchButtonColor</label>
+                  <color-picker data-ng-model="gnCssStyle.gnSearchButtonColor"
+                    color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
+                </div>
+              </div>
+            </div>
+            <div class="row gn-margin-bottom">
               <div class="col-md-12">
                 <legend>
                   <span data-translate="">gnBottombarCss</span>
@@ -129,7 +165,7 @@
                 </div>
               </div>
             </div>
-            <div class="row">
+            <div class="row gn-margin-bottom">
               <div class="col-md-6">
                 <legend>
                   <span data-translate="">gnTopicsCss</span>
@@ -156,7 +192,7 @@
                 </div>
               </div>
             </div>
-            <div class="row">
+            <div class="row gn-margin-bottom">
               <div class="col-md-6">
                 <legend>
                   <span data-translate="">gnResultcardsCss</span>
@@ -193,7 +229,7 @@
                 </div>
               </div>
             </div>
-            <div class="row">
+            <div class="row gn-margin-bottom">
               <div class="col-md-12">
                 <legend>
                   <span data-translate="">gnMdViewCss</span>

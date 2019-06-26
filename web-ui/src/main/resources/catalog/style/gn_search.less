@@ -129,11 +129,11 @@
 
 /*HOME*/
 .search-over {
-  color: #838383;
+  color: #707070;
   text-align: center;
   margin-top: 5px;
   strong {
-    color: #606060;
+    color: #333;
   }
 }
 .gn-form-any {
@@ -188,8 +188,12 @@ span.gn-facet-label:first-letter {
 // fix sort-by combo case
 .gn-sort-by .btn.dropdown-toggle {
   text-transform: lowercase;
+  background-color: #fff;
   &:first-letter {
     text-transform: uppercase;
+  }
+  span {
+    background-color: #fff;
   }
 }
 
@@ -427,21 +431,14 @@ span.gn-facet-label:first-letter {
     cursor: pointer;
     background-color:  #428bca;
   }
-  .gn-md-edit-btn {
-    //position: absolute;
-    //bottom: 0px;
-    //right: 0px;
-    //margin: 2px;
-    //z-index: 10;
-    //float: right;
-  }
   .invisible {
     display: none;
   }
   .gn-md-thumbnail {
     float:left;
     width: 140px;
-    height: 140px;
+    max-height: 140px;
+    height: auto;
     margin-right: 15px;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -727,4 +724,9 @@ button.active [role=tooltip] {
 
 .hidden-nojs {
   display:none !important;
+}
+
+.gn-nojs [role=main] {
+  background-color: white;
+  padding-top: 15px;
 }

@@ -24,7 +24,11 @@
 package org.fao.geonet.api.records;
 
 import com.google.common.collect.Lists;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
@@ -51,10 +55,13 @@ import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -68,8 +75,8 @@ import java.util.UUID;
 import static org.fao.geonet.api.ApiParams.*;
 
 @RequestMapping(value = {
-    "/api/records",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/records",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
 @Api(value = API_CLASS_RECORD_TAG,
@@ -81,6 +88,15 @@ public class MetadataSampleApi {
 
     @Autowired
     LanguageUtils languageUtils;
+
+    @Autowired
+    DataManager dataManager;
+
+    @Autowired
+    SettingManager settingManager;
+
+    @Autowired
+    SchemaManager schemaManager;
 
 
     @ApiOperation(
@@ -111,8 +127,6 @@ public class MetadataSampleApi {
         throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
-        SchemaManager schemaMan = applicationContext.getBean(SchemaManager.class);
-        DataManager dataManager = applicationContext.getBean(DataManager.class);
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
 
@@ -122,7 +136,7 @@ public class MetadataSampleApi {
         for (String schemaName : schema) {
             Log.info(Geonet.DATA_MANAGER, "Loading sample data for schema "
                 + schemaName);
-            Path schemaDir = schemaMan.getSchemaSampleDataDir(schemaName);
+            Path schemaDir = schemaManager.getSchemaSampleDataDir(schemaName);
             if (schemaDir == null) {
                 report.addInfos(String.format(
                     "No samples available for schema '%s'.", schemaName
@@ -206,12 +220,7 @@ public class MetadataSampleApi {
         HttpServletRequest request
     )
         throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
-
-        SchemaManager schemaMan = applicationContext.getBean(SchemaManager.class);
-        DataManager dataMan = applicationContext.getBean(DataManager.class);
-        SettingManager settingManager = applicationContext.getBean(SettingManager.class);
 
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
@@ -222,7 +231,7 @@ public class MetadataSampleApi {
             "Loading templates for schemas '%s'.", schema));
 
         for (String schemaName : schema) {
-            Path templatesDir = schemaMan.getSchemaTemplatesDir(schemaName);
+            Path templatesDir = schemaManager.getSchemaTemplatesDir(schemaName);
             if (templatesDir == null) {
                 report.addInfos(String.format(
                     "No templates available for schema '%s'.", schemaName
@@ -272,7 +281,7 @@ public class MetadataSampleApi {
                             setOwner(owner).
                             setGroupOwner(1);
 
-                        dataMan.insertMetadata(context, metadata, xml, true, true, true, UpdateDatestamp.NO, false, false);
+                        dataManager.insertMetadata(context, metadata, xml, true, true, true, UpdateDatestamp.NO, false, false);
 
 
                         report.addMetadataInfos(metadata.getId(), String.format(

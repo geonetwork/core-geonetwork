@@ -166,6 +166,7 @@
               _id: $routeParams.id,
               _content_type: 'json',
               _isTemplate: 'y or n or s',
+              _draft: 'y or n or e',
               fast: 'index'
             }).then(function(data) {
               $scope.metadataFound = data.count !== '0';
@@ -240,6 +241,7 @@
                   formScope: $scope.$new(),
                   sessionStartTime: moment(),
                   formLoadExtraFn: formLoadExtraFunctions,
+                  codelistFilter: '',
                   working: false
                 });
 

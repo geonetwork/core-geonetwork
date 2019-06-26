@@ -72,17 +72,17 @@
         link: function(scope, element, attrs) {
           // Using Jquery to parse attribute to preserve
           // leading/trailing space which may have sense
-          scope.prefix = element.attr('data-prefix') || '';
-          scope.suffix = element.attr('data-suffix') || '';
+          var prefix = element.attr('data-prefix') || '';
+          var suffix = element.attr('data-suffix') || '';
           var fieldType = attrs['fieldType'] || 'text';
 
           // Create an input
           var input = $('<input class="form-control" type="' + fieldType + '">');
           // Copy the value without prefix/suffix
           input.val(element.val()
-            .replace(scope.prefix, '')
-            .replace(scope.suffix, '')).change(function() {
-            element.val(scope.prefix + input.val() + scope.suffix);
+            .replace(prefix, '')
+            .replace(suffix, '')).change(function() {
+            element.val(prefix + input.val() + suffix);
           });
           element.after(input);
           element.hide();
@@ -188,6 +188,7 @@
              element.is('input') ||
              element.is('textarea') ||
              element.is('select');
+             var isDiv = element.is('div');
              var tooltipTarget = element;
              var iconMode = gnCurrentEdit.displayTooltipsMode === 'icon';
              var isDatePicker = 'gnDatePicker' in attrs;
@@ -269,6 +270,8 @@
                  } else {
                    element.after(tooltipIconCompiled);
                  }
+               } else if (isDiv) {
+                 element.closest(".gn-field").find("div.gn-control").append(tooltipIconCompiled);
                }
 
                // close tooltips on click in editor container

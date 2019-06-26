@@ -113,7 +113,7 @@ public class SpringLocalServiceInvoker {
      * but also urls prefixed with the nodename only eg. '/srv/api/records/..'
      */
     private MockHttpServletRequest prepareMockRequestFromUri(String uri) {
-        String requestURI = uri.replace("local:/","").replace("/"+nodeId, "").split("\\?")[0];
+        String requestURI = uri.replace("local:/","").split("\\?")[0];
         MockHttpServletRequest request = new MockHttpServletRequest("GET", requestURI);
         request.setSession(new MockHttpSession());
         String[] splits = uri.split("\\?");

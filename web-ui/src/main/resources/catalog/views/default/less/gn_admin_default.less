@@ -47,6 +47,16 @@ ul.gn-resultview li.list-group-item {
     .navbar-collapse {
       background: #fff;
     }
+    .navbar-nav > li > a, .navbar-nav > .open > a, .navbar-nav > .active > a {
+      color: @navbar-default-link-color;
+      &:hover, &:focus {
+        color: @navbar-default-link-hover-color;
+        background-color: @navbar-default-link-hover-bg;
+      }
+    }
+    .navbar-nav > .active > a {
+      background-color: @navbar-default-link-active-bg;
+    }
     .dropdown-menu {
       > li {
         > a {
@@ -54,8 +64,31 @@ ul.gn-resultview li.list-group-item {
         }
         &.active, &:hover {
           > a {
-            color: @gn-menubar-color;
+            color: @navbar-default-link-color;
             background-color: lighten(@brand-primary, 46.7%);
+          }
+        }
+      }
+    }
+    @media (min-width: @screen-sm-min) {
+      li.dropdown-hover {
+        &.open:not(.active) > .dropdown-toggle {
+          &:hover, &:focus {
+            background: none;
+          }
+        }
+      }
+    }
+    .username-dropdown {
+      .dropdown-menu {
+        > li {
+          &.active {
+            > a {
+              background-color: @dropdown-bg;
+              &:hover {
+                background-color: lighten(@brand-primary, 46.7%);
+              }
+            }
           }
         }
       }
@@ -102,6 +135,10 @@ ul.gn-resultview li.list-group-item {
         width: calc(~"100% - @{gn-col-main-width}");
         margin-left: @gn-col-main-width;
         float: left;
+      }
+      .sidebar-col-sub-editor {
+        width: @gn-sidebar-width;
+        margin-left: 0;
       }
       .sidebar-col-full {
         width: @gn-sidebar-width;
@@ -266,7 +303,6 @@ ul.gn-resultview li.list-group-item {
             float: right;
           }
         }
-    
       }
       .thumbnail {
         padding: 0;
@@ -283,6 +319,16 @@ ul.gn-resultview li.list-group-item {
               text-decoration: none;
             }
           }
+        }
+      }
+      .gn-harvester-list-group {
+        i {
+          vertical-align: top;
+          margin-top: 3px;
+        }
+        .gn-harvester-name {
+          display: inline-block;
+          width: 80%;
         }
       }
     }

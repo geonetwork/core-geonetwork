@@ -356,7 +356,7 @@ public class MailUtil {
             throw new IllegalArgumentException(
                 "Missing settings in System Configuration (see Administration menu) - cannot send mail");
         }
-        if (username != null) {
+        if (StringUtils.isNotEmpty(username)) {
             email.setAuthenticator(new DefaultAuthenticator(username, password));
         }
 

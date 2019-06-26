@@ -387,6 +387,12 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>listeners</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <!-- Handled locally by a temporarly repository -->
     <dependency>
       <groupId>dlib</groupId>
@@ -578,7 +584,7 @@
 	    <plugin>
 	        <groupId>pl.project13.maven</groupId>
 	        <artifactId>git-commit-id-plugin</artifactId>
-	        <version>2.2.1</version>
+	        <version>2.2.6</version>
 	        <executions>
                   <execution>
                     <phase>initialize</phase>
@@ -673,7 +679,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.7</version>
         <executions>
           <execution>
             <id>add-source</id>
@@ -694,7 +699,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.5</version>
         <executions>
           <execution>
             <id>copy-filter-webResource</id>
@@ -952,6 +956,16 @@
       </properties>
     </profile>
 
+    <profile>
+      <id>slave</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.geonetwork-opensource</groupId>
+          <artifactId>slave</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
   </profiles>
 
   <properties>

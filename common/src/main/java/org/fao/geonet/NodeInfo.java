@@ -31,6 +31,7 @@ import java.io.Serializable;
  * User: Jesse Date: 11/27/13 Time: 2:35 PM
  */
 public class NodeInfo implements Serializable {
+    public static final String DEFAULT_NODE = "srv";
     private String id = "srv";
     private boolean defaultNode = true;
     private boolean readOnly = false;

@@ -23,7 +23,7 @@
 
 package org.fao.geonet.events.md;
 
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.AbstractMetadata;
 
 /**
  * Event launched when a metadata is removed from the database
@@ -34,7 +34,7 @@ public class MetadataRemove extends MetadataEvent {
 
     private static final long serialVersionUID = 324534556246220509L;
 
-    public MetadataRemove(Metadata md) {
+    public MetadataRemove(AbstractMetadata md) {
         super(md);
     }
 

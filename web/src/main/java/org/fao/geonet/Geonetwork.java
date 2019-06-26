@@ -37,6 +37,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
+import org.fao.geonet.events.server.ServerStartup;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.inspireatom.InspireAtomType;
 import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
@@ -351,7 +352,7 @@ public class Geonetwork implements ApplicationHandler {
                 new Source(settingMan.getSiteId(),
                     settingMan.getSiteName(),
                     null,
-                    true));
+                    SourceType.portal));
         }
 
         // Creates a default site logo, only if the logo image doesn't exists
@@ -410,6 +411,9 @@ public class Geonetwork implements ApplicationHandler {
         fillCaches(context);
 
         AbstractEntityListenerManager.setSystemRunning(true);
+        
+        this._applicationContext.publishEvent(new ServerStartup(this._applicationContext));
+        
         return gnContext;
     }
 

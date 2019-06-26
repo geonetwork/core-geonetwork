@@ -65,6 +65,11 @@
   <!-- View configuration -->
   <views>
     <view name="default">
+      <sidePanel>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
       <tab id="default" default="true" mode="flat">
         <section name="gfc:FC_FeatureCatalogue">
           <!-- Preserve gmx:* in editor for backward compatibility. -->
@@ -88,6 +93,10 @@
             xpath="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType/gfc:typeName"
             or="typeName"
             in="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType"/>
+
+          <action type="suggest"
+                  process="add-columns-from-csv"/>
+
           <field
             xpath="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType/gfc:carrierOfCharacteristics"
             or="carrierOfCharacteristics"
@@ -100,12 +109,22 @@
       </flatModeExceptions>
     </view>
     <view name="advanced">
+      <sidePanel>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
       <tab id="advanced">
         <section xpath="/gfc:FC_FeatureType"/>
         <section xpath="/gfc:FC_FeatureCatalogue"/>
       </tab>
     </view>
     <view name="xml">
+      <sidePanel>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
       <tab id="xml" default="true"/>
     </view>
   </views>

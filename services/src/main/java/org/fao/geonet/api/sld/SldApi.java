@@ -1,5 +1,8 @@
 package org.fao.geonet.api.sld;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -17,6 +20,7 @@ import org.jdom.output.XMLOutputter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.opengis.filter.Filter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +32,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.mail.internet.ParseException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
@@ -35,19 +43,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.mail.internet.ParseException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.TransformerException;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-
 @Service
 @RequestMapping(value = {
-    "/api/tools/ogc",
-    "/api/" + API.VERSION_0_1 + "/tools/ogc"
+    "/{portal}/api/tools/ogc",
+    "/{portal}/api/" + API.VERSION_0_1 + "/tools/ogc"
 })
 @Api(value = "tools",
     tags = "tools",
@@ -128,6 +127,12 @@ public class SldApi {
     }
 
 
+    @Autowired
+    TextFileRepository fileRepository;
+
+    @Autowired
+    SettingManager settingManager;
+
     @ApiOperation(value = "Get the list of SLD available")
     @RequestMapping(value = "/sld",
         method = RequestMethod.GET,
@@ -135,10 +140,6 @@ public class SldApi {
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     public List<String> getSLD(HttpServletRequest request) {
-        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
-        TextFileRepository fileRepository = appContext.getBean(TextFileRepository.class);
-        SettingManager settingManager = appContext.getBean(SettingManager.class);
-
         List<TextFile> files = fileRepository.findAll();
         List<String> response = new ArrayList<>(files.size());
         String pathPrefix = request.getContextPath() + request.getServletPath();
@@ -158,8 +159,6 @@ public class SldApi {
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     public void deteleSLD() {
-        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
-        TextFileRepository fileRepository = appContext.getBean(TextFileRepository.class);
         fileRepository.deleteAll();
     }
 
@@ -187,10 +186,6 @@ public class SldApi {
         HttpServletRequest request) throws ServiceException, TransformerException, JSONException, ParseException, IOException, JDOMException {
 
         try {
-            ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
-            TextFileRepository fileRepository = appContext.getBean(TextFileRepository.class);
-            SettingManager settingManager = appContext.getBean(SettingManager.class);
-
             HashMap<String, String> hash = SLDUtil.parseSLD(new URL(serverURL), layers);
 
             Element root = Xml.loadString(hash.get("content"), false);
@@ -233,9 +228,6 @@ public class SldApi {
         @PathVariable("id") int id,
         HttpServletResponse response) throws ResourceNotFoundException {
         try {
-            ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
-            TextFileRepository fileRepository = appContext.getBean(TextFileRepository.class);
-
             TextFile file = fileRepository.findOne(id);
             response.setContentType(file.getMimeType() + "; charset=utf-8");
             PrintWriter writer = response.getWriter();

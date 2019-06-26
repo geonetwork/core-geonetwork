@@ -29,7 +29,8 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                version="1.0"
+                version="2.0"
+                exclude-result-prefixes="#all"
 >
 
   <!-- =================================================================-->
@@ -84,35 +85,25 @@
 
   <!-- =================================================================-->
 
-  <!-- Handle xsi:nil attribute for max cardinality -->
+
+  <!-- Handle xsi:nil and isInfinite attributes for max cardinality
+  This means that editor can't set them from the editor. -->
   <xsl:template match="gco:UnlimitedInteger" priority="2">
-    <xsl:variable name="isNil">
-      <xsl:choose>
-        <xsl:when test="@isInfinite = 'true' or string(.) = ''">
-          <xsl:text>true</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>false</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+    <xsl:variable name="isNil" select="if (string(.) = '') then 'true' else 'false'"/>
 
     <xsl:copy>
-      <xsl:apply-templates select="@*"/>
-      <xsl:if test="not(@isInfinite)">
-        <xsl:attribute name="isInfinite">
-          <xsl:choose>
-            <xsl:when test="string(.) = ''">true</xsl:when>
-            <xsl:otherwise>false</xsl:otherwise>
-          </xsl:choose>
-        </xsl:attribute>
-      </xsl:if>
+      <xsl:apply-templates select="@*[name() != 'isInfinite' and name() != 'xsi:nil']"/>
+
+      <xsl:attribute name="isInfinite"
+                     select="$isNil"/>
+
       <xsl:attribute name="nil" namespace="http://www.w3.org/2001/XMLSchema-instance">
         <xsl:value-of select="$isNil"/>
       </xsl:attribute>
       <xsl:value-of select="."/>
     </xsl:copy>
   </xsl:template>
+
 
   <xsl:template match="gmx:FileName[name(..)!='gmd:contactInstructions']">
     <xsl:copy>

@@ -36,6 +36,23 @@ html, body {
 
 .gn-row-main {
   margin: 2em 0 4em;
+  .gn-form-any {
+    .input-lg {
+      &:focus {
+        border-color: @gn-search-outline-color;
+        box-shadow: rgba(0, 0, 0, 0.075) 0px 1px 1px inset, rgba(@gn-search-outline-color-red, @gn-search-outline-color-green, @gn-search-outline-color-blue, 0.6) 0px 0px 8px;
+      }
+    }
+    .btn {
+      background-color: @gn-search-button-background-color;
+      border-color: darken(@gn-search-button-background-color, 5%);
+      color: @gn-search-button-color;
+      &:hover {
+        background-color: darken(@gn-search-button-background-color, 10%);
+        border-color: darken(@gn-search-button-background-color, 15%);
+      }
+    }
+  }
 }
 
 .gn-row-info {

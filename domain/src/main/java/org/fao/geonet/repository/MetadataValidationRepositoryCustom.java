@@ -23,6 +23,10 @@
 
 package org.fao.geonet.repository;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Custom repository methods for the MetadataValidationRepository User: Jesse Date: 9/5/13 Time:
  * 10:17 PM
@@ -34,5 +38,8 @@ public interface MetadataValidationRepositoryCustom {
      * @param metadataId the id of the metadata.
      * @return the number of rows deleted
      */
-    int deleteAllById_MetadataId(int metadataId);
+    @Modifying(clearAutomatically=true)
+    @Transactional
+    @Query(value="DELETE FROM MetadataValidation v where v.id.metadataId = ?1")
+    int deleteAllById_MetadataId(Integer metadataId);
 }

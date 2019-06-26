@@ -34,6 +34,7 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.InspireAtomFeed;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
 import org.fao.geonet.kernel.DataManager;
@@ -47,6 +48,7 @@ import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import jeeves.server.context.ServiceContext;
@@ -149,7 +151,9 @@ public class InspireAtomHarvester {
         SettingManager sm = context.getBean(SettingManager.class);
 
         final IMetadataUtils metadataUtils = gc.getBean(IMetadataUtils.class);
-        AbstractMetadata iso19139Metadata = metadataUtils.findOne(Specifications.where(MetadataSpecs.isType(MetadataType.METADATA)).and(MetadataSpecs.isIso19139Schema()));
+        AbstractMetadata iso19139Metadata = metadataUtils.findOne(
+        		Specifications.where((Specification<Metadata>) MetadataSpecs.isType(MetadataType.METADATA))
+        			.and((Specification<Metadata>) MetadataSpecs.isIso19139Schema()));
 
 
         Element result = new Element("response");

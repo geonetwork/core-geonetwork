@@ -24,6 +24,7 @@
   <xsl:template mode="getOverviews" match="*"/>
   <xsl:template mode="getMetadataThumbnail" match="*"/>
   <xsl:template mode="getMetadataHeader" match="*"/>
+  <xsl:template mode="getJsonLD" match="*"/>
   <!-- Those templates should be overriden in the schema plugin - end -->
 
   <!-- Starting point -->
@@ -115,38 +116,43 @@
             <xsl:apply-templates mode="getOverviews" select="$metadata"/>
 
             <section class="gn-md-side-providedby">
-              <h4>
+              <h2>
                 <i class="fa fa-fw fa-cog"><xsl:comment select="'icon'"/></i>
                 <span><xsl:value-of select="$schemaStrings/providedBy"/></span>
-              </h4>
+              </h2>
               <img class="gn-source-logo"
+                   alt="{$schemaStrings/logo}"
                    src="{$nodeUrl}../images/logos/{$source}.png" />
             </section>
 
             <xsl:if test="$isSocialbarEnabled">
               <section class="gn-md-side-social">
-                <h4>
+                <h2>
                   <i class="fa fa-fw fa-share-square-o"><xsl:comment select="'icon'"/></i>
                   <span><xsl:value-of select="$schemaStrings/shareOnSocialSite"/></span>
-                </h4>
+                </h2>
                 <a href="https://twitter.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                  target="_blank" class="btn btn-default">
+                   target="_blank"
+                   aria-label="Twitter"
+                   class="btn btn-default">
                   <i class="fa fa-fw fa-twitter"><xsl:comment select="'icon'"/></i>
                 </a>
-                <a href="https://plus.google.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                  target="_blank" class="btn btn-default">
-                  <i class="fa fa-fw fa-google-plus"><xsl:comment select="'icon'"/></i>
-                </a>
                 <a href="https://www.facebook.com/sharer.php?u={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                  target="_blank" class="btn btn-default">
+                   target="_blank"
+                   aria-label="Facebook"
+                   class="btn btn-default">
                   <i class="fa fa-fw fa-facebook"><xsl:comment select="'icon'"/></i>
                 </a>
                 <a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                  target="_blank" class="btn btn-default">
+                   target="_blank"
+                   aria-label="LinkedIn"
+                   class="btn btn-default">
                   <i class="fa fa-fw fa-linkedin"><xsl:comment select="'icon'"/></i>
                 </a>
                 <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                  target="_blank" class="btn btn-default">
+                   target="_blank"
+                   aria-label="Email"
+                   class="btn btn-default">
                   <i class="fa fa-fw fa-envelope-o"><xsl:comment select="'icon'"/></i>
                 </a>
               </section>
@@ -156,10 +162,10 @@
             when in pure HTML mode. -->
             <xsl:if test="$root != 'div'">
               <section class="gn-md-side-viewmode">
-                <h4>
+                <h2>
                   <i class="fa fa-fw fa-eye"><xsl:comment select="'icon'"/></i>
                   <span><xsl:value-of select="$schemaStrings/viewMode"/></span>
-                </h4>
+                </h2>
                 <xsl:for-each select="$configuration/editor/views/view[not(@disabled)]">
                   <ul>
                     <li>
@@ -198,10 +204,10 @@
             </xsl:if>
 
             <section class="gn-md-side-associated">
-              <h4>
+              <h2>
                 <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
                 <span><xsl:value-of select="$schemaStrings/associatedResources"/></span>
-              </h4>
+              </h2>
               <div gn-related="md"
                    data-user="user"
                    data-types="parent|children|services|datasets|hassources|sources|fcats|siblings|associated">
@@ -259,6 +265,11 @@
           <xsl:attribute name="class" select="'tab-pane'"/>
         </xsl:if>
         <h1 class="view-header">
+          <!-- If in tab mode, do not repeat the tab name as header
+          as it is already displayed in the tab itself. -->
+          <xsl:if test="$tabs = 'true'">
+            <xsl:attribute name="class" select="'hidden'"/>
+          </xsl:if>
           <xsl:value-of select="$title"/>
         </h1>
         <xsl:choose>
@@ -283,7 +294,8 @@
                 match="section[@xpath]">
     <div id="gn-view-{generate-id()}" class="gn-tab-content">
       <xsl:apply-templates mode="render-view" select="@xpath"/>
-    <xsl:comment select="'icon'"/></div>
+      <xsl:comment select="'icon'"/>
+    </div>
   </xsl:template>
 
 
@@ -294,7 +306,7 @@
         <xsl:variable name="title"
                       select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
 
-        <xsl:element name="h{3 + count(ancestor-or-self::*[name(.) = 'section'])}">
+        <xsl:element name="h{1 + count(ancestor-or-self::*[name(.) = 'section'])}">
           <xsl:attribute name="class" select="'view-header'"/>
           <xsl:value-of select="$title"/>
         </xsl:element>

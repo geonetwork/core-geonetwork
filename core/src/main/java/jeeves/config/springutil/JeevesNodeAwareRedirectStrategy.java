@@ -39,6 +39,8 @@ import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicatio
 import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getServletContext;
 
 /**
+ * Once authenticated on a portal, this allows to stay on it.
+ *
  * Created by Jesse on 2/17/14.
  */
 public class JeevesNodeAwareRedirectStrategy extends DefaultRedirectStrategy implements RedirectStrategy {

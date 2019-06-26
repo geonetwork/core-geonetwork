@@ -67,6 +67,9 @@ goog.require('gn_alert');
         'default': '/geonetwork'
       },
       'mods': {
+        'global': {
+          'humanizeDates': true
+        },
         'header': {
           'enabled': true,
           'languages': {
@@ -90,12 +93,13 @@ goog.require('gn_alert');
         },
         'home': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.search#/home',
-          'showSocialBarInFooter': true
+          'appUrl': '../../{{node}}/{{lang}}/catalog.search#/home',
+          'showSocialBarInFooter': true,
+          'fluidLayout': true
         },
         'search': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.search#/search',
+          'appUrl': '../../{{node}}/{{lang}}/catalog.search#/search',
           'hitsperpageValues': [10, 50, 100],
           'paginationInfo': {
             'hitsPerPage': 20
@@ -159,11 +163,15 @@ goog.require('gn_alert');
             'layers': ['OGC'],
             'maps': ['ows']
           },
-          'isFilterTagsDisplayedInSearch': false
+          'isFilterTagsDisplayedInSearch': false,
+          'usersearches': {
+            'enabled': false,
+            'displayFeaturedSearchesPanel': false
+          }
         },
         'map': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.search#/map',
+          'appUrl': '../../{{node}}/{{lang}}/catalog.search#/map',
           'externalViewer': {
             'enabled': false,
             'baseUrl': 'http://www.example.com/viewer',
@@ -175,6 +183,7 @@ goog.require('gn_alert');
           'isSaveMapInCatalogAllowed': true,
           'isExportMapAsImageEnabled': false,
           'storage': 'sessionStorage',
+          'bingKey': '',
           'listOfServices': {
             'wms': [],
             'wmts': []
@@ -232,27 +241,28 @@ goog.require('gn_alert');
         },
         'editor': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.edit',
+          'appUrl': '../../{{node}}/{{lang}}/catalog.edit',
           'isUserRecordsOnly': false,
           'isFilterTagsDisplayed': false,
+          'fluidEditorLayout': true,
           'createPageTpl':
               '../../catalog/templates/editor/new-metadata-horizontal.html',
           'editorIndentType': ''
         },
         'admin': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/admin.console'
+          'appUrl': '../../{{node}}/{{lang}}/admin.console'
         },
         'signin': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.signin'
+          'appUrl': '../../{{node}}/{{lang}}/catalog.signin'
         },
         'signout': {
           'appUrl': '../../signout'
         },
         'page': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.search#/page'
+          'appUrl': '../../{{node}}/{{lang}}/catalog.search#/page'
         }
       }
     };
@@ -264,7 +274,7 @@ goog.require('gn_alert');
       requireProxy: [],
       gnCfg: angular.copy(defaultConfig),
       gnUrl: '',
-      docUrl: 'http://geonetwork-opensource.org/manuals/3.4.x/',
+      docUrl: 'http://geonetwork-opensource.org/manuals/3.6.x/',
       //docUrl: '../../doc/',
       modelOptions: {
         updateOn: 'default blur',
@@ -433,6 +443,7 @@ goog.require('gn_alert');
       // Links for social media
       $scope.socialMediaLink = $location.absUrl();
       $scope.getPermalink = gnUtilityService.getPermalink;
+      $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
 
       // If gnLangs current already set by config, do not use URL
       $scope.langs = gnGlobalSettings.gnCfg.mods.header.languages;
@@ -476,6 +487,8 @@ goog.require('gn_alert');
       }
       $scope.nodeId = detectNode(gnGlobalSettings.gnCfg.nodeDetector);
       $scope.service = detectService(gnGlobalSettings.gnCfg.serviceDetector);
+      $scope.redirectUrlAfterSign = window.location.href;
+
       gnGlobalSettings.nodeId = $scope.nodeId;
       gnConfig.env = gnConfig.env ||  {};
       gnConfig.env.node = $scope.nodeId;

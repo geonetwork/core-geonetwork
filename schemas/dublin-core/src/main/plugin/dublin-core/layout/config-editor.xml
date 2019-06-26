@@ -30,6 +30,7 @@
   <!-- Form field type configuration. Default is text. -->
   <fields>
     <for name="dc:description" use="textarea"/>
+    <for name="dct:abstract" use="textarea"/>
     <for name="dc:source" use="textarea"/>
     <for name="dc:rights" use="textarea"/>
 

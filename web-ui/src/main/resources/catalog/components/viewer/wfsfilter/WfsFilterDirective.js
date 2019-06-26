@@ -113,11 +113,12 @@
     'gnIndexRequestManager',
     'gnIndexService',
     'gnGlobalSettings',
+    'gnSearchSettings',
     'ngeoDebounce',
     'gnFeaturesTableManager',
     function($http, wfsFilterService, $q, $rootScope,
              gnIndexRequestManager, gnIndexService, gnGlobalSettings,
-             ngeoDebounce, gnFeaturesTableManager) {
+             gnSearchSettings, ngeoDebounce, gnFeaturesTableManager) {
       return {
         restrict: 'A',
         replace: true,
@@ -163,6 +164,9 @@
           // Get an instance of index object
           var indexObject, extentFilter;
           scope.filterGeometry = undefined;
+
+          // Extent of current features matching the filter.
+          scope.featureExtent = undefined;
 
           /**
            * Init the directive when the scope.layer has changed.
@@ -398,17 +402,26 @@
               var filter = scope.facetFilters[facetName];
               if (!filter) { return; }
 
-              // make the filter case insensitive, ie : abc => [aA][bB][cC]
-              filter = filter.replace(/./g, function(match) {
-                return '[' + match.toLowerCase() + match.toUpperCase() + ']';
-              });
+              // Regex filter can only be apply to string type.
+              if (facetName.match(/^ft_.*_s$/)) {
+                // make the filter case insensitive, ie : abc => [aA][bB][cC]
+                // only alpha regex
+                var lettersRegexOnly = /^[A-Za-z\u00C0-\u017F]+$/;
+                filter = filter.replace(/./g, function (match) {
+                  var upperMatch = scope.accentify(match).toUpperCase();
+                  var lowerMatch = scope.accentify(match).toLowerCase();
+                  return lettersRegexOnly.test(match) ? '[' + lowerMatch + upperMatch + ']': match;
+                });
 
-              aggs[facetName] = {
-                terms: {
-                  include: '.*' + filter + '.*'
-                }
-              };
+                aggs[facetName] = {
+                  terms: {
+                    include: '.*' + filter + '.*'
+                  }
+                };
+              }
             });
+
+            addBboxAggregation(aggs);
 
             //indexObject is only available if Elastic is configured
             if (indexObject) {
@@ -417,9 +430,7 @@
                 geometry: scope.filterGeometry
               }, aggs).
                   then(function(resp) {
-                    indexObject.pushState();
-                    scope.fields = resp.facets;
-                    scope.count = resp.count;
+                    searchResponseHandler(resp);
                     angular.forEach(scope.fields, function(f) {
                       if (expandedFields.indexOf(f.name) >= 0) {
                         f.expanded = true;
@@ -428,6 +439,72 @@
                   });
             }
           };
+
+
+          // Compute bbox of returned object
+          // At some point we may be able to use geo_bounds aggregation
+          // when it is supported for geo_shape type
+          // See https://github.com/elastic/elasticsearch/issues/7574
+          // Eg.
+          // "viewport" : {
+          //   "geo_bounds" : {
+          //     "field" : "location",
+          //     "wrap_longitude" : true
+          //   }
+          // }
+          function addBboxAggregation(aggs) {
+            aggs['bbox_xmin'] = {'min': {'field': 'bbox_xmin'}};
+            aggs['bbox_ymin'] = {'min': {'field': 'bbox_ymin'}};
+            aggs['bbox_xmax'] = {'max': {'field': 'bbox_xmax'}};
+            aggs['bbox_ymax'] = {'max': {'field': 'bbox_ymax'}};
+          };
+
+          function setFeatureExtent(agg) {
+            scope.autoZoomToExtent = true;
+            if (scope.autoZoomToExtent
+              && agg.bbox_xmin.value && agg.bbox_ymin.value
+              && agg.bbox_xmax.value && agg.bbox_ymax.value) {
+              var isPoint = agg.bbox_xmin.value === agg.bbox_xmax.value
+                            && agg.bbox_ymin.value === agg.bbox_ymax.value,
+                  radius = .05,
+                  extent = [agg.bbox_xmin.value, agg.bbox_ymin.value,
+                            agg.bbox_xmax.value, agg.bbox_ymax.value];
+
+              if (isPoint) {
+                var point = new ol.geom.Point([agg.bbox_xmin.value, agg.bbox_ymin.value]);
+                extent = new ol.extent.buffer(point.getExtent(), radius);
+              }
+              scope.featureExtent = ol.extent.applyTransform(extent,
+                ol.proj.getTransform("EPSG:4326", scope.map.getView().getProjection()));
+            }
+          };
+
+          scope.zoomToResults = function () {
+            scope.map.getView().fit(scope.featureExtent, scope.map.getSize());
+          };
+
+          scope.$watch('featureExtent', function(n, o) {
+            if (n && n !== o) {
+              scope.zoomToResults();
+            }
+          });
+
+
+          scope.accentify = function(str) {
+            var searchStr = str.toLocaleLowerCase()
+            var accents = {
+                a: 'àáâãäåæa',
+                c: 'çc',
+                e: 'èéêëæe',
+                i: 'ìíîïi',
+                n: 'ñn',
+                o: 'òóôõöøo',
+                s: 'ßs',
+                u: 'ùúûüu',
+                y: 'ÿy'
+              }
+            return accents.hasOwnProperty(searchStr) ? accents[searchStr] : str
+          }
 
           scope.getMore = function(field) {
             indexObject.getFacetMoreResults(field).then(function(response) {
@@ -453,14 +530,62 @@
             scope.layer.set('esConfig', null);
             scope.$broadcast('FiltersChanged');
 
+            // reset text search in facets
+            scope.facetFilters = {};
+
+            var aggs = {};
+            addBboxAggregation(aggs);
+
             // load all facet and fill ui structure for the list
-            return indexObject.searchWithFacets({}).
+            return indexObject.searchWithFacets({}, aggs).
                 then(function(resp) {
-                  indexObject.pushState();
-                  scope.fields = resp.facets;
-                  scope.count = resp.count;
-                });
+              searchResponseHandler(resp);
+            });
           };
+
+          function searchResponseHandler(resp) {
+            indexObject.pushState();
+            scope.count = resp.count;
+            scope.fields = resp.facets;
+            scope.sortAggregation();
+            resp.indexData.aggregations &&
+            setFeatureExtent(resp.indexData.aggregations);
+          };
+
+          /**
+           * Each aggregations are sorted based as defined in the application profil config
+           * and the query is ordered based on this config.
+           *
+           * The values of each aggregations are sorted, checked first.
+           */
+          scope.sortAggregation = function() {
+            // Disable sorting of aggregations by alpha order and based on expansion
+            // Order comes from application profile
+            // scope.fields.sort(function (a, b) {
+            //   var aChecked = !!scope.output[a.name];
+            //   var bChecked = !!scope.output[b.name];
+            //   var aLabel = a.label;
+            //   var bLabel = b.label;
+            //   if ((aChecked && bChecked) || (!aChecked && !bChecked)) {
+            //     return aLabel.localeCompare(bLabel);
+            //   }
+            //   return (aChecked === bChecked) ? 0 : aChecked ? -1 : 1;
+            // });
+
+            scope.fields.forEach(function (facette) {
+              facette.values.sort(function (a, b) {
+                var aChecked = scope.isFacetSelected(facette.name, a.value);
+                var bChecked = scope.isFacetSelected(facette.name, b.value);
+                if ((aChecked && bChecked) || (!aChecked && !bChecked)) {
+                  if (gnSearchSettings.facetOrdering === 'alphabetical') {
+                    return a.value.localeCompare(b.value);
+                  }
+                  return b.count - a.count;
+                }
+                return (aChecked === bChecked) ? 0 : aChecked ? -1 : 1;
+              })
+            })
+          }
 
           /**
            * alter form values & resend a search in case there are initial
@@ -484,13 +609,17 @@
                   initialFilters.geometry[0][1];
             }
 
+            var aggs = {};
+            addBboxAggregation(aggs);
+
             // resend a search with initial filters to alter the facets
             return indexObject.searchWithFacets({
               params: initialFilters.qParams,
               geometry: initialFilters.geometry
-            }).then(function(resp) {
+            }, aggs).then(function(resp) {
               indexObject.pushState();
               scope.fields = resp.facets;
+              scope.sortAggregation();
               scope.count = resp.count;
 
               // look for date graph fields; call onUpdateDate to refresh them
@@ -519,6 +648,8 @@
             // save this filter state for future comparison
             scope.previousFilterState.params = angular.merge({}, scope.output);
             scope.previousFilterState.geometry = scope.ctrl.searchGeometry;
+
+            scope.zoomToResults();
 
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);

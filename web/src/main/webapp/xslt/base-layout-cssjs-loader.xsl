@@ -58,6 +58,13 @@
           rel="stylesheet" media="screen"/>
   </xsl:template>
 
+  <xsl:template name="css-load-nojs">
+    <link href="{/root/gui/url}/static/{$customFilename}.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
+          media="screen"/>
+    <link href="{/root/gui/url}/static/gn_metadata_pdf.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
+          media="print"/>
+  </xsl:template>
+
 
   <xsl:template name="javascript-load">
 
@@ -157,6 +164,7 @@
         <script
           src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/angular/bootstrap-table-angular.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
         <!--</xsl:if>-->

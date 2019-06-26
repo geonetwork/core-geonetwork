@@ -1,0 +1,52 @@
+@import "../../../style/gn_bootstrap.less";
+
+.gn-alerts {
+  left: 0;
+  @media (min-width: @screen-md-min) {
+    max-width: 75%;
+  }
+  .alert {
+    min-width: 300px;
+    min-height: 50px;
+    border-radius: 0px 3px 3px 0px;
+    border-left: 5px solid #d4edda;
+    padding-left: 50px;
+    line-height: 1.5em;
+    margin-right: 5px;
+    margin-bottom: 0;
+    .close {
+      opacity: 0.5;
+    }
+    &:before {
+      font: normal normal normal 14px/1 FontAwesome;
+      font-size: inherit;
+      text-rendering: auto;
+      -webkit-font-smoothing: antialiased;
+      float: left;
+      font-size: 24px;
+      margin-left: -35px;
+      margin-top: -2px;
+    }
+    .btn {
+      margin-top: 10px;
+    }
+  }
+  .alert-success {
+    color: #3c864d;
+    background-color: #c7f0d1;
+    border-color: #c3e6cb;
+    border-left: 5px solid #3c864d;
+    &:before {
+      content: "\f05d";
+    }
+  }
+  .alert-danger {
+    color: #d9534f;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    border-left: 5px solid #e44f5e;
+    &:before {
+      content: "\f071";
+    }
+  }
+}

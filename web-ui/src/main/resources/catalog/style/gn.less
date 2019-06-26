@@ -110,7 +110,7 @@ div[gn-transfer-ownership] * .list-group {
     top: 0;
     left: 0;
     right: 0;
-    z-index: 30;
+    z-index: 100;
     height: 52px;
   }
   .gn-sub-bar {
@@ -599,31 +599,24 @@ i.fa-times.delete:hover {
 
 .gn-search-page {
   .gn-status {
-    border: 2px solid darken(@brand-info, 5%);
+    border: 2px solid @brand-primary;
     position: absolute;
-    top: 95px;
-    left: 2px;
-    border-radius: 6px;
-    padding: 2px;
-    -ms-transform: rotate(-30deg);
-    -webkit-transform: rotate(-30deg);
-    transform: rotate(-30deg);
-    color: @brand-info;
-    font-weight: bold;
+    margin-top: 15px;
+    border-radius: 20px;
+    padding: 5px 8px;
+    color: @brand-primary;
+    font-weight: 500;
     font-size: 80%;
-    background-color: rgba(255, 255, 255 , 0.7);
+    background-color: #fff;
   }
   .gn-status-mdview {
     position: relative;
-    top: 0;
-    left: 0;
+    margin-top: 0;
     display: inline-block;
-    font-size: 100%;
     border-radius: 20px;
     padding: 8px 12px;
-    font-weight: normal;
-    font-size: 80%;
-    transform: none;
+    font-weight: 500;
+    font-size: 90%;
   }
   /* Decide here which status should be displayed
   or not and with which colors */
@@ -636,6 +629,45 @@ i.fa-times.delete:hover {
     color: @brand-warning;
   }
   .gn-status-obsolete {
+    border-color: darken(@brand-danger, 5%);
+    color: @brand-danger;
+  }
+
+// Same as before but with workflow statuses
+  .gn-workflow-status {
+    border: 2px solid darken(@brand-info, 5%);
+    position: absolute;
+    top: 95px;
+    left: 115px;
+    border-radius: 6px;
+    padding: 2px;
+    -ms-transform: rotate(30deg);
+    -webkit-transform: rotate(30deg);
+    transform: rotate(30deg);
+    color: @brand-info;
+    font-weight: bold;
+    font-size: 80%;
+    background-color: rgba(255, 255, 255 , 0.7);
+    border-color: darken(@brand-success, 5%);
+    color: @brand-success;
+  }
+  .gn-workflow-status-mdview {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    font-size: 100%;
+    border-radius: 20px;
+    padding: 8px 12px;
+    font-weight: normal;
+    font-size: 80%;
+    transform: none;
+    border-color: darken(@brand-success, 5%);
+    color: @brand-success;
+  }
+  /* Decide here which status should be displayed
+  or not and with which colors */
+  .gn-workflow-status-1 {
     border-color: darken(@brand-danger, 5%);
     color: @brand-danger;
   }
@@ -701,6 +733,7 @@ button, .btn, .btn:active, a {
   height: auto;
   border-radius: 2px;
   font-size: 12px;
+  z-index: 2100;
   .popover-content {
     display: table-cell;
     vertical-align: middle;
@@ -809,6 +842,48 @@ input.ng-invalid {
 }
 
 
+// md type widget (used only in editor for now)
+gn-md-type-widget {
+  display: inline-block;
+  & > div {
+    border-radius: 1000px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 14px;
+    position: relative;
+    color: white;
+    margin-top: -0.2em;
+    margin-bottom: -0.4em;
+    background-color: @gray-light;
+    overflow: hidden;
+
+    &.valid-status-1 {
+      background-color: @gray-light;
+    }
+    &.valid-status0 {
+      background-color: @btn-danger-bg;
+    }
+    &.valid-status1 {
+      background-color: @btn-success-bg;
+    }
+    &.md-type-t {
+      background-color: @btn-primary-bg;
+    }
+
+    &::after {
+      content: '';
+      background-color: rgba(255, 255, 255, 0.25);
+      position: absolute;
+      top: 0px;
+      height: 50%;
+      left: 0px;
+      right: 0px;
+    }
+  }
+}
+
 .navbar {
   margin-bottom: 14px;
   .navbar-brand {
@@ -853,8 +928,9 @@ input.ng-invalid {
     line-height: 1em;
     .gn-user-role {
       text-transform: uppercase;
-      opacity: 0.7;
+      opacity: 0.9;
       font-size: 0.8em;
+      color: @gray-darker;
     }
   }
 }

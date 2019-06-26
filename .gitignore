@@ -78,3 +78,6 @@ schemas/*/doc/*/*.rst
 *.old
 web-ui-docs/package-lock.json
 release/jetty/*
+chromedriver
+node_modules
+package-lock.json

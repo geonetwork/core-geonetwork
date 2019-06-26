@@ -79,7 +79,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
-@RequestMapping(value = { "/api/records", "/api/" + API.VERSION_0_1 + "/records" })
+@RequestMapping(value = { "/{portal}/api/records", "/{portal}/api/" + API.VERSION_0_1 + "/records" })
 @Api(value = API_CLASS_RECORD_TAG, tags = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
 @Controller("recordProcessing")
 @ReadWriteController
@@ -87,6 +87,12 @@ public class MetadataProcessApi {
 
     @Autowired
     LanguageUtils languageUtils;
+
+    @Autowired
+    DataManager dm;
+
+    @Autowired
+    SettingManager sm;
 
     public static final String XSL_SUGGEST_FILE = "suggest.xsl";
 
@@ -102,11 +108,7 @@ public class MetadataProcessApi {
             HttpServletRequest request) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
-
-        DataManager dm = applicationContext.getBean(DataManager.class);
-        SettingManager sm = applicationContext.getBean(SettingManager.class);
 
         Map<String, Object> xslParameter = new HashMap<String, Object>();
         xslParameter.put("guiLang", request.getLocale().getISO3Language());
@@ -159,7 +161,6 @@ public class MetadataProcessApi {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        SettingManager sm = applicationContext.getBean(SettingManager.class);
         XsltMetadataProcessingReport report = new XsltMetadataProcessingReport(process);
 
         Element processedMetadata = process(applicationContext, process, request, metadata, save, context, sm, report);
@@ -184,7 +185,6 @@ public class MetadataProcessApi {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        SettingManager sm = applicationContext.getBean(SettingManager.class);
         XsltMetadataProcessingReport report = new XsltMetadataProcessingReport(process);
 
         process(applicationContext, process, request, metadata, save, context, sm, report);
@@ -195,10 +195,9 @@ public class MetadataProcessApi {
             AbstractMetadata metadata, boolean save, ServiceContext context, SettingManager sm,
             XsltMetadataProcessingReport report) throws Exception {
 
-        DataManager dataMan = context.getBean(DataManager.class);
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
         Element processedMetadata;
-        Element beforeMetadata = dataMan.getMetadata(context, Integer.toString(metadata.getId()), false, false, false);
+        Element beforeMetadata = dm.getMetadata(context, Integer.toString(metadata.getId()), false, false, false);
         try {
             final String siteURL = sm.getSiteURL(context);
             processedMetadata = XslProcessUtils.process(context, String.valueOf(metadata.getId()), process, save, true,

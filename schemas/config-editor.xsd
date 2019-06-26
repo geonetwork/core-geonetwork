@@ -1468,6 +1468,14 @@ Example of a drowdown button with 3 coordinates system to choose from:
           </action>
 
 
+Example of a button to display a suggestion form:
+
+.. code-block:: xml
+
+          <action type="suggest"
+                  process="add-columns-from-csv"/>
+
+
         ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>
@@ -1524,6 +1532,7 @@ For example, for sibling panel, the association type and initiative type could b
           <xs:restriction base="xs:string">
             <xs:enumeration value="add"/>
             <xs:enumeration value="process"/>
+            <xs:enumeration value="suggest"/>
             <xs:enumeration value="associatedResource"/>
           </xs:restriction>
         </xs:simpleType>
