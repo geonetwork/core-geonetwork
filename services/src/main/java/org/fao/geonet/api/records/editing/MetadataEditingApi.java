@@ -23,9 +23,15 @@
 
 package org.fao.geonet.api.records.editing;
 
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
+import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -41,9 +47,13 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.events.history.RecordUpdatedEvent;
-import org.fao.geonet.kernel.*;
-import org.fao.geonet.kernel.datamanager.IMetadataValidator;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -61,22 +71,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
-import springfox.documentation.annotations.ApiIgnore;
 
 import static jeeves.guiservices.session.Get.getSessionAsXML;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
@@ -129,9 +140,9 @@ public class MetadataEditingApi {
         @ApiParam(
             value = "Tab"
         )
-            @RequestParam(
-                defaultValue = "simple"
-            )
+        @RequestParam(
+            defaultValue = "simple"
+        )
             String currTab,
         @RequestParam(
             defaultValue = "false"
@@ -143,10 +154,10 @@ public class MetadataEditingApi {
         @ApiIgnore
         @ApiParam(hidden = true)
         @RequestParam
-            Map<String,String> allRequestParams,
+            Map<String, String> allRequestParams,
         HttpServletRequest request,
         HttpServletResponse response
-        ) throws Exception {
+    ) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         boolean showValidationErrors = false;
@@ -159,7 +170,7 @@ public class MetadataEditingApi {
         Integer id2 = dm.startEditingSession(context, String.valueOf(metadata.getId()));
 
         //Maybe we are redirected to another metadata?
-        if(id2 != metadata.getId()) {
+        if (id2 != metadata.getId()) {
 
             StringBuilder sb = new StringBuilder("?");
 
@@ -169,15 +180,15 @@ public class MetadataEditingApi {
             // back that makes sense and prevent a loop:
             boolean hasPreviousURL = false;
 
-            while(parameters.hasMoreElements()) {
+            while (parameters.hasMoreElements()) {
                 String key = parameters.nextElement();
                 sb.append(key + "=" + request.getParameter(key) + "%26");
-                if(key.equalsIgnoreCase("redirectUrl")) {
+                if (key.equalsIgnoreCase("redirectUrl")) {
                     hasPreviousURL = true;
                 }
             }
 
-            if(!hasPreviousURL) {
+            if (!hasPreviousURL) {
                 sb.append("redirectUrl=catalog.edit");
             }
 
@@ -226,9 +237,9 @@ public class MetadataEditingApi {
         @ApiParam(
             value = "Tab"
         )
-            @RequestParam(
-                defaultValue = "simple"
-            )
+        @RequestParam(
+            defaultValue = "simple"
+        )
             String tab,
         @RequestParam(
             defaultValue = "false"
@@ -266,15 +277,15 @@ public class MetadataEditingApi {
         @ApiIgnore
         @ApiParam(hidden = true)
         @RequestParam
-            Map<String,String> allRequestParams,
+            Map<String, String> allRequestParams,
         HttpServletRequest request,
         HttpServletResponse response,
         @ApiIgnore
         @ApiParam(hidden = true)
             HttpSession httpSession
-        ) throws Exception {
+    ) throws Exception {
 
-		Log.trace(Geonet.DATA_MANAGER, "Saving metadata editing with UUID " + metadataUuid);
+        Log.trace(Geonet.DATA_MANAGER, "Saving metadata editing with UUID " + metadataUuid);
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
         AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
@@ -285,7 +296,7 @@ public class MetadataEditingApi {
         UserSession session = ApiUtils.getUserSession(httpSession);
         IMetadataValidator validator = applicationContext.getBean(IMetadataValidator.class);
         String id = String.valueOf(metadata.getId());
-		Log.trace(Geonet.DATA_MANAGER, " > ID of the record to edit: " + id);
+        Log.trace(Geonet.DATA_MANAGER, " > ID of the record to edit: " + id);
         String isTemplate = allRequestParams.get(Params.TEMPLATE);
 //        boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
 //        boolean forget = config.getValue(Params.FORGET, "no").equals("yes");
@@ -293,7 +304,7 @@ public class MetadataEditingApi {
 
         // TODO: Use map only to avoid this conversion
         Log.trace(Geonet.DATA_MANAGER, " > Getting parameters from request");
-        Element params = new Element ("request");
+        Element params = new Element("request");
         Map<String, String> forwardedParams = new HashMap<>();
         for (Map.Entry<String, String> e : allRequestParams.entrySet()) {
             params.addContent(new Element(e.getKey()).setText(e.getValue()));
@@ -302,24 +313,24 @@ public class MetadataEditingApi {
             }
         }
 
-        if(Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
-        	Log.trace(Geonet.DATA_MANAGER, " > Setting type of record " 
-        					+ MetadataType.lookup(isTemplate));
+        if (Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
+            Log.trace(Geonet.DATA_MANAGER, " > Setting type of record "
+                + MetadataType.lookup(isTemplate));
         }
         int iLocalId = Integer.parseInt(id);
-    	Log.trace(Geonet.DATA_MANAGER, " > Id is " + iLocalId);
+        Log.trace(Geonet.DATA_MANAGER, " > Id is " + iLocalId);
         dataMan.setTemplateExt(iLocalId, MetadataType.lookup(isTemplate));
 
         //--- use StatusActionsFactory and StatusActions class to possibly
         //--- change status as a result of this edit (use onEdit method)
-    	Log.trace(Geonet.DATA_MANAGER, " > Trigger status actions based on this edit");
+        Log.trace(Geonet.DATA_MANAGER, " > Trigger status actions based on this edit");
         StatusActionsFactory saf = context.getBean(StatusActionsFactory.class);
         StatusActions sa = saf.createStatusActions(context);
         sa.onEdit(iLocalId, minor);
         Element beforeMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
 
         if (StringUtils.isNotEmpty(data)) {
-    		Log.trace(Geonet.DATA_MANAGER, " > Updating metadata through data manager");
+            Log.trace(Geonet.DATA_MANAGER, " > Updating metadata through data manager");
             Element md = Xml.loadString(data, false);
             String changeDate = null;
             boolean updateDateStamp = !minor;
@@ -334,7 +345,7 @@ public class MetadataEditingApi {
             String xmlAfter = outp.outputString(md);
             new RecordUpdatedEvent(Long.parseLong(id), session.getUserIdAsInt(), xmlBefore, xmlAfter).publish(applicationContext);
         } else {
-    		Log.trace(Geonet.DATA_MANAGER, " > Updating contents");
+            Log.trace(Geonet.DATA_MANAGER, " > Updating contents");
             ajaxEditUtils.updateContent(params, false, true);
 
             Element afterMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
@@ -361,7 +372,7 @@ public class MetadataEditingApi {
             return;
         }
         if (terminate) {
-    		Log.trace(Geonet.DATA_MANAGER, " > Closing editor");
+            Log.trace(Geonet.DATA_MANAGER, " > Closing editor");
             SettingManager sm = context.getBean(SettingManager.class);
 
             boolean forceValidationOnMdSave = sm.getValueAsBool("metadata/workflow/forceValidationOnMdSave");
@@ -402,7 +413,7 @@ public class MetadataEditingApi {
             }
 
             if (reindex) {
-        		Log.trace(Geonet.DATA_MANAGER, " > Reindexing record");
+                Log.trace(Geonet.DATA_MANAGER, " > Reindexing record");
                 dataMan.indexMetadata(id, true, null);
             }
 
@@ -412,7 +423,7 @@ public class MetadataEditingApi {
                 throw new IllegalStateException(String.format(
                     "Record saved but as it was invalid at the end of " +
                         "the editing session. The public record '%s' was unpublished.",
-                metadata.getUuid()));
+                    metadata.getUuid()));
             } else {
                 return;
             }
@@ -429,9 +440,9 @@ public class MetadataEditingApi {
 
 
         buildEditorForm(
-                tab, httpSession, forwardedParams,
-                request, elMd, metadata.getDataInfo().getSchemaId(),
-                context, applicationContext, false, false, response);
+            tab, httpSession, forwardedParams,
+            request, elMd, metadata.getDataInfo().getSchemaId(),
+            context, applicationContext, false, false, response);
 
     }
 
@@ -462,7 +473,7 @@ public class MetadataEditingApi {
         @ApiIgnore
         @ApiParam(hidden = true)
         @RequestParam
-            Map<String,String> allRequestParams,
+            Map<String, String> allRequestParams,
         HttpServletRequest request,
         @ApiIgnore
         @ApiParam(hidden = true)
@@ -475,8 +486,6 @@ public class MetadataEditingApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         dataMan.cancelEditingSession(context, String.valueOf(metadata.getId()));
     }
-
-
 
 
     @ApiOperation(value = "Add element",
@@ -522,13 +531,13 @@ public class MetadataEditingApi {
             value = "Should attributes be shown on the editor snippet?",
             required = false)
         @RequestParam(
-                defaultValue = "false"
-            )
-                boolean displayAttributes,
+            defaultValue = "false"
+        )
+            boolean displayAttributes,
         @ApiIgnore
         @ApiParam(hidden = true)
         @RequestParam
-            Map<String,String> allRequestParams,
+            Map<String, String> allRequestParams,
         HttpServletRequest request,
         HttpServletResponse response,
         @ApiIgnore
@@ -565,9 +574,6 @@ public class MetadataEditingApi {
             request, md, metadata.getDataInfo().getSchemaId(),
             context, applicationContext, true, true, response);
     }
-
-
-
 
 
     @ApiOperation(value = "Reorder element",
@@ -608,13 +614,13 @@ public class MetadataEditingApi {
             value = "Should attributes be shown on the editor snippet?",
             required = false)
         @RequestParam(
-                defaultValue = "false"
-            )
-                boolean displayAttributes,
+            defaultValue = "false"
+        )
+            boolean displayAttributes,
         @ApiIgnore
         @ApiParam(hidden = true)
         @RequestParam
-            Map<String,String> allRequestParams,
+            Map<String, String> allRequestParams,
         HttpServletRequest request,
         @ApiIgnore
         @ApiParam(hidden = true)
@@ -629,9 +635,6 @@ public class MetadataEditingApi {
             ref,
             direction == Direction.down);
     }
-
-
-
 
 
     @ApiOperation(value = "Delete element",
@@ -671,9 +674,9 @@ public class MetadataEditingApi {
             value = "Should attributes be shown on the editor snippet?",
             required = false)
         @RequestParam(
-                defaultValue = "false"
-            )
-                boolean displayAttributes,
+            defaultValue = "false"
+        )
+            boolean displayAttributes,
         HttpServletRequest request,
         @ApiIgnore
         @ApiParam(hidden = true)
@@ -723,9 +726,9 @@ public class MetadataEditingApi {
             value = "Should attributes be shown on the editor snippet?",
             required = false)
         @RequestParam(
-                defaultValue = "false"
-            )
-                boolean displayAttributes,
+            defaultValue = "false"
+        )
+            boolean displayAttributes,
         HttpServletRequest request,
         @ApiIgnore
         @ApiParam(hidden = true)
@@ -752,14 +755,14 @@ public class MetadataEditingApi {
      * element required for the editor are created.
      */
     private void buildEditorForm(
-            String tab,
-            HttpSession session,
-            Map<String, String> allRequestParams,
-            HttpServletRequest request,
-            Element xml,
-            String schema,
-            ServiceContext context,
-            ApplicationContext applicationContext, boolean isEmbedded, boolean embedded, HttpServletResponse response) throws Exception {
+        String tab,
+        HttpSession session,
+        Map<String, String> allRequestParams,
+        HttpServletRequest request,
+        Element xml,
+        String schema,
+        ServiceContext context,
+        ApplicationContext applicationContext, boolean isEmbedded, boolean embedded, HttpServletResponse response) throws Exception {
 
 
         UserSession userSession = ApiUtils.getUserSession(session);
@@ -767,18 +770,18 @@ public class MetadataEditingApi {
         root.addContent(xml);
         Element gui = root.getChild("gui");
         gui.addContent(
-                new Element("currTab").setText(tab));
+            new Element("currTab").setText(tab));
         // This flag is used to generate top tool bar or not
         gui.addContent(
-                new Element("reqService").setText(embedded ? "embedded" : "md.edit"));
+            new Element("reqService").setText(embedded ? "embedded" : "md.edit"));
         String iso3langCode = languageUtils.getIso3langCode(request.getLocales());
         gui.addContent(
-                new Element("language").setText(iso3langCode));
+            new Element("language").setText(iso3langCode));
         gui.addContent(
-                getSchemaStrings(schema, context)
+            getSchemaStrings(schema, context)
         );
 
-        Element requestParams = new Element ("request");
+        Element requestParams = new Element("request");
         for (Map.Entry<String, String> e : allRequestParams.entrySet()) {
             requestParams.addContent(new Element(e.getKey()).setText(e.getValue()));
         }
@@ -786,9 +789,9 @@ public class MetadataEditingApi {
 
         GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
         Path xslt = dataDirectory.getWebappDir().resolve(
-                isEmbedded ?
-                        "xslt/ui-metadata/edit/edit-embedded.xsl" :
-                        "xslt/ui-metadata/edit/edit.xsl");
+            isEmbedded ?
+                "xslt/ui-metadata/edit/edit-embedded.xsl" :
+                "xslt/ui-metadata/edit/edit.xsl");
         Xml.transformXml(root, xslt, response.getOutputStream());
     }
 
@@ -840,7 +843,7 @@ public class MetadataEditingApi {
             if (schema.equals(schemaToLoad) ||
                 schemaToLoad.startsWith(schema) ||
                 schemaManager.getDependencies(schemaToLoad).contains(schema)
-                ) {
+            ) {
                 try {
                     Map<String, XmlFile> schemaInfo = schemaManager.getSchemaInfo(schema);
 
