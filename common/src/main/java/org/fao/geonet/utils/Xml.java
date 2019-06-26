@@ -385,7 +385,7 @@ public final class Xml {
     public static void transform(Element xml, Path styleSheetPath, OutputStream out) throws Exception {
         StreamResult resStream = new StreamResult(out);
         transform(xml, styleSheetPath, resStream, null);
-        out.close();
+        out.flush();
     }
 
 
@@ -394,7 +394,7 @@ public final class Xml {
         Map<String, Object> map = new HashMap<>();
         map.put("geonet-force-xml", "xml");
         transform(xml, styleSheetPath, resStream, map);
-        out.close();
+        out.flush();
     }
 
     //--------------------------------------------------------------------------
@@ -1060,7 +1060,7 @@ public final class Xml {
     /**
      * return true if the String passed in is something like XML
      *
-     * @param inString a string that might be XML
+     * @param inXMLStr a string that might be XML
      * @return true of the string is XML, false otherwise
      */
     public static boolean isXMLLike(String inXMLStr) {

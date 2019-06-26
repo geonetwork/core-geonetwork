@@ -150,42 +150,44 @@ public class MetadataEditingApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         boolean showValidationErrors = false;
-        boolean starteditingsession = true;
 
         ServiceContext context = ApiUtils.createServiceContext(request);
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        if (starteditingsession) {
-            IMetadataUtils dm = applicationContext.getBean(IMetadataUtils.class);
-            Integer id2 = dm.startEditingSession(context, String.valueOf(metadata.getId()));
-            
-            //Maybe we are redirected to another metadata?
-            if(id2 != metadata.getId()) {
-                
-            	StringBuilder sb = new StringBuilder("?");
-            	
-            	Enumeration<String> parameters = request.getParameterNames();
-            	
-            	//As this editor will redirect, make sure there is something to go 
-            	// back that makes sense and prevent a loop:
-            	boolean hasPreviousURL = false;
-            	
-            	while(parameters.hasMoreElements()) {
-            		String key = parameters.nextElement();
-            		sb.append(key + "=" + request.getParameter(key) + "%26");
-            		if(key.equalsIgnoreCase("redirectUrl")) {
-            			hasPreviousURL = true;
-            		}
-            	}
-            	
-            	if(!hasPreviousURL) {
-            		sb.append("redirectUrl=catalog.edit");
-            	}
-            	
-                Element el = new Element("script");
-                el.setText("window.location.hash = decodeURIComponent(\"#/metadata/" + id2 + sb.toString() + "\")");
-                return el;
+
+        // Start editing session
+        IMetadataUtils dm = applicationContext.getBean(IMetadataUtils.class);
+        Integer id2 = dm.startEditingSession(context, String.valueOf(metadata.getId()));
+
+        //Maybe we are redirected to another metadata?
+        if(id2 != metadata.getId()) {
+
+            StringBuilder sb = new StringBuilder("?");
+
+            Enumeration<String> parameters = request.getParameterNames();
+
+            //As this editor will redirect, make sure there is something to go
+            // back that makes sense and prevent a loop:
+            boolean hasPreviousURL = false;
+
+            while(parameters.hasMoreElements()) {
+                String key = parameters.nextElement();
+                sb.append(key + "=" + request.getParameter(key) + "%26");
+                if(key.equalsIgnoreCase("redirectUrl")) {
+                    hasPreviousURL = true;
+                }
             }
+
+            if(!hasPreviousURL) {
+                sb.append("redirectUrl=catalog.edit");
+            }
+
+            Element el = new Element("script");
+            el.setText("window.location.hash = decodeURIComponent(\"#/metadata/" + id2 + sb.toString() + "\")");
+            String elStr = Xml.getString(el);
+            response.getWriter().print(elStr);
         }
+        // End of start editing session
+
 
         Element elMd = new AjaxEditUtils(context)
             .getMetadataEmbedded(
