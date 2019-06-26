@@ -122,6 +122,18 @@ goog.require('gn_alert');
               // TODOES: Add INSPIRE
             },
             'mainsearch': {
+              "resourceType": {
+                "terms": {
+                  "field": "resourceType"
+                },
+                "aggs": {
+                  "serviceType": {
+                    "terms": {
+                      "field": "serviceType"
+                    }
+                  }
+                }
+              },
               'availableInServices': {
                 'filters': {
                   'filters': {
@@ -155,12 +167,6 @@ goog.require('gn_alert');
                 'terms': {
                   'field': 'tag',
                   'size': 15
-                }
-              },
-              'resourceType': {
-                'terms': {
-                  'field': 'resourceType',
-                  'size': 10
                 }
               }
             },

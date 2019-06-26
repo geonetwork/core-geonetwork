@@ -1,13 +1,13 @@
 <div data-ng-class="{'is-date': !!ctrl.facet.dates}">
   <ul class="list-group">
     <li class="list-group-item"
-         data-ng-repeat="item in ctrl.facet.items"
-         data-ng-click="ctrl.filter(ctrl.facet, item)">
-      <label data-ng-class="{'gn-facet-active': ctrl.isInSearch(ctrl.facet, item)}">
+         data-ng-repeat="item in ctrl.facet.items">
+      <label data-ng-click="ctrl.filter(ctrl.facet, item)" data-ng-class="{'gn-facet-active': ctrl.isInSearch(ctrl.facet, item)}">
         <span class="gn-facet-label">{{::item.name}}</span>&nbsp;
         <span class="gn-facet-count">({{::item.count}})</span>
-
       </label>
+      <div data-es-facet="nestedFacet" ng-if="::item.aggs" ng-repeat="nestedFacet in ::item.aggs">
+      </div>
     </li>
   </ul>
   <a href class="see-more" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">

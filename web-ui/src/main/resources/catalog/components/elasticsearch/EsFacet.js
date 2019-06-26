@@ -44,32 +44,48 @@
     };
 
     this.getUIModel = function(response, request) {
+      var listModel;
+      listModel = createFacetModel(request.aggregations, response.data.aggregations)
+      response.data.facets = listModel;
+      console.log(listModel)
+      return response.data;
+    };
+
+    function createFacetModel(reqAggs, respAggs) {
       var listModel = [];
-      for (var fieldId in response.data.aggregations) {
-        var respAgg = response.data.aggregations[fieldId];
-        var reqAgg = request.aggregations[fieldId];
+      for (var fieldId in respAggs) {
+        var respAgg = respAggs[fieldId];
+        var reqAgg = reqAggs[fieldId];
 
         var facetModel = {
           name: fieldId,
           items: []
         };
 
-        if(reqAgg.hasOwnProperty('terms')) {
+        if (reqAgg.hasOwnProperty('terms')) {
           facetModel.type = 'terms';
           facetModel.size = reqAgg.terms.size;
-          respAgg.buckets.forEach(function(bucket) {
-            if(bucket.key) {
-              facetModel.items.push({
+          respAgg.buckets.forEach(function (bucket) {
+            if (bucket.key) {
+              var facet = {
                 name: bucket.key,
                 count: bucket.doc_count
-              });
+              };
+              // nesting
+              if(reqAgg.hasOwnProperty('aggs')) {
+                var nestAggs = {}
+                for (var indexKey in reqAgg.aggs) {
+                  nestAggs[indexKey] = bucket[indexKey]
+                }
+                facet.aggs = createFacetModel(reqAgg.aggs, nestAggs)
+              }
+              facetModel.items.push(facet);
             }
           });
-        }
-        else if(reqAgg.hasOwnProperty('filters')) {
+        } else if (reqAgg.hasOwnProperty('filters')) {
           facetModel.type = 'filters';
           facetModel.size = DEFAULT_SIZE;
-          for(var p in respAgg.buckets) {
+          for (var p in respAgg.buckets) {
             facetModel.items.push({
               name: p,
               query_string: reqAgg.filters.filters[p],
@@ -77,15 +93,10 @@
             });
           }
         }
-
         listModel.push(facetModel);
-
       }
-
-      response.data.facets = listModel;
-      return response.data;
-    };
-
+      return listModel;
+    }
 
   }]);
 })();
