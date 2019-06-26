@@ -875,8 +875,8 @@
       </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
-        <artifactId>mockito-all</artifactId>
-        <version>1.10.19</version>
+        <artifactId>mockito-core</artifactId>
+        <version>2.28.2</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -887,8 +887,8 @@
       </dependency>
       <dependency>
         <groupId>org.powermock</groupId>
-        <artifactId>powermock-api-mockito</artifactId>
-        <version>1.6.4</version>
+        <artifactId>powermock-api-mockito2</artifactId>
+        <version>2.0.2</version>
         <scope>test</scope>
       </dependency>
       <dependency>
