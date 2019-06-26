@@ -27,7 +27,7 @@
         </div>
 
         <div data-translate="" class="search-over"
-            data-translate-values="{records: '{{searchInfo.count}}'}">searchOver</div>
+            data-translate-values="{records: '{{searchInfo.hits.total.value}}'}">searchOver</div>
 
       </div>
     </div>
@@ -55,10 +55,9 @@
     <!-- /.gn-top-records -->
   </form>
 
-  <div class="row" data-ng-show="searchInfo.count == 0">
+  <div class="row" data-ng-show="searchInfo.hits.total.value == 0">
     <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
-      <div data-ng-show="searchInfo.count == 0"
-          class="col-md-offset-2 col-md-8 alert alert-warning">
+      <div class="col-md-offset-2 col-md-8 alert alert-warning">
         <span data-translate="">noDataInCatalog</span>
         <div data-gn-need-help="user-guide/quick-start/index.html"></div>
       </div>
@@ -162,7 +161,7 @@
   <!-- /.gn-row-topics -->
   
   <div class="row gn-row-info"
-       data-ng-show="searchInfo.count > 0"
+       data-ng-show="searchInfo.hits.total.value > 0"
        data-ng-class="{'gn-info-list-blocks': type === 'blocks' || type === undefined, 'gn-info-list-large': type === 'large', 'gn-info-list-small': type === 'small'}">
     <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
       <div class="col-sm-12">

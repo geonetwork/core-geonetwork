@@ -155,8 +155,7 @@
               function(key, value) {
                 filter += '&' + key + '=' + value;
               });
-          search('q?_content_type=json&fast=index' +
-              '&bucket=' + scope.searchResults.selectionBucket +
+          search('q?bucket=' + scope.searchResults.selectionBucket +
               filter +
               '&from=' + (pageOptions.currentPage *
               pageOptions.hitsPerPage + 1) +
