@@ -331,7 +331,7 @@ public class EsSearchManager implements ISearchManager {
                                             mapper.readTree(node.getTextNormalize()));
                                     } catch (IOException e) {
                                         // Invalid JSON object provided
-                                        e.printStackTrace();
+                                        Log.error(Geonet.INDEX_ENGINE, e.getMessage(), e);
                                     }
                                 } else {
                                     arrayNode.add(
@@ -351,7 +351,7 @@ public class EsSearchManager implements ISearchManager {
                                             ));
                                     } catch (IOException e) {
                                         // Invalid JSON object provided
-                                        e.printStackTrace();
+                                        Log.error(Geonet.INDEX_ENGINE, e.getMessage(), e);
                                     }
                                 } else {
                                     doc.put(

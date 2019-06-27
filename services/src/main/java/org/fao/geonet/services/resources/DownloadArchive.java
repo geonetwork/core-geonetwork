@@ -61,10 +61,7 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.resources.handlers.IResourceDownloadHandler;
 import org.fao.geonet.util.MailSender;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.FilePathChecker;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.*;
 import org.jdom.Element;
 
 import jeeves.interfaces.Service;
@@ -403,7 +400,7 @@ public class DownloadArchive implements Service {
                                 sm.getValueAsBool("system/feedback/mailServer/ingoreSslCertificateErrors", false),
                                 from, fromDescr, email, null, subject, message);
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            Log.error(Geonet.RESOURCES, e.getMessage(), e);
                         }
                     }
                 }

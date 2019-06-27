@@ -51,6 +51,7 @@ import org.fao.geonet.api.cssstyle.service.ICssStyleSettingService;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.CssStyleSetting;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.utils.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,7 +107,7 @@ public class CssStyleSettingsService {
             return new ResponseEntity<String>(HttpStatus.CREATED);
 
         } catch (final Exception e) {
-            e.printStackTrace();
+            Log.error(API.LOG_MODULE_NAME, "CssStyleSettingsService - saveCssStyle: " + e.getMessage(), e);
             throw e;
         }
     }

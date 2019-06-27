@@ -151,13 +151,13 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
                 error = true;
                 log.error("Unknown error trying to harvest");
                 log.error(e.getMessage());
-                e.printStackTrace();
+                log.error(e);
                 errors.add(new HarvestError(context, e));
             } catch (Throwable e) {
                 error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(e.getMessage());
-                e.printStackTrace();
+                log.error(e);
                 errors.add(new HarvestError(context, e));
             }
         }
@@ -170,13 +170,13 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
                 error = true;
                 log.error("Unknown error trying to harvest");
                 log.error(e.getMessage());
-                e.printStackTrace();
+                log.error(e);
                 errors.add(new HarvestError(context, e));
             } catch(Throwable e) {
                 error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(e.getMessage());
-                e.printStackTrace();
+                log.error(e);
                 errors.add(new HarvestError(context, e));
             }
         }

@@ -744,8 +744,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                         logger.warning("Raised exception while harvesting from : " + nodeName);
                         logger.warning(" (C) Class   : " + t.getClass().getSimpleName());
                         logger.warning(" (C) Message : " + t.getMessage());
+                        logger.error(t);
                         error = t;
-                        t.printStackTrace();
                         errors.add(new HarvestError(context, t));
                     } finally {
                         List<HarvestError> harvesterErrors = getErrors();
@@ -809,13 +809,13 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             } catch (Exception e2) {
                 logger.error("Raised exception while attempting to send email");
                 logger.error(" (C) Exc   : " + e2);
-                e2.printStackTrace();
+                logger.error(e2);
             }
 
         } catch (Exception e) {
             logger.warning("Raised exception while attempting to store harvest history from : " + nodeName);
-            e.printStackTrace();
-            logger.warning(" (C) Exc   : " + e);
+            logger.warning(" (C) Exc   : " + e.getMessage());
+            logger.error(e);
         }
     }
 

@@ -20,6 +20,8 @@
 
 package org.fao.geonet.services.util.z3950;
 
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 import org.jzkit.configuration.api.Configuration;
 import org.jzkit.configuration.api.ConfigurationException;
 import org.jzkit.search.ExplainInformationDTO;
@@ -147,7 +149,7 @@ public class GNSearchSessionFactory extends SearchSessionFactoryImpl {
             result.setDatabaseInfo(list);
 
         } catch (ConfigurationException ce) {
-            ce.printStackTrace();
+            Log.error(Geonet.SRU, "GNSearchSessionFactory - explain, error: " + ce.getMessage(), ce);
         }
 
 

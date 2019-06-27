@@ -947,7 +947,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             return null;
         } catch (Exception e) {
             log.warning("  - Failed to set thumbnail for metadata: " + e.getMessage());
-            e.printStackTrace();
+            log.error(e);
             result.thumbnailsFailed++;
         }
         return null;

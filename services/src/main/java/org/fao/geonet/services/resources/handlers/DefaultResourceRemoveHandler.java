@@ -64,8 +64,7 @@ public class DefaultResourceRemoveHandler implements IResourceRemoveHandler {
             storeFileUploadDeleteRequest(context, metadataId, fileName);
 
         } catch (Exception ex) {
-            Log.error(Geonet.RESOURCES, "DefaultResourceRemoveHandler (onDelete): " + ex.getMessage());
-            ex.printStackTrace();
+            Log.error(Geonet.RESOURCES, "DefaultResourceRemoveHandler (onDelete): " + ex.getMessage(), ex);
             throw new ResourceHandlerException(ex);
         }
     }
@@ -104,8 +103,7 @@ public class DefaultResourceRemoveHandler implements IResourceRemoveHandler {
             storeFileUploadDeleteRequest(context, metadataId, fileName);
 
         } catch (Exception ex) {
-            Log.error(Geonet.RESOURCES, "DefaultResourceRemoveHandler (onDelete): " + ex.getMessage());
-            ex.printStackTrace();
+            Log.error(Geonet.RESOURCES, "DefaultResourceRemoveHandler (onDelete): " + ex.getMessage(), ex);
             throw new ResourceHandlerException(ex);
         }
 
