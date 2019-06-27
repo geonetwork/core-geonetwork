@@ -37,7 +37,6 @@
   <!-- =========================================================== -->
   <!-- Module Description -->
   <!-- =========================================================== -->
-  <groupId>org.geonetwork-opensource</groupId>
   <artifactId>oaipmh</artifactId>
   <packaging>jar</packaging>
   <name>Oaipmh modules</name>

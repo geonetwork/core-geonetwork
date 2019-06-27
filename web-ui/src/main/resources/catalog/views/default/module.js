@@ -137,6 +137,8 @@
       $scope.facetConfig = gnSearchSettings.facetConfig;
       $scope.facetTabField = gnSearchSettings.facetTabField;
       $scope.location = gnSearchLocation;
+      $scope.fluidLayout = gnGlobalSettings.gnCfg.mods.home.fluidLayout;
+      $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
       $scope.toggleMap = function () {
         $(searchMap.getTargetElement()).toggle();
         $('button.gn-minimap-toggle > i').toggleClass('fa-angle-double-left fa-angle-double-right');
@@ -342,6 +344,7 @@
       setActiveTab();
       $scope.$on('$locationChangeSuccess', setActiveTab);
 
+      var sortConfig = gnSearchSettings.sortBy.split('#');
       angular.extend($scope.searchObj, {
         advancedMode: false,
         from: 1,
@@ -357,12 +360,14 @@
         defaultParams: {
           'facet.q': '',
           resultType: gnSearchSettings.facetsSummaryType || 'details',
-          sortBy: gnSearchSettings.sortBy || 'relevance'
+          sortBy: sortConfig[0] || 'relevance',
+          sortOrder: sortConfig[1] || ''
         },
         params: {
           'facet.q': gnSearchSettings.defaultSearchString || '',
           resultType: gnSearchSettings.facetsSummaryType || 'details',
-          sortBy: gnSearchSettings.sortBy || 'relevance'
+          sortBy: sortConfig[0] || 'relevance',
+          sortOrder: sortConfig[1] || ''
         },
         sortbyValues: gnSearchSettings.sortbyValues
       });

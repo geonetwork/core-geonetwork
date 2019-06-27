@@ -403,7 +403,7 @@ public class Handlers {
             def xpath = f.getXPathFrom(el);
 
             if (xpath != null) {
-                def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@xpath$xpath\"\n" +
+                def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=settings&amp;id=metadata:@id$mdId:@xpath$xpath\"\n" +
                         "         style=\"min-width:${width/4}px; min-height:${width/4}px;\" />"
 
                 def inclusion = el.'gmd:extentTypeCode'.text() == '0' ? 'exclusive' : 'inclusive';

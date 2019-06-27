@@ -26,8 +26,8 @@ package org.fao.geonet.utils;
 import net.sf.json.JSON;
 import net.sf.json.xml.XMLSerializer;
 import net.sf.saxon.Configuration;
+import net.sf.saxon.Controller;
 import net.sf.saxon.FeatureKeys;
-
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
@@ -55,6 +55,21 @@ import org.jdom.xpath.XPath;
 import org.mozilla.universalchardet.UniversalDetector;
 import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.URIResolver;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.ValidatorHandler;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -79,6 +94,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -87,22 +103,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.URIResolver;
-import javax.xml.transform.sax.SAXResult;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.ValidatorHandler;
 
 import static org.fao.geonet.Constants.ENCODING;
 
@@ -385,6 +385,16 @@ public final class Xml {
     public static void transform(Element xml, Path styleSheetPath, OutputStream out) throws Exception {
         StreamResult resStream = new StreamResult(out);
         transform(xml, styleSheetPath, resStream, null);
+        out.flush();
+    }
+
+
+    public static void transformXml(Element xml, Path styleSheetPath, OutputStream out) throws Exception {
+        StreamResult resStream = new StreamResult(out);
+        Map<String, Object> map = new HashMap<>();
+        map.put("geonet-force-xml", "xml");
+        transform(xml, styleSheetPath, resStream, map);
+        out.flush();
     }
 
     //--------------------------------------------------------------------------
@@ -472,6 +482,7 @@ public final class Xml {
                 transFact.setAttribute(FeatureKeys.LINE_NUMBERING, true);
                 transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION, false);
                 transFact.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
+
                 // Add the following to get timing info on xslt transformations
                 //transFact.setAttribute(FeatureKeys.TIMING,true);
             } catch (IllegalArgumentException e) {
@@ -484,6 +495,13 @@ public final class Xml {
                     for (Map.Entry<String, Object> param : params.entrySet()) {
                         t.setParameter(param.getKey(), param.getValue());
                     }
+
+                if (params.containsKey("geonet-force-xml")) {
+                    ((Controller) t).setOutputProperty("indent", "yes");
+                    ((Controller) t).setOutputProperty("method", "xml");
+                    ((Controller) t).setOutputProperty("{http://saxon.sf.net/}indent-spaces", "3");
+                }
+
                 }
                 t.transform(srcXml, result);
             }
@@ -516,7 +534,7 @@ public final class Xml {
 
         // Step 1: Construct a FopFactory
         // (reuse if you plan to render multiple documents!)
-        FopFactory fopFactory = FopFactory.newInstance();
+        FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
 
         // Step 2: Set up output stream.
         // Note: Using BufferedOutputStream for performance reasons
@@ -1042,7 +1060,7 @@ public final class Xml {
     /**
      * return true if the String passed in is something like XML
      *
-     * @param inString a string that might be XML
+     * @param inXMLStr a string that might be XML
      * @return true of the string is XML, false otherwise
      */
     public static boolean isXMLLike(String inXMLStr) {

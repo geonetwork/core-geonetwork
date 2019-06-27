@@ -417,8 +417,8 @@
       };
     }]);
 
-  module.directive('gnHumanizeTime', [
-    function() {
+  module.directive('gnHumanizeTime', ['gnGlobalSettings',
+    function(gnGlobalSettings) {
       return {
         restrict: 'A',
         template: '<span title="{{title}}">{{value}}</span>',
@@ -428,6 +428,7 @@
           fromNow: '@'
         },
         link: function linkFn(scope, element, attr) {
+          var useFromNowSetting = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
           scope.$watch('date', function(originalDate) {
             if (originalDate) {
               // Moment will properly parse YYYY, YYYY-MM,
@@ -445,9 +446,9 @@
                 var formattedDate = scope.format ?
                     date.format(scope.format) :
                     date.toString();
-                scope.value = scope.fromNow !== undefined ?
+                scope.value = scope.fromNow !== undefined && useFromNowSetting ?
                     fromNow : formattedDate;
-                scope.title = scope.fromNow !== undefined ?
+                scope.title = scope.fromNow !== undefined && useFromNowSetting ?
                     formattedDate : fromNow;
               }
             }
@@ -1230,8 +1231,8 @@
    * to the parent element (required to highlight
    * element in navbar)
    */
-  module.directive('gnActiveTbItem', ['$location', 'gnLangs',
-    function($location, gnLangs) {
+  module.directive('gnActiveTbItem', ['$location', 'gnLangs', 'gnConfig',
+    function($location, gnLangs, gnConfig) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -1240,6 +1241,7 @@
 
           // Replace lang in link
           link = link.replace('{{lang}}', gnLangs.getCurrent());
+          link = link.replace('{{node}}', gnConfig.env.node);
 
           // Insert debug mode between service and route
           if (link.indexOf('#') !== -1) {
@@ -1295,10 +1297,11 @@
         }
       };
     }]);
-  module.filter('signInLink', ['$location', 'gnLangs',
-    function($location, gnLangs) {
+  module.filter('signInLink', ['$location', 'gnLangs', 'gnConfig',
+    function($location, gnLangs, gnConfig) {
       return function(href) {
-        href = href.replace('{{lang}}', gnLangs.getCurrent()) +
+        href = href.replace('{{lang}}', gnLangs.getCurrent())
+                   .replace('{{node}}', gnConfig.env.node) +
             '?redirect=' + encodeURIComponent(window.location.href);
         return href;
       }}

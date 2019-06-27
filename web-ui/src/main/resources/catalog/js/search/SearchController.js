@@ -30,12 +30,14 @@
   goog.require('gn_catalog_service');
   goog.require('gn_searchsuggestion_service');
   goog.require('gn_static_pages');
+  goog.require('gn_usersearches');
 
   var module = angular.module('gn_search_controller', [
     'ui.bootstrap.typeahead',
     'gn_searchsuggestion_service',
     'gn_catalog_service',
-    'gn_static_pages'
+    'gn_static_pages',
+    'gn_usersearches'
   ]);
 
   /**
@@ -49,9 +51,10 @@
     'suggestService',
     'gnAlertService',
     'gnSearchSettings',
+    'gnGlobalSettings',
     'gnConfig',
-    function($scope, $q, $http, suggestService,
-             gnAlertService, gnSearchSettings, gnConfig) {
+    function($scope, $q, $http, suggestService, gnAlertService,
+             gnSearchSettings, gnGlobalSettings, gnConfig) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
@@ -69,6 +72,12 @@
         $scope.isUserFeedbackEnabled = true;
       }
 
+      $scope.isUserSearchesEnabled = gnGlobalSettings.gnCfg.mods.search.usersearches.enabled;
+      $scope.displayFeaturedSearchesPanel =
+        gnGlobalSettings.gnCfg.mods.search.usersearches.displayFeaturedSearchesPanel;
+
+      $scope.ise  = false;
+
       /** Facets configuration */
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType;
 
@@ -80,7 +89,7 @@
           gnSearchSettings.resultViewTpls[0].tplUrl;
       /* Default advanced search form template */
       $scope.advancedSearchTemplate = gnSearchSettings.advancedSearchTemplate ||
-        "../../catalog/views/default/templates/advancedSearchForm/defaultAdvancedSearchForm.html";
+        '../../catalog/views/default/templates/advancedSearchForm/defaultAdvancedSearchForm.html';
 
       $scope.getAnySuggestions = function(val) {
         return suggestService.getAnySuggestions(val);
@@ -147,11 +156,5 @@
        * @return {*}
        */
       $scope.getCatScope = function() {return $scope};
-
-      // TODO: see if not redondant with CatController event management
-      $scope.$on('StatusUpdated', function(e, status) {
-        gnAlertService.addAlert(status);
-      });
-
     }]);
 })();

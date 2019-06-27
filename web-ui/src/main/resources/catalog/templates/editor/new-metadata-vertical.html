@@ -4,6 +4,10 @@
   <div class="alert alert-warning" data-ng-hide="hasTemplates"
        data-translate="">noTemplatesAvailable
   </div>
+  <div class="alert alert-warning" data-ng-show="groups.length === 0"
+       data-translate="">youAreNotMemberOfAnyGroup
+  </div>
+
 
   <div class="progress progress-striped active"
        data-ng-show="hasTemplates && mdList === null">
@@ -124,7 +128,4 @@
       </div>
     </div>
   </div>
-</div>
-
-<div data-ng-include="'../../catalog/templates/info.html'">
 </div>

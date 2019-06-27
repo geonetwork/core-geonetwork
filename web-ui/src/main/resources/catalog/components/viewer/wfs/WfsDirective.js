@@ -27,22 +27,29 @@
   var module = angular.module('gn_wfs_directive', [
   ]);
 
-  module.directive('gnWfsDownload', ['gnWfsService', 'gnSearchSettings',
-    function(gnWfsService, gnSearchSettings) {
+  module.directive('gnWfsDownload', ['gnWfsService', 'gnSearchSettings', 'gnGlobalSettings',
+    function(gnWfsService, gnSearchSettings, gnGlobalSettings) {
       return {
         restrict: 'A',
         scope: {
           layer: '=gnWfsDownload',
           map: '=',
-          isWfsAvailable: '=?hasDownload'
+          isWfsAvailable: '=?hasDownload',
+          // When you've secured WFS, you may want the popup
+          // opened for basic authentication to only appear
+          // when user request the download
+          initOnDemand: '@',
+          mode: '@'
         },
         templateUrl: '../../catalog/components/' +
             'viewer/wfs/partials/download.html',
         link: function(scope, element, attrs, ctrls) {
-          scope.isWfsAvailable = false;
+          scope.initOnDemand = attrs['initOnDemand'] == 'true' || false;
+          scope.isWfsAvailable = scope.initOnDemand ? true : false;
+          scope.isInitialized = false;
+          scope.downloadFormat = undefined;
 
-          function init() {
-
+          scope.init = function() {
             if (!scope.layer) {
               return;
             }
@@ -51,6 +58,9 @@
             if (!source || !(source instanceof ol.source.ImageWMS ||
                 source instanceof ol.source.TileWMS)) {
               return;
+              // TODO add WFS layer download support
+              // || (source instanceof ol.source.Vector &&
+              //   source.getFormat() instanceof ol.format.WFS)
             }
 
             // Get WFS URL from attrs or try by substituting WFS in WMS URLs.
@@ -96,19 +106,36 @@
            */
           scope.checkWFSUrl = function() {
             if (scope.url && scope.url != '') {
-              return gnWfsService.getCapabilities(scope.url)
+              return gnWfsService.getCapabilities(gnGlobalSettings.getNonProxifiedUrl(scope.url))
                   .then(function(capabilities) {
+                    scope.isInitialized = true;
                     scope.isWfsAvailable = true;
+                    scope.capabilities = capabilities;
                     scope.featureType =
                       gnWfsService.getTypeName(capabilities, scope.typename);
                     if (scope.featureType) {
                       scope.formats =
                       gnWfsService.getOutputFormat(capabilities);
                     }
+                  }, function (r) {
+                    console.warn(r);
+                    scope.isInitialized = true;
+                    scope.isWfsAvailable = false;
                   });
             }
           };
-          init();
+
+          scope.downloadFormatChange = function (o) {
+            var df = o.downloadFormat;
+            if (df) {
+              scope.download(df.split('#')[0],
+                df.split('#')[1] == 'true');
+            }
+          };
+
+          if (!scope.initOnDemand){
+            scope.init();
+          }
         }
       };
     }
@@ -123,10 +150,12 @@
         templateUrl: '../../catalog/components/' +
             'viewer/wfs/partials/download.html',
         link: function(scope, element, attrs, ctrls) {
-          scope.capabilities;
+          scope.initOnDemand = attrs['initOnDemand'] == 'true' || false;
           scope.isWfsAvailable = false;
+          scope.isInitialized = false;
+          scope.mode = 'dropdown';
 
-          function init() {
+          scope.init = function() {
             // Get WFS URL from attrs or try by substituting WFS in WMS URLs.
             scope.url = attrs['url'];
             scope.typename = attrs['typename'];
@@ -155,7 +184,6 @@
                   e[1] + ',' + e[0] + ',' + e[3] + ',' + e[2],
                   p);
             } else {
-              console.log('hi4');
               gnWfsService.download(scope.url, scope.capabilities.version, featureTypeName, format);
             }
           };
@@ -166,15 +194,22 @@
           scope.checkWFSUrl = function() {
             return gnWfsService.getCapabilities(scope.url)
                 .then(function(capabilities) {
+                  scope.isInitialized = true;
                   scope.isWfsAvailable = true;
                   scope.capabilities = capabilities;
                   scope.featureType =
                       gnWfsService.getTypeName(capabilities, scope.typename);
                   scope.formats = gnWfsService.getOutputFormat(capabilities);
+                }, function (r) {
+                  console.warn(r);
+                  scope.isInitialized = true;
+                  scope.isWfsAvailable = false;
                 });
           };
 
-          init();
+          if (!scope.initOnDemand){
+            scope.init();
+          }
         }
       };
     }

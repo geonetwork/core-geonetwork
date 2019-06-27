@@ -40,8 +40,8 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -101,7 +101,7 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 
                 // --- check access
 
-                final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+                final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
                 final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
                 AbstractMetadata info = metadataRepository.findOne(id);
                 if (info == null) {
@@ -112,7 +112,7 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 
                     // --- remove old operations
                     if (!"replace".equals(mode)) {
-                        info.getMetadataCategories().clear();
+                        info.getCategories().clear();
                     }
 
                     // --- set new ones
@@ -126,7 +126,7 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
                         if (name.startsWith("_") && !name.equals(Params.CONTENT_TYPE)) {
                             final MetadataCategory category = categoryRepository.findOne(Integer.valueOf(name.substring(1)));
                             if (category != null) {
-                                info.getMetadataCategories().add(category);
+                                info.getCategories().add(category);
                             } else {
                                 context.warning("Unable to find category with name: " + name.substring(1));
                             }

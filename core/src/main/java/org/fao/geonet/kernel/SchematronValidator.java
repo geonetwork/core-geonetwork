@@ -66,7 +66,7 @@ public class SchematronValidator extends AbstractSchematronValidator {
             }
         } catch (Throwable e) {
             Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
-            errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
+            errorReport.addContent("Schematron error occurred, rules could not be verified: " + e.getMessage());
             schemaTronXmlOut.addContent(errorReport);
         }
 

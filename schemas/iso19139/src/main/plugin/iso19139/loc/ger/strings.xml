@@ -221,4 +221,7 @@
   <sds-section-custodian>Responsible custodian</sds-section-custodian>
   <sds-addOperation>Add Operation</sds-addOperation>
 
+  <trueValue>Ja</trueValue>
+  <falseValue>Nein</falseValue>
+  <nilValue>Undefined</nilValue>
 </strings>

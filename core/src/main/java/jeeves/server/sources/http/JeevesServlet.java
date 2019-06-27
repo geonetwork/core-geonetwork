@@ -74,18 +74,11 @@ public class JeevesServlet extends HttpServlet {
             final ServletContext servletContext = getServletContext();
             final ServletPathFinder pathFinder = new ServletPathFinder(servletContext);
 
-            // initialize each JeevesEngine now
-            for (String node : JeevesContextLoaderListener.getNodeIds(servletContext)) {
-                if (!node.trim().isEmpty()) {
-                    JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) servletContext.getAttribute(
-                        User.NODE_APPLICATION_CONTEXT_KEY + node.trim());
-                    ApplicationContextHolder.set(jeevesAppContext);
-                    jeevesAppContext.setServletConfig(getServletConfig());
-                    jeevesAppContext.getBean(JeevesEngine.class).init(pathFinder.getAppPath(), pathFinder.getConfigPath(),
-                        pathFinder.getBaseUrl(), this);
-
-                }
-            }
+            JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) servletContext.getAttribute(User.NODE_APPLICATION_CONTEXT_KEY);
+            ApplicationContextHolder.set(jeevesAppContext);
+            jeevesAppContext.setServletConfig(getServletConfig());
+            jeevesAppContext.getBean(JeevesEngine.class).init(pathFinder.getAppPath(), pathFinder.getConfigPath(),
+                pathFinder.getBaseUrl(), this);
 
             initialized = true;
         } catch (Throwable e) {
@@ -180,7 +173,8 @@ public class JeevesServlet extends HttpServlet {
         JeevesEngine jeeves = applicationContext.getBean(JeevesEngine.class);
 
         try {
-            srvReq = ServiceRequestFactory.create(req, res, jeeves.getUploadDir(), jeeves.getMaxUploadSize());
+            srvReq = ServiceRequestFactory.create(req, res,
+                null, null, null, jeeves.getUploadDir(), jeeves.getMaxUploadSize());
         } catch (FileUploadTooBigEx e) {
             StringBuilder sb = new StringBuilder();
             sb.append("File upload too big - exceeds ").append(jeeves.getMaxUploadSize()).append(" Mb\n")

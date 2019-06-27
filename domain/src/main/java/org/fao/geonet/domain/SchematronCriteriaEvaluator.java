@@ -40,6 +40,6 @@ public interface SchematronCriteriaEvaluator {
 
     // Used for metadata that is not in the catalogue, should be provided the groupOwner for the metadata
     // to evaluate the SchemaCriteriaType.GROUP
-    public abstract boolean accepts(ApplicationContext applicationContext, String value,Element metadata,
+    public abstract boolean accepts(ApplicationContext applicationContext, String value, Element metadata,
                                     List<Namespace> metadataNamespaces,  Integer groupOwnerId);
 }

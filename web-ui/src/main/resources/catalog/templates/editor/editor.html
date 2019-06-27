@@ -20,8 +20,9 @@
       unsupportedSchemaAlert
     </div>
 
-
-    <div id="gn-editor-container-{{id}}"></div>
+    <div data-ng-class="fluidEditorLayout ? 'container-fluid' : 'container'">
+      <div id="gn-editor-container-{{id}}"></div>
+    </div>
 
   </div>
 </div>
@@ -85,7 +86,4 @@
      data-gn-popup-options="{title:'confirmCloseInvalidTitle', confirmCallback: confirmClose}"
      id="confirm-editor-close">
   <p translate>confirmCloseInvalidMetadata</p>
-</div>
-
-<div data-ng-include="'../../catalog/templates/info.html'">
 </div>

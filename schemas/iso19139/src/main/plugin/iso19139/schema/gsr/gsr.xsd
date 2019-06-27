@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.isotc211.org/2005/gsr"
+           xmlns:gsr="http://www.isotc211.org/2005/gsr"
            elementFormDefault="qualified" version="0.1"
 >
   <!-- ================================= Annotation ================================ -->

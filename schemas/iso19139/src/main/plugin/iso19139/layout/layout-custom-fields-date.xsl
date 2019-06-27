@@ -108,9 +108,9 @@
       <div class="col-sm-3 gn-value">
         <xsl:variable name="codelist"
                       select="gn-fn-metadata:getCodeListValues($schema,
-                                  'gmd:CI_DateTypeCode',
-                                  $listOfValues,
-                                  .)"/>
+                                'gmd:CI_DateTypeCode',
+                                $listOfValues,
+                                .)"/>
         <xsl:call-template name="render-codelist-as-select">
           <xsl:with-param name="listOfValues" select="$codelist"/>
           <xsl:with-param name="lang" select="$lang"/>
@@ -146,18 +146,24 @@
         <div class="well well-sm gn-attr {if ($isDisplayingAttributes = true()) then '' else 'hidden'}">
           <xsl:apply-templates mode="render-for-field-for-attribute"
                                select="
-            ../../@*|
-            ../../gn:attribute[not(@name = parent::node()/@*/name())]">
+          ../../@*|
+          ../../gn:attribute[not(@name = parent::node()/@*/name())]">
             <xsl:with-param name="ref" select="../../gn:element/@ref"/>
             <xsl:with-param name="insertRef" select="../gn:element/@ref"/>
           </xsl:apply-templates>
         </div>
+
+
       </div>
       <div class="col-sm-1 gn-control">
         <xsl:call-template name="render-form-field-control-remove">
           <xsl:with-param name="editInfo" select="../gn:element"/>
           <xsl:with-param name="parentEditInfo" select="../../gn:element"/>
         </xsl:call-template>
+      </div>
+
+      <div class="col-sm-offset-2 col-sm-9">
+        <xsl:call-template name="get-errors"/>
       </div>
     </div>
   </xsl:template>
@@ -181,7 +187,7 @@
     <xsl:variable name="dateTypeElementRef"
                   select="gn:element/@ref"/>
 
-    <xsl:variable name="isRequired" select="gn:element/@min = 1 and gn:element/@max = 1"/>
+    <xsl:variable name="isRequired" select="gn:element/@min = 1"/>
 
     <div class="form-group gn-field gn-date {if ($isRequired) then 'gn-required' else ''}"
          id="gn-el-{$dateTypeElementRef}"
@@ -222,6 +228,10 @@
         <xsl:call-template name="render-form-field-control-remove">
           <xsl:with-param name="editInfo" select="gn:element"/>
         </xsl:call-template>
+      </div>
+
+      <div class="col-sm-offset-2 col-sm-9">
+        <xsl:call-template name="get-errors"/>
       </div>
     </div>
   </xsl:template>

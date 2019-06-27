@@ -850,7 +850,8 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 metadataManager.save(metadata);
             }
         }
-        metadata.getMetadataCategories().clear();
+
+        metadata.getCategories().clear();
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
         metadata = metadataRepository.findOne(id);
 
@@ -877,7 +878,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-        repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
+        repository.deleteAllByMetadataId(Integer.parseInt(id));
         if (((ArrayList<Group>) params.getGroupCopyPolicy()).size() == 0) {
             addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
         } else {

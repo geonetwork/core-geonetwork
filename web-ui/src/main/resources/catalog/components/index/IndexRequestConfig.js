@@ -39,8 +39,10 @@
       },
       facets: true,
       stats: true,
-      excludedFields: ['geom', 'the_geom', 'ms_geometry',
-        'msgeometry', 'id_s', '_version_', 'featuretypeid', 'doctype']
+      excludedFields: [
+        'geom', 'the_geom', 'ms_geometry', 'msgeometry',
+        'bbox_xmin', 'bbox_ymin', 'bbox_xmax', 'bbox_ymax',
+        'id_s', '_version_', 'featuretypeid', 'doctype']
     };
   }]);
 

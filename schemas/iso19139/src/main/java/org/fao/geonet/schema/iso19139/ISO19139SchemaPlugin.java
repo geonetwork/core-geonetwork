@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.kernel.schema.*;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -266,6 +267,7 @@ public class ISO19139SchemaPlugin
         }
 
         // Remove unused lang entries
+        // eg. the directory entry contains more languages than requested.
         List<Element> translationNodes = (List<Element>)Xml.selectNodes(element, "*//node()[@locale]");
         for(Element el : translationNodes) {
             // Remove all translations if there is no or only one language requested
@@ -282,6 +284,31 @@ public class ISO19139SchemaPlugin
                 el.detach();
             }
         }
+
+        // Sort all children elements translation
+        // according to the language list.
+        // When a directory entry is added as an xlink, the URL
+        // contains an ordered list of language and this ordre must
+        // be preserved in order to display fields in the editor in the same
+        // order as other element in the record.
+        if (langs.size() > 1) {
+            List<Element> elementList = (List<Element>)Xml.selectNodes(element,
+                                        ".//*[gmd:PT_FreeText]",
+                                               Arrays.asList(ISO19139Namespaces.GMD));
+            for(Element el : elementList) {
+                final Element ptFreeText = el.getChild("PT_FreeText", GMD);
+                List<Element> orderedTextGroup = new ArrayList<>();
+                for (String l : langs) {
+                    List<Element> node = (List<Element>) Xml.selectNodes(ptFreeText, "gmd:textGroup[*/@locale='" + l + "']", Arrays.asList(ISO19139Namespaces.GMD));
+                    if (node != null && node.size() == 1) {
+                        orderedTextGroup.add((Element) node.get(0).clone());
+                    }
+                }
+                ptFreeText.removeContent();
+                ptFreeText.addContent(orderedTextGroup);
+            }
+        }
+
 
         return element;
     }
@@ -479,5 +506,44 @@ public class ISO19139SchemaPlugin
         if (el == null) return false;
 
         return elementsToProcess.contains(el.getQualifiedName());
+    }
+
+    /**
+     * Return an ordered list of record languages.
+     * The main language is the first.
+     *
+     * This may be used when substituting elements by their matching
+     * XLinks. In such case, the XLink must contains an ordered list of
+     * language codes.
+     *
+     * @param md The record to analyze
+     * @return An ordered list of ISO 3 letters codes
+     */
+    public static List<String> getLanguages(Element md) {
+        List<String> languages = new ArrayList<>();
+        try {
+            // Main language for the record
+            Attribute mainLanguageAttribute = (Attribute) Xml.selectSingle(md, "gmd:language/*/@codeListValue", ISO19139SchemaPlugin.allNamespaces.asList());
+
+            if (mainLanguageAttribute != null &&
+                StringUtils.isNotEmpty(mainLanguageAttribute.getValue())) {
+                languages.add(mainLanguageAttribute.getValue());
+            }
+            final String mainLanguage = languages.size() == 1 ? languages.get(0) : "";
+
+            // Append all other locales as ordered in the locale section
+            List<Attribute> locales = (List<Attribute>) Xml.selectNodes(md, "gmd:locale/*/gmd:languageCode/*/@codeListValue", ISO19139SchemaPlugin.allNamespaces.asList());
+            if (locales != null && locales.size() > 0) {
+                locales.forEach(a -> {
+                    // Main language may be repeated in locale section
+                    // at least in GN case - do not add it twice
+                    if (StringUtils.isNotEmpty(mainLanguage) && !mainLanguage.equals(a.getValue())) {
+                        languages.add(a.getValue());
+                    }
+                });
+            }
+        } catch (JDOMException e) {
+        }
+        return languages;
     }
 }

@@ -2,7 +2,7 @@
 
   <div class="sidebar">
 
-    <div class="sidebar-col-main">
+    <div class="sidebar-col-main" data-ng-if="user.isUserAdminOrMore()">
       <ul data-ng-if="user.isUserAdmin()" class="nav nav-sidebar" role="menu">
           <li>
             <a data-gn-active-tb-item="admin.console#/home">
@@ -35,7 +35,8 @@
         </ul>
     </div>
     <!-- /.sidebar-col-main -->
-    <div class="sidebar-col-sub">
+    <div class="sidebar-col-sub"
+        data-ng-class="!user.isUserAdminOrMore() ? 'sidebar-col-sub-editor' : ''">
        <ul class="nav nav-sidebar">
         <li data-ng-repeat="t in pageMenu.tabs"
             data-ng-class="(href === t.href && 'active') || (!href && t.href + '' === '#/' + pageMenu.folder + pageMenu.defaultTab && 'active')">

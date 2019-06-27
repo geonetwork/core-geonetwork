@@ -301,8 +301,11 @@
 
                   // Select by default the first group.
                   if ((angular.isUndefined(scope.ownerGroup) ||
-                    scope.ownerGroup === '') && data) {
-                    scope.ownerGroup = scope.groups[0].id;
+                    scope.ownerGroup === '' ||
+                    scope.ownerGroup === null) && data) {
+                    // Requires to be converted to string, otherwise
+                    // angularjs adds empty non valid option
+                    scope.ownerGroup = scope.groups[0].id + "";
                   }
                   if (optional) {
                     scope.groups.unshift({
@@ -618,6 +621,14 @@
                     }
                   });
 
+              scope.codelistFilter = '';
+              scope.$watch('gnCurrentEdit.codelistFilter',
+                function(n, o) {
+                  if (n && n !== o) {
+                    scope.codelistFilter = n;
+                    init();
+                  }
+                });
               var init = function() {
                 var schema = attrs['schema'] ||
                     gnCurrentEdit.schema || 'iso19139';
@@ -625,14 +636,14 @@
 
                 scope.type = attrs['schemaInfoCombo'];
                 if (scope.type == 'codelist') {
-                  gnSchemaManagerService.getCodelist(config).then(
+                  gnSchemaManagerService.getCodelist(config, scope.codelistFilter).then(
                       function(data) {
                         scope.infos = angular.copy(data.entry);
                         addBlankValueAndSetDefault();
                       });
                 }
                 else if (scope.type == 'element') {
-                  gnSchemaManagerService.getElementInfo(config).then(
+                  gnSchemaManagerService.getElementInfo(config, scope.codelistFilter).then(
                       function(data) {
                         scope.infos = data.helper ? data.helper.option : null;
                         addBlankValueAndSetDefault();

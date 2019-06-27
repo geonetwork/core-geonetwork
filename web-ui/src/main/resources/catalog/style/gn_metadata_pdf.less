@@ -1,3 +1,6 @@
+.gn-top-bar, .gn-bottom-bar {
+  display: none;
+}
 .gn-metadata-view {
   font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
   font-size: 13px;
@@ -8,12 +11,14 @@
   h1 {
     font-size: 24px;
   }
-
   h3 {
     color: #3071a9;
     font-size: 18px;
     font-weight: normal;
     font-family: "Arial Bold", "Helvetica Bold", Arial, Helvetica, sans-serif;
+  }
+  a {
+    color: #3071a9;
   }
   .toggler {
     display: none;
@@ -26,42 +31,54 @@
       display: table-cell;
     }
   }
-
+  blockquote {
+    margin-left: 0;
+    em {
+      margin-bottom: 5px;
+    }
+  }
+  dl {
+    margin: 0;
+    border-top: 1px solid #999999;
+  }
   dt, dd {
     line-height: 1.428571429;
+    padding: 10px 0;
   }
   dt {
     clear: left;
-    float: left;
-    width: 160px;
-    font-style: italic;
+    width: 300px;
+    font-weight: 500;
     font-size: 13px;
     box-sizing: border-box;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    float: left;
   }
   dd {
     display: block;
-    margin-left: 180px;
+    margin-left: 300px;
     padding-left: 10px;
     border-left: 1px solid #999999;
     font-size: 13px;
-    background-color: #eeeeee;
+    ul {
+      padding-left: 01.5em;
+      margin: 0;
+    }
+    p {
+      margin: 8px 0;
+    }
   }
   .overview dd {
     margin-left: 1em;
   }
   .entry {
-    border-left: 2px solid #eeeeee;
-    padding-left: 1em;
+    margin: 10px 0 20px 0;
   }
-  img {
-    padding-left: 1em;
-  }
-  div.md-text {
-    border-spacing: 10px 0;
-  }
+  // div.md-text {
+  //   border-spacing: 10px 0;
+  // }
   ul.container-list {
     list-style-type: none;
     background: #eeeeee;
@@ -75,7 +92,6 @@
     padding-left: 1em;
     background: #eeeeee;
   }
-
   table {
     width: 100%;
   }
@@ -86,38 +102,37 @@
   a > img.graphic-overview {
     display: none;
   }
-  @coord-half-width: 75px;
-  @coord-half-height: 1.25em;
-
   .extent {
+    page-break-before: always;
     img {
       border: 1px solid #ccc;
+      margin-top: 20px;
+      max-width: 100%;
+      display: block;
+      clear: both;
     }
-
-    div {
-      margin-top: 5px;
-      margin-left: 5px;
-      display: table;
-      width: 30em;
-      left: 50%;
-      div {
-        display: table-row;
-      }
-    }
-    span.value {
-      text-align: left;
-      display: table-cell;
+    .coord{
+      float: left;
+      display: block;
       border: 1px solid #ccc;
       background: #fff;
-      padding: 6px 12px;
-      border-right-width: 0;
-    }
-    span.input-group-addon {
-      display: table-cell;
-      background-color: #eeeeee;
-      border: 1px solid #ccc;
-      padding: 6px 12px;
-      width: 1%;
+      margin-right: 20px;
+      margin-bottom: 20px;
+      input {
+        text-align: left;
+        border: 0;
+        padding: 6px;
+        width: 114px;
+        background: #fff;
+      }
+      span.input-group-addon {
+        background-color: #eeeeee;
+        border-left: 1px solid #ccc;
+        padding: 6px 10px 7px 10px;
+        width: 15px;
+        text-align: center;
+        float: right;
+      }
     }
   }
 }

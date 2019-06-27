@@ -24,9 +24,11 @@
 (function() {
   goog.provide('gn_share_directive');
 
+
+  goog.require('gn_popup');
   goog.require('gn_share_service');
 
-  var module = angular.module('gn_share_directive', ['gn_share_service']);
+  var module = angular.module('gn_share_directive', ['gn_share_service', 'gn_popup']);
 
   /**
    * @ngdoc directive
@@ -46,8 +48,8 @@
    * TODO: User group only privilege
    */
   module.directive('gnShare', [
-    'gnShareService', 'gnShareConstants', 'gnConfig', '$translate', '$filter',
-    function(gnShareService, gnShareConstants, gnConfig, $translate, $filter) {
+    'gnShareService', 'gnShareConstants', 'gnConfig', 'gnUtilityService', '$translate', '$filter',
+    function(gnShareService, gnShareConstants, gnConfig, gnUtilityService, $translate, $filter) {
 
       return {
         restrict: 'A',
@@ -154,17 +156,33 @@
                 scope.privileges,
                 scope.user,
                 replace).then(
-                function(data) {
-                  scope.$emit('PrivilegesUpdated', true);
-                  scope.$emit('StatusUpdated', {
-                    msg: translations.privilegesUpdated,
-                    timeout: 0,
-                    type: 'success'});
-                }, function(data) {
+                function(response) {
+                  if (response.data !== '') {
+                    scope.processReport = response.data;
+
+                    // A report is returned
+                    gnUtilityService.openModal({
+                      title: translations.privilegesUpdated,
+                      content: '<div gn-batch-report="processReport"></div>',
+                      className: 'gn-privileges-popup',
+                      onCloseCallback: function() {
+                        scope.$emit('PrivilegesUpdated', true);
+                        scope.processReport = null;
+                      }
+                    }, scope, 'PrivilegesUpdated');
+                  } else {
+                    scope.$emit('PrivilegesUpdated', true);
+                    scope.$emit('StatusUpdated', {
+                      msg: translations.privilegesUpdated,
+                      timeout: 0,
+                      type: 'success'});
+                  }
+
+                }, function(response) {
                   scope.$emit('PrivilegesUpdated', false);
                   scope.$emit('StatusUpdated', {
                     title: translations.privilegesUpdatedError,
-                    error: data,
+                    error: response.data,
                     timeout: 0,
                     type: 'danger'});
                 });
@@ -194,7 +212,7 @@
 
           scope.sortGroups = function(g) {
             if (scope.sorter.predicate == 'g') {
-              return $translate.instant(g.group);
+              return $translate.instant('group-' + g.group);
             }
             else if (scope.sorter.predicate == 'p') {
               return g.userProfile;

@@ -86,7 +86,7 @@
               }, {
                 match_phrase: {
                   featureTypeId: {
-                    query: featureType
+                    query: encodeURIComponent(featureType)
                   }
                 }
               }, {

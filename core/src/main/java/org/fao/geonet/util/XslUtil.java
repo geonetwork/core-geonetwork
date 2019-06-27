@@ -23,28 +23,17 @@
 
 package org.fao.geonet.util;
 
-import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.parseGml;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.Locale;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Function;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import jeeves.component.ProfileManager;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
@@ -54,8 +43,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IsoLanguage;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.UiSetting;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
@@ -67,6 +60,9 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.IsoLanguageRepository;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.UiSettingsRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -89,18 +85,28 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.client.ClientHttpResponse;
 import org.w3c.dom.Node;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Function;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.MultiPolygon;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import jeeves.component.ProfileManager;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import net.objecthunter.exp4j.Expression;
-import net.objecthunter.exp4j.ExpressionBuilder;
+import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.parseGml;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_ORGANIZATION;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All params are objects because
@@ -175,6 +181,72 @@ public final class XslUtil {
     }
 
     /**
+     * Get the UI configuration. UI configuration can be defined
+     * at portal level (see Source table) or as a UI (see settings_iu table).
+     *
+     *
+     * @param key Optional key, if null,
+     *            check the portal UI config and if null,
+     *            return a default configuration named 'srv' if exist.
+     *            If not, empty config is returned.
+     *
+     * @return Return the JSON config as string or an empty object.
+     */
+    public static String getUiConfiguration(String key) {
+        final String defaultUiConfiguration = NodeInfo.DEFAULT_NODE;
+        NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
+        SourceRepository sourceRepository= ApplicationContextHolder.get().getBean(SourceRepository.class);
+        UiSettingsRepository uiSettingsRepository = ApplicationContextHolder.get().getBean(UiSettingsRepository.class);
+
+        Source portal = sourceRepository.findOne(nodeInfo.getId());
+
+        if (uiSettingsRepository != null) {
+            UiSetting one = null;
+            if (portal != null && StringUtils.isNotEmpty(portal.getUiConfig())) {
+                one = uiSettingsRepository.findOne(portal.getUiConfig());
+            }
+            else if (StringUtils.isNotEmpty(key)) {
+                one = uiSettingsRepository.findOne(key);
+            }
+            else if (one == null) {
+                one = uiSettingsRepository.findOne(defaultUiConfiguration);
+            }
+
+            if (one != null) {
+                return one.getConfiguration();
+            } else {
+                return "{}";
+            }
+        }
+        return "{}";
+    }
+
+    /**
+     * Get a precise value in the JSON UI configuration
+     *
+     * @param key
+     * @param path JSON path to the property
+     * @return
+     */
+    public static String getUiConfigurationJsonProperty(String key, String path) {
+        String json = getUiConfiguration(key);
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            Object jsonObj = objectMapper.readValue(json, Object.class);
+
+            Object value = PropertyUtils.getProperty(jsonObj, path);
+            if (value != null) {
+                return value.toString();
+            } else {
+                return "";
+            }
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    /**
      * Get a setting value
      */
     public static String getSettingValue(String key) {
@@ -199,6 +271,30 @@ public final class XslUtil {
 
         return "";
     }
+
+    /**
+     * Return the name of the current catalogue.
+     * If the main one, then get the name on the source table with the site id.
+     * If a sub portal, use the sub portal key.
+     *
+     * @param key   Sub portal key
+     * @return
+     */
+    public static String getNodeName(String key, String lang, boolean withOrganization) {
+        SettingManager settingsMan = ApplicationContextHolder.get().getBean(SettingManager.class);
+        if (StringUtils.isEmpty(key)) {
+            key =  ApplicationContextHolder.get().getBean(NodeInfo.class).getId();
+        }
+        if (NodeInfo.DEFAULT_NODE.equals(key)) {
+            key = settingsMan.getSiteId();
+        }
+        SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
+        Source source = sourceRepository.findOne(key);
+
+        return source != null ? source.getLabel(lang) : settingsMan.getSiteName()
+            + (withOrganization ? " - " + settingsMan.getValue(SYSTEM_SITE_ORGANIZATION) : "");
+    }
+
 
     public static String getJsonSettingValue(String key, String path) {
         if (key == null) {
@@ -455,17 +551,25 @@ public final class XslUtil {
             String iso2LangCode = null;
 
             try {
+                final IsoLanguagesMapper mapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
+                /*if the language  is 2 characters long...*/
                 if (iso3LangCode.length() == 2) {
                     iso2LangCode = iso3LangCode;
+                    /*Catch language entries longer than 3 characters with a semicolon*/
+                } else if (iso3LangCode.length() > 3 && (iso3LangCode.indexOf(';') != -1)) {
+                    iso2LangCode = mapper.iso639_2_to_iso639_1(iso3LangCode.substring(0, 3));
+                    /** This final else works properly for languages with exactly three characters, so
+                     * an exception will occur if gmd:language has more than 3 characters but
+                     * does not have a semicolon.
+                     */
                 } else {
-                    final IsoLanguagesMapper mapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
                     iso2LangCode = mapper.iso639_2_to_iso639_1(iso3LangCode);
                 }
             } catch (Exception ex) {
                 Log.error(Geonet.GEONETWORK, "Failed to get iso 2 language code for " + iso3LangCode + " caused by " + ex.getMessage());
 
             }
-
+            /* Triggers when the language can't be matched to a code */
             if (iso2LangCode == null) {
                 Log.error(Geonet.GEONETWORK, "Cannot convert " + iso3LangCode + " to 2 char iso lang code", new Error());
                 return iso3LangCode.substring(0, 2);
@@ -637,7 +741,6 @@ public final class XslUtil {
     }
 
 
-
     public static String geomToBbox(Object geom) {
         String ret = "";
         try {
@@ -726,7 +829,7 @@ public final class XslUtil {
         if (context != null) baseUrl = context.getBaseUrl();
 
         SettingInfo si = new SettingInfo();
-        return si.getSiteUrl() + (!baseUrl.startsWith("/")?"/":"") + baseUrl;
+        return si.getSiteUrl() + (!baseUrl.startsWith("/") ? "/" : "") + baseUrl;
     }
 
     public static String getLanguage() {
@@ -760,10 +863,11 @@ public final class XslUtil {
     }
 
     /**
-     *  To get the xml content of an url
-     *  It supports the usage of a proxy
-        * @param surl
-        * @return
+     * To get the xml content of an url
+     * It supports the usage of a proxy
+     *
+     * @param surl
+     * @return
      */
     public static Node getUrlContent(String surl) {
 
@@ -812,7 +916,7 @@ public final class XslUtil {
 
         for (int i = 0; i < strings.length; i++) {
             String val = strings[i];
-            if(val.compareTo(max) > 0) {
+            if (val.compareTo(max) > 0) {
                 max = val;
             }
         }
@@ -823,9 +927,9 @@ public final class XslUtil {
 
     static {
         URL_VALIDATION_CACHE = CacheBuilder.<String, Boolean>newBuilder().
-                maximumSize(100000).
-                expireAfterAccess(25, TimeUnit.HOURS).
-                build();
+            maximumSize(100000).
+            expireAfterAccess(25, TimeUnit.HOURS).
+            build();
     }
 
     public static boolean validateURL(final String urlString) throws ExecutionException {
@@ -844,15 +948,15 @@ public final class XslUtil {
 
     /**
      * Utility method to retrieve the thesaurus dir from xsl processes.
-     *
+     * <p>
      * Usage:
-     *
-     *    <xsl:stylesheet
-     *      xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
-     *      ...
-     *      xmlns:java="java:org.fao.geonet.util.XslUtil" ...>
-     *
-     *     <xsl:variable name="thesauriDir" select="java:getThesaurusDir()"/>
+     * <p>
+     * <xsl:stylesheet
+     * xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+     * ...
+     * xmlns:java="java:org.fao.geonet.util.XslUtil" ...>
+     * <p>
+     * <xsl:variable name="thesauriDir" select="java:getThesaurusDir()"/>
      *
      * @return Thesaurus directory
      */
@@ -861,5 +965,37 @@ public final class XslUtil {
         ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
 
         return thesaurusManager.getThesauriDirectory().toString();
+    }
+
+
+    /**
+     * Utility method to retrieve the name (label) for an iso language using it's code for a specific language.
+     * <p>
+     * Usage:
+     * <p>
+     * <xsl:stylesheet
+     * xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+     * ...
+     * xmlns:java="java:org.fao.geonet.util.XslUtil" ...>
+     * <p>
+     * <xsl:variable name="thesauriDir" select="java:getIsoLanguageLabel('dut', 'eng')"/>
+     *
+     * @param code      Code of the IsoLanguage to retrieve the name.
+     * @param language  Language to retrieve the IsoLanguage name.
+     * @return
+     */
+    public static String getIsoLanguageLabel(String code, String language) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        IsoLanguageRepository isoLanguageRepository = applicationContext.getBean(IsoLanguageRepository.class);
+
+        List<IsoLanguage> languageValues = isoLanguageRepository.findAllByCode(code);
+
+        String languageLabel = code;
+
+        if (!languageValues.isEmpty()) {
+            languageLabel = languageValues.get(0).getLabelTranslations().get(language);
+        }
+
+        return languageLabel;
     }
 }

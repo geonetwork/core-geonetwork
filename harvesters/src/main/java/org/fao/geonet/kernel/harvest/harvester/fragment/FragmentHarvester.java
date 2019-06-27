@@ -576,7 +576,7 @@ public class FragmentHarvester extends BaseAligner {
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         AbstractMetadata metadata = metadataRepository.findOne(iId);
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-        repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, iId);
+        repository.deleteAllByMetadataId(iId);
 
         if (isSubtemplate) {
           // Note: we use fragmentAllPrivs here because subtemplates need to be 
@@ -586,7 +586,7 @@ public class FragmentHarvester extends BaseAligner {
           addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
         }
 
-        metadata.getMetadataCategories().clear();
+        metadata.getCategories().clear();
         addCategories(metadata, params.categories, localCateg, context, log, null, true);
 
         if (isSubtemplate) { 
@@ -632,7 +632,7 @@ public class FragmentHarvester extends BaseAligner {
             if (metadataCategory == null) {
                 throw new IllegalArgumentException("No category found with name: " + params.isoCategory);
             }
-            metadata.getMetadataCategories().add(metadataCategory);
+            metadata.getCategories().add(metadataCategory);
         }
         metadata = dataMan.insertMetadata(context, metadata, template, true, false, false, UpdateDatestamp.NO, false, false);
 

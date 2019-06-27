@@ -1698,4 +1698,6 @@
   <tag_label>TAGS</tag_label>
   <map_label>Mapa</map_label>
   <unknown>Unknown</unknown>
+
+  <pdfReportTocTitle>Contenidos</pdfReportTocTitle>
 </strings>

@@ -171,14 +171,13 @@ public class EsClient implements InitializingBean {
         return this;
     }
 
-    public boolean bulkRequest(String index, String indexType, Map<String, String> docs) throws IOException {
+    public boolean bulkRequest(String index, Map<String, String> docs) throws IOException {
         if (!activated) {
             return false;
         }
         boolean success = true;
         Bulk.Builder bulk = new Bulk.Builder()
-            .defaultIndex(index)
-            .defaultType(indexType);
+            .defaultIndex(index);
 
         Iterator iterator = docs.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -211,7 +210,7 @@ public class EsClient implements InitializingBean {
         return client.execute(bulk.build());
     }
 
-    public String deleteByQuery(String index, String indexType, String query) throws Exception {
+    public String deleteByQuery(String index, String query) throws Exception {
         if (!activated) {
             return "";
         }
@@ -222,7 +221,6 @@ public class EsClient implements InitializingBean {
 
         DeleteByQuery deleteAll = new DeleteByQuery.Builder(searchQuery)
             .addIndex(index)
-            .addType(indexType)
             .build();
         final JestResult result = client.execute(deleteAll);
         if (result.isSucceeded()) {
@@ -265,7 +263,7 @@ public class EsClient implements InitializingBean {
                     JsonObject token = tokens.get(0).getAsJsonObject();
                     String type = token.get("type").getAsString();
                     if ("SYNONYM".equals(type) || "word".equals(type)) {
-                        analyzedValue = token.get("token").getAsString();
+                        return token.get("token").getAsString();
                     }
                 }
                 return "";

@@ -48,6 +48,17 @@
   <xsl:variable name="header-weight">bold</xsl:variable>
   <xsl:variable name="note-size">6pt</xsl:variable>
 
+  <xsl:variable name="heading1-text-size">16pt</xsl:variable>
+  <xsl:variable name="heading1-text-weight">bold</xsl:variable>
+
+  <xsl:variable name="heading2-text-size">12pt</xsl:variable>
+  <xsl:variable name="heading2-text-weight">bold</xsl:variable>
+
+  <xsl:variable name="toc-text-size">10pt</xsl:variable>
+
+  <xsl:variable name="header-text-size">9pt</xsl:variable>
+  <xsl:variable name="footer-text-size">11pt</xsl:variable>
+
   <!-- Date format for footer information -->
   <xsl:variable name="df">[Y0001]-[M01]-[D01]</xsl:variable>
 
@@ -58,10 +69,19 @@
   <xsl:template name="fop-master">
     <fo:layout-master-set>
       <fo:simple-page-master master-name="simpleA4" page-height="29.7cm" page-width="21cm"
-                             margin-top=".2cm" margin-bottom=".2cm" margin-left=".6cm"
-                             margin-right=".2cm">
-        <fo:region-body margin-top="0cm"/>
-        <fo:region-after extent=".2cm"/>
+                             margin-top="1.25cm" margin-bottom="1cm" margin-left="2cm"
+                             margin-right="2cm">
+        <fo:region-body margin-top="1.5cm" margin-bottom="3cm" />
+        <fo:region-before extent="0.8cm" />
+        <fo:region-after extent="0.8cm" />
+      </fo:simple-page-master>
+
+      <fo:simple-page-master master-name="Intro" page-height="29.7cm" page-width="21cm"
+                             margin-top="1.25cm" margin-bottom="1cm" margin-left="2cm"
+                             margin-right="2cm">
+        <fo:region-body margin-top="1.5cm" margin-bottom="3cm" />
+        <fo:region-before extent="0.8cm" />
+        <fo:region-after extent="0.8cm"/>
       </fo:simple-page-master>
 
       <fo:page-sequence-master master-name="PSM_Name">
@@ -70,24 +90,131 @@
     </fo:layout-master-set>
   </xsl:template>
 
+
+  <!-- ======================================================
+        Page header
+  -->
+  <xsl:template name="fop-header">
+    <fo:static-content flow-name="xsl-region-before">
+      <fo:block font-size="{$header-text-size}" color="{$font-color}">
+
+        <fo:table width="100%" table-layout="fixed">
+          <fo:table-body>
+            <fo:table-row height="8mm">
+              <fo:table-cell>
+                <fo:block padding-top="4pt" padding-right="4pt"
+                          padding-left="4pt"
+                          text-align="left">
+                  <xsl:call-template name="replacePlaceholders">
+                    <xsl:with-param name="value" select="$env/metadata/pdfReport/headerLeft" />
+                  </xsl:call-template>
+                </fo:block>
+              </fo:table-cell>
+
+              <fo:table-cell>
+                <fo:block padding-top="4pt" padding-right="4pt"
+                          padding-left="4pt"
+                          text-align="right"
+                >
+                  <xsl:call-template name="replacePlaceholders">
+                    <xsl:with-param name="value" select="$env/metadata/pdfReport/headerRight" />
+                  </xsl:call-template>
+                </fo:block>
+              </fo:table-cell>
+            </fo:table-row>
+
+          </fo:table-body>
+        </fo:table>
+      </fo:block>
+    </fo:static-content>
+  </xsl:template>
+
+
   <!-- ======================================================
         Page footer with node info, date and paging info
   -->
   <xsl:template name="fop-footer">
+
     <!-- Footer with catalogue name, org name and pagination -->
     <fo:static-content flow-name="xsl-region-after">
-      <fo:block text-align="end" font-family="{$font-family}" font-size="{$note-size}"
-                color="{$font-color}">
-        <xsl:value-of select="$env/system/site/name"/> -
-        <xsl:value-of
-          select="$env/system/site/organization"/>
-        | <!-- TODO : set date format according to locale -->
-        <xsl:value-of select="format-dateTime(current-dateTime(),$df)"/> |
-        <fo:page-number/>
-        /
-        <fo:page-number-citation ref-id="terminator"/>
+
+      <fo:block font-size="{$header-text-size}" color="{$font-color}">
+
+        <fo:table width="100%" table-layout="fixed">
+          <fo:table-body>
+            <fo:table-row height="8mm">
+              <fo:table-cell>
+                <fo:block padding-top="4pt" padding-right="4pt"
+                          padding-left="4pt"
+                          text-align="left">
+                  <xsl:call-template name="replacePlaceholders">
+                    <xsl:with-param name="value" select="$env/metadata/pdfReport/footerLeft" />
+                  </xsl:call-template>
+                </fo:block>
+              </fo:table-cell>
+
+              <fo:table-cell>
+                <!-- FIXME : align all text on top and capitalize ? -->
+                <fo:block padding-top="4pt" padding-right="4pt"
+                          padding-left="4pt"
+                          text-align="right"
+                >
+                  <xsl:call-template name="replacePlaceholders">
+                    <xsl:with-param name="value" select="$env/metadata/pdfReport/footerRight" />
+                  </xsl:call-template>
+                  <xsl:if test="string($env/metadata/pdfReport/footerRight)"> | </xsl:if>
+                  <fo:page-number/> / <fo:page-number-citation ref-id="terminator"/>
+                </fo:block>
+              </fo:table-cell>
+            </fo:table-row>
+
+          </fo:table-body>
+        </fo:table>
       </fo:block>
     </fo:static-content>
+  </xsl:template>
+
+
+  <xsl:template name="replacePlaceholders">
+    <xsl:param name="value" />
+
+    <xsl:value-of select="replace(replace($value, '\{date\}', format-dateTime(current-dateTime(),$df)),
+                                  '\{siteInfo\}', concat($env/system/site/name, '-', $env/system/site/organization))" />
+  </xsl:template>
+
+
+  <!-- ======================================================
+      TOC page
+  -->
+  <xsl:template name="toc-page">
+    <xsl:param name="res"/>
+
+    <fo:block break-after="page">
+
+      <fo:block font-size="{$heading1-text-size}" font-weight="{$heading1-text-weight}" text-align="center" margin-bottom="10pt">
+        <xsl:value-of select="/root/gui/strings/pdfReportTocTitle" />
+      </fo:block>
+
+
+      <xsl:for-each select="$res/*[name() != 'summary' and name() != 'from' and name() != 'to']" >
+        <xsl:variable name="md">
+          <!--<xsl:apply-templates mode="briefPdf" select="."/>-->
+          <!-- Using search service with fast=index to retrieve the information directly from the index -->
+          <xsl:copy-of select="."/>
+        </xsl:variable>
+
+        <xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
+
+        <fo:block text-align-last="justify" font-size="{$toc-text-size}" color="{$title-color}">
+          <fo:basic-link internal-destination="section-{$metadata/geonet:info/id}">
+            <xsl:value-of select="$metadata/title" />
+            <fo:leader leader-pattern="space" />
+            <fo:page-number-citation ref-id="section-{$metadata/geonet:info/id}" />
+          </fo:basic-link>
+        </fo:block>
+      </xsl:for-each>
+
+    </fo:block>
   </xsl:template>
 
 
@@ -231,7 +358,8 @@
           </fo:table-cell>
           <fo:table-cell display-align="center">
             <fo:block font-weight="{$title-weight}" font-size="{$title-size}" color="{$title-color}"
-                      padding-top="4pt" padding-bottom="4pt" padding-left="4pt" padding-right="4pt">
+                      padding-top="4pt" padding-bottom="4pt" padding-left="4pt" padding-right="4pt"
+                      id="section-{$metadata/geonet:info/id}">
               <xsl:value-of select="$metadata/title"/>
             </fo:block>
           </fo:table-cell>
@@ -245,7 +373,7 @@
           <fo:table-cell number-columns-spanned="2">
             <fo:block margin-left="2pt" margin-right="4pt" margin-top="4pt" margin-bottom="4pt">
               <fo:table>
-                <fo:table-column column-width="14.8cm"/>
+                <fo:table-column column-width="11.8cm"/>
                 <fo:table-column column-width="4.8cm"/>
                 <fo:table-body>
                   <fo:table-row>
@@ -254,8 +382,8 @@
 
                         <!-- Labels and values-->
                         <fo:table>
-                          <fo:table-column column-width="3cm"/>
-                          <fo:table-column column-width="11.4cm"/>
+                          <fo:table-column column-width="2.5cm"/>
+                          <fo:table-column column-width="9.3cm"/>
 
                           <fo:table-body>
                             <xsl:call-template name="info-rows">
@@ -374,7 +502,7 @@
               </xsl:attribute>
               <xsl:value-of select="$oldGuiStrings/show"/>
             </fo:basic-link>
-            |
+            <fo:block/>
             <fo:basic-link text-decoration="underline" color="blue">
               <xsl:attribute name="external-destination">url('<xsl:value-of
                 select="concat($baseURL, '/srv/', $lang, '/xml.metadata.get?uuid=', $metadata/geonet:info/uuid)"
@@ -382,7 +510,7 @@
               </xsl:attribute>
               <xsl:value-of select="$oldGuiStrings/show"/> (XML)
             </fo:basic-link>
-            |
+            <fo:block/>
           </xsl:when>
           <xsl:otherwise>
             <fo:block text-align="left" font-style="italic">
@@ -406,7 +534,7 @@
               </xsl:attribute>
               <xsl:value-of select="$oldGuiStrings/download"/>
             </fo:basic-link>
-            |
+            <fo:block/>
           </xsl:for-each>
         </xsl:if>
 
@@ -425,7 +553,7 @@
               <xsl:value-of select="$oldGuiStrings/visualizationService"/> (<xsl:value-of
               select="$title"/>)
             </fo:basic-link>
-            |
+            <fo:block/>
           </xsl:for-each>
         </xsl:if>
 

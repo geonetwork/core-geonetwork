@@ -70,4 +70,6 @@ public class ApiParams {
     public static final String API_RESPONSE_NOT_ALLOWED_ONLY_AUTHENTICATED = "Operation not allowed. Only authenticated user can access it.";
     public static final String API_RESPONSE_RESOURCE_NOT_FOUND = "Resource not found.";
     public static final String API_PARAM_BUCKET_NAME = "Selection bucket name";
+    public static final String API_PARAM_UPDATE_DATESTAMP = "If true updates the DateStamp (or equivalent in standards different to ISO 19139) " +
+        "field in the metadata with the current timestamp";
 }

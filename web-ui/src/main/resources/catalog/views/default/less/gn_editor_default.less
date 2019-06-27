@@ -3,6 +3,11 @@
 @import "gn_view.less";
 
 
+.gn-results-editor {
+  .gn-status {
+    font-weight: 500;
+  }
+}
 
 [ng-app="gn_editor"] {
   .gn-top-bar {
@@ -333,6 +338,24 @@
         padding-bottom: 0;
       }
     }
+    .gn-control {
+      padding-left: 0;
+      .field-tooltip, [data-gn-field-highlight-remove] {
+        padding: 6px;
+      }
+    }
+    .gn-multi-field {
+      label.gn-required:after, .gn-required > label:after, label.gn-mandatory:after, .gn-mandatory > label:after {
+        margin-top: -7px;
+      }
+      .col-sm-11 {
+        padding-left: 0;
+      }
+      .col-sm-1 {
+        padding-right: 0;
+      }
+    }
+      
   }
   // map
   .gn-drawmap-panel {

@@ -219,16 +219,28 @@
           }
         };
 
-        var mergeParams = function(url, Params) {
+        var mergeParams = function(url, Params, excludedParams) {
           //merge URL parameters with indicated ones
           var parts = url.split('?');
+          var combinedParams = {};
           var urlParams = angular.isDefined(parts[1]) ?
               gnUrlUtils.parseKeyValue(parts[1]) : {};
-          for (var p in Params) {
-            urlParams[p] = Params[p];
+
+          for (var p in urlParams) {
+            if (!angular.isArray(excludedParams) ||
+              (excludedParams.findIndex &&
+               excludedParams.findIndex(function(item) {
+                  return p.toLowerCase() === item.toLowerCase();}) === -1)) {
+              combinedParams[p] = urlParams[p];
+            }
           }
-          return gnUrlUtils.append(parts[0], gnUrlUtils.toKeyValue(urlParams));
+          for (var p in Params) {
+            combinedParams[p] = Params[p];
+          }
+
+          return gnUrlUtils.append(parts[0], gnUrlUtils.toKeyValue(combinedParams));
         };
+
         var mergeDefaultParams = function(url, defaultParams) {
           //merge URL parameters with default ones
           var parts = url.split('?');
@@ -246,6 +258,7 @@
           return gnUrlUtils.append(parts[0],
               gnUrlUtils.toKeyValue(defaultParams));
         };
+
         return {
           mergeDefaultParams: mergeDefaultParams,
           mergeParams: mergeParams,
@@ -430,68 +443,82 @@
             return extent;
           },
 
-          getLayerInfoFromCap: function(name, capObj, uuid) {
+          
+          getLayerInfoFromCap: function(layerName, capObj, uuid) {
             var needles = [];
             var layers = capObj.layers || capObj.Layer;
 
-            //non namespaced lowercase name
-            nameNoNamespace = name.split(':')[
-                name.split(':').length - 1].toLowerCase();
+            // Layer name may be a list of comma separated layers
+            layerList = layerName.split(',');
+            layersLoop:
+            for (var j = 0; j < layerList.length; j ++) {
+              var name = layerList[j];
+              //non namespaced lowercase name
+              nameNoNamespace = name.split(':')[
+                  name.split(':').length - 1].toLowerCase();
 
-            for (var i = 0; i < layers.length; i++) {
-              //Add Info for Requests:
-              if (capObj.Request) {
-                layers[i].capRequest = capObj.Request;
-              }
-
-              //check layername
-              var lId = layers[i].Identifier;
-              var capName = layers[i].Name ||
-                  (lId && angular.isArray(lId) ? lId[0] : lId) || '',
-                  capNameNoNamespace;
-              //non namespaced lowercase capabilities name
-              if (capName) {
-                capNameNoNamespace = capName.split(':')[
-                    capName.split(':').length - 1].toLowerCase();
-              }
-
-              //either names match or non namespaced names
-              if (name == capName || nameNoNamespace == capNameNoNamespace) {
-                layers[i].nameToUse = capName;
-                if (capObj.version) {
-                  layers[i].version = capObj.version;
+              capabilityLayers:
+              for (var i = 0; i < layers.length; i++) {
+                //Add Info for Requests:
+                if (capObj.Request) {
+                  layers[i].capRequest = capObj.Request;
                 }
-                return layers[i];
-              }
+                
+                //check layername
+                var lId = layers[i].Identifier;
+                var capName = layers[i].Name ||
+                    (lId && angular.isArray(lId) ? lId[0] : lId) || '',
+                    capNameNoNamespace;
+                //non namespaced lowercase capabilities name
+                if (capName) {
+                  capNameNoNamespace = capName.split(':')[
+                      capName.split(':').length - 1].toLowerCase();
+                }
 
-              //check dataset identifer match
-              if (uuid != null) {
-                if (angular.isArray(layers[i].Identifier)) {
-                  angular.forEach(layers[i].Identifier, function(id) {
-                    if (id == uuid) {
-                      needles.push(layers[i]);
+                //either names match or non namespaced names
+                if (name == capName || nameNoNamespace == capNameNoNamespace) {
+                  layers[i].nameToUse = capName;
+                  if (capObj.version) {
+                    layers[i].version = capObj.version;
+                  }
+                  needles.push(layers[i]);
+                  break capabilityLayers;
+                }
+
+                //check dataset identifer match
+                if (uuid != null) {
+                  if (angular.isArray(layers[i].Identifier)) {
+                    for (var c = 0; c < layers[i].Identifier.length; c++) {
+                      if (layers[i].Identifier[c] == uuid) {
+                        needles.push(layers[i]);
+                        break capabilityLayers;
+                      }
                     }
-                  });
-                }
-              }
-
-              //check uuid from metadata url
-              if (uuid != null) {
-                if (angular.isArray(layers[i].MetadataURL)) {
-                  angular.forEach(layers[i].MetadataURL, function(mdu) {
-                    if (mdu && mdu.OnlineResource &&
+                  }
+                  if (angular.isArray(layers[i].MetadataURL)) {
+                    for (var c = 0; c < layers[i].MetadataURL.length; c++) {
+                      var mdu = layers[i].MetadataURL[c];
+                      if (mdu && mdu.OnlineResource &&
                         mdu.OnlineResource.indexOf(uuid) > 0) {
-                      needles.push(layers[i]);
+                        needles.push(layers[i]);
+                        break capabilityLayers;
+                      }
                     }
-                  });
+                  }
                 }
               }
             }
-
-            //FIXME: allow multiple, remove duplicates
-            if (needles.length > 0) {
+            
+            //FIXME: remove duplicates
+            if (needles.length >= layerList.length) {
               if (capObj.version) {
                 needles[0].version = capObj.version;
+              }
+              // Multiple layers from the same service
+              if (layerName.indexOf(',')) {
+                needles[0].Name = layerName;
+                // Parameters 'styles' and 'layers' should have the same number of values.
+                needles[0].Style = new Array(layerList.length).join(',');
               }
               return needles[0];
             }

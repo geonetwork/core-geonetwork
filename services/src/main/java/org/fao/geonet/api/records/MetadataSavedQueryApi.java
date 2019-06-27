@@ -54,8 +54,8 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
  */
 @Service
 @RequestMapping(value = {
-    "/api/records/{metadataUuid}",
-    "/api/" + API.VERSION_0_1 + "/records/{metadataUuid}"
+    "/{portal}/api/records/{metadataUuid}",
+    "/{portal}/api/" + API.VERSION_0_1 + "/records/{metadataUuid}"
 })
 @Api(value = API_CLASS_RECORD_TAG,
     tags = API_CLASS_RECORD_TAG,

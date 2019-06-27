@@ -71,7 +71,7 @@
                     <select class="form-control" id="gn-batchSearchGroupOwner"
                             data-ng-model="searchObj.params.group">
                       <option></option>
-                      <option data-ng-repeat="g in batchSearchGroups" value="{{g.id}}"
+                      <option data-ng-repeat="g in batchSearchGroups | orderBy:'name' " value="{{g.id}}"
                       >{{g.label[lang]|empty:g.name}}
                       </option>
                     </select>
@@ -83,9 +83,8 @@
                     <select class="form-control" id="gn-batchSearchOwner"
                             data-ng-model="searchObj.params._owner">
                       <option></option>
-                      <option data-ng-repeat="u in batchSearchUsers.users"
-                              value="{{u.value.id}}">{{u.value.name}}
-                        {{u.value.surname}}
+                      <option data-ng-repeat="u in batchSearchUsers | orderBy: 'username'"
+                              value="{{u.id}}">{{u.name}} {{u.surname}} ({{u.username}})
                       </option>
                     </select>
                   </div>

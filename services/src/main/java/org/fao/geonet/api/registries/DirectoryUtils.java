@@ -19,9 +19,9 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.subtemplate.Get;
 import org.fao.geonet.util.Sha1Encoder;
-import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -162,7 +162,7 @@ public class DirectoryUtils {
         CollectResults collectResults = new CollectResults(record);
         Map<String, List<Namespace>> namespaceList = new HashMap<String, List<Namespace>>();
 
-        IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
         if (Log.isDebugEnabled(LOGGER)) {
             Log.debug(LOGGER, String.format(

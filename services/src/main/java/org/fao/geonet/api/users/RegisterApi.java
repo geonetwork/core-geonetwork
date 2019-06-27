@@ -66,8 +66,8 @@ import jeeves.server.context.ServiceContext;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-    "/api/user",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/user",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/user"
 })
 @Api(value = "users",

@@ -23,10 +23,12 @@
 
 package org.fao.geonet.repository;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collection;
 
 /**
@@ -42,6 +44,9 @@ public interface HarvestHistoryRepositoryCustom {
      * @param ids the ids of the history elements to delete
      * @return number or entities deleted
      */
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query(value = "DELETE FROM HarvestHistory h where h.id in (?1)")
     int deleteAllById(Collection<Integer> ids);
 
     /**
@@ -50,5 +55,8 @@ public interface HarvestHistoryRepositoryCustom {
      * @param harvesterUuid the harvester uuid.
      * @return number or entities modified
      */
+    @Transactional
+    @Query(value = "UPDATE HarvestHistory SET deleted_JpaWorkaround = 'y'" + "WHERE harvesterUuid in (:uuid)")
+    @Modifying(clearAutomatically = true)
     int markAllAsDeleted(@Param("uuid") @Nonnull String harvesterUuid);
 }

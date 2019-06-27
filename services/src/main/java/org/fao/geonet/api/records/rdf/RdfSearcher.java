@@ -47,6 +47,7 @@ import java.util.List;
 public class RdfSearcher {
     private MetaSearcher searcher;
     private Element searchRequest;
+    private long _versionToken = -1;
 
     public RdfSearcher(Element params, ServiceContext context) {
         searchRequest = SearchDefaults.getDefaultSearch(context, params);
@@ -65,16 +66,15 @@ public class RdfSearcher {
 
         ServiceConfig config = new ServiceConfig();
 
+      
         searcher.search(context, searchRequest, config);
-
-        Element presentRequest = new Element("request");
-        presentRequest.addContent(new Element("fast").setText("true"));
-        presentRequest.addContent(new Element("from").setText("1"));
-        presentRequest.addContent(new Element("to").setText(searcher.getSize() + ""));
-        presentRequest.addContent(new Element(Geonet.SearchResult.FAST).setText("true"));
-        presentRequest.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
-
-        return searcher.present(context, presentRequest, config).getChildren();
+        
+        numberMatched = searcher.getSize();
+        _versionToken = searcher.getVersionToken(); 
+        
+        searchRequest.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
+                  
+        return searcher.present(context, searchRequest, config).getChildren();
     }
 
     public void close() {
@@ -84,4 +84,16 @@ public class RdfSearcher {
             // Ignore exception
         }
     }
+    
+    private int numberMatched;
+    public int getSize() {
+        return numberMatched;
+    }
+    
+    /**
+     * <p> Gets the Lucene version token. Can be used as ETag. </p>
+     */      
+    public long getVersionToken(){
+    	return _versionToken;
+    };    
 }

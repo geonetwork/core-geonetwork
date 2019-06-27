@@ -47,7 +47,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @RequestMapping(value = {
-    "/search"
+    "/{portal}/search"
 })
 @Api(value = "search",
     tags = "search",

@@ -64,11 +64,11 @@ import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.repository.MetadataStatusRepository;
-import org.fao.geonet.repository.MetadataStatusRepositoryCustom;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -99,8 +99,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
 @RequestMapping(value = {
-    "/api/records",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/records",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
 @Api(value = API_CLASS_RECORD_TAG,
@@ -113,6 +113,29 @@ public class MetadataWorkflowApi {
     @Autowired
     LanguageUtils languageUtils;
 
+    @Autowired
+    MetadataStatusRepository metadataStatusRepository;
+
+    @Autowired
+    StatusValueRepository statusValueRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    IMetadataStatus metadataStatus;
+
+    @Autowired
+    AccessManager accessManager;
+
+    @Autowired
+    DataManager dataManager;
+
+    @Autowired
+    IMetadataIndexer metadataIndexer;
+
+    @Autowired
+    StatusActionsFactory statusActionFactory;
 
     @ApiOperation(
         value = "Get record status history",
@@ -141,12 +164,10 @@ public class MetadataWorkflowApi {
         HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
-        MetadataStatusRepositoryCustom metadataStatusRepository =
-            ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
 
         String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
 
-        List<MetadataStatus> listOfStatus = ((MetadataStatusRepository) metadataStatusRepository).findAllById_MetadataId(
+        List<MetadataStatus> listOfStatus = metadataStatusRepository.findAllById_MetadataId(
             metadata.getId(),
             new Sort(sortOrder, sortField));
 
@@ -188,8 +209,6 @@ public class MetadataWorkflowApi {
         HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
-        MetadataStatusRepositoryCustom metadataStatusRepository =
-            ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
 
         String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
 
@@ -237,24 +256,21 @@ public class MetadataWorkflowApi {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
 
-        AccessManager am = appContext.getBean(AccessManager.class);
         //--- only allow the owner of the record to set its status
-        if (!am.isOwner(context, String.valueOf(metadata.getId()))) {
+        if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
             throw new SecurityException(String.format(
                 "Only the owner of the metadata can get the status. User is not the owner of the metadata"
             ));
         }
 
-        IMetadataStatus metadataStatus = context.getBean(IMetadataStatus.class);
         MetadataStatus recordStatus = metadataStatus.getStatus(metadata.getId());
 
-//        List<StatusValue> elStatus = context.getBean(StatusValueRepository.class).findAll();
-        List<StatusValue> elStatus = context.getBean(StatusValueRepository.class).findAllByType(StatusValueType.workflow);
+        List<StatusValue> elStatus = statusValueRepository.findAllByType(StatusValueType.workflow);
 
         //--- get the list of content reviewers for this metadata record
         Set<Integer> ids = new HashSet<Integer>();
         ids.add(Integer.valueOf(metadata.getId()));
-        List<Pair<Integer, User>> reviewers = context.getBean(UserRepository.class).findAllByGroupOwnerNameAndProfile(ids,
+        List<Pair<Integer, User>> reviewers = userRepository.findAllByGroupOwnerNameAndProfile(ids,
             Profile.Reviewer, SortUtils.createSort(User_.name));
         List<User> listOfReviewers = new ArrayList<>();
         for (Pair<Integer, User> reviewer : reviewers) {
@@ -263,7 +279,7 @@ public class MetadataWorkflowApi {
         return new MetadataWorkflowStatusResponse(
             recordStatus,
             listOfReviewers,
-            am.hasEditPermission(context, metadata.getId() + ""),
+            accessManager.hasEditPermission(context, metadata.getId() + ""),
             elStatus);
 
     }
@@ -301,14 +317,10 @@ public class MetadataWorkflowApi {
     )
         throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request, languageUtils.getIso3langCode(request.getLocales()));
 
-
-
-        AccessManager am = appContext.getBean(AccessManager.class);
         //--- only allow the owner of the record to set its status
-        if (!am.isOwner(context, String.valueOf(metadata.getId()))) {
+        if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
             throw new SecurityException(String.format(
                 "Only the owner of the metadata can set the status of this record. User is not the owner of the metadata."
             ));
@@ -316,9 +328,7 @@ public class MetadataWorkflowApi {
 
         //--- use StatusActionsFactory and StatusActions class to
         //--- change status and carry out behaviours for status changes
-        StatusActionsFactory saf = appContext.getBean(StatusActionsFactory.class);
-
-        StatusActions sa = saf.createStatusActions(context);
+        StatusActions sa = statusActionFactory.createStatusActions(context);
 
         int author = context.getUserSession().getUserIdAsInt();
         MetadataStatus metadataStatus = convertParameter(metadata.getId(), status, author);
@@ -327,8 +337,7 @@ public class MetadataWorkflowApi {
         sa.onStatusChange(listOfStatusChange);
 
         //--- reindex metadata
-        DataManager dataManager = appContext.getBean(DataManager.class);
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+        metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, null);
     }
 
 
@@ -380,14 +389,13 @@ public class MetadataWorkflowApi {
         throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
-        MetadataStatusRepository statusRepository = ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
-        MetadataStatus metadataStatus = statusRepository.findOne(new MetadataStatusId()
+        MetadataStatus metadataStatus = metadataStatusRepository.findOne(new MetadataStatusId()
             .setMetadataId(metadata.getId())
             .setStatusId(statusId)
             .setUserId(userId)
             .setChangeDate(new ISODate(changeDate)));
         if (metadataStatus != null) {
-            statusRepository.update(metadataStatus.getId(),
+            metadataStatusRepository.update(metadataStatus.getId(),
                 entity -> entity.setCloseDate(new ISODate(closeDate)));
         } else {
             throw new ResourceNotFoundException(String.format(
@@ -436,14 +444,13 @@ public class MetadataWorkflowApi {
         throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
-        MetadataStatusRepository statusRepository = ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
-        MetadataStatus metadataStatus = statusRepository.findOne(new MetadataStatusId()
+        MetadataStatus metadataStatus = metadataStatusRepository.findOne(new MetadataStatusId()
             .setMetadataId(metadata.getId())
             .setStatusId(statusId)
             .setUserId(userId)
             .setChangeDate(new ISODate(changeDate)));
         if (metadataStatus != null) {
-            statusRepository.delete(metadataStatus);
+            metadataStatusRepository.delete(metadataStatus);
             // TODO: Reindex record ?
         } else {
             throw new ResourceNotFoundException(String.format(
@@ -495,8 +502,6 @@ public class MetadataWorkflowApi {
             Integer size,
             HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        MetadataStatusRepository statusRepository = context.getBean(MetadataStatusRepository.class);
-
 
         Sort sortByStatusChangeDate = SortUtils.createSort(Sort.Direction.DESC,
             MetadataStatus_.id, MetadataStatusId_.changeDate);
@@ -505,7 +510,7 @@ public class MetadataWorkflowApi {
         List<MetadataStatus> metadataStatuses;
         if ((type != null && type.length > 0) || (author != null && author.length > 0)
                 || (owner != null && owner.length > 0) || (record != null && record.length > 0)) {
-            metadataStatuses = statusRepository.searchStatus(
+            metadataStatuses = metadataStatusRepository.searchStatus(
                     type != null && type.length > 0 ? Arrays.asList(type) : null,
                     author != null && author.length > 0 ? Arrays.asList(author) : null,
                     owner != null && owner.length > 0 ? Arrays.asList(owner) : null,
@@ -514,7 +519,7 @@ public class MetadataWorkflowApi {
                     pageRequest
                 );
         } else {
-            metadataStatuses = statusRepository.findAll(pageRequest).getContent();
+            metadataStatuses = metadataStatusRepository.findAll(pageRequest).getContent();
         }
 
         return buildMetadataStatusResponses(metadataStatuses, details, context.getLanguage());
@@ -524,7 +529,6 @@ public class MetadataWorkflowApi {
      * Convert request parameter to a metadata status.
      */
     public MetadataStatus convertParameter(int id, MetadataStatusParameter parameter, int author) throws Exception {
-        StatusValueRepository statusValueRepository = ApplicationContextHolder.get().getBean(StatusValueRepository.class);
         StatusValue statusValue = statusValueRepository.findOne(parameter.getStatus());
 
         MetadataStatus metadataStatus = new MetadataStatus();
@@ -565,7 +569,6 @@ public class MetadataWorkflowApi {
 
         // Add all user info in response
         Map<Integer, User> listOfUsers = new HashMap<>();
-        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
 
         // Collect all user info
         for(MetadataStatus s : listOfStatus) {
