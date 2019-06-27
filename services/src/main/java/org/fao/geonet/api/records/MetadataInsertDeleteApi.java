@@ -781,7 +781,13 @@ public class MetadataInsertDeleteApi {
         // --- if the uuid does not exist we generate it for metadata and templates
         String uuid;
         if (metadataType == MetadataType.SUB_TEMPLATE || metadataType == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
-            uuid = UUID.randomUUID().toString();
+            // subtemplates may need to be loaded with a specific uuid
+            // that will be attached to the root element so check for that
+            // and if not found, generate a new uuid
+            uuid = xmlElement.getAttributeValue("uuid");
+            if (StringUtils.isEmpty(uuid)) {
+              uuid = UUID.randomUUID().toString();
+            }
         } else {
             uuid = dataManager.extractUUID(schema, xmlElement);
             if (uuid.length() == 0) {

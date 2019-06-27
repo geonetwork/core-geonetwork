@@ -59,7 +59,7 @@ public class MetadataRegionSearchRequest extends Request {
 
     public static final String PREFIX = "metadata:";
     private static final FindByNodeName EXTENT_FINDER = new FindByNodeName("EX_BoundingPolygon", "EX_GeographicBoundingBox", "polygon");
-    private final Parser parser;
+    private final Parser[] parsers;
     ServiceContext context;
     private List<? extends MetadataRegionFinder> regionFinders = Lists.newArrayList(
         new FindRegionByXPath(), new FindRegionByGmlId(), new FindRegionByEditRef());
@@ -67,9 +67,9 @@ public class MetadataRegionSearchRequest extends Request {
     private String label;
     private GeometryFactory factory;
 
-    public MetadataRegionSearchRequest(ServiceContext context, Parser parser, GeometryFactory factory) {
+    public MetadataRegionSearchRequest(ServiceContext context, Parser[] parsers, GeometryFactory factory) {
         this.context = context;
-        this.parser = parser;
+        this.parsers = parsers;
         this.factory = factory;
     }
 
@@ -175,10 +175,10 @@ public class MetadataRegionSearchRequest extends Request {
         Geometry geometry = null;
         if ("polygon".equals(extentObj.getName())) {
             String gml = Xml.getString(extentObj);
-            geometry = SpatialIndexWriter.parseGml(parser, gml);
+            geometry = SpatialIndexWriter.parseGml(parsers[0], gml);
         } else if ("EX_BoundingPolygon".equals(extentObj.getName())) {
             String gml = Xml.getString(extentObj.getChild("polygon", Geonet.Namespaces.GMD));
-            geometry = SpatialIndexWriter.parseGml(parser, gml);
+            geometry = SpatialIndexWriter.parseGml(parsers[0], gml);
         } else if ("EX_GeographicBoundingBox".equals(extentObj.getName())) {
             double minx = Double.parseDouble(extentObj.getChild("westBoundLongitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
             double maxx = Double.parseDouble(extentObj.getChild("eastBoundLongitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));

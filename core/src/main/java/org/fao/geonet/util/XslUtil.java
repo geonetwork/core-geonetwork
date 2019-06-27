@@ -23,6 +23,7 @@
 
 package org.fao.geonet.util;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.cache.Cache;
@@ -750,8 +751,13 @@ public final class XslUtil {
             String srs = geomElement.getAttributeValue("srsName");
             CoordinateReferenceSystem geomSrs = DefaultGeographicCRS.WGS84;
             if (srs != null && !(srs.equals(""))) geomSrs = CRS.decode(srs);
-
-            Parser parser = new Parser(new GMLConfiguration());
+            Parser[] parsers = GMLParsers.create();
+            Parser parser = null;
+            if (geomElement.getNamespace().equals(Geonet.Namespaces.GML32)) {
+              parser = parsers[1];
+            } else {
+              parser = parsers[0];
+            }
             MultiPolygon jts = parseGml(parser, gml);
 
 
