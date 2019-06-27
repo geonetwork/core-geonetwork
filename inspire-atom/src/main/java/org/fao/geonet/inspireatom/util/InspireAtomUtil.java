@@ -308,7 +308,7 @@ public class InspireAtomUtil {
             Map<Integer, AbstractMetadata> allMdInfo = ((LuceneSearcher) searcher).getAllMdInfo(context, searcher.getSize());
             return new ArrayList<>(allMdInfo.values());
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Log.error(Geonet.ATOM, ex.getMessage(), ex);
             return new ArrayList<>();
         } finally {
             if (searcher != null) searcher.close();
@@ -337,7 +337,7 @@ public class InspireAtomUtil {
                 uuid = uuids.get(0);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Log.error(Geonet.ATOM, ex.getMessage(), ex);
         }
 
         return uuid;
@@ -720,7 +720,7 @@ public class InspireAtomUtil {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Log.error(Geonet.ATOM, ex.getMessage(), ex);
         }
 
         return keywordsList;

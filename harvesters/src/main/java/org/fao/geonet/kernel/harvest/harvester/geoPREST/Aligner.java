@@ -274,9 +274,9 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
             try {
                 response = request.execute();
             } catch (Exception e) {
-                e.printStackTrace();
                 log.error("Getting record from GeoPortal REST raised exception: " + e.getMessage());
                 log.error("Sent request " + request.getSentData());
+                log.error(e);
                 throw new Exception(e);
             }
 
@@ -307,7 +307,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
             return response;
         } catch (Exception e) {
             log.warning("Raised exception while getting record : " + e);
-            e.printStackTrace();
+            log.error(e);
             result.unretrievable++;
 
             //--- we don't raise any exception here. Just try to go on

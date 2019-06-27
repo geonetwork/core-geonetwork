@@ -27,6 +27,7 @@ import javax.transaction.Transactional.TxType;
 
 import org.apache.batik.util.resources.ResourceManager;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
@@ -38,6 +39,7 @@ import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.utils.Log;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -157,7 +159,7 @@ public class ShibbolethUserUtils {
 				try {
 					ldapUserDetails = (LDAPUser) userDetailsManager.loadUserByUsername(username);
 				} catch (Throwable t) {
-					t.printStackTrace();
+                    Log.error(Geonet.GEONETWORK, "Shibboleth setupUser error: " + t.getMessage(), t);
 				}
 
 				if (ldapUserDetails == null) {

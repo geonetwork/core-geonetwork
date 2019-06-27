@@ -129,8 +129,8 @@ public class InspireAtomHarvester {
 
         } catch (Exception x) {
             logger.error("ATOM feed harvest error: " + x.getMessage());
+            logger.error(x);
             result.addContent(new Element("error").setText(x.getMessage()));
-            x.printStackTrace();
         }
 
         return result;
@@ -188,7 +188,7 @@ public class InspireAtomHarvester {
             logger.info("ATOM feed harvest finished for metadata: " + metadataId);
         } catch (Exception x) {
             logger.error("ATOM feed harvest error: " + x.getMessage());
-            x.printStackTrace();
+            logger.error(x);
         }
     }
 
@@ -261,8 +261,8 @@ public class InspireAtomHarvester {
             } catch (Exception ex) {
                 // Log exception and continue processing the other metadata
                 logger.error("Failed to process atom feed for service metadata: " + metadataId + " " + ex.getMessage());
+                logger.error(ex);
                 result.addContent(new Element("feed").setAttribute("uuid", metadataUuid).setAttribute("error", ex.getMessage()).setAttribute("status", "error"));
-                ex.printStackTrace();
             }
         }
 
@@ -329,8 +329,8 @@ public class InspireAtomHarvester {
             } catch (Exception ex) {
                 // Log exception and continue processing the other metadata
                 logger.error("Failed to process atom feed for dataset metadata: " + metadataId + " " + ex.getMessage());
+                logger.error(ex);
                 result.addContent(new Element("feed").setAttribute("uuid", metadataUuid).setAttribute("error", ex.getMessage()).setAttribute("status", "error"));
-                ex.printStackTrace();
             }
         }
     }

@@ -345,8 +345,7 @@ public class SearchController {
                         break;
                     }
                 } catch (Exception x) {
-                    Log.error(Geonet.CSW_SEARCH, x.getMessage());
-                    x.printStackTrace();
+                    Log.error(Geonet.CSW_SEARCH, x.getMessage(), x);
                     throw new InvalidParameterValueEx("elementName has invalid XPath : " + elementName, x.getMessage());
                 }
             }

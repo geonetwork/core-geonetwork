@@ -337,9 +337,9 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                     }
                 }
             }catch(Throwable t) {
-                t.printStackTrace();
                 log.error("Unable to process record from arcsde (" + this.params.getName() + ")");
                 log.error("   Record failed. Error is: " + t.getMessage());
+                log.error(t);
             } finally {
                 result.originalMetadata++;
             }
@@ -530,7 +530,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         } catch (Exception e) {
             log.warning("  - Failed to set thumbnail for metadata: " + e.getMessage());
-            e.printStackTrace();
+            log.error(e);
             result.thumbnailsFailed++;
         }
 

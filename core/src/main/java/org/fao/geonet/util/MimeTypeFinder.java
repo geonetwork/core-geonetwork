@@ -30,6 +30,8 @@ package org.fao.geonet.util;
 import eu.medsea.mimeutil.MimeType;
 import eu.medsea.mimeutil.MimeUtil;
 import eu.medsea.mimeutil.MimeUtil2;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 
 import java.io.File;
 import java.net.URL;
@@ -85,7 +87,7 @@ public class MimeTypeFinder {
                     return types.iterator().next().toString();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.error(Geonet.GEONETWORK, "Detect file mime type error: " + e.getMessage(), e);
                 return MimeUtil2.UNKNOWN_MIME_TYPE.toString();
             }
         } else return blank;

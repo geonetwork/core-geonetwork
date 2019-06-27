@@ -96,6 +96,7 @@ public final class Geonet {
     public static final String CLASSIFIER = GEONETWORK + ".classifier";
     public static final String CORS = GEONETWORK + ".cors";
 
+
     /**
      * Container for file names.
      */

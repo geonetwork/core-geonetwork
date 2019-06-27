@@ -306,8 +306,7 @@ public final class Processor {
         try {
             xlinks = (List<Attribute>) Xml.selectNodes(md, xpath, theNss);
         } catch (Exception e) {
-            e.printStackTrace();
-            Log.error(Log.XLINK_PROCESSOR, e.getMessage());
+            Log.error(Log.XLINK_PROCESSOR, e.getMessage(), e);
         }
         return xlinks;
     }
@@ -395,8 +394,7 @@ public final class Processor {
                         continue;
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.error(Log.XLINK_PROCESSOR, "Failed to look up localxlink " + idSearch + ": " + e.getMessage());
+                    Log.error(Log.XLINK_PROCESSOR, "Failed to look up localxlink " + idSearch + ": " + e.getMessage(), e);
                 }
                 if (localFragment != null) {
                     localFragment = (Element) localFragment.clone();
@@ -448,8 +446,7 @@ public final class Processor {
                     try {
                         uncacheXLinkUri(hrefUri);
                     } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.error(Log.XLINK_PROCESSOR, "Uncaching failed: " + e.getMessage());
+                        Log.error(Log.XLINK_PROCESSOR, "Uncaching failed: " + e.getMessage(), e);
                     }
                 } else {
                     try {
@@ -476,8 +473,7 @@ public final class Processor {
                             element.addContent(remoteFragment);
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.error(Log.XLINK_PROCESSOR, "doXLink " + action + " failed: " + e.getMessage());
+                        Log.error(Log.XLINK_PROCESSOR, "doXLink " + action + " failed: " + e.getMessage(), e);
                     }
                 }
                 cleanXLinkAttributes(element, action);

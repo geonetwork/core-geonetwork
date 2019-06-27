@@ -31,6 +31,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.utils.Log;
 
 import java.util.HashSet;
 import java.util.List;
@@ -165,7 +166,7 @@ public final class ReportUtils {
                 value = "";
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Log.error(Geonet.GEONETWORK, ex.getMessage(), ex);
         }
 
         return value;

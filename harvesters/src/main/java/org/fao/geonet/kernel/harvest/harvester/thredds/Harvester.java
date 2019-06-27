@@ -680,8 +680,8 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
                 result.atomicDatasetRecords += fragmentResult.recordsBuilt;
             }
         } catch (Exception e) {
-            log.error("Thrown Exception " + e + " during dataset processing");
-            e.printStackTrace();
+            log.error("Thrown Exception " + e.getMessage() + " during dataset processing");
+            log.error(e);
         }
     }
 
@@ -708,8 +708,8 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
         try {
             return ds.getParentCatalog().getUriString() + "?dataset=" + URLEncoder.encode(ds.getID(), Constants.ENCODING);
         } catch (UnsupportedEncodingException e) {
-            log.error("Thrown Exception " + e + " during dataset processing");
-            e.printStackTrace();
+            log.error("Thrown Exception " + e.getMessage() + " during dataset processing");
+            log.error(e);
         }
         return null;
     }
@@ -824,7 +824,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
                         ncD.close();
                     } catch (Exception e) {
                         log.info("Exception raised in netcdfDataset ops: " + e);
-                        e.printStackTrace();
+                        log.error(e);
                     }
                 }
 
@@ -852,7 +852,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
                         ncDI.close();
                     } catch (Exception e) {
                         log.info("Exception raised in netcdfDatasetInfo ops: " + e);
-                        e.printStackTrace();
+                        log.error(e);
                     }
                 }
 
@@ -900,7 +900,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
             }
         } catch (Exception e) {
             log.error("Thrown Exception " + e + " during dataset processing");
-            e.printStackTrace();
+            log.error(e);
         }
     }
 
@@ -1077,7 +1077,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
         } catch (Exception e) {
             if (log.isDebugEnabled())
                 log.debug("Caught exception " + e + " whilst attempting to query URL " + href);
-            e.printStackTrace();
+            log.error(e);
         }
         return result;
     }

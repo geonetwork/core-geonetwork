@@ -920,7 +920,7 @@ public class ServiceManager {
                 // ignore this.
                 // it happens because the stream closes by client.
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.error(Log.JEEVES, e.getMessage(), e);
             }
         }
 

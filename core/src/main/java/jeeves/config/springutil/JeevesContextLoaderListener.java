@@ -96,7 +96,7 @@ public class JeevesContextLoaderListener implements ServletContextListener {
 
             servletContext.setAttribute(User.NODE_APPLICATION_CONTEXT_KEY, jeevesAppContext);
         } catch (Throwable e) {
-            e.printStackTrace();
+            Log.error(Log.JEEVES, "JeevesContextLoaderListener: " + e.getMessage(), e);
             JeevesEngine.handleStartupError(e);
         }
     }
