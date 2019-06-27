@@ -6,7 +6,7 @@
         <span class="gn-facet-label">{{::item.name}}</span>&nbsp;
         <span class="gn-facet-count">({{::item.count}})</span>
       </label>
-      <div data-es-facet="nestedFacet" ng-if="::item.aggs" ng-repeat="nestedFacet in ::item.aggs">
+      <div data-es-facet="nestedFacet" data-es-facet-parent-name="::item.name" ng-if="::nestedFacet.items.length" ng-repeat="nestedFacet in ::item.aggs track by nestedFacet.name">
       </div>
     </li>
   </ul>

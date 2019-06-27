@@ -47,11 +47,10 @@
       var listModel;
       listModel = createFacetModel(request.aggregations, response.data.aggregations)
       response.data.facets = listModel;
-      console.log(listModel)
       return response.data;
     };
 
-    function createFacetModel(reqAggs, respAggs) {
+    function createFacetModel(reqAggs, respAggs, isNested) {
       var listModel = [];
       for (var fieldId in respAggs) {
         var respAgg = respAggs[fieldId];
@@ -72,12 +71,15 @@
                 count: bucket.doc_count
               };
               // nesting
+              if(isNested) {
+                facet.isNested = true
+              }
               if(reqAgg.hasOwnProperty('aggs')) {
                 var nestAggs = {}
                 for (var indexKey in reqAgg.aggs) {
                   nestAggs[indexKey] = bucket[indexKey]
                 }
-                facet.aggs = createFacetModel(reqAgg.aggs, nestAggs)
+                facet.aggs = createFacetModel(reqAgg.aggs, nestAggs, true)
               }
               facetModel.items.push(facet);
             }

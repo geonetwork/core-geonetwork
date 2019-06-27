@@ -21,64 +21,71 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_es_facet_directive');
+(function () {
+  goog.provide('gn_es_facet_directive')
 
-  var module = angular.module('gn_es_facet_directive', []);
+  var module = angular.module('gn_es_facet_directive', [])
 
 
   /**
    * All facet panel
    * @constructor
    */
-  var FacetsController = function($scope) {
-    this.fLvlCollapse = {};
-    this.currentFacet;
-    this.$scope = $scope;
+  var FacetsController = function ($scope) {
+    this.fLvlCollapse = {}
+    this.currentFacet
+    this.$scope = $scope
 
     $scope.$watch(
-      function() { return this.list}.bind(this),
-      function(newValue) {
-        if(!newValue) return;
-        if( this.lastUpdatedFacet && this.state[this.lastUpdatedFacet.name].length) {
-          this.list.forEach(function(f) {
-            if(f.name === this.lastUpdatedFacet.name) {
-              f.items = this.lastUpdatedFacet.items
+      function () {
+        return this.list
+      }.bind(this),
+      function (newValue) {
+        if (!newValue) return
+        var lastFacet = this.lastUpdatedFacet
+        if (this._isFlatTermsFacet(lastFacet) && Object.keys(this.state[lastFacet.name]).length) {
+          this.list.forEach(function (f) {
+            if (f.name === lastFacet.name) {
+              f.items = lastFacet.items
             }
           }.bind(this))
           this.lastUpdatedFacet = null
         }
       }.bind(this)
     )
-  };
+  }
 
-  FacetsController.prototype.$onInit = function() {
+  FacetsController.prototype.$onInit = function () {
     this.state = this.lucene.facets || {}
-  };
+  }
 
-  FacetsController.prototype.collapseAll = function() {
-    angular.forEach(this.fLvlCollapse, function(v, k) {
-      this.fLvlCollapse[k] = true;
-    }.bind(this));
-  };
-  FacetsController.prototype.expandAll = function() {
-    angular.forEach(this.fLvlCollapse, function(v, k) {
-      this.fLvlCollapse[k] = false;
-    }.bind(this));
-  };
+  FacetsController.prototype.collapseAll = function () {
+    angular.forEach(this.fLvlCollapse, function (v, k) {
+      this.fLvlCollapse[k] = true
+    }.bind(this))
+  }
+  FacetsController.prototype.expandAll = function () {
+    angular.forEach(this.fLvlCollapse, function (v, k) {
+      this.fLvlCollapse[k] = false
+    }.bind(this))
+  }
 
-  FacetsController.prototype.updateSearch = function() {
+  FacetsController.prototype.updateSearch = function () {
     this.lucene.facets = this.state
-    this.$scope.$emit('resetSearch', this.sParams);
-  };
+    this.$scope.$parent.triggerSearch();
+  }
+
+  FacetsController.prototype._isFlatTermsFacet = function (facet) {
+    return facet && (facet.type === 'terms') && !facet.aggs
+  }
 
   FacetsController.$inject = [
     '$scope'
-  ];
+  ]
 
   module.directive('esFacets', [
     'gnFacetConfigService', 'gnLangs',
-    function(gnFacetConfigService, gnLangs) {
+    function (gnFacetConfigService, gnLangs) {
       return {
         restrict: 'A',
         controllerAs: 'ctrl',
@@ -90,14 +97,14 @@
           lucene: '<',
           type: '<facetType'
         },
-        templateUrl: function(elem, attrs) {
+        templateUrl: function (elem, attrs) {
           return attrs.template || '../../catalog/components/elasticsearch/directives/' +
-            'partials/facets.html';
+            'partials/facets.html'
         },
-        link: function(scope, element, attrs) {
+        link: function (scope, element, attrs) {
         }
-      };
-    }]);
+      }
+    }])
 
 
   /**
@@ -105,74 +112,87 @@
    * @param $scope
    * @constructor
    */
-  var FacetController = function($scope, gnESFacet) {
-    this.$scope = $scope;
-    this.defaultState = this.facet.type == 'terms' ? [] : {}
-    this.config = gnESFacet[this.facet.name];
+  var FacetController = function ($scope) {
+    this.$scope = $scope
 
-    $scope.$on('beforeSearchReset', function() {
-      this.facetsCtrl.state[this.facet.name] = this.state = this.defaultState
+    $scope.$on('beforeSearchReset', function () {
+      this._resetState()
     }.bind(this))
-  };
+  }
 
-  FacetController.prototype.$onInit = function() {
-    this.facetsCtrl.state[this.facet.name] = this.state = this.facetsCtrl.state[this.facet.name] || this.defaultState;
-  };
+  FacetController.prototype.$onInit = function () {
+    this.parentCtrl = this.facetCtrl || this.facetsCtrl
+    this._initState()
+  }
 
-  FacetController.prototype.filter = function(facet, item) {
-    if(facet.type === 'terms') {
-      var index = this.state.indexOf(item.name);
-      if(index > -1 ) {
-        this.state.splice(index, 1)
-      } else {
-        this.state.push(item.name)
+  FacetController.prototype.filter = function (facet, item) {
+    if (this.state[item.name]) {
+      delete this.state[item.name]
+    } else {
+      var itemState
+      if (facet.type === 'terms') {
+        itemState = true
+
+        if (!item.isNested) {
+          this.facetsCtrl.lastUpdatedFacet = facet
+        }
+      } else if (facet.type === 'filters') {
+        itemState = item.query_string.query_string.query
       }
-      this.facetsCtrl.lastUpdatedFacet = facet;
+      this.state[item.name] = itemState
     }
-    else if (facet.type === 'filters') {
-      if(this.state[item.name]) {
-        delete this.state[item.name]
-      } else {
-        this.state[item.name] = item.query_string.query_string.query
-      }
-    }
-    this.facetsCtrl.updateSearch();
-  };
+    this.facetsCtrl.updateSearch()
+  }
 
-  FacetController.prototype.isInSearch = function(facet, item) {
-    if(facet.type === 'terms') {
-      return (this.state.indexOf(item.name) >= 0)
-    } else if (facet.type === 'filters') {
-      return this.state.hasOwnProperty(item.name)
+  FacetController.prototype.isInSearch = function (facet, item) {
+    return this.state.hasOwnProperty(item.name) && !angular.isObject(this.state[item.name])
+  }
+
+  FacetController.prototype._initState = function () {
+    if( this.parentName) {
+      this.parentCtrl.state[this.parentName] = this.parentCtrl.state[this.parentName] || {}
+      this.parentCtrl.state[this.parentName][this.facet.name] = this.state = this.parentCtrl.state[this.parentName][this.facet.name] || {}
+    } else {
+      this.parentCtrl.state[this.facet.name] = this.state = this.parentCtrl.state[this.facet.name] || {}
     }
-  };
+  }
+
+  FacetController.prototype._resetState = function () {
+    if( this.parentName) {
+      this.parentCtrl.state[this.parentName] = {}
+      this.parentCtrl.state[this.parentName][this.facet.name] =  this.state = {}
+    } else {
+      this.parentCtrl.state[this.facet.name] = this.state = {}
+    }
+  }
 
   FacetController.$inject = [
-    '$scope',
-    'gnESFacet'
-  ];
+    '$scope'
+  ]
 
   module.directive('esFacet', [
     'gnFacetConfigService', 'gnLangs',
-    function(gnFacetConfigService, gnLangs) {
+    function (gnFacetConfigService, gnLangs) {
       return {
         restrict: 'A',
         controllerAs: 'ctrl',
         controller: FacetController,
         bindToController: true,
         scope: {
-          facet: '<esFacet'
+          facet: '<esFacet',
+          parentName: '<esFacetParentName'
         },
         require: {
-          facetsCtrl: '^^esFacets'
+          facetsCtrl: '^^esFacets',
+          facetCtrl: '?^^esFacet'
         },
         templateUrl: function (elem, attrs) {
           return attrs.template || '../../catalog/components/elasticsearch/directives/' +
-            'partials/facet.html';
+            'partials/facet.html'
         },
         link: function (scope, element, attrs) {
         }
-      };
-    }]);
+      }
+    }])
 
-})();
+})()

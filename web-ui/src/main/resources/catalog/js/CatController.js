@@ -127,9 +127,9 @@ goog.require('gn_alert');
                   "field": "resourceType"
                 },
                 "aggs": {
-                  "serviceType": {
+                  "format.keyword": {
                     "terms": {
-                      "field": "serviceType"
+                      "field": "format.keyword"
                     }
                   }
                 }
@@ -150,7 +150,6 @@ goog.require('gn_alert');
                   }
                 }
               },
-
               'codelist_spatialRepresentationType': {
                 'terms': {
                   'field': 'codelist_spatialRepresentationType',

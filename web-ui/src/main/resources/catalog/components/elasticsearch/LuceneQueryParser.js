@@ -21,40 +21,65 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_es_query_parser');
+(function () {
+  goog.provide('gn_es_query_parser')
 
-  var module = angular.module('gn_es_query_parser', []);
+  var module = angular.module('gn_es_query_parser', [])
 
-  module.service('gnEsLuceneQueryParser', [ function() {
+  module.service('gnEsLuceneQueryParser', [function () {
 
-    this.facetGroupToLuceneQuery = function(indexKey, values) {
-      return ( values && values.length ) ? ('+' + indexKey + ':("' + values.join('" "') + '")').trim() : ''
+    this.facetGroupToLuceneQuery = function (indexKey, values) {
+      return (values && values.length) ? ('+' + indexKey + ':("' + values.join('" "') + '")').trim() : ''
     }
 
-    this.combineQueryGroups = function(queryGroups) {
-      return queryGroups ? queryGroups.join(' ').trim() : ''
+    this.combineQueryGroups = function (queryGroups) {
+      return queryGroups ? queryGroups.join(' AND ').trim() : ''
     }
 
-    this.facetsToLuceneQuery = function(facetsState) {
-      var query = [];
+    /**
+     * Facet state is an object like this:
+     *
+     * {
+     *   'tag': {
+     *     'world': true,
+     *     'vector': true
+     *   },
+     *   'availableInService' : {
+     *     'availableInViewService': '+linkProtocol:\/OGC:WMS.*\/'
+     *   },
+     *   'resourceType': {
+     *     'service': {
+     *       'serviceType': {
+     *         'OGC:WMS': true
+     *       }
+     *     },
+     *     'download': {
+     *       'serviceType': {
+     *       }
+     *     },
+     *     'dataset': true
+     *   }
+     * }
+     *
+     * @param facetsState
+     * @returns {string}
+     */
+    this.facetsToLuceneQuery = function (facetsState) {
+      var query = []
       for (var indexKey in facetsState) {
-        var state = facetsState[indexKey]
-        if(Array.isArray(state)) {
-          query.push(this.facetGroupToLuceneQuery(indexKey, state))
-        } else {
-          for (var p in state) {
-            query.push(state[p])
-          }
+
+        var query_chunk = parseStateNode(indexKey, facetsState[indexKey])
+        if (query_chunk) {
+          query.push(query_chunk)
         }
       }
       return this.combineQueryGroups(query)
     }
 
-    this.luceneQueryToFacets = function(query_string) {
-      if(query_string) {
+    this.luceneQueryToFacets = function (query_string) {
+      if (query_string) {
 
-        var astRoot = lucenequeryparser.parse(query_string);
+        var astRoot = lucenequeryparser.parse(query_string)
         var facets = {}
 
         parseAstNode(astRoot, facets)
@@ -62,24 +87,62 @@
       }
     }
 
-    function parseAstNode(node, facets) {
-      if(!node) return;
+    function parseStateNode(nodeName, node, indexKey) {
+      var query_string = ''
+      if (angular.isObject(node)) {
+        var chunks = []
+        for (var p in node) {
 
-      var left = node.left;
-      var right = node.right;
-      var field = node.field;
-      var operator = node.operator;
-      var term = node.term;
+          // nesting
+          if (angular.isObject(node[p])) {
+            var nextLvlKey = Object.keys(node[p])[0]
+            var nextLvlState = node[p][nextLvlKey]
+            if(Object.keys(nextLvlState).length) {
+              var nestedChunks = [nodeName + ':' + '"' + p + '"']
+              var chunk = parseStateNode(nextLvlKey, nextLvlState, nextLvlKey).trim()
+              if (chunk) {
+                nestedChunks.push(chunk)
+              }
+              chunks.push('(' + nestedChunks.join(' AND ') + ')')
+            }
+          } else {
+            var chunk = parseStateNode(p, node[p], nodeName).trim()
+            if (chunk) {
+              chunks.push(chunk)
+            }
+          }
+        }
+        if (chunks && chunks.length) {
+          query_string += '('
+          query_string += chunks.join(' ')
+          query_string += ')'
+        }
+      } else if (angular.isString(node)) {
+        query_string += node
+      } else if (node === true) {
+        query_string += indexKey + ':"' + nodeName + '"'
+      }
+      return query_string
+    }
+
+    function parseAstNode(node, facets) {
+      if (!node) return
+
+      var left = node.left
+      var right = node.right
+      var field = node.field
+      var operator = node.operator
+      var term = node.term
       var nextGroup = facets
 
-      if(field) {
-        var indexKey = field.field;
-        facets[indexKey] = facets[indexKey] || [];
+      if (field) {
+        var indexKey = field.field
+        facets[indexKey] = facets[indexKey] || []
         nextGroup = facets[indexKey]
       }
 
-      if(Array.isArray(facets)) {
-        if(term) {
+      if (Array.isArray(facets)) {
+        if (term) {
           facets.push(term)
         }
       } else if (typeof facets == 'object') {
@@ -89,5 +152,5 @@
       parseAstNode(right, nextGroup)
 
     }
-  }]);
-})();
+  }])
+})()
