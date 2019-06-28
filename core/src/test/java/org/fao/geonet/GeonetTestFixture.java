@@ -111,7 +111,7 @@ public class GeonetTestFixture {
                     });
 
                     // Create ES index
-                    _applicationContext.getBean(EsSearchManager.class).init();
+                    _applicationContext.getBean(EsSearchManager.class).init(false);
 
                     Path schemaPluginsDir = templateDataDirectory.resolve("config/schema_plugins");
                     deploySchema(webappDir, schemaPluginsDir);

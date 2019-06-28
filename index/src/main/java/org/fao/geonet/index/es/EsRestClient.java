@@ -210,6 +210,8 @@ public class EsRestClient implements InitializingBean {
         return this;
     }
 
+    public static final String ROUTING_KEY = "101";
+
     public BulkResponse bulkRequest(String index, Map<String, String> docs) throws IOException {
         if (!activated) {
             throw new IOException("Index not yet activated.");
@@ -222,6 +224,10 @@ public class EsRestClient implements InitializingBean {
             Map.Entry<String, String> entry = (Map.Entry) iterator.next();
             request.add(new IndexRequest(index).id(entry.getKey())
                 .source(entry.getValue(), XContentType.JSON));
+                // https://www.elastic.co/fr/blog/customizing-your-document-routing
+                // For features & record search we need to route the record
+                // document to the same place as the features in order to make join
+//                .routing(ROUTING_KEY));
         }
         try {
             return client.bulk(request, RequestOptions.DEFAULT);

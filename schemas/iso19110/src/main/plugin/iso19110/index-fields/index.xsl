@@ -33,7 +33,7 @@
 
   <xsl:template match="/">
     <doc>
-      <documentType>metadata</documentType>
+      <docType>metadata</docType>
       <documentStandard>iso19139</documentStandard>
 
       <resourceTitle>

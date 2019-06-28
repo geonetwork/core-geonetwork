@@ -223,7 +223,7 @@ public class BaseMetadataManager implements IMetadataManager {
         }
 
         // From DataManager:
-        searchManager.init();
+        searchManager.init(false);
     }
 
     /**

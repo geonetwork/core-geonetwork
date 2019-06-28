@@ -149,6 +149,8 @@ public class EsHTTPProxy {
                      HttpServletResponse response,
                      String endPoint, String body, String selectionBucket) throws Exception {
         final String url = client.getServerUrl() + "/" + defaultIndex + "/" + endPoint + "?";
+        // Make query on multiple indices
+//        final String url = client.getServerUrl() + "/" + defaultIndex + ",gn-features/" + endPoint + "?";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode nodeQuery = objectMapper.readTree(body);
 

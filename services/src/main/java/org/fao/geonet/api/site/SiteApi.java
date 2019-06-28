@@ -579,7 +579,7 @@ public class SiteApi {
         EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
 
         if(reset) {
-            searchMan.recreate();
+            searchMan.init(true);
         }
         searchMan.rebuildIndex(context, havingXlinkOnly, reset, bucket);
 

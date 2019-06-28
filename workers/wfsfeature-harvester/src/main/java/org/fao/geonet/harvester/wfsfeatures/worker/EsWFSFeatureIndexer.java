@@ -74,6 +74,8 @@ import java.util.concurrent.Phaser;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static org.fao.geonet.index.es.EsRestClient.ROUTING_KEY;
+
 
 // TODO: GeoServer WFS 1.0.0 in some case return
 // Feb 18, 2016 12:04:22 PM org.geotools.data.wfs.v1_0_0.NonStrictWFSStrategy createFeatureReaderGET
@@ -237,7 +239,11 @@ public class EsWFSFeatureIndexer {
         ObjectNode protoNode = createProtoNode(url, typeName);
         if (state.getParameters().getMetadataUuid() != null) {
             report.put("parent", state.getParameters().getMetadataUuid());
-            protoNode.put("parent", state.getParameters().getMetadataUuid());
+            protoNode.put("recordGroup", state.getParameters().getMetadataUuid());
+            ObjectNode linkToParent = jacksonMapper.createObjectNode();
+            linkToParent.put("name", "feature");
+            linkToParent.put("parent", state.getParameters().getMetadataUuid());
+            protoNode.set("featureOfRecord", linkToParent);
         }
         initFeatureAttributeToDocumentFieldNamesMapping(featureAttributes, state.getParameters().getTreeFields(), report);
         boolean initializeESReportSucceeded = report.saveHarvesterReport();
@@ -253,13 +259,14 @@ public class EsWFSFeatureIndexer {
         } else {
             wgs84 = CRS.getAuthorityFactory(true).createCoordinateReferenceSystem("urn:x-ogc:def:crs:EPSG::4326");
         }
+
         query.setCoordinateSystemReproject(wgs84);
 
         try {
             nbOfFeatures = 0;
 
             final Phaser phaser = new Phaser();
-            BulkResutHandler brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report);
+            BulkResutHandler brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report, state.getParameters().getMetadataUuid());
 
             long begin = System.currentTimeMillis();
             FeatureIterator<SimpleFeature> features = wfs.getFeatureSource(typeName).getFeatures(query).features();
@@ -354,7 +361,7 @@ public class EsWFSFeatureIndexer {
 
                 if (brh.getBulkSize() >= featureCommitInterval) {
                     brh.launchBulk(client);
-                    brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report);
+                    brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report, state.getParameters().getMetadataUuid());
                 }
             }
 
@@ -493,17 +500,19 @@ public class EsWFSFeatureIndexer {
         private String url;
         protected int firstFeatureIndex;
         private Report report;
+        private String metadataUuid;
         protected long begin;
         protected BulkRequest bulk;
         protected int bulkSize;
         ActionListener<BulkResponse> listener;
 
-        public BulkResutHandler(Phaser phaser, String typeName, String url, int firstFeatureIndex, Report report) {
+        public BulkResutHandler(Phaser phaser, String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
             this.phaser = phaser;
             this.typeName = typeName;
             this.url = url;
             this.firstFeatureIndex = firstFeatureIndex;
             this.report = report;
+            this.metadataUuid = metadataUuid;
             this.bulk =  new BulkRequest(index);
             this.bulkSize = 0;
             LOGGER.debug("  {} - from {}, {} features to index, preparing bulk.", typeName, firstFeatureIndex, featureCommitInterval);
@@ -543,6 +552,7 @@ public class EsWFSFeatureIndexer {
             String id = String.format("%s#%s#%s", url, typeName, featureId);
             bulk.add(new IndexRequest(index).id(id)
                 .source(jacksonMapper.writeValueAsString(rootNode), XContentType.JSON));
+//                .routing(ROUTING_KEY));
             bulkSize++;
         }
 
@@ -557,8 +567,8 @@ public class EsWFSFeatureIndexer {
 
     // depending on situation, one can expect going up to 1.5 faster using an async result handler (e.g. hudge collection of points)
     class AsyncBulkResutHandler extends BulkResutHandler {
-        public AsyncBulkResutHandler(Phaser phaser, String typeName, String url, int firstFeatureIndex, Report report) {
-            super(phaser, typeName, url, firstFeatureIndex, report);
+        public AsyncBulkResutHandler(Phaser phaser, String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
+            super(phaser, typeName, url, firstFeatureIndex, report, metadataUuid);
         }
 
         public void launchBulk(EsRestClient client) throws Exception {

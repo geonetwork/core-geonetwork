@@ -189,22 +189,17 @@ public class EsSearchManager implements ISearchManager {
 
 
     @Override
-    public void init() throws Exception {
+    public void init(boolean dropIndexFirst) throws Exception {
         if (indexList != null) {
             indexList.keySet().forEach(e -> {
-                createIndex(e, indexList.get(e), false);
+                try {
+                    createIndex(e, indexList.get(e), dropIndexFirst);
+                } catch (IOException ex) {
+                    LOGGER.error("Error during index creation. Error is: {}", ex.getMessage());
+                }
             });
         }
     }
-
-    public void recreate() throws Exception {
-        if (indexList != null) {
-            indexList.keySet().forEach(e -> {
-                createIndex(e, indexList.get(e), true);
-            });
-        }
-    }
-
 
     @Autowired
     private GeonetworkDataDirectory dataDirectory;
@@ -212,62 +207,59 @@ public class EsSearchManager implements ISearchManager {
     public static final String INDEX_DIRECTORY = "index";
 
 
-    private void createIndex(String indexId, String indexName, boolean dropIndexFirst) {
-        try {
-            if (dropIndexFirst) {
-                try {
-                    DeleteIndexRequest request = new DeleteIndexRequest(indexName);
-                    AcknowledgedResponse deleteIndexResponse = client.getClient().indices().delete(request, RequestOptions.DEFAULT);
-                    if (!deleteIndexResponse.isAcknowledged()) {
-                        // index does not exist ?
-                    }
-                } catch (Exception e) {
-                    // index does not exist ?
-                }
-            }
-
-            // Check index exist first
-            GetIndexRequest request = new GetIndexRequest(indexName);
+    private void createIndex(String indexId, String indexName, boolean dropIndexFirst) throws IOException {
+        if (dropIndexFirst) {
             try {
-                boolean exists = client.getClient().indices().exists(request, RequestOptions.DEFAULT);
-                if (exists && !dropIndexFirst) {
-                    return;
+                DeleteIndexRequest request = new DeleteIndexRequest(indexName);
+                AcknowledgedResponse deleteIndexResponse = client.getClient().indices().delete(request, RequestOptions.DEFAULT);
+                if (deleteIndexResponse.isAcknowledged()) {
+                    LOGGER.debug("Index '{}' removed.", new Object[]{indexName});
                 }
-
-
-                if (!exists || dropIndexFirst) {
-                    // Check version of the index - how ?
-
-                    // Create it if not
-                    Path indexConfiguration = dataDirectory.getConfigDir().resolve(INDEX_DIRECTORY).resolve(indexId + ".json");
-                    if (Files.exists(indexConfiguration)) {
-                        String configuration = FileUtils.readFileToString(indexConfiguration.toFile());
-                        CreateIndexRequest createIndexRequest = new CreateIndexRequest(indexName);
-                        createIndexRequest.source(configuration, XContentType.JSON);
-                        CreateIndexResponse createIndexResponse = client.getClient().indices().create(createIndexRequest, RequestOptions.DEFAULT);
-
-                        if (createIndexResponse.isAcknowledged()) {
-                            LOGGER.debug("Index '{}' created", new Object[]{indexName});
-                        } else {
-                            final String message = String.format("Index '%s' was not created. Error is: %s", indexName, createIndexResponse.toString());
-                            LOGGER.error(message);
-                            throw new IllegalStateException(message);
-                        }
-                    } else {
-                        throw new FileNotFoundException(String.format(
-                            "Index configuration file '%s' not found in data directory for building index with name '%s'. Create one or copy the default one.",
-                            indexConfiguration.toAbsolutePath(),
-                            indexName));
-                    }
-                }
-            } catch (Exception cnce) {
-                final String message = String.format("Could not connect to index '%s'. Error is %s. Is the index server is up and running?",
-                    defaultIndex, cnce.getMessage());
-                LOGGER.error(message);
-                throw new IOException(message);
+            } catch (Exception e) {
+                // index does not exist ?
+                LOGGER.debug("Error during index '{}' removal. Error is: %s", new Object[]{indexName, e.getMessage()});
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+
+        // Check index exist first
+        GetIndexRequest request = new GetIndexRequest(indexName);
+        try {
+            boolean exists = client.getClient().indices().exists(request, RequestOptions.DEFAULT);
+            if (exists && !dropIndexFirst) {
+                return;
+            }
+
+
+            if (!exists || dropIndexFirst) {
+                // Check version of the index - how ?
+
+                // Create it if not
+                Path indexConfiguration = dataDirectory.getConfigDir().resolve(INDEX_DIRECTORY).resolve(indexId + ".json");
+                if (Files.exists(indexConfiguration)) {
+                    String configuration = FileUtils.readFileToString(indexConfiguration.toFile());
+                    CreateIndexRequest createIndexRequest = new CreateIndexRequest(indexName);
+                    createIndexRequest.source(configuration, XContentType.JSON);
+                    CreateIndexResponse createIndexResponse = client.getClient().indices().create(createIndexRequest, RequestOptions.DEFAULT);
+
+                    if (createIndexResponse.isAcknowledged()) {
+                        LOGGER.debug("Index '{}' created", new Object[]{indexName});
+                    } else {
+                        final String message = String.format("Index '%s' was not created. Error is: %s", indexName, createIndexResponse.toString());
+                        LOGGER.error(message);
+                        throw new IllegalStateException(message);
+                    }
+                } else {
+                    throw new FileNotFoundException(String.format(
+                        "Index configuration file '%s' not found in data directory for building index with name '%s'. Create one or copy the default one.",
+                        indexConfiguration.toAbsolutePath(),
+                        indexName));
+                }
+            }
+        } catch (Exception cnce) {
+            final String message = String.format("Could not connect to index '%s'. Error is %s. Is the index server is up and running?",
+                defaultIndex, cnce.getMessage());
+            LOGGER.error(message);
+            throw new IOException(message);
         }
     }
 
@@ -295,7 +287,6 @@ public class EsSearchManager implements ISearchManager {
             doc.put(SOURCE_CATALOGUE, catalog);
         }
         String jsonDocument = mapper.writeValueAsString(doc);
-//        System.out.println(jsonDocument);
         listOfDocumentsToIndex.put(id, jsonDocument);
 
         if (listOfDocumentsToIndex.size() == commitInterval || forceRefreshReaders) {
@@ -314,7 +305,6 @@ public class EsSearchManager implements ISearchManager {
                     } else {
                         Map<String, String> listErrorOfDocumentsToIndex = new HashMap<>(bulkItemResponses.getItems().length);
                         List<String> errorDocumentIds = new ArrayList<>();
-                        System.out.println(bulkItemResponses.buildFailureMessage());
                         // Add information in index that some items were not properly indexed
                         Arrays.stream(bulkItemResponses.getItems()).forEach(e -> {
                             if (e.status().getStatus() != 201) { // Not created
@@ -429,8 +419,8 @@ public class EsSearchManager implements ISearchManager {
                             arrayNode.add(
                                 mapper.readTree(node.getTextNormalize()));
                         } catch (IOException e) {
-                            // Invalid JSON object provided
-                            e.printStackTrace();
+                            LOGGER.error("Parsing invalid JSON node {} for property {}. Error is: {}",
+                                new Object[]{node.getTextNormalize(), propertyName, e.getMessage()});
                         }
                     } else {
                         arrayNode.add(
@@ -457,8 +447,8 @@ public class EsSearchManager implements ISearchManager {
                                 nodeElements.get(0).getTextNormalize()
                             ));
                     } catch (IOException e) {
-                        // Invalid JSON object provided
-                        e.printStackTrace();
+                        LOGGER.error("Parsing invalid JSON node {} for property {}. Error is: {}",
+                            new Object[]{nodeElements.get(0).getTextNormalize(), propertyName, e.getMessage()});
                     }
                 } else {
                     doc.put(propertyName,

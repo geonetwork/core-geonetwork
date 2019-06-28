@@ -1056,7 +1056,13 @@
       }
     ],
     "properties": {
+      "any": {
+        "type": "text"
+      },
       "dateStamp": {
+        "type": "date"
+      },
+      "changeDate": {
         "type": "date"
       },
       "document": {
@@ -1067,7 +1073,7 @@
       "documentStandard": {
         "type": "keyword"
       },
-      "documentType": {
+      "docType": {
         "type": "keyword"
       },
       "sourceCatalogue": {
@@ -1098,7 +1104,8 @@
         "type": "keyword"
       },
       "uuid": {
-        "type": "keyword"
+        "type": "keyword",
+        "copy_to": "any"
       },
       "id": {
         "type": "keyword"
@@ -1130,9 +1137,15 @@
       "link": {
         "type": "nested",
         "properties": {
-          "protocol": {"type": "keyword"},
+          "protocol": {
+            "type": "keyword",
+            "copy_to": "any"
+          },
           "link": {"type": "text"},
-          "name": {"type": "text"},
+          "name": {
+            "type": "text",
+            "copy_to": "any"
+          },
           "description": {"type": "text"}
         }
       },
@@ -1196,11 +1209,21 @@
       "parentUuid": {
         "type": "keyword"
       },
+      "recordGroup": {
+        "type": "keyword"
+      },
+      "recordLink": {
+        "type": "join",
+        "relations": {
+          "record": ["children", "dataset", "sibling", "feature"]
+        }
+      },
       "resolutionDistance": {
         "type": "keyword"
       },
       "resourceAbstract": {
         "type": "text",
+        "copy_to": "any",
         "fields": {
           "keyword": {
             "type": "keyword",
@@ -1210,6 +1233,7 @@
       },
       "resourceAltTitle": {
         "type": "text",
+        "copy_to": "any",
         "fields": {
           "keyword": {
             "type": "keyword",
@@ -1219,6 +1243,7 @@
       },
       "resourceCredit": {
         "type": "text",
+        "copy_to": "any",
         "fields": {
           "keyword": {
             "type": "keyword",
@@ -1231,6 +1256,7 @@
       },
       "resourceTitle": {
         "type": "text",
+        "copy_to": "any",
         "fields": {
           "keyword": {
             "type": "keyword",
@@ -1252,6 +1278,9 @@
       "serviceType": {
         "type": "keyword"
       },
+      "format": {
+        "type": "keyword"
+      },
       "spatialRepresentationType": {
         "type": "keyword"
       },
@@ -1263,6 +1292,7 @@
       },
       "tag": {
         "type": "keyword",
+        "copy_to": "any",
         "fields": {
           "trigram": {
             "type": "text",
@@ -1281,7 +1311,8 @@
         "type": "keyword"
       },
       "topic": {
-        "type": "keyword"
+        "type": "keyword",
+        "copy_to": "any"
       },
       "validReport": {
         "type" : "text",

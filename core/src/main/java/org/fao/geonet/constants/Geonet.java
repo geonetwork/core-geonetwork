@@ -673,5 +673,7 @@ public final class Geonet {
         public static final String RESOURCEABSTRACT = "resourceAbstract";
         public static final String PARENTUUID = "parentUuid";
         public static final String RECORDOPERATESON = "recordOperateOn";
+        public static final String FEATUREOFRECORD = "featureOfRecord";
+        public static final String RECORDLINK = "record";
     }
 }

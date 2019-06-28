@@ -41,7 +41,7 @@ import jeeves.server.context.ServiceContext;
  * Base interface for the search (Lucene or Solr).
  */
 public interface ISearchManager {
-    void init() throws Exception;
+    void init(boolean dropIndexFirst) throws Exception;
 
     void end() throws Exception;
 

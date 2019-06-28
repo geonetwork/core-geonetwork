@@ -66,7 +66,8 @@
           "match": "ft_*_s",
           "mapping": {
             "type": "keyword",
-            "fielddata": true
+            "fielddata": true,
+            "copy_to": "any"
           }
         }
       },
@@ -92,6 +93,9 @@
       }
     ],
     "properties": {
+      "any": {
+        "type": "text"
+      },
       "id": {
         "type": "keyword"
       },
@@ -102,18 +106,30 @@
         "type": "keyword"
       },
       "resourceType": {
-        "type": "keyword"
+        "type": "keyword",
+        "copy_to": "any"
       },
       "resourceTitle": {
-        "type": "keyword"
+        "type": "text",
+        "copy_to": "any",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
       },
-      "parent": {
+      "recordLink": {
+        "type": "join",
+        "relations": {
+          "record": "feature"
+        }
+      },
+      "recordGroup": {
         "type": "keyword"
       },
       "geom": {
-        "type": "geo_shape",
-        "tree": "quadtree",
-        "precision": "10km"
+        "type": "geo_shape"
       },
       "location": {
         "type": "geo_point"

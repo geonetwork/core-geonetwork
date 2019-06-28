@@ -126,7 +126,7 @@
     <!-- Create a first document representing the main record. -->
     <doc>
 
-      <xsl:copy-of select="gn-fn-index:add-field('documentType', 'metadata')"/>
+      <xsl:copy-of select="gn-fn-index:add-field('docType', 'metadata')"/>
       <xsl:copy-of select="gn-fn-index:add-field('documentStandard', 'iso19139')"/>
 
       <!-- Index the metadata document as XML -->
@@ -940,15 +940,26 @@
         </xsl:variable>
 
         <xsl:if test="$datasetId != ''">
-          <recordOperateOn>
-            <xsl:value-of select="$datasetId"/>
-          </recordOperateOn>
+          <recordOperateOn><xsl:value-of select="$datasetId"/></recordOperateOn>
+          <!-- TODO: link -->
+<!--          <recordLink type="object">{"name": "dataset", "parent": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"}</recordLink>-->
         </xsl:if>
       </xsl:for-each>
 
-      <xsl:for-each select="gmd:parentIdentifier/gco:CharacterString">
-        <parentUuid><xsl:value-of select="."/></parentUuid>
-      </xsl:for-each>
+      <xsl:variable name="recordLinks"
+                    select="gmd:parentIdentifier/gco:CharacterString[. != '']"/>
+      <xsl:choose>
+        <xsl:when test="count($recordLinks) > 0">
+          <xsl:for-each select="$recordLinks">
+            <parentUuid><xsl:value-of select="."/></parentUuid>
+            <recordGroup><xsl:value-of select="."/></recordGroup>
+            <recordLink type="object">{"name": "children", "parent": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"}</recordLink>
+          </xsl:for-each>
+        </xsl:when>
+        <xsl:otherwise>
+          <recordGroup><xsl:value-of select="$identifier"/></recordGroup>
+        </xsl:otherwise>
+      </xsl:choose>
 
       <!-- Index more fields in this element -->
       <xsl:apply-templates mode="index-extra-fields" select="."/>

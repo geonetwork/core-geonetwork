@@ -413,11 +413,13 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.ROOT, root));
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.SCHEMA, schema));
+            moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.RECORDLINK, "record"));
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.DATABASE_CREATE_DATE, createDate));
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE, changeDate));
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.SOURCE, source));
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.IS_TEMPLATE, metadataType.codeString));
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.UUID, uuid));
+            moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.FEATUREOFRECORD, "record"));
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.IS_HARVESTED, isHarvested ? "true" : "false"));
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.OWNER, owner));
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.POPULARITY, popularity));
@@ -551,7 +553,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             //To inject extra fields from BaseMetadataIndexer inherited beans
             addExtraFields(fullMd, moreFields);
 
-            searchManager.index(schemaManager.getSchemaDir(schema), md, metadataId, moreFields, metadataType, root, forceRefreshReaders);
+            searchManager.index(schemaManager.getSchemaDir(schema), md, uuid, moreFields, metadataType, root, forceRefreshReaders);
 
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId
