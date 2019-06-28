@@ -50,7 +50,7 @@ public class XmlErrorHandler extends DefaultHandler {
             }
             x.setText(xpath);
         } catch (JDOMException e) {
-            e.printStackTrace();
+            Log.error(Log.ENGINE, e.getMessage(), e);
             x.setText("nopath");
         }
         String message = exception.getMessage() + " (Element: " + elem.getQualifiedName();

@@ -28,7 +28,9 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.utils.Log;
 import org.geotools.referencing.ReferencingFactoryFinder;
 import org.jdom.Element;
 import org.opengis.metadata.Identifier;
@@ -139,8 +141,7 @@ public class Search implements Service {
                     }
                 }
             } catch (FactoryException e) {
-                // TODO : Use logger.
-                System.out.println("CRS Authority:" + e.getMessage());
+                Log.error(Geonet.GEONETWORK, "CRS Authority:" + e.getMessage(), e);
             }
         }
         return crsList;

@@ -45,6 +45,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.LuceneConfig;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -115,12 +116,12 @@ public class SiteInformation {
             try {
                 loadDatabaseInfo(context);
             } catch (SQLException e) {
-                e.printStackTrace();
+                Log.error(Geonet.GEONETWORK, e.getMessage(), e);
             }
             try {
                 loadIndexInfo(context);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.error(Geonet.GEONETWORK, e.getMessage(), e);
             }
             loadVersionInfo(context);
             loadSystemInfo();
@@ -232,7 +233,7 @@ public class SiteInformation {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Log.error(Geonet.GEONETWORK, ex.getMessage(), ex);
         }
     }
 }

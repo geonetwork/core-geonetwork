@@ -196,12 +196,10 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
                 }
                 update.executeBatch();
             } catch (java.sql.BatchUpdateException e) {
-                System.out.println("Error occurred while updating resource links:");
-                e.printStackTrace();
+                Log.error(Geonet.GEONETWORK, "Error occurred while updating resource links:" + e.getMessage(), e);
                 SQLException next = e.getNextException();
                 while (next != null) {
-                    System.err.println("Next error: ");
-                    next.printStackTrace();
+                    Log.error(Geonet.GEONETWORK, "Next error: " + next.getMessage(), next);
                     next = e.getNextException();
                 }
 

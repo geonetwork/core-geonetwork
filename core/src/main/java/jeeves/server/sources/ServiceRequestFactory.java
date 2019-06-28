@@ -90,7 +90,7 @@ public final class ServiceRequestFactory {
             try {
                 req.setCharacterEncoding(Constants.ENCODING);
             } catch (UnsupportedEncodingException ex) {
-                ex.printStackTrace();
+                Log.error(Log.JEEVES, "Create request error: " + ex.getMessage(), ex);
             }
         }
 
@@ -337,7 +337,7 @@ public final class ServiceRequestFactory {
             byte[] utf8Bytes = file.getBytes("UTF8");
             file = new String(utf8Bytes, "UTF8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Log.error(Log.JEEVES, e.getMessage(), e);
         }
 
         //--- replace whitespace with underscore

@@ -207,8 +207,7 @@ public final class Xml {
 
             result = (Element) jdoc.getRootElement().detach();
         } catch (Exception e) {
-            Log.error(Log.ENGINE, "Error loading URL " + url.getPath() + " .Threw exception " + e);
-            e.printStackTrace();
+            Log.error(Log.ENGINE, "Error loading URL " + url.getPath() + " .Threw exception " + e.getMessage(), e);
         }
         return result;
     }
@@ -438,8 +437,7 @@ public final class Xml {
             // Add the following to get timing info on xslt transformations
             //transFact.setAttribute(FeatureKeys.TIMING,true);
         } catch (IllegalArgumentException e) {
-            System.out.println("WARNING: transformerfactory doesnt like saxon attributes!");
-            //e.printStackTrace();
+            Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
         } finally {
             Transformer t = transFact.newTransformer(xslt);
             if (xmlParam != null) {
@@ -486,8 +484,7 @@ public final class Xml {
                 // Add the following to get timing info on xslt transformations
                 //transFact.setAttribute(FeatureKeys.TIMING,true);
             } catch (IllegalArgumentException e) {
-                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
-                //e.printStackTrace();
+                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
             } finally {
                 transFact.setURIResolver(new JeevesURIResolver());
                 Transformer t = transFact.newTransformer(srcSheet);
@@ -553,8 +550,7 @@ public final class Xml {
                 factory.setAttribute(FeatureKeys.LINE_NUMBERING, true);
                 factory.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
             } catch (IllegalArgumentException e) {
-                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
-                //e.printStackTrace();
+                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
             } finally {
                 Transformer transformer = factory.newTransformer(xslt);
 
@@ -1134,8 +1130,7 @@ public final class Xml {
                         s.setSystemId(f.toUri().toASCIIString());
                     }
                 } catch (URISyntaxException e) {
-                    Log.warning(Log.XML_RESOLVER, "URI syntax problem: " + e.getMessage());
-                    e.printStackTrace();
+                    Log.warning(Log.XML_RESOLVER, "URI syntax problem: " + e.getMessage(), e);
                 }
             }
 

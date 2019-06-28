@@ -52,8 +52,7 @@ public class LuceneOptimizerJob implements Job {
             indexTracker.optimize();
         } catch (Exception e) {
             Log.error(Geonet.INDEX_ENGINE,
-                "Optimize task failed: " + e.getMessage());
-            e.printStackTrace();
+                "Optimize task failed: " + e.getMessage(), e);
         }
     }
 
