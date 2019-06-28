@@ -139,7 +139,7 @@ public class XmlSearch implements Service {
         // Sets the boundaries (from/to) if needed
         boolean boundariesSet = false;
         if (! this.allowUnboundedQueries) {
-            setSafeBoundaries(params);
+            boundariesSet = setSafeBoundaries(params);
         }
 
         Element elData = SearchDefaults.getDefaultSearch(context, params);
