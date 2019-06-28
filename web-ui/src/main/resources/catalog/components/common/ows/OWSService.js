@@ -85,15 +85,15 @@
   var unmarshaller100 = context100.createUnmarshaller();
   var unmarshaller110 = context110.createUnmarshaller();
   var unmarshaller20 = context20.createUnmarshaller();
+  var cachedGetCapabilitiesUrls = {};
 
   module.provider('gnOwsCapabilities', function() {
     this.$get = ['$http', '$q', '$translate',
       'gnUrlUtils', 'gnGlobalSettings',
       function($http, $q, $translate,
                gnUrlUtils, gnGlobalSettings) {
-        var cachedGetCapabilitiesUrls = {};
         var displayFileContent = function(data, getCapabilitiesUrl) {
-          if (!cachedUrls.hasOwnProperty(getCapabilitiesUrl)) {
+          if (!cachedGetCapabilitiesUrls.hasOwnProperty(getCapabilitiesUrl)) {
             var parser = new ol.format.WMSCapabilities();
             cachedGetCapabilitiesUrls[getCapabilitiesUrl] = parser.read(data);
           }
