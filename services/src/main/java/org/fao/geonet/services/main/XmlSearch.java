@@ -112,12 +112,12 @@ public class XmlSearch implements Service {
         }
         // from defined, to defined
         else {
-            // if the range is unacceptable
+            // if the range is unacceptable, fix it. Otherwise all good
             if ((to - from) > this.maxRecordValue) {
                 params.removeChildren("to");
                 params.addContent(new Element("to").setText(Integer.toString(from + this.maxRecordValue)));
-                boundariesSet = true;
             }
+            boundariesSet = true;
         }
         return boundariesSet;
     }
