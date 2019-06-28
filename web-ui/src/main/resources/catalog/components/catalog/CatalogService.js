@@ -319,7 +319,6 @@
     removeThumbnail: 'md.thumbnail.remove?_content_type=json&',
     removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
     suggest: 'suggest',
-    facetConfig: 'search/facet/config',
     selectionLayers: 'selection.layers',
 
     featureindexproxy: '../../index/features',
@@ -570,8 +569,8 @@
         'status', 'status_text', 'coordinateSystem', 'identifier', 'responsibleParty',
         'mdLanguage', 'resourceLanguage', 'resourceIdentifier',
         'MD_LegalConstraintsOtherConstraints', 'MD_LegalConstraintsUseLimitation',
-        'MD_SecurityConstraintsUseLimitation',
-        'MD_ConstraintsUseLimitation',
+        'MD_SecurityConstraintsUseLimitation', 'overview',
+        'MD_ConstraintsUseLimitation', 'resourceType',
         'type', 'link', 'crsDetails', 'format', 'otherLanguage',
         'creationDateForResource', 'publicationDateForResource', 'revisionDateForResource',
         'contact', 'contactForResource'];

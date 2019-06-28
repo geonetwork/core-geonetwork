@@ -45,6 +45,10 @@
           must: []
         }
       };
+
+
+
+
       var query_string;
 
       var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',
@@ -129,6 +133,17 @@
       }
 
       params.query = query;
+
+      // Collapse could be an option to group
+      // features related to a record.
+      // params.collapse = {
+      //   "field": "recordGroup",
+      //     "inner_hits": {
+      //     "name": "others",
+      //       "size": 30
+      //   },
+      //   "max_concurrent_group_searches": 4
+      // };
       gnESFacet.addFacets(params, 'mainsearch');
       return params;
     };
@@ -151,7 +166,12 @@
       match[field] = phrase;
       var params = {
         query: {
-          match_phrase_prefix: match
+          // match_phrase_prefix: match
+          "multi_match" : {
+            "query" : query,
+            // "type":       "phrase_prefix",
+            "fields" : [ field + "^3", "tag" ]
+          }
         },
         _source: [field]
       };

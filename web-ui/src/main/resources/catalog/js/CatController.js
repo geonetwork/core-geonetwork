@@ -127,9 +127,9 @@ goog.require('gn_alert');
                   "field": "resourceType"
                 },
                 "aggs": {
-                  "format.keyword": {
+                  "format": {
                     "terms": {
-                      "field": "format.keyword"
+                      "field": "format"
                     }
                   }
                 }
@@ -686,6 +686,7 @@ goog.require('gn_alert');
               error(function(data, status, headers, config) {
                 $rootScope.$broadcast('StatusUpdated',
                    {
+                     id: 'catalogueStatus',
                      title: $translate.instant('somethingWrong'),
                      msg: $translate.instant('msgNoCatalogInfo'),
                      type: 'danger'});
@@ -771,26 +772,28 @@ goog.require('gn_alert');
 
         // Retrieve main search information
         var searchInfo = userLogin.then(function(value) {
-          // Check index status. TODO: Disable functionnalities depending on it
+          // Check index status.
           $http.get('../api/site/index/status').then(function(r) {
-            if (r.data.state.id.match(/^(green|yellow)$/) == null) {
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: r.data.state.title + " / " + r.data.message ,
-                type: r.data.state.icon});
-            }
             gnConfig['indexStatus'] = r.data;
 
-            var url = '../api/search/records/_search';
-            // angular.forEach(gnGlobalSettings.gnCfg.mods.search.filters,
-            //   function(v, k) {
-            //     url += '&' + k + '=' + v;
-            //   });
-            return $http.post('../api/search/records/_search',
-              {"size": 0, "query": {"match_all": {}},
-                "aggs": gnGlobalSettings.gnCfg.mods.search.facetConfig.home}).
-            then(function(r) {
-              $scope.searchInfo = r.data;
-            });
+            if (r.data.state.id.match(/^(green|yellow)$/) == null) {
+              $rootScope.$broadcast('StatusUpdated', {
+                id: 'indexStatus',
+                title: r.data.state.title,
+                error: {
+                  message: r.data.message
+                },
+                // type: r.data.state.icon,
+                type: 'danger'
+              });
+            } else {
+              return $http.post('../api/search/records/_search',
+                {"size": 0, "query": {"match_all": {}},
+                  "aggs": gnGlobalSettings.gnCfg.mods.search.facetConfig.home}).
+              then(function(r) {
+                $scope.searchInfo = r.data;
+              });
+            }
           });
         });
       };

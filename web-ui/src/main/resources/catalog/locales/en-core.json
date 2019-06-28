@@ -12,6 +12,7 @@
     "advanced": "Advanced",
     "basic": "Basic",
     "none": "none",
+    "indexNotAvailable": "No search service available currently!",
     "BadParameterEx": "Wrong parameter",
     "Editor": "Editor",
     "Keywords": "Keywords",

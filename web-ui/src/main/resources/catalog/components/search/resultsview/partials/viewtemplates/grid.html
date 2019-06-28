@@ -73,12 +73,14 @@
          data-ng-click="openRecord($index, md, searchResults.records)">
       <!-- Thumbnail -->
       <div class="gn-md-thumbnail"
-            data-ng-class="{'gn-md-no-thumbnail': !md.overview[0]}">
-            <!--data-ng-class="{'gn-md-no-thumbnail': !md.getThumbnails().list[0].url}">-->
+           data-ng-class="{'gn-md-no-thumbnail': !md.overview[0]}">
+
+      <div class="gn-md-thumbnail">
         <img class="gn-img-thumbnail"
              alt="{{md.resourceTitle}}"
              data-ng-src="{{md.overview[0].url}}"
              data-ng-if="md.overview[0]"/>
+<!--             data-ng-src="{{::buildOverviewUrl(md)}}"/>-->
 
         <!-- Display the first metadata status (apply to ISO19139 record) -->
         <div data-ng-if="md.status_text.length > 0"
@@ -114,6 +116,13 @@
           </p>
         </div>
       </div>
+
+
+      <!--<div>
+        <span data-ng-repeat="h in md.inner_hits.others.hits.hits">
+          <i class="fa fa-fw {{h._source.docType === 'feature' ? 'fa-map-pin' : 'gn-icon-' + h._source.resourceType}}"></i> {{h._source.resourceTitle}},
+        </span>
+      </div>-->
 
     </div>
     <!--end middle row-->

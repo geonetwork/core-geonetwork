@@ -195,7 +195,8 @@
         // data is not an object: this is an error
         if (typeof data !== 'object') {
           gnAlertService.addAlert({
-            msg: data,
+            id: 'searchError',
+            msg: data || ('Error running search: ' + angular.toJson(esParams)),
             type: 'danger'
           });
           return;

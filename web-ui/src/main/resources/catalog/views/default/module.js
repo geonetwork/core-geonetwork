@@ -209,6 +209,26 @@
         gnMdView.feedMd(index, md, records);
       };
 
+      $scope.buildOverviewUrl = function(md) {
+        if (md.overview) {
+          return md.overview[0].url;
+        } else if (md.resourceType && md.resourceType[0] === 'feature') {
+          // Build a getmap request on the feature
+          var t = decodeURIComponent(md.featureTypeId).split('#');
+
+          var getMapRequest = t[0].replace(/SERVICE=WFS/i, '') + (t[0].indexOf('?' !== -1) ? '&' : '?')
+            + "SERVICE=WMS&VERSION=1.1.0&REQUEST=GetMap&FORMAT=image/png&LAYERS=" + t[1]
+            + "&CRS=EPSG:4326&BBOX=" + md.bbox_xmin + ","+ md.bbox_ymin + ","+ md.bbox_xmax + ","+ md.bbox_ymax
+            + "&WIDTH=100&HEIGHT=100";
+
+          return getMapRequest;
+
+          console.log(md);
+        } else {
+          return '../../catalog/views/default/images/no-thumbnail.png';
+        }
+      };
+
       $scope.closeRecord = function() {
         gnMdView.removeLocationUuid();
       };
