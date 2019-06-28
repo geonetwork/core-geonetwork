@@ -499,7 +499,15 @@
             + (window.location.search || '?') + window.location.hash;
         return gnGlobalSettings.gnUrl + '../../casRedirect?service=' +
           encodeURIComponent(currentUrl);
-      }
+      };
+
+      // signout url is https://host/geonetwork/logout?service=<currentUrl>
+      $scope.getSignOutUrl = function() {
+        var currentUrl = window.location.origin + window.location.pathname
+          + (window.location.search || '?') + window.location.hash;
+        return gnGlobalSettings.gnUrl + '../../signout?redirect=' +
+          encodeURIComponent(currentUrl);
+      };
     }]);
 
   module.controller('gnsSextantSearch', [

@@ -228,7 +228,7 @@
   </bean>
 
   <bean id="logoutSuccessHandler"
-        class="jeeves.config.springutil.JeevesNodeAwareLogoutSuccessHandler">
+        class="org.fao.geonet.web.RedirectLogoutSuccessHandler">
     <property name="defaultTargetUrl" value="${logout.success.url}"></property>
   </bean>
   <bean id="requestCacheFilter"
