@@ -317,13 +317,14 @@ public class Aligner extends BaseAligner<CswParams> {
             setUuid(params.getUuid());
 
         metadata.getSourceInfo().setGroupOwner(getGroupOwner());
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+
+        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
         metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         metadataIndexer.indexMetadata(id, true, null);
         result.addedMetadata++;
@@ -387,10 +388,10 @@ public class Aligner extends BaseAligner<CswParams> {
 		OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
 		repository.deleteAllByMetadataId(Integer.parseInt(id));
 
-		addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+		addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
 		metadata.getCategories().clear();
-		addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
+		addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 		
 		return true;
 	}

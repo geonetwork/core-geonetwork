@@ -25,7 +25,7 @@ package jeeves.server.resources;
 
 import jeeves.server.context.ServiceContext;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.sql.DataSource;
 
@@ -50,7 +50,7 @@ public class Stats {
             BasicDataSource basicDataSource = (BasicDataSource) source;
             numActive = basicDataSource.getNumActive();
             numIdle = basicDataSource.getNumIdle();
-            maxActive = basicDataSource.getMaxActive();
+            maxActive = basicDataSource.getMaxTotal();
         } else {
             maxActive = numActive = numIdle = -1;
         }

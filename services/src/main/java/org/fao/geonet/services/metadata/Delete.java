@@ -23,8 +23,9 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.nio.file.Path;
-
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -33,18 +34,16 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
 
 /**
  * Removes a metadata from the system.
@@ -62,7 +61,7 @@ public class Delete extends BackupFileService {
 
     public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dataMan = gc.getBean(DataManager.class);
+        IMetadataManager metadataManager = gc.getBean(IMetadataManager.class);
         AccessManager accessMan = gc.getBean(AccessManager.class);
 
         boolean backupFile = Util.getParam(params, Params.BACKUP_FILE, true);
@@ -96,7 +95,7 @@ public class Delete extends BackupFileService {
         //-----------------------------------------------------------------------
         //--- delete metadata and return status
 
-        dataMan.deleteMetadata(context, id);
+        metadataManager.deleteMetadata(context, id);
 
         Element elResp = new Element(Jeeves.Elem.RESPONSE);
         elResp.addContent(new Element(Geonet.Elem.ID).setText(id));

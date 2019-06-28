@@ -28,6 +28,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.IndexingTask;
@@ -51,6 +52,9 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
 
     @Autowired
     private DataManager dataManager;
+
+    @Autowired
+    private IMetadataManager metadataManager;
 
     @Autowired
     private SchemaManager schemaManager;
@@ -96,7 +100,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         assertEquals(vicinityMapMetadata.getUuid(), document.getField("_uuid").stringValue());
 
         Xml.selectElement(contactElement, "gmd:individualName/gco:CharacterString", Arrays.asList(GMD, GCO)).setText("momo");
-        dataManager.updateMetadata(context,
+        metadataManager.updateMetadata(context,
                 Integer.toString(contactMetadata.getId()),
                 contactElement,
                 false,
@@ -119,9 +123,9 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         AbstractMetadata contactMetadata = insertContact();
         AbstractMetadata vicinityMapMetadata = insertVicinityMap(contactMetadata);
 
-        dataManager.deleteMetadata(context, Integer.toString(vicinityMapMetadata.getId()));
-        dataManager.deleteMetadata(context, Integer.toString(contactMetadata.getId()));
-        assertNull(dataManager.getMetadata(Integer.toString(contactMetadata.getId())));
+        metadataManager.deleteMetadata(context, Integer.toString(vicinityMapMetadata.getId()));
+        metadataManager.deleteMetadata(context, Integer.toString(contactMetadata.getId()));
+        assertNull(metadataManager.getMetadata(Integer.toString(contactMetadata.getId())));
     }
 
     @Test
@@ -131,12 +135,12 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         insertVicinityMap(contactMetadata);
 
         try {
-            dataManager.deleteMetadata(context,
+            metadataManager.deleteMetadata(context,
                     Integer.toString(contactMetadata.getId()));
         } catch (Exception e) {
 
         }
-        assertNotNull(dataManager.getMetadata(Integer.toString(contactMetadata.getId())));
+        assertNotNull(metadataManager.getMetadata(Integer.toString(contactMetadata.getId())));
     }
 
     @Test
@@ -145,8 +149,8 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         AbstractMetadata contactMetadata = insertContact();
         insertVicinityMap(contactMetadata);
 
-        dataManager.deleteMetadata(context, Integer.toString(contactMetadata.getId()));
-        assertNull(dataManager.getMetadata(Integer.toString(contactMetadata.getId())));
+        metadataManager.deleteMetadata(context, Integer.toString(contactMetadata.getId()));
+        assertNull(metadataManager.getMetadata(Integer.toString(contactMetadata.getId())));
     }
 
     private AbstractMetadata insertTemplateResourceInDb(Element element, MetadataType type) throws Exception {
@@ -167,7 +171,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         metadata.getHarvestInfo()
                 .setHarvested(false);
 
-        AbstractMetadata dbInsertedMetadata = dataManager.insertMetadata(
+        AbstractMetadata dbInsertedMetadata = metadataManager.insertMetadata(
                 context,
                 metadata,
                 element,
