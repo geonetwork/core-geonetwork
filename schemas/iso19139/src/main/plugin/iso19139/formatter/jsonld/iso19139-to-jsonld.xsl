@@ -102,11 +102,11 @@
   <xsl:param name="lang"
              select="''"/>
 
-
-  <!-- TODO: Convert language code eng > en_US ? -->
   <xsl:variable name="defaultLanguage"
                 select="//gmd:MD_Metadata/gmd:language/*/@codeListValue"/>
 
+  <!-- TODO: Convert language code eng > en_US ? -->
+ 
   <xsl:variable name="requestedLanguageExist"
                 select="$lang != ''
                         and count(//gmd:MD_Metadata/gmd:locale/*[gmd:languageCode/*/@codeListValue = $lang]/@id) > 0"/>
@@ -123,7 +123,6 @@
 
   <xsl:template name="getJsonLD"
                 mode="getJsonLD" match="gmd:MD_Metadata">
-
 	{
 		"@context": "http://schema.org/",
     <xsl:choose>
@@ -136,9 +135,9 @@
     </xsl:choose>
     <!-- TODO: Use the identifier property to attach any relevant Digital Object identifiers (DOIs). -->
 		"@id": "<xsl:value-of select="concat($baseUrl, 'api/records/', gmd:fileIdentifier/*/text())"/>",
-		"includedInDataCatalog":["<xsl:value-of select="concat($baseUrl, 'search#', $catalogueName)"/>"],
+		"includedInDataCatalog":[{"url":"<xsl:value-of select="concat($baseUrl, 'search#', $catalogueName)"/>","name":"<xsl:value-of select="$catalogueName"/>"}],
     <!-- TODO: is the dataset language or the metadata language ? -->
-    "inLanguage":"<xsl:value-of select="$requestedLanguage"/>",
+    "inLanguage":"<xsl:value-of select="if ($requestedLanguage  != '') then $requestedLanguage else $defaultLanguage"/>",
     <!-- TODO: availableLanguage -->
     "name": <xsl:apply-templates mode="toJsonLDLocalized"
                                  select="gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>,
@@ -155,10 +154,12 @@
     <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:dateType/*/@codeListValue='revision']/*/gmd:date/*/text()">
 		"dateModified": "<xsl:value-of select="."/>",
     </xsl:for-each>
+    
+		"thumbnailUrl": [
     <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*/gmd:fileName/*[. != '']">
-		"thumbnailUrl": "<xsl:value-of select="."/>",
+    "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
     </xsl:for-each>
-
+    ],
 		"description": <xsl:apply-templates mode="toJsonLDLocalized"
                                         select="gmd:identificationInfo/*/gmd:abstract"/>,
 
@@ -263,10 +264,11 @@
     <xsl:for-each select="gmd:distributionInfo">
     ,"distribution": [
       <xsl:for-each select=".//gmd:onLine/*[gmd:linkage/gmd:URL != '']">
+        <xsl:variable name="p" select="normalize-space(gmd:protocol/*/text())"/>
         {
         "@type":"DataDownload",
         "contentUrl":"<xsl:value-of select="gmd:linkage/gmd:URL/text()"/>",
-        "encodingFormat":"<xsl:value-of select="gmd:protocol/*/text() or gmd:protocol/*/@xlink:href"/>",
+        "encodingFormat":"<xsl:value-of select="if ($p != '') then $p else gmd:protocol/*/@xlink:href"/>",
         "name":"<xsl:value-of select="gmd:name/*/text()"/>",
         "description":"<xsl:value-of select="gmd:description/*/text()"/>"
         }
