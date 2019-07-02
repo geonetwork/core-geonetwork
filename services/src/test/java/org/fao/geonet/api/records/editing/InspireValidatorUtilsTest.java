@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -32,6 +33,7 @@ public class InspireValidatorUtilsTest {
     }
 
     @Test
+    @Ignore
     public void testLifeCycle() {
 
         sm.setValue(Settings.SYSTEM_PROXY_USE, false);
