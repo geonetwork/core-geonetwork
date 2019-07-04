@@ -69,22 +69,13 @@
       </xsl:variable>
 
       <article id="{$metadataUuid}"
-               class="gn-md-view gn-metadata-display"
-               itemscope="itemscope"
-               itemtype="{gn-fn-core:get-schema-org-class($type)}">
-        <meta itemprop="identifier" content="{$metadataUuid}"></meta>
-        <meta itemprop="url" content="{$nodeUrl}api/records/{$metadataUuid}"></meta>
-        <span itemprop="includedInDataCatalog" 
-              itemscope="itemscope"
-              itemtype="http://schema.org/DataCatalog">
-                 <meta itemprop="url" content="{$nodeUrl}search"></meta>
-        </span>
+               class="gn-md-view gn-metadata-display">
 
         <div class="row">
           <div class="col-md-8">
 
             <header>
-              <h1 itemprop="name">
+              <h1>
                 <i class="fa gn-icon-{$type}"><xsl:comment select="'icon'"/></i>
                 <xsl:value-of select="$title"/>
               </h1>
@@ -190,8 +181,7 @@
 
               <section class="gn-md-side-access">
                 <div class="well text-center">
-                  <a itemprop="url"
-                     class="btn btn-block btn-primary"
+                  <a class="btn btn-block btn-primary"
                      href="{if ($portalLink != '')
                             then replace($portalLink, '\$\{uuid\}', $metadataUuid)
                             else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
