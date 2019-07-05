@@ -29,27 +29,38 @@
     'ui.bootstrap.rating']);
 
   module.directive('gnMetadataOpen', [
-    '$http',
-    '$sanitize',
-    '$compile',
-    'gnSearchSettings',
-    '$sce',
-    'gnMdView',
-    function($http, $sanitize, $compile, gnSearchSettings, $sce, gnMdView) {
+    'gnMdViewObj',
+    function(gnMdViewObj) {
       return {
         restrict: 'A',
         scope: {
           md: '=gnMetadataOpen',
+          formatter: '=gnFormatter',
+          records: '=gnRecords',
           selector: '@gnMetadataOpenSelector'
         },
-
         link: function(scope, element, attrs, controller) {
+          scope.$watch('md', function(n, o) {
+            if (n == null || n == undefined) {
+              return;
+            }
 
-          element.on('click', function(e) {
-            e.preventDefault();
-            gnMdView.setLocationUuid(scope.md.getUuid());
-            gnMdView.setCurrentMdScope(scope.$parent);
-            scope.$apply();
+            var formatter = scope.formatter === undefined || scope.formatter == '' ?
+              undefined :
+              scope.formatter.replace('../api/records/{{uuid}}/formatters/', '');
+
+            var hyperlinkTagName = 'A';
+            if (element.get(0).tagName === hyperlinkTagName) {
+              var url = '#/' +
+                (scope.md.draft == 'y' ? 'metadraf' : 'metadata') +
+                '/' + scope.md.getUuid() +
+                (scope.formatter === undefined || scope.formatter == '' ?
+                  '' :
+                  formatter);
+              element.attr('href', url);
+            }
+
+            gnMdViewObj.records = scope.records;
           });
         }
       };
