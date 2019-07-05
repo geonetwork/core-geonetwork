@@ -3,3 +3,20 @@
 @sxt-base-color-light: #CECECE;
 @sxt-button-color: #36B5C1;
 @sxt-button-color-light: #2F9DA8;
+
+// see: https://gitlab.ifremer.fr/sextant/geonetwork/issues/34
+
+// cancel automatic bullet points
+.c_showlocation ul li::before, .c_nodelist ul li::before {
+  content: none;
+}
+
+// cancel automatic caret
+.dropdown-toggle::after {
+  content: none;
+}
+
+// fix dropdown opening using show class instead of open
+.btn-group.show {
+  display: inline-block !important;
+}
