@@ -73,6 +73,10 @@
           <address ng-if="md.getContacts().resource">{{::md.getContacts().resource}}</address>
         </div>
 
+        <div gn-grid-related
+             gn-grid-related-uuid="::md.getUuid()"
+             template="../../catalog/views/default/templates/gridRelatedList.html"></div>
+
         <div class="row gn-md-links">
           <div class="btn-group" ng-if="::links.length > 0">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
