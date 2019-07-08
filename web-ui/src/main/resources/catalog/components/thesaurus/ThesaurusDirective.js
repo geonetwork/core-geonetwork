@@ -654,7 +654,7 @@
                   // Use a search instead of a scope element to cope with init order.
 
                   var insertionPoint = isMultilingualMode ?
-                    element.closest('div[data-gn-multilingual-field]') : element;
+                    element.closest('div[data-gn-multilingual-field]') : element.parent().parent();
                   var input = insertionPoint.find('[name=' + scope.conceptIdElementName + ']');
                   input.val(keywordKey);
                 }
