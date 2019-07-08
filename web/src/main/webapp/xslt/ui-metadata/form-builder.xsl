@@ -1395,8 +1395,11 @@
     <xsl:variable name="fieldName"
                   select="concat('_', $ref, '_', replace($attributeName, ':', 'COLON'))"/>
 
-    <div class="form-group" id="gn-attr-{$fieldName}">
+    <div class="form-group gn-attr-{replace($attributeName, ':', '_')}" id="gn-attr-{$fieldName}">
       <label class="col-sm-4">
+        <xsl:if test="$attributeName = 'xlink:href'">
+          <i class="fa fa-link fa-fw"/>
+        </xsl:if>
         <xsl:value-of select="gn-fn-metadata:getLabel($schema, $attributeName, $labels)/label"/>
       </label>
       <div class="col-sm-7">
@@ -1479,7 +1482,7 @@
     <xsl:param name="insertRef" select="''"/>
 
     <xsl:variable name="attributeLabel" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
-    <button type="button" class="btn btn-default btn-xs"
+    <button type="button" class="btn btn-default btn-xs gn-attr-{replace(@name, ':', '_')}"
             data-gn-click-and-spin="add('{$ref}', '{@name}', '{$insertRef}', null, true)"
             title="{$attributeLabel/description}">
       <i class="fa fa-plus fa-fw"/>

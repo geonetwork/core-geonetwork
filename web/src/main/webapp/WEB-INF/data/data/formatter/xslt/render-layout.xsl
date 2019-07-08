@@ -194,10 +194,6 @@
                      target="_blank" class="btn btn-default">
                     <i class="fa fa-fw fa-twitter">&#160;</i>&#160;
                   </a>
-                  <a href="https://plus.google.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                     target="_blank" class="btn btn-default">
-                    <i class="fa fa-fw fa-google-plus">&#160;</i>&#160;
-                  </a>
                   <a href="https://www.facebook.com/sharer.php?u={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                      target="_blank" class="btn btn-default">
                     <i class="fa fa-fw fa-facebook">&#160;</i>&#160;
