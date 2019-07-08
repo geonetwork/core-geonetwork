@@ -121,19 +121,6 @@
         $('.nav-tabs-advanced a:first').tab('show');
       };
 
-      // $scope.format = function(f) {
-      //   $scope.gnMdViewObj.usingFormatter = f !== undefined;
-      //   $scope.currentFormatter = f;
-      //   if (f) {
-      //     var gn_metadata_display = $('#gn-metadata-display', $('.gn-md-view:visible'));
-      //
-      //     gn_metadata_display.find('*').remove();
-      //     gnMdFormatter.getFormatterUrl(f.url, $scope).then(function(url) {
-      //       $scope.loadFormatter(url);
-      //     });
-      //   };
-      // };
-
       $scope.loadFormatter = function(url) {
         if ($scope.mdView.current.record == null) {
           return;
@@ -151,7 +138,10 @@
         }).then(
           function(response,status) {
             if (response.status!=200){
-              gn_metadata_display.append("<div class='alert alert-danger top-buffer'>"+$translate.instant("metadataViewLoadError")+"</div>");
+              gn_metadata_display.append(
+                "<div class='alert alert-danger top-buffer'>" +
+                $translate.instant("metadataViewLoadError") +
+                "</div>");
             } else {
               var snippet = response.data.replace(
                 '<?xml version="1.0" encoding="UTF-8"?>', '');
@@ -171,7 +161,10 @@
             }
           },
           function(data) {
-            gn_metadata_display.append("<div class='alert alert-danger top-buffer'>"+$translate.instant("metadataViewLoadError")+"</div>");
+            gn_metadata_display.append(
+              "<div class='alert alert-danger top-buffer'>" +
+              $translate.instant("metadataViewLoadError") +
+              "</div>");
           });
       };
 

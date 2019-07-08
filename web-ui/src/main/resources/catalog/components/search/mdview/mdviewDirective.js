@@ -34,8 +34,8 @@
    * or using a formatter.
    */
   module.directive('gnMetadataOpen', [
-    'gnMdViewObj',
-    function(gnMdViewObj) {
+    'gnMdViewObj', 'gnMdView',
+    function(gnMdViewObj, gnMdView) {
       return {
         restrict: 'A',
         scope: {
@@ -63,6 +63,10 @@
                   '' :
                   formatter);
               element.attr('href', url);
+            } else {
+              element.on('click', function(e) {
+                gnMdView.setLocationUuid(scope.md.getUuid(), formatter);
+              });
             }
 
             gnMdViewObj.records = scope.records;
