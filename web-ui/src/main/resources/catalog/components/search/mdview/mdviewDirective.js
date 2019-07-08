@@ -28,6 +28,11 @@
     'ui.bootstrap.tpls',
     'ui.bootstrap.rating']);
 
+  /**
+   * Directive to set the proper link to open
+   * a metadata record in the default angular view
+   * or using a formatter.
+   */
   module.directive('gnMetadataOpen', [
     'gnMdViewObj',
     function(gnMdViewObj) {

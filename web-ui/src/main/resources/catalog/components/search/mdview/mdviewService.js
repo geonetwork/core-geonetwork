@@ -268,12 +268,14 @@
     '$rootScope',
     '$http',
     '$compile',
+    '$translate',
     '$sce',
     'gnAlertService',
     'gnSearchSettings',
     '$q',
     'gnMetadataManager',
-    function($rootScope, $http, $compile, $sce, gnAlertService,
+    function($rootScope, $http, $compile, $translate,
+             $sce, gnAlertService,
              gnSearchSettings, $q, gnMetadataManager) {
 
 
@@ -333,7 +335,7 @@
           }, function() {
             $rootScope.$broadcast('mdLoadingEnd');
             gnAlertService.addAlert({
-              msg: 'Erreur de chargement de la métadonnée.',
+              msg: $translate.instant('metadataViewLoadError'),
               type: 'danger'
             });
           });
