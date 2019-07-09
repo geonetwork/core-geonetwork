@@ -160,13 +160,21 @@ class Harvester implements IHarvester<HarvestResult> {
         //--- perform all searches
 
         Set<RecordInfo> records = new HashSet<RecordInfo>();
-
+        
+        
+        int blockSize = 100, numberBlocks = 0;
         boolean error = false;
-        for (Search s : params.getSearches()) {
+        for (int i = 1; i < Integer.MAX_VALUE; i+=blockSize) {
+
+          int blockStart = i, blockEnd = i + (blockSize - 1);
+          
+          for (Search s : params.getSearches()) {
             if (cancelMonitor.get()) {
                 return new HarvestResult();
             }
 
+            s.from = blockStart;
+            s.to = blockEnd;
             try {
                 records.addAll(search(req, s));
             } catch (Exception t) {
@@ -182,17 +190,17 @@ class Harvester implements IHarvester<HarvestResult> {
                 log.error(t);
                 errors.add(new HarvestError(context, t));
             }
-        }
+          }
 
-        if (params.isSearchEmpty()) {
+          if (params.isSearchEmpty()) {
             try {
                 log.debug("Doing an empty search");
-                records.addAll(search(req, Search.createEmptySearch()));
+                records.addAll(search(req, Search.createEmptySearch(blockStart, blockEnd)));
             } catch (Exception t) {
                 error = true;
                 log.error("Unknown error trying to harvest");
                 log.error(t.getMessage());
-                log.error(t);
+                log.error(t); 
                 errors.add(new HarvestError(context, t));
             } catch (Throwable t) {
                 error = true;
@@ -201,12 +209,18 @@ class Harvester implements IHarvester<HarvestResult> {
                 log.error(t);
                 errors.add(new HarvestError(context, t));
             }
+          }
+          
+          // keep on going until we are not getting any more records
+          if (records.size() < (numberBlocks*blockSize) || error) {
+        	 break;
+          }
+          numberBlocks++;
         }
-
-        log.info("Total records processed in all searches :" + records.size());
+        log.info("Total records processed from this search :" + records.size());
 
         //--- align local node
-        HarvestResult result = new HarvestResult();
+        HarvestResult result = new HarvestResult();  
         if (!error) {
             try {
                 Aligner aligner = new Aligner(cancelMonitor, log, context, req, params, remoteInfo);
@@ -226,8 +240,6 @@ class Harvester implements IHarvester<HarvestResult> {
         } else {
             log.warning("Due to previous errors the align process has not been called");
         }
-
-        log.info("Total records processed in all searches :" + records.size());
 
         return result;
     }
@@ -281,7 +293,6 @@ class Harvester implements IHarvester<HarvestResult> {
             }
         }
 
-        log.info("Records added to result list : " + records.size());
 
         return records;
     }

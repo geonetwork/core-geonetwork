@@ -36,6 +36,8 @@ import com.google.common.base.Splitter;
 //=============================================================================
 
 class Search {
+	public int from;
+	public int to;
     public String freeText;
 
     //---------------------------------------------------------------------------
@@ -93,8 +95,11 @@ class Search {
         sourceName = Util.getParam(source, "name", "");
     }
 
-    public static Search createEmptySearch() throws BadParameterEx {
-        return new Search(new Element("search"));
+    public static Search createEmptySearch(int from, int to) throws BadParameterEx {
+        Search s = new Search(new Element("search"));
+        s.from = from;
+        s.to = to;
+        return s;
     }
 
     public Search copy() {
@@ -110,13 +115,16 @@ class Search {
         s.sourceName = sourceName;
         s.anyField = anyField;
         s.anyValue = anyValue;
+        s.from = s.from;
+        s.to = s.to;
 
         return s;
     }
 
     public Element createRequest() {
         Element req = new Element("request");
-
+        add(req, "from", from+"");
+        add(req, "to", to+"");
         add(req, "any", freeText);
         add(req, "title", title);
         add(req, "abstract", abstrac);
