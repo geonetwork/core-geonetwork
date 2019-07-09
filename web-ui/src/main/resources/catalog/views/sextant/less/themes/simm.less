@@ -7,8 +7,14 @@
 // see: https://gitlab.ifremer.fr/sextant/geonetwork/issues/34
 
 // cancel automatic bullet points
-.c_showlocation ul li::before, .c_nodelist ul li::before {
+.c_showlocation ul:not(.pagination) > li::before, .c_nodelist ul:not(.pagination) > li::before {
   content: none;
+}
+
+#main-tabset > div > div.tab-pane.ng-scope.active >
+div.hfull.sxt-search-main-container.ng-scope.sxt-scroll
+> form > div  div > div.ng-scope > div > ul > li {
+  content: none !important;
 }
 
 // cancel automatic caret
@@ -19,4 +25,9 @@
 // fix dropdown opening using show class instead of open
 .btn-group.show {
   display: inline-block !important;
+}
+.gn[ng-app="gn_search_sextant"]
+.gn[ng-app="gn_search_sextant"] ul li::before,
+.gn[ng-app="gn_search_sextant"] ol li::before {
+  content: none !important;
 }
