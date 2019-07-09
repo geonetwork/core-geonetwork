@@ -446,7 +446,7 @@
                   }
                   var coords = this.getPolygonFromExtent(
                     ol.extent.getIntersection(projectedExtent, projExtent)
-                  };
+                  );
                   geometry.appendPolygon(new ol.geom.Polygon(coords));
                 }
               }
