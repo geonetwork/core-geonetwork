@@ -440,13 +440,19 @@
                 geometry = new ol.geom.MultiPolygon(null);
                 for (var j = 0; j < extent.length; j++) {
                   // TODO: Point will not be supported in multi geometry
-                  var projectedExtent = ol.extent.getIntersection(
-                      ol.proj.transformExtent(extent[j], 'EPSG:4326', proj),
-                      projExtent
-                      );
-                  var coords = this.getPolygonFromExtent(projectedExtent);
+                  var projectedExtent = ol.proj.transformExtent(extent[j], 'EPSG:4326', proj);
+                  if (!ol.extent.intersects(projectedExtent, projExtent)) {
+                    continue;
+                  }
+                  var coords = this.getPolygonFromExtent(
+                    ol.extent.getIntersection(projectedExtent, projExtent)
+                  );
                   geometry.appendPolygon(new ol.geom.Polygon(coords));
                 }
+              }
+              // no valid bbox was found: clear geometry
+              if (!geometry.getPolygons().length) {
+                geometry = null;
               }
               feat.setGeometry(geometry);
             }
