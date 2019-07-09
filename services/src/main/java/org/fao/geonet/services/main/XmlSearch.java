@@ -116,8 +116,8 @@ public class XmlSearch implements Service {
             if ((to - from) >= this.maxRecordValue) {
                 params.removeChildren("to");
                 params.addContent(new Element("to").setText(Integer.toString(from + this.maxRecordValue - 1)));
+                boundariesSet = true;
             }
-            boundariesSet = true;
         }
         return boundariesSet;
     }
