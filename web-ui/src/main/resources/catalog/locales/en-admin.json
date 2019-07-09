@@ -1225,6 +1225,7 @@
     "ui-graticuleOgcService": "OGC Service to use as graticule",
     "ui-graticuleOgcService-help": "Optional. For now, only WMS services are supported.",
     "ui-usersearches": "User custom searches",
+    "ui-savedSelection": "Saved selections",
     "ui-enabled": "Enabled",
     "ui-displayFeaturedSearchesPanel": "Display featured user searches panel in home page",
     "confirmDeleteThesaurus": "Are you sure you want to delete this thesaurus?",

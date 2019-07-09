@@ -167,6 +167,9 @@ goog.require('gn_alert');
           'usersearches': {
             'enabled': false,
             'displayFeaturedSearchesPanel': false
+          },
+          'savedSelection': {
+            'enabled': true
           }
         },
         'map': {

@@ -367,6 +367,22 @@
         </div>
       </div>
 
+      <div data-ng-switch-when="savedSelection">
+        <h3>{{('ui-' + key) | translate}}</h3>
+        <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
+
+          <input type="checkbox"
+                 id="{{key + type}}-checkbox"
+                 data-ng-model="mCfg[key][type]"/>&nbsp;
+          <label class="control-label"
+                 for="{{key + type}}-checkbox">{{('ui-' + type) | translate}}</label>
+
+          <p class="help-block"
+             data-ng-show="(('ui-' + key + type + '-help') | translate) != ('ui-' + key + type + '-help')">
+            {{('ui-' + key + type + '-help') | translate}} </p>
+        </div>
+      </div>
+
 
 
 
