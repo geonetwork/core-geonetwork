@@ -1449,6 +1449,67 @@
             return defer.promise;
           },
 
+          addEsriRestFromScratch: function(map, url, name, createOnly, md) {
+            var defer = $q.defer();
+            var $this = this;
+
+            var serviceUrl = url.replace(/(.*\/MapServer).*/, '$1')
+            var layer = url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$2');
+            name = url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$1 $2');
+
+            if (!isLayerInMap(map, name, url)) {
+              gnWmsQueue.add(url, name);
+              var params = {};
+              if (layer != '') {
+                params.LAYERS = layer;
+              }
+              var layerOptions = {
+                url: url,
+                opacity: 1,
+                visible: true,
+                source: new ol.source.ImageArcGISRest({
+                  // ratio: 1.01,
+                  params: params,
+                  url: serviceUrl
+                })
+              };
+
+              olL = new ol.layer.Image(layerOptions);
+
+              olL.set('name', name);
+              olL.set('label', name);
+              olL.displayInLayerManager = true;
+              // FIXME: Layer tree visibility toggle does not work
+              olL.visible = layerOptions.visible;
+
+              var finishCreation = function() {
+                $q.resolve(olL).
+                    then(gnViewerSettings.getPreAddLayerPromise).
+                    finally(
+                    function() {
+                      if (!createOnly) {
+                        map.addLayer(olL);
+                      }
+                      gnWmsQueue.removeFromQueue(url, name);
+                      defer.resolve(olL);
+                    });
+              };
+
+              var feedMdPromise = md ?
+                $q.resolve(md).then(function(md) {
+                  olL.set('md', md);
+                }) : $this.feedLayerMd(olL);
+
+              feedMdPromise.then(finishCreation);
+            } else {
+              var olL = getTheLayerFromMap(map, name, url);
+                if(olL && md) {
+                  olL.set('md', md);
+                }
+            }
+            return defer.promise;
+          },
+
           /**
            * Call a WMS getCapabilities and create ol3 layers for all items.
            * Add them to the map if `createOnly` is false;
