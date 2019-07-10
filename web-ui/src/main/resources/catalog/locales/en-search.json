@@ -55,6 +55,7 @@
   "noRecordFoundWithResourceRegistered": "No record found with one or more WMS layers registered.",
   "noRecordFoundWithResourceRegisteredmap": "No record found with one or more maps registered.",
   "tmsLinkDetails":"This dataset is published in the view service (TMS) available at <a href='{{url}}' target='_blank'>{{url}}</a> with identifier <strong>{{layer}}</strong>.",
+  "esriRestLinkDetails": "ESRI REST service <a href='{{url}}' target='_blank'>{{url}}</a>.",
   "wmsLinkDetails": "This dataset is published in the view service (WMS) available at <a href='{{url}}' target='_blank'>{{url}}</a> with layer name <strong>{{layer}}</strong>.",
   "wmsServiceLinkDetails": "This dataset is published in the view service (WMS) available at <a href='{{url}}' target='_blank'>{{url}}</a>.",
   "wmtsLinkDetails": "This dataset is published in the view service (WMTS) available at <a href='{{url}}' target='_blank'>{{url}}</a> with identifier <strong>{{layer}}</strong>.",

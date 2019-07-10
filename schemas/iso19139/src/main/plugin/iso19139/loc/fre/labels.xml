@@ -4350,9 +4350,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
     <help>Protocole de connexion utilisé, par exemple FTP.</help>
     <condition/>
     <helper sort="true">
-      <option value="ESRI:AIMS--http--configuration">Fichier configuration ArcIMS Map Service (*.AXL)</option>
-      <option value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</option>
-      <option value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</option>
+      <option value="ESRI:REST">ArcGIS REST Services</option>
       <option value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</option>
       <option value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
       <option value="OGC:KML">OGC-KML Keyhole Markup Language</option>
