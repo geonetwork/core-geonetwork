@@ -169,9 +169,9 @@
                 filter_type: 'PropertyIsLike',
                 params: ['*' + tokenSeparator + k + tokenSeparator + '*']
               }, {
-                // PropertyIsEqualTo ne fonctionne pas sur les CLOB, remplace par un PropertyIsLike avec debut/fin de ligne
+                // PropertyIsEqualTo ne fonctionne pas sur les CLOB, remplace par un PropertyIsLike
                 filter_type: 'PropertyIsLike',
-                params: ['^' + k + '$']
+                params: [k]
               }
               
               
