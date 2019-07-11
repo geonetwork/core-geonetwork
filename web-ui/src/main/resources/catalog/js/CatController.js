@@ -174,7 +174,7 @@ goog.require('gn_alert');
           'linkTypes': {
             'links': ['LINK', 'kml'],
             'downloads': ['DOWNLOAD'],
-            'layers': ['OGC'],
+            'layers': ['OGC', 'ESRI:REST'],
             'maps': ['ows']
           },
           'isFilterTagsDisplayedInSearch': false,
