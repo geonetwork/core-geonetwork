@@ -51,10 +51,11 @@
     '$translate',
     '$q',
     '$http',
+    'gnConfig',
     function($rootScope, $timeout, $location, gnHttp,
              gnMetadataManager, gnAlertService, gnSearchSettings,
              gnUtilityService, gnShareService, gnPopup, gnMdFormatter,
-             $translate, $q, $http) {
+             $translate, $q, $http, gnConfig) {
 
       var windowName = 'geonetwork';
       var windowOption = '';
@@ -301,11 +302,13 @@
       this.publish = function(md, bucket, flag, scope) {
         if (md) {
           flag = md.isPublished() ? 'off' : 'on';
-        } 
+        }
+
+        scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
 
         //Warn about possible workflow changes on batch changes 
         // or when record is not approved 
-        if((!md || md.mdStatus != 2) && flag === 'on') {
+        if((!md || md.mdStatus != 2) && flag === 'on' && scope.isMdWorkflowEnable) {
           if(!confirm($translate.instant('warnPublishDraft'))){
             return;
           }
