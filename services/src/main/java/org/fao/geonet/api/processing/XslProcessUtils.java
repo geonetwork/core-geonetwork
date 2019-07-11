@@ -195,7 +195,7 @@ public class XslProcessUtils {
             } catch (Exception e) {
                 report.addMetadataError(iId, e);
                 context.error("  Processing failed with error " + e.getMessage());
-                e.printStackTrace();
+                context.error(e);
             }
             return processedMetadata;
         }
@@ -292,7 +292,7 @@ public class XslProcessUtils {
             } catch (Exception e) {
                 report.addMetadataError(iId, e);
                 context.error("  Processing failed with error " + e.getMessage());
-                e.printStackTrace();
+                context.error(e);
             }
             return sw.toString();
         }

@@ -41,6 +41,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.mef.ImportWebMap;
 import org.fao.geonet.util.XslUtil;
@@ -65,6 +66,7 @@ public class ImportWebMapTest {
     private UserSession userSession = Mockito.mock(UserSession.class);
     private GeonetContext geonetContext = Mockito.mock(GeonetContext.class);
     private DataManager dataManager = Mockito.mock(DataManager.class);
+    private IMetadataManager metadataManager = Mockito.mock(IMetadataManager.class);
     private SettingManager sm = Mockito.mock(SettingManager.class);
 
     @Before
@@ -95,6 +97,7 @@ public class ImportWebMapTest {
         Mockito.when(serviceContext.getBean(SettingManager.class)).thenReturn(sm);
         Mockito.when(geonetContext.getBean(SettingManager.class)).thenReturn(sm);
         Mockito.when(geonetContext.getBean(DataManager.class)).thenReturn(dataManager);
+        Mockito.when(geonetContext.getBean(IMetadataManager.class)).thenReturn(metadataManager);
         Mockito.when(sm.getSiteId()).thenReturn("1234");
         Mockito.when(sm.getSiteName()).thenReturn("geonetwork-testor");
 

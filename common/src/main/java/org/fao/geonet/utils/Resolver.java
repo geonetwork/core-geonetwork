@@ -90,8 +90,7 @@ public final class Resolver implements ProxyInfoObserver {
         try {
             iCatVerb = Integer.parseInt(catVerbosity);
         } catch (NumberFormatException nfe) {
-            Log.error(Log.JEEVES, "Failed to parse " + Constants.XML_CATALOG_VERBOSITY + " " + catVerbosity);
-            nfe.printStackTrace();
+            Log.error(Log.JEEVES, "Failed to parse " + Constants.XML_CATALOG_VERBOSITY + " " + catVerbosity, nfe);
         }
         if (Log.isDebugEnabled(Log.JEEVES))
             Log.debug(Log.JEEVES, "Using catalog resolver verbosity " + iCatVerb);

@@ -192,6 +192,9 @@ public class MetadataInsertDeleteApi {
             HttpServletRequest request) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        IMetadataManager metadataManager = appContext.getBean(IMetadataManager.class);
+        SearchManager searchManager = appContext.getBean(SearchManager.class);
 
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
                 && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
@@ -200,7 +203,7 @@ public class MetadataInsertDeleteApi {
 
         IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(dataDirectory, metadata.getId()));
 
-        dataManager.deleteMetadata(context, metadata.getId() + "");
+        metadataManager.deleteMetadata(context, metadata.getId() + "");
 
         searchManager.forceIndexChanges();
     }
@@ -219,6 +222,10 @@ public class MetadataInsertDeleteApi {
             @ApiParam(value = API_PARAM_BACKUP_FIRST, required = false) @RequestParam(required = false, defaultValue = "true") boolean withBackup,
             @ApiIgnore HttpSession session, HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        IMetadataManager metadataManager = appContext.getBean(IMetadataManager.class);
+        AccessManager accessMan = appContext.getBean(AccessManager.class);
+        SearchManager searchManager = appContext.getBean(SearchManager.class);
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
 
@@ -239,7 +246,7 @@ public class MetadataInsertDeleteApi {
                 IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class),
                         String.valueOf(metadata.getId())));
 
-                dataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
+                metadataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
 
                 report.incrementProcessedRecords();
                 report.addMetadataId(metadata.getId());
@@ -788,7 +795,13 @@ public class MetadataInsertDeleteApi {
         // --- if the uuid does not exist we generate it for metadata and templates
         String uuid;
         if (metadataType == MetadataType.SUB_TEMPLATE || metadataType == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
-            uuid = UUID.randomUUID().toString();
+            // subtemplates may need to be loaded with a specific uuid
+            // that will be attached to the root element so check for that
+            // and if not found, generate a new uuid
+            uuid = xmlElement.getAttributeValue("uuid");
+            if (StringUtils.isEmpty(uuid)) {
+              uuid = UUID.randomUUID().toString();
+            }
         } else {
             uuid = dataManager.extractUUID(schema, xmlElement);
             if (uuid.length() == 0) {

@@ -59,6 +59,8 @@ import java.util.Map;
  * Client to connect to Elasticsearch
  */
 public class EsClient implements InitializingBean {
+    private final static String LOGGER_MODULE = "geonetwork.index";
+
     private static EsClient instance;
 
     private JestClient client;
@@ -138,7 +140,7 @@ public class EsClient implements InitializingBean {
             }
             activated = true;
         } else {
-            Log.debug("geonetwork.index", String.format(
+            Log.debug(LOGGER_MODULE, String.format(
                 "No Elasticsearch URL defined '%s'. "
                     + "Check bean configuration. Statistics and dasboard will not be available.", this.serverUrl));
         }
@@ -189,12 +191,12 @@ public class EsClient implements InitializingBean {
         try {
             BulkResult result = client.execute(bulk.build());
             if (!result.isSucceeded()) {
-                System.out.println(result.getErrorMessage());
-                System.out.println(result.getJsonString());
+                Log.warning(LOGGER_MODULE, "EsClient bulkRequest: " + result.getErrorMessage());
+                Log.warning(LOGGER_MODULE, "EsClient bulkRequest: " + result.getJsonString());
                 return false;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.error(LOGGER_MODULE, "EsClient bulkRequest: " + e.getMessage(), e);
             throw e;
         }
         return success;

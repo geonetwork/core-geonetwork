@@ -23,24 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.commons.lang.StringUtils;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
@@ -86,7 +68,6 @@ import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -112,6 +93,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
     private ServiceContext context;
     private XmlRequest request;
     private DataManager dataMan;
+    private IMetadataManager metadataManager;
     private HarvestResult result;
     private CategoryMapper localCateg;
     private GroupMapper localGroups;
@@ -132,6 +114,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         dataMan = gc.getBean(DataManager.class);
+        metadataManager = gc.getBean(IMetadataManager.class);
         metadataRepository = gc.getBean(MetadataRepository.class);
         result = new HarvestResult();
 
@@ -198,7 +181,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
                     String id = localUuids.getID(uuid);
 
                     if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id:" + id);
-                    dataMan.deleteMetadata(context, id);
+                    metadataManager.deleteMetadata(context, id);
 
                     result.locallyRemoved++;
                 }
@@ -555,9 +538,9 @@ public class Aligner extends BaseAligner<GeonetParams> {
         } catch (NumberFormatException e) {
         }
 
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = dataMan.insertMetadata(context, metadata, md, true, false, ufo, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, ufo, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
@@ -586,7 +569,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
             }
         }
         if (((ArrayList<Group>) params.getGroupCopyPolicy()).size() == 0) {
-            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
         } else {
             addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
         }
@@ -827,7 +810,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
             boolean index = false;
             boolean updateDateStamp = true;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate,
+            metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate,
                 updateDateStamp);
             metadata = metadataRepository.findOne(id);
             result.updatedMetadata++;
@@ -842,7 +825,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
 
         metadata.getCategories().clear();
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, true);
         metadata = metadataRepository.findOne(id);
 
         Element general = info.getChild("general");
@@ -870,7 +853,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByMetadataId(Integer.parseInt(id));
         if (((ArrayList<Group>) params.getGroupCopyPolicy()).size() == 0) {
-            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
         } else {
             addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
         }

@@ -42,7 +42,7 @@
     select="concat(@class, ' ', @file, ' line ', @line, ' #', @method)"/>"
     <xsl:if test="following-sibling::at">,</xsl:if>
   </xsl:template>
-  <xsl:template mode="error" match="message|class|stack|request">
+  <xsl:template mode="error" match="message|class|request">
     "<xsl:value-of select="name(.)"/>":
     <xsl:choose>
       <xsl:when test="*">

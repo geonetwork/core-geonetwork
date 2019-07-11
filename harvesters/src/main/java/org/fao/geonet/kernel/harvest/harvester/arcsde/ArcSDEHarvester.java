@@ -22,20 +22,8 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.arcsde;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
+import com.google.common.collect.Sets;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
@@ -56,7 +44,6 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -70,9 +57,18 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.google.common.collect.Sets;
-
-import jeeves.server.context.ServiceContext;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Harvester from ArcSDE. Requires the propietary ESRI libraries containing their API. Since those
@@ -83,17 +79,10 @@ import jeeves.server.context.ServiceContext;
  */
 public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
-    static final String ARCSDE_LOG_MODULE_NAME = Geonet.HARVESTER + ".arcsde";
-    //FIXME use custom class?
     private static final String ARC_TO_ISO19115_TRANSFORMER = "ArcCatalog8_to_ISO19115.xsl";
     private static final String ISO19115_TO_ISO19139_TRANSFORMER = "ISO19115-to-ISO19139.xsl";
 
     private ArcSDEParams params;
-
-    /**
-     * Contains a list of accumulated errors during the executing of this harvest.
-     */
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
 
     @Override
     protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
@@ -188,7 +177,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         CategoryMapper localCateg = new CategoryMapper(context);
         GroupMapper localGroups = new GroupMapper(context);
 
-        dataMan.flush();
+        metadataManager.flush();
 
 
         Path ArcToISO19115Transformer = context.getAppPath().resolve(Geonet.Path.STYLESHEETS).resolve("conversion/import").resolve(ARC_TO_ISO19115_TRANSFORMER);
@@ -337,9 +326,9 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                     }
                 }
             }catch(Throwable t) {
-                t.printStackTrace();
                 log.error("Unable to process record from arcsde (" + this.params.getName() + ")");
                 log.error("   Record failed. Error is: " + t.getMessage());
+                log.error(t);
             } finally {
                 result.originalMetadata++;
             }
@@ -358,7 +347,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             }
             if (!idsResultHs.contains(existingId)) {
                 log.debug("  Removing: " + existingId);
-                dataMan.deleteMetadata(context, existingId.toString());
+                metadataManager.deleteMetadata(context, existingId.toString());
                 result.locallyRemoved++;
             }
         }
@@ -385,17 +374,17 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             changeDate = new ISODate().toString();
         }
 
-        final AbstractMetadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
+        final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
             true);
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
         operationAllowedRepository.deleteAllByMetadataId(Integer.parseInt(id));
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         metadata.getCategories().clear();
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
-        dataMan.flush();
+        metadataManager.flush();
 
         dataMan.indexMetadata(id, true, null);
     }
@@ -439,13 +428,13 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         } catch (NumberFormatException e) {
         }
 
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         dataMan.indexMetadata(id, true, null);
 
@@ -524,16 +513,14 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             // Call the services
             s.execOnHarvest(par, context, dataMan);
 
-            dataMan.flush();
+            metadataManager.flush();
 
             result.thumbnails++;
 
         } catch (Exception e) {
             log.warning("  - Failed to set thumbnail for metadata: " + e.getMessage());
-            e.printStackTrace();
+            log.error(e);
             result.thumbnailsFailed++;
         }
-
     }
-
 }

@@ -161,7 +161,7 @@ public class MetadataSchema {
                 Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
                 return (Editor) unmarshaller.unmarshal(metadataSchemaConfig.toFile());
             } catch (JAXBException e) {
-                e.printStackTrace();
+                Log.error(Geonet.SCHEMA_MANAGER, " Get config editor. Error is " + e.getMessage(), e);
                 throw new RuntimeException(e);
             }
         }

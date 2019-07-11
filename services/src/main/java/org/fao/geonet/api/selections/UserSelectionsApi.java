@@ -32,6 +32,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.Selection;
@@ -43,6 +44,7 @@ import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SelectionRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.UserSavedSelectionRepository;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -352,7 +354,7 @@ public class UserSelectionsApi {
                 try {
                     umsRepository.save(e);
                 } catch (Exception e1) {
-                    e1.printStackTrace();
+                    Log.error(API.LOG_MODULE_NAME, "UserSelectionsApi - addToUserSelection: " + e1.getMessage(), e1);
                 }
             } else {
                 return new ResponseEntity<>(u, HttpStatus.NOT_FOUND);

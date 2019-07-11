@@ -61,6 +61,7 @@ import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -187,6 +188,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
     private Logger log;
     private ServiceContext context;
     private DataManager dataMan;
+    private IMetadataManager metadataManager;
     private SchemaManager schemaMan;
     private CategoryMapper localCateg;
     private GroupMapper localGroups;
@@ -214,6 +216,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         dataMan = gc.getBean(DataManager.class);
+        metadataManager = gc.getBean(IMetadataManager.class);
         schemaMan = gc.getBean(SchemaManager.class);
 
         SettingInfo si = context.getBean(SettingInfo.class);
@@ -283,7 +286,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
 
                     if (log.isDebugEnabled())
                         log.debug("  - Removing deleted metadata with id: " + record.id);
-                    dataMan.deleteMetadata(context, record.id);
+                    metadataManager.deleteMetadata(context, record.id);
 
                     if (record.isTemplate.equals("s")) {
                         //--- Uncache xlinks if a subtemplate
@@ -296,7 +299,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
             }
         }
 
-        dataMan.flush();
+        metadataManager.flush();
 
         result.totalMetadata = result.serviceRecords + result.collectionDatasetRecords + result.atomicDatasetRecords;
         return result;
@@ -480,16 +483,16 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
             setUuid(params.getUuid()).
             setUri(uri);
 
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
-        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         dataMan.indexMetadata(id, true, null);
 
-        dataMan.flush();
+        metadataManager.flush();
     }
 
     //---------------------------------------------------------------------------
@@ -584,7 +587,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
         if (localRecords == null) return;
 
         for (RecordInfo record : localRecords) {
-            dataMan.deleteMetadata(context, record.id);
+            metadataManager.deleteMetadata(context, record.id);
 
             if (record.isTemplate.equals("s")) {
                 //--- Uncache xlinks if a subtemplate
@@ -680,8 +683,8 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
                 result.atomicDatasetRecords += fragmentResult.recordsBuilt;
             }
         } catch (Exception e) {
-            log.error("Thrown Exception " + e + " during dataset processing");
-            e.printStackTrace();
+            log.error("Thrown Exception " + e.getMessage() + " during dataset processing");
+            log.error(e);
         }
     }
 
@@ -708,8 +711,8 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
         try {
             return ds.getParentCatalog().getUriString() + "?dataset=" + URLEncoder.encode(ds.getID(), Constants.ENCODING);
         } catch (UnsupportedEncodingException e) {
-            log.error("Thrown Exception " + e + " during dataset processing");
-            e.printStackTrace();
+            log.error("Thrown Exception " + e.getMessage() + " during dataset processing");
+            log.error(e);
         }
         return null;
     }
@@ -824,7 +827,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
                         ncD.close();
                     } catch (Exception e) {
                         log.info("Exception raised in netcdfDataset ops: " + e);
-                        e.printStackTrace();
+                        log.error(e);
                     }
                 }
 
@@ -852,7 +855,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
                         ncDI.close();
                     } catch (Exception e) {
                         log.info("Exception raised in netcdfDatasetInfo ops: " + e);
-                        e.printStackTrace();
+                        log.error(e);
                     }
                 }
 
@@ -900,7 +903,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
             }
         } catch (Exception e) {
             log.error("Thrown Exception " + e + " during dataset processing");
-            e.printStackTrace();
+            log.error(e);
         }
     }
 
@@ -1077,7 +1080,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
         } catch (Exception e) {
             if (log.isDebugEnabled())
                 log.debug("Caught exception " + e + " whilst attempting to query URL " + href);
-            e.printStackTrace();
+            log.error(e);
         }
         return result;
     }

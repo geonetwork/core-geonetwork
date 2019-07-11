@@ -22,7 +22,7 @@
 //==============================================================================
 package org.fao.geonet.services.config;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -195,7 +195,7 @@ public class GetInfo implements Service {
                 try {
                     databaseProperties.put("db.numactive", "" + basicDataSource.getNumActive());
                     databaseProperties.put("db.numidle", "" + basicDataSource.getNumIdle());
-                    databaseProperties.put("db.maxactive", "" + basicDataSource.getMaxActive());
+                    databaseProperties.put("db.maxactive", "" + basicDataSource.getMaxTotal());
                 } catch (Exception e) {
                     databaseProperties.put("db.statserror", "Failed to get stats on database connections. Error is: " + e.getMessage());
                 }

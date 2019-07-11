@@ -23,13 +23,14 @@
 
 package org.fao.geonet.api.records.formatters.cache;
 
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest.ImportMetadata;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
@@ -43,14 +44,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ContextConfiguration;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import jeeves.server.context.ServiceContext;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -67,7 +65,8 @@ public class FormatterCacheIntegrationTest extends AbstractServiceIntegrationTes
     @Autowired
     private OperationAllowedRepository operationAllowedRepository;
     @Autowired
-    private DataManager dataManager;
+    private IMetadataManager metadataManager;
+
     @Autowired
     private SystemInfo systemInfo;
     private FilesystemStore fsStore;
@@ -137,7 +136,7 @@ public class FormatterCacheIntegrationTest extends AbstractServiceIntegrationTes
         final Key key = new Key(Integer.parseInt(metadataId), "eng", FormatType.html, "full_view", true, FormatterWidth._100);
         formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, true), true);
 
-        dataManager.deleteMetadata(createServiceContext(), metadataId);
+        metadataManager.deleteMetadata(createServiceContext(), metadataId);
         entityManager.flush();
 
         assertNull(formatterCache.getPublished(key));
