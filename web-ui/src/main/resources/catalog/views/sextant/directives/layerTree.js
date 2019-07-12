@@ -489,7 +489,7 @@
                   if(data.count > 0) {
                     scope.wfs = wfsLink;
                     var featureType = wfsLink.url + '#' + wfsLink.name;
-                    sxtCompositeLayer.init(scope.member, scope.map, featureType, 100, 50);
+                    sxtCompositeLayer.init(scope.member, scope.map, featureType, 1000, 1000);
                   }
                 });
               }
