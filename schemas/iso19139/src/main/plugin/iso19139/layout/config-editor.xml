@@ -28,7 +28,7 @@
         xmlns:gmd="http://www.isotc211.org/2005/gmd"
         xmlns:gmx="http://www.isotc211.org/2005/gmx"
         xmlns:srv="http://www.isotc211.org/2005/srv"
-        xmlns:gml="http://www.opengis.net/gml"
+        xmlns:gml="http://www.opengis.net/gml/3.2"
         xmlns:xlink="http://www.w3.org/1999/xlink"
         xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd">
 
@@ -458,7 +458,10 @@
 
   <!-- View configuration -->
   <views>
-    <!--Turn on INSPIRE according to system settings -->
+    <!--Turn on INSPIRE according to system settings
+    WARNING: INSPIRE view is not compatible with ISO19139:2005 schema.
+    You have to use the default ISO19139:2007 schema.
+    -->
     <view name="inspire" upAndDownControlHidden="true" displayIfServiceInfo="/settings/system/inspire/enable='true'">
       <sidePanel>
         <directive data-gn-onlinesrc-list=""/>

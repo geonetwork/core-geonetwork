@@ -28,7 +28,8 @@
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -1040,7 +1041,7 @@
                         </xsl:when>
                         <xsl:when test="name(.)='WCS_Capabilities'">
                           <xsl:for-each
-                            select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:lonLatEnvelope/gml:pos[1]">
+                            select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:lonLatEnvelope/gml320:pos[1]">
                             <xmin>
                               <xsl:value-of select="substring-before(., ' ')"/>
                             </xmin>
@@ -1049,7 +1050,7 @@
                             </ymin>
                           </xsl:for-each>
                           <xsl:for-each
-                            select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:lonLatEnvelope/gml:pos[2]">
+                            select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:lonLatEnvelope/gml320:pos[2]">
                             <xmax>
                               <xsl:value-of select="substring-before(., ' ')"/>
                             </xmax>
@@ -1137,7 +1138,7 @@
                       </xsl:for-each>
                     </xsl:when>
                     <xsl:when test="$rootName='WCS_Capabilities'">
-                      <xsl:for-each select="$getCapabilities//wcs:lonLatEnvelope/gml:pos[1]">
+                      <xsl:for-each select="$getCapabilities//wcs:lonLatEnvelope/gml320:pos[1]">
                         <xmin>
                           <xsl:value-of select="substring-before(., ' ')"/>
                         </xmin>
@@ -1145,7 +1146,7 @@
                           <xsl:value-of select="substring-after(., ' ')"/>
                         </ymin>
                       </xsl:for-each>
-                      <xsl:for-each select="$getCapabilities//wcs:lonLatEnvelope/gml:pos[2]">
+                      <xsl:for-each select="$getCapabilities//wcs:lonLatEnvelope/gml320:pos[2]">
                         <xmax>
                           <xsl:value-of select="substring-before(., ' ')"/>
                         </xmax>

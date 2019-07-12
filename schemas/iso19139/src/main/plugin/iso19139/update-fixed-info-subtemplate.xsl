@@ -22,7 +22,9 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gml="http://www.opengis.net/gml"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
@@ -50,7 +52,7 @@
   defined, computed the bounding box from the polygon
   removing any previous bounding boxes. -->
   <xsl:template match="gmd:EX_Extent
-                            [gmd:geographicElement/*/gmd:polygon/gml:*]
+                            [gmd:geographicElement/*/gmd:polygon/(gml:*|gml320:*)]
                             [$isExtentSubtemplate]">
     <xsl:variable name="polygons"
                   select="gmd:geographicElement/gmd:EX_BoundingPolygon/
@@ -72,7 +74,7 @@
   </xsl:template>
 
   <xsl:template match="gmd:EX_SpatialTemporalExtent
-                            [gmd:spatialExtent/*/gmd:polygon/gml:*]
+                            [gmd:spatialExtent/*/gmd:polygon/(gml:*|gml320:*)]
                             [$isExtentSubtemplate]">
     <xsl:variable name="polygons"
                   select="*/gmd:EX_BoundingPolygon/
@@ -96,7 +98,7 @@
                 match="gmd:polygon">
 
     <xsl:variable name="polygonWithNs">
-      <xsl:apply-templates select="./gml:*"/>
+      <xsl:apply-templates select="./(gml:*|gml320:*)"/>
     </xsl:variable>
     <xsl:variable name="bbox"
                   select="java:geomToBbox(
@@ -151,6 +153,28 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="gml320:MultiSurface[not(@gml320:id)]|gml320:Polygon[not(@gml320:id)]">
+    <xsl:copy>
+      <xsl:attribute name="gml320:id">
+        <xsl:value-of select="generate-id(.)"/>
+      </xsl:attribute>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="@gml320:id">
+    <xsl:choose>
+      <xsl:when test="normalize-space(.)=''">
+        <xsl:attribute name="gml320:id">
+          <xsl:value-of select="generate-id(.)"/>
+        </xsl:attribute>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of select="."/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 
 
   <xsl:template name="correct_ns_prefix">
@@ -188,6 +212,13 @@
     <xsl:call-template name="correct_ns_prefix">
       <xsl:with-param name="element" select="."/>
       <xsl:with-param name="prefix" select="'gml'"/>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="gml320:*">
+    <xsl:call-template name="correct_ns_prefix">
+      <xsl:with-param name="element" select="."/>
+      <xsl:with-param name="prefix" select="'gml320'"/>
     </xsl:call-template>
   </xsl:template>
 

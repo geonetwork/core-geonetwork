@@ -78,7 +78,8 @@ USA.
 -->
 
     <sch:title xmlns="http://www.w3.org/2001/XMLSchema">INSPIRE rules</sch:title>
-    <sch:ns prefix="gml" uri="http://www.opengis.net/gml"/>
+    <sch:ns prefix="gml" uri="http://www.opengis.net/gml/3.2"/>
+    <sch:ns prefix="gml320" uri="http://www.opengis.net/gml"/>
     <sch:ns prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
     <sch:ns prefix="gmx" uri="http://www.isotc211.org/2005/gmx"/>
     <sch:ns prefix="srv" uri="http://www.isotc211.org/2005/srv"/>
@@ -432,9 +433,9 @@ USA.
 			//srv:SV_ServiceIdentification|
 			//*[@gco:isoType='srv:SV_ServiceIdentification']">
             <sch:let name="temporalExtentBegin"
-                value="gmd:extent/*/gmd:temporalElement/*/gmd:extent/*/gml:beginPosition/text()"/>
+                value="gmd:extent/*/gmd:temporalElement/*/gmd:extent/*/(gml:beginPosition|gml320:beginPosition)/text()"/>
             <sch:let name="temporalExtentEnd"
-                value="gmd:extent/*/gmd:temporalElement/*/gmd:extent/*/gml:endPosition/text()"/>
+                value="gmd:extent/*/gmd:temporalElement/*/gmd:extent/*/(gml:endPosition|gml320:endPosition)/text()"/>
             <sch:let name="publicationDate"
                 value="gmd:citation/*/gmd:date[./*/gmd:dateType/*/@codeListValue='publication']/*/gmd:date/*"/>
             <sch:let name="creationDate"

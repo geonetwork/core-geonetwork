@@ -13,6 +13,9 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metada
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/footerRight', '{date}', 0, 12507, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/pdfName', 'metadata_{datetime}.pdf', 0, 12507, 'n');
 
+-- Update GML namespace for moving from ISO19139:2005 to ISO19139:2007
+UPDATE Metadata SET data = replace(data, '"http://www.opengis.net/gml"', '"http://www.opengis.net/gml/3.2"') WHERE data LIKE '%"http://www.opengis.net/gml"%' AND schema = 'iso19139';
+
 UPDATE Settings SET internal='n' WHERE name='system/server/securePort';
 
 UPDATE Settings SET value='3.7.0' WHERE name='system/platform/version';

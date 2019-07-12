@@ -34,7 +34,8 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:ogc="http://www.opengis.net/rdf#"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:iso19139="http://geonetwork-opensource.org/schemas/iso19139"
@@ -371,12 +372,12 @@
     <!-- "The temporal period that the dataset covers." -->
     <!-- TODO could be improved-->
     <xsl:for-each
-      select="gmd:extent/*/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod">
+      select="gmd:extent/*/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/(gml:TimePeriod|gml320:TimePeriod)">
       <dct:temporal>
-        <xsl:value-of select="gml:beginPosition"/>
-        <xsl:if test="gml:endPosition">
+        <xsl:value-of select="gml:beginPosition|gml320:beginPosition"/>
+        <xsl:if test="gml:endPosition|gml320:endPosition">
           /
-          <xsl:value-of select="gml:endPosition"/>
+          <xsl:value-of select="gml:endPosition|gml320:endPosition"/>
         </xsl:if>
       </dct:temporal>
     </xsl:for-each>

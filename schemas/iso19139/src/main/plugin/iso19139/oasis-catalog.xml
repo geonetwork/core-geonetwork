@@ -75,8 +75,11 @@
           uri="schema/gml/gml.xsd"/>
 
   <!-- xlinks -->
-
+  <system systemId="http://www.w3.org/1999/xlink.xsd"
+          uri="schema/xlink/xlink.xsd"/>
+  <!--
+  19139:2005 version
   <system systemId="http://www.w3.org/1999/xlink/xlinks.xsd"
-          uri="schema/xlink/xlinks.xsd"/>
+          uri="schema/xlink/xlinks.xsd"/>-->
 
 </catalog>

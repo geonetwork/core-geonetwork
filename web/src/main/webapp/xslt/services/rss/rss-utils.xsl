@@ -26,7 +26,8 @@
                 xmlns:exslt="http://exslt.org/common"
                 xmlns:media="http://search.yahoo.com/mrss/"
                 xmlns:georss="http://www.georss.org/georss"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 version="1.0"
                 exclude-result-prefixes="gn exslt">
 
