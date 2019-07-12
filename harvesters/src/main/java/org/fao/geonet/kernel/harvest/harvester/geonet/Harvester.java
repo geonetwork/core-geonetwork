@@ -227,6 +227,7 @@ class Harvester implements IHarvester<HarvestResult> {
                 try {
                   log.debug("Doing an empty search");
                   Set<RecordInfo> pageOfResults = search(req, Search.createEmptySearch(pageStart, pageEnd));
+                  recordsAdded = pageOfResults.size();
                   records.addAll(pageOfResults);
                 } catch (Exception t) {
                   error = true;
