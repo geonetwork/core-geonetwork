@@ -114,7 +114,7 @@
         "geom": {
           "type": "geo_shape",
           "tree": "quadtree",
-          "precision": "10km",
+          "precision": "100m",
           "distance_error_pct": 0.0025
         },
         "location": {
