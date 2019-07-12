@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
+import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
@@ -162,32 +163,17 @@ class Harvester implements IHarvester<HarvestResult> {
         Set<RecordInfo> records = new HashSet<RecordInfo>();
 
         boolean error = false;
-        for (Search s : params.getSearches()) {
+        List<Search> searches = Lists.newArrayList(params.getSearches());
+        if (params.isSearchEmpty()) {
+            searches.add(Search.createEmptySearch());
+        }
+        for (Search s : searches) {
             if (cancelMonitor.get()) {
                 return new HarvestResult();
             }
 
             try {
                 records.addAll(search(req, s));
-            } catch (Exception t) {
-                error = true;
-                log.error("Unknown error trying to harvest");
-                log.error(t.getMessage());
-                log.error(t);
-                errors.add(new HarvestError(context, t));
-            } catch (Throwable t) {
-                error = true;
-                log.fatal("Something unknown and terrible happened while harvesting");
-                log.fatal(t.getMessage());
-                log.error(t);
-                errors.add(new HarvestError(context, t));
-            }
-        }
-
-        if (params.isSearchEmpty()) {
-            try {
-                log.debug("Doing an empty search");
-                records.addAll(search(req, Search.createEmptySearch()));
             } catch (Exception t) {
                 error = true;
                 log.error("Unknown error trying to harvest");
@@ -251,34 +237,58 @@ class Harvester implements IHarvester<HarvestResult> {
     private Set<RecordInfo> search(XmlRequest request, Search s) throws OperationAbortedEx {
         Set<RecordInfo> records = new HashSet<RecordInfo>();
 
-        for (Object o : doSearch(request, s).getChildren("metadata")) {
+        int hitsPerPage = 100;
+        int from = 1;
+        int to = from + hitsPerPage - 1;
+        s.setRange(from, to);
+        int resultsCount = Integer.MAX_VALUE;
+        log.info("Searching on : " + params.getName());
+
+        while (from < resultsCount) {
+            if (log.isDebugEnabled()) {
+                log.info(String.format("Total count  %d. From %d to %d.", resultsCount, from, to));
+            }
 
             if (cancelMonitor.get()) {
                 return Collections.emptySet();
             }
 
-            try {
-                Element md = (Element) o;
-                Element info = md.getChild("info", Edit.NAMESPACE);
-
-                if (info == null)
-                    log.warning("Missing 'geonet:info' element in 'metadata' element");
-                else {
-                    String uuid = info.getChildText("uuid");
-                    String schema = info.getChildText("schema");
-                    String changeDate = info.getChildText("changeDate");
-                    String source = info.getChildText("source");
-
-                    records.add(new RecordInfo(uuid, changeDate, schema, source));
+            Element searchResult = doSearch(request, s);
+            Element summary = searchResult.getChild(Geonet.Elem.SUMMARY);
+            resultsCount = Integer.valueOf(summary.getAttributeValue("count"));
+            @SuppressWarnings("unchecked")
+            List<Element> metadataResultList = searchResult.getChildren("metadata");
+            for (Element md : metadataResultList) {
+                if (cancelMonitor.get()) {
+                    return Collections.emptySet();
                 }
-            } catch (Exception e) {
-                HarvestError harvestError = new HarvestError(context, e);
-                harvestError.setDescription("Malformed element '"
-                    + o.toString() + "'");
-                harvestError
-                    .setHint("It seems that there was some malformed element. Check with your administrator.");
-                this.errors.add(harvestError);
+
+                try {
+                    Element info = md.getChild("info", Edit.NAMESPACE);
+
+                    if (info == null)
+                        log.warning("Missing 'geonet:info' element in 'metadata' element");
+                    else {
+                        String uuid = info.getChildText("uuid");
+                        String schema = info.getChildText("schema");
+                        String changeDate = info.getChildText("changeDate");
+                        String source = info.getChildText("source");
+
+                        records.add(new RecordInfo(uuid, changeDate, schema, source));
+                    }
+                } catch (Exception e) {
+                    HarvestError harvestError = new HarvestError(context, e);
+                    harvestError.setDescription("Malformed element '"
+                        + md.toString() + "'");
+                    harvestError
+                        .setHint("It seems that there was some malformed element. Check with your administrator.");
+                    this.errors.add(harvestError);
+                }
             }
+
+            from = from + hitsPerPage;
+            to = to + hitsPerPage;
+            s.setRange(from, to);
         }
 
         log.info("Records added to result list : " + records.size());
@@ -292,7 +302,9 @@ class Harvester implements IHarvester<HarvestResult> {
             + "/eng/" + Geonet.Service.XML_SEARCH);
         request.clearParams();
         try {
-            log.info("Searching on : " + params.getName());
+            if (log.isDebugEnabled()) {
+                log.debug("Searching on : " + params.getName());
+            }
             Element response = request.execute(s.createRequest());
             if (log.isDebugEnabled()) log.debug("Search results:\n" + Xml.getString(response));
 
@@ -327,6 +339,7 @@ class Harvester implements IHarvester<HarvestResult> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private Map<String, Source> buildSources(Element info) throws BadServerResponseEx {
         Element sources = info.getChild("sources");
 
@@ -341,7 +354,7 @@ class Harvester implements IHarvester<HarvestResult> {
             String uuid = sourceEl.getChildText("uuid");
             String name = sourceEl.getChildText("name");
 
-            Source source = new Source(uuid, name, new HashMap<String, String>(), SourceType.harvester);
+            Source source = new Source(uuid, name, new HashMap<>(), SourceType.harvester);
             // If translation element provided and has values, use it.
             // Otherwise use the default ones from the name of the source
             if ((sourceEl.getChild("label") != null) &&
@@ -378,7 +391,7 @@ class Harvester implements IHarvester<HarvestResult> {
                     retrieveLogo(context, params.host, sourceUuid);
                 } else {
                     String sourceName = "(unknown)";
-                    source = new Source(sourceUuid, sourceName, new HashMap<String, String>(), SourceType.harvester);
+                    source = new Source(sourceUuid, sourceName, new HashMap<>(), SourceType.harvester);
                     Resources.copyUnknownLogo(context, sourceUuid);
                 }
 

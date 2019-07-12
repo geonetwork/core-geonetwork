@@ -100,9 +100,9 @@ public class Aligner extends BaseAligner<GeonetParams> {
     private UUIDMapper localUuids;
     private String processName;
     private String preferredSchema;
-    private Map<String, Object> processParams = new HashMap<String, Object>();
+    private Map<String, Object> processParams = new HashMap<>();
     private MetadataRepository metadataRepository;
-    private HashMap<String, HashMap<String, String>> hmRemoteGroups = new HashMap<String, HashMap<String, String>>();
+    private HashMap<String, HashMap<String, String>> hmRemoteGroups = new HashMap<>();
 
     public Aligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, XmlRequest req,
                    GeonetParams params, Element remoteInfo) {
@@ -222,7 +222,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
                     // look up value of localrating/enable
                     SettingManager settingManager = context.getBean(SettingManager.class);
                     String localRating = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
-                    final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
                     if (id == null) {
                         //record doesn't exist (so it doesn't belong to this harvester)
@@ -234,10 +233,10 @@ public class Aligner extends BaseAligner<GeonetParams> {
                         result.datasetUuidExist++;
                         switch(params.getOverrideUuid()){
                         case OVERRIDE:
-                            updateMetadata(ri, 
-                                    Integer.toString(metadataRepository.findOneByUuid(ri.uuid).getId()), 
-                                    localRating.equals(RatingsSetting.BASIC), 
-                                    params.useChangeDateForUpdate(), 
+                            updateMetadata(ri,
+                                    Integer.toString(metadataRepository.findOneByUuid(ri.uuid).getId()),
+                                    localRating.equals(RatingsSetting.BASIC),
+                                    params.useChangeDateForUpdate(),
                                     localUuids.getChangeDate(ri.uuid), true);
                             log.info("Overriding record with uuid " + ri.uuid);
                             result.updatedMetadata++;
@@ -255,12 +254,12 @@ public class Aligner extends BaseAligner<GeonetParams> {
                     } else {
                         //record exists and belongs to this harvester
                         log.debug("Updating record with uuid " + ri.uuid);
-                        updateMetadata(ri, id, 
-                                localRating.equals(RatingsSetting.BASIC), 
-                                params.useChangeDateForUpdate(), 
+                        updateMetadata(ri, id,
+                                localRating.equals(RatingsSetting.BASIC),
+                                params.useChangeDateForUpdate(),
                                 localUuids.getChangeDate(ri.uuid), false);
                     }
-                        
+
                 }
             } catch (Throwable t) {
                 log.error("Couldn't insert or update metadata with uuid " + ri.uuid);
@@ -307,7 +306,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
             Log.debug(Geonet.MEF, "Multiple metadata files");
 
         Map<String, Pair<String, Element>> mdFiles =
-                new HashMap<String, Pair<String, Element>>();
+                new HashMap<>();
         for (Path file : files) {
             if (Files.isRegularFile(file)) {
                 Element metadata = Xml.loadFile(file);
@@ -380,8 +379,8 @@ public class Aligner extends BaseAligner<GeonetParams> {
     //--------------------------------------------------------------------------
 
     private void addMetadata(final RecordInfo ri, final boolean localRating, String uuid) throws Exception {
-        final String id[] = {null};
-        final Element md[] = {null};
+        final String[] id = { null };
+        final Element[] md = { null };
 
         //--- import metadata from MEF file
 
@@ -695,9 +694,9 @@ public class Aligner extends BaseAligner<GeonetParams> {
      */
     private void updateMetadata(final RecordInfo ri, final String id, final boolean localRating,
                                 final boolean useChangeDate, String localChangeDate, Boolean force) throws Exception {
-        final Element md[] = {null};
-        final Element publicFiles[] = {null};
-        final Element privateFiles[] = {null};
+        final Element[] md = {null};
+        final Element[] publicFiles = {null};
+        final Element[] privateFiles = {null};
 
         if (localUuids.getID(ri.uuid) == null && !force) {
             if (log.isDebugEnabled())
@@ -743,8 +742,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
                             handleFile(id, file, "public", changeDate, is, publicFiles[index]);
                         }
 
-                        public void handleFeatureCat(Element md, int index)
-                            throws Exception {
+                        public void handleFeatureCat(Element md, int index) {
                             // Feature Catalog not managed for harvesting
                         }
 
@@ -772,7 +770,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
     }
 
-    private void updateMetadata(RecordInfo ri, String id, Element md, 
+    private void updateMetadata(RecordInfo ri, String id, Element md,
             Element info, boolean localRating, boolean force) throws Exception {
         String date = localUuids.getChangeDate(ri.uuid);
 
@@ -785,14 +783,14 @@ public class Aligner extends BaseAligner<GeonetParams> {
             return;
         }
 
-        final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+        final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
         final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
         AbstractMetadata metadata;
         if (!force && !ri.isMoreRecentThan(date)) {
             if (log.isDebugEnabled())
                 log.debug("  - XML not changed for local metadata with uuid:" + ri.uuid);
             result.unchangedMetadata++;
-            metadata = metadataRepository.findOne(id);
+            metadata = metadataUtils.findOne(id);
             if (metadata == null) {
                 throw new NoSuchElementException("Unable to find a metadata with ID: " + id);
             }
@@ -812,21 +810,21 @@ public class Aligner extends BaseAligner<GeonetParams> {
             String language = context.getLanguage();
             metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate,
                 updateDateStamp);
-            metadata = metadataRepository.findOne(id);
+            metadata = metadataUtils.findOne(id);
             result.updatedMetadata++;
-        
+
             if(force) {
                 //change ownership of metadata to new harvester
                 metadata.getHarvestInfo().setUuid(params.getUuid());
                 metadata.getSourceInfo().setSourceId(params.getUuid());
-    
+
                 metadataManager.save(metadata);
             }
         }
 
         metadata.getCategories().clear();
         addCategories(metadata, params.getCategories(), localCateg, context, null, true);
-        metadata = metadataRepository.findOne(id);
+        metadata = metadataUtils.findOne(id);
 
         Element general = info.getChild("general");
 

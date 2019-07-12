@@ -23,15 +23,15 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
-import java.util.Iterator;
-
+import com.google.common.base.Splitter;
 import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
-import com.google.common.base.Splitter;
+import java.util.Iterator;
 
 //=============================================================================
 
@@ -70,6 +70,9 @@ class Search {
     public String sourceName;
     public String anyField;
     public String anyValue;
+    private int from = -1;
+    private int to = -1;
+
     //---------------------------------------------------------------------------
     //---
     //--- Constructor
@@ -77,6 +80,7 @@ class Search {
     //---------------------------------------------------------------------------
     public Search() {
     }
+
     public Search(Element search) throws BadParameterEx {
         freeText = Util.getParam(search, "freeText", "");
         title = Util.getParam(search, "title", "");
@@ -141,11 +145,26 @@ class Search {
                 "number of criteria and values.", e);
         }
 
-        if (digital)
+        if (digital) {
             Lib.element.add(req, "digital", "on");
+        }
 
-        if (hardcopy)
+        if (hardcopy) {
             Lib.element.add(req, "paper", "on");
+        }
+
+        // If the search doesn't contains already a buildSummary add it
+        if (req.getChild(Geonet.SearchResult.BUILD_SUMMARY) == null) {
+            Lib.element.add(req, Geonet.SearchResult.BUILD_SUMMARY, "true");
+        }
+
+        if (from != -1) {
+            Lib.element.add(req, "from", from);
+        }
+        if (to != -1) {
+            Lib.element.add(req, "to", to);
+        }
+
 
         return req;
     }
@@ -154,6 +173,12 @@ class Search {
         if (value.length() != 0)
             req.addContent(new Element(name).setText(value));
     }
+
+    public void setRange(int from, int to) {
+        this.from = from;
+        this.to = to;
+    }
+
 }
 
 //=============================================================================
