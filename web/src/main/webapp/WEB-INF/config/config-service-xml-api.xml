@@ -70,7 +70,9 @@
 
 
     <service name="xml.search" xmlapi="true">
-      <class name=".services.main.XmlSearch"/>
+      <class name=".services.main.XmlSearch">
+        <param name="maxRecords" value="100"/>
+      </class>
 
       <output sheet="portal-present.xsl" contentType="application/xml; charset=UTF-8"/>
 

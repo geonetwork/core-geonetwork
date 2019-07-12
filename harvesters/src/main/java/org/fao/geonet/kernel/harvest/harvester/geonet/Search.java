@@ -26,6 +26,9 @@ package org.fao.geonet.kernel.harvest.harvester.geonet;
 import java.util.Iterator;
 
 import org.fao.geonet.Util;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.lib.Lib;
@@ -77,8 +80,8 @@ class Search {
     //--- Constructor
     //---
     //---------------------------------------------------------------------------
-    public Search() {
-    }
+    public Search() {}
+   
     public Search(Element search) throws BadParameterEx {
         freeText = Util.getParam(search, "freeText", "");
         title = Util.getParam(search, "title", "");
@@ -93,6 +96,7 @@ class Search {
 
         sourceUuid = Util.getParam(source, "uuid", "");
         sourceName = Util.getParam(source, "name", "");
+        
     }
 
     public static Search createEmptySearch(int from, int to) throws BadParameterEx {
@@ -154,6 +158,8 @@ class Search {
 
         if (hardcopy)
             Lib.element.add(req, "paper", "on");
+        
+        Log.debug(Geonet.HARVEST_MAN,"Search request is "+Xml.getString(req));
 
         return req;
     }

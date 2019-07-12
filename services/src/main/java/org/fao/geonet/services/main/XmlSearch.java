@@ -174,7 +174,9 @@ public class XmlSearch implements Service {
 
                 // Update result elements to present
                 SelectionManager.updateMDResult(context.getUserSession(), result, bucket);
-
+                if (! this.allowUnboundedQueries) { // return maxRecordValue for users of this service to request pages 
+                	result = result.setAttribute("maxPageSize", getMaxRecordValue()+"");
+                }
                 return result;
             }
         } finally {
