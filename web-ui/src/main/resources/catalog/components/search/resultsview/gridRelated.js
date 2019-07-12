@@ -78,6 +78,8 @@
         },
         link: function(scope, element, attrs) {
           scope.location = window.location;
+          scope.max = attrs['max'] || 5;
+          scope.displayState = {};
           gnGridRelatedList.promise.then(function() {
             var related = gnGridRelatedList.list[scope.uuid];
             if (related) {
