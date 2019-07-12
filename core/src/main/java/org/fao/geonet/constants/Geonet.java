@@ -425,8 +425,8 @@ public final class Geonet {
         public static final String MAX_RECORDS = "maxRecords";
 
         /**
-         * Parameter name: {@value #MAX_RECORDS} - Number of maximum results returned by the search
-         * engine, given the from / to user provided parameters. Default is 100 results.
+         * Parameter name: {@value #ALLOW_UNBOUNDED_QUERIES} - Allow XmlSearch to return as many 
+         * records as the search returns (this was the default behaviour before 3.8.x).
          */
         public static final String ALLOW_UNBOUNDED_QUERIES = "allowUnboundedQueries";
 
