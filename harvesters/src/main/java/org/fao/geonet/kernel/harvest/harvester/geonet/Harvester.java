@@ -24,6 +24,8 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import jeeves.server.context.ServiceContext;
+
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -147,7 +149,7 @@ class Harvester implements IHarvester<HarvestResult> {
         log.info("Retrieving information from : " + host);
 
         req.setAddress(params.getServletPath() + "/" + params.getNode()
-            + "/en/" + Geonet.Service.XML_INFO);
+            + "/eng/" + Geonet.Service.XML_INFO);
         req.clearParams();
         req.addParam("type", "sources");
         req.addParam("type", "groups");
@@ -160,53 +162,98 @@ class Harvester implements IHarvester<HarvestResult> {
         //--- perform all searches
 
         Set<RecordInfo> records = new HashSet<RecordInfo>();
-
-        boolean error = false;
+       
+        // Do a search and set from=1 and to=2, try to find out maxPageSize
+        // xml.search service returns maxPageSize in 3.8.x onwards, if not set then 
+        // use 100
+        int pageSize = 100;
+        try {
+          Element getPageSizeSearch = doSearch(req, Search.createEmptySearch(1, 2));
+          String sPageSize = getPageSizeSearch.getAttributeValue("maxPageSize");
+          if (!StringUtils.isBlank(sPageSize)) {
+        	  pageSize = Integer.parseInt(sPageSize);
+        	  log.info("Client said maximum page size is "+pageSize);
+          } else {
+        	  log.info("Client didn't response with page size so using page size of "+pageSize);
+          }
+        } catch (NumberFormatException nfe) {
+          log.error("Invalid maxPageSize attribute value, using "+pageSize);
+        } catch (Exception e) {
+          log.error("Unable to determine pagesize, this could be fatal");
+        }
+        
+        boolean error = false; 
         for (Search s : params.getSearches()) {
             if (cancelMonitor.get()) {
                 return new HarvestResult();
             }
+            
+            for (int i = 1; i < Integer.MAX_VALUE; i+=pageSize) {
 
-            try {
-                records.addAll(search(req, s));
-            } catch (Exception t) {
+              int pageStart = i, pageEnd = i + (pageSize - 1), recordsAdded = 0;
+
+              s.from = pageStart;
+              s.to = pageEnd;
+              
+              try {
+            	Set<RecordInfo> pageOfResults = search(req,s);
+            	recordsAdded = pageOfResults.size();
+                records.addAll(pageOfResults);
+              } catch (Exception t) {
                 error = true;
                 log.error("Unknown error trying to harvest");
                 log.error(t.getMessage());
                 log.error(t);
                 errors.add(new HarvestError(context, t));
-            } catch (Throwable t) {
+              } catch (Throwable t) {
                 error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(t.getMessage());
                 log.error(t);
                 errors.add(new HarvestError(context, t));
+              }
+              // keep on going until we are not getting any more records
+              if ((recordsAdded < pageSize) || error) {
+          	    break;
+              }
             }
         }
 
         if (params.isSearchEmpty()) {
-            try {
-                log.debug("Doing an empty search");
-                records.addAll(search(req, Search.createEmptySearch()));
-            } catch (Exception t) {
-                error = true;
-                log.error("Unknown error trying to harvest");
-                log.error(t.getMessage());
-                log.error(t);
-                errors.add(new HarvestError(context, t));
-            } catch (Throwable t) {
-                error = true;
-                log.fatal("Something unknown and terrible happened while harvesting");
-                log.fatal(t.getMessage());
-                log.error(t);
-                errors.add(new HarvestError(context, t));
-            }
-        }
+            for (int i = 1; i < Integer.MAX_VALUE; i+=pageSize) {
 
-        log.info("Total records processed in all searches :" + records.size());
+                int pageStart = i, pageEnd = i + (pageSize - 1), recordsAdded = 0;
+
+                try {
+                  log.debug("Doing an empty search");
+                  Set<RecordInfo> pageOfResults = search(req, Search.createEmptySearch(pageStart, pageEnd));
+                  recordsAdded = pageOfResults.size();
+                  records.addAll(pageOfResults);
+                } catch (Exception t) {
+                  error = true;
+                  log.error("Unknown error trying to harvest");
+                  log.error(t.getMessage());
+                  log.error(t); 
+                  errors.add(new HarvestError(context, t));
+                } catch (Throwable t) {
+                  error = true;
+                  log.fatal("Something unknown and terrible happened while harvesting");
+                  log.fatal(t.getMessage());
+                  log.error(t);
+                  errors.add(new HarvestError(context, t));
+                }
+                // keep on going until we are not getting any more records
+                if ((recordsAdded < pageSize) || error) {
+            	    break;
+                }
+              }
+        }
+          
+          
+        log.info("Total records processed from this search :" + records.size());
 
         //--- align local node
-        HarvestResult result = new HarvestResult();
+        HarvestResult result = new HarvestResult();  
         if (!error) {
             try {
                 Aligner aligner = new Aligner(cancelMonitor, log, context, req, params, remoteInfo);
@@ -226,8 +273,6 @@ class Harvester implements IHarvester<HarvestResult> {
         } else {
             log.warning("Due to previous errors the align process has not been called");
         }
-
-        log.info("Total records processed in all searches :" + records.size());
 
         return result;
     }
@@ -281,7 +326,6 @@ class Harvester implements IHarvester<HarvestResult> {
             }
         }
 
-        log.info("Records added to result list : " + records.size());
 
         return records;
     }

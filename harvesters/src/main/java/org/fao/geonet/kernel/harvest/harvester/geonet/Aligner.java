@@ -968,7 +968,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         request.addParam("version", "2");
         request.addParam("relation", "false");
         request.setAddress(params.getServletPath() + "/" + params.getNode()
-            + "/en/" + Geonet.Service.MEF_EXPORT);
+            + "/eng/" + Geonet.Service.MEF_EXPORT);
 
         Path tempFile = Files.createTempFile("temp-", ".dat");
         request.executeLarge(tempFile);
