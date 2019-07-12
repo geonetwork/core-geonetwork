@@ -1,7 +1,12 @@
 (function() {
   goog.provide('sxt_layertree');
 
-  var module = angular.module('sxt_layertree', []);
+  goog.require('sxt_compositeLayer');
+
+
+  var module = angular.module('sxt_layertree', [
+    'sxt_compositeLayer'
+  ]);
 
   // Contains all layers that come from wps service
   var wpsLayers = [];
@@ -378,8 +383,13 @@
     }]);
 
   module.directive('sxtLayertreeElt', [
-    '$compile', '$http', 'gnMap', 'gnMdView', 'wfsFilterService',
-    function($compile, $http, gnMap, gnMdView, wfsFilterService) {
+    '$compile',
+    '$http',
+    'gnMap',
+    'gnMdView',
+    'wfsFilterService',
+    'sxtCompositeLayer',
+    function($compile, $http, gnMap, gnMdView, wfsFilterService, sxtCompositeLayer) {
       return {
         restrict: 'E',
         replace: true,
@@ -478,6 +488,8 @@
                 indexObject.searchWithFacets({}).then(function(data) {
                   if(data.count > 0) {
                     scope.wfs = wfsLink;
+                    var featureType = wfsLink.url + '#' + wfsLink.name;
+                    sxtCompositeLayer.init(scope.member, scope.map, featureType, 100, 50);
                   }
                 });
               }
