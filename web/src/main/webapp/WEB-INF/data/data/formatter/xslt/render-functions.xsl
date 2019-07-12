@@ -80,7 +80,7 @@
 
       <img class="gn-img-extent"
            alt="{$schemaStrings/thumbnail}"
-           src="{$nodeUrl}/eng/region.getmap.png?mapsrs={if ($mapproj != '')
+           src="{$nodeUrl}eng/region.getmap.png?mapsrs={if ($mapproj != '')
                                          then $mapproj
                                          else 'EPSG:3857'}&amp;width={
                                          if ($width != '')
