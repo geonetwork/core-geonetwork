@@ -19,6 +19,7 @@
     function($http, ngeoDecorateLayer, $translate, gnHeatmapService, gnIndexRequestManager) {
       var BUFFER_RATIO = 1;
       var indexObject = gnIndexRequestManager.register('WfsFilter', 'compositeLayer');
+      var GeoJSON = new ol.format.GeoJSON();
 
       return {
         init: function (layer, map, featureType, heatmapMinCount, tooltipMaxCount) {
@@ -52,9 +53,11 @@
             features: []
           });
           var tooltipLayer = new ol.layer.Vector({
-            source: tooltipSource
+            source: tooltipSource,
+            opacity: 0
           });
-          group.getLayers().push(heatmapLayer, tooltipLayer);
+          group.getLayers().push(heatmapLayer);
+          group.getLayers().push(tooltipLayer);
 
           // add an interaction for cell hovering
           var heatmapInteraction = new ol.interaction.Select({
@@ -90,6 +93,41 @@
             }
           });
 
+          var tooltipInteraction = new ol.interaction.Select({
+            condition: ol.events.condition.pointerMove,
+            layers: [tooltipLayer]
+          });
+          map.addInteraction(tooltipInteraction);
+
+          // add popover for feature info
+          var tooltipOverlay = new ol.Overlay({
+            element: $('<div class="heatmap-overlay"></div>')[0],
+            positioning: 'bottom-center',
+            stopEvent: false,
+            offset: [0, -2]
+          });
+          map.addOverlay(tooltipOverlay);
+          tooltipInteraction.on('select', function (event) {
+            var selected = event.selected[0];
+
+            // hide if no feature hovered; else move overlay on hovered feature
+            if (!selected) {
+              tooltipOverlay.setPosition();
+            } else {
+              var center =
+                ol.extent.getCenter(selected.getGeometry().getExtent());
+              var topleft =
+                ol.extent.getTopLeft(selected.getGeometry().getExtent());
+              tooltipOverlay.setPosition([center[0], topleft[1]]);
+
+              // TEMP
+              var props = selected.getProperties();
+              props[selected.getGeometryName()] = undefined;
+              tooltipOverlay.getElement().innerHTML = '<pre>' + JSON.stringify(props, null, 2) + '</pre>';
+            }
+          });
+
+
           var me = this;
           function refresh() {
             me.requestCount(featureType, map)
@@ -112,13 +150,16 @@
 
                 if (count <= tooltipMaxCount) {
                   me.requestFeatures(featureType, map, count).then(
-                    function (results) {
-                      // TEMP
-                      console.log(results)
+                    function (features) {
+                      tooltipSource.clear();
+                      tooltipInteraction.getFeatures().clear();
+                      tooltipOverlay.setPosition();
+                      tooltipSource.addFeatures(features);
                     }
                   )
                 } else {
                   tooltipSource.clear();
+                  tooltipOverlay.setPosition();
                 }
               });
           }
@@ -189,7 +230,30 @@
           // trigger search on ES
           return $http.post(indexObject.ES_URL, reqParams)
             .then(function (response) {
-              return response.data.hits;
+              if (!response.data.hits.total) {
+                return [];
+              }
+              return response.data.hits.hits.map(function(hit) {
+                var source = hit._source;
+                var props = {};
+                for (var key in source) {
+                  var fieldInfo = key.match(/ft_(.*?)_([a-z]+)(?:_(tree))?$/);
+                  if (fieldInfo) {
+                    props[fieldInfo[1]] = source[key];
+                  }
+                }
+                var geom = source.geom;
+                if (angular.isArray(geom)) {
+                  geom = geom[0];
+                }
+                props.geometry = GeoJSON.readGeometry(geom, {
+                  dataProjection: 'EPSG:4326',
+                  featureProjection: map.getView().getProjection()
+                });
+
+                // create feature with cell data
+                return new ol.Feature(props);
+              });
             });
         }
       }
