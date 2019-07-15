@@ -298,7 +298,7 @@
                 </gmd:date>
                 <gmd:dateType>
                   <gmd:CI_DateTypeCode
-                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                    codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                     codeListValue="publication"/>
                 </gmd:dateType>
               </gmd:CI_Date>

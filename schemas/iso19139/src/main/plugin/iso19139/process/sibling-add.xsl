@@ -142,13 +142,13 @@ Stylesheet used to add a reference to a related record using aggregation info.
           </gmd:aggregateDataSetIdentifier>
           <gmd:associationType>
             <gmd:DS_AssociationTypeCode
-              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#DS_AssociationTypeCode"
+              codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#DS_AssociationTypeCode"
               codeListValue="{$associationType}"/>
           </gmd:associationType>
           <xsl:if test="$initiativeType != ''">
             <gmd:initiativeType>
               <gmd:DS_InitiativeTypeCode
-                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#DS_InitiativeTypeCode"
+                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#DS_InitiativeTypeCode"
                 codeListValue="{$initiativeType}"/>
             </gmd:initiativeType>
           </xsl:if>
