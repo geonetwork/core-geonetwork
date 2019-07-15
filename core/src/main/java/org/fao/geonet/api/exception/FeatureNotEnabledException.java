@@ -21,38 +21,22 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.api.processing.report;
+package org.fao.geonet.api.exception;
 
-import org.fao.geonet.Util;
-import org.opengis.annotation.XmlElement;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-
-/**
- * Created by francois on 20/05/16.
- */
-@XmlElement(value = "error")
-@XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
-public class ErrorReport extends Report {
-    private String stack;
-
-    public ErrorReport(Exception e) {
-        super(e.getMessage());
-        this.stack = Util.getStackTrace(e);
+public class FeatureNotEnabledException extends Exception {
+    public FeatureNotEnabledException() {
+        super();
     }
 
-    public ErrorReport(String e) {
-        super(e);
-        this.stack = "";
+    public FeatureNotEnabledException(String message) {
+        super(message);
     }
 
-    @XmlElement(value = "stacktrace")
-    public String getStack() {
-        return stack;
+    public FeatureNotEnabledException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public void setStack(String stack) {
-        this.stack = stack;
+    public FeatureNotEnabledException(Throwable cause) {
+        super(cause);
     }
 }

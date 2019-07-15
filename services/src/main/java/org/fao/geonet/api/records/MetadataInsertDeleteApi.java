@@ -73,6 +73,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.UserGroupRepository;
@@ -157,6 +158,9 @@ public class MetadataInsertDeleteApi {
     private MetadataRepository metadataRepository;
 
     @Autowired
+    MetadataDraftRepository metadataDraftRepository;
+
+    @Autowired
     private SettingManager settingManager;
 
     @Autowired
@@ -230,7 +234,8 @@ public class MetadataInsertDeleteApi {
             AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
             if (metadata == null) {
                 report.incrementNullRecords();
-            } else if (!accessManager.canEdit(context, String.valueOf(metadata.getId()))) {
+            } else if (!accessManager.canEdit(context, String.valueOf(metadata.getId()))
+                    || metadataDraftRepository.findOneByUuid(uuid) != null) {
                 report.addNotEditableMetadataId(metadata.getId());
             } else {
                 if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
@@ -294,8 +299,8 @@ public class MetadataInsertDeleteApi {
                 throw new IllegalArgumentException(
                         String.format("XML fragment is invalid. Error is %s", ex.getMessage()));
             }
-            Pair<Integer, String> pair = loadRecord(metadataType, element, uuidProcessing, group,
-                    category, rejectIfInvalid, false, transformWith, schema, extra, request);
+            Pair<Integer, String> pair = loadRecord(metadataType, element, uuidProcessing, group, category,
+                    rejectIfInvalid, false, transformWith, schema, extra, request);
             report.addMetadataInfos(pair.one(), String.format("Metadata imported from XML with UUID '%s'", pair.two()));
 
             triggerImportEvent(request, pair.two());
@@ -428,8 +433,9 @@ public class MetadataInsertDeleteApi {
             // Check if the UUID exists
             try {
                 ApiUtils.getRecord(targetUuid);
-                throw new BadParameterEx(
-                        String.format("You can't create a new record with the UUID '%s' because a record already exist with this UUID.", targetUuid), targetUuid);
+                throw new BadParameterEx(String.format(
+                        "You can't create a new record with the UUID '%s' because a record already exist with this UUID.",
+                        targetUuid), targetUuid);
             } catch (ResourceNotFoundException e) {
                 metadataUuid = targetUuid;
             }
@@ -660,9 +666,8 @@ public class MetadataInsertDeleteApi {
         md.add(transformedMd);
 
         // Import record
-        Importer.importRecord(uuid, uuidProcessing, md, "iso19139", 0,
-            settingManager.getSiteId(), settingManager.getSiteName(), null, context,
-                id, date, date, group, MetadataType.METADATA);
+        Importer.importRecord(uuid, uuidProcessing, md, "iso19139", 0, settingManager.getSiteId(),
+                settingManager.getSiteName(), null, context, id, date, date, group, MetadataType.METADATA);
 
         // Save the context if no context-url provided
         if (StringUtils.isEmpty(url)) {
@@ -682,7 +687,8 @@ public class MetadataInsertDeleteApi {
             transformedMd = Xml.transform(transformedMd,
                     schemaManager.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"),
                     onlineSrcParams);
-            dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(), null, true);
+            dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(),
+                    null, true);
         }
 
         if (StringUtils.isNotEmpty(overview) && StringUtils.isNotEmpty(overviewFilename)) {
@@ -695,12 +701,13 @@ public class MetadataInsertDeleteApi {
 
             // Update the MD
             Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
-            onlineSrcParams.put("thumbnail_url",
-                    settingManager.getNodeURL() + String.format("api/records/%s/attachments/%s", uuid, overviewFilename));
+            onlineSrcParams.put("thumbnail_url", settingManager.getNodeURL()
+                    + String.format("api/records/%s/attachments/%s", uuid, overviewFilename));
             transformedMd = Xml.transform(transformedMd,
                     schemaManager.getSchemaDir("iso19139").resolve("process").resolve("thumbnail-add.xsl"),
                     onlineSrcParams);
-            dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(), null, true);
+            dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(),
+                    null, true);
         }
 
         dataManager.indexMetadata(id);
@@ -818,7 +825,6 @@ public class MetadataInsertDeleteApi {
         final List<String> id = new ArrayList<String>();
         final List<Element> md = new ArrayList<Element>();
         md.add(xmlElement);
-
 
         // Import record
         Map<String, String> sourceTranslations = Maps.newHashMap();

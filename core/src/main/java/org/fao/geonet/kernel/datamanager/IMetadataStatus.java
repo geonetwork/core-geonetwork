@@ -54,6 +54,11 @@ public interface IMetadataStatus {
     void activateWorkflowIfConfigured(ServiceContext context, String newId, String groupOwner) throws Exception;
 
     /**
+     * Safely change the status if the current is compatible.
+     */
+    void changeCurrentStatus(Integer userId, Integer metadataId, Integer newStatus) throws Exception;
+
+    /**
      * Set status of metadata id and do not reindex metadata id afterwards.
      *
      * @return the saved status entity object

@@ -49,6 +49,7 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
@@ -57,6 +58,8 @@ import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.services.metadata.Show;
 import org.fao.geonet.services.relations.Get;
 import org.fao.geonet.utils.BinaryFile;
@@ -374,5 +377,32 @@ public class MetadataUtils {
                 IO.deleteFile(file, false, Geonet.MEF);
             }
         }
+    }
+
+
+    /**
+     * Returns the metadata validation status from the database, calculating/storing the validation if not stored.
+     *
+     * @param metadata
+     * @param context
+     * @return
+     */
+    public static boolean retrieveMetadataValidationStatus(AbstractMetadata metadata, ServiceContext context) throws Exception {
+        MetadataValidationRepository metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
+        IMetadataValidator validator = context.getBean(IMetadataValidator.class);
+        DataManager dataManager = context.getBean(DataManager.class);
+
+        boolean hasValidation =
+            (metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(metadata.getId())) > 0);
+
+        if (!hasValidation) {
+            validator.doValidate(metadata, context.getLanguage());
+            dataManager.indexMetadata(metadata.getId() + "", true, null);
+        }
+
+        boolean isInvalid =
+            (metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(metadata.getId())) > 0);
+
+        return isInvalid;
     }
 }

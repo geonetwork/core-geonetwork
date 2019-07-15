@@ -685,6 +685,11 @@ goog.require('gn_alert');
             Math.floor(Math.random() * 10000)).
             success(function(me, status) {
               if (angular.isObject(me)) {
+
+                me['isAdmin'] = function(groupId) {
+                  return me.admin;
+                }
+
                 angular.forEach($scope.profiles, function(profile) {
                   // Builds is<ProfileName>ForGroup methods
                   // to check the profile in the group

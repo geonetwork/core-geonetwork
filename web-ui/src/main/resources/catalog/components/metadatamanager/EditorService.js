@@ -176,6 +176,20 @@
            * value in the form and trigger save to update the view.
            */
            save: function(refreshForm, silent, terminate) {
+             save(refreshForm, silent, terminate, false, false);
+           },
+           /**
+            * Save the metadata record currently in editing session.
+            *
+            * If refreshForm is true, then will also update the current form.
+            * This is required while switching tab for example. Update the tab
+            * value in the form and trigger save to update the view.
+            * If submit is true and the current user is editor, the metadata
+            * status will be changed to submitted.
+            * If approve is true and the current user is reviewer, the metadata
+            * status will be changed to approved.
+            */
+           save: function(refreshForm, silent, terminate, submit, approve) {
              var defer = $q.defer();
              var scope = this;
              if (gnCurrentEdit.saving) {
@@ -215,7 +229,9 @@
              '../api/records/' + gnCurrentEdit.id + '/editor?' +
              (gnCurrentEdit.showValidationErrors ? '&withValidationErrors=true' : '') +
              (refreshForm ? '' : '&commit=true') +
-             (terminate ? '&terminate=true' : ''),
+             (terminate ? '&terminate=true' : '') +
+             (submit ? '&status=4' : '') +
+             (approve ? '&status=2' : ''),
              getFormParameters(),
              {
                headers: {'Content-Type':

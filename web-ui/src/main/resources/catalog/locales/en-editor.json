@@ -262,6 +262,8 @@
     "saveTemplate": "Save template",
     "saveAsMetadata": "Save as metadata",
     "saveAsTemplate": "Save as template",
+    "saveAndApprove": "Save and Approve",
+    "saveAndSubmit": "Save and Submit",
     "saving": "Saving ...",
     "schematron-rules-geonetwork": "Recommendations",
     "schematron-rules-inspire": "INSPIRE rules",

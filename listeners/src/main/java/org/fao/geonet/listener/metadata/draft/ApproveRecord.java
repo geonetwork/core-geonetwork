@@ -86,7 +86,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
                     }
                     break;
                 case StatusValue.Status.RETIRED:
-                case StatusValue.Status.REJECTED:
+//                case StatusValue.Status.REJECTED:
                     try {
                         Log.trace(Geonet.DATA_MANAGER,
                             "Removing draft from record (ID=" + event.getMd().getId() + "), if exists.");

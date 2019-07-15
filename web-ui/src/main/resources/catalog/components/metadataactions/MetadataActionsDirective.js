@@ -52,7 +52,8 @@
         scope: {
           md: '=gnMetadataStatusUpdater',
           statusType: '@',
-          task: '='
+          task: '=',
+          statusToSelect: '@'
         },
         link: function(scope) {
           var user = scope.$parent.user;
@@ -74,7 +75,7 @@
                   success(function(data) {
                     scope.status =
                        data !== 'null' ? data.status : null;
-                    scope.newStatus.status = data.currentStatus.id.statusId;
+                    scope.newStatus.status = scope.statusToSelect;
                     scope.lastStatus = data.currentStatus.id.statusId;
                   });
             } else {

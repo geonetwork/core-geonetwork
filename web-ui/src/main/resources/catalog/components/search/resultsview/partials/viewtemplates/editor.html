@@ -39,6 +39,9 @@
               </div> 
             </div>
 
+            <span class="pull-right text-muted"
+                  data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
+                  data-ng-if="md.mdStatus<50 && isMdWorkflowEnable">{{('status-' + md.mdStatus) | translate}}</span>
           </div>
           <gn-draft-validation-widget data-ng-if="md.draft == 'e'" metadata="md"></gn-draft-validation-widget>
         </div>
@@ -54,13 +57,13 @@
             </a>
             <!-- TODO: subtemplate link for editing is different -->
             <a class="btn btn-default"
-               data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
+               data-ng-show="user.canEditRecord(md) && md.isTemplate != 's' && (user.isReviewerOrMore() || md.mdStatus != 4 || !isMdWorkflowEnable)"
                data-ng-href="#/metadata/{{md['geonet:info'].id}}?redirectUrl=catalog.edit"
                title="{{'edit' | translate}}">
               <i class="fa fa-pencil"></i>
             </a>
             <a class="btn btn-default"
-               data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
+               data-ng-show="user.canEditRecord(md) && md.isTemplate != 's' && (user.isReviewerOrMore() || md.mdStatus != 4 || !isMdWorkflowEnable) && md.draft != 'e'"
                data-gn-click-and-spin="deleteRecord(md)"
                data-gn-confirm-click="{{'deleteRecordConfirm' | translate:md}}"
                title="{{'delete' | translate}}">
