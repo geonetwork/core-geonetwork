@@ -23,24 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.commons.lang.StringUtils;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
@@ -86,7 +68,6 @@ import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -101,6 +82,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -170,7 +152,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
     //--------------------------------------------------------------------------
 
-    public HarvestResult align(Set<RecordInfo> records, List<HarvestError> errors) throws Exception {
+    public HarvestResult align(SortedSet<RecordInfo> records, List<HarvestError> errors) throws Exception {
         log.info("Start of alignment for : " + params.getName());
 
         //-----------------------------------------------------------------------
@@ -965,12 +947,12 @@ public class Aligner extends BaseAligner<GeonetParams> {
      * Return true if the uuid is present in the remote node
      */
 
-    private boolean exists(Set<RecordInfo> records, String uuid) {
-        for (RecordInfo ri : records)
-            if (uuid.equals(ri.uuid))
-                return true;
-
-        return false;
+    private boolean exists(SortedSet<RecordInfo> records, String uuid) {
+        // Records is a TreeSet sorted by uuid attribute.
+        // Method equals of RecordInfo only checks equality using `uuid` attribute.
+        // TreeSet.contains can be used more efficiently instead of doing a loop over all the recordInfo elements.
+        RecordInfo recordToTest = new RecordInfo(uuid, null);
+        return records.contains(recordToTest);
     }
 
     private Path retrieveMEF(String uuid) throws IOException {
