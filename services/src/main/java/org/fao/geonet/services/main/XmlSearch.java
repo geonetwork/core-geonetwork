@@ -27,9 +27,8 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.SelectionManager;
@@ -78,11 +77,8 @@ public class XmlSearch implements Service {
      * This method may modify the object params passed as argument. In this
      * case, it returns true.
      *
-     * @param params
-     *            the parameters coming from the request.
-     *
+     * @param params the parameters coming from the request.
      * @return true if the boundaries have been modified, false otherwise.
-     *
      */
     private boolean setSafeBoundaries(Element params) {
         boolean fromUndefined = params.getChild("from") == null;
@@ -90,7 +86,7 @@ public class XmlSearch implements Service {
         boolean toUndefined = params.getChild("to") == null;
         int to = Util.getParam(params, "to", Integer.MAX_VALUE);
         if ((to - from) < 0) {
-            throw new RuntimeException("Bad range requested, check the from/to parameters");
+            throw new BadParameterEx("Bad range requested, check the from/to parameters");
         }
         boolean boundariesSet = false;
 
@@ -101,12 +97,12 @@ public class XmlSearch implements Service {
             boundariesSet = true;
         }
         // from undefined, to defined
-        else if (fromUndefined && ! toUndefined) {
-            params.addContent(new Element("from").setText(Integer.toString(Math.max(1,to - this.maxRecordValue))));
+        else if (fromUndefined && !toUndefined) {
+            params.addContent(new Element("from").setText(Integer.toString(Math.max(1, to - this.maxRecordValue))));
             boundariesSet = true;
         }
         // from defined, to undefined
-        else if (! fromUndefined && toUndefined) {
+        else if (!fromUndefined && toUndefined) {
             params.addContent(new Element("to").setText(Integer.toString(from + this.maxRecordValue - 1)));
             boundariesSet = true;
         }
@@ -121,6 +117,7 @@ public class XmlSearch implements Service {
         }
         return boundariesSet;
     }
+
     /**
      * Run a search and return results as XML.
      *
@@ -138,7 +135,7 @@ public class XmlSearch implements Service {
 
         // Sets the boundaries (from/to) if needed
         boolean boundariesSet = false;
-        if (! this.allowUnboundedQueries) {
+        if (!this.allowUnboundedQueries) {
             boundariesSet = setSafeBoundaries(params);
         }
 
@@ -166,7 +163,7 @@ public class XmlSearch implements Service {
             } else {
 
                 elData.addContent(new Element(Geonet.SearchResult.FAST).setText(_searchFast));
-                if (! boundariesSet) {
+                if (!boundariesSet) {
                     elData.addContent(new Element("from").setText("1"));
                     elData.addContent(new Element("to").setText(searcher.getSize() + ""));
                 }
@@ -174,8 +171,8 @@ public class XmlSearch implements Service {
 
                 // Update result elements to present
                 SelectionManager.updateMDResult(context.getUserSession(), result, bucket);
-                if (! this.allowUnboundedQueries) { // return maxRecordValue for users of this service to request pages 
-                	result = result.setAttribute("maxPageSize", getMaxRecordValue()+"");
+                if (!this.allowUnboundedQueries) { // return maxRecordValue for users of this service to request pages
+                    result = result.setAttribute("maxPageSize", getMaxRecordValue() + "");
                 }
                 return result;
             }
@@ -183,6 +180,7 @@ public class XmlSearch implements Service {
             searcher.close();
         }
     }
+
     /**
      * get the max record to be searched. This parameter is meant to alter the
      * user-provided "from" and "to" parameters.

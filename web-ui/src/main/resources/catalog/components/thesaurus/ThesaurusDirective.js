@@ -631,12 +631,12 @@
                     var lang = input.getAttribute('lang');
                     var value = keyword.props.values[gnCurrentEdit.allLanguages.code2iso['#' + lang]];
                     if (value) {
-                      $(input).val(value);
+                      $(input).typeahead('val', value);
                     }
                     // If no value for the language, value is not set.
                   }
                 } else {
-                  $(obj.currentTarget).val(keyword.label);
+                  $(obj.currentTarget).typeahead('val', keyword.label);
                 }
 
                 if(scope.conceptIdElementName) {

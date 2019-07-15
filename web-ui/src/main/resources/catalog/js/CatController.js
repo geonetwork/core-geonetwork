@@ -144,6 +144,11 @@ goog.require('gn_alert');
                 'search/resultsview/partials/viewtemplates/grid.html',
             'tooltip': 'Grid',
             'icon': 'fa-th'
+          },{
+            'tplUrl': '../../catalog/components/' +
+              'search/resultsview/partials/viewtemplates/list.html',
+            'tooltip': 'List',
+            'icon': 'fa-bars'
           }],
           'resultTemplate': '../../catalog/components/' +
               'search/resultsview/partials/viewtemplates/grid.html',
