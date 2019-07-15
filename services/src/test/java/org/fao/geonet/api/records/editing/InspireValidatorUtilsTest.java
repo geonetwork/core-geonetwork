@@ -1,14 +1,14 @@
 package org.fao.geonet.api.records.editing;
 
-import static org.junit.Assert.assertEquals;
-
+import javassist.NotFoundException;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class InspireValidatorUtilsTest {
+import static org.junit.Assert.assertEquals;
+
+public class InspireValidatorUtilsTest extends AbstractServiceIntegrationTest {
 
     private static String URL = "http://inspire-sandbox.jrc.ec.europa.eu/etf-webapp";
 
@@ -39,7 +39,7 @@ public class InspireValidatorUtilsTest {
 
         // FIRST TEST IF OFFICIAL ETF IS AVAILABLE
         // Needed to avoid GN errors when ETF is not available
-        if(inspireValidatorUtils.checkServiceStatus(URL, null)) {
+        if (inspireValidatorUtils.checkServiceStatus(URL, null)) {
 
             try {
                 // No file
