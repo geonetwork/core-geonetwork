@@ -3396,6 +3396,10 @@
       CharacterStrings
     </description>
   </element>
+  <element name="xlink:title">
+    <label>URL title</label>
+    <description></description>
+  </element>
   <element name="xlink:href">
     <label>URL</label>
     <description>Supplies the data that allows an XLink application to find a remote resource (or
