@@ -26,7 +26,6 @@ package org.fao.geonet.services.util;
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
