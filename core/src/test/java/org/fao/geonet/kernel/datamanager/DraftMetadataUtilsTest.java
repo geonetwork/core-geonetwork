@@ -66,7 +66,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(inheritLocations = true, locations = {"classpath:draft-test-context.xml"})
 public class DraftMetadataUtilsTest extends AbstractCoreIntegrationTest {
 
-    private static final String UUID = "test-metadata" + Math.random();
+    private static final String UUID = "test-md" + Math.random();
 
     @Autowired
     private IMetadataManager metadataManager;
