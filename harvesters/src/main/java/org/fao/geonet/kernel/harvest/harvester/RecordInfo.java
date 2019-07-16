@@ -137,6 +137,10 @@ public class RecordInfo {
         return false;
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
 }
 
 //=============================================================================
