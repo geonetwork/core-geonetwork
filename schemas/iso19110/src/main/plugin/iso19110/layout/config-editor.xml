@@ -50,6 +50,7 @@
 
   <fieldsWithFieldset>
     <name>gfc:producer</name>
+    <name>gfc:featureType</name>
     <name>gfc:carrierOfCharacteristics</name>
     <name>gfc:listedValue</name>
     <name>gfc:constrainedBy</name>
@@ -89,18 +90,10 @@
                  in="/gfc:FC_FeatureCatalogue"/>
           <field xpath="/gfc:FC_FeatureCatalogue/gfc:functionalLanguage" or="functionalLanguage"
                  in="/gfc:FC_FeatureCatalogue"/>
-          <field
-            xpath="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType/gfc:typeName"
-            or="typeName"
-            in="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType"/>
+          <field xpath="/gfc:FC_FeatureCatalogue/gfc:featureType" or="featureType" in="/gfc:FC_FeatureCatalogue"/>
 
           <action type="suggest"
                   process="add-columns-from-csv"/>
-
-          <field
-            xpath="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType/gfc:carrierOfCharacteristics"
-            or="carrierOfCharacteristics"
-            in="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType"/>
         </section>
       </tab>
       <flatModeExceptions>
