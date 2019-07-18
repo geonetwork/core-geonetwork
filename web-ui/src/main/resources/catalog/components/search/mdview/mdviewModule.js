@@ -182,6 +182,7 @@
       }
       // $scope.$watch('mdView.current.record', loadFormatter);
       $rootScope.$on('$locationChangeSuccess', loadFormatter)
+      loadFormatter();
 
       // Know from what path we come from
       $scope.gnMdViewObj = gnMdViewObj;

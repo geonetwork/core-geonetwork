@@ -114,7 +114,6 @@
         currentMdScope = scope;
         gnMdViewObj.records = records;
         // gnMdViewObj.current.index = index;
-        console.log('md view index is now ' + index);
       };
       this.getCurrentMdScope = function() {
         return currentMdScope;
