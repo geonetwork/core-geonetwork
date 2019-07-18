@@ -252,9 +252,9 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         boolean isSchemaLocationDefinedInMd = schemaLoc != null && schemaLoc != "";
 
         if (noChoiceButToUseSchemaLocation || isSchemaLocationDefinedInMd) {
-            return Xml.validateInfo(md, eh);
+            return Xml.validateInfo(md, eh, schema);
         } else {
-            return Xml.validateInfo(metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.SCHEMA), md, eh);
+            return Xml.validateInfo(metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.SCHEMA), md, eh, schema);
         }
     }
 
