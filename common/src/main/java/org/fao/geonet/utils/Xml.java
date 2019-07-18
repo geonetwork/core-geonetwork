@@ -865,7 +865,7 @@ public final class Xml {
         }
         XmlErrorHandler eh = new XmlErrorHandler();
         Schema schema = factory().newSchema();
-        Element xsdErrors = validateRealGuts(schema, xml, eh);
+        Element xsdErrors = validateRealGuts(schema, xml, eh, null);
         if (xsdErrors != null) {
             throw new XSDValidationErrorEx("XSD Validation error(s):\n" + getString(xsdErrors), xsdErrors);
         }
@@ -879,7 +879,7 @@ public final class Xml {
     public static void validate(Path schemaPath, Element xml) throws Exception {
         XmlErrorHandler eh = new XmlErrorHandler();
         Schema schema = getSchemaFromPath(schemaPath);
-        Element xsdErrors = validateRealGuts(schema, xml, eh);
+        Element xsdErrors = validateRealGuts(schema, xml, eh, null);
         if (xsdErrors != null) {
             throw new XSDValidationErrorEx("XSD Validation error(s):\n" + getString(xsdErrors), xsdErrors);
         }
@@ -889,9 +889,9 @@ public final class Xml {
     /**
      * Validates an xml document with respect to schemaLocation hints using supplied error handler.
      */
-    public static Element validateInfo(Element xml, XmlErrorHandler eh) throws Exception {
+    public static Element validateInfo(Element xml, XmlErrorHandler eh, String schemaName) throws Exception {
         Schema schema = factory().newSchema();
-        return validateRealGuts(schema, xml, eh);
+        return validateRealGuts(schema, xml, eh, schemaName);
     }
 
 
@@ -900,9 +900,9 @@ public final class Xml {
      * Validates an xml document with respect to an xml schema described by .xsd file path using
      * supplied error handler.
      */
-    public static Element validateInfo(Path schemaPath, Element xml, XmlErrorHandler eh) throws Exception {
+    public static Element validateInfo(Path schemaPath, Element xml, XmlErrorHandler eh, String schemaName) throws Exception {
         Schema schema = getSchemaFromPath(schemaPath);
-        return validateRealGuts(schema, xml, eh);
+        return validateRealGuts(schema, xml, eh, schemaName);
     }
 
     //---------------------------------------------------------------------------
@@ -923,8 +923,8 @@ public final class Xml {
     /**
      * Called by all validation methods to do the real guts of the validation job.
      */
-    private static Element validateRealGuts(Schema schema, Element xml, XmlErrorHandler eh) throws JDOMException {
-        Resolver resolver = ResolverWrapper.getInstance();
+    private static Element validateRealGuts(Schema schema, Element xml, XmlErrorHandler eh, String schemaName) throws JDOMException {
+        Resolver resolver = ResolverWrapper.getInstance(schemaName);
 
         ValidatorHandler vh = schema.newValidatorHandler();
         vh.setResourceResolver(resolver.getXmlResolver());

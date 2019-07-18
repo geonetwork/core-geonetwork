@@ -1293,6 +1293,7 @@ public class SchemaManager {
                 stage = "adding the schema information";
                 addSchema(applicationContext, schemasDir, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile,
                     idFile, oasisCatFile, conversionsFile);
+                ResolverWrapper.createResolverForSchema(schemasDir.getFileName().toString(), oasisCatFile);
             }
         } catch (Exception e) {
             String errStr = "Failed whilst " + stage + ". Exception message if any is " + e.getMessage();
