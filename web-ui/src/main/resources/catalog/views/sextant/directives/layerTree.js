@@ -489,9 +489,16 @@
                   if(data.count > 0) {
                     scope.wfs = wfsLink;
                     var featureType = wfsLink.url + '#' + wfsLink.name;
-                    var applicationProfileCompositeConfig = JSON.parse(wfsLink.applicationProfile).compositeLayer;
-                    sxtCompositeLayer.init(scope.member, scope.map, featureType,
-                      applicationProfileCompositeConfig.minHeatmapCount, applicationProfileCompositeConfig.maxTooltipCount);
+                    var appProfile;
+                    try {
+                      appProfile = wfsLink.applicationProfile ? JSON.parse(wfsLink.applicationProfile) : {};
+                    } catch (e) {
+                      appProfile = {};
+                      console.error('Erreur lors de la lecture de l\'élément applicationProfile', e);
+                    }
+                    var minHeatmapCount = appProfile.minHeatmapCount || 1000;
+                    var maxTooltipCount = appProfile.maxTooltipCount || 1000;
+                    sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount);
                   }
                 });
               }
