@@ -5,7 +5,8 @@
 	xmlns:gmd="http://www.isotc211.org/2005/gmd"
   xmlns:gmx="http://www.isotc211.org/2005/gmx"
   xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:gml="http://www.opengis.net/gml" 
+  xmlns:gml="http://www.opengis.net/gml/3.2"
+  xmlns:gml320="http://www.opengis.net/gml"
 	xmlns:srv="http://www.isotc211.org/2005/srv"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:util="java:org.fao.geonet.util.XslUtil"
@@ -315,8 +316,9 @@
 
     <xsl:for-each select="gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent">
       ,"temporalCoverage": "<xsl:value-of select="concat(
-                                                  gml:TimePeriod/gml:beginPosition, '/',
-                                                  gml:TimePeriod/gml:endPosition
+                                                  gml:TimePeriod/gml:beginPosition|gml320:TimePeriod/gml320:beginPosition,
+                                                  '/',
+                                                  gml:TimePeriod/gml:endPosition|gml320:TimePeriod/gml320:endPosition
       )"/>"
       <!-- TODO: handle
       "temporalCoverage" : "2013-12-19/.."

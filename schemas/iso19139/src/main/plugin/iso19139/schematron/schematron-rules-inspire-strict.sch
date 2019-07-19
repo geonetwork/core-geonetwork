@@ -34,7 +34,8 @@
     -->
 
     <sch:title xmlns="http://www.w3.org/2001/XMLSchema">INSPIRE Strict rules</sch:title>
-    <sch:ns prefix="gml" uri="http://www.opengis.net/gml"/>
+    <sch:ns prefix="gml" uri="http://www.opengis.net/gml/3.2"/>
+    <sch:ns prefix="gml320" uri="http://www.opengis.net/gml"/>
     <sch:ns prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
     <sch:ns prefix="gmx" uri="http://www.isotc211.org/2005/gmx"/>
     <sch:ns prefix="srv" uri="http://www.isotc211.org/2005/srv"/>

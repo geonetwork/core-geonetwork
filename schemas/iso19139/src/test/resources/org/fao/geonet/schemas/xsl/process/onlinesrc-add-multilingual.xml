@@ -33,12 +33,12 @@
   </gmd:language>
   <gmd:characterSet>
     <gmd:MD_CharacterSetCode
-      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"
+      codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode"
       codeListValue="utf8"/>
   </gmd:characterSet>
   <gmd:hierarchyLevel>
     <gmd:MD_ScopeCode
-      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+      codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode"
       codeListValue="dataset"/>
   </gmd:hierarchyLevel>
   <gmd:dateStamp>
@@ -59,7 +59,7 @@
       <gmd:characterEncoding
       >
         <gmd:MD_CharacterSetCode
-          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"
+          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode"
           codeListValue=""/>
       </gmd:characterEncoding>
     </gmd:PT_Locale>
@@ -139,7 +139,7 @@
               </gmd:contactInfo>
               <gmd:role>
                 <gmd:CI_RoleCode
-                  codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                  codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
                   codeListValue=""/>
               </gmd:role>
             </gmd:CI_ResponsibleParty>

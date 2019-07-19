@@ -28,7 +28,8 @@
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -740,7 +741,7 @@
         </xsl:for-each>
         <gmd:type>
           <gmd:MD_KeywordTypeCode
-            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+            codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_KeywordTypeCode"
             codeListValue="theme"/>
         </gmd:type>
         <gmd:thesaurusName>
@@ -755,7 +756,7 @@
                 </gmd:date>
                 <gmd:dateType>
                   <gmd:CI_DateTypeCode
-                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                    codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                     codeListValue="publication"/>
                 </gmd:dateType>
               </gmd:CI_Date>
@@ -784,14 +785,14 @@
               ">
             <gmd:accessConstraints>
               <gmd:MD_RestrictionCode
-                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
                 codeListValue="{.}"/>
             </gmd:accessConstraints>
           </xsl:when>
           <xsl:when test="lower-case(.) = 'none'">
             <gmd:accessConstraints>
               <gmd:MD_RestrictionCode
-                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
                 codeListValue="otherRestrictions"/>
             </gmd:accessConstraints>
             <gmd:otherConstraints>
@@ -801,7 +802,7 @@
           <xsl:otherwise>
             <gmd:accessConstraints>
               <gmd:MD_RestrictionCode
-                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
                 codeListValue="otherRestrictions"/>
             </gmd:accessConstraints>
             <gmd:otherConstraints>
@@ -912,7 +913,7 @@
                     </gmd:date>
                     <gmd:dateType>
                       <gmd:CI_DateTypeCode
-                        codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                        codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                         codeListValue="revision"/>
                     </gmd:dateType>
                   </gmd:CI_Date>
@@ -1040,7 +1041,7 @@
                         </xsl:when>
                         <xsl:when test="name(.)='WCS_Capabilities'">
                           <xsl:for-each
-                            select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:lonLatEnvelope/gml:pos[1]">
+                            select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:lonLatEnvelope/gml320:pos[1]">
                             <xmin>
                               <xsl:value-of select="substring-before(., ' ')"/>
                             </xmin>
@@ -1049,7 +1050,7 @@
                             </ymin>
                           </xsl:for-each>
                           <xsl:for-each
-                            select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:lonLatEnvelope/gml:pos[2]">
+                            select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:lonLatEnvelope/gml320:pos[2]">
                             <xmax>
                               <xsl:value-of select="substring-before(., ' ')"/>
                             </xmax>
@@ -1137,7 +1138,7 @@
                       </xsl:for-each>
                     </xsl:when>
                     <xsl:when test="$rootName='WCS_Capabilities'">
-                      <xsl:for-each select="$getCapabilities//wcs:lonLatEnvelope/gml:pos[1]">
+                      <xsl:for-each select="$getCapabilities//wcs:lonLatEnvelope/gml320:pos[1]">
                         <xmin>
                           <xsl:value-of select="substring-before(., ' ')"/>
                         </xmin>
@@ -1145,7 +1146,7 @@
                           <xsl:value-of select="substring-after(., ' ')"/>
                         </ymin>
                       </xsl:for-each>
-                      <xsl:for-each select="$getCapabilities//wcs:lonLatEnvelope/gml:pos[2]">
+                      <xsl:for-each select="$getCapabilities//wcs:lonLatEnvelope/gml320:pos[2]">
                         <xmax>
                           <xsl:value-of select="substring-before(., ' ')"/>
                         </xmax>
