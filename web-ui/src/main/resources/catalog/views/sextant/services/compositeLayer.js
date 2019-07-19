@@ -4,6 +4,15 @@
 
   var module = angular.module('sxt_compositeLayer', []);
 
+
+  /**
+   * This regex is used to loop through all the attribute tokens
+   * in a tooltip template, and either replace them with the value
+   * on the feature, or simply remove the token altogether.
+   * Tokens are expected to be like so: {ATTR_NAME}
+   */
+  var TOOLTIP_ATTR_REGEX = /{(.+)}/g;
+
   /**
    * @ngdoc service
    * @kind function
@@ -22,7 +31,7 @@
       var GeoJSON = new ol.format.GeoJSON();
 
       return {
-        init: function (layer, map, featureType, heatmapMinCount, tooltipMaxCount) {
+        init: function (layer, map, featureType, heatmapMinCount, tooltipMaxCount, tooltipTemplate) {
           // create base group & copy properties
           var group = new ol.layer.Group();
           group.setProperties(layer.getProperties());
@@ -101,10 +110,10 @@
 
           // add popover for feature info
           var tooltipOverlay = new ol.Overlay({
-            element: $('<div class="heatmap-overlay"></div>')[0],
+            element: $('<div class="tooltip-overlay"></div>')[0],
             positioning: 'bottom-center',
             stopEvent: false,
-            offset: [0, -2]
+            offset: [0, -6]
           });
           map.addOverlay(tooltipOverlay);
           tooltipInteraction.on('select', function (event) {
@@ -120,10 +129,16 @@
                 ol.extent.getTopLeft(selected.getGeometry().getExtent());
               tooltipOverlay.setPosition([center[0], topleft[1]]);
 
-              // TEMP
+              // read the feature's attributes & render them using the tooltip template
               var props = selected.getProperties();
-              props[selected.getGeometryName()] = undefined;
-              tooltipOverlay.getElement().innerHTML = '<pre>' + JSON.stringify(props, null, 2) + '</pre>';
+              var html = tooltipTemplate;
+              var matches;
+              while (!!(matches = TOOLTIP_ATTR_REGEX.exec(html))) {
+                var token = matches[0];
+                var attrName = matches[1];
+                html = html.replace(token, props[attrName] || '');
+              }
+              tooltipOverlay.getElement().innerHTML = html;
             }
           });
 
