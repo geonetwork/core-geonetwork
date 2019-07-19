@@ -265,7 +265,7 @@ Mapping between :
           </xsl:for-each>
           <type>
             <MD_KeywordTypeCode
-              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+              codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_KeywordTypeCode"
               codeListValue="theme"/>
           </type>
           <thesaurusName>
@@ -283,7 +283,7 @@ Mapping between :
                   </date>
                   <dateType>
                     <CI_DateTypeCode
-                      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                      codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                       codeListValue="publication"/>
                   </dateType>
                 </CI_Date>
