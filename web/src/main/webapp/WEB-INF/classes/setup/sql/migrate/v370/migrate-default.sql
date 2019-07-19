@@ -16,6 +16,9 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metada
 -- Update GML namespace for moving from ISO19139:2005 to ISO19139:2007
 UPDATE Metadata SET data = replace(data, '"http://www.opengis.net/gml"', '"http://www.opengis.net/gml/3.2"') WHERE data LIKE '%"http://www.opengis.net/gml"%' AND schema = 'iso19139';
 
+-- Unset 2005 schemaLocation
+UPDATE Metadata SET data = replace(data, ' xsi:schemaLocation="http://www.isotc211.org/2005/gmd https://www.isotc211.org/2005/gmd/gmd.xsd http://www.isotc211.org/2005/gmx https://www.isotc211.org/2005/gmx/gmx.xsd http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd"', '') WHERE data LIKE '%xsi:schemaLocation="http://www.isotc211.org/2005/gmd https://www.isotc211.org/2005/gmd/gmd.xsd http://www.isotc211.org/2005/gmx https://www.isotc211.org/2005/gmx/gmx.xsd http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd%';
+
 UPDATE Settings SET internal='n' WHERE name='system/server/securePort';
 
 UPDATE Settings SET value='3.7.0' WHERE name='system/platform/version';
