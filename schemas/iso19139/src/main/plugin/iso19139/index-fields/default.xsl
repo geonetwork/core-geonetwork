@@ -24,7 +24,8 @@
 
 <xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -290,14 +291,16 @@
 
         <xsl:for-each select="gmd:temporalElement/
                                   (gmd:EX_TemporalExtent|gmd:EX_SpatialTemporalExtent)/gmd:extent">
-          <xsl:for-each select="gml:TimePeriod">
+          <xsl:for-each select="gml:TimePeriod|gml320:TimePeriod">
 
             <xsl:variable name="times">
               <xsl:call-template name="newGmlTime">
                 <xsl:with-param name="begin"
-                                select="gml:beginPosition|gml:begin/gml:TimeInstant/gml:timePosition"/>
+                                select="gml:beginPosition|gml:begin/gml:TimeInstant/gml:timePosition|
+                                        gml320:beginPosition|gml320:begin/gml320:TimeInstant/gml320:timePosition"/>
                 <xsl:with-param name="end"
-                                select="gml:endPosition|gml:end/gml:TimeInstant/gml:timePosition"/>
+                                select="gml:endPosition|gml:end/gml:TimeInstant/gml:timePosition|
+                                        gml320:endPosition|gml320:end/gml320:TimeInstant/gml320:timePosition"/>
               </xsl:call-template>
             </xsl:variable>
 
