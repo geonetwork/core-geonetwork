@@ -41,10 +41,23 @@
               scope.isDownloadingRecord = false;
               scope.isDownloadedRecord = false;
               scope.isEnabled = false;
+              scope.testSuites = {}
+
+
 
               scope.$watch('gnCurrentEdit.uuid', function(newValue, oldValue) {
+                if (newValue == undefined) {
+                  return;
+                }
                 scope.isEnabled = true;
                 scope.inspMdUuid = newValue;
+                $http({
+                  method: 'GET',
+                  url: '../api/records/' + scope.inspMdUuid +
+                    '/validate/inspire/testsuites'
+                }).then(function(r) {
+                  scope.testsuites = r.data;
+                });
 
                 gnConfigService.load().then(function(c) {
                   // INSPIRE validator only support ISO19139/115-3 records.
@@ -57,7 +70,7 @@
                 });
               });
 
-              scope.validateInspire = function() {
+              scope.validateInspire = function(test) {
 
                 if (scope.isEnabled) {
 
@@ -67,7 +80,7 @@
                   $http({
                     method: 'PUT',
                     url: '../api/records/' + scope.inspMdUuid +
-                    '/validate/inspire'
+                    '/validate/inspire?testsuite=' + test
                   }).then(function mySucces(response) {
                     if (angular.isDefined(response.data) && response.data != null) {
                       scope.checkInBackgroud(response.data);

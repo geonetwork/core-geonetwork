@@ -30,6 +30,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -69,8 +70,7 @@ public class GetSchemaInfo implements Service {
                     schemas.addContent(schemaElem);
                 }
             } catch (Exception e) {
-                context.error("Failed to load guiservices for schema " + schema + ": " + e.getMessage());
-                e.printStackTrace();
+                Log.error(Geonet.GEONETWORK, "Failed to load guiservices for schema "+schema+": "+e.getMessage(), e);
             }
         }
 

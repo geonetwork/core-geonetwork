@@ -58,14 +58,39 @@
     </div>
     <div class="btn-group">
       <button type="button"
-              class="btn btn-default navbar-btn gn-tooltip"
+              class="btn btn-default navbar-btn"
               aria-label="{{'closeEditor' | translate}}"
               title="{{'closeEditor'|translate}}"
-              gn-click-and-spin="close()"
+              gn-click-and-spin="close(false, false)"
               id="gn-editor-btn-close">
         <i class="fa fa-fw fa-sign-out"/>
         <span class="visible-lg" data-translate="">closeEditor</span>
       </button>
+      <button type="button"
+              class="btn btn-default navbar-btn dropdown-toggle"
+              data-ng-if="((user.isEditorForGroup(gnCurrentEdit.metadata.groupOwner) || user.isAdmin()) && gnCurrentEdit.metadata.mdStatus == 1 && isMdWorkflowEnable) ||
+              ((user.isReviewerForGroup(gnCurrentEdit.metadata.groupOwner) || user.isAdmin()) && gnCurrentEdit.metadata.mdStatus == 4)"
+              aria-label="{{'showOptions' | translate}}"
+              data-toggle="dropdown"
+              aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right" role="menu">
+        <li role="menuitem" data-ng-if="(user.isEditorForGroup(gnCurrentEdit.metadata.groupOwner) || user.isAdmin()) && gnCurrentEdit.metadata.mdStatus == 1 && isMdWorkflowEnable">
+          <a href=""
+             title="{{'saveAndSubmit' | translate }}"
+             data-gn-click-and-spin="close(true, false)">
+            {{'saveAndSubmit' | translate}}
+          </a>
+        </li>
+        <li role="menuitem" data-ng-if="(user.isReviewerForGroup(gnCurrentEdit.metadata.groupOwner) || user.isAdmin()) && gnCurrentEdit.metadata.mdStatus == 4">
+          <a href=""
+             title="{{'saveAndApprove' | translate }}"
+             data-gn-click-and-spin="close(false, true)">
+            {{'saveAndApprove' | translate}}
+          </a>
+        </li>
+        </ul>
     </div>
     <!-- /.btn-group -->
     <div class="btn-group" title="{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}">

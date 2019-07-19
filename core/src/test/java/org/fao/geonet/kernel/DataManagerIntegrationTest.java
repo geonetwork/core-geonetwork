@@ -74,6 +74,10 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
     DataManager _dataManager;
+
+    @Autowired
+    IMetadataManager metadataManager;
+
     @Autowired
     MetadataRepository _metadataRepository;
 
@@ -142,7 +146,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
 
         assertEquals(count + 1, _metadataRepository.count());
 
-        _dataManager.deleteMetadata(serviceContext, mdId);
+        metadataManager.deleteMetadata(serviceContext, mdId);
 
         assertEquals(count, _metadataRepository.count());
     }

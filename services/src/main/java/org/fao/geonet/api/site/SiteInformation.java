@@ -23,31 +23,26 @@
 
 package org.fao.geonet.api.site;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.TransformerFactoryFactory;
+
+import javax.sql.DataSource;
+import javax.xml.transform.TransformerFactory;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.sql.DataSource;
-import javax.xml.transform.TransformerFactory;
-
-import org.apache.commons.dbcp.BasicDataSource;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.utils.TransformerFactoryFactory;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 
 /**
  * Created by francois on 04/06/16.
@@ -112,12 +107,12 @@ public class SiteInformation {
             try {
                 loadDatabaseInfo(context);
             } catch (SQLException e) {
-                e.printStackTrace();
+                Log.error(Geonet.GEONETWORK, e.getMessage(), e);
             }
             try {
                 loadIndexInfo(context);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.error(Geonet.GEONETWORK, e.getMessage(), e);
             }
             loadVersionInfo(context);
             loadSystemInfo();
@@ -188,7 +183,7 @@ public class SiteInformation {
                 try {
                     databaseProperties.put("db.numactive", "" + basicDataSource.getNumActive());
                     databaseProperties.put("db.numidle", "" + basicDataSource.getNumIdle());
-                    databaseProperties.put("db.maxactive", "" + basicDataSource.getMaxActive());
+                    databaseProperties.put("db.maxactive", "" + basicDataSource.getMaxTotal());
                 } catch (Exception e) {
                     databaseProperties.put("db.statserror", "Failed to get stats on database connections. Error is: " + e.getMessage());
                 }
@@ -222,7 +217,7 @@ public class SiteInformation {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Log.error(Geonet.GEONETWORK, ex.getMessage(), ex);
         }
     }
 }

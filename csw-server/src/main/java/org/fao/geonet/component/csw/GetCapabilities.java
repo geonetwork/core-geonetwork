@@ -472,7 +472,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
         } catch (Exception ex) {
             // TODO: handle exception
-            ex.printStackTrace();
+            Log.error(Geonet.CSW, ex.getMessage(), ex);
         }
 
     }

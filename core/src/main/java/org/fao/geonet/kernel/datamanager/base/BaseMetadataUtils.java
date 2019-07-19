@@ -230,7 +230,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
             boolean index = true;
             metadataBeforeAnyChanges.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
             metadataManager.updateMetadata(context, id, metadataBeforeAnyChanges, validate, ufo,
-                index, context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE), false);
+                index, context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE), true);
             endEditingSession(id, session);
         } else {
             if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {

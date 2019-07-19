@@ -17,16 +17,19 @@
         },
         "url": {
           "isMultilingual": false,
+          "required": true,
           "tooltip": "gmd:URL"
         },
         "name": {"tooltip": "gmd:name"},
         "desc": {"tooltip": "gmd:description"},
         "function": {
           "isMultilingual": false,
-          "tooltip": "gmd:function"},
+          "tooltip": "gmd:function"
+        },
         "applicationProfile": {
           "isMultilingual": false,
-          "tooltip": "gmd:applicationProfile"}
+          "tooltip": "gmd:applicationProfile"
+        }
       }
     }, {
       "label": "addThumbnail",
@@ -40,7 +43,8 @@
       "fields": {
         "url": {
           "param": "thumbnail_url",
-          "isMultilingual": false
+          "isMultilingual": false,
+          "required": true
         },
         "name": {"param": "thumbnail_desc"}
       }

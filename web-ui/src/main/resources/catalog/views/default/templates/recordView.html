@@ -67,7 +67,7 @@
           </button>
         </div>
 
-        <div class="btn-group pull-right gn-view-menu-button">
+      <div class="btn-group pull-right gn-view-menu-button">
           <button type="button" class="btn btn-default dropdown-toggle"
                   data-toggle="dropdown"
                   aria-label="{{'chooseAView' | translate}}"
@@ -98,6 +98,8 @@
         
         <div class="btn-group pull-right" role="group">
           <a class="btn btn-default"
+            data-ng-show="user.canEditRecord(mdView.current.record)
+                          && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
             data-gn-click-and-spin="deleteRecord(mdView.current.record)"
             data-gn-confirm-click="{{(mdView.current.record.draft != 'y') ? 'deleteRecordConfirm' : 'deleteWorkingCopyRecordConfirm' | translate:mdView.current.record}}"
             data-ng-show="user.canEditRecord(mdView.current.record)"
@@ -110,7 +112,7 @@
 
         <div class="btn-group pull-right" role="group">
           <a class="btn btn-default gn-md-edit-btn"
-            data-ng-show="user.canEditRecord(mdView.current.record)"
+            data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
             data-ng-href="catalog.edit#/metadata/{{mdView.current.record.id}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.uuid}}"
             title="{{'edit' | translate}}">
             <i class="fa fa-fw fa-pencil"></i>
@@ -127,14 +129,19 @@
 
       <div data-ng-show="!usingFormatter" class="gn-metadata-display">
 
-        <div class="col-md-8 gn-record">
-          <h1>
-            <i class="fa gn-icon-{{mdView.current.record.resourceType[0]}}"/>
-            {{mdView.current.record.resourceTitle}}
-          </h1>
 
-          <div class="lead1 gn-margin-bottom"
-              data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"/>
+      <div class="col-md-8 gn-record">
+        <h1>
+          <i class="fa gn-icon-{{mdView.current.record.resourceType[0]}}"/>
+          {{mdView.current.record.resourceTitle}}
+          <span class="text-muted badge"
+                data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
+                data-ng-if="user.isEditorOrMore() && md.mdStatus<50 && isMdWorkflowEnable">{{('mdStatus-' + md.mdStatus) | translate}}</span>
+        </h1>
+
+
+        <div class="lead1 gn-margin-bottom"
+            data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"/>
 
           <!-- Display the first metadata status (apply to ISO19139 record) -->
           <div data-ng-if="mdView.current.record.codelist_status_text.length > 0"
@@ -556,21 +563,22 @@
 
           <div data-gn-userfeedback='mdView.current.record'
                data-gn-user={{user.username}}
-               data-ng-if="isUserFeedbackEnabled">
+               data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
           </div>
           <div class="gn-md-feedback-buttons clearfix">
             <div class="pull-left"
                  data-gn-userfeedbackfull='mdView.current.record'
                  data-gn-user={{user.username}}
-                 data-ng-if="isUserFeedbackEnabled">
+                 data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
             </div>
             <div class="pull-left"
                  data-gn-userfeedbacknew='mdView.current.record'
                  data-gn-user={{user.username}}
-                 data-ng-if="isUserFeedbackEnabled">
+                 data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
             </div>
           </div>
           <div data-gn-md-feedback="mdView.current.record"></div>
+
 
           <section class="gn-md-side-social" data-ng-show="isSocialbarEnabled">
             <h2>
@@ -603,7 +611,7 @@
           </section>
 
 
-          <div data-ng-show="isRecordHistoryEnabled && user.isEditorOrMore()"
+          <div data-ng-show="isRecordHistoryEnabled && user.isEditorOrMore() && mdView.current.record.draft != 'y'"
               data-gn-record-history="mdView.current.record"></div>
         </div>
       </div>

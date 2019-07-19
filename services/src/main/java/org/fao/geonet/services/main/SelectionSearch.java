@@ -105,6 +105,5 @@ public class SelectionSearch implements Service {
 //        Element summary = searcher.getSummary();
 //        summary.addContent(new Element(SELECTION_BUCKET).setText(bucket));
 //        return summary;
-
     }
 }

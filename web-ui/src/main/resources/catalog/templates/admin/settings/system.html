@@ -64,6 +64,7 @@
               <div data-ng-repeat="s in section2.children | hideLanguages | hideGeoNetworkInternalSettings | orderObjectBy:'position'"
                   data-ng-switch="s.dataType"
                   data-ng-if="s.name != ''">
+
                 <div data-ng-switch-when="BOOLEAN" class="form-group">
                   <label class="col-sm-4 control-label" for="{{s['name']}}"> {{s['name'] |
                     translate}} </label>
@@ -88,6 +89,21 @@
                     translate}}</label>
                   <!-- According to entry -->
                   <div class="col-sm-8" data-ng-switch="s['name']">
+                    
+                    <div data-ng-switch-when="metadata/workflow/draftWhenInGroup">
+                      <input type="radio" class="gn-no-setting" data-ng-model="draftInAllGroups"
+                             data-ng-value="true" /> {{'draftWhenInGroup-all' | translate}}<br>
+                      <input type="radio" class="gn-no-setting" data-ng-model="draftInAllGroups"
+                             data-ng-value="false" /> {{'draftWhenInGroup-selection' | translate}}<br>
+
+                      <input type="hidden"
+                             class="form-control" id="{{s['name']}}" name="{{s.name}}" value=".*"
+                             data-ng-disabled="draftInAllGroups != true" />
+
+                      <input type="text"
+                             class="form-control" id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
+                             data-ng-disabled="draftInAllGroups == true" />
+                    </div>
                     <!-- List of user to be used as CSW contact -->
                     <select data-ng-switch-when="system/csw/contactId" class="form-control"
                             name="{{s.name}}">
@@ -347,8 +363,18 @@
                             data-ng-change="processRecommended('siteIdChange', s['name'])"/>
                     </div>
 
-                    <input data-ng-switch-when="system/inspire/remotevalidation/url" type="text" class="form-control"
-                          id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}" placeholder="{{'system/inspire/remotevalidation/url-placeholder' | translate}}" />
+                    <div class="input-group"
+                         data-ng-switch-when="system/inspire/remotevalidation/url" >
+                      <input type="text" class="form-control"
+                             id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
+                             placeholder="{{'system/inspire/remotevalidation/url-placeholder' | translate}}" />
+                      <span class="input-group-btn">
+                      <div class="btn btn-default"
+                           onClick="document.getElementById('system/inspire/remotevalidation/url').value = 'http://inspire.ec.europa.eu/validator/';"
+                           data-translate="">validatorUseInspireOne</div>
+                    </span>
+                    </div>
+
 
                     <!-- Default -->
                     <input data-ng-switch-default="" type="text" class="form-control"

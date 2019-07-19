@@ -66,25 +66,26 @@
     <xsl:if test="/root/search/response">
       <form action="{$nodeUrl}search"
             class="form-horizontal" role="form">
-        <div class="row gn-top-search">
-          <div class="col-md-offset-3 col-md-6 relative">
-            <div class="gn-form-any input-group">
+        <div class="row gn-top-search" style="margin:20px">
+          <div class="col-md-offset-3 col-md-1 relative"><b><xsl:value-of select="$t/search"/></b></div>
+          <div class="col-md-5 relative">
+            <div class="gn-form-any input-group input-group-lg">
               <input type="text"
                       name="any"
                       id="gn-any-field"
                       aria-label="{$t/anyPlaceHolder}"
                       placeholder="{$t/anyPlaceHolder}"
                       value="{/root/request/any}"
-                      class="form-control input-lg"
+                      class="form-control"
                       autofocus=""/>
               <div class="input-group-btn">
                 <button type="submit"
-                        class="btn btn-default btn-lg"
+                        class="btn btn-default"
                         title="{$t/search}">
                   <i class="fa fa-search">&#160;</i>
                 </button>
                 <a href="{$nodeUrl}search"
-                    class="btn btn-default btn-lg"
+                    class="btn btn-default"
                     title="{$t/reset}">
                   <i class="fa fa-times">&#160;</i>
                 </a>

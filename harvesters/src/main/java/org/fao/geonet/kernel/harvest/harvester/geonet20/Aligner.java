@@ -34,6 +34,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.AbstractAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -60,6 +61,8 @@ public class Aligner extends AbstractAligner<GeonetParams> {
 
     private DataManager dataMan;
 
+    private IMetadataManager metadataManager;
+
     private ServiceContext context;
 
     private CategoryMapper localCateg;
@@ -69,12 +72,13 @@ public class Aligner extends AbstractAligner<GeonetParams> {
     private HarvestResult result;
 
     public Aligner(AtomicBoolean cancelMonitor, Logger log, XmlRequest req, GeonetParams params, DataManager dm,
-                   ServiceContext sc, CategoryMapper cm) {
+                   IMetadataManager metadataManager, ServiceContext sc, CategoryMapper cm) {
         this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.req = req;
         this.params = params;
         this.dataMan = dm;
+        this.metadataManager = metadataManager;
         this.context = sc;
         this.localCateg = cm;
     }
@@ -107,9 +111,9 @@ public class Aligner extends AbstractAligner<GeonetParams> {
                 String id = localUuids.getID(uuid);
 
                 if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id=" + id);
-                dataMan.deleteMetadata(context, id);
+                metadataManager.deleteMetadata(context, id);
 
-                dataMan.flush();
+                metadataManager.flush();
                 this.result.locallyRemoved++;
             }
         }
@@ -145,7 +149,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
                     updateMetadata(siteId, info, id);
                 }
 
-                dataMan.flush();
+                metadataManager.flush();
 
 
                 //--- maybe the metadata was unretrievable
@@ -206,7 +210,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
         List<Element> categories = info.getChildren("category");
         addCategories(metadata, categories);
 
-        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
@@ -293,7 +297,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                dataMan.updateMetadata(context, id, md, validate, ufo, index, language, changeDate, false);
+                metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, changeDate, false);
 
                 result.updatedMetadata++;
             }

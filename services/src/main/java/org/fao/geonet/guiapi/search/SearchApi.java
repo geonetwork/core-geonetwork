@@ -28,11 +28,13 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.services.util.SearchDefaults;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
@@ -47,7 +49,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @RequestMapping(value = {
-    "/search"
+    "/{portal}/search"
 })
 @Api(value = "search",
     tags = "search",

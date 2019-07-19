@@ -93,6 +93,7 @@ public final class Geonet {
     public static final String CLASSIFIER = GEONETWORK + ".classifier";
     public static final String CORS = GEONETWORK + ".cors";
 
+
     /**
      * Container for file names.
      */
@@ -415,6 +416,18 @@ public final class Geonet {
         public static final String HITS_PER_PAGE = "hitsPerPage";
 
         /**
+         * Parameter name: {@value #MAX_RECORDS} - Number of maximum results returned by the search
+         * engine, given the from / to user provided parameters. Default is 100 results.
+         */
+        public static final String MAX_RECORDS = "maxRecords";
+
+        /**
+         * Parameter name: {@value #ALLOW_UNBOUNDED_QUERIES} - Allow XmlSearch to return as many 
+         * records as the search returns (this was the default behaviour before 3.8.x).
+         */
+        public static final String ALLOW_UNBOUNDED_QUERIES = "allowUnboundedQueries";
+
+        /**
          * Parameter name: {@value #SIMILARITY} - Use the Lucene FuzzyQuery. Values range from 0.0
          * to 1.0 and defaults to 0.8
          */
@@ -630,6 +643,7 @@ public final class Geonet {
         public static final Namespace OWS = Namespace.getNamespace("ows", "http://www.opengis.net/ows");
         public static final Namespace OGC = Namespace.getNamespace("ogc", "http://www.opengis.net/ogc");
         public static final Namespace GML = Namespace.getNamespace("gml", "http://www.opengis.net/gml");
+        public static final Namespace GML32 = Namespace.getNamespace("gml", "http://www.opengis.net/gml/3.2");
         public static final Namespace SVRL = Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
         public static final Namespace SLD = Namespace.getNamespace("sld", "http://www.opengis.net/sld");
         public static final Namespace SE = Namespace.getNamespace("se", "http://www.opengis.net/se");

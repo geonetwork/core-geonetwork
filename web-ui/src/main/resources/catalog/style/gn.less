@@ -345,6 +345,20 @@ div.gn-scroll-spy {
     }
   }
 }
+.modal-dialog {
+  // footer inside `modal-body`
+  .modal-footer-inline {
+    margin: 10px -15px -15px -15px;
+    border-top: 1px solid @modal-footer-border-color;
+    padding: 15px;
+    [data-gn-need-help] {
+      margin-top: 0;
+      border: 0;
+      font-size: 18px;
+    }
+  }
+}
+
 .gn-save-invalid-modal {
   max-width: none;
   max-height: none;
@@ -598,10 +612,11 @@ i.fa-times.delete:hover {
 
 
 .gn-search-page {
-  .gn-status {
+  .gn-status, .gn-workflow-status {
     border: 2px solid @brand-primary;
-    position: absolute;
-    margin-top: 15px;
+    display: inline-block;
+    margin-top: 5px;
+    margin-right: 5px;
     border-radius: 20px;
     padding: 5px 8px;
     color: @brand-primary;
@@ -609,11 +624,9 @@ i.fa-times.delete:hover {
     font-size: 80%;
     background-color: #fff;
   }
-  .gn-status-mdview {
+  .gn-status-mdview, .gn-workflow-status-mdview {
     position: relative;
     margin-top: 0;
-    display: inline-block;
-    border-radius: 20px;
     padding: 8px 12px;
     font-weight: 500;
     font-size: 90%;
@@ -632,36 +645,12 @@ i.fa-times.delete:hover {
     border-color: darken(@brand-danger, 5%);
     color: @brand-danger;
   }
-
-// Same as before but with workflow statuses
   .gn-workflow-status {
-    border: 2px solid darken(@brand-info, 5%);
-    position: absolute;
-    top: 95px;
-    left: 115px;
-    border-radius: 6px;
-    padding: 2px;
-    -ms-transform: rotate(30deg);
-    -webkit-transform: rotate(30deg);
-    transform: rotate(30deg);
-    color: @brand-info;
-    font-weight: bold;
-    font-size: 80%;
     background-color: rgba(255, 255, 255 , 0.7);
     border-color: darken(@brand-success, 5%);
     color: @brand-success;
   }
   .gn-workflow-status-mdview {
-    position: relative;
-    top: 0;
-    left: 0;
-    display: inline-block;
-    font-size: 100%;
-    border-radius: 20px;
-    padding: 8px 12px;
-    font-weight: normal;
-    font-size: 80%;
-    transform: none;
     border-color: darken(@brand-success, 5%);
     color: @brand-success;
   }
@@ -670,6 +659,37 @@ i.fa-times.delete:hover {
   .gn-workflow-status-1 {
     border-color: darken(@brand-danger, 5%);
     color: @brand-danger;
+
+
+  }
+  .gn-workingcopy-status {
+    border: 1px solid @btn-default-border;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 0 15px 0 0;
+    font-size: 12px;
+    margin-top: 7px;
+    display: block;
+    cursor: pointer;
+    color: @gray-dark;
+    .fa {
+      border-radius: 1000px;
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      font-size: 14px;
+      color: #fff;
+      margin-bottom: -0.3em;
+      background-color: #777;
+      overflow: hidden;
+    }
+    span {
+      line-height: 30px;
+      display: block;
+      float: right;
+      margin-left: 10px;
+    }
   }
 }
 

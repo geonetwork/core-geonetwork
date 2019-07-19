@@ -38,12 +38,15 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.services.relations.Get;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
@@ -341,11 +344,38 @@ public class MetadataUtils {
                 BinaryFile.copy(is, os);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK,"Backup record. Error: " + e.getMessage(), e);
         } finally {
             if (file == null) {
                 IO.deleteFile(file, false, Geonet.MEF);
             }
         }
+    }
+
+
+    /**
+     * Returns the metadata validation status from the database, calculating/storing the validation if not stored.
+     *
+     * @param metadata
+     * @param context
+     * @return
+     */
+    public static boolean retrieveMetadataValidationStatus(AbstractMetadata metadata, ServiceContext context) throws Exception {
+        MetadataValidationRepository metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
+        IMetadataValidator validator = context.getBean(IMetadataValidator.class);
+        DataManager dataManager = context.getBean(DataManager.class);
+
+        boolean hasValidation =
+            (metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(metadata.getId())) > 0);
+
+        if (!hasValidation) {
+            validator.doValidate(metadata, context.getLanguage());
+            dataManager.indexMetadata(metadata.getId() + "", true);
+        }
+
+        boolean isInvalid =
+            (metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(metadata.getId())) > 0);
+
+        return isInvalid;
     }
 }

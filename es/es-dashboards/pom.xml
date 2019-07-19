@@ -22,7 +22,6 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.geonetwork-opensource</groupId>
   <artifactId>es-dashboards</artifactId>
   <name>GeoNetwork dashboard app based on Kibana</name>
 
@@ -44,7 +43,6 @@
           <plugin>
             <groupId>com.googlecode.maven-download-plugin</groupId>
             <artifactId>download-maven-plugin</artifactId>
-            <version>1.4.0</version>
             <executions>
               <execution>
                 <id>download-elastic-search</id>
@@ -77,7 +75,6 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>1.5.0</version>
             <configuration>
               <executable>kibana-${es.version}-${kb.platform}/bin/${kb.executable}</executable>
             </configuration>

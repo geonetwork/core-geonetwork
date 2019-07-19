@@ -27,17 +27,20 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.jdom.Element;
 
 import java.nio.file.Path;
-
-//=============================================================================
 
 @Deprecated
 public class XmlSearch implements Service {
     private ServiceConfig _config;
     private String _searchFast; //true, false, index
+    // Initialized here for testing purposes
+    private int maxRecordValue = 100;
+    private boolean allowUnboundedQueries = false;
 
     //--------------------------------------------------------------------------
     //---
@@ -48,6 +51,60 @@ public class XmlSearch implements Service {
     public void init(Path appPath, ServiceConfig config) throws Exception {
         _config = config;
         _searchFast = config.getValue(Geonet.SearchResult.FAST, "true");
+        maxRecordValue = Integer.parseInt(config.getValue(Geonet.SearchResult.MAX_RECORDS, "100"));
+        allowUnboundedQueries = Boolean.parseBoolean(config.getValue(Geonet.SearchResult.ALLOW_UNBOUNDED_QUERIES, "false"));
+    }
+
+    /**
+     * This method ensures that the user-provided boundaries will not harm the
+     * application, e.g. on huge catalogue (80k MDs), calling the search service
+     * without passing the from/to parameters (or giving weird parameters
+     * combinations) can generate a response document reaching several MB (80k
+     * MDs gives 400MB of JSON, which is not really parseable in the UI anyway,
+     * and can DoS the webapp).
+     *
+     * This method may modify the object params passed as argument. In this
+     * case, it returns true.
+     *
+     * @param params the parameters coming from the request.
+     * @return true if the boundaries have been modified, false otherwise.
+     */
+    private boolean setSafeBoundaries(Element params) {
+        boolean fromUndefined = params.getChild("from") == null;
+        int from = Util.getParam(params, "from", 0);
+        boolean toUndefined = params.getChild("to") == null;
+        int to = Util.getParam(params, "to", Integer.MAX_VALUE);
+        if ((to - from) < 0) {
+            throw new BadParameterEx("Bad range requested, check the from/to parameters");
+        }
+        boolean boundariesSet = false;
+
+        // from / to undefined
+        if (fromUndefined && toUndefined) {
+            params.addContent(new Element("from").setText("1"));
+            params.addContent(new Element("to").setText(Integer.toString(this.maxRecordValue)));
+            boundariesSet = true;
+        }
+        // from undefined, to defined
+        else if (fromUndefined && !toUndefined) {
+            params.addContent(new Element("from").setText(Integer.toString(Math.max(1, to - this.maxRecordValue))));
+            boundariesSet = true;
+        }
+        // from defined, to undefined
+        else if (!fromUndefined && toUndefined) {
+            params.addContent(new Element("to").setText(Integer.toString(from + this.maxRecordValue - 1)));
+            boundariesSet = true;
+        }
+        // from defined, to defined
+        else {
+            // if the range is unacceptable, fix it. Otherwise all good
+            if ((to - from) >= this.maxRecordValue) {
+                params.removeChildren("to");
+                params.addContent(new Element("to").setText(Integer.toString(from + this.maxRecordValue - 1)));
+                boundariesSet = true;
+            }
+        }
+        return boundariesSet;
     }
 
     /**
@@ -105,7 +162,14 @@ public class XmlSearch implements Service {
 //            searcher.close();
 //        }
     }
+
+    /**
+     * get the max record to be searched. This parameter is meant to alter the
+     * user-provided "from" and "to" parameters.
+     *
+     * @return the max allowed records.
+     */
+    public int getMaxRecordValue() {
+        return maxRecordValue;
+    }
 }
-
-//=============================================================================
-

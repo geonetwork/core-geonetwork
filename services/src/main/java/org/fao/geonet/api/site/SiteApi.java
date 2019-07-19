@@ -156,7 +156,8 @@ public class SiteApi {
             // Update http.proxyHost, http.proxyPort and http.nonProxyHosts
             Lib.net.setupProxy(settingMan);
         } catch (Exception e) {
-            e.printStackTrace();
+            context.error("Reload services. Error: " + e.getMessage());
+            context.error(e);
             throw new OperationAbortedEx("Parameters saved but cannot set proxy information: " + e.getMessage());
         }
         DoiManager doiManager = gc.getBean(DoiManager.class);

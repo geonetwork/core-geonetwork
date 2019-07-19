@@ -414,9 +414,9 @@ public class DataManager {
     }
 
     @Deprecated
-    public synchronized AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
-                                                        final boolean validate, final boolean ufo, final boolean index, final String lang, final String changeDate,
-                                                        final boolean updateDateStamp) throws Exception {
+    public AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
+            final boolean validate, final boolean ufo, final boolean index, final String lang, final String changeDate,
+            final boolean updateDateStamp) throws Exception {
         return metadataManager.updateMetadata(context, metadataId, md, validate, ufo, index, lang, changeDate, updateDateStamp);
     }
 
@@ -429,16 +429,6 @@ public class DataManager {
     public Element applyCustomSchematronRules(String schema, int metadataId, Element md, String lang,
                                               List<MetadataValidation> validations) {
         return metadataValidator.applyCustomSchematronRules(schema, metadataId, md, lang, validations);
-    }
-
-    @Deprecated
-    public synchronized void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
-        metadataManager.deleteMetadata(context, metadataId);
-    }
-
-    @Deprecated
-    public synchronized void deleteMetadataGroup(ServiceContext context, String metadataId) throws Exception {
-        metadataManager.deleteMetadataGroup(context, metadataId);
     }
 
     @Deprecated

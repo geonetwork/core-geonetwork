@@ -23,6 +23,7 @@
 
 package org.fao.geonet.util;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.cache.Cache;
@@ -386,7 +387,7 @@ public final class XslUtil {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK,"XslUtil getJsonSettingValue error: " + e.getMessage(), e);
         }
         return "";
     }
@@ -819,8 +820,13 @@ public final class XslUtil {
             String srs = geomElement.getAttributeValue("srsName");
             CoordinateReferenceSystem geomSrs = DefaultGeographicCRS.WGS84;
             if (srs != null && !(srs.equals(""))) geomSrs = CRS.decode(srs);
-
-            Parser parser = new Parser(new GMLConfiguration());
+            Parser[] parsers = GMLParsers.create();
+            Parser parser = null;
+            if (geomElement.getNamespace().equals(Geonet.Namespaces.GML32)) {
+              parser = parsers[1];
+            } else {
+              parser = parsers[0];
+            }
             MultiPolygon jts = parseGml(parser, gml);
 
 
@@ -858,7 +864,7 @@ public final class XslUtil {
                 return outputter.output(new Document(metadata));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK,"XslUtil getRecord error: " + e.getMessage(), e);
         }
         return null;
     }
@@ -887,7 +893,7 @@ public final class XslUtil {
 
             return e.evaluate();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK,"XslUtil evaluate error: " + e.getMessage(), e);
             return null;
         }
     }
@@ -926,7 +932,7 @@ public final class XslUtil {
         try {
             return DefaultEncoder.getInstance().encodeForURL(str);
         } catch (EncodingException ex) {
-            ex.printStackTrace();
+            Log.error(Geonet.GEONETWORK,"XslUtil encode for URL error: " + ex.getMessage(), ex);
             return str;
         }
     }
@@ -968,7 +974,7 @@ public final class XslUtil {
         try {
             return java.net.URLDecoder.decode(str, "UTF-8");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Log.error(Geonet.GEONETWORK,"XslUtil decodeURLParameter error: " + ex.getMessage(), ex);
             return str;
         }
     }

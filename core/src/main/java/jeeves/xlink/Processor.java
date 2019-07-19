@@ -99,7 +99,7 @@ public final class Processor {
      * Action to specify to resolve and remove all XLinks.
      */
     private static final String ACTION_DETACH = "detach";
-    private static TreeSet<Long> failures = new TreeSet<Long>();
+
     private static CopyOnWriteArraySet<URIMapper> uriMapper = new CopyOnWriteArraySet<URIMapper>();
 
     /**
@@ -178,12 +178,8 @@ public final class Processor {
     /**
      * Resolves an xlink
      */
-    public static synchronized Element resolveXLink(String uri, String idSearch, ServiceContext srvContext) throws IOException, JDOMException, CacheException {
+    private static Element resolveXLink(String uri, String idSearch, ServiceContext srvContext) throws IOException, JDOMException, CacheException {
 
-        cleanFailures();
-        if (failures.size() > MAX_FAILURES) {
-            throw new RuntimeException("There have been " + failures.size() + " timeouts resolving xlinks in the last " + ELAPSE_TIME + " ms");
-        }
         Element remoteFragment = null;
         try {
             // TODO-API: Support local protocol on /api/registries/
@@ -230,10 +226,6 @@ public final class Processor {
 
             }
         } catch (Exception e) {    // MalformedURLException, IOException
-            synchronized (Processor.class) {
-                failures.add(System.currentTimeMillis());
-            }
-
             Log.error(Log.XLINK_PROCESSOR, "Failed on " + uri, e);
         }
 
@@ -306,8 +298,7 @@ public final class Processor {
         try {
             xlinks = (List<Attribute>) Xml.selectNodes(md, xpath, theNss);
         } catch (Exception e) {
-            e.printStackTrace();
-            Log.error(Log.XLINK_PROCESSOR, e.getMessage());
+            Log.error(Log.XLINK_PROCESSOR, e.getMessage(), e);
         }
         return xlinks;
     }
@@ -395,8 +386,7 @@ public final class Processor {
                         continue;
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.error(Log.XLINK_PROCESSOR, "Failed to look up localxlink " + idSearch + ": " + e.getMessage());
+                    Log.error(Log.XLINK_PROCESSOR, "Failed to look up localxlink " + idSearch + ": " + e.getMessage(), e);
                 }
                 if (localFragment != null) {
                     localFragment = (Element) localFragment.clone();
@@ -448,8 +438,7 @@ public final class Processor {
                     try {
                         uncacheXLinkUri(hrefUri);
                     } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.error(Log.XLINK_PROCESSOR, "Uncaching failed: " + e.getMessage());
+                        Log.error(Log.XLINK_PROCESSOR, "Uncaching failed: " + e.getMessage(), e);
                     }
                 } else {
                     try {
@@ -476,8 +465,7 @@ public final class Processor {
                             element.addContent(remoteFragment);
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.error(Log.XLINK_PROCESSOR, "doXLink " + action + " failed: " + e.getMessage());
+                        Log.error(Log.XLINK_PROCESSOR, "doXLink " + action + " failed: " + e.getMessage(), e);
                     }
                 }
                 cleanXLinkAttributes(element, action);
@@ -500,17 +488,4 @@ public final class Processor {
     }
 
     //--------------------------------------------------------------------------
-    private synchronized static void cleanFailures() {
-        long now = System.currentTimeMillis();
-
-        for (Iterator<Long> iter = failures.iterator(); iter.hasNext(); ) {
-            long next = iter.next();
-            if (now - next > ELAPSE_TIME) {
-                iter.remove();
-            } else {
-                break;
-            }
-        }
-    }
-
 }

@@ -213,6 +213,11 @@ goog.require('gn_alert');
                 'search/resultsview/partials/viewtemplates/grid.html',
             'tooltip': 'Grid',
             'icon': 'fa-th'
+          },{
+            'tplUrl': '../../catalog/components/' +
+              'search/resultsview/partials/viewtemplates/list.html',
+            'tooltip': 'List',
+            'icon': 'fa-bars'
           }],
           'resultTemplate': '../../catalog/components/' +
               'search/resultsview/partials/viewtemplates/grid.html',
@@ -236,6 +241,9 @@ goog.require('gn_alert');
           'usersearches': {
             'enabled': false,
             'displayFeaturedSearchesPanel': false
+          },
+          'savedSelection': {
+            'enabled': true
           }
         },
         'map': {
@@ -745,6 +753,11 @@ goog.require('gn_alert');
             Math.floor(Math.random() * 10000)).
             success(function(me, status) {
               if (angular.isObject(me)) {
+
+                me['isAdmin'] = function(groupId) {
+                  return me.admin;
+                }
+
                 angular.forEach($scope.profiles, function(profile) {
                   // Builds is<ProfileName>ForGroup methods
                   // to check the profile in the group

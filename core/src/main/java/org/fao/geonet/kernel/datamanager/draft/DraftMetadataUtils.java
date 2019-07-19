@@ -541,11 +541,6 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             Set<Integer> metadataIds = new HashSet<Integer>();
             metadataIds.add(finalId);
 
-            if (context.getBean(IMetadataStatus.class)
-                .getCurrentStatus(Integer.valueOf(templateId)) == StatusValue.Status.UNKNOWN) {
-                metadataIds.add(Integer.valueOf(templateId));
-            }
-
             // --- use StatusActionsFactory and StatusActions class to
             // --- change status and carry out behaviours for status changes
             StatusActionsFactory saf = context.getBean(StatusActionsFactory.class);

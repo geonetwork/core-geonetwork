@@ -693,8 +693,6 @@ public class InspireAtomUtil {
     }
 
     public static List<String> retrieveKeywordsFromFileIdentifier(ServiceContext context, String fileIdentifier) {
-
-        throw new NotImplementedException("Not implemented in ES");
 //        List<String> keywordsList = new ArrayList<String>();
 //        Element request = new Element(Jeeves.Elem.REQUEST);
 //        request.addContent(new Element("fileId").setText(fileIdentifier));
@@ -714,10 +712,10 @@ public class InspireAtomUtil {
 //                }
 //            }
 //        } catch (Exception ex) {
-//            ex.printStackTrace();
+//            Log.error(Geonet.ATOM, ex.getMessage(), ex);
 //        }
-//
-//        return keywordsList;
+
+        throw new NotImplementedException("Not implemented in ES");
     }
 }
 

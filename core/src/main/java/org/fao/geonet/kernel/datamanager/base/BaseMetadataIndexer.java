@@ -419,6 +419,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.SOURCE, source));
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.IS_TEMPLATE, metadataType.codeString));
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.UUID, uuid));
+            moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.ID, metadataId));
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.FEATUREOFRECORD, "record"));
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.IS_HARVESTED, isHarvested ? "true" : "false"));
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.OWNER, owner));

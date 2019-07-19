@@ -187,12 +187,10 @@ public class Harvest extends AbstractOperation implements CatalogService {
                 Log.debug(Geonet.CSW_HARVEST, "CSW Harvest execute returns:\n" + Xml.getString(response));
             return response;
         } catch (CatalogException x) {
-            Log.error(Geonet.CSW_HARVEST, x.getMessage());
-            x.printStackTrace();
+            Log.error(Geonet.CSW_HARVEST, x.getMessage(), x);
             throw x;
         } catch (Exception x) {
-            Log.error(Geonet.CSW_HARVEST, x.getMessage());
-            x.printStackTrace();
+            Log.error(Geonet.CSW_HARVEST, x.getMessage(), x);
             throw new NoApplicableCodeEx("ERROR: " + x.getMessage());
         }
     }
@@ -920,13 +918,11 @@ public class Harvest extends AbstractOperation implements CatalogService {
             }
             // never mind, just log it
             catch (IOException x) {
-                System.err.println("WARNING: " + x.getMessage() + " (this exception is swallowed)");
-                x.printStackTrace();
+                Log.error(Geonet.CSW_HARVEST, "WARNING: " + x.getMessage() + " (this exception is swallowed)", x);
             }
             // never mind, just log it
             catch (URISyntaxException x) {
-                System.err.println("WARNING: " + x.getMessage() + " (this exception is swallowed)");
-                x.printStackTrace();
+                Log.error(Geonet.CSW_HARVEST, "WARNING: " + x.getMessage() + " (this exception is swallowed)", x);
             } finally {
                 if (ftpClient != null && ftpClient.isConnected()) {
                     try {
@@ -934,8 +930,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
                     }
                     // never mind, just log it
                     catch (IOException x) {
-                        System.err.println("WARNING: " + x.getMessage() + " (this exception is swallowed)");
-                        x.printStackTrace();
+                        Log.error(Geonet.CSW_HARVEST, "WARNING: " + x.getMessage() + " (this exception is swallowed)", x);
                     }
                 }
             }
@@ -972,8 +967,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
                 }
             } catch (IOException x) {
                 // never mind, just log it
-                Log.warning(Geonet.CSW_HARVEST, "WARNING: " + x.getMessage() + " (this exception is swallowed)");
-                x.printStackTrace();
+                Log.warning(Geonet.CSW_HARVEST, "WARNING: " + x.getMessage() + " (this exception is swallowed)", x);
             } finally {
                 method.releaseConnection();
             }
@@ -1037,8 +1031,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
                     Log.debug(Geonet.CSW_HARVEST, "AsyncHarvestResponse run finished");
                 }
             } catch (Exception x) {
-                Log.error(Geonet.CSW_HARVEST, ("ERROR: AsyncHarvestResponse " + x.getMessage() + " (this exception is swallowed)"));
-                x.printStackTrace();
+                Log.error(Geonet.CSW_HARVEST, ("ERROR: AsyncHarvestResponse " + x.getMessage() + " (this exception is swallowed)"), x);
             }
         }
 

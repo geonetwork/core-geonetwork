@@ -48,6 +48,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
@@ -137,14 +138,14 @@ public class DefaultStatusActions implements StatusActions {
      */
     public void onEdit(int id, boolean minorEdit) throws Exception {
         if (Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
-            Log.trace(Geonet.DATA_MANAGER, "DefaultStatusActions.onEdit(" + id
-                + ", " + minorEdit + ") with status " + dm.getCurrentStatus(id));
+            Log.trace(Geonet.DATA_MANAGER, "DefaultStatusActions.onEdit(" + id + ", " + minorEdit + ") with status "
+                    + dm.getCurrentStatus(id));
         }
-        if (!minorEdit && dm.getCurrentStatus(id).equals(StatusValue.Status.APPROVED) &&
-        		(context.getBean(IMetadataManager.class) instanceof DraftMetadataManager)) {
-            ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
+        if (!minorEdit && dm.getCurrentStatus(id).equals(StatusValue.Status.APPROVED)
+                && (context.getBean(IMetadataManager.class) instanceof DraftMetadataManager)) {
+            ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages",
+                    new Locale(this.language));
             String changeMessage = String.format(messages.getString("status_email_text"), replyToDescr, replyTo, id);
-            unsetAllOperations(id);
             Log.trace(Geonet.DATA_MANAGER, "Set DRAFT to current record with id " + id);
             dm.setStatus(context, id, Integer.valueOf(StatusValue.Status.DRAFT), new ISODate(), changeMessage);
         }
@@ -163,7 +164,11 @@ public class DefaultStatusActions implements StatusActions {
 
         // -- process the metadata records to set status
         for (MetadataStatus status : listOfStatus) {
-            String currentStatus = dm.getCurrentStatus(status.getId().getMetadataId());
+            MetadataStatus currentStatus = dm.getStatus(status.getId().getMetadataId());
+            String currentStatusId = (currentStatus != null)?
+                String.valueOf(currentStatus.getId().getStatusId()):"";
+
+
             String statusId = status.getId().getStatusId() + "";
             Set<Integer> listOfId = new HashSet<>(1);
             listOfId.add(status.getId().getMetadataId());
@@ -172,17 +177,13 @@ public class DefaultStatusActions implements StatusActions {
             // --- For the workflow, if the status is already set to value
             // of status then do nothing. This does not apply to task and event.
             if (status.getStatusValue().getType().equals(StatusValueType.workflow) &&
-                (statusId).equals(currentStatus)) {
+               (statusId).equals(currentStatusId)) {
                 if (context.isDebugEnabled())
                     context.debug(String.format("Metadata %s already has status %s ",
                         status.getId().getMetadataId(), status.getId().getStatusId()));
                 unchanged.add(status.getId().getMetadataId());
                 continue;
             }
-
-            // --- Apply changes based on status change
-            // TODO: Would be good to report what has been done ?
-            applyRulesForStatusChange(status);
 
             // --- set status, indexing is assumed to take place later
             metadataStatusManager.setStatusExt(status);
@@ -213,7 +214,6 @@ public class DefaultStatusActions implements StatusActions {
         return unchanged;
     }
 
-
     /**
      * This apply specific rules depending on status change.
      * The default rules are:
@@ -235,15 +235,15 @@ public class DefaultStatusActions implements StatusActions {
                     "You can't edit record with ID %s",
                     String.valueOf(status.getId().getMetadataId())));
             }
-        } else if (statusId.equals(StatusValue.Status.DRAFT) ||
-            statusId.equals(StatusValue.Status.REJECTED)) {
+        } else if (statusId.equals(StatusValue.Status.DRAFT)) {
             unsetAllOperations(status.getId().getMetadataId());
         }
     }
 
+
     /**
-     * Send email to a list of users. The list of users is defined based on
-     * the notification level of the status. See {@link StatusValueNotificationLevel}.
+     * Send email to a list of users. The list of users is defined based on the
+     * notification level of the status. See {@link StatusValueNotificationLevel}.
      *
      * @param userToNotify
      * @param status
@@ -256,15 +256,14 @@ public class DefaultStatusActions implements StatusActions {
         // TODO: Refactor to allow custom messages based on the type of status
         String subjectTemplate = "";
         try {
-            subjectTemplate = messages.getString(
-                "status_change_" + status.getStatusValue().getName() + "_email_subject");
+            subjectTemplate = messages
+                    .getString("status_change_" + status.getStatusValue().getName() + "_email_subject");
         } catch (MissingResourceException e) {
             subjectTemplate = messages.getString("status_change_default_email_subject");
         }
-        String subject = MessageFormat.format(subjectTemplate,
-            siteName,
-            translatedStatusName,
-            replyToDescr // Author of the change
+        String subject = MessageFormat.format(subjectTemplate, siteName, translatedStatusName, replyToDescr // Author of
+                                                                                                            // the
+                                                                                                            // change
         );
 
         Set<Integer> listOfId = new HashSet<>(1);
@@ -272,8 +271,7 @@ public class DefaultStatusActions implements StatusActions {
 
         String textTemplate = "";
         try {
-            textTemplate = messages.getString(
-                "status_change_" + status.getStatusValue().getName() + "_email_text");
+            textTemplate = messages.getString("status_change_" + status.getStatusValue().getName() + "_email_text");
         } catch (MissingResourceException e) {
             textTemplate = messages.getString("status_change_default_email_text");
         }
@@ -281,15 +279,9 @@ public class DefaultStatusActions implements StatusActions {
         UserRepository userRepository = context.getBean(UserRepository.class);
         User owner = userRepository.findOne(status.getOwner());
 
-        String message = MessageFormat.format(textTemplate,
-            replyToDescr, // Author of the change
-            status.getChangeMessage(),
-            translatedStatusName,
-            status.getId().getChangeDate(),
-            status.getDueDate(),
-            status.getCloseDate(),
-            owner == null ? "" : owner.getName() + " " + owner.getSurname(),
-            siteUrl);
+        String message = MessageFormat.format(textTemplate, replyToDescr, // Author of the change
+                status.getChangeMessage(), translatedStatusName, status.getId().getChangeDate(), status.getDueDate(),
+                status.getCloseDate(), owner == null ? "" : owner.getName() + " " + owner.getSurname(), siteUrl);
 
         IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
         AbstractMetadata metadata = metadataRepository.findOne(status.getId().getMetadataId());
@@ -302,8 +294,8 @@ public class DefaultStatusActions implements StatusActions {
     }
 
     /**
-     * Based on the status notification level defined in the database
-     * collect the list of users to notify.
+     * Based on the status notification level defined in the database collect the
+     * list of users to notify.
      *
      * @param status
      * @return
@@ -325,10 +317,8 @@ public class DefaultStatusActions implements StatusActions {
                 User owner = userRepository.findOne(status.getOwner());
                 users.add(owner);
             } else if (notificationLevel == StatusValueNotificationLevel.recordProfileReviewer) {
-                List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(
-                    listOfId,
-                    Profile.Reviewer,
-                    SortUtils.createSort(User_.name));
+                List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(listOfId,
+                        Profile.Reviewer, SortUtils.createSort(User_.name));
                 for (Pair<Integer, User> p : results) {
                     users.add(p.two());
                 }
@@ -340,8 +330,7 @@ public class DefaultStatusActions implements StatusActions {
                 }
                 ;
             } else if (notificationLevel.name().startsWith("catalogueProfile")) {
-                String profileId = notificationLevel.name().replace(
-                    "catalogueProfile", "");
+                String profileId = notificationLevel.name().replace("catalogueProfile", "");
                 Profile profile = Profile.findProfileIgnoreCase(profileId);
                 users = userRepository.findAllByProfile(profile);
             } else if (notificationLevel == StatusValueNotificationLevel.catalogueAdministrator) {
@@ -359,8 +348,8 @@ public class DefaultStatusActions implements StatusActions {
     }
 
     /**
-     * Unset all operations on 'All' Group. Used when status changes from approved to something
-     * else.
+     * Unset all operations on 'All' Group. Used when status
+     * changes from approved to something else.
      *
      * @param mdId The metadata id to unset privileges on
      */
@@ -374,8 +363,6 @@ public class DefaultStatusActions implements StatusActions {
     }
 
     /**
-     * Substitute lucene index field values in message.
-     * Lucene field are identified using {{index:fieldName}} tag.
      *
      * @param message  The message to work on
      * @param uuid     The record UUID
@@ -402,13 +389,13 @@ public class DefaultStatusActions implements StatusActions {
         String translatedStatusName = "";
         StatusValue s = _statusValueRepository.findOneById(statusValueId);
         if (s == null) {
-            translatedStatusName = statusValueId + " (Status not found in database translation table. Check the content of the StatusValueDes table.)";
+            translatedStatusName = statusValueId
+                    + " (Status not found in database translation table. Check the content of the StatusValueDes table.)";
         } else {
             translatedStatusName = s.getLabel(this.language);
         }
         return translatedStatusName;
     }
-
 
     /**
      * Send the email message about change of status on a group of metadata records.
@@ -424,9 +411,13 @@ public class DefaultStatusActions implements StatusActions {
         } else {
             ApplicationContext applicationContext = ApplicationContextHolder.get();
             SettingManager sm = applicationContext.getBean(SettingManager.class);
-            List<String> to = new ArrayList<>();
-            to.add(sendTo);
-            MailUtil.sendMail(to, subject, message, null, sm, replyTo, replyToDescr);
+            // Doesn't make sense go further without any mailserver set...
+            if(StringUtils.isNotBlank(sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME)) &&
+               StringUtils.isNotBlank(sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST))) {
+                List<String> to = new ArrayList<>();
+                to.add(sendTo);
+                MailUtil.sendMail(to, subject, message, null, sm, replyTo, replyToDescr);
+            }
         }
     }
 }

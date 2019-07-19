@@ -106,8 +106,7 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
             setTaskStatusCode(IRResultSetStatus.COMPLETE);
 
         } catch (Throwable e) {
-            Log.error(Geonet.SRU, "error evaluating query.." + e);
-            e.printStackTrace();
+            Log.error(Geonet.SRU, "error evaluating query.." + e.getMessage(), e);
         }
         return (getStatus());
     }

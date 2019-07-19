@@ -272,7 +272,6 @@ public class EsSearchManager implements ISearchManager {
                       MetadataType metadataType, String root, boolean forceRefreshReaders) throws Exception {
 
         Element docs = new Element("doc");
-        docs.addContent(new Element(ID).setText(id));
         addMDFields(docs, schemaDir, metadata);
         addMoreFields(docs, moreFields);
 

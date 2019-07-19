@@ -30,7 +30,7 @@ import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest.ImportMetadata;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
@@ -62,7 +62,8 @@ public class FormatterCacheIntegrationTest extends AbstractServiceIntegrationTes
     @Autowired
     private OperationAllowedRepository operationAllowedRepository;
     @Autowired
-    private DataManager dataManager;
+    private IMetadataManager metadataManager;
+
     @Autowired
     private SystemInfo systemInfo;
     private FilesystemStore fsStore;
@@ -133,7 +134,7 @@ public class FormatterCacheIntegrationTest extends AbstractServiceIntegrationTes
         final Key key = new Key(Integer.parseInt(metadataId), "eng", FormatType.html, "full_view", true, FormatterWidth._100);
         formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, true), true);
 
-        dataManager.deleteMetadata(createServiceContext(), metadataId);
+        metadataManager.deleteMetadata(createServiceContext(), metadataId);
         entityManager.flush();
 
         assertNull(formatterCache.getPublished(key));

@@ -135,8 +135,7 @@ public class DefaultResourceUploadHandler implements IResourceUploadHandler {
             storeFileUploadRequest(context, metadataId, fileName, fileSize);
 
         } catch (Exception ex) {
-            Log.error(Geonet.RESOURCES, "DefaultResourceUploadHandler (onUpload): " + ex.getMessage());
-            ex.printStackTrace();
+            Log.error(Geonet.RESOURCES, "DefaultResourceUploadHandler (onUpload): " + ex.getMessage(), ex);
             throw new ResourceHandlerException(ex);
         }
     }
@@ -169,8 +168,7 @@ public class DefaultResourceUploadHandler implements IResourceUploadHandler {
             storeFileUploadRequest(context, metadataId, fileName, fileSize);
 
         } catch (Exception ex) {
-            Log.error(Geonet.RESOURCES, "DefaultResourceUploadHandler (onUpload): " + ex.getMessage());
-            ex.printStackTrace();
+            Log.error(Geonet.RESOURCES, "DefaultResourceUploadHandler (onUpload): " + ex.getMessage(), ex);
             throw new ResourceHandlerException(ex);
         }
     }
