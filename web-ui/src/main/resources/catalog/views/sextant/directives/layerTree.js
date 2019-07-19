@@ -494,11 +494,23 @@
                       appProfile = wfsLink.applicationProfile ? JSON.parse(wfsLink.applicationProfile) : {};
                     } catch (e) {
                       appProfile = {};
-                      console.error('Erreur lors de la lecture de l\'élément applicationProfile', e);
+                      console.warn('Erreur lors de la lecture de l\'élément applicationProfile', e);
                     }
                     var minHeatmapCount = appProfile.minHeatmapCount || 1000;
                     var maxTooltipCount = appProfile.maxTooltipCount || 1000;
-                    sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount);
+
+                    var tooltipTemplateUrl = appProfile.tooltipTemplateUrl;
+                    if (!tooltipTemplateUrl) {
+                      console.warn('Pas d\'URL de template de tooltip dans l\'élément applicationProfile', appProfile);
+                      return;
+                    }
+
+                    $http.get(tooltipTemplateUrl).then(function (response) {
+                      var tooltipTemplate = response.data;
+                      sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount, tooltipTemplate);
+                    }, function() {
+                      console.warn('Le chargement du template de tooltip a échoué');
+                    });
                   }
                 });
               }
