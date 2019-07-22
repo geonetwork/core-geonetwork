@@ -36,6 +36,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -48,6 +50,9 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexFields;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.BinaryFile;
@@ -79,6 +84,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -91,6 +97,7 @@ import java.util.Set;
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
+import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
 
 @RequestMapping(value = {
     "/{portal}/api/records",
@@ -121,6 +128,12 @@ public class CatalogApi {
 
     @Autowired
     SettingManager settingManager;
+
+    @Autowired
+    EsSearchManager searchManager;
+
+    @Autowired
+    SettingInfo settingInfo;
 
     @ApiOperation(
         value = "Get a set of metadata records as ZIP",
@@ -168,7 +181,7 @@ public class CatalogApi {
             required = false)
         @RequestParam(
             required = false,
-            defaultValue = "true")
+            defaultValue = "false")
             boolean withRelated,
         @ApiParam(
             value = "Resolve XLinks in the records.",
@@ -227,47 +240,28 @@ public class CatalogApi {
             throw new IllegalArgumentException("MEF version 1 only support one record. Use the /records/{uuid}/formatters/zip to retrieve that format");
         } else {
             // MEF version 2 support multiple metadata record by file.
-//            if (withRelated) {
-//                // Adding children in MEF file
-//                Set<String> tmpUuid = new HashSet<String>();
-//                for (Iterator<String> iter = uuidList.iterator(); iter.hasNext(); ) {
-//                    String _uuid = (String) iter.next();
-//
-//                    // Creating request for services search
-//                    Element childRequest = new Element("request");
-//                    childRequest.addContent(new Element("parentUuid")
-//                        .setText(_uuid));
-//                    childRequest.addContent(new Element("to").setText("1000"));
-//
-//                    // Get children to export - It could be better to use GetRelated service TODO
-//                    Set<String> childs = getUuidsToExport(_uuid, context,
-//                        childRequest);
-//                    if (childs.size() != 0) {
-//                        tmpUuid.addAll(childs);
-//                    }
-//
-//                    // Creating request for services search
-//                    Element servicesRequest = new Element(Jeeves.Elem.REQUEST);
-//                    servicesRequest.addContent(new Element(
-//                        org.fao.geonet.constants.Params.OPERATES_ON)
-//                        .setText(_uuid));
-//                    servicesRequest.addContent(new Element(
-//                        org.fao.geonet.constants.Params.TYPE)
-//                        .setText("service"));
-//
-//                    // Get linked services for export
-//                    Set<String> services = getUuidsToExport(_uuid, context,
-//                        servicesRequest);
-//                    if (services.size() != 0) {
-//                        tmpUuid.addAll(services);
-//                    }
-//                }
-//
-//                if (selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA, tmpUuid)) {
-//                    Log.info(Geonet.MEF, "Child and services added into the selection");
-//                }
-//            uuidList = selectionManger.getSelection(SelectionManager.SELECTION_METADATA);
-//            }
+            if (withRelated) {
+                int maxhits = Integer.parseInt(settingInfo.getSelectionMaxRecords());
+
+                Set<String> tmpUuid = new HashSet<String>();
+                for (Iterator<String> iter = uuidList.iterator(); iter.hasNext(); ) {
+                    String uuid = (String) iter.next();
+
+                    // Search for children records
+                    // and service record. At some point this might be extended to all type of relations.
+                    final SearchResponse searchResponse = searchManager.query(
+                        String.format("parentUuid:\"%s\" recordOperateOn:\"%s\"", uuid, uuid),
+                        FIELDLIST_UUID, 0, maxhits);
+
+                    Arrays.asList(searchResponse.getHits().getHits()).forEach(h ->
+                        tmpUuid.add((String) h.getSourceAsMap().get(Geonet.IndexFieldNames.UUID)));
+                }
+
+                if (selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA, tmpUuid)) {
+                    Log.info(Geonet.MEF, "Child and services added into the selection");
+                }
+                uuidList = selectionManger.getSelection(SelectionManager.SELECTION_METADATA);
+            }
 
             Log.info(Geonet.MEF, "Building MEF2 file with " + uuidList.size()
                 + " records.");

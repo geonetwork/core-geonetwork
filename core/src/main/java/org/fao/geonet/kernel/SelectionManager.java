@@ -48,6 +48,8 @@ import java.util.*;
 
 import javax.annotation.Nonnull;
 
+import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
+
 /**
  * Manage objects selection for a user session.
  */
@@ -240,13 +242,10 @@ public class SelectionManager {
             if (request == null) {
                 return;
             } else {
-                final Set<String> includedFields = new HashSet<>();
-                includedFields.add(Geonet.IndexFieldNames.UUID);
-                // TODOES add maxhits
                 final SearchResponse searchResponse;
                 try {
                     EsSearchManager searchManager = context.getBean(EsSearchManager.class);
-                    searchResponse = searchManager.query(request.get("query"), includedFields, 0, maxhits);
+                    searchResponse = searchManager.query(request.get("query"), FIELDLIST_UUID, 0, maxhits);
                     List<String> uuidList = new ArrayList();
                     for (SearchHit h : Arrays.asList(searchResponse.getHits().getHits())) {
                         uuidList.add((String) h.getSourceAsMap().get(Geonet.IndexFieldNames.UUID));

@@ -70,6 +70,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_CORE;
+import static org.fao.geonet.kernel.search.EsSearchManager.relatedIndexFields;
+
 /**
  *
  */
@@ -231,29 +234,6 @@ public class MetadataUtils {
     }
 
 
-    private static Map<String, String> relatedIndexFields;
-    private static Set<String> documentFields;
-
-    static {
-        relatedIndexFields = ImmutableMap.<String, String>builder()
-            .put("children", "parentUuid")
-            .put("services", "recordOperateOn")
-            .put("hasfeaturecats", "hasfeaturecat")
-            .put("hassources", "hassources")
-            .put("associated", "agg_associated")
-            .put("datasets", "uuid")
-            .put("fcats", "uuid")
-            .put("sources", "uuid")
-            .put("parent", "uuid")
-            .build();
-
-        documentFields = ImmutableSet.<String>builder()
-            .add(Geonet.IndexFieldNames.ID)
-            .add(Geonet.IndexFieldNames.UUID)
-            .add(Geonet.IndexFieldNames.RESOURCETITLE)
-            .add(Geonet.IndexFieldNames.RESOURCEABSTRACT).build();
-    }
-
     private static Element search(String uuid, String type, ServiceContext context, String from, String to, String fast) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
@@ -265,7 +245,7 @@ public class MetadataUtils {
         int toValue = Integer.parseInt(to);
 
         final SearchResponse result = searchMan.query(
-            String.format("+%s:%s", relatedIndexFields.get(type), uuid), documentFields, fromValue, (toValue -fromValue));
+            String.format("+%s:%s", relatedIndexFields.get(type), uuid), FIELDLIST_CORE, fromValue, (toValue -fromValue));
 
         Element typeResponse = new Element(type);
         if (result.getHits().getTotalHits().value > 0) {

@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -97,6 +98,33 @@ public class EsSearchManager implements ISearchManager {
     public static final String SCHEMA_INDEX_XSTL_FILENAME = "index.xsl";
     public static final String FIELDNAME = "name";
     public static final String FIELDSTRING = "string";
+
+    public static Map<String, String> relatedIndexFields;
+    public static Set<String> FIELDLIST_CORE;
+    public static Set<String> FIELDLIST_UUID;
+
+    static {
+        FIELDLIST_UUID = ImmutableSet.<String>builder()
+            .add(Geonet.IndexFieldNames.UUID).build();
+
+        relatedIndexFields = ImmutableMap.<String, String>builder()
+            .put("children", "parentUuid")
+            .put("services", "recordOperateOn")
+            .put("hasfeaturecats", "hasfeaturecat")
+            .put("hassources", "hassources")
+            .put("associated", "agg_associated")
+            .put("datasets", "uuid")
+            .put("fcats", "uuid")
+            .put("sources", "uuid")
+            .put("parent", "uuid")
+            .build();
+
+        FIELDLIST_CORE = ImmutableSet.<String>builder()
+            .add(Geonet.IndexFieldNames.ID)
+            .add(Geonet.IndexFieldNames.UUID)
+            .add(Geonet.IndexFieldNames.RESOURCETITLE)
+            .add(Geonet.IndexFieldNames.RESOURCEABSTRACT).build();
+    }
 
     @Value("${es.index.records:gn-records}")
     private String defaultIndex = "records";
