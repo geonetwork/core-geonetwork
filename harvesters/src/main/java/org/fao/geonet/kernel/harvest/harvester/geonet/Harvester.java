@@ -206,7 +206,7 @@ class Harvester implements IHarvester<HarvestResult> {
                 return new HarvestResult();
             }
             log.info(String.format("Processing search with these parameters %s", s.toString()));
-            int from = 1;
+            int from = 0;
             int to = from + (pageSize - 1);
             s.setRange(from, to);
 

@@ -156,6 +156,9 @@ public class EsHTTPProxy {
 
         addFilterToQuery(context, objectMapper, nodeQuery);
 
+        UserSession session = context.getUserSession();
+        session.setProperty(Geonet.Session.SEARCH_REQUEST + selectionBucket, nodeQuery);
+
         String requestBody = nodeQuery.toString();
 
         handleRequest(context, httpSession, request, response, url, requestBody, true, selectionBucket);

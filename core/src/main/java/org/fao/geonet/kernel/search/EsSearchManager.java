@@ -524,10 +524,13 @@ public class EsSearchManager implements ISearchManager {
     }
 
     public SearchResponse query(String luceneQuery, Set<String> includedFields,
-                                int startPosition, int maxRecords) throws Exception {
-        return client.query(defaultIndex, luceneQuery, includedFields, startPosition, maxRecords);
+                                int from, int size) throws Exception {
+        return client.query(defaultIndex, luceneQuery, includedFields, from, size);
     }
-
+    public SearchResponse query(JsonNode jsonRequest, Set<String> includedFields,
+                                int from, int size) throws Exception {
+        return client.query(defaultIndex, jsonRequest, includedFields, from, size);
+    }
     public Map<String, String> getFieldsValues(String id, Set<String> fields) throws Exception {
         return client.getFieldsValues(defaultIndex, id, fields);
     }
@@ -570,7 +573,7 @@ public class EsSearchManager implements ISearchManager {
         // TODO: Response could be large
         // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/master/java-rest-high-search-scroll.html
 
-        int from = 1;
+        int from = 0;
         // TODO: Review size
         int size = 1000;
         final SearchResponse response = client.query(defaultIndex, "*", docsChangeIncludedFields, from, size);
@@ -584,7 +587,7 @@ public class EsSearchManager implements ISearchManager {
 
     @Override
     public ISODate getDocChangeDate(String mdId) throws Exception {
-        int from = 1;
+        int from = 0;
         // TODO: Review size
         int size = 1000;
         final SearchResponse response = client.query(defaultIndex, "_id:" + mdId, docsChangeIncludedFields, from, size);
@@ -666,7 +669,7 @@ public class EsSearchManager implements ISearchManager {
             query = "*:*";
         }
 
-        int from = 1;
+        int from = 0;
         // TODO: Review size
         int size = 1000;
 

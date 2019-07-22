@@ -300,7 +300,7 @@ public class MetadataUtils {
         Set<String> field = new HashSet<>(1);
         field.add(Geonet.IndexFieldNames.UUID);
 
-        int from = 1;
+        int from = 0;
         SettingInfo si = applicationContext.getBean(SettingInfo.class);
         int size = Integer.parseInt(si.getSelectionMaxRecords());
 

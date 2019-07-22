@@ -44,7 +44,7 @@ public class IndexHealthCheck implements HealthCheckFactory {
                 try {
                     ApplicationContext applicationContext = ApplicationContextHolder.get();
                     EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
-                    int from = 1;
+                    int from = 0;
                     SettingInfo si = applicationContext.getBean(SettingInfo.class);
                     int size = Integer.parseInt(si.getSelectionMaxRecords());
 

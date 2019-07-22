@@ -130,7 +130,7 @@ class MEF2Exporter {
                 }
                 String id = String.valueOf(md.getId());
 
-                int from = 1;
+                int from = 0;
                 SettingInfo si = context.getBean(SettingInfo.class);
                 int size = Integer.parseInt(si.getSelectionMaxRecords());
 

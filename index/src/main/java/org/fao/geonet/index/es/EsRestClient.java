@@ -23,6 +23,7 @@
 
 package org.fao.geonet.index.es;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -50,8 +51,10 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
+import org.elasticsearch.index.query.WrapperQueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 import org.elasticsearch.search.SearchHit;
@@ -296,7 +299,25 @@ public class EsRestClient implements InitializingBean {
 //    }
 
 
+    /**
+     * Query using Lucene query syntax.
+     */
     public SearchResponse query(String index, String luceneQuery, Set<String> includedFields,
+                                int from, int size) throws Exception {
+        final QueryBuilder query = QueryBuilders.queryStringQuery(luceneQuery);
+        return query(index, query, includedFields, from, size);
+    }
+
+    /**
+     * Query using JSON elastic query
+     */
+    public SearchResponse query(String index, JsonNode jsonQuery, Set<String> includedFields,
+                                int from, int size) throws Exception {
+        final QueryBuilder query = QueryBuilders.wrapperQuery(String.valueOf(jsonQuery));
+        return query(index, query, includedFields, from, size);
+    }
+
+    public SearchResponse query(String index, QueryBuilder queryBuilder, Set<String> includedFields,
                                 int from, int size) throws Exception {
         if (!activated) {
             return null;
@@ -307,10 +328,10 @@ public class EsRestClient implements InitializingBean {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(index);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(QueryBuilders.queryStringQuery(luceneQuery));
+        searchSourceBuilder.query(queryBuilder);
         searchSourceBuilder.fetchSource(includedFields.toArray(new String[includedFields.size()]), null);
         searchSourceBuilder.from(from);
-        searchSourceBuilder.size(size); // TODOES limit & paging
+        searchSourceBuilder.size(size);
 //        searchSourceBuilder.sort(new FieldSortBuilder("_id").order(SortOrder.ASC));
         searchRequest.source(searchSourceBuilder);
 
@@ -323,6 +344,7 @@ public class EsRestClient implements InitializingBean {
             ));
         }
     }
+
 
     public String deleteByQuery(String index, String query) throws Exception {
         if (!activated) {
