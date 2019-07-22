@@ -17,6 +17,10 @@
 .c_showlocation section h4 {
   font-weight: 500;
 }
+.c_showlocation section h3::before {
+  content: None;
+  font-weight: normal;
+}
 
 #main-tabset > div > div.tab-pane.ng-scope.active >
 div.hfull.sxt-search-main-container.ng-scope.sxt-scroll
@@ -44,4 +48,8 @@ div.hfull.sxt-search-main-container.ng-scope.sxt-scroll
 .gn[ng-app="gn_search_sextant"] ol ul ul > li::before,
 .gn[ng-app="gn_search_sextant"] ol ol ul > li::before {
   content: none;
+}
+
+.gn .popover.right > .arrow, .g .popover.right > .arrow {
+ left: -16px !important;
 }
