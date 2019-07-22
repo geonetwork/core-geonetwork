@@ -519,12 +519,13 @@ public class EsSearchManager implements ISearchManager {
         return true;
     }
 
-    public SearchResponse query(String luceneQuery) throws Exception {
-        return client.query(defaultIndex, luceneQuery, new HashSet<String>());
+    public SearchResponse query(String luceneQuery, int startPosition, int maxRecords) throws Exception {
+        return client.query(defaultIndex, luceneQuery, new HashSet<String>(), startPosition, maxRecords);
     }
 
-    public SearchResponse query(String luceneQuery, Set<String> includedFields) throws Exception {
-        return client.query(defaultIndex, luceneQuery, includedFields);
+    public SearchResponse query(String luceneQuery, Set<String> includedFields,
+                                int startPosition, int maxRecords) throws Exception {
+        return client.query(defaultIndex, luceneQuery, includedFields, startPosition, maxRecords);
     }
 
     public Map<String, String> getFieldsValues(String id, Set<String> fields) throws Exception {
@@ -568,7 +569,11 @@ public class EsSearchManager implements ISearchManager {
     public Map<String, String> getDocsChangeDate() throws Exception {
         // TODO: Response could be large
         // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/master/java-rest-high-search-scroll.html
-        final SearchResponse response = client.query(defaultIndex, "*", docsChangeIncludedFields);
+
+        int from = 1;
+        // TODO: Review size
+        int size = 1000;
+        final SearchResponse response = client.query(defaultIndex, "*", docsChangeIncludedFields, from, size);
 
         final Map<String, String> docs = new HashMap<>();
         response.getHits().forEach(r -> {
@@ -579,7 +584,10 @@ public class EsSearchManager implements ISearchManager {
 
     @Override
     public ISODate getDocChangeDate(String mdId) throws Exception {
-        final SearchResponse response = client.query(defaultIndex, "_id:" + mdId, docsChangeIncludedFields);
+        int from = 1;
+        // TODO: Review size
+        int size = 1000;
+        final SearchResponse response = client.query(defaultIndex, "_id:" + mdId, docsChangeIncludedFields, from, size);
 
         if (response.getHits().getTotalHits().value == 1) {
             String date =
@@ -657,7 +665,12 @@ public class EsSearchManager implements ISearchManager {
         if (StringUtils.isBlank(query)) {
             query = "*:*";
         }
-        final SearchResponse response = client.query(defaultIndex, query, docsChangeIncludedFields);
+
+        int from = 1;
+        // TODO: Review size
+        int size = 1000;
+
+        final SearchResponse response = client.query(defaultIndex, query, docsChangeIncludedFields, from, size);
         return response.getHits().getTotalHits().value;
     }
 

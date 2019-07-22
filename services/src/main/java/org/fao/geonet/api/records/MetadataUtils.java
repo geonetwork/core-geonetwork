@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
@@ -260,9 +261,11 @@ public class MetadataUtils {
         if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Searching for: " + type);
 
-        // TODOES Limit fields in the response
+        int fromValue = Integer.parseInt(from);
+        int toValue = Integer.parseInt(to);
+
         final SearchResponse result = searchMan.query(
-            String.format("+%s:%s", relatedIndexFields.get(type), uuid), documentFields);
+            String.format("+%s:%s", relatedIndexFields.get(type), uuid), documentFields, fromValue, (toValue -fromValue));
 
         Element typeResponse = new Element(type);
         if (result.getHits().getTotalHits().value > 0) {
@@ -296,7 +299,12 @@ public class MetadataUtils {
         Set<String> uuids = new HashSet<>();
         Set<String> field = new HashSet<>(1);
         field.add(Geonet.IndexFieldNames.UUID);
-        final SearchResponse result = searchMan.query(query);
+
+        int from = 1;
+        SettingInfo si = applicationContext.getBean(SettingInfo.class);
+        int size = Integer.parseInt(si.getSelectionMaxRecords());
+
+        final SearchResponse result = searchMan.query(query, from, size);
         if (result.getHits().getTotalHits().value > 0) {
             final SearchHit[] elements = result.getHits().getHits();
             Arrays.asList(elements).forEach(e -> uuids.add((String) e.getSourceAsMap().get(Geonet.IndexFieldNames.UUID)));

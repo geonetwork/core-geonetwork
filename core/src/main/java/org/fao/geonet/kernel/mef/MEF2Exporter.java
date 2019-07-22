@@ -40,6 +40,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRelationRepository;
 import org.fao.geonet.repository.MetadataRepository;
@@ -129,7 +130,11 @@ class MEF2Exporter {
                 }
                 String id = String.valueOf(md.getId());
 
-                final SearchResponse result = searchManager.query("+id:" + id);
+                int from = 1;
+                SettingInfo si = context.getBean(SettingInfo.class);
+                int size = Integer.parseInt(si.getSelectionMaxRecords());
+
+                final SearchResponse result = searchManager.query("+id:" + id, from, size);
 
                 String mdSchema = null, mdTitle = null, mdAbstract = null, isHarvested = null;
                 MetadataType mdType = null;

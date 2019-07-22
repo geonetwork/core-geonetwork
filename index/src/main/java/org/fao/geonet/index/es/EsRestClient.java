@@ -296,7 +296,8 @@ public class EsRestClient implements InitializingBean {
 //    }
 
 
-    public SearchResponse query(String index, String luceneQuery, Set<String> includedFields) throws Exception {
+    public SearchResponse query(String index, String luceneQuery, Set<String> includedFields,
+                                int from, int size) throws Exception {
         if (!activated) {
             return null;
         }
@@ -308,8 +309,8 @@ public class EsRestClient implements InitializingBean {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.queryStringQuery(luceneQuery));
         searchSourceBuilder.fetchSource(includedFields.toArray(new String[includedFields.size()]), null);
-        searchSourceBuilder.from(0);
-        searchSourceBuilder.size(1000); // TODOES limit & paging
+        searchSourceBuilder.from(from);
+        searchSourceBuilder.size(size); // TODOES limit & paging
 //        searchSourceBuilder.sort(new FieldSortBuilder("_id").order(SortOrder.ASC));
         searchRequest.source(searchSourceBuilder);
 
@@ -353,7 +354,8 @@ public class EsRestClient implements InitializingBean {
         Map<String, String> fieldValues = new HashMap<>(fields.size());
         try {
             String query = String.format("_id:%s uuid:%s", id, id);
-            final SearchResponse searchResponse = this.query(index, query, fields);
+            // TODO: Check maxRecords
+            final SearchResponse searchResponse = this.query(index, query, fields, 0, 1000);
             if (searchResponse.status().getStatus() == 200) {
                 if (searchResponse.getHits().getTotalHits().value == 1) {
                     final SearchHit[] hits = searchResponse.getHits().getHits();

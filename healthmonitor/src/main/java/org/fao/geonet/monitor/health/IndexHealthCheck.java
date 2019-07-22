@@ -29,6 +29,8 @@ import jeeves.server.context.ServiceContext;
 import org.elasticsearch.action.search.SearchResponse;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.setting.SettingInfo;
+import org.openrdf.sesame.sail.query.In;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -42,7 +44,11 @@ public class IndexHealthCheck implements HealthCheckFactory {
                 try {
                     ApplicationContext applicationContext = ApplicationContextHolder.get();
                     EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
-                    final SearchResponse result = searchMan.query("*");
+                    int from = 1;
+                    SettingInfo si = applicationContext.getBean(SettingInfo.class);
+                    int size = Integer.parseInt(si.getSelectionMaxRecords());
+
+                    final SearchResponse result = searchMan.query("*", from, size);
                     if (result.status().getStatus() == 200) {
                         return Result.healthy(String.format(
                             "%s records indexed in remote index currently.",
