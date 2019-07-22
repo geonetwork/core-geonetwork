@@ -141,7 +141,6 @@
       <Class name="org.fao.geonet.services.main.Info"/>
       <Class name="org.fao.geonet.guiservices.metadata.GetRelated"/>
       <Class name="org.fao.geonet.guiservices.templates.Get"/>
-      <Class name="org.fao.geonet.services.mef.Export"/>
       <Class name="org.fao.geonet.services.metadata.SearchUnused"/>
       <Class name="org.fao.geonet.services.metadata.SearchUnused"/>
       <Class name="org.fao.geonet.utils.Xml"/>

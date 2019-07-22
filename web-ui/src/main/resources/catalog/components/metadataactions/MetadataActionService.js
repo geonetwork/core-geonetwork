@@ -142,9 +142,9 @@
        */
       this.metadataMEF = function(uuid, bucket, approved) {
         
-        var url = gnHttp.getService('mdGetMEF') + '?version=2';
+        var url = '../api/records/zip?';
         url += angular.isDefined(uuid) ?
-            '&uuid=' + uuid : '&format=full';
+            '&uuids=' + uuid : '';
         url += angular.isDefined(bucket) ?
             '&bucket=' + bucket : '';
         url += angular.isDefined(approved) ?

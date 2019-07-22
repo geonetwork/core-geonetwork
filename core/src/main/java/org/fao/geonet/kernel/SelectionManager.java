@@ -241,8 +241,7 @@ public class SelectionManager {
                 return;
             } else {
                 final Set<String> includedFields = new HashSet<>();
-                final String uuidField = "uuid";
-                includedFields.add(uuidField);
+                includedFields.add(Geonet.IndexFieldNames.UUID);
                 // TODOES add maxhits
                 final SearchResponse searchResponse;
                 try {
@@ -250,7 +249,7 @@ public class SelectionManager {
                     searchResponse = searchManager.query(request.get("query"), includedFields, 0, maxhits);
                     List<String> uuidList = new ArrayList();
                     for (SearchHit h : Arrays.asList(searchResponse.getHits().getHits())) {
-                        uuidList.add((String) h.getSourceAsMap().get(uuidField));
+                        uuidList.add((String) h.getSourceAsMap().get(Geonet.IndexFieldNames.UUID));
                     }
 
                     if (selection != null) {
