@@ -312,7 +312,7 @@
         cleanSearchParams(params);
 
         if($scope.searchObj.lucene.facets) {
-          var query_string = gnESService.facetsToLuceneQuery($scope.searchObj.lucene.facets);
+          var query_string = JSON.stringify($scope.searchObj.lucene.facets);
           if(query_string) {
             params.query_string = query_string
           } else {
@@ -335,12 +335,7 @@
         if (newUrl == gnSearchLocation.lastSearchUrl) return;
 
         var params = angular.copy($location.search());
-
-        if(params.query_string && !$scope.searchObj.lucene.facets) {
-          $scope.searchObj.lucene.facets = gnESService.luceneQueryToFacets(params.query_string);
-        }
-
-        // delete params.query_string
+        $scope.searchObj.lucene.facets = JSON.parse(params.query_string);
 
         $scope.searchObj.params = params;
         triggerSearchFn();
@@ -460,7 +455,7 @@
                   gnSearchLocation.getParams());
 
               if(scope.searchObj.params.query_string && !scope.searchObj.lucene.facets) {
-                scope.searchObj.lucene.facets = gnESService.luceneQueryToFacets(scope.searchObj.params.query_string);
+                scope.searchObj.lucene.facets = JSON.parse(scope.searchObj.params.query_string);
               }
 
             }
