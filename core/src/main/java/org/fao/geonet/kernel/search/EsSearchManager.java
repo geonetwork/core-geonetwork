@@ -59,6 +59,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -67,6 +68,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
@@ -574,8 +576,9 @@ public class EsSearchManager implements ISearchManager {
         // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/master/java-rest-high-search-scroll.html
 
         int from = 0;
-        // TODO: Review size
-        int size = 1000;
+        SettingInfo si = ApplicationContextHolder.get().getBean(SettingInfo.class);
+        int size = Integer.parseInt(si.getSelectionMaxRecords());
+
         final SearchResponse response = client.query(defaultIndex, "*", docsChangeIncludedFields, from, size);
 
         final Map<String, String> docs = new HashMap<>();
@@ -588,8 +591,9 @@ public class EsSearchManager implements ISearchManager {
     @Override
     public ISODate getDocChangeDate(String mdId) throws Exception {
         int from = 0;
-        // TODO: Review size
-        int size = 1000;
+        SettingInfo si = ApplicationContextHolder.get().getBean(SettingInfo.class);
+        int size = Integer.parseInt(si.getSelectionMaxRecords());
+
         final SearchResponse response = client.query(defaultIndex, "_id:" + mdId, docsChangeIncludedFields, from, size);
 
         if (response.getHits().getTotalHits().value == 1) {
@@ -670,8 +674,8 @@ public class EsSearchManager implements ISearchManager {
         }
 
         int from = 0;
-        // TODO: Review size
-        int size = 1000;
+        SettingInfo si = ApplicationContextHolder.get().getBean(SettingInfo.class);
+        int size = Integer.parseInt(si.getSelectionMaxRecords());
 
         final SearchResponse response = client.query(defaultIndex, query, docsChangeIncludedFields, from, size);
         return response.getHits().getTotalHits().value;
