@@ -34,8 +34,9 @@
       search: {
         facets: gnGlobalSettings.gnCfg.mods.search.facetConfig,
         source: {
-          include: [
+          includes: [
             'uuid',
+            'id',
             'creat*',
             'group*',
             'logo',
@@ -58,7 +59,8 @@
       home: {
         facets: gnGlobalSettings.gnCfg.mods.home.facetConfig,
         source: {
-          include: [
+          includes: [
+            'id',
             'uuid',
             'creat*',
             'topicCat',
