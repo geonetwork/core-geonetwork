@@ -250,7 +250,7 @@ public class CatalogApi {
                     // Search for children records
                     // and service record. At some point this might be extended to all type of relations.
                     final SearchResponse searchResponse = searchManager.query(
-                        String.format("parentUuid:\"%s\" recordOperateOn:\"%s\"", uuid, uuid),
+                        String.format("parentUuid:\"%s\" recordOperateOn:\"%s\"", uuid, uuid), null,
                         FIELDLIST_UUID, 0, maxhits);
 
                     Arrays.asList(searchResponse.getHits().getHits()).forEach(h ->

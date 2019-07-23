@@ -134,7 +134,7 @@ class MEF2Exporter {
                 SettingInfo si = context.getBean(SettingInfo.class);
                 int size = Integer.parseInt(si.getSelectionMaxRecords());
 
-                final SearchResponse result = searchManager.query("+id:" + id, from, size);
+                final SearchResponse result = searchManager.query("+id:" + id, null, from, size);
 
                 String mdSchema = null, mdTitle = null, mdAbstract = null, isHarvested = null;
                 MetadataType mdType = null;

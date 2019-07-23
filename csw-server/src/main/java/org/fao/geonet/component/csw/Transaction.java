@@ -84,13 +84,14 @@ public class Transaction extends AbstractOperation implements CatalogService {
     static final String NAME = "Transaction";
     @Autowired
     SchemaManager _schemaManager;
+    @Autowired
     private SearchController _searchController;
     @Autowired
     private FieldMapper _fieldMapper;
 
     @Autowired
     public Transaction(ApplicationContext context) {
-        _searchController = new SearchController(context);
+
     }
 
 

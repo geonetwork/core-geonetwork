@@ -85,7 +85,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService {
 
     @Autowired
     public GetRecordById(ApplicationContext applicationContext) {
-        _searchController = new SearchController(applicationContext);
+
     }
 
 
@@ -161,7 +161,8 @@ public class GetRecordById extends AbstractOperation implements CatalogService {
                 // to the requested MD
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
                 // TODOES
-                throw new NotImplementedException("CSW not implemented in ES");
+//                throw new NotImplementedException("CSW not implemented in ES");
+
 
 //                final SettingInfo settingInfo = gc.getBean(SearchManager.class).getSettingInfo();
 //                final String displayLanguage = LuceneSearcher.determineLanguage(context, request, settingInfo).presentationLanguage;

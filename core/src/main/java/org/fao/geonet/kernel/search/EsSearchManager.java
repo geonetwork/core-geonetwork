@@ -551,17 +551,18 @@ public class EsSearchManager implements ISearchManager {
         return true;
     }
 
-    public SearchResponse query(String luceneQuery, int startPosition, int maxRecords) throws Exception {
-        return client.query(defaultIndex, luceneQuery, new HashSet<String>(), startPosition, maxRecords);
+    public SearchResponse query(String luceneQuery, String filterQuery, int startPosition, int maxRecords) throws Exception {
+        return client.query(defaultIndex, luceneQuery, filterQuery, new HashSet<String>(), startPosition, maxRecords);
     }
 
-    public SearchResponse query(String luceneQuery, Set<String> includedFields,
+    public SearchResponse query(String luceneQuery, String filterQuery, Set<String> includedFields,
                                 int from, int size) throws Exception {
-        return client.query(defaultIndex, luceneQuery, includedFields, from, size);
+        return client.query(defaultIndex, luceneQuery, filterQuery, includedFields, from, size);
     }
     public SearchResponse query(JsonNode jsonRequest, Set<String> includedFields,
                                 int from, int size) throws Exception {
-        return client.query(defaultIndex, jsonRequest, includedFields, from, size);
+        // TODO: Review postFilterBuilder
+        return client.query(defaultIndex, jsonRequest, null, includedFields, from, size);
     }
     public Map<String, String> getFieldsValues(String id, Set<String> fields) throws Exception {
         return client.getFieldsValues(defaultIndex, id, fields);
@@ -609,7 +610,7 @@ public class EsSearchManager implements ISearchManager {
         SettingInfo si = ApplicationContextHolder.get().getBean(SettingInfo.class);
         int size = Integer.parseInt(si.getSelectionMaxRecords());
 
-        final SearchResponse response = client.query(defaultIndex, "*", docsChangeIncludedFields, from, size);
+        final SearchResponse response = client.query(defaultIndex, "*", null, docsChangeIncludedFields, from, size);
 
         final Map<String, String> docs = new HashMap<>();
         response.getHits().forEach(r -> {
@@ -624,7 +625,7 @@ public class EsSearchManager implements ISearchManager {
         SettingInfo si = ApplicationContextHolder.get().getBean(SettingInfo.class);
         int size = Integer.parseInt(si.getSelectionMaxRecords());
 
-        final SearchResponse response = client.query(defaultIndex, "_id:" + mdId, docsChangeIncludedFields, from, size);
+        final SearchResponse response = client.query(defaultIndex, "_id:" + mdId, null, docsChangeIncludedFields, from, size);
 
         if (response.getHits().getTotalHits().value == 1) {
             String date =
@@ -707,7 +708,7 @@ public class EsSearchManager implements ISearchManager {
         SettingInfo si = ApplicationContextHolder.get().getBean(SettingInfo.class);
         int size = Integer.parseInt(si.getSelectionMaxRecords());
 
-        final SearchResponse response = client.query(defaultIndex, query, docsChangeIncludedFields, from, size);
+        final SearchResponse response = client.query(defaultIndex, query, null, docsChangeIncludedFields, from, size);
         return response.getHits().getTotalHits().value;
     }
 

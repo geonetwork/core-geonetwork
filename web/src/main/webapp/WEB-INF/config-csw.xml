@@ -53,7 +53,7 @@
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString"/>
         </parameter>
 
-        <parameter name="AnyText" field="any" type="SupportedISOQueryables"/>
+        <parameter name="AnyText" field="" type="SupportedISOQueryables"/>
 
         <parameter name="Format" field="format" type="SupportedISOQueryables">
           <xpath schema="iso19139"

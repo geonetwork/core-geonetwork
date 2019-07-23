@@ -215,6 +215,15 @@ public class EsHTTPProxy {
     private String buildQueryFilter(ServiceContext context, String type) throws Exception {
         StringBuilder query = new StringBuilder();
         query.append(buildPermissionsFilter(context).trim());
+
+        if (type.equalsIgnoreCase("metadata")) {
+            query.append(" AND (isTemplate:n)");
+        } else if (type.equalsIgnoreCase("template")) {
+            query.append(" AND (isTemplate:y)");
+        } else if (type.equalsIgnoreCase("subtemplate")) {
+            query.append(" AND (isTemplate:s)");
+        }
+
         final String portalFilter = buildPortalFilter();
         if (!"".equals(portalFilter)) {
             query.append(" ").append(portalFilter);

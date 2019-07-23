@@ -245,7 +245,7 @@ public class MetadataUtils {
         int toValue = Integer.parseInt(to);
 
         final SearchResponse result = searchMan.query(
-            String.format("+%s:%s", relatedIndexFields.get(type), uuid), FIELDLIST_CORE, fromValue, (toValue -fromValue));
+            String.format("+%s:%s", relatedIndexFields.get(type), uuid), null, FIELDLIST_CORE, fromValue, (toValue -fromValue));
 
         Element typeResponse = new Element(type);
         if (result.getHits().getTotalHits().value > 0) {
@@ -284,7 +284,7 @@ public class MetadataUtils {
         SettingInfo si = applicationContext.getBean(SettingInfo.class);
         int size = Integer.parseInt(si.getSelectionMaxRecords());
 
-        final SearchResponse result = searchMan.query(query, from, size);
+        final SearchResponse result = searchMan.query(query, null, from, size);
         if (result.getHits().getTotalHits().value > 0) {
             final SearchHit[] elements = result.getHits().getHits();
             Arrays.asList(elements).forEach(e -> uuids.add((String) e.getSourceAsMap().get(Geonet.IndexFieldNames.UUID)));

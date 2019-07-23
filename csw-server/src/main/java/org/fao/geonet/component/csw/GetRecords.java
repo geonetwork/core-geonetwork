@@ -80,7 +80,9 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     //---
     //---------------------------------------------------------------------------
 
+    @Autowired
     private SearchController _searchController;
+
     @Autowired
     private CatalogConfiguration _catalogConfig;
     @Autowired
@@ -91,7 +93,6 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
     @Autowired
     public GetRecords(ApplicationContext context) {
-        _searchController = new SearchController(context);
     }
 
     /**

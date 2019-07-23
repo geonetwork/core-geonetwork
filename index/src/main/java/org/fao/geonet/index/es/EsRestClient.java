@@ -302,22 +302,23 @@ public class EsRestClient implements InitializingBean {
     /**
      * Query using Lucene query syntax.
      */
-    public SearchResponse query(String index, String luceneQuery, Set<String> includedFields,
+    public SearchResponse query(String index, String luceneQuery, String filterQuery, Set<String> includedFields,
                                 int from, int size) throws Exception {
         final QueryBuilder query = QueryBuilders.queryStringQuery(luceneQuery);
-        return query(index, query, includedFields, from, size);
+        final QueryBuilder filter = QueryBuilders.queryStringQuery(filterQuery);
+        return query(index, query, filter, includedFields, from, size);
     }
 
     /**
      * Query using JSON elastic query
      */
-    public SearchResponse query(String index, JsonNode jsonQuery, Set<String> includedFields,
+    public SearchResponse query(String index, JsonNode jsonQuery, QueryBuilder postFilterBuilder, Set<String> includedFields,
                                 int from, int size) throws Exception {
         final QueryBuilder query = QueryBuilders.wrapperQuery(String.valueOf(jsonQuery));
-        return query(index, query, includedFields, from, size);
+        return query(index, query, postFilterBuilder, includedFields, from, size);
     }
 
-    public SearchResponse query(String index, QueryBuilder queryBuilder, Set<String> includedFields,
+    public SearchResponse query(String index, QueryBuilder queryBuilder, QueryBuilder postFilterBuilder, Set<String> includedFields,
                                 int from, int size) throws Exception {
         if (!activated) {
             return null;
@@ -332,6 +333,9 @@ public class EsRestClient implements InitializingBean {
         searchSourceBuilder.fetchSource(includedFields.toArray(new String[includedFields.size()]), null);
         searchSourceBuilder.from(from);
         searchSourceBuilder.size(size);
+        if (postFilterBuilder != null) {
+            searchSourceBuilder.postFilter(postFilterBuilder);
+        }
 //        searchSourceBuilder.sort(new FieldSortBuilder("_id").order(SortOrder.ASC));
         searchRequest.source(searchSourceBuilder);
 
@@ -377,7 +381,7 @@ public class EsRestClient implements InitializingBean {
         try {
             String query = String.format("_id:%s uuid:%s", id, id);
             // TODO: Check maxRecords
-            final SearchResponse searchResponse = this.query(index, query, fields, 0, 1000);
+            final SearchResponse searchResponse = this.query(index, query, null, fields, 0, 1000);
             if (searchResponse.status().getStatus() == 200) {
                 if (searchResponse.getHits().getTotalHits().value == 1) {
                     final SearchHit[] hits = searchResponse.getHits().getHits();
