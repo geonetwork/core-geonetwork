@@ -154,7 +154,7 @@
       };
 
       this.exportCSV = function(bucket) {
-        window.open(gnHttp.getService('csv') +
+        window.open('../api/records/csv' +
             '?bucket=' + bucket, windowName, windowOption);
       };
       this.validateMd = function(md, bucket) {

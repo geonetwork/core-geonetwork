@@ -299,7 +299,6 @@
   module.value('gnHttpServices', {
     mdGetRDF: 'rdf.metadata.get',
     mdGetXML19139: 'xml_iso19139',
-    csv: 'csv.search',
 
     publish: 'md.publish',
     unpublish: 'md.unpublish',

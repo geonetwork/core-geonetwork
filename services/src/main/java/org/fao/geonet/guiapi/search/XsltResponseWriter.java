@@ -76,7 +76,7 @@ public class XsltResponseWriter {
 
 
         Element settings = settingManager.getAllAsXML(true);
-        settings.setName(envTagName != null ? envTagName : "systemConfig");
+        settings.setName(StringUtils.isNotEmpty(envTagName) ? envTagName : "systemConfig");
         gui.addContent(settings);
         gui.addContent(new Element("reqService").setText("search"));
 

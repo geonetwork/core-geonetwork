@@ -47,7 +47,9 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.rdf.RdfOutputManager;
 import org.fao.geonet.api.records.rdf.RdfSearcher;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.guiapi.search.XsltResponseWriter;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -62,6 +64,7 @@ import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
@@ -130,6 +133,9 @@ public class CatalogApi {
 
     @Autowired
     IMetadataUtils metadataUtils;
+
+    @Autowired
+    DataManager dataManager;
 
     @Autowired
     GeonetworkDataDirectory dataDirectory;
@@ -423,6 +429,79 @@ public class CatalogApi {
             .withParams(params)
             .withXsl("xslt/services/pdf/portal-present-fop.xsl")
             .asPdf(httpResponse, settingManager.getValue("metadata/pdfReport/pdfName"));
+    }
+
+
+
+    @ApiOperation(
+        value = "Get a set of metadata records as CSV",
+        notes = "The CSV is a short summary of each records.",
+        nickname = "getRecordsAsCsv")
+    @RequestMapping(value = "/csv",
+        method = RequestMethod.GET,
+        consumes = {
+            MediaType.ALL_VALUE
+        },
+        produces = {
+            "text/csv"
+        })
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Return requested records as CSV."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
+    @ResponseBody
+    public void exportAsCsv(
+        @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
+            required = false,
+            example = "")
+        @RequestParam(required = false)
+            String[] uuids,
+        @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
+        @ApiIgnore
+        @ApiParam(hidden = false)
+        @RequestParam
+            Map<String, String> allRequestParams,
+        @ApiIgnore
+            HttpSession httpSession,
+        @ApiIgnore
+            HttpServletResponse httpResponse,
+        @ApiIgnore
+            HttpServletRequest httpRequest)
+        throws Exception {
+        final UserSession session = ApiUtils.getUserSession(httpSession);
+        Set<String> uuidList = ApiUtils.getUuidsParameterOrSelection(
+            uuids, bucket, session);
+
+        int maxhits = Integer.parseInt(settingInfo.getSelectionMaxRecords());
+        ServiceContext context = ApiUtils.createServiceContext(httpRequest);
+
+        final SearchResponse searchResponse = searchManager.query(
+            String.format("uuid:(\"%s\")", String.join("\" or \"", uuidList)),
+            "*:*", FIELDLIST_CORE, 0, maxhits);
+
+        Element response = new Element("response");
+        Arrays.asList(searchResponse.getHits().getHits()).forEach(h -> {
+            try {
+                response.addContent(
+                    dataManager.getMetadata(
+                        context,
+                        (String) h.getSourceAsMap().get("id"),
+                        false, false, false));
+            } catch (Exception e) {
+            }
+        });
+
+        Element r = new XsltResponseWriter("")
+            .withXml(response)
+            .withXsl("xslt/services/csv/csv-search.xsl")
+            .asElement();
+        httpResponse.getWriter().write(r.getText());
     }
 
 
