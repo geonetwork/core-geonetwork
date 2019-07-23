@@ -103,7 +103,7 @@
       this.metadataPrint = function(params, bucket) {
         var url;
         if (angular.isObject(params) && params.sortBy) {
-          url = gnHttp.getService('mdGetPDFSelection');
+          url = '../api/records/pdf';
           url += '?sortBy=' + params.sortBy;
           if (params.sortOrder) {
             url += '&sortOrder=' + params.sortOrder;

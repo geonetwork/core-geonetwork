@@ -297,7 +297,6 @@
    */
 
   module.value('gnHttpServices', {
-    mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
     mdGetRDF: 'rdf.metadata.get',
     mdGetXML19139: 'xml_iso19139',
     csv: 'csv.search',

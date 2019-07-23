@@ -469,5 +469,7 @@
     "canceWorkingCopy": "Cancel working copy",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{resourceTitle}}'?",
     "moreLikeThis": "Similar records",
-    "workingCopy": "Working copy"
+    "workingCopy": "Working copy",
+    "onTheWeb": "More online information",
+    "pdfReportTocTitle": "Contents"
 }

@@ -26,27 +26,42 @@
 package org.fao.geonet.guiapi.search;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Utility to mimic what Jeeves was doing
  */
+@Component
 public class XsltResponseWriter {
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
+
     public static final String TRANSLATIONS = "translations";
     Element xml;
-    public XsltResponseWriter() {
+    public XsltResponseWriter(String envTagName) {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
         String url = settingManager.getBaseURL();
         Element gui = new Element("gui");
@@ -61,7 +76,7 @@ public class XsltResponseWriter {
 
 
         Element settings = settingManager.getAllAsXML(true);
-        settings.setName("systemConfig");
+        settings.setName(envTagName != null ? envTagName : "systemConfig");
         gui.addContent(settings);
         gui.addContent(new Element("reqService").setText("search"));
 
@@ -99,6 +114,39 @@ public class XsltResponseWriter {
     public String asHtml() throws Exception {
         return Xml.getString(asElement());
     }
+    public void asPdf(HttpServletResponse response, String documentName) throws Exception {
+        GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
+        Path file = Xml.transformFOP(dataDirectory.getUploadDir(), xml, xsl.toString());
+
+//        // Checks for a parameter documentFileName with the document file name,
+//        // otherwise uses a default value
+        if (StringUtils.isEmpty(documentName)) {
+            documentName = "document.pdf";
+        } else {
+            if (!documentName.endsWith(".pdf")) {
+                documentName = documentName + ".pdf";
+            }
+
+            Calendar c = Calendar.getInstance();
+
+            documentName = documentName.replace("{year}", c.get(Calendar.YEAR) + "");
+            documentName = documentName.replace("{month}", c.get(Calendar.MONTH) + "");
+            documentName = documentName.replace("{day}", c.get(Calendar.DAY_OF_MONTH) + "");
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+
+            documentName = documentName.replace("{date}", dateFormat.format(c.getTime()));
+            documentName = documentName.replace("{datetime}", datetimeFormat.format(c.getTime()));
+        }
+
+        response.setContentType("application/pdf");
+        response.addHeader("Content-Disposition", "attachment; filename=" + documentName);
+        response.setContentLength((int) file.toFile().length());
+        response.getOutputStream().write(Files.readAllBytes(file));
+        response.getOutputStream().flush();
+
+    }
 
     public XsltResponseWriter withJson(String json) {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
@@ -118,4 +166,5 @@ public class XsltResponseWriter {
 
         return this;
     }
+
 }

@@ -23,6 +23,8 @@
 
 package org.fao.geonet.api.records;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -45,6 +47,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.rdf.RdfOutputManager;
 import org.fao.geonet.api.records.rdf.RdfSearcher;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.guiapi.search.XsltResponseWriter;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -57,6 +60,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -84,9 +88,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -97,7 +103,9 @@ import java.util.Set;
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
+import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_CORE;
 import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
+import static org.fao.geonet.kernel.search.IndexFields.SOURCE_CATALOGUE;
 
 @RequestMapping(value = {
     "/{portal}/api/records",
@@ -288,6 +296,133 @@ public class CatalogApi {
                 selectionManger.close(SelectionManager.SELECTION_METADATA);
             }
         }
+    }
+
+    public static Set<String> FIELDLIST_PDF;
+
+    static {
+        FIELDLIST_PDF = ImmutableSet.<String>builder()
+            .add(Geonet.IndexFieldNames.ID)
+            .add(Geonet.IndexFieldNames.UUID)
+            .add("tag")
+            .add("codelist_spatialRepresentationType_text")
+            .add("codelist_maintenanceAndUpdateFrequency_text")
+            .add("format")
+            .add("overview")
+            .add("link")
+            .add("standardName")
+            .add("schema")
+            .add("geom")
+            .add(SOURCE_CATALOGUE)
+            .add(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)
+            .add(Geonet.IndexFieldNames.RESOURCETITLE)
+            .add(Geonet.IndexFieldNames.RESOURCEABSTRACT).build();
+    }
+
+
+    @ApiOperation(
+        value = "Get a set of metadata records as PDF",
+        notes = "The PDF is a short summary of each records with links to the complete metadata record in different format (ie. landing page on the portal, XML)",
+        nickname = "getRecordsAsPdf")
+    @RequestMapping(value = "/pdf",
+        method = RequestMethod.GET,
+        consumes = {
+            MediaType.ALL_VALUE
+        },
+        produces = {
+            "application/pdf"
+        })
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Return requested records as PDF."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
+    @ResponseBody
+    public void exportAsPdf(
+        @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
+            required = false,
+            example = "")
+        @RequestParam(required = false)
+            String[] uuids,
+        @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
+        @ApiIgnore
+        @ApiParam(hidden = false)
+        @RequestParam
+            Map<String, String> allRequestParams,
+        @ApiIgnore
+            HttpSession httpSession,
+        @ApiIgnore
+            HttpServletResponse httpResponse,
+        @ApiIgnore
+            HttpServletRequest httpRequest)
+        throws Exception {
+
+
+        final UserSession session = ApiUtils.getUserSession(httpSession);
+        Set<String> uuidList = ApiUtils.getUuidsParameterOrSelection(
+            uuids, bucket, session);
+
+        int maxhits = Integer.parseInt(settingInfo.getSelectionMaxRecords());
+
+        final SearchResponse searchResponse = searchManager.query(
+            String.format("uuid:(\"%s\")", String.join("\" or \"", uuidList)),
+            "*:*", FIELDLIST_PDF, 0, maxhits);
+
+
+        Map<String, Object> params = new HashMap<>();
+        Element request = new Element("request");
+        allRequestParams.entrySet().forEach(e-> {
+            Element n = new Element(e.getKey());
+            n.setText(e.getValue());
+            request.addContent(n);
+        });
+
+        Element response = new Element("response");
+        Arrays.asList(searchResponse.getHits().getHits()).forEach(h -> {
+            Element r = new Element("metadata");
+            final Map<String, Object> source = h.getSourceAsMap();
+            source.entrySet().forEach(e -> {
+                Object v = e.getValue();
+                if (v instanceof String) {
+                    Element t = new Element(e.getKey());
+                    t.setText((String) v);
+                    r.addContent(t);
+                } else if (v instanceof ArrayList && e.getKey().equals("link")) {
+                    //landform|Physiography of North and Central Eurasia Landform|http://geonetwork3.fao.org/ows/7386_landf|OGC:WMS-1.1.1-http-get-map|application/vnd.ogc.wms_xml
+                    ((ArrayList) v).forEach(i -> {
+                        Element t = new Element(e.getKey());
+                        Map<String, String> linkProperties = (HashMap) i;
+                        t.setText(linkProperties.get("description") + "|" + linkProperties.get("name") + "|" + linkProperties.get("url") + "|" + linkProperties.get("protocol"));
+                        r.addContent(t);
+                    });
+                } else if (v instanceof ArrayList) {
+                    ((ArrayList) v).forEach(i -> {
+                        Element t = new Element(e.getKey());
+                        t.setText((String) i);
+                        r.addContent(t);
+                    });
+                } else if (v instanceof HashMap && e.getKey().equals("overview")) {
+                    Element t = new Element(e.getKey());
+                    Map<String, String> overviewProperties = (HashMap) v;
+                    t.setText(overviewProperties.get("url") + "|" + overviewProperties.get("name"));
+                    r.addContent(t);
+                }
+            });
+            response.addContent(r);
+        });
+
+        new XsltResponseWriter("env")
+            .withJson("catalog/locales/en-core.json")
+            .withJson("catalog/locales/en-search.json")
+            .withXml(response)
+            .withParams(params)
+            .withXsl("xslt/services/pdf/portal-present-fop.xsl")
+            .asPdf(httpResponse, settingManager.getValue("metadata/pdfReport/pdfName"));
     }
 
 
