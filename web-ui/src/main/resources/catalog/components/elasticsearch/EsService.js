@@ -134,7 +134,7 @@
           [extent[2], extent[1]]
         ];
 
-        query.bool.filter = {
+        query.bool.must.push({
           'geo_shape': {
             'geom': {
               'shape': {
@@ -144,7 +144,7 @@
               'relation': p.relation || 'intersects'
             }
           }
-        };
+        });
 
       }
 
