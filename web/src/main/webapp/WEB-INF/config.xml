@@ -167,6 +167,7 @@
   <include>config/config-service-admin-schematron.xml</include>
   <include>config/config-service-admin-notification.xml</include>
   <include>config/config-service-admin-formatter.xml</include>
+  <include>config/config-service-csw.xml</include>
   <include>config/config-service-csw-virtual.xml</include>
   <include>config/config-service-sitemap.xml</include>
   <include>config/config-ui-search.xml</include>
