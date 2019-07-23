@@ -160,31 +160,27 @@ public class GetRecordById extends AbstractOperation implements CatalogService {
                 // Check if the current user has access
                 // to the requested MD
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
-                // TODOES
-//                throw new NotImplementedException("CSW not implemented in ES");
 
+                final String displayLanguage = context.getLanguage();
+                Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null,
+                    displayLanguage);
 
-//                final SettingInfo settingInfo = gc.getBean(SearchManager.class).getSettingInfo();
-//                final String displayLanguage = LuceneSearcher.determineLanguage(context, request, settingInfo).presentationLanguage;
-//                Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null,
-//                    displayLanguage);
-//
-//                if (md != null) {
-//                    final Map<String, GetRecordByIdMetadataTransformer> transformers = context.getApplicationContext()
-//                        .getBeansOfType(GetRecordByIdMetadataTransformer.class);
-//                    for (GetRecordByIdMetadataTransformer transformer : transformers.values()) {
-//                        final Optional<Element> transformedMd = transformer.apply(context, md, outSchema);
-//                        if (transformedMd.isPresent()) {
-//                            md = transformedMd.get();
-//                        }
-//                    }
-//
-//                    response.addContent(md);
-//
-//                    if (_catalogConfig.isIncreasePopularity()) {
-//                        gc.getBean(DataManager.class).increasePopularity(context, id);
-//                    }
-//                }
+                if (md != null) {
+                    final Map<String, GetRecordByIdMetadataTransformer> transformers = context.getApplicationContext()
+                        .getBeansOfType(GetRecordByIdMetadataTransformer.class);
+                    for (GetRecordByIdMetadataTransformer transformer : transformers.values()) {
+                        final Optional<Element> transformedMd = transformer.apply(context, md, outSchema);
+                        if (transformedMd.isPresent()) {
+                            md = transformedMd.get();
+                        }
+                    }
+
+                    response.addContent(md);
+
+                    if (_catalogConfig.isIncreasePopularity()) {
+                        gc.getBean(DataManager.class).increasePopularity(context, id);
+                    }
+                }
             }
         } catch (Exception e) {
             context.error("Raised : " + e);
