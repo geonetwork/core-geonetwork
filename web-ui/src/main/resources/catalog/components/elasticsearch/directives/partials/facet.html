@@ -3,10 +3,10 @@
     <li class="list-group-item"
          data-ng-repeat="item in ctrl.facet.items">
       <label data-ng-click="ctrl.filter(ctrl.facet, item)" data-ng-class="{'gn-facet-active': ctrl.isInSearch(ctrl.facet, item)}">
-        <span class="gn-facet-label">{{::item.name}}</span>&nbsp;
+        <span class="gn-facet-label">{{::item.value}}</span>&nbsp;
         <span class="gn-facet-count">({{::item.count}})</span>
       </label>
-      <div data-es-facet="nestedFacet" data-es-facet-parent-name="::item.name" ng-if="::nestedFacet.items.length" ng-repeat="nestedFacet in ::item.aggs track by nestedFacet.name">
+      <div data-es-facet="nestedFacet" data-es-facet-parent-name="::item.value" ng-if="::nestedFacet.items.length" ng-repeat="nestedFacet in ::item.aggs track by nestedFacet.key">
       </div>
     </li>
   </ul>

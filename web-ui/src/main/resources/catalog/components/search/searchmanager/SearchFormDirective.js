@@ -51,14 +51,17 @@
    * Controller to create new metadata record.
    */
   var searchFormController =
-      function($scope, $location, gnSearchManagerService,
+      function($scope, $location, $parse, gnSearchManagerService,
                gnFacetService, Metadata, gnSearchLocation, gnESClient,
                gnESService, gnAlertService) {
     var defaultParams = {};
     var self = this;
 
     var hiddenParams = $scope.searchObj.hiddenParams;
-    $scope.searchObj.lucene = {}
+    $scope.searchObj.lucene = {};
+    $scope.searchObj.state = {
+      filters: {}
+    };
 
     /** State of the facets of the current search */
     $scope.currentFacets = [];
@@ -190,7 +193,7 @@
       var finalParams = angular.extend(params, hiddenParams);
       $scope.finalParams = finalParams;
 
-      var esParams = gnESService.convertLuceneParams(finalParams, $scope.searchObj.lucene);
+      var esParams = gnESService.convertLuceneParams(finalParams, $scope.searchObj.state);
       gnESClient.search(esParams, $scope.searchResults.selectionBucket || 'metadata').then(function(data) {
         // data is not an object: this is an error
         if (typeof data !== 'object') {
@@ -311,13 +314,16 @@
         var params = angular.copy($scope.searchObj.params);
         cleanSearchParams(params);
 
-        if($scope.searchObj.lucene.facets) {
-          var query_string = JSON.stringify($scope.searchObj.lucene.facets);
+        var filters = $scope.searchObj.state.filters;
+        if(Object.keys(filters).length) {
+          var query_string = JSON.stringify(filters);
           if(query_string) {
             params.query_string = query_string
           } else {
             delete params.query_string
           }
+        } else {
+          delete params.query_string
         }
 
         if (angular.equals(params, $location.search())) {
@@ -336,7 +342,9 @@
 
         var params = angular.copy($location.search());
         if(params.query_string) {
-          $scope.searchObj.lucene.facets = JSON.parse(params.query_string);
+          $scope.searchObj.state.filters = JSON.parse(params.query_string);
+        } else {
+          $scope.searchObj.state.filters = {};
         }
 
         $scope.searchObj.params = params;
@@ -371,7 +379,9 @@
       var customPagination = searchParams;
 
       self.resetPagination(customPagination);
-      $scope.currentFacets = [];
+      $scope.searchObj.state = {
+        filters: {}
+      }
       $scope.triggerSearch();
       $scope.$broadcast('resetSelection');
     };
@@ -393,11 +403,79 @@
 
     $scope.triggerSearch = this.triggerSearch;
     $scope.triggerWildSubtemplateSearch = this.triggerWildSubtemplateSearch;
+
+    /*
+     * Implement AngularJS $parse without the restriction of expressions
+     */
+    var parse = function(path) {
+      var fn =  function(obj) {
+        var paths = path.split('.')
+          , current = obj
+          , i;
+
+        for (i = 0; i < paths.length; ++i) {
+          if (current[paths[i]] == undefined) {
+            return undefined;
+          } else {
+            current = current[paths[i]];
+          }
+        }
+        return current;
+      }
+      fn.assign = function(obj, value) {
+        var paths = path.split('.')
+          , current = obj
+          , i;
+
+        for (i = 0; i < paths.length-1; ++i) {
+          if (current[paths[i]] == undefined) {
+            current[paths[i]] = {}
+          }
+          current = current[paths[i]];
+        }
+        current[paths[paths.length-1]] = value
+      }
+      return fn;
+    };
+
+    var removeKey = function(obj, keys) {
+      var head = keys[0];
+      var tail = keys.slice(1);
+      for (var prop in obj) {
+        obj.hasOwnProperty(prop) && (head === prop && tail.length === 0 ?
+          delete obj[prop] : 'object' === typeof (obj[prop]) && (removeKey(obj[prop], tail),
+        0 === Object.keys(obj[prop]).length && delete obj[prop]))
+      }
+    }
+
+    this.updateState = function(path, value) {
+      var filters = $scope.searchObj.state.filters;
+
+      var getter = parse(path.join('.'));
+      if(!getter(filters)) {
+        var setter = getter.assign;
+        setter(filters, value)
+      } else {
+        removeKey(filters, path)
+      }
+      this.triggerSearch();
+    }
+
+    this.isInSearch = function(path) {
+      var filters = $scope.searchObj.state.filters;
+      var getter = parse(path.join('.'));
+      return getter(filters)
+    }
+
+    this.hasFiltersForKey = function(key) {
+      return !!$scope.searchObj.state.filters[key];
+    }
   };
 
   searchFormController['$inject'] = [
     '$scope',
     '$location',
+    '$parse',
     'gnSearchManagerService',
     'gnFacetService',
     'Metadata',
@@ -456,8 +534,8 @@
               angular.extend(scope.searchObj.params,
                   gnSearchLocation.getParams());
 
-              if(scope.searchObj.params.query_string && !scope.searchObj.lucene.facets) {
-                scope.searchObj.lucene.facets = JSON.parse(scope.searchObj.params.query_string);
+              if(scope.searchObj.params.query_string) {
+                scope.searchObj.state.filters = JSON.parse(scope.searchObj.params.query_string);
               }
 
             }

@@ -54,14 +54,14 @@
       return response.data;
     };
 
-    function createFacetModel(reqAggs, respAggs, isNested) {
+    function createFacetModel(reqAggs, respAggs, isNested, path) {
       var listModel = [];
       for (var fieldId in respAggs) {
         var respAgg = respAggs[fieldId];
         var reqAgg = reqAggs[fieldId];
 
         var facetModel = {
-          name: fieldId,
+          key: fieldId,
           items: []
         };
 
@@ -70,9 +70,11 @@
           facetModel.size = reqAgg.terms.size;
           respAgg.buckets.forEach(function (bucket) {
             if (bucket.key) {
+              var itemPath = (path || []).concat([fieldId, bucket.key + ''])
               var facet = {
-                name: bucket.key,
-                count: bucket.doc_count
+                value: bucket.key,
+                count: bucket.doc_count,
+                path: itemPath
               };
               // nesting
               if(isNested) {
@@ -83,7 +85,7 @@
                 for (var indexKey in reqAgg.aggs) {
                   nestAggs[indexKey] = bucket[indexKey]
                 }
-                facet.aggs = createFacetModel(reqAgg.aggs, nestAggs, true)
+                facet.aggs = createFacetModel(reqAgg.aggs, nestAggs, true, itemPath)
               }
               facetModel.items.push(facet);
             }
@@ -93,7 +95,8 @@
           facetModel.size = DEFAULT_SIZE;
           for (var p in respAgg.buckets) {
             facetModel.items.push({
-              name: p,
+              value: p,
+              path: [fieldId, p],
               query_string: reqAgg.filters.filters[p],
               count: respAgg.buckets[p].doc_count
             });

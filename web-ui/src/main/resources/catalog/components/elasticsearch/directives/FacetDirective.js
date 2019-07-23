@@ -43,9 +43,10 @@
       function (newValue) {
         if (!newValue) return
         var lastFacet = this.lastUpdatedFacet
-        if (this._isFlatTermsFacet(lastFacet) && Object.keys(this.state[lastFacet.name]).length) {
+
+        if (this._isFlatTermsFacet(lastFacet) && this.searchCtrl.hasFiltersForKey(lastFacet.key)) {
           this.list.forEach(function (f) {
-            if (f.name === lastFacet.name) {
+            if (f.key === lastFacet.key) {
               f.items = lastFacet.items
             }
           }.bind(this))
@@ -56,7 +57,6 @@
   }
 
   FacetsController.prototype.$onInit = function () {
-    this.state = this.lucene.facets || {}
   }
 
   FacetsController.prototype.collapseAll = function () {
@@ -70,10 +70,6 @@
     }.bind(this))
   }
 
-  FacetsController.prototype.updateSearch = function () {
-    this.lucene.facets = this.state
-    this.$scope.$parent.triggerSearch();
-  }
 
   FacetsController.prototype._isFlatTermsFacet = function (facet) {
     return facet && (facet.type === 'terms') && !facet.aggs
@@ -94,8 +90,10 @@
         scope: {
           list: '<esFacets',
           sParams: '<params',
-          lucene: '<',
           type: '<facetType'
+        },
+        require: {
+          searchCtrl: '^^ngSearchForm'
         },
         templateUrl: function (elem, attrs) {
           return attrs.template || '../../catalog/components/elasticsearch/directives/' +
@@ -114,57 +112,29 @@
    */
   var FacetController = function ($scope) {
     this.$scope = $scope
-
-    $scope.$on('beforeSearchReset', function () {
-      this._resetState()
-    }.bind(this))
   }
 
   FacetController.prototype.$onInit = function () {
     this.parentCtrl = this.facetCtrl || this.facetsCtrl
-    this._initState()
   }
 
   FacetController.prototype.filter = function (facet, item) {
-    if (this.state[item.name]) {
-      delete this.state[item.name]
-    } else {
-      var itemState
-      if (facet.type === 'terms') {
-        itemState = true
-
-        if (!item.isNested) {
-          this.facetsCtrl.lastUpdatedFacet = facet
-        }
-      } else if (facet.type === 'filters') {
-        itemState = item.query_string.query_string.query
+    var value;
+    if (facet.type === 'terms') {
+      value = true
+      if (!item.isNested) {
+        this.facetsCtrl.lastUpdatedFacet = facet
       }
-      this.state[item.name] = itemState
+    } else if (facet.type === 'filters') {
+      value = item.query_string.query_string.query
     }
-    this.facetsCtrl.updateSearch()
+    this.searchCtrl.updateState(item.path, value)
   }
 
   FacetController.prototype.isInSearch = function (facet, item) {
-    return this.state.hasOwnProperty(item.name) && !angular.isObject(this.state[item.name])
+    return this.searchCtrl.isInSearch(item.path)
   }
 
-  FacetController.prototype._initState = function () {
-    if( this.parentName) {
-      this.parentCtrl.state[this.parentName] = this.parentCtrl.state[this.parentName] || {}
-      this.parentCtrl.state[this.parentName][this.facet.name] = this.state = this.parentCtrl.state[this.parentName][this.facet.name] || {}
-    } else {
-      this.parentCtrl.state[this.facet.name] = this.state = this.parentCtrl.state[this.facet.name] || {}
-    }
-  }
-
-  FacetController.prototype._resetState = function () {
-    if( this.parentName) {
-      this.parentCtrl.state[this.parentName] = {}
-      this.parentCtrl.state[this.parentName][this.facet.name] =  this.state = {}
-    } else {
-      this.parentCtrl.state[this.facet.name] = this.state = {}
-    }
-  }
 
   FacetController.$inject = [
     '$scope'
@@ -184,7 +154,8 @@
         },
         require: {
           facetsCtrl: '^^esFacets',
-          facetCtrl: '?^^esFacet'
+          facetCtrl: '?^^esFacet',
+          searchCtrl: '^^ngSearchForm'
         },
         templateUrl: function (elem, attrs) {
           return attrs.template || '../../catalog/components/elasticsearch/directives/' +

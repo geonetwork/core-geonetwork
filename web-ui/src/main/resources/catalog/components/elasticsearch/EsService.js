@@ -37,9 +37,9 @@
       return gnEsLuceneQueryParser.luceneQueryToFacets(query_string);
     }
 
-    this.convertLuceneParams = function(p, luceneConfig) {
+    this.convertLuceneParams = function(p, searchState) {
       var params = {};
-      var luceneQueryString = gnEsLuceneQueryParser.facetsToLuceneQuery(luceneConfig.facets);
+      var luceneQueryString = gnEsLuceneQueryParser.facetsToLuceneQuery(searchState.filters);
       var query = {
         bool: {
           must: []
