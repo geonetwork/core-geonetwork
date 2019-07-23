@@ -25,6 +25,9 @@ package org.fao.geonet.component.csw;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.*;
@@ -217,8 +220,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             maxHitsInSummary = Integer.parseInt(sMaxRecordsInKeywordSummary);
         }
 
-        // TODOES
-//        Sort sort = getSortFields(request, context);
+        List<SortBuilder<FieldSortBuilder>> sort = getSortFields(request, context);
 
         Element response;
 
@@ -255,7 +257,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
 
             Pair<Element, Element> search = _searchController.search(context, startPos, maxRecords, resultType, outSchema,
-                setName, filterExpr, filterVersion, null, elemNames, typeName, maxHitsInSummary, cswServiceSpecificContraint, elementnameStrategy);
+                setName, filterExpr, filterVersion, sort, elemNames, typeName, maxHitsInSummary, cswServiceSpecificContraint, elementnameStrategy);
 
             // Only add GeoNetwork summary on results_with_summary option
             if (resultType == ResultType.RESULTS_WITH_SUMMARY) {
@@ -724,44 +726,38 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     /**
      * TODO javadoc.
      */
-//    private Sort getSortFields(Element request, ServiceContext context) {
-//        Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
-//        if (query == null) {
-//            return null;
-//        }
-//
-//        Element sortBy = query.getChild("SortBy", Csw.NAMESPACE_OGC);
-//        if (sortBy == null) {
-//            return null;
-//        }
-//
-//        @SuppressWarnings("unchecked")
-//        List<Element> list = sortBy.getChildren();
-//        List<Pair<String, Boolean>> sortFields = new ArrayList<Pair<String, Boolean>>();
-//        for (Element el : list) {
-//            String field = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
-//            String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
-//
-//            // Map CSW search field to Lucene for sorting. And if not mapped assumes the field is a Lucene field.
-//            String luceneField = _fieldMapper.map(field);
-//            if (luceneField != null) {
-//                sortFields.add(Pair.read(luceneField, "DESC".equals(order)));
-//            } else {
-//                sortFields.add(Pair.read(field, "DESC".equals(order)));
-//            }
-//        }
-//
-//        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-//        EsSearchManager sm = gc.getBean(EsSearchManager.class);
-//        // TODOES
-////        boolean requestedLanguageOnTop = sm.getSettingInfo().getRequestedLanguageOnTop();
-////
-////        String preferredLanguage = LuceneSearcher.determineLanguage(context, request, sm.getSettingInfo()).presentationLanguage;
-////
-////        // we always want to keep the relevancy as part of the sorting mechanism
-////        return LuceneSearcher.makeSort(sortFields, preferredLanguage, requestedLanguageOnTop);
-//        throw new NotImplementedException("CSW not implemented in ES");
-//    }
+    private List<SortBuilder<FieldSortBuilder>>  getSortFields(Element request, ServiceContext context) {
+        Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
+        if (query == null) {
+            return null;
+        }
+
+        Element sortBy = query.getChild("SortBy", Csw.NAMESPACE_OGC);
+        if (sortBy == null) {
+            return null;
+        }
+
+        List<SortBuilder<FieldSortBuilder>> sortFields = new ArrayList<>();
+
+        @SuppressWarnings("unchecked")
+        List<Element> list = sortBy.getChildren();
+        for (Element el : list) {
+            String field = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
+            String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
+
+            boolean isDescOrder = "DESC".equals(order);
+
+            // Map CSW search field to Lucene for sorting. And if not mapped assumes the field is a Lucene field.
+            String luceneSortField = _fieldMapper.mapSort(field);
+            if (luceneSortField != null) {
+                sortFields.add(new FieldSortBuilder(luceneSortField).order(isDescOrder?SortOrder.DESC:SortOrder.ASC));
+            //} else {
+                //    sortFields.add(new FieldSortBuilder(field).order(isDescOrder?SortOrder.DESC:SortOrder.ASC));
+            }
+        }
+
+        return sortFields;
+    }
 
 
     /**

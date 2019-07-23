@@ -24,10 +24,13 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortBuilder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
@@ -446,9 +449,9 @@ public class SearchController {
      * @return result
      * @throws CatalogException hmm
      */
-    public Pair<Element, Element> search(ServiceContext context, int startPos, int maxRecords,
+        public Pair<Element, Element> search(ServiceContext context, int startPos, int maxRecords,
                                          ResultType resultType, String outSchema, ElementSetName setName,
-                                         Element filterExpr, String filterVersion, Object sort,
+                                         Element filterExpr, String filterVersion, List<SortBuilder<FieldSortBuilder>> sort,
                                          Set<String> elemNames, String typeName, int maxHitsFromSummary,
                                          String cswServiceSpecificContraint, String strategy) throws CatalogException {
 
@@ -469,8 +472,7 @@ public class SearchController {
         // TODO: How to get summary
 
         try {
-            // TODO: searchManager.query with luceneQuery doesn´t use the filter
-            SearchResponse result = searchManager.query(luceneQuery, filterQueryString, startPos-1, maxRecords);
+            SearchResponse result = searchManager.query(luceneQuery, filterQueryString, startPos-1, maxRecords, sort);
 
             SearchHit[] hits = result.getHits().getHits();
 
@@ -523,48 +525,6 @@ public class SearchController {
         }
 
         //context.getUserSession().setProperty(Geonet.Session.SEARCH_RESULT, searcher);
-
-        // TODOES ?
-
-        // search for results, filtered and sorted
-//        Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher.search(context, filterExpr, filterVersion,
-//            typeName, sort, resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
-//
-//        Element summary = summaryAndSearchResults.one();
-//        int numMatches = Integer.parseInt(summary.getAttributeValue("count"));
-//        if (numMatches != 0 && startPos > numMatches) {
-//            throw new InvalidParameterValueEx("startPosition", String.format(
-//                "Start position (%d) can't be greater than number of matching records (%d for current search).",
-//                startPos, numMatches
-//            ));
-//        }
-
-
-//        final SettingInfo settingInfo = context.getBean(SearchManager.class).getSettingInfo();
-//        String displayLanguage = LuceneSearcher.determineLanguage(context, filterExpr, settingInfo).presentationLanguage;
-        // retrieve actual metadata for results
-//        int counter = retrieveMetadataMatchingResults(context, results, summaryAndSearchResults, maxRecords, setName,
-//            outSchema, elemNames, typeName, resultType, strategy, displayLanguage);
-//
-//        //
-//        // properties of search result
-//        //
-//        results.setAttribute("numberOfRecordsMatched", numMatches + "");
-//        results.setAttribute("numberOfRecordsReturned", counter + "");
-//        results.setAttribute("elementSet", setName.toString());
-//
-//        int nextRecord = counter + startPos;
-//        if (nextRecord >= numMatches) {
-//            //  "number of records returned to client nextRecord -
-//            // position of next record in the result set
-//            // (0 if no records remain)"
-//            // Cf. http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd
-//            results.setAttribute("nextRecord", "0");
-//        } else {
-//            results.setAttribute("nextRecord", nextRecord + "");
-//        }
-//
-//        return Pair.read(summary, results);
     }
 
 

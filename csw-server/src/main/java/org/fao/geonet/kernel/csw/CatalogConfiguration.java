@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.csw;
 import jeeves.constants.ConfigFile;
 import jeeves.server.overrides.ConfigurationOverrides;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -44,8 +45,7 @@ import javax.servlet.ServletContext;
 public class CatalogConfiguration {
 
     // GetRecords variables
-    private final HashMap<String, String> _fieldMapping = new HashMap<String, String>();
-    private final HashMap<String, HashMap<String, String>> _fieldMappingXPath = new HashMap<String, HashMap<String, String>>();
+    private final HashMap<String, CatalogConfigurationGetRecordsField> _fieldMapping = new HashMap<String, CatalogConfigurationGetRecordsField>();
     private final Set<String> _isoQueryables = new HashSet<String>();
     private final Set<String> _additionalQueryables = new HashSet<String>();
     private final Set<String> _getRecordsConstraintLanguage = new HashSet<String>();
@@ -204,7 +204,7 @@ public class CatalogConfiguration {
         @SuppressWarnings("unchecked")
         List<Element> paramsList = params.getChildren(Csw.ConfigFile.Parameters.Child.PARAMETER);
 
-        String name, field, type, range;
+        String name, field, type, range, sortField;
         for (Element param : paramsList) {
             name = param
                 .getAttributeValue(Csw.ConfigFile.Parameter.Attr.NAME);
@@ -214,14 +214,17 @@ public class CatalogConfiguration {
                 .getAttributeValue(Csw.ConfigFile.Parameter.Attr.TYPE);
             range = param
                 .getAttributeValue(Csw.ConfigFile.Parameter.Attr.RANGE, "false");
+            sortField = param
+                .getAttributeValue(Csw.ConfigFile.Parameter.Attr.SORT_FIELD);
+            if (StringUtils.isEmpty(sortField)) {
+                sortField = field;
+            }
 
 
             // TODO: OGC 07-45:
             // Case sensitivity is as follows: For the common queryables use the same case as defined in the base
             // specification (e.g. ‘apiso:title’), for the additional queryables use the cases as defined in this profile
             // (tables 9-14), e.g. ‘apiso:RevisionDate’.
-
-            _fieldMapping.put(name.toLowerCase(), field);
 
             if (range.equals("true"))
                 _getRecordsRangeFields.add(field);
@@ -247,11 +250,14 @@ public class CatalogConfiguration {
                     .getAttributeValue(Csw.ConfigFile.XPath.Attr.PATH);
 
                 xpathMap.put(schema, path);
-
             }
 
-            _fieldMappingXPath.put(name.toLowerCase(), xpathMap);
+            CatalogConfigurationGetRecordsField fieldInfo =
+                new CatalogConfigurationGetRecordsField(name, type, range.equals("true"), field, sortField, xpathMap);
+            _fieldMapping.put(name.toLowerCase(), fieldInfo);
         }
+
+
 
         // OutputFormat parameter
         _getRecordsOutputFormat.addAll(getOutputFormat(operation));
@@ -298,14 +304,9 @@ public class CatalogConfiguration {
         return outformatList;
     }
 
-    public HashMap<String, String> getFieldMapping() {
+    public HashMap<String, CatalogConfigurationGetRecordsField> getFieldMapping() {
         init();
         return _fieldMapping;
-    }
-
-    public HashMap<String, HashMap<String, String>> getFieldMappingXPath() {
-        init();
-        return _fieldMappingXPath;
     }
 
     public Set<String> getTypeMapping(String type) {

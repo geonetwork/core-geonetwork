@@ -1275,6 +1275,12 @@
       "resourceType": {
         "type": "keyword"
       },
+      "resourceIdentifier": {
+        "type": "keyword"
+      },
+      "geoTag": {
+        "type": "keyword"
+      },
       "serviceType": {
         "type": "keyword"
       },

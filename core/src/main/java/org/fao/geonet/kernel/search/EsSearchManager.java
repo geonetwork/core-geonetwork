@@ -49,6 +49,8 @@ import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentParser;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -553,6 +555,10 @@ public class EsSearchManager implements ISearchManager {
 
     public SearchResponse query(String luceneQuery, String filterQuery, int startPosition, int maxRecords) throws Exception {
         return client.query(defaultIndex, luceneQuery, filterQuery, new HashSet<String>(), startPosition, maxRecords);
+    }
+
+    public SearchResponse query(String luceneQuery, String filterQuery, int startPosition, int maxRecords, List<SortBuilder<FieldSortBuilder>> sort) throws Exception {
+        return client.query(defaultIndex, luceneQuery, filterQuery, new HashSet<String>(), startPosition, maxRecords, sort);
     }
 
     public SearchResponse query(String luceneQuery, String filterQuery, Set<String> includedFields,

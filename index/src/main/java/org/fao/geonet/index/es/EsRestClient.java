@@ -59,6 +59,8 @@ import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortBuilder;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,11 +70,7 @@ import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -304,9 +302,14 @@ public class EsRestClient implements InitializingBean {
      */
     public SearchResponse query(String index, String luceneQuery, String filterQuery, Set<String> includedFields,
                                 int from, int size) throws Exception {
+        return query(index, luceneQuery, filterQuery, includedFields, from, size, null);
+    }
+
+    public SearchResponse query(String index, String luceneQuery, String filterQuery, Set<String> includedFields,
+                                int from, int size, List<SortBuilder<FieldSortBuilder>> sort) throws Exception {
         final QueryBuilder query = QueryBuilders.queryStringQuery(luceneQuery);
         final QueryBuilder filter = QueryBuilders.queryStringQuery(filterQuery);
-        return query(index, query, filter, includedFields, from, size);
+        return query(index, query, filter, includedFields, from, size, sort);
     }
 
     /**
@@ -315,11 +318,11 @@ public class EsRestClient implements InitializingBean {
     public SearchResponse query(String index, JsonNode jsonQuery, QueryBuilder postFilterBuilder, Set<String> includedFields,
                                 int from, int size) throws Exception {
         final QueryBuilder query = QueryBuilders.wrapperQuery(String.valueOf(jsonQuery));
-        return query(index, query, postFilterBuilder, includedFields, from, size);
+        return query(index, query, postFilterBuilder, includedFields, from, size, null);
     }
 
     public SearchResponse query(String index, QueryBuilder queryBuilder, QueryBuilder postFilterBuilder, Set<String> includedFields,
-                                int from, int size) throws Exception {
+                                int from, int size, List<SortBuilder<FieldSortBuilder>> sort) throws Exception {
         if (!activated) {
             return null;
         }
@@ -336,6 +339,11 @@ public class EsRestClient implements InitializingBean {
         if (postFilterBuilder != null) {
             searchSourceBuilder.postFilter(postFilterBuilder);
         }
+
+        if ((sort != null) && (!sort.isEmpty())) {
+            sort.forEach(s -> searchSourceBuilder.sort(s));
+        }
+
 //        searchSourceBuilder.sort(new FieldSortBuilder("_id").order(SortOrder.ASC));
         searchRequest.source(searchSourceBuilder);
 
@@ -381,7 +389,7 @@ public class EsRestClient implements InitializingBean {
         try {
             String query = String.format("_id:%s uuid:%s", id, id);
             // TODO: Check maxRecords
-            final SearchResponse searchResponse = this.query(index, query, null, fields, 0, 1000);
+            final SearchResponse searchResponse = this.query(index, query, null, fields, 0, 1000, null);
             if (searchResponse.status().getStatus() == 200) {
                 if (searchResponse.getHits().getTotalHits().value == 1) {
                     final SearchHit[] hits = searchResponse.getHits().getHits();
