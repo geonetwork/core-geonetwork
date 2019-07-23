@@ -364,7 +364,8 @@ public class EsSearchManager implements ISearchManager {
                 // TODOES: Report status of failures
                 try {
                     final BulkResponse bulkItemResponses = client.bulkRequest(defaultIndex, listOfDocumentsToIndex);
-                    if (bulkItemResponses.status().getStatus() == 201) {
+                    int responseStatus = bulkItemResponses.status().getStatus();
+                    if ((responseStatus == 201) || (responseStatus == 200)) {
                         // TODOES: inform about time ellapsed ?
                     } else {
                         Map<String, String> listErrorOfDocumentsToIndex = new HashMap<>(bulkItemResponses.getItems().length);
