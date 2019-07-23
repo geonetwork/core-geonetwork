@@ -116,6 +116,11 @@
 
   FacetController.prototype.$onInit = function () {
     this.parentCtrl = this.facetCtrl || this.facetsCtrl
+
+    // init collapsed state
+    for (var item in this.facet.items) {
+      item.collapsed = false;
+    }
   }
 
   FacetController.prototype.filter = function (facet, item) {
@@ -135,6 +140,9 @@
     return this.searchCtrl.isInSearch(item.path)
   }
 
+  FacetController.prototype.toggleCollapse = function (item) {
+    item.collapsed = !item.collapsed;
+  }
 
   FacetController.$inject = [
     '$scope'
