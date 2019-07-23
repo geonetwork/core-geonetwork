@@ -170,7 +170,7 @@ public class EsHTTPProxy {
                                   JsonNode esQuery) throws Exception {
 
         // Build filter node
-        String esFilter = buildQueryFilter(context, "metadata");
+        String esFilter = buildQueryFilter(context, "");
         JsonNode nodeFilter = objectMapper.readTree(esFilter);
 
         JsonNode queryNode = esQuery.get("query");
