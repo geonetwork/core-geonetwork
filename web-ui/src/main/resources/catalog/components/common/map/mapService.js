@@ -387,34 +387,6 @@
           /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
-           * @name gnMap#getBboxFromMd
-           *
-           * @description
-           * Get the extent of the md.
-           * It is stored in the object md.geoBox as an array of String
-           * '150|-12|160|12'.
-           * Returns it as an array of array of floats.
-           *
-           * @param {Object} md to extract bbox from
-           */
-          getBboxFromMd: function(md) {
-            if (angular.isUndefined(md.geoBox)) return;
-            var bboxes = [];
-            angular.forEach(md.geoBox, function(bbox) {
-              var c = bbox.split('|');
-              if (angular.isArray(c) && c.length == 4) {
-                bboxes.push([parseFloat(c[0]),
-                      parseFloat(c[1]),
-                      parseFloat(c[2]),
-                      parseFloat(c[3])]);
-              }
-            });
-            return bboxes;
-          },
-
-          /**
-           * @ngdoc method
-           * @methodOf gn_map.service:gnMap
            * @name gnMap#getBboxFeatureFromMd
            *
            * @description
@@ -426,35 +398,22 @@
            */
           getBboxFeatureFromMd: function(md, proj) {
             var feat = new ol.Feature();
-            var extent = this.getBboxFromMd(md);
+            var wkts = md.geom;
             var projExtent = proj.getExtent();
-            if (extent) {
+            if (wkts && wkts.length) {
+
               var geometry;
-              // If is composed of one geometry of type point
-              if (extent.length === 1 &&
-                  extent[0][0] === extent[0][2] &&
-                  extent[0][1] === extent[0][3]) {
-                geometry = new ol.geom.Point([extent[0][0], extent[0][1]]);
-              } else {
-                // Build multipolygon from the set of bboxes
-                geometry = new ol.geom.MultiPolygon(null);
-                for (var j = 0; j < extent.length; j++) {
-                  // TODO: Point will not be supported in multi geometry
-                  var projectedExtent = ol.proj.transformExtent(extent[j], 'EPSG:4326', proj);
-                  if (!ol.extent.intersects(projectedExtent, projExtent)) {
-                    continue;
-                  }
-                  var coords = this.getPolygonFromExtent(
-                    ol.extent.getIntersection(projectedExtent, projExtent)
-                  );
-                  geometry.appendPolygon(new ol.geom.Polygon(coords));
-                }
-              }
-              // no valid bbox was found: clear geometry
-              if (!geometry.getPolygons().length) {
-                geometry = null;
-              }
-              feat.setGeometry(geometry);
+              var geoms = [];
+              var format = new ol.format.WKT();
+              wkts.forEach(function(wkt) {
+                var geom = format.readGeometry(wkt, {
+                  featureProjection: proj,
+                  dataProjection: 'EPSG:4326'
+                })
+                geoms.push(geom);
+              })
+              var geometryCollection = new ol.geom.GeometryCollection(geoms);
+              feat.setGeometry(geometryCollection);
             }
             return feat;
           },

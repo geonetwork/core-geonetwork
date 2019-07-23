@@ -50,7 +50,8 @@
             'image*',
             'status*',
             'rating',
-            'tag*'
+            'tag*',
+            'geom'
           ]
         }
       },

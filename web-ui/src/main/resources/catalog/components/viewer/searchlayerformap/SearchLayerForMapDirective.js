@@ -85,9 +85,10 @@
             gnRelatedResources.getAction('WMS')(link);
           };
           scope.zoomToLayer = function(md) {
-            var extent = gnMap.getBboxFromMd(md);
+            var proj = scope.map.getView().getProjection();
+            var feat = gnMap.getBboxFeatureFromMd(md, proj);
+            var extent = feat.getGeometry().getExtent();
             if (extent) {
-              var proj = scope.map.getView().getProjection();
               extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
                   ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
                   proj.getExtent();
