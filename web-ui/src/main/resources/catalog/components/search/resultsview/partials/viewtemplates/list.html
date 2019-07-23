@@ -60,7 +60,7 @@
             <a data-ng-href="#/metadata/{{md.uuid}}"
                title="{{md.resourceTitle}}"
                aria-label="{{md.resourceTitle}}">
-              <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
+              <i class="fa gn-icon-{{md.resourceType[0]}}" title="{{md.resourceType[0] | translate}}"/>
               {{md.resourceTitle}}</a>
           </h1>
         </div>
@@ -70,7 +70,14 @@
             data-ng-click="openRecord($index, md, searchResults.records)"
             dd-text-collapse dd-text-collapse-max-length="350"
             dd-text-collapse-text="{{md.resourceAbstract}}"></p>
-          <address ng-if="md.allContacts.resource">{{::md.allContacts.resource}}</address>
+          <p ng-if="::!md.getAllContacts().resource">&nbsp;</p>
+          <p data-ng-repeat="c in ::md.getAllContacts().resource track by $index">
+            <img data-ng-if="::c.logo"
+                 data-ng-src="{{::c.logo}}"
+                 class="gn-source-logo"
+                 title="{{::c.name}} ({{::c.role}})"/>
+            {{::c.name}}
+          </p>
         </div>
 
         <div gn-grid-related
