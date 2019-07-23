@@ -81,7 +81,7 @@
 
   module.directive('esFacets', [
     'gnFacetConfigService', 'gnLangs',
-    function (gnFacetConfigService, gnLangs) {
+    function (gnLangs) {
       return {
         restrict: 'A',
         controllerAs: 'ctrl',
@@ -142,7 +142,7 @@
 
   module.directive('esFacet', [
     'gnFacetConfigService', 'gnLangs',
-    function (gnFacetConfigService, gnLangs) {
+    function (gnLangs) {
       return {
         restrict: 'A',
         controllerAs: 'ctrl',
