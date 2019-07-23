@@ -95,7 +95,22 @@ goog.require('gn_alert');
           'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/home',
           'showSocialBarInFooter': true,
-          'fluidLayout': true
+          'fluidLayout': true,
+          'facetConfig': {
+            'resourceType': {
+              'terms': {
+                'field': 'resourceType',
+                'size': 10
+              }
+            },
+            'topic': {
+              'terms': {
+                'field': 'topic',
+                'size': 20
+              }
+            }
+            // TODOES: Add INSPIRE
+          }
         },
         'search': {
           'enabled': true,
@@ -106,81 +121,50 @@ goog.require('gn_alert');
           },
           'facetTabField': '',
           'facetConfig': {
-            'home': {
-              'resourceType': {
-                'terms': {
-                  'field': 'resourceType',
-                  'size': 10
-                }
+            'resourceType': {
+              'terms': {
+                'field': 'resourceType'
               },
-              'topic': {
-                'terms': {
-                  'field': 'topic',
-                  'size': 20
-                }
-              }
-              // TODOES: Add INSPIRE
-            },
-            'mainsearch': {
-              "resourceType": {
-                "terms": {
-                  "field": "resourceType"
-                },
-                "aggs": {
-                  "format": {
-                    "terms": {
-                      "field": "format"
-                    }
+              'aggs': {
+                'format': {
+                  'terms': {
+                    'field': 'format'
                   }
                 }
-              },
-              'availableInServices': {
+              }
+            },
+            'availableInServices': {
+              'filters': {
                 'filters': {
-                  'filters': {
-                    'availableInViewService': {
-                      'query_string': {
-                        'query': '+linkProtocol:/OGC:WMS.*/'
-                      }
-                    },
-                    'availableInDownloadService': {
-                      'query_string': {
-                        'query': '+linkProtocol:/OGC:WFS.*/'
-                      }
+                  'availableInViewService': {
+                    'query_string': {
+                      'query': '+linkProtocol:/OGC:WMS.*/'
+                    }
+                  },
+                  'availableInDownloadService': {
+                    'query_string': {
+                      'query': '+linkProtocol:/OGC:WFS.*/'
                     }
                   }
                 }
-              },
-              'codelist_spatialRepresentationType': {
-                'terms': {
-                  'field': 'codelist_spatialRepresentationType',
-                  'size': 10
-                }
-              },
-              'creationYearForResource': {
-                'terms': {
-                  'field': 'creationYearForResource',
-                  'size': 5
-                }
-              },
-              'tag': {
-                'terms': {
-                  'field': 'tag',
-                  'size': 15
-                }
               }
             },
-            'adminsearch': {
-              'tag': {
-                'terms': {
-                  'field': 'tag',
-                  'size': 15
-                }
-              },
-              'resourceType': {
-                'terms': {
-                  'field': 'resourceType',
-                  'size': 10
-                }
+            'codelist_spatialRepresentationType': {
+              'terms': {
+                'field': 'codelist_spatialRepresentationType',
+                'size': 10
+              }
+            },
+            'creationYearForResource': {
+              'terms': {
+                'field': 'creationYearForResource',
+                'size': 5
+              }
+            },
+            'tag': {
+              'terms': {
+                'field': 'tag',
+                'size': 15
               }
             }
           },
@@ -324,7 +308,21 @@ goog.require('gn_alert');
           'fluidEditorLayout': true,
           'createPageTpl':
               '../../catalog/templates/editor/new-metadata-horizontal.html',
-          'editorIndentType': ''
+          'editorIndentType': '',
+          'facetConfig': {
+            'tag': {
+              'terms': {
+                'field': 'tag',
+                'size': 15
+              }
+            },
+            'resourceType': {
+              'terms': {
+                'field': 'resourceType',
+                'size': 10
+              }
+            }
+          }
         },
         'admin': {
           'enabled': true,

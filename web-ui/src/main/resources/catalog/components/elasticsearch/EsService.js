@@ -144,7 +144,7 @@
       //   },
       //   "max_concurrent_group_searches": 4
       // };
-      gnESFacet.addFacets(params, 'mainsearch');
+      gnESFacet.addFacets(params, 'search');
       return params;
     };
 

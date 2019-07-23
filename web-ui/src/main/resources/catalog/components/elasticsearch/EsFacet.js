@@ -30,7 +30,11 @@
 
   module.service('gnESFacet', ['gnGlobalSettings', function(gnGlobalSettings) {
 
-    this.configs = gnGlobalSettings.gnCfg.mods.search.facetConfig;
+    this.configs = {
+      search: gnGlobalSettings.gnCfg.mods.search.facetConfig,
+      home: gnGlobalSettings.gnCfg.mods.home.facetConfig,
+      editor: gnGlobalSettings.gnCfg.mods.editor.facetConfig,
+    };
 
     this.addFacets = function(esParams, type) {
       esParams.aggregations = this.getAggregationFromConfig(type);
