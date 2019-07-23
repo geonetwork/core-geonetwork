@@ -28,6 +28,7 @@ import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataU
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +38,7 @@ import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.elasticsearch.action.update.UpdateResponse;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -59,6 +61,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -109,6 +112,9 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Autowired
     private IndexingList indexingList;
+
+    @Autowired
+    private EsSearchManager searchManager;
 
     @Autowired
     private GeonetworkDataDirectory dataDirectory;
@@ -493,13 +499,16 @@ public class BaseMetadataUtils implements IMetadataUtils {
     public void increasePopularity(ServiceContext srvContext, String id) throws Exception {
         // READONLYMODE
         if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
-            // Update the popularity in database
             int iId = Integer.parseInt(id);
             metadataRepository.incrementPopularity(iId);
-
-            // And register the metadata to be indexed in the near future
-            final IndexingList list = srvContext.getBean(IndexingList.class);
-            list.add(iId);
+            final Metadata metadata = metadataRepository.findOne(iId);
+            searchManager.updateFieldAsynch(
+                metadata.getUuid(),
+                Geonet.IndexFieldNames.POPULARITY,
+                metadata.getDataInfo().getPopularity());
+//            // And register the metadata to be indexed in the near future
+//            final IndexingList list = srvContext.getBean(IndexingList.class);
+//            list.add(iId);
         } else {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER,
