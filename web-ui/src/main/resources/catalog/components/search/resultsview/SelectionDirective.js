@@ -104,7 +104,7 @@
                 .then(function(res) {
                   if (angular.isArray(res.data)) {
                     scope.resetSearch({
-                      _uuid: res.data.join(' or ')
+                      uuid: res.data
                     });
                   }
                 });
