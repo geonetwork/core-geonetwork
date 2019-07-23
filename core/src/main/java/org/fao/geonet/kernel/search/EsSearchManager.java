@@ -367,10 +367,12 @@ public class EsSearchManager implements ISearchManager {
                             }
                         });
 
-                        BulkResponse response = client.bulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
-                        if (!(response.status().getStatus() != 201)) {
-                            LOGGER.error("Failed to save error documents {}.",
-                                new Object[]{errorDocumentIds.toArray().toString()});
+                        if (listErrorOfDocumentsToIndex.size() > 0) {
+                            BulkResponse response = client.bulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
+                            if (!(response.status().getStatus() != 201)) {
+                                LOGGER.error("Failed to save error documents {}.",
+                                    new Object[]{errorDocumentIds.toArray().toString()});
+                            }
                         }
                     }
                 } catch (IOException e) {
