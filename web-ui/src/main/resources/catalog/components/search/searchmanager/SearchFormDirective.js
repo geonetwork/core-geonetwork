@@ -34,14 +34,12 @@
 
 
   goog.require('gn_catalog_service');
-  goog.require('gn_facets');
   goog.require('gn_search_form_results_directive');
   goog.require('gn_selection_directive');
   goog.require('search_filter_tags_directive');
 
   var module = angular.module('gn_search_form_controller', [
     'gn_catalog_service',
-    'gn_facets',
     'gn_selection_directive',
     'gn_search_form_results_directive',
     'search_filter_tags_directive'
@@ -52,7 +50,7 @@
    */
   var searchFormController =
       function($scope, $location, $parse, gnSearchManagerService,
-               gnFacetService, Metadata, gnSearchLocation, gnESClient,
+               Metadata, gnSearchLocation, gnESClient,
                gnESService, gnAlertService) {
     var defaultParams = {};
     var self = this;
@@ -62,9 +60,6 @@
     $scope.searchObj.state = {
       filters: {}
     };
-
-    /** State of the facets of the current search */
-    $scope.currentFacets = [];
 
     /** Object where are stored result search information */
     $scope.searchResults = {
@@ -134,7 +129,6 @@
      * triggerSearch
      *
      * Run a search with the actual $scope.params
-     * merged with the params from facets state.
      * Update the paginationInfo object with the total
      * count of metadata found.
      *
@@ -181,15 +175,7 @@
         angular.extend($scope.searchObj.params, $scope.searchObj.sortbyDefault);
       }
 
-      // Don't add facet extra params to $scope.params but
-      // compute them each time on a search.
       var params = angular.copy($scope.searchObj.params);
-
-      if ($scope.currentFacets.length > 0) {
-        angular.extend(params,
-            gnFacetService.getParamsFromFacets($scope.currentFacets));
-      }
-
       var finalParams = angular.extend(params, hiddenParams);
       $scope.finalParams = finalParams;
 
@@ -212,7 +198,6 @@
         });
         $scope.searchResults.records = records;
         $scope.searchResults.count = data.hits.total.value;
-        $scope.searchResults.facets = data.facets || {};  // TODOES: actually get facets from response
 
         // compute page number for pagination
         if ($scope.hasPagination) {
@@ -250,7 +235,6 @@
      * triggerWildSubtemplateSearch
      *
      * Run a search with the actual $scope.params
-     * merged with the params from facets state.
      * Update the paginationInfo object with the total
      * count of metadata found. Note that this search
      * is for subtemplates with _root element provided as function
@@ -260,13 +244,7 @@
 
       angular.extend($scope.params, defaultParams);
 
-      // Don't add facet extra params to $scope.params but
-      // compute them each time on a search.
       var params = angular.copy($scope.params);
-      if ($scope.currentFacets.length > 0) {
-        angular.extend(params,
-            gnFacetService.getParamsFromFacets($scope.currentFacets));
-      }
 
       // Add wildcard char to search, limit to subtemplates and the _root
       // element of the subtemplate we want
@@ -284,7 +262,6 @@
       //     function(data) {
       //       $scope.searchResults.records = data.metadata;
       //       $scope.searchResults.count = data.count;
-      //       $scope.searchResults.facet = data.facet;
 
       //       // compute page number for pagination
       //       if ($scope.searchResults.records.length > 0 &&
@@ -477,7 +454,6 @@
     '$location',
     '$parse',
     'gnSearchManagerService',
-    'gnFacetService',
     'Metadata',
     'gnSearchLocation',
     'gnESClient',
