@@ -1,16 +1,43 @@
-<div data-ng-class="{'is-date': !!ctrl.facet.dates}">
-  <ul class="list-group">
-    <li class="list-group-item"
-         data-ng-repeat="item in ctrl.facet.items">
-      <label data-ng-click="ctrl.filter(ctrl.facet, item)" data-ng-class="{'gn-facet-active': ctrl.isInSearch(ctrl.facet, item)}">
-        <span class="gn-facet-label">{{::item.value}}</span>&nbsp;
-        <span class="gn-facet-count">({{::item.count}})</span>
-      </label>
-      <div data-es-facet="nestedFacet" data-es-facet-parent-name="::item.value" ng-if="::nestedFacet.items.length" ng-repeat="nestedFacet in ::item.aggs track by nestedFacet.key">
+<div>
+  <div class="gn-facet-container"
+       ng-repeat="item in ctrl.facet.items">
+    <div class="gn-facet-item">
+      <a href
+         class="gn-facet-collapse-toggle"
+         ng-click="ctrl.toggleCollapse(item)">
+        <span ng-if="::item.aggs[0].items.length"
+              class="fa"
+              ng-class="item.collapsed ? 'fa-plus-square' : 'fa-minus-square'">
+        </span>
+      </a>
+      <a href
+         class="flex-row flex-align-center width-100"
+         ng-class="{'gn-facet-checked': ctrl.isInSearch(ctrl.facet, item)}"
+         title="{{item.value | capitalize}}"
+         ng-click="ctrl.filter(ctrl.facet, item)">
+        <span class="fa fa-fw"
+              ng-class="ctrl.isInSearch(ctrl.facet, item) ? 'fa-check-square' : 'fa-square-o'">
+        </span>
+        <span class="gn-facet-label flex-shrink text-ellipsis">
+          {{::item.value | capitalize}}
+        </span>
+        &nbsp;
+        <span class="gn-facet-count flex-no-shrink">({{::item.count}})</span>
+      </a>
+    </div>
+    <div class="gn-facet-children"
+         ng-show="!item.collapsed">
+      <div es-facet="nestedFacet"
+           es-facet-parent-name="::item.value"
+           ng-if="::nestedFacet.items.length"
+           ng-repeat="nestedFacet in ::item.aggs track by nestedFacet.key">
       </div>
-    </li>
-  </ul>
-  <a href class="see-more" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">
+    </div>
+  </div>
+  <a href
+     class="see-more"
+     ng-click="getMore(field)"
+     ng-if="field.more && !field.dates && !field.tree">
     <span translate>more</span>...
   </a>
 </div>
