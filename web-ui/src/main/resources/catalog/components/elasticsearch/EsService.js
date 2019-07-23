@@ -137,6 +137,8 @@
       //   "max_concurrent_group_searches": 4
       // };
       gnESFacet.addFacets(params, 'search');
+      gnESFacet.addSourceConfiguration(params, 'search');
+
       return params;
     };
 

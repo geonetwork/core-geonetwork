@@ -31,20 +31,57 @@
   module.service('gnESFacet', ['gnGlobalSettings', function(gnGlobalSettings) {
 
     this.configs = {
-      search: gnGlobalSettings.gnCfg.mods.search.facetConfig,
-      home: gnGlobalSettings.gnCfg.mods.home.facetConfig,
-      editor: gnGlobalSettings.gnCfg.mods.editor.facetConfig,
+      search: {
+        facets: gnGlobalSettings.gnCfg.mods.search.facetConfig,
+        source: {
+          include: [
+            'uuid',
+            'creat*',
+            'group*',
+            'logo',
+            'category',
+            'topicCat',
+            'inspire*',
+            'resource*',
+            'draft',
+            'overview.*',
+            'owner*',
+            'link*',
+            'image*',
+            'status*',
+            'rating',
+            'tag*'
+          ]
+        }
+      },
+      home: {
+        facets: gnGlobalSettings.gnCfg.mods.home.facetConfig,
+        source: {
+          include: [
+            'uuid',
+            'creat*',
+            'topicCat',
+            'inspire*',
+            'resource*',
+            'image*',
+            'tag*'
+          ]
+        }
+      },
+      editor: {
+        facets: gnGlobalSettings.gnCfg.mods.editor.facetConfig,
+        source: {}
+      }
     };
 
     this.addFacets = function(esParams, type) {
-      esParams.aggregations = this.getAggregationFromConfig(type);
+      var aggs = typeof type === 'string' ? this.configs[type].facets : type;
+      esParams.aggregations = aggs;
     };
 
-    this.getAggregationFromConfig = function(typeOrConfig) {
-      var aggs = typeof typeOrConfig === 'string' ?
-        this.configs[typeOrConfig] : typeOrConfig;
-
-      return aggs;
+    this.addSourceConfiguration = function(esParams, type) {
+      var source = typeof type === 'string' ? this.configs[type].source : type;
+      esParams._source = source;
     };
 
     this.getUIModel = function(response, request) {
