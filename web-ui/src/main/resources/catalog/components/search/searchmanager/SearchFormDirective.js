@@ -335,7 +335,9 @@
         if (newUrl == gnSearchLocation.lastSearchUrl) return;
 
         var params = angular.copy($location.search());
-        $scope.searchObj.lucene.facets = JSON.parse(params.query_string);
+        if(params.query_string) {
+          $scope.searchObj.lucene.facets = JSON.parse(params.query_string);
+        }
 
         $scope.searchObj.params = params;
         triggerSearchFn();
