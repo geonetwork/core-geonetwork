@@ -33,10 +33,6 @@
       return gnEsLuceneQueryParser.facetsToLuceneQuery(facetsState);
     }
 
-    this.luceneQueryToFacets = function(query_string) {
-      return gnEsLuceneQueryParser.luceneQueryToFacets(query_string);
-    }
-
     this.convertLuceneParams = function(p, searchState) {
       var params = {};
       var luceneQueryString = gnEsLuceneQueryParser.facetsToLuceneQuery(searchState.filters);
@@ -46,11 +42,7 @@
         }
       };
 
-
-
-
       var query_string;
-
       var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',
         'sortBy', 'sortOrder', 'resultType', 'facet.q', 'any', 'geometry', 'query_string',
         'creationDateFrom', 'creationDateTo', 'dateFrom', 'dateTo'];

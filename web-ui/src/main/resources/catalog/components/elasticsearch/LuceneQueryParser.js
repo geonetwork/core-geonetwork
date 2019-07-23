@@ -76,17 +76,6 @@
       return this.combineQueryGroups(query)
     }
 
-    this.luceneQueryToFacets = function (query_string) {
-      if (query_string) {
-
-        var astRoot = lucenequeryparser.parse(query_string)
-        var facets = {}
-
-        parseAstNode(astRoot, facets)
-        return facets
-      }
-    }
-
     function parseStateNode(nodeName, node, indexKey) {
       var query_string = ''
       if (angular.isObject(node)) {

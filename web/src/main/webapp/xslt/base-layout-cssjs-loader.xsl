@@ -118,8 +118,6 @@
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/proj4js-compressed.js?v={$buildNumber}"></script>
 
-        <script src="{$uiResourcesPath}lib/lucene-parser/lucene-query-parser.js?v={$buildNumber}"></script>
-
         <xsl:choose>
           <xsl:when test="$is3DModeAllowed">
             <script src="{$uiResourcesPath}lib/ol3cesium/Cesium/Cesium.js?v={$buildNumber}"></script>
