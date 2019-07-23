@@ -198,7 +198,8 @@
         });
         $scope.searchResults.records = records;
         $scope.searchResults.count = data.hits.total.value;
-
+        $scope.searchResults.facets = data.facets || {}
+        
         // compute page number for pagination
         if ($scope.hasPagination) {
 
