@@ -36,6 +36,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
@@ -46,6 +47,8 @@ import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.script.Script;
+import org.elasticsearch.script.ScriptType;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.fao.geonet.ApplicationContextHolder;
@@ -77,6 +80,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -202,11 +206,11 @@ public class EsSearchManager implements ISearchManager {
         }
     }
 
-    private void addMoreFields(Element doc, List<Element> fields) {
-        for (Element field : fields) {
-            doc.addContent(new Element(field.getAttributeValue(FIELDNAME))
-                .setText(field.getAttributeValue(FIELDSTRING)));
-        }
+    private void addMoreFields(Element doc, Map<String, Object> fields) {
+        fields.entrySet().forEach(e -> {
+            doc.addContent(new Element(e.getKey())
+                .setText(String.valueOf(e.getValue())));
+        });
     }
 
     public Element makeField(String name, String value) {
@@ -298,8 +302,25 @@ public class EsSearchManager implements ISearchManager {
 
     public UpdateResponse updateFields(String id, Map<String, Object> fields) throws Exception {
         fields.put("indexingDate", new Date());
-        UpdateRequest request = new UpdateRequest(defaultIndex, id).doc(fields);
-        return client.getClient().update(request, RequestOptions.DEFAULT);
+        UpdateRequest updateRequest = new UpdateRequest(defaultIndex, id).doc(fields);
+        return client.getClient().update(updateRequest, RequestOptions.DEFAULT);
+    }
+    public BulkResponse updateFields(String id, Map<String, Object> fields, Set<String> fieldsToRemove) throws Exception {
+        fields.put("indexingDate", new Date());
+        BulkRequest bulkrequest = new BulkRequest();
+        StringBuffer script = new StringBuffer();
+        fieldsToRemove.forEach(f ->
+            script.append(String.format("ctx._source.remove('%s');", f)));
+
+        UpdateRequest deleteFieldRequest =
+            new UpdateRequest(defaultIndex, id).script(new Script(ScriptType.INLINE,
+                "painless",
+                script.toString(),
+                Collections.emptyMap()));
+        bulkrequest.add(deleteFieldRequest);
+        UpdateRequest addFieldRequest = new UpdateRequest(defaultIndex, id).doc(fields);
+        bulkrequest.add(addFieldRequest);
+        return client.getClient().bulk(bulkrequest, RequestOptions.DEFAULT);
     }
 
     public void updateFieldsAsynch(String id, Map<String, Object> fields) throws Exception {
@@ -331,12 +352,14 @@ public class EsSearchManager implements ISearchManager {
     }
 
     @Override
-    public void index(Path schemaDir, Element metadata, String id, List<Element> moreFields,
-                      MetadataType metadataType, String root, boolean forceRefreshReaders) throws Exception {
+    public void index(Path schemaDir, Element metadata, String id,
+                      Map<String, Object> dbFields,
+                      MetadataType metadataType, String root,
+                      boolean forceRefreshReaders) throws Exception {
 
         Element docs = new Element("doc");
         addMDFields(docs, schemaDir, metadata);
-        addMoreFields(docs, moreFields);
+        addMoreFields(docs, dbFields);
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode doc = documentToJson(docs);

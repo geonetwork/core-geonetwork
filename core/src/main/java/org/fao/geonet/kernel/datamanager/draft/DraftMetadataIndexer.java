@@ -32,10 +32,10 @@ import org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.utils.Log;
-import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Vector;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DraftMetadataIndexer extends BaseMetadataIndexer implements IMetadataIndexer {
 
@@ -51,29 +51,30 @@ public class DraftMetadataIndexer extends BaseMetadataIndexer implements IMetada
         metadataDraftRepository = context.getBean(MetadataDraftRepository.class);
     }
 
-    @Override
     /**
      * Adds the specific draft related fields.
      *
      * @param fullMd
-     * @param moreFields
      */
-    protected void addExtraFields(AbstractMetadata fullMd, Vector<Element> moreFields) {
-        super.addExtraFields(fullMd, moreFields);
+    protected Map<String, Object> addExtraFields(AbstractMetadata fullMd) {
+        Map<String, Object> extraFields = new HashMap<>();
+
+        extraFields.putAll(super.addExtraFields(fullMd));
 
         if (fullMd instanceof MetadataDraft) {
             Log.trace(Geonet.DATA_MANAGER, "We are indexing a draft with uuid " + fullMd.getUuid());
-            moreFields.addElement(searchManager.makeField(Geonet.IndexFieldNames.DRAFT, "y"));
+            extraFields.put(Geonet.IndexFieldNames.DRAFT, "y");
         } else {
             if (metadataDraftRepository.findOneByUuid(fullMd.getUuid()) != null) {
                 Log.trace(Geonet.DATA_MANAGER,
                     "We are indexing a record with a draft associated with uuid " + fullMd.getUuid());
-                moreFields.addElement(searchManager.makeField(Geonet.IndexFieldNames.DRAFT, "e"));
+                extraFields.put(Geonet.IndexFieldNames.DRAFT, "e");
             } else {
                 Log.trace(Geonet.DATA_MANAGER,
                     "We are indexing a record with no draft associated with uuid " + fullMd.getUuid());
-                moreFields.addElement(searchManager.makeField(Geonet.IndexFieldNames.DRAFT, "n"));
+                extraFields.put(Geonet.IndexFieldNames.DRAFT, "n");
             }
         }
+        return extraFields;
     }
 }

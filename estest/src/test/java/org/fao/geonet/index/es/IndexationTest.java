@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class IndexationTest {
 
@@ -23,7 +24,7 @@ public class IndexationTest {
         Path schemaDir = Paths.get(this.getClass().getResource("/nominal").toURI());
         Element metadata = new Element("root");
         String id = "test-id";
-        List< Element > moreFields = Collections.emptyList();
+        Map<String, Object> moreFields = new HashMap<>();
         MetadataType metadataType = MetadataType.METADATA;
         String root = "dummy";
         boolean forceRefreshReaders = true;

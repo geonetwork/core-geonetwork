@@ -71,6 +71,7 @@ import org.fao.geonet.events.history.RecordOwnerChangeEvent;
 import org.fao.geonet.events.history.RecordPrivilegesChangeEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -133,6 +134,9 @@ public class MetadataSharingApi {
     
     @Autowired
     DataManager dataManager;
+
+    @Autowired
+    IMetadataIndexer metadataIndexer;
 
     @Autowired
     AccessManager accessManager;
@@ -298,7 +302,7 @@ public class MetadataSharingApi {
 
         List<GroupOperations> privileges = sharing.getPrivileges();
         setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges, ApiUtils.getUserSession(session).getUserIdAsInt(), null, request);
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
+        metadataIndexer.indexMetadataPrivileges(metadata.getUuid(), metadata.getId());
     }
 
     @ApiOperation(
@@ -978,11 +982,13 @@ public class MetadataSharingApi {
         if (!allowPublishNonApprovedMd) {
             MetadataStatus metadataStatus = metadataStatusRepository.getStatus(metadata.getId());
 
-            String statusId = metadataStatus.getId().getStatusId() + "";
-            boolean isApproved = statusId.equals(StatusValue.Status.APPROVED);
+            if (metadataStatus != null) {
+                String statusId = metadataStatus.getId().getStatusId() + "";
+                boolean isApproved = statusId.equals(StatusValue.Status.APPROVED);
 
-            if (!isApproved) {
-                throw new Exception("The metadata " + metadata.getUuid() + " it's not approved, can't be published.");
+                if (!isApproved) {
+                    throw new Exception("The metadata " + metadata.getUuid() + " it's not approved, can't be published.");
+                }
             }
         }
 

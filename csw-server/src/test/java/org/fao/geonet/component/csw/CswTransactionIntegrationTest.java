@@ -45,7 +45,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
@@ -380,11 +382,10 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         metadata.setDataAndFixCR(Xml.loadStream(CswTransactionIntegrationTest.class.getResourceAsStream("metadata-photographic.xml")));
         metadata = _metadataRepository.save(metadata);
         final Path schemaDir = _schemaManager.getSchemaDir("iso19139");
-        List<Element> extras = Lists.newArrayList(
-            _searchManager.makeField("_uuid", PHOTOGRAPHIC_UUID),
-            _searchManager.makeField("_isTemplate", "n"),
-            _searchManager.makeField("_owner", "" + ownerId)
-        );
+        Map<String, Object> extras = new HashMap<>(3);
+        extras.put("_uuid", PHOTOGRAPHIC_UUID);
+        extras.put("_isTemplate", "n");
+        extras.put("_owner", "" + ownerId);
         _searchManager.index(schemaDir, metadata.getXmlData(false), "" + metadata.getId(), extras,
             MetadataType.METADATA, metadata.getDataInfo().getRoot(), false);
     }

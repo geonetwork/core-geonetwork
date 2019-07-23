@@ -103,10 +103,10 @@ public interface IMetadataIndexer {
      *
      * @param metadataId
      * @param forceRefreshReaders
-     * @param searchManager
      * @throws Exception
      */
     void indexMetadata(String metadataId, boolean forceRefreshReaders) throws Exception;
+    void indexMetadataPrivileges(String uuid, int id) throws Exception;
 
     /**
      * Start record versioning
