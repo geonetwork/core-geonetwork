@@ -23,8 +23,6 @@
 
 package org.fao.geonet.kernel.search;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,18 +34,17 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
+import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.common.xcontent.NamedXContentRegistry;
-import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.common.xcontent.XContentParser;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
@@ -71,7 +68,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
@@ -81,6 +77,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -299,6 +296,40 @@ public class EsSearchManager implements ISearchManager {
     public void end() {
     }
 
+    public UpdateResponse updateFields(String id, Map<String, Object> fields) throws Exception {
+        fields.put("indexingDate", new Date());
+        UpdateRequest request = new UpdateRequest(defaultIndex, id).doc(fields);
+        return client.getClient().update(request, RequestOptions.DEFAULT);
+    }
+
+    public void updateFieldsAsynch(String id, Map<String, Object> fields) throws Exception {
+        fields.put("indexingDate", new Date());
+        UpdateRequest request = new UpdateRequest(defaultIndex, id).doc(fields);
+        ActionListener listener = new ActionListener<UpdateResponse>() {
+            @Override
+            public void onResponse(UpdateResponse updateResponse) {
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+            }
+        };
+        client.getClient().updateAsync(request, RequestOptions.DEFAULT, listener);
+    }
+
+    public UpdateResponse updateField(String id, String field, Object value) throws Exception {
+        Map<String, Object> updates = new HashMap<>(2);
+        updates.put(field, value);
+        updates.put("indexingDate", new Date());
+        return updateFields(id, updates);
+    }
+    public void updateFieldAsynch(String id, String field, Object value) throws Exception {
+        Map<String, Object> updates = new HashMap<>(2);
+        updates.put(field, value);
+        updates.put("indexingDate", new Date());
+        updateFieldsAsynch(id, updates);
+    }
+
     @Override
     public void index(Path schemaDir, Element metadata, String id, List<Element> moreFields,
                       MetadataType metadataType, String root, boolean forceRefreshReaders) throws Exception {
@@ -317,6 +348,8 @@ public class EsSearchManager implements ISearchManager {
             doc.remove("source");
             doc.put(SOURCE_CATALOGUE, catalog);
         }
+//        doc.put("indexingDate", new Date());
+
         String jsonDocument = mapper.writeValueAsString(doc);
         listOfDocumentsToIndex.put(id, jsonDocument);
 
@@ -737,21 +770,6 @@ public class EsSearchManager implements ISearchManager {
 //
 //    public void updateRating(int metadataId, int newValue) throws IOException, SolrServerException {
 //        updateField(metadataId, Geonet.IndexFieldNames.RATING, newValue, "set");
-//    }
-//
-//    public void incrementPopularity(int metadataId) throws IOException, SolrServerException {
-//        //TODO: check that works
-//        updateField(metadataId, Geonet.IndexFieldNames.POPULARITY, 1, "inc");
-//    }
-//
-//    private void updateField(int metadataId, String fieldName, int newValue, String operator) throws IOException, SolrServerException {
-//        SolrInputDocument doc = new SolrInputDocument();
-//        doc.addField(ID, metadataId);
-//        Map<String, Object> fieldModifier = new HashMap<>(1);
-//        fieldModifier.put(operator, newValue);
-//        doc.addField(fieldName, fieldModifier);
-//        client.add(doc);
-//        client.commit();
 //    }
 
     public EsRestClient getClient() {
