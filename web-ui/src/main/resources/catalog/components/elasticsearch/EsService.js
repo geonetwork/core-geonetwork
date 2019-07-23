@@ -45,7 +45,7 @@
       var query_string;
       var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',
         'sortBy', 'sortOrder', 'resultType', 'facet.q', 'any', 'geometry', 'query_string',
-        'creationDateFrom', 'creationDateTo', 'dateFrom', 'dateTo'];
+        'creationDateFrom', 'creationDateTo', 'dateFrom', 'dateTo', 'geom', 'relation'];
       var mappingFields = {
         title: 'resourceTitle',
         abstract: 'resourceAbstract',
@@ -122,6 +122,27 @@
         query.bool.must.push({
           query_string: query_string
         });
+      }
+      if(p.geometry) {
+        var geom = new ol.format.WKT().readGeometry(p.geometry)
+        var extent = geom.getExtent()
+        var coordinates = [
+          [extent[0], extent[3]],
+          [extent[2], extent[1]]
+        ];
+
+        query.bool.filter = {
+          'geo_shape': {
+            'geom': {
+              'shape': {
+                'type': 'envelope',
+                'coordinates': coordinates
+              },
+              'relation': p.relation || 'intersects'
+            }
+          }
+        };
+
       }
 
       params.query = query;
