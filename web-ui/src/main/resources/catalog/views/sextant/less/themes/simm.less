@@ -17,9 +17,25 @@
 .c_showlocation section h4 {
   font-weight: 500;
 }
+
 .c_showlocation section h3::before {
   content: None;
   font-weight: normal;
+}
+
+.gn .gn-metadata-display h3, .g .gn-metadata-display h3 {
+  content: None;
+  font-weight: normal !important;
+}
+
+.gn .sxt-scroll, .g .sxt-scroll, .gn .sxt-scroll .hfull, .g .sxt-scroll .hfull {
+  height: auto;
+  width: 100%;
+}
+
+#main-tabset > div > div.tab-pane.ng-scope.active > div.hfull.sxt-search-main-container.ng-scope.sxt-scroll
+> form > div > div.maincol.hfull.sxt-left-panel.col-md-4.ng-scope > div {
+  top: 25px;
 }
 
 #main-tabset > div > div.tab-pane.ng-scope.active >
