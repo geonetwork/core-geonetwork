@@ -60,14 +60,14 @@
   }
 
   FacetsController.prototype.collapseAll = function () {
-    angular.forEach(this.fLvlCollapse, function (v, k) {
-      this.fLvlCollapse[k] = true
-    }.bind(this))
+    for (var i = 0; i < this.list.length; i++) {
+      this.fLvlCollapse[this.list[i].key] = true;
+    }
   }
   FacetsController.prototype.expandAll = function () {
-    angular.forEach(this.fLvlCollapse, function (v, k) {
-      this.fLvlCollapse[k] = false
-    }.bind(this))
+    for (var i = 0; i < this.list.length; i++) {
+      this.fLvlCollapse[this.list[i].key] = false;
+    }
   }
 
 
