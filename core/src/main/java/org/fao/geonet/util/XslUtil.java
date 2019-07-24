@@ -57,6 +57,7 @@ import org.fao.geonet.domain.UiSetting;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.EsSearchManager;
@@ -1072,5 +1073,19 @@ public final class XslUtil {
         }
 
         return languageLabel;
+    }
+
+    public static List<String> getKeywordHierarchy(String keyword, String thesaurusId, String langCode) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
+
+        thesaurusId = thesaurusId.replaceAll("geonetwork.thesaurus.", "");
+        Thesaurus thesaurus = thesaurusManager.getThesaurusByName(thesaurusId);
+
+        List<String> res = new ArrayList<String>();
+        if(thesaurus != null) {
+            res = thesaurus.getKeywordHierarchy(keyword, langCode);
+        }
+        return res;
     }
 }

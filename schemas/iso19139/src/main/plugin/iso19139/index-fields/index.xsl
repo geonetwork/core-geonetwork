@@ -514,6 +514,21 @@
             <xsl:for-each select="gmd:keyword/(*[normalize-space() != '']|
                                   */@xlink:href[normalize-space() != '']|
                                   gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space() != ''])">
+
+              <xsl:variable name="keywordsWithHierarchy"
+                            select="util:getKeywordHierarchy(normalize-space(.), $thesaurusId, $mainLanguageCode)"/>
+
+              <xsl:for-each select="$keywordsWithHierarchy">
+                <xsl:variable name="path" select="tokenize(., '/')"/>
+                <xsl:for-each select="$path">
+                  <xsl:element name="keywordWithHierarchy">
+                    <xsl:variable name="position"
+                                  select="position()"/>
+                    <xsl:value-of select="string-join($path[position() &lt;= $position], '/')"/>
+                  </xsl:element>
+                </xsl:for-each>
+              </xsl:for-each>
+
               <xsl:element name="{$thesaurusField}">
                 <xsl:value-of select="normalize-space(.)"/>
               </xsl:element>

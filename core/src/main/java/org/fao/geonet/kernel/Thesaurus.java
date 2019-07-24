@@ -1104,4 +1104,54 @@ public class Thesaurus {
     public Map<String, String> getTitles(ApplicationContext context) throws JDOMException, IOException {
         return LangUtils.translate(context, getKey());
     }
+
+    public List <String> getKeywordHierarchy(String keywordLabel, String langCode) {
+        KeywordBean term = this.getKeywordWithLabel(keywordLabel, langCode);
+
+        List<ArrayList <String>> result = new ArrayList<ArrayList<String>>();
+
+        result = this.classify(term, langCode);
+
+        List <String> hierarchies = new ArrayList <String>();
+        for ( List <String> hierachy : result) {
+            hierarchies.add(String.join("/", hierachy));
+        }
+        return hierarchies;
+    }
+
+    public List<ArrayList <String>> classify(KeywordBean term, String langCode) {
+
+        List<ArrayList <String>> result = new ArrayList<ArrayList <String>>();
+        if (this.hasBroader(term.getUriCode())) {
+            result.addAll(classifyTermWithBroaderTerms(term, langCode));
+        } else {
+            result.add(classifyTermWithNoBroaderTerms(term, langCode));
+        }
+        return result;
+    }
+
+    private List<ArrayList <String>> classifyTermWithBroaderTerms(KeywordBean term, String langCode) {
+        List<ArrayList <String>> result = new ArrayList<ArrayList <String>>();
+        for (ArrayList <String> stringToBroaderTerm : classifyBroaderTerms(term, langCode)) {
+            stringToBroaderTerm.add(term.getPreferredLabel(langCode));
+            result.add(stringToBroaderTerm);
+        }
+        return result;
+    }
+
+    private List<ArrayList <String>> classifyBroaderTerms(KeywordBean term, String langCode) {
+        List<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+
+        for (KeywordBean broaderTerm : this.getBroader(term.getUriCode(), langCode)) {
+            result.addAll(this.classify(broaderTerm, langCode));
+        }
+        return result;
+    }
+
+    private ArrayList <String> classifyTermWithNoBroaderTerms(KeywordBean term, String langCode) {
+        ArrayList <String> list = new ArrayList <String>();
+        list.add(term.getPreferredLabel(langCode));
+        return list;
+    }
+
 }

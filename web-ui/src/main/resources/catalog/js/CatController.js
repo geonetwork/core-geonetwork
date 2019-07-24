@@ -147,6 +147,12 @@ goog.require('gn_alert');
           },
           'facetTabField': '',
           'facetConfig': {
+            'keywordWithHierarchy': {
+              'terms': {
+                'field': 'keywordWithHierarchy.keyword',
+                'size': 100
+              }
+            },
             'resourceType': {
               'terms': {
                 'field': 'resourceType'
