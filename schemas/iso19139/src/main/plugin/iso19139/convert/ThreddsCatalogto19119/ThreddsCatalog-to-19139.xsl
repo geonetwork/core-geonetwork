@@ -36,7 +36,7 @@
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-    <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd">
+    <gmd:MD_Metadata xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 

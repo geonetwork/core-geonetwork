@@ -3,7 +3,7 @@
 <xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:wms="http://www.opengis.net/wms"
                 xmlns:math="http://exslt.org/math"
                 xmlns:date="http://exslt.org/dates-and-times"
