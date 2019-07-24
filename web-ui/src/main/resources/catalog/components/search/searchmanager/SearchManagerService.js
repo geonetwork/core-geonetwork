@@ -70,10 +70,10 @@
     this.state.loadingFacets = true;
     var params = this.searchService.generateEsRequest(this.state);
 
-    this.searchClient.search(params, '1234').then(function(result) {
+    this.searchClient.search(params, '1234').then(function(response) {
       this.state.loading = false;
       this.state.loadingFacets = false;
-      console.log(result);
+      this.state.results = response.records;
     }.bind(this), function(error) {
       console.error('The search failed', error);
     }.bind(this));
@@ -140,7 +140,16 @@
    * @returns {boolean}
    */
   SearchManager.prototype.hasResults = function() {
-    return this.state.results > 0;
+    return this.state.results.length > 0;
+  };
+
+  /**
+   * Returns the results array. Note: the reference will change
+   * when new results are received.
+   * @returns {Array<Object>}
+   */
+  SearchManager.prototype.getResults = function() {
+    return this.state.results;
   };
 
 

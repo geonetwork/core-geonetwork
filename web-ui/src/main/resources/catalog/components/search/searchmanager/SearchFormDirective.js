@@ -479,9 +479,7 @@
               searchManager.setFullTextSearch(element.val());
             });
           });
-          scope.$watch(function() {
-            return searchManager.getFullTextSearch();
-          }, function(val) {
+          scope.$watch(searchManager.getFullTextSearch.bind(searchManager), function(val) {
             element.val(val);
           });
         }
@@ -622,8 +620,37 @@
           var searchManager = gnSearchManagerService.getSearchManager(searchName);
 
           scope.$watch(searchManager.hasResults.bind(searchManager),
-            function(loading) {
-              loading ? element.show() : element.hide()
+            function(hasResults) {
+              hasResults ? element.show() : element.hide()
+            });
+        }
+      }
+    }
+  ]);
+
+
+  /**
+   * @ngdoc directive
+   * @name gn_search_form_controller.directive:gnSearchResults
+   *
+   * @restrict E
+   *
+   * @description
+   * This directive will load results on its isolated scope.
+   */
+  module.directive('gnSearchResults', [
+    'gnSearchManagerService',
+    function(gnSearchManagerService) {
+      return {
+        restrict: 'E',
+        scope: true,
+        link: function (scope, element, attrs) {
+          var searchName = attrs['gnSearchName'];
+          var searchManager = gnSearchManagerService.getSearchManager(searchName);
+
+          scope.$watch(searchManager.getResults.bind(searchManager),
+            function(results) {
+              scope.results = results
             });
         }
       }

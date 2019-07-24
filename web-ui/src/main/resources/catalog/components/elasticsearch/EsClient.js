@@ -42,7 +42,12 @@
     this.search = function(params, selectionBucket) {
       return callApi('_search', params, selectionBucket).then(
         function(response) {
-          return gnESFacet.getUIModel(response, params);
+          return {
+            records: response.data.hits.hits.map(function(hit) {
+              return hit._source;
+            }),
+            facets: gnESFacet.getUIModel(response, params)
+          };
         }
       );
     };
