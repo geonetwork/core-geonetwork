@@ -73,8 +73,8 @@
     <div class="row">
       <div class="col-xs-12">
         <span class="loading fa fa-spinner fa-spin"
-              gn-search-show-loading
-              gn-search-name="mainsearch">
+              gn-search-bind="mainsearch"
+              ng-show="search.isLoading()">
         </span>
 
         <div class="alert alert-warning" role="alert"
@@ -83,8 +83,8 @@
           <span data-translate="">zarooResult</span>
         </div>
 
-        <div gn-search-show-results
-             gn-search-name="mainsearch"
+        <div gn-search-bind="mainsearch"
+             ng-show="search.hasResults()"
              data-gn-results-container=""
              data-search-results="searchResults"
              data-template-url="resultTemplate"

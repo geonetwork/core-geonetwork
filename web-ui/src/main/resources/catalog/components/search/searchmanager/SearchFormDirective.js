@@ -457,201 +457,22 @@
 
   /**
    * @ngdoc directive
-   * @name gn_search_form_controller.directive:gnSearchTextField
+   * @name gn_search_form_controller.directive:gnSearchActions
    *
    * @restrict A
    *
    * @description
-   * This directive is used to add a full text criteria on the search.
-   * This is bound on the `any` field of the search state.
+   * This directive will bind a search manager on the local scope
    */
-  module.directive('gnSearchFullText', [
+  module.directive('gnSearchBind', [
     'gnSearchManagerService',
     function(gnSearchManagerService) {
       return {
         restrict: 'A',
-        link: function (scope, element, attrs) {
-          var searchName = attrs['gnSearchName'];
-          var searchManager = gnSearchManagerService.getSearchManager(searchName);
-
-          element.on('change', function(event) {
-            scope.$apply(function() {
-              searchManager.setFullTextSearch(element.val());
-            });
-          });
-          scope.$watch(searchManager.getFullTextSearch.bind(searchManager), function(val) {
-            element.val(val);
-          });
-        }
-      }
-    }
-  ]);
-
-  /**
-   * @ngdoc directive
-   * @name gn_search_form_controller.directive:gnSearchTriggerEnter
-   *
-   * @restrict A
-   *
-   * @description
-   * This directive will trigger a new search on enter key press
-   */
-  module.directive('gnSearchTriggerEnter', [
-    'gnSearchManagerService',
-    function(gnSearchManagerService) {
-      return {
-        restrict: 'A',
-        link: function (scope, element, attrs) {
-          var searchName = attrs['gnSearchName'];
-          var searchManager = gnSearchManagerService.getSearchManager(searchName);
-
-          element.on('keyup', function(event) {
-            if (event.keyCode == 13) {
-              scope.$apply(function() {
-                searchManager.triggerSearch();
-              });
-            }
-          });
-        }
-      }
-    }
-  ]);
-
-  /**
-   * @ngdoc directive
-   * @name gn_search_form_controller.directive:gnSearchTriggerClick
-   *
-   * @restrict A
-   *
-   * @description
-   * This directive will trigger a new search on click
-   */
-  module.directive('gnSearchTriggerClick', [
-    'gnSearchManagerService',
-    function(gnSearchManagerService) {
-      return {
-        restrict: 'A',
-        link: function (scope, element, attrs) {
-          var searchName = attrs['gnSearchName'];
-          var searchManager = gnSearchManagerService.getSearchManager(searchName);
-
-          element.on('click', function() {
-            scope.$apply(function() {
-              searchManager.triggerSearch();
-            });
-          });
-        }
-      }
-    }
-  ]);
-
-  /**
-   * @ngdoc directive
-   * @name gn_search_form_controller.directive:gnSearchResetClick
-   *
-   * @restrict A
-   *
-   * @description
-   * This directive will reset the search params on click
-   */
-  module.directive('gnSearchResetClick', [
-    'gnSearchManagerService',
-    function(gnSearchManagerService) {
-      return {
-        restrict: 'A',
-        link: function (scope, element, attrs) {
-          var searchName = attrs['gnSearchName'];
-          var searchManager = gnSearchManagerService.getSearchManager(searchName);
-
-          element.on('click', function() {
-            scope.$apply(function() {
-              searchManager.resetSearch();
-            });
-          });
-        }
-      }
-    }
-  ]);
-
-  /**
-   * @ngdoc directive
-   * @name gn_search_form_controller.directive:gnSearchShowLoading
-   *
-   * @restrict A
-   *
-   * @description
-   * This directive will show or hide the element whether a search is currently running
-   */
-  module.directive('gnSearchShowLoading', [
-    'gnSearchManagerService',
-    function(gnSearchManagerService) {
-      return {
-        restrict: 'A',
-        link: function (scope, element, attrs) {
-          var searchName = attrs['gnSearchName'];
-          var searchManager = gnSearchManagerService.getSearchManager(searchName);
-
-          scope.$watch(searchManager.isLoading.bind(searchManager),
-            function(loading) {
-              loading ? element.show() : element.hide()
-            });
-        }
-      }
-    }
-  ]);
-
-  /**
-   * @ngdoc directive
-   * @name gn_search_form_controller.directive:gnSearchShowResults
-   *
-   * @restrict A
-   *
-   * @description
-   * This directive will show or hide the element whether records are present
-   * in the search state.
-   */
-  module.directive('gnSearchShowResults', [
-    'gnSearchManagerService',
-    function(gnSearchManagerService) {
-      return {
-        restrict: 'A',
-        link: function (scope, element, attrs) {
-          var searchName = attrs['gnSearchName'];
-          var searchManager = gnSearchManagerService.getSearchManager(searchName);
-
-          scope.$watch(searchManager.hasResults.bind(searchManager),
-            function(hasResults) {
-              hasResults ? element.show() : element.hide()
-            });
-        }
-      }
-    }
-  ]);
-
-
-  /**
-   * @ngdoc directive
-   * @name gn_search_form_controller.directive:gnSearchResults
-   *
-   * @restrict E
-   *
-   * @description
-   * This directive will load results on its isolated scope.
-   */
-  module.directive('gnSearchResults', [
-    'gnSearchManagerService',
-    function(gnSearchManagerService) {
-      return {
-        restrict: 'E',
         scope: true,
         link: function (scope, element, attrs) {
-          var searchName = attrs['gnSearchName'];
-          var searchManager = gnSearchManagerService.getSearchManager(searchName);
-
-          scope.$watch(searchManager.getResults.bind(searchManager),
-            function(results) {
-              scope.results = results
-            });
+          var searchName = attrs['gnSearchBind'];
+          scope.search = gnSearchManagerService.getSearchManager(searchName);
         }
       }
     }

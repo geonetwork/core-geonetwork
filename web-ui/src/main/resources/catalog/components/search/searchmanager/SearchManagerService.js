@@ -27,9 +27,9 @@
   var module = angular.module('gn_search_manager_service', []);
 
   var SearchManager = function($injector) {
-    this.facetService = $injector.get('gnESFacet');
-    this.searchClient = $injector.get('gnESClient');
-    this.searchService = $injector.get('gnESService');
+    this.facetService_ = $injector.get('gnESFacet');
+    this.searchClient_ = $injector.get('gnESClient');
+    this.searchService_ = $injector.get('gnESService');
 
     /**
      * Describes the full search state including query params, facets and results
@@ -47,7 +47,7 @@
      * @property {string} geometry Geometry expressed in WKT
      * @property {string} geometryRelation Either intersects or overlaps
      */
-    this.state = {
+    this.state_ = {
       from: 0,
       to: 10,
       sortBy: 'relevance',
@@ -59,21 +59,20 @@
       facets: [],
       loadingFacets: false
     };
-
   };
 
   /**
    * Manually trigger a search, updating the state in the process.
    */
-  SearchManager.prototype.triggerSearch = function() {
-    this.state.loading = true;
-    this.state.loadingFacets = true;
-    var params = this.searchService.generateEsRequest(this.state);
+  SearchManager.prototype.trigger = function() {
+    this.state_.loading = true;
+    this.state_.loadingFacets = true;
+    var params = this.searchService_.generateEsRequest(this.state_);
 
-    this.searchClient.search(params, '1234').then(function(response) {
-      this.state.loading = false;
-      this.state.loadingFacets = false;
-      this.state.results = response.records;
+    this.searchClient_.search(params, '1234').then(function(response) {
+      this.state_.loading = false;
+      this.state_.loadingFacets = false;
+      this.state_.results = response.records;
     }.bind(this), function(error) {
       console.error('The search failed', error);
     }.bind(this));
@@ -85,9 +84,9 @@
    * @param {number} to
    */
   SearchManager.prototype.setPagination = function(from, to) {
-    this.state.from = from;
-    this.state.to = to;
-    this.triggerSearch();
+    this.state_.from = from;
+    this.state_.to = to;
+    this.trigger();
   };
 
   /**
@@ -97,34 +96,17 @@
    * @param {bool} [reverse]
    */
   SearchManager.prototype.setSortBy = function(criteria, reverse) {
-    this.state.sortBy = criteria;
-    this.state.sortByReversed = !!reverse;
-    this.triggerSearch();
+    this.state_.sortBy = criteria;
+    this.state_.sortByReversed = !!reverse;
+    this.trigger();
   };
 
   /**
    * Reset the search params.
    */
-  SearchManager.prototype.resetSearch = function() {
-    this.state.any = '';
-    this.state.params = {};
-  };
-
-  /**
-   * Change the full text search criteria, or clear it if no arguments
-   * passed.
-   * @param {string} text
-   */
-  SearchManager.prototype.setFullTextSearch = function(text) {
-    this.state.any = text || '';
-  };
-
-  /**
-   * Returns the full text search criteria.
-   * @returns {string}
-   */
-  SearchManager.prototype.getFullTextSearch = function() {
-    return this.state.any;
+  SearchManager.prototype.reset = function() {
+    this.state_.any = '';
+    this.state_.params = {};
   };
 
   /**
@@ -132,7 +114,7 @@
    * @returns {boolean}
    */
   SearchManager.prototype.isLoading = function() {
-    return this.state.loading;
+    return this.state_.loading;
   };
 
   /**
@@ -140,7 +122,7 @@
    * @returns {boolean}
    */
   SearchManager.prototype.hasResults = function() {
-    return this.state.results.length > 0;
+    return this.state_.results.length > 0;
   };
 
   /**
@@ -149,8 +131,20 @@
    * @returns {Array<Object>}
    */
   SearchManager.prototype.getResults = function() {
-    return this.state.results;
+    return this.state_.results;
   };
+
+  /**
+   * full text search property, to be used with ngModel
+   */
+  Object.defineProperty(SearchManager.prototype, 'fullText', {
+    get: function() {
+      return this.state_.any;
+    },
+    set: function(text) {
+      this.state_.any = text || '';
+    }
+  });
 
 
   module.factory('gnSearchManagerService', [

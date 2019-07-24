@@ -15,9 +15,9 @@
               <input type="text"
                      class="form-control input-lg"
                      id="gn-any-field"
-                     gn-search-full-text
-                     gn-search-trigger-enter
-                     gn-search-name="mainsearch"
+                     gn-search-bind="mainsearch"
+                     ng-model="search.fullText"
+                     ng-keyup="$event.keyCode === 13 && search.trigger()"
                      autocomplete="off"
                      placeholder="{{'anyPlaceHolder' | translate}}"
                      aria-label="{{'anyPlaceHolder' | translate}}">
@@ -40,8 +40,8 @@
                 </button>
 
                 <button type="button"
-                        gn-search-trigger-click
-                        gn-search-name="mainsearch"
+                        gn-search-bind="mainsearch"
+                        ng-click="search.trigger()"
                         title="{{'search' | translate}}"
                         class="btn btn-primary btn-lg">
                   &nbsp;&nbsp;
@@ -51,9 +51,8 @@
                 </button>
 
                 <button type="button"
-                        gn-search-reset-click
-                        gn-search-trigger-click
-                        gn-search-name="mainsearch"
+                        gn-search-bind="mainsearch"
+                        ng-click="search.reset(); search.trigger()"
                         title="{{'ClearTitle' | translate}}"
                         class="btn btn-default btn-lg">
                   <i class="fa fa-times text-danger"></i>
