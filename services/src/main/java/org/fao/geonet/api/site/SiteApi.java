@@ -582,7 +582,7 @@ public class SiteApi {
         if(reset) {
             searchMan.init(true);
         }
-        searchMan.rebuildIndex(context, havingXlinkOnly, reset, bucket);
+        searchMan.rebuildIndex(context, havingXlinkOnly, false, bucket);
 
         return new HttpEntity<>(HttpStatus.CREATED);
     }
