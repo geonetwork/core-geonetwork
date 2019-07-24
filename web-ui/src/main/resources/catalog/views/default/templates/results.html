@@ -1,5 +1,6 @@
 <div class="gn-search-results-container"
-     gn-search-bind="mainsearch">
+     gn-search-bind="mainsearch"
+     ng-init="search.trigger()">
   <div data-ng-include="'../../catalog/views/default/templates/searchForm.html'"></div>
 
   <div gn-grid-related-query="search.getResults()"></div>
@@ -20,9 +21,10 @@
             <span data-translate="">filter</span>
           </div>
           <div class="panel-body">
-            <div data-es-facets="search.getFacets()"
-                 data-params="search.getParams()"
-                 data-facet-type="facetsSummaryType"/>
+            <div es-facets="search.getFacets()"
+                 es-facet-search-name="mainsearch"
+                 params="search.getParams()"
+                 facet-type="facetsSummaryType"/>
             </div>
           </div>
       </div>

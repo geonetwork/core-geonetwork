@@ -26,6 +26,41 @@
 
   var module = angular.module('gn_search_manager_service', []);
 
+
+  /*
+   * Implement AngularJS $parse without the restriction of expressions
+   */
+  var parse = function(path) {
+    var fn =  function(obj) {
+      var paths = path.split('.')
+        , current = obj
+        , i;
+
+      for (i = 0; i < paths.length; ++i) {
+        if (current[paths[i]] == undefined) {
+          return undefined;
+        } else {
+          current = current[paths[i]];
+        }
+      }
+      return current;
+    };
+    fn.assign = function(obj, value) {
+      var paths = path.split('.')
+        , current = obj
+        , i;
+
+      for (i = 0; i < paths.length-1; ++i) {
+        if (current[paths[i]] == undefined) {
+          current[paths[i]] = {}
+        }
+        current = current[paths[i]];
+      }
+      current[paths[paths.length-1]] = value
+    };
+    return fn;
+  };
+
   var SearchManager = function($injector) {
     this.facetService_ = $injector.get('gnESFacet');
     this.searchClient_ = $injector.get('gnESClient');
@@ -59,6 +94,16 @@
       facets: [],
       loadingFacets: false
     };
+  };
+
+  var removeKey = function(obj, keys) {
+    var head = keys[0];
+    var tail = keys.slice(1);
+    for (var prop in obj) {
+      obj.hasOwnProperty(prop) && (head === prop && tail.length === 0 ?
+        delete obj[prop] : 'object' === typeof (obj[prop]) && (removeKey(obj[prop], tail),
+      0 === Object.keys(obj[prop]).length && delete obj[prop]))
+    }
   };
 
   /**
@@ -146,7 +191,7 @@
 
   /**
    * Returns the params dictionary.
-   * @returns {Array<Object>}
+   * @returns {Object}
    */
   SearchManager.prototype.getParams = function() {
     return this.state_.params;
@@ -163,6 +208,48 @@
       this.state_.any = text || '';
     }
   });
+
+  /**
+   * Sets a search parameter value
+   * If a path is given, the value will be stored liked this
+   * {
+   *   parent1.value.parent2.value.field: value
+   * }
+   * @param {Array<string>|string} fieldOrPath
+   * @param {number|string} value
+   */
+  SearchManager.prototype.toggleParam = function(fieldOrPath, value) {
+    var params = this.state_.params;
+
+    if (Array.isArray(fieldOrPath)) {
+      var getter = parse(fieldOrPath.join('.'));
+      if(!getter(params)) {
+        var setter = getter.assign;
+        setter(params, value)
+      } else {
+        removeKey(params, fieldOrPath)
+      }
+    } else {
+      params[fieldOrPath] = value;
+    }
+    this.trigger();
+  };
+
+  SearchManager.prototype.isInSearch = function(fieldOrPath) {
+    if(!fieldOrPath) return;
+    var params = this.state_.params;
+
+    if (Array.isArray(fieldOrPath)) {
+      var getter = parse(fieldOrPath.join('.'));
+      return getter(params);
+    } else {
+      return !!params[fieldOrPath];
+    }
+  };
+
+  SearchManager.prototype.hasFiltersForKey = function(key) {
+    return !!this.state_.params[key];
+  };
 
 
   module.factory('gnSearchManagerService', [

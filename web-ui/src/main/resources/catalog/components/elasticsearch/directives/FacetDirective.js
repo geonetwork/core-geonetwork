@@ -31,53 +31,55 @@
    * All facet panel
    * @constructor
    */
-  var FacetsController = function ($scope) {
-    this.fLvlCollapse = {}
-    this.currentFacet
-    this.$scope = $scope
+  var FacetsController = function ($scope, gnSearchManagerService) {
+    this.searchManager = gnSearchManagerService.getSearchManager(this.searchName);
+
+    this.fLvlCollapse = {};
+    this.$scope = $scope;
 
     $scope.$watch(
       function () {
         return this.list
       }.bind(this),
       function (newValue) {
-        if (!newValue) return
-        var lastFacet = this.lastUpdatedFacet
+        if (!newValue) return;
+        var lastFacet = this.lastUpdatedFacet;
 
-        if (this._isFlatTermsFacet(lastFacet) && this.searchCtrl.hasFiltersForKey(lastFacet.key)) {
+        if (this._isFlatTermsFacet(lastFacet) && this.searchManager.hasFiltersForKey(lastFacet.key)) {
           this.list.forEach(function (f) {
             if (f.key === lastFacet.key) {
               f.items = lastFacet.items
             }
-          }.bind(this))
+          }.bind(this));
           this.lastUpdatedFacet = null
         }
       }.bind(this)
     )
-  }
+  };
 
   FacetsController.prototype.$onInit = function () {
-  }
+  };
 
   FacetsController.prototype.collapseAll = function () {
     for (var i = 0; i < this.list.length; i++) {
       this.fLvlCollapse[this.list[i].key] = true;
     }
-  }
+  };
   FacetsController.prototype.expandAll = function () {
     for (var i = 0; i < this.list.length; i++) {
       this.fLvlCollapse[this.list[i].key] = false;
     }
-  }
+  };
 
 
   FacetsController.prototype._isFlatTermsFacet = function (facet) {
     return facet && (facet.type === 'terms') && !facet.aggs
-  }
+  };
 
   FacetsController.$inject = [
-    '$scope'
-  ]
+    '$scope',
+    'gnSearchManagerService'
+  ];
 
   module.directive('esFacets', [
    'gnLangs',
@@ -90,10 +92,8 @@
         scope: {
           list: '<esFacets',
           sParams: '<params',
-          type: '<facetType'
-        },
-        require: {
-          searchCtrl: '^^ngSearchForm'
+          type: '<facetType',
+          searchName: '@esFacetSearchName'
         },
         templateUrl: function (elem, attrs) {
           return attrs.template || '../../catalog/components/elasticsearch/directives/' +
@@ -102,24 +102,26 @@
         link: function (scope, element, attrs) {
         }
       }
-    }])
+    }]);
 
 
   /**
    * One facet block
    * @param $scope
+   * @param gnSearchManagerService
    * @constructor
    */
-  var FacetController = function ($scope) {
-    this.$scope = $scope
-  }
+  var FacetController = function ($scope, gnSearchManagerService) {
+    this.$scope = $scope;
+    this.searchManager = gnSearchManagerService.getSearchManager(this.searchName);
+  };
 
   FacetController.prototype.$onInit = function () {
     this.item.collapsed = true;
     if (this.facet.type === 'tree') {
       this.item.path = [this.facet.key, this.item.key];
     }
-  }
+  };
 
   FacetController.prototype.filter = function (facet, item) {
     var value;
@@ -133,24 +135,24 @@
     } else if (facet.type === 'tree') {
       value = true;
     }
-    this.searchCtrl.updateState(item.path, value)
-  }
+    this.searchManager.toggleParam(item.path, value)
+  };
 
   FacetController.prototype.isInSearch = function (facet, item) {
-    return this.searchCtrl.isInSearch(item.path)
-  }
+    return this.searchManager.isInSearch(item.path)
+  };
 
   FacetController.prototype.toggleCollapse = function () {
     this.item.collapsed = !this.item.collapsed;
-  }
+  };
 
   FacetController.$inject = [
-    '$scope'
-  ]
+    '$scope',
+    'gnSearchManagerService'
+  ];
 
   module.directive('esFacet', [
-    'gnLangs',
-    function (gnLangs) {
+    function () {
       return {
         restrict: 'A',
         controllerAs: 'ctrl',
@@ -159,11 +161,11 @@
         scope: {
           facet: '<esFacet',
           item: '<esFacetItem',
+          searchName: '@esFacetSearchName'
         },
         require: {
           facetsCtrl: '^^esFacets',
           facetCtrl: '?^^esFacet',
-          searchCtrl: '^^ngSearchForm'
         },
         templateUrl: function (elem, attrs) {
           return attrs.template || '../../catalog/components/elasticsearch/directives/' +
@@ -174,4 +176,4 @@
       }
     }])
 
-})()
+})();
