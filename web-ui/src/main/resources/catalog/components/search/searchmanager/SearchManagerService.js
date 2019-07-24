@@ -26,258 +26,120 @@
 
   var module = angular.module('gn_search_manager_service', []);
 
+  var SearchManager = function($injector) {
+    this.facetService = $injector.get('gnESFacet');
+    this.searchClient = $injector.get('gnESClient');
+    this.searchService = $injector.get('gnESService');
+
+    /**
+     * Describes the full search state including query params, facets and results
+     * @type {Object}
+     * @property {number} from
+     * @property {number} to
+     * @property {string} sortBy
+     * @property {boolean} sortByReversed
+     * @property {string} any
+     * @property {Object} params
+     * @property {Array<Object>} results
+     * @property {boolean} loading
+     * @property {Array<Object>} facets
+     * @property {boolean} loadingFacets
+     * @property {string} geometry Geometry expressed in WKT
+     * @property {string} geometryRelation Either intersects or overlaps
+     */
+    this.state = {
+      from: 0,
+      to: 10,
+      sortBy: 'relevance',
+      sortByReversed: false,
+      any: '',
+      params: {},
+      results: [],
+      loading: false,
+      facets: [],
+      loadingFacets: false
+    };
+
+  };
+
+  /**
+   * Manually trigger a search, updating the state in the process.
+   */
+  SearchManager.prototype.triggerSearch = function() {
+    this.state.loading = true;
+    this.state.loadingFacets = true;
+    var params = this.searchService.generateEsRequest(this.state);
+
+    this.searchClient.search(params, '1234').then(function(result) {
+      this.state.loading = false;
+      this.state.loadingFacets = false;
+      console.log(result);
+    }.bind(this), function(error) {
+      console.error('The search failed', error);
+    }.bind(this));
+  };
+
+  /**
+   * Set the current pagination. This will trigger a search.
+   * @param {number} from
+   * @param {number} to
+   */
+  SearchManager.prototype.setPagination = function(from, to) {
+    this.state.from = from;
+    this.state.to = to;
+    this.triggerSearch();
+  };
+
+  /**
+   * Set a sorting criteria, and whether the sort is reversed. This will
+   * trigger a search.
+   * @param {string} criteria
+   * @param {bool} [reverse]
+   */
+  SearchManager.prototype.setSortBy = function(criteria, reverse) {
+    this.state.sortBy = criteria;
+    this.state.sortByReversed = !!reverse;
+    this.triggerSearch();
+  };
+
+  /**
+   * Reset the search params.
+   */
+  SearchManager.prototype.resetSearch = function() {
+    this.state.any = '';
+    this.state.params = {};
+  };
+
+  /**
+   * Change the full text search criteria, or clear it if no arguments
+   * passed.
+   * @param {string} text
+   */
+  SearchManager.prototype.setFullTextSearch = function(text) {
+    this.state.any = text || '';
+  };
+
+  /**
+   * Returns the full text search criteria.
+   * @returns {string}
+   */
+  SearchManager.prototype.getFullTextSearch = function() {
+    return this.state.any;
+  };
+
+
   module.factory('gnSearchManagerService', [
-    'gnUtilityService',
-    '$q',
-    '$rootScope',
-    '$http',
-    'gnHttp',
-    function(gnUtilityService, $q, $rootScope,
-             $http, gnHttp) {
-      /**
-       * Utility to format a search response. JSON response
-       * when containing one element will not make an array.
-       * Tidy the JSON to be always the same if one or more
-       * elements.
-       */
-      var format = function(data) {
-        // Retrieve facet and add name as property and remove @count
-        var facets = {}, dimension = [], results = -1,
-            listOfArrayFields = ['image', 'link',
-              'format', 'keyword', 'otherConstr',
-              'Constraints', 'SecurityConstraints'];
-
-        // When using summaryOnly=true, the facet is the root element
-        if (data[0] && data[0]['@count']) {
-          data.summary = data[0];
-          results = data[0]['@count'];
-        }
-
-        // Cleaning facets
-        for (var facet in data.summary) {
-          if (facet == 'dimension') {
-            dimension = gnUtilityService.traverse(
-                data.summary.dimension,
-                gnUtilityService.formatObjectPropertyAsArray,
-                'category');
-          } else if (facet != '@count' && facet != '@type') {
-            facets[facet] = data.summary[facet];
-            facets[facet].name = facet;
-          } else if (facet == '@count') {
-            // Number of results
-            results = data.summary[facet];
-          }
-        }
-
-        if (data.metadata) {
-          // Retrieve metadata
-          for (var i = 0; i < data.metadata.length ||
-              (!$.isArray(data.metadata) && i < 1); i++) {
-            var metadata =
-                $.isArray(data.metadata) ? data.metadata[i] : data.metadata;
-
-            // Fix all fields which are arrays and are returned as string
-            // when only one value returned.
-            for (var property in metadata) {
-              if (metadata.hasOwnProperty(property) &&
-                  listOfArrayFields.indexOf(property) != -1 &&
-                  typeof metadata[property] === 'string') {
-                metadata[property] = [metadata[property]];
-              }
-            }
-
-            // Parse selected to boolean
-            metadata.selected =
-                metadata.selected == 'true';
-          }
-        }
-
-        var records = [];
-        if (data.metadata && data.metadata.length) {
-          records = data.metadata; // results is an array
-        } else if (data.metadata) {
-          records = [data.metadata]; // only one result
-        }
-
-        return {
-          facet: facets,
-          dimension: dimension,
-          count: results,
-          metadata: records
-        };
-
-      };
-
-      /**
-       * Link together records, filter and a pager.
-       * Return the search function to invoke.
-       *
-       * <code>
-       *        $scope.records = {};
-       *        $scope.filter = {};
-       *
-       *        // Pager config
-       *        $scope.pagination = {
-       *          pages: -1,
-       *          currentPage: 0,
-       *          hitsPerPage: 20
-       *        };
-       *
-       *        // Register the search results, filter and pager
-       *        // and get the search function back
-       *        searchFn = gnSearchManagerService.register({
-       *          records: 'records',
-       *          filter: 'filter',
-       *          pager: 'pagination'
-       *          //              error: function () {console.log('error');},
-       *          //              success: function () {console.log('succ');}
-       *        }, $scope);
-       *
-       *        // Update search filter and reset page
-       *        $scope.search = function(e) {
-       *          $filter = {any: (e ? e.target.value : '')};
-       *          $scope.pagination.currentPage = 0;
-       *          searchFn();
-       *        };
-       *
-       *        // When the current page change trigger the search
-       *        $scope.$watch('pagination.currentPage', function() {
-       *          $scope.search();
-       *        });
-       *        </code>
-       */
-      var register = function(config, scope) {
-
-        var searchFn = function() {
-          var pageOptions = scope[config.pager], filter = '';
-
-          scope[config.filter] && $.each(scope[config.filter],
-              function(key, value) {
-                filter += '&' + key + '=' + value;
-              });
-          search('q?bucket=' + scope.searchResults.selectionBucket +
-              filter +
-              '&from=' + (pageOptions.currentPage *
-              pageOptions.hitsPerPage + 1) +
-              '&to=' + ((pageOptions.currentPage + 1) *
-              pageOptions.hitsPerPage), config.error)
-              .then(function(data) {
-                scope[config.records] = data;
-                pageOptions.count = parseInt(data.count);
-                pageOptions.pages = Math.round(
-                    data.count /
-                    pageOptions.hitsPerPage, 0);
-                config.success && config.success(data);
-              });
-        };
-        return searchFn;
-      };
-
-      /**
-       * Run a search.
-       */
-      var search = function(url, error) {
-        var defer = $q.defer();
-        $http.get(url).
-            success(function(data, status) {
-              defer.resolve(format(data));
-            }).
-            error(function(data, status) {
-              defer.reject(error);
-            });
-        return defer.promise;
-      };
-
-      // TODO: remove search call to use params instead
-      // of url and use gnSearch only (then rename it to search)
-      var gnSearch = function(params, error, internal) {
-        var defer = $q.defer();
-        gnHttp.callService(internal ? 'internalSearch' : 'search',
-            params).
-            success(function(data, status) {
-              defer.resolve(format(data));
-            }).
-            error(function(data, status) {
-              defer.reject(error);
-            });
-        return defer.promise;
-      };
-
-      var indexSetOfRecords = function(params) {
-        var defer = $q.defer();
-        var defaultParams = {
-          fast: 'index',
-          summaryOnly: 'true'
-        };
-        angular.extend(params, defaultParams);
-
-        gnSearch(params).then(function(data) {
-          if (parseInt(data.count) > 0) {
-            selectAll().then(function() {
-              index(false, true).then(function(data) {
-                defer.resolve(data);
-              });
-            });
-          } else {
-            defer.reject('No records to index');
-          }
-        }, function(reason) {
-          defer.reject('error: ' + reason);
-        });
-        return defer.promise;
-      };
-      var index = function(reset, fromSelection) {
-        var defer = $q.defer();
-        var url = 'admin.index.rebuildxlinks?reset=';
-        url += reset ? 'yes' : 'no';
-        url += '&fromSelection=';
-        url += fromSelection ? 'yes' : 'no';
-
-        $http.get(url).
-            success(function(data, status) {
-              defer.resolve(data);
-            }).
-            error(function(data, status) {
-              defer.reject(error);
-            });
-        return defer.promise;
-      };
-      var selected = function(bucket) {
-        return $http.get('../api/selections/' + (bucket || 'metadata'));
-      };
-      var select = function(uuid, bucket) {
-        return $http.put('../api/selections/' + (bucket || 'metadata'), null, {
-          params: {
-            uuid: uuid
-          }
-        });
-      };
-      var unselect = function(uuid, bucket) {
-        return $http.delete('../api/selections/' + (bucket || 'metadata'),
-            {
-              params: {
-                uuid: uuid
-              }
-            });
-      };
-      var selectAll = function(bucket) {
-        return $http.put('../api/selections/' + (bucket || 'metadata'));
-      };
-      var selectNone = function(bucket) {
-        return $http.delete('../api/selections/' + (bucket || 'metadata'));
-      };
+    '$injector',
+    function($injector) {
+      var searches = {};
 
       return {
-        search: search,
-        format: format,
-        gnSearch: gnSearch,
-        register: register,
-        selected: selected,
-        select: select,
-        unselect: unselect,
-        selectAll: selectAll,
-        selectNone: selectNone,
-        indexSetOfRecords: indexSetOfRecords
+        getSearchManager: function(searchName) {
+          if (!searches[searchName]) {
+            searches[searchName] = new SearchManager($injector);
+          }
+          return searches[searchName];
+        }
       };
     }
   ]);
