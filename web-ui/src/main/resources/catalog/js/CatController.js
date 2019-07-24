@@ -119,6 +119,32 @@ goog.require('gn_alert');
           'paginationInfo': {
             'hitsPerPage': 20
           },
+          'autocompleteConfig': {
+            'query': {
+              "multi_match": {
+                "query": "",
+                "type": "bool_prefix",
+                "fields": [
+                  "anytext",
+                  "anytext._2gram",
+                  "anytext._3gram"
+                ]
+              }
+            },
+            '_source': ['resourceTitle']
+            // Fuzzy autocomplete
+            // {
+            //   query: {
+            //     // match_phrase_prefix: match
+            //     "multi_match" : {
+            //       "query" : query,
+            //         // "type":       "phrase_prefix",
+            //         "fields" : [ field + "^3", "tag" ]
+            //     }
+            //   },
+            //   _source: [field]
+            // }
+          },
           'facetTabField': '',
           'facetConfig': {
             'resourceType': {

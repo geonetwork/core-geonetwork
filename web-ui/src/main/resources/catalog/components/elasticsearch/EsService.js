@@ -26,7 +26,10 @@
 
   var module = angular.module('gn_es_service', []);
 
-  module.service('gnESService', ['gnESFacet', 'gnEsLuceneQueryParser', function(gnESFacet, gnEsLuceneQueryParser) {
+  module.service('gnESService', [
+    'gnESFacet', 'gnEsLuceneQueryParser', 'gnGlobalSettings',
+    function(
+      gnESFacet, gnEsLuceneQueryParser, gnGlobalSettings) {
 
 
     this.facetsToLuceneQuery = function(facetsState) {
@@ -173,45 +176,8 @@
      * @returns es request params
      */
     this.getSuggestParams = function(field, query) {
-      var phrase = {
-        query: query,
-        max_expansions: 1
-      };
-      var match = {};
-      match[field] = phrase;
-      var params = {
-        query: {
-          // match_phrase_prefix: match
-          "multi_match" : {
-            "query" : query,
-            // "type":       "phrase_prefix",
-            "fields" : [ field + "^3", "tag" ]
-          }
-        },
-        _source: [field]
-      };
-      return params;
-    };
-
-    this.getSuggestParamsTrigram = function(field, query) {
-      var params = {
-        suggest: {
-          text: query,
-          simple_phrase: {
-            phrase: {
-              field: field + '.trigram',
-              direct_generator: [ {
-                field: field + '.trigram',
-                suggest_mode: 'always'
-              } ],
-              highlight: {
-                pre_tag: '<em>',
-                post_tag: '</em>'
-              }
-            }
-          }
-        }
-      };
+      var params = gnGlobalSettings.gnCfg.mods.search.autocompleteConfig;
+      params.query.multi_match.query = query;
       return params;
     };
 

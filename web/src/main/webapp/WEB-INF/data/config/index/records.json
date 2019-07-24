@@ -1059,6 +1059,9 @@
       "any": {
         "type": "text"
       },
+      "anytext": {
+        "type": "search_as_you_type"
+      },
       "dateStamp": {
         "type": "date"
       },
@@ -1233,7 +1236,7 @@
       },
       "resourceAltTitle": {
         "type": "text",
-        "copy_to": "any",
+        "copy_to": ["any", "anytext"],
         "fields": {
           "keyword": {
             "type": "keyword",
@@ -1256,7 +1259,7 @@
       },
       "resourceTitle": {
         "type": "text",
-        "copy_to": "any",
+        "copy_to": ["any", "anytext"],
         "fields": {
           "keyword": {
             "type": "keyword",
@@ -1298,7 +1301,7 @@
       },
       "tag": {
         "type": "keyword",
-        "copy_to": "any",
+        "copy_to": ["any", "anytext"],
         "fields": {
           "trigram": {
             "type": "text",
@@ -1318,7 +1321,7 @@
       },
       "topic": {
         "type": "keyword",
-        "copy_to": "any"
+        "copy_to": ["any", "anytext"]
       },
       "validReport": {
         "type" : "text",

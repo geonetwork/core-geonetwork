@@ -297,7 +297,6 @@
    */
 
   module.value('gnHttpServices', {
-    mdGetRDF: 'rdf.metadata.get',
     mdGetXML19139: 'xml_iso19139',
 
     publish: 'md.publish',
