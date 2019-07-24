@@ -127,6 +127,9 @@
       }
     } else if (facet.type === 'filters') {
       value = item.query_string.query_string.query
+    } else if (facet.type === 'tree') {
+      item.path = [facet.key, item.key];
+      value = true;
     }
     this.searchCtrl.updateState(item.path, value)
   }

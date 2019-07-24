@@ -108,6 +108,7 @@
         if (reqAgg.hasOwnProperty('terms')) {
 
           if(fieldId.endsWith('_tree')) {
+            facetModel.type = 'tree';
             var tree = gnTreeFromSlash.getTree(respAgg.buckets);
             facetModel.items = tree.items;
           } else {
