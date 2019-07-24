@@ -26,51 +26,49 @@
 
   var module = angular.module('gn_pagination_directive', []);
 
-  module.directive('gnPagination', ['hotkeys', '$translate',
-                                    function(hotkeys, $translate) {
-
+  module.directive('gnPagination', ['hotkeys', '$translate', 'gnSearchManagerService',
+    function(hotkeys, $translate, gnSearchManagerService) {
       return {
         restrict: 'A',
         replace: true,
-        require: '^ngSearchForm',
         scope: {
           config: '=gnPagination',
-          values: '=hitsValues'
+          values: '=hitsValues',
+          searchName: '@gnPaginationSearchName'
         },
         templateUrl: '../../catalog/components/search/pagination/partials/' +
             'pagination.html',
-        link: function(scope, element, attrs, controller) {
+        link: function(scope, element, attrs) {
+          scope.search = gnSearchManagerService.getSearchManager(scope.searchName);
 
           // Init config from default and eventual given one
           var defaultConfig = {
             pages: -1,
-            currentPage: 1,
+            currentPage: 0,
             hitsPerPage: 10
           };
           angular.extend(defaultConfig, scope.config);
           scope.config = defaultConfig;
           delete defaultConfig;
-          /**
-           * If an object {paginationInfo} is defined inside the
-           * SearchFormController, then add from and to  params
-           * to the search.
-           */
-          var getPaginationParams = function(customPageOptions) {
-            var pageOptions = scope.config;
-            angular.extend(pageOptions, customPageOptions);
-            return {
-              from: (pageOptions.currentPage - 1) * pageOptions.hitsPerPage + 1,
-              to: pageOptions.currentPage * pageOptions.hitsPerPage
-            };
-          };
-          controller.getPaginationParams = getPaginationParams;
+
+          scope.$watch(scope.search.getPagination.bind(scope.search), function(pagination) {
+            var pageSize = pagination.to - pagination.from;
+            scope.config.from = pagination.from + 1;
+            scope.config.to = Math.min(pagination.to, pagination.resultsCount);
+            scope.config.pages = Math.ceil(pagination.resultsCount / pageSize);
+            scope.config.currentPage = Math.floor(pagination.from / pageSize);
+            scope.config.hitsPerPage = pageSize;
+            scope.config.resultsCount = pagination.resultsCount;
+          }, true);
 
           scope.updateSearch = function(hitsPerPage) {
             if (hitsPerPage) {
               scope.config.hitsPerPage = hitsPerPage;
             }
-            controller.updateSearchParams(getPaginationParams());
-            controller.triggerSearch(true);
+            var from = scope.config.currentPage * scope.config.hitsPerPage;
+            var to = (scope.config.currentPage + 1) * scope.config.hitsPerPage;
+            scope.search.setPagination(from, to);
+            scope.search.trigger();
           };
 
           scope.previous = function() {
@@ -86,11 +84,11 @@
             }
           };
           scope.first = function() {
-            scope.config.currentPage = 1;
+            scope.config.currentPage = 0;
             scope.updateSearch();
           };
           scope.last = function() {
-            scope.config.currentPage = scope.config.pages;
+            scope.config.currentPage = scope.config.pages - 1;
             scope.updateSearch();
           };
 
@@ -105,7 +103,6 @@
               });
             });
           }
-          controller.activatePagination();
 
           if (angular.isDefined(attrs.enableHotKeys)) {
             hotkeys.bindTo(scope)

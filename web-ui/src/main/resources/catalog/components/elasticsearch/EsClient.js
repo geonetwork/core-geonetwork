@@ -47,7 +47,8 @@
             records: response.data.hits.hits.map(function(hit) {
               return new Metadata(hit);
             }),
-            facets: gnESFacet.getFacetsFromPayloads(response, params)
+            facets: gnESFacet.getFacetsFromPayloads(response, params),
+            total: response.data.hits.total.value
           };
         }
       );

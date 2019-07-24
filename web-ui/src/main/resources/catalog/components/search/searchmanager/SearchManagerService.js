@@ -71,6 +71,7 @@
      * @type {Object}
      * @property {number} from
      * @property {number} to
+     * @property {number} resultsCount
      * @property {string} sortBy
      * @property {boolean} sortByReversed
      * @property {string} any
@@ -85,6 +86,7 @@
     this.state_ = {
       from: 0,
       to: 10,
+      resultsCount: 0,
       sortBy: 'relevance',
       sortByReversed: false,
       any: '',
@@ -117,6 +119,7 @@
     this.searchClient_.search(params, '1234').then(function(response) {
       this.state_.loading = false;
       this.state_.loadingFacets = false;
+      this.state_.resultsCount = response.total;
       this.state_.results = response.records;
       this.state_.facets = response.facets;
     }.bind(this), function(error) {
@@ -133,6 +136,21 @@
     this.state_.from = from;
     this.state_.to = to;
     this.trigger();
+  };
+
+  /**
+   * Gets the current pagination.
+   * @return {Object}
+   * @property {number} from
+   * @property {number} to
+   * @property {number} resultsCount
+   */
+  SearchManager.prototype.getPagination = function() {
+    return {
+      from: this.state_.from,
+      to: this.state_.to,
+      resultsCount: this.state_.resultsCount
+    }
   };
 
   /**
@@ -153,6 +171,10 @@
   SearchManager.prototype.reset = function() {
     this.state_.any = '';
     this.state_.params = {};
+
+    var size = this.state_.to - this.state_.from;
+    this.state_.from = 0;
+    this.state_.to = size;
   };
 
   /**
