@@ -846,39 +846,26 @@
                 internalUpdate = false;
                 return;
               }
-
-              var paramsCopy = angular.merge({}, params);
-              if (paramsCopy.from !== undefined && paramsCopy.to !== undefined) {
-                searchManager.setPagination(parseInt(paramsCopy.from), parseInt(paramsCopy.to));
+              if (params.from !== undefined && params.to !== undefined) {
+                searchManager.setPagination(parseInt(params.from), parseInt(params.to));
               }
-              if (paramsCopy.sortBy) {
-                searchManager.setSortBy(paramsCopy.sortBy);
+              if (params.sortBy) {
+                searchManager.setSortBy(params.sortBy);
               }
-              delete paramsCopy.from;
-              delete paramsCopy.to;
-              delete paramsCopy.sortBy;
-              delete paramsCopy.query;
-              for (var key in paramsCopy) {
-                searchManager.toggleParam(key, paramsCopy[key]);
+              if (params.query) {
+                searchManager.state_.params = JSON.parse(params.query);
               }
               searchManager.trigger();
               internalUpdate = true;
             });
 
             scope.$watchCollection(function() {
-              var params = angular.merge({}, {
+              var params = {
                 from: searchManager.getPagination().from,
                 to: searchManager.getPagination().to,
-                sortBy: searchManager.getSortBy()
-              });
-              var searchParams = searchManager.getParams();
-              for(var field in searchParams) {
-                for (var value in searchParams[field]) {
-                  searchParams[field][value] === true ?
-                    params[field] = value :
-                    params[field] = searchParams[field][value];
-                }
-              }
+                sortBy: searchManager.getSortBy(),
+                query: JSON.stringify(searchManager.getParams())
+              };
               return params;
             }, function(params) {
               if (internalUpdate) {
