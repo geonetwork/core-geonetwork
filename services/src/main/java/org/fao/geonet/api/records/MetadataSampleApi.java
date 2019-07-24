@@ -32,6 +32,7 @@ import io.swagger.annotations.ApiResponses;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -268,40 +269,39 @@ public class MetadataSampleApi {
                                 "t" : "s";
                         }
                         if (isTemplate.equals("s")) {
-                            // subtemplates loaded here can have a title or uuid attribute
+                            // subtemplates loaded here can have a specific uuid
+                            // attribute
                             String tryUuid = xml.getAttributeValue("uuid");
-                            if (tryUuid != null && tryUuid.length() > 0) uuid = tryUuid;
-                            title = xml.getAttributeValue("title");
-                            if (title == null || title.length() == 0) {
-                              title = templateName.substring(prefixLength,
-                                templateName.length() - prefixLength);
-                            }
-                            // throw away the uuid and title attributes if present as they
-                            // cause problems for validation
-                            xml.removeAttribute("uuid");
-                            xml.removeAttribute("title");
+                            if (!StringUtils.isEmpty(tryUuid)) uuid = tryUuid;
                         }
-                        //
-                        // insert metadata
-                        //
-                        Metadata metadata = new Metadata();
-                        metadata.setUuid(uuid);
-                        metadata.getDataInfo().
-                            setSchemaId(schemaName).
-                            setRoot(xml.getQualifiedName()).
-                            setType(MetadataType.lookup(isTemplate)).
-                            setTitle(title);
-                        metadata.getSourceInfo().
-                            setSourceId(siteId).
-                            setOwner(owner).
-                            setGroupOwner(1);
-
-                        dataManager.insertMetadata(context, metadata, xml, true, true, true, UpdateDatestamp.NO, false, false);
-
-
-                        report.addMetadataInfos(metadata.getId(), String.format(
+                        if (dataManager.existsMetadataUuid(uuid)) {
+                            String upid = dataManager.getMetadataId(uuid);
+                            dataManager.updateMetadata(context, upid, xml, false, true, false, context.getLanguage(), null, true); 
+                            report.addMetadataInfos(Integer.parseInt(upid), 
+                            String.format(
+                            "Template for schema '%s' with UUID '%s' updated.",
+                            schemaName, uuid));
+                        } else {
+                            //
+                            // insert metadata
+                            //
+                            Metadata metadata = new Metadata();
+                            metadata.setUuid(uuid);
+                            metadata.getDataInfo().
+                                setSchemaId(schemaName).
+                                setRoot(xml.getQualifiedName()).
+                                setType(MetadataType.lookup(isTemplate));
+                            metadata.getSourceInfo().
+                                setSourceId(siteId).
+                                setOwner(owner).
+                                setGroupOwner(1);
+                            dataManager.insertMetadata(context, metadata, xml, true, true, true, UpdateDatestamp.NO, false, false);
+                            report.addMetadataInfos(metadata.getId(), 
+                            String.format(
                             "Template for schema '%s' with UUID '%s' added.",
                             schemaName, metadata.getUuid()));
+                        }
+
                         schemaCount++;
                     } catch (Exception e) {
                         Log.error(Geonet.DATA_MANAGER,
