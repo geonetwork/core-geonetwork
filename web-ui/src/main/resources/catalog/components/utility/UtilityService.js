@@ -496,12 +496,15 @@
           };
           if (!node.nodes) node.nodes = [];
           node.nodes.push(newNode);
+          node.items = node.nodes;
           //node.nodes.sort(sortNodeFn);
         }
         createNode(newNode, g, index + 1, e);
       } else {
         node.key = e.key;
         node.count = e.doc_count;
+        node.size = node.count;
+        node.path = [e.key];
       }
     };
 

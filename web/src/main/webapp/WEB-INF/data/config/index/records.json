@@ -962,6 +962,14 @@
         }
       },
       {
+        "tree": {
+          "match": "*_tree*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      },
+      {
         "contact": {
           "match": "*contact*",
           "mapping": {

@@ -521,7 +521,7 @@
               <xsl:for-each select="$keywordsWithHierarchy">
                 <xsl:variable name="path" select="tokenize(., '/')"/>
                 <xsl:for-each select="$path">
-                  <xsl:element name="keywordWithHierarchy">
+                  <xsl:element name="keywords_tree">
                     <xsl:variable name="position"
                                   select="position()"/>
                     <xsl:value-of select="string-join($path[position() &lt;= $position], '/')"/>

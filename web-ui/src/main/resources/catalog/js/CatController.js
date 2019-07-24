@@ -147,9 +147,9 @@ goog.require('gn_alert');
           },
           'facetTabField': '',
           'facetConfig': {
-            'keywordWithHierarchy': {
+            'keywords_tree': {
               'terms': {
-                'field': 'keywordWithHierarchy.keyword',
+                'field': 'keywords_tree',
                 'size': 100
               }
             },

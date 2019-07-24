@@ -28,7 +28,7 @@
 
   var DEFAULT_SIZE = 10;
 
-  module.service('gnESFacet', ['gnGlobalSettings', function(gnGlobalSettings) {
+  module.service('gnESFacet', ['gnGlobalSettings', 'gnTreeFromSlash', function(gnGlobalSettings, gnTreeFromSlash) {
 
     this.configs = {
       search: {
@@ -106,30 +106,38 @@
         };
 
         if (reqAgg.hasOwnProperty('terms')) {
-          facetModel.type = 'terms';
-          facetModel.size = reqAgg.terms.size;
-          respAgg.buckets.forEach(function (bucket) {
-            if (bucket.key) {
-              var itemPath = (path || []).concat([fieldId, bucket.key + ''])
-              var facet = {
-                value: bucket.key,
-                count: bucket.doc_count,
-                path: itemPath
-              };
-              // nesting
-              if(isNested) {
-                facet.isNested = true
-              }
-              if(reqAgg.hasOwnProperty('aggs')) {
-                var nestAggs = {}
-                for (var indexKey in reqAgg.aggs) {
-                  nestAggs[indexKey] = bucket[indexKey]
+
+          if(fieldId.endsWith('_tree')) {
+            var tree = gnTreeFromSlash.getTree(respAgg.buckets);
+            facetModel.items = tree.items;
+          } else {
+            facetModel.type = 'terms';
+            facetModel.size = reqAgg.terms.size;
+            respAgg.buckets.forEach(function (bucket) {
+              if (bucket.key) {
+                var itemPath = (path || []).concat([fieldId, bucket.key + ''])
+                var facet = {
+                  value: bucket.key,
+                  count: bucket.doc_count,
+                  path: itemPath
+                };
+                // nesting
+                if(isNested) {
+                  facet.isNested = true
                 }
-                facet.aggs = createFacetModel(reqAgg.aggs, nestAggs, true, itemPath)
+                if(reqAgg.hasOwnProperty('aggs')) {
+                  var nestAggs = {}
+                  for (var indexKey in reqAgg.aggs) {
+                    nestAggs[indexKey] = bucket[indexKey]
+                  }
+                  facet.aggs = createFacetModel(reqAgg.aggs, nestAggs, true, itemPath)
+                }
+                facetModel.items.push(facet);
               }
-              facetModel.items.push(facet);
-            }
-          });
+            });
+
+          }
+
         } else if (reqAgg.hasOwnProperty('filters')) {
           facetModel.type = 'filters';
           facetModel.size = DEFAULT_SIZE;

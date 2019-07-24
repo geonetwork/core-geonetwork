@@ -440,6 +440,7 @@
     }
 
     this.isInSearch = function(path) {
+      if(!path) return;
       var filters = $scope.searchObj.state.filters;
       var getter = parse(path.join('.'));
       return getter(filters)
