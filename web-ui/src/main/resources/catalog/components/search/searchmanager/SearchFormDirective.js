@@ -24,15 +24,6 @@
 (function() {
   goog.provide('gn_search_form_controller');
 
-
-
-
-
-
-
-
-
-
   goog.require('gn_catalog_service');
   goog.require('gn_search_form_results_directive');
   goog.require('gn_selection_directive');
@@ -463,75 +454,125 @@
     'gnAlertService'
   ];
 
+
   /**
-   * Possible attributes:
-   *  * runSearch: run search inmediately after the  directive is loaded.
-   *  * waitForUser: wait until a user id is available to trigger the search.
+   * @ngdoc directive
+   * @name gn_search_form_controller.directive:gnSearchTextField
+   *
+   * @restrict A
+   *
+   * @description
+   * This directive is used to add a full text criteria on the search.
+   * This is bound on the `any` field of the search state.
    */
-  module.directive('ngSearchForm', [
-    'gnSearchLocation', 'gnESService',
-    function(gnSearchLocation, gnESService) {
+  module.directive('gnSearchFullText', [
+    'gnSearchManagerService',
+    function(gnSearchManagerService) {
       return {
         restrict: 'A',
-        scope: true,
-        controller: searchFormController,
-        controllerAs: 'controller',
-        link: function(scope, element, attrs) {
+        link: function (scope, element, attrs) {
+          var searchName = attrs['gnSearchName'];
+          var searchManager = gnSearchManagerService.getSearchManager(searchName);
 
-          scope.resetSearch = function(htmlElementOrDefaultSearch, preserveGeometrySearch) {
-            if (angular.isObject(htmlElementOrDefaultSearch)) {
-              scope.controller.resetSearch(htmlElementOrDefaultSearch, preserveGeometrySearch);
-            } else {
-              scope.controller.resetSearch();
-              $(htmlElementOrDefaultSearch).focus();
-            }
-          };
-
-          var waitForPagination = function() {
-            // wait for pagination to be set before triggering search
-            if (element.find('[data-gn-pagination]').length > 0) {
-              var unregisterFn = scope.$watch('hasPagination', function() {
-                if (scope.hasPagination) {
-                  scope.triggerSearch(true);
-                  unregisterFn();
-                }
-              });
-            } else {
-              scope.triggerSearch(false);
-            }
-          };
-
-          // Run a first search on directive rendering if attr is specified
-          // Don't run it on page load if the permalink is 'on' and the
-          // $location is not set to 'search'
-          if (attrs.runsearch &&
-              (!scope.searchObj.permalink || gnSearchLocation.isSearch())) {
-
-            // get permalink params on page load
-            if (scope.searchObj.permalink) {
-              angular.extend(scope.searchObj.params,
-                  gnSearchLocation.getParams());
-
-              if(scope.searchObj.params.query_string) {
-                scope.searchObj.state.filters = JSON.parse(scope.searchObj.params.query_string);
-              }
-
-            }
-
-            if (attrs.waitForUser === "true") {
-              var userUnwatch = scope.$watch('user.id', function(userNewVal) {
-                // Don't trigger the search until the user id has been loaded
-                // Unregister the watch once we have the user id.
-                if (angular.isDefined(userNewVal)) {
-                  waitForPagination();
-                  userUnwatch();
-                }
-              });
-            } else {
-              waitForPagination();
-            }
-          }
+          element.on('change', function(event) {
+            scope.$apply(function() {
+              searchManager.setFullTextSearch(element.val());
+            });
+          });
+          scope.$watch(function() {
+            return searchManager.getFullTextSearch();
+          }, function(val) {
+            element.val(val);
+          });
         }
-      };
-    }]);
+      }
+    }
+  ]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_search_form_controller.directive:gnSearchTriggerEnter
+   *
+   * @restrict A
+   *
+   * @description
+   * This directive will trigger a new search on enter key press
+   */
+  module.directive('gnSearchTriggerEnter', [
+    'gnSearchManagerService',
+    function(gnSearchManagerService) {
+      return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+          var searchName = attrs['gnSearchName'];
+          var searchManager = gnSearchManagerService.getSearchManager(searchName);
+
+          element.on('keyup', function(event) {
+            if (event.keyCode == 13) {
+              scope.$apply(function() {
+                searchManager.triggerSearch();
+              });
+            }
+          });
+        }
+      }
+    }
+  ]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_search_form_controller.directive:gnSearchTriggerClick
+   *
+   * @restrict A
+   *
+   * @description
+   * This directive will trigger a new search on click
+   */
+  module.directive('gnSearchTriggerClick', [
+    'gnSearchManagerService',
+    function(gnSearchManagerService) {
+      return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+          var searchName = attrs['gnSearchName'];
+          var searchManager = gnSearchManagerService.getSearchManager(searchName);
+
+          element.on('click', function() {
+            scope.$apply(function() {
+              searchManager.triggerSearch();
+            });
+          });
+        }
+      }
+    }
+  ]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_search_form_controller.directive:gnSearchResetClick
+   *
+   * @restrict A
+   *
+   * @description
+   * This directive will reset the search params on click
+   */
+  module.directive('gnSearchResetClick', [
+    'gnSearchManagerService',
+    function(gnSearchManagerService) {
+      return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+          var searchName = attrs['gnSearchName'];
+          var searchManager = gnSearchManagerService.getSearchManager(searchName);
+
+          element.on('click', function() {
+            scope.$apply(function() {
+              searchManager.resetSearch();
+            });
+          });
+        }
+      }
+    }
+  ]);
+
 })();
