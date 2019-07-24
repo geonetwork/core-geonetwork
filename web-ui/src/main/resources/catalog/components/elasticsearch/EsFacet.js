@@ -52,7 +52,11 @@
             'status*',
             'rating',
             'tag*',
-            'geom'
+            'geom',
+            'isTemplate',
+            'valid',
+            'isHarvested',
+            'documentStandard'
           ]
         }
       },
