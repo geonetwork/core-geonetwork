@@ -357,6 +357,7 @@
               scope.search = gnSearchManagerService.getSearchManager(scope.searchName);
               scope.sortBy = function(v) {
                 scope.search.setSortBy(v.sortBy, v.sortOrder === 'reverse');
+                scope.search.trigger();
               };
               hotkeys.bindTo(scope)
                   .add({
@@ -373,26 +374,6 @@
                       }
                     }
                   });
-            }
-          };
-        }])
-
-      .directive('hitsperpageCombo', [
-        function() {
-          return {
-            restrict: 'A',
-            require: '^ngSearchForm',
-            templateUrl: '../../catalog/components/search/formfields/' +
-                'partials/hitsperpageCombo.html',
-            scope: {
-              pagination: '=paginationCfg',
-              values: '=gnHitsperpageValues'
-            },
-            link: function(scope, element, attrs, searchFormCtrl) {
-              scope.updatePagination = function() {
-                searchFormCtrl.resetPagination();
-                searchFormCtrl.triggerSearch();
-              };
             }
           };
         }])
@@ -844,5 +825,71 @@
             }
           };
         }
-      ]);
+      ])
+
+    .directive('gnPermalink', ['gnSearchManagerService', 'gnSearchLocation',
+      function(gnSearchManagerService, gnSearchLocation) {
+        return {
+          restrict: 'E',
+          scope: {
+            searchName: '@gnPermalinkSearchName'
+          },
+          link: function(scope) {
+            var searchManager = gnSearchManagerService.getSearchManager(scope.searchName);
+
+            var internalUpdate = false;
+
+            scope.$watchCollection(function() {
+              return gnSearchLocation.getParams();
+            }, function(params) {
+              if (internalUpdate) {
+                internalUpdate = false;
+                return;
+              }
+
+              var paramsCopy = angular.merge({}, params);
+              if (paramsCopy.from !== undefined && paramsCopy.to !== undefined) {
+                searchManager.setPagination(parseInt(paramsCopy.from), parseInt(paramsCopy.to));
+              }
+              if (paramsCopy.sortBy) {
+                searchManager.setSortBy(paramsCopy.sortBy);
+              }
+              delete paramsCopy.from;
+              delete paramsCopy.to;
+              delete paramsCopy.sortBy;
+              delete paramsCopy.query;
+              for (var key in paramsCopy) {
+                searchManager.toggleParam(key, paramsCopy[key]);
+              }
+              searchManager.trigger();
+              internalUpdate = true;
+            });
+
+            scope.$watchCollection(function() {
+              var params = angular.merge({}, {
+                from: searchManager.getPagination().from,
+                to: searchManager.getPagination().to,
+                sortBy: searchManager.getSortBy()
+              });
+              var searchParams = searchManager.getParams();
+              for(var field in searchParams) {
+                for (var value in searchParams[field]) {
+                  searchParams[field][value] === true ?
+                    params[field] = value :
+                    params[field] = searchParams[field][value];
+                }
+              }
+              return params;
+            }, function(params) {
+              if (internalUpdate) {
+                internalUpdate = false;
+                return;
+              }
+              gnSearchLocation.setSearch(params);
+              internalUpdate = true;
+            });
+          }
+        };
+      }]
+    );
 })();

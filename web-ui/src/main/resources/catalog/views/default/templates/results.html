@@ -1,6 +1,6 @@
 <div class="gn-search-results-container"
-     gn-search-bind="mainsearch"
-     ng-init="search.trigger()">
+     gn-search-bind="mainsearch">
+  <gn-permalink gn-permalink-search-name="mainsearch"></gn-permalink>
   <div data-ng-include="'../../catalog/views/default/templates/searchForm.html'"></div>
 
   <div gn-grid-related-query="search.getResults()"></div>

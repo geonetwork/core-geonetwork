@@ -126,14 +126,13 @@
   };
 
   /**
-   * Set the current pagination. This will trigger a search.
+   * Set the current pagination.
    * @param {number} from
    * @param {number} to
    */
   SearchManager.prototype.setPagination = function(from, to) {
     this.state_.from = from;
     this.state_.to = to;
-    this.trigger();
   };
 
   /**
@@ -152,15 +151,13 @@
   };
 
   /**
-   * Set a sorting criteria, and whether the sort is reversed. This will
-   * trigger a search.
+   * Set a sorting criteria, and whether the sort is reversed.
    * @param {string} criteria
    * @param {bool} [reverse]
    */
   SearchManager.prototype.setSortBy = function(criteria, reverse) {
     this.state_.sortBy = criteria;
     this.state_.sortByReversed = !!reverse;
-    this.trigger();
   };
 
   /**
@@ -258,9 +255,10 @@
         removeKey(params, fieldOrPath)
       }
     } else {
-      params[fieldOrPath] = value;
+      params[fieldOrPath] = {
+        [value]: true
+      };
     }
-    this.trigger();
   };
 
   SearchManager.prototype.isInSearch = function(fieldOrPath) {

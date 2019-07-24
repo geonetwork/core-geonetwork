@@ -68,6 +68,7 @@
             var from = scope.config.currentPage * scope.config.hitsPerPage;
             var to = (scope.config.currentPage + 1) * scope.config.hitsPerPage;
             scope.search.setPagination(from, to);
+            scope.search.trigger();
           };
 
           scope.previous = function() {

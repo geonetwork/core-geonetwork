@@ -135,7 +135,8 @@
     } else if (facet.type === 'tree') {
       value = true;
     }
-    this.searchManager.toggleParam(item.path, value)
+    this.searchManager.toggleParam(item.path, value);
+    this.searchManager.trigger();
   };
 
   FacetController.prototype.isInSearch = function (facet, item) {
