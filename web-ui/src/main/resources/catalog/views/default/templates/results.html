@@ -1,29 +1,30 @@
-<div class="gn-search-results-container">
+<div class="gn-search-results-container"
+     gn-search-bind="mainsearch">
   <div data-ng-include="'../../catalog/views/default/templates/searchForm.html'"></div>
 
-  <div gn-grid-related-query="searchResults.records"></div>
+  <div gn-grid-related-query="search.getResults()"></div>
   <div class="row gn-row-results">
     <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
       <div class="col-md-3 gn-search-facet">
 
-        <div data-ng-show="searchResults.records.length > 0"
+        <div data-ng-show="search.hasResults()"
             data-gn-saved-selections-panel="user"></div>
 
         <div data-gn-user-searches-panel="user"></div>
 
         <!-- Hierachical facet mode -->
         <div class="panel panel-default"
-           data-ng-show="searchResults.records.length > 0">
-        <div class="panel-heading" data-gn-slide-toggle="">
-          <i class="fa fa-search"/>&nbsp;
-          <span data-translate="">filter</span>
-        </div>
-        <div class="panel-body">
-          <div data-es-facets="searchResults.facets"
-               data-params="searchObj.params"
-               data-facet-type="facetsSummaryType"/>
+             ng-show="search.hasResults()">
+          <div class="panel-heading" data-gn-slide-toggle="">
+            <i class="fa fa-search"/>&nbsp;
+            <span data-translate="">filter</span>
           </div>
-        </div>
+          <div class="panel-body">
+            <div data-es-facets="search.getFacets()"
+                 data-params="search.getParams()"
+                 data-facet-type="facetsSummaryType"/>
+            </div>
+          </div>
       </div>
 
       <div class="col-md-9 container-fluid">
@@ -44,7 +45,7 @@
             data-tab-field="facetTabField"></div>
 
         <div class="col-xs-12 col-sm-6 col-sm-push-3 text-center"
-          data-ng-show="searchResults.records.length > 0">
+          data-ng-show="search.hasResults()">
           <div class=""
               data-gn-pagination="paginationInfo"
               data-hits-values="searchObj.hitsperpageValues"
@@ -53,13 +54,13 @@
         </div>
 
         <div class="col-xs-6 col-sm-3 col-sm-pull-6 col-lg-pull-6"
-          data-ng-show="searchResults.records.length > 0">
+          data-ng-show="search.hasResults()">
           <div data-gn-selection-widget=""
                 data-results="searchResults"></div>
         </div>
 
         <div class="col-xs-6 col-sm-3"
-          data-ng-show="searchResults.records.length > 0">
+          data-ng-show="search.hasResults()">
           <div class="pull-right"
                data-gn-results-tpl-switcher=""></div>
           <div class="pull-right"
@@ -73,18 +74,16 @@
     <div class="row">
       <div class="col-xs-12">
         <span class="loading fa fa-spinner fa-spin"
-              gn-search-bind="mainsearch"
               ng-show="search.isLoading()">
         </span>
 
         <div class="alert alert-warning" role="alert"
-            ng-if="!searching && searchResults.count == 0">
+            ng-if="!search.isLoading() && !search.hasResults()">
           <i class="fa fa-frown-o"></i>
           <span data-translate="">zarooResult</span>
         </div>
 
-        <div gn-search-bind="mainsearch"
-             ng-show="search.hasResults()"
+        <div ng-show="search.hasResults()"
              data-gn-results-container=""
              data-search-results="searchResults"
              data-template-url="resultTemplate"
@@ -94,7 +93,7 @@
 
     <div class="row">
       <div class="col-xs-12 text-center"
-      data-ng-show="searchResults.records.length > 0">
+      data-ng-show="search.hasResults()">
         <div class=""
               data-gn-pagination="paginationInfo"
               data-hits-values="searchObj.hitsperpageValues"

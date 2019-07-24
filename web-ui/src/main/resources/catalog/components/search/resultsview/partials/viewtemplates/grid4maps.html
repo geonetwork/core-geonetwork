@@ -1,6 +1,7 @@
 <ul class="list-group gn-resultview gn-resultview-sumup">
   <li class="list-group-item gn-grid gn-map-item flex-col flex-align-stretch"
-      data-ng-repeat="md in searchResults.records"
+      gn-search-bind="mainsearch"
+      data-ng-repeat="md in search.getResults()"
       data-gn-fix-mdlinks=""
       title="{{(md.abstract || md.defaultAbstract) | striptags}}"
       ng-click="loadMap(maps[0], md)">
