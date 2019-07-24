@@ -461,6 +461,10 @@
     this.hasFiltersForKey = function(key) {
       return !!$scope.searchObj.state.filters[key];
     }
+
+    this.loadMoreTerms = function(facet) {
+      return gnESClient.loadMoreTerms($scope.searchObj.params.query, facet.path, facet.items.length + 20);
+    }
   };
 
   searchFormController['$inject'] = [

@@ -160,7 +160,7 @@ goog.require('gn_alert');
               'aggs': {
                 'format': {
                   'terms': {
-                    'field': 'format'
+                    'field': 'format',
                   }
                 }
               }

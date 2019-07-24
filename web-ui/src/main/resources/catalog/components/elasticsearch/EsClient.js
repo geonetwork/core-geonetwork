@@ -69,6 +69,16 @@
       );
     };
 
+    this.loadMoreTerms = function(query, facetPath, newSize) {
+      var params = gnESService.getMoreTermsParams(query, facetPath, newSize);
+      return callApi('_search', params).then(
+        function(response) {
+          var model = gnESFacet.getUIModel(response, params);
+          return model.facets[0];
+        }
+      );
+    };
+
     function callApi(service, params, selectionBucket) {
       return $http.post(ES_API_URL + service + (selectionBucket ? '?bucket=' + selectionBucket : ''), params);
     }

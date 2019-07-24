@@ -69,6 +69,11 @@
       this.fLvlCollapse[this.list[i].key] = false;
     }
   }
+  FacetsController.prototype.loadMoreTerms = function (facet) {
+    this.searchCtrl.loadMoreTerms(facet).then(function (terms) {
+      angular.merge(facet, terms);
+    });
+  }
 
 
   FacetsController.prototype._isFlatTermsFacet = function (facet) {

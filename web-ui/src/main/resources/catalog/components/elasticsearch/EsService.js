@@ -257,5 +257,27 @@
       return mapping[name] || name;
     }
 
+    this.getMoreTermsParams = function(query, facetPath, newSize) {
+      var params = {
+        query: query || {bool: {must: []}},
+        size: 0
+      };
+      var aggregations = params;
+      for (var i = 0; i < facetPath.length; i++) {
+        if ((i + 1) % 2 === 0) continue;
+        var key = facetPath[i];
+        aggregations.aggregations = {
+          [key]: {
+            terms: {
+              field: key,
+              size: newSize
+            }
+          }
+        };
+        aggregations = aggregations.aggregations[key];
+      }
+      return params;
+    };
+
   }]);
 })();

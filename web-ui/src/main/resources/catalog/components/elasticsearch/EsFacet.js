@@ -106,7 +106,8 @@
 
         var facetModel = {
           key: fieldId,
-          items: []
+          items: [],
+          path: (path || []).concat([fieldId])
         };
 
         if (reqAgg.hasOwnProperty('terms')) {
@@ -118,9 +119,10 @@
           } else {
             facetModel.type = 'terms';
             facetModel.size = reqAgg.terms.size;
+            facetModel.more = respAgg.sum_other_doc_count > 0;
             respAgg.buckets.forEach(function (bucket) {
               if (bucket.key) {
-                var itemPath = (path || []).concat([fieldId, bucket.key + ''])
+                var itemPath = facetModel.path.concat([bucket.key + '']);
                 var facet = {
                   value: bucket.key,
                   count: bucket.doc_count,
@@ -142,7 +144,6 @@
             });
 
           }
-
         } else if (reqAgg.hasOwnProperty('filters')) {
           facetModel.type = 'filters';
           facetModel.size = DEFAULT_SIZE;

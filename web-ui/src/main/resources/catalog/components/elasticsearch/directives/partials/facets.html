@@ -34,11 +34,12 @@
            es-facet-item="::item"
            ng-repeat="item in facet.items">
       </div>
+
       <a href
-         class="see-more"
-         ng-click="getMore(field)"
-         ng-if="::field.more && !field.dates && !field.tree">
-        <span translate>more</span>...
+         class="gn-facet-more"
+         ng-if="facet.more"
+         ng-click="ctrl.loadMoreTerms(facet)">
+        <span translate>loadMoreResults</span>
       </a>
     </div>
   </div>
