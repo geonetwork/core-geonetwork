@@ -36,14 +36,18 @@
       return gnEsLuceneQueryParser.facetsToLuceneQuery(facetsState);
     }
 
-    this.convertLuceneParams = function(p, searchState) {
-      var params = {};
-      var luceneQueryString = gnEsLuceneQueryParser.facetsToLuceneQuery(searchState.filters);
+    this.generateEsRequest = function(searchState) {
+      var params = {
+        size: 10
+      };
       var query = {
         bool: {
           must: []
         }
       };
+
+      // var luceneQueryString = gnEsLuceneQueryParser.facetsToLuceneQuery(searchState.filters);
+      var luceneQueryString = '';
 
       var query_string;
       var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',
@@ -56,53 +60,54 @@
         keyword: 'tag'
       };
 
-      if(p.from) {
-        params.from = p.from - 1;
+      if(searchState.from !== undefined) {
+        params.from = searchState.from - 1;
       }
-      if(p.to) {
-        params.size = p.to - p.from;
+      if(searchState.to !== undefined && searchState.from !== undefined) {
+        params.size = searchState.to - searchState.from;
       }
-      if(p.any || luceneQueryString) {
+      if(searchState.any || luceneQueryString) {
         query_string = {
-          query: ((p.any || '') + ' ' + luceneQueryString).trim()
+          query: ((searchState.any || '') + ' ' + luceneQueryString).trim()
         };
       }
-      if(p.sortBy) {
+      if(searchState.sortBy) {
         var sort = {};
         params.sort = [];
-        if(p.sortBy != 'relevance') {
-          sort[getFieldName(mappingFields, p.sortBy)] = 'asc';
+        if(searchState.sortBy !== 'relevance') {
+          sort[getFieldName(mappingFields, searchState.sortBy)] = searchState.sortByReverse ? 'desc' : 'asc';
           params.sort.push(sort);
         }
         params.sort.push('_score');
       }
 
       // ranges criteria (for dates)
-      if (p.creationDateFrom || p.creationDateTo) {
+      if (searchState.creationDateFrom !== undefined ||
+        searchState.creationDateTo !== undefined) {
         query.bool.must.push({
           range: {
             createDate : {
-                gte: p.creationDateFrom || undefined,
-                lte: p.creationDateTo || undefined,
+                gte: searchState.creationDateFrom || undefined,
+                lte: searchState.creationDateTo || undefined,
                 format: 'yyyy-MM-dd'
             }
           }
         });
       }
-      if (p.dateFrom || p.dateTo) {
+      if (searchState.dateFrom !== undefined || searchState.dateTo !== undefined) {
         query.bool.must.push({
           range: {
             changeDate : {
-                gte: p.dateFrom || undefined,
-                lte: p.dateTo || undefined,
+                gte: searchState.dateFrom || undefined,
+                lte: searchState.dateTo || undefined,
                 format: 'yyyy-MM-dd'
             }
           }
         });
       }
 
-      var termss = Object.keys(p).reduce(function(output, current) {
-        var value = p[current];
+      var termss = Object.keys(searchState.params).reduce(function(output, current) {
+        var value = searchState.params[current];
         if(excludeFields.indexOf(current) < 0) {
           var newName = mappingFields[current] || current;
           if(!angular.isArray(value)) {
@@ -126,9 +131,9 @@
           query_string: query_string
         });
       }
-      if(p.geometry) {
-        var geom = new ol.format.WKT().readGeometry(p.geometry)
-        var extent = geom.getExtent()
+      if(searchState.geometry) {
+        var geom = new ol.format.WKT().readGeometry(searchState.geometry);
+        var extent = geom.getExtent();
         var coordinates = [
           [extent[0], extent[3]],
           [extent[2], extent[1]]
@@ -141,7 +146,7 @@
                 'type': 'envelope',
                 'coordinates': coordinates
               },
-              'relation': p.relation || 'intersects'
+              'relation': searchState.geometryRelation || 'intersects'
             }
           }
         });
