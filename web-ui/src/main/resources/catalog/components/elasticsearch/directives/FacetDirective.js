@@ -116,6 +116,9 @@
 
   FacetController.prototype.$onInit = function () {
     this.item.collapsed = true;
+    if (this.facet.type === 'tree') {
+      this.item.path = [this.facet.key, this.item.key];
+    }
   }
 
   FacetController.prototype.filter = function (facet, item) {
@@ -128,7 +131,6 @@
     } else if (facet.type === 'filters') {
       value = item.query_string.query_string.query
     } else if (facet.type === 'tree') {
-      item.path = [facet.key, item.key];
       value = true;
     }
     this.searchCtrl.updateState(item.path, value)
