@@ -632,7 +632,7 @@ goog.require('gn_alert');
       });
       //If no csrf, ask for one:
       if (!$rootScope.csrf) {
-        $http.post('../api/me');
+        $http.get('../api/me');
       }
       //Comment the upper lines if you want to remove csrf support
 
