@@ -98,10 +98,12 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.apache.commons.fileupload.util.Streams.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
@@ -249,7 +251,7 @@ public class SiteApi {
         List<String> settingList = new ArrayList<>();
         if (set == null && key == null) {
             final SettingRepository settingRepository = appContext.getBean(SettingRepository.class);
-            final List<org.fao.geonet.domain.Setting> publicSettings =
+            final List<Setting> publicSettings =
                 settingRepository.findAllByInternal(false);
 
             // Add virtual settings based on internal settings.
@@ -276,12 +278,12 @@ public class SiteApi {
             if (key != null && key.length > 0) {
                 Collections.addAll(settingList, key);
             }
-            List<org.fao.geonet.domain.Setting> settings = sm.getSettings(settingList.toArray(new String[0]));
-            ListIterator<org.fao.geonet.domain.Setting> iterator = settings.listIterator();
+            List<Setting> settings = sm.getSettings(settingList.toArray(new String[0]));
+            ListIterator<Setting> iterator = settings.listIterator();
 
             // Cleanup internal settings for not authenticated users.
             while (iterator.hasNext()) {
-                org.fao.geonet.domain.Setting s = iterator.next();
+                Setting s = iterator.next();
                 if (s.isInternal() && profile == null) {
                     settings.remove(s);
                 }
@@ -352,12 +354,12 @@ public class SiteApi {
             if (key != null && key.length > 0) {
                 Collections.addAll(settingList, key);
             }
-            List<org.fao.geonet.domain.Setting> settings = sm.getSettings(settingList.toArray(new String[0]));
-            ListIterator<org.fao.geonet.domain.Setting> iterator = settings.listIterator();
+            List<Setting> settings = sm.getSettings(settingList.toArray(new String[0]));
+            ListIterator<Setting> iterator = settings.listIterator();
 
             // Cleanup internal settings for not authenticated users.
             while (iterator.hasNext()) {
-                org.fao.geonet.domain.Setting s = iterator.next();
+                Setting s = iterator.next();
                 if (s.isInternal() && profile == null) {
                     settings.remove(s);
                 }
@@ -562,11 +564,10 @@ public class SiteApi {
             required = false)
         @RequestParam(required = false, defaultValue = "false")
             boolean havingXlinkOnly,
-//        @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
-//            required = false,
-//            example = "")
-//        @RequestParam(required = false)
-//        String[] uuids,
+        @ApiParam(value = "Index. By default only remove record index.",
+            required = false)
+        @RequestParam(required = false, defaultValue = "records")
+        String[] indices,
         @ApiParam(
             value = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
@@ -580,7 +581,7 @@ public class SiteApi {
         EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
 
         if(reset) {
-            searchMan.init(true);
+            searchMan.init(true, Optional.of(Arrays.asList(indices)));
         }
         searchMan.rebuildIndex(context, havingXlinkOnly, false, bucket);
 

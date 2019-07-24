@@ -87,6 +87,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.fao.geonet.kernel.search.IndexFields.SOURCE_CATALOGUE;
@@ -222,11 +223,15 @@ public class EsSearchManager implements ISearchManager {
 
 
     @Override
-    public void init(boolean dropIndexFirst) throws Exception {
+    public void init(boolean dropIndexFirst, Optional<List<String>> indices) throws Exception {
         if (indexList != null) {
             indexList.keySet().forEach(e -> {
                 try {
-                    createIndex(e, indexList.get(e), dropIndexFirst);
+                    if (indices.isPresent() ?
+                        indices.get().contains(e) :
+                        true) {
+                        createIndex(e, indexList.get(e), dropIndexFirst);
+                    }
                 } catch (IOException ex) {
                     LOGGER.error("Error during index creation. Error is: {}", ex.getMessage());
                 }

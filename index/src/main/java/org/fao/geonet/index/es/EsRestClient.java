@@ -366,10 +366,12 @@ public class EsRestClient implements InitializingBean {
             return "";
         }
 
-        DeleteByQueryRequest request = new DeleteByQueryRequest(index);
+        DeleteByQueryRequest request = new DeleteByQueryRequest();
+        request.indices(index);
         request.setQuery(new QueryStringQueryBuilder(query));
 
-        final BulkByScrollResponse deleteByQueryResponse = client.deleteByQuery(request, RequestOptions.DEFAULT);
+        final BulkByScrollResponse deleteByQueryResponse =
+            client.deleteByQuery(request, RequestOptions.DEFAULT);
 
         if (deleteByQueryResponse.getStatus().getDeleted() >= 0) {
             return String.format("Record removed. %s.", deleteByQueryResponse.getStatus().getDeleted());

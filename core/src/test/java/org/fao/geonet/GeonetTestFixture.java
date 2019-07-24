@@ -53,6 +53,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.fao.geonet.constants.Geonet.Config.LANGUAGE_PROFILES_DIR;
@@ -111,7 +112,7 @@ public class GeonetTestFixture {
                     });
 
                     // Create ES index
-                    _applicationContext.getBean(EsSearchManager.class).init(false);
+                    _applicationContext.getBean(EsSearchManager.class).init(false, Optional.empty());
 
                     Path schemaPluginsDir = templateDataDirectory.resolve("config/schema_plugins");
                     deploySchema(webappDir, schemaPluginsDir);

@@ -32,6 +32,7 @@ import java.nio.file.Path;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import jeeves.server.ServiceConfig;
@@ -41,7 +42,7 @@ import jeeves.server.context.ServiceContext;
  * Base interface for the search (Lucene or Solr).
  */
 public interface ISearchManager {
-    void init(boolean dropIndexFirst) throws Exception;
+    void init(boolean dropIndexFirst, Optional<List<String>> indices) throws Exception;
 
     void end() throws Exception;
 
