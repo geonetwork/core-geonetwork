@@ -308,7 +308,10 @@ public class EsRestClient implements InitializingBean {
     public SearchResponse query(String index, String luceneQuery, String filterQuery, Set<String> includedFields,
                                 int from, int size, List<SortBuilder<FieldSortBuilder>> sort) throws Exception {
         final QueryBuilder query = QueryBuilders.queryStringQuery(luceneQuery);
-        final QueryBuilder filter = QueryBuilders.queryStringQuery(filterQuery);
+        QueryBuilder filter = null;
+        if (StringUtils.isNotEmpty(filterQuery)) {
+            filter = QueryBuilders.queryStringQuery(filterQuery);
+        }
         return query(index, query, filter, includedFields, from, size, sort);
     }
 
