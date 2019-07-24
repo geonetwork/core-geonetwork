@@ -465,7 +465,7 @@
     <dependency>
       <groupId>edu.ucar</groupId>
       <artifactId>netcdf</artifactId>
-      <version>4.0.patch</version>
+      <version>4.3.23</version>
     </dependency>
 
     <!-- language detection -->
