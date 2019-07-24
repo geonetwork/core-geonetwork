@@ -100,6 +100,7 @@ public class EsSearchManager implements ISearchManager {
 
     public static final String SCHEMA_INDEX_XSLT_FOLDER = "index-fields";
     public static final String SCHEMA_INDEX_XSTL_FILENAME = "index.xsl";
+    public static final String SCHEMA_INDEX_SUBTEMPLATE_XSTL_FILENAME = "index-subtemplate.xsl";
     public static final String FIELDNAME = "name";
     public static final String FIELDSTRING = "string";
 
@@ -161,9 +162,12 @@ public class EsSearchManager implements ISearchManager {
         return defaultIndex;
     }
 
-    private Path getXSLTForIndexing(Path schemaDir) {
+    private Path getXSLTForIndexing(Path schemaDir, MetadataType metadataType) {
         Path xsltForIndexing = schemaDir
-            .resolve(SCHEMA_INDEX_XSLT_FOLDER).resolve(SCHEMA_INDEX_XSTL_FILENAME);
+            .resolve(SCHEMA_INDEX_XSLT_FOLDER)
+            .resolve(
+                metadataType.equals(MetadataType.SUB_TEMPLATE) || metadataType.equals(MetadataType.TEMPLATE_OF_SUB_TEMPLATE) ?
+                    SCHEMA_INDEX_SUBTEMPLATE_XSTL_FILENAME : SCHEMA_INDEX_XSTL_FILENAME);
         if (!Files.exists(xsltForIndexing)) {
             throw new RuntimeException(String.format(
                 "XSLT for schema indexing does not exist. Create file '%s'.",
@@ -172,8 +176,8 @@ public class EsSearchManager implements ISearchManager {
         return xsltForIndexing;
     }
 
-    private void addMDFields(Element doc, Path schemaDir, Element metadata) {
-        final Path styleSheet = getXSLTForIndexing(schemaDir);
+    private void addMDFields(Element doc, Path schemaDir, Element metadata, MetadataType metadataType) {
+        final Path styleSheet = getXSLTForIndexing(schemaDir, metadataType);
         try {
             Element fields = Xml.transform(metadata, styleSheet);
             /* Generates something like that:
@@ -184,7 +188,7 @@ public class EsSearchManager implements ISearchManager {
                 doc.addContent((Element) field.clone());
             }
         } catch (Exception e) {
-            LOGGER.error("Indexing stylesheet contains errors: {} \n\t Marking the metadata as _indexingError=1 in index", e.getMessage());
+            LOGGER.error("Indexing stylesheet contains errors: {} \n  Marking the metadata as _indexingError=1 in index", e.getMessage());
             doc.addContent(new Element(IndexFields.INDEXING_ERROR_FIELD).setText("1"));
             doc.addContent(new Element(IndexFields.INDEXING_ERROR_MSG).setText("GNIDX-XSL||" + e.getMessage()));
             StringBuilder sb = new StringBuilder();
@@ -363,7 +367,7 @@ public class EsSearchManager implements ISearchManager {
                       boolean forceRefreshReaders) throws Exception {
 
         Element docs = new Element("doc");
-        addMDFields(docs, schemaDir, metadata);
+        addMDFields(docs, schemaDir, metadata, metadataType);
         addMoreFields(docs, dbFields);
 
         ObjectMapper mapper = new ObjectMapper();

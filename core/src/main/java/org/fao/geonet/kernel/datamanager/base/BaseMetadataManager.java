@@ -632,7 +632,10 @@ public class BaseMetadataManager implements IMetadataManager {
         }
         metadataOperations.copyDefaultPrivForGroup(context, stringId, groupId, fullRightsForGroup);
 
-        if (index) {
+        if (newMetadata.getDataInfo().getType().equals(MetadataType.SUB_TEMPLATE)) {
+            // TODOES
+            System.out.println("Subtemplate are not indexed with ES");
+        } else if (index) {
             metadataIndexer.indexMetadata(stringId, forceRefreshReaders);
         }
 

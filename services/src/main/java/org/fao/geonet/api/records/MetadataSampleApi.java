@@ -281,7 +281,7 @@ public class MetadataSampleApi {
                             setOwner(owner).
                             setGroupOwner(1);
 
-                        dataManager.insertMetadata(context, metadata, xml, true, true, true, UpdateDatestamp.NO, false, false);
+                        dataManager.insertMetadata(context, metadata, xml, true, true, true, UpdateDatestamp.NO, false, true);
 
 
                         report.addMetadataInfos(metadata.getId(), String.format(

@@ -32,6 +32,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -215,9 +216,6 @@ public class SelectionManager {
         return selection.size();
     }
 
-    @Autowired
-    SettingInfo settingInfo;
-
     /**
      * <p> Selects all element in the last search
      * which is stored in session based on the bucket name.
@@ -226,7 +224,7 @@ public class SelectionManager {
     public void selectAll(String type, ServiceContext context, UserSession session) {
         Set<String> selection = selections.get(type);
         int maxhits = DEFAULT_MAXHITS;
-
+        SettingInfo settingInfo = ApplicationContextHolder.get().getBean(SettingInfo.class);
         try {
             maxhits = Integer.parseInt(settingInfo.getSelectionMaxRecords());
         } catch (Exception e) {

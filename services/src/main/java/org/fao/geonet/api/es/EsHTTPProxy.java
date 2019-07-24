@@ -27,9 +27,11 @@ package org.fao.geonet.api.es;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.collect.Sets;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -74,6 +76,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.FileSystem;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -151,17 +154,34 @@ public class EsHTTPProxy {
         final String url = client.getServerUrl() + "/" + defaultIndex + "/" + endPoint + "?";
         // Make query on multiple indices
 //        final String url = client.getServerUrl() + "/" + defaultIndex + ",gn-features/" + endPoint + "?";
+        UserSession session = context.getUserSession();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode nodeQuery = objectMapper.readTree(body);
 
-        addFilterToQuery(context, objectMapper, nodeQuery);
+        // multisearch support
+        final MappingIterator<Object> mappingIterator = objectMapper.readerFor(JsonNode.class).readValues(body);
+        StringBuffer requestBody = new StringBuffer();
+        while(mappingIterator.hasNextValue()){
+            JsonNode  node = (JsonNode) mappingIterator.nextValue();
+            final JsonNode indexNode = node.get("index");
+            if (indexNode != null) {
+                ((ObjectNode) node).put("index", defaultIndex);
+            } else {
+                final JsonNode queryNode = node.get("query");
+                if (queryNode != null) {
+                    addFilterToQuery(context, objectMapper, node);
+                    if (selectionBucket != null) {
+                        // Multisearch are not supposed to work with a bucket.
+                        // Only one request is store in session
+                        session.setProperty(Geonet.Session.SEARCH_REQUEST + selectionBucket, node);
+                    }
+                }
+            }
+            requestBody.append(node.toString()).append(System.lineSeparator());
+        }
 
-        UserSession session = context.getUserSession();
-        session.setProperty(Geonet.Session.SEARCH_REQUEST + selectionBucket, nodeQuery);
-
-        String requestBody = nodeQuery.toString();
-
-        handleRequest(context, httpSession, request, response, url, requestBody, true, selectionBucket);
+        handleRequest(context, httpSession, request, response, url,
+            requestBody.toString(), true, selectionBucket);
     }
 
 
