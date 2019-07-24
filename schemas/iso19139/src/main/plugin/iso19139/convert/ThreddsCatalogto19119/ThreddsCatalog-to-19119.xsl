@@ -91,12 +91,11 @@
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
       <gmd:metadataStandardName>
-        <gco:CharacterString>AS/NZS 19119/2005: Geographic Information - Services
-        </gco:CharacterString>
+        <gco:CharacterString>ISO19119: Geographic Information - Services</gco:CharacterString>
       </gmd:metadataStandardName>
 
       <gmd:metadataStandardVersion>
-        <gco:CharacterString>1.0 - 2005</gco:CharacterString>
+        <gco:CharacterString>1.0</gco:CharacterString>
       </gmd:metadataStandardVersion>
 
       <!-- spatRepInfo-->

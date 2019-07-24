@@ -89,11 +89,11 @@
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
       <gmd:metadataStandardName>
-        <gco:CharacterString>Australian Marine Community Profile of ISO 19115:2005/19139</gco:CharacterString>
+        <gco:CharacterString>ISO 19115:2003/19139</gco:CharacterString>
       </gmd:metadataStandardName>
 
       <gmd:metadataStandardVersion>
-        <gco:CharacterString>1.5-experimental</gco:CharacterString>
+        <gco:CharacterString>1.0</gco:CharacterString>
       </gmd:metadataStandardVersion>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
