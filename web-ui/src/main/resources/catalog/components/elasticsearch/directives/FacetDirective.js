@@ -115,12 +115,7 @@
   }
 
   FacetController.prototype.$onInit = function () {
-    this.parentCtrl = this.facetCtrl || this.facetsCtrl
-
-    // init collapsed state
-    for (var item in this.facet.items) {
-      item.collapsed = false;
-    }
+    this.item.collapsed = true;
   }
 
   FacetController.prototype.filter = function (facet, item) {
@@ -140,8 +135,8 @@
     return this.searchCtrl.isInSearch(item.path)
   }
 
-  FacetController.prototype.toggleCollapse = function (item) {
-    item.collapsed = !item.collapsed;
+  FacetController.prototype.toggleCollapse = function () {
+    this.item.collapsed = !this.item.collapsed;
   }
 
   FacetController.$inject = [
@@ -158,7 +153,7 @@
         bindToController: true,
         scope: {
           facet: '<esFacet',
-          parentName: '<esFacetParentName'
+          item: '<esFacetItem',
         },
         require: {
           facetsCtrl: '^^esFacets',

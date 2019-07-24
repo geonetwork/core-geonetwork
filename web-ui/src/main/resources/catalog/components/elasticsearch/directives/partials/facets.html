@@ -18,17 +18,28 @@
        ng-repeat="facet in ctrl.list track by facet.key"
        class="gn-facet">
     <a href
-       title="{{facet.key | translate}}"
+       title="::{{facet.key | translate}}"
        class="gn-facet-header flex-row width-100"
-       gn-collapsible="ctrl.fLvlCollapse[facet.key]">
+       gn-collapsible="::ctrl.fLvlCollapse[facet.key]">
       <span class="flex-shrink text-ellipsis"
             translate>{{facet.key | uppercase}}</span>
       <span class="fa fa-fw"
             ng-class="ctrl.fLvlCollapse[facet.key] ? 'fa-caret-right' : 'fa-caret-down'"></span>
     </a>
     <div class="gn-facet-root-container"
-         es-facet="facet"
          ng-class="{'collapse': ctrl.fLvlCollapse[facet.key]}">
+
+      <div class="gn-facet-container"
+           es-facet="::facet"
+           es-facet-item="::item"
+           ng-repeat="item in ::facet.items">
+      </div>
+      <a href
+         class="see-more"
+         ng-click="getMore(field)"
+         ng-if="::field.more && !field.dates && !field.tree">
+        <span translate>more</span>...
+      </a>
     </div>
   </div>
 </div>
