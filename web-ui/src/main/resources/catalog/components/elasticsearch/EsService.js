@@ -61,7 +61,7 @@
       };
 
       if(searchState.from !== undefined) {
-        params.from = searchState.from - 1;
+        params.from = searchState.from;
       }
       if(searchState.to !== undefined && searchState.from !== undefined) {
         params.size = searchState.to - searchState.from;

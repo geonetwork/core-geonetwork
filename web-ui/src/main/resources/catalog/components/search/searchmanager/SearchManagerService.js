@@ -87,8 +87,6 @@
       from: 0,
       to: 10,
       resultsCount: 0,
-      sortBy: 'relevance',
-      sortByReversed: false,
       any: '',
       params: {},
       results: [],
@@ -163,6 +161,14 @@
     this.state_.sortBy = criteria;
     this.state_.sortByReversed = !!reverse;
     this.trigger();
+  };
+
+  /**
+   * Returns the sorting criteria
+   * @return {string} criteria
+   */
+  SearchManager.prototype.getSortBy = function() {
+    return this.state_.sortBy
   };
 
   /**

@@ -340,23 +340,23 @@
           };
         }])
 
-      .directive('sortbyCombo', ['$translate', 'hotkeys',
-        function($translate, hotkeys) {
+      .directive('sortbyCombo', ['$translate', 'hotkeys', 'gnSearchManagerService',
+        function($translate, hotkeys, gnSearchManagerService) {
           return {
             restrict: 'A',
-            require: '^ngSearchForm',
             templateUrl: function(elem, attrs) {
               return attrs.template ||
                   '../../catalog/components/search/formfields/' +
                   'partials/sortByCombo.html';
-            }, scope: {
-              params: '=',
+            },
+            scope: {
+              searchName: '@gnSortbySearchName',
               values: '=gnSortbyValues'
             },
-            link: function(scope, element, attrs, searchFormCtrl) {
+            link: function(scope, element, attrs) {
+              scope.search = gnSearchManagerService.getSearchManager(scope.searchName);
               scope.sortBy = function(v) {
-                angular.extend(scope.params, v);
-                searchFormCtrl.triggerSearch(true);
+                scope.search.setSortBy(v.sortBy, v.sortOrder === 'reverse');
               };
               hotkeys.bindTo(scope)
                   .add({
