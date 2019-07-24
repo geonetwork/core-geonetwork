@@ -1,263 +1,90 @@
 <form data-ng-keypress="updatingHarvester()">
-  <input type="hidden" name="_csrf" value="{{csrf}}"/>
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+
 
   <div class="row">
-    <div id="gn-harvest-settings-selected-id" class="col-lg-6 gn-nopadding-left" data-gn-harvester-identification="harvesterSelected"/>
-    <div id="gn-harvest-settings-selected-schedule" class="col-lg-6 gn-nopadding-right" data-gn-harvester-schedule="harvesterSelected"/>
+    <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected" lang=""/>
+
+    <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
   </div>
 
-  <fieldset id="gn-harvest-settings-thredds-basic-row">
-    <legend id="gn-harvest-settings-thredds-basic-title"><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+
+  <fieldset>
+    <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
       harvesterSelected['@type']) | translate}}
     </legend>
-
-    <div id="gn-harvest-settings-thredds-basic-service-row" data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
-      <label id="gn-harvest-settings-thredds-basic-service-label" class="control-label" data-translate="">serviceUrl</label>
-      <input id="gn-harvest-settings-thredds-basic-service-input" type="text" class="form-control" data-ng-model="harvesterSelected.site.url"/>
-      <p class="help-block" data-translate="">serviceUrlHelp</p>
+    <div data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
+      <label class="control-label" data-translate="">serviceUrl</label>
+      <input type="text" class="form-control" data-ng-model="harvesterSelected.site.url"/>
+      <p class="help-block" data-translate="">thredds-serviceUrlHelp</p>
     </div>
 
   </fieldset>
 
-  <fieldset id="gn-harvest-settings-thredds-advanced-row">
-    <legend id="gn-harvest-settings-thredds-advanced-title"><span data-translate="">harvesterAdvancedConfigurationFor</span>
+
+  <fieldset>
+    <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
       {{harvesterSelected['@type'] | translate}}
     </legend>
 
-    <div id="gn-harvest-settings-thredds-advanced-remote-row" data-gn-harvester-account="harvesterSelected"/>
+
+    <!-- <div data-gn-harvester-account="harvesterSelected"/> -->
+
 
     <!-- TODO: Could be nicer to have a list of languages -->
-    <div id="gn-harvest-settings-thredds-advanced-lang-row">
-      <label id="gn-harvest-settings-thredds-advanced-lang-label" class="control-label" data-translate="">thredds-metadataLanguage</label>
-      <input id="gn-harvest-settings-thredds-advanced-lang-input" type="text" class="form-control" data-ng-model="harvesterSelected.options.lang"/>
+    <div>
+      <label class="control-label" data-translate="">thredds-metadataLanguage</label>
+      <input type="text" class="form-control" data-ng-model="harvesterSelected.options.lang"/>
     </div>
 
-    <!-- TODO: Should be ISO category -->
-    <div id="gn-harvest-settings-thredds-advanced-topic-row">
-      <label id="gn-harvest-settings-thredds-advanced-topic-label" class="control-label" data-translate="">thredds-topic</label>
-      <input id="gn-harvest-settings-thredds-advanced-topic-input" type="text" class="form-control" data-ng-model="harvesterSelected.options.topic"
-      />
+    <div>
+      <label class="control-label" data-translate="">thredds-topic</label>
+      <div
+        data-schema-info-combo="codelist"
+        data-selected-info="harvesterSelected.options.topic"
+        data-gn-schema-info="gmd:MD_TopicCategoryCode"
+        lang="lang"></div>
     </div>
 
-    <div id="gn-harvest-settings-thredds-advanced-services-row">
+
+    <div>
       <label class="control-label">
-        <input id="gn-harvest-settings-thredds-advanced-services-checkbox" type="checkbox" data-ng-model="harvesterSelected.options.createServiceMd"/>
-        <span id="gn-harvest-settings-thredds-advanced-services-label" data-translate="">thredds-createServiceMd</span>
+        <input type="checkbox" data-ng-model="harvesterSelected.options.createServiceMd"/>
+        <span data-translate="">thredds-createServiceMd</span>
       </label>
       <p class="help-block" data-translate="">thredds-createServiceMdHelp</p>
     </div>
 
-    <!-- Collection dataset -->
-    <div id="gn-harvest-settings-thredds-advanced-collection-row" class="panel panel-default">
-      <div class="panel-heading">
-        <label class="control-label">
-          <input id="gn-harvest-settings-thredds-advanced-collection-checkbox"
-                 type="checkbox"
-                 data-ng-model="harvesterSelected.options.createCollectionDatasetMd"/>
-          <span id="gn-harvest-settings-thredds-advanced-collection-label" data-translate="">thredds-createCollectionDatasetMd</span>
-        </label>
-        <p class="help-block" data-translate="">thredds-createCollectionDatasetMdHelp</p>
-      </div>
-      <div class="panel-body"
-           data-ng-show="harvesterSelected.options.createCollectionDatasetMd === true">
-        <div id="gn-harvest-settings-thredds-advanced-collection-ignore-row">
-          <label class="control-label">
-            <input id="gn-harvest-settings-thredds-advanced-collection-ignore-checkbox"
-                   type="checkbox"
-                   data-ng-model="harvesterSelected.options.ignoreHarvestOnCollections"/>
-            <span id="gn-harvest-settings-thredds-advanced-collection-ignore-label" data-translate="">thredds-ignoreHarvestOnCollections</span>
-          </label>
-          <p class="help-block" data-translate="">thredds-ignoreHarvestOnCollectionsHelp</p>
-        </div>
-
-        <div id="gn-harvest-settings-thredds-advanced-collection-dif-row" class="radio">
-          <label>
-            <input id="gn-harvest-settings-thredds-advanced-collection-dif-radio"
-                   type="radio"
-                   name="optionsRadios"
-                   data-ng-model="threddsCollectionsMode"
-                   value="DIF"
-                   checked=""/>
-            <span data-translate="">thredds-DIF</span>
-          </label>
-        </div>
-        <div data-ng-show="threddsCollectionsMode === 'DIF'">
-          <label id="gn-harvest-settings-thredds-advanced-collection-dif-label" class="control-label" data-translate="">thredds-outputSchemaOnCollections</label>
-          <input id="gn-harvest-settings-thredds-advanced-collection-dif-input"
-                 type="text"
-                 class="form-control"
-                 data-ng-model="harvesterSelected.options.outputSchemaOnCollectionsDIF"/>
-        </div>
-
-        <div id="gn-harvest-settings-thredds-advanced-collection-uni-row" class="radio">
-          <label>
-            <input id="gn-harvest-settings-thredds-advanced-collection-uni-radio"
-                   type="radio"
-                   name="optionsRadios"
-                   data-ng-model="threddsCollectionsMode"
-                   value="UNIDATA"
-                   checked=""/>
-            <span data-translate="">thredds-UNIDATA</span>
-          </label>
-        </div>
-        <div data-ng-show="threddsCollectionsMode === 'UNIDATA'">
-          <label id="gn-harvest-settings-thredds-advanced-collection-uni-label" class="control-label" data-translate="">thredds-outputSchemaOnCollections</label>
-          <input id="gn-harvest-settings-thredds-advanced-collection-uni-input"
-                 type="text"
-                 class="form-control"
-                 data-ng-model="harvesterSelected.options.outputSchemaOnCollectionsFragments"/>
-        </div>
-
-        <fieldset id="gn-harvest-settings-thredds-advanced-collection-uni-options-row"
-          data-ng-show="threddsCollectionsMode === 'UNIDATA' && harvesterSelected.options.outputSchemaOnCollectionsFragments">
-          <legend id="gn-harvest-settings-thredds-advanced-collection-uni-options-title" data-translate="">thredds-unidataCfg</legend>
-
-          <div id="gn-harvest-settings-thredds-advanced-collection-uni-style-row">
-            <label id="gn-harvest-settings-thredds-advanced-collection-uni-style-label" class="control-label">
-              <span data-translate="">thredds-stylesheet</span>
-            </label>
-            <select id="gn-harvest-settings-thredds-advanced-collection-uni-style-list"
-                    class="form-control"
-                    data-ng-model="harvesterSelected.options.collectionFragmentStylesheet"
-                    data-ng-options="s.id as (s.name + ' (' + s.schema + ')') for s in harvesterThreddsXSLT"> </select>
-            <p class="help-block" data-translate="">thredds-stylesheetHelp</p>
-          </div>
-
-          <div id="gn-harvest-settings-thredds-advanced-collection-uni-create-row">
-            <label class="control-label">
-              <input id="gn-harvest-settings-thredds-advanced-collection-uni-create-checkbox"
-                     type="checkbox"
-                     data-ng-model="harvesterSelected.options.createCollectionSubtemplates"/>
-              <span id="gn-harvest-settings-thredds-advanced-collection-uni-create-label" data-translate="">thredds-createCollectionSubtemplates</span>
-            </label>
-            <p class="help-block" data-translate="">thredds-createCollectionSubtemplatesHelp</p>
-          </div>
-
-          <div id="gn-harvest-settings-thredds-advanced-collection-uni-template-row">
-            <label id="gn-harvest-settings-thredds-advanced-collection-uni-template-label" class="control-label">
-              <span data-translate="">thredds-templateId</span>
-            </label>
-            <select id="gn-harvest-settings-thredds-advanced-collection-uni-template-list"
-                    class="form-control"
-                    data-ng-model="harvesterSelected.options.collectionMetadataTemplate"
-                    data-ng-options="t['@id'] as (t.schema + ' > ' + t.title) for t in harvesterTemplates"> </select>
-            <p class="help-block" data-translate="">thredds-templateIdHelp</p>
-          </div>
-        </fieldset>
-      </div>
-
+    <div>
+      <label class="control-label" data-translate="">thredds-outputSchema</label>
+      <input type="text" class="form-control"
+             data-ng-model="harvesterSelected.options.outputSchema"/>
     </div>
 
-    <!-- Atomic dataset -->
-    <div id="gn-harvest-settings-thredds-advanced-atomic-row" class="panel panel-default">
-      <div class="panel-heading">
-        <label class="control-label">
-          <input id="gn-harvest-settings-thredds-advanced-atomic-checkbox"
-                 type="checkbox"
-                 data-ng-model="harvesterSelected.options.createAtomicDatasetMd"/>
-          <span id="gn-harvest-settings-thredds-advanced-atomic-label" data-translate="">thredds-createAtomicDatasetMd</span>
-        </label>
-        <p class="help-block" data-translate="">thredds-createAtomicDatasetMdHelp</p>
-      </div>
-      <div class="panel-body"
-           data-ng-show="harvesterSelected.options.createAtomicDatasetMd === true">
-
-        <div id="gn-harvest-settings-thredds-advanced-atomic-ignore-row">
-          <label class="control-label">
-            <input id="gn-harvest-settings-thredds-advanced-atomic-ignore-checkbox"
-                   type="checkbox"
-                   data-ng-model="harvesterSelected.options.ignoreHarvestOnAtomics"/>
-            <span id="gn-harvest-settings-thredds-advanced-atomic-ignore-label" data-translate="">thredds-ignoreHarvestOnAtomics</span>
-          </label>
-          <p class="help-block" data-translate="">thredds-ignoreHarvestOnAtomicsHelp</p>
-        </div>
-
-        <div id="gn-harvest-settings-thredds-advanced-atomic-dif-row" class="radio">
-          <label>
-            <input id="gn-harvest-settings-thredds-advanced-atomic-dif-radio"
-                   type="radio"
-                   name="threddsAtomicsMode"
-                   data-ng-model="threddsAtomicsMode"
-                   value="DIF"
-                   checked=""/>
-            <span id="gn-harvest-settings-thredds-advanced-atomic-dif-label" data-translate="">thredds-DIF</span>
-          </label>
-        </div>
-        <div data-ng-show="threddsAtomicsMode === 'DIF'">
-          <label id="gn-harvest-settings-thredds-advanced-atomic-dif-label2 class="control-label" data-translate="">thredds-outputSchemaOnAtomicsDIF</label>
-          <input id="gn-harvest-settings-thredds-advanced-atomic-dif-input" type="text" class="form-control"
-                 data-ng-model="harvesterSelected.options.outputSchemaOnAtomicsDIF"/>
-        </div>
-
-        <div id="gn-harvest-settings-thredds-advanced-atomic-uni-row" class="radio">
-          <label>
-            <input id="gn-harvest-settings-thredds-advanced-atomic-uni-radio" type="radio" name="threddsAtomicsMode"
-                   data-ng-model="threddsAtomicsMode" value="UNIDATA" checked=""/>
-            <span id="gn-harvest-settings-thredds-advanced-atomic-uni-label" data-translate="">thredds-UNIDATA</span>
-          </label>
-        </div>
-        <div data-ng-show="threddsAtomicsMode === 'UNIDATA'">
-          <label id="gn-harvest-settings-thredds-advanced-atomic-uni-label2"
-                 class="control-label" data-translate="">thredds-outputSchemaOnAtomicsFragmentsUNIDATA</label>
-          <input id="gn-harvest-settings-thredds-advanced-atomic-uni-input"
-                 type="text"
-                 class="form-control"
-                 data-ng-model="harvesterSelected.options.outputSchemaOnAtomicsFragments"/>
-        </div>
-
-        <fieldset id="gn-harvest-settings-thredds-advanced-atomic-uni-options-row"
-          data-ng-show="threddsAtomicsMode === 'UNIDATA' && harvesterSelected.options.outputSchemaOnAtomicsFragments">
-          <legend id="gn-harvest-settings-thredds-advanced-atomic-uni-options-title" data-translate="">thredds-unidataCfg</legend>
-
-          <div id="gn-harvest-settings-thredds-advanced-atomic-uni-style-row">
-            <label id="gn-harvest-settings-thredds-advanced-atomic-uni-style-label" class="control-label">
-              <span data-translate="">thredds-stylesheet</span>
-            </label>
-            <select id="gn-harvest-settings-thredds-advanced-atomic-uni-style-list"
-                    class="form-control"
-                    data-ng-model="harvesterSelected.options.atomicFragmentStylesheet"
-                    data-ng-options="s.id as (s.name + ' (' + s.schema + ')') for s in harvesterThreddsXSLT"> </select>
-            <p class="help-block" data-translate="">thredds-stylesheetHelp</p>
-          </div>
-
-          <div id="gn-harvest-settings-thredds-advanced-atomic-uni-create-row">
-            <label class="control-label">
-              <input id="gn-harvest-settings-thredds-advanced-atomic-uni-create-checkbox"
-                     type="checkbox"
-                     data-ng-model="harvesterSelected.options.createAtomicSubtemplates"/>
-              <span id="gn-harvest-settings-thredds-advanced-atomic-uni-create-label" data-translate="">thredds-createAtomicSubtemplates</span>
-            </label>
-            <p class="help-block" data-translate="">thredds-createAtomicSubtemplatesHelp</p>
-          </div>
-
-          <div id="gn-harvest-settings-thredds-advanced-atomic-uni-template-row">
-            <label id="gn-harvest-settings-thredds-advanced-atomic-uni-template-label" class="control-label">
-              <span data-translate="">thredds-templateId</span>
-            </label>
-            <select id="gn-harvest-settings-thredds-advanced-atomic-uni-template-list"
-                    class="form-control"
-                    data-ng-model="harvesterSelected.options.atomicMetadataTemplate"
-                    data-ng-options="t['@id'] as (t.schema + ' > ' + t.title) for t in harvesterTemplates"> </select>
-            <p class="help-block" data-translate="">thredds-templateIdHelp</p>
-          </div>
-
-        </fieldset>
-      </div>
+    <div>
+      <label class="control-label" data-translate="">thredds-datasetTitle</label>
+      <input type="text" class="form-control"
+             data-ng-model="harvesterSelected.options.datasetTitle"/>
+      <p class="help-block" data-translate="">thredds-datasetTitleHelp</p>
     </div>
 
-    <div id="gn-harvest-settings-thredds-advanced-thumbnail-row">
-      <label class="control-label">
-        <input id="gn-harvest-settings-thredds-advanced-thumbnail-checkbox" type="checkbox" data-ng-model="harvesterSelected.options.createThumbnails"/>
-        <span id="gn-harvest-settings-thredds-advanced-thumbnail-label" data-translate="">thredds-createThumbnails</span>
-      </label>
-      <p class="help-block" data-translate="">thredds-createThumbnailsHelp</p>
+    <div>
+      <label class="control-label" data-translate="">thredds-datasetAbstract</label>
+      <input type="text" class="form-control"
+             data-ng-model="harvesterSelected.options.datasetAbstract"/>
+      <p class="help-block" data-translate="">thredds-datasetAbstractHelp</p>
     </div>
 
-    <div id="gn-harvest-settings-thredds-advanced-category-row"
-         data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
+    <div data-gn-category="harvesterSelected.options.serviceCategory" data-lang="{{lang}}"
+         data-label="thredds-serviceCategory"/>
+
+
+    <div data-gn-category="harvesterSelected.options.datasetCategory" data-lang="{{lang}}"
          data-label="thredds-datasetCategory"/>
+
 
   </fieldset>
 
-  <div id="gn-harvest-settings-thredds-privileges-row" data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+
+  <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
 </form>
