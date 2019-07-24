@@ -446,6 +446,18 @@
       return getter(filters)
     }
 
+    this.hasChildInSearch = function(path) {
+      if(!path) return;
+      var filters = $scope.searchObj.state.filters;
+      if(filters[path[0]]) {
+        return Object.keys(filters[path[0]]).some(function(key) {
+          return key.indexOf(path[1]) === 0 && key != path[1];
+        });
+      } else {
+        return false;
+      }
+    }
+
     this.hasFiltersForKey = function(key) {
       return !!$scope.searchObj.state.filters[key];
     }
