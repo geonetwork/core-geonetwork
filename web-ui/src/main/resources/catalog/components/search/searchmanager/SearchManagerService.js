@@ -287,6 +287,10 @@
 
       return {
         getSearchManager: function(searchName) {
+          if (!searchName) {
+            console.error('No search manager name provided');
+            return;
+          }
           if (!searches[searchName]) {
             searches[searchName] = new SearchManager($injector);
           }

@@ -31,14 +31,16 @@
     <div es-facet="::nestedFacet"
          es-facet-item="::item"
          class="gn-facet-container"
-         ng-if="::nestedFacet.items.length"
-         ng-repeat="item in ::nestedFacet.items">
+         es-facet-search-name="{{::ctrl.searchName}}"
+           ng-if="::nestedFacet.items.length"
+           ng-repeat="item in ::nestedFacet.items">
     </div>
   </div>
 
 <!--  Hierachical facets-->
   <div es-facet="::ctrl.facet"
        es-facet-item="::item"
+       es-facet-search-name="{{::ctrl.searchName}}"
        class="gn-facet-container"
        ng-if="::ctrl.item.items.length"
        ng-repeat="item in ::ctrl.item.items">
