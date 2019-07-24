@@ -73,7 +73,9 @@
     <div class="row">
       <div class="col-xs-12">
         <span class="loading fa fa-spinner fa-spin"
-              data-ng-show="searching"></span>
+              gn-search-show-loading
+              gn-search-name="mainsearch">
+        </span>
 
         <div class="alert alert-warning" role="alert"
             ng-if="!searching && searchResults.count == 0">
@@ -81,11 +83,12 @@
           <span data-translate="">zarooResult</span>
         </div>
 
-        <div data-ng-show="searchResults.records.length > 0"
-            data-gn-results-container=""
-            data-search-results="searchResults"
-            data-template-url="resultTemplate"
-            data-map="searchObj.searchMap"></div>
+        <div gn-search-show-results
+             gn-search-name="mainsearch"
+             data-gn-results-container=""
+             data-search-results="searchResults"
+             data-template-url="resultTemplate"
+             data-map="searchObj.searchMap"></div>
       </div>
     </div>
 

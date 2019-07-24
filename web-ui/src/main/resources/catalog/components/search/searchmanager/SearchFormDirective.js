@@ -575,4 +575,59 @@
     }
   ]);
 
+  /**
+   * @ngdoc directive
+   * @name gn_search_form_controller.directive:gnSearchShowLoading
+   *
+   * @restrict A
+   *
+   * @description
+   * This directive will show or hide the element whether a search is currently running
+   */
+  module.directive('gnSearchShowLoading', [
+    'gnSearchManagerService',
+    function(gnSearchManagerService) {
+      return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+          var searchName = attrs['gnSearchName'];
+          var searchManager = gnSearchManagerService.getSearchManager(searchName);
+
+          scope.$watch(searchManager.isLoading.bind(searchManager),
+            function(loading) {
+              loading ? element.show() : element.hide()
+            });
+        }
+      }
+    }
+  ]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_search_form_controller.directive:gnSearchShowResults
+   *
+   * @restrict A
+   *
+   * @description
+   * This directive will show or hide the element whether records are present
+   * in the search state.
+   */
+  module.directive('gnSearchShowResults', [
+    'gnSearchManagerService',
+    function(gnSearchManagerService) {
+      return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+          var searchName = attrs['gnSearchName'];
+          var searchManager = gnSearchManagerService.getSearchManager(searchName);
+
+          scope.$watch(searchManager.hasResults.bind(searchManager),
+            function(loading) {
+              loading ? element.show() : element.hide()
+            });
+        }
+      }
+    }
+  ]);
+
 })();

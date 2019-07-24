@@ -127,6 +127,22 @@
     return this.state.any;
   };
 
+  /**
+   * Returns whether a search is running.
+   * @returns {boolean}
+   */
+  SearchManager.prototype.isLoading = function() {
+    return this.state.loading;
+  };
+
+  /**
+   * Returns whether search results are currently present in the state.
+   * @returns {boolean}
+   */
+  SearchManager.prototype.hasResults = function() {
+    return this.state.results > 0;
+  };
+
 
   module.factory('gnSearchManagerService', [
     '$injector',
