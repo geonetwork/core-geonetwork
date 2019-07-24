@@ -33,7 +33,8 @@
     '$http',
     'gnESFacet',
     'gnESService',
-    function($http, gnESFacet, gnESService) {
+    'Metadata',
+    function($http, gnESFacet, gnESService, Metadata) {
 
     this.getUrl = function(service) {
       return ES_API_URL + service;
@@ -44,9 +45,9 @@
         function(response) {
           return {
             records: response.data.hits.hits.map(function(hit) {
-              return hit._source;
+              return new Metadata(hit);
             }),
-            facets: gnESFacet.getUIModel(response, params)
+            facets: gnESFacet.getFacetsFromPayloads(response, params)
           };
         }
       );

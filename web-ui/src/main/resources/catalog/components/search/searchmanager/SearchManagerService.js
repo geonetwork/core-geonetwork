@@ -73,6 +73,7 @@
       this.state_.loading = false;
       this.state_.loadingFacets = false;
       this.state_.results = response.records;
+      this.state_.facets = response.facets;
     }.bind(this), function(error) {
       console.error('The search failed', error);
     }.bind(this));
@@ -132,6 +133,23 @@
    */
   SearchManager.prototype.getResults = function() {
     return this.state_.results;
+  };
+
+  /**
+   * Returns the facets array. Note: the reference will change
+   * when new facets are received.
+   * @returns {Array<Object>}
+   */
+  SearchManager.prototype.getFacets = function() {
+    return this.state_.facets;
+  };
+
+  /**
+   * Returns the params dictionary.
+   * @returns {Array<Object>}
+   */
+  SearchManager.prototype.getParams = function() {
+    return this.state_.params;
   };
 
   /**

@@ -87,11 +87,8 @@
       esParams._source = source;
     };
 
-    this.getUIModel = function(response, request) {
-      var listModel;
-      listModel = createFacetModel(request.aggregations, response.data.aggregations)
-      response.data.facets = listModel;
-      return response.data;
+    this.getFacetsFromPayloads = function(response, request) {
+      return createFacetModel(request.aggregations, response.data.aggregations);
     };
 
     function createFacetModel(reqAggs, respAggs, isNested, path) {
