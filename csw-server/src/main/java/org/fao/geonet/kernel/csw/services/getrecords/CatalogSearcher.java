@@ -178,7 +178,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
     public Pair<Element, List<ResultItem>> search(ServiceContext context,
                                                   Element filterExpr, String filterVersion, String typeName,
                                                   Object sort, ResultType resultType, int startPosition, int maxRecords,
-                                                  int maxHitsInSummary, String cswServiceSpecificContraint) throws CatalogException {
+                                                  int maxHitsInSummary) throws CatalogException {
         if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
             Log.debug(Geonet.CSW_SEARCH, "CatalogSearch search");
         Element luceneExpr = filterToLucene(context, filterExpr);

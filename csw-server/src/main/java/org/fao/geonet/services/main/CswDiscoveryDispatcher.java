@@ -55,10 +55,9 @@ public class CswDiscoveryDispatcher implements Service {
      * <service name="csw-custom"> <class name=".services.main.CswDispatcher" > <param name="filter"
      * value="+inspirerelated:on"/> </class> </service>
      */
-    private String cswServiceSpecificContraint;
 
     public void init(Path appPath, ServiceConfig config) throws Exception {
-        cswServiceSpecificContraint = config.getValue(Geonet.Elem.FILTER);
+
     }
 
 
@@ -111,7 +110,7 @@ public class CswDiscoveryDispatcher implements Service {
             Element info = new Element("info").setText("CSW is disabled");
             response.addContent(info);
         } else {
-            response = gc.getBean(CatalogDispatcher.class).dispatch(params, context, cswServiceSpecificContraint);
+            response = gc.getBean(CatalogDispatcher.class).dispatch(params, context);
         }
         return response;
     }

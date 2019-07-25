@@ -436,9 +436,6 @@ public class Geonetwork implements ApplicationHandler {
                 String siteUuid = UUID.randomUUID().toString();
                 context.getBean(SettingManager.class).setSiteUuid(siteUuid);
 
-                // Reload services which may be defined in
-                // database creation scripts in Services table.
-                context.getBean(JeevesEngine.class).loadConfigDB(context.getApplicationContext(), -1);
             } catch (Throwable t) {
                 Log.error(Geonet.DB, "Error occurred while trying to execute SQL", t);
                 throw new RuntimeException(t);

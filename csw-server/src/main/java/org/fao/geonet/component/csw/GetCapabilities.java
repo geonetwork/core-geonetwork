@@ -124,8 +124,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             }
             ConfigurationOverrides.DEFAULT.updateWithOverrides(file.toString(), servletContext, context.getAppPath(), capabilities);
 
-            String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
-            setKeywords(capabilities, context, cswServiceSpecificContraint);
+            setKeywords(capabilities, context);
             setOperationsParameters(capabilities);
 
             String currentLanguage = "";
@@ -481,7 +480,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
      * Defines keyword section of the GetCapabilities document according to catalogue content.
      * Reading  Lucene index, most popular keywords are added to the document.
      */
-    private void setKeywords(Element capabilities, ServiceContext context, String cswServiceSpecificContraint) {
+    private void setKeywords(Element capabilities, ServiceContext context) {
         Element serviceIdentificationEl = capabilities.getChild("ServiceIdentification", Csw.NAMESPACE_OWS);
         @SuppressWarnings("unchecked")
         List<Element> keywords = serviceIdentificationEl.getChildren("Keywords", Csw.NAMESPACE_OWS);
@@ -489,8 +488,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         List<Element> values;
         String[] properties = {"keyword"};
         try {
-            values = GetDomain.handlePropertyName(_catalogConfig, properties, context, true, _catalogConfig.getMaxNumberOfRecordsForKeywords(),
-                cswServiceSpecificContraint);
+            values = GetDomain.handlePropertyName(_catalogConfig, properties, context, true, _catalogConfig.getMaxNumberOfRecordsForKeywords());
         } catch (Exception e) {
             Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
             // If GetDomain operation failed, just add nothing to the capabilities document template.

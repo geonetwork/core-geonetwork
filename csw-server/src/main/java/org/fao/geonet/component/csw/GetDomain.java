@@ -59,8 +59,7 @@ public class GetDomain extends AbstractOperation implements CatalogService {
     private CatalogConfiguration _catalogConfig;
 
     public static List<Element> handlePropertyName(CatalogConfiguration catalogConfig, String[] propertyNames,
-                                                   ServiceContext context, boolean freq, int maxRecords,
-                                                   String cswServiceSpecificConstraint) throws Exception {
+                                                   ServiceContext context, boolean freq, int maxRecords) throws Exception {
 
         List<Element> domainValuesList = new ArrayList<Element>();
 
@@ -286,16 +285,12 @@ public class GetDomain extends AbstractOperation implements CatalogService {
         String[] propertyNames = getParameters(request, "PropertyName");
         String[] parameterNames = getParameters(request, "ParameterName");
 
-
-        String cswServiceSpecificConstraint = request.getChildText(Geonet.Elem.FILTER);
-
         // PropertyName handled first.
         if (propertyNames != null) {
             List<Element> domainValues;
             try {
                 final int maxNumberOfRecordsForPropertyNames = _catalogConfig.getMaxNumberOfRecordsForPropertyNames();
-                domainValues = handlePropertyName(_catalogConfig, propertyNames, context, false, maxNumberOfRecordsForPropertyNames,
-                    cswServiceSpecificConstraint);
+                domainValues = handlePropertyName(_catalogConfig, propertyNames, context, false, maxNumberOfRecordsForPropertyNames);
             } catch (Exception e) {
                 Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
                 throw new NoApplicableCodeEx(

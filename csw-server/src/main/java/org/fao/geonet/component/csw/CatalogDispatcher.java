@@ -81,7 +81,7 @@ public class CatalogDispatcher {
     //---
     //---------------------------------------------------------------------------
 
-    public Element dispatch(Element request, ServiceContext context, String cswServiceSpecificContraint) {
+    public Element dispatch(Element request, ServiceContext context) {
         context.info("Received:\n" + Xml.getString(request));
 
         InputMethod im = context.getInputMethod();
@@ -96,7 +96,7 @@ public class CatalogDispatcher {
             if (inSOAP)
                 request = SOAPUtil.unembed(request);
 
-            Element response = dispatchI(request, context, cswServiceSpecificContraint);
+            Element response = dispatchI(request, context);
 
             if (outSOAP)
                 response = SOAPUtil.embed(response);
@@ -121,7 +121,7 @@ public class CatalogDispatcher {
         return response;
     }
 
-    private Element dispatchI(Element request, ServiceContext context, String cswServiceSpecificContraint) throws CatalogException {
+    private Element dispatchI(Element request, ServiceContext context) throws CatalogException {
         InputMethod im = context.getInputMethod();
 
         if (im == InputMethod.XML || im == InputMethod.SOAP) {
@@ -133,10 +133,6 @@ public class CatalogDispatcher {
                 throw new OperationNotSupportedEx(operation);
 
             Log.info(Geonet.CSW, "Dispatching operation : " + operation);
-
-            if (cswServiceSpecificContraint != null) {
-                request.addContent(new Element(Geonet.Elem.FILTER).setText(cswServiceSpecificContraint));
-            }
 
             return cs.execute(request, context);
         } else //--- GET or POST/www-encoded request
@@ -154,10 +150,6 @@ public class CatalogDispatcher {
                 throw new OperationNotSupportedEx(operation);
 
             request = cs.adaptGetRequest(params);
-
-            if (cswServiceSpecificContraint != null) {
-                request.addContent(new Element(Geonet.Elem.FILTER).setText(cswServiceSpecificContraint));
-            }
 
             if (context.isDebugEnabled())
                 context.debug("Adapted GET request is:\n" + Xml.getString(request));
