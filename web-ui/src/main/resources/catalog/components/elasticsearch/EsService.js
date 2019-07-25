@@ -266,12 +266,11 @@
       for (var i = 0; i < facetPath.length; i++) {
         if ((i + 1) % 2 === 0) continue;
         var key = facetPath[i];
-        aggregations.aggregations = {
-          [key]: {
-            terms: {
-              field: key,
+        aggregations.aggregations = {};
+        aggregations.aggregations[key] = {
+          terms: {
+            field: key,
               size: newSize
-            }
           }
         };
         aggregations = aggregations.aggregations[key];
