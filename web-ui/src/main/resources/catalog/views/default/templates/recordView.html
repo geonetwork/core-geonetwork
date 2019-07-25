@@ -48,24 +48,30 @@
         </div>
 
         <div class="btn-group" role="group">
-          <button class="btn btn-default"
-                  data-ng-class="searchObj.params.from == (mdView.current.index + 1) ? 'disabled' : ''"
-                  data-ng-show="mdView.records.length > 1"
-                  data-ng-click="previousRecord()">
+          <a class="btn btn-default"
+             title="{{mdView.records[mdView.current.index - 1].defaultTitle}}"
+             gn-metadata-open="mdView.records[mdView.current.index - 1]"
+             gn-records="mdView.records"
+             gn-formatter="formatter.defaultUrl"
+             data-ng-class="{'disabled': searchObj.params.from == (mdView.current.index + 1)}"
+             data-ng-show="mdView.records.length > 1">
             <i class="fa fa-fw fa-angle-left"></i>
-            <span data-ng-show="mdView.current.index === 0" data-translate="">previousPage</span>
-            <span data-ng-hide="mdView.current.index === 0" data-translate="">previous</span>
-          </button>
-          <button class="btn btn-default"
-                  data-ng-class="mdView.current.index === mdView.records.length - 1 &&
-                                searchObj.params.to > searchInfo.count &&
-                                searchInfo.count > searchObj.params.from ? 'disabled' : ''"
-                  data-ng-show="mdView.records.length > 1"
-                  data-ng-click="nextRecord()">
-            <span data-ng-show="mdView.current.index === mdView.records.length - 1" data-translate="">nextPage</span>
-            <span data-ng-hide="mdView.current.index === mdView.records.length - 1" data-translate="">next</span>
+<!--            <span data-ng-show="mdView.current.index === 0" data-translate="">previousPage</span>-->
+            <span data-translate="">previous</span>
+          </a>
+          <a class="btn btn-default"
+             title="{{mdView.records[mdView.current.index + 1].defaultTitle}}"
+             gn-metadata-open="mdView.records[mdView.current.index + 1]"
+             gn-records="mdView.records"
+             gn-formatter="formatter.defaultUrl"
+             data-ng-class="{'disabled': mdView.current.index === mdView.records.length - 1 &&
+                            searchObj.params.to > searchInfo.count &&
+                            searchInfo.count > searchObj.params.from}"
+             data-ng-show="mdView.records.length > 1">
+<!--            <span data-ng-show="mdView.current.index === mdView.records.length - 1" data-translate="">nextPage</span>-->
+            <span data-translate="">next</span>
             <i class="fa fa-fw fa-angle-right"></i>
-          </button>
+          </a>
         </div>
 
       <div class="btn-group pull-right gn-view-menu-button">
@@ -78,16 +84,13 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" role="menu">
-            <!-- <li class="dropdown-header" data-translate="">chooseAView</li> -->
-            <li role="menuitem" data-ng-class="currentFormatter == undefined ? 'disabled' : ''">
-              <a href="" data-ng-click="format()">
-                <span data-translate="">defaultView</span>
-              </a>
-            </li>
             <li role="menuitem"
                 data-ng-repeat="f in formatter.list"
                 data-ng-class="f === currentFormatter ? 'disabled' : ''">
-              <a href="" data-ng-click="format(f)">
+              <a href=""
+                 gn-metadata-open="mdView.current.record"
+                 gn-records="mdView.records"
+                 gn-formatter="f && f.url">
                 {{f.label | translate}}
               </a>
             </li>
@@ -120,13 +123,13 @@
         </div>
       </div>
 
-      <div data-ng-show="usingFormatter"
+      <div data-ng-show="gnMdViewObj.usingFormatter"
           id="gn-metadata-display"
           class="gn-metadata-display">
       </div>
 
 
-      <div data-ng-show="!usingFormatter" class="gn-metadata-display">
+      <div data-ng-show="!gnMdViewObj.usingFormatter" class="gn-metadata-display">
 
       <div class="col-md-8 gn-record">
         <h1>

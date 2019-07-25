@@ -54,10 +54,12 @@
             </a>
           </div>
 
-          <h1 data-ng-click="openRecord($index, md, searchResults.records)"
-          >
-            <!-- Icon for types -->
-            <a data-ng-href="#/metadata/{{md.getUuid()}}"
+          <h1>
+            <a href=""
+               gn-metadata-open="md"
+               gn-index="$index"
+               gn-records="searchResults.records"
+               gn-formatter="formatter.defaultUrl"
                title="{{md.title || md.defaultTitle}}"
                aria-label="{{md.title || md.defaultTitle}}">
               <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
@@ -65,11 +67,14 @@
           </h1>
         </div>
 
-        <div class="gn-md-abstract">
+        <div class="gn-md-abstract"
+             gn-metadata-open="md"
+             gn-index="$index"
+             gn-records="searchResults.records"
+             gn-formatter="formatter.defaultUrl">
           <p class="text-justify"
-            data-ng-click="openRecord($index, md, searchResults.records)"
-            dd-text-collapse dd-text-collapse-max-length="350"
-            dd-text-collapse-text="{{md.abstract || md.defaultAbstract}}"></p>
+             dd-text-collapse dd-text-collapse-max-length="350"
+             dd-text-collapse-text="{{md.abstract || md.defaultAbstract}}"></p>
           <address ng-if="md.getContacts().resource">{{::md.getContacts().resource}}</address>
         </div>
 

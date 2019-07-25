@@ -130,6 +130,7 @@
       $scope.gnWmsQueue = gnWmsQueue;
       $scope.$location = $location;
       $scope.activeTab = '/home';
+      $scope.formatter = gnGlobalSettings.gnCfg.mods.search.formatter;
       $scope.listOfResultTemplate = gnGlobalSettings.gnCfg.mods.search.resultViewTpls;
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
       $scope.advandedSearchTemplate = gnSearchSettings.advancedSearchTemplate;
@@ -201,31 +202,14 @@
         }
         return false;
       };
-      $scope.openRecord = function(index, md, records) {
-        gnMdView.feedMd(index, md, records);
-      };
-
       $scope.closeRecord = function() {
         gnMdView.removeLocationUuid();
       };
-      $scope.nextRecord = function() {
-        var nextRecordId = mdView.current.index + 1;
-        if (nextRecordId === mdView.records.length) {
-          // When last record of page reached, go to next page...
-          // Not the most elegant way to do it, but it will
-          // be easier using index search components
-          $scope.$broadcast('nextPage');
-        } else {
-          $scope.openRecord(nextRecordId);
-        }
+      $scope.nextPage = function() {
+        $scope.$broadcast('nextPage');
       };
-      $scope.previousRecord = function() {
-        var prevRecordId = mdView.current.index - 1;
-        if (prevRecordId === -1) {
-          $scope.$broadcast('previousPage');
-        } else {
-          $scope.openRecord(prevRecordId);
-        }
+      $scope.previousPage = function() {
+        $scope.$broadcast('previousPage');
       };
 
       /**

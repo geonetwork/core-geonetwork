@@ -58,10 +58,12 @@
            class="pull-right"/>
     </div>
     <!--end top row-->
-    <div class="row gn-md-title"
-         data-ng-click="openRecord($index, md, searchResults.records)">
+    <div class="row gn-md-title">
       <h3>
-        <a data-ng-href="#/{{(md.draft == 'y')?'metadraf':'metadata'}}/{{md.getUuid()}}"
+        <a href=""
+           gn-metadata-open="md"
+           gn-records="searchResults.records"
+           gn-formatter="formatter.defaultUrl"
            title="{{md.title || md.defaultTitle}}">
 
           <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
@@ -71,7 +73,9 @@
 
     <!--start middle row-->
     <div title="{{(md.abstract || md.defaultAbstract) | striptags}}"
-         data-ng-click="openRecord($index, md, searchResults.records)">
+         gn-metadata-open="md"
+         gn-records="searchResults.records"
+         gn-formatter="formatter.defaultUrl">
       <!-- Thumbnail -->
       <div class="gn-md-thumbnail">
         <div class="gn-md-no-thumbnail"
@@ -128,7 +132,6 @@
       </div>
     </div>
 
-    </div>
     <!--end bottom row-->
     <div style="clear: both;"></div>
   </li>
