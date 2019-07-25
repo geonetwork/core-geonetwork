@@ -100,7 +100,7 @@
 
     function createFacetModel(reqAggs, respAggs, isNested, path) {
       var listModel = [];
-      for (var fieldId in respAggs) {
+      for (var fieldId in reqAggs) {
         var respAgg = respAggs[fieldId];
         var reqAgg = reqAggs[fieldId];
 
