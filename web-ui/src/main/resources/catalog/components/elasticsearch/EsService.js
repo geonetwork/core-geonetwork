@@ -99,7 +99,7 @@
       }
       if(p.any || luceneQueryString) {
         query_string = {
-          query: ((p.any || '') + ' ' + luceneQueryString).trim()
+          query: ((p.any ? p.any + ' AND ' : '') + luceneQueryString).trim()
         };
       }
       if(p.sortBy) {
