@@ -35,6 +35,16 @@
            ng-repeat="item in facet.items">
       </div>
 
+      <div class="gn-facet-date-histogram"
+           ng-if="::facet.type === 'dates'"
+           gn-facet-daterange="facet"
+           available-dates="facet.dates"
+           show-graph="true"
+           graph-expanded="true"
+           dates-count="facet.datesCount"
+           callback="ctrl.onUpdateDateRange(facet, from, to)">
+      </div>
+
       <a href
          class="gn-facet-more"
          ng-if="facet.more"

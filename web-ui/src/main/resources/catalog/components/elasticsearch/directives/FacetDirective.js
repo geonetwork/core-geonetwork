@@ -24,7 +24,9 @@
 (function () {
   goog.provide('gn_facet_directive')
 
-  var module = angular.module('gn_facet_directive', [])
+  goog.require('gn_facets');
+
+  var module = angular.module('gn_facet_directive', ['gn_facets']);
 
 
   /**
@@ -74,6 +76,13 @@
       angular.merge(facet, terms);
     });
   }
+
+  FacetsController.prototype.onUpdateDateRange = function (facet, from, to) {
+    var query_string =  '+' + facet.key + ':[' + moment(from, 'DD-MM-YYYY').toISOString() + ' TO ' +
+      moment(to, 'DD-MM-YYYY').toISOString() + ']';
+    this.$scope.$digest();
+    this.searchCtrl.updateState(facet.path, query_string, true);
+  };
 
 
   FacetsController.prototype._isFlatTermsFacet = function (facet) {

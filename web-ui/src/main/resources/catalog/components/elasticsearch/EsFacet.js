@@ -144,6 +144,34 @@
             });
 
           }
+        } else if (reqAgg.hasOwnProperty('date_histogram')) {
+          facetModel.type = 'dates';
+          facetModel.dates = [];
+          facetModel.datesCount = [];
+
+          var dayDuration = 1000 * 60 * 60 * 24;
+          var dateInterval = {
+            year: dayDuration * 365,
+            month: dayDuration * 30,
+            week: dayDuration * 7,
+            day: dayDuration
+          }[reqAgg.date_histogram.calendar_interval];
+
+          for (var p in respAgg.buckets) {
+            if (!respAgg.buckets[p].key || !respAgg.buckets[p].doc_count) {
+              continue;
+            }
+            facetModel.dates.push(new Date(respAgg.buckets[p].key));
+            facetModel.datesCount.push({
+              begin: new Date(respAgg.buckets[p].key),
+              end: new Date(respAgg.buckets[p].key + dateInterval),
+              count: respAgg.buckets[p].doc_count
+            });
+          }
+
+          facetModel.from = moment(respAgg.buckets[0].key).format('DD-MM-YYYY');
+          facetModel.to = moment(respAgg.buckets[respAgg.buckets.length - 2].key).format('DD-MM-YYYY');
+
         } else if (reqAgg.hasOwnProperty('filters')) {
           facetModel.type = 'filters';
           facetModel.size = DEFAULT_SIZE;

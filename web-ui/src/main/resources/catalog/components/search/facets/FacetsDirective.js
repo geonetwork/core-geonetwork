@@ -289,9 +289,9 @@
         values: '<gnFacetDaterange',
         // object with 'from' and 'to' properties as DD-MM-YYYY
         dates: '<availableDates',
-        // array of avalable dates as epoch (sorted asc)
+        // array of available dates as epoch (sorted asc)
         datesCount: '<datesCount',
-        // an object with keys as epoch date & values as counts (sorted asc)
+        // array of counts per date; each element holds a value (date epoch) and a count property
         updateCallback: '&callback',
         // called when values are updated:
         // arguments are 'from' and 'to' as DD-MM-YYYY
@@ -347,11 +347,8 @@
             if (counts) {
               var data = counts.map(function(d) {
                 return {
-                  event: d.value,
-                  time: {
-                    begin: d.value,
-                    end: d.value
-                  },
+                  begin: d.begin ? d.begin : d.value,
+                  end: d.end ? d.end : d.value,
                   value: d.count
                 };
               });

@@ -16,12 +16,10 @@ function TimeLine(element, callback, options) {
   var timelineHeight;
   var timelineX;
   var timelineY;
-  var timelineLine;
   var timelineArea;
   var timelineXAxis;
   var timelineXTranslate = 0;
   var timelineXScale = 1;
-  var svg;
   var lastQuery = null;
   var maxDomain;
 
@@ -58,8 +56,8 @@ function TimeLine(element, callback, options) {
     // Compute X axis
     var current_first_time = Number.MAX_VALUE;
     var timeExtent = d3.extent(this.graphMaxData, function(d) {
-      var begin = d.time.begin;
-      var end = d.time.end;
+      var begin = d.begin;
+      var end = d.end;
       if (begin < current_first_time) {
         current_first_time = begin;
         return begin;
@@ -155,7 +153,7 @@ function TimeLine(element, callback, options) {
 
     timelineArea = d3.svg.area()
       .x(function(d) {
-        return timelineX(d.event);
+        return timelineX(d.begin);
       })
       .y0(timelineHeight)
       .y1(function(d) {
@@ -181,22 +179,20 @@ function TimeLine(element, callback, options) {
       .attr('transform', 'translate(0,' + (timelineHeight) + ')')
       .call(timelineXAxis);
 
-    // svg = d3.select("body").append("svg").append("g");
     initAppControls();
 
     this.initialized = true;
-  }
+  };
 
   this.recomputeSize = function () {
     // if we have never been initialized: do it now
     if (!this.initialized) {
       this.initialize(this.graphData, this.callback);
     }
-  }
+  };
 
   function initAppControls() {
     d3.select(element).selectAll('.zoomBtn').on('click', function(event) {
-      var currentZoom = zoom.scale();
       var scale = zoom.scale(),
         extent = zoom.scaleExtent(),
         translate = zoom.translate(),
@@ -204,10 +200,12 @@ function TimeLine(element, callback, options) {
         y = translate[1],
         factor = (this.getAttribute('rel') === 'zoomIn') ? 1.5 : 1 / 1.5,
         target_scale = scale * factor;
+
       // If we're already at an extent, done
       if (target_scale === extent[0] || target_scale === extent[1]) {
         return false;
       }
+
       // If the factor is too much, scale it down to reach the extent exactly
       var clamped_target_scale = Math.max(extent[0], Math.min(extent[1], target_scale));
       if (clamped_target_scale != target_scale) {
@@ -219,7 +217,6 @@ function TimeLine(element, callback, options) {
       center = [timelineWidth / 2, timelineHeight / 2];
       x = (x - center[0]) * factor + center[0];
       y = (y - center[1]) * factor + center[1];
-
 
       // Transition to the new view over 350ms
       d3.transition().duration(350).tween("zoom", function() {
@@ -239,7 +236,6 @@ function TimeLine(element, callback, options) {
   }
 
   function timelineZoom() {
-
     // prevent event propagation if possible
     if (d3.event && d3.event.sourceEvent) {
         d3.event.sourceEvent.preventDefault();
@@ -258,15 +254,11 @@ function TimeLine(element, callback, options) {
       // calculate the zone
       refreshGraphMaxData();
       refreshGraphData();
-      var context = container.select('svg').select('g');
       container.select('svg').select(".x.axis").call(timelineXAxis);
     }
-
   }
 
   function applyZoom() {
-    var container = d3.select(element);
-
     // calculate zone
     refreshGraphMaxData();
     refreshGraphData();
@@ -284,9 +276,10 @@ function TimeLine(element, callback, options) {
 
   // will be used to filter out invisible blocks
   function isVisible(d) {
-    var x = timelineX(d.event);
-    return x >= 0 && x <= timelineWidth;
-  };
+    var begin = timelineX(d.begin);
+    var end = timelineX(d.end);
+    return end >= 0 && begin <= timelineWidth;
+  }
 
   function refreshGraphMaxData() {
     if (me.initialized && !me.options.showAsHistogram) {
@@ -298,16 +291,16 @@ function TimeLine(element, callback, options) {
 
     if (me.options.showAsHistogram) {
       var all = context.selectAll('rect.areaAll')
-        .data(me.graphMaxData, function(d) { return d.event; });
+        .data(me.graphMaxData, function(d) { return d.begin; });
       all.enter()
         .append('rect').attr('class', 'areaAll');
       all.style('display', 'none')
         .filter(isVisible).style('display', 'block')
-        .attr("x", function(d) { return timelineX(d.event); })
+        .attr("x", function(d) { return timelineX(d.begin); })
         .attr("width", function(d) {
-          // one day is 86400000 ms; min width is 2px
           return Math.max(
-            timelineX(d.event) - timelineX(d.event - 86400000),
+            // min width is 3px
+            timelineX(d.end) - timelineX(d.begin),
             3 / timelineScale
           );
         })
@@ -335,19 +328,18 @@ function TimeLine(element, callback, options) {
     var container = d3.select(element);
     var context = container.select('svg').select('g.data-root');
 
-
     if (me.options.showAsHistogram) {
       var all = context.selectAll('rect.area')
-        .data(me.graphData, function(d) { return d.event; });
+        .data(me.graphData, function(d) { return d.begin; });
       all.enter()
         .append('rect').attr('class', 'area');
       all.style('display', 'none')
         .filter(isVisible).style('display', 'block')
-        .attr("x", function(d) { return timelineX(d.event); })
+        .attr("x", function(d) { return timelineX(d.begin); })
         .attr("width", function(d) {
-          // one day is 86400000 ms; min width is 2px
+          // min width is 3px
           return Math.max(
-            timelineX(d.event) - timelineX(d.event - 86400000),
+            timelineX(d.end) - timelineX(d.begin),
             3 / timelineScale
           );
         })
@@ -376,7 +368,7 @@ function TimeLine(element, callback, options) {
       refreshGraphMaxData();
       refreshGraphData();
     }
-  }
+  };
 
   // set the dates range; `from` and `to` are dates in DD-MM-YYYY format
   // if a date is null it is assumed to be the min/max boundary
@@ -407,5 +399,5 @@ function TimeLine(element, callback, options) {
     timelineXTranslate = targetTranslate[0];
     timelineXScale = targetScale;
     applyZoom();
-  }
+  };
 }

@@ -426,11 +426,11 @@
       }
     }
 
-    this.updateState = function(path, value) {
+    this.updateState = function(path, value, doNotRemove) {
       var filters = $scope.searchObj.state.filters;
 
       var getter = parse(path.join('.'));
-      if(!getter(filters)) {
+      if(!getter(filters) || doNotRemove) {
         var setter = getter.assign;
         setter(filters, value)
       } else {

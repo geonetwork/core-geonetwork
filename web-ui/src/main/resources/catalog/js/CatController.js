@@ -198,6 +198,12 @@ goog.require('gn_alert');
                 'field': 'tag',
                 'size': 15
               }
+            },
+            "dateStamp" : {
+              "date_histogram" : {
+                "field" : "dateStamp",
+                "calendar_interval" : "month"
+              }
             }
           },
           'filters': {},
