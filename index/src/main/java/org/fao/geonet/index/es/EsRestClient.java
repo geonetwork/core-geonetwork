@@ -320,8 +320,13 @@ public class EsRestClient implements InitializingBean {
      */
     public SearchResponse query(String index, JsonNode jsonQuery, QueryBuilder postFilterBuilder, Set<String> includedFields,
                                 int from, int size) throws Exception {
+        return query(index, jsonQuery, postFilterBuilder, includedFields, from, size, null);
+    }
+
+    public SearchResponse query(String index, JsonNode jsonQuery, QueryBuilder postFilterBuilder, Set<String> includedFields,
+                                int from, int size, List<SortBuilder<FieldSortBuilder>> sort) throws Exception {
         final QueryBuilder query = QueryBuilders.wrapperQuery(String.valueOf(jsonQuery));
-        return query(index, query, postFilterBuilder, includedFields, from, size, null);
+        return query(index, query, postFilterBuilder, includedFields, from, size, sort);
     }
 
     public SearchResponse query(String index, QueryBuilder queryBuilder, QueryBuilder postFilterBuilder, Set<String> includedFields,

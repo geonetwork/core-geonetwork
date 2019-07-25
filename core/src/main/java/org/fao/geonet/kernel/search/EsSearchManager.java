@@ -632,6 +632,12 @@ public class EsSearchManager implements ISearchManager {
         return client.query(defaultIndex, luceneQuery, filterQuery, includedFields, from, size);
     }
     public SearchResponse query(JsonNode jsonRequest, Set<String> includedFields,
+                                int from, int size, List<SortBuilder<FieldSortBuilder>> sort) throws Exception {
+        // TODO: Review postFilterBuilder
+        return client.query(defaultIndex, jsonRequest, null, includedFields, from, size, sort);
+    }
+
+    public SearchResponse query(JsonNode jsonRequest, Set<String> includedFields,
                                 int from, int size) throws Exception {
         // TODO: Review postFilterBuilder
         return client.query(defaultIndex, jsonRequest, null, includedFields, from, size);

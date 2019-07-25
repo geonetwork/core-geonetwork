@@ -27,9 +27,6 @@
                 resultType="results">
   <csw:Query typeNames="csw:Record">
     <csw:ElementSetName>summary</csw:ElementSetName>
-    <csw:Constraint version="1.1.0">
-      <Filter xmlns="http://www.opengis.net/ogc"/>
-    </csw:Constraint>
     <ogc:SortBy xmlns:ogc="http://www.opengis.net/ogc">
       <ogc:SortProperty>
         <ogc:PropertyName>title</ogc:PropertyName>

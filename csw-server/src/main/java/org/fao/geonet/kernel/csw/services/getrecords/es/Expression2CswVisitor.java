@@ -30,6 +30,7 @@ import org.fao.geonet.kernel.csw.services.getrecords.IFieldMapper;
 import org.geotools.filter.expression.AbstractExpressionVisitor;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
+import org.locationtech.jts.geom.Coordinate;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.referencing.FactoryException;
@@ -37,13 +38,17 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
+
 public class Expression2CswVisitor extends AbstractExpressionVisitor {
     public static final WKTWriter WKT_WRITER = new WKTWriter();
-    private final StringBuilder builder;
     private final IFieldMapper fieldMapper;
+    private final Deque<String> stack;
 
-    public Expression2CswVisitor(StringBuilder builder, IFieldMapper fieldMapper) {
-        this.builder = builder;
+    public Expression2CswVisitor(Deque<String> stack, IFieldMapper fieldMapper) {
+        this.stack = stack;
         this.fieldMapper = fieldMapper;
     }
 
@@ -53,7 +58,7 @@ public class Expression2CswVisitor extends AbstractExpressionVisitor {
 
     @Override
     public Object visit(PropertyName expr, Object extraData) {
-        builder.append(fieldMapper.map(expr.getPropertyName()));
+        stack.push(fieldMapper.map(expr.getPropertyName()));
         return expr;
     }
 
@@ -61,14 +66,14 @@ public class Expression2CswVisitor extends AbstractExpressionVisitor {
     public Object visit(Literal expr, Object extraData) {
         if (expr.getValue() instanceof Geometry) {
             Geometry geometry = (Geometry) expr.getValue();
-            geometry2wkt(geometry);
+            geometry2coordinates(geometry);
         } else {
-            builder.append("\"").append(quoteString(expr.getValue().toString())).append("\"");
+            stack.push(quoteString(expr.getValue().toString()));
         }
         return expr;
     }
 
-    private void geometry2wkt(Geometry geometry) {
+    private void geometry2coordinates(Geometry geometry) {
         try {
             final CoordinateReferenceSystem sourceCRS;
             if (geometry.getUserData() != null && geometry.getUserData() instanceof CoordinateReferenceSystem) {
@@ -83,8 +88,7 @@ public class Expression2CswVisitor extends AbstractExpressionVisitor {
         } catch (FactoryException | TransformException e) {
             e.printStackTrace();
         }
-        builder.append(WKT_WRITER.write(geometry));
+
+        stack.push(geometry.toText());
     }
-
-
 }

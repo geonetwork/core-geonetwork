@@ -27,5 +27,6 @@
                 resultType="results"
                 outputSchema="http://www.isotc211.org/2005/gfc">
   <csw:Query typeNames="gfc:FC_FeatureCatalog">
+    <csw:ElementSetName>summary</csw:ElementSetName>
   </csw:Query>
 </csw:GetRecords>

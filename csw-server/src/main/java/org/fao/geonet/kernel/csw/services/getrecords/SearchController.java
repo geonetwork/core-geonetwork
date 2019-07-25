@@ -23,8 +23,8 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.search.SearchResponse;
@@ -455,24 +455,29 @@ public class SearchController {
                                          Set<String> elemNames, String typeName, int maxHitsFromSummary,
                                          String cswServiceSpecificContraint, String strategy) throws CatalogException {
 
-        String luceneQuery = "*";
-        luceneQuery = addFilter(luceneQuery, convertCswFilter(filterExpr, filterVersion));
-        luceneQuery = addFilter(luceneQuery, cswServiceSpecificContraint);
+        String elasticSearchQuery = convertCswFilterToEsQuery(filterExpr, filterVersion);
 
-        String filterQueryString = null;
+        // TODO: Handle cswServiceSpecificContraint
+
+        JsonNode esJsonQuery;
 
         try {
-            filterQueryString = esFilterBuilder.build(context, "metadata");
+            String filterQueryString = esFilterBuilder.build(context, "metadata");
+            String jsonQuery = String.format(elasticSearchQuery, filterQueryString);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            esJsonQuery = objectMapper.readTree(jsonQuery);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
+
         Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
-        // TODO: How to get summary
+        // TODO: Check to get summary or remove custom summary output
 
         try {
-            SearchResponse result = searchManager.query(luceneQuery, filterQueryString, startPos-1, maxRecords, sort);
+            SearchResponse result = searchManager.query(esJsonQuery, new HashSet<String>(), startPos-1, maxRecords, sort);
 
             SearchHit[] hits = result.getHits().getHits();
 
@@ -637,6 +642,8 @@ public class SearchController {
 
 
     private Filter parseFilter(Element xml, String filterVersion) {
+        if (xml == null) return null;
+
         final Parser parser = createFilterParser(filterVersion);
         parser.setValidating(true);
         parser.setFailOnValidationError(true);
@@ -650,18 +657,11 @@ public class SearchController {
             }
         } catch (IOException | SAXException | ParserConfigurationException e) {
             Log.error(Geonet.CSW_SEARCH, "Errors occurred when trying to parse a filter", e);
-            return null;
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
-    private String convertCswFilter(Element xml, String filterVersion) {
-        if (xml == null) {
-            return null;
-        }
-        String result = CswFilter2Es.translate(parseFilter(xml, filterVersion), fieldMapper);
-        /*if (result != null && !result.contains("isTemplate:")) {
-            result += " AND (isTemplate:n)";
-        }*/
-        return result;
+    private String  convertCswFilterToEsQuery(Element xml, String filterVersion) {
+        return CswFilter2Es.translate(parseFilter(xml, filterVersion), fieldMapper);
     }
 }

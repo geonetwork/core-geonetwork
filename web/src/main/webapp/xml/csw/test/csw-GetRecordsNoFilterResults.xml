@@ -27,8 +27,6 @@
                 service="CSW" version="2.0.2"
                 resultType="results">
   <csw:Query typeNames="gmd:MD_Metadata">
-    <csw:Constraint version="1.1.0">
-      <Filter xmlns="http://www.opengis.net/ogc"/>
-    </csw:Constraint>
+    <csw:ElementSetName>summary</csw:ElementSetName>
   </csw:Query>
 </csw:GetRecords>
