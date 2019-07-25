@@ -200,7 +200,7 @@
 
           if (respAgg.buckets.length > 1) {
             facetModel.from = moment(respAgg.buckets[0].key).format('DD-MM-YYYY');
-            facetModel.to = moment(respAgg.buckets[respAgg.buckets.length - 2].key).format('DD-MM-YYYY');
+            facetModel.to = moment(respAgg.buckets[respAgg.buckets.length - 1].key + dateInterval).format('DD-MM-YYYY');
           }
 
         } else if (reqAgg.hasOwnProperty('filters')) {

@@ -22,6 +22,7 @@ function TimeLine(element, callback, options) {
   var timelineXScale = 1;
   var lastQuery = null;
   var maxDomain;
+  var maxValue = 0;
 
   this.initialized = false;
   this.graphMaxData = null;
@@ -113,7 +114,7 @@ function TimeLine(element, callback, options) {
 
     timelineY = d3.scale.linear()
       .range([timelineHeight, 0])
-      .domain(valueExtent);
+      .domain([0, valueExtent[1]]);
 
     var changeRequest;
     zoom = d3.behavior.zoom().x(timelineX)
@@ -162,7 +163,6 @@ function TimeLine(element, callback, options) {
 
     timelineSelection = timelineX.domain();
 
-    refreshGraphMaxData();
     refreshGraphData();
 
     timelineSvg
@@ -252,7 +252,6 @@ function TimeLine(element, callback, options) {
       var container = d3.select(element);
 
       // calculate the zone
-      refreshGraphMaxData();
       refreshGraphData();
       container.select('svg').select(".x.axis").call(timelineXAxis);
     }
@@ -260,7 +259,6 @@ function TimeLine(element, callback, options) {
 
   function applyZoom() {
     // calculate zone
-    refreshGraphMaxData();
     refreshGraphData();
     setZoom(timelineXTranslate, timelineXScale);
   }
@@ -282,10 +280,6 @@ function TimeLine(element, callback, options) {
   }
 
   function refreshGraphMaxData() {
-    if (me.initialized && !me.options.showAsHistogram) {
-      return;
-    }
-
     var container = d3.select(element);
     var context = container.select('svg').select('g.all-data-root');
 
@@ -315,18 +309,23 @@ function TimeLine(element, callback, options) {
         .attr("class", "areaAll")
         .attr("d", timelineArea);
     }
-
-    var valueExtent = d3.extent(me.graphMaxData, function(d) {
-      return d.value;
-    });
-    timelineY = d3.scale.linear()
-      .range([timelineHeight, 0])
-      .domain(valueExtent);
   }
 
   function refreshGraphData() {
     var container = d3.select(element);
     var context = container.select('svg').select('g.data-root');
+
+    var valueExtent = d3.extent(me.graphData, function(d) {
+      return d.value;
+    });
+    if (valueExtent[1] > maxValue) {
+      me.graphMaxData = me.graphData;
+      maxValue = valueExtent[1];
+      timelineY = d3.scale.linear()
+        .range([timelineHeight, 0])
+        .domain([0, maxValue]);
+    }
+    refreshGraphMaxData();
 
     if (me.options.showAsHistogram) {
       var all = context.selectAll('rect.area')
@@ -365,7 +364,6 @@ function TimeLine(element, callback, options) {
     if (!this.initialized) {
       this.initialize(data, this.callback);
     } else {
-      refreshGraphMaxData();
       refreshGraphData();
     }
   };
