@@ -159,7 +159,7 @@
         bindToController: true,
         scope: {
           facet: '<esFacet',
-          item: '<esFacetItem',
+          item: '<esFacetItem'
         },
         require: {
           facetsCtrl: '^^esFacets',
