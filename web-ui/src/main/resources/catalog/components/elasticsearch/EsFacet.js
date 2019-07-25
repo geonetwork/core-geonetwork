@@ -169,8 +169,10 @@
             });
           }
 
-          facetModel.from = moment(respAgg.buckets[0].key).format('DD-MM-YYYY');
-          facetModel.to = moment(respAgg.buckets[respAgg.buckets.length - 2].key).format('DD-MM-YYYY');
+          if (respAgg.buckets.length > 2) {
+            facetModel.from = moment(respAgg.buckets[0].key).format('DD-MM-YYYY');
+            facetModel.to = moment(respAgg.buckets[respAgg.buckets.length - 2].key).format('DD-MM-YYYY');
+          }
 
         } else if (reqAgg.hasOwnProperty('filters')) {
           facetModel.type = 'filters';
