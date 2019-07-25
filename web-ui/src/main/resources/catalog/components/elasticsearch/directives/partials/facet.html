@@ -1,4 +1,4 @@
-<div class="gn-facet-item">
+<div class="gn-facet-item flex-row width-100">
   <a href
      class="gn-facet-collapse-toggle"
      ng-click="ctrl.toggleCollapse()">
@@ -8,8 +8,8 @@
         </span>
   </a>
   <a href
-     class="flex-row flex-align-center width-100"
-     ng-class="{'gn-facet-checked': ctrl.isInSearch(ctrl.facet, ctrl.item)}"
+     class="flex-row flex-align-center flex-shrink"
+     ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'gn-facet-checked' + (ctrl.item.inverted ? '-inverted' : '') : ''"
      title="{{::ctrl.item.value | capitalize}}"
      ng-click="ctrl.filter(ctrl.facet, ctrl.item)">
         <span class="fa fa-fw"
@@ -20,6 +20,12 @@
         </span>
     &nbsp;
     <span class="gn-facet-count flex-no-shrink">({{::ctrl.item.count}})</span>
+  </a>
+  <div class="flex-spacer"></div>
+  <a href
+     class="facet-invert"
+     ng-click="ctrl.toggleInvert()">
+    <span class="fa" ng-class="ctrl.item.inverted ? 'fa-check' : 'fa-close'"></span>
   </a>
 </div>
 <div class="gn-facet-children"

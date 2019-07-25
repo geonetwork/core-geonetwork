@@ -51,6 +51,7 @@
      *     'service': {
      *       'serviceType': {
      *         'OGC:WMS': true
+     *         'OGC:WFS': false
      *       }
      *     },
      *     'download': {
@@ -110,6 +111,8 @@
         query_string += node
       } else if (node === true) {
         query_string += indexKey + ':"' + nodeName + '"'
+      } else if (node === false) {
+        query_string += '-' + indexKey + ':"' + nodeName + '"'
       }
       return query_string
     }

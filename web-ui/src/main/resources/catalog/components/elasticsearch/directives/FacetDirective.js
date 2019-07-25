@@ -131,22 +131,25 @@
     if (this.facet.type === 'tree') {
       this.item.path = [this.facet.key, this.item.key];
       this.item.collapsed = !this.searchCtrl.hasChildInSearch(this.item.path);
+    } else if (this.facet.type === 'filters') {
+      this.item.inverted= this.searchCtrl.isNegativeSearch(this.item.path);
     }
   }
 
   FacetController.prototype.filter = function (facet, item) {
-    var value;
+    var value = !item.inverted;
     if (facet.type === 'terms') {
-      value = true
       if (!item.isNested) {
-        this.facetsCtrl.lastUpdatedFacet = facet
+        this.facetsCtrl.lastUpdatedFacet = facet;
       }
     } else if (facet.type === 'filters') {
-      value = item.query_string.query_string.query
+      value = item.query_string.query_string.query;
+      if(item.inverted) {
+        value = '-('+value+')';
+      }
     } else if (facet.type === 'tree') {
-      value = true;
     }
-    this.searchCtrl.updateState(item.path, value)
+    this.searchCtrl.updateState(item.path, value);
   }
 
   FacetController.prototype.isInSearch = function (facet, item) {
@@ -155,6 +158,12 @@
 
   FacetController.prototype.toggleCollapse = function () {
     this.item.collapsed = !this.item.collapsed;
+  }
+
+  FacetController.prototype.toggleInvert = function () {
+    var item = this.item;
+    item.inverted = !item.inverted;
+    this.filter(this.facet, item);
   }
 
   FacetController.$inject = [

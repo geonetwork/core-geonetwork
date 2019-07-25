@@ -428,13 +428,18 @@
 
     this.updateState = function(path, value, doNotRemove) {
       var filters = $scope.searchObj.state.filters;
-
       var getter = parse(path.join('.'));
-      if(!getter(filters) || doNotRemove) {
+      var existingValue = getter(filters);
+      if(!existingValue || doNotRemove) {
         var setter = getter.assign;
         setter(filters, value)
       } else {
-        removeKey(filters, path)
+        if(existingValue !== value) {
+          var setter = getter.assign;
+          setter(filters, value)
+        } else {
+          removeKey(filters, path)
+        }
       }
       this.triggerSearch();
     }
@@ -443,7 +448,8 @@
       if(!path) return;
       var filters = $scope.searchObj.state.filters;
       var getter = parse(path.join('.'));
-      return getter(filters)
+      var res = getter(filters);
+      return angular.isDefined(res);
     }
 
     this.hasChildInSearch = function(path) {
@@ -455,6 +461,18 @@
         });
       } else {
         return false;
+      }
+    }
+
+    this.isNegativeSearch = function(path) {
+      if(!path) return;
+      var filters = $scope.searchObj.state.filters;
+      var getter = parse(path.join('.'));
+      var res = getter(filters);
+      if(angular.isString(res)) {
+        return res.indexOf('-(') === 0;
+      } else {
+        return res === false;
       }
     }
 
