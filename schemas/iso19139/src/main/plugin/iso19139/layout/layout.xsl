@@ -241,16 +241,22 @@
       current element and its children (eg. @uom in gco:Distance).
       A list of exception is defined in form-builder.xsl#render-for-field-for-attribute. -->
       <xsl:apply-templates mode="render-for-field-for-attribute"
-                           select="
-            @*|
-            gn:attribute[not(@name = parent::node()/@*/name())]">
+                           select="@*">
         <xsl:with-param name="ref" select="gn:element/@ref"/>
         <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
       </xsl:apply-templates>
       <xsl:apply-templates mode="render-for-field-for-attribute"
-                           select="
-        */@*|
-        */gn:attribute[not(@name = parent::node()/@*/name())]">
+                           select="*/@*">
+        <xsl:with-param name="ref" select="$theElement/gn:element/@ref"/>
+        <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
+      </xsl:apply-templates>
+      <xsl:apply-templates mode="render-for-field-for-attribute"
+                           select="gn:attribute[not(@name = parent::node()/@*/name())]">
+        <xsl:with-param name="ref" select="gn:element/@ref"/>
+        <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
+      </xsl:apply-templates>
+      <xsl:apply-templates mode="render-for-field-for-attribute"
+                           select="*/gn:attribute[not(@name = parent::node()/@*/name())]">
         <xsl:with-param name="ref" select="$theElement/gn:element/@ref"/>
         <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
       </xsl:apply-templates>

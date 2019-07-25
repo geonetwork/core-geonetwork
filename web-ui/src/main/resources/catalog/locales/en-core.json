@@ -247,6 +247,7 @@
     "upload": "Upload",
     "uuid": "Identifier",
     "url": "URL",
+    "resetUrl": "Reset URL",
     "records": "record(s)",
     "responsiblePartyEmail": "Contact",
     "call": "Call",
