@@ -77,7 +77,22 @@
       },
       editor: {
         facets: gnGlobalSettings.gnCfg.mods.editor.facetConfig,
-        source: defaultSource
+        source: {
+          includes: [
+            'id',
+            'creat*',
+            'group*',
+            'resource*',
+            'draft',
+            'owner*',
+            'status*',
+            'tag*',
+            'isTemplate',
+            'valid',
+            'isHarvested',
+            'documentStandard'
+          ]
+        }
       }
     };
 

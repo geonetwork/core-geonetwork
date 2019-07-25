@@ -102,9 +102,7 @@
         controller: FacetsController,
         bindToController: true,
         scope: {
-          list: '<esFacets',
-          sParams: '<params',
-          type: '<facetType'
+          list: '<esFacets'
         },
         require: {
           searchCtrl: '^^ngSearchForm'

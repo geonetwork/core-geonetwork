@@ -56,7 +56,7 @@
     var self = this;
 
     var hiddenParams = $scope.searchObj.hiddenParams;
-    $scope.searchObj.lucene = {};
+    $scope.searchObj.configId = $scope.searchObj.configId || 'search';
     $scope.searchObj.state = {
       filters: {}
     };
@@ -179,7 +179,7 @@
       var finalParams = angular.extend(params, hiddenParams);
       $scope.finalParams = finalParams;
 
-      var esParams = gnESService.convertLuceneParams(finalParams, $scope.searchObj.state);
+      var esParams = gnESService.generateEsRequest(finalParams, $scope.searchObj.state, $scope.searchObj.configId);
       gnESClient.search(esParams, $scope.searchResults.selectionBucket || 'metadata').then(function(data) {
         // data is not an object: this is an error
         if (typeof data !== 'object') {

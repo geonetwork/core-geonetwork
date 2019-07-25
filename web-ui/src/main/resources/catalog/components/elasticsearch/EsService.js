@@ -36,7 +36,7 @@
       return gnEsLuceneQueryParser.facetsToLuceneQuery(facetsState);
     }
 
-    this.convertLuceneParams = function(p, searchState) {
+    this.generateEsRequest = function(p, searchState, searchConfigId) {
       var params = {};
       var luceneQueryString = gnEsLuceneQueryParser.facetsToLuceneQuery(searchState.filters);
       // var query = {
@@ -193,8 +193,8 @@
       //   },
       //   "max_concurrent_group_searches": 4
       // };
-      gnESFacet.addFacets(params, 'search');
-      gnESFacet.addSourceConfiguration(params, 'search');
+      gnESFacet.addFacets(params, searchConfigId);
+      gnESFacet.addSourceConfiguration(params, searchConfigId);
 
       return params;
     };

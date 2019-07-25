@@ -56,6 +56,7 @@
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         selectionBucket: 'e101',
         filters: gnSearchSettings.filters,
+        configId: 'editor',
         params: {
           sortBy: 'changeDate',
           isTemplate: ['y', 'n'],

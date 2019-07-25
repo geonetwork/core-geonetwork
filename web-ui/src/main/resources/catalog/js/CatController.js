@@ -362,6 +362,18 @@ goog.require('gn_alert');
                 'field': 'resourceType',
                 'size': 10
               }
+            },
+            'isTemplate': {
+              'terms': {
+                'field': 'isTemplate',
+                'size': 10
+              }
+            },
+            'isHarvested': {
+              'terms': {
+                'field': 'isHarvested',
+                'size': 10
+              }
             }
           }
         },

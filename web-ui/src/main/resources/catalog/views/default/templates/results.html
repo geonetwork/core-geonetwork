@@ -12,13 +12,11 @@
 
         <div data-gn-user-searches-panel="user"></div>
 
-        <!-- Hierachical facet mode -->
+        <!--Facets 'filter' panel-->
         <div class="panel panel-default"
            data-ng-show="searchResults.records.length > 0">
         <div class="panel-body">
-          <div data-es-facets="searchResults.facets"
-               data-params="searchObj.params"
-               data-facet-type="facetsSummaryType"/>
+          <div data-es-facets="searchResults.facets"/>
           </div>
         </div>
       </div>
@@ -32,14 +30,6 @@
         </div>
       </div>
       <div class="row gn-row-tools">
-        <div class="col-xs-12 col-md-9"
-            data-gn-facet-dimension-list="searchResults.dimension"
-            data-params="searchObj.params"
-            data-facet-type="facetsSummaryType"
-            data-facet-list="facetConfig"
-            data-current-facets="currentFacets"
-            data-tab-field="facetTabField"></div>
-
         <div class="col-xs-12 col-sm-6 col-sm-push-3 text-center"
           data-ng-show="searchResults.records.length > 0">
           <div class=""
