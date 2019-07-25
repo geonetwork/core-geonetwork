@@ -14,7 +14,7 @@
     </button>
   </div>
 
-  <div ng-if="!isTabMode && facet.items.length > 0"
+  <div ng-if="!isTabMode && (facet.items.length > 0 || facet.dates.length > 0)"
        ng-repeat="facet in ctrl.list track by facet.key"
        class="gn-facet">
     <a href
