@@ -6,6 +6,18 @@
   padding-top: 15px;
   background-color: @gn-results-background-color;
 }
+.gn-row-tools {
+  .btn-default, .pagination > li > a, .pagination > li > span {
+    border-color: @panel-default-border !important;
+    &:hover, &:active, &:focus {
+      background-color: @panel-default-heading-bg !important;
+      border-color: @btn-default-border !important;
+      span {
+        background: transparent;
+      }
+    }
+  }
+}
 // search terms
 .searchterm {
   margin: 0 5px 5px 0;

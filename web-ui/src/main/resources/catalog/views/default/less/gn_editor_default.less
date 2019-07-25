@@ -440,6 +440,16 @@ form.gn-editor.gn-label-above-input {
     width: 100%;
     text-align: left;
   }
+  // But do not for section in a well (eg. remove action)
+  // which are in one line label/control mode
+  .well {
+    .col-sm-2 {
+      width: 16.666%;
+    }
+    .col-sm-6 {
+      width: 50%;
+    }
+  }
   // Form field on a second row
   .col-sm-9 {
     width: 90%;

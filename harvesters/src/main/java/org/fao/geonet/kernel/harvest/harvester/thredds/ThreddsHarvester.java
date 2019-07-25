@@ -134,26 +134,11 @@ public class ThreddsHarvester extends AbstractHarvester<HarvestResult> {
         harvesterSettingsManager.add("id:" + siteId, "icon", params.icon);
         harvesterSettingsManager.add("id:" + optionsId, "lang", params.lang);
         harvesterSettingsManager.add("id:" + optionsId, "topic", params.topic);
-        harvesterSettingsManager.add("id:" + optionsId, "createThumbnails", params.createThumbnails);
         harvesterSettingsManager.add("id:" + optionsId, "createServiceMd", params.createServiceMd);
-        harvesterSettingsManager.add("id:" + optionsId, "createCollectionDatasetMd", params.createCollectionDatasetMd);
-        harvesterSettingsManager.add("id:" + optionsId, "createAtomicDatasetMd", params.createAtomicDatasetMd);
-        harvesterSettingsManager.add("id:" + optionsId, "ignoreHarvestOnCollections", params.ignoreHarvestOnCollections);
-        harvesterSettingsManager.add("id:" + optionsId, "collectionGeneration", params.collectionMetadataGeneration);
-        harvesterSettingsManager.add("id:" + optionsId, "collectionFragmentStylesheet", params.collectionFragmentStylesheet);
-        harvesterSettingsManager.add("id:" + optionsId, "collectionMetadataTemplate", params.collectionMetadataTemplate);
-        harvesterSettingsManager.add("id:" + optionsId, "createCollectionSubtemplates", params.createCollectionSubtemplates);
-        harvesterSettingsManager.add("id:" + optionsId, "outputSchemaOnCollectionsDIF", params.outputSchemaOnCollectionsDIF);
-        harvesterSettingsManager.add("id:" + optionsId, "outputSchemaOnCollectionsFragments", params.outputSchemaOnCollectionsFragments);
-        harvesterSettingsManager.add("id:" + optionsId, "ignoreHarvestOnAtomics", params.ignoreHarvestOnAtomics);
-        harvesterSettingsManager.add("id:" + optionsId, "atomicGeneration", params.atomicMetadataGeneration);
-        harvesterSettingsManager.add("id:" + optionsId, "modifiedOnly", params.modifiedOnly);
-        harvesterSettingsManager.add("id:" + optionsId, "atomicFragmentStylesheet", params.atomicFragmentStylesheet);
-        harvesterSettingsManager.add("id:" + optionsId, "atomicMetadataTemplate", params.atomicMetadataTemplate);
-        harvesterSettingsManager.add("id:" + optionsId, "createAtomicSubtemplates", params.createAtomicSubtemplates);
-        harvesterSettingsManager.add("id:" + optionsId, "outputSchemaOnAtomicsDIF", params.outputSchemaOnAtomicsDIF);
-        harvesterSettingsManager.add("id:" + optionsId, "outputSchemaOnAtomicsFragments", params.outputSchemaOnAtomicsFragments);
-        harvesterSettingsManager.add("id:" + optionsId, "createAtomicDatasetMd", params.createAtomicDatasetMd);
+        harvesterSettingsManager.add("id:" + optionsId, "outputSchema", params.outputSchema);
+        harvesterSettingsManager.add("id:" + optionsId, "datasetTitle", params.datasetTitle);
+        harvesterSettingsManager.add("id:" + optionsId, "datasetAbstract", params.datasetAbstract);
+        harvesterSettingsManager.add("id:" + optionsId, "serviceCategory", params.serviceCategory);
         harvesterSettingsManager.add("id:" + optionsId, "datasetCategory", params.datasetCategory);
     }
 

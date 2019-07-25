@@ -54,20 +54,25 @@
             </a>
           </div>
 
-          <h1 data-ng-click="openRecord($index, md, searchResults.records)"
-          >
-            <!-- Icon for types -->
-            <a data-ng-href="#/metadata/{{md.uuid}}"
-               title="{{md.resourceTitle}}"
+          <h1>
+            <a href=""
+               gn-metadata-open="md"
+               gn-index="$index"
+               gn-records="searchResults.records"
+               gn-formatter="formatter.defaultUrl"
+               title="{{md.title || md.defaultTitle}}"
                aria-label="{{md.resourceTitle}}">
               <i class="fa gn-icon-{{md.resourceType[0]}}" title="{{md.resourceType[0] | translate}}"/>
               {{md.resourceTitle}}</a>
           </h1>
         </div>
 
-        <div class="gn-md-abstract">
+        <div class="gn-md-abstract"
+             gn-metadata-open="md"
+             gn-index="$index"
+             gn-records="searchResults.records"
+             gn-formatter="formatter.defaultUrl">
           <p class="text-justify"
-            data-ng-click="openRecord($index, md, searchResults.records)"
             dd-text-collapse dd-text-collapse-max-length="350"
             dd-text-collapse-text="{{md.resourceAbstract}}"></p>
           <p ng-if="::!md.getAllContacts().resource">&nbsp;</p>

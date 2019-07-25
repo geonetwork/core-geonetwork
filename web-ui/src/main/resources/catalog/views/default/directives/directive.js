@@ -114,7 +114,9 @@
 
           scope.getVisibleTasks = function() {
             $.each(scope.tasks, function(i,t) {
-              scope.hasVisibletasks = scope.taskConfiguration[t.name].isVisible();
+              scope.hasVisibletasks = scope.taskConfiguration[t.name] &&
+                scope.taskConfiguration[t.name].isVisible &&
+                scope.taskConfiguration[t.name].isVisible();
             });
           }
 
