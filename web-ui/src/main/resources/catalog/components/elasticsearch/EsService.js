@@ -95,7 +95,7 @@
         params.from = p.from - 1;
       }
       if(p.to) {
-        params.size = p.to - p.from;
+        params.size = (p.to + 1) - p.from;
       }
       if(p.any || luceneQueryString) {
         query_string = {
