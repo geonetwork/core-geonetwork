@@ -430,7 +430,7 @@
       var filters = $scope.searchObj.state.filters;
       var getter = parse(path.join('.'));
       var existingValue = getter(filters);
-      if(!existingValue || doNotRemove) {
+      if(angular.isUndefined(existingValue) || doNotRemove) {
         var setter = getter.assign;
         setter(filters, value)
       } else {
