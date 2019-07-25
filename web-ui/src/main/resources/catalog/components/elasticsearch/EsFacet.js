@@ -30,35 +30,35 @@
 
   module.service('gnESFacet', ['gnGlobalSettings', 'gnTreeFromSlash', function(gnGlobalSettings, gnTreeFromSlash) {
 
+    var defaultSource = {
+      includes: [
+      'uuid',
+      'id',
+      'creat*',
+      'group*',
+      'logo',
+      'category',
+      'topicCat',
+      'inspire*',
+      'resource*',
+      'draft',
+      'overview.*',
+      'owner*',
+      'link*',
+      'image*',
+      'status*',
+      'rating',
+      'tag*',
+      'geom',
+      'isTemplate',
+      'valid',
+      'isHarvested',
+      'documentStandard'
+    ]};
     this.configs = {
       search: {
         facets: gnGlobalSettings.gnCfg.mods.search.facetConfig,
-        source: {
-          includes: [
-            'uuid',
-            'id',
-            'creat*',
-            'group*',
-            'logo',
-            'category',
-            'topicCat',
-            'inspire*',
-            'resource*',
-            'draft',
-            'overview.*',
-            'owner*',
-            'link*',
-            'image*',
-            'status*',
-            'rating',
-            'tag*',
-            'geom',
-            'isTemplate',
-            'valid',
-            'isHarvested',
-            'documentStandard'
-          ]
-        }
+        source: defaultSource
       },
       home: {
         facets: gnGlobalSettings.gnCfg.mods.home.facetConfig,
@@ -77,7 +77,7 @@
       },
       editor: {
         facets: gnGlobalSettings.gnCfg.mods.editor.facetConfig,
-        source: {}
+        source: defaultSource
       }
     };
 

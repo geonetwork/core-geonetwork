@@ -201,7 +201,11 @@ public class EsHTTPProxy {
 //            objectNodeQuery.set("filter", nodeFilter);
 //            ((ObjectNode) esQuery).set("query", objectNodeQuery);
 //        } else
-        if (queryNode.get("bool") != null) {
+        if (queryNode.get("function_score") != null) {
+            // Add filter node to the bool element of the query if provided
+            ObjectNode objectNode = (ObjectNode) queryNode.get("function_score").get("query").get("bool");
+            objectNode.set("filter", nodeFilter);
+        } else if (queryNode.get("bool") != null) {
             // Add filter node to the bool element of the query if provided
             ObjectNode objectNode = (ObjectNode) queryNode.get("bool");
             objectNode.set("filter", nodeFilter);
