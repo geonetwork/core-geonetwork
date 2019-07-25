@@ -48,6 +48,12 @@
       &:hover * {
         color: @facet-hover;
       }
+      &.gn-facet-collapse-toggle * {
+        color: @brand-primary;
+      }
+      &.gn-facet-collapse-toggle:hover * {
+        color: darken(@brand-primary, 10%);
+      }
       &.gn-facet-checked * {
         color: @brand-success;
       }
@@ -83,7 +89,6 @@
     margin-left: 15px;
   }
 
-  // legacy
   .input-daterange {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -94,10 +99,20 @@
     position: relative;
   }
   .gn-graph-buttons {
+    font-size: 1.2em;
     position: absolute;
-    left: 1em;
+    left: 0.2em;
     top: 0;
   }
+  .ui-timeline {
+    .zoomBtn {
+      text-decoration: none;
+    }
+    .axis {
+      font-size: 10px;
+    }
+  }
+
 }
 
 /*HOME*/
