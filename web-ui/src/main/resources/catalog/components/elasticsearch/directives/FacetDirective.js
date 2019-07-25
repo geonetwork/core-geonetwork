@@ -118,6 +118,7 @@
     this.item.collapsed = true;
     if (this.facet.type === 'tree') {
       this.item.path = [this.facet.key, this.item.key];
+      this.item.collapsed = !this.searchCtrl.hasChildInSearch(this.item.path);
     }
   }
 
@@ -137,7 +138,7 @@
   }
 
   FacetController.prototype.isInSearch = function (facet, item) {
-    return this.searchCtrl.isInSearch(item.path)
+    return this.searchCtrl.isInSearch(item.path);
   }
 
   FacetController.prototype.toggleCollapse = function () {
