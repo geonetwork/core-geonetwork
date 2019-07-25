@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.csw.services.getrecords;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.search.SearchResponse;
@@ -59,6 +60,7 @@ import org.jdom.Comment;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.json.JSONArray;
 import org.opengis.filter.Filter;
 import org.opengis.filter.capability.FilterCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -444,7 +446,6 @@ public class SearchController {
      * @param elemNames                   requested ElementNames
      * @param typeName                    requested typeName
      * @param maxHitsFromSummary          ?
-     * @param cswServiceSpecificContraint specific contraint for specialized CSW services
      * @param strategy                    ElementNames strategy
      * @return result
      * @throws CatalogException hmm
@@ -453,11 +454,9 @@ public class SearchController {
                                          ResultType resultType, String outSchema, ElementSetName setName,
                                          Element filterExpr, String filterVersion, List<SortBuilder<FieldSortBuilder>> sort,
                                          Set<String> elemNames, String typeName, int maxHitsFromSummary,
-                                         String cswServiceSpecificContraint, String strategy) throws CatalogException {
+                                         String strategy) throws CatalogException {
 
         String elasticSearchQuery = convertCswFilterToEsQuery(filterExpr, filterVersion);
-
-        // TODO: Handle cswServiceSpecificContraint
 
         JsonNode esJsonQuery;
 
@@ -470,7 +469,6 @@ public class SearchController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
 
         Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 

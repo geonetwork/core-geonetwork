@@ -16,9 +16,9 @@
 
         <label class="radio-inline" data-ng-repeat="csw in cswVirtual">
           <input type="radio" name="csw" id="csw{{$index + 3}}"
-                 value="{{csw.name}}"
-                 data-ng-click="setCswUrl(csw.name)">
-          <label for="csw{{$index + 3}}">{{csw.name}}</label>
+                 value="{{csw.uuid}}"
+                 data-ng-click="setCswUrl(csw.uuid)">
+          <label for="csw{{$index + 3}}">{{csw.name || csw.uuid}}</label>
         </label>
 
         <h4 data-translate="">cswRequest</h4>

@@ -1637,39 +1637,6 @@
   <cswServerAccessConstraints>Reglas de Acceso</cswServerAccessConstraints>
   <cswServerContact>Contacto</cswServerContact>
 
-  <virtualcswServer>Configure virtual CSW access point</virtualcswServer>
-  <virtualcswServerDes>Configuración de servidores CSW virtuales</virtualcswServerDes>
-  <virtualcswServerConfig>Configuración de servidores CSW virtuales</virtualcswServerConfig>
-  <virtualcswInsert>Configuración del servidor CSW virtuales</virtualcswInsert>
-  <virtualcswServiceName>Nombre del servicio</virtualcswServiceName>
-  <virtualcswServiceDescription>Descripción del servicio</virtualcswServiceDescription>
-  <virtualcswClassName>Clase</virtualcswClassName>
-  <virtualcswNewService>Añadir un servicio</virtualcswNewService>
-  <virtualcswParamName>Tipo de Filtro</virtualcswParamName>
-  <virtualcswParamValue>Valor del Filtro</virtualcswParamValue>
-  <virtualcswServicenameMandatory>El nombre del servicio es obligatorio.
-  </virtualcswServicenameMandatory>
-  <virtualcswServicenameTooLong>El nombre del servicio es muy largo (48 carácteres máx.)
-  </virtualcswServicenameTooLong>
-  <virtualcswServicenameSpecialChars>El nombre del servicio no puede contener caracteres
-    especiales.
-  </virtualcswServicenameSpecialChars>
-  <virtualcswClassnameMandatory>El nombre de la clase es obligatorio.</virtualcswClassnameMandatory>
-  <virtualcswServiceNameStartsWith>El nombre del servicio tiene que empezar con \"csw-\".
-  </virtualcswServiceNameStartsWith>
-
-  <virtualcswUpdateService>Update a CSW virtual server</virtualcswUpdateService>
-
-  <virtualcswAny>Texto libre</virtualcswAny>
-  <virtualcswTitle>Título</virtualcswTitle>
-  <virtualcswAbstract>Resúmen</virtualcswAbstract>
-  <virtualcswKeywords>Palabra clave</virtualcswKeywords>
-  <virtualcswDenominator>Denominador</virtualcswDenominator>
-  <virtualcswCatalog>Catálogo</virtualcswCatalog>
-  <virtualcswGroup>Grupo</virtualcswGroup>
-  <virtualcswCategory>Categoría</virtualcswCategory>
-  <virtualcswType>Tipo de Recurso</virtualcswType>
-
   <customize-elementset>Personalizar conjunto de elementos</customize-elementset>
   <csw-server-disabled>Servidor de la CSW se desactiva.</csw-server-disabled>
   <custom-elementset-intro>Definir los elementos que deben incluirse en el elemento personalizado

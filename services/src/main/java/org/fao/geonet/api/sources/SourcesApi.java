@@ -32,6 +32,7 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.domain.Source_;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SortUtils;
@@ -96,6 +97,19 @@ public class SourcesApi {
         return sourceRepository.findAll(SortUtils.createSort(Source_.name));
     }
 
+
+    @ApiOperation(
+        value = "Get all sources by type",
+        notes = "Sources are the local catalogue, subportal, external catalogue (when importing MEF files) or harvesters.",
+        nickname = "getSourcesByType")
+    @RequestMapping(
+        value = "/{type}",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseBody
+    public List<Source> getSourcesByType(@PathVariable SourceType type) throws Exception {
+        return sourceRepository.findByType(type, SortUtils.createSort(Source_.name));
+    }
 
     @ApiOperation(
         value = "Add a source",

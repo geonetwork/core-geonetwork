@@ -54,11 +54,8 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Logger;
 import org.fao.geonet.Util;
-import org.fao.geonet.domain.Service;
-import org.fao.geonet.domain.ServiceParam;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.repository.ServiceRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
@@ -181,7 +178,6 @@ public class JeevesEngine {
 
 
             loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, _serviceMan);
-            loadConfigDB(appContext, -1);
 
             //--- handlers must be started here because they may need the context
             //--- with the ProfileManager already loaded
@@ -621,69 +617,5 @@ public class JeevesEngine {
 
     public ProfileManager getProfileManager() {
         return getServiceManager().getProfileManager();
-    }
-
-    /**
-     * Create or reload Jeeves services from a configuration stored in the Services table of the
-     * DBMS resource.
-     *
-     * @param serviceIdentifierToLoad -1 for all or the service identifier
-     */
-    public void loadConfigDB(ApplicationContext context, int serviceIdentifierToLoad) {
-        try {
-            Element eltServices = new Element("services");
-            eltServices.setAttribute("package", "org.fao.geonet");
-
-            java.util.List<Service> serviceList = null;
-            ServiceRepository serviceRepo = context.getBean(ServiceRepository.class);
-            if (serviceIdentifierToLoad == -1) {
-                serviceList = serviceRepo.findAll();
-            } else {
-                serviceList = Collections.singletonList(serviceRepo.findOne(serviceIdentifierToLoad));
-            }
-
-            for (Service service : serviceList) {
-                if (service != null) {
-                    Element srv = new Element("service");
-                    Element cls = new Element("class");
-
-                    List<ServiceParam> paramList = service.getParameters();
-                    StringBuilder filter = new StringBuilder();
-                    if (!service.getExplicitQuery().isEmpty()) {
-                        filter.append(service.getExplicitQuery());
-                    }
-                    for (ServiceParam serviceParam : paramList) {
-                        if (serviceParam.getValue() != null && !serviceParam.getValue().trim().isEmpty()) {
-                            filter.append(" ");
-                            if (serviceParam.getOccur() == null) {
-                                filter.append("+");
-                            } else {
-                                filter.append(serviceParam.getOccur());
-                            }
-                            filter.append(serviceParam.getName()).append(":").append(serviceParam.getValue());
-                        }
-                    }
-                    cls.addContent(new Element("param").
-                        setAttribute("name", "filter").
-                        setAttribute("value", filter.toString().trim()));
-
-                    srv.setAttribute("name", service.getName())
-                        .addContent(
-                            cls.setAttribute("name",
-                                service.getClassName()));
-                    eltServices.addContent(srv);
-                }
-            }
-
-            _dbServices.add(eltServices);
-
-            for (int i = 0; i < _dbServices.size(); i++) {
-                initServices(_dbServices.get(i));
-            }
-        } catch (Exception e) {
-            warning("Jeeves DBMS service configuration lookup failed (database may not be available yet). Message is: "
-                + e.getMessage());
-        }
-
     }
 }
