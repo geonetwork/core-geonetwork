@@ -144,18 +144,32 @@
             });
 
           }
-        } else if (reqAgg.hasOwnProperty('date_histogram')) {
+        } else if (reqAgg.hasOwnProperty('date_histogram') || reqAgg.hasOwnProperty('auto_date_histogram')) {
           facetModel.type = 'dates';
           facetModel.dates = [];
           facetModel.datesCount = [];
 
+          var dateInterval;
           var dayDuration = 1000 * 60 * 60 * 24;
-          var dateInterval = {
+          var intervals = {
             year: dayDuration * 365,
             month: dayDuration * 30,
             week: dayDuration * 7,
-            day: dayDuration
-          }[reqAgg.date_histogram.calendar_interval];
+            day: dayDuration,
+            s: 1000,
+            m: 1000 * 60,
+            h: 1000 * 60 * 24,
+            d: dayDuration,
+            M: dayDuration * 30,
+            y: dayDuration * 365
+          };
+          if (reqAgg.hasOwnProperty('date_histogram')) {
+            dateInterval = intervals[reqAgg.date_histogram.calendar_interval];
+          } else {
+            var interval = respAgg.interval;
+            var unit = interval.substring(interval.length - 1, interval.length);
+            dateInterval = parseInt(interval.substring(0, interval.length - 1)) * intervals[unit];
+          }
 
           for (var p in respAgg.buckets) {
             if (!respAgg.buckets[p].key || !respAgg.buckets[p].doc_count) {
@@ -169,7 +183,7 @@
             });
           }
 
-          if (respAgg.buckets.length > 2) {
+          if (respAgg.buckets.length > 1) {
             facetModel.from = moment(respAgg.buckets[0].key).format('DD-MM-YYYY');
             facetModel.to = moment(respAgg.buckets[respAgg.buckets.length - 2].key).format('DD-MM-YYYY');
           }

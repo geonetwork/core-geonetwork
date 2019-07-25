@@ -200,9 +200,9 @@ goog.require('gn_alert');
               }
             },
             "dateStamp" : {
-              "date_histogram" : {
+              "auto_date_histogram" : {
                 "field" : "dateStamp",
-                "calendar_interval" : "month"
+                "buckets": 50
               }
             }
           },
