@@ -344,9 +344,17 @@
                 <th data-translate="">featureAliases</th>
                 <td>{{featureType.aliases}}</td>
               </tr>
-              <tr data-ng-if="featureType.attributeTable">
-                <td colspan="2">
-                  <h4><b data-translate="">featureAttributeTable</b></h4>
+              </tbody>
+              <tbody data-ng-if="featureType.attributeTable" class="gn-noborder-top">
+              <tr>
+                <th data-translate="">featureAttributeTable</th>
+                <td></td>
+              </tr>
+              <tr>
+                <td class="gn-noborder-top gn-nopadding-top gn-nopadding-bottom"/>
+              </tr>
+              <tr>
+                <td colspan="2" class="gn-noborder-top">
                   <div data-ng-if="featureType.attributeTable"
                        data-gn-attribute-table-renderer="featureType.attributeTable">
                   </div>
