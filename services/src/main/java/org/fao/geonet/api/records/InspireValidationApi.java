@@ -308,10 +308,10 @@ public class InspireValidationApi {
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
 
         try {
-            if (inspireValidatorUtils.isReady(URL, testId, null)) {
+            if (inspireValidatorUtils.isReady(URL, testId)) {
                 Map<String, String> values = new HashMap<>();
 
-                values.put("status", inspireValidatorUtils.isPassed(URL, testId, null));
+                values.put("status", inspireValidatorUtils.isPassed(URL, testId));
                 values.put("report", inspireValidatorUtils.getReportUrl(URL, testId));
                 response.setStatus(HttpStatus.SC_OK);
 
