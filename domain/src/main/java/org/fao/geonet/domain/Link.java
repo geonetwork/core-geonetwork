@@ -25,6 +25,7 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.domain.converter.LinkTypeConverter;
 import org.fao.geonet.entitylistener.LinkEntityListenerManager;
+import org.hibernate.annotations.SortNatural;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Access;
@@ -40,15 +41,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * An entity representing link. A link can be a URL in a metadata record.
@@ -66,6 +67,9 @@ public class Link implements Serializable {
     private String _url;
     private String _protocol;
     private LinkType _linkType = LinkType.HTTP;
+    private Set<MetadataLink> records = new HashSet<>();
+    private Set<LinkStatus> linkStatus = new TreeSet<>();
+    private Integer lastState = 0;
 
     /**
      * Get the id of the link.
@@ -120,8 +124,6 @@ public class Link implements Serializable {
         return this;
     }
 
-    private List<LinkStatus> linkStatus = new ArrayList<>();
-
     /**
      * Get all status information for a link.
      *
@@ -129,36 +131,35 @@ public class Link implements Serializable {
      */
     @OneToMany(cascade = CascadeType.ALL,
         fetch = FetchType.EAGER,
-        mappedBy = "linkId",
+        mappedBy = "link",
         orphanRemoval = true)
     @OrderBy("checkDate DESC")
-    public List<LinkStatus> getLinkStatus() {
+    @SortNatural
+    public Set<LinkStatus> getLinkStatus() {
         return linkStatus;
     }
 
-    public Link setLinkStatus(List<LinkStatus> linkStatus) {
+    public Link setLinkStatus(Set<LinkStatus> linkStatus) {
         this.linkStatus = linkStatus;
         return this;
     }
 
+    public Integer getLastState() {
+        return lastState;
+    }
 
-    private List<MetadataLink> records = new ArrayList<>();
+    public void setLastState(Integer lastState) {
+        this.lastState = lastState;
+    }
 
-    /**
-     * Get all status information for a link
-     *
-     * @return
-     */
-    @OneToMany(cascade = CascadeType.ALL,
-        fetch = FetchType.EAGER,
-//        mappedBy = "id.linkId",
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+        mappedBy = "link",
         orphanRemoval = true)
-    @JoinColumn(name="linkId")
-    public List<MetadataLink> getRecords() {
+    public Set<MetadataLink> getRecords() {
         return records;
     }
 
-    public Link setRecords(List<MetadataLink> records) {
+    public Link setRecords(Set<MetadataLink> records) {
         this.records = records;
         return this;
     }
@@ -172,6 +173,7 @@ public class Link implements Serializable {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @Type(type = "org.hibernate.type.StringClobType")
+    @Column(unique = true)
     public String getUrl() {
         return _url;
     }
@@ -179,5 +181,18 @@ public class Link implements Serializable {
     public Link setUrl(String url) {
         this._url = url;
         return this;
+    }
+
+    public void addStatus(LinkStatus linkStatus) {
+        linkStatus.setLink(this);
+        this.linkStatus.add(linkStatus);
+        this.lastState = convertStatusToState(linkStatus);
+    }
+
+    private Integer convertStatusToState(LinkStatus lastStatus) {
+        if (lastStatus.isFailing()) {
+            return -1;
+        }
+        return 1;
     }
 }

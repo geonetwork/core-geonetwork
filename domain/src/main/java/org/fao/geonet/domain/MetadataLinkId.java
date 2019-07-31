@@ -23,83 +23,44 @@
 
 package org.fao.geonet.domain;
 
-import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 /**
  * The id object of {@link MetadataLink}
  */
-@Embeddable
+
 public class MetadataLinkId implements Serializable {
     private static final long serialVersionUID = -5759713154514715316L;
 
-    private int _metadataId;
-    private int _linkId;
+    private Link link;
 
-    /**
-     * Default constructor. Setters must be used to initialize object.
-     */
+    private Integer metadataId;
+
     public MetadataLinkId() {
-        // default constructor.
     }
 
-    /**
-     * Create a new instance from the required id objects.
-     *
-     * @param metadataId  the metadata id
-     * @param linkId     the link id
-     */
-    public MetadataLinkId(int metadataId, int linkId) {
-        this._metadataId = metadataId;
-        this._linkId = _linkId;
+    public Link getLink() {
+        return link;
     }
 
-    /**
-     * Get the id of the metadata this MetadataLink is references to.
-     *
-     * @return the id of the metadata this MetadataLink is references to.
-     */
-    public int getMetadataId() {
-        return _metadataId;
+    public Integer getMetadataId() {
+        return metadataId;
     }
 
-    /**
-     * Set the id of the metadata this MetadataLink is references to.
-     *
-     * @param newMetadataId the id of the metadata this MetadataLink is references to.
-     * @return this id object
-     */
-    public MetadataLinkId setMetadataId(int newMetadataId) {
-        this._metadataId = newMetadataId;
-        return this;
+    public void setLink(Link link) {
+        this.link = link;
     }
 
-    /**
-     * Get the id of the group this MetadataLink is references to.
-     *
-     * @return the id of the group this MetadataLink is references to.
-     */
-    public int getLinkId() {
-        return _linkId;
-    }
-
-    /**
-     * Get the id of the group this MetadataLink is references to.
-     *
-     * @param newLinkId the id of the group this MetadataLink is references to.
-     * @return this id object
-     */
-    public MetadataLinkId setLinkId(int newLinkId) {
-        this._linkId = newLinkId;
-        return this;
+    public void setMetadataId(Integer metadataId) {
+        this.metadataId = metadataId;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + _linkId;
-        result = prime * result + _metadataId;
+        result = prime * result + link.getId();
+        result = prime * result + metadataId;
         return result;
     }
 
@@ -112,27 +73,11 @@ public class MetadataLinkId implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         MetadataLinkId other = (MetadataLinkId) obj;
-        if (_linkId != other._linkId)
+        if (link.getId() != other.link.getId())
             return false;
-        if (_metadataId != other._metadataId)
+        if (metadataId.intValue() != other.metadataId.intValue())
             return false;
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "MetadataLinkId [metadataId=" + _metadataId + ", linkId=" + _linkId + "]";
-    }
-
-    /**
-     * Make a copy of this id object.
-     *
-     * @return a copy of this id object.
-     */
-    public MetadataLinkId copy() {
-        MetadataLinkId copy = new MetadataLinkId();
-        copy._linkId = _linkId;
-        copy._metadataId = _metadataId;
-        return copy;
-    }
 }

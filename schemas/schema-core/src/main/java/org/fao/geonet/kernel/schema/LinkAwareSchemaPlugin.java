@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2019 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -20,24 +20,12 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
+package org.fao.geonet.kernel.schema;
 
-package org.fao.geonet.repository;
+import org.fao.geonet.kernel.schema.LinkPatternStreamer.ILinkBuilder;
+import org.fao.geonet.kernel.schema.LinkPatternStreamer.RawLinkPatternStreamer;
 
-import org.fao.geonet.domain.Link;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+public interface LinkAwareSchemaPlugin {
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-/**
- * Data Access object for the {@link Link} entities.
- */
-public interface LinkRepository extends GeonetRepository<Link, Integer>, LinkRepositoryCustom, JpaSpecificationExecutor<Link> {
-    /**
-     * Find one link by url.
-     *
-     * @return one link or null.
-     */
-    @Nullable
-    Link findOneByUrl(@Nonnull String url);
+    <L, M> RawLinkPatternStreamer<L, M> createLinkStreamer(ILinkBuilder<L, M> linkbuilder);
 }

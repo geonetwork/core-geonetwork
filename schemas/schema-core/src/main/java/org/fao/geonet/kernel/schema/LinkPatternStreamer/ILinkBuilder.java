@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2019 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -21,23 +21,11 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.repository;
+package org.fao.geonet.kernel.schema.LinkPatternStreamer;
 
-import org.fao.geonet.domain.Link;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+public interface ILinkBuilder<L, M> {
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+    L found(String url);
 
-/**
- * Data Access object for the {@link Link} entities.
- */
-public interface LinkRepository extends GeonetRepository<Link, Integer>, LinkRepositoryCustom, JpaSpecificationExecutor<Link> {
-    /**
-     * Find one link by url.
-     *
-     * @return one link or null.
-     */
-    @Nullable
-    Link findOneByUrl(@Nonnull String url);
+    void persist(L link, M ref);
 }

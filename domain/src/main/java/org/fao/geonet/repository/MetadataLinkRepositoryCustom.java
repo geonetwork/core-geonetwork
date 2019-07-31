@@ -23,21 +23,8 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.Link;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 /**
- * Data Access object for the {@link Link} entities.
+ * Methods for accessing MetadataLink Repository that cannot be automatically be implemented by
+ * spring-data-jpa.
  */
-public interface LinkRepository extends GeonetRepository<Link, Integer>, LinkRepositoryCustom, JpaSpecificationExecutor<Link> {
-    /**
-     * Find one link by url.
-     *
-     * @return one link or null.
-     */
-    @Nullable
-    Link findOneByUrl(@Nonnull String url);
-}
+public interface MetadataLinkRepositoryCustom {}

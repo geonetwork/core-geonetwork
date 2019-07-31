@@ -36,14 +36,42 @@
     function($scope, $routeParams, $http, $rootScope, $translate) {
       $scope.links = [];
       $scope.loading = true;
+      $scope.from = 0;
+      $scope.size = 200;
+      $scope.sizeDefault = $scope.size;
 
-      $scope.loadLinks = function() {
+      $scope.loadLinks = function(more) {
+        $scope.size = more ? $scope.size + $scope.sizeDefault : $scope.sizeDefault;
+
         $scope.loading = true;
-        $http.get('../api/records/links').then(function(r) {
+        $http.get('../api/records/links?from=' + $scope.from + '&size=' + $scope.size).then(function(r) {
           $scope.links = r.data;
           $scope.loading = false;
         }, function(r) {
           $scope.error = r.data;
+          $scope.loading = false;
+        })
+      };
+      $scope.more = function() {
+        $scope.loadLinks(true);
+      };
+
+      $scope.analyzeLinks = function() {
+        $scope.loading = true;
+        $http.post('../api/records/links?analyze=true').then(function(r) {
+          $scope.loadLinks();
+          $scope.loading = false;
+        }, function(r) {
+          $scope.loadLinks();
+          $scope.loading = false;
+        })
+      };
+
+      $scope.removeAll = function() {
+        $scope.loading = true;
+        $http.delete('../api/records/links').then($scope.loadLinks, function(r) {
+          $scope.error = r.data;
+          $scope.loadLinks();
           $scope.loading = false;
         })
       };

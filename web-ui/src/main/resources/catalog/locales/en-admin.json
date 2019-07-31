@@ -1408,5 +1408,11 @@
     "gnSearchCss": "Search Box",
     "styleVariable-gnSearchOutlineColor": "Border color for when the search box has the focus",
     "styleVariable-gnSearchButtonBackgroundColor": "Background color for the search button",
-    "styleVariable-gnSearchButtonColor": "Text color for the search button"
+    "styleVariable-gnSearchButtonColor": "Text color for the search button",
+    "analyzeLinks": "Analyze all records",
+    "analyzeLinks-help": "For all records in the catalogue, extract links and analyze URL status.",
+    "refreshLinks": "Refresh",
+    "removeAllLinksAndStatus": "Remove all",
+    "removeAllLinksAndStatusConfirm": "Are you sure to remove all links and status history?",
+    "moreLinks": "More links ..."
 }

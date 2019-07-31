@@ -23,6 +23,7 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.fao.geonet.domain.converter.BooleanToYNConverter;
 import org.fao.geonet.entitylistener.LinkStatusEntityListenerManager;
 import org.hibernate.annotations.Type;
@@ -56,10 +57,10 @@ import javax.persistence.Table;
     indexes = {@Index(name = "idx_linkstatus_isFailing", columnList = "failing")})
 @EntityListeners(LinkStatusEntityListenerManager.class)
 @SequenceGenerator(name = LinkStatus.ID_SEQ_NAME, initialValue = 1, allocationSize = 1)
-public class LinkStatus extends GeonetEntity {
+public class LinkStatus extends GeonetEntity implements Comparable<LinkStatus> {
     static final String ID_SEQ_NAME = "linkstatus_id_seq";
     private int id;
-    private int linkId;
+    private Link link;
     private ISODate checkDate = new ISODate();
     private Boolean isFailing = Boolean.TRUE;
     private String statusValue;
@@ -84,20 +85,19 @@ public class LinkStatus extends GeonetEntity {
         return this;
     }
 
-
-    public int getLinkId() {
-        return linkId;
+    @ManyToOne(
+            cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.MERGE},
+            fetch = FetchType.EAGER)
+    @JoinColumn(name = "link",
+            referencedColumnName = "id",
+            nullable = false)
+    @JsonIgnore
+    public Link getLink() {
+        return link;
     }
 
-    @ManyToOne(
-        cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.MERGE},
-        fetch = FetchType.EAGER)
-    @JoinColumn(name = "linkId",
-        referencedColumnName = "id",
-        nullable = false,
-        unique = true)
-    public LinkStatus setLinkId(int linkId) {
-        this.linkId = linkId;
+    public LinkStatus setLink(Link link) {
+        this.link = link;
         return this;
     }
 
@@ -167,7 +167,7 @@ public class LinkStatus extends GeonetEntity {
     }
 
     /**
-     * eg. HTTP status != 2xx means that the link is not working.
+     * eg. HTTP status != 2xx means that the link is ok.
      *
      * @return
      */
@@ -206,7 +206,7 @@ public class LinkStatus extends GeonetEntity {
     @Override
     public String toString() {
         return "LinkStatus{" + id +
-            ", link=" + linkId +
+            ", link=" + link.getId() +
             ", isFailing=" + isFailing +
             ", checkDate=" + checkDate +
             ", statusValue=" + statusValue +
@@ -215,4 +215,8 @@ public class LinkStatus extends GeonetEntity {
             '}';
     }
 
+    @Override
+    public int compareTo(LinkStatus linkStatus) {
+        return (linkStatus.checkDate.compareTo(this.checkDate));
+    }
 }

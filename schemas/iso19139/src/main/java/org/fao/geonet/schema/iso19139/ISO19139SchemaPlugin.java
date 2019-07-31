@@ -27,6 +27,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.kernel.schema.*;
+import org.fao.geonet.kernel.schema.LinkPatternStreamer.ILinkBuilder;
+import org.fao.geonet.kernel.schema.LinkPatternStreamer.RawLinkPatternStreamer;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -49,7 +51,8 @@ public class ISO19139SchemaPlugin
     AssociatedResourcesSchemaPlugin,
     MultilingualSchemaPlugin,
     ExportablePlugin,
-    ISOPlugin {
+    ISOPlugin,
+    LinkAwareSchemaPlugin {
     public static final String IDENTIFIER = "iso19139";
 
     public static ImmutableSet<Namespace> allNamespaces;
@@ -545,5 +548,12 @@ public class ISO19139SchemaPlugin
         } catch (JDOMException e) {
         }
         return languages;
+    }
+
+    public <L, M> RawLinkPatternStreamer<L, M> createLinkStreamer(ILinkBuilder<L, M> linkbuilder) {
+        RawLinkPatternStreamer patternStreamer = new RawLinkPatternStreamer(linkbuilder);
+        patternStreamer.setNamespaces(ISO19139SchemaPlugin.allNamespaces.asList());
+        patternStreamer.setRawTextXPath(".//*[name() = 'gco:CharacterString' or name() = 'gmd:URL']");
+        return patternStreamer;
     }
 }

@@ -23,21 +23,11 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.Link;
+import org.fao.geonet.domain.LinkStatus;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 /**
- * Data Access object for the {@link Link} entities.
+ * Data Access object for the {@link LinkStatus} entities.
  */
-public interface LinkRepository extends GeonetRepository<Link, Integer>, LinkRepositoryCustom, JpaSpecificationExecutor<Link> {
-    /**
-     * Find one link by url.
-     *
-     * @return one link or null.
-     */
-    @Nullable
-    Link findOneByUrl(@Nonnull String url);
+public interface LinkStatusRepository extends GeonetRepository<LinkStatus, Integer>, LinkRepositoryCustom, JpaSpecificationExecutor<LinkStatus> {
 }

@@ -23,10 +23,18 @@
 
 package org.fao.geonet.repository;
 
+import org.fao.geonet.domain.Link;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
+
 /**
  * Methods for accessing Link Repository that cannot be automatically be implemented by
  * spring-data-jpa.
  */
 public interface LinkRepositoryCustom {
+
+    @Query("select l from Link l order by l.lastState, l.url")
+    List<Link> getLinks();
 
 }
