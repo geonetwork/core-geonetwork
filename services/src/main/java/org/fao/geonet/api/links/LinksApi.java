@@ -73,8 +73,8 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-    "/api/records/links",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/records/links",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/records/links"
 })
 @Api(value = "links",

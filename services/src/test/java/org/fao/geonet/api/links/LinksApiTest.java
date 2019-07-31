@@ -104,14 +104,14 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         final MockHttpSession httpSession = this.loginAsAdmin();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(post("/api/records/links?uuid=" + this.uuid)
+        this.mockMvc.perform(post("/srv/api/records/links?uuid=" + this.uuid)
             .session(httpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isCreated());
 
         Assert.assertEquals(1, linkRepository.count());
 
-        this.mockMvc.perform(get("/api/records/links")
+        this.mockMvc.perform(get("/srv/api/records/links")
             .session(httpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
@@ -123,7 +123,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$[0].records[0].metadataId").value(equalTo(this.id)))
             .andExpect(jsonPath("$[0].records[0].metadataUuid").value(equalTo(md.getUuid())));;
 
-        this.mockMvc.perform(delete("/api/records/links")
+        this.mockMvc.perform(delete("/srv/api/records/links")
             .session(httpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNoContent());
