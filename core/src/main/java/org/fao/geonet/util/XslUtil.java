@@ -1076,15 +1076,23 @@ public final class XslUtil {
     }
 
     public static List<String> getKeywordHierarchy(String keyword, String thesaurusId, String langCode) {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
-
-        thesaurusId = thesaurusId.replaceAll("geonetwork.thesaurus.", "");
-        Thesaurus thesaurus = thesaurusManager.getThesaurusByName(thesaurusId);
-
         List<String> res = new ArrayList<String>();
-        if(thesaurus != null) {
-            res = thesaurus.getKeywordHierarchy(keyword, langCode);
+        if (StringUtils.isEmpty(thesaurusId)) {
+            return res;
+        }
+        
+        try {
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
+            ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
+
+            thesaurusId = thesaurusId.replaceAll("geonetwork.thesaurus.", "");
+            Thesaurus thesaurus = thesaurusManager.getThesaurusByName(thesaurusId);
+
+            if (thesaurus != null) {
+                res = thesaurus.getKeywordHierarchy(keyword, langCode);
+            }
+            return res;
+        } catch (Exception ex) {
         }
         return res;
     }
