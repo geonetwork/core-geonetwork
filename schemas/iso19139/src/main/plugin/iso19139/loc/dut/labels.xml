@@ -1512,17 +1512,6 @@
       dataset
     </description>
   </element>
-  <element name="gmd:MD_CharacterSetCode">
-    <label>Character Set</label>
-  </element>
-  <element name="gmd:MD_Constraints" id="67.0">
-    <label>Constraints</label>
-    <description>Restrictions on the access and use of a resource or metadata</description>
-  </element>
-  <element name="gmd:MD_CoverageDescription" id="239.0">
-    <label>Coverage description</label>
-    <description>Information about the content of a grid data cell</description>
-  </element>
   <element name="gmd:MD_StandardOrderProcess">
     <label>Standard leverings proces</label>
     <description>common ways in which the resource may be obtained or
@@ -2376,33 +2365,6 @@
     <description></description>
   </element>
 
-  <element name="gco:attributeType">
-    <label>Attribute type</label>
-    <description/>
-  </element>
-  <element name="gco:aName" context="gco:TypeName">
-    <label>Type name</label>
-    <description/>
-    <helper>
-      <option value="BOOLEAN">BOOLEAN</option>
-      <option value="BYTE">BYTE</option>
-      <option value="CHARACTER">CHARACTER</option>
-      <option value="DATE">DATE</option>
-      <option value="DATETIME">DATETIME</option>
-      <option value="DOUBLE">DOUBLE</option>
-      <option value="FLOAT">FLOAT</option>
-      <option value="INTEGER">INTEGER</option>
-      <option value="NUMERIC">NUMERIC</option>
-      <option value="REAL">REAL</option>
-      <option value="SERIAL">SERIAL</option>
-      <option value="VARCHAR">VARCHAR</option>
-      <option value="TEXT">TEXT</option>
-    </helper>
-  </element>
-  <element name="gco:TypeName">
-    <label>Type name</label>
-    <description/>
-  </element>
   <element name="gco:LocalName">
     <label>Local name</label>
     <description/>
@@ -2850,10 +2812,6 @@
       component of this union type provides a method for indicating time units other than the six
       standard units given in the enumeration.
     </description>
-  </element>
-  <element name="gco:Record">
-    <label>Record</label>
-    <description></description>
   </element>
   <element name="gml:BaseUnit">
     <label>Basis eenheid</label>
