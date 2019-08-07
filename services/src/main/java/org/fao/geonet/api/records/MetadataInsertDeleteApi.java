@@ -838,7 +838,8 @@ public class MetadataInsertDeleteApi {
             throw ex;
         }
         int iId = Integer.parseInt(id.get(0));
-
+        uuid = dataManager.getMetadataUuid(iId + "");
+        
         // Set template
         dataManager.setTemplate(iId, metadataType, null);
 
