@@ -1498,7 +1498,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 LOGGER.debug("Lucene query: {}", _query);
 
 
-                appendPortalFilter();
+                _query = appendPortalFilter(_query, _luceneConfig);
 
 
                 try {
@@ -1582,7 +1582,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
     }
 
-    private void appendPortalFilter() throws ParseException, QueryNodeException {
+    public static Query appendPortalFilter(Query q, LuceneConfig luceneConfig) throws ParseException, QueryNodeException {
         // If the requested portal define a filter
         // Add it to the request.
         NodeInfo node = ApplicationContextHolder.get().getBean(NodeInfo.class);
@@ -1595,20 +1595,21 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             else if (StringUtils.isNotEmpty(portal.getFilter())) {
                 Query portalFilterQuery = null;
                 // Parse Lucene query
-                portalFilterQuery = parseLuceneQuery(portal.getFilter(), _luceneConfig);
+                portalFilterQuery = parseLuceneQuery(portal.getFilter(), luceneConfig);
                 LOGGER.info("Portal filter is :\n" + portalFilterQuery);
 
                 BooleanQuery query = new BooleanQuery();
                 BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-                query.add(_query, occur);
+                query.add(q, occur);
 
                 if (portalFilterQuery != null) {
                     query.add(portalFilterQuery, occur);
                 }
-                _query = query;
-                LOGGER.debug("Lucene query (with portal filter): {}", _query);
+                q = query;
+                LOGGER.debug("Lucene query (with portal filter): {}", q);
             }
         }
+        return q;
     }
 
     /**
