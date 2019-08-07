@@ -535,7 +535,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
         ServiceConfig config = new ServiceConfig();
         String geomWkt = null;
 
-
+        _query = LuceneSearcher.appendPortalFilter(_query, luceneConfig);
         Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
             maxRecords + startPosition - 1, _lang.presentationLanguage,
             luceneConfig.getSummaryTypes().get(resultType.toString()), luceneConfig,
