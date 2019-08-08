@@ -98,8 +98,15 @@
         params.size = (p.to + 1) - p.from;
       }
       if(p.any || luceneQueryString) {
+        var queryStringParams = [];
+        if (p.any) {
+          queryStringParams.push(p.any);
+        }
+        if (luceneQueryString) {
+          queryStringParams.push(luceneQueryString);
+        }
         query_string = {
-          query: ((p.any ? p.any + ' AND ' : '') + luceneQueryString).trim()
+          query: queryStringParams.join(' AND ').trim()
         };
       }
       if(p.sortBy) {
