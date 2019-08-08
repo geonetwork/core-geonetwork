@@ -514,25 +514,27 @@
             <xsl:for-each select="gmd:keyword/(*[normalize-space() != '']|
                                   */@xlink:href[normalize-space() != '']|
                                   gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space() != ''])">
-
-              <xsl:variable name="keywordsWithHierarchy"
-                            select="util:getKeywordHierarchy(normalize-space(.), $thesaurusId, $mainLanguageCode)"/>
-
-              <xsl:for-each select="$keywordsWithHierarchy">
-                <xsl:variable name="path" select="tokenize(., '/')"/>
-                <xsl:for-each select="$path">
-                  <xsl:element name="keywords_tree">
-                    <xsl:variable name="position"
-                                  select="position()"/>
-                    <xsl:value-of select="string-join($path[position() &lt;= $position], '/')"/>
-                  </xsl:element>
-                </xsl:for-each>
-              </xsl:for-each>
-
               <xsl:element name="{$thesaurusField}">
                 <xsl:value-of select="normalize-space(.)"/>
               </xsl:element>
             </xsl:for-each>
+
+
+            <xsl:call-template name="build-tree-values">
+              <xsl:with-param name="values"
+                              select="gmd:keyword/(*[normalize-space() != '']|
+                                */@xlink:href[normalize-space() != '']|
+                                gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space() != ''])"/>
+              <xsl:with-param name="thesaurus"
+                              select="$thesaurusId"/>
+              <xsl:with-param name="language"
+                              select="$mainLanguageCode"/>
+              <xsl:with-param name="fieldName"
+                              select="concat($thesaurusField, '_tree')"/>
+              <xsl:with-param name="allTreeField"
+                              select="true()"/>
+            </xsl:call-template>
+
           </xsl:if>
         </xsl:for-each>
 
@@ -982,6 +984,48 @@
 
     <!-- Index more documents for this element -->
     <xsl:apply-templates mode="index-extra-documents" select="."/>
+  </xsl:template>
+
+  <xsl:template name="build-tree-values">
+    <xsl:param name="values"/>
+    <xsl:param name="fieldName" as="xs:string"/>
+    <xsl:param name="thesaurus" as="xs:string"/>
+    <xsl:param name="language" as="xs:string"/>
+    <xsl:param name="allTreeField" as="xs:boolean"/>
+
+    <xsl:variable name="paths">
+      <xsl:for-each select="$values">
+        <xsl:variable name="keywordsWithHierarchy"
+                      select="util:getKeywordHierarchy(normalize-space(.), $thesaurus, $language)"/>
+
+        <xsl:if test="count($keywordsWithHierarchy) > 0">
+
+          <xsl:for-each select="$keywordsWithHierarchy">
+            <xsl:variable name="path" select="tokenize(., '/')"/>
+            <xsl:for-each select="$path">
+              <xsl:variable name="position"
+                            select="position()"/>
+              <value><xsl:value-of select="string-join($path[position() &lt;= $position], '/')"/></value>
+            </xsl:for-each>
+          </xsl:for-each>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
+
+    <xsl:for-each-group select="$paths/*" group-by=".">
+      <xsl:sort select="."/>
+      <xsl:if test="$fieldName != ''">
+        <xsl:element name="{$fieldName}">
+          <xsl:value-of select="."/>
+        </xsl:element>
+      </xsl:if>
+
+      <xsl:if test="$allTreeField">
+        <xsl:element name="keywords_tree">
+          <xsl:value-of select="."/>
+        </xsl:element>
+      </xsl:if>
+    </xsl:for-each-group>
   </xsl:template>
 
   <xsl:template mode="index-contact" match="*[gmd:CI_ResponsibleParty]">

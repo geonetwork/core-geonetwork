@@ -171,6 +171,7 @@
           gnSearchSettings.resultViewTpls[0].tplUrl;
 
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType = 'manager';
+      $scope.facetConfig = gnGlobalSettings.gnCfg.mods.editor.facetConfig;
 
       gnSearchSettings.sortbyValues = [{
         sortBy: 'relevance',

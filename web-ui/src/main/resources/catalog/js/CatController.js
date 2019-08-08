@@ -145,12 +145,24 @@ goog.require('gn_alert');
             //   _source: [field]
             // }
           },
+          // TODOES
           'facetTabField': '',
           'facetConfig': {
-            'keywords_tree': {
+            'thesaurus_geonetworkthesaurusexternalthemegemet_tree': {
               'terms': {
-                'field': 'keywords_tree',
-                'size': 100
+                'field': 'thesaurus_geonetworkthesaurusexternalthemegemet_tree',
+                'size': 100,
+                "order" : { "_key" : "asc" }
+                //"include": "[^/]+/?[^/]+"
+                // Limit to 2 levels
+              }
+            },
+            'thesaurus_geonetworkthesaurusexternalplaceregions_tree': {
+              'terms': {
+                'field': 'thesaurus_geonetworkthesaurusexternalplaceregions_tree',
+                'size': 100,
+                "order" : { "_key" : "asc" }
+                //"include": "EEA.*"
               }
             },
             'resourceType': {
@@ -167,6 +179,8 @@ goog.require('gn_alert');
             },
             'availableInServices': {
               'filters': {
+                //"other_bucket_key": "others",
+                // But does not support to click on it
                 'filters': {
                   'availableInViewService': {
                     'query_string': {
@@ -222,12 +236,6 @@ goog.require('gn_alert');
           }, {
             'sortBy': 'popularity',
             'sortOrder': ''
-          }, {
-            'sortBy': 'denominatorDesc',
-            'sortOrder': ''
-          }, {
-            'sortBy': 'denominatorAsc',
-            'sortOrder': 'reverse'
           }],
           'sortBy': 'relevance',
           'resultViewTpls': [{
