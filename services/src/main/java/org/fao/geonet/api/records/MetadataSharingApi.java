@@ -981,7 +981,6 @@ public class MetadataSharingApi {
 
         if (!allowPublishNonApprovedMd) {
             MetadataStatus metadataStatus = metadataStatusRepository.getStatus(metadata.getId());
-
             if (metadataStatus != null) {
                 String statusId = metadataStatus.getId().getStatusId() + "";
                 boolean isApproved = statusId.equals(StatusValue.Status.APPROVED);
