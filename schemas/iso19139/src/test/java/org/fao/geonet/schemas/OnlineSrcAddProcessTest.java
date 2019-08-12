@@ -23,6 +23,7 @@
 
 package org.fao.geonet.schemas;
 
+import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
@@ -31,26 +32,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.xmlunit.matchers.EvaluateXPathMatcher.hasXPath;
 
-/**
- * Created by francois on 25/05/16.
- */
 public class OnlineSrcAddProcessTest extends XslProcessTest {
 
     public OnlineSrcAddProcessTest() {
         super();
-        this.setXslFilename("../../../../../../src/main/plugin/iso19139/process/onlinesrc-add.xsl");
-        this.setXmlFilename("xsl/process/input.xml");
+        this.setXslFilename("process/onlinesrc-add.xsl");
+        this.setXmlFilename("schemas/xsl/process/input.xml");
+        this.setNs(ISO19139SchemaPlugin.allNamespaces);
+    }
+
+    @Test
+    public void mustNotAlterARecordWhenNoParameterProvided() throws Exception {
+        super.testMustNotAlterARecordWhenNoParameterProvided();
     }
 
     @Test
     public void testAddSimpleLinkAndUpdate() throws Exception {
 
-        Element inputElement = Xml.loadFile(
-            root.resolve("xsl/process/input.xml"));
+        Element inputElement = Xml.loadFile(xmlFile);
 
         String resultString = Xml.getString(inputElement);
 
@@ -138,8 +140,7 @@ public class OnlineSrcAddProcessTest extends XslProcessTest {
     @Test
     public void testAddMultilingualLinkAndUpdate() throws Exception {
 
-        Element controlElement = Xml.loadFile(
-            root.resolve("xsl/process/onlinesrc-add-multilingual.xml"));
+        Element controlElement = Xml.loadFile(testClass.getClassLoader().getResource("schemas/xsl/process/onlinesrc-add-multilingual.xml"));
         String controlString = Xml.getString(controlElement);
 
         assertThat(

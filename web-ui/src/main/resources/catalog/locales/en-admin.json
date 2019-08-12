@@ -1283,6 +1283,11 @@
     "restoreDefaultSettings": "Restore default settings",
     "restoreDefaultStyleConfirm": "Confirm to restore default default style values. Current changes will be lost.",
     "gnUploadCssStyle": "Upload a JSON style file",
+    "record-links": "Record links analysis",
+    "recordLinksDashboard": "Record links analysis",
+    "recordLinksDashboardSubtitle": "Here are listed all record links analyzed. For each link, the history of all checks is provided.",
+    "lastCheck": "Last check",
+    "associatedRecords": "Associated records",
     "wfs-indexing": "WFS Indexing",
     "wfsIndexingTitle": "WFS Indexing Dashboard",
     "wfsIndexingSubtitle": "Here are listed the ongoing and finished jobs for indexing features from remote WFS services. Once indexed, features can then be filtered according to their attributes and the filter applied to the original map layer.",
@@ -1403,5 +1408,11 @@
     "gnSearchCss": "Search Box",
     "styleVariable-gnSearchOutlineColor": "Border color for when the search box has the focus",
     "styleVariable-gnSearchButtonBackgroundColor": "Background color for the search button",
-    "styleVariable-gnSearchButtonColor": "Text color for the search button"
+    "styleVariable-gnSearchButtonColor": "Text color for the search button",
+    "analyzeLinks": "Analyze all records",
+    "analyzeLinks-help": "For all records in the catalogue, extract links and analyze URL status.",
+    "refreshLinks": "Refresh",
+    "removeAllLinksAndStatus": "Remove all",
+    "removeAllLinksAndStatusConfirm": "Are you sure to remove all links and status history?",
+    "moreLinks": "More links ..."
 }

@@ -31,8 +31,6 @@ import org.junit.Test;
 
 import javax.xml.transform.TransformerConfigurationException;
 import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,13 +43,11 @@ import static org.xmlunit.matchers.EvaluateXPathMatcher.hasXPath;
  * Created by fgravin on 7/31/17.
  */
 public class ISO19139SchemaPluginTest {
-    protected Path root;
     protected Map<String, String> ns = new HashMap<String, String>();
 
     @Before
     public void setup() throws TransformerConfigurationException, URISyntaxException {
         TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
-        root = Paths.get(ISO19139SchemaPluginTest.class.getResource("").toURI());
 
         ns.put(
                 ISO19139Namespaces.GMD.getPrefix(),
@@ -66,8 +62,7 @@ public class ISO19139SchemaPluginTest {
 
     @Test
     public void removeTranslationFromElement() throws Exception {
-        Element multilingualElement = Xml.loadFile(
-                root.resolve("multilingual-contact.xml"));
+        Element multilingualElement = Xml.loadFile(this.getClass().getClassLoader().getResource("schema/iso19139/multilingual-contact.xml"));
 
         ISO19139SchemaPlugin plugin = new ISO19139SchemaPlugin();
         plugin.removeTranslationFromElement(multilingualElement, Arrays.asList(new String[]{"#EN"}));

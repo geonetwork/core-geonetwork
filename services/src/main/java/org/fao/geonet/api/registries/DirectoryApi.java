@@ -24,7 +24,7 @@
 package org.fao.geonet.api.registries;
 
 import static org.fao.geonet.api.records.MetadataInsertDeleteApi.API_PARAM_RECORD_UUID_PROCESSING;
-import static org.fao.geonet.api.records.MetadataInsertDeleteApi.API_PARAP_RECORD_GROUP;
+import static org.fao.geonet.api.records.MetadataInsertDeleteApi.API_PARAM_RECORD_GROUP;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -640,7 +640,7 @@ public class DirectoryApi {
         )
         final MEFLib.UuidAction uuidProcessing,
         @ApiParam(
-            value = API_PARAP_RECORD_GROUP,
+            value = API_PARAM_RECORD_GROUP,
             required = false
         )
         @RequestParam(

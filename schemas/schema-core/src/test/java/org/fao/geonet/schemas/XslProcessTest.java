@@ -23,12 +23,15 @@
 
 package org.fao.geonet.schemas;
 
-import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
+import com.google.common.collect.ImmutableSet;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.Rule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
 import org.xmlunit.diff.DefaultNodeMatcher;
@@ -41,10 +44,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.transform.TransformerConfigurationException;
-
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 
 /**
  * Base class for XSL processing tests.
@@ -55,21 +55,26 @@ import static org.junit.Assert.assertThat;
  */
 public abstract class XslProcessTest {
 
-    protected Map<String, String> ns = new HashMap<String, String>();
-    protected Path root;
-    protected Path xslFile;
-    protected Path xmlFile;
-    private String xslFilename;
-    private String xmlFilename;
 
-    /**
-     *
-     */
-    public XslProcessTest() {
+    protected Map<String, String> ns = new HashMap<String, String>();
+    public Map<String, String> getNs() {
+        return ns;
     }
 
-    public String getXslFilename() {
-        return xslFilename;
+    public XslProcessTest setNs(ImmutableSet<Namespace> ns) {
+        for (Namespace n : ns) {
+            this.ns.put(n.getPrefix(), n.getURI());
+        }
+        return this;
+    }
+
+    protected Path xslFile;
+    protected Path xmlFile;
+
+    protected String xslFilename;
+    protected String xmlFilename;
+
+    public XslProcessTest() {
     }
 
     public XslProcessTest setXslFilename(String xslFilename) {
@@ -77,63 +82,55 @@ public abstract class XslProcessTest {
         return this;
     }
 
-    public String getXmlFilename() {
-        return xmlFilename;
-    }
-
     public XslProcessTest setXmlFilename(String xmlFilename) {
         this.xmlFilename = xmlFilename;
         return this;
     }
 
+    public Class testClass;
+
+    @Rule
+    public TestWatcher watchman= new TestWatcher() {
+        @Override
+        protected void starting(Description description) {
+            testClass = description.getTestClass();
+        }
+    };
+
     @Before
-    public void setup() throws TransformerConfigurationException, URISyntaxException {
+    public void setup() throws URISyntaxException {
         TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
 
-        root = Paths.get(XslProcessTest.class.getResource(XslProcessTest.class.getSimpleName() + ".class").toURI()).getParent();
         if (xslFilename != null) {
-            xslFile = root.resolve(xslFilename);
+            xslFile = Paths.get(testClass.getClassLoader().getResource(xslFilename).toURI());
         }
         if (xmlFilename != null) {
-            xmlFile = root.resolve(xmlFilename);
+            xmlFile = Paths.get(testClass.getClassLoader().getResource(xmlFilename).toURI());
         }
-
-        // TODO: Register all required namespaces
-        ns.put(
-            ISO19139Namespaces.GMD.getPrefix(),
-            ISO19139Namespaces.GMD.getURI()
-        );
-        ns.put(
-            ISO19139Namespaces.GCO.getPrefix(),
-            ISO19139Namespaces.GCO.getURI()
-        );
     }
 
-    @Test
-    public void testMustNotAlterARecordWhenNoParameterProvided() throws Exception {
-        if (xmlFile != null && xslFilename != null) {
-            Element controlElement = Xml.loadFile(xmlFile);
-            Element inputElement = Xml.loadFile(xmlFile);
+    public Element testMustNotAlterARecordWhenNoParameterProvided() throws Exception {
+        Element controlElement = Xml.loadFile(xmlFile);
+        Element inputElement = Xml.loadFile(xmlFile);
 
 
-            // First, check that the process with no parameters
-            // does not alter the record
-            Element resultElement = Xml.transform(
-                inputElement,
-                root.resolve(xslFilename));
+        // First, check that the process with no parameters
+        // does not alter the record
+        Element resultElement = Xml.transform(inputElement, xslFile);
 
-            String resultString = Xml.getString(resultElement);
-            String controlString = Xml.getString(controlElement);
-            Diff diffForNoParameter = DiffBuilder
-                .compare(Input.fromString(resultString))
-                .withTest(Input.fromString(controlString))
-                .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
-                .checkForSimilar()
-                .build();
+        String resultString = Xml.getString(resultElement);
+        String controlString = Xml.getString(controlElement);
+        Diff diffForNoParameter = DiffBuilder
+            .compare(Input.fromString(resultString))
+            .withTest(Input.fromString(controlString))
+            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+            .checkForSimilar()
+            .build();
 
-            assertFalse(
-                "Process does not alter the document.",
-                diffForNoParameter.hasDifferences());
-        }
+        assertFalse(
+            "Process does not alter the document.",
+            diffForNoParameter.hasDifferences());
+
+        return resultElement;
     }
 }

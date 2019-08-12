@@ -19,6 +19,13 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>schema-core</artifactId>
+      <version>${project.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.xmlunit</groupId>
       <artifactId>xmlunit-core</artifactId>
     </dependency>
@@ -29,19 +36,14 @@
   </dependencies>
 
   <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>test-jar</id>
-            <goals>
-              <goal>test-jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources/org/fao/geonet</directory>
+      </testResource>
+      <testResource>
+        <directory>src/main/plugin/iso19139</directory>
+      </testResource>
+    </testResources>
   </build>
 
   <profiles>
