@@ -4,6 +4,19 @@
 
   var module = angular.module('sxt_compositeLayer', []);
 
+  var defaultTemplate =
+    '<div class="panel panel-default"> ' +
+    '<div class="panel-heading">Prélèvement</div> '+
+    '<div class="panel-body"> '+
+    '<ul> '+
+    '<li>Programme de suivi : {PROGRAMME}</li> '+
+    '<li>Date début : {DATEMIN}</li> '+
+    '<li>Date fin : {DATEMAX}</li> '+
+    '<li>Zone marine Quadrige : {QUADRIGE_ZONEMARINE}</li> '+
+    '<li>Lieu : {LIEU_LIBELLE}</li> '+
+    '</ul> '+
+    '</div> '+
+    '</div>'
 
   /**
    * This regex is used to loop through all the attribute tokens
@@ -131,7 +144,7 @@
 
               // read the feature's attributes & render them using the tooltip template
               var props = selected.getProperties();
-              var html = tooltipTemplate;
+              var html = tooltipTemplate || defaultTemplate;
               var matches;
               while (!!(matches = TOOLTIP_ATTR_REGEX.exec(html))) {
                 var token = matches[0];
