@@ -398,10 +398,19 @@
   <xsl:function name="gn-fn-metadata:getFieldDirective" as="node()">
     <xsl:param name="configuration" as="node()"/>
     <xsl:param name="name" as="xs:string"/>
+    <xsl:param name="xpath" as="xs:string?"/>
 
     <xsl:variable name="type"
-                  select="$configuration/editor/fields/for[@name = $name and starts-with(@use, 'data-')]"/>
+                  select="$configuration/editor/fields/for[@name = $name and starts-with(@use, 'data-') and not(@xpath)]"/>
+    <xsl:variable name="typeWithXpath"
+                  select="$configuration/editor/fields/for[@name = $name and starts-with(@use, 'data-') and @xpath = $xpath]"/>
     <xsl:choose>
+      <xsl:when test="$typeWithXpath">
+        <xsl:element name="directive">
+          <xsl:attribute name="data-directive-name" select="$typeWithXpath/@use"/>
+          <xsl:copy-of select="$typeWithXpath/directiveAttributes/@*"/>
+        </xsl:element>
+      </xsl:when>
       <xsl:when test="$type">
         <xsl:element name="directive">
           <xsl:attribute name="data-directive-name" select="$type/@use"/>
