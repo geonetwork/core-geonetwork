@@ -317,9 +317,50 @@
 
           <h2 data-translate="">technicalInformation</h2>
 
+          <div data-ng-if="mdView.current.record.featureTypes"
+            data-ng-repeat="featureType in mdView.current.record.featureTypes">
 
-          <div data-ng-if="mdView.current.record.attributeTable"
-              data-gn-attribute-table-renderer="mdView.current.record.attributeTable">
+            <h3><span data-translate="">featureType</span>&nbsp;'{{featureType.typeName}}'</h3>
+
+            <table class="table table-striped" >
+              <tbody>
+              <tr data-ng-if="featureType.typeName">
+                <th data-translate="">featureTypeName</th>
+                <td>{{featureType.typeName}}</td>
+              </tr>
+              <tr data-ng-if="featureType.definition">
+                <th data-translate="">featureDefinition</th>
+                <td>{{featureType.definition}}</td>
+              </tr>
+              <tr data-ng-if="featureType.code">
+                <th data-translate="">featureCode</th>
+                <td>{{featureType.code}}</td>
+              </tr>
+              <tr data-ng-if="featureType.isAbstract">
+                <th data-translate="">featureIsAbstract</th>
+                <td>{{featureType.isAbstract}}</td>
+              </tr>
+              <tr data-ng-if="featureType.aliases">
+                <th data-translate="">featureAliases</th>
+                <td>{{featureType.aliases}}</td>
+              </tr>
+              <tr data-ng-if="featureType.attributeTable">
+                <th data-translate="">featureAttributeTable</th>
+                <td></td>
+              </tr>
+              <tr data-ng-if="featureType.attributeTable">
+                <td colspan="2" class="gn-noborder-top gn-nopadding-top gn-nopadding-bottom"/>
+              </tr>
+              <tr data-ng-if="featureType.attributeTable">
+                <td colspan="2" class="gn-noborder-top">
+                  <div data-ng-if="featureType.attributeTable"
+                       data-gn-attribute-table-renderer="featureType.attributeTable">
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
           </div>
 
 
