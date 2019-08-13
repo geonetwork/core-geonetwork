@@ -47,15 +47,17 @@
   <div class="col-md-12">
     <div class="panel panel-default">
       <div class="gn-scroll-spy" data-gn-scroll-spy="gn-settings-spy-target"
-          data-watch="sectionsLevel1" data-depth="1"/>
+           data-watch="sectionsLevel1"
+           data-all-depth="true"/>
       <div class="panel-heading">
         <span data-translate="">settings</span>
       </div>
       <div class="panel-body">
         <form id="gn-settings" name="gnSettings" class="form-horizontal">
+          <div id="gn-settings-spy-target">
           <fieldset data-ng-repeat="(key, section1) in sectionsLevel1 | orderObjectBy:'position'"
-                    id="gn-settings-spy-target">
-            <h1>{{section1.name | translate}}</h1>
+                    id="gn-settings-spy-target-{{section1.name}}">
+            <legend>{{section1.name | translate}}</legend>
             <fieldset data-ng-repeat="section2 in section1.children | orderObjectBy:'position'"
                       id="{{section2.name.replace('/', '-')}}"
                       data-ng-show="section2.name">
@@ -401,6 +403,7 @@
               {{"saveSettings"|translate}}
             </button>
           </fieldset>
+          </div>
         </form>
 
         <div data-gn-need-help="administrator-guide/configuring-the-catalog/system-configuration.html"
