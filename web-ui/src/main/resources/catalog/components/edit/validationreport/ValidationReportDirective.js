@@ -121,6 +121,37 @@
                 }
               };
 
+              scope.downloadErrors = function () {
+                html2canvas($('#gn-editor-validation-panel')[0], {
+                  useCORS: true,
+                  allowTaint: true,
+                  letterRendering: true
+                }).then(function (canvas) {
+                  var heightOffset = 30;
+                  var widthOffset = 150;
+                  var imgData = canvas.toDataURL('image/png', 1.0);
+                  var doc = new jsPDF('p', 'pt', 'letter');
+
+                  var imgProps= doc.getImageProperties(imgData);
+                  var pageHeight = doc.internal.pageSize.getHeight() - heightOffset;
+                  var imgWidth = doc.internal.pageSize.getWidth() - widthOffset;
+                  var imgHeight = (imgProps.height * imgWidth / imgProps.width);
+                  var heightLeft = imgHeight;
+                  var position = heightOffset;
+
+                  doc.addImage(imgData, 'PNG', widthOffset / 2, position, imgWidth, imgHeight);
+                  heightLeft -= (pageHeight);
+
+                  while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', widthOffset / 2, position, imgWidth, imgHeight);
+                    heightLeft -= doc.internal.pageSize.getHeight();
+                  }
+                  doc.save('Validation.pdf');
+                });
+              };
+
               scope.toggleAlwaysOnTop = function() {
                 scope.alwaysOnTop = !scope.alwaysOnTop;
                 var element = angular.element( document.querySelector( '#gn-editor-validation-panel' ) );

@@ -35,6 +35,12 @@
                   data-toggle="tooltip" data-placement="top" title="{{'showHideErrors' | translate}}">
             <span class="fa fa-thumbs-down text-danger" aria-hidden="true"></span>
           </button>
+          <button type="button" class="btn btn-default"
+                  data-ng-click="downloadErrors();$event.stopPropagation();"
+                  data-ng-show="hasSuccess || hasErrors"
+                  data-toggle="tooltip" data-placement="top" title="{{'downloadErrors' | translate}}">
+            <span class="fa fa-download text-danger" aria-hidden="true"></span>
+          </button>
         </div>
       </div>
     </div>

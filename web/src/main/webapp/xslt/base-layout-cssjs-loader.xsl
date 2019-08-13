@@ -130,6 +130,8 @@
 
         <script src="{$uiResourcesPath}lib/FileSaver/FileSaver.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/tableExport/tableExport.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}/lib/jspdf/jspdf.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}/lib/html2canvas/html2canvas.min.js?v={$buildNumber}"></script>
         <xsl:if test="$withD3">
           <script src="{$uiResourcesPath}lib/d3.v3.js?v={$buildNumber}"></script>
           <script src="{$uiResourcesPath}lib/nv.d3.js?v={$buildNumber}"></script>
