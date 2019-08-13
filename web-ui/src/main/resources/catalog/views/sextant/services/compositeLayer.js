@@ -6,14 +6,10 @@
 
   var defaultTemplate =
     '<div class="panel panel-default"> ' +
-    '<div class="panel-heading">Prélèvement</div> '+
+    '<div class="panel-heading">Informations</div> '+
     '<div class="panel-body"> '+
     '<ul> '+
-    '<li>Programme de suivi : {PROGRAMME}</li> '+
-    '<li>Date début : {DATEMIN}</li> '+
-    '<li>Date fin : {DATEMAX}</li> '+
-    '<li>Zone marine Quadrige : {QUADRIGE_ZONEMARINE}</li> '+
-    '<li>Lieu : {LIEU_LIBELLE}</li> '+
+    'ATTRIBUTESTOREPLACE '+
     '</ul> '+
     '</div> '+
     '</div>'
@@ -144,14 +140,25 @@
 
               // read the feature's attributes & render them using the tooltip template
               var props = selected.getProperties();
-              var html = tooltipTemplate || defaultTemplate;
-              var matches;
-              while (!!(matches = TOOLTIP_ATTR_REGEX.exec(html))) {
-                var token = matches[0];
-                var attrName = matches[1];
-                html = html.replace(token, props[attrName] || '');
+              if (tooltipTemplate) {
+                var html = tooltipTemplate
+                var matches;
+                while (!!(matches = TOOLTIP_ATTR_REGEX.exec(html))) {
+                  var token = matches[0];
+                  var attrName = matches[1];
+                  html = html.replace(token, props[attrName] || '');
+                }
+                tooltipOverlay.getElement().innerHTML = html;
+              } else { // use default template
+                var attributesHtml = '';
+                for (var prop in props) {
+                  if (prop === 'geom' ||  prop === 'geometry') { continue; }
+                  var currentAttribute = '<li>' + prop + ': ' + props[prop] + '</li>';
+                  attributesHtml += currentAttribute;
+                }
+                var html = defaultTemplate.replace('ATTRIBUTESTOREPLACE', attributesHtml);
+                tooltipOverlay.getElement().innerHTML = html;
               }
-              tooltipOverlay.getElement().innerHTML = html;
             }
           });
 
