@@ -106,6 +106,7 @@
                 $scope.jobs[key] = {
                   url: url,
                   featureType: featureType,
+                  status: 'not started',
                   mdUuid: producer.wfsHarvesterParam.metadataUuid,
                   cronScheduleExpression: producer.cronExpression,
                   cronScheduleProducerId: producer.id
@@ -177,6 +178,7 @@
           $scope.jobs[key] = angular.merge({}, $scope.jobs[key], {
             url: savedJob.wfsHarvesterParam.url,
             featureType: savedJob.wfsHarvesterParam.typeName,
+            status: 'not started',
             mdUuid: savedJob.wfsHarvesterParam.metadataUuid,
             cronScheduleExpression: savedJob.cronExpression,
             cronScheduleProducerId: savedJob.id
