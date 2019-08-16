@@ -89,8 +89,11 @@
             </td>
             <td>
               <button ng-if="job.cronScheduleProducerId"
-                      type="button" class="btn btn-sm btn-default btn-danger">
-                <span class="fa fa-times"></span>&nbsp;removeSchedule
+                      type="button" class="btn btn-sm btn-default btn-danger"
+                      ng-disabled="job.deleteLoading"
+                      ng-click="deleteSchedule(job)">
+                <span class="fa"
+                      ng-class="job.deleteLoading ? 'fa-spinner fa-spin' : 'fa-times'"></span>&nbsp;removeSchedule
               </button>
             </td>
           </tr>

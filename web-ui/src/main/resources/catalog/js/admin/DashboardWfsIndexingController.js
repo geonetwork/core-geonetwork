@@ -189,8 +189,28 @@
         });
       };
 
+      $scope.deleteSchedule = function(job) {
+        if (job.cronScheduleProducerId === null) { return }
+
+        job.deleteLoading = true;
+
+        $http.delete($scope.messageProducersApiUrl + '/' + job.cronScheduleProducerId)
+          .then(function() {
+            job.deleteLoading = false;
+
+            var key = job.url + '#' + job.featureType;
+            $scope.jobs[key].cronScheduleExpression = null;
+            $scope.jobs[key].cronScheduleProducerId = null;
+
+            settingsModal.modal('hide');
+          }, function(error) {
+            job.deleteLoading = false;
+          });
+      };
+
       settingsModal.on('hidden.bs.modal', function() {
         $scope.currentJob = null;
+        $scope.settingsLoading = false;
         $scope.settingsError = null;
       });
     }]);
