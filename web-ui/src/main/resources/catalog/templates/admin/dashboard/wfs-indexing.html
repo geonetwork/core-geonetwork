@@ -16,6 +16,11 @@
           <i class="fa fa-refresh"/>&nbsp;
           <span translate>refresh</span>
         </button>
+        <div class="flex-spacer"></div>
+        <button type="button" class="btn btn-success" ng-click="openScheduleSettings({ isNew: true })">
+          <i class="fa fa-plus"/>&nbsp;
+          <span translate>newWfsIndexing</span>
+        </button>
       </div>
     </div>
 
@@ -84,7 +89,7 @@
               <button ng-if="job.cronScheduleProducerId"
                       ng-click="openScheduleSettings(job)"
                       type="button" class="btn btn-sm btn-default btn-primary">
-                <span class="fa fa-pencil"></span>&nbsp;editSchedule
+                <span class="fa fa-clock-o"></span>&nbsp;editSchedule
               </button>
             </td>
             <td>
@@ -112,30 +117,32 @@
             <h4 class="modal-title" translate>harvesterSchedule</h4>
           </div>
           <div class="modal-body">
-            <form class="form-horizontal" name="gn-edit-schedule-settings">
+            <form class="form-horizontal" name="scheduleSettingsForm">
               <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
-              <div class="form-group">
+              <div class="form-group gn-required">
                 <label class="control-label col-sm-3" translate>wfsurl</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control"
-                         ng-model="currentJob.url"/>
+                  <input type="text" class="form-control" required
+                         ng-model="currentJob.url"
+                         ng-disabled="!currentJob.isNew"/>
                 </div>
               </div>
 
-              <div class="form-group">
+              <div class="form-group gn-required">
                 <label class="control-label col-sm-3" translate>wfsIndexingFeatureType</label>
                 <div class="col-sm-6">
-                  <input type="text" class="form-control"
-                         ng-model="currentJob.featureType"/>
+                  <input type="text" class="form-control" required
+                         ng-model="currentJob.featureType"
+                         ng-disabled="!currentJob.isNew"/>
                 </div>
               </div>
 
-              <div class="form-group">
+              <div class="form-group gn-required">
                 <label class="control-label col-sm-3" translate>frequency</label>
                 <div class="col-sm-6">
                   <div class="input-group">
-                    <input type="text" class="form-control"
+                    <input type="text" class="form-control" required
                            ng-model="currentJob.cronScheduleExpression"/>
                     <div class="input-group-btn">
                       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -167,13 +174,13 @@
               <span class="fa fa-times"></span>&nbsp;{{"cancel"|translate}}
             </button>
             <button type="button" class="btn btn-primary"
-                    ng-disabled="settingsLoading"
+                    ng-disabled="settingsLoading || !scheduleSettingsForm.$valid"
                     ng-if="currentJob.cronScheduleProducerId"
                     ng-click="updateSchedule(currentJob)">
               <span class="fa" ng-class="settingsLoading ? 'fa-spinner fa-spin' : 'fa-save'"></span>&nbsp;{{"updateSchedule" | translate}}
             </button>
             <button type="button" class="btn btn-success"
-                    ng-disabled="settingsLoading"
+                    ng-disabled="settingsLoading || !scheduleSettingsForm.$valid"
                     ng-if="!currentJob.cronScheduleProducerId"
                     ng-click="updateSchedule(currentJob)">
               <span class="fa" ng-class="settingsLoading ? 'fa-spinner fa-spin' : 'fa-plus'"></span>&nbsp;{{"createSchedule" | translate}}
