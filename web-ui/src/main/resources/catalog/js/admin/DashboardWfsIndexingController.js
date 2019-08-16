@@ -28,8 +28,15 @@
       []);
 
   module.controller('GnDashboardWfsIndexingController', [
-    '$q', '$scope', '$location', '$http', 'gnMetadataManager', 'gnHttp',
-    function($q, $scope, $location, $http, gnMetadataManager, gnHttp) {
+    '$q',
+    '$scope',
+    '$location',
+    '$http',
+    '$translate',
+    'gnMetadataManager',
+    'gnHttp',
+    'gnAlertService',
+    function($q, $scope, $location, $http, $translate, gnMetadataManager, gnHttp, gnAlertService) {
       $scope.url = decodeURIComponent($location.search()['wfs-indexing']);
 
       // sample CRON expressions
@@ -206,6 +213,11 @@
 
             settingsModal.modal('hide');
           }, function(error) {
+            gnAlertService.addAlert({
+              msg: $translate.instant('wfsScheduleDeleteError') + ' ' +
+                (error.data.description || error.data.message || $translate.instant('wfsScheduleDeleteUnknownError')),
+              type: 'danger'
+            });
             job.deleteLoading = false;
           });
       };
