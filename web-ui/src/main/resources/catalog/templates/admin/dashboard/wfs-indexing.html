@@ -47,7 +47,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="job in jobs">
+          <tr ng-repeat="(key, job) in jobs">
             <td>
               <div ng-if="job.mdUuid">
                 <span ng-if="job.md.error">

@@ -47,9 +47,10 @@
       // URL of the message producer CRUD API endpoint
       $scope.messageProducersApiUrl = gnHttp.getService('wfsMessageProducers');
 
-      // list of wfs indexing jobs received from the index
+      // dictionary of wfs indexing jobs received from the index
+      // key is url#typename
       // null means loading
-      $scope.jobs = null;
+      $scope.jobs = {};
 
       // error on request or results parsing
       $scope.error = null;
@@ -58,7 +59,7 @@
       $scope.loading = false;
 
       $scope.refreshJobList = function() {
-        $scope.jobs = null;
+        $scope.jobs = {};
         $scope.error = null;
         $scope.loading = true;
 
@@ -77,10 +78,10 @@
 
           $scope.loading = false;
           try {
-            $scope.jobs = indexResults.data.hits.hits.map(function (hit) {
+            indexResults.data.hits.hits.forEach(function (hit) {
               var source = hit._source;
               var infos = decodeURIComponent(source.id).split('#');
-              return {
+              $scope.jobs[infos[0] + '#' + infos[1]] = {
                 url: infos[0],
                 featureType: infos[1],
                 featureCount: source.totalRecords_i || 0,
@@ -93,7 +94,26 @@
               };
             });
 
-            $scope.jobs.forEach(function(job) {
+            apiResults.data.forEach(function(producer) {
+              var url = producer.wfsHarvesterParam.url;
+              var featureType = producer.wfsHarvesterParam.typeName;
+              var key = url + '#' + featureType;
+
+              if ($scope.jobs[key]) {
+                $scope.jobs[key].cronScheduleExpression = producer.cronExpression;
+                $scope.jobs[key].cronScheduleProducerId = producer.id;
+              } else {
+                $scope.jobs[key] = {
+                  url: url,
+                  featureType: featureType,
+                  mdUuid: producer.wfsHarvesterParam.metadataUuid,
+                  cronScheduleExpression: producer.cronExpression,
+                  cronScheduleProducerId: producer.id
+                };
+              }
+            });
+
+            angular.forEach($scope.jobs, function(job) {
               gnMetadataManager.getMdObjByUuid(job.mdUuid).then(function(md) {
                 if (!md['geonet:info']) {
                   job.md = {
@@ -149,8 +169,19 @@
           $http.put($scope.messageProducersApiUrl + '/' + job.cronScheduleProducerId, payload) :
           $http.post($scope.messageProducersApiUrl, payload);
 
-        query.then(function() {
+        query.then(function(response) {
+          var savedJob = response.data;
           $scope.settingsLoading = false;
+
+          var key = savedJob.wfsHarvesterParam.url + '#' + savedJob.wfsHarvesterParam.typeName;
+          $scope.jobs[key] = angular.merge({}, $scope.jobs[key], {
+            url: savedJob.wfsHarvesterParam.url,
+            featureType: savedJob.wfsHarvesterParam.typeName,
+            mdUuid: savedJob.wfsHarvesterParam.metadataUuid,
+            cronScheduleExpression: savedJob.cronExpression,
+            cronScheduleProducerId: savedJob.id
+          });
+
           settingsModal.modal('hide');
         }, function(error) {
           $scope.settingsLoading = false;
@@ -158,7 +189,7 @@
         });
       };
 
-      settingsModal.on('hide.bs.modal', function() {
+      settingsModal.on('hidden.bs.modal', function() {
         $scope.currentJob = null;
         $scope.settingsError = null;
       });
