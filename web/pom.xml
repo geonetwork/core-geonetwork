@@ -363,6 +363,12 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>camelPeriodicProducer</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>harvesters</artifactId>
       <version>${project.version}</version>
     </dependency>
