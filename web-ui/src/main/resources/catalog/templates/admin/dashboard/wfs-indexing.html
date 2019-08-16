@@ -164,14 +164,16 @@
               <span class="fa fa-times"></span>&nbsp;{{"cancel"|translate}}
             </button>
             <button type="button" class="btn btn-primary"
+                    ng-disabled="settingsLoading"
                     ng-if="currentJob.cronScheduleProducerId"
                     ng-click="updateSchedule(currentJob)">
-              <span class="fa fa-save"></span>&nbsp;{{"updateSchedule" | translate}}
+              <span class="fa" ng-class="settingsLoading ? 'fa-spinner fa-spin' : 'fa-save'"></span>&nbsp;{{"updateSchedule" | translate}}
             </button>
             <button type="button" class="btn btn-success"
+                    ng-disabled="settingsLoading"
                     ng-if="!currentJob.cronScheduleProducerId"
-                    ng-click="createSchedule(currentJob)">
-              <span class="fa fa-plus"></span>&nbsp;{{"createSchedule" | translate}}
+                    ng-click="updateSchedule(currentJob)">
+              <span class="fa" ng-class="settingsLoading ? 'fa-spinner fa-spin' : 'fa-plus'"></span>&nbsp;{{"createSchedule" | translate}}
             </button>
           </div>
         </div>

@@ -124,6 +124,8 @@
       };
 
       $scope.currentJob = null;
+      $scope.settingsLoading = false;
+      $scope.settingsError = null;
 
       var settingsModal = $('#gn-indexing-schedule');
 
@@ -133,15 +135,32 @@
       };
 
       $scope.updateSchedule = function(job) {
-        settingsModal.modal('hide');
-      };
+        $scope.settingsLoading = true;
+        var payload = {
+          wfsHarvesterParam: {
+            url: job.url,
+            typeName: job.featureType,
+            metadataUuid: job.mdUuid
+          },
+          cronExpression: job.cronScheduleExpression
+        };
 
-      $scope.createSchedule = function(job) {
-        settingsModal.modal('hide');
+        var query = job.cronScheduleProducerId ?
+          $http.put($scope.messageProducersApiUrl + '/' + job.cronScheduleProducerId, payload) :
+          $http.post($scope.messageProducersApiUrl, payload);
+
+        query.then(function() {
+          $scope.settingsLoading = false;
+          settingsModal.modal('hide');
+        }, function(error) {
+          $scope.settingsLoading = false;
+          $scope.settingsError = error;
+        });
       };
 
       settingsModal.on('hide.bs.modal', function() {
         $scope.currentJob = null;
+        $scope.settingsError = null;
       });
     }]);
 
