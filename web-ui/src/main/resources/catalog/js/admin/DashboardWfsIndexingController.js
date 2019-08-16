@@ -28,12 +28,24 @@
       []);
 
   module.controller('GnDashboardWfsIndexingController', [
-    '$scope', '$location', '$http', 'gnMetadataManager', 'gnHttp',
-    function($scope, $location, $http, gnMetadataManager, gnHttp) {
+    '$q', '$scope', '$location', '$http', 'gnMetadataManager', 'gnHttp',
+    function($q, $scope, $location, $http, gnMetadataManager, gnHttp) {
       $scope.url = decodeURIComponent($location.search()['wfs-indexing']);
+
+      // sample CRON expressions
+      $scope.cronExp = [
+        '0 0 12 * * ?',
+        '0 15 10 * * ?',
+        '0 0/5 14 * * ?',
+        '0 15 10 ? * MON-FRI',
+        '0 15 10 15 * ?'
+      ];
 
       // URL of the index service endpoint
       $scope.indexUrl = gnHttp.getService('featureindexproxy') + '?_=_search';
+
+      // URL of the message producer CRUD API endpoint
+      $scope.messageProducersApiUrl = gnHttp.getService('wfsMessageProducers');
 
       // list of wfs indexing jobs received from the index
       // null means loading
@@ -49,16 +61,23 @@
         $scope.jobs = null;
         $scope.error = null;
         $scope.loading = true;
-        $http.post($scope.indexUrl, {
+
+        var indexQuery = $http.post($scope.indexUrl, {
           'query': {
             'query_string': {
               'query': 'docType:harvesterReport'
             }
           }
-        }).then(function(result) {
+        });
+        var apiQuery = $http.get($scope.messageProducersApiUrl);
+
+        $q.all([indexQuery, apiQuery]).then(function(results) {
+          var indexResults = results[0];
+          var apiResults = results[1];
+
           $scope.loading = false;
           try {
-            $scope.jobs = result.data.hits.hits.map(function (hit) {
+            $scope.jobs = indexResults.data.hits.hits.map(function (hit) {
               var source = hit._source;
               var infos = decodeURIComponent(source.id).split('#');
               return {
@@ -68,7 +87,9 @@
                 status: source.endDate_dt === undefined ? 'ongoing' : source.status_s,
                 mdUuid: source.parent,
                 error: source.error_ss,
-                endDate: source.endDate_dt ? moment(source.endDate_dt).format('LLLL') : null
+                endDate: source.endDate_dt ? moment(source.endDate_dt).format('LLLL') : null,
+                cronScheduleExpression: null,
+                cronScheduleProducerId: null
               };
             });
 
@@ -101,6 +122,27 @@
           default: return 'default';
         }
       };
+
+      $scope.currentJob = null;
+
+      var settingsModal = $('#gn-indexing-schedule');
+
+      $scope.openScheduleSettings = function(job) {
+        $scope.currentJob = angular.merge({}, job);
+        settingsModal.modal();
+      };
+
+      $scope.updateSchedule = function(job) {
+        settingsModal.modal('hide');
+      };
+
+      $scope.createSchedule = function(job) {
+        settingsModal.modal('hide');
+      };
+
+      settingsModal.on('hide.bs.modal', function() {
+        $scope.currentJob = null;
+      });
     }]);
 
 })();
