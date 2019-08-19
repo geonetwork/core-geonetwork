@@ -45,9 +45,10 @@
     'gnSearchSettings',
     'gnUrlUtils',
     'gnUtilityService',
+    '$http',
     function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
-             gnUrlUtils, gnUtilityService) {
+             gnUrlUtils, gnUtilityService, $http) {
 
       // Keep where the metadataview come from to get back on close
       var initFromConfig = function() {
@@ -97,6 +98,9 @@
         // TODO: do not add duplicates
         gnMdViewObj.previousRecords.push(md);
 
+        if (!gnMdViewObj.usingFormatter) {
+          $http.post('../api/records/' + md.getUuid() + '/popularity');
+        }
       };
 
       /**
