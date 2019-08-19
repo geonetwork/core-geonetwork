@@ -210,8 +210,6 @@
             var key = job.url + '#' + job.featureType;
             $scope.jobs[key].cronScheduleExpression = null;
             $scope.jobs[key].cronScheduleProducerId = null;
-
-            settingsModal.modal('hide');
           }, function(error) {
             var cause = error.status == 404 ? 'wfsIndexingScheduleDeleteNotFoundError' : 'wfsIndexingScheduleDeleteUnknownError';
             gnAlertService.addAlert({
