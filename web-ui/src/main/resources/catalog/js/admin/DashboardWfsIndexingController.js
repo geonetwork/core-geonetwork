@@ -194,7 +194,7 @@
           settingsModal.modal('hide');
         }, function(error) {
           $scope.settingsLoading = false;
-          $scope.settingsError = error;
+          $scope.settingsError = error && error.data && error.data.message;
         });
       };
 
@@ -213,9 +213,10 @@
 
             settingsModal.modal('hide');
           }, function(error) {
+            var cause = error.status == 404 ? 'wfsIndexingScheduleDeleteNotFoundError' : 'wfsIndexingScheduleDeleteUnknownError';
             gnAlertService.addAlert({
-              msg: $translate.instant('wfsScheduleDeleteError') + ' ' +
-                (error.data.description || error.data.message || $translate.instant('wfsScheduleDeleteUnknownError')),
+              msg: $translate.instant('wfsIndexingScheduleDeleteError') + ' ' +
+                $translate.instant(cause),
               type: 'danger'
             });
             job.deleteLoading = false;
