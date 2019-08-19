@@ -53,8 +53,9 @@
     'gnSearchSettings',
     'gnGlobalSettings',
     'gnConfig',
+    'orderByFilter',
     function($scope, $q, $http, suggestService, gnAlertService,
-             gnSearchSettings, gnGlobalSettings, gnConfig) {
+             gnSearchSettings, gnGlobalSettings, gnConfig, orderByFilter) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
@@ -126,6 +127,7 @@
                     name: data[i].label.eng
                   });
                 }
+                res = orderByFilter(res,'name',false);
                 defer.resolve(res);
               });
           return defer.promise;

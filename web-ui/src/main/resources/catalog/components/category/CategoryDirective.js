@@ -50,7 +50,12 @@
               success(function(data) {
                 scope.categories = data;
               });
+
+          scope.sortByLabel = function(c) {
+            return c.label[scope.lang];
+          };
         }
+        
       };
     }]);
 
