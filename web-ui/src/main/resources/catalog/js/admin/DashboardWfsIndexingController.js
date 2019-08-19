@@ -54,10 +54,19 @@
       // URL of the message producer CRUD API endpoint
       $scope.messageProducersApiUrl = gnHttp.getService('wfsMessageProducers');
 
+      // URL of the WFS indexing actions
+      $scope.wfsWorkersApiUrl = gnHttp.getService('wfsWorkersActions');
+
       // dictionary of wfs indexing jobs received from the index
       // key is url#typename
       // null means loading
       $scope.jobs = {};
+
+      // same thing as a sorted array
+      $scope.jobsArray = null;
+
+      // cache of queried metadata records; key is uuid
+      $scope.mdCache = {};
 
       // error on request or results parsing
       $scope.error = null;
@@ -122,6 +131,12 @@
             });
 
             angular.forEach($scope.jobs, function(job) {
+              if (!job.mdUuid) return;
+              if ($scope.mdCache[job.mdUuid]) {
+                job.md = $scope.mdCache[job.mdUuid];
+                return;
+              }
+
               gnMetadataManager.getMdObjByUuid(job.mdUuid).then(function(md) {
                 if (!md['geonet:info']) {
                   job.md = {
@@ -129,8 +144,12 @@
                   };
                   return;
                 }
-                job.md = md;
+                $scope.mdCache[job.mdUuid] = job.md = md;
               })
+            });
+
+            $scope.jobsArray = Object.keys($scope.jobs).sort().map(function (key) {
+              return $scope.jobs[key];
             });
           } catch(e) {
             $scope.error = e.message;
@@ -226,6 +245,24 @@
         $scope.settingsLoading = false;
         $scope.settingsError = null;
       });
+
+      $scope.triggerIndexing = function(job) {
+        $http.put($scope.wfsWorkersApiUrl + '/start', {
+          typeName: job.featureType,
+          url: job.url,
+          version: "1.1.0"
+        }).then(function() {
+          gnAlertService.addAlert({
+            msg: $translate.instant('wfsIndexingTriggerSuccess'),
+            type: 'success'
+          });
+        }, function() {
+          gnAlertService.addAlert({
+            msg: $translate.instant('wfsIndexingTriggerError'),
+            type: 'error'
+          });
+        });
+      };
     }]);
 
 })();

@@ -319,7 +319,8 @@
 
     featureindexproxy: '../../index/features',
     indexproxy: '../../index/records',
-    wfsMessageProducers: '../api/msg_producers'
+    wfsMessageProducers: '../api/msg_producers',
+    wfsWorkersActions: '../api/workers/data/wfs/actions'
   });
 
 

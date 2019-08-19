@@ -45,6 +45,7 @@
           <tr>
             <th translate>wfsIndexingMetadata</th>
             <th translate>wfsurl</th>
+            <th></th>
             <th translate>featureCount</th>
             <th translate>wfsIndexingEndDate</th>
             <th translate>status</th>
@@ -52,7 +53,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="(key, job) in jobs">
+          <tr ng-repeat="job in jobsArray">
             <td>
               <div ng-if="job.mdUuid">
                 <span ng-if="job.md.error">
@@ -71,6 +72,14 @@
             <td>
               <a href="{{job.url}}">{{job.url}}</a> - <a href="{{job.url | asGetCapabilities:'WFS'}}">GetCapabilities</a><br>
               <span translate>wfsIndexingFeatureType</span>: <code>{{job.featureType}}</code>
+            </td>
+
+            <td>
+              <button ng-click="triggerIndexing(job)"
+                      type="button" class="btn btn-sm btn-default btn-primary">
+                <span class="fa fa-play-circle"></span>
+                <span translate>wfsIndexingTrigger</span>
+              </button>
             </td>
 
             <td>{{job.featureCount}}</td>
