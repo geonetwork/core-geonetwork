@@ -19,7 +19,7 @@
         <div class="flex-spacer"></div>
         <button type="button" class="btn btn-success" ng-click="openScheduleSettings({ isNew: true })">
           <i class="fa fa-plus"/>&nbsp;
-          <span translate>newWfsIndexing</span>
+          <span translate>wfsIndexingNewSchedule</span>
         </button>
       </div>
     </div>
@@ -46,9 +46,9 @@
             <th translate>wfsIndexingMetadata</th>
             <th translate>wfsurl</th>
             <th translate>featureCount</th>
-            <th translate>endDate</th>
+            <th translate>wfsIndexingEndDate</th>
             <th translate>status</th>
-            <th colspan="2" translate>harvesterSchedule</th>
+            <th translate>harvesterSchedule</th>
           </tr>
         </thead>
         <tbody>
@@ -59,7 +59,9 @@
                   <span translate>{{job.md.error}}</span>
                 </span>
                 <span ng-if="job.md && !job.md.error">
-                  <a href="catalog.search#/metadata/{{job.md.getUuid()}}" translate>{{job.md.title}}</a>
+                  <a href="catalog.search#/metadata/{{job.md.getUuid()}}">
+                    {{job.md.title || ('recordWithNoTitle' | translate)}}
+                  </a>
                 </span>
                 <i ng-if="!job.md" class="fa fa-spinner fa-spin"/>
               </div>
@@ -80,25 +82,26 @@
               <div ng-if="job.error" class="text-danger">{{job.error}}</div>
             </td>
 
-            <td>
+            <td class="text-no-wrap">
               <button ng-if="!job.cronScheduleProducerId"
                       ng-click="openScheduleSettings(job)"
                       type="button" class="btn btn-sm btn-default btn-success">
-                <span class="fa fa-clock-o"></span>&nbsp;addSchedule
+                <span class="fa fa-clock-o"></span>
+                <span translate>wfsIndexingAddSchedule</span>
               </button>
               <button ng-if="job.cronScheduleProducerId"
                       ng-click="openScheduleSettings(job)"
                       type="button" class="btn btn-sm btn-default btn-primary">
-                <span class="fa fa-clock-o"></span>&nbsp;editSchedule
+                <span class="fa fa-clock-o"></span>
+                <span translate>wfsIndexingEditSchedule</span>
               </button>
-            </td>
-            <td>
               <button ng-if="job.cronScheduleProducerId"
                       type="button" class="btn btn-sm btn-default btn-danger"
                       ng-disabled="job.deleteLoading"
                       ng-click="deleteSchedule(job)">
                 <span class="fa"
-                      ng-class="job.deleteLoading ? 'fa-spinner fa-spin' : 'fa-times'"></span>&nbsp;removeSchedule
+                      ng-class="job.deleteLoading ? 'fa-spinner fa-spin' : 'fa-times'"></span>
+                <span translate>wfsIndexingDeleteSchedule</span>
               </button>
             </td>
           </tr>
@@ -171,7 +174,7 @@
 
             <div class="alert alert-danger" role="alert" ng-if="settingsError">
               <i class="fa fa-exclamation-triangle" />
-              <span translate>wfsScheduleSettingsError</span>
+              <span translate>wfsIndexingScheduleSettingsError</span>
               <span>{{settingsError}}</span>
             </div>
           </div>
@@ -183,13 +186,15 @@
                     ng-disabled="settingsLoading || !scheduleSettingsForm.$valid"
                     ng-if="currentJob.cronScheduleProducerId"
                     ng-click="updateSchedule(currentJob)">
-              <span class="fa" ng-class="settingsLoading ? 'fa-spinner fa-spin' : 'fa-save'"></span>&nbsp;{{"updateSchedule" | translate}}
+              <span class="fa" ng-class="settingsLoading ? 'fa-spinner fa-spin' : 'fa-save'"></span>
+              <span translate>update</span>
             </button>
             <button type="button" class="btn btn-success"
                     ng-disabled="settingsLoading || !scheduleSettingsForm.$valid"
                     ng-if="!currentJob.cronScheduleProducerId"
                     ng-click="updateSchedule(currentJob)">
-              <span class="fa" ng-class="settingsLoading ? 'fa-spinner fa-spin' : 'fa-plus'"></span>&nbsp;{{"createSchedule" | translate}}
+              <span class="fa" ng-class="settingsLoading ? 'fa-spinner fa-spin' : 'fa-plus'"></span>
+              <span translate>create</span>
             </button>
           </div>
         </div>
