@@ -112,8 +112,9 @@ public class MessageProducerControllerTest {
         messageProducerEntity.setCronExpression("i am not a cron expression");
 
         ResponseEntity<?> response = toTest.create(messageProducerEntity);
+        String message = ((MessageProducerController.ErrorResponse)response.getBody()).getMessage();
 
-        assertEquals("CronExpression 'i am not a cron expression' is invalid,.", response.getBody().toString());
+        assertEquals("CronExpression 'i am not a cron expression' is invalid,.", message);
         assertEquals(0, toTest.msgProducerRepository.findAll().size());
     }
 
@@ -121,12 +122,13 @@ public class MessageProducerControllerTest {
     public void rollbackWhenUpdateTroubleAtCamelSide() throws Exception {
         MessageProducerController toTest = createToTest();
         MessageProducerEntity messageProducerEntity = createMessageProducerEntity();
-        messageProducerEntity =  ((ResponseEntity<MessageProducerEntity>)toTest.create(messageProducerEntity)).getBody();
+        messageProducerEntity = ((ResponseEntity<MessageProducerEntity>)toTest.create(messageProducerEntity)).getBody();
         messageProducerEntity.setCronExpression("i am not a cron expression");
 
         ResponseEntity<?> response = toTest.update(messageProducerEntity.getId(), messageProducerEntity);
+        String message = ((MessageProducerController.ErrorResponse)response.getBody()).getMessage();
 
-        assertEquals("CronExpression 'i am not a cron expression' is invalid,.", response.getBody().toString());
+        assertEquals("CronExpression 'i am not a cron expression' is invalid,.", message);
         assertEquals(EVERY_SECOND, toTest.msgProducerRepository.findOne(messageProducerEntity.getId()).getCronExpression());
         toTest.delete(messageProducerEntity.getId());
     }
@@ -138,7 +140,8 @@ public class MessageProducerControllerTest {
         MessageProducerEntity messageProducerEntity2 = createMessageProducerEntity();
         messageProducerEntity = ((ResponseEntity<MessageProducerEntity>)toTest.create(messageProducerEntity)).getBody();
 
-        String message = ((ResponseEntity<String>) toTest.create(messageProducerEntity2)).getBody();
+        ResponseEntity<?> response = toTest.create(messageProducerEntity2);
+        String message = ((MessageProducerController.ErrorResponse)response.getBody()).getMessage();
 
         assertTrue(message.startsWith("Unique index or primary key violation"));
         toTest.delete(messageProducerEntity.getId());
@@ -154,7 +157,8 @@ public class MessageProducerControllerTest {
         messageProducerEntity2 = ((ResponseEntity<MessageProducerEntity>)toTest.create(messageProducerEntity2)).getBody();
         messageProducerEntity2.getWfsHarvesterParam().setUrl("url");
 
-        String message = ((ResponseEntity<String>) toTest.update(messageProducerEntity2.getId(), messageProducerEntity2)).getBody();
+        ResponseEntity<?> response = toTest.update(messageProducerEntity2.getId(), messageProducerEntity2);
+        String message = ((MessageProducerController.ErrorResponse)response.getBody()).getMessage();
 
         assertTrue(message.startsWith("Unique index or primary key violation"));
         toTest.delete(messageProducerEntity.getId());

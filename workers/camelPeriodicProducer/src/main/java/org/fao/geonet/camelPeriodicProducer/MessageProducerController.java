@@ -36,6 +36,30 @@ public class MessageProducerController {
 
     protected MessageProducerRepository msgProducerRepository;
 
+    class ErrorResponse {
+        ErrorResponse(String error, String message) {
+            this.error = error;
+            this.message = message;
+        }
+        public String getError() {
+            return error;
+        }
+
+        public void setError(String error) {
+            this.error = error;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+        private String error;
+        private String message;
+    }
+
     public MessageProducerController(MessageProducerRepository msgProducerRepository) {
         this.msgProducerRepository = msgProducerRepository;
     }
@@ -67,10 +91,12 @@ public class MessageProducerController {
             return ResponseEntity.ok().body(messageProducerEntity);
         } catch (PersistenceException e) {
             innerEntityManager.rollback();
-            return ResponseEntity.badRequest().body(sqlCause(e));
+            ErrorResponse response = new ErrorResponse("Could not create object in database", sqlCause(e));
+            return ResponseEntity.badRequest().body(response);
         } catch (Exception e) {
             innerEntityManager.rollback();
-            return ResponseEntity.badRequest().body(e.getMessage());
+            ErrorResponse response = new ErrorResponse("An unknown error occurred", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         } finally {
             innerEntityManager.close();
         }
@@ -89,10 +115,12 @@ public class MessageProducerController {
                 return ResponseEntity.ok().body(messageProducerEntity);
             } catch (PersistenceException e) {
                 innerEntityManager.rollback();
-                return ResponseEntity.badRequest().body(sqlCause(e));
+                ErrorResponse response = new ErrorResponse("Could not update object in database", sqlCause(e));
+                return ResponseEntity.badRequest().body(response);
             } catch (Exception e) {
                 innerEntityManager.rollback();
-                return ResponseEntity.badRequest().body(e.getMessage());
+                ErrorResponse response = new ErrorResponse("An unknown error occurred", e.getMessage());
+                return ResponseEntity.badRequest().body(response);
             } finally {
                 innerEntityManager.close();
             }

@@ -318,7 +318,8 @@
     selectionLayers: 'selection.layers',
 
     featureindexproxy: '../../index/features',
-    indexproxy: '../../index/records'
+    indexproxy: '../../index/records',
+    wfsMessageProducers: '../api/msg_producers'
   });
 
 
