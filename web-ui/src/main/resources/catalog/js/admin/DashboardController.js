@@ -27,12 +27,14 @@
 
   goog.require('gn_dashboard_render_controller');
   goog.require('gn_dashboard_status_controller');
+  goog.require('gn_dashboard_record_link_controller');
   goog.require('gn_dashboard_wfs_indexing_controller');
   goog.require('gn_vcs_controller');
 
   var module = angular.module('gn_dashboard_controller',
       ['gn_dashboard_status_controller',
        'gn_dashboard_render_controller',
+       'gn_dashboard_record_link_controller',
        'gn_dashboard_wfs_indexing_controller',
        'gn_vcs_controller']);
 
@@ -52,6 +54,11 @@
         label: 'status',
         icon: 'fa-dashboard',
         href: '#/dashboard/status'
+      },{
+        type: 'record-links',
+        label: 'record-links',
+        icon: 'fa-link',
+        href: '#/dashboard/record-links'
       },{
         type: 'wfs-indexing',
         label: 'wfs-indexing',

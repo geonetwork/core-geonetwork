@@ -429,6 +429,24 @@ ul.container-list {
       ul {
         padding-left: 0;
       }
+      &.gn-table-attribute {
+        padding-left: 8px;
+        table {
+          th {
+            border-top: 0;
+            border-bottom: 2px solid @table-border-color;
+          }
+          td {
+            padding-left: 8px;
+            table {
+              th {
+                background-color: @table-bg-accent;
+              }
+            }
+          }
+        }
+       
+      }
     }
   }
   .gn-contact img {
