@@ -37,6 +37,8 @@ import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataHarvestInfo;
+import org.fao.geonet.domain.MetadataRatingByIp;
+import org.fao.geonet.domain.MetadataRatingByIpId;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId;
@@ -198,6 +200,13 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
      */
     @Override
     public int rateMetadata(final int metadataId, final String ipAddress, final int rating) throws Exception {
+        // Save rating for this IP
+        MetadataRatingByIp ratingEntity = new MetadataRatingByIp();
+        ratingEntity.setRating(rating);
+        ratingEntity.setId(new MetadataRatingByIpId(metadataId, ipAddress));
+
+        ratingByIpRepository.save(ratingEntity);
+
         final int newRating = ratingByIpRepository.averageRating(metadataId);
 
         if (metadataDraftRepository.exists(metadataId)) {
