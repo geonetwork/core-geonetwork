@@ -146,6 +146,9 @@ public class VirtualCswApi {
                 "A service already exist with this name '%s'. Choose another name.",
                 service.getName()));
         }
+        service.getParameters().forEach(p -> {
+            p.setService(service);
+        });
         serviceRepository.save(service);
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
