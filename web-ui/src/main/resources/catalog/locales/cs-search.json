@@ -192,7 +192,8 @@
     "preview": "Náhled",
     "metadataInformation": "Informace o metadatech",
     "backTosearch": "Zpět na vyhledávání",
-    "backTosmap": "Zpět na mapu",
+    "backTomap": "Zpět na mapu",
+    "backTohome": "zpět na domovskou stránku",
     "shareOn": "Sdílet na sociálních sítích",
     "updatedOn": "Aktualizováno:",
     "license": "Licence",
@@ -491,6 +492,6 @@
     "userSearchFeaturedDisplayInHomePage": "Domovská stránka",
     "userSearchUpdated": "Uživatelské hledání uloženo",
     "userSearchUpdatedError": "Chyba při ukládání hledání uživatele",
-    "seeDraft": "This record has a working copy version. Click here to see it.",
-    "seeNoDraft": "This record has an approved and published version. Click here to see it."
+    "seeDraft": "Tento záznam má verzi pracovní kopie. Klikněte sem a uvidíte.",
+    "seeNoDraft": "Tento záznam má schválenou a publikovanou verzi. Klikněte sem a uvidíte ho."
 }
