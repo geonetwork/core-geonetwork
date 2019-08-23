@@ -652,9 +652,6 @@
           <field
             xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:geometricObjects"/>
 
-          <text ref="hr"
-                if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 1"/>
-
         </section>
 
 
