@@ -167,6 +167,7 @@ public class MetadataEditingApi {
             el.setText("window.location.hash = decodeURIComponent(\"#/metadata/" + id2 + sb.toString() + "\")");
             String elStr = Xml.getString(el);
             response.getWriter().print(elStr);
+            return;
         }
         // End of start editing session
 
