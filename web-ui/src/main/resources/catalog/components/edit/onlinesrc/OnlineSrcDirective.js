@@ -482,7 +482,16 @@
                   return scope.config.types[0];
                 }
 
-                gnOnlinesrc.register('onlinesrc', function(linkToEdit) {
+                gnOnlinesrc.register('onlinesrc', function(linkToEditOrType) {
+                  var linkToEdit = undefined, linkType = undefined;
+                  if (angular.isDefined(linkToEditOrType)) {
+                    if (angular.isObject(linkToEditOrType)) {
+                        linkToEdit = linkToEditOrType;
+                      } else if (angular.isString(linkToEditOrType)) {
+                        linkType = linkToEditOrType;
+                      }
+                  }
+
                   scope.isEditing = angular.isDefined(linkToEdit);
                   scope.codelistFilter = scope.gnCurrentEdit && scope.gnCurrentEdit.codelistFilter;
 
@@ -490,9 +499,19 @@
                   scope.schema = gnCurrentEdit.schema;
 
                   var init = function() {
+                    function getType(linkType) {
+                      for (var i = 0; i < scope.config.types.length; i++) {
+                          var t = scope.config.types[i];
+                          if (t.label === linkType) {
+                              return t;
+                            }
+                        }
+                      return scope.config.types[0];
+                    };
+
                     var typeConfig = linkToEdit ?
                       getTypeConfig(linkToEdit) :
-                      scope.config.types[0];
+                      getType(linkType);
                     scope.config.multilingualFields = [];
                     angular.forEach(typeConfig.fields, function(f, k) {
                     if (scope.isMdMultilingual &&
@@ -596,9 +615,9 @@
                         selectedLayers: []
                       };
                     } else {
-                      scope.editingKey= null;
-                      scope.params.linkType= scope.config.types[0];
-                      scope.params.protocol= null;
+                      scope.editingKey = null;
+                      scope.params.linkType = typeConfig;
+                      scope.params.protocol = null;
                       scope.params.name= '';
                       scope.params.desc= '';
                       initMultilingualFields();
@@ -1421,7 +1440,22 @@
                    * Register a method on popup open to reset
                    * the search form and trigger a search.
                    */
-                  gnOnlinesrc.register('sibling', function() {
+                  gnOnlinesrc.register('sibling', function(config) {
+                    if (config && !angular.isObject(config)) {
+                      config = angular.fromJson(config);
+                    }
+
+                    scope.config = {
+                      associationTypeForced:
+                        angular.isDefined(config && config.associationType),
+                      associationType:
+                        (config && config.associationType) || null,
+                      initiativeTypeForced:
+                        angular.isDefined(config && config.initiativeType),
+                      initiativeType:
+                        (config && config.initiativeType) || null
+                    };
+
                     $(scope.popupid).modal('show');
 
                     scope.$broadcast('resetSearch');
