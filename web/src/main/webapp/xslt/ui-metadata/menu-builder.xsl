@@ -44,7 +44,7 @@
 
     <div class="nav nav-tabs">
       <!-- Make a drop down choice to swith to one view to another -->
-      <span id="gn-view-menu-{$metadataId}">
+      <span id="gn-view-menu-{$metadataId}" class="btn-group">
         <button type="button"
                 class="btn btn-default navbar-btn dropdown-toggle"
                 data-toggle="dropdown"
@@ -54,7 +54,7 @@
           <i class="fa fa-eye"></i>
           <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+        <ul class="dropdown-menu" role="menu">
           <!-- links -->
           <xsl:choose>
             <xsl:when test="$isTemplate = 's'">
