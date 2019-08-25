@@ -96,7 +96,7 @@
       <Field name="versionIdentifier"
              string="{string(/gfc:FC_FeatureCatalogue/gmx:versionNumber/gco:CharacterString|
         /gfc:FC_FeatureCatalogue/gfc:versionNumber/gco:CharacterString)}"
-             store="false" index="true"/>
+             store="true" index="true"/>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- === Revision date === -->
