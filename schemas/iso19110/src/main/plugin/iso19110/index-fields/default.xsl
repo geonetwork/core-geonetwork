@@ -92,6 +92,13 @@
       </xsl:apply-templates>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+      <!-- === Version identifier === -->
+      <Field name="versionIdentifier"
+             string="{string(/gfc:FC_FeatureCatalogue/gmx:versionNumber/gco:CharacterString|
+        /gfc:FC_FeatureCatalogue/gfc:versionNumber/gco:CharacterString)}"
+             store="false" index="true"/>
+
+      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- === Revision date === -->
       <xsl:for-each select="/gfc:FC_FeatureCatalogue/gmx:versionDate/gco:Date|
         /gfc:FC_FeatureCatalogue/gfc:versionDate/gco:Date">
