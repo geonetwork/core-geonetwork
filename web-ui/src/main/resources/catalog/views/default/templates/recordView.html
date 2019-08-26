@@ -11,7 +11,7 @@
       data-ng-show="user.canEditRecord(mdView.current.record)">
       {{'seeDraft' | translate}}
     </a>
-    
+
     <!-- If approved exists, show a link -->
     <a data-ng-if="mdView.current.record.draft == 'y'"
       class="see-draft see-draft-approved"
@@ -21,7 +21,7 @@
       {{'seeNoDraft' | translate}}
     </a>
   </div>
-  
+
   <div class="container">
     <div class="alert alert-warning"
         data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
@@ -38,7 +38,7 @@
         data-ng-show="mdView.current.record">
 
       <div class="btn-toolbar" role="toolbar">
-        
+
         <div class="btn-group" role="group">
           <button class="btn btn-default"
                   data-ng-click="closeRecord(mdView.current.record)">
@@ -99,7 +99,7 @@
 
         <div class="gn-md-actions-btn pull-right"
             data-gn-md-actions-menu="mdView.current.record"/>
-        
+
         <div class="btn-group pull-right" role="group">
           <a class="btn btn-default"
             data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
@@ -150,7 +150,7 @@
               class="gn-status gn-status-mdview gn-status-{{mdView.current.record.status[0]}}">
             {{mdView.current.record.status_text[0]}}
           </div>
-          
+
           <div data-gn-related-observer>
             <div data-gn-related="mdView.current.record"
                 data-user="user"
@@ -309,6 +309,10 @@
                 </ul>
               </td>
             </tr>
+            <tr data-ng-if="mdView.current.record.versionIdentifier">
+              <th data-translate="">versionIdentifier</th>
+              <td>{{mdView.current.record.versionIdentifier}}</td>
+            </tr>
             </tbody>
           </table>
 
@@ -449,7 +453,7 @@
 
           <table class="table table-striped">
             <tbody>
-            <tr data-ng-if="mdView.current.record.getAllContacts()">
+            <tr data-ng-if="mdView.current.record.getAllContacts().metadata && mdView.current.record.getAllContacts().metadata.length > 0">
               <th data-translate="">contact</th>
               <td>
                 <div data-gn-metadata-contacts="mdView.current.record.getAllContacts().metadata" data-gn-mode="org-role" />

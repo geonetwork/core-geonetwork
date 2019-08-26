@@ -104,6 +104,7 @@
   "defaultView": "Default view",
   "full": "Full view",
   "securityConstraints": "Security constraints",
+  "versionIdentifier": "Version identifier",
   "otherConstraints": "Other constraints",
   "resourceConstraints": "Resource constraints",
   "maintenanceAndUpdateFrequencies": "Update frequencies",
