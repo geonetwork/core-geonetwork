@@ -1408,6 +1408,7 @@
     <es.index.features.type>features</es.index.features.type>
     <es.index.features.commitInterval>1000</es.index.features.commitInterval>
     <es.index.records>geo-records</es.index.records>
+    <es.index.records_public>geo-records-public</es.index.records_public>
     <es.index.records.type>records</es.index.records.type>
     <es.index.searchlogs>geo-searchlogs</es.index.searchlogs>
     <es.index.searchlogs.type>searchlogs</es.index.searchlogs.type>
