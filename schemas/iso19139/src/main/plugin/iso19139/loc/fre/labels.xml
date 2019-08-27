@@ -3138,22 +3138,6 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
     <help>Identification de la personne (voire des personnes) ou de l'organisation (voire des organisations) en charge du jeu de données décrit et mode de communication avec elle(s). Cette personne ou ce service endosse un rôle bien spécifique (propriétaire, prestataire, gestionnaire, etc.) pouvant être sélectionné dans la liste proposée ici. Ces informations sont du type CI_ResponsibleParty et sont gérées dans la classe du même nom.</help>
     <condition/>
   </element>
-  <element name="gmd:protocol" id="398.0" alias="protocol"
-           displayIf="ancestor::node()[name()='gmd:MD_Metadata' and contains(gmd:metadataStandardName/*/gco:CharacterString, 'ISO 19139, MyOcean profile')]">
-    <label>Protocole</label>
-    <description>Protocole de la connexion à utiliser</description>
-    <helper>
-      <option value="WWW:FTP">FTP</option>
-      <option value="WWW:MAIL">Mail</option>
-      <option value="WWW:LINK">Web link</option>
-      <option value="OGC:WMS">Web Map Service (OGC)</option>
-      <option value="OGC:WCS">Web Coverage Service (OGC)</option>
-      <option value="OGC:SOS:getCapabilities">Sensor Observation Service - getCapabilities (OGC)</option>
-      <option value="WWW:OPENDAP">OPeNDAP</option>
-      <option value="MYO:MOTU-SUB">MOTU (SUB)</option>
-      <option value="MYO:MOTU-DGF">MOTU (DGF)</option>
-    </helper>
-  </element>
   <element name="gmd:protocol" id="398.0" alias="protocol">
     <label>Protocole</label>
     <description>Protocole de la connexion à utiliser</description>
@@ -3174,6 +3158,22 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
       <option value="OGC:WFS">Télécharger (WFS)</option>
       <option value="OGC:WCS">Télécharger (WCS)</option>
       <option value="OGC:WPS">Traitement en ligne (WPS)</option>
+    </helper>
+  </element>
+  <element name="gmd:protocol" id="398.0" alias="protocol"
+           displayIf="ancestor::node()[name()='gmd:MD_Metadata' and contains(gmd:metadataStandardName/*/gco:CharacterString, 'ISO 19139, MyOcean profile')]">
+    <label>Protocole</label>
+    <description>Protocole de la connexion à utiliser</description>
+    <helper>
+      <option value="WWW:FTP">FTP</option>
+      <option value="WWW:MAIL">Mail</option>
+      <option value="WWW:LINK">Web link</option>
+      <option value="OGC:WMS">Web Map Service (OGC)</option>
+      <option value="OGC:WCS">Web Coverage Service (OGC)</option>
+      <option value="OGC:SOS:getCapabilities">Sensor Observation Service - getCapabilities (OGC)</option>
+      <option value="WWW:OPENDAP">OPeNDAP</option>
+      <option value="MYO:MOTU-SUB">MOTU (SUB)</option>
+      <option value="MYO:MOTU-DGF">MOTU (DGF)</option>
     </helper>
   </element>
   <element name="gmd:purpose" id="26.0">

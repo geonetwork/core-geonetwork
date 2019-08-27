@@ -53,6 +53,7 @@
     <for name="gmd:useLimitation" use="textarea"/>
     <for name="gmd:environmentDescription" use="textarea"/>
     <for name="gmd:value" use="textarea"/>
+    <for name="gmd:applicationProfile" use="textarea"/>
 
     <!-- Example configuration to use thesaurus to populate a CharacterString field
     (including multilingual fields).
