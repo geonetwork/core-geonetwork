@@ -659,7 +659,7 @@
         <section>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:geographicElement/*"/>
 
-          <field xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo/*/gmd:referenceSystemIdentifier/*/gmd:code" name="cm-crs" del="../../../.."/>
+          <field xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo/*/gmd:referenceSystemIdentifier/*/gmd:code" name="cm-crs" del="../../../.." or="referenceSystemInfo" in="/gmd:MD_Metadata"/>
 
           <action type="add"
                   btnLabel="addCrs"
