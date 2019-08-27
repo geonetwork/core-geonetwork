@@ -380,7 +380,7 @@
   <emodnet-bathymetry.QI.Horizontal>Horizontal Quality Indicator</emodnet-bathymetry.QI.Horizontal>
   <emodnet-bathymetry.QI.Purpose>Purpose Quality Indicator</emodnet-bathymetry.QI.Purpose>
   <emodnet-bathymetry.QI.Vertical>Vertical Quality Indicator</emodnet-bathymetry.QI.Vertical>
-  <addCrs>Add coordinate system</addCrs>
+  <addCrs>Ajouter un système de coordonées</addCrs>
   <addCrs4326>WGS 84</addCrs4326>
   <addCrs3395>WGS 84 / World Mercator</addCrs3395>
   <addCrs3395Custom>WGS 84 / World Mercator (custom)</addCrs3395Custom>
@@ -517,7 +517,7 @@
   <cm-updateFrequency>Update frequency</cm-updateFrequency>
   <cm-contact>Contact</cm-contact>
 
-  <cm-crs>Coordinate reference system</cm-crs>
+  <cm-crs>Système de coordonnées</cm-crs>
   <cm-addCrsEPSG4326>WGS 84 (EPSG 4326)</cm-addCrsEPSG4326>
   <cm-addCrsEPSG41001>WGS 84 / Simple Mercator (EPSG 41001)</cm-addCrsEPSG41001>
   <cm-addCrsEPSG3035>Lambert Azimuthal Equal Area (EPSG 3035)</cm-addCrsEPSG3035>
