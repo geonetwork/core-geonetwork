@@ -1367,6 +1367,7 @@
     <es.index.features></es.index.features>
     <es.index.features.type></es.index.features.type>
     <es.index.records></es.index.records>
+    <es.index.records_public></es.index.records_public>
     <es.index.records.type></es.index.records.type>
     <es.index.searchlogs></es.index.searchlogs>
     <es.index.searchlogs.type></es.index.searchlogs.type>
