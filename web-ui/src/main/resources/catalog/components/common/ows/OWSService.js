@@ -85,17 +85,19 @@
   var unmarshaller100 = context100.createUnmarshaller();
   var unmarshaller110 = context110.createUnmarshaller();
   var unmarshaller20 = context20.createUnmarshaller();
+  var cachedGetCapabilitiesUrls = {};
 
   module.provider('gnOwsCapabilities', function() {
     this.$get = ['$http', '$q', '$translate',
       'gnUrlUtils', 'gnGlobalSettings',
       function($http, $q, $translate,
                gnUrlUtils, gnGlobalSettings) {
-
-        var displayFileContent = function(data, withGroupLayer) {
-          var parser = new ol.format.WMSCapabilities();
-          var result = parser.read(data);
-
+        var displayFileContent = function(data, withGroupLayer, getCapabilitiesUrl) {
+          if (!cachedGetCapabilitiesUrls.hasOwnProperty(getCapabilitiesUrl)) {
+            var parser = new ol.format.WMSCapabilities();
+            cachedGetCapabilitiesUrls[getCapabilitiesUrl] = parser.read(data);
+          }
+          var result = cachedGetCapabilitiesUrls[getCapabilitiesUrl];
           var layers = [];
           var url = result.Capability.Request.GetMap.
               DCPType[0].HTTP.Get.OnlineResource;
@@ -279,7 +281,7 @@
                 })
                     .success(function(data) {
                       try {
-                        defer.resolve(displayFileContent(data, withGroupLayer));
+                        defer.resolve(displayFileContent(data, withGroupLayer, url));
                       } catch (e) {
                         defer.reject(
                         $translate.instant('failedToParseCapabilities'));
