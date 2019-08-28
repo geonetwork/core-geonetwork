@@ -73,7 +73,7 @@
           this.addLayer = function(getCapLayer, style) {
             getCapLayer.version = $scope.capability.version;
             getCapLayer.capRequest = $scope.capability.Request;
-  
+
             //check if proxy is needed
             var url = $scope.url.split('/');
             getCapLayer.useProxy = false;
@@ -178,7 +178,6 @@
             scope.loading = false;
             scope.capability = null;
             scope.serviceDesc = null;
-            scope.servicesList = [];
             scope.url = '';
           };
 
@@ -419,8 +418,10 @@
         scope: {
           collection: '='
         },
-        template: "<ul class='list-group'><gn-cap-tree-elt " +
-          "ng-repeat='member in collection' member='member'>" +
+        template: "<ul class='list-group'><li data-ng-show='collection.length > 10' >" +
+            "<input class='form-control input-sm' data-ng-model-options='{debounce: 200}' data-ng-model='layerSearchText'/>" +
+            "</li>" +
+            '<gn-cap-tree-elt ng-repeat="member in collection | filter:layerSearchText | orderBy: \'Title\'" member="member">' +
             '</gn-cap-tree-elt></ul>'
       };
     }]);

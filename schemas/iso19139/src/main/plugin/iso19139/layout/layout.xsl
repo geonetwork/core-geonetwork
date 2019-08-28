@@ -27,7 +27,8 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
@@ -49,8 +50,11 @@
   <!-- Ignore group element. -->
   <xsl:template mode="mode-iso19139"
                 match="gml:*[
-                    starts-with(name(.), 'gml:TimePeriodTypeGROUP_ELEMENT') or
-                    starts-with(name(.), 'gml:TimeInstantTypeGROUP_ELEMENT')
+                    starts-with(local-name(.), 'TimePeriodTypeGROUP_ELEMENT') or
+                    starts-with(local-name(.), 'TimeInstantTypeGROUP_ELEMENT')
+                ]|gml320:*[
+                    starts-with(local-name(.), 'TimePeriodTypeGROUP_ELEMENT') or
+                    starts-with(local-name(.), 'TimeInstantTypeGROUP_ELEMENT')
                 ]"
                 priority="1000"/>
 
@@ -99,7 +103,7 @@
   </xsl:template>
 
   <!-- Visit all XML tree recursively -->
-  <xsl:template mode="mode-iso19139" match="gmd:*|gmx:*|gml:*|srv:*|gts:*">
+  <xsl:template mode="mode-iso19139" match="gmd:*|gmx:*|gml:*|gml320:*|srv:*|gts:*">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="refToDelete" required="no"/>
@@ -185,7 +189,7 @@
                 match="*[gco:CharacterString|gmx:Anchor|gco:Integer|gco:Decimal|
        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
        gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName|gmd:PT_FreeText|
-       gts:TM_PeriodDuration|gml:duration]">
+       gts:TM_PeriodDuration|gml:duration|gml320:duration]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
@@ -193,6 +197,7 @@
     <xsl:param name="config" required="no"/>
 
     <xsl:variable name="elementName" select="name()"/>
+
     <xsl:variable name="excluded"
                   select="gn-fn-iso19139:isNotMultilingualField(., $editorConfig)"/>
 
@@ -213,7 +218,7 @@
     <xsl:variable name="monoLingualValue" select="gco:CharacterString|gmx:Anchor|gco:Integer|gco:Decimal|
       gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
       gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName|
-       gts:TM_PeriodDuration|gml:duration"/>
+       gts:TM_PeriodDuration|gml:duration|gml320:duration"/>
     <xsl:variable name="theElement"
                   select="if ($isMultilingualElement and $hasOnlyPTFreeText or not($monoLingualValue))
                           then gmd:PT_FreeText
@@ -324,6 +329,7 @@
       </xsl:choose>
     </xsl:variable>
 
+
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
                       select="$labelConfig/*"/>
@@ -347,7 +353,7 @@
             </xsl:element>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:copy-of select="gn-fn-metadata:getFieldDirective($editorConfig, name())"/>
+            <xsl:copy-of select="gn-fn-metadata:getFieldDirective($editorConfig, name(), $xpath)"/>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:with-param>
@@ -361,6 +367,11 @@
       <xsl:with-param name="forceDisplayAttributes" select="$forceDisplayAttributes"/>
       <xsl:with-param name="isFirst"
                       select="count(preceding-sibling::*[name() = $elementName]) = 0"/>
+      <!-- Children of an element having an XLink using the directory
+      is in readonly mode. Search by reference because this template may be
+      called without context eg. render-table. -->
+      <xsl:with-param name="isDisabled"
+                      select="count($metadata//*[gn:element/@ref = $theElement/gn:element/@ref]/ancestor-or-self::node()[contains(@xlink:href, 'api/registries/entries')]) > 0"/>
     </xsl:call-template>
 
   </xsl:template>
@@ -472,6 +483,9 @@
       </xsl:choose>
     </xsl:variable>
 
+    <xsl:variable name="ref"
+                  select="*/gn:element/@ref"/>
+
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="$labelConfig/*"/>
       <xsl:with-param name="value" select="*/@codeListValue"/>
@@ -487,6 +501,11 @@
                       select="gn-fn-metadata:getCodeListValues($schema, name(*[@codeListValue]), $codelists, .)"/>
       <xsl:with-param name="isFirst"
                       select="count(preceding-sibling::*[name() = $elementName]) = 0"/>
+      <!-- Children of an element having an XLink using the directory
+      is in readonly mode. Search by reference because this template may be
+      called without context eg. render-table. -->
+      <xsl:with-param name="isDisabled"
+                      select="count($metadata//*[gn:element/@ref = $ref]/ancestor-or-self::node()[contains(@xlink:href, 'api/registries/entries')]) > 0"/>
     </xsl:call-template>
 
   </xsl:template>
@@ -526,7 +545,8 @@
 
 
   <!-- the gml element having no child eg. gml:name. -->
-  <xsl:template mode="mode-iso19139" priority="100" match="gml:*[count(.//gn:element) = 1]">
+  <xsl:template mode="mode-iso19139" priority="100"
+                match="gml:*[count(.//gn:element) = 1]|gml320:*[count(.//gn:element) = 1]">
     <xsl:variable name="name" select="name(.)"/>
 
     <xsl:variable name="labelConfig" select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>

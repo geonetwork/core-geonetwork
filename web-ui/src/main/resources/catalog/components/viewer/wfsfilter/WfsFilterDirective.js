@@ -113,12 +113,13 @@
     'gnIndexRequestManager',
     'gnIndexService',
     'gnGlobalSettings',
+    'gnSearchSettings',
     'ngeoDebounce',
     'gnFeaturesTableManager',
     'gnSearchSettings',
         function($http, wfsFilterService, $q, $rootScope,
              gnIndexRequestManager, gnIndexService, gnGlobalSettings,
-             ngeoDebounce, gnFeaturesTableManager, gnSearchSettings) {
+             gnSearchSettings, ngeoDebounce, gnFeaturesTableManager, gnSearchSettings) {
       return {
         restrict: 'A',
         replace: true,
@@ -609,6 +610,41 @@
           }
 
           /**
+           * Each aggregations are sorted based as defined in the application profil config
+           * and the query is ordered based on this config.
+           *
+           * The values of each aggregations are sorted, checked first.
+           */
+          scope.sortAggregation = function() {
+            // Disable sorting of aggregations by alpha order and based on expansion
+            // Order comes from application profile
+            // scope.fields.sort(function (a, b) {
+            //   var aChecked = !!scope.output[a.name];
+            //   var bChecked = !!scope.output[b.name];
+            //   var aLabel = a.label;
+            //   var bLabel = b.label;
+            //   if ((aChecked && bChecked) || (!aChecked && !bChecked)) {
+            //     return aLabel.localeCompare(bLabel);
+            //   }
+            //   return (aChecked === bChecked) ? 0 : aChecked ? -1 : 1;
+            // });
+
+            scope.fields.forEach(function (facette) {
+              facette.values.sort(function (a, b) {
+                var aChecked = scope.isFacetSelected(facette.name, a.value);
+                var bChecked = scope.isFacetSelected(facette.name, b.value);
+                if ((aChecked && bChecked) || (!aChecked && !bChecked)) {
+                  if (gnSearchSettings.facetOrdering === 'alphabetical') {
+                    return a.value.localeCompare(b.value);
+                  }
+                  return b.count - a.count;
+                }
+                return (aChecked === bChecked) ? 0 : aChecked ? -1 : 1;
+              })
+            })
+          }
+
+          /**
            * alter form values & resend a search in case there are initial
            * filters loaded from the context. This must only happen once
            */
@@ -639,6 +675,7 @@
               geometry: initialFilters.geometry
             }, aggs).then(function(resp) {
               indexObject.pushState();
+              scope.fields = resp.facets;
               scope.sortAggregation();
               scope.count = resp.count;
 

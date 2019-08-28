@@ -83,6 +83,13 @@
           <xsl:value-of select="$thesaurusTitleEl/gmd:PT_FreeText/gmd:textGroup/
                                   gmd:LocalisedCharacterString[normalize-space(text()) != ''][1]"/>
         </xsl:when>
+        <xsl:when test="normalize-space($thesaurusTitleEl/gmx:Anchor) != ''">
+          <xsl:value-of select="if ($overrideLabel != '')
+              then $overrideLabel
+              else concat(
+                      $iso19139strings/keywordFrom,
+                      normalize-space($thesaurusTitleEl/gmx:Anchor))"/>
+        </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="gmd:MD_Keywords/gmd:thesaurusName/
                                   gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code"/>
@@ -160,6 +167,7 @@
                           else (gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString))[1]"/>
 
 
+
     <xsl:variable name="thesaurusConfig"
                   as="element()?"
                   select="if ($thesaurusList/thesaurus[@key=substring-after($thesaurusIdentifier, 'geonetwork.thesaurus.')])
@@ -185,8 +193,8 @@
         <xsl:variable name="guiLangId"
                       select="
                       if (count($metadata/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $lang]) = 1)
-                        then $metadata/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $lang]/@id
-                        else $metadata/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $metadataLanguage]/@id"/>
+                        then ($metadata/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $lang]/@id)[1]
+                        else ($metadata/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $metadataLanguage]/@id)[1]"/>
 
         <!--
         get keyword in gui lang

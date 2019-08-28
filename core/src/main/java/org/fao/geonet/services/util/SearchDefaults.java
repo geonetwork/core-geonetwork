@@ -26,7 +26,6 @@ package org.fao.geonet.services.util;
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
@@ -82,7 +81,7 @@ public class SearchDefaults {
             }
 
             // Add other elements send by the request
-            // It could be extra parameters handle by Lucene in lucene.xsl
+            // It could be extra parameters handled by Lucene in lucene.xsl
             // and not set by default
             @SuppressWarnings("unchecked")
             List<Element> otherEl = request.getChildren();

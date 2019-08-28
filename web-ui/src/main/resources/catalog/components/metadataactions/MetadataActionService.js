@@ -56,20 +56,22 @@ goog.require('gn_share');
     'gnUtilityService',
     'gnShareService',
     'gnPopup',
+    'gnMdFormatter',
     '$translate',
     '$q',
     '$http',
     'gnGlobalSettings',
     function($window, $rootScope, $timeout, $location, gnHttp,
              gnMetadataManager, gnAlertService, gnSearchSettings,
-             gnUtilityService, gnShareService, gnPopup,
+             gnUtilityService, gnShareService, gnPopup, gnMdFormatter,
              $translate, $q, $http, gnGlobalSettings) {
       var printConfigUrlPrefix = (gnGlobalSettings.gnUrl) ? gnGlobalSettings.gnUrl : '';
+
       var windowName = 'geonetwork';
       var windowOption = '';
       var translations = null;
-      $translate(['privilegesUpdated',
-        'privilegesUpdatedError']).then(function(t) {
+      $translate(['metadataPublished', 'metadataUnpublished',
+        'metadataPublishedError', 'metadataUnpublishedError']).then(function(t) {
         translations = t;
       });
       var alertResult = function(msg) {
@@ -187,8 +189,12 @@ goog.require('gn_share');
        * Export one metadata to RDF format.
        * @param {string} uuid
        */
-      this.metadataRDF = function(uuid) {
+      this.metadataRDF = function(uuid, approved) {
         var url = gnHttp.getService('mdGetRDF') + '?uuid=' + uuid;
+
+        url += angular.isDefined(approved) ?
+            '&approved=' + approved : '';
+
         location.replace(url);
       };
 
@@ -197,12 +203,15 @@ goog.require('gn_share');
        * one metadata, else export the whole selection.
        * @param {string} uuid
        */
-      this.metadataMEF = function(uuid, bucket) {
+      this.metadataMEF = function(uuid, bucket, approved) {
+
         var url = gnHttp.getService('mdGetMEF') + '?version=2';
         url += angular.isDefined(uuid) ?
             '&uuid=' + uuid : '&format=full';
         url += angular.isDefined(bucket) ?
             '&bucket=' + bucket : '';
+        url += angular.isDefined(approved) ?
+            '&approved=' + approved : '';
 
         location.replace(url);
       };
@@ -257,6 +266,7 @@ goog.require('gn_share');
       this.openPrivilegesPanel = function(md, scope) {
         // specific Sextant
         openPopup({
+        // gnUtilityService.openModal({
           title: $translate.instant('privileges') + ' - ' +
               (md.title || md.defaultTitle),
           content: '<div gn-share="' + md.getId() + '"></div>',
@@ -264,37 +274,41 @@ goog.require('gn_share');
         }, scope, 'PrivilegesUpdated');
       };
        // end specific Sextant
-      this.openUpdateStatusPanel = function(scope, statusType, t) {
+      this.openUpdateStatusPanel = function(scope, statusType, t, statusToBe, label) {
         scope.task = t;
-        openModal({
-          title: 'updateStatus',
+        scope.statusToSelect = statusToBe;
+        gnUtilityService.openModal({
+          title: 'mdStatusTitle-' + label,
           content: '<div data-gn-metadata-status-updater="md" ' +
-                        'data-status-type="' + statusType + '" task="t"></div>'
+                        'data-status-to-select="' + statusToBe +
+                        '" data-status-type="' + statusType + '" task="t"></div>'
         }, scope, 'metadataStatusUpdated');
       };
 
       this.startWorkflow = function(md, scope) {
         return $http.put('../api/records/' + md.getId() +
             '/status', {status: 1, changeMessage: 'Enable workflow'}).then(
-            function(data) {
+            function(response) {
               gnMetadataManager.updateMdObj(md);
               scope.$emit('metadataStatusUpdated', true);
               scope.$emit('StatusUpdated', {
                 msg: $translate.instant('metadataStatusUpdatedWithNoErrors'),
                 timeout: 2,
                 type: 'success'});
-            }, function(data) {
+            }, function(response) {
               scope.$emit('metadataStatusUpdated', false);
+
+
               scope.$emit('StatusUpdated', {
                 title: $translate.instant('metadataStatusUpdatedErrors'),
-                error: data,
+                error: response.data,
                 timeout: 0,
                 type: 'danger'});
             });
       };
 
       this.openPrivilegesBatchPanel = function(scope, bucket) {
-        openModal({
+        gnUtilityService.openModal({
           title: 'privileges',
           content: '<div gn-share="" ' +
               'gn-share-batch="true" ' +
@@ -306,7 +320,7 @@ goog.require('gn_share');
         $location.path('/batchediting');
       };
       this.openCategoriesBatchPanel = function(bucket, scope) {
-        openModal({
+        gnUtilityService.openModal({
           title: 'categories',
           content: '<div gn-batch-categories="" ' +
               'selection-bucket="' + bucket + '"></div>'
@@ -317,13 +331,13 @@ goog.require('gn_share');
         var uuid = md ? md.getUuid() : '';
         var ownerId = md ? md.getOwnerId() : '';
         var groupOwner = md ? md.getGroupOwner() : '';
-        openModal({
+        gnUtilityService.openModal({
           title: 'transferOwnership',
           content: '<div gn-transfer-ownership="' + uuid +
               '" gn-transfer-md-owner="' + ownerId + '" ' +
               '" gn-transfer-md-group-owner="' + groupOwner + '" ' +
               'selection-bucket="' + bucket + '"></div>'
-        }, scope, 'TransferOwnership');
+        }, scope, 'TransferOwnershipDone');
       };
       /**
        * Duplicate the given metadata. Open the editor in new page.
@@ -351,10 +365,21 @@ goog.require('gn_share');
        * @return {*}
        */
       this.publish = function(md, bucket, flag, scope) {
-        scope.$broadcast('operationOnSelectionStart');
         if (md) {
           flag = md.isPublished() ? 'off' : 'on';
         }
+
+        scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
+
+        //Warn about possible workflow changes on batch changes
+        // or when record is not approved
+        if((!md || md.mdStatus != 2) && flag === 'on' && scope.isMdWorkflowEnable) {
+          if(!confirm($translate.instant('warnPublishDraft'))){
+            return;
+          }
+        }
+
+        scope.$broadcast('operationOnSelectionStart');
         var onOrOff = flag === 'on';
 
         return gnShareService.publish(
@@ -362,22 +387,43 @@ goog.require('gn_share');
             angular.isDefined(md) ? undefined : bucket,
             onOrOff, $rootScope.user)
             .then(
-            function(data) {
-              scope.$emit('PrivilegesUpdated', true);
-              scope.$broadcast('operationOnSelectionStop');
-              scope.$emit('StatusUpdated', {
-                msg: translations.privilegesUpdated,
-                timeout: 0,
-                type: 'success'});
+            function(response) {
+              if (response.data !== '') {
+                scope.processReport = response.data;
+
+                // A report is returned
+                gnUtilityService.openModal({
+                  title: onOrOff ? translations.metadataPublished :
+                    translations.metadataUnpublished,
+                  content: '<div gn-batch-report="processReport"></div>',
+                  className: 'gn-privileges-popup',
+                  onCloseCallback: function() {
+                    scope.$emit('PrivilegesUpdated', true);
+                    scope.$broadcast('operationOnSelectionStop');
+                    scope.processReport = null;
+                  }
+                }, scope, 'PrivilegesUpdated');
+
+              } else {
+                scope.$emit('PrivilegesUpdated', true);
+                scope.$broadcast('operationOnSelectionStop');
+                scope.$emit('StatusUpdated', {
+                  msg: onOrOff ? translations.metadataPublished :
+                    translations.metadataUnpublished,
+                  timeout: 0,
+                  type: 'success'});
+              }
+
               if (md) {
                 md.publish();
               }
-            }, function(data) {
+            }, function(response) {
               scope.$emit('PrivilegesUpdated', false);
               scope.$broadcast('operationOnSelectionStop');
               scope.$emit('StatusUpdated', {
-                title: translations.privilegesUpdatedError,
-                error: data,
+                title: onOrOff ? translations.metadataPublishedError :
+                  translations.metadataUnpublishedError,
+                error: response.data,
                 timeout: 0,
                 type: 'danger'});
             });
@@ -462,7 +508,7 @@ goog.require('gn_share');
        */
       this.formatCrs = function(crsDetails) {
         var crs = (crsDetails.codeSpace && crsDetails.codeSpace + ':') +
-          crsDetails.code;
+            crsDetails.code;
         if (crsDetails.name) return crsDetails.name + ' (' + crs + ')';
         else return crs;
       };

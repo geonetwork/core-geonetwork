@@ -4904,6 +4904,10 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <label>Nom</label>
     <description></description>
   </element>
+  <element name="xlink:title">
+    <label>Libellé de l'URL</label>
+    <description></description>
+  </element>
   <element name="xlink:href">
     <label>URL</label>
     <description>Supplies the data that allows an XLink application to find a remote resource (or
@@ -4987,6 +4991,10 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
   <element name="gco:lower">
     <label>Minimum</label>
     <description/>
+  </element>
+  <element name="gco:upper">
+    <label>Maximum</label>
+    <description></description>
   </element>
   <element name="gmx:language">
     <label>Langue des métadonnées</label>

@@ -218,7 +218,7 @@ public class GetMap {
      * @param geomSrs        (optional)
      * @param outputFileName the filename if the image is downloaded
      */
-    @RequestMapping(value = "/{lang}/region.getmap.{imageFormat}")
+    @RequestMapping(value = "/{portal}/{lang:[a-z]{3}}/region.getmap.{imageFormat}")
     public HttpEntity<byte[]> exec(@PathVariable String lang,
                                    @PathVariable String imageFormat,
                                    @RequestParam(value = Params.ID, required = false) String id,

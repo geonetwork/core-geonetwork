@@ -26,16 +26,21 @@
  */
 package org.fao.geonet.domain;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
-
-import java.util.Arrays;
-import java.util.List;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Used on {@link SchematronCriteria}
@@ -58,12 +63,46 @@ public enum SchematronCriteriaType {
             for (int i = 0; i < values.length; i++) {
                 ids[i] = Integer.valueOf(values[i]);
             }
-            final Specification<Metadata> correctOwner = MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(ids));
-            final Specification<Metadata> correctId = MetadataSpecs.hasMetadataId(metadataId);
+            final Specification<MetadataDraft> correctOwnerDraft = (Specification<MetadataDraft>)MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(ids));
+            final Specification<MetadataDraft> correctIdDraft = (Specification<MetadataDraft>)MetadataSpecs.hasMetadataId(metadataId);
+            final Specifications<MetadataDraft> finalSpecDraft = Specifications.where(correctIdDraft).and(correctOwnerDraft);
+            final Specification<Metadata> correctOwner = (Specification<Metadata>)MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(ids));
+            final Specification<Metadata> correctId = (Specification<Metadata>)MetadataSpecs.hasMetadataId(metadataId);
             final Specifications<Metadata> finalSpec = Specifications.where(correctId).and(correctOwner);
-            return applicationContext.getBean(MetadataRepository.class).count(finalSpec) > 0;
+            return applicationContext.getBean(MetadataRepository.class).count(finalSpec)
+                    + applicationContext.getBean(MetadataDraftRepository.class).count(finalSpecDraft) > 0;
         }
     }),
+
+    /**
+     * A criteria where the user highest profile value must match one of the profile ids values.
+     * Multiple ids can be comma separated.
+     */
+    USER_MAIN_PROFILE(new SchematronCriteriaEvaluator() {
+        @Override
+        public boolean accepts(ApplicationContext applicationContext, String value, int metadataId, Element metadata,
+                               List<Namespace> metadataNamespaces) {
+
+
+            String[] values = value.split(",");
+            List<String> profiles = Arrays.asList(values);
+
+            final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null) {
+                final Object principal = authentication.getPrincipal();
+                if (principal instanceof UserDetails) {
+                    final UserDetails userDetails = (UserDetails) principal;
+                    UserRepository userRepo = applicationContext.getBean(UserRepository.class);
+                    User user = userRepo.findOneByUsername(userDetails.getUsername());
+                    if (profiles.contains(user.getProfile().name())) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }),
+
     /**
      * An always true criteria.
      */

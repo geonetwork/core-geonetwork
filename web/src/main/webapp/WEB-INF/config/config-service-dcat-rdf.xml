@@ -48,6 +48,7 @@
       <class name=".services.main.XmlSearch">
         <!-- rdf.xsl requires the full metadata, returned only if fast=false in the searcher -->
         <param name="fast" value="false"/>
+        <param name="maxRecords" value="100"/>
       </class>
       <output sheet="../xslt/services/dcat/rdf.xsl"
               contentType=" application/rdf+xml; charset=UTF-8"/>

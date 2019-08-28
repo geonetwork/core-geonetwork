@@ -53,23 +53,26 @@
         </div>
         <div class="row panel-body">
           <div class="col-lg-3" data-ng-repeat="l in logos">
-            <div class="thumbnail gn-thumbnail">
-              <div class="caption">
-                <p>
-                  <a class="btn btn-link fa fa-picture-o" title="{{'useLogoForCatalog' | translate}}"
-                    data-ng-click="setCatalogLogo(l, false)"/>
-                  <a class="btn btn-link fa fa-bookmark"
-                    title="{{'useLogoForCatalogFavicon' | translate}}"
-                    data-ng-click="setCatalogLogo(l, true)"/>
-                  <a class="btn btn-link fa fa-times" title="{{'removeLogo' | translate}}"
-                    data-ng-click="removeLogo(l)"/>
-                </p>
+            <div class="panel panel-default">
+              <div class="panel-heading">{{l.split(".").slice(0, -1).join(".")}}</div>
+              <div class="panel-body text-center">
+                <div class="caption">
+                  <p>
+                    <a class="btn btn-link fa fa-picture-o" title="{{'useLogoForCatalog' | translate}}"
+                      data-ng-click="setCatalogLogo(l, false)"/>
+                    <a class="btn btn-link fa fa-bookmark"
+                      title="{{'useLogoForCatalogFavicon' | translate}}"
+                      data-ng-click="setCatalogLogo(l, true)"/>
+                    <a class="btn btn-link fa fa-times" title="{{'removeLogo' | translate}}"
+                      data-ng-click="removeLogo(l)"/>
+                  </p>
+                </div>
+                <img data-ng-src="{{logoPath}}{{l}}" alt="{{l}}"/>
               </div>
-              <img data-ng-src="{{logoPath}}{{l}}" alt="{{l}}"/>
-            </div>
+              </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </div>  
 </span>

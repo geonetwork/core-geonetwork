@@ -32,7 +32,7 @@ public class ReportApiTests extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/api/reports/datadownloads")
+        this.mockMvc.perform(get("/srv/api/reports/datadownloads")
                 .session(mockHttpSession)
                 .param("dateFrom", "2017-01-01")
                 .param("dateTo", "2017-02-01")
@@ -48,7 +48,7 @@ public class ReportApiTests extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/api/reports/datauploads")
+        this.mockMvc.perform(get("/srv/api/reports/datauploads")
                 .session(mockHttpSession)
                 .param("dateFrom", "2017-01-01")
                 .param("dateTo", "2017-02-01")
@@ -64,7 +64,7 @@ public class ReportApiTests extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/api/reports/users")
+        this.mockMvc.perform(get("/srv/api/reports/users")
                 .session(mockHttpSession)
                 .param("dateFrom", "2017-01-01")
                 .param("dateTo", "2017-02-01")
@@ -80,7 +80,7 @@ public class ReportApiTests extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/api/reports/metadataupdated")
+        this.mockMvc.perform(get("/srv/api/reports/metadataupdated")
                 .session(mockHttpSession)
                 .param("dateFrom", "2017-01-01")
                 .param("dateTo", "2017-02-01")
@@ -96,7 +96,7 @@ public class ReportApiTests extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/api/reports/metadatainternal")
+        this.mockMvc.perform(get("/srv/api/reports/metadatainternal")
                 .session(mockHttpSession)
                 .param("dateFrom", "2017-01-01")
                 .param("dateTo", "2017-02-01")

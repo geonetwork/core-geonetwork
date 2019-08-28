@@ -107,8 +107,7 @@ public class GetLatestUpdated implements Service {
                         Element md = dataMan.getMetadata(context, id + "", forEditing, withValidationErrors, keepXlinkAttributes);
                         _response.addContent(md);
                     } catch (Exception e) {
-                        Log.error(Geonet.SEARCH_ENGINE, "Exception in latest update searcher " + e.getMessage());
-                        e.printStackTrace();
+                        Log.error(Geonet.SEARCH_ENGINE, "Exception in latest update searcher " + e.getMessage(), e);
                     }
                 }
             }

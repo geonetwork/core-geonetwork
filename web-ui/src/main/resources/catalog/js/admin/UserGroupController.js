@@ -26,10 +26,12 @@
 
   goog.require('gn_dbtranslation');
   goog.require('gn_multiselect');
+  goog.require('gn_mdtypewidget');
 
   var module = angular.module('gn_usergroup_controller', [
     'gn_dbtranslation',
     'gn_multiselect',
+    'gn_mdtypewidget',
     'blueimp.fileupload']);
 
 
@@ -45,7 +47,7 @@
 
       $scope.searchObj = {
         params: {
-          template: 'y or n',
+          template: 'y or n or s or t',
           sortBy: 'title'
         }
       };
@@ -121,6 +123,7 @@
         var profile = ($scope.user.profile) ?
             '?profile=' + $scope.user.profile : '';
 
+
         $http.get('../api/groups' + profile).
             success(function(data) {
               $scope.groups = data;
@@ -146,6 +149,7 @@
               }
             });
       }
+
       function loadUsers() {
         $scope.isLoadingUsers = true;
         $http.get('../api/users').success(function(data) {
@@ -271,7 +275,7 @@
 
         // Retrieve records in that group
         $scope.$broadcast('resetSearch', {
-          template: 'y or n',
+          template: 'y or n or s or t',
           _owner: u.id,
           sortBy: 'title'
         });
@@ -609,7 +613,8 @@
       };
 
       var createOrModifyGroup = function() {
-        if ($scope.groupSelected.defaultCategory === '') {
+        if (($scope.groupSelected.defaultCategory) &&
+            ($scope.groupSelected.defaultCategory.id == null)) {
           $scope.groupSelected.defaultCategory = null;
         }
         $http.put('../api/groups' + (
@@ -654,7 +659,7 @@
 
       $scope.deleteGroup = function(formId) {
         $http.delete('../api/groups/' +
-                $scope.groupSelected.id)
+                $scope.groupSelected.id + '?force=true')
             .success(function(data) {
               $scope.unselectGroup();
               loadGroups();
@@ -685,7 +690,7 @@
 
         // Retrieve records in that group
         $scope.$broadcast('resetSearch', {
-          template: 'y or n',
+          template: 'y or n or s or t',
           group: g.id,
           sortBy: 'title'
         });
@@ -703,8 +708,12 @@
         $scope.groupUpdated = true;
       };
 
-      loadGroups();
-      loadUsers();
+      $scope.$watch('user', function(n, o) {
+        if (n && n.profile) {
+          loadGroups();
+          loadUsers();
+        }
+      });
     }]);
 
   module.filter('loggedUserIsUseradminOrMore', function() {

@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>3.5.0-SNAPSHOT</version>
+  <version>3.9.0-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -119,6 +119,11 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.1.2</version>
+        </plugin>
+        <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>jslint-maven-plugin</artifactId>
           <version>1.0.1</version>
@@ -126,12 +131,12 @@
         <plugin>
           <groupId>org.bsc.maven</groupId>
           <artifactId>maven-processor-plugin</artifactId>
-          <version>2.2.3</version>
+          <version>3.3.3</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>2.6</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -146,12 +151,17 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
-          <version>2.3</version>
+          <version>3.2.3</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-          <version>1.2</version>
+          <version>1.6.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>3.0.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -216,13 +226,36 @@
           <artifactId>maven-eclipse-plugin</artifactId>
           <version>2.9</version>
         </plugin>
+        <plugin>
+          <groupId>com.googlecode.maven-download-plugin</groupId>
+          <artifactId>download-maven-plugin</artifactId>
+          <version>1.4.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.1.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.8</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.0.0-M3</version>
+        </plugin>
+
       </plugins>
     </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.5.1</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
@@ -237,7 +270,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
         <configuration>
           <encoding>UTF-8</encoding>
         </configuration>
@@ -286,7 +318,6 @@
       <!-- artifact assembly -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.5.4</version>
         <configuration>
           <descriptors>
             <descriptor>release/zip-war.xml</descriptor>
@@ -300,7 +331,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.18.1</version>
         <configuration>
           <argLine>-Dfile.encoding=UTF-8 -Xmx512M</argLine>
           <!--<rerunFailingTestsCount>5</rerunFailingTestsCount>-->
@@ -468,7 +498,13 @@
       <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>fop</artifactId>
-        <version>0.95</version>
+        <version>2.3</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.xmlgraphics</groupId>
+        <artifactId>fop-pdf-images</artifactId>
+        <version>2.3</version>
       </dependency>
 
       <!-- Jetty stuff -->
@@ -511,9 +547,9 @@
         <version>1.6</version>
       </dependency>
       <dependency>
-        <groupId>commons-dbcp</groupId>
-        <artifactId>commons-dbcp</artifactId>
-        <version>1.4</version>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-dbcp2</artifactId>
+        <version>2.6.0</version>
       </dependency>
       <dependency>
         <groupId>commons-pool</groupId>
@@ -528,7 +564,7 @@
       <dependency>
         <groupId>commons-fileupload</groupId>
         <artifactId>commons-fileupload</artifactId>
-        <version>1.3.2</version>
+        <version>1.3.3</version>
       </dependency>
       <dependency>
         <groupId>commons-collections</groupId>
@@ -543,12 +579,22 @@
       <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>xmlgraphics-commons</artifactId>
-        <version>1.3.1</version>
+        <version>2.3</version>
       </dependency>
       <dependency>
         <groupId>avalon-framework</groupId>
         <artifactId>avalon-framework-api</artifactId>
-        <version>4.2.0</version>
+        <version>4.3</version>
+        <exclusions>
+          <exclusion>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-javamail</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-jms</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.apache.avalon.framework</groupId>
@@ -556,19 +602,24 @@
         <version>4.3.1</version>
       </dependency>
       <dependency>
-        <groupId>batik</groupId>
+        <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>batik-ext</artifactId>
-        <version>1.6-1</version>
+        <version>1.10</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.xmlgraphics</groupId>
+        <artifactId>batik-transcoder</artifactId>
+        <version>1.10</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.7.5</version>
+        <version>${slf4j.version}</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
-        <version>1.7.5</version>
+        <version>${slf4j.version}</version>
       </dependency>
       <dependency>
         <groupId>log4j</groupId>
@@ -605,6 +656,12 @@
         <artifactId>xercesImpl</artifactId>
         <version>2.11.0</version>
       </dependency>
+      <dependency>
+        <groupId>xml-apis</groupId>
+        <artifactId>xml-apis</artifactId>
+        <version>1.4.01</version>
+      </dependency>
+
       <!-- Patched XML Resolver 1.2 from apache xml-commons - fixes problems
                  with windows URLs -->
       <dependency>
@@ -830,7 +887,7 @@
       <dependency>
         <groupId>joda-time</groupId>
         <artifactId>joda-time</artifactId>
-        <version>1.5.2</version>
+        <version>2.2</version>
       </dependency>
       <dependency>
         <groupId>jaxen</groupId>
@@ -1062,11 +1119,6 @@
         <version>${spring.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-jmx</artifactId>
-        <version>2.0.8</version>
-      </dependency>
-      <dependency>
         <groupId>org.jolokia</groupId>
         <artifactId>jolokia-core</artifactId>
         <version>${jolokia.version}</version>
@@ -1131,17 +1183,17 @@
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>2.9.7</version>
+        <version>2.9.8</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
-        <version>2.9.7</version>
+        <version>2.9.8</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
-        <version>2.9.7</version>
+        <version>2.9.8</version>
       </dependency>
       <dependency>
         <groupId>javax.xml.bind</groupId>
@@ -1175,6 +1227,12 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-csv</artifactId>
         <version>1.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.pdfbox</groupId>
+        <artifactId>pdfbox</artifactId>
+        <version>2.0.7</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -1301,6 +1359,7 @@
     <module>oaipmh</module>
     <module>events</module>
     <module>core</module>
+    <module>listeners</module>
     <module>schemas</module>
     <module>csw-server</module>
     <module>harvesters</module>
@@ -1330,6 +1389,7 @@
         </file>
       </activation>
       <modules>
+	<module>slave</module>
         <module>schemas-test</module>
         <module>web-ui</module>
         <module>web-ui-docs</module>
@@ -1370,8 +1430,9 @@
     <db.name>sextant66x</db.name>
     <db.username>www-data</db.username>
     <db.password>www-data</db.password>
-    <db.pool.maxActive>10</db.pool.maxActive>
-
+    <db.pool.maxActive>30</db.pool.maxActive>
+    <db.pool.maxIdle>10</db.pool.maxIdle>
+    <db.pool.initialSize>10</db.pool.initialSize>
 
     <!-- Default catalog language when accessing the home page
     ie. http://localhost:8080/geonetwork. -->
@@ -1391,10 +1452,11 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>6.4.2</es.version>
-    <es.version.sha512>23c610a8cd33d4229e8b79b0dc5e1f106e5f186d45c83e9994bb15708d2ce4e763fcb7c9be0f652ebdf12905be7f4ced14e1d8e18f6240dfe5ccb4a064239f86</es.version.sha512>
-    <es.port>9200</es.port>
-    <es.host>localhost</es.host>
+
+    <es.version>7.3.0</es.version>
+    <es.version.sha512>1e45bf29b344f96f4adbfcaa2dba35e46eb1a5e6564f94ed3641835d6ed62fdaee039c627a04b0b6156ff88b885e7257b6e5595b3ecad21021da491e9bdb00a6</es.version.sha512>
+    <es.platform>linux-x86_64</es.platform>
+    <es.installer.extension>tar.gz</es.installer.extension>
     <!-- A user with read/write privileges -->
     <es.username>admin</es.username>
     <es.password>admin</es.password>
@@ -1420,7 +1482,9 @@
     <es.spring.profile></es.spring.profile>
 
 
-    <kb.version.sha512>b3b422c3bd157e363f528a27f5243f2ee13eba3e3bb22e1a7a9f24ea33f75b864643e297047379dfbef040a0eaa05ed6d998dd2cfe798b9d058f5b3d346f4d1d</kb.version.sha512>
+    <kb.version.sha512>d9d28d620a70a126747ee004042f4e728aaff05d9efc954739d3c15209acd4093321871423f486b51842a8e7b24ae969081702928802088c0e8bca22959e37aa</kb.version.sha512>
+    <kb.platform>linux-x86_64</kb.platform>
+    <kb.installer.extension>tar.gz</kb.installer.extension>
     <kb.port></kb.port>
     <kb.url></kb.url>
 
@@ -1462,20 +1526,19 @@
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <print-lib.version>2.1.1</print-lib.version>
+    <print-lib.version>2.1.4</print-lib.version>
     <flying-saucer>9.0.7</flying-saucer>
     <camel.version>2.14.4</camel.version>
     <log4j.version>1.2.17</log4j.version>
     <log4j2.version>2.7</log4j2.version>
-    <slf4j.version>1.7.7</slf4j.version>
+    <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>3.18</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.4.1</httpcomponents.version>
-    <gn.schemas.version>3.5</gn.schemas.version>
-
 
     <!-- Sextant property file
      Check web/src/main/filters/deployment for available configurations. -->
     <sxt.properties>ifr-exp</sxt.properties>
+    <gn.schemas.version>3.7</gn.schemas.version>
   </properties>
 </project>

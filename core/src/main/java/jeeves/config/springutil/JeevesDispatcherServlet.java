@@ -25,7 +25,8 @@ package jeeves.config.springutil;
 
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
-
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.User;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.web.context.WebApplicationContext;
@@ -36,11 +37,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Define the transaction policy and set the node id depending on the URL path.
+ *
  * @author Jesse on 6/3/2014.
  */
 public class JeevesDispatcherServlet extends DispatcherServlet {
-
-    private String nodeId;
 
     @Override
     protected void doDispatch(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
@@ -51,8 +52,8 @@ public class JeevesDispatcherServlet extends DispatcherServlet {
             false, new TransactionTask<Void>() {
                 @Override
                 public Void doInTransaction(TransactionStatus transaction) throws Throwable {
+                    setNodeId(request);
                     JeevesDispatcherServlet.super.doDispatch(request, response);
-
                     return null;
                 }
             });
@@ -61,12 +62,25 @@ public class JeevesDispatcherServlet extends DispatcherServlet {
     @Override
     protected WebApplicationContext findWebApplicationContext() {
         final ServletContext servletContext = getServletContext();
-        return createWebApplicationContext((org.springframework.context.ApplicationContext) servletContext.getAttribute(User.NODE_APPLICATION_CONTEXT_KEY + this.nodeId));
+        return createWebApplicationContext(
+            (org.springframework.context.ApplicationContext) servletContext.getAttribute(User.NODE_APPLICATION_CONTEXT_KEY));
     }
 
 
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
+    private void setNodeId(HttpServletRequest request) {
+        NodeInfo node = ApplicationContextHolder.get().getBean(NodeInfo.class);
+        if (node == null) {
+            return; // Should not happen
+        }
+        // URL path contains the node id as the first part of the URL
+        // eg. /srv/eng/catalogue.search or /srv/api/...
+        String path = request.getPathInfo();
+        if (path != null && path.length() > 1 && path.contains("/")) {
+            node.setId(request.getPathInfo().split("/")[1]);
+        } else {
+            // eg. when accessing /
+            node.setId(NodeInfo.DEFAULT_NODE);
+        }
     }
 
 }

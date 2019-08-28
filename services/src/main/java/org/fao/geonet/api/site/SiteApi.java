@@ -71,6 +71,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -111,8 +112,8 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 
 @RequestMapping(value = {
-    "/api/site",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/site",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/site"
 })
 @Api(value = API_CLASS_CATALOG_TAG,
@@ -120,6 +121,15 @@ import springfox.documentation.annotations.ApiIgnore;
     description = ApiParams.API_CLASS_CATALOG_OPS)
 @Controller("site")
 public class SiteApi {
+
+    @Autowired
+    SettingManager settingManager;
+
+    @Autowired
+    NodeInfo node;
+
+    @Autowired
+    SourceRepository sourceRepository;
 
     public static void reloadServices(ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -134,7 +144,8 @@ public class SiteApi {
                 dataMan.disableOptimizer();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            context.error("Reload services. Error: " + e.getMessage());
+            context.error(e);
             throw new OperationAbortedEx("Parameters saved but cannot restart Lucene Index Optimizer: " + e.getMessage());
         }
 
@@ -150,9 +161,15 @@ public class SiteApi {
                 String username = settingMan.getValue(Settings.SYSTEM_PROXY_USERNAME);
                 String password = settingMan.getValue(Settings.SYSTEM_PROXY_PASSWORD);
                 pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
+            } else {
+                pi.setProxyInfo(null, -1, null, null);
             }
+
+            // Update http.proxyHost, http.proxyPort and http.nonProxyHosts
+            Lib.net.setupProxy(settingMan);
         } catch (Exception e) {
-            e.printStackTrace();
+            context.error("Reload services. Error: " + e.getMessage());
+            context.error(e);
             throw new OperationAbortedEx("Parameters saved but cannot set proxy information: " + e.getMessage());
         }
         DoiManager doiManager = gc.getBean(DoiManager.class);
@@ -173,17 +190,29 @@ public class SiteApi {
     @ResponseBody
     public SettingsListResponse get(
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        SettingManager sm = appContext.getBean(SettingManager.class);
-
         SettingsListResponse response = new SettingsListResponse();
-        response.setSettings(sm.getSettings(new String[]{
+        response.setSettings(settingManager.getSettings(new String[]{
             Settings.SYSTEM_SITE_NAME_PATH,
             Settings.SYSTEM_SITE_ORGANIZATION,
             Settings.SYSTEM_SITE_SITE_ID_PATH,
             Settings.SYSTEM_PLATFORM_VERSION,
             Settings.SYSTEM_PLATFORM_SUBVERSION
         }));
+        if (!NodeInfo.DEFAULT_NODE.equals(node.getId())) {
+            Source source = sourceRepository.findOne(node.getId());
+            if (source != null) {
+                final List<Setting> settings = response.getSettings();
+                settings.add(
+                    new Setting().setName(Settings.NODE_DEFAULT)
+                        .setValue("false"));
+                settings.add(
+                    new Setting().setName(Settings.NODE)
+                        .setValue(source.getUuid()));
+                settings.add(
+                    new Setting().setName(Settings.NODE_NAME)
+                        .setValue(source.getName()));
+            }
+        }
         return response;
     }
 
@@ -407,7 +436,7 @@ public class SiteApi {
             final IMetadataManager metadataRepository = applicationContext.getBean(IMetadataManager.class);
             final SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
             final Source source = sourceRepository.findOne(currentUuid);
-            Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.isLocal());
+            Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.getType());
             sourceRepository.save(newSource);
 
             PathSpec<Metadata, String> servicesPath = new PathSpec<Metadata, String>() {

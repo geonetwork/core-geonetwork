@@ -174,7 +174,6 @@ public class GeonetWroModelFactory implements WroModelFactory {
                 }
             } catch (Exception e) {
                 errors.add(e);
-                e.printStackTrace();
                 Log.error(WRO4J_LOG, "Error while loading wro4j model", e);
             } finally {
                 if (streams != null) {

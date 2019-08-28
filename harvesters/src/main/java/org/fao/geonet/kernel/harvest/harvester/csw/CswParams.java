@@ -87,7 +87,7 @@ public class CswParams extends AbstractParams {
 
         capabUrl = Util.getParam(site, "capabilitiesUrl", "");
         rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource", false);
-        queryScope = Util.getParam(site, "queryScope", "off");
+        queryScope = Util.getParam(site, "queryScope", "local");
         hopCount = Util.getParam(site, "hopCount", 2);
         xslfilter = Util.getParam(site, "xslfilter", "");
         outputSchema = Util.getParam(site, "outputSchema", outputSchema);

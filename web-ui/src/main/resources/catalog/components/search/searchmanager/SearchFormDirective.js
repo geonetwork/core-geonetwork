@@ -360,11 +360,11 @@
       angular.extend($scope.searchObj.params, params);
     };
 
-    this.resetSearch = function(searchParams) {
+    this.resetSearch = function(searchParams, preserveGeometrySearch) {
 
       // Only if it is a real reset
       if (!searchParams) {
-        $scope.$broadcast('beforeSearchReset');
+        $scope.$broadcast('beforeSearchReset', preserveGeometrySearch);
       }
 
       if (searchParams) {
@@ -383,8 +383,8 @@
       $scope.triggerSearch();
       $scope.$broadcast('resetSelection');
     };
-    $scope.$on('resetSearch', function(evt, searchParams) {
-      $scope.controller.resetSearch(searchParams);
+    $scope.$on('resetSearch', function(evt, searchParams, preserveGeometrySearch) {
+      $scope.controller.resetSearch(searchParams, preserveGeometrySearch);
     });
 
     $scope.$on('search', function() {
@@ -427,9 +427,9 @@
         controllerAs: 'controller',
         link: function(scope, element, attrs) {
 
-          scope.resetSearch = function(htmlElementOrDefaultSearch) {
+          scope.resetSearch = function(htmlElementOrDefaultSearch, preserveGeometrySearch) {
             if (angular.isObject(htmlElementOrDefaultSearch)) {
-              scope.controller.resetSearch(htmlElementOrDefaultSearch);
+              scope.controller.resetSearch(htmlElementOrDefaultSearch, preserveGeometrySearch);
             } else {
               scope.controller.resetSearch();
               $(htmlElementOrDefaultSearch).focus();

@@ -27,6 +27,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
@@ -83,7 +84,7 @@ public class ThreddsHarvester extends AbstractHarvester<HarvestResult> {
         String id = harvesterSettingsManager.add("harvesting", "node", getType());
 
         storeNode(params, "id:" + id);
-        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
+        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), SourceType.harvester);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
 
@@ -109,7 +110,7 @@ public class ThreddsHarvester extends AbstractHarvester<HarvestResult> {
         //--- we update a copy first because if there is an exception Params
         //--- could be half updated and so it could be in an inconsistent state
 
-        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
+        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), SourceType.harvester);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.getUuid());
 
@@ -133,26 +134,11 @@ public class ThreddsHarvester extends AbstractHarvester<HarvestResult> {
         harvesterSettingsManager.add("id:" + siteId, "icon", params.icon);
         harvesterSettingsManager.add("id:" + optionsId, "lang", params.lang);
         harvesterSettingsManager.add("id:" + optionsId, "topic", params.topic);
-        harvesterSettingsManager.add("id:" + optionsId, "createThumbnails", params.createThumbnails);
         harvesterSettingsManager.add("id:" + optionsId, "createServiceMd", params.createServiceMd);
-        harvesterSettingsManager.add("id:" + optionsId, "createCollectionDatasetMd", params.createCollectionDatasetMd);
-        harvesterSettingsManager.add("id:" + optionsId, "createAtomicDatasetMd", params.createAtomicDatasetMd);
-        harvesterSettingsManager.add("id:" + optionsId, "ignoreHarvestOnCollections", params.ignoreHarvestOnCollections);
-        harvesterSettingsManager.add("id:" + optionsId, "collectionGeneration", params.collectionMetadataGeneration);
-        harvesterSettingsManager.add("id:" + optionsId, "collectionFragmentStylesheet", params.collectionFragmentStylesheet);
-        harvesterSettingsManager.add("id:" + optionsId, "collectionMetadataTemplate", params.collectionMetadataTemplate);
-        harvesterSettingsManager.add("id:" + optionsId, "createCollectionSubtemplates", params.createCollectionSubtemplates);
-        harvesterSettingsManager.add("id:" + optionsId, "outputSchemaOnCollectionsDIF", params.outputSchemaOnCollectionsDIF);
-        harvesterSettingsManager.add("id:" + optionsId, "outputSchemaOnCollectionsFragments", params.outputSchemaOnCollectionsFragments);
-        harvesterSettingsManager.add("id:" + optionsId, "ignoreHarvestOnAtomics", params.ignoreHarvestOnAtomics);
-        harvesterSettingsManager.add("id:" + optionsId, "atomicGeneration", params.atomicMetadataGeneration);
-        harvesterSettingsManager.add("id:" + optionsId, "modifiedOnly", params.modifiedOnly);
-        harvesterSettingsManager.add("id:" + optionsId, "atomicFragmentStylesheet", params.atomicFragmentStylesheet);
-        harvesterSettingsManager.add("id:" + optionsId, "atomicMetadataTemplate", params.atomicMetadataTemplate);
-        harvesterSettingsManager.add("id:" + optionsId, "createAtomicSubtemplates", params.createAtomicSubtemplates);
-        harvesterSettingsManager.add("id:" + optionsId, "outputSchemaOnAtomicsDIF", params.outputSchemaOnAtomicsDIF);
-        harvesterSettingsManager.add("id:" + optionsId, "outputSchemaOnAtomicsFragments", params.outputSchemaOnAtomicsFragments);
-        harvesterSettingsManager.add("id:" + optionsId, "createAtomicDatasetMd", params.createAtomicDatasetMd);
+        harvesterSettingsManager.add("id:" + optionsId, "outputSchema", params.outputSchema);
+        harvesterSettingsManager.add("id:" + optionsId, "datasetTitle", params.datasetTitle);
+        harvesterSettingsManager.add("id:" + optionsId, "datasetAbstract", params.datasetAbstract);
+        harvesterSettingsManager.add("id:" + optionsId, "serviceCategory", params.serviceCategory);
         harvesterSettingsManager.add("id:" + optionsId, "datasetCategory", params.datasetCategory);
     }
 

@@ -27,6 +27,8 @@
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 version="1.0">
 
   <!-- This file defines what parts of the metadata are indexed by Lucene
@@ -37,6 +39,9 @@
         Please keep indexes consistent among metadata standards if they should
         work accross different metadata resources -->
   <!-- ========================================================================================= -->
+
+
+  <xsl:import href="common/index-utils.xsl"/>
 
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
 
@@ -87,6 +92,13 @@
       </xsl:apply-templates>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+      <!-- === Version identifier === -->
+      <Field name="versionIdentifier"
+             string="{string(/gfc:FC_FeatureCatalogue/gmx:versionNumber/gco:CharacterString|
+        /gfc:FC_FeatureCatalogue/gfc:versionNumber/gco:CharacterString)}"
+             store="true" index="true"/>
+
+      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- === Revision date === -->
       <xsl:for-each select="/gfc:FC_FeatureCatalogue/gmx:versionDate/gco:Date|
         /gfc:FC_FeatureCatalogue/gfc:versionDate/gco:Date">
@@ -99,47 +111,64 @@
         <xsl:with-param name="name" select="'fileId'"/>
       </xsl:apply-templates>
 
-      <!-- Index attribute table as JSON object -->
-      <xsl:variable name="attributes"
-                    select=".//gfc:carrierOfCharacteristics"/>
-      <xsl:if test="count($attributes) > 0">
-        <xsl:variable name="jsonAttributeTable">
-          [
-          <xsl:for-each select="$attributes">
-            {"name": "<xsl:value-of select="*/gfc:memberName/*/text()"/>",
-            "definition": "<xsl:value-of select="*/gfc:definition/*/text()"/>",
-            "code": "<xsl:value-of select="*/gfc:code/*/text()"/>",
-            "link": "<xsl:value-of select="*/gfc:code/*/@xlink:href"/>",
-            "type": "<xsl:value-of select="*/gfc:valueType/gco:TypeName/gco:aName/*/text()"/>"
-            <xsl:if test="*/gfc:listedValue">
-              ,"values": [
-              <xsl:for-each select="*/gfc:listedValue">{
-                "label": "<xsl:value-of select="*/gfc:label/*/text()"/>",
-                "code": "<xsl:value-of select="*/gfc:code/*/text()"/>",
-                "definition": "<xsl:value-of select="*/gfc:definition/*/text()"/>"}
-                <xsl:if test="position() != last()">,</xsl:if>
-              </xsl:for-each>
-              ]
-            </xsl:if>
-            }
-            <xsl:if test="position() != last()">,</xsl:if>
-          </xsl:for-each>
-          ]
-        </xsl:variable>
-        <Field name="attributeTable" index="true" store="true"
-               string="{$jsonAttributeTable}"/>
-      </xsl:if>
+      <xsl:variable name="jsonFeatureTypes">[
+
+      <xsl:for-each select="/gfc:FC_FeatureCatalogue/gfc:featureType">{
+
+        "typeName" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:typeName/*/text()"/>",
+        "definition" :"<xsl:value-of select="gn-fn-index:json-escape(gfc:FC_FeatureType/gfc:definition/*/text())"/>",
+        "code" :"<xsl:value-of select="gfc:FC_FeatureType/gfc:code/*/text()"/>",
+        "isAbstract" :"<xsl:value-of select="gfc:FC_FeatureType/gfc:isAbstract/*/text()"/>",
+        "aliases" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:aliases/*/text()"/>",
+        <!--"inheritsFrom" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:inheritsFrom/*/text()"/>",
+        "inheritsTo" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:inheritsTo/*/text()"/>",
+        "constrainedBy" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:constrainedBy/*/text()"/>",
+        "definitionReference" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:definitionReference/*/text()"/>",-->
+        <!-- Index attribute table as JSON object -->
+        <xsl:variable name="attributes"
+                      select="*/gfc:carrierOfCharacteristics"/>
+        <xsl:if test="count($attributes) > 0">
+            "attributeTable" : [
+            <xsl:for-each select="$attributes">
+              {"name": "<xsl:value-of select="*/gfc:memberName/*/text()"/>",
+              "definition": "<xsl:value-of select="*/gfc:definition/*/text()"/>",
+              "code": "<xsl:value-of select="*/gfc:code/*/text()"/>",
+              "link": "<xsl:value-of select="*/gfc:code/*/@xlink:href"/>",
+              "type": "<xsl:value-of select="*/gfc:valueType/gco:TypeName/gco:aName/*/text()"/>"
+              <xsl:if test="*/gfc:listedValue">
+                ,"values": [
+                <xsl:for-each select="*/gfc:listedValue">{
+                  "label": "<xsl:value-of select="*/gfc:label/*/text()"/>",
+                  "code": "<xsl:value-of select="*/gfc:code/*/text()"/>",
+                  "definition": "<xsl:value-of select="*/gfc:definition/*/text()"/>"}
+                  <xsl:if test="position() != last()">,</xsl:if>
+                </xsl:for-each>
+                ]
+              </xsl:if>
+              }
+              <xsl:if test="position() != last()">,</xsl:if>
+            </xsl:for-each>
+            ]
+        </xsl:if>
+        }
+        <xsl:if test="position() != last()">,</xsl:if>
+      </xsl:for-each>
+      ]
+
+      </xsl:variable>
+
+      <Field name="featureTypes" index="true" store="true"
+             string="{$jsonFeatureTypes}"/>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- === Responsible organization === -->
-      <xsl:for-each
-        select="/gfc:FC_FeatureCatalogue/gfc:producer/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString">
-        <xsl:variable name="role" select="../../gmd:role/*/@codeListValue"/>
-        <xsl:variable name="logo" select="descendant::*/gmx:FileName/@src"/>
-
-        <Field name="orgName" string="{string(.)}" store="false" index="true"/>
-        <Field name="responsibleParty" string="{concat($role, '|metadata|', ., '|', $logo)}"
-               store="true" index="false"/>
+      <xsl:for-each select="/gfc:FC_FeatureCatalogue/gfc:producer">
+        <xsl:apply-templates mode="index-contact"
+                             select="gmd:CI_ResponsibleParty|*[@gco:isoType = 'gmd:CI_ResponsibleParty']">
+          <xsl:with-param name="type" select="'resource'"/>
+          <xsl:with-param name="fieldPrefix" select="'responsibleParty'"/>
+          <xsl:with-param name="position" select="position()"/>
+        </xsl:apply-templates>
       </xsl:for-each>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -171,6 +200,56 @@
     <xsl:param name="index" select="'true'"/>
 
     <Field name="{$name}" string="{string(.)}" store="{$store}" index="{$index}"/>
+  </xsl:template>
+
+  <xsl:template mode="index-contact" match="gmd:CI_ResponsibleParty|*[@gco:isoType = 'gmd:CI_ResponsibleParty']">
+    <xsl:param name="type"/>
+    <xsl:param name="fieldPrefix"/>
+    <xsl:param name="position" select="'0'"/>
+
+    <xsl:variable name="orgName" select="gmd:organisationName/(gco:CharacterString|gmx:Anchor)"/>
+
+    <Field name="orgName" string="{string($orgName)}" store="true" index="true"/>
+    <Field name="orgNameTree" string="{string($orgName)}" store="true" index="true"/>
+
+    <xsl:variable name="uuid" select="@uuid"/>
+    <xsl:variable name="role" select="gmd:role/*/@codeListValue"/>
+    <xsl:variable name="roleTranslation"
+                  select="util:getCodelistTranslation('gmd:CI_RoleCode', string($role), 'en')"/>
+    <xsl:variable name="logo" select=".//gmx:FileName/@src"/>
+    <xsl:variable name="email"
+                  select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString"/>
+    <xsl:variable name="phone"
+                  select="gmd:contactInfo/*/gmd:phone/*/gmd:voice[normalize-space(.) != '']/*/text()"/>
+    <xsl:variable name="individualName"
+                  select="gmd:individualName/gco:CharacterString/text()"/>
+    <xsl:variable name="positionName"
+                  select="gmd:positionName/gco:CharacterString/text()"/>
+    <xsl:variable name="address" select="string-join(gmd:contactInfo/*/gmd:address/*/(
+                                        gmd:deliveryPoint|gmd:postalCode|gmd:city|
+                                        gmd:administrativeArea|gmd:country)/gco:CharacterString/text(), ', ')"/>
+
+    <Field name="{$fieldPrefix}"
+           string="{concat($roleTranslation, '|', $type,'|',
+                             $orgName, '|',
+                             $logo, '|',
+                             string-join($email, ','), '|',
+                             $individualName, '|',
+                             $positionName, '|',
+                             $address, '|',
+                             string-join($phone, ','), '|',
+                             $uuid, '|',
+                             $position)}"
+           store="true" index="false"/>
+
+    <xsl:for-each select="$email">
+      <Field name="{$fieldPrefix}Email" string="{string(.)}" store="true" index="true"/>
+      <Field name="{$fieldPrefix}RoleAndEmail" string="{$role}|{string(.)}" store="true" index="true"/>
+    </xsl:for-each>
+    <xsl:for-each select="@uuid">
+      <Field name="{$fieldPrefix}Uuid" string="{string(.)}" store="true" index="true"/>
+      <Field name="{$fieldPrefix}RoleAndUuid" string="{$role}|{string(.)}" store="true" index="true"/>
+    </xsl:for-each>
   </xsl:template>
 
 </xsl:stylesheet>

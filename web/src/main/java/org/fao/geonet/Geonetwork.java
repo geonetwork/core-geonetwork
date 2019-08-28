@@ -37,6 +37,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
+import org.fao.geonet.events.server.ServerStartup;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.inspireatom.InspireAtomType;
 import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
@@ -227,8 +228,7 @@ public class Geonetwork implements ApplicationHandler {
 
 
         } catch (Exception e) {
-          logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + e.getMessage());
-          e.printStackTrace();
+          logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + Util.getStackTrace(e));
         }
 
         //------------------------------------------------------------------------
@@ -275,7 +275,6 @@ public class Geonetwork implements ApplicationHandler {
         } catch (NumberFormatException nfe) {
             logger.error("Invalid config parameter: maximum number of writes to spatial index in a transaction (maxWritesInTransaction)"
                 + ", Using " + maxWritesInTransaction + " instead.");
-            nfe.printStackTrace();
         }
 
         SettingInfo settingInfo = context.getBean(SettingInfo.class);
@@ -351,7 +350,7 @@ public class Geonetwork implements ApplicationHandler {
                 new Source(settingMan.getSiteId(),
                     settingMan.getSiteName(),
                     null,
-                    true));
+                    SourceType.portal));
         }
 
         // Creates a default site logo, only if the logo image doesn't exists
@@ -410,6 +409,9 @@ public class Geonetwork implements ApplicationHandler {
         fillCaches(context);
 
         AbstractEntityListenerManager.setSystemRunning(true);
+        
+        this._applicationContext.publishEvent(new ServerStartup(this._applicationContext));
+        
         return gnContext;
     }
 
@@ -533,8 +535,7 @@ public class Geonetwork implements ApplicationHandler {
                     }
                 } catch (Throwable x) {
                     // any uncaught exception would cause the scheduled execution to silently stop
-                    logger.error("DBHeartBeat error: " + x.getMessage() + " This error is ignored.");
-                    x.printStackTrace();
+                    logger.error("DBHeartBeat error: " + x.getMessage() + " This error is ignored. Error details: " + Util.getStackTrace(x));
                 }
             }
 

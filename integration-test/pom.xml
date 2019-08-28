@@ -4,7 +4,7 @@
 
   <groupId>geonetwork-integration-test</groupId>
   <artifactId>geonetwork-integration-test</artifactId>
-  <version>3.5.0-SNAPSHOT</version>
+  <version>3.7.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>geonetwork-integration-test</name>
 
@@ -62,7 +62,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.5</version>
+      <version>1.8.0-beta2</version>
     </dependency>
 
   </dependencies>
@@ -73,7 +73,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.2</version>
+        <version>3.8.1</version>
         <configuration>
           <encoding>UTF-8</encoding>
           <source>1.8</source>
@@ -102,7 +102,7 @@
           <plugin>
             <groupId>com.googlecode.maven-download-plugin</groupId>
             <artifactId>download-maven-plugin</artifactId>
-            <version>1.2.1</version>
+            <version>1.4.2</version>
             <executions>
               <execution>
                 <id>download-webdriver</id>
@@ -120,7 +120,6 @@
               </execution>
             </executions>
           </plugin>
-
         </plugins>
       </build>
     </profile>

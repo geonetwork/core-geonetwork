@@ -102,7 +102,7 @@ public class ResumptionTokenCache extends Thread {
                         expunge();
                     }
                 } catch (java.lang.InterruptedException ie) {
-                    ie.printStackTrace();
+                    Log.debug(Geonet.OAI_HARVESTER,"OAI execution error: " + ie.getMessage(), ie);
                 }
             }
         }

@@ -24,12 +24,8 @@
 package org.fao.geonet.component.csw;
 
 import com.vividsolutions.jts.util.Assert;
-import java.nio.file.Path;
-import java.util.*;
-
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
@@ -40,25 +36,38 @@ import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.AddElemValue;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 //=============================================================================
 /**
@@ -207,7 +216,6 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
     /**
      * @param xml
-     * @param fileIds
      * @param context
      * @param toIndex
      * @return
@@ -287,6 +295,9 @@ public class Transaction extends AbstractOperation implements CatalogService {
         return true;
     }
 
+    @Autowired
+    IMetadataUtils metadataUtils;
+
 
     /**
      * @param request
@@ -338,11 +349,17 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
             String changeDate = null;
 
+            try {
+                changeDate = metadataUtils.extractDateModified(schemaId, xml);
+            } catch (Exception ex) {
+                changeDate = new ISODate().toString();
+            }
+
             boolean validate = false;
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate, false);
+            dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate, true);
 
             toIndex.add(id);
 
@@ -438,8 +455,13 @@ public class Transaction extends AbstractOperation implements CatalogService {
                     boolean validate = false;
                     boolean ufo = false;
                     boolean index = false;
+                    try {
+                        changeDate = metadataUtils.extractDateModified(schemaId, metadata);
+                    } catch (Exception ex) {
+                        changeDate = new ISODate().toString();
+                    }
                     String language = context.getLanguage();
-                    dataMan.updateMetadata(context, id, metadata, validate, ufo, index, language, changeDate, false);
+                    dataMan.updateMetadata(context, id, metadata, validate, ufo, index, language, changeDate, true);
 
                     updatedMd.add(id);
 
@@ -465,6 +487,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
+        IMetadataManager metadataManager = gc.getBean(IMetadataManager.class);
 
         if (context.getUserSession().getUserId() == null)
             throw new NoApplicableCodeEx("User not authenticated.");
@@ -492,7 +515,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
                 throw new NoApplicableCodeEx("User not allowed to delete metadata : " + id);
             }
 
-            dataMan.deleteMetadata(context, id);
+            metadataManager.deleteMetadata(context, id);
             deleted++;
         }
 
@@ -523,7 +546,6 @@ public class Transaction extends AbstractOperation implements CatalogService {
     /**
      * @param request
      * @param response
-     * @param fileIds
      * @param totalInserted
      * @param totalUpdated
      * @param totalDeleted

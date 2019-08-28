@@ -75,6 +75,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import static org.fao.geonet.kernel.search.LuceneSearcher.parseLuceneQuery;
+
 //=============================================================================
 @Component(CatalogService.BEAN_PREFIX + GetDomain.NAME)
 public class GetDomain extends AbstractOperation implements CatalogService {
@@ -139,7 +141,7 @@ public class GetDomain extends AbstractOperation implements CatalogService {
 
                 // Apply CSW service specific constraint
                 if (StringUtils.isNotEmpty(cswServiceSpecificConstraint)) {
-                    Query constraintQuery = CatalogSearcher.getCswServiceSpecificConstraintQuery(cswServiceSpecificConstraint, luceneConfig);
+                    Query constraintQuery = parseLuceneQuery(cswServiceSpecificConstraint, luceneConfig);
 
                     query = new BooleanQuery();
 

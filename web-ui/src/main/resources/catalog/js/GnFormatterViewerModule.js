@@ -39,12 +39,6 @@
   goog.require('gn_viewer');
   goog.require('sxt_directives');
 
-
-
-
-
-
-
   var module = angular.module('gn_formatter_viewer', [
     'ngRoute',
     'gn',
@@ -110,7 +104,6 @@
            $scope.loading = false;
          });
          $scope.fullScreen = $location.search()['view'] == 'emodnetHydrography';
-         var url = '../api/records' + $location.url();
 
          // special case for sextant (TODO: remove this when not used anymore)
          if ($routeParams.uuid) {
@@ -119,26 +112,34 @@
                  + 'view=' + $location.search()['view'] + '&css=' + $location.search()['css']);
             return;
          }
+         var url = '../api/records' + $location.url().replace('/metadata', '');
 
-         gnMdFormatter.loadGn(mdId, '.formatter-container', $scope, url);
+         gnMdFormatter.load(mdId, '.formatter-container', $scope, url);
        }]);
 
   module.config(['$routeProvider', function($routeProvider) {
     var tpls = '../../catalog/templates/';
 
     $routeProvider
-        .when(
+      .when(
+        '/metadata/:mdId/formatters/:formatter', {
+          templateUrl: tpls + 'formatter-viewer.html',
+          controller: 'GnFormatterViewer'})
+      .when(
         '/:mdId/formatters/:formatter', {
           templateUrl: tpls + 'formatter-viewer.html',
           controller: 'GnFormatterViewer'})
-        .when(
-        '/:mdId', {
+      .when(
+        '/metadata/:mdId', {
           templateUrl: tpls + 'formatter-viewer.html',
           controller: 'GnFormatterViewer'})
-
-        // TEMP SEXTANT
-        .when(
+      // TEMP SEXTANT
+      .when(
         '/', {
+          templateUrl: tpls + 'formatter-viewer.html',
+          controller: 'GnFormatterViewer'})
+      .when(
+       '/:mdId', {
           templateUrl: tpls + 'formatter-viewer.html',
           controller: 'GnFormatterViewer'});
   }]);

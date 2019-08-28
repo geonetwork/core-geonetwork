@@ -168,7 +168,7 @@ public class UserTest extends AbstractSpringDataTest {
 
         assertTrue(authNames.contains(Profile.RegisteredUser.name()));
         assertTrue(authNames.contains(Profile.Guest.name()));
-        assertTrue(authNames.contains(User.NODE_APPLICATION_CONTEXT_KEY + nodeId));
+        assertTrue(authNames.contains(User.NODE_APPLICATION_CONTEXT_KEY));
 
     }
 

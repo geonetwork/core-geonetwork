@@ -74,8 +74,10 @@
     'gnOwsCapabilities',
     'gnSearchSettings',
     'gnMetadataActions',
+    'gnConfig',
+    'gnConfigService',
     function($compile, gnMap, gnOwsCapabilities, gnSearchSettings,
-             gnMetadataActions) {
+             gnMetadataActions, gnConfig, gnConfigService) {
 
       return {
         restrict: 'A',
@@ -113,10 +115,9 @@
             });
           }
 
-          scope.buildEditorUrl = function(md) {
-            var baseUrl = '#/metadata/' + md['geonet:info'].id;
-            return baseUrl;
-          };
+          gnConfigService.load().then(function(c) {
+            scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
+          });
 
           scope.$watchCollection('searchResults.records', function(rec) {
 

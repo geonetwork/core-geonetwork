@@ -28,7 +28,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.5.0-SNAPSHOT</version>
+    <version>3.9.0-SNAPSHOT</version>
   </parent>
 
   <name>GeoNetwork Events</name>

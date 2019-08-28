@@ -338,7 +338,7 @@
             indexData: r.data,
             records: r.data.hits.hits,
             facets: quiet ? undefined : this.createFacetData_(r.data, params),
-            count: r.data.hits.total
+            count: r.data.hits.total.value
           };
           if (!quiet) {
             this.sendEvent('search', angular.extend({}, resp, {
@@ -438,7 +438,7 @@
           };
           // if (!field.isDateTime) {
           if (field.idxName.match(/^ft_.*_s$/)) {
-            // Sextant: ignore empty strings
+            // ignore empty strings
             // include/exclude settings as they can only be applied to string fields
             facetParams[field.idxName].terms['exclude'] = '';
           }
@@ -1037,9 +1037,11 @@
       filter = '(' + fieldsQ.join(') AND (') +')'
     }
 
+    // FIXME: This sounds useless as we already built filter based on fieldsQ
     if (this.initialParams.filter != '') {
       fieldsQ.push(this.initialParams.filter);
     }
+
     qParam += filter;
     return qParam;
 

@@ -86,12 +86,13 @@
    */
   module.controller('GnSystemSettingsController', [
     '$scope', '$http', '$rootScope', '$translate', '$location',
-    'gnUtilityService', '$timeout',
+    'gnUtilityService', '$timeout', 'gnGlobalSettings',
     function($scope, $http, $rootScope, $translate, $location,
-        gnUtilityService, $timeout) {
+        gnUtilityService, $timeout, gnGlobalSettings) {
 
       $scope.settings = [];
       $scope.initalSettings = [];
+      $scope.uiConfigurations = [];
       $scope.sectionsLevel1 = {};
       $scope.systemUsers = null;
       $scope.processTitle = '';
@@ -135,42 +136,42 @@
             .success(function(data) {
               $scope.systemInfo = data;
             });
+
         // load log files
         $http.get('../api/site/logging')
             .success(function(data) {
               $scope.logfiles = data;
             });
+
         $http.get('../api/site/settings/details')
             .success(function(data) {
 
               var sectionsLevel1 = [];
               var sectionsLevel2 = [];
-              var uiConfigFound = false;
 
               // Stringify JSON for editing in text area
               angular.forEach(data, function(s) {
-                if (s.name === 'ui/config') {
-                  uiConfigFound = true;
-                }
                 if (s.dataType === 'JSON') {
                   s.value = angular.toJson(s.value);
                 }
               });
-
-              // Init empty settings for the UI configuration if none
-              // eg. an old database.
-              if (!uiConfigFound) {
-                data.push({name: 'ui/config', value: {}});
-              }
 
               $scope.settings = data;
               angular.copy(data, $scope.initalSettings);
 
 
               for (var i = 0; i < $scope.settings.length; i++) {
+
+                if ($scope.settings[i].name == 'metadata/workflow/enable') {
+                  $scope.workflowEnable =  ($scope.settings[i].value == 'true');
+
+                } else if ($scope.settings[i].name == 'metadata/workflow/draftWhenInGroup') {
+                  $scope.draftInAllGroups = ($scope.settings[i].value == '.*');
+                }
+
                 var tokens = $scope.settings[i].name.split('/');
                 // Extract level 1 and 2 sections
-                if (tokens && $scope.settings[i].name != 'ui/config') {
+                if (tokens) {
                   var level1name = tokens[0];
                   if (sectionsLevel1.indexOf(level1name) === -1) {
                     sectionsLevel1.push(level1name);
@@ -201,7 +202,79 @@
             }).error(function(data) {
               // TODO
             });
+        loadUiConfigurations();
       }
+
+      $scope.lastUiConfiguration = undefined;
+
+      function loadUiConfigurations() {
+        $scope.uiConfiguration = undefined;
+        $scope.uiConfigurationId = '';
+        $scope.uiConfigurationIdIsValid = false;
+        $http.get('../api/ui')
+          .success(function(data) {
+            for (var i = 0; i < data.length; i ++) {
+              data[i].configuration == angular.toJson(data[i].configuration);
+
+              // Select last one updated or created
+              if (angular.isDefined($scope.lastUiConfiguration) &&
+                $scope.lastUiConfiguration == data[i].id) {
+                $scope.uiConfiguration = data[i];
+              }
+            }
+            $scope.uiConfigurations = data;
+
+            // Select the first
+            if ($scope.uiConfigurations.length > 0 &&
+                angular.isUndefined($scope.uiConfiguration)) {
+              $scope.uiConfiguration = $scope.uiConfigurations[0];
+            }
+          });
+      };
+
+      $scope.$watch('uiConfigurationId', function (n, o) {
+        if (n !== o) {
+          $http.get('../api/ui/' + n)
+            .then(function(r) {
+              $scope.uiConfigurationIdIsValid = r.status === 404;
+            }, function(r) {
+              $scope.uiConfigurationIdIsValid = r.status === 404;
+            });
+        }
+      });
+
+      /**
+       * Create the default configuration based on the
+       * one defined in CatController.
+       */
+      $scope.createDefaultUiConfig = function() {
+        var defaultConfigId = 'srv';
+        $scope.lastUiConfiguration = defaultConfigId;
+        $scope.createOrUpdateUiConfiguration(false, defaultConfigId);
+      };
+      $scope.updateUiConfig = function() {
+        $scope.createOrUpdateUiConfiguration(true);
+      };
+      $scope.createOrUpdateUiConfiguration = function(isUpdate, id) {
+        var newid = id || $scope.uiConfiguration.id;
+        $scope.lastUiConfiguration = newid;
+        if (newid) {
+          $http.put('../api/ui' + (isUpdate ? '/' + newid : ''), {
+            "id": newid,
+            // TODO: copy an existing one?
+            "configuration": (isUpdate ? $scope.uiConfiguration.configuration : JSON.stringify(gnGlobalSettings.gnCfg))
+          }, {responseType: 'text'}).then(function(r) {
+            loadUiConfigurations();
+          });
+        }
+      };
+
+      $scope.deleteUiConfig = function() {
+        $scope.lastUiConfiguration = undefined;
+        $http.delete('../api/ui/' + $scope.uiConfiguration.id).then(function(r) {
+          loadUiConfigurations();
+        });
+      };
 
       function loadUsers() {
         $http.get('../api/users').success(function(data) {
@@ -229,6 +302,8 @@
          * broadcast success status and reload catalog info.
          */
       $scope.saveSettings = function(formId) {
+        // Used to disable some UI form elements that should not be submitted.
+        $(".gn-no-setting" ).attr("disabled", true);
 
         $http.post('../api/site/settings',
             gnUtilityService.serialize(formId), {
@@ -236,6 +311,9 @@
                     'application/x-www-form-urlencoded'}
             })
             .success(function(data) {
+              $(".gn-no-setting" ).attr("disabled", false);
+
+
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate.instant('settingsUpdated'),
                 timeout: 2,
@@ -244,12 +322,14 @@
               $scope.loadCatalogInfo();
             })
             .error(function(data) {
-                  $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate.instant('settingsUpdateError'),
-                    error: data,
-                    timeout: 0,
-                    type: 'danger'});
-                });
+              $(".gn-no-setting" ).attr("disabled", false);
+
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('settingsUpdateError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
       };
       $scope.processName = null;
       $scope.processRecommended = function(processName) {
@@ -283,6 +363,8 @@
           } else {
             $(this).hide();
           }
+          // check parent
+          $scope.filterParent($(this));
         });
       };
       $scope.resetFilter = function(formId) {
@@ -295,6 +377,47 @@
           // show the fieldsets
           $(formId + ' fieldset').show();
         });
+
+      };
+
+      // check the parent for visible children
+      $scope.filterParent = function(element) {
+
+        var doFilterMain = true;
+        // go back to the fieldset
+        var fieldsetParent = element.parent().parent();
+        // check for UI settings
+        if (fieldsetParent.prop('nodeName').toLowerCase() != 'fieldset') {
+          fieldsetParent = element.parent();
+          doFilterMain = false;
+        }
+        // reset
+        fieldsetParent.show();
+        fieldsetParent.parent().show();
+        // count visible elements
+        var counter = fieldsetParent.children('div').children(':visible').length;
+
+        if (counter > 0) {
+          fieldsetParent.show();
+        } else {
+          fieldsetParent.hide();
+        }
+        if (doFilterMain) {
+          $scope.filterMain(fieldsetParent);
+        }
+      };
+      
+      // filter the main parent (for Settings)
+      $scope.filterMain = function(element) {
+
+        var parentMain = element.parent();
+        var counter = parentMain.children('fieldset:visible').length;
+
+        if (counter > 0) {
+          parentMain.show();
+        } else {
+          parentMain.hide();
+        }
 
       };
 

@@ -27,7 +27,8 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
@@ -315,15 +316,17 @@
       </LegalConstraints>
     </xsl:for-each>
 
-    <xsl:for-each select="gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimePeriod">
+    <xsl:for-each select="gmd:extent/*/gmd:temporalElement/*/gmd:extent/(gml:TimePeriod|gml320:TimePeriod)">
       <temporalExtent>
         <begin>
           <xsl:apply-templates mode="brieftime"
-                               select="gml:beginPosition|gml:begin/gml:TimeInstant/gml:timePosition"/>
+                               select="gml:beginPosition|gml:begin/gml:TimeInstant/gml:timePosition|
+                                       gml320:beginPosition|gml320:begin/gml320:TimeInstant/gml320:timePosition"/>
         </begin>
         <end>
           <xsl:apply-templates mode="brieftime"
-                               select="gml:endPosition|gml:end/gml:TimeInstant/gml:timePosition"/>
+                               select="gml:endPosition|gml:end/gml:TimeInstant/gml:timePosition|
+                                       gml320:endPosition|gml320:end/gml320:TimeInstant/gml320:timePosition"/>
         </end>
       </temporalExtent>
     </xsl:for-each>

@@ -34,6 +34,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.io.ByteArrayInputStream;
 import java.util.Comparator;
@@ -204,10 +205,10 @@ public class MergeUsersByUsernameDatabaseMigrationTest extends AbstractCoreInteg
             assertEquals((Integer) greatestProfileUser.getId(), metadata.getSourceInfo().getOwner());
             assertEquals(groupId, metadata.getSourceInfo().getGroupOwner());
         }
-        assertEquals(0, metadataRepository.findAll(MetadataSpecs.isOwnedByUser(user1.getId())).size());
-        assertEquals(0, metadataRepository.findAll(MetadataSpecs.isOwnedByUser(user2.getId())).size());
-        assertEquals(0, metadataRepository.findAll(MetadataSpecs.isOwnedByUser(user3.getId())).size());
-        assertEquals(6, metadataRepository.findAll(MetadataSpecs.isOwnedByUser(user4.getId())).size());
+        assertEquals(0, metadataRepository.findAll((Specification<Metadata>)MetadataSpecs.isOwnedByUser(user1.getId())).size());
+        assertEquals(0, metadataRepository.findAll((Specification<Metadata>)MetadataSpecs.isOwnedByUser(user2.getId())).size());
+        assertEquals(0, metadataRepository.findAll((Specification<Metadata>)MetadataSpecs.isOwnedByUser(user3.getId())).size());
+        assertEquals(6, metadataRepository.findAll((Specification<Metadata>)MetadataSpecs.isOwnedByUser(user4.getId())).size());
     }
 
     private Group newGroup(String groupName) {

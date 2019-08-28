@@ -152,7 +152,7 @@
 
           <xsl:if test="name()  != 'geonet:child'">
             <xsl:for-each select="$metadata//svrl:failed-assert[@ref=$ref]">
-              <error type="{ancestor::svrl:schematron-output/@title}">
+              <error type="{ancestor::svrl:schematron-output/@title}" gravity="{ancestor::gn:report/@gn:required}">
                 <xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> :
                 <xsl:copy-of select="svrl:text/*"/>
               </error>
@@ -161,28 +161,11 @@
 
         </errors>
       </xsl:variable>
-      <xsl:if test="count($listOfErrors//error) > 0">
-        <div class="gn-validation-report">
-          <ul class="list-group">
-            <xsl:for-each select="$listOfErrors/errors/error">
-              <li class="list-group-item text-danger">
 
-                <div class="row">
-                  <div class="col-xs-10">
-                    <xsl:value-of select="."/>
-                  </div>
-                  <div class="col-xs-2">
-                    <span class="pull-right label label-danger">
-                      <xsl:value-of select="@type"/>
-                    </span>
-                  </div>
-                </div>
+      <xsl:call-template name="display-error">
+        <xsl:with-param name="listOfErrors" select="$listOfErrors"/>
+      </xsl:call-template>
 
-              </li>
-            </xsl:for-each>
-          </ul>
-        </div>
-      </xsl:if>
     </xsl:if>
   </xsl:template>
 
@@ -196,7 +179,7 @@
         <errors>
           <xsl:if test="name() = 'geonet:child'">
             <xsl:for-each select="$metadata//svrl:failed-assert[@ref=$uuid]">
-              <error type="{ancestor::svrl:schematron-output/@title}">
+              <error type="{ancestor::svrl:schematron-output/@title}" gravity="{ancestor::gn:report/@gn:required}">
                 <xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> :
                 <xsl:copy-of select="svrl:text/*"/>
               </error>
@@ -205,28 +188,55 @@
 
         </errors>
       </xsl:variable>
-      <xsl:if test="count($listOfErrors//error) > 0">
-        <div class="gn-validation-report">
-          <ul class="list-group">
-            <xsl:for-each select="$listOfErrors/errors/error">
-              <li class="list-group-item text-danger">
 
-                <div class="row">
-                  <div class="col-xs-10">
-                    <xsl:value-of select="."/>
-                  </div>
-                  <div class="col-xs-2">
-                    <span class="pull-right label label-danger">
-                      <xsl:value-of select="@type"/>
-                    </span>
-                  </div>
-                </div>
+      <xsl:call-template name="display-error">
+        <xsl:with-param name="listOfErrors" select="$listOfErrors"/>
+      </xsl:call-template>
 
-              </li>
-            </xsl:for-each>
-          </ul>
-        </div>
-      </xsl:if>
     </xsl:if>
   </xsl:template>
+
+  <xsl:template name="display-error">
+    <xsl:param name="listOfErrors"/>
+
+    <xsl:if test="count($listOfErrors//error) > 0">
+      <div class="gn-validation-report">
+        <ul class="list-group">
+          <xsl:for-each select="$listOfErrors/errors/error">
+            <xsl:choose>
+              <xsl:when test="@gravity = 'REPORT_ONLY'">
+                <li class="list-group-item text-info">
+                  <div class="row">
+                    <div class="col-xs-10">
+                      <xsl:value-of select="."/>
+                    </div>
+                    <div class="col-xs-2">
+                      <span class="pull-right label label-info">
+                        <xsl:value-of select="@type"/>
+                      </span>
+                    </div>
+                  </div>
+                </li>
+              </xsl:when>
+              <xsl:otherwise>
+                <li class="list-group-item text-danger">
+                  <div class="row">
+                    <div class="col-xs-10">
+                      <xsl:value-of select="."/>
+                    </div>
+                    <div class="col-xs-2">
+                      <span class="pull-right label label-danger">
+                        <xsl:value-of select="@type"/>
+                      </span>
+                    </div>
+                  </div>
+                </li>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
+        </ul>
+      </div>
+    </xsl:if>
+  </xsl:template>
+
 </xsl:stylesheet>

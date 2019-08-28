@@ -122,7 +122,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
     public HarvestResult harvest(Logger log) throws Exception {
         this.log = log;
-        log.info("Retrieving capabilities file for : " + params.getName());
+        log.debug("Retrieving capabilities file for : " + params.getName());
 
         CswServer server = retrieveCapabilities(log);
         if (cancelMonitor.get()) {
@@ -130,8 +130,6 @@ class Harvester implements IHarvester<HarvestResult> {
         }
 
         //--- perform all searches
-
-        Set<RecordInfo> records = new HashSet<RecordInfo>();
 
         Search s = new Search();
 
@@ -149,14 +147,13 @@ class Harvester implements IHarvester<HarvestResult> {
             }
         }
 
-        HarvestResult result = new HarvestResult();
         boolean error = false;
+        HarvestResult result = null;
+    	Set<String> uuids = new HashSet<String>();
         try {
-            records.addAll(search(server, s));
-
-            //--- align local node
             Aligner aligner = new Aligner(cancelMonitor, context, server, params, log);
-            result = aligner.align(records, errors);
+            searchAndAlign(server, s, uuids, aligner, errors);
+            result = aligner.cleanupRemovedRecords(uuids);
         } catch (Exception t) {
             error = true;
             log.error("Unknown error trying to harvest");
@@ -170,7 +167,7 @@ class Harvester implements IHarvester<HarvestResult> {
             errors.add(new HarvestError(context, t));
         }
 
-        log.info("Total records processed in all searches :" + records.size());
+        log.info("Total records processed in all searches :" + uuids.size());
         if (error) {
             log.warning("Due to previous errors the align process has not been called");
         }
@@ -246,8 +243,11 @@ class Harvester implements IHarvester<HarvestResult> {
 
     /**
      * Does CSW GetRecordsRequest.
+     * @param aligner 
+     * @param errors2 
      */
-    private Set<RecordInfo> search(CswServer server, Search s) throws Exception {
+    private void searchAndAlign(CswServer server, Search s, Set<String> uuids, 
+    		Aligner aligner, List<HarvestError> harvesterErrors) throws Exception {
         int start = 1;
 
         GetRecordsRequest request = new GetRecordsRequest(context);
@@ -256,7 +256,7 @@ class Harvester implements IHarvester<HarvestResult> {
         //request.setOutputSchema(OutputSchema.OGC_CORE);	// Use default value
         request.setElementSetName(ElementSetName.SUMMARY);
         request.setMaxRecords(GETRECORDS_REQUEST_MAXRECORDS);
-        request.setDistribSearch(params.queryScope.equalsIgnoreCase("true"));
+        request.setDistribSearch(params.queryScope.equalsIgnoreCase("distributed"));
         request.setHopCount(params.hopCount);
 
         CswOperation oper = server.getOperation(CswServer.GET_RECORDS);
@@ -270,7 +270,7 @@ class Harvester implements IHarvester<HarvestResult> {
         }
         // Simple fallback mechanism. Try search with PREFERRED_HTTP_METHOD method, if fails change it
         try {
-            log.info(String.format("Trying the search with HTTP %s method.", PREFERRED_HTTP_METHOD));
+            log.debug(String.format("Trying the search with HTTP %s method.", PREFERRED_HTTP_METHOD));
             request.setStartPosition(start);
             doSearch(request, start, 1);
         } catch (Exception ex) {
@@ -283,13 +283,12 @@ class Harvester implements IHarvester<HarvestResult> {
             configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD.equals("GET") ? "POST" : "GET");
         }
 
-        Set<RecordInfo> records = new HashSet<RecordInfo>();
 
         while (true) {
             if(this.cancelMonitor.get()) {
               log.error("Harvester stopped in the middle of running!");
               //Returning whatever, we have to move on and finish!
-              return records;
+              return;
             }
             request.setStartPosition(start);
             Element response = doSearch(request, start, GETRECORDS_REQUEST_MAXRECORDS);
@@ -312,20 +311,21 @@ class Harvester implements IHarvester<HarvestResult> {
             if(this.cancelMonitor.get()) {
               log.error("Harvester stopped in the middle of running!");
               //Returning whatever, we have to move on and finish!
-              return records;
+              return;
             }
             @SuppressWarnings("unchecked")
             List<Element> list = results.getChildren();
             int foundCnt = 0;
 
             log.debug("Extracting all elements in the csw harvesting response");
+            Set<RecordInfo> records = new HashSet<RecordInfo>();
             for (Element record : list) {
-                foundCnt++;
                 try {
                     RecordInfo recInfo = getRecordInfo((Element) record.clone());
 
                     if (recInfo != null) {
                         records.add(recInfo);
+                        uuids.add(recInfo.uuid);
                     }
 
                 } catch (Exception ex) {
@@ -336,6 +336,10 @@ class Harvester implements IHarvester<HarvestResult> {
                 }
 
             }
+
+            foundCnt += records.size();
+            //Align here to keep memory clean
+            aligner.align(records, harvesterErrors);
 
             //--- check to see if we have to perform other searches
             int matchedCount = getSearchResultAttribute(results, ATTRIB_SEARCHRESULT_MATCHED);
@@ -397,9 +401,9 @@ class Harvester implements IHarvester<HarvestResult> {
             start += returnedCount;
         }
 
-        log.info("Records added to result list : " + records.size());
+        log.debug("Records added to result list : " + uuids.size());
 
-        return records;
+        return;
     }
 
     //---------------------------------------------------------------------------
@@ -613,7 +617,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
     private Element doSearch(CatalogRequest request, int start, int max) throws Exception {
         try {
-            log.info("Searching on : " + params.getName() + " (" + start + ".." + (start + max) + ")");
+            log.debug("Searching on : " + params.getName() + " (" + start + ".." + (start + max) + ")");
             Element response = request.execute();
             if (log.isDebugEnabled()) {
                 log.debug("Sent request " + request.getSentData());
@@ -687,7 +691,6 @@ class Harvester implements IHarvester<HarvestResult> {
             return new RecordInfo(identif, modified);
         } catch (Exception e) {
             log.warning("Skipped record not in supported format : " + name);
-            e.printStackTrace();
         }
 
         // we get here if we didn't recognize the schema and/or couldn't get the

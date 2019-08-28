@@ -25,7 +25,7 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn="http://geonetwork-opensource.org"
                 xmlns:saxon="http://saxon.sf.net/"
@@ -46,7 +46,7 @@
   <xsl:template match="/">
     <gmd:EX_Extent xmlns:gco="http://www.isotc211.org/2005/gco"
                    xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                   xmlns:gml="http://www.opengis.net/gml">
+                   xmlns:gml="http://www.opengis.net/gml/3.2">
       <xsl:if test="$description">
         <gmd:description>
           <gco:CharacterString>

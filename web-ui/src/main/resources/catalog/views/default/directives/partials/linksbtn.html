@@ -1,9 +1,10 @@
 <div class="gn-md-links">
 
-  <a class="gn-md-edit-btn"
+  <a class="gn-md-edit-btn btn btn-default"
      data-ng-show="user.canEditRecord(md)"
      data-ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{md['geonet:info'].uuid}}"
-     title="{{'edit' | translate}}">
+     title="{{'edit' | translate}}"
+     aria-label="{{'edit' | translate}}">
     <i class="fa fa-pencil"></i>
   </a>
 
@@ -16,9 +17,11 @@
   <div class="btn-group"
        data-ng-class="::links.length > 0 ? '' : 'hidden'">
     <button type="button"
+            role="button"
             class="btn btn-default dropdown-toggle"
             data-toggle="dropdown"
-            title="{{'weblink' | translate}}">
+            title="{{'weblink' | translate}}"
+            aria-label="{{'weblink' | translate}}">
       <span class="fa fa-link"></span>
       <span class="caret"></span>
     </button>
@@ -33,9 +36,11 @@
   <div class="btn-group"
        data-ng-if="isMapViewerEnabled && layers.length > 1">
     <button type="button"
+            role="button"
             class="btn btn-default dropdown-toggle"
             data-toggle="dropdown"
-            title="{{'layers' | translate}}">
+            title="{{'layers' | translate}}"
+            aria-label="{{'layers' | translate}}">
       <span class="fa fa-globe"></span>
       <span class="caret"></span>
     </button>
@@ -53,19 +58,22 @@
         <a href=""
            data-ng-click="resultviewFns.addAllMdLayersToMap(layers, md)">
           <i class="fa fa-plus"></i>&nbsp;
-                  <span data-translate=""
-                        data-translate-values="{number: '{{layers.length}}'}">
-                    addAllLayersToMap</span>
+          <span data-translate=""
+                data-translate-values="{number: '{{layers.length}}'}">
+            addAllLayersToMap
+          </span>
         </a>
       </li>
     </ul>
   </div>
   <button type="button"
+          role="button"
           class="btn btn-default"
           data-ng-disabled="md['geonet:info'].dynamic == 'false'"
           data-ng-if="isMapViewerEnabled && layers.length == 1"
           data-ng-click="resultviewFns.addMdLayerToMap(layers[0], md)"
-          title="{{'view' | translate}}">
+          title="{{'view' | translate}}"
+          aria-label="{{'view' | translate}}">
     <span class="fa fa-globe"></span>
   </button>
 
@@ -74,9 +82,11 @@
        data-ng-if="isMapViewerEnabled"
        data-ng-class="maps.length > 0 ? '' : 'invisible'">
     <button type="button"
+            role="button"
             class="btn btn-default dropdown-toggle"
             data-toggle="dropdown"
-            title="{{'maps' | translate}}">
+            title="{{'maps' | translate}}"
+            aria-label="{{'maps' | translate}}">
       <span class="fa fa-map"></span>
       <span class="caret"></span>
     </button>
@@ -91,9 +101,11 @@
   <div class="btn-group"
        data-ng-class="::downloads.length > 0 ? '' : 'hidden'">
     <button type="button"
+            role="button"
             class="btn btn-default dropdown-toggle"
             data-toggle="dropdown"
-            title="{{'downloads' | translate}}">
+            title="{{'downloads' | translate}}"
+            aria-label="{{'downloads' | translate}}">
       <span class="fa fa-download"></span>
       <span class="caret"></span>
     </button>
@@ -102,9 +114,10 @@
         <a href="{{::link.url}}"
            title="{{::link.desc}}"
            target="_blank">
-                  <span class="fa fa-file-zip-o"
-                        data-ng-if="link.contentType=='application/zip'"></span>
-          {{link.desc || (link.name + ' - ' + link.contentType) }}</a>
+          <span class="fa fa-file-zip-o"
+                data-ng-if="link.contentType=='application/zip'"></span>
+          {{link.desc || (link.name + ' - ' + link.contentType) }}
+        </a>
       </li>
     </ul>
   </div>

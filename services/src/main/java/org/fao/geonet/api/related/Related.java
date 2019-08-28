@@ -65,8 +65,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
 @RequestMapping(value = {
-    "/api/related",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/related",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/related"
 })
 @Api(value = "related",
@@ -80,6 +80,9 @@ public class Related implements ApplicationContextAware {
     LanguageUtils languageUtils;
 
     private ApplicationContext context;
+
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
 
     public synchronized void setApplicationContext(ApplicationContext context) {
         this.context = context;
@@ -118,7 +121,6 @@ public class Related implements ApplicationContextAware {
 
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
         final ServiceContext context = ApiUtils.createServiceContext(request);
-        GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
         Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
 
         AbstractMetadata md;

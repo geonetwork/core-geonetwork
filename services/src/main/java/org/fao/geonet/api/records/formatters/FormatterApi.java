@@ -58,6 +58,7 @@ import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.xlink.Processor;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.fao.geonet.ApplicationContextHolder;
@@ -92,6 +93,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.util.XslUtil;
@@ -105,7 +107,6 @@ import org.jdom.Namespace;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Lazy;
@@ -127,40 +128,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 import springfox.documentation.annotations.ApiIgnore;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.common.io.ByteStreams;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
-import springfox.documentation.annotations.ApiIgnore;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
-import java.util.concurrent.Callable;
-
-import static com.google.common.io.Files.getNameWithoutExtension;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
-import static org.fao.geonet.api.records.formatters.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
-import static org.springframework.data.jpa.domain.Specifications.where;
 /**
  * Allows a user to display a metadata with a particular formatters
  *
@@ -232,8 +199,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     }
 
     @RequestMapping(value = {
-        "/api/records/{metadataUuid}/formatters/{formatterId}",
-        "/api/" + API.VERSION_0_1 +
+        "/{portal}/api/records/{metadataUuid}/formatters/{formatterId}",
+        "/{portal}/api/" + API.VERSION_0_1 +
             "/records/{metadataUuid}/formatters/{formatterId}"
     },
         method = RequestMethod.GET,
@@ -273,14 +240,24 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         @RequestParam(
             value = "mdpath",
             required = false) final String mdPath,
+        @ApiParam(
+            value = "Optional language ISO 3 letters code to override HTTP Accept-language header.",
+            required = false
+        )
+        @RequestParam(
+            value = "language",
+            required = false) final String iso3lang,
         @RequestParam(
             value = "output",
             required = false)
             FormatType formatType,
+        @ApiParam(value = "Download the approved version",
+            required = false, defaultValue = "true")
+        @RequestParam(required = false, defaultValue = "true")
+            boolean approved,
         @ApiIgnore final NativeWebRequest request,
         final HttpServletRequest servletRequest) throws Exception {
 
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
         Locale locale = languageUtils.parseAcceptLanguage(servletRequest.getLocales());
 
         // TODO :
@@ -300,12 +277,20 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             formatType = FormatType.xml;
         }
 
-        final String language = LanguageUtils.locale2gnCode(locale.getISO3Language());
+        String language = LanguageUtils.locale2gnCode(locale.getISO3Language());
+        if (StringUtils.isNotEmpty(iso3lang)) {
+            language = LanguageUtils.locale2gnCode(iso3lang);
+        }
+
         final ServiceContext context = createServiceContext(
             language,
             formatType,
             request.getNativeRequest(HttpServletRequest.class));
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
+        
+        if(approved) {
+        	metadata = context.getBean(MetadataRepository.class).findOneByUuid(metadataUuid);
+        }
 
 
         Boolean hideWithheld = true;
@@ -812,7 +797,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         return context.getApplicationContext().getBean(SystemInfo.class).isDevMode();
     }
 
-    private class FormatMetadata implements Callable<StoreInfoAndDataLoadResult> {
+    public class FormatMetadata implements Callable<StoreInfoAndDataLoadResult> {
         private final Key key;
         private final NativeWebRequest request;
         private final ServiceContext serviceContext;

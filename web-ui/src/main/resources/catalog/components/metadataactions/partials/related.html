@@ -1,5 +1,5 @@
 <div class="gn-related-resources"
-     data-ng-if="relationFound">
+           data-ng-if="relationFound">
   <h2>{{::title}}</h2>
 
   <div class=""
@@ -22,11 +22,11 @@
         <strong data-ng-if="(mainType !== 'WMS') && (mainType !== 'WMSSERVICE') && (mainType !== 'WMTS') &&
                             (mainType !== 'WMTSSERVICE') && (mainType !== 'WFS') && (mainType !== 'WCS')">
           <i class="fa"
-               data-ng-class="config.getClassIcon(mainType)"/>&nbsp;
+             data-ng-class="config.getClassIcon(mainType)"/>&nbsp;
         </strong>
-      </strong>
+        </strong>
       </div>
-      <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-8 col-sm-8'" >
+      <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-8 col-sm-8'">
         <!-- WMS & WFS contains layer name in title -->
         <h3 data-ng-if="((mainType === 'WMS' || mainType === 'WMSSERVICE' ||
                           mainType === 'WMTS' || mainType === 'WMTSSERVICE' ||
@@ -124,8 +124,8 @@
 
           <div data-ng-switch-when="ATOM">
             <p class="text-muted" data-translate=""
-                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
-                  atomLinkDetails
+               data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+              atomLinkDetails
             </p>
             <div
               data-gn-atom-download="r.title"
@@ -168,13 +168,14 @@
               <a href="#/metadata/{{r.id}}">
                 {{(r.title | gnLocalized: lang) }}
               </a> ({{(config.getLabel(mainType, type)) | translate}})<br/>
-              {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a href="#/metadata/{{r.id}}">{{'more' | translate}}...</a>
+              {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a href="#/metadata/{{r.id}}">{{'more' |
+              translate}}...</a>
             </p>
 
             <p class="text-muted"
                data-ng-if="mainType.indexOf('MD') == -1">
-               <b>{{r.locTitle}}</b>
-               <span ng-bind-html="r.url | gnLocalized: lang | linky:'_blank'"></span>
+              <b>{{r.locTitle}}</b>
+              <span ng-bind-html="r.url | gnLocalized: lang | linky:'_blank'"></span>
             </p>
           </div>
         </div>
@@ -182,7 +183,7 @@
 
       <div class="col-xs-12 col-sm-3">
         <button type="button"
-                class="btn btn-default btn-sm btn-block"
+                class="btn btn-default btn-sm btn-block text-wrap"
                 data-ng-show="hasAction(mainType)"
                 data-ng-click="config.doAction(mainType, r, md)">
 
@@ -198,5 +199,6 @@
         </button>
       </div>
 
+    </div>
   </div>
 </div>

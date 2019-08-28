@@ -27,14 +27,12 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.5.0-SNAPSHOT</version>
+    <version>3.9.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.geonetwork-opensource</groupId>
   <artifactId>docs</artifactId>
   <name>Documentation module</name>
   <packaging>pom</packaging>
-  <description></description>
   <licenses>
     <license>
       <name>General Public License (GPL)</name>

@@ -23,14 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang.StringUtils;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -46,6 +38,7 @@ import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.AbstractAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -55,13 +48,6 @@ import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.specification.MetadataCategorySpecs;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
-
-import jeeves.server.context.ServiceContext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,6 +65,8 @@ public class Aligner extends AbstractAligner<GeonetParams> {
 
     private DataManager dataMan;
 
+    private IMetadataManager metadataManager;
+
     private ServiceContext context;
 
     private CategoryMapper localCateg;
@@ -88,12 +76,13 @@ public class Aligner extends AbstractAligner<GeonetParams> {
     private HarvestResult result;
 
     public Aligner(AtomicBoolean cancelMonitor, Logger log, XmlRequest req, GeonetParams params, DataManager dm,
-                   ServiceContext sc, CategoryMapper cm) {
+                   IMetadataManager metadataManager, ServiceContext sc, CategoryMapper cm) {
         this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.req = req;
         this.params = params;
         this.dataMan = dm;
+        this.metadataManager = metadataManager;
         this.context = sc;
         this.localCateg = cm;
     }
@@ -126,9 +115,9 @@ public class Aligner extends AbstractAligner<GeonetParams> {
                 String id = localUuids.getID(uuid);
 
                 if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id=" + id);
-                dataMan.deleteMetadata(context, id);
+                metadataManager.deleteMetadata(context, id);
 
-                dataMan.flush();
+                metadataManager.flush();
                 this.result.locallyRemoved++;
             }
         }
@@ -164,7 +153,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
                     updateMetadata(siteId, info, id);
                 }
 
-                dataMan.flush();
+                metadataManager.flush();
 
 
                 //--- maybe the metadata was unretrievable
@@ -225,7 +214,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
         List<Element> categories = info.getChildren("category");
         addCategories(metadata, categories);
 
-        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
@@ -264,7 +253,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
             log.debug("    - Setting categories : " + categories);
         }
 
-        metadata.getMetadataCategories().addAll(categories);
+        metadata.getCategories().addAll(categories);
     }
 
     private void addPrivileges(String id) throws Exception {
@@ -312,7 +301,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                dataMan.updateMetadata(context, id, md, validate, ufo, index, language, changeDate, false);
+                metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, changeDate, false);
 
                 result.updatedMetadata++;
             }
@@ -325,7 +314,6 @@ public class Aligner extends AbstractAligner<GeonetParams> {
 
         //--- remove old categories
 
-        @SuppressWarnings("unchecked")
         Collection<MetadataCategory> locCateg = dataMan.getCategories(id);
 
         for (MetadataCategory el : locCateg) {

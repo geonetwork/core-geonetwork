@@ -41,6 +41,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
@@ -56,6 +57,7 @@ import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -70,9 +72,7 @@ import jeeves.server.context.ServiceContext;
  */
 public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
-    //FIXME Put on a different file?
     private LocalFilesystemParams params;
-
 
     @Override
     protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
@@ -102,7 +102,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         String id = harvesterSettingsManager.add("harvesting", "node", getType());
         storeNode(params, "id:" + id);
 
-        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
+        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), SourceType.harvester);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
 
@@ -119,7 +119,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
      */
     private HarvestResult align(Path root) throws Exception {
         log.debug("Start of alignment for : " + params.getName());
-        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, this, log);
+        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, this);
         if (params.recurse) {
             Files.walkFileTree(root, visitor);
         } else {
@@ -132,8 +132,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
             }
         }
         result = visitor.getResult();
-        log.debug(String.format("Scan directory is done. %d files analyzed.",
-            result.totalMetadata));
+        log.debug(String.format("Scan directory is done. %d files analyzed.", result.totalMetadata));
         Set<Integer> idsForHarvestingResult = visitor.getListOfRecords();
         Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
 
@@ -141,7 +140,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
             log.debug("Starting to delete locally existing metadata " +
                 "from the same source if they " +
                 " were not in this harvesting result...");
-            List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findAllIdsBy(MetadataSpecs.hasHarvesterUuid(params.getUuid()));
+            List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findAllIdsBy((Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(params.getUuid()));
             for (Integer existingId : existingMetadata) {
 
                 if (cancelMonitor.get()) {
@@ -149,7 +148,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
                 }
                 if (!idsResultHs.contains(existingId)) {
                     log.debug("  Removing: " + existingId);
-                    dataMan.deleteMetadata(context, existingId.toString());
+                    metadataManager.deleteMetadata(context, existingId.toString());
                     result.locallyRemoved++;
                 }
             }
@@ -169,56 +168,31 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
     void updateMetadata(Element xml, final String id, GroupMapper localGroups,
                         final CategoryMapper localCateg, String changeDate, BaseAligner aligner) throws Exception {
-        updateMetadata(xml, id, localGroups, localCateg, changeDate, aligner, true);
-    }
 
-    void updateMetadata(Element xml, final String id, GroupMapper localGroups,
-                        final CategoryMapper localCateg, String changeDate, BaseAligner aligner, boolean indexAfterUpdate) throws Exception {
         log.debug("  - Updating metadata with id: " + id);
-
-        //
-        // update metadata
-        //
 
         String language = context.getLanguage();
 
-        final AbstractMetadata metadata = dataMan.updateMetadata(context, id, xml, false, false, false, language, changeDate,
+        final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, xml, false, false, false, language, changeDate,
             true);
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-        repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        repository.deleteAllByMetadataId(Integer.parseInt(id));
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
-        metadata.getMetadataCategories().clear();
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
+        metadata.getCategories().clear();
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
-        dataMan.flush();
+        metadataManager.flush();
 
-        if (indexAfterUpdate == true) {
-            dataMan.indexMetadata(id, true, null);
-        }
-    }
-
-
-    /**
-     * Inserts a metadata into the database. If index param is true, Lucene index is updated after
-     * insertion, else the indexation step is skipped
-     *
-     * @param createDate TODO
-     */
-    String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg,
-                       String createDate, BaseAligner aligner) throws Exception {
-        return addMetadata(xml, uuid, schema, localGroups, localCateg, createDate, aligner, true);
+        dataMan.indexMetadata(id, true, null);
     }
 
     String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg,
                        String createDate, BaseAligner aligner, boolean index) throws Exception {
+
         log.debug("  - Adding metadata with remote uuid: " + uuid);
 
-
-        //
-        // insert metadata
-        //
         AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
         metadata.getDataInfo().
@@ -229,21 +203,21 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
             setChangeDate(new ISODate(createDate));
         metadata.getSourceInfo().
             setSourceId(params.getUuid()).
-            setOwner(Integer.parseInt(params.getOwnerId())).
+            setOwner(aligner.getOwner()).
             setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid());
 
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
-        dataMan.flush();
+        metadataManager.flush();
 
         if (index) {
             dataMan.indexMetadata(id, true, null);
@@ -283,7 +257,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         //--- we update a copy first because if there is an exception LocalFilesystemParams
         //--- could be half updated and so it could be in an inconsistent state
 
-        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
+        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), SourceType.harvester);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.getUuid());
 
@@ -294,7 +268,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
     private void runBeforeScript() throws IOException, InterruptedException {
 		if (StringUtils.isEmpty(params.beforeScript)) {
-			return;  // Nothing to run
+			return;
 		}
 		log.info("Running the before script: " + params.beforeScript);
         List<String> args = new ArrayList<String>(Arrays.asList(params.beforeScript.split(" ")));

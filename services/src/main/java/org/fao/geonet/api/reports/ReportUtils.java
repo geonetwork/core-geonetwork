@@ -28,8 +28,10 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.utils.Log;
 
 import java.util.HashSet;
 import java.util.List;
@@ -63,11 +65,14 @@ public final class ReportUtils {
     public static Set<Integer> groupsForFilter(
             final ServiceContext context,
             final List<Integer> groups) throws Exception {
-        if (groups == null) {
-            return ImmutableSet.of();
-        }
 
-        Set<Integer> requestedGroups = ImmutableSet.copyOf(groups);
+        Set<Integer> requestedGroups;
+
+        if (groups == null) {
+            requestedGroups = new HashSet<>();
+        } else {
+            requestedGroups = ImmutableSet.copyOf(groups);
+        }
 
         Profile userProfile = context.getUserSession().getProfile();
 
@@ -81,9 +86,13 @@ public final class ReportUtils {
             Set<Integer> userGroups = am.getUserGroups(context.getUserSession(),
                     context.getIpAddress(), false);
 
+            // Remove special groups
+            userGroups.remove(ReservedGroup.guest.getId());
+            userGroups.remove(ReservedGroup.all.getId());
+            userGroups.remove(ReservedGroup.intranet.getId());
+
             // If no specific group requested, filter by user groups
             if (requestedGroups.isEmpty()) {
-
                 return userGroups;
 
             } else {
@@ -96,7 +105,12 @@ public final class ReportUtils {
                     }
                 }
 
-                return filterRequestedGroups;
+                if (!filterRequestedGroups.isEmpty()) {
+                    return filterRequestedGroups;
+                } else {
+                    // If no specific group requested, filter by user groups
+                    return userGroups;
+                }
             }
         }
     }
@@ -152,7 +166,7 @@ public final class ReportUtils {
                 value = "";
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Log.error(Geonet.GEONETWORK, ex.getMessage(), ex);
         }
 
         return value;

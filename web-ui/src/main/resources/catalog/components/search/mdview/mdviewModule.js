@@ -48,14 +48,15 @@
   module.controller('GnMdViewController', [
     '$scope', '$http', '$compile', 'gnSearchSettings', 'gnSearchLocation',
     'gnMetadataActions', 'gnAlertService', '$translate', '$location',
-    'gnMdView', 'gnMdViewObj', 'gnMdFormatter', 'gnConfig', 'gnGlobalSettings',
+    'gnMdView', 'gnMdViewObj', 'gnMdFormatter', 'gnConfig',
+    'gnGlobalSettings', 'gnConfigService', '$rootScope',
     function($scope, $http, $compile, gnSearchSettings, gnSearchLocation,
              gnMetadataActions, gnAlertService, $translate, $location,
-             gnMdView, gnMdViewObj, gnMdFormatter, gnConfig, gnGlobalSettings) {
+             gnMdView, gnMdViewObj, gnMdFormatter, gnConfig,
+             gnGlobalSettings, gnConfigService, $rootScope) {
 
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
-      $scope.usingFormatter = false;
       $scope.url = location.href;
       $scope.compileScope = $scope.$new();
       $scope.recordIdentifierRequested = gnSearchLocation.getUuid();
@@ -63,14 +64,19 @@
       $scope.isRatingEnabled = false;
       $scope.isSocialbarEnabled = gnGlobalSettings.gnCfg.mods.recordview.isSocialbarEnabled;
 
-      statusSystemRating =
-         gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
-      if (statusSystemRating == 'advanced') {
-        $scope.isUserFeedbackEnabled = true;
-      }
-      if (statusSystemRating == 'basic') {
-        $scope.isRatingEnabled = true;
-      }
+      gnConfigService.load().then(function(c) {
+        $scope.isRecordHistoryEnabled = gnConfig['system.metadata.history.enabled'];
+
+        var statusSystemRating =
+          gnConfig['system.localrating.enable'];
+
+        if (statusSystemRating == 'advanced') {
+          $scope.isUserFeedbackEnabled = true;
+        }
+        if (statusSystemRating == 'basic') {
+          $scope.isRatingEnabled = true;
+        }
+      });
 
       $scope.search = function(params) {
         $location.path('/search');
@@ -88,7 +94,7 @@
           // Data needs improvements
           // See https://github.com/geonetwork/core-geonetwork/issues/723
           gnAlertService.addAlert({
-            msg: reason.data,
+            msg: reason.data.description,
             type: 'danger'
           });
         });
@@ -117,51 +123,68 @@
         $('.nav-tabs-advanced a:first').tab('show');
       };
 
-      $scope.format = function(f) {
-        $scope.usingFormatter = f !== undefined;
-        $scope.currentFormatter = f;
-        if (f) {
-          $('#gn-metadata-display').find('*').remove();
-          gnMdFormatter.getFormatterUrl(f.url, $scope).then(function(url) {
-            $http.get(url, {
-              headers: {
-                Accept: 'text/html'
-              }
-            }).then(
-                function(response,status) {
-                  if (response.status!=200){
-                    $('#gn-metadata-display').append("<div class='alert alert-danger top-buffer'>"+$translate.instant("metadataViewLoadError")+"</div>");
-                  } else {
-                    var snippet = response.data.replace(
-                        '<?xml version="1.0" encoding="UTF-8"?>', '');
+      $scope.loadFormatter = function(url) {
+        if ($scope.mdView.current.record == null) {
+          return;
+        }
+        var showApproved = $scope.mdView.current.record.draft != 'y';
+        var gn_metadata_display = $('#gn-metadata-display');
 
-                    $('#gn-metadata-display').find('*').remove();
+        $http.get(url, {
+          headers: {
+            Accept: 'text/html'
+          },
+          params: {
+            approved : showApproved
+          }
+        }).then(
+          function(response,status) {
+            if (response.status!=200){
+              gn_metadata_display.append(
+                "<div class='alert alert-danger top-buffer'>" +
+                $translate.instant("metadataViewLoadError") +
+                "</div>");
+            } else {
+              var snippet = response.data.replace(
+                '<?xml version="1.0" encoding="UTF-8"?>', '');
 
-                    $scope.compileScope.$destroy();
+              gn_metadata_display.find('*').remove();
 
-                    // Compile against a new scope
-                    $scope.compileScope = $scope.$new();
-                    var content = $compile(snippet)($scope.compileScope);
+              $scope.compileScope.$destroy();
 
-                    $('#gn-metadata-display').append(content);
+              // Compile against a new scope
+              $scope.compileScope = $scope.$new();
+              var content = $compile(snippet)($scope.compileScope);
 
-                    // activate the tabs in the full view
-                    $scope.activateTabs();
-                }
-              },
-            function(data) {
-              $('#gn-metadata-display').append("<div class='alert alert-danger top-buffer'>"+$translate.instant("metadataViewLoadError")+"</div>");
-            });
+              gn_metadata_display.append(content);
+
+              // activate the tabs in the full view
+              $scope.activateTabs();
+            }
+          },
+          function(data) {
+            gn_metadata_display.append(
+              "<div class='alert alert-danger top-buffer'>" +
+              $translate.instant("metadataViewLoadError") +
+              "</div>");
           });
-        };
       };
 
       // Reset current formatter to open the next record
       // in default mode.
-      $scope.$watch('mdView.current.record', function() {
-        $scope.usingFormatter = false;
+      function loadFormatter() {
         $scope.currentFormatter = null;
-      });
+        var f = gnSearchLocation.getFormatterPath();
+        if (f != undefined) {
+          $scope.currentFormatter = {
+            url: f
+          };
+          $scope.loadFormatter(f);
+        }
+      }
+      // $scope.$watch('mdView.current.record', loadFormatter);
+      $rootScope.$on('$locationChangeSuccess', loadFormatter)
+      loadFormatter();
 
       // Know from what path we come from
       $scope.gnMdViewObj = gnMdViewObj;

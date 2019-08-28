@@ -49,6 +49,7 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
@@ -57,6 +58,8 @@ import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.services.metadata.Show;
 import org.fao.geonet.services.relations.Get;
 import org.fao.geonet.utils.BinaryFile;
@@ -64,6 +67,7 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import com.google.common.base.Joiner;
@@ -77,6 +81,7 @@ import jeeves.server.context.ServiceContext;
  */
 public class MetadataUtils {
     public static final boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+
 
     public static Element getRelated(ServiceContext context, int iId, String uuid,
                                      RelatedItemType[] type,
@@ -344,6 +349,7 @@ public class MetadataUtils {
     }
 
     public static void backupRecord(AbstractMetadata metadata, ServiceContext context) {
+    	Log.trace(Geonet.DATA_MANAGER, "Backing up record " + metadata.getId());
         Path outDir = Lib.resource.getRemovedDir(metadata.getId());
         Path outFile;
         try {
@@ -358,18 +364,45 @@ public class MetadataUtils {
 
         Path file = null;
         try {
-            file = MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false, false);
+            file = MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false, false, true);
             Files.createDirectories(outDir);
             try (InputStream is = IO.newInputStream(file);
                  OutputStream os = Files.newOutputStream(outFile)) {
                 BinaryFile.copy(is, os);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK,"Backup record. Error: " + e.getMessage(), e);
         } finally {
             if (file == null) {
                 IO.deleteFile(file, false, Geonet.MEF);
             }
         }
+    }
+
+
+    /**
+     * Returns the metadata validation status from the database, calculating/storing the validation if not stored.
+     *
+     * @param metadata
+     * @param context
+     * @return
+     */
+    public static boolean retrieveMetadataValidationStatus(AbstractMetadata metadata, ServiceContext context) throws Exception {
+        MetadataValidationRepository metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
+        IMetadataValidator validator = context.getBean(IMetadataValidator.class);
+        DataManager dataManager = context.getBean(DataManager.class);
+
+        boolean hasValidation =
+            (metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(metadata.getId())) > 0);
+
+        if (!hasValidation) {
+            validator.doValidate(metadata, context.getLanguage());
+            dataManager.indexMetadata(metadata.getId() + "", true, null);
+        }
+
+        boolean isInvalid =
+            (metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(metadata.getId())) > 0);
+
+        return isInvalid;
     }
 }

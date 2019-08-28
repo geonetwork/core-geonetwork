@@ -5,7 +5,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.5.0-SNAPSHOT</version>
+    <version>3.9.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>es</artifactId>
@@ -25,7 +25,6 @@
           <plugin>
             <groupId>com.googlecode.maven-download-plugin</groupId>
             <artifactId>download-maven-plugin</artifactId>
-            <version>1.4.0</version>
             <executions>
               <execution>
                 <id>download-elastic-search</id>
@@ -35,7 +34,7 @@
                 </goals>
                 <configuration>
                   <url>
-                    https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${es.version}.tar.gz
+                    https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${es.version}-${es.platform}.${es.installer.extension}
                   </url>
                   <unpack>true</unpack>
                   <outputDirectory>${project.basedir}</outputDirectory>
@@ -59,7 +58,6 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>1.5.0</version>
             <configuration>
               <executable>elasticsearch-${es.version}/bin/${es.executable}</executable>
             </configuration>

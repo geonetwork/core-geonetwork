@@ -91,6 +91,15 @@
       };
 
       /**
+       * Opens the "Add Layer" tab, switch to WFS and specify URL (optional)
+       * @param {string} serviceUrl optional, do GetCap on specified URL
+       */
+      this.openWfsTab = function(serviceUrl) {
+        this.openTool('addLayers', 'services');
+        scope.addLayerUrl[config.type || 'wfs'] = serviceUrl;
+      };
+
+      /**
        * Opens the "WPS Processes" tab, and specify URL (optional)
        * @param {string} serviceUrl optional, do GetCap on specified URL
        */

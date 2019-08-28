@@ -20,219 +20,294 @@
 
 package org.fao.geonet.kernel.security.shibboleth;
 
-import jeeves.component.ProfileManager;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.apache.batik.util.resources.ResourceManager;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider;
 import org.fao.geonet.kernel.security.WritableUserDetailsContextMapper;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.utils.Log;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import jeeves.component.ProfileManager;
 
 /**
  * @author ETj (etj at geo-solutions.it)
+ * @author María Arias de Reyna (delawen)
  */
 public class ShibbolethUserUtils {
-    private UserDetailsManager userDetailsManager;
-    private WritableUserDetailsContextMapper udetailsmapper;
+	private UserDetailsManager userDetailsManager;
+	private WritableUserDetailsContextMapper udetailsmapper;
 
+	static MinimalUser parseUser(ServletRequest request, ResourceManager resourceManager, ProfileManager profileManager,
+			ShibbolethUserConfiguration config) {
+		return MinimalUser.create(request, config);
+	}
 
-    static MinimalUser parseUser(ServletRequest request,
-                                 ResourceManager resourceManager, ProfileManager profileManager,
-                                 ShibbolethUserConfiguration config) {
-        return MinimalUser.create(request, config);
-    }
+	protected static String getHeader(HttpServletRequest req, String name, String defValue) {
 
-    protected static String getHeader(HttpServletRequest req, String name,
-                                      String defValue) {
+		if (name == null || name.trim().isEmpty()) {
+			return defValue;
+		}
 
-        if (name == null || name.trim().isEmpty()) {
-            return defValue;
-        }
+		String value = req.getHeader(name);
 
-        String value = req.getHeader(name);
+		if (value == null)
+			return defValue;
 
-        if (value == null)
-            return defValue;
+		if (value.length() == 0)
+			return defValue;
 
-        if (value.length() == 0)
-            return defValue;
+		return value;
+	}
 
-        return value;
-    }
+	/**
+	 * @return the inserted/updated user or null if no valid user found or any error
+	 *         happened
+	 */
+	@Transactional(value = TxType.REQUIRES_NEW)
+	protected UserDetails setupUser(ServletRequest request, ShibbolethUserConfiguration config) throws Exception {
+		UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
+		GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
+		UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
+		GeonetworkAuthenticationProvider authProvider = ApplicationContextHolder.get()
+				.getBean(GeonetworkAuthenticationProvider.class);
 
-    /**
-     * @return the inserted/updated user or null if no valid user found or any error happened
-     */
-    @Transactional
-    protected UserDetails setupUser(ServletRequest request,
-                                    ShibbolethUserConfiguration config) throws Exception {
-        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
-        GeonetworkAuthenticationProvider authProvider = ApplicationContextHolder.get().getBean(GeonetworkAuthenticationProvider.class);
+		// Read in the data from the headers
+		HttpServletRequest req = (HttpServletRequest) request;
 
-        // Read in the data from the headers
-        HttpServletRequest req = (HttpServletRequest) request;
+		String username = getHeader(req, config.getUsernameKey(), "");
+		String surname = getHeader(req, config.getSurnameKey(), "");
+		String firstname = getHeader(req, config.getFirstnameKey(), "");
+		String email = getHeader(req, config.getEmailKey(), "");
+		String arraySeparator = config.getArraySeparator();
 
-        String username = getHeader(req, config.getUsernameKey(), "");
-        String surname = getHeader(req, config.getSurnameKey(), "");
-        String firstname = getHeader(req, config.getFirstnameKey(), "");
-        String email = getHeader(req, config.getEmailKey(), "");
-        Profile profile = Profile.findProfileIgnoreCase(getHeader(req,
-            config.getProfileKey(), ""));
-        // TODO add group to user
-        //String group = getHeader(req, config.getGroupKey(), "");
+		String profile_header = getHeader(req, config.getProfileKey(), Profile.Guest.name());
+		String[] profiles = new String[0];
+		if (!StringUtils.isEmpty(profile_header)) {
+			profiles = profile_header.split(arraySeparator);
+		}
 
-        if (username != null && username.trim().length() > 0) { // ....add other
-            // cnstraints to
-            // be sure it's
-            // a real
-            // shibbolet
-            // login and not
-            // fake
+		String group_header = getHeader(req, config.getGroupKey(), config.getDefaultGroup());
+		String[] groups = new String[0];
+		if (!StringUtils.isEmpty(group_header)) {
+			groups = group_header.split(arraySeparator);
+		}
 
+		if (!StringUtils.isEmpty(username)) {
 
-            // Make sure the profile name is an exact match
-            if (profile == null) {
-                profile = Profile.Guest;
-            }
+			// FIXME: needed? only accept the first 256 chars
+			if (username.length() > 256) {
+				username = username.substring(0, 256);
+			}
 
-            // TODO add group to user
-            //if (group.equals("")) {
-            //	group = config.getDefaultGroup();
-            //}
+			// Create or update the user
+			User user = null;
+			try {
+				user = (User) authProvider.loadUserByUsername(username);
 
+				if (config.isUpdateGroup()) {
+					// First we remove all previous groups
+					userGroupRepository.deleteAll(UserGroupSpecs.hasUserId(user.getId()));
 
-            // FIXME: needed? only accept the first 256 chars
-            if (username.length() > 256) {
-                username = username.substring(0, 256);
-            }
+					// Now we add the groups
+					assignGroups(groupRepository, userGroupRepository, profiles, groups, user);
+				}
 
-            // Create or update the user
-            User user = new User();
-            try {
-                user = (User) authProvider.loadUserByUsername(username);
-            } catch (UsernameNotFoundException e) {
-                user.setUsername(username);
-                user.setSurname(surname);
-                user.setName(firstname);
-                user.setProfile(profile);
+				//Assign the highest profile available
+				if (config.isUpdateProfile()) {
+					assignProfile(profiles, user);
+					userRepository.save(user);
+				}
 
-                // TODO add group to user
-                // Group g = _groupRepository.findByName(group);
+			} catch (UsernameNotFoundException e) {
+				user = new User();
+				user.setUsername(username);
+				user.setSurname(surname);
+				user.setName(firstname);
 
-            }
+				// Add email
+				if (!StringUtils.isEmpty(email)) {
+					user.getEmailAddresses().add(email);
+				}
+				
+				assignProfile(profiles, user);
+				userRepository.save(user);
+				
+				assignGroups(groupRepository, userGroupRepository, profiles, groups, user);
+			}
 
+			if (udetailsmapper != null) {
+				// If is not null, we may want to write to ldap if user does not exist
+				LDAPUser ldapUserDetails = null;
+				try {
+					ldapUserDetails = (LDAPUser) userDetailsManager.loadUserByUsername(username);
+				} catch (Throwable t) {
+                    Log.error(Geonet.GEONETWORK, "Shibboleth setupUser error: " + t.getMessage(), t);
+				}
 
-            if (udetailsmapper != null) {
-                //If is not null, we may want to write to ldap if user does not exist
-                LDAPUser ldapUserDetails = null;
-                try {
-                    ldapUserDetails = (LDAPUser) userDetailsManager
-                        .loadUserByUsername(username);
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                }
+				if (ldapUserDetails == null) {
+					ldapUserDetails = new LDAPUser(username);
+					ldapUserDetails.getUser().setName(firstname).setSurname(surname);
 
-                if (ldapUserDetails == null) {
-                    ldapUserDetails = new LDAPUser(username);
-                    ldapUserDetails.getUser().setName(firstname)
-                        .setSurname(surname);
+					ldapUserDetails.getUser().setProfile(user.getProfile());
+					ldapUserDetails.getUser().getEmailAddresses().clear();
+					if (StringUtils.isEmpty(email)) {
+						ldapUserDetails.getUser().getEmailAddresses().add(username + "@unknownIdp");
+					} else {
+						ldapUserDetails.getUser().getEmailAddresses().add(email);
+					}
+				}
 
-                    ldapUserDetails.getUser().setProfile(profile);
-                    ldapUserDetails.getUser().getEmailAddresses().clear();
-                    if (StringUtils.isEmpty(email)) {
-                        ldapUserDetails.getUser().getEmailAddresses().add(username + "@unknownIdp");
-                    } else {
-                        ldapUserDetails.getUser().getEmailAddresses().add(email);
-                    }
-                }
+				udetailsmapper.saveUser(ldapUserDetails);
 
-                udetailsmapper.saveUser(ldapUserDetails);
+				user = ldapUserDetails.getUser();
+			}
 
-                user = ldapUserDetails.getUser();
-            } else {
-                userRepository.saveAndFlush(user);
-            }
+			return user;
+		}
 
-            return user;
-        }
+		return null;
+	}
 
-        return null;
-    }
+	private void assignGroups(GroupRepository groupRepository, UserGroupRepository userGroupRepository,
+			String[] profiles, String[] groups, User user) {
+		// Assign groups
+		int i = 0;
 
-    public static class MinimalUser {
+		for (String group : groups) {
+			Group g = groupRepository.findByName(group);
+			
+			if(g == null) {
+				g = new Group();
+				g.setName(group);
+				groupRepository.save(g);
+			}
 
-        private String username;
-        private String name;
-        private String surname;
-        private String profile;
+			UserGroup usergroup = new UserGroup();
+			usergroup.setGroup(g);
+			usergroup.setUser(user);
+			if (profiles.length > i) {
+				Profile profile = Profile.findProfileIgnoreCase(profiles[i]);
+				if(profile.equals(Profile.Administrator)) {
+					//As we are assigning to a group, it is UserAdmin instead
+					profile = Profile.UserAdmin;
+				}
+				usergroup.setProfile(profile);
+				
+				if(profile.equals(Profile.Reviewer)) {
+					UserGroup ug = new UserGroup();
+					ug.setGroup(g);
+					ug.setUser(user);
+					ug.setProfile(Profile.Editor);
+					userGroupRepository.save(ug);
+				}
+			} else {
+				//Failback if no profile
+				usergroup.setProfile(Profile.Guest);
+			}
+			userGroupRepository.save(usergroup);
+			i++;
+		}
+	}
 
-        static MinimalUser create(ServletRequest request,
-                                  ShibbolethUserConfiguration config) {
+	private void assignProfile(String[] profiles, User user) {
+		// Assign the highest profile to the user
+		user.setProfile(null);
+		
+		for (String profile : profiles) {
+			Profile p = Profile.findProfileIgnoreCase(profile);
+			if (p != null && user.getProfile() == null) {
+				user.setProfile(p);
+			} else if (p != null && user.getProfile().compareTo(p) >= 0) {
+				user.setProfile(p);
+			} 
+		}
+		
+		//Failback if no profile
+		if(user.getProfile() == null) {
+			user.setProfile(Profile.Guest);
+		}
+	}
 
-            // Read in the data from the headers
-            HttpServletRequest req = (HttpServletRequest) request;
+	public static class MinimalUser {
 
-            String username = getHeader(req, config.getUsernameKey(), "");
-            String surname = getHeader(req, config.getSurnameKey(), "");
-            String firstname = getHeader(req, config.getFirstnameKey(), "");
-            String profile = getHeader(req, config.getProfileKey(), "");
+		private String username;
+		private String name;
+		private String surname;
+		private String profile;
 
-            if (username.trim().length() > 0) {
+		static MinimalUser create(ServletRequest request, ShibbolethUserConfiguration config) {
 
-                MinimalUser user = new MinimalUser();
-                user.setUsername(username);
-                user.setName(firstname);
-                user.setSurname(surname);
-                user.setProfile(profile);
-                return user;
+			// Read in the data from the headers
+			HttpServletRequest req = (HttpServletRequest) request;
 
-            } else {
-                return null;
-            }
-        }
+			String username = getHeader(req, config.getUsernameKey(), "");
+			String surname = getHeader(req, config.getSurnameKey(), "");
+			String firstname = getHeader(req, config.getFirstnameKey(), "");
+			String profile = getHeader(req, config.getProfileKey(), "");
 
-        public String getUsername() {
-            return username;
-        }
+			if (username.trim().length() > 0) {
 
-        public void setUsername(String username) {
-            this.username = username;
-        }
+				MinimalUser user = new MinimalUser();
+				user.setUsername(username);
+				user.setName(firstname);
+				user.setSurname(surname);
+				user.setProfile(profile);
+				return user;
 
-        public String getName() {
-            return name;
-        }
+			} else {
+				return null;
+			}
+		}
 
-        public void setName(String name) {
-            this.name = name;
-        }
+		public String getUsername() {
+			return username;
+		}
 
-        public String getSurname() {
-            return surname;
-        }
+		public void setUsername(String username) {
+			this.username = username;
+		}
 
-        public void setSurname(String surname) {
-            this.surname = surname;
-        }
+		public String getName() {
+			return name;
+		}
 
-        public String getProfile() {
-            return profile;
-        }
+		public void setName(String name) {
+			this.name = name;
+		}
 
-        public void setProfile(String profile) {
-            this.profile = profile;
-        }
-    }
+		public String getSurname() {
+			return surname;
+		}
+
+		public void setSurname(String surname) {
+			this.surname = surname;
+		}
+
+		public String getProfile() {
+			return profile;
+		}
+
+		public void setProfile(String profile) {
+			this.profile = profile;
+		}
+	}
 
 }

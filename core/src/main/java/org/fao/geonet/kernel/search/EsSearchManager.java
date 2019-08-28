@@ -54,6 +54,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.io.IOException;
@@ -62,7 +63,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -238,7 +238,7 @@ public class EsSearchManager implements ISearchManager {
     private void sendDocumentsToIndex() throws IOException {
         synchronized (this) {
             if (listOfDocumentsToIndex.size() > 0) {
-                client.bulkRequest(index, indexType, listOfDocumentsToIndex);
+                client.bulkRequest(index, listOfDocumentsToIndex);
                 listOfDocumentsToIndex.clear();
             }
         }
@@ -331,7 +331,7 @@ public class EsSearchManager implements ISearchManager {
                                             mapper.readTree(node.getTextNormalize()));
                                     } catch (IOException e) {
                                         // Invalid JSON object provided
-                                        e.printStackTrace();
+                                        Log.error(Geonet.INDEX_ENGINE, e.getMessage(), e);
                                     }
                                 } else {
                                     arrayNode.add(
@@ -351,7 +351,7 @@ public class EsSearchManager implements ISearchManager {
                                             ));
                                     } catch (IOException e) {
                                         // Invalid JSON object provided
-                                        e.printStackTrace();
+                                        Log.error(Geonet.INDEX_ENGINE, e.getMessage(), e);
                                     }
                                 } else {
                                     doc.put(
@@ -400,12 +400,12 @@ public class EsSearchManager implements ISearchManager {
                 for (Iterator<String> iter = sm.getSelection(bucket).iterator();
                      iter.hasNext(); ) {
                     String uuid = (String) iter.next();
-//                    String id = dataMan.getMetadataId(uuid);
-                    AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
-                    if (metadata != null) {
+                    for (AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
                         listOfIdsToIndex.add(metadata.getId() + "");
-                    } else {
-                        System.out.println(String.format(
+                    } 
+                    
+                    if(!metadataRepository.existsMetadataUuid(uuid)) {
+                        Log.warning(Geonet.INDEX_ENGINE, String.format(
                             "Selection contains uuid '%s' not found in database", uuid));
                     }
                 }
@@ -416,8 +416,8 @@ public class EsSearchManager implements ISearchManager {
             sendDocumentsToIndex();
         } else {
             final Specifications<Metadata> metadataSpec =
-                Specifications.where(MetadataSpecs.isType(MetadataType.METADATA))
-                    .or(MetadataSpecs.isType(MetadataType.TEMPLATE));
+                Specifications.where((Specification<Metadata>)MetadataSpecs.isType(MetadataType.METADATA))
+                    .or((Specification<Metadata>)MetadataSpecs.isType(MetadataType.TEMPLATE));
             final List<Integer> metadataIds = metadataRepository.findAllIdsBy(
                 Specifications.where(metadataSpec)
             );
@@ -432,7 +432,7 @@ public class EsSearchManager implements ISearchManager {
 
     public void clearIndex() throws Exception {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        client.deleteByQuery(index, indexType,
+        client.deleteByQuery(index,
             "harvesterUuid:\\\"" + settingManager.getSiteId() + "\\\"");
     }
 
@@ -533,7 +533,7 @@ public class EsSearchManager implements ISearchManager {
 
     @Override
     public void delete(String txt) throws Exception {
-        client.deleteByQuery(index, indexType, txt);
+        client.deleteByQuery(index, txt);
 //        client.commit();
     }
 

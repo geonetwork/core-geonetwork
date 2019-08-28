@@ -26,9 +26,11 @@
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:media="http://search.yahoo.com/mrss/"
                 xmlns:georss="http://www.georss.org/georss"
-                xmlns:gml="http://www.opengis.net/gml"
-                version="2.0"
-                exclude-result-prefixes="#all">
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
+                version="1.0"
+                exclude-result-prefixes="gn exslt">
+
 
   <xsl:include href="../../common/profiles-loader-tpl-brief.xsl"/>
 

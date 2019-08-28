@@ -377,18 +377,6 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
 
-  <servlet-mapping>
-    <servlet-name>gn-servlet</servlet-name>
-    <url-pattern>/nouse/*</url-pattern>
-  </servlet-mapping>
-
-  <!--
-  Multinode configuration: Add servlet mapping for each nodes
-  <servlet-mapping>
-      <servlet-name>gn-servlet</servlet-name>
-      <url-pattern>/node1/*</url-pattern>
-  </servlet-mapping>
-   -->
 
   <servlet>
     <servlet-name>HttpProxy</servlet-name>
@@ -516,11 +504,11 @@
 
   <servlet>
     <servlet-name>jolokia-agent</servlet-name>
+    <servlet-class>org.jolokia.http.AgentServlet</servlet-class>
     <init-param>
       <param-name>policyLocation</param-name>
       <param-value>classpath:/jolokia-access.xml</param-value>
     </init-param>
-    <servlet-class>org.jolokia.http.AgentServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
@@ -545,23 +533,7 @@
 
   <servlet-mapping>
     <servlet-name>spring</servlet-name>
-    <url-pattern>/srv/*</url-pattern>
-  </servlet-mapping>
-
-
-  <servlet-mapping>
-    <servlet-name>spring</servlet-name>
-    <url-pattern>/home</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>spring</servlet-name>
-    <url-pattern>/login.jsp</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>spring</servlet-name>
-    <url-pattern>/accessDenied.jsp</url-pattern>
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
@@ -580,7 +552,7 @@
       <http-only>true</http-only>
       <secure>${cookieSecureFlag}</secure>
     </cookie-config>
- </session-config>
+  </session-config>
 
   <context-param>
     <param-name>spring.profiles.active</param-name>

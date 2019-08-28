@@ -12,6 +12,7 @@
     <button data-ng-click="location.setMap()"
             data-ng-if="isMapViewerEnabled && !isExternalViewerEnabled"
             title="{{'openLargeMap' | translate}}"
+            aria-label="{{'openLargeMap' | translate}}"
             class="btn btn-default">
       <i class="fa fa-globe"></i>
     </button>
@@ -19,10 +20,12 @@
   </div>
 
   <div class="btn-group gn-draw-btn" data-ng-if="relations">
-    <button class="btn btn-default" gn-draw-bbox-btn="{{gnDrawBboxBtn}}"
+    <button class="btn btn-default"
+            gn-draw-bbox-btn="{{gnDrawBboxBtn}}"
             gn-draw-bbox-extent="{{gnDrawBboxExtent}}"
             gi-btn
             title="{{getButtonTitle()}}"
+            aria-label="{{getButtonTitle()}}"
             data-ng-class="{active: interaction.active}"
             data-ng-model="interaction.active">
       <i class="fa fa-pencil fa-fw" data-ng-hide="interaction.active"></i>
@@ -31,7 +34,9 @@
     <button type="button"
             class="btn btn-default dropdown-toggle"
             title="{{'chooseSpatialFilterType' | translate}}"
-            data-toggle="dropdown" aria-expanded="false">
+            aria-label="{{'chooseSpatialFilterType' | translate}}"
+            data-toggle="dropdown"
+            aria-expanded="false">
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu">

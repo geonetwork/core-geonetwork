@@ -53,14 +53,19 @@
   <!-- You may customize the following values by editing the file config-security-shibboleth-overrides.properties -->
   <bean id="shibbolethConfiguration"
         class="org.fao.geonet.kernel.security.shibboleth.ShibbolethUserConfiguration">
-    <property name="firstnameKey" value="${shibbolethConfiguration.firstnameKey}"/>
-    <property name="surnameKey" value="${shibbolethConfiguration.surnameKey}"/>
     <property name="usernameKey" value="${shibbolethConfiguration.usernameKey}"/>
+    <property name="surnameKey" value="${shibbolethConfiguration.surnameKey}"/>
+    <property name="firstnameKey" value="${shibbolethConfiguration.firstnameKey}"/>
     <property name="profileKey" value="${shibbolethConfiguration.profileKey}"/>
     <property name="groupKey" value="${shibbolethConfiguration.groupKey}"/>
+    <property name="emailKey" value="${shibbolethConfiguration.emailKey}"/>
+    
+    <property name="defaultGroup" value="${shibbolethConfiguration.defaultGroup}"/>
 
-    <property name="updateGroup" value="${shibbolethConfiguration.updateGroup}"/>
     <property name="updateProfile" value="${shibbolethConfiguration.updateProfile}"/>
+    <property name="updateGroup" value="${shibbolethConfiguration.updateGroup}"/>
+   
+    <property name="arraySeparator" value="${shibbolethConfiguration.arraySeparator}"/>
   </bean>
   
   <bean id="filterChainFilters" class="java.util.ArrayList">

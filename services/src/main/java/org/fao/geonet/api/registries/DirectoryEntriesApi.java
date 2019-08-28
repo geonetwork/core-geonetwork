@@ -75,8 +75,8 @@ import springfox.documentation.annotations.ApiIgnore;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-    "/api/registries/entries",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/registries/entries",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/registries/entries"
 })
 @Api(value = ApiParams.API_CLASS_REGISTRIES_TAG,
@@ -86,6 +86,12 @@ public class DirectoryEntriesApi {
 
     @Autowired
     SchemaManager schemaManager;
+
+    @Autowired
+    IMetadataUtils metadataRepository;
+
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
 
     private static final char SEPARATOR = '~';
 
@@ -150,9 +156,8 @@ public class DirectoryEntriesApi {
         )
         throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        final IMetadataUtils metadataRepository = applicationContext.getBean(IMetadataUtils.class);
-        final AbstractMetadata metadata = ApiUtils.getRecord(uuid);
 
+        final AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
 
         if (metadata == null) {
             throw new ResourceNotFoundException(String.format(
@@ -226,7 +231,6 @@ public class DirectoryEntriesApi {
             root.addContent(requestElt);
             root.addContent(tpl);
 
-            GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
             Path xslt = dataDirectory.getWebappDir()
                 .resolve("xslt/services/subtemplate/convert.xsl");
             return Xml.transform(root, xslt);

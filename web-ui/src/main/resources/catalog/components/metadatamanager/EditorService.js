@@ -37,15 +37,17 @@
   module.value('gnCurrentEdit', {});
 
   module.factory('gnEditor',
-      ['$q',
-       '$http',
-       '$translate',
-       '$compile',
-       'gnUrlUtils',
-       'gnXmlTemplates',
-       'gnHttp',
-       'gnCurrentEdit',
-       function($q, $http, $translate, $compile,
+      [
+        '$rootScope',
+        '$q',
+        '$http',
+        '$translate',
+        '$compile',
+        'gnUrlUtils',
+        'gnXmlTemplates',
+        'gnHttp',
+        'gnCurrentEdit',
+       function($rootScope, $q, $http, $translate, $compile,
                gnUrlUtils, gnXmlTemplates,
                gnHttp, gnCurrentEdit) {
 
@@ -174,6 +176,20 @@
            * value in the form and trigger save to update the view.
            */
            save: function(refreshForm, silent, terminate) {
+             save(refreshForm, silent, terminate, false, false);
+           },
+           /**
+            * Save the metadata record currently in editing session.
+            *
+            * If refreshForm is true, then will also update the current form.
+            * This is required while switching tab for example. Update the tab
+            * value in the form and trigger save to update the view.
+            * If submit is true and the current user is editor, the metadata
+            * status will be changed to submitted.
+            * If approve is true and the current user is reviewer, the metadata
+            * status will be changed to approved.
+            */
+           save: function(refreshForm, silent, terminate, submit, approve) {
              var defer = $q.defer();
              var scope = this;
              if (gnCurrentEdit.saving) {
@@ -213,7 +229,9 @@
              '../api/records/' + gnCurrentEdit.id + '/editor?' +
              (gnCurrentEdit.showValidationErrors ? '&withValidationErrors=true' : '') +
              (refreshForm ? '' : '&commit=true') +
-             (terminate ? '&terminate=true' : ''),
+             (terminate ? '&terminate=true' : '') +
+             (submit ? '&status=4' : '') +
+             (approve ? '&status=2' : ''),
              getFormParameters(),
              {
                headers: {'Content-Type':
@@ -233,8 +251,14 @@
                 if (!silent) {
                   setStatus({msg: 'saveMetadataError', saving: false});
                 }
+
                 gnCurrentEdit.working = false;
-                defer.reject(error);
+
+                // Error is returned in XML format, convert it to JSON
+                var x2js = new X2JS();
+                var errorJson = x2js.xml_str2json(error);
+
+                defer.reject(errorJson.apiError);
               });
              return defer.promise;
            },
@@ -306,7 +330,9 @@
              }
              else {
                var params = {id: gnCurrentEdit.id};
-
+               if (gnCurrentEdit.tab) {
+                 params.currTab = gnCurrentEdit.tab;
+               }
                // If a new session, ask the server to save the original
                // record and update session start time
                if (startNewSession) {
@@ -314,7 +340,7 @@
                  gnCurrentEdit.sessionStartTime = moment();
                }
                $http.get('../api/records/' + gnCurrentEdit.id + '/editor',
-               params).then(function(data) {
+                 {params: params}).then(function(data) {
                  refreshForm($(data.data));
                });
              }
@@ -339,7 +365,7 @@
                extent = angular.fromJson(value);
              } catch (e) {
                console.warn(
-                 'Failed to parse the following extent as JSON: ' +
+               'Failed to parse the following extent as JSON: ' +
                value);
              }
              angular.extend(gnCurrentEdit, {
@@ -375,7 +401,7 @@
                  gnCurrentEdit.allLanguages.code2iso[code] = iso;
                  gnCurrentEdit.allLanguages.iso2code[iso] = code;
                  gnCurrentEdit.allLanguages.iso.push(iso);
-                 ;
+
                });
              }
 
@@ -539,10 +565,14 @@
              var defer = $q.defer();
              $http.delete('../api/records/' + gnCurrentEdit.id +
              '/editor/attributes?ref=' + ref.replace('COLON', ':'))
-              .success(function(data) {
+              .then(function(data) {
                var target = $('#gn-attr-' + ref);
                target.slideUp(duration, function() { $(this).remove();});
-             });
+               defer.resolve();
+               $rootScope.$broadcast('attributeRemoved', ref);
+             }, function(errorData) {
+                defer.reject(errorData);
+              });
              return defer.promise;
            },
            /**

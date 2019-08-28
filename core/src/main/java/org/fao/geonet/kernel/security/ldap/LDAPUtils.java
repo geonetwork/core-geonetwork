@@ -294,7 +294,7 @@ public class LDAPUtils {
                 }
             }
         } catch (NamingException e) {
-            e.printStackTrace();
+            Log.error(Geonet.LDAP, e.getMessage(), e);
         }
         return userInfo;
     }

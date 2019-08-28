@@ -49,8 +49,8 @@ import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 
 @RequestMapping(value = {
-    "/api/tools/migration",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/tools/migration",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/tools/migration"
 })
 @Api(value = "tools",
@@ -81,6 +81,8 @@ public class MigrationApi {
             if (DatabaseMigrationTask.class.isAssignableFrom(clazz)) {
                 DatabaseMigrationTask task =
                     (DatabaseMigrationTask) clazz.newInstance();
+                connection.setAutoCommit(true);
+                task.setContext(appContext);
                 task.update(connection);
             } else if (ContextAwareTask.class.isAssignableFrom(clazz)) {
                 ContextAwareTask task = (ContextAwareTask) clazz.newInstance();

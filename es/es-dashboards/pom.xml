@@ -22,14 +22,13 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.geonetwork-opensource</groupId>
   <artifactId>es-dashboards</artifactId>
   <name>GeoNetwork dashboard app based on Kibana</name>
 
   <parent>
     <artifactId>es</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.5.0-SNAPSHOT</version>
+    <version>3.9.0-SNAPSHOT</version>
   </parent>
   <profiles>
     <profile>
@@ -44,7 +43,6 @@
           <plugin>
             <groupId>com.googlecode.maven-download-plugin</groupId>
             <artifactId>download-maven-plugin</artifactId>
-            <version>1.4.0</version>
             <executions>
               <execution>
                 <id>download-elastic-search</id>
@@ -78,7 +76,6 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>1.5.0</version>
             <configuration>
               <executable>kibana-${es.version}-${kb.platform}/bin/${kb.executable}</executable>
             </configuration>
@@ -97,14 +94,12 @@
         <kb.executable>kibana.bat</kb.executable>
         <kb.platform>windows-x86</kb.platform>
         <kb.installer.extension>zip</kb.installer.extension>
-        <kb.version.sha512>795b19d5be8841d9bbc3d11f174a118bf1f71de2d1789e6285ff835ae37d6b09d47063b2bc35fa2df802df1cfd19e13e9deb46ede657c78f62b3a99346463913</kb.version.sha512>
+        <kb.version.sha512>d9ed16170f9ef88a2dc4f0d300c52157674d1fe902cd1da3e9472d0830c0810b9417d9d3af6116dcdb328dea038998f9b4c695e0284d6094f43777b6598a7bf4</kb.version.sha512>
       </properties>
     </profile>
   </profiles>
   <properties>
     <kb.executable>kibana</kb.executable>
-    <kb.platform>linux-x86_64</kb.platform>
-    <kb.installer.extension>tar.gz</kb.installer.extension>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

@@ -26,21 +26,20 @@ import static org.fao.geonet.domain.userfeedback.RatingCriteria.AVERAGE_ID;
 import java.util.List;
 
 import org.apache.jcs.access.exception.ObjectNotFoundException;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.userfeedback.UserFeedbackUtils;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.userfeedback.Rating;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.domain.userfeedback.UserFeedback.UserRatingStatus;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.userfeedback.RatingRepository;
 import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -53,6 +52,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserFeedbackDatabaseService implements IUserFeedbackService {
 
+    @Autowired
+    IMetadataUtils dataManager;
+
+    @Autowired
+    MetadataRepository metadataRepository;
+
+    @Autowired
+    RatingRepository ratingRepository;
+
+    @Autowired
+    UserFeedbackRepository userFeedbackRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
     /*
      * (non-Javadoc)
      *
@@ -61,9 +75,6 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
      */
     @Override
     public void publishUserFeedback(String feedbackUuid, User user) throws ObjectNotFoundException {
-        final UserFeedbackRepository userFeedbackRepository = ApplicationContextHolder.get()
-                .getBean(UserFeedbackRepository.class);
-
         final UserFeedback userFeedback = userFeedbackRepository.findByUuid(feedbackUuid);
 
         if(userFeedback != null) {
@@ -84,20 +95,20 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
      */
     @Override
     public void removeUserFeedback(String feedbackUuid, String ip) throws Exception {
-        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
-        final UserFeedbackRepository userFeedbackRepository = appContext
-                .getBean(UserFeedbackRepository.class);
-
         final UserFeedback userFeedback = userFeedbackRepository.findByUuid(feedbackUuid);
         final Metadata metadata = userFeedback.getMetadata();
 
         userFeedbackRepository.delete(userFeedback);
 
         // Then update global metadata rating
-        IMetadataUtils dataManager = appContext.getBean(IMetadataUtils.class);
-        UserFeedbackUtils.RatingAverage averageRating = new UserFeedbackUtils()
-            .getAverage(retrieveUserFeedbackForMetadata(metadata.getUuid(), -1, true));
-        dataManager.rateMetadata(metadata.getId(), ip, averageRating.getRatingAverages().get(AVERAGE_ID));
+        List<UserFeedback> listFeedbacks = retrieveUserFeedbackForMetadata(metadata.getUuid(), -1, true);
+        Integer average = 0;
+        if(listFeedbacks.size()>0) {
+            UserFeedbackUtils.RatingAverage averageRating = new UserFeedbackUtils()
+                    .getAverage(listFeedbacks);
+            average = averageRating.getRatingAverages().get(AVERAGE_ID);
+        }
+        dataManager.rateMetadata(metadata.getId(), ip, average);
     }
 
     /*
@@ -108,8 +119,6 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
      */
     @Override
     public List<Rating> retrieveMetadataRatings(String metadataUuid, boolean published) {
-        final RatingRepository ratingRepository = ApplicationContextHolder.get().getBean(RatingRepository.class);
-
         return ratingRepository.findByMetadata_Uuid(metadataUuid);
     }
 
@@ -121,9 +130,6 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
      */
     @Override
     public List<UserFeedback> retrieveUserFeedback(int maxSize, boolean published) {
-        final UserFeedbackRepository userFeedbackRepository = ApplicationContextHolder.get()
-                .getBean(UserFeedbackRepository.class);
-
         List<UserFeedback> result = null;
 
         if (published) {
@@ -157,9 +163,6 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
      */
     @Override
     public UserFeedback retrieveUserFeedback(String feedbackUuid, boolean published) {
-        final UserFeedbackRepository userFeedbackRepository = ApplicationContextHolder.get()
-                .getBean(UserFeedbackRepository.class);
-
         if (published) {
             return userFeedbackRepository.findByUuidAndStatus(feedbackUuid, UserRatingStatus.PUBLISHED);
         } else {
@@ -175,10 +178,6 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
      */
     @Override
     public List<UserFeedback> retrieveUserFeedbackForMetadata(String metadataUuid, int maxSize, boolean published) {
-
-        final UserFeedbackRepository userFeedbackRepository = ApplicationContextHolder.get()
-                .getBean(UserFeedbackRepository.class);
-
         List<UserFeedback> result = null;
 
         if (published) {
@@ -209,14 +208,6 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
      */
     @Override
     public void saveUserFeedback(UserFeedback userFeedback, String ip) throws Exception {
-        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
-        final UserFeedbackRepository userFeedbackRepository = appContext
-                .getBean(UserFeedbackRepository.class);
-
-        final MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
-
-        final UserRepository userRepository = appContext.getBean(UserRepository.class);
-
         if (userFeedback.getAuthorId() != null) {
             final User author = userRepository.findOneByUsername(userFeedback.getAuthorId().getUsername());
             userFeedback.setAuthorId(author);
@@ -225,8 +216,8 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
             final User approver = userRepository.findOneByUsername(userFeedback.getApprover().getUsername());
             userFeedback.setApprover(approver);
         }
-        final Metadata metadata = metadataRepository.findOneByUuid(userFeedback.getMetadata().getUuid());
-        userFeedback.setMetadata(metadata);
+        final AbstractMetadata metadata = metadataRepository.findOneByUuid(userFeedback.getMetadata().getUuid());
+        userFeedback.setMetadata((Metadata)metadata);
 
         if (userFeedback.getCreationDate() == null) {
             userFeedback.setCreationDate(new ISODate(System.currentTimeMillis()).toDate());
@@ -235,7 +226,6 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
         userFeedbackRepository.save(userFeedback);
 
         // Then update global metadata rating
-        IMetadataUtils dataManager = appContext.getBean(IMetadataUtils.class);
         UserFeedbackUtils.RatingAverage averageRating = new UserFeedbackUtils()
             .getAverage(retrieveUserFeedbackForMetadata(metadata.getUuid(), -1, true));
         Integer average =  averageRating.getRatingAverages().get(AVERAGE_ID);

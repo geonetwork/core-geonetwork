@@ -105,12 +105,12 @@ public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
         MetadataCategory cat2 = _repo.save(newMetadataCategory(_inc));
 
         Metadata metadata1 = MetadataRepositoryTest.newMetadata(_inc);
-        metadata1.getMetadataCategories().add(cat1);
-        metadata1.getMetadataCategories().add(cat2);
+        metadata1.getCategories().add(cat1);
+        metadata1.getCategories().add(cat2);
         metadata1 = _metadataRepo.save(metadata1);
 
         Metadata metadata2 = MetadataRepositoryTest.newMetadata(_inc);
-        metadata2.getMetadataCategories().add(cat1);
+        metadata2.getCategories().add(cat1);
         metadata2 = _metadataRepo.save(metadata2);
 
         _repo.deleteCategoryAndMetadataReferences(cat1.getId());
@@ -120,11 +120,11 @@ public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
 
         // org.fao.geonet.services.category.Remove assumes that this test passes.  If this test can't pass
         // then there needs to be a way to fix Remove as well.
-        final Set<MetadataCategory> foundCategories = _metadataRepo.findOne(metadata1.getId()).getMetadataCategories();
+        final Set<MetadataCategory> foundCategories = _metadataRepo.findOne(metadata1.getId()).getCategories();
         assertEquals(1, foundCategories.size());
         assertEquals(cat2.getId(), foundCategories.iterator().next().getId());
 
-        assertEquals(0, _metadataRepo.findOne(metadata2.getId()).getMetadataCategories().size());
+        assertEquals(0, _metadataRepo.findOne(metadata2.getId()).getCategories().size());
     }
 
     private MetadataCategory newMetadataCategory() {

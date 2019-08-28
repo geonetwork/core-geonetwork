@@ -49,7 +49,7 @@ public class FacetsService {
     @Autowired
     private LuceneConfig luceneConfig;
 
-    @RequestMapping(value = "/{lang}/search/facet/config", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/{portal}/{lang:[a-z]{3}}/search/facet/config", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public Map<String, List<Facet>> getConfig() {
         Map<String, List<Facet>> results = Maps.newLinkedHashMap();

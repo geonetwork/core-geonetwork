@@ -4,13 +4,14 @@
               <input type="hidden" name="_csrf" value="{{csrf}}"/>
     <div class="onlinesrc-container">
 
-      <div class="form-group" ng-show="::ctrl.associationTypes.length">
+      <div class="form-group gn-required" ng-show="::ctrl.associationTypes.length">
         <label class="col-sm-3 control-label">
           <span data-translate="">associationType</span>
         </label>
         <div class="col-sm-5">
           <div data-schema-info-combo="codelist"
                data-schema-info-combo-values="ctrl.associationTypes"
+               data-allow-blank="false"
                data-selected-info="config.associationType"
                data-gn-schema-info="associationType" lang="lang"></div>
         </div>
@@ -25,7 +26,7 @@
                data-selected-info="config.initiativeType"
                data-gn-schema-info="initiativeType"
                lang="lang"
-               data-allow-blank=""></div>
+               data-allow-blank="true"></div>
         </div>
       </div>
       <div class="form-group">
@@ -68,7 +69,7 @@
       <div class="">
         <button type="button" class="btn navbar-btn btn-success"
                 data-gn-click-and-spin="linkToResource()"
-                data-ng-class="{'disabled': (selection.length < 1)}">
+                data-ng-disabled="selection.length < 1">
           <i class="fa gn-icon-sibling"/>&nbsp;
           <span data-translate="">saveLinkToSibling</span>
         </button>

@@ -26,8 +26,8 @@ package org.fao.geonet.utils;
 import net.sf.json.JSON;
 import net.sf.json.xml.XMLSerializer;
 import net.sf.saxon.Configuration;
+import net.sf.saxon.Controller;
 import net.sf.saxon.FeatureKeys;
-
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
@@ -55,6 +55,21 @@ import org.jdom.xpath.XPath;
 import org.mozilla.universalchardet.UniversalDetector;
 import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.URIResolver;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.ValidatorHandler;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -79,6 +94,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -87,22 +103,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.URIResolver;
-import javax.xml.transform.sax.SAXResult;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.ValidatorHandler;
 
 import static org.fao.geonet.Constants.ENCODING;
 
@@ -207,8 +207,7 @@ public final class Xml {
 
             result = (Element) jdoc.getRootElement().detach();
         } catch (Exception e) {
-            Log.error(Log.ENGINE, "Error loading URL " + url.getPath() + " .Threw exception " + e);
-            e.printStackTrace();
+            Log.error(Log.ENGINE, "Error loading URL " + url.getPath() + " .Threw exception " + e.getMessage(), e);
         }
         return result;
     }
@@ -385,6 +384,16 @@ public final class Xml {
     public static void transform(Element xml, Path styleSheetPath, OutputStream out) throws Exception {
         StreamResult resStream = new StreamResult(out);
         transform(xml, styleSheetPath, resStream, null);
+        out.flush();
+    }
+
+
+    public static void transformXml(Element xml, Path styleSheetPath, OutputStream out) throws Exception {
+        StreamResult resStream = new StreamResult(out);
+        Map<String, Object> map = new HashMap<>();
+        map.put("geonet-force-xml", "xml");
+        transform(xml, styleSheetPath, resStream, map);
+        out.flush();
     }
 
     //--------------------------------------------------------------------------
@@ -428,8 +437,7 @@ public final class Xml {
             // Add the following to get timing info on xslt transformations
             //transFact.setAttribute(FeatureKeys.TIMING,true);
         } catch (IllegalArgumentException e) {
-            System.out.println("WARNING: transformerfactory doesnt like saxon attributes!");
-            //e.printStackTrace();
+            Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
         } finally {
             Transformer t = transFact.newTransformer(xslt);
             if (xmlParam != null) {
@@ -472,11 +480,11 @@ public final class Xml {
                 transFact.setAttribute(FeatureKeys.LINE_NUMBERING, true);
                 transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION, false);
                 transFact.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
+
                 // Add the following to get timing info on xslt transformations
                 //transFact.setAttribute(FeatureKeys.TIMING,true);
             } catch (IllegalArgumentException e) {
-                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
-                //e.printStackTrace();
+                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
             } finally {
                 transFact.setURIResolver(new JeevesURIResolver());
                 Transformer t = transFact.newTransformer(srcSheet);
@@ -484,6 +492,13 @@ public final class Xml {
                     for (Map.Entry<String, Object> param : params.entrySet()) {
                         t.setParameter(param.getKey(), param.getValue());
                     }
+
+                if (params.containsKey("geonet-force-xml")) {
+                    ((Controller) t).setOutputProperty("indent", "yes");
+                    ((Controller) t).setOutputProperty("method", "xml");
+                    ((Controller) t).setOutputProperty("{http://saxon.sf.net/}indent-spaces", "3");
+                }
+
                 }
                 t.transform(srcXml, result);
             }
@@ -516,7 +531,7 @@ public final class Xml {
 
         // Step 1: Construct a FopFactory
         // (reuse if you plan to render multiple documents!)
-        FopFactory fopFactory = FopFactory.newInstance();
+        FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
 
         // Step 2: Set up output stream.
         // Note: Using BufferedOutputStream for performance reasons
@@ -535,8 +550,7 @@ public final class Xml {
                 factory.setAttribute(FeatureKeys.LINE_NUMBERING, true);
                 factory.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
             } catch (IllegalArgumentException e) {
-                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
-                //e.printStackTrace();
+                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
             } finally {
                 Transformer transformer = factory.newTransformer(xslt);
 
@@ -851,7 +865,7 @@ public final class Xml {
         }
         XmlErrorHandler eh = new XmlErrorHandler();
         Schema schema = factory().newSchema();
-        Element xsdErrors = validateRealGuts(schema, xml, eh);
+        Element xsdErrors = validateRealGuts(schema, xml, eh, null);
         if (xsdErrors != null) {
             throw new XSDValidationErrorEx("XSD Validation error(s):\n" + getString(xsdErrors), xsdErrors);
         }
@@ -865,7 +879,7 @@ public final class Xml {
     public static void validate(Path schemaPath, Element xml) throws Exception {
         XmlErrorHandler eh = new XmlErrorHandler();
         Schema schema = getSchemaFromPath(schemaPath);
-        Element xsdErrors = validateRealGuts(schema, xml, eh);
+        Element xsdErrors = validateRealGuts(schema, xml, eh, null);
         if (xsdErrors != null) {
             throw new XSDValidationErrorEx("XSD Validation error(s):\n" + getString(xsdErrors), xsdErrors);
         }
@@ -875,9 +889,9 @@ public final class Xml {
     /**
      * Validates an xml document with respect to schemaLocation hints using supplied error handler.
      */
-    public static Element validateInfo(Element xml, XmlErrorHandler eh) throws Exception {
+    public static Element validateInfo(Element xml, XmlErrorHandler eh, String schemaName) throws Exception {
         Schema schema = factory().newSchema();
-        return validateRealGuts(schema, xml, eh);
+        return validateRealGuts(schema, xml, eh, schemaName);
     }
 
 
@@ -886,9 +900,9 @@ public final class Xml {
      * Validates an xml document with respect to an xml schema described by .xsd file path using
      * supplied error handler.
      */
-    public static Element validateInfo(Path schemaPath, Element xml, XmlErrorHandler eh) throws Exception {
+    public static Element validateInfo(Path schemaPath, Element xml, XmlErrorHandler eh, String schemaName) throws Exception {
         Schema schema = getSchemaFromPath(schemaPath);
-        return validateRealGuts(schema, xml, eh);
+        return validateRealGuts(schema, xml, eh, schemaName);
     }
 
     //---------------------------------------------------------------------------
@@ -909,8 +923,8 @@ public final class Xml {
     /**
      * Called by all validation methods to do the real guts of the validation job.
      */
-    private static Element validateRealGuts(Schema schema, Element xml, XmlErrorHandler eh) throws JDOMException {
-        Resolver resolver = ResolverWrapper.getInstance();
+    private static Element validateRealGuts(Schema schema, Element xml, XmlErrorHandler eh, String schemaName) throws JDOMException {
+        Resolver resolver = ResolverWrapper.getInstance(schemaName);
 
         ValidatorHandler vh = schema.newValidatorHandler();
         vh.setResourceResolver(resolver.getXmlResolver());
@@ -1042,7 +1056,7 @@ public final class Xml {
     /**
      * return true if the String passed in is something like XML
      *
-     * @param inString a string that might be XML
+     * @param inXMLStr a string that might be XML
      * @return true of the string is XML, false otherwise
      */
     public static boolean isXMLLike(String inXMLStr) {
@@ -1116,8 +1130,7 @@ public final class Xml {
                         s.setSystemId(f.toUri().toASCIIString());
                     }
                 } catch (URISyntaxException e) {
-                    Log.warning(Log.XML_RESOLVER, "URI syntax problem: " + e.getMessage());
-                    e.printStackTrace();
+                    Log.warning(Log.XML_RESOLVER, "URI syntax problem: " + e.getMessage(), e);
                 }
             }
 

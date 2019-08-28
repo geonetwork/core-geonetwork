@@ -301,8 +301,11 @@
 
                   // Select by default the first group.
                   if ((angular.isUndefined(scope.ownerGroup) ||
-                    scope.ownerGroup === '') && data) {
-                    scope.ownerGroup = scope.groups[0].id;
+                    scope.ownerGroup === '' ||
+                    scope.ownerGroup === null) && data) {
+                    // Requires to be converted to string, otherwise
+                    // angularjs adds empty non valid option
+                    scope.ownerGroup = scope.groups[0].id + "";
                   }
                   if (optional) {
                     scope.groups.unshift({
@@ -585,11 +588,12 @@
             link: function(scope, element, attrs) {
               var initialized = false;
               var defaultValue;
+              var allowBlank = attrs['allowBlank'] == true;
 
               var addBlankValueAndSetDefault = function() {
                 var blank = {label: '', code: ''};
                 if (scope.infos != null && scope.infos.length &&
-                    scope.allowBlank !== undefined) {
+                    allowBlank) {
                   scope.infos.unshift(blank);
                 }
                 // Search default value
@@ -600,9 +604,10 @@
                 });
 
                 // If no blank value allowed select default or first
-                // If no value defined, select defautl or blank one
+                // If no value defined, select default or blank one
                 if (!angular.isDefined(scope.selectedInfo)) {
-                  scope.selectedInfo = defaultValue || scope.infos[0].code;
+                  scope.selectedInfo = defaultValue
+                    || (scope.infos && scope.infos.length > 0 ? scope.infos[0].code : defaultValue);
                 }
                 // This will avoid to have undefined selected option
                 // on top of the list.
@@ -611,7 +616,7 @@
               scope.gnCurrentEdit = gnCurrentEdit;
               scope.$watch('gnCurrentEdit.schema',
                   function(newValue, oldValue) {
-                    if (newValue !== oldValue) {
+                    if (!initialized && angular.isDefined(newValue)) {
                       init();
                     }
                   });

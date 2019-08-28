@@ -15,6 +15,17 @@
   }
 }
 
+// draft
+.see-draft-alert {
+  padding: 15px 50px;
+  a {
+    color: @gray-dark;
+    &:hover {
+      color: @gray-darker;
+    }
+  }
+}
+
 .gn-md-view {
   padding: 15px 20px;
   background-color: @gn-md-view-background-color;
@@ -120,5 +131,118 @@
   // IE11 flexbox fix
   .gn-record > table {
     table-layout: fixed;
+  }
+}
+
+// nojs styles
+.gn-nojs {
+  .gn-md-view {
+    h1 {
+      margin: 15px 0 25px 0;
+      font-size: 22px;
+      i {
+        display: none;
+      }
+    }
+    blockquote {
+      font-size: 15px;
+      line-height: 1.5em;
+    }
+    .gn-md-side {
+      h2 {
+        font-size: 16px;
+      }
+      .gn-img-thumbnail {
+        line-height: 1.42857;
+        background-color: rgb(255, 255, 255);
+        display: inline-block;
+        max-width: 100%;
+        height: auto;
+        padding: 4px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: rgb(221, 221, 221);
+        border-image: initial;
+        border-radius: 4px;
+        transition: all 0.2s ease-in-out 0s;
+      }
+    } 
+    h2 {
+      font-size: 18px;
+    }
+    .gn-contact {
+      padding: 8px;
+      border-top: 1px solid #ddd;
+      h2 {
+        font-size: 14px;
+        margin: 0 0 15px 0;
+      }
+    }
+    dl {
+      .clearfix();
+      border-top: 1px solid #ddd;
+      margin-bottom: 0;
+      padding-bottom: 0;
+      dt {
+        float:left;
+        width: 35%;
+        padding: 8px;
+        font-weight: 500;
+      }
+      dd {
+        float: left;
+        padding: 8px;
+        width: 65%;
+        ul {
+          padding-left: 1.2em;
+        }
+      }
+    }
+    h2.view-header, h5.view-header {
+      border-bottom: 0;
+    }
+    .entry {
+      margin-left: 0 !important;
+      padding-left: 0;
+      border-left: 0;
+      h2 {
+        font-weight: 400;
+        margin: 15px 0;
+      }
+    }
+    .extent {
+      display: inline-block;
+      position: relative;
+      margin: 2em 0px 0px 90px;
+      display: inline-block;
+      position: relative;
+      margin: 2em 0px 0px 90px;
+      border-width: 1px;
+      border-style: solid;
+      border-color: rgb(204, 204, 204);
+      border-image: initial;
+    }
+    // tabs
+    .nav-tabs {
+      border: 0;
+      > li {
+        a {
+          border: 1px solid @nav-tabs-border-color;
+          border-radius: @border-radius-base;
+          margin: 0 5px 5px 0;
+        }
+      } 
+    }
+    .tab-content {
+      #gn-tab-default {
+        h1.view-header {
+          display: none;
+        }
+      }
+      .tab-pane {
+        display: block;
+      }
+
+    }
   }
 }

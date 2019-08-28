@@ -48,11 +48,11 @@
    * config.js
    */
   module.service('gnRelatedService', ['$http', '$q', function($http, $q) {
-    this.get = function(uuid, types) {
+    this.get = function(uuidOrId, types) {
       var canceller = $q.defer();
       var request = $http({
         method: 'get',
-        url: '../api/records/' + uuid + '/related?' +
+        url: '../api/records/' + uuidOrId + '/related?' +
             (types ?
             'type=' + types.split('|').join('&type=') :
             ''),
@@ -140,13 +140,13 @@
 
               scope.updateRelations = function() {
                 scope.relations = null;
-                if (scope.uuid) {
+                if (scope.id) {
                   scope.relationFound = false;
                   if (controller) {
                     controller.startGnRelatedRequest(elem);
                   }
                   (promise = gnRelatedService.get(
-                     scope.uuid, scope.types)
+                     scope.id, scope.types)
                   ).then(function(data) {
                        angular.forEach(data, function(value, idx) {
                          if (!value) { return; }
@@ -204,12 +204,12 @@
               if (gnSearchSettings.displayChildrenBtn === undefined ||
                  gnSearchSettings.displayChildrenBtn === true) {
                 scope.$watchCollection('md', function(n, o) {
-                  if (n && n !== o || angular.isUndefined(scope.uuid)) {
+                  if (n && n !== o || angular.isUndefined(scope.id)) {
                     if (promise && angular.isFunction(promise.abort)) {
                       promise.abort();
                     }
                     if (scope.md != null) {
-                      scope.uuid = scope.md.getUuid();
+                      scope.id = scope.md.getId();
                     }
                     scope.updateRelations();
                   }

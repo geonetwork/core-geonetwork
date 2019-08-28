@@ -23,26 +23,23 @@
 
 package org.fao.geonet.api.regions.metadata;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
-
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-
-import jeeves.server.context.ServiceContext;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.region.MetadataRegion;
 import org.fao.geonet.utils.Xml;
@@ -50,17 +47,19 @@ import org.geotools.xml.Parser;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+
+import jeeves.server.context.ServiceContext;
 
 public class MetadataRegionSearchRequest extends Request {
 
     public static final String PREFIX = "metadata:";
     private static final FindByNodeName EXTENT_FINDER = new FindByNodeName("EX_BoundingPolygon", "EX_GeographicBoundingBox", "polygon");
-    private final Parser parser;
+    private final Parser[] parsers;
     ServiceContext context;
     private List<? extends MetadataRegionFinder> regionFinders = Lists.newArrayList(
         new FindRegionByXPath(), new FindRegionByGmlId(), new FindRegionByEditRef());
@@ -68,9 +67,9 @@ public class MetadataRegionSearchRequest extends Request {
     private String label;
     private GeometryFactory factory;
 
-    public MetadataRegionSearchRequest(ServiceContext context, Parser parser, GeometryFactory factory) {
+    public MetadataRegionSearchRequest(ServiceContext context, Parser[] parsers, GeometryFactory factory) {
         this.context = context;
-        this.parser = parser;
+        this.parsers = parsers;
         this.factory = factory;
     }
 
@@ -176,10 +175,10 @@ public class MetadataRegionSearchRequest extends Request {
         Geometry geometry = null;
         if ("polygon".equals(extentObj.getName())) {
             String gml = Xml.getString(extentObj);
-            geometry = SpatialIndexWriter.parseGml(parser, gml);
+            geometry = SpatialIndexWriter.parseGml(parsers[0], gml);
         } else if ("EX_BoundingPolygon".equals(extentObj.getName())) {
             String gml = Xml.getString(extentObj.getChild("polygon", Geonet.Namespaces.GMD));
-            geometry = SpatialIndexWriter.parseGml(parser, gml);
+            geometry = SpatialIndexWriter.parseGml(parsers[0], gml);
         } else if ("EX_GeographicBoundingBox".equals(extentObj.getName())) {
             double minx = Double.parseDouble(extentObj.getChild("westBoundLongitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
             double maxx = Double.parseDouble(extentObj.getChild("eastBoundLongitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
@@ -203,7 +202,7 @@ public class MetadataRegionSearchRequest extends Request {
         final DataManager dataManager = context.getBean(DataManager.class);
         String mdId = id.getMdId(context.getBean(SearchManager.class), dataManager);
         try {
-            if (context.getBean(MetadataRepository.class).exists(Integer.parseInt(mdId))) {
+            if (context.getBean(IMetadataUtils.class).exists(Integer.parseInt(mdId))) {
                 Lib.resource.checkPrivilege(context, mdId, ReservedOperation.view);
 
                 return dataManager.getMetadata(context, mdId, includeEditData, false, true);

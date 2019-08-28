@@ -41,7 +41,7 @@ import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.RelatedMetadata;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -157,7 +157,7 @@ public class GetRelated implements Service, RelatedMetadata {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
         GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
-        IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
+        MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
 
         final ServiceContext context = serviceManager.createServiceContext("xml.relation", lang, request);
 

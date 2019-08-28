@@ -82,6 +82,8 @@
     <jsSource webappPath="/catalog/lib/bootstrap-select/bootstrap-select.min.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap-table/dist/extensions/angular/bootstrap-table-angular.js"
+              minimize="false"/>
     <jsSource webappPath="/catalog/lib/FileSaver/FileSaver.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/tableExport/tableExport.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js" minimize="false"/>
@@ -95,6 +97,7 @@
     <jsSource webappPath="/catalog/lib/underscore/underscore-min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/recaptcha/angular-recaptcha.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/geohash.js"/>
+    <jsSource webappPath="/catalog/lib/xml2json/xml2json.min.js" minimize="false"/>
   </declarative>
   <!-- Same as previous + ol3cesium -->
   <declarative name="lib3d" pathOnDisk="web-ui/src/main/resources">
@@ -158,6 +161,8 @@
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap-table/dist/extensions/angular/bootstrap-table-angular.js"
+              minimize="false"/>
     <jsSource webappPath="/catalog/lib/FileSaver/FileSaver.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/tableExport/tableExport.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js" minimize="false"/>
@@ -290,6 +295,8 @@
     <jsSource webappPath="/catalog/lib/bootstrap-select/bootstrap-select.min.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap-table/dist/extensions/angular/bootstrap-table-angular.js"
+              minimize="false"/>
     <jsSource webappPath="/catalog/lib/FileSaver/FileSaver.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/tableExport/tableExport.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js" minimize="false"/>
@@ -303,6 +310,7 @@
     <jsSource webappPath="/catalog/lib/underscore/underscore-min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/recaptcha/angular-recaptcha.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/geohash.js"/>
+    <jsSource webappPath="/catalog/lib/xml2json/xml2json.min.js" minimize="false"/>
   </declarative>
   <!-- END SEXTANT SPECIFIC -->
 </sources>

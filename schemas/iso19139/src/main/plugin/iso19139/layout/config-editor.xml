@@ -21,7 +21,6 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
-
 <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd"
         xmlns:gn="http://www.fao.org/geonetwork"
@@ -29,8 +28,9 @@
         xmlns:gmd="http://www.isotc211.org/2005/gmd"
         xmlns:gmx="http://www.isotc211.org/2005/gmx"
         xmlns:srv="http://www.isotc211.org/2005/srv"
-        xmlns:gml="http://www.opengis.net/gml"
-        xmlns:xlink="http://www.w3.org/1999/xlink">
+        xmlns:gml="http://www.opengis.net/gml/3.2"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd">
 
   <!-- Form field type configuration. Default is text. -->
   <fields>

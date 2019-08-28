@@ -114,11 +114,7 @@ public class ResourceFilter implements Filter {
 
         public void execute() throws IOException {
             if (isGet(request)) {
-                String servletPath = ((HttpServletRequest) request).getServletPath();
-
-                Log.info(Geonet.RESOURCES, "Handling resource request: " + servletPath);
-
-                String filename = servletPath.substring(CONTEXT_PATH_PREFIX).replaceAll("/+", "/");
+                String filename =  ((HttpServletRequest) request).getPathInfo();
                 int extIdx = filename.lastIndexOf('.');
                 String ext;
                 if (extIdx > 0) {
@@ -156,7 +152,7 @@ public class ResourceFilter implements Filter {
 
                         // Return HTTP 404 ? TODO
                         Log.warning(Geonet.RESOURCES, "Resource not found " + filename +
-                            ", default resource returned: " + servletPath);
+                            ", default resource returned.");
                         httpServletResponse.setContentType("image/png");
                         httpServletResponse.setHeader("Cache-Control", "no-cache");
                     }

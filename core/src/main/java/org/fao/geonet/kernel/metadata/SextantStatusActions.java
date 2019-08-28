@@ -31,11 +31,11 @@ import java.util.Set;
 
 /**
  * Custom status action class for Sextant.
- * 
+ *
  * Changes defined in https://forge.ifremer.fr/mantis/view.php?id=15011
- * 
+ *
  * @author francois
- * 
+ *
  */
 public class SextantStatusActions extends DefaultStatusActions {
 
@@ -49,14 +49,14 @@ public class SextantStatusActions extends DefaultStatusActions {
 	/**
 	 * Called when a record is edited to set/reset status.
 	 * Default status for record is DRAFT.
-	 * 
+	 *
 	 * @param id
 	 *            The metadata id that has been edited.
 	 * @param minorEdit
 	 *            If true then the edit was a minor edit.
 	 */
 	public void onEdit(int id, boolean minorEdit) throws Exception {
-		
+
 		// TODO : turn it off - it should be activated only for some records
 //		if (dm.getCurrentStatus(dbms, id).equals(Params.Status.UNKNOWN)) {
 //			dm.setStatus(context, dbms, id,
@@ -67,8 +67,8 @@ public class SextantStatusActions extends DefaultStatusActions {
 //      https://forge.ifremer.fr/mantis/view.php?id=24431
 //		super.onEdit(id, minorEdit);
 	}
-	
-	/** 
+
+	/**
 	  * Called when need to set status on a set of metadata records.
 	  *
 		* @param listOfStatus List of status status to set.
@@ -90,7 +90,7 @@ public class SextantStatusActions extends DefaultStatusActions {
 
             if (status.equals(StatusValue.Status.APPROVED)) {
                 // setAllOperations(mid); - this is a short cut that could be enabled
-            } else if (status.equals(StatusValue.Status.REJECTED)) {
+            } else if (status.equals(StatusValue.Status.RETIRED)) {
                 unsetAllOperations(status.getId().getMetadataId());
             }
 

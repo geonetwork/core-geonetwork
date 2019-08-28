@@ -195,21 +195,4 @@ public class MEF2Visitor implements IVisitor {
         }
         return tmp;
     }
-
-    // --------------------------------------------------------------------------
-
-    public Path getMetadataDirectory(Path dir) throws IOException {
-        Path metadata = dir.resolve("metadata");
-
-        if (!Files.isDirectory(metadata)) {
-            try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir)) {
-                for (Path path : paths) {
-                    if (Files.isDirectory(path)) {
-                        metadata = getMetadataDirectory(path);
-                    }
-                }
-            }
-        }
-        return metadata;
-    }
 }

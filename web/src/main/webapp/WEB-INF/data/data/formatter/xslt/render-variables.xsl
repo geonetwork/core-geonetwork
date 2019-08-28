@@ -32,6 +32,9 @@
   <xsl:param name="portalLink" select="''"/>
 
   <xsl:param name="css" select="''"/>
+  <!-- Define if the formatter output also the record as JSON-LD. -->
+  <xsl:param name="withJsonLd" select="'true'"/>
+
 
   <!-- TODO: schema is not part of the XML -->
   <xsl:variable name="schema"

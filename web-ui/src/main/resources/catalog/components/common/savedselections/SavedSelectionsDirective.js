@@ -396,12 +396,14 @@
    * Panel to manage user saved selection content
    */
   module.directive('gnSavedSelectionsPanel', [
-    '$translate', 'gnLangs', 'gnSavedSelectionConfig',
-    function($translate, gnLangs, gnSavedSelectionConfig) {
+    '$translate', 'gnLangs', 'gnSavedSelectionConfig', 'gnGlobalSettings',
+    function($translate, gnLangs, gnSavedSelectionConfig, gnGlobalSettings) {
       function link(scope, element, attrs, controller) {
         scope.lang = gnLangs.current;
         scope.selections = null;
         scope.actions = gnSavedSelectionConfig.actions;
+        scope.isSavedSelectionEnabled =
+          gnGlobalSettings.gnCfg.mods.search.savedSelection.enabled;
 
         scope.$watch('user', function(n, o) {
           if (n !== o || scope.selections === null) {
@@ -450,12 +452,14 @@
    * Button to add or remove item from user saved selection.
    */
   module.directive('gnSavedSelectionsAction',
-      ['gnSavedSelectionConfig', '$rootScope',
-       function(gnSavedSelectionConfig, $rootScope) {
+      ['gnSavedSelectionConfig', '$rootScope', 'gnGlobalSettings',
+       function(gnSavedSelectionConfig, $rootScope, gnGlobalSettings) {
          function link(scope, element, attrs, controller) {
            scope.selectionsWithRecord = [];
            scope.selections = {};
            scope.uuid = scope.record['geonet:info'].uuid;
+           scope.isSavedSelectionEnabled =
+             gnGlobalSettings.gnCfg.mods.search.savedSelection.enabled;
 
            $rootScope.$on('savedSelectionsUpdate', function(e, n, o) {
              scope.selections = n;

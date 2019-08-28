@@ -36,9 +36,9 @@ import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Xml;
@@ -46,6 +46,7 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+
 
 //=============================================================================
 
@@ -137,7 +138,7 @@ public class Show extends ShowViewBaseService {
         // that is in the GeoNetwork schema identification and if there isn't one
         // of those then build one pointing to the XSD in GeoNetwork
 
-        AbstractMetadata info = context.getBean(MetadataRepository.class).findOne(id);
+        AbstractMetadata info = context.getBean(IMetadataUtils.class).findOne(id);
         Attribute schemaLocAtt = sm.getSchemaLocation(info.getDataInfo().getSchemaId(), context);
 
         if (schemaLocAtt != null) {

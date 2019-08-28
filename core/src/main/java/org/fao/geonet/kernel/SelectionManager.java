@@ -39,10 +39,18 @@ import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.util.MarkupParserCache;
 import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 
 
 /**
@@ -230,7 +238,7 @@ public class SelectionManager {
         try {
             maxhits = Integer.parseInt(si.getSelectionMaxRecords());
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK, "Select all - invalid max hits value, error: " + e.getMessage(), e);
         }
 
         if (selection != null)
@@ -252,7 +260,7 @@ public class SelectionManager {
                     ServiceConfig sc = new ServiceConfig();
                     ((LuceneSearcher) searcher).search(context, request, sc);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.error(Geonet.GEONETWORK, "Select all error: " + e.getMessage(), e);
                 }
             } else {
                 searcher = session.getProperty(Geonet.Session.SEARCH_RESULT + type);
@@ -272,7 +280,7 @@ public class SelectionManager {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.error(Geonet.GEONETWORK, "Select all error: " + e.getMessage(), e);
             }
         }
     }

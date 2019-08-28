@@ -34,6 +34,7 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.InspireAtomFeed;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
 import org.fao.geonet.kernel.DataManager;
@@ -47,6 +48,7 @@ import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import jeeves.server.context.ServiceContext;
@@ -127,8 +129,8 @@ public class InspireAtomHarvester {
 
         } catch (Exception x) {
             logger.error("ATOM feed harvest error: " + x.getMessage());
+            logger.error(x);
             result.addContent(new Element("error").setText(x.getMessage()));
-            x.printStackTrace();
         }
 
         return result;
@@ -149,7 +151,9 @@ public class InspireAtomHarvester {
         SettingManager sm = context.getBean(SettingManager.class);
 
         final IMetadataUtils metadataUtils = gc.getBean(IMetadataUtils.class);
-        AbstractMetadata iso19139Metadata = metadataUtils.findOne(Specifications.where(MetadataSpecs.isType(MetadataType.METADATA)).and(MetadataSpecs.isIso19139Schema()));
+        AbstractMetadata iso19139Metadata = metadataUtils.findOne(
+        		Specifications.where((Specification<Metadata>) MetadataSpecs.isType(MetadataType.METADATA))
+        			.and((Specification<Metadata>) MetadataSpecs.isIso19139Schema()));
 
 
         Element result = new Element("response");
@@ -184,7 +188,7 @@ public class InspireAtomHarvester {
             logger.info("ATOM feed harvest finished for metadata: " + metadataId);
         } catch (Exception x) {
             logger.error("ATOM feed harvest error: " + x.getMessage());
-            x.printStackTrace();
+            logger.error(x);
         }
     }
 
@@ -257,8 +261,8 @@ public class InspireAtomHarvester {
             } catch (Exception ex) {
                 // Log exception and continue processing the other metadata
                 logger.error("Failed to process atom feed for service metadata: " + metadataId + " " + ex.getMessage());
+                logger.error(ex);
                 result.addContent(new Element("feed").setAttribute("uuid", metadataUuid).setAttribute("error", ex.getMessage()).setAttribute("status", "error"));
-                ex.printStackTrace();
             }
         }
 
@@ -325,8 +329,8 @@ public class InspireAtomHarvester {
             } catch (Exception ex) {
                 // Log exception and continue processing the other metadata
                 logger.error("Failed to process atom feed for dataset metadata: " + metadataId + " " + ex.getMessage());
+                logger.error(ex);
                 result.addContent(new Element("feed").setAttribute("uuid", metadataUuid).setAttribute("error", ex.getMessage()).setAttribute("status", "error"));
-                ex.printStackTrace();
             }
         }
     }

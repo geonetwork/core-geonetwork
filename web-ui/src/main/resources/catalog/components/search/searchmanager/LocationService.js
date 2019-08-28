@@ -31,17 +31,20 @@
     '$rootScope',
     '$timeout',
     'gnGlobalSettings',
+    'gnUrlUtils',
     'gnExternalViewer',
     function($location,
       $rootScope,
       $timeout,
       gnGlobalSettings,
+      gnUrlUtils,
       gnExternalViewer) {
 
       this.SEARCH = '/search';
       this.SEARCHPAGES = /\/search|\/board/;
       this.MAP = '/map';
       this.METADATA = '/metadata/';
+      this.DRAFT = '/metadraf/';
       this.HOME = '/home';
 
       var state = {};
@@ -65,7 +68,8 @@
 
       this.isMdView = function(path) {
         var p = path || $location.path();
-        return p.indexOf(this.METADATA) == 0;
+        return p.indexOf(this.METADATA) == 0
+            || p.indexOf(this.DRAFT) == 0;
       };
 
       this.isMap = function() {
@@ -80,16 +84,39 @@
         return angular.isUndefined($location.path()) ||
             $location.path() == '';
       };
-
-      this.setUuid = function(uuid) {
-        $location.path(this.METADATA + uuid);
-        this.removeParams();
+      this.getFormatter = function() {
+        var tokens = $location.path().split('/');
+        if (tokens.length > 2 && tokens[3] === 'formatters') {
+          return '/formatters/' + $location.url().split('/formatters/')[1];
+        } else {
+          return undefined;
+        }
+      };
+      this.getFormatterPath = function() {
+        var tokens = $location.path().split('/');
+        if (tokens.length > 2 && tokens[3] === 'formatters') {
+          return '../api/records/' + $location.url().split(/^metadraf|metadata\//)[1];
+        } else {
+          return undefined;
+        }
+      };
+      this.setUuid = function(uuid, formatter) {
+        var newPath = (
+            $location.path().indexOf(this.DRAFT) == 0 ? this.DRAFT : this.METADATA) +
+          uuid +
+          (formatter == undefined || formatter == ''? '' : formatter.split('?')[0]);
+        if (newPath != $location.path()) {
+          this.removeParams();
+          if (formatter && formatter.indexOf('?') !== -1) {
+            $location.search(gnUrlUtils.parseKeyValue(formatter.split('?')[1]));
+          }
+          $location.path(newPath);
+        }
       };
 
       this.getUuid = function() {
         if (this.isMdView()) {
-          var url = $location.path();
-          return url.substring(this.METADATA.length, url.length);
+          return $location.path().split('/')[2];
         }
       };
 
@@ -121,6 +148,7 @@
       };
 
       this.restoreSearch = function() {
+        this.removeParams();
         this.setSearch(state.lastSearchParams);
 
         //Wait all location search are triggered

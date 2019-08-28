@@ -103,6 +103,8 @@ import java.util.StringTokenizer;
 
 import javax.annotation.Nonnull;
 
+import static org.fao.geonet.kernel.search.LuceneSearcher.parseLuceneQuery;
+
 //=============================================================================
 
 public class CatalogSearcher implements MetadataRecordSelector {
@@ -163,51 +165,6 @@ public class CatalogSearcher implements MetadataRecordSelector {
     // ---
     // ---------------------------------------------------------------------------
 
-    /**
-     * Creates a lucene Query object from a lucene query string using Lucene query syntax.
-     */
-    public static Query getCswServiceSpecificConstraintQuery(String cswServiceSpecificConstraint, LuceneConfig _luceneConfig) throws ParseException, QueryNodeException {
-//        MultiFieldQueryParser parser = new MultiFieldQueryParser(Geonet.LUCENE_VERSION, fields , SearchManager.getAnalyzer());
-        StandardQueryParser parser = new StandardQueryParser(SearchManager.getAnalyzer());
-        Map<String, NumericConfig> numericMap = new HashMap<String, NumericConfig>();
-        for (LuceneConfigNumericField field : _luceneConfig.getNumericFields().values()) {
-            String name = field.getName();
-            int precisionStep = field.getPrecisionStep();
-            NumberFormat format = NumberFormat.getNumberInstance();
-            NumericType type = NumericType.valueOf(field.getType().toUpperCase());
-            NumericConfig config = new NumericConfig(precisionStep, format, type);
-            numericMap.put(name, config);
-        }
-        parser.setNumericConfigMap(numericMap);
-        Query q = parser.parse(cswServiceSpecificConstraint, "title");
-
-        // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
-        List<String> SECURITY_FIELDS = Arrays.asList(
-            LuceneIndexField.OWNER,
-            LuceneIndexField.GROUP_OWNER);
-
-        BooleanQuery bq;
-        if (q instanceof BooleanQuery) {
-            bq = (BooleanQuery) q;
-            List<BooleanClause> clauses = bq.clauses();
-
-            Iterator<BooleanClause> it = clauses.iterator();
-            while (it.hasNext()) {
-                BooleanClause bc = it.next();
-
-                for (String fieldName : SECURITY_FIELDS) {
-                    if (bc.getQuery().toString().contains(fieldName + ":")) {
-                        if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                            Log.debug(Geonet.CSW_SEARCH, "LuceneSearcher getCswServiceSpecificConstraintQuery removed security field: " + fieldName);
-                        it.remove();
-
-                        break;
-                    }
-                }
-            }
-        }
-        return q;
-    }
 
     /**
      * Convert a filter to a lucene search and run the search.
@@ -525,7 +482,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
         Query cswCustomFilterQuery = null;
         Log.info(Geonet.CSW_SEARCH, "LuceneSearcher cswCustomFilter:\n" + cswServiceSpecificContraint);
         if (StringUtils.isNotEmpty(cswServiceSpecificContraint)) {
-            cswCustomFilterQuery = getCswServiceSpecificConstraintQuery(cswServiceSpecificContraint, luceneConfig);
+            cswCustomFilterQuery = parseLuceneQuery(cswServiceSpecificContraint, luceneConfig);
             Log.info(Geonet.CSW_SEARCH, "LuceneSearcher cswCustomFilterQuery:\n" + cswCustomFilterQuery);
         }
 
@@ -578,7 +535,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
         ServiceConfig config = new ServiceConfig();
         String geomWkt = null;
 
-
+        _query = LuceneSearcher.appendPortalFilter(_query, luceneConfig);
         Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
             maxRecords + startPosition - 1, _lang.presentationLanguage,
             luceneConfig.getSummaryTypes().get(resultType.toString()), luceneConfig,

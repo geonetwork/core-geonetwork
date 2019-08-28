@@ -6,7 +6,7 @@
   <div class="form-group">
     <label class="control-label" data-translate="">mapTitle</label>
     <div class="">
-      <input class="form-control" type="text" data-ng-model="mapTitle"/>
+      <input class="form-control" type="text" aria-label="{{'mapTitle'|translate}}" data-ng-model="mapTitle"/>
     </div>
   </div>
 
@@ -15,6 +15,7 @@
     <div class="">
       <select class="form-control"
               data-ng-model="config.layout"
+              aria-label="{{'print_layout'|translate}}"
               data-ng-options="l.name | translate for l in config.layouts"></select>
     </div>
   </div>
@@ -23,7 +24,7 @@
     <label class="control-label" data-translate="">print_scale</label>
     <div class="checkbox">
       <label>
-        <input type="checkbox" ng-model="auto"> {{'Auto'|translate}}
+        <input type="checkbox" aria-label="{{'print_scale'|translate}}" ng-model="auto"> {{'Auto'|translate}}
       </label>
     </div>
 
@@ -31,6 +32,7 @@
       <select class="form-control"
               data-ng-model="config.scale"
               data-ng-change="refreshComp()"
+              aria-label="{{'print_scale'|translate}}"
               data-ng-options="l.name for l in config.scales"></select>
     </div>
   </div>
@@ -39,7 +41,7 @@
     <label class="control-label" data-translate="">print_legend</label>
     <div class="checkbox">
       <label>
-        <input type="checkbox" ng-model="enableLegends"> {{'print_legend_field'|translate}}
+        <input type="checkbox" aria-label="{{'print_legend'|translate}}" ng-model="enableLegends"> {{'print_legend_field'|translate}}
       </label>
     </div>
   </div>
@@ -48,7 +50,7 @@
     <label class="control-label"
            data-translate="">mapComment</label>
     <div class="">
-      <textarea class="form-control" data-ng-model="mapComment"></textarea>
+      <textarea class="form-control" aria-label="{{'mapComment'|translate}}" data-ng-model="mapComment"></textarea>
     </div>
   </div>
 

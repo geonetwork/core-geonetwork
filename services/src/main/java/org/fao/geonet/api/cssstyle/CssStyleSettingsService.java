@@ -51,8 +51,10 @@ import org.fao.geonet.api.cssstyle.service.ICssStyleSettingService;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.CssStyleSetting;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.utils.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -72,10 +74,13 @@ import springfox.documentation.annotations.ApiIgnore;
 /**
  * The Class CssStyleSettingsService.
  */
-@RequestMapping(value = { "/api/customstyle", "/api/" + API.VERSION_0_1 + "/customstyle" })
+@RequestMapping(value = { "/{portal}/api/customstyle", "/{portal}/api/" + API.VERSION_0_1 + "/customstyle" })
 @Api(value = "customstyle", tags = "customstyle", description = "Functionalities for custom styling")
 @Controller("stylesheet")
 public class CssStyleSettingsService {
+
+    @Autowired
+    GeonetworkDataDirectory geonetworkDataDirectory;
 
     /**
      * Save css style.
@@ -100,10 +105,9 @@ public class CssStyleSettingsService {
             saveLessVariablesOnDB(cleanedVariables);
             saveLessVariablesInDataFolder(cleanedVariables);
             return new ResponseEntity<String>(HttpStatus.CREATED);
-        } catch (final JSONException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+
         } catch (final Exception e) {
-            e.printStackTrace();
+            Log.error(API.LOG_MODULE_NAME, "CssStyleSettingsService - saveCssStyle: " + e.getMessage(), e);
             throw e;
         }
     }
@@ -192,7 +196,6 @@ public class CssStyleSettingsService {
      */
 
     private String getDataFolder() {
-        final GeonetworkDataDirectory geonetworkDataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
         final String path = geonetworkDataDirectory.getSystemDataDir().resolve(Geonet.Config.NODE_LESS_DIR).toString();
         return path;
     }

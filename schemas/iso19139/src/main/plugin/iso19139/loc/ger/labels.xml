@@ -3685,7 +3685,7 @@
     <description/>
   </element>
   <element name="gco:aName" context="gco:TypeName">
-    <label>Type name</label>
+    <label>Feldtyp</label>
     <description/>
     <helper>
       <option value="BOOLEAN">BOOLEAN</option>
@@ -3786,5 +3786,13 @@
   </element>
   <element name="gmd:MD_ScopeCode">
     <label>Anwendungsbereich</label>
+  </element>
+  <element name="gco:lower">
+    <label>Lower cardinality</label>
+    <description>Lower cardinality</description>
+  </element>
+  <element name="gco:upper">
+    <label>Upper cardinality</label>
+    <description>Upper cardinality</description>
   </element>
 </labels>
