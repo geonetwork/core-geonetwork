@@ -116,10 +116,9 @@
     'gnSearchSettings',
     'ngeoDebounce',
     'gnFeaturesTableManager',
-    'gnSearchSettings',
         function($http, wfsFilterService, $q, $rootScope,
              gnIndexRequestManager, gnIndexService, gnGlobalSettings,
-             gnSearchSettings, ngeoDebounce, gnFeaturesTableManager, gnSearchSettings) {
+             gnSearchSettings, ngeoDebounce, gnFeaturesTableManager) {
       return {
         restrict: 'A',
         replace: true,
