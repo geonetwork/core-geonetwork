@@ -30,6 +30,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -68,6 +69,7 @@ public class BatchDelete extends BackupFileService {
         IMetadataManager metadataManager = gc.getBean(IMetadataManager.class);
         AccessManager accessMan = gc.getBean(AccessManager.class);
         UserSession session = context.getUserSession();
+        Store store = context.getBean("resourceStore", Store.class);
 
         Set<String> metadata = new HashSet<>();
         Set<String> notFound = new HashSet<>();
@@ -96,24 +98,23 @@ public class BatchDelete extends BackupFileService {
             if (!metadataRepository.existsMetadataUuid(uuid)) {
                 notFound.add(uuid);
             }
-            
+
             for(AbstractMetadata info : metadataRepository.findAllByUuid(uuid)) {
             	if (!accessMan.isOwner(context, String.valueOf(info.getId()))) {
 	                notOwner.add(uuid);
 	            } else {
 	                String idString = String.valueOf(info.getId());
-	
+
 	                //--- backup metadata in 'removed' folder
 	                if (backupFile &&
 	                    info.getDataInfo().getType() != MetadataType.SUB_TEMPLATE &&
 	                    info.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
 	                    backupFile(context, idString, info.getUuid(), MEFLib.doExport(context, info.getUuid(), "full", false, true, false, false, true));
 	                }
-	
+
 	                //--- remove the metadata directory
-	                Path pb = Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), idString);
-	                IO.deleteFileOrDirectory(pb);
-	
+                    store.delResources(context, uuid);
+
 	                //--- delete metadata and return status
                   metadataManager.deleteMetadata(context, idString);
                   if (context.isDebugEnabled())

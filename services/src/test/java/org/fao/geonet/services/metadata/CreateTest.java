@@ -148,6 +148,7 @@ public class CreateTest extends AbstractServiceIntegrationTest {
         Graphics2D g2d = image.createGraphics();
         g2d.drawRect(1, 1, 5, 5);
         g2d.dispose();
+        Files.createDirectories(outFile.getParent());
         try (OutputStream out = Files.newOutputStream(outFile)) {
             final boolean writerWasFound = ImageIO.write(image, format, out);
             assertTrue(writerWasFound);

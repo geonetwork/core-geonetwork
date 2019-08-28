@@ -185,7 +185,6 @@ public class Aligner extends BaseAligner<CswParams> {
             if (cancelMonitor.get()) {
                 return;
             }
-
             try {
                 String id = metadataUtils.getMetadataId(ri.uuid);
 
