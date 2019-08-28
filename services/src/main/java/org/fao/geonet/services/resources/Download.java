@@ -26,9 +26,11 @@ package org.fao.geonet.services.resources;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -100,81 +102,76 @@ public class Download {
 		}
 
 		// Build the response
-		Path dir = Lib.resource.getDir(context, access, id);
-		Path file= dir.resolve(fname);
+        final Store store = context.getBean("resourceStore", Store.class);
+		if (uuidParam == null) {
+            uuidParam = dataManager.getMetadataUuid(id);
+        }
+        try (Store.ResourceHolder resource = store.getResource(context, uuidParam, MetadataResourceVisibility.parse(access), fname, true)) {
+            Path file = resource.getPath();
+            context.info("File is : " + file);
 
-        context.info("File is : " + file);
+            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+            SettingManager sm = gc.getBean(SettingManager.class);
+            DataManager dm = gc.getBean(DataManager.class);
 
-        if (!Files.exists(file))
-            throw new ResourceNotFoundEx(fname);
+            //--- increase metadata popularity
+            if (access.equals(Params.Access.PRIVATE))
+                dm.increasePopularity(context, id);
 
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SettingManager sm = gc.getBean(SettingManager.class);
-        DataManager dm = gc.getBean(DataManager.class);
+            //--- send email notification
+            if (doNotify) {
+                String host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+                String port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
+                String from = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
-        //--- increase metadata popularity
-        if (access.equals(Params.Access.PRIVATE))
-            dm.increasePopularity(context, id);
+                String fromDescr = "GeoNetwork administrator";
 
-        //--- send email notification
-        if (doNotify) {
-            String host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
-            String port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
-            String from = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
+                if (host.trim().length() == 0 || from.trim().length() == 0) {
+                    if (context.isDebugEnabled()) {
+                        context.debug("Skipping email notification");
+                    }
+                } else {
+                    if (context.isDebugEnabled()) {
+                        context.debug("Sending email notification for file : " + file);
+                    }
 
+                    // send emails about downloaded file to groups with notify privilege
 
-            String fromDescr = "GeoNetwork administrator";
+                    OperationAllowedRepository opAllowedRepo = context.getBean(OperationAllowedRepository.class);
+                    final GroupRepository groupRepository = context.getBean(GroupRepository.class);
 
-            if (host.trim().length() == 0 || from.trim().length() == 0) {
-                if (context.isDebugEnabled()) {
-                    context.debug("Skipping email notification");
-                }
-            } else {
-                if (context.isDebugEnabled()) {
-                    context.debug("Sending email notification for file : " + file);
-                }
+                    List<OperationAllowed> opsAllowed = opAllowedRepo.findByMetadataId(id);
 
-                // send emails about downloaded file to groups with notify privilege
+                    for (OperationAllowed opAllowed: opsAllowed) {
+                        if (opAllowed.getId().getOperationId() != ReservedOperation.notify.getId())
+                            continue;
+                        Group group = groupRepository.findOne(opAllowed.getId().getGroupId());
+                        String name = group.getName();
+                        String email = group.getEmail();
 
-                OperationAllowedRepository opAllowedRepo = context.getBean(OperationAllowedRepository.class);
-                final GroupRepository groupRepository = context.getBean(GroupRepository.class);
+                        if (email != null && email.trim().length() != 0) {
+                            // TODO i18n
+                            String subject = "File " + fname + " has been downloaded";
+                            String message = "GeoNetwork notifies you, as contact person of group " + name + " that data file " + fname + " belonging metadata " + id
+                                    + " has beed downloaded from address " + context.getIpAddress() + ".";
 
-                List<OperationAllowed> opsAllowed = opAllowedRepo.findByMetadataId(id);
-
-                for (OperationAllowed opAllowed : opsAllowed) {
-                    if (opAllowed.getId().getOperationId() != ReservedOperation.notify.getId())
-                        continue;
-                    Group group = groupRepository.findOne(opAllowed.getId().getGroupId());
-                    String name = group.getName();
-                    String email = group.getEmail();
-
-                    if (email != null && email.trim().length() != 0) {
-                        // TODO i18n
-                        String subject = "File " + fname + " has been downloaded";
-                        String message = "GeoNetwork notifies you, as contact person of group " + name
-                            + " that data file " + fname
-                            + " belonging metadata " + id
-                            + " has beed downloaded from address " + context.getIpAddress() + ".";
-
-                        try {
-                            MailSender sender = new MailSender(context);
-                            sender.send(host, Integer.parseInt(port),
-                                sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME),
-                                sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD),
-                                sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL),
-                                sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS),
-                                sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS),
-                                from, fromDescr, email, null, subject, message);
-                        } catch (Exception e) {
-                            Log.error(Geonet.RESOURCES, e.getMessage(), e);
+                            try {
+                                MailSender sender = new MailSender(context);
+                                sender.send(host, Integer.parseInt(port), sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME), sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD),
+                                        sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL), sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS),
+                                        sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS), from,
+                                        fromDescr, email, null, subject, message);
+                            } catch (Exception e) {
+                                Log.error(Geonet.RESOURCES, e.getMessage(), e);
+                            }
                         }
                     }
                 }
             }
-        }
 
-        IResourceDownloadHandler downloadHook = (IResourceDownloadHandler) context.getApplicationContext().getBean("resourceDownloadHandler");
-        return downloadHook.onDownload(context, request, Integer.parseInt(id), fname, file);
+            IResourceDownloadHandler downloadHook = (IResourceDownloadHandler) context.getApplicationContext().getBean("resourceDownloadHandler");
+            return downloadHook.onDownload(context, request, Integer.parseInt(id), fname, file);
+        }
     }
 }
 

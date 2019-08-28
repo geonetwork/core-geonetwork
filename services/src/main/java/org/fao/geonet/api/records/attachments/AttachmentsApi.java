@@ -170,7 +170,7 @@ public class AttachmentsApi {
             @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        store.delResource(context, metadataUuid, approved);
+        store.delResources(context, metadataUuid, approved);
 
         String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
         if (metadataIdString != null) {
@@ -249,16 +249,17 @@ public class AttachmentsApi {
             @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "true") Boolean approved,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        Path file = store.getResource(context, metadataUuid, resourceId, approved);
-        
-        ApiUtils.canViewRecord(metadataUuid, request);
+        try (Store.ResourceHolder file = store.getResource(context, metadataUuid, resourceId, approved)) {
 
-        MultiValueMap<String, String> headers = new HttpHeaders();
-        headers.add("Content-Disposition", "inline; filename=\"" + file.getFileName() + "\"");
-        headers.add("Cache-Control", "no-cache");
-        headers.add("Content-Type", getFileContentType(file));
+            ApiUtils.canViewRecord(metadataUuid, request);
 
-        return new HttpEntity<>(Files.readAllBytes(file), headers);
+            MultiValueMap<String, String> headers = new HttpHeaders();
+            headers.add("Content-Disposition", "inline; filename=\"" + file.getMetadata().getFilename() + "\"");
+            headers.add("Cache-Control", "no-cache");
+            headers.add("Content-Type", getFileContentType(file.getPath()));
+
+            return new HttpEntity<>(Files.readAllBytes(file.getPath()), headers);
+        }
     }
 
     @ApiOperation(value = "Update the metadata resource visibility", nickname = "patchMetadataResourceVisibility")

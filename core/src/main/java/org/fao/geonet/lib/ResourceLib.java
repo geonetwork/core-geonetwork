@@ -34,8 +34,6 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.utils.IO;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.AccessDeniedException;
 

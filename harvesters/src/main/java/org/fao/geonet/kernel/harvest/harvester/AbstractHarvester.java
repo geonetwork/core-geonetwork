@@ -164,7 +164,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
 
         try {
-            AbstractHarvester<?> ah = context.getApplicationContext().getBean(type, AbstractHarvester.class);
+            AbstractHarvester<?> ah = context.getBean(type, AbstractHarvester.class);
             ah.setContext(context);
             return ah;
         } catch (Exception e) {
@@ -982,7 +982,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     public static String[] getNonDisabledHarvesterTypes(ServiceContext context) {
         String[] availableTypes = context.getApplicationContext().getBeanNamesForType(AbstractHarvester.class);
-        SettingManager localSettingManager = context.getApplicationContext().getBean(SettingManager.class);
+        SettingManager localSettingManager = context.getBean(SettingManager.class);
         String disabledTypesString = StringUtils.defaultIfBlank(localSettingManager.getValue(Settings.SYSTEM_HARVESTER_DISABLED_HARVESTER_TYPES), "");
         String[] disabledTypes = StringUtils.split(disabledTypesString.toLowerCase().replace(',', ' '), " ");
 
