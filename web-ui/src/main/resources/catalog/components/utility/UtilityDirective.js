@@ -116,7 +116,7 @@
 
           var addGeonames = !attrs['disableGeonames'];
           scope.regionTypes = [];
-         
+
           function setDefault() {
             var defaultThesaurus = attrs['default'];
             for (t in scope.regionTypes) {
@@ -1373,7 +1373,20 @@
         var modalElt;
 
         element.bind('click', function() {
-          var img = scope.$eval(attr['gnImgModal']);
+          var imgOrMd = scope.$eval(attr['gnImgModal']);
+          var img = undefined;
+          if(imgOrMd.getThumbnails) {
+            var imgs = imgOrMd.getThumbnails();
+            var url = $(element).attr('src');
+            for (var i = 0; i < imgs.list.length; i++) {
+              if (imgs.list[i].url === url) {
+                img = imgs.list[i];
+                break;
+              }
+            }
+          } else {
+            img = imgOrMd;
+          }
 
           // Toggle the modal if already displayed
           if (modalElt) {

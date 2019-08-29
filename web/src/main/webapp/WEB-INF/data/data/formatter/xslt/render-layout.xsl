@@ -24,8 +24,9 @@
   <xsl:template mode="getOverviews" match="*"/>
   <xsl:template mode="getMetadataThumbnail" match="*"/>
   <xsl:template mode="getMetadataHeader" match="*"/>
+  <xsl:template mode="getMetadataCitation" match="*"/>
   <xsl:template mode="getJsonLD" match="*"/>
-  <!-- Those templates should be overriden in the schema plugin - end -->
+  <!-- Those templates should be overridden in the schema plugin - end -->
 
   <!-- Starting point -->
   <xsl:template match="/">
@@ -82,9 +83,11 @@
 
               <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
 
-              <div gn-related="md"
-                   data-user="user"
-                   data-types="onlines"><xsl:comment select="'icon'"/></div>
+              <xsl:if test="$related != ''">
+                <div gn-related="md"
+                     data-user="user"
+                     data-types="{$related}"><xsl:comment select="'icon'"/></div>
+              </xsl:if>
             </header>
 
             <div>
@@ -102,6 +105,8 @@
                 </xsl:for-each>
               </div>
             </div>
+
+            <xsl:apply-templates mode="getMetadataCitation" select="$metadata"/>
           </div>
           <div class="gn-md-side gn-md-side-advanced col-md-4">
             <xsl:apply-templates mode="getOverviews" select="$metadata"/>
@@ -151,7 +156,7 @@
 
             <!-- Display link to portal and other view only
             when in pure HTML mode. -->
-            <xsl:if test="$root != 'div'">
+            <xsl:if test="$viewMenu = 'true'">
               <section class="gn-md-side-viewmode">
                 <h2>
                   <i class="fa fa-fw fa-eye"><xsl:comment select="'icon'"/></i>
@@ -180,30 +185,32 @@
               </section>
 
               <section class="gn-md-side-access">
-                <div class="well text-center">
-                  <a class="btn btn-block btn-primary"
-                     href="{if ($portalLink != '')
-                            then replace($portalLink, '\$\{uuid\}', $metadataUuid)
-                            else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
-                    <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
-                    <xsl:value-of select="$schemaStrings/linkToPortal"/>
-                  </a>
+                <a class="btn btn-block btn-primary"
+                   href="{if ($portalLink != '')
+                          then replace($portalLink, '\$\{uuid\}', $metadataUuid)
+                          else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
+                  <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
+                  <xsl:value-of select="$schemaStrings/linkToPortal"/>
+                </a>
+                <div class="hidden-xs hidden-sm">
                   <xsl:value-of select="$schemaStrings/linkToPortal-help"/>
                 </div>
               </section>
             </xsl:if>
 
-            <section class="gn-md-side-associated">
-              <h2>
-                <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
-                <span><xsl:value-of select="$schemaStrings/associatedResources"/></span>
-              </h2>
-              <div gn-related="md"
-                   data-user="user"
-                   data-types="parent|children|services|datasets|hassources|sources|fcats|siblings|associated">
-                Not available
-              </div>
-            </section>
+            <xsl:if test="$sideRelated != ''">
+              <section class="gn-md-side-associated">
+                <h2>
+                  <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
+                  <span><xsl:value-of select="$schemaStrings/associatedResources"/></span>
+                </h2>
+                <div gn-related="md"
+                     data-user="user"
+                     data-types="{$sideRelated}">
+                  Not available
+                </div>
+              </section>
+            </xsl:if>
           </div>
         </div>
 
