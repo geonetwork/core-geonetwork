@@ -214,31 +214,30 @@
               case 'checkpoint-tdp':
               case 'checkpoint-dps':
               case 'medsea':
-                url = 'md.format.xml?root=div&css=checkpoint&xsl=xsl-view&view=' +
-                  searchSettings.metadataFormatter + '&uuid=' + uuid;
+                url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&css=checkpoint&view=' +
+                  searchSettings.metadataFormatter;
                 break;
               case 'emodnet-hydrography':
               case 'emodnet-bathymetry':
               case 'emodnet-bathymetry-portal':
-                url = 'md.format.xml?root=div&xsl=xsl-view&css=sextant&view=emodnetHydrography&uuid=' + uuid;
+                url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&css=sextant&view=emodnetHydrography';
                 break;
               case 'seadatanet':
-                url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + uuid;
+                url = '../api/records/' + uuid + '/formatters/sdn-emodnet';
                 break;
               case 'emodnet':
-                url = 'md.format.xml?xsl=emodnet&uuid=' + uuid;
+                url = '../api/records/' + uuid + '/formatters/emodnet';
                 break;
               case 'sextant':
-                url = 'md.format.xml?xsl=sxt_view&uuid=' + uuid;
+                url = '../api/records/' + uuid + '/formatters/sxt_view';
                 break;
               default:
-                url = 'md.format.xml?xsl=' + searchSettings.metadataFormatter +
-                  '&uuid=' + uuid;
+                url = '../api/records/' + uuid + '/formatters/' + searchSettings.metadataFormatter;
             }
           } else if(md.getSchema() == 'dublin-core') {
-            url = 'md.format.xml?xsl=sxt_view&uuid=' + uuid;
+            url = '../api/records/' + uuid + '/formatters/sxt_view';
           } else if(md.getSchema() == 'iso19115-3.2018') {
-            url = 'md.format.xml?root=div&header=false&xsl=xsl-view&view=earthObservation&uuid=' + uuid;
+            url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&header=false&view=earthObservation';
           } else if(md.getSchema() == 'iso19115-3') {
             var view;
             if(md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Upstream Data') {
@@ -251,17 +250,16 @@
               view = 'checkpoint-dps'
             }
             url = view ?
-              'md.format.xml?root=div&tabs=false&css=checkpoint&xsl=xsl-view&view=' + view +
-              '&uuid=' + uuid :
-              'md.format.xml?xsl=sxt_view&uuid=' + uuid;
+              '../api/records/' + uuid + '/formatters/xsl-view?root=div&tabs=false&css=checkpoint&view=' + view :
+              '../api/records/' + uuid + '/formatters/sxt_view';
           } else {
             if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY' ||
                 md.standardName === 'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY') {
-              url = 'md.format.xml?root=div&header=false&xsl=xsl-view&css=sextant&tabs=false&view=emodnetHydrography&uuid=' + uuid;
+              url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&header=false&css=sextant&tabs=false&view=emodnetHydrography';
             } else if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - SDN') {
-              url = 'md.format.xml?root=div&header=false&xsl=xsl-view&tabs=false&css=sextant&view=sdn&uuid=' + uuid;
+              url = '../api/records/' + uuid + '/formatters/xs-view?root=div&header=false&tabs=false&css=sextant&view=sdn' + uuid;
             } else {
-              url = 'md.format.xml?xsl=sxt_view&uuid=' + uuid;
+              url = '../api/records/' + uuid + '/formatters/sxt_view';
             }
           }
           return url;
@@ -270,11 +268,6 @@
         list: [
           {label: 'fullView', url: 'md.format.xml?xsl=full_view&uuid='}
         ]
-        // TODO: maybe formatter config should depends
-        // on the metadata schema.
-        //schema: {
-        //  iso19139: 'md.format.xml?xsl=full_view&id='
-        //}
       };
 
       /* thesaurus definition */
