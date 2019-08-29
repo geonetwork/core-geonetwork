@@ -220,8 +220,10 @@
 
             <!-- Publishers -->
             <xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/
-                              *[gmd:role/*/@codeListValue = 'publisher']">
-              <xsl:value-of select="gmd:organisationName/*"/>
+                              *[gmd:role/*/@codeListValue = 'publisher']/gmd:organisationName">
+              <xsl:call-template name="localised">
+                <xsl:with-param name="langId" select="$langId"/>
+              </xsl:call-template>
               <xsl:if test="position() != last()">&#160;-&#160;</xsl:if>
             </xsl:for-each>
 
