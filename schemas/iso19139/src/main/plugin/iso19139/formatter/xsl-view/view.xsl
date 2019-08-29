@@ -181,12 +181,21 @@
             <!-- Custodians -->
             <xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/
                               *[gmd:role/*/@codeListValue = ('custodian', 'author')]">
-              <xsl:variable name="name"
-                            select="normalize-space(gmd:individualName)"/>
+              <xsl:variable name="name">
+                <xsl:for-each select="gmd:individualName">
+                  <xsl:call-template name="localised">
+                    <xsl:with-param name="langId" select="$langId"/>
+                  </xsl:call-template>
+                </xsl:for-each>
+              </xsl:variable>
 
               <xsl:value-of select="$name"/>
               <xsl:if test="$name != ''">&#160;(</xsl:if>
-              <xsl:value-of select="gmd:organisationName/*"/>
+              <xsl:for-each select="gmd:organisationName">
+                <xsl:call-template name="localised">
+                  <xsl:with-param name="langId" select="$langId"/>
+                </xsl:call-template>
+              </xsl:for-each>
               <xsl:if test="$name">)</xsl:if>
               <xsl:if test="position() != last()">&#160;-&#160;</xsl:if>
             </xsl:for-each>
