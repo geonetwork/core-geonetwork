@@ -327,6 +327,11 @@ Element to match for creating the table.
                 <xs:documentation>Table header label (from strings.xml), if not defined is used the value of attribute 'for' use the related element label from labels.xml</xs:documentation>
               </xs:annotation>
             </xs:attribute>
+            <xs:attribute name="fieldset" type="xs:string" use="optional" fixed="false">
+              <xs:annotation>
+                <xs:documentation>To not to add an extra section around the table. This means that editor can't remove the element targeted by the table.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
             <xs:sequence>
               <xs:element maxOccurs="1" ref="header"/>
               <xs:element maxOccurs="1" ref="row"/>
