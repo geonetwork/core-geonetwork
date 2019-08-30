@@ -691,6 +691,20 @@ A good default config with all directives is:
       </sidePanel>
 
 
+For the online source panel, the list of choices can be overridden with a "config-id" attribute 
+pointing to a JSON configuration file in config/associated-panel. This file allows to customize
+the list of type of link user can set by defining for each type the list of fields to display and
+default values for fields (eg. protocol, function, application profile).
+
+.. code-block:: xml
+
+        <directive data-gn-onlinesrc-list=""
+                   types="thumbnail|onlinesrc|parent|dataset|service|source|sibling|associated|fcats"
+                   config-id="remotesensing"/>
+      </sidePanel>
+
+
+
 To include text block use the following:
 
 
