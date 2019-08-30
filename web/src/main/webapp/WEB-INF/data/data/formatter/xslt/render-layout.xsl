@@ -91,19 +91,26 @@
             </header>
 
             <div>
-              <xsl:apply-templates mode="render-toc" select="$viewConfig"/>
-              <!-- Tab panes -->
-              <div>
-                <xsl:if test="$tabs = 'true'">
-                  <xsl:attribute name="class" select="'tab-content'"/>
-                </xsl:if>
-                <xsl:for-each select="$viewConfig/*">
-                  <xsl:sort select="@formatter-order"
-                            data-type="number"/>
-                  <xsl:apply-templates mode="render-view"
-                                       select="."/>
-                </xsl:for-each>
-              </div>
+              <xsl:choose>
+                <xsl:when test="$template != ''">
+                  <saxon:call-template name="{$template}"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:apply-templates mode="render-toc" select="$viewConfig"/>
+                  <!-- Tab panes -->
+                  <div>
+                    <xsl:if test="$tabs = 'true'">
+                      <xsl:attribute name="class" select="'tab-content'"/>
+                    </xsl:if>
+                    <xsl:for-each select="$viewConfig/*">
+                      <xsl:sort select="@formatter-order"
+                                data-type="number"/>
+                      <xsl:apply-templates mode="render-view"
+                                           select="."/>
+                    </xsl:for-each>
+                  </div>
+                </xsl:otherwise>
+              </xsl:choose>
             </div>
 
             <xsl:apply-templates mode="getMetadataCitation" select="$metadata"/>
