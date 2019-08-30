@@ -15,7 +15,10 @@ import org.xmlunit.diff.ElementSelectors;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 /**
@@ -36,6 +39,17 @@ public class SLDUtilTest {
     public void testInsertFilterOneFilter() throws Exception {
         testInsertFilter("onefilter", "simplefilter");
     }
+
+//     @Test
+//     public void testGetGetStyleRequest() throws Exception {
+//         String req = "http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval?service=WMS&request=GetStyles&version=1.1.1&layers=surval_30140_all_point_postgis";
+
+//         String s = SLDUtil.getGetStyleRequest(new URI("http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval"), "surval_30140_all_point_postgis");
+//         assertEquals(s, req);
+//         s = SLDUtil.getGetStyleRequest(new URI("http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval?"), "surval_30140_all_point_postgis");
+//         assertEquals(s, req);
+//     }
+
 //
 //    @Test
 //    @Ignore
