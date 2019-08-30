@@ -25,8 +25,9 @@
   <xsl:template mode="getOverviews" match="*"/>
   <xsl:template mode="getMetadataThumbnail" match="*"/>
   <xsl:template mode="getMetadataHeader" match="*"/>
+  <xsl:template mode="getMetadataCitation" match="*"/>
   <xsl:template mode="getJsonLD" match="*"/>
-  <!-- Those templates should be overriden in the schema plugin - end -->
+  <!-- Those templates should be overridden in the schema plugin - end -->
 
   <!-- Starting point -->
   <xsl:template match="/">
@@ -127,11 +128,15 @@
                                 $view = 'sdn'">
                 </xsl:when>
                 <xsl:otherwise>
-                  <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
+                  <div>
+                    <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
+                  </div>
 
-                  <div gn-related="md"
-                       data-user="user"
-                       data-types="onlines">&#160;</div>
+                  <xsl:if test="$related != ''">
+                    <div gn-related="md"
+                         data-user="user"
+                         data-types="{$related}">&#160;</div>
+                  </xsl:if>
                 </xsl:otherwise>
               </xsl:choose>
 
@@ -151,6 +156,9 @@
                 </xsl:for-each>
               </div>
             </div>
+
+            <xsl:apply-templates mode="getMetadataCitation" select="$metadata"/>
+
           </div>
           <div class="gn-md-side gn-md-side-advanced col-md-3">
 
@@ -262,14 +270,14 @@
                      target="_blank" class="btn btn-default">
                     <i class="fa fa-fw fa-envelope-o">&#160;</i>&#160;
                   </a>
-                </section>
-
-                <br/>
+                </div>
+              </section>
+              <br/>
               </xsl:if>
 
               <!-- Display link to portal and other view only
               when in pure HTML mode. -->
-              <xsl:if test="$root != 'div'">
+              <xsl:if test="$viewMenu = 'true'">
                 <section>
                   <h4>
                     <i class="fa fa-fw fa-eye">&#160;</i>&#160;
@@ -300,7 +308,7 @@
 
               <br/>
 
-              <div class="well text-center">
+              <section class="gn-md-side-permalink">
                 <a class="btn btn-block btn-primary"
                    href="{if ($portalLink != '')
                           then replace($portalLink, '\$\{uuid\}', $metadataUuid)
@@ -308,10 +316,13 @@
                   <i class="fa fa-link">&#160;</i>
                   <xsl:value-of select="$schemaStrings/linkToPortal"/>
                 </a>
-                <xsl:value-of select="$schemaStrings/linkToPortal-help"/>
-              </div>
+                <div class="hidden-xs hidden-sm">
+                  <xsl:value-of select="$schemaStrings/linkToPortal-help"/>
+                </div>
+              </section>
 
 
+            <xsl:if test="$sideRelated != ''">
               <section class="gn-md-side-associated">
                 <h2>
                   <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
@@ -319,7 +330,7 @@
                 </h2>
                 <div gn-related="md"
                      data-user="user"
-                     data-types="parent|children|services|datasets|hassources|sources|fcats|siblings|associated">
+                     data-types="{$sideRelated}">
                   Not available
                 </div>
               </section>

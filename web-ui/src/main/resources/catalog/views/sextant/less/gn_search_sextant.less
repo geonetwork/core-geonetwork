@@ -1123,7 +1123,34 @@ without attaching styles to an angular object but
 to a common CSS class?
 */
 .gn-metadata-display {
-  section.links {
+  section.gn-md-side-providedby  {
+    display: none;
+  }
+  section.gn-md-side-social {
+    text-align: center;
+    h2 > i {
+      display: none;
+    }
+  }
+  section.gn-md-side-overview {
+    /* Hide section title */
+    h2 {
+      display: none;
+    }
+    .gn-img-thumbnail {
+      max-height: none;
+      max-width: 100%;
+      min-width: 100%;
+    }
+  }
+  section.gn-md-side-associated {
+    h2 > i {
+      display: none;
+    }
+  }
+  section.links, section.gn-md-side-overview,
+  section.gn-md-side-social, section.gn-md-side-providedby,
+  section.gn-md-side-permalink, section.gn-md-side-associated {
     margin: 0 0 1.5em;
     padding: 1em;
     box-shadow: @sxt-shadow;

@@ -229,13 +229,13 @@
                 url = '../api/records/' + uuid + '/formatters/emodnet';
                 break;
               case 'sextant':
-                url = '../api/records/' + uuid + '/formatters/sxt_view';
+                url = '../api/records/' + uuid + '/formatters/xsl-view?view=sextant&root=div&header=false&related=';
                 break;
               default:
                 url = '../api/records/' + uuid + '/formatters/' + searchSettings.metadataFormatter;
             }
           } else if(md.getSchema() == 'dublin-core') {
-            url = '../api/records/' + uuid + '/formatters/sxt_view';
+            url = '../api/records/' + uuid + '/formatters/xsl-view';
           } else if(md.getSchema() == 'iso19115-3.2018') {
             url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&header=false&view=earthObservation';
           } else if(md.getSchema() == 'iso19115-3') {
@@ -251,7 +251,7 @@
             }
             url = view ?
               '../api/records/' + uuid + '/formatters/xsl-view?root=div&tabs=false&css=checkpoint&view=' + view :
-              '../api/records/' + uuid + '/formatters/sxt_view';
+              '../api/records/' + uuid + '/formatters/xsl-view';
           } else {
             if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY' ||
                 md.standardName === 'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY') {
@@ -259,14 +259,14 @@
             } else if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - SDN') {
               url = '../api/records/' + uuid + '/formatters/xs-view?root=div&header=false&tabs=false&css=sextant&view=sdn' + uuid;
             } else {
-              url = '../api/records/' + uuid + '/formatters/sxt_view';
+              url = '../api/records/' + uuid + '/formatters/xsl-view?view=sextant&root=div&header=false&related=';
             }
           }
           return url;
         },
         defaultPdfUrl: 'md.format.pdf?xsl=full_view&uuid=',
         list: [
-          {label: 'fullView', url: 'md.format.xml?xsl=full_view&uuid='}
+          // {label: 'fullView', url: 'md.format.xml?xsl=full_view&uuid='}
         ]
       };
 

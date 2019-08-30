@@ -24,12 +24,20 @@
   <!-- Enable tab view mode or not -->
   <xsl:param name="tabs" select="'true'"/>
 
+  <!-- List of related items to display on top. By default only online links. -->
+  <xsl:param name="related" select="'onlines'"/>
+  <!-- List of related items to display on the side panel. By default all except links. -->
+  <xsl:param name="sideRelated" select="'parent|children|services|datasets|hassources|sources|fcats|siblings|associated'"/>
+
   <!-- Define the full portal link. By default, it will link
   to the catalog.search main page of the catalog. To configure a custom
   use {{uuid}} to be replaced by the record UUID.
   eg. http://another.portal.org/${uuid}
   -->
   <xsl:param name="portalLink" select="''"/>
+
+  <!-- To display all views defined in config-editor.xml -->
+  <xsl:param name="viewMenu" select="'false'"/>
 
   <xsl:param name="css" select="''"/>
   <!-- Define if the formatter output also the record as JSON-LD. -->
