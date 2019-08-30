@@ -151,6 +151,7 @@
           <xsl:variable name="label" select="$strings/*[name() = $labelKey]"/>
           <xsl:call-template name="render-associated-resource-button">
             <xsl:with-param name="type" select="@process"/>
+            <xsl:with-param name="options" select="directiveAttributes"/>
             <xsl:with-param name="label" select="if ($label != '') then $label else $labelKey"/>
           </xsl:call-template>
         </xsl:when>
