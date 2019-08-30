@@ -533,4 +533,11 @@
   <cm-linkToUpstreamValidation>Link to upstream validation</cm-linkToUpstreamValidation>
   <cm-linkToDocument>Link to document</cm-linkToDocument>
   <cm-temportal-description>Description</cm-temportal-description>
+
+  <sxt-view-date>Date(s)</sxt-view-date>
+  <sxt-view-contact>Contact(s)</sxt-view-contact>
+  <sxt-view-author>Auteur(s)</sxt-view-author>
+  <sxt-view-keyword>Mots-clés</sxt-view-keyword>
+  <sxt-view-lineage>Généalogie</sxt-view-lineage>
+  <sxt-view-constraints>Contraintes</sxt-view-constraints>
 </strings>

@@ -550,4 +550,12 @@
   <cm-add-format-n4cm>NetCDF 4 Classic model</cm-add-format-n4cm>
   <cm-add-format-n4>NetCDF 4</cm-add-format-n4>
   <cm-add-format-n3>NetCDF 3</cm-add-format-n3>
-  </strings>
+
+
+  <sxt-view-date>Date(s)</sxt-view-date>
+  <sxt-view-contact>Contact(s)</sxt-view-contact>
+  <sxt-view-author>Author(s)</sxt-view-author>
+  <sxt-view-keyword>Keywords</sxt-view-keyword>
+  <sxt-view-lineage>Lineage</sxt-view-lineage>
+  <sxt-view-constraints>Constraints</sxt-view-constraints>
+</strings>

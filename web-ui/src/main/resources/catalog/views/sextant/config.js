@@ -229,7 +229,7 @@
                 url = '../api/records/' + uuid + '/formatters/emodnet';
                 break;
               case 'sextant':
-                url = '../api/records/' + uuid + '/formatters/xsl-view?view=sextant&root=div&header=false&related=';
+                url = '../api/records/' + uuid + '/formatters/xsl-view?view=sextant&root=div&template=sextant-summary-view&header=false&related=';
                 break;
               default:
                 url = '../api/records/' + uuid + '/formatters/' + searchSettings.metadataFormatter;
@@ -259,7 +259,7 @@
             } else if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - SDN') {
               url = '../api/records/' + uuid + '/formatters/xs-view?root=div&header=false&tabs=false&css=sextant&view=sdn' + uuid;
             } else {
-              url = '../api/records/' + uuid + '/formatters/xsl-view?view=sextant&root=div&header=false&related=';
+              url = '../api/records/' + uuid + '/formatters/xsl-view?view=sextant&root=div&template=sextant-summary-view&header=false&related=';
             }
           }
           return url;

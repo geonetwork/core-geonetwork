@@ -66,6 +66,7 @@
   <xsl:include href="../../layout/utility-tpl-multilingual.xsl"/>
   <xsl:include href="../../layout/utility-fn.xsl"/>
   <xsl:include href="../../formatter/jsonld/iso19139-to-jsonld.xsl"/>
+  <xsl:include href="sextant.xsl"/>
 
   <!-- The core formatter XSL layout based on the editor configuration -->
   <xsl:include href="sharedFormatterDir/xslt/render-layout.xsl"/>
@@ -434,11 +435,11 @@
     </xsl:variable>
 
     <div class="gn-contact">
-      <h2>
+      <strong>
         <i class="fa fa-envelope"><xsl:comment select="'email'"/></i>
         <xsl:apply-templates mode="render-value"
                              select="*/gmd:role/*/@codeListValue"/>
-      </h2>
+      </strong>
       <div class="row">
         <div class="col-md-6">
           <address>
