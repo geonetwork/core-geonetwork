@@ -408,11 +408,11 @@
     </xsl:variable>
 
     <div class="gn-contact">
-      <h2>
+      <strong>
         <i class="fa fa-envelope"><xsl:comment select="'email'"/></i>
         <xsl:apply-templates mode="render-value"
                              select="*/gmd:role/*/@codeListValue"/>
-      </h2>
+      </strong>
       <div class="row">
         <div class="col-md-6">
           <address>
