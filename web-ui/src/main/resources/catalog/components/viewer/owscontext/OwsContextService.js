@@ -520,16 +520,6 @@
             return;
           }
 
-          // SPECIFIC SEXTANT
-          // this is a composite layer: get the original WMS layer
-          if (layer.get('originalWms')) {
-            var visible = layer.getVisible();
-            layer = layer.get('originalWms');
-            source = layer.getSource();
-            layer.setVisible(visible);
-          }
-          // END SPECIFIC SEXTANT
-
           if (source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
             version = source.getParams().VERSION;
