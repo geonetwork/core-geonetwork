@@ -97,12 +97,13 @@ public class WFSHarvesterExchangeState implements Serializable {
      * all schema infos (attributes names and types).
      */
     public void initDataStore() throws Exception {
-        WFSDataStoreFactory factory = new WFSDataStoreFactory();
+        WFSDataStoreStrategyWithNameSpaceForMapServer factory = new WFSDataStoreStrategyWithNameSpaceForMapServer();
+        factory.init(parameters.getUrl(), parameters.getTypeName());
         Map m = new HashMap();
 
         try {
             String getCapUrl = OwsUtils.getGetCapabilitiesUrl(
-                    parameters.getUrl(), parameters.getVersion());
+                    parameters.getUrl(), "1.0.0"); //parameters.getVersion());
             logger.info(String.format(
                     "Connecting using GetCapabilities URL '%s'.",
                     getCapUrl));
