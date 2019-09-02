@@ -128,7 +128,7 @@
           featureTypeName: '@',
           wfsUrl: '@',
           displayCount: '@',
-          layer: '='
+          baseLayer: '=layer'
         },
         controller: function() {},
         link: function(scope, element, attrs, ctrl) {
@@ -167,6 +167,15 @@
 
           // Extent of current features matching the filter.
           scope.featureExtent = undefined;
+
+          // SEXTANT SPECIFIC
+          // use nested wms if we're in a group
+          if (scope.baseLayer.get('originalWms')) {
+            scope.layer = scope.baseLayer.get('originalWms');
+          } else {
+            scope.layer = scope.baseLayer
+          }
+          // END SEXTANT SPECIFIC
 
           /**
            * Init the directive when the scope.layer has changed.
