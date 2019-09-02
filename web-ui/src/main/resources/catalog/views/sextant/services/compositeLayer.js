@@ -13,6 +13,8 @@
     '</ul> '+
     '</div> '+
     '</div>'
+  var closeTemplate = '<a href="#" id="popup-closer" class="ol-popup-closer"></a>'
+
 
   /**
    * This regex is used to loop through all the attribute tokens
@@ -111,27 +113,38 @@
             }
           });
 
-          var tooltipInteraction = new ol.interaction.Select({
+/*          var tooltipInteraction = new ol.interaction.Select({
             condition: ol.events.condition.pointerMove,
-            layers: [tooltipLayer]
+            layers: [tooltipLayer],
+            name: 'compositeLayer'
           });
-          map.addInteraction(tooltipInteraction);
+          map.addInteraction(tooltipInteraction);*/
 
           // add popover for feature info
           var tooltipOverlay = new ol.Overlay({
-            element: $('<div class="tooltip-overlay"></div>')[0],
+            element: $('<div class="tooltip-overlay composite-popup"></div>')[0],
             positioning: 'bottom-center',
             stopEvent: false,
-            offset: [0, -6]
-          });
-          map.addOverlay(tooltipOverlay);
-          tooltipInteraction.on('select', function (event) {
-            var selected = event.selected[0];
+            offset: [0, -2],
+            autoPan: true,
+            autoPanAnimation: {
+              duration: 250
+            }
 
-            // hide if no feature hovered; else move overlay on hovered feature
-            if (!selected) {
-              tooltipOverlay.setPosition();
-            } else {
+          });
+
+          map.addOverlay(tooltipOverlay);
+          var tooltipIsDisplayed = false;
+          map.on('pointermove', function(evt) {
+            var feature = map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+              //you can add a condition on layer to restrict the listener
+              return feature;
+            });
+            if (feature) {
+              var selected = feature;
+              // hide if no feature hovered; else move overlay on hovered feature
+
+              tooltipIsDisplayed = true;
               var center =
                 ol.extent.getCenter(selected.getGeometry().getExtent());
               var topleft =
@@ -141,7 +154,7 @@
               // read the feature's attributes & render them using the tooltip template
               var props = selected.getProperties();
               if (tooltipTemplate) {
-                var html = tooltipTemplate
+                var html = closeTemplate + tooltipTemplate
                 var matches;
                 while (!!(matches = TOOLTIP_ATTR_REGEX.exec(html))) {
                   var token = matches[0];
@@ -152,13 +165,21 @@
               } else { // use default template
                 var attributesHtml = '';
                 for (var prop in props) {
-                  if (prop === 'geom' ||  prop === 'geometry') { continue; }
+                  if (prop === 'geom' || prop === 'geometry') {
+                    continue;
+                  }
                   var currentAttribute = '<li>' + prop + ': ' + props[prop] + '</li>';
                   attributesHtml += currentAttribute;
                 }
-                var html = defaultTemplate.replace('ATTRIBUTESTOREPLACE', attributesHtml);
+                var html = closeTemplate + defaultTemplate.replace('ATTRIBUTESTOREPLACE', attributesHtml);
                 tooltipOverlay.getElement().innerHTML = html;
               }
+              var closer = document.getElementById('popup-closer');
+              closer.onclick = function () {
+                tooltipOverlay.setPosition(undefined);
+                closer.blur();
+                return false;
+              };
             }
           });
 
@@ -182,19 +203,16 @@
                   heatmapSource.clear();
                   heatmapOverlay.setPosition();
                 }
-
                 if (count <= tooltipMaxCount) {
                   me.requestFeatures(featureType, map, count).then(
                     function (features) {
                       tooltipSource.clear();
-                      tooltipInteraction.getFeatures().clear();
-                      tooltipOverlay.setPosition();
+                     // tooltipInteraction.getFeatures().clear();
                       tooltipSource.addFeatures(features);
                     }
-                  )
+                  );
                 } else {
                   tooltipSource.clear();
-                  tooltipOverlay.setPosition();
                 }
               });
           }
