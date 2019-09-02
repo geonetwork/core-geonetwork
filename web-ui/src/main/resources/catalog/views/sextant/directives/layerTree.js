@@ -1,12 +1,7 @@
 (function() {
   goog.provide('sxt_layertree');
 
-  goog.require('sxt_compositeLayer');
-
-
-  var module = angular.module('sxt_layertree', [
-    'sxt_compositeLayer'
-  ]);
+  var module = angular.module('sxt_layertree', []);
 
   // Contains all layers that come from wps service
   var wpsLayers = [];
@@ -383,13 +378,8 @@
     }]);
 
   module.directive('sxtLayertreeElt', [
-    '$compile',
-    '$http',
-    'gnMap',
-    'gnMdView',
-    'wfsFilterService',
-    'sxtCompositeLayer',
-    function($compile, $http, gnMap, gnMdView, wfsFilterService, sxtCompositeLayer) {
+    '$compile', '$http', 'gnMap', 'gnMdView', 'wfsFilterService',
+    function($compile, $http, gnMap, gnMdView, wfsFilterService) {
       return {
         restrict: 'E',
         replace: true,
@@ -488,30 +478,6 @@
                 indexObject.searchWithFacets({}).then(function(data) {
                   if(data.count > 0) {
                     scope.wfs = wfsLink;
-                    var featureType = wfsLink.url + '#' + wfsLink.name;
-                    var appProfile;
-                    try {
-                      appProfile = wfsLink.applicationProfile ? JSON.parse(wfsLink.applicationProfile) : {};
-                    } catch (e) {
-                      appProfile = {};
-                      console.warn('Erreur lors de la lecture de l\'élément applicationProfile', e);
-                    }
-
-                    var minHeatmapCount =  appProfile.compositeLayer && appProfile.compositeLayer.minHeatmapCount || 1000;
-                    var maxTooltipCount =  appProfile.compositeLayer && appProfile.compositeLayer.maxTooltipCount || 1000;
-
-                    var tooltipTemplateUrl = appProfile.tooltipTemplateUrl;
-                    if (!tooltipTemplateUrl) {
-                      console.warn('Pas d\'URL de template de tooltip dans l\'élément applicationProfile,', appProfile);
-                      sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount, undefined);
-                    } else {
-                      $http.get(tooltipTemplateUrl).then(function (response) {
-                        var tooltipTemplate = response.data;
-                        sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount, tooltipTemplate);
-                      }, function () {
-                        console.warn('Le chargement du template de tooltip a échoué');
-                      });
-                    }
                   }
                 });
               }
