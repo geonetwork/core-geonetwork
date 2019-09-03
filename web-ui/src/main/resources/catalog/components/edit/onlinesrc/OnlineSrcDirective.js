@@ -487,12 +487,11 @@
                   var linkToEdit = undefined, linkType = undefined;
                   if (angular.isDefined(linkToEditOrType)) {
                     if (angular.isObject(linkToEditOrType)) {
-                        linkToEdit = linkToEditOrType;
-                      } else if (angular.isString(linkToEditOrType)) {
-                        linkType = linkToEditOrType;
-                      }
+                      linkToEdit = linkToEditOrType;
+                    } else if (angular.isString(linkToEditOrType)) {
+                      linkType = linkToEditOrType;
+                    }
                   }
-
                   scope.isEditing = angular.isDefined(linkToEdit);
                   scope.codelistFilter = scope.gnCurrentEdit && scope.gnCurrentEdit.codelistFilter;
 
@@ -543,6 +542,28 @@
                       } else {
                         scope.isMdMultilingual = false;
                       }
+                    } else {
+                      scope.isMdMultilingual = false;
+                    }
+                  }
+
+                  function getType(linkType) {
+                    for (var i = 0; i < scope.config.types.length; i++) {
+                      var t = scope.config.types[i];
+                      if (t.label === linkType) {
+                        return t;
+                      }
+                    }
+                    return scope.config.types[0];
+                  };
+
+                  var typeConfig = linkToEdit ?
+                      getTypeConfig(linkToEdit) :
+                      getType(linkType);
+                  scope.config.multilingualFields = [];
+                  angular.forEach(typeConfig.fields, function(f, k) {
+                    if (f.isMultilingual !== false) {
+                      scope.config.multilingualFields.push(k);
                     }
 
                     initThumbnailMaker();
@@ -619,8 +640,8 @@
                       scope.editingKey = null;
                       scope.params.linkType = typeConfig;
                       scope.params.protocol = null;
-                      scope.params.name= '';
-                      scope.params.desc= '';
+                      scope.params.name = '';
+                      scope.params.desc = '';
                       initMultilingualFields();
                     }
                   };
