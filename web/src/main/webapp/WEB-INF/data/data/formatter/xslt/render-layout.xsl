@@ -23,6 +23,7 @@
   <xsl:template mode="getMetadataAbstract" match="*"/>
   <xsl:template mode="getMetadataHierarchyLevel" match="*"/>
   <xsl:template mode="getOverviews" match="*"/>
+  <xsl:template mode="getTags" match="*"/>
   <xsl:template mode="getMetadataThumbnail" match="*"/>
   <xsl:template mode="getMetadataHeader" match="*"/>
   <xsl:template mode="getMetadataCitation" match="*"/>
@@ -178,6 +179,8 @@
             <br/>
 
             <xsl:apply-templates mode="getOverviews" select="$metadata"/>
+
+            <xsl:apply-templates mode="getTags" select="$metadata"/>
 
 
             <br/>

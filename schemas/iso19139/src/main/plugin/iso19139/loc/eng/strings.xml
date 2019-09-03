@@ -556,6 +556,13 @@
   <sxt-view-contact>Contact(s)</sxt-view-contact>
   <sxt-view-author>Author(s)</sxt-view-author>
   <sxt-view-keyword>Keywords</sxt-view-keyword>
+  <sxt-view-source>Source</sxt-view-source>
   <sxt-view-lineage>Lineage</sxt-view-lineage>
   <sxt-view-constraints>Constraints</sxt-view-constraints>
+  <sxt-view-spatialRepresentationType>Data type</sxt-view-spatialRepresentationType>
+  <sxt-view-geoinfo>Informations géographiques</sxt-view-geoinfo>
+  <sxt-view-crs>Système de coordonnées</sxt-view-crs>
+  <sxt-view-scale>Échelle</sxt-view-scale>
+  <sxt-view-resolution>Résolution</sxt-view-resolution>
+  <sxt-view-description>Description</sxt-view-description>
 </strings>

@@ -538,6 +538,13 @@
   <sxt-view-contact>Contact(s)</sxt-view-contact>
   <sxt-view-author>Auteur(s)</sxt-view-author>
   <sxt-view-keyword>Mots-clés</sxt-view-keyword>
-  <sxt-view-lineage>Généalogie</sxt-view-lineage>
+  <sxt-view-source>Source</sxt-view-source>
+  <sxt-view-lineage>Provenance</sxt-view-lineage>
   <sxt-view-constraints>Contraintes</sxt-view-constraints>
+  <sxt-view-spatialRepresentationType>Type de données</sxt-view-spatialRepresentationType>
+  <sxt-view-geoinfo>Informations géographiques</sxt-view-geoinfo>
+  <sxt-view-crs>Système de coordonnées</sxt-view-crs>
+  <sxt-view-scale>Échelle</sxt-view-scale>
+  <sxt-view-resolution>Résolution</sxt-view-resolution>
+  <sxt-view-description>Description</sxt-view-description>
 </strings>
