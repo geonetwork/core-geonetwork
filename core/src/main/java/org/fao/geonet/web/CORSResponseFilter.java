@@ -127,7 +127,11 @@ public class CORSResponseFilter
             }
         }
 
-        chain.doFilter(request, httpResponse);
+        if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
+            httpResponse.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            chain.doFilter(request, httpResponse);
+        }
     }
 
     public synchronized void destroy() {
