@@ -718,7 +718,7 @@
             } else {
               var config = {
                 params: layerParams,
-                url: options.url,
+                directUrl: options.directUrl,
                 projection: layerOptions.projection,
                 gutter: 15,
                 tileLoadFunction: loadFunction
@@ -740,6 +740,7 @@
 
             var layerOptions = {
               url: options.url,
+              directUrl: options.directUrl,
               type: 'WMS',
               opacity: options.opacity,
               visible: options.visible,
@@ -942,12 +943,14 @@
                 url = url.substring(0, url.length-1);
               }
 
+              var proxifiedUrl = url;
               if(getCapLayer.useProxy
                   && url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
-                url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
+                proxifiedUrl = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
               }
               var layer = this.createOlWMS(map, layerParam, {
-                url: url,
+                url: proxifiedUrl,
+                directUrl: url,
                 label: getCapLayer.Title,
                 attribution: attribution,
                 attributionUrl: attributionUrl,
@@ -1938,7 +1941,8 @@
                       '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map');
 
                   angular.forEach(mdLinks, function(link) {
-                    if (layer.get('url').indexOf(link.url) >= 0 &&
+                    var layerUrl = layer.get('directUrl') || layer.get('url');
+                    if (layerUrl.indexOf(link.url) >= 0 &&
                         link.name == layer.getSource().getParams().LAYERS) {
                       this.feedLayerWithRelated(layer, link.group);
                       return;
