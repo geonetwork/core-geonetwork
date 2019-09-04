@@ -341,6 +341,8 @@
                 delete output[fieldName].values[facetKey];
                 if (Object.keys(output[fieldName].values).length == 0) {
                   delete output[fieldName];
+                } else {
+                  scope.lastClickedField = fieldName;
                 }
               }
               else {
