@@ -37,14 +37,14 @@
       <!-- value filter field -->
       <div class="filter-input sxt-layertree-filter"
         ng-if="!field.dates && (field.more || facetFilters[field.name] || (field.tree.nodes.length > 20))" ng-show="field.expanded">
-        <span class="fa fa-times-circle clear" title="clear"
-          ng-click="facetFilters[field.name] = ''; filterFacets()"
+        <span class="fa fa-times-circle clear" title="clear"-features
+          ng-click="facetFilters[field.name] = ''; onFilterInputChange(field)"
           ng-show="facetFilters[field.name]"></span>
         <input type="text" class="form-control input-sm layerfilter"
           placeholder="{{ 'filter' | translate }}"
           ng-model="facetFilters[field.name]"
           ng-model-options="{debounce: 300}"
-          ng-change="filterFacets()">
+          ng-change="onFilterInputChange(field)">
       </div>
 
       <div data-ng-class="{'collapse': !field.expanded, 'is-date': !!field.dates}">

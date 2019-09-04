@@ -168,6 +168,8 @@
           // Extent of current features matching the filter.
           scope.featureExtent = undefined;
 
+          var textInputsHistory = {};
+
           /**
            * Init the directive when the scope.layer has changed.
            * If the layer is given through the isolate scope object, the init
@@ -330,6 +332,10 @@
             var output = scope.output;
             scope.lastClickedField = null;
 
+            if(textInputsHistory[fieldName] && !scope.facetFilters[fieldName]) {
+              textInputsHistory[fieldName].lastValue = '';
+            }
+
             if (output[fieldName]) {
               if (output[fieldName].values[facetKey]) {
                 delete output[fieldName].values[facetKey];
@@ -380,14 +386,33 @@
             scope.filterFacets();
           };
 
+          scope.onFilterInputChange = function(field) {
+            var name = field.name;
+            var history = textInputsHistory[name];
+            if(!history) {
+              history = textInputsHistory[name] = {
+                facet: getFieldByName(name),
+                lastValue: '',
+                newValue: scope.facetFilters[name]
+              };
+            } else {
+              history.lastValue = history.newValue;
+              history.newValue = scope.facetFilters[name];
+            }
+            history.resetInput = !!(history.lastValue && !history.newValue);
+            history.initInput = !!(history.newValue && !history.lastValue);
+
+            scope.filterFacets(true);
+          };
+
           /**
            * Send a new filtered request to index to update the facet ui
            * structure.
            * This method is called each time the user check or uncheck a box
            * from the ui, or when he updates the filter input.
-           * @param {boolean} formInput the filter comes from input change
+           * @param filterInputUpdate if the search comes from filter input change
            */
-          scope.filterFacets = function(formInput) {
+          scope.filterFacets = function(filterInputUpdate) {
             scope.$broadcast('FiltersChanged');
 
             // Update the facet UI
@@ -432,7 +457,7 @@
                 geometry: scope.filterGeometry
               }, aggs).
                   then(function(resp) {
-                    searchResponseHandler(resp);
+                    searchResponseHandler(resp, filterInputUpdate);
                     angular.forEach(scope.fields, function(f) {
                       if (expandedFields.indexOf(f.name) >= 0) {
                         f.expanded = true;
@@ -547,25 +572,48 @@
 
             var aggs = {};
             addBboxAggregation(aggs);
+            textInputsHistory = {};
 
             // load all facet and fill ui structure for the list
             return indexObject.searchWithFacets({}, aggs).
                 then(function(resp) {
-              searchResponseHandler(resp);
+              searchResponseHandler(resp, false);
             });
           };
 
-          function searchResponseHandler(resp) {
+          function searchResponseHandler(resp, filterInputUpdate) {
             indexObject.pushState();
             scope.count = resp.count;
 
             // if a facet was clicked, keep the previous facet object
-            var lastClickedFacet = scope.fields.filter(function(e){
+            var lastClickedFacet = scope.fields.filter(function(e) {
               return e.name === scope.lastClickedField;
             })[0];
-            scope.fields = resp.facets.map(function(e){
-              return lastClickedFacet && lastClickedFacet.name === e.name ?
-                lastClickedFacet : e;
+            scope.fields = resp.facets.map(function(e) {
+              if (lastClickedFacet && lastClickedFacet.name === e.name) {
+                var history = filterInputUpdate && textInputsHistory[lastClickedFacet.name];
+
+                // if we clear text-filter, we restore last history saved facets
+                // we merge this history of items with the actual checked items
+                if(history && history.resetInput) {
+                  var checkedItems = lastClickedFacet.values.filter(function(f) {
+                    return f.count;
+                  });
+                  checkedItems.forEach(function(item) {
+                    history.facet.values = history.facet.values.filter(function(value) {
+                      return value.value !== item.value;
+                    })
+                  });
+                  history.facet.values = checkedItems.concat(history.facet.values);
+                  return history.facet;
+                } else if(history) { // input is init or changed
+                  return e;
+                } else  { // input is init or changed
+                  return lastClickedFacet;
+                }
+              } else {
+                return e;
+              }
             });
 
             scope.sortAggregation();
@@ -844,6 +892,12 @@
             // other fields: the filter must be active
             return true;
           };
+
+          function getFieldByName(name) {
+            return scope.fields.filter(function(field) {
+              return field.name === name;
+            })[0];
+          }
         }
       };
     }]);
