@@ -1940,13 +1940,9 @@
                   var mdLinks = md.getLinksByType('#OGC:WMTS',
                       '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map');
 
-                  var layerUrl = layer.get('directUrl') || layer.get('url');
-                  var layerServiceURI = gnUrlUtils.urlResolve(layerUrl);
-                  var layerServiceFullPath = layerServiceURI.path + layerServiceURI.pathname;
                   angular.forEach(mdLinks, function(link) {
-                    var linkURI = gnUrlUtils.urlResolve(link.url);
-                    var linkFullPath = linkURI.path + linkURI.pathname;
-                    if (layerServiceFullPath.indexOf(linkFullPath) >= 0 &&
+                    var layerUrl = layer.get('directUrl') || layer.get('url');
+                    if (layerUrl.indexOf(link.url) >= 0 &&
                         link.name == layer.getSource().getParams().LAYERS) {
                       this.feedLayerWithRelated(layer, link.group);
                       return;
