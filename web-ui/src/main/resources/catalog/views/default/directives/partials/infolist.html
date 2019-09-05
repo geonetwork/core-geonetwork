@@ -18,9 +18,14 @@
       </div>
 
       <div class="gn-md-thumbnail">
-        <div class="gn-img-thumbnail"
-             style="background-image: url({{md.getThumbnails().list[0].url}})">
-        </div>
+        <a href=""
+           gn-metadata-open="md"
+           gn-records="searchResults.records"
+           gn-formatter="formatter.defaultUrl">
+          <div class="gn-img-thumbnail"
+               style="background-image: url({{md.getThumbnails().list[0].url}})">
+          </div>
+        </a>
       </div>
 
       <div class="content">
