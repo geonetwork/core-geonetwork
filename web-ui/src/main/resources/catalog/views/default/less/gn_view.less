@@ -61,4 +61,19 @@
   border-radius: 50%;
   padding: 11px 15px;
 }
+.btn-truncate {
+  span {
+    display: inline-block;
+    float: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 150px;
+    @media (min-width: @screen-md-min) {
+      max-width: 125px;
+    }
+    @media (min-width: @screen-lg-min) {
+      max-width: 115px;
+    }
+  }
+}
 

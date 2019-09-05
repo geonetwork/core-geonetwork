@@ -32,7 +32,7 @@
                 alt="{{'siteLogo' | translate}}"
                 data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
         </a>
-        <a class="pull-left"
+        <a class="pull-left hidden-sm"
            data-ng-class="gnCfg.mods.header.isLogoInHeader ? '' : 'gn-nopadding-left'"
            data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
           <span class="gn-name"
@@ -159,7 +159,7 @@
           <img class="img-circle"
             alt="{{'avatar' | translate}}"
             data-ng-src="//gravatar.com/avatar/{{user.email | md5}}?s=18"/>
-          <div class="gn-user-info hidden-sm">
+          <div class="gn-user-info hidden-sm hidden-md">
             {{user.name}} {{user.surname}}<br>
             <span class="gn-user-role">{{user.profile | lowercase | translate}}</span>
           </div>
