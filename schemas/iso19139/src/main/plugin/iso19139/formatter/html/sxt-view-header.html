@@ -84,7 +84,7 @@
 
         <section>
           <p>
-            <img gn-img-modal="md" fmt-if="thumbnail" class="gn-img-thumbnail img-thumbnail graphic-overview" src="{{thumbnail | escapeXmlAttrs}}"></img>
+            <img onerror="this.style.display='none'"  gn-img-modal="md" fmt-if="thumbnail" class="gn-img-thumbnail img-thumbnail graphic-overview" src="{{thumbnail | escapeXmlAttrs}}"></img>
           </p>
         </section>
 
