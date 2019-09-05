@@ -404,7 +404,7 @@
             history.resetInput = !!(history.lastValue && !history.newValue);
             history.initInput = !!(history.newValue && !history.lastValue);
 
-            scope.filterFacets(true);
+            scope.filterFacets(field.name);
           };
 
           /**
@@ -412,7 +412,8 @@
            * structure.
            * This method is called each time the user check or uncheck a box
            * from the ui, or when he updates the filter input.
-           * @param filterInputUpdate if the search comes from filter input change
+           * @param filterInputUpdate if the search comes from text input,
+           *   then the value of the field of the text input
            */
           scope.filterFacets = function(filterInputUpdate) {
             scope.$broadcast('FiltersChanged');
@@ -424,6 +425,8 @@
                 expandedFields.push(f.name);
               }
             });
+
+            var facetsState = scope.output;
 
             // use value filters for facets
             var aggs = {};
@@ -447,6 +450,13 @@
                     include: '.*' + filter + '.*'
                   }
                 };
+
+                // apply a text search on all possible values of the facets
+                // for this, remove current facet checkbox filters
+                if(facetName === scope.lastClickedField && filterInputUpdate) {
+                  facetsState = angular.copy(facetsState);
+                  delete facetsState[facetName];
+                }
               }
             });
 
@@ -455,7 +465,7 @@
             //indexObject is only available if Elastic is configured
             if (indexObject) {
               indexObject.searchWithFacets({
-                params: scope.output,
+                params: facetsState,
                 geometry: scope.filterGeometry
               }, aggs).
                   then(function(resp) {
@@ -608,13 +618,20 @@
                   });
                   history.facet.values = checkedItems.concat(history.facet.values);
                   return history.facet;
-                } else if(history) { // input is init or changed
+                } else if(history) { // text input is init or changed
                   return e;
-                } else  { // input is init or changed
+                } else  { // checkbox click update
                   return lastClickedFacet;
                 }
               } else {
-                return e;
+                // if we text filtering, the result should apply only on the current facet
+                // for all other facet, we keep same result.
+                var field = getFieldByName(e.name);
+                if (filterInputUpdate && filterInputUpdate !== e.name && field) {
+                  return field;
+                } else {
+                  return e;
+                }
               }
             });
 
