@@ -15,4 +15,4 @@
 	url = https://github.com/geonetwork/doc.git
 [submodule "schemas/iso19115-3.2018"]
 	path = schemas/iso19115-3.2018
-	url = https://gitlab.ifremer.fr/sextant-public/geonetwork-iso19115-3.2018.git
+	url = https://fp1ea20@gitlab.ifremer.fr/sextant-public/geonetwork-iso19115-3.2018.git
