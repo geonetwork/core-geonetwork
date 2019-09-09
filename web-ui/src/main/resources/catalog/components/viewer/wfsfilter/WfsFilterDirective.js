@@ -547,7 +547,7 @@
 
           scope.getMore = function(field) {
             indexObject.getFacetMoreResults(field).then(function(response) {
-              field.values = response.facets[0].values;
+              field.values = mergeResponseItemsWithCheckedItems(response.facets[0].values, field.values);
               field.more = response.facets[0].more;
             });
           };
@@ -608,15 +608,8 @@
                 // if we clear text-filter, we restore last history saved facets
                 // we merge this history of items with the actual checked items
                 if(history && history.resetInput) {
-                  var checkedItems = lastClickedFacet.values.filter(function(f) {
-                    return f.count;
-                  });
-                  checkedItems.forEach(function(item) {
-                    history.facet.values = history.facet.values.filter(function(value) {
-                      return value.value !== item.value;
-                    })
-                  });
-                  history.facet.values = checkedItems.concat(history.facet.values);
+                  history.facet.values = mergeResponseItemsWithCheckedItems(history.facet.values,
+                    lastClickedFacet.values);
                   return history.facet;
                 } else if(history) { // text input is init or changed
                   return e;
@@ -916,6 +909,19 @@
             return scope.fields.filter(function(field) {
               return field.name === name;
             })[0];
+          }
+
+          function mergeResponseItemsWithCheckedItems(newItems, oldItems) {
+            var checkedItems = oldItems.filter(function(f) {
+              return f.count;
+            });
+            checkedItems.forEach(function(item) {
+              newItems = newItems.filter(function(value) {
+                return value.value !== item.value;
+              })
+            });
+            newItems = checkedItems.concat(newItems);
+            return newItems;
           }
         }
       };
