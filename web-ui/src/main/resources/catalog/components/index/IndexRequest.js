@@ -289,9 +289,13 @@
     var agg = this.reqParams.aggs[field.name];
     agg[field.type].size += ROWS;
     aggs[field.name] = agg;
+
+    var params = angular.copy(this.requestParams.qParams);
+    delete params[field.name];
+
     return this.search_({
       any: this.requestParams.any,
-      params: this.requestParams.qParams,
+      params: params,
       geometry: this.requestParams.geometry
     }, aggs, false, true);
   };
