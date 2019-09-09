@@ -292,11 +292,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>-Dfile.encoding=UTF-8 -Xmx512M</argLine>
+          <argLine>-Dfile.encoding=UTF-8 -Xmx1G</argLine>
           <!--<rerunFailingTestsCount>5</rerunFailingTestsCount>-->
           <runOrder>alphabetical</runOrder>
-          <redirectTestOutputToFile>true</redirectTestOutputToFile>
           <forkCount>4</forkCount>
+          <redirectTestOutputToFile>true</redirectTestOutputToFile>
           <excludes>
             <exclude>**/*PerformanceTest.java</exclude>
           </excludes>
