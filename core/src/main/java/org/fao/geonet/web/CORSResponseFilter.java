@@ -116,7 +116,7 @@ public class CORSResponseFilter
 //                        httpResponse.setHeader("Access-Control-Allow-Origin", "*");
                         httpResponse.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
                         httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
-                        httpResponse.setHeader("Vary", "Origin");
+                        //httpResponse.setHeader("Vary", "Origin");
                     }
                 } catch (Exception e) {
                     Log.warning(Geonet.CORS, String.format(
@@ -127,11 +127,22 @@ public class CORSResponseFilter
             }
         }
 
+        // SEXTANT SPECIFIC: since Spring 4.3.0, this is required to get the
+        // preflight requests to work (otherwise the browser will block
+        // any POST-like request in a cross-domain situation)
+        // see: https://gitlab.ifremer.fr/sextant/geonetwork/issues/52
         if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
             httpResponse.setStatus(HttpServletResponse.SC_OK);
         } else {
             chain.doFilter(request, httpResponse);
         }
+
+        // SEXTANT SPECIFIC: The Vary: Origin header is always sent back to the client
+        // This is so that results for requests made on the same domain as Geonetwork do not get
+        // cached for cross-domain requests as well (for which CORS headers will be missing,
+        // thus giving an error)
+        // see: https://gitlab.ifremer.fr/sextant/geonetwork/issues/27
+        httpResponse.setHeader("Vary", "Origin");
     }
 
     public synchronized void destroy() {
