@@ -26,9 +26,15 @@ package org.fao.geonet.schema.iso19139;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.kernel.schema.*;
+import org.fao.geonet.kernel.schema.AssociatedResource;
+import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
+import org.fao.geonet.kernel.schema.ExportablePlugin;
+import org.fao.geonet.kernel.schema.ISOPlugin;
+import org.fao.geonet.kernel.schema.LinkAwareSchemaPlugin;
 import org.fao.geonet.kernel.schema.LinkPatternStreamer.ILinkBuilder;
 import org.fao.geonet.kernel.schema.LinkPatternStreamer.RawLinkPatternStreamer;
+import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -38,9 +44,20 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.*;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMX;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.SRV;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.XLINK;
 
 /**
  * Created by francois on 6/15/14.
@@ -525,26 +542,21 @@ public class ISO19139SchemaPlugin
     public static List<String> getLanguages(Element md) {
         List<String> languages = new ArrayList<>();
         try {
-            // Main language for the record
-            Attribute mainLanguageAttribute = (Attribute) Xml.selectSingle(md, "gmd:language/*/@codeListValue", ISO19139SchemaPlugin.allNamespaces.asList());
+            String mainLanguage = getMainLanguage(md);
 
-            if (mainLanguageAttribute != null &&
-                StringUtils.isNotEmpty(mainLanguageAttribute.getValue())) {
-                languages.add(mainLanguageAttribute.getValue());
+            if (mainLanguage.length() > 0) {
+                languages.add(mainLanguage);
             }
-            final String mainLanguage = languages.size() == 1 ? languages.get(0) : "";
 
             // Append all other locales as ordered in the locale section
             List<Attribute> locales = (List<Attribute>) Xml.selectNodes(md, "gmd:locale/*/gmd:languageCode/*/@codeListValue", ISO19139SchemaPlugin.allNamespaces.asList());
-            if (locales != null && locales.size() > 0) {
-                locales.forEach(a -> {
-                    // Main language may be repeated in locale section
-                    // at least in GN case - do not add it twice
-                    if (StringUtils.isNotEmpty(mainLanguage) && !mainLanguage.equals(a.getValue())) {
-                        languages.add(a.getValue());
-                    }
-                });
-            }
+            if (locales != null) {
+                locales.stream()
+                        .map(Attribute::getValue)
+                        .filter(Objects::nonNull)
+                        .filter(l -> !l.equalsIgnoreCase(mainLanguage))
+                        .forEach(l -> languages.add(l));
+                };
         } catch (JDOMException e) {
         }
         return languages;
@@ -555,5 +567,18 @@ public class ISO19139SchemaPlugin
         patternStreamer.setNamespaces(ISO19139SchemaPlugin.allNamespaces.asList());
         patternStreamer.setRawTextXPath(".//*[name() = 'gco:CharacterString' or name() = 'gmd:URL']");
         return patternStreamer;
+    }
+
+    private static String getMainLanguage(Element md) throws JDOMException {
+        Attribute mainLanguageAttribute = (Attribute) Xml.selectSingle(md, "gmd:language/*/@codeListValue", ISO19139SchemaPlugin.allNamespaces.asList());
+        if (mainLanguageAttribute != null && StringUtils.isNotEmpty(mainLanguageAttribute.getValue())) {
+            return mainLanguageAttribute.getValue();
+        }
+
+        Element mainLanguageElem = (Element) Xml.selectSingle(md, "gmd:language/*", ISO19139SchemaPlugin.allNamespaces.asList());
+        if (mainLanguageElem != null && StringUtils.isNotEmpty(mainLanguageElem.getText())) {
+            return mainLanguageElem.getText();
+        }
+        return "";
     }
 }
