@@ -698,6 +698,16 @@
               params: initialFilters.qParams,
               geometry: initialFilters.geometry
             }, aggs).then(function(resp) {
+              // display selected values that do not appear in first result page
+              for (var prop in initialFilters.qParams) {
+                var field = getFieldByName(prop);
+                var respFacet = resp.facets.filter(function(res) {
+                  return res.name === prop;
+                })[0];
+                if( respFacet && respFacet.type === 'terms') {
+                  field.values = mergeResponseItemsWithCheckedItems(respFacet.values, field.values);
+                }
+              }
               indexObject.pushState();
               scope.sortAggregation();
               scope.count = resp.count;
