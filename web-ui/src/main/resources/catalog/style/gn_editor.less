@@ -522,6 +522,12 @@ form.gn-editor {
       top: 2px;
     }
   }
+  .gn-validation-report {
+    .list-group-item {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+  }
 }
 
 .gn-autocomplete-list {
@@ -976,23 +982,29 @@ gn-draft-validation-widget {
   }
 }
 
-.gn-fixed-scroll {
-  position:fixed;
-  top: 70px;
-  margin-right: 15px;
-  z-index: 10;
-  .gn-btn-fix {
-    color: #333;
-    background-color: #e6e6e6;
-    border-color: #adadad;
-    outline: 0;
-    background-image: none;
-    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+.gn-editor-sidebar {
+  margin-top: 15px;
+  padding-bottom: 150px;
+}
+@media (min-width: @screen-md-min) {
+  .scrollbar-white() {
+    &::-webkit-scrollbar-track, &::-webkit-scrollbar-thumb {
+      -webkit-box-shadow: inset 0 0 6px #fff; 
+    }
+    &::-webkit-scrollbar-thumb:window-inactive {
+      background: #fff; 
+    }
+  }
+  .gn-editor-sidebar {
+    margin-top: 0;
+    position: fixed;
+    right: 0;
+    overflow: auto;
+    max-height: 100%;
+    padding-bottom: 110px;
+    .scrollbar-white();
   }
 }
-
-
 
 gn-bounding-polygon {
   label {
@@ -1006,3 +1018,10 @@ gn-bounding-polygon {
     font-size: 0.9em;
   }
 }
+
+ // scrollspy
+  .gn-scroll-spy {
+    .btn.btn-round {
+      border-radius: 50% !important;
+    }
+  }
