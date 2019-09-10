@@ -262,7 +262,7 @@
             }
             scope.hmActive = appProfile ? appProfile.heatmap : true;
 
-            scope.resetFacets().then(scope.restoreInitialFilters);
+            scope.resetFacets().then(scope.restoreInitialFilters).then(scope.filterWMS);
           }
           function getDataModelLabel(fieldId) {
             for (var j = 0; j < scope.md.attributeTable.length; j++) {
@@ -758,7 +758,7 @@
 
             }
             if (sldConfig.filters.length > 0) {
-              wfsFilterService.getSldUrl(sldConfig, layer.get('url'),
+              wfsFilterService.getSldUrl(sldConfig, layer.get('directUrl') || layer.get('url'),
                   ftName).success(function(sldURL) {
                 // Do not activate it
                 // Usually return 414 Request-URI Too Large
