@@ -55,6 +55,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import javax.annotation.Nullable;
 
@@ -101,47 +102,63 @@ public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void testExecTextGroupOnly() throws Exception {
-        final String thesaurusKey = firstThesaurusKey();
-        final java.util.List<KeywordBean> keywordBeans = getExampleKeywords(thesaurusKey, 2);
+        final Iterator<String> thesaurusIterator = getThesaurusKeys();
+        int maxResults = 2;
+        while(thesaurusIterator.hasNext()) {
+            String thesaurusKey = thesaurusIterator.next();
+            final java.util.List<KeywordBean> keywordBeans = getExampleKeywords(thesaurusKey, 2);
 
-        String uri1 = keywordBeans.get(0).getUriCode();
-        String uri2 = keywordBeans.get(1).getUriCode();
+            // Skip thesaurus with no or non matching keywords
+            if (keywordBeans.size() == maxResults) {
+                String uri1 = keywordBeans.get(0).getUriCode();
+                String uri2 = keywordBeans.get(1).getUriCode();
 
-        final Element keywordXml = getKeywordsById(uri1, uri2, thesaurusKey, new Function<Element, Void>() {
-            @Nullable
-            @Override
-            public Void apply(Element input) {
-                input.addContent(new Element("textgroupOnly").setText(""));
-                return null;
+                final Element keywordXml = getKeywordsById(uri1, uri2, thesaurusKey, new Function<Element, Void>() {
+                    @Nullable
+                    @Override
+                    public Void apply(Element input) {
+                        input.addContent(new Element("textgroupOnly").setText(""));
+                        return null;
+                    }
+                });
+
+                final java.util.List<?> charStrings = Xml.selectNodes(keywordXml, "*//gmd:keyword/gco:CharacterString[normalize-space(text()) != '']", Arrays.asList
+                    (ISO19139Namespaces.GCO,
+                        ISO19139Namespaces.GMD));
+                assertEquals(maxResults, charStrings.size());
+                return;
             }
-        });
-
-        final java.util.List<?> charStrings = Xml.selectNodes(keywordXml, "*//gmd:keyword/gco:CharacterString[normalize-space(text()) != '']", Arrays.asList
-            (ISO19139Namespaces.GCO,
-                ISO19139Namespaces.GMD));
-        assertEquals(2, charStrings.size());
+        }
     }
 
     @Test
     public void testExecMD_Keywords() throws Exception {
-        final String thesaurusKey = firstThesaurusKey();
-        final java.util.List<KeywordBean> keywordBeans = getExampleKeywords(thesaurusKey, 2);
+        final Iterator<String> thesaurusIterator = getThesaurusKeys();
+        int maxResults = 2;
+        while(thesaurusIterator.hasNext()) {
+            String thesaurusKey = thesaurusIterator.next();
+            final java.util.List<KeywordBean> keywordBeans = getExampleKeywords(thesaurusKey, maxResults);
 
-        String uri1 = keywordBeans.get(0).getUriCode();
-        String uri2 = keywordBeans.get(1).getUriCode();
+            // Skip thesaurus with no or non matching keywords
+            if (keywordBeans.size() == maxResults) {
+                String uri1 = keywordBeans.get(0).getUriCode();
+                String uri2 = keywordBeans.get(1).getUriCode();
 
-        final Element keywordXml = getKeywordsById(uri1, uri2, thesaurusKey, new Function<Element, Void>() {
-            @Nullable
-            @Override
-            public Void apply(Element input) {
-                input.addContent(new Element("skipdescriptivekeywords").setText(""));
-                return null;
+                final Element keywordXml = getKeywordsById(uri1, uri2, thesaurusKey, new Function<Element, Void>() {
+                    @Nullable
+                    @Override
+                    public Void apply(Element input) {
+                        input.addContent(new Element("skipdescriptivekeywords").setText(""));
+                        return null;
+                    }
+                });
+
+                assertEquals("gmd:MD_Keywords", keywordXml.getQualifiedName());
+                assertTrue(Xml.getString(keywordXml), Xml.selectNodes(keywordXml, "gmd:keyword/gco:CharacterString[normalize-space(text()) != '']", Arrays.asList(ISO19139Namespaces.GCO,
+                    ISO19139Namespaces.GMD)).size() > 0);
+                return;
             }
-        });
-
-        assertEquals("gmd:MD_Keywords", keywordXml.getQualifiedName());
-        assertTrue(Xml.getString(keywordXml), Xml.selectNodes(keywordXml, "gmd:keyword/gco:CharacterString[normalize-space(text()) != '']", Arrays.asList(ISO19139Namespaces.GCO,
-            ISO19139Namespaces.GMD)).size() > 0);
+        }
     }
 
     @Test
@@ -228,7 +245,7 @@ public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
         return value != null && value.isEmpty();
     }
 
-    private String firstThesaurusKey() {
-        return thesaurusManager.getThesauriMap().keySet().iterator().next();
+    private Iterator<String> getThesaurusKeys() {
+        return thesaurusManager.getThesauriMap().keySet().iterator();
     }
 }
