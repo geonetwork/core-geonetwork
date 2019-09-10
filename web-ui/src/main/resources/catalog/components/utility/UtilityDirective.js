@@ -224,6 +224,63 @@
       };
     }]);
 
+  module.directive('gnDuplicateCheck', ['$translate', '$http',
+    function($translate, $http) {
+      return {
+        restrict: 'A',
+        scope: {
+          value: '=gnDuplicateCheck',
+          list: '=gnDuplicateCheckList',
+          remote: '@gnDuplicateCheckRemote',
+          property: '@gnDuplicateCheckProperty',
+          msg: '@gnDuplicateCheckMsg'
+        },
+        link: function(scope, element, attrs) {
+          if (!angular.isArray(scope.list) && scope.remote === undefined) {
+            console.warn('gnDuplicateCheck need an array of values for the list or a remote URL.')
+            return;
+          }
+
+          if (angular.isArray(scope.list)) {
+            var existingValues = scope.property ? [] : scope.list;
+            if (scope.property) {
+              var path = scope.property.split('.');
+              for (var i = 0; i < scope.list.length; i++) {
+                var v = scope.list[i];
+                if (angular.isObject(v)) {
+                  for (var j = 0; j < path.length; j++) {
+                    v = v[path[j]]
+                    existingValues.push(v);
+                  }
+                }
+              }
+            }
+          }
+          scope.$watch('value', function(n, o) {
+            if (n && n != o) {
+              if (angular.isArray(existingValues) && existingValues.indexOf(scope.value) !== -1) {
+                element.toggleClass('ng-invalid');
+                console.log($translate.instant(scope.msg || 'duplicatedValueFound',
+                  {value: scope.value, list: existingValues}));
+              } else if (scope.remote) {
+                // Promise server side check
+                $http.get(scope.remote.replace('{value}', scope.value)).then(function (r){
+                  if (r.status !== 404) {
+                    console.log($translate.instant(scope.msg || 'duplicatedValueFound',
+                      {value: scope.value}));
+                  }
+                }, function (e){
+
+                })
+              } else {
+                element.toggleClass('ng-valid');
+              }
+            }
+          });
+        }
+      };
+    }]);
+
   /**
    * Region picker coupled with typeahead.
    * scope.region will tell what kind of region to load
