@@ -29,6 +29,7 @@ import org.fao.geonet.kernel.harvest.AbstractHarvesterIntegrationTest;
 import org.fao.geonet.MockCloseableHttpResponse;
 import org.fao.geonet.MockRequestFactoryGeonet;
 import org.jdom.Element;
+import org.junit.Ignore;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -42,6 +43,7 @@ import java.util.List;
  *
  * Created by Jesse on 1/12/14.
  */
+@Ignore
 public class WebDavHarvester_Validation_NonRecursive_IntegrationTest extends AbstractHarvesterIntegrationTest {
 
     private static final String BASE_PATH = "/webdav/";

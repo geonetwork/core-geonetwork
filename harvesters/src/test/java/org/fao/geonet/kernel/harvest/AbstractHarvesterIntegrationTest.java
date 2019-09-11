@@ -65,7 +65,6 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
     }
 
     @Test
-    @Ignore(value = "Broken")
     public void testHarvest() throws Exception {
         assertEquals(0, harvestHistoryRepository.count());
         assertEquals(0, metadataRepository.count());

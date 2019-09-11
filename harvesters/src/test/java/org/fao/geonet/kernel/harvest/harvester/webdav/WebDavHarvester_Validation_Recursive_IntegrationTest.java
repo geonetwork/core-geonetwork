@@ -23,11 +23,14 @@
 
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
+import org.junit.Ignore;
+
 /**
  * Test Webdav harvesting when no validation is done.
  *
  * Created by Jesse on 1/25/14.
  */
+@Ignore
 public class WebDavHarvester_Validation_Recursive_IntegrationTest extends WebDavHarvester_Validation_NonRecursive_IntegrationTest {
     @Override
     protected boolean isRecursive() {
