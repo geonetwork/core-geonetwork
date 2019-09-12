@@ -24,12 +24,12 @@
 (function() {
   goog.provide('gn_cat_controller');
 
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
 goog.require('gn_admin_menu');
 goog.require('gn_external_viewer');
 goog.require('gn_history');
@@ -83,7 +83,8 @@ goog.require('gn_alert');
             'cat': 'ca',
             'fin': 'fi',
             'ice': 'is',
-            'ita' : 'it',
+            'ita': 'it',
+            'por': 'pt',
             'rus': 'ru',
             'chi': 'zh',
             'slo': 'sk'
@@ -508,7 +509,7 @@ goog.require('gn_alert');
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
-        'spa': 'Español', 'cat': 'Català', 'cze': 'Czech',
+        'spa': 'Español', 'por': 'Portuguesa', 'cat': 'Català', 'cze': 'Czech',
         'ita': 'Italiano', 'fin': 'Suomeksi', 'ice': 'Íslenska',
         'rus': 'русский', 'chi': '中文', 'slo': 'Slovenčina'};
       $scope.url = '';
