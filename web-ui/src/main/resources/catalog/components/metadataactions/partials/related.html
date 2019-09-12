@@ -5,7 +5,7 @@
   <div class=""
        data-ng-repeat="(type, items) in relations track by $index"
        data-ng-if="type && type !== 'thumbnails'">
-    <div class="row list-group-item gn-related-item"
+    <div class="row list-group-item gn-related-item gn-related-{{type}}"
          data-ng-repeat="r in items track by $index"
          data-ng-init="mainType = config.getType(r, type);">
       <div class="col-xs-1 col-sm-1">
@@ -165,11 +165,15 @@
           <div data-ng-switch-default>
             <p class="text-muted"
                data-ng-if="mainType.indexOf('MD') == 0 && r.id">
-              <a href="#/metadata/{{r.id}}">
-                {{(r.title | gnLocalized: lang) }}
-              </a> ({{(config.getLabel(mainType, type)) | translate}})<br/>
-              {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a href="#/metadata/{{r.id}}">{{'more' |
-              translate}}...</a>
+              <span class="gn-related-title">
+                <a href="#/metadata/{{r.id}}">
+                  {{(r.title | gnLocalized: lang) }}
+                </a> ({{(config.getLabel(mainType, type)) | translate}})
+              </span>
+              <span class="gn-related-description">
+                {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a href="#/metadata/{{r.id}}">{{'more' |
+                translate}}...</a>
+              </span>
             </p>
 
             <p class="text-muted"
