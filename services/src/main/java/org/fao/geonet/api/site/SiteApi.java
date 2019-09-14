@@ -53,6 +53,7 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.doi.client.DoiManager;
 import org.fao.geonet.domain.Metadata;
@@ -131,6 +132,9 @@ public class SiteApi {
     @Autowired
     SourceRepository sourceRepository;
 
+    @Autowired
+    LanguageUtils languageUtils;
+
     public static void reloadServices(ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
@@ -177,7 +181,7 @@ public class SiteApi {
     }
 
     @ApiOperation(
-        value = "Get site description",
+        value = "Get site (or portal) description",
         notes = "",
         nickname = "getDescription")
     @RequestMapping(
@@ -189,6 +193,8 @@ public class SiteApi {
     })
     @ResponseBody
     public SettingsListResponse get(
+        @ApiIgnore
+        HttpServletRequest request
     ) throws Exception {
         SettingsListResponse response = new SettingsListResponse();
         response.setSettings(settingManager.getSettings(new String[]{
@@ -201,6 +207,7 @@ public class SiteApi {
         if (!NodeInfo.DEFAULT_NODE.equals(node.getId())) {
             Source source = sourceRepository.findOne(node.getId());
             if (source != null) {
+                String iso3langCode = languageUtils.getIso3langCode(request.getLocales());
                 final List<Setting> settings = response.getSettings();
                 settings.add(
                     new Setting().setName(Settings.NODE_DEFAULT)
@@ -210,7 +217,7 @@ public class SiteApi {
                         .setValue(source.getUuid()));
                 settings.add(
                     new Setting().setName(Settings.NODE_NAME)
-                        .setValue(source.getName()));
+                        .setValue(source != null ? source.getLabel(iso3langCode) : source.getName()));
             }
         }
         return response;
