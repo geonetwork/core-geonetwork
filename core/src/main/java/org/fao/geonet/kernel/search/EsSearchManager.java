@@ -202,6 +202,9 @@ public class EsSearchManager implements ISearchManager {
     private int commitInterval = 200;
     private Map<String, String> listOfDocumentsToIndex = new HashMap<>();
 
+    @Autowired
+    SourceRepository sourceRepository;
+    
     @Override
     public void index(Path schemaDir, Element metadata, String id, List<Element> moreFields,
                       MetadataType metadataType, String root, boolean forceRefreshReaders) throws Exception {
