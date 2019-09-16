@@ -8,7 +8,7 @@ and copy it to the ES module. eg. es/elasticsearch-7.2.1
 Start ES using:
 
 ```
-./bin.elasticsearch
+./bin/elasticsearch
 ```
 
 
