@@ -223,7 +223,14 @@ public class EsSearchManager implements ISearchManager {
         // ES does not allow a _source field
         String catalog = doc.get("source").asText();
         doc.remove("source");
-        doc.put("sourceCatalogue", catalog);
+        if (StringUtils.isNotEmpty(catalog)) {
+            doc.put("sourceCatalogue", catalog);
+            final Source source = sourceRepository.findOne(catalog);
+            if (source != null) {
+                source.getLabelTranslations()
+                    .forEach((key, value) -> doc.put("sourceCatalogueName_lang" + key, value));
+            }
+        }
         doc.put("scope", settingManager.getSiteName());
         doc.put("harvesterUuid", settingManager.getSiteId());
         doc.put("harvesterId", settingManager.getNodeURL());
