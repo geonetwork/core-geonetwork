@@ -85,11 +85,6 @@
               };
               if (outputLang) {
                 parameters['pLang'] = outputLang;
-              } else {
-                parameters['pLang'] = 'eng';
-                // Always set english as a source language
-                // If a record is in french and thesaurus in english, results are returned
-                // in english.
               }
               return gnUrlUtils.append('../api/registries/vocabularies/search',
                   gnUrlUtils.toKeyValue(parameters)
