@@ -20,8 +20,9 @@ var gnHarvestersimpleurl = {
         "url" : "http://",
         "loopElement" : "",
         "numberOfRecordPath": "",
+        "pageSizeParam": "",
+        "pageFromParam": "",
         "recordIdPath": "",
-        "pageSize": 200,
         "toISOConversion": ""
       },
       "content" : {
@@ -85,7 +86,8 @@ var gnHarvestersimpleurl = {
       + '    <loopElement>' + h.site.loopElement + '</loopElement>'
       + '    <numberOfRecordPath>' + h.site.numberOfRecordPath + '</numberOfRecordPath>'
       + '    <recordIdPath>' + h.site.recordIdPath + '</recordIdPath>'
-      + '    <pageSize>' + h.site.pageSize + '</pageSize>'
+      + '    <pageFromParam>' + h.site.pageFromParam + '</pageFromParam>'
+      + '    <pageSizeParam>' + h.site.pageSizeParam + '</pageSizeParam>'
       + '    <toISOConversion>' + h.site.toISOConversion + '</toISOConversion>'
       + '  </site>'
       + gnHarvestercsw.buildResponseCSWSearch($scope)

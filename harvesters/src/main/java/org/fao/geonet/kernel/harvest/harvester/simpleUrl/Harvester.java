@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester.simpleUrl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.CharStreams;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
@@ -54,11 +55,11 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -66,6 +67,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * <p>
  * The JSON source can be a simple JSON file or
  * an URL with indication on how to pass paging information.
+ *
+ * This harvester has been tested with CKAN search API.
  */
 class Harvester implements IHarvester<HarvestResult> {
     public static final String LOGGER_NAME = "geonetwork.harvester.json";
@@ -96,7 +99,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
         requestFactory = context.getBean(GeonetHttpRequestFactory.class);
 
-        String jsonResponse = retrieveUrl(log);
+        String jsonResponse = retrieveUrl(params.url, log);
         if (cancelMonitor.get()) {
             return new HarvestResult();
         }
@@ -114,30 +117,36 @@ class Harvester implements IHarvester<HarvestResult> {
             } catch (Exception e) {
             }
         }
-
-        JsonNode nodes;
-        Map<String, Element> uuids = new HashMap<String, Element>();
-
-        if (StringUtils.isNotEmpty(params.loopElement)) {
-            try {
-                nodes = jsonObj.at(params.loopElement);
-                log.debug("Number of records in response: " + nodes.size());
-
-                nodes.forEach(record -> {
-                    Element xml = convertRecordToXml(record);
-                    uuids.put(record.get("id").asText(), xml);
-                });
-            } catch (Exception e) {
-                log.warning("Failed to collect record in response");
-            }
-        }
-
         boolean error = false;
         HarvestResult result = null;
+        Map<String, Element> allUuids = new HashMap<String, Element>();
         try {
             Aligner aligner = new Aligner(cancelMonitor, context, params, log);
-            aligner.align(uuids, errors);
-            result = aligner.cleanupRemovedRecords(uuids.keySet());
+            List<String> listOfUrlForPages = buildListOfUrl(params, numberOfRecordsToHarvest);
+            for (int i = 0; i < listOfUrlForPages.size(); i ++) {
+                if (i != 0) {
+                    jsonResponse = retrieveUrl(listOfUrlForPages.get(i), log);
+                    jsonObj = objectMapper.readTree(jsonResponse);
+                }
+                Map<String, Element> uuids = new HashMap<String, Element>();
+                JsonNode nodes;
+                if (StringUtils.isNotEmpty(params.loopElement)) {
+                    try {
+                        nodes = jsonObj.at(params.loopElement);
+                        log.debug("Number of records in response: " + nodes.size());
+
+                        nodes.forEach(record -> {
+                            Element xml = convertRecordToXml(record);
+                            uuids.put(record.get(params.recordIdPath).asText(), xml);
+                        });
+                        aligner.align(uuids, errors);
+                        allUuids.putAll(uuids);
+                    } catch (Exception e) {
+                        log.warning("Failed to collect record in response");
+                    }
+                }
+            }
+            result = aligner.cleanupRemovedRecords(allUuids.keySet());
         } catch (Exception t) {
             error = true;
             log.error("Unknown error trying to harvest");
@@ -151,12 +160,61 @@ class Harvester implements IHarvester<HarvestResult> {
             errors.add(new HarvestError(context, t));
         }
 
-        log.info("Total records processed in all searches :" + uuids.size());
+        log.info("Total records processed in all searches :" + allUuids.size());
         if (error) {
             log.warning("Due to previous errors the align process has not been called");
         }
 
         return result;
+    }
+
+    @VisibleForTesting
+    protected List<String> buildListOfUrl(SimpleUrlParams params, int numberOfRecordsToHarvest) {
+        List<String> urlList = new ArrayList<String>();
+        if (StringUtils.isEmpty(params.pageSizeParam)) {
+            urlList.add(params.url);
+            return urlList;
+        }
+
+        int numberOfRecordsPerPage = -1;
+        final String pageSizeParamValue = params.url.replaceAll(".*[?&]" + params.pageSizeParam + "=([0-9]+).*", "$1");
+        if (StringUtils.isNumeric(pageSizeParamValue)) {
+            numberOfRecordsPerPage = Integer.parseInt(pageSizeParamValue);
+        } else {
+            log.warning(String.format(
+                "Page size param '%s' not found or is not a numeric in URL '%s'. Can't build a list of pages.",
+                params.pageSizeParam, params.url));
+            urlList.add(params.url);
+            return urlList;
+        }
+
+        final String pageFromParamValue = params.url.replaceAll(".*[?&]" + params.pageFromParam + "=([0-9]+).*", "$1");
+        boolean startAtZero = false;
+        if (StringUtils.isNumeric(pageFromParamValue)) {
+            startAtZero = Integer.parseInt(pageFromParamValue) == 0;
+        } else {
+            log.warning(String.format(
+                "Page from param '%s' not found or is not a numeric in URL '%s'. Can't build a list of pages.",
+                params.pageFromParam, params.url));
+            urlList.add(params.url);
+            return urlList;
+        }
+
+
+        int numberOfPages = (int) Math.abs((numberOfRecordsToHarvest + (startAtZero ? -1 : 0)) / numberOfRecordsPerPage) + 1;
+
+        for (int i = 0; i < numberOfPages; i++) {
+            int from = i * numberOfRecordsPerPage + (startAtZero ? 0 : 1);
+            int size = i == numberOfPages - 1 ? // Last page
+                numberOfRecordsToHarvest - from + (startAtZero ? 0 : 1) :
+                numberOfRecordsPerPage;
+            String url = params.url
+                .replaceAll(params.pageFromParam + "=[0-9]+", params.pageFromParam + "=" + from)
+                .replaceAll(params.pageSizeParam + "=[0-9]+", params.pageSizeParam + "=" + size);
+            urlList.add(url);
+        }
+
+        return urlList;
     }
 
     private Element convertRecordToXml(JsonNode record) {
@@ -190,14 +248,14 @@ class Harvester implements IHarvester<HarvestResult> {
      *
      * @return
      */
-    private String retrieveUrl(Logger log) throws Exception {
-        if (!Lib.net.isUrlValid(params.url))
-            throw new BadParameterEx("Invalid URL", params.url);
+    private String retrieveUrl(String url, Logger log) throws Exception {
+        if (!Lib.net.isUrlValid(url))
+            throw new BadParameterEx("Invalid URL", url);
         HttpGet httpMethod = null;
         ClientHttpResponse httpResponse = null;
 
         try {
-            httpMethod = new HttpGet(createUrl(params.url));
+            httpMethod = new HttpGet(createUrl(url));
             httpResponse = requestFactory.execute(httpMethod);
             int status = httpResponse.getRawStatusCode();
             Log.debug(LOGGER_NAME, "Request status code: " + status);

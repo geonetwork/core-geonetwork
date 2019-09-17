@@ -19,12 +19,15 @@
     <recordIdPath>
       <xsl:value-of select="recordIdPath/value"/>
     </recordIdPath>
+    <pageSizeParam>
+      <xsl:value-of select="pageSizeParam/value"/>
+    </pageSizeParam>
+    <pageFromParam>
+      <xsl:value-of select="pageFromParam/value"/>
+    </pageFromParam>
     <toISOConversion>
       <xsl:value-of select="toISOConversion/value"/>
     </toISOConversion>
-    <pageSize>
-      <xsl:value-of select="pageSize/value"/>
-    </pageSize>
   </xsl:template>
 
   <xsl:template match="*" mode="options"/>

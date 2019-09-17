@@ -35,7 +35,8 @@ public class SimpleUrlParams extends AbstractParams {
     public String loopElement;
     public String numberOfRecordPath;
     public String recordIdPath;
-    int pageSize;
+    public String pageSizeParam;
+    public String pageFromParam;
     public String toISOConversion;
 
     public SimpleUrlParams(DataManager dm) {
@@ -55,7 +56,8 @@ public class SimpleUrlParams extends AbstractParams {
         loopElement = Util.getParam(site, "loopElement", "/result/results");
         numberOfRecordPath = Util.getParam(site, "numberOfRecordPath", "/result/count");
         recordIdPath = Util.getParam(site, "recordIdPath", "id");
-        pageSize = Util.getParamAsInt(site, "pageSize");
+        pageSizeParam = Util.getParam(site, "pageSizeParam", "rows");
+        pageFromParam = Util.getParam(site, "pageFromParam", "start");
         toISOConversion = Util.getParam(site, "toISOConversion", "CKAN-to-ISO19115-3-2018");
         icon = Util.getParam(site, "icon", "default.gif");
     }
@@ -72,7 +74,8 @@ public class SimpleUrlParams extends AbstractParams {
         loopElement = Util.getParam(site, "loopElement", "");
         numberOfRecordPath = Util.getParam(site, "numberOfRecordPath", "");
         recordIdPath = Util.getParam(site, "recordIdPath", "");
-        pageSize = Util.getParamAsInt(site, "pageSize");
+        pageSizeParam = Util.getParam(site, "pageSizeParam", "");
+        pageFromParam = Util.getParam(site, "pageFromParam", "");
         toISOConversion = Util.getParam(site, "toISOConversion", "");
         icon = Util.getParam(site, "icon", icon);
     }
@@ -85,6 +88,8 @@ public class SimpleUrlParams extends AbstractParams {
         copy.icon = icon;
         copy.loopElement = loopElement;
         copy.numberOfRecordPath = numberOfRecordPath;
+        copy.pageSizeParam = pageSizeParam;
+        copy.pageFromParam = pageFromParam;
         copy.recordIdPath = recordIdPath;
         copy.toISOConversion = toISOConversion;
 

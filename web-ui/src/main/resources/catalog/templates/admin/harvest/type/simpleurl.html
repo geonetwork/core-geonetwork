@@ -59,14 +59,22 @@
       <p class="help-block" data-translate="">simpleurl-recordIdPathHelp</p>
     </div>
 
-    <div id="gn-harvest-settings-simpleurl-basic-pageSize-row">
-      <label id="gn-harvest-settings-pageSize-label" class="control-label"
-             data-translate="">pageSize</label>
-      <input id="gn-harvest-settings-pageSize-input"
-             type="number"
+    <div id="gn-harvest-settings-pageFromParam-row">
+      <label id="gn-harvest-settings-pageFromParam-label" class="control-label" data-translate="">pageFromParam</label>
+      <input id="gn-harvest-settings-pageFromParam-input"
+             type="text"
              class="form-control"
-             data-ng-model="harvesterSelected.site.pageSize"/>
-      <p class="help-block" data-translate="">simpleurl-pageSizeHelp</p>
+             data-ng-model="harvesterSelected.site.pageFromParam"/>
+      <p class="help-block" data-translate="">simpleurl-pageFromParamHelp</p>
+    </div>
+
+    <div id="gn-harvest-settings-pageSizeParam-row">
+      <label id="gn-harvest-settings-pageSizeParam-label" class="control-label" data-translate="">pageSizeParam</label>
+      <input id="gn-harvest-settings-pageSizeParam-input"
+             type="text"
+             class="form-control"
+             data-ng-model="harvesterSelected.site.pageSizeParam"/>
+      <p class="help-block" data-translate="">simpleurl-pageSizeParamHelp</p>
     </div>
 
     <div id="gn-harvest-settings-simpleurl-basic-toISOConversion-row"
