@@ -57,6 +57,7 @@
   <bean id="wfsfeatures"
         class="org.fao.geonet.kernel.harvest.harvester.wfsfeatures.WfsFeaturesHarvester"
         scope="prototype"/>
-
-
+  <bean id="simpleurl"
+        class="org.fao.geonet.kernel.harvest.harvester.simpleUrl.SimpleUrlHarvester"
+        scope="prototype"/>
 </beans>
