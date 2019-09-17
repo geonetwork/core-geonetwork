@@ -201,9 +201,9 @@
    */
   module.directive('gnSaveUserSearch', [
     'gnUserSearchesService', 'gnConfigService', 'gnConfig', 'gnLangs', 'gnGlobalSettings',
-    '$http', '$translate', '$location', '$httpParamSerializer',
+    '$http', '$translate', '$location', '$httpParamSerializer', '$timeout',
     function(gnUserSearchesService, gnConfigService, gnConfig, gnLangs, gnGlobalSettings,
-             $http, $translate, $location, $httpParamSerializer) {
+             $http, $translate, $location, $httpParamSerializer, $timeout) {
       return {
         restrict: 'A',
         replace: true,
@@ -224,7 +224,7 @@
           });
           scope.currentLangShown = scope.lang;
 
-          scope.groups = null;
+          scope.userSearchGroups = {choices: [], groups: []};
 
           // Retrieve groups for current user when creating a new
           // user search or the user creator groups
@@ -235,41 +235,43 @@
             userIdForGroups = scope.userSearch.creatorId;
           }
 
-          $http.get('../api/users/' + userIdForGroups + '/groups').
-          success(function(data) {
-            scope.groups = [];
+          function loadUserGroup () {
+            $http.get('../api/users/' + userIdForGroups + '/groups').success(function (data) {
+              var choices = [];
 
-            // Remove internal groups
-            for(var i = 0; i < data.length; i++) {
-              if (data[i].group.id > 1) {
-                scope.groups.push(data[i].group);
+              // Remove internal groups
+              for (var i = 0; i < data.length; i++) {
+                if (data[i].group.id > 1) {
+                  var g = data[i].group
+                  g.langlabel = g.label[scope.lang] || g.name
+                  choices.push(g);
+                }
               }
-            }
+              scope.userSearchGroups.choices = choices;
 
-            angular.forEach(scope.groups, function(u) {
-                u.langlabel = u.label[scope.lang] || u.name;
-            });
+              var searchGroup = [];
+              scope.userSearchGroupsTextList = "";
 
-            var b = [];
-            scope.userSearchGroups = b;
-            scope.userSearchGroupsTextList = "";
-
-            if ((scope.userSearch) &&
+              if ((scope.userSearch) &&
                 (scope.userSearch.groups.length > 0)) {
-              for(var i = 0; i < scope.userSearch.groups.length; i++) {
-                var groupId = scope.userSearch.groups[i];
-                scope.userSearchGroups = scope.userSearchGroups.concat(
-                  scope.groups.filter(function(group) {
-                    return group.id === groupId;
-                }));
+                for (var i = 0; i < scope.userSearch.groups.length; i++) {
+                  var groupId = scope.userSearch.groups[i];
+                  searchGroup = searchGroup.concat(
+                    scope.userSearchGroups.choices.filter(function (group) {
+                      return group.id === groupId;
+                    }));
+                }
+                scope.userSearchGroupsTextList =
+                  scope.userSearch.groups.join(",");
               }
-              scope.userSearchGroupsTextList =
-               scope.userSearch.groups.join(",");
-            }
+              scope.userSearchGroups.groups = searchGroup;
+            }).error(function (data) {
+              // TODO
+            });
+          }
 
-          }).error(function(data) {
-            // TODO
-          });
+          //loadUserGroup();
+          $timeout(loadUserGroup, 200);
 
           scope.$watchCollection('userSearchGroups',
             function(n, o) {
