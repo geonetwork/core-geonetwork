@@ -168,6 +168,8 @@
           // Extent of current features matching the filter.
           scope.featureExtent = undefined;
 
+          var textInputsHistory = {};
+
           /**
            * Init the directive when the scope.layer has changed.
            * If the layer is given through the isolate scope object, the init
@@ -260,7 +262,7 @@
             }
             scope.hmActive = appProfile ? appProfile.heatmap : true;
 
-            scope.resetFacets().then(scope.restoreInitialFilters);
+            scope.resetFacets().then(scope.restoreInitialFilters).then(scope.filterWMS);
           }
           function getDataModelLabel(fieldId) {
             for (var j = 0; j < scope.md.attributeTable.length; j++) {
@@ -330,11 +332,17 @@
             var output = scope.output;
             scope.lastClickedField = null;
 
+            if(textInputsHistory[fieldName] && !scope.facetFilters[fieldName]) {
+              textInputsHistory[fieldName].lastValue = '';
+            }
+
             if (output[fieldName]) {
               if (output[fieldName].values[facetKey]) {
                 delete output[fieldName].values[facetKey];
                 if (Object.keys(output[fieldName].values).length == 0) {
                   delete output[fieldName];
+                } else {
+                  scope.lastClickedField = fieldName;
                 }
               }
               else {
@@ -380,14 +388,34 @@
             scope.filterFacets();
           };
 
+          scope.onFilterInputChange = function(field) {
+            var name = field.name;
+            var history = textInputsHistory[name];
+            if(!history) {
+              history = textInputsHistory[name] = {
+                facet: getFieldByName(name),
+                lastValue: '',
+                newValue: scope.facetFilters[name]
+              };
+            } else {
+              history.lastValue = history.newValue;
+              history.newValue = scope.facetFilters[name];
+            }
+            history.resetInput = !!(history.lastValue && !history.newValue);
+            history.initInput = !!(history.newValue && !history.lastValue);
+
+            scope.filterFacets(field.name);
+          };
+
           /**
            * Send a new filtered request to index to update the facet ui
            * structure.
            * This method is called each time the user check or uncheck a box
            * from the ui, or when he updates the filter input.
-           * @param {boolean} formInput the filter comes from input change
+           * @param filterInputUpdate if the search comes from text input,
+           *   then the value of the field of the text input
            */
-          scope.filterFacets = function(formInput) {
+          scope.filterFacets = function(filterInputUpdate) {
             scope.$broadcast('FiltersChanged');
 
             // Update the facet UI
@@ -397,6 +425,8 @@
                 expandedFields.push(f.name);
               }
             });
+
+            var facetsState = scope.output;
 
             // use value filters for facets
             var aggs = {};
@@ -420,6 +450,13 @@
                     include: '.*' + filter + '.*'
                   }
                 };
+
+                // apply a text search on all possible values of the facets
+                // for this, remove current facet checkbox filters
+                if(facetName === scope.lastClickedField && filterInputUpdate) {
+                  facetsState = angular.copy(facetsState);
+                  delete facetsState[facetName];
+                }
               }
             });
 
@@ -428,11 +465,11 @@
             //indexObject is only available if Elastic is configured
             if (indexObject) {
               indexObject.searchWithFacets({
-                params: scope.output,
+                params: facetsState,
                 geometry: scope.filterGeometry
               }, aggs).
                   then(function(resp) {
-                    searchResponseHandler(resp);
+                    searchResponseHandler(resp, filterInputUpdate);
                     angular.forEach(scope.fields, function(f) {
                       if (expandedFields.indexOf(f.name) >= 0) {
                         f.expanded = true;
@@ -510,7 +547,7 @@
 
           scope.getMore = function(field) {
             indexObject.getFacetMoreResults(field).then(function(response) {
-              field.values = response.facets[0].values;
+              field.values = mergeResponseItemsWithCheckedItems(response.facets[0].values, field.values);
               field.more = response.facets[0].more;
             });
           };
@@ -547,25 +584,48 @@
 
             var aggs = {};
             addBboxAggregation(aggs);
+            textInputsHistory = {};
 
             // load all facet and fill ui structure for the list
             return indexObject.searchWithFacets({}, aggs).
                 then(function(resp) {
-              searchResponseHandler(resp);
+              searchResponseHandler(resp, false);
             });
           };
 
-          function searchResponseHandler(resp) {
+          function searchResponseHandler(resp, filterInputUpdate) {
             indexObject.pushState();
             scope.count = resp.count;
 
             // if a facet was clicked, keep the previous facet object
-            var lastClickedFacet = scope.fields.filter(function(e){
+            var lastClickedFacet = scope.fields.filter(function(e) {
               return e.name === scope.lastClickedField;
             })[0];
-            scope.fields = resp.facets.map(function(e){
-              return lastClickedFacet && lastClickedFacet.name === e.name ?
-                lastClickedFacet : e;
+            scope.fields = resp.facets.map(function(e) {
+              if (lastClickedFacet && lastClickedFacet.name === e.name) {
+                var history = filterInputUpdate && textInputsHistory[lastClickedFacet.name];
+
+                // if we clear text-filter, we restore last history saved facets
+                // we merge this history of items with the actual checked items
+                if(history && history.resetInput) {
+                  history.facet.values = mergeResponseItemsWithCheckedItems(history.facet.values,
+                    lastClickedFacet.values);
+                  return history.facet;
+                } else if(history) { // text input is init or changed
+                  return e;
+                } else  { // checkbox click update
+                  return lastClickedFacet;
+                }
+              } else {
+                // if we text filtering, the result should apply only on the current facet
+                // for all other facet, we keep same result.
+                var field = getFieldByName(e.name);
+                if (filterInputUpdate && filterInputUpdate !== e.name && field) {
+                  return field;
+                } else {
+                  return e;
+                }
+              }
             });
 
             scope.sortAggregation();
@@ -673,6 +733,16 @@
               params: initialFilters.qParams,
               geometry: initialFilters.geometry
             }, aggs).then(function(resp) {
+              // display selected values that do not appear in first result page
+              for (var prop in initialFilters.qParams) {
+                var field = getFieldByName(prop);
+                var respFacet = resp.facets.filter(function(res) {
+                  return res.name === prop;
+                })[0];
+                if( respFacet && respFacet.type === 'terms') {
+                  field.values = mergeResponseItemsWithCheckedItems(respFacet.values, field.values);
+                }
+              }
               indexObject.pushState();
               scope.fields = resp.facets;
               scope.sortAggregation();
@@ -724,7 +794,7 @@
 
             }
             if (sldConfig.filters.length > 0) {
-              wfsFilterService.getSldUrl(sldConfig, layer.get('url'),
+              wfsFilterService.getSldUrl(sldConfig, layer.get('directUrl') || layer.get('url'),
                   ftName).success(function(sldURL) {
                 // Do not activate it
                 // Usually return 414 Request-URI Too Large
@@ -880,6 +950,25 @@
             // other fields: the filter must be active
             return true;
           };
+
+          function getFieldByName(name) {
+            return scope.fields.filter(function(field) {
+              return field.name === name;
+            })[0];
+          }
+
+          function mergeResponseItemsWithCheckedItems(newItems, oldItems) {
+            var checkedItems = oldItems.filter(function(f) {
+              return f.count;
+            });
+            checkedItems.forEach(function(item) {
+              newItems = newItems.filter(function(value) {
+                return value.value !== item.value;
+              })
+            });
+            newItems = checkedItems.concat(newItems);
+            return newItems;
+          }
         }
       };
     }]);

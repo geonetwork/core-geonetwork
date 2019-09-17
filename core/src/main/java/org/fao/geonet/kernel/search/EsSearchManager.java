@@ -68,7 +68,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 public class EsSearchManager implements ISearchManager {
     public static final String ID = "id";
     public static final String DOC_TYPE = "docType";
@@ -100,6 +99,15 @@ public class EsSearchManager implements ISearchManager {
     public String getIndexType() {
         return indexType;
     }
+
+    public void setIndex(String index) {
+        this.index = index;
+    }
+
+    public void setPublicIndex(String publicIndex) {
+        this.publicIndex = publicIndex;
+    }
+
     public void setIndexType(String indexType) {
         this.indexType = indexType;
     }

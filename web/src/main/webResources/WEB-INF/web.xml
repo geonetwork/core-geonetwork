@@ -533,6 +533,10 @@
       <param-name>nodeId</param-name>
       <param-value>srv</param-value>
     </init-param>
+    <init-param>
+      <param-name>dispatchOptionsRequest</param-name>
+      <param-value>true</param-value>
+    </init-param>
     <load-on-startup>2</load-on-startup>
   </servlet>
 
