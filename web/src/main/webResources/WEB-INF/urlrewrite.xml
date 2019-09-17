@@ -29,6 +29,12 @@
 -->
 <urlrewrite use-query-string="true" use-context="false">
 
+  <rule>
+    <note>API Documentation redirection as Spring does not redirect to index.html.</note>
+    <from>^/doc/api/?$</from>
+    <to type="permanent-redirect">%{context-path}/doc/api/index.html</to>
+  </rule>
+
   <!-- Rule to redirect URL to resources from RDF output -->
   <rule>
     <note>In the catalog, a resource is equivalent to one record.
