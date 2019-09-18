@@ -72,10 +72,10 @@
   module.directive('gnUserSearchesPanel', [
     'gnUserSearchesService', 'gnConfigService', 'gnConfig',
     'gnUtilityService', 'gnAlertService', 'gnLangs', 'gnGlobalSettings',
-    '$http', '$translate', '$location',
+    '$http', '$translate', '$location', '$filter',
     function(gnUserSearchesService, gnConfigService, gnConfig,
              gnUtilityService, gnAlertService, gnLangs, gnGlobalSettings,
-             $http, $translate, $location) {
+             $http, $translate, $location, $filter) {
       return {
         restrict: 'A',
         replace: true,
@@ -108,7 +108,7 @@
                 scope.userSearches = featuredSearchesCollection.data;
 
                 angular.forEach(scope.userSearches, function(search) {
-                  search.label = search.names[scope.lang] || search.names['eng'] || $filter('translate')('featuredSearch');
+                  search.label = search.names[scope.lang] || search.names['eng'] || $filter('translate')('userSearchNameMissing');
                 });
 
 
@@ -273,10 +273,8 @@
           //loadUserGroup();
           $timeout(loadUserGroup, 200);
 
-          scope.$watchCollection('userSearchGroups',
+          scope.$watchCollection('userSearchGroups.groups',
             function(n, o) {
-              console.log("userSearchGroups watchCollection");
-
               if (n !== o) {
                 scope.userSearchGroupsTextList = "";
 
@@ -422,7 +420,7 @@
                   // Calculate the label to display
                   angular.forEach(result.rows, function(search) {
                     search.label = search.names[scope.lang] ||
-                      search.names['eng'] || $filter('translate')('featuredSearch');
+                      search.names['eng'] || $filter('translate')('userSearchNameMissing');
                   });
 
                   return result;

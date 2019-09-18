@@ -25,7 +25,7 @@
                   data-ng-hide="canManageUserSearches() && search.featuredType !== ''"/>
 
             <a data-ng-href="#/search?{{search.url}}">
-              {{search.names[lang] || search.names['eng'] || ('featuredSearch' | translate)}}
+              {{search.names[lang] || search.names['eng'] || ('userSearchNameMissing' | translate)}}
 
               <img data-ng-if="search.logo"
                    data-ng-src="{{search.logo}}"
