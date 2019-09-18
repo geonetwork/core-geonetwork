@@ -224,18 +224,19 @@
       };
     }]);
 
-  module.directive('gnDuplicateCheck', ['$translate', '$http',
-    function($translate, $http) {
+  module.directive('gnDuplicateCheck', ['$translate', '$http', '$q',
+    function($translate, $http, $q) {
       return {
         restrict: 'A',
+        require: 'ngModel',
         scope: {
           value: '=gnDuplicateCheck',
           list: '=gnDuplicateCheckList',
           remote: '@gnDuplicateCheckRemote',
-          property: '@gnDuplicateCheckProperty',
-          msg: '@gnDuplicateCheckMsg'
+          property: '@gnDuplicateCheckProperty'
         },
-        link: function(scope, element, attrs) {
+        link: function(scope, element, attrs, ngModel) {
+          var cssClass = 'gn-duplicate';
           if (!angular.isArray(scope.list) && scope.remote === undefined) {
             console.warn('gnDuplicateCheck need an array of values for the list or a remote URL.')
             return;
@@ -256,27 +257,36 @@
               }
             }
           }
-          scope.$watch('value', function(n, o) {
-            if (n && n != o) {
-              if (angular.isArray(existingValues) && existingValues.indexOf(scope.value) !== -1) {
-                element.toggleClass('ng-invalid');
-                console.log($translate.instant(scope.msg || 'duplicatedValueFound',
-                  {value: scope.value, list: existingValues}));
-              } else if (scope.remote) {
-                // Promise server side check
-                $http.get(scope.remote.replace('{value}', scope.value)).then(function (r){
-                  if (r.status !== 404) {
-                    console.log($translate.instant(scope.msg || 'duplicatedValueFound',
-                      {value: scope.value}));
-                  }
-                }, function (e){
 
-                })
+          ngModel.$asyncValidators.gnDuplicateCheck = function(value, viewValue) {
+            value = value || viewValue;
+            if (angular.isArray(existingValues)) {
+              if (existingValues.indexOf(value) !== -1) {
+                ngModel.$setValidity(cssClass, false);
+                return $q.reject(false);
               } else {
-                element.toggleClass('ng-valid');
+                return $q.when(true);
               }
+            } else if (scope.remote) {
+              var deferred = $q.defer();
+
+              // Promise server side check
+              $http.get(scope.remote.replace('{value}', value)).then(function (r){
+                if (r.status !== 404) {
+                  ngModel.$setValidity(cssClass, false);
+                  deferred.reject(false);
+                } else {
+                  ngModel.$setValidity(cssClass, true);
+                  deferred.resolve(true);
+                }
+              }, function (e){
+                ngModel.$setValidity(cssClass, true);
+                deferred.resolve(true);
+              });
+
+              return deferred.promise;
             }
-          });
+          };
         }
       };
     }]);
