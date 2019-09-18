@@ -124,7 +124,8 @@
       </h2>
 
       <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*">
-        <img class="gn-img-thumbnail center-block" 
+        <img data-gn-img-modal="md"
+             class="gn-img-thumbnail center-block"
              alt="{$schemaStrings/overview}"
              src="{gmd:fileName/*}"/>
 
@@ -141,7 +142,7 @@
   </xsl:template>
 
   <xsl:template mode="getMetadataHeader" match="gmd:MD_Metadata">
-    <div>
+    <div class="gn-abstract">
       <xsl:for-each select="gmd:identificationInfo/*/gmd:abstract">
         <xsl:variable name="txt">
           <xsl:call-template name="localised">
@@ -160,70 +161,93 @@
                              select="$metadata"/>
       </script>
     </xsl:if>
+  </xsl:template>
 
+
+  <xsl:template mode="getMetadataCitation" match="gmd:MD_Metadata">
     <!-- Citation -->
     <blockquote>
-
-      <em title="{$schemaStrings/citationProposal-help}"><xsl:comment select="name()"/>
-        <xsl:value-of select="$schemaStrings/citationProposal"/>
-      </em><br/>
-
-      <!-- Custodians -->
-      <xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/
+      <div class="row">
+        <div class="col-md-3">
+          <i class="fa fa-quote-left pull-right"><xsl:comment select="'icon'"/></i>
+        </div>
+        <div class="col-md-9">
+          <h2 title="{$schemaStrings/citationProposal-help}"><xsl:comment select="name()"/>
+            <xsl:value-of select="$schemaStrings/citationProposal"/>
+            <i class="fa fa-info-circle"><xsl:comment select="'icon'"/></i>
+          </h2>
+          <br/>
+          <p>
+            <!-- Custodians -->
+            <xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/
                               *[gmd:role/*/@codeListValue = ('custodian', 'author')]">
-        <xsl:variable name="name"
-                      select="normalize-space(gmd:individualName)"/>
+              <xsl:variable name="name">
+                <xsl:for-each select="gmd:individualName">
+                  <xsl:call-template name="localised">
+                    <xsl:with-param name="langId" select="$langId"/>
+                  </xsl:call-template>
+                </xsl:for-each>
+              </xsl:variable>
 
-        <xsl:value-of select="$name"/>
-        <xsl:if test="$name != ''">&#160;(</xsl:if>
-        <xsl:value-of select="gmd:organisationName/*"/>
-        <xsl:if test="$name">)</xsl:if>
-        <xsl:if test="position() != last()">&#160;-&#160;</xsl:if>
-      </xsl:for-each>
+              <xsl:value-of select="$name"/>
+              <xsl:if test="$name != ''">&#160;(</xsl:if>
+              <xsl:for-each select="gmd:organisationName">
+                <xsl:call-template name="localised">
+                  <xsl:with-param name="langId" select="$langId"/>
+                </xsl:call-template>
+              </xsl:for-each>
+              <xsl:if test="$name">)</xsl:if>
+              <xsl:if test="position() != last()">&#160;-&#160;</xsl:if>
+            </xsl:for-each>
 
-      <!-- Publication year: use last publication date -->
-      <xsl:variable  name="publicationDate">
-        <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[
+            <!-- Publication year: use last publication date -->
+            <xsl:variable  name="publicationDate">
+              <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[
                                 gmd:dateType/*/@codeListValue = 'publication']/
                                   gmd:date/gco:*">
-          <xsl:sort select="." order="descending" />
+                <xsl:sort select="." order="descending" />
 
-          <xsl:if test="position() = 1">
-            <xsl:value-of select="." />
-          </xsl:if>
-        </xsl:for-each>
-      </xsl:variable>
+                <xsl:if test="position() = 1">
+                  <xsl:value-of select="." />
+                </xsl:if>
+              </xsl:for-each>
+            </xsl:variable>
 
-      <xsl:if test="normalize-space($publicationDate) != ''">
-        (<xsl:value-of select="substring(normalize-space($publicationDate), 1, 4)"/>)
-      </xsl:if>
+            <xsl:if test="normalize-space($publicationDate) != ''">
+              (<xsl:value-of select="substring(normalize-space($publicationDate), 1, 4)"/>)
+            </xsl:if>
 
-      <xsl:text>. </xsl:text>
+            <xsl:text>. </xsl:text>
 
-      <!-- Title -->
-      <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:title">
-        <xsl:call-template name="localised">
-          <xsl:with-param name="langId" select="$langId"/>
-        </xsl:call-template>
-      </xsl:for-each>
+            <!-- Title -->
+            <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:title">
+              <xsl:call-template name="localised">
+                <xsl:with-param name="langId" select="$langId"/>
+              </xsl:call-template>
+            </xsl:for-each>
+            <xsl:text>. </xsl:text>
 
-      <xsl:text>. </xsl:text>
+            <!-- Publishers -->
+            <xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/
+                              *[gmd:role/*/@codeListValue = 'publisher']/gmd:organisationName">
+              <xsl:call-template name="localised">
+                <xsl:with-param name="langId" select="$langId"/>
+              </xsl:call-template>
+              <xsl:if test="position() != last()">&#160;-&#160;</xsl:if>
+            </xsl:for-each>
 
-      <!-- Publishers -->
-      <xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/
-                              *[gmd:role/*/@codeListValue = 'publisher']">
-        <xsl:value-of select="gmd:organisationName/*"/>
-        <xsl:if test="position() != last()">&#160;-&#160;</xsl:if>
-      </xsl:for-each>
-
-      <!-- Link -->
-      <xsl:variable name="url"
-                    select="concat($nodeUrl, 'api/records/', $metadataUuid)"/>
-      <a href="{url}">
-        <xsl:value-of select="$url"/>
-      </a>
+            <br/>
+            <!-- Link -->
+            <xsl:variable name="url"
+                          select="concat($nodeUrl, 'api/records/', $metadataUuid)"/>
+            <a href="{url}">
+              <xsl:value-of select="$url"/>
+            </a>
+            <br/>
+          </p>
+        </div>
+      </div>
     </blockquote>
-
   </xsl:template>
 
   <!-- Most of the elements are ... -->
@@ -384,11 +408,11 @@
     </xsl:variable>
 
     <div class="gn-contact">
-      <h2>
+      <strong>
         <i class="fa fa-envelope"><xsl:comment select="'email'"/></i>
         <xsl:apply-templates mode="render-value"
                              select="*/gmd:role/*/@codeListValue"/>
-      </h2>
+      </strong>
       <div class="row">
         <div class="col-md-6">
           <address>
@@ -516,7 +540,7 @@
           <span><xsl:comment select="name()"/>
             <xsl:value-of select="$linkName"/>
           </span>
-        </a> 
+        </a>
         <xsl:if test="*/gmd:protocol[normalize-space(gco:CharacterString|gmx:Anchor) != '']">
         (<span><xsl:comment select="name()"/>
           <xsl:apply-templates mode="render-value"
@@ -768,7 +792,7 @@
             <xsl:value-of select="gn-fn-render:getMetadataTitle(./gco:CharacterString, $langId)"/>
           </a>
         </xsl:when>
-       
+
       </xsl:choose><xsl:comment select="name()"/>
       <xsl:call-template name="addLineBreaksAndHyperlinks">
         <xsl:with-param name="txt" select="$txt"/>
@@ -909,7 +933,7 @@
       <xsl:value-of select="."/>
     </span>
   </xsl:template>
-  
+
   <!-- ... Codelists -->
   <xsl:template mode="render-value"
                 match="@codeListValue">
