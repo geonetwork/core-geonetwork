@@ -22,14 +22,18 @@
  */
 package org.fao.geonet.repository;
 
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserSearch;
 import org.fao.geonet.domain.UserSearchFeaturedType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  *  Data Access object for the {@link UserSearch} entities.
@@ -37,6 +41,9 @@ import java.util.List;
 public interface UserSearchRepository extends GeonetRepository<UserSearch, Integer>, JpaSpecificationExecutor<UserSearch> {
 
     List<UserSearch> findAllByCreator(User creator);
+
+    @Query("SELECT DISTINCT b FROM UserSearch b LEFT JOIN b.groups grp WHERE grp in :groups OR b.creator = :creator")
+    List<UserSearch> findAllByGroupsInOrCreator(@Param("groups") Set<Group> groups, @Param("creator") User creator);
 
     List<UserSearch> findAllByFeaturedType(UserSearchFeaturedType featuredType);
 
