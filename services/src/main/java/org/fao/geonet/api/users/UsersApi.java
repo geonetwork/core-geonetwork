@@ -298,16 +298,15 @@ public class UsersApi {
             value = "The value to search"
         )
         @RequestParam
-            String exist,
-        HttpServletRequest request) throws Exception {
+            String exist) {
         if ("userid".equals(property)) {
             final User user = userRepository.findOneByUsername(exist);
             if (user != null) {
                 return new ResponseEntity<>(HttpStatus.OK);
             }
         } else if ("email".equals(property)) {
-            final User user = userRepository.findOneByEmail(exist);
-            if (user != null) {
+            List<User> existingUsers = userRepository.findByUsernameIgnoreCase(exist);
+            if (!existingUsers.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.OK);
             }
         } else {
