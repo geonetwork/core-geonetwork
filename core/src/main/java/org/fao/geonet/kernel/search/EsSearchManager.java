@@ -42,11 +42,13 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.es.EsClient;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -213,6 +215,9 @@ public class EsSearchManager implements ISearchManager {
     private Map<String, String> listOfDocumentsToIndex = new HashMap<>();
     private Map<String, String> listOfPublicDocumentsToIndex = new HashMap<>();
 
+    @Autowired
+    SourceRepository sourceRepository;
+    
     @Override
     public void index(Path schemaDir, Element metadata, String id, List<Element> moreFields,
                       MetadataType metadataType, String root, boolean forceRefreshReaders) throws Exception {
@@ -234,7 +239,14 @@ public class EsSearchManager implements ISearchManager {
         // ES does not allow a _source field
         String catalog = doc.get("source").asText();
         doc.remove("source");
-        doc.put("sourceCatalogue", catalog);
+        if (StringUtils.isNotEmpty(catalog)) {
+            doc.put("sourceCatalogue", catalog);
+            final Source source = sourceRepository.findOne(catalog);
+            if (source != null) {
+                source.getLabelTranslations()
+                    .forEach((key, value) -> doc.put("sourceCatalogueName_lang" + key, value));
+            }
+        }
         doc.put("scope", settingManager.getSiteName());
         doc.put("harvesterUuid", settingManager.getSiteId());
         doc.put("harvesterId", settingManager.getNodeURL());
