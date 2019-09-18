@@ -169,7 +169,15 @@ public class UserSearchDto implements Serializable {
 
         GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
         Set<Group> groups = new HashSet<>();
-        getGroups().forEach(groupId -> groups.add(groupRepository.findOne(groupId)));
+        getGroups().forEach(groupId -> {
+            if (groupId != null) {
+                Group g = groupRepository.findOne(groupId);
+
+                if (g != null) {
+                    groups.add(g);
+                }
+            }
+        });
         userSearch.setGroups(groups);
 
         return userSearch;

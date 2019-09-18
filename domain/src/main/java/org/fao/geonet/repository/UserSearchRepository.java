@@ -42,7 +42,7 @@ public interface UserSearchRepository extends GeonetRepository<UserSearch, Integ
 
     List<UserSearch> findAllByCreator(User creator);
 
-    @Query("SELECT DISTINCT b FROM UserSearch b INNER JOIN b.groups grp WHERE grp in :groups OR b.creator = :creator")
+    @Query("SELECT DISTINCT b FROM UserSearch b LEFT JOIN b.groups grp WHERE grp in :groups OR b.creator = :creator")
     List<UserSearch> findAllByGroupsInOrCreator(@Param("groups") Set<Group> groups, @Param("creator") User creator);
 
     List<UserSearch> findAllByFeaturedType(UserSearchFeaturedType featuredType);
