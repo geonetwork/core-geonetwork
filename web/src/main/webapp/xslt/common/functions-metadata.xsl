@@ -342,7 +342,6 @@
   <!-- Get field type based on editor configuration.
   Search by element name or the child element name (the one
   containing the value).
-
   The child element take priority if defined.
   -->
   <xsl:function name="gn-fn-metadata:getFieldType" as="xs:string">
@@ -351,19 +350,93 @@
     <xsl:param name="name" as="xs:string"/>
     <!-- The element containing the value eg. gco:Date -->
     <xsl:param name="childName" as="xs:string?"/>
+    <xsl:param name="xpath" as="xs:string?"/>
 
     <xsl:variable name="childType"
-                  select="normalize-space($configuration/editor/fields/for[@name = $childName]/@use)"/>
+                  select="normalize-space($configuration/editor/fields/for[@name = $childName and not(@xpath)]/@use)"/>
+    <xsl:variable name="childTypeXpath"
+                  select="normalize-space($configuration/editor/fields/for[@name = $childName and @xpath = $xpath]/@use)"/>
     <xsl:variable name="type"
-                  select="normalize-space($configuration/editor/fields/for[@name = $name]/@use)"/>
+                  select="normalize-space($configuration/editor/fields/for[@name = $name and not(@xpath)]/@use)"/>
+    <xsl:variable name="typeXpath"
+                  select="normalize-space($configuration/editor/fields/for[@name = $name and @xpath = $xpath]/@use)"/>
 
     <xsl:value-of
-      select="if ($childType != '')
+      select="if ($childTypeXpath != '')
+      then $childTypeXpath
+      else if ($childType != '')
       then $childType
+      else if ($typeXpath != '')
+      then $typeXpath
       else if ($type != '')
       then $type
       else $defaultFieldType"
     />
+
+  </xsl:function>
+
+  <xsl:function name="gn-fn-metadata:getAttributeFieldType" as="xs:string">
+    <xsl:param name="configuration" as="node()"/>
+    <!-- The container element gmx:fileName/@src-->
+    <xsl:param name="attributeNameWithParent" as="xs:string"/>
+
+    <xsl:variable name="type"
+                  select="normalize-space($configuration/editor/fields/for[@name = $attributeNameWithParent]/@use)"/>
+
+    <xsl:value-of
+      select="if ($type != '')
+      then $type
+      else $defaultFieldType"
+    />
+  </xsl:function>
+
+  <!-- Return the directive to use for editing. -->
+  <xsl:function name="gn-fn-metadata:getFieldDirective" as="node()">
+    <xsl:param name="configuration" as="node()"/>
+    <!-- The container element -->
+    <xsl:param name="name" as="xs:string"/>
+    <!-- The element containing the value eg. gco:Date -->
+    <xsl:param name="childName" as="xs:string?"/>
+    <xsl:param name="xpath" as="xs:string?"/>
+
+    <xsl:variable name="childType"
+                  select="$configuration/editor/fields/for[@name = $childName and not(@xpath) and starts-with(@use, 'data-')]"/>
+    <xsl:variable name="childTypeXpath"
+                  select="$configuration/editor/fields/for[@name = $childName and @xpath = $xpath and starts-with(@use, 'data-')]"/>
+    <xsl:variable name="type"
+                  select="$configuration/editor/fields/for[@name = $name and not(@xpath) and starts-with(@use, 'data-')]"/>
+    <xsl:variable name="typeXpath"
+                  select="$configuration/editor/fields/for[@name = $name and @xpath = $xpath and starts-with(@use, 'data-')]"/>
+
+    <xsl:choose>
+      <xsl:when test="$childTypeXpath">
+        <xsl:element name="directive">
+          <xsl:attribute name="data-directive-name" select="$childTypeXpath/@use"/>
+          <xsl:copy-of select="$childTypeXpath/directiveAttributes/@*"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:when test="$childType">
+        <xsl:element name="directive">
+          <xsl:attribute name="data-directive-name" select="$childType/@use"/>
+          <xsl:copy-of select="$childType/directiveAttributes/@*"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:when test="$typeXpath">
+        <xsl:element name="directive">
+          <xsl:attribute name="data-directive-name" select="$typeXpath/@use"/>
+          <xsl:copy-of select="$typeXpath/directiveAttributes/@*"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:when test="$type">
+        <xsl:element name="directive">
+          <xsl:attribute name="data-directive-name" select="$type/@use"/>
+          <xsl:copy-of select="$type/directiveAttributes/@*"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <null/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:function>
 
 
