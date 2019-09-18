@@ -36,8 +36,11 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.converter.UserSearchFeaturedTypeConverter;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserSearchRepository;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSearchSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -76,6 +79,13 @@ public class UserSearchesApi {
     @Autowired
     UserSearchRepository userSearchRepository;
 
+    @Autowired
+    UserGroupRepository userGroupRepository;
+
+    @Autowired
+    GroupRepository groupRepository;
+
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(UserSearchFeaturedType.class, new UserSearchFeaturedTypeConverter());
@@ -96,9 +106,20 @@ public class UserSearchesApi {
             HttpSession httpSession
     ) {
         UserSession session = ApiUtils.getUserSession(httpSession);
+        Profile myProfile = session.getProfile();
 
-        List<UserSearch> userSearchesList =
-            userSearchRepository.findAllByCreator(session.getPrincipal());
+        List<UserSearch> userSearchesList;
+
+        // Get user groups
+        if (myProfile.equals(Profile.Administrator)) {
+            userSearchesList = userSearchRepository.findAll();
+        } else {
+            List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(session.getPrincipal().getId()));
+
+            Set<Group> groups = new HashSet<>();
+            userGroups.forEach(us -> groups.add(us.getGroup()));
+            userSearchesList= userSearchRepository.findAllByGroupsInOrCreator(groups, session.getPrincipal());
+        }
 
         List<UserSearchDto> customSearchDtoList = new ArrayList<>();
         userSearchesList.forEach(u -> customSearchDtoList.add(UserSearchDto.from(u)));
@@ -295,10 +316,21 @@ public class UserSearchesApi {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
 
-        // TODO: Validate parameters
-
         UserSearch userSearch = userSearchDto.asUserSearch();
         userSearch.setCreator(session.getPrincipal());
+
+        // Validate groups associated with the user search
+        if (!myProfile.equals(Profile.Administrator)) {
+            List<UserGroup> userGroups =
+                userGroupRepository.findAll(UserGroupSpecs.hasUserId(session.getPrincipal().getId()));
+
+            Set<Group> groups = new HashSet<>();
+            userGroups.forEach(us -> groups.add(us.getGroup()));
+
+            if (!groups.containsAll(userSearch.getGroups())) {
+                throw new IllegalArgumentException("Not all the groups associated with the user search are groups of the user " + session.getUsername());
+            }
+        }
 
         // Featured user searches can be created only by Administrator
         if (!myProfile.equals(Profile.Administrator)) {
