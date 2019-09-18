@@ -420,13 +420,13 @@
     <url-pattern>/index/records</url-pattern>
   </servlet-mapping>
 
-<!--
+
   <servlet>
-    <servlet-name>ESProxy</servlet-name>
-    <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
+    <servlet-name>ESPublicRecordsProxy</servlet-name>
+    <servlet-class>org.mitre.dsmiley.httpproxy.URITemplateProxyServlet</servlet-class>
     <init-param>
       <param-name>targetUri</param-name>
-      <param-value>${es.url}</param-value>
+      <param-value>${es.url}/${es.index.records_public}/{_}</param-value>
     </init-param>
     <init-param>
       <param-name>log</param-name>
@@ -434,12 +434,9 @@
     </init-param>
   </servlet>
   <servlet-mapping>
-    <servlet-name>ESProxy</servlet-name>
-    <url-pattern>/index/all</url-pattern>
+    <servlet-name>ESPublicRecordsProxy</servlet-name>
+    <url-pattern>/index/records_public</url-pattern>
   </servlet-mapping>
--->
-
-
 
   <servlet>
     <servlet-name>HttpDashboardProxy</servlet-name>
