@@ -139,7 +139,8 @@
           };
 
           scope.canEditUserSearch = function(search) {
-            return ((search.creatorId == scope.user.id) ||
+            return scope.user.id &&
+                    ((search.creatorId == scope.user.id) ||
                     (scope.user.isAdministrator()));
           };
 
