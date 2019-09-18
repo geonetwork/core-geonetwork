@@ -232,6 +232,7 @@
         scope: {
           value: '=gnDuplicateCheck',
           list: '=gnDuplicateCheckList',
+          apply: '=gnDuplicateCheckApply',
           remote: '@gnDuplicateCheckRemote',
           property: '@gnDuplicateCheckProperty'
         },
@@ -260,6 +261,9 @@
 
           ngModel.$asyncValidators.gnDuplicateCheck = function(value, viewValue) {
             value = value || viewValue;
+            if (scope.apply === false) {
+              return $q.when(true);
+            }
             if (angular.isArray(existingValues)) {
               if (existingValues.indexOf(value) !== -1) {
                 ngModel.$setValidity(cssClass, false);
