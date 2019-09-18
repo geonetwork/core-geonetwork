@@ -47,7 +47,7 @@ public class Set {
      * Saves custom element sets.
      */
 
-    @RequestMapping(value = "/{lang}/admin.config.csw.customelementset.save",
+    @RequestMapping(value = "/{portal}/{lang}/admin.config.csw.customelementset.save",
         method = {RequestMethod.POST, RequestMethod.PUT},
         produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
