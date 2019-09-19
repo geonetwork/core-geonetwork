@@ -44,6 +44,7 @@ import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
 import java.io.File;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -173,9 +174,12 @@ public class Geonet20Harvester extends AbstractHarvester {
     public void doHarvest(Logger log) throws Exception {
         CategoryMapper localCateg = new CategoryMapper(context);
 
-        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(params.host);
+        final URL url = new URL(params.host);
 
-        servletName = req.getAddress();
+        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class)
+            .createXmlRequest(url.getHost(), url.getPort());
+
+        servletName = url.getPath();
 
         Lib.net.setupProxy(context, req);
 
