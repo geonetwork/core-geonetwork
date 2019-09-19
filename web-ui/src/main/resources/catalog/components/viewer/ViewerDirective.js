@@ -302,7 +302,7 @@
 
                 if ($location.search()['extent']) {
                   scope.map.getView().fit(
-                      $location.search()['extent'].split(','),
+                      $location.search()['extent'].split(',').map(Number),
                       scope.map.getSize());
                 }
               };
