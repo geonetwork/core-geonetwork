@@ -151,7 +151,7 @@
               </td>
             </tr>
           </xsl:if>
-          <xsl:if test="normalize-space($metadata/gmd:referenceSystemInfo) != ''">
+          <xsl:if test="$metadata/gmd:referenceSystemInfo">
             <tr>
               <td><xsl:value-of select="$schemaStrings/sxt-view-crs"/></td>
               <td>
