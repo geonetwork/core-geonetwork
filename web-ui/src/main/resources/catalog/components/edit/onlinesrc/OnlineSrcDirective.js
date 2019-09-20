@@ -644,7 +644,7 @@
                       scope.params.desc = '';
                       initMultilingualFields();
                     }
-                  };
+                  });
                   function loadConfigAndInit(withInit) {
                     gnSchemaManagerService.getEditorAssociationPanelConfig(
                       gnCurrentEdit.schema,
