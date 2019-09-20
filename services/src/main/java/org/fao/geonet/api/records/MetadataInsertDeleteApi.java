@@ -210,7 +210,12 @@ public class MetadataInsertDeleteApi {
 
     @ApiOperation(value = "Delete one or more records", notes = "User MUST be able to edit the record to delete it. "
             + "", nickname = "deleteRecords")
-    @RequestMapping(method = RequestMethod.DELETE)
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        }
+    )
     @ApiResponses(value = { @ApiResponse(code = 204, message = "Report about deleted records."),
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR) })
     @PreAuthorize("hasRole('Editor')")
@@ -839,7 +844,7 @@ public class MetadataInsertDeleteApi {
         }
         int iId = Integer.parseInt(id.get(0));
         uuid = dataManager.getMetadataUuid(iId + "");
-        
+
         // Set template
         dataManager.setTemplate(iId, metadataType, null);
 
