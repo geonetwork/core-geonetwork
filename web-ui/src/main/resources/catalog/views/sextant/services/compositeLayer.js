@@ -139,7 +139,7 @@
             var feature = map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
               //you can add a condition on layer to restrict the listener
               return feature;
-            });
+            }, undefined, function (layer) { return layer === tooltipLayer; });
             if (feature) {
               var selected = feature;
               // hide if no feature hovered; else move overlay on hovered feature
