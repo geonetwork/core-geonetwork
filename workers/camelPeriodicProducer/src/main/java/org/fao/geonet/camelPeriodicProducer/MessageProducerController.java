@@ -23,7 +23,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/msg_producers")
+@RequestMapping("/{portal}/api/msg_producers")
 public class MessageProducerController {
     @Autowired
     protected MessageProducerFactory messageProducerFactory;
