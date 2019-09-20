@@ -250,7 +250,8 @@
         $http.put($scope.wfsWorkersApiUrl + '/start', {
           typeName: job.featureType,
           url: job.url,
-          version: "1.1.0"
+          version: "1.1.0",
+          metadataUuid: job.mdUuid
         }).then(function() {
           gnAlertService.addAlert({
             msg: $translate.instant('wfsIndexingTriggerSuccess'),
