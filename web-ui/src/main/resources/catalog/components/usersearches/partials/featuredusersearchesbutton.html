@@ -13,7 +13,7 @@
   <ul class="dropdown-menu">
     <li data-ng-repeat="row in featuredSearches | orderBy:sortByLabel">
       <a data-ng-click="search(row.url)">
-        {{row.names[lang] || row.names['eng'] || ('featuredSearch' | translate)}}
+        {{row.names[lang] || row.names['eng'] || ('userSearchNameMissing' | translate)}}
 
         <img data-ng-if="row.logo"
              data-ng-src="{{row.logo}}"

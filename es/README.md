@@ -2,21 +2,19 @@
 
 ### Manual installation
 
-Download Elasticsearch from https://www.elastic.co/fr/downloads/elasticsearch
-and copy it to the ES module. eg. es/elasticsearch-5.0.0
+Download Elasticsearch (at least 7.2.1 for Geonetwork 3.8.x) from https://www.elastic.co/fr/downloads/elasticsearch
+and copy it to the ES module. eg. es/elasticsearch-7.2.1
+ 
+Start ES using:
 
-or run "mvn install -Pes-download"
-
-Start ES.
-
-Configure index
 ```
-curl -X PUT http://localhost:9200/features -d @config/features.json
+./bin/elasticsearch
 ```
+
 
 ### Maven installation
 
-Maven could take care of the installation steps:
+Maven can take care of the installation steps:
 * download
 * initialize collection
 * start
@@ -34,7 +32,6 @@ curl -X PUT http://localhost:9200/$IDX_PREFIX-records -H "Content-Type:applicati
 curl -X PUT http://localhost:9200/$IDX_PREFIX-searchlogs -H "Content-Type:application/json"  -d @config/searchlogs.json
 curl -X PUT http://localhost:9200/$IDX_PREFIX-checkpoint -H "Content-Type:application/json"  -d @config/checkpoint.json
 ```
-
 To delete your index:
 
 ```
@@ -44,10 +41,12 @@ curl -X DELETE http://localhost:9200/$IDX_PREFIX-searchlogs
 curl -X DELETE http://localhost:9200/$IDX_PREFIX-features
 curl -X DELETE http://localhost:9200/$IDX_PREFIX-checkpoint
 ```
-
+ Check that elasticsearch is running by visiting http://localhost:9200 in a browser
 
 
 ### Production use
 
 Configure ES to start on server startup.
+
+ * Note that for debian-based servers the current deb download (7.3.2) can be installed rather than installing manually and can be configured to run as a service using the instructions here: https://www.elastic.co/guide/en/elasticsearch/reference/current/starting-elasticsearch.html
 

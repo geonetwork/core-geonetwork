@@ -1376,9 +1376,20 @@
         var modalElt;
 
         element.bind('click', function() {
-          var md = scope.$eval(attr['gnImgModal']);
-          var imgs = md.getThumbnails();
-          var img = imgs.big || imgs.small || md.thumbnail;
+          var imgOrMd = scope.$eval(attr['gnImgModal']);
+          var img = undefined;
+          if(imgOrMd.getThumbnails) {
+            var imgs = imgOrMd.getThumbnails();
+            var url = $(element).attr('src');
+            for (var i = 0; i < imgs.list.length; i++) {
+              if (imgs.list[i].url === url) {
+                img = imgs.list[i];
+                break;
+              }
+            }
+          } else {
+            img = imgOrMd;
+          }
 
           if (img) {
             var modalElt = angular.element(

@@ -48,7 +48,7 @@ import java.util.List;
 @Controller("admin.config.csw.save")
 public class Set2 {
 
-    @RequestMapping(value = "/{lang}/admin.config.csw.save",
+    @RequestMapping(value = "/{portal}/{lang}/admin.config.csw.save",
         method = {RequestMethod.POST, RequestMethod.PUT},
         produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public

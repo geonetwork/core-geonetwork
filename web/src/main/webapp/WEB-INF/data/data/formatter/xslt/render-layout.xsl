@@ -235,7 +235,7 @@
 
             <!-- Display link to portal and other view only
             when in pure HTML mode. -->
-            <xsl:if test="$root != 'div'">
+            <xsl:if test="$viewMenu = 'true'">
               <section class="gn-md-side-viewmode">
                 <h2>
                   <i class="fa fa-fw fa-eye"><xsl:comment select="'icon'"/></i>
@@ -283,53 +283,7 @@
                 </div>
               </section>
               <br/>
-              </xsl:if>
-
-              <!-- Display link to portal and other view only
-              when in pure HTML mode. -->
-              <xsl:if test="$viewMenu = 'true'">
-                <section>
-                  <h4>
-                    <i class="fa fa-fw fa-eye">&#160;</i>&#160;
-                    <span><xsl:value-of select="$schemaStrings/viewMode"/></span>
-                  </h4>
-                  <xsl:for-each select="$configuration/editor/views/view[not(@disabled)]">
-                    <ul>
-                      <li>
-                        <a>
-                          <xsl:attribute name="href">
-                            <xsl:choose>
-                              <xsl:when test="@name = 'xml'">
-                                <xsl:value-of select="concat($nodeUrl, 'api/records/', $metadataUuid, '/formatters/xml')"/>
-                              </xsl:when>
-                              <xsl:otherwise>
-                                <xsl:value-of select="concat($nodeUrl, 'api/records/', $metadataUuid, '/formatters/xsl-view?view=', @name, '&amp;portalLink=', $portalLink)"/>
-                              </xsl:otherwise>
-                            </xsl:choose>
-                          </xsl:attribute>
-                          <xsl:variable name="name" select="@name"/>
-                          <xsl:value-of select="$schemaStrings/*[name(.) = $name]"/>
-                        </a>
-                      </li>
-                    </ul>
-                  </xsl:for-each>
-                </section>
-              </xsl:if>
-
-              <br/>
-
-              <section class="gn-md-side-permalink">
-                <a class="btn btn-block btn-primary"
-                   href="{if ($portalLink != '')
-                          then replace($portalLink, '\$\{uuid\}', $metadataUuid)
-                          else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
-                  <i class="fa fa-link">&#160;</i>
-                  <xsl:value-of select="$schemaStrings/linkToPortal"/>
-                </a>
-                <div class="hidden-xs hidden-sm">
-                  <xsl:value-of select="$schemaStrings/linkToPortal-help"/>
-                </div>
-              </section>
+            </xsl:if>
 
 
             <xsl:if test="$sideRelated != ''">

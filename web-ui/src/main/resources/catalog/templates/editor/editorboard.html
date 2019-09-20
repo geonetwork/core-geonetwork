@@ -17,8 +17,8 @@
 
                 <span class="input-group-addon">
                   <label>
-                    <input type="checkbox" data-ng-model="onlyMyRecord.is">
-                    <span data-translate="" class="hidden-xs">onlyMyRecord</span>
+                    <input type="checkbox" title="{{'onlyMyRecord' | translate}}" data-ng-model="onlyMyRecord.is">
+                    <span data-translate="" class="hidden-xs hidden-sm">onlyMyRecord</span>
                   </label>
                 </span>
                 <input type="text"
@@ -49,21 +49,21 @@
                 </div>
               </div>
               <div class="col-xs-12 col-sm-6 col-md-6 col-lg-7 text-right">
-                <a href="#/create" class="btn btn-primary">
-                  <i class="fa fa-fw fa-plus"/><span data-translate="">addRecord</span>
+                <a href="#/create" class="btn btn-primary btn-truncate" title="{{'addRecord' | translate}}">
+                  <i class="fa fa-fw fa-plus"/><span class=" hidden-sm" data-translate="">addRecord</span>
                 </a>
-                <a href="#/import" class="btn btn-default">
+                <a href="#/import" class="btn btn-default btn-truncate" title="{{'ImportRecord' | translate}}">
                   <i class="fa fa-fw fa-upload"/><span class="hidden-xs hidden-sm" data-translate="">ImportRecord</span>
                 </a>
-                <a href="#/directory" class="btn btn-default"
+                <a href="#/directory" class="btn btn-default btn-truncate" title="{{'directoryManager' | translate}}"
                   ng-if="user.isEditorOrMore()">
-                  <i class="fa fa-fw fa-bookmark"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">directoryManager</span>
+                  <i class="fa fa-fw fa-bookmark"/><span class="hidden-xs hidden-sm hidden-md btn-truncate-lg" data-translate="">directoryManager</span>
                 </a>
-                <a href="#/batchedit" class="btn btn-default"
+                <a href="#/batchedit" class="btn btn-default btn-truncate" title="{{'batchEditing' | translate}}"
                   ng-if="user.isEditorOrMore()">
                   <i class="fa fa-fw fa-pencil"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">batchEditing</span>
                 </a>
-                <a href="#/accessManager" class="btn btn-default"
+                <a href="#/accessManager" class="btn btn-default" title="{{'accessManager' | translate}}"
                   ng-if="user.isAdministratorOrMore() && healthCheck.IndexHealthCheck === true">
                   <i class="fa fa-fw fa-lock"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">accessManager</span>
                 </a>
@@ -105,16 +105,16 @@
 
             <div class="row gn-margin-bottom"
                 data-ng-show="searchResults.records.length > 0">
-              <div class="col-xs-12 col-sm-5 col-md-3 relative gn-nopadding-left">
+              <div class="col-xs-12 col-sm-5 col-md-5 col-lg-4 relative gn-nopadding-left">
                 <div data-gn-selection-widget=""
                     data-results="searchResults"></div>
               </div>
-              <div class="col-xs-12 col-sm-7 col-md-5 gn-nopadding-left gn-nopadding-right text-right">
+              <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4 gn-nopadding-left gn-nopadding-right text-right">
                 <div class="pull-right"
                     data-gn-pagination="paginationInfo"
                     data-hits-values="searchObj.hitsperpageValues"></div>
               </div>
-              <div class="col-xs-12 col-sm-12 col-md-4 gn-nopadding-right text-right">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 gn-nopadding-right text-right">
                 <div class="pull-right"
                     data-sortby-combo=""
                     data-params="searchObj.params"
@@ -126,7 +126,7 @@
                   data-gn-results-container=""
                   data-search-results="searchResults"
                   data-template-url="resultTemplate"></div>
-              </div>
+            </div>
           </div>
         </div>
       </div>

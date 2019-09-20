@@ -23,19 +23,27 @@
 
 package org.fao.geonet.schema.iso19139;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.xml.transform.TransformerConfigurationException;
 import java.net.URISyntaxException;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertThat;
 import static org.xmlunit.matchers.EvaluateXPathMatcher.hasXPath;
 
@@ -43,6 +51,13 @@ import static org.xmlunit.matchers.EvaluateXPathMatcher.hasXPath;
  * Created by fgravin on 7/31/17.
  */
 public class ISO19139SchemaPluginTest {
+    static private ImmutableList<Namespace> ALL_NAMESPACES = ImmutableSet.<Namespace>builder()
+            .add(ISO19139Namespaces.GCO)
+            .add(ISO19139Namespaces.GMD)
+            .add(ISO19139Namespaces.SRV)
+            .add(ISO19139Namespaces.XSI)
+            .build().asList();
+
     protected Map<String, String> ns = new HashMap<String, String>();
 
     @Before
@@ -57,7 +72,6 @@ public class ISO19139SchemaPluginTest {
                 ISO19139Namespaces.GCO.getPrefix(),
                 ISO19139Namespaces.GCO.getURI()
         );
-
     }
 
     @Test
@@ -80,7 +94,54 @@ public class ISO19139SchemaPluginTest {
                 resultString, hasXPath("count(//gco:CharacterString[text() = 'en-individualname'])",
                         equalTo("1")).withNamespaceContext(ns)
         );
-
     }
 
+    @Test
+    public void mainLanguageGcoCharString() throws URISyntaxException, JDOMException, NoSuchFileException {
+        Element input = Xml.loadFile(Paths.get(ISO19139SchemaPluginTest.class.getClassLoader().getResource("schema/iso19139/languages/main_charstring.xml").toURI()));
+
+        List<String> languages = ISO19139SchemaPlugin.getLanguages(input);
+
+        assertArrayEquals(new String[] {"ger", "fre", "ita"}, languages.toArray());
+    }
+
+    @Test
+    public void noMainLanguageGcoCharString() throws URISyntaxException, JDOMException, NoSuchFileException {
+        Element input = Xml.loadFile(Paths.get(ISO19139SchemaPluginTest.class.getClassLoader().getResource("schema/iso19139/languages/main_charstring.xml").toURI()));
+        ((List<Element>) Xml.selectNodes(input, ".//gmd:language", ALL_NAMESPACES)).stream().forEach(Element::detach);
+
+        List<String> languages = ISO19139SchemaPlugin.getLanguages(input);
+
+        assertArrayEquals(new String[] {"fre", "ita", "ger"}, languages.toArray());
+    }
+
+    @Test
+    public void noLocales() throws URISyntaxException, JDOMException, NoSuchFileException {
+        Element input = Xml.loadFile(Paths.get(ISO19139SchemaPluginTest.class.getClassLoader().getResource("schema/iso19139/languages/main_charstring.xml").toURI()));
+        ((List<Element>) Xml.selectNodes(input, ".//gmd:locale", ALL_NAMESPACES)).stream().forEach(Element::detach);
+
+        List<String> languages = ISO19139SchemaPlugin.getLanguages(input);
+
+        assertArrayEquals(new String[] {"ger"}, languages.toArray());
+    }
+
+    @Test
+    public void noLocalesnoMain() throws URISyntaxException, JDOMException, NoSuchFileException {
+        Element input = Xml.loadFile(Paths.get(ISO19139SchemaPluginTest.class.getClassLoader().getResource("schema/iso19139/languages/main_charstring.xml").toURI()));
+        ((List<Element>) Xml.selectNodes(input, ".//gmd:language", ALL_NAMESPACES)).stream().forEach(Element::detach);
+        ((List<Element>) Xml.selectNodes(input, ".//gmd:locale", ALL_NAMESPACES)).stream().forEach(Element::detach);
+
+        List<String> languages = ISO19139SchemaPlugin.getLanguages(input);
+
+        assertArrayEquals(new String[] {}, languages.toArray());
+    }
+
+    @Test
+    public void mainEncodedWithCodelist() throws URISyntaxException, JDOMException, NoSuchFileException {
+        Element input = Xml.loadFile(Paths.get(ISO19139SchemaPluginTest.class.getClassLoader().getResource("schema/iso19139/languages/main_code.xml").toURI()));
+
+        List<String> languages = ISO19139SchemaPlugin.getLanguages(input);
+
+        assertArrayEquals(new String[] {"roh", "fre", "ita", "ger"}, languages.toArray());
+    }
 }

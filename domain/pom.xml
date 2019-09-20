@@ -203,6 +203,8 @@
               <systemPropertyVariables>
                 <postgresqlPerformanceTest>true</postgresqlPerformanceTest>
               </systemPropertyVariables>
+              <runOrder>alphabetical</runOrder>
+              <forkCount>4</forkCount>
             </configuration>
           </plugin>
         </plugins>

@@ -214,7 +214,9 @@
     </xsl:if>
   </xsl:template>
 
+
   <xsl:template mode="getMetadataCitation" match="gmd:MD_Metadata">
+    <!-- Citation -->
     <blockquote>
       <div class="row">
         <div class="col-md-3">
@@ -222,8 +224,8 @@
         </div>
         <div class="col-md-9">
           <h2 title="{$schemaStrings/citationProposal-help}"><xsl:comment select="name()"/>
-              <xsl:value-of select="$schemaStrings/citationProposal"/>
-              <i class="fa fa-info-circle"><xsl:comment select="'icon'"/></i>
+            <xsl:value-of select="$schemaStrings/citationProposal"/>
+            <i class="fa fa-info-circle"><xsl:comment select="'icon'"/></i>
           </h2>
           <br/>
           <p>
@@ -253,6 +255,7 @@
               </xsl:for-each>
             </xsl:variable>
 
+
             <xsl:if test="normalize-space($publicationDate) != ''">
               (<xsl:value-of select="substring(normalize-space($publicationDate), 1, 4)"/>)
             </xsl:if>
@@ -269,8 +272,10 @@
 
             <!-- Publishers -->
             <xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/
-                              *[gmd:role/*/@codeListValue = 'publisher']">
-              <xsl:value-of select="gmd:organisationName/*"/>
+                              *[gmd:role/*/@codeListValue = 'publisher']/gmd:organisationName">
+              <xsl:call-template name="localised">
+                <xsl:with-param name="langId" select="$langId"/>
+              </xsl:call-template>
               <xsl:if test="position() != last()">&#160;-&#160;</xsl:if>
             </xsl:for-each>
 

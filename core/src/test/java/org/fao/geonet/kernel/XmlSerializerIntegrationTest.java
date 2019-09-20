@@ -29,6 +29,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.Closeable;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -50,6 +51,7 @@ import org.jdom.Namespace;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -58,7 +60,6 @@ import com.google.common.collect.Maps;
 import jeeves.server.context.ServiceContext;
 
 public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
-    private static final String OWNER_ID = "1234";
     private static final String XPATH_WITHHELD = "*//*[@gco:nilReason = 'withheld']";
     private static final String XPATH_DOWNLOAD = "*//gmd:onLine[*/gmd:protocol/gco:CharacterString = 'WWW:DOWNLOAD-1.0-http--download']";
     private static final String XPATH_DYNAMIC = "*//gmd:onLine[starts-with(*/gmd:protocol/gco:CharacterString, 'OGC:WMS')]";
@@ -146,65 +147,62 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
 
     @Test
     public void testInternalSelectHidingWithheldAdministrator() throws Exception {
-        configureXmlSerializerAndServiceContext(true, false, false);
-
-        assertHiddenElements(false);
+        try (Closeable ignored = configureXmlSerializerAndServiceContext(true, false, false)) {
+            assertHiddenElements(false);
+        }
     }
 
     @Test
     public void testInternalSelectHidingWithheldNotLoggedIn() throws Exception {
-        configureXmlSerializerAndServiceContext(false, false, false);
-
-        assertHiddenElements(true);
+        try (Closeable ignored = configureXmlSerializerAndServiceContext(false, false, false)) {
+            assertHiddenElements(true);
+        }
     }
 
     @Test
     public void testInternalSelectHidingDownloadAndDynamicNotLoggedIn() throws Exception {
-        configureXmlSerializerAndServiceContext(false, false, false);
-
-        assertDownloadElements(false);
-        assertDynamicElements(false);
+        try (Closeable ignored = configureXmlSerializerAndServiceContext(false, false, false)) {
+            assertDownloadElements(false);
+            assertDynamicElements(false);
+        }
     }
 
     @Test
     public void testInternalSelectCanDownloadAndDynamicNotLoggedIn() throws Exception {
-        configureXmlSerializerAndServiceContext(false, true, true);
-
-        assertDownloadElements(true);
-        assertDynamicElements(true);
+        try (Closeable ignored = configureXmlSerializerAndServiceContext(false, true, true)) {
+            assertDownloadElements(true);
+            assertDynamicElements(true);
+        }
     }
 
     @Test
     public void testInternalCompleteHidingHiddenElement() throws Exception {
-        configureXmlSerializerAndServiceContext(false, false, false);
+        try (Closeable ignored = configureXmlSerializerAndServiceContext(false, false, false)) {
+            Element loadedMetadata = _xmlSerializer.internalSelect("1", false, false);
+            List<?> withheld = Xml.selectNodes(loadedMetadata, "*//*[@gco:nilReason = 'withheld']", Arrays.asList(Geonet.Namespaces.GCO));
 
-        Element loadedMetadata = _xmlSerializer.internalSelect("1", false, false);
-        List<?> withheld = Xml.selectNodes(loadedMetadata, "*//*[@gco:nilReason = 'withheld']", Arrays.asList(Geonet.Namespaces.GCO));
-
-        assertEquals(0, withheld.size());
+            assertEquals(0, withheld.size());
+        }
     }
 
     @Test
     public void testInternalSelectHidingWithheldNotOwner() throws Exception {
-        configureXmlSerializerAndServiceContext(false, false, false);
-
-        assertHiddenElements(true);
+        try (Closeable ignored = configureXmlSerializerAndServiceContext(false, false, false)) {
+            assertHiddenElements(true);
+        }
     }
 
     @Test
     public void testInternalSelectHidingWithheldOwner() throws Exception {
-        configureXmlSerializerAndServiceContext(true, false, false);
-
-        assertHiddenElements(false);
+        try (Closeable ignored = configureXmlSerializerAndServiceContext(true, false, false)) {
+            assertHiddenElements(false);
+        }
     }
 
-    private ServiceContext configureXmlSerializerAndServiceContext(boolean canEdit,
-                                                                   boolean canDownload,
-                                                                   boolean canDynamic) throws Exception {//boolean isAdmin, String userId) {
+    private Closeable configureXmlSerializerAndServiceContext(boolean canEdit,
+                                                              boolean canDownload,
+                                                              boolean canDynamic) throws Exception {//boolean isAdmin, String userId) {
         AccessManager accessManager = mock(AccessManager.class);
-        if (applicationContext.getBean(AccessManager.class).getClass().getSimpleName().contains("Mockito")) {
-            accessManager = applicationContext.getBean(AccessManager.class);
-        }
 
         when(accessManager.canEdit(any(ServiceContext.class), anyString()))
             .thenReturn(canEdit);
@@ -221,13 +219,14 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
         context.setAsThreadLocal();
 
         final String beanName = "AccessManager";
-        if (!applicationContext.getBean(AccessManager.class).getClass().getSimpleName().contains("Mockito")) {
-            final DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) applicationContext.getBeanFactory();
-            beanFactory.removeBeanDefinition(beanName);
-            beanFactory.registerSingleton(beanName, accessManager);
-        }
-
-        return context;
+        final DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) applicationContext.getBeanFactory();
+        final BeanDefinition def = beanFactory.getBeanDefinition(beanName);
+        beanFactory.removeBeanDefinition(beanName);
+        beanFactory.registerSingleton(beanName, accessManager);
+        return () -> {
+            beanFactory.registerBeanDefinition(beanName, def);
+            beanFactory.destroySingleton(beanName);
+        };
     }
 
     private void assertHiddenElements(boolean checkElementsAreHidden) throws Exception {

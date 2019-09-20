@@ -88,6 +88,7 @@ import jeeves.server.sources.http.ServletPathFinder;
  */
 
 @Controller
+@RequestMapping(value = "/{portal}")
 public class AtomPredefinedFeed {
 
     /**
