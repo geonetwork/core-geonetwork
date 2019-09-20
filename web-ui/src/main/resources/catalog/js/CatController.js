@@ -88,9 +88,9 @@
         'search': {
           'enabled': true,
           'appUrl': '../../srv/{{lang}}/catalog.search#/search',
-          'hitsperpageValues': [10, 50, 100],
+          'hitsperpageValues': [30, 60, 120],
           'paginationInfo': {
-            'hitsPerPage': 20
+            'hitsPerPage': 30
           },
           'facetsSummaryType': 'details',
           'defaultSearchString': '',
