@@ -201,7 +201,7 @@ public class Info implements Service {
     //--------------------------------------------------------------------------
 
     private Element getIcons(ServiceContext context) {
-        Set<Path> icons = Resources.listFiles(context, "harvesting", iconFilter);
+        Set<Path> icons = context.getBean(Resources.class).listFiles(context, "harvesting", iconFilter);
         List<Path> list = new ArrayList<>(icons);
         Collections.sort(list);
         Element result = new Element("icons");

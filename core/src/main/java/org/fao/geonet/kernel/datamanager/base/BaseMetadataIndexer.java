@@ -141,6 +141,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     @Autowired
     @Qualifier("resourceStore")
     private Store store;
+    @Autowired
+    private Resources resources;
 
     // FIXME remove when get rid of Jeeves
     private ServiceContext servContext;
@@ -468,25 +470,27 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
 
             // Group logo are in the harvester folder and contains extension in file name
-            final Path harvesterLogosDir = Resources.locateHarvesterLogosDir(getServiceContext());
             boolean added = false;
             if (StringUtils.isNotEmpty(logoUUID)) {
-                final Path logoPath = harvesterLogosDir.resolve(logoUUID);
-                if (Files.exists(logoPath)) {
-                    added = true;
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO,
-                        "/images/harvesting/" + logoPath.getFileName(), true, false));
+                final Path harvesterLogosDir = resources.locateHarvesterLogosDir(getServiceContext());
+                try (Resources.ResourceHolder logo = resources.getImage(getServiceContext(), logoUUID, harvesterLogosDir)) {
+                    if (logo != null) {
+                        added = true;
+                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO,
+                                                               "/images/harvesting/" + logo.getPath().getFileName(),
+                                                               true, false));
+                    }
                 }
             }
 
             // If not available, use the local catalog logo
             if (!added) {
                 logoUUID = source + ".png";
-                final Path logosDir = Resources.locateLogosDir(getServiceContext());
-                final Path logoPath = logosDir.resolve(logoUUID);
-                if (Files.exists(logoPath)) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID,
-                        true, false));
+                final Path logosDir = resources.locateLogosDir(getServiceContext());
+                try (Resources.ResourceHolder image = resources.getImage(getServiceContext(), logoUUID, logosDir)) {
+                    if (image != null) {
+                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID, true, false));
+                    }
                 }
             }
 

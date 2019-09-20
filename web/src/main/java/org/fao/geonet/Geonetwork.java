@@ -409,9 +409,9 @@ public class Geonetwork implements ApplicationHandler {
         fillCaches(context);
 
         AbstractEntityListenerManager.setSystemRunning(true);
-        
+
         this._applicationContext.publishEvent(new ServerStartup(this._applicationContext));
-        
+
         return gnContext;
     }
 
@@ -560,11 +560,12 @@ public class Geonetwork implements ApplicationHandler {
      */
     private void createSiteLogo(String nodeUuid, ServiceContext context, Path appPath) {
         try {
-            Path logosDir = Resources.locateLogosDir(context);
+            final Resources resources = context.getBean(Resources.class);
+            Path logosDir = resources.locateLogosDir(context);
             Path logo = logosDir.resolve(nodeUuid + ".png");
             if (!Files.exists(logo)) {
                 final ServletContext servletContext = context.getServlet().getServletContext();
-                byte[] logoData = Resources.loadImage(servletContext, appPath,
+                byte[] logoData = resources.loadImage(servletContext, appPath,
                     "images/harvesting/GN3.png", new byte[0]).one();
                 Files.write(logo, logoData);
             }

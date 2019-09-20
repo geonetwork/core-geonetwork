@@ -29,6 +29,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -72,6 +73,8 @@ import java.util.Set;
  *
  */
 
+// TODO: pvi
+
 @RequestMapping(value = {
     "/{portal}/api/logos",
     "/{portal}/api/" + API.VERSION_0_1 +
@@ -85,7 +88,7 @@ public class LogosApi {
     private static final String iconExt[] = {".gif", ".png", ".jpg", ".jpeg"};
     private DirectoryStream.Filter<Path> iconFilter = new DirectoryStream.Filter<Path>() {
         @Override
-        public boolean accept(Path file) throws IOException {
+        public boolean accept(Path file) {
             if (file == null || !Files.isRegularFile(file))
                 return false;
             if (file.getFileName() != null) {
@@ -117,8 +120,9 @@ public class LogosApi {
     @ResponseBody
     public Set<String> get(
         HttpServletRequest request
-    ) throws Exception {
-        Set<Path> icons = Resources.listFiles(
+    ) {
+        ApplicationContext context = ApplicationContextHolder.get();
+        Set<Path> icons = context.getBean(Resources.class).listFiles(
             ApiUtils.createServiceContext(request),
             "harvesting",
             iconFilter);
@@ -160,13 +164,16 @@ public class LogosApi {
             defaultValue = "false",
             required = false
         )
-            boolean overwrite
+            boolean overwrite,
+            HttpServletRequest request
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        Path directoryPath;
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final Path directoryPath;
+        final Resources resources = appContext.getBean(Resources.class);
+        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         synchronized (this) {
             if (this.logoDirectory == null) {
-                this.logoDirectory = Resources.locateHarvesterLogosDirSMVC(appContext);
+                this.logoDirectory = resources.locateHarvesterLogosDirSMVC(appContext);
             }
             directoryPath = this.logoDirectory;
         }
@@ -176,16 +183,12 @@ public class LogosApi {
 
             checkFileName(fileName);
 
-            Path filePath = directoryPath.resolve(f.getOriginalFilename());
-            if (Files.exists(filePath) && overwrite) {
-                IO.deleteFile(filePath, true, "Deleting file");
-                filePath = directoryPath.resolve(f.getOriginalFilename());
-            } else if (Files.exists(filePath)) {
-                throw new ResourceAlreadyExistException(f.getOriginalFilename());
+            try (Resources.ResourceHolder holder = resources.getWritableImage(serviceContext, fileName, directoryPath)) {
+                if (Files.exists(holder.getPath()) && !overwrite) {
+                    throw new ResourceAlreadyExistException(f.getOriginalFilename());
+                }
+                Files.copy(f.getInputStream(), holder.getPath());
             }
-
-            filePath = Files.createFile(filePath);
-            FileUtils.copyInputStreamToFile(f.getInputStream(), filePath.toFile());
         }
         return new ResponseEntity(HttpStatus.CREATED);
     }

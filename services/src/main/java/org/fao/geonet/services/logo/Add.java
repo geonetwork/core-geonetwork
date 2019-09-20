@@ -23,7 +23,9 @@
 
 package org.fao.geonet.services.logo;
 
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.responses.StatusResponse;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.resources.Resources;
@@ -42,6 +44,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller("admin.logo.upload")
 @Deprecated
@@ -59,23 +63,25 @@ public class Add implements ApplicationContextAware {
         produces = {MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
-    StatusResponse execJSON(@RequestParam("fname") MultipartFile fname)
+    StatusResponse execJSON(@RequestParam("fname") MultipartFile fname, HttpServletRequest request)
         throws Exception {
-        return exec(fname);
+        return exec(fname, request);
     }
 
     @RequestMapping(value = "/{portal}/{lang}/admin.logo.upload", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
-    StatusResponse exec(@RequestParam("fname") MultipartFile fname)
+    StatusResponse exec(@RequestParam("fname") MultipartFile fname, HttpServletRequest request)
         throws Exception {
 
         try {
             Path logoDir;
+            final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+            final Resources resources = context.getBean(Resources.class);
             synchronized (this) {
                 if (this.logoDirectory == null) {
-                    this.logoDirectory = Resources.locateHarvesterLogosDirSMVC(context);
+                    this.logoDirectory = resources.locateHarvesterLogosDirSMVC(context);
                 }
                 logoDir = this.logoDirectory;
             }
@@ -86,24 +92,9 @@ public class Add implements ApplicationContextAware {
 				throw new Exception("Logo name is not defined.");
 			}
 
-            Path serverFile = logoDir.resolve(fname.getOriginalFilename());
-            if (Files.exists(serverFile)) {
-                IO.deleteFile(serverFile, true, "Deleting server file");
-                serverFile = logoDir.resolve(fname.getOriginalFilename());
-            }
-
-            serverFile = Files.createFile(serverFile);
-
-            try (OutputStream stream = Files.newOutputStream(serverFile)) {
-
-                int read;
-                byte[] bytes = new byte[1024];
-
-                InputStream is = fname.getInputStream();
-
-                while ((read = is.read(bytes)) != -1) {
-                    stream.write(bytes, 0, read);
-                }
+			try (Resources.ResourceHolder serverFile = resources.getWritableImage(serviceContext, fname.getOriginalFilename(), logoDir);
+                 InputStream in = fname.getInputStream()) {
+                Files.copy(in, serverFile.getPath(), StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (Exception e) {
             return new StatusResponse(e.getMessage());

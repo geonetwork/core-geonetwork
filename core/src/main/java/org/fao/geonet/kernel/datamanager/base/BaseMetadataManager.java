@@ -975,8 +975,7 @@ public class BaseMetadataManager implements IMetadataManager {
                 env.addContent(new Element("parentUuid").setText(parentUuid));
             }
             if (metadataId.isPresent()) {
-                String metadataIdString = String.valueOf(metadataId.get());
-                final Path resourceDir = Lib.resource.getDir(context, Params.Access.PRIVATE, metadataIdString);
+                final Path resourceDir = Lib.resource.getDir(context, Params.Access.PRIVATE, metadataId.get());
                 env.addContent(new Element("datadir").setText(resourceDir.toString()));
             }
 
