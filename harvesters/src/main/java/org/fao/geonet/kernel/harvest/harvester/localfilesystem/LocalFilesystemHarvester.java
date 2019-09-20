@@ -22,7 +22,6 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -31,7 +30,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
@@ -39,21 +37,15 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.SourceType;
-import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
-import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
-import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
@@ -62,50 +54,30 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import java.util.*;
-import jeeves.server.context.ServiceContext;
 
 /**
  * Harvester for local filesystem.
  *
  * @author heikki doeleman
  */
-public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
-
-    private LocalFilesystemParams params;
+public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, LocalFilesystemParams> {
 
     @Override
-    protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
-        LocalFilesystemParams lp = (LocalFilesystemParams) params;
-        super.setParams(lp);
+    protected void storeNodeExtra(LocalFilesystemParams params, String path, String siteId, String optionsId) throws SQLException {
+        setParams(params);
 
-        harvesterSettingsManager.add("id:" + siteId, "icon", lp.icon);
-        harvesterSettingsManager.add("id:" + siteId, "recurse", lp.recurse);
-        harvesterSettingsManager.add("id:" + siteId, "directory", lp.directoryname);
-        harvesterSettingsManager.add("id:" + siteId, "recordType", lp.recordType);
-        harvesterSettingsManager.add("id:" + siteId, "nodelete", lp.nodelete);
-        harvesterSettingsManager.add("id:" + siteId, "checkFileLastModifiedForUpdate", lp.checkFileLastModifiedForUpdate);
-        harvesterSettingsManager.add("id:" + siteId, "beforeScript", lp.beforeScript);
+        harvesterSettingsManager.add("id:" + siteId, "icon", params.icon);
+        harvesterSettingsManager.add("id:" + siteId, "recurse", params.recurse);
+        harvesterSettingsManager.add("id:" + siteId, "directory", params.directoryname);
+        harvesterSettingsManager.add("id:" + siteId, "recordType", params.recordType);
+        harvesterSettingsManager.add("id:" + siteId, "nodelete", params.nodelete);
+        harvesterSettingsManager.add("id:" + siteId, "checkFileLastModifiedForUpdate", params.checkFileLastModifiedForUpdate);
+        harvesterSettingsManager.add("id:" + siteId, "beforeScript", params.beforeScript);
     }
 
     @Override
-    protected String doAdd(Element node) throws BadInputEx, SQLException {
-        params = new LocalFilesystemParams(dataMan);
-        super.setParams(params);
-
-        //--- retrieve/initialize information
-        params.create(node);
-
-        //--- force the creation of a new uuid
-        params.setUuid(UUID.randomUUID().toString());
-
-        String id = harvesterSettingsManager.add("harvesting", "node", getType());
-        storeNode(params, "id:" + id);
-
-        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), SourceType.harvester);
-        context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
-
-        return id;
+    protected LocalFilesystemParams createParams() {
+        return new LocalFilesystemParams(dataMan);
     }
 
     /**
@@ -230,39 +202,6 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         runBeforeScript();
         Path directory = IO.toPath(params.directoryname);
         this.result = align(directory);
-    }
-
-    @Override
-    protected void doInit(Element entry, ServiceContext context) throws BadInputEx {
-        params = new LocalFilesystemParams(dataMan);
-        super.setParams(params);
-        params.create(entry);
-    }
-
-    @Override
-    protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
-        LocalFilesystemParams copy = params.copy();
-
-        //--- update variables
-        copy.update(node);
-
-        String path = "harvesting/id:" + id;
-
-        harvesterSettingsManager.removeChildren(path);
-
-        //--- update database
-        storeNode(copy, path);
-
-        //--- we update a copy first because if there is an exception LocalFilesystemParams
-        //--- could be half updated and so it could be in an inconsistent state
-
-        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), SourceType.harvester);
-        context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.getUuid());
-
-        params = copy;
-        super.setParams(params);
-
     }
 
     private void runBeforeScript() throws IOException, InterruptedException {

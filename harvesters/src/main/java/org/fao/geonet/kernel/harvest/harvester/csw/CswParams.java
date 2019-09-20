@@ -60,6 +60,12 @@ public class CswParams extends AbstractParams {
      */
     public String xslfilter;
     public List<Element> eltSearches = new ArrayList<Element>();
+
+    @Override
+    public String getIcon() {
+        return icon;
+    }
+
     public CswParams(DataManager dm) {
         super(dm);
     }

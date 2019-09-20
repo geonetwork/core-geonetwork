@@ -205,4 +205,6 @@
         class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">
     <constructor-arg index="0" ref="filesystemStore"/>
   </bean>
+
+  <bean id="resources" class="org.fao.geonet.resources.Resources"/>
 </beans>

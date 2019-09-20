@@ -221,28 +221,30 @@ public class Update extends NotInReadOnlyModeService {
             try (InputStream in = IO.newInputStream(input)) {
                 ImageIO.read(in); // check it parses
             }
-            Path logoDir = Resources.locateLogosDir(context);
+            final Resources resources = context.getBean(Resources.class);
+            Path logoDir = resources.locateLogosDir(context);
             logoUUID = UUID.randomUUID().toString();
-            Path output = logoDir.resolve(logoUUID + ".png");
-            Files.copy(input, output);
+            resources.copyFile(input, logoDir, logoUUID + ".png");
         }
 
         return logoUUID;
     }
 
     private String copyLogoFromHarvesters(ServiceContext context, String logoFile) throws IOException {
-        String logoUUID = null;
-
-        Path harvestLogo = Resources.locateHarvesterLogosDir(context).resolve(logoFile);
-        String extension = FilenameUtils.getExtension(harvestLogo.getFileName().toString());
-        logoUUID = UUID.randomUUID().toString();
-
-        Path newLogo = Resources.locateLogosDir(context).resolve(logoUUID + "." + extension);
-
-        try (InputStream in = IO.newInputStream(harvestLogo)) {
-            ImageIO.read(in); // check it parses
+        final String logoUUID = UUID.randomUUID().toString();
+        final Resources resources = context.getBean(Resources.class);
+        final Path harvesterDir = resources.locateHarvesterLogosDir(context);
+        try (Resources.ResourceHolder harvestLogo = resources.getImage(context, logoFile, harvesterDir)) {
+            if (harvestLogo != null) {
+                try (InputStream in = IO.newInputStream(harvestLogo.getPath())) {
+                    ImageIO.read(in); // check it parses
+                }
+                String extension = FilenameUtils.getExtension(harvestLogo.getRelativePath());
+                resources.copyFile(harvestLogo.getPath(), resources.locateLogosDir(context), logoUUID + "." + extension);
+            } else {
+                throw new IOException("Cannot find " + logoFile + " in " + harvesterDir);
+            }
         }
-        Files.copy(harvestLogo, newLogo);
         return logoUUID;
     }
 

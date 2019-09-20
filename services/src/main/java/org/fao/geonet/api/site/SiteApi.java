@@ -708,11 +708,14 @@ public class SiteApi {
             defaultValue = "false",
             required = false
         )
-            boolean asFavicon
+            boolean asFavicon,
+        HttpServletRequest request
 
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        Path logoDirectory = Resources.locateHarvesterLogosDirSMVC(appContext);
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final Resources resources = appContext.getBean(Resources.class);
+        final Path logoDirectory = resources.locateHarvesterLogosDirSMVC(appContext);
+        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
         checkFileName(file);
         FilePathChecker.verify(file);
@@ -721,21 +724,25 @@ public class SiteApi {
         GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
         String nodeUuid = settingMan.getSiteId();
 
-        try {
-            Path logoFilePath = logoDirectory.resolve(file);
-            Path nodeLogoDirectory = dataDirectory.getResourcesDir()
-                .resolve("images");
-            if (!Files.exists(logoFilePath)) {
+        try (Resources.ResourceHolder holder = resources.getImage(serviceContext, file, logoDirectory)) {
+            final Path nodeLogoDirectory = dataDirectory.getResourcesDir()
+                    .resolve("images");
+            final Path logoFilePath;
+            if (holder != null) {
+                logoFilePath = holder.getPath();
+            } else {
                 logoFilePath = nodeLogoDirectory.resolve("harvesting").resolve(file);
             }
             try (InputStream inputStream = Files.newInputStream(logoFilePath)) {
                 BufferedImage source = ImageIO.read(inputStream);
 
                 if (asFavicon) {
+                    // TODO: pvi
                     ApiUtils.createFavicon(
                         source,
                         dataDirectory.getResourcesDir().resolve("images").resolve("logos").resolve("favicon.png"));
                 } else {
+                    // TODO: pvi
                     Path logo = nodeLogoDirectory.resolve("logos").resolve(nodeUuid + ".png");
                     Path defaultLogo = nodeLogoDirectory.resolve("images").resolve("logo.png");
 

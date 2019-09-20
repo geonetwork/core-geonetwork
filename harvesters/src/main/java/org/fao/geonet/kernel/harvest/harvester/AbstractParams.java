@@ -54,10 +54,13 @@ import static org.quartz.JobBuilder.newJob;
 /**
  * Params to configure a harvester. It contains things like url, username, password,...
  */
-public abstract class AbstractParams {
+public abstract class AbstractParams implements Cloneable {
     public static final String TRANSLATIONS = "translations";
     private static final long MAX_EVERY = Integer.MAX_VALUE;
 
+    public abstract String getIcon();
+
+    public abstract AbstractParams copy();
 
     public enum OverrideUuid {
         SKIP, OVERRIDE, RANDOM

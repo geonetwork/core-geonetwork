@@ -70,6 +70,11 @@ public class GeoPRESTParams extends AbstractParams {
 
     //---------------------------------------------------------------------------
 
+    @Override
+    public String getIcon() {
+        return icon;
+    }
+
     public GeoPRESTParams(DataManager dm) {
         super(dm);
     }

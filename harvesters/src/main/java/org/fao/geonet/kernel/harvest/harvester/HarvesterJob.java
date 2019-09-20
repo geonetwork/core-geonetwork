@@ -52,7 +52,7 @@ public class HarvesterJob implements Job, InterruptableJob {
 
     public static final String ID_FIELD = "harvesterId";
     String harvesterId;
-    AbstractHarvester<?> harvester;
+    AbstractHarvester<?, ?> harvester;
     private Thread _this = null;
     protected Logger log = Log.createLogger(Geonet.HARVESTER);
 
@@ -84,7 +84,7 @@ public class HarvesterJob implements Job, InterruptableJob {
         ApplicationContextHolder.set(applicationContext);
     }
 
-    public void setHarvester(AbstractHarvester<?> harvester) {
+    public void setHarvester(AbstractHarvester<?, ?> harvester) {
         this.harvester = harvester;
     }
 

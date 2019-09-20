@@ -46,14 +46,6 @@ import java.util.Set;
  */
 public class ResourceLib {
     /**
-     * Get metadata public or private data directory. See {@link #getDir(jeeves.server.context.ServiceContext,
-     * String, int)}.
-     */
-    public Path getDir(ServiceContext context, String access, String id) {
-        return getDir(context, access, Integer.valueOf(id));
-    }
-
-    /**
      * Get metadata public or private data directory
      *
      * @param access The type of data directory. {@link org.fao.geonet.constants.Params.Access#PUBLIC}
@@ -63,13 +55,6 @@ public class ResourceLib {
      */
     public Path getDir(ServiceContext context, String access, int id) {
         Path mdDir = getMetadataDir(context.getBean(GeonetworkDataDirectory.class), id);
-        String subDir = (access != null && access.equals(Params.Access.PUBLIC)) ? Params.Access.PUBLIC
-            : Params.Access.PRIVATE;
-        return mdDir.resolve(subDir);
-    }
-
-    public Path getDir(GeonetworkDataDirectory dataDirectory, String access, int id) {
-        Path mdDir = getMetadataDir(dataDirectory, id);
         String subDir = (access != null && access.equals(Params.Access.PUBLIC)) ? Params.Access.PUBLIC
             : Params.Access.PRIVATE;
         return mdDir.resolve(subDir);
