@@ -420,6 +420,8 @@
     "siteLogo": "Logo",
     "currentStatus": "Ultimo estado",
     "languageSwitcher": "Seleccionador del Idioma",
+    "userSearchNameMissing": "- name missing -",
+    "featuredsearch": "Featured search",
     "avatar": "Avatar",
     "first": "Primero",
     "createDoiForRecord": "Crear DOI para el registro",

@@ -420,6 +420,8 @@
     "siteLogo": "로고",
     "currentStatus": "마지막 상태",
     "languageSwitcher": "언어 전환",
+    "userSearchNameMissing": "- name missing -",
+    "featuredsearch": "Featured search",
     "avatar": "아바타",
     "first": "우선",
     "createDoiForRecord": "레코드용 DOI 생성",
