@@ -23,6 +23,7 @@
   <xsl:template mode="getMetadataAbstract" match="*"/>
   <xsl:template mode="getMetadataHierarchyLevel" match="*"/>
   <xsl:template mode="getOverviews" match="*"/>
+  <xsl:template mode="getLicense" match="*"/>
   <xsl:template mode="getTags" match="*"/>
   <xsl:template mode="getMetadataThumbnail" match="*"/>
   <xsl:template mode="getMetadataHeader" match="*"/>
@@ -174,6 +175,9 @@
                      ng-show="downloads.length > 0 || links.length > 0 ||layers.length > 0">
               <h3 translate="">accessData</h3>
               <sxt-links-btn>&#160;</sxt-links-btn>
+
+              <br/>
+              <xsl:apply-templates mode="getLicense" select="$metadata"/>
             </section>
 
             <br/>

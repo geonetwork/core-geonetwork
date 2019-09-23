@@ -40,6 +40,14 @@
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
+
+  <xsl:template mode="getLicense" match="gmd:MD_Metadata[$view = 'sextant']">
+    <xsl:apply-templates mode="render-value"
+                         select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:useLimitation/gmx:Anchor"/>
+  </xsl:template>
+
+
+
   <xsl:template name="sextant-summary-view">
     <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords/*[gmd:thesaurusName/*/gmd:identifier/*/gmd:code/* = 'geonetwork.thesaurus.local.theme.sextant-theme']/gmd:keyword">
       <xsl:variable name="path">
@@ -169,8 +177,15 @@
       <tr>
         <td><xsl:value-of select="$schemaStrings/sxt-view-constraints"/></td>
         <td>
+
+          <xsl:apply-templates mode="render-field"
+                               select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:useLimitation"/>
+
           <xsl:apply-templates mode="render-field"
                                select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/*[*/@codeListValue != 'otherRestrictions']"/>
+
+          <xsl:apply-templates mode="render-field"
+                               select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:otherConstraints"/>
         </td>
       </tr>
     </table>
