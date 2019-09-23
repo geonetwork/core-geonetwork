@@ -918,6 +918,10 @@ div.gn-individualName {
   .gn-MD_TopicCategoryCode .col-sm-1.gn-control {
     display: none;
   }
+  /* Hide add keyword from the keyword directive */
+  [data-gn-thesaurus-selector] > div.btn-group > button.btn-default {
+    display: none;
+  }
   /* Add mandatory flag to spatial representation type */
   .gn-spatialRepresentationType label:after,
   .gn-MD_TopicCategoryCode label:after {
