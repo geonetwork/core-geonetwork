@@ -1031,12 +1031,13 @@
 
   <!-- ... Codelists -->
   <xsl:template mode="render-value"
-                match="@codeListValue">
+                match="@codeListValue|@indeterminatePosition">
     <xsl:variable name="id" select="."/>
     <xsl:variable name="codelistTranslation"
                   select="tr:codelist-value-label(
                             tr:create($schema),
-                            parent::node()/local-name(), $id)"/>
+                            if (name() = 'indeterminatePosition') then 'indeterminatePosition' else parent::node()/local-name(),
+                            $id)"/>
     <xsl:choose>
       <xsl:when test="$codelistTranslation != ''">
 
@@ -1053,6 +1054,7 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
 
   <!-- Enumeration -->
   <xsl:template mode="render-value"

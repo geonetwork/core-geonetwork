@@ -58,10 +58,47 @@
       <tr>
         <td><xsl:value-of select="$schemaStrings/sxt-view-date"/></td>
         <td>
+
           <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*">
+            <xsl:apply-templates mode="render-value" select="gmd:dateType/*/@codeListValue"/>
             <xsl:apply-templates mode="render-value" select="gmd:date"/>
-            - <xsl:apply-templates mode="render-value" select="gmd:dateType/*/@codeListValue"/><br/>
+            <br/>
           </xsl:for-each>
+
+
+          <xsl:variable name="temporalCoverageContent">
+            <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/*">
+              <xsl:variable name="indeterminatePositionLabel">
+                <xsl:apply-templates mode="render-value"
+                                     select="gml:beginPosition/@indeterminatePosition"/>
+              </xsl:variable>
+
+              <xsl:if test="gml:beginPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
+                  <xsl:value-of select="concat ((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ', gml:beginPosition, ' > ')"/>
+              </xsl:if>
+
+              <xsl:variable name="indeterminatePositionLabel">
+                <xsl:apply-templates mode="render-value"
+                                     select="gml:endPosition/@indeterminatePosition"/>
+              </xsl:variable>
+              <xsl:if test="gml:endPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
+                <xsl:value-of select="concat ((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-to)[1], ' ', gml:endPosition)"/>
+              </xsl:if>
+
+              <xsl:if test="gml:timePosition != ''">
+                <xsl:value-of select="concat ($schemaStrings/sxt-view-temporal-at, ' ', gml:timePosition)"/>
+              </xsl:if>
+              <br/>
+            </xsl:for-each>
+          </xsl:variable>
+
+          <xsl:if test="$temporalCoverageContent != ''">
+            <br/>
+            <strong><xsl:value-of select="$schemaStrings/sxt-view-temporal"/></strong>
+            <xsl:copy-of select="$temporalCoverageContent"/>
+          </xsl:if>
+
+
         </td>
       </tr>
       <xsl:variable name="authors"

@@ -547,4 +547,8 @@
   <sxt-view-scale>Échelle</sxt-view-scale>
   <sxt-view-resolution>Résolution</sxt-view-resolution>
   <sxt-view-description>Description</sxt-view-description>
+  <sxt-view-temporal-from>De</sxt-view-temporal-from>
+  <sxt-view-temporal-to>à</sxt-view-temporal-to>
+  <sxt-view-temporal-at>Le</sxt-view-temporal-at>
+  <sxt-view-temporal>Couverture temporelle</sxt-view-temporal>
 </strings>
