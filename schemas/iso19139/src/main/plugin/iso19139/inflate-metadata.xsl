@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                   xmlns:gco="http://www.isotc211.org/2005/gco"
@@ -7,7 +8,7 @@
   <xsl:output method="xml" indent="yes"/>
 
   <xsl:template match="/root">
-    <xsl:apply-templates select="gmd:MD_Metadata"/>
+    <xsl:apply-templates select="gmd:*"/>
   </xsl:template>
 
   <!-- Add gco:Boolean to gmd:pass with nilReason to work nicely in the editor,
