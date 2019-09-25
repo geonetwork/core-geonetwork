@@ -84,7 +84,13 @@
     <for name="gmd:organisationName" use="data-gn-anchor-switcher"/>
     -->
 
+    <!-- Example of data-gn-field-upload-div directive:
+         data-allow-modify-xlink="true": allows to modify the xlink href (defaults to false)
 
+      -->
+    <!--<for name="gmd:supplementalInformation" use="data-gn-field-upload-div">
+      <directiveAttributes data-allow-modify-xlink="true" data-link-href="eval#gmx:Anchor/@xlink:href" />
+    </for>-->
 
     <for name="gts:TM_PeriodDuration" use="data-gn-field-duration-div"/>
     <for name="gml:duration" use="data-gn-field-duration-div"/>
@@ -3141,7 +3147,7 @@
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
-        
+
         <directive data-gn-suggestion-list=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
