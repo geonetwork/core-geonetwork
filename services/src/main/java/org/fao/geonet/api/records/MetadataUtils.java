@@ -67,6 +67,8 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -82,6 +84,7 @@ import jeeves.server.context.ServiceContext;
 public class MetadataUtils {
     public static final boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.SEARCH_ENGINE);
 
     public static Element getRelated(ServiceContext context, int iId, String uuid,
                                      RelatedItemType[] type,
@@ -203,7 +206,11 @@ public class MetadataUtils {
                         Element metadata = new Element("metadata");
                         Element response = new Element("response");
                         Element current = getRecord(fcat_uuid, context, dm);
-                        metadata.addContent(current);
+                        if (current != null) {
+                            metadata.addContent(current);
+                        } else {
+                            LOGGER.error("Feature catalogue with UUID {} referenced in {} was not found.", fcat_uuid, uuid);
+                        }
                         response.addContent(metadata);
                         fcat.addContent(response);
                     }
