@@ -28,6 +28,7 @@ import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -72,6 +74,7 @@ import org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
 
 import jeeves.server.context.ServiceContext;
@@ -87,11 +90,7 @@ public class Aligner extends BaseAligner<CswParams> {
     private IMetadataUtils metadataUtils;
     private IMetadataManager metadataManager;
     private IMetadataIndexer metadataIndexer;
-    //--------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //--------------------------------------------------------------------------
+
     private HarvestResult result;
     private GetRecordByIdRequest request;
     private String processName;
@@ -113,6 +112,7 @@ public class Aligner extends BaseAligner<CswParams> {
         result.unretrievable = 0;
         result.uuidSkipped = 0;
         result.couldNotInsert = 0;
+        result.xpathFilterExcluded = 0;
 
         //--- setup get-record-by-id request
 
@@ -183,11 +183,11 @@ public class Aligner extends BaseAligner<CswParams> {
 
 	private void insertOrUpdate(Collection<RecordInfo> records, Collection<HarvestError> errors) {
         for (RecordInfo ri : records) {
-            
+
             if (cancelMonitor.get()) {
                 return;
             }
-            
+
             try {
 
                 String id = metadataUtils.getMetadataId(ri.uuid);
@@ -221,9 +221,9 @@ public class Aligner extends BaseAligner<CswParams> {
                     updateMetadata(ri, id, false);
 
                 }
-                
+
                 context.getBean(LuceneIndexLanguageTracker.class).commit();
-                
+
                 result.totalMetadata++;
             } catch (Throwable t) {
                 errors.add(new HarvestError(this.context, t));
@@ -238,13 +238,13 @@ public class Aligner extends BaseAligner<CswParams> {
 
     /**
      * Remove records no longer on the remote CSW server
-     * 
+     *
      * @param records
      * @throws Exception
      */
 	@Transactional(value=TxType.REQUIRES_NEW)
 	public HarvestResult cleanupRemovedRecords(Set<String> records) throws Exception {
-		
+
         if (cancelMonitor.get()) {
             return result;
         }
@@ -258,7 +258,7 @@ public class Aligner extends BaseAligner<CswParams> {
             }
         }
         dataMan.forceIndexChanges();
-        
+
         return result;
 	}
 
@@ -276,12 +276,19 @@ public class Aligner extends BaseAligner<CswParams> {
         }
 
         String schema = dataMan.autodetectSchema(md, null);
-
         if (schema == null) {
             log.debug("  - Metadata skipped due to unknown schema. uuid:" + ri.uuid);
             result.unknownSchema++;
-
             return;
+        }
+
+        if (StringUtils.isNotEmpty(params.xpathFilter)) {
+            Object xpathResult = Xml.selectSingle(md, params.xpathFilter, new ArrayList<Namespace>(dataMan.getSchema(schema).getNamespaces()));
+            boolean match = xpathResult instanceof Boolean && ((Boolean) xpathResult).booleanValue();
+            if(!match) {
+                result.xpathFilterExcluded ++;
+                return;
+            }
         }
 
         log.debug("  - Adding metadata with remote uuid:" + ri.uuid + " schema:" + schema);
@@ -295,7 +302,7 @@ public class Aligner extends BaseAligner<CswParams> {
                 mdUuid = ri.uuid;
             }
         }
-        
+
         //
         // insert metadata
         //
@@ -362,7 +369,7 @@ public class Aligner extends BaseAligner<CswParams> {
 		    result.unchangedMetadata++;
 		    return false;
 		}
-		
+
 		if (!params.xslfilter.equals("")) {
 		    md = processMetadata(context, md, processName, processParams);
 		}
@@ -376,7 +383,7 @@ public class Aligner extends BaseAligner<CswParams> {
 		String language = context.getLanguage();
 
 		final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, true);
-		
+
 		if(force) {
 		    //change ownership of metadata to new harvester
 		    metadata.getHarvestInfo().setUuid(params.getUuid());
@@ -392,10 +399,10 @@ public class Aligner extends BaseAligner<CswParams> {
 
 		metadata.getCategories().clear();
 		addCategories(metadata, params.getCategories(), localCateg, context, null, true);
-		
+
 		return true;
 	}
-    
+
     /**
      * Does CSW GetRecordById request. If validation is requested and the metadata does not
      * validate, null is returned.

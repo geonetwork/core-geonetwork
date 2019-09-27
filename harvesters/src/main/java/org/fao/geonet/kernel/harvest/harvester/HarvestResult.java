@@ -31,6 +31,7 @@ public class HarvestResult {
     public int couldNotInsert;
     public int datasetUuidExist;    // = uuid already in catalogue
     public int doesNotValidate;            // = 0 cos' not validated
+    public int xpathFilterExcluded;
     public int duplicatedResource;
     public int fragmentsMatched;    // = fragments matched in md templates
     public int fragmentsReturned;    // = fragments generated
