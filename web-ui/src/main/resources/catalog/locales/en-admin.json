@@ -312,6 +312,8 @@
     "csw-dublinCore": "Dublin Core",
     "csw-iso19139": "ISO 19139",
     "csw-recommendedValues": "Recommended values",
+    "xpathFilter": "XPath filter",
+    "xpathFilter-help": "When record is retrived from remote server, check an XPath expression to accept or not the record. The XPath must use namespaces of the schema of the record (eg. gmd, gco, srv for ISO19139) and must return a boolean value. For example, to filter record with status = completed 'count(.//gmd:status/*[@codeListValue = 'completed']) > 0'.",
     "currentCatalogLogo": "Current catalog logo",
     "customConfiguration": "Custom ...",
     "customizeElementSet": "Customize element set",
