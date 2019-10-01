@@ -36,37 +36,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-//=============================================================================
-
 public class GeonetParams extends AbstractParams {
-    //--------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //--------------------------------------------------------------------------
-
     public String host;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Create : called when a new entry must be added. Reads values from the
-    //---          provided entry, providing default values
-    //---
-    //---------------------------------------------------------------------------
     public boolean createRemoteCategory;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Update : called when an entry has changed and variables must be updated
-    //---
-    //---------------------------------------------------------------------------
     public boolean mefFormatFull;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Other API methods
-    //---
-    //---------------------------------------------------------------------------
     /**
      * The filter is a process (see schema/process folder) which depends on the schema. It could be
      * composed of parameter which will be sent to XSL transformation using the following syntax :
@@ -75,26 +51,18 @@ public class GeonetParams extends AbstractParams {
      * </pre>
      */
     public String xslfilter;
+
     private String node;
+
     private Boolean useChangeDateForUpdate;
 
-    //---------------------------------------------------------------------------
     private ArrayList<Search> alSearches = new ArrayList<Search>();
 
-    //---------------------------------------------------------------------------
     private ArrayList<Group> alCopyPolicy = new ArrayList<Group>();
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //---------------------------------------------------------------------------
 
     public GeonetParams(DataManager dm) {
         super(dm);
     }
-
-    //---------------------------------------------------------------------------
 
     public void create(Element node) throws BadInputEx {
         super.create(node);
@@ -116,12 +84,6 @@ public class GeonetParams extends AbstractParams {
         addSearches(searches);
         addCopyPolicy(policy);
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
 
     public void update(Element node) throws BadInputEx {
         super.update(node);
@@ -245,7 +207,3 @@ public class GeonetParams extends AbstractParams {
         this.useChangeDateForUpdate = useChangeDateForUpdate;
     }
 }
-
-//=============================================================================
-
-
