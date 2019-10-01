@@ -363,6 +363,8 @@
     "exportLogAsZIP": "Export (ZIP)",
     "facetIndicatorHelp": "Statistics by records are defined based on facets configuration and may represent only the most frequent values.",
     "fees": "Fees",
+    "ifRecordExistAppendPrivileges": "If record exist (eg. already harvested from another source), append privileges defined below.",
+    "ifRecordExistAppendPrivilegesHelp": "Only applies on update and if action on UUID collision is set to overwrite record. If enabled, privileges are not removed on update. So if you want to reset privileges, you need to remove those records first and trigger the harvester again.",
     "filesystem-beforeScript": "Script to run before harvesting",
     "filesystem-beforeScriptHelp": "Can be used to do a rsync or something similar. Runs nothing if empty.",
     "filesystem-checkFileLastModifiedForUpdate": "Update catalog record only if file was updated",

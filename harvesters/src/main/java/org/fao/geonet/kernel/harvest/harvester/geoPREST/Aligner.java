@@ -36,7 +36,6 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -193,7 +192,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         dataMan.indexMetadata(id, Math.random() < 0.01, null);
         result.addedMetadata++;
@@ -234,7 +233,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
                 repository.deleteAllByMetadataId(Integer.parseInt(id));
-                addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+                addPrivileges(id, params.getPrivileges(), localGroups, context);
 
                 metadata.getCategories().clear();
                 addCategories(metadata, params.getCategories(), localCateg, context, null, true);

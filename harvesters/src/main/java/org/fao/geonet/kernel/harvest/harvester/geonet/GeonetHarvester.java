@@ -38,35 +38,16 @@ import org.jdom.Element;
 import java.sql.SQLException;
 import java.util.UUID;
 
-//=============================================================================
-
 public class GeonetHarvester extends AbstractHarvester<HarvestResult> {
     public static final String TYPE = "geonetwork";
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
     private GeonetParams params;
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Add
-    //---
-    //---------------------------------------------------------------------------
 
     protected void doInit(Element node, ServiceContext context) throws BadInputEx {
         params = new GeonetParams(dataMan);
         super.setParams(params);
         params.create(node);
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Update
-    //---
-    //---------------------------------------------------------------------------
 
     protected String doAdd(Element node) throws BadInputEx, SQLException {
         params = new GeonetParams(dataMan);
@@ -86,8 +67,6 @@ public class GeonetHarvester extends AbstractHarvester<HarvestResult> {
 
         return id;
     }
-
-    //---------------------------------------------------------------------------
 
     protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
         GeonetParams copy = params.copy();
@@ -113,12 +92,6 @@ public class GeonetHarvester extends AbstractHarvester<HarvestResult> {
         super.setParams(params);
 
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- addHarvestInfo
-    //---
-    //---------------------------------------------------------------------------
 
     protected void storeNodeExtra(AbstractParams p, String path,
                                   String siteId, String optionsId) throws SQLException {
@@ -159,12 +132,6 @@ public class GeonetHarvester extends AbstractHarvester<HarvestResult> {
         }
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Harvest
-    //---
-    //---------------------------------------------------------------------------
-
     public void addHarvestInfo(Element info, String id, String uuid) {
         super.addHarvestInfo(info, id, uuid);
 
@@ -177,12 +144,6 @@ public class GeonetHarvester extends AbstractHarvester<HarvestResult> {
         info.addContent(new Element("smallThumbnail").setText(small));
         info.addContent(new Element("largeThumbnail").setText(large));
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
 
     public void doHarvest(Logger log) throws Exception {
         Harvester h = new Harvester(cancelMonitor, log, context, params);

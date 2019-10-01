@@ -31,6 +31,7 @@ var gnHarvesterwebdav = {
                 "overrideUuid" : "SKIP",
                 "subtype" : "waf"
             },
+            "ifRecordExistAppendPrivileges": false,
             "privileges" : [ {
                 "@id" : "1",
                 "operation" : [ {
@@ -50,7 +51,7 @@ var gnHarvesterwebdav = {
         var body = '<node id="' + h['@id'] + '" '
                 + '    type="' + h['@type'] + '">'
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
-                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>' 
+                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>'
                 + '  <site>'
                 + '    <name>' + h.site.name + '</name>'
                 + '    <url>' + h.site.url.replace(/&/g, '&amp;') + '</url>'

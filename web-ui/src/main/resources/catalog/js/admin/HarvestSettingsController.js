@@ -234,7 +234,8 @@
           groups +=
               '<group id="' + p['@id'] + '">' + ops + '</group>';
         });
-        return '<privileges>' + groups + '</privileges>';
+        return '<privileges>' + groups + '</privileges>' +
+          '<ifRecordExistAppendPrivileges>' + h.ifRecordExistAppendPrivileges + '</ifRecordExistAppendPrivileges>';
       };
       $scope.buildResponseCategory = function(h) {
         var cats = '';
