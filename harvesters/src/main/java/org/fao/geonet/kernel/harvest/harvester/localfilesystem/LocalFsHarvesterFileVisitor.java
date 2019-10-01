@@ -295,7 +295,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                        metadata.getSourceInfo().setOwner(aligner.getOwner());
                     }
                 });
-                aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+                aligner.addPrivileges(id, params.getPrivileges(), localGroups, context);
                 listOfRecordsToIndex.add(Integer.valueOf(id));
                 listOfRecords.add(Integer.valueOf(id));
                 result.addedMetadata++;

@@ -30,6 +30,7 @@ public class HarvestResult {
     public int collectionDatasetRecords;    // = md for collection datasets
     public int couldNotInsert;
     public int datasetUuidExist;    // = uuid already in catalogue
+    public int privilegesAppendedOnExistingRecord;
     public int doesNotValidate;            // = 0 cos' not validated
     public int xpathFilterExcluded;
     public int duplicatedResource;

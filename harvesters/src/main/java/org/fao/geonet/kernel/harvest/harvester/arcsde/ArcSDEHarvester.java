@@ -33,7 +33,6 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.exceptions.BadInputEx;
@@ -379,7 +378,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
         operationAllowedRepository.deleteAllByMetadataId(Integer.parseInt(id));
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         metadata.getCategories().clear();
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, true);
@@ -434,7 +433,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         String id = String.valueOf(metadata.getId());
 
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         dataMan.indexMetadata(id, true, null);
 
