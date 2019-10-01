@@ -115,19 +115,12 @@ public class SourcesApi {
     @ResponseBody
     public void getSubPortal(
         @ApiIgnore
-            HttpServletRequest request,
-        @ApiIgnore
-            HttpServletResponse response,
-        @ApiIgnore
-        @RequestHeader(
-            value = "Accept",
-            defaultValue = MediaType.APPLICATION_JSON_VALUE
-        )
-            String accept
+            HttpServletResponse response
     ) throws Exception {
         final List<Source> sources = sourceRepository.findAll(SortUtils.createSort(Source_.name));
         Element sourcesList = new Element("sources");
         sources.stream().map(GeonetEntity::asXml).forEach(sourcesList::addContent);
+        response.setContentType(MediaType.TEXT_HTML_VALUE);
         response.getWriter().write(
             new XsltResponseWriter()
                 .withJson("catalog/locales/en-core.json")
