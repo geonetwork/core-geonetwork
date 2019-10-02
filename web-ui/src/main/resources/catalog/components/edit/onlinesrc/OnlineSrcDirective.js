@@ -357,7 +357,21 @@
                     scope.map.removeLayer(layer);
                   });
 
-                  scope.map.addLayer(gnMap.getLayersFromConfig());
+                  var conf = gnMap.getMapConfig();
+
+                  if (conf.useOSM) {
+                    scope.map.addLayer(new ol.layer.Tile({source:  new ol.source.OSM()}));
+                  }
+                  else {
+                    conf['map-editor'].layers.forEach(function(layerInfo) {
+                        gnMap.createLayerFromProperties(layerInfo, scope.map)
+                            .then(function(layer) {
+                              if (layer) {
+                                scope.map.addLayer(layer);
+                              }
+                            });
+                      });
+                  }
 
                   // Add each WMS layer to the map
                   scope.layers = scope.gnCurrentEdit.layerConfig;
