@@ -52,7 +52,7 @@
           <span data-translate="">defineCatalogLogo</span>
         </div>
         <div class="row panel-body">
-          <div class="col-lg-3" data-ng-repeat="l in logos">
+          <div class="col-lg-3" data-ng-repeat="l in logos | orderBy:l">
             <div class="panel panel-default">
               <div class="panel-heading">{{l.split(".").slice(0, -1).join(".")}}</div>
               <div class="panel-body text-center">
