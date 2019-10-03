@@ -120,6 +120,7 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
         harvesterSettingsManager.add("id:" + siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
         harvesterSettingsManager.add("id:" + siteId, "queryScope", params.queryScope);
         harvesterSettingsManager.add("id:" + siteId, "hopCount", params.hopCount);
+        harvesterSettingsManager.add("id:" + siteId, "xpathFilter", params.xpathFilter);
         harvesterSettingsManager.add("id:" + siteId, "xslfilter", params.xslfilter);
         harvesterSettingsManager.add("id:" + siteId, "outputSchema", params.outputSchema);
 
