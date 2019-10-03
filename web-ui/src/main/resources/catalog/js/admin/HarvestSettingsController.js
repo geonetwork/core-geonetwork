@@ -610,11 +610,24 @@
                       $(this).find('ows\\:Value').each(parseCriteriaFn);
                     }
                   };
-                  // For Chrome and IE
+                  $scope.cswBboxFilter = false;
+                  var bboxProperties = ['bbox-xmin', 'bbox-ymin', 'bbox-xmax', 'bbox-ymax']
+                  var checkSpatialCapabilities = function() {
+                    if ($(this).attr("name") === 'BBOX') {
+                      $scope.cswBboxFilter = true;
+                      for (var i = 0; i < bboxProperties.length; i ++) {
+                      if (!$scope.harvesterSelected.searches[0][bboxProperties[i]])
+                        $scope.harvesterSelected.searches[0][bboxProperties[i]] = {value: ''};
+                      }
+                    }
+                  };
+                  // For IE
                   $xml.find('Constraint').each(parseQueryablesFn);
-                  // For FF, namespace parsing is different
+                  $xml.find('SpatialOperator').each(checkSpatialCapabilities);
+                  // For Chrome & FF, namespace parsing is different
                   if ($scope.cswCriteria.length === 0) {
                     $xml.find('ows\\:Constraint').each(parseQueryablesFn);
+                    $xml.find('ogc\\:SpatialOperator').each(checkSpatialCapabilities);
                   }
 
                   $scope.cswCriteria.sort();

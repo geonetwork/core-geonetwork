@@ -54,6 +54,29 @@
                  data-ng-model="harvesterSelected.searches[0][c].value"/>
         </div>
       </div>
+
+      <div class="form-group"
+           data-ng-show="cswBboxFilter">
+        <label class="control-label col-lg-4" data-translate="">bbox</label>
+        <div class="col-lg-8">
+          xmin: <input type="number"
+                       data-gn-string-to-number
+                       class="form-control gn-csw-criteria" id="csw-bbox-xmin"
+                 data-ng-model="harvesterSelected.searches[0]['bbox-xmin'].value"/>
+          ymin: <input type="number"
+                       data-gn-string-to-number
+                       class="form-control gn-csw-criteria" id="csw-bbox-ymin"
+                 data-ng-model="harvesterSelected.searches[0]['bbox-ymin'].value"/>
+          xmax: <input type="number"
+                       data-gn-string-to-number
+                       class="form-control gn-csw-criteria" id="csw-bbox-xmax"
+                 data-ng-model="harvesterSelected.searches[0]['bbox-xmax'].value"/>
+          ymax: <input type="number"
+                       data-gn-string-to-number
+                       class="form-control gn-csw-criteria" id="csw-bbox-ymax"
+                 data-ng-model="harvesterSelected.searches[0]['bbox-ymax'].value"/>
+        </div>
+      </div>
     </fieldset>
 
   </fieldset>
