@@ -420,6 +420,8 @@
     "siteLogo": "logo",
     "currentStatus": "Laatste status",
     "languageSwitcher": "Taal wijzigen",
+    "userSearchNameMissing": "- name missing -",
+    "featuredsearch": "Featured search",
     "avatar": "Avatar",
     "first": "Eerste",
     "createDoiForRecord": "Aanmaken DOI voor record",

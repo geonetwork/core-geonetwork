@@ -420,6 +420,8 @@
     "siteLogo": "Logo",
     "currentStatus": "Síðasta staða",
     "languageSwitcher": "Skiptir um tungumál",
+    "userSearchNameMissing": "- name missing -",
+    "featuredsearch": "Featured search",
     "avatar": "Avatar",
     "first": "Fyrst",
     "createDoiForRecord": "Búa til DOI fyrir færslu",

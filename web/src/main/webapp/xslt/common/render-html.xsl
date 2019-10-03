@@ -25,6 +25,8 @@
                 version="2.0"
                 exclude-result-prefixes="#all">
 
+  <xsl:param name="cssClass" select="''"/>
+
   <xsl:include href="../base-layout-cssjs-loader.xsl"/>
   <xsl:include href="../skin/default/skin.xsl"/>
 
@@ -86,7 +88,7 @@
 
       </head>
 
-      <body class="gn-nojs">
+      <body class="gn-nojs {$cssClass}">
         <div class="gn gn-full">
           <xsl:if test="$header">
             <xsl:call-template name="header"/>

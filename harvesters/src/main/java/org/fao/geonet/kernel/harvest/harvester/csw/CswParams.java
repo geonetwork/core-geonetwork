@@ -36,32 +36,21 @@ import java.util.List;
  *
  */
 public class CswParams extends AbstractParams {
-    //--------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //--------------------------------------------------------------------------
 
     public String capabUrl;
+
     public String icon;
+
     public String outputSchema;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Other API methods
-    //---
-    //---------------------------------------------------------------------------
-
-    //public Iterable<Element> getSearchElements() { return eltSearches; }
     public boolean rejectDuplicateResource;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
     public String queryScope;
+
+    public String xpathFilter;
+
     public Integer hopCount;
+
     /**
      * The filter is a process (see schema/process folder) which depends on the schema. It could be
      * composed of parameter which will be sent to XSL transformation using the following syntax :
@@ -90,6 +79,7 @@ public class CswParams extends AbstractParams {
         queryScope = Util.getParam(site, "queryScope", "local");
         hopCount = Util.getParam(site, "hopCount", 2);
         xslfilter = Util.getParam(site, "xslfilter", "");
+        xpathFilter = Util.getParam(site, "xpathFilter", "");
         outputSchema = Util.getParam(site, "outputSchema", outputSchema);
         icon = Util.getParam(site, "icon", "default.gif");
 
@@ -119,6 +109,7 @@ public class CswParams extends AbstractParams {
         rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource", rejectDuplicateResource);
         queryScope = Util.getParam(site, "queryScope", queryScope);
         hopCount = Util.getParam(site, "hopCount", hopCount);
+        xpathFilter = Util.getParam(site, "xpathFilter", "");
         xslfilter = Util.getParam(site, "xslfilter", "");
         outputSchema = Util.getParam(site, "outputSchema", outputSchema);
 
@@ -150,6 +141,7 @@ public class CswParams extends AbstractParams {
         copy.rejectDuplicateResource = rejectDuplicateResource;
         copy.queryScope = queryScope;
         copy.hopCount = hopCount;
+        copy.xpathFilter = xpathFilter;
         copy.xslfilter = xslfilter;
         copy.outputSchema = outputSchema;
 

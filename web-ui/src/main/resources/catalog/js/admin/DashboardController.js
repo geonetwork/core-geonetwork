@@ -60,11 +60,6 @@
         icon: 'fa-link',
         href: '#/dashboard/record-links'
       },{
-        type: 'wfs-indexing',
-        label: 'wfs-indexing',
-        icon: 'fa-globe',
-        href: '#/dashboard/wfs-indexing'
-      },{
         type: 'information',
         label: 'information',
         icon: 'fa-list-ul',
@@ -101,6 +96,14 @@
 
       if ($scope.healthCheck.DashboardAppHealthCheck === true) {
         tabs = tabs.concat(dashboards);
+      }
+      if ($scope.healthCheck.IndexHealthCheck === true) {
+        tabs = tabs.concat({
+          type: 'wfs-indexing',
+          label: 'wfs-indexing',
+          icon: 'fa-globe',
+          href: '#/dashboard/wfs-indexing'
+        });
       }
       $scope.pageMenu = {
         folder: 'dashboard/',

@@ -252,7 +252,6 @@ public class XslProcessApi {
         value = "/{process}",
         method = RequestMethod.POST,
         produces = {
-            MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE
         })
     @ResponseBody

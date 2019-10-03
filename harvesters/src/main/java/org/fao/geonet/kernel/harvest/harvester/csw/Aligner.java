@@ -28,6 +28,7 @@ import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -72,6 +74,7 @@ import org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
 
 import jeeves.server.context.ServiceContext;
@@ -87,11 +90,7 @@ public class Aligner extends BaseAligner<CswParams> {
     private IMetadataUtils metadataUtils;
     private IMetadataManager metadataManager;
     private IMetadataIndexer metadataIndexer;
-    //--------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //--------------------------------------------------------------------------
+
     private HarvestResult result;
     private GetRecordByIdRequest request;
     private String processName;
@@ -113,6 +112,7 @@ public class Aligner extends BaseAligner<CswParams> {
         result.unretrievable = 0;
         result.uuidSkipped = 0;
         result.couldNotInsert = 0;
+        result.xpathFilterExcluded = 0;
 
         //--- setup get-record-by-id request
 
@@ -276,12 +276,19 @@ public class Aligner extends BaseAligner<CswParams> {
         }
 
         String schema = dataMan.autodetectSchema(md, null);
-
         if (schema == null) {
             log.debug("  - Metadata skipped due to unknown schema. uuid:" + ri.uuid);
             result.unknownSchema++;
-
             return;
+        }
+
+        if (StringUtils.isNotEmpty(params.xpathFilter)) {
+            Object xpathResult = Xml.selectSingle(md, params.xpathFilter, new ArrayList<Namespace>(dataMan.getSchema(schema).getNamespaces()));
+            boolean match = xpathResult instanceof Boolean && ((Boolean) xpathResult).booleanValue();
+            if(!match) {
+                result.xpathFilterExcluded ++;
+                return;
+            }
         }
 
         log.debug("  - Adding metadata with remote uuid:" + ri.uuid + " schema:" + schema);

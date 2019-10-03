@@ -1,18 +1,10 @@
 // GN Styles
 @import "../lib/style/font-awesome/less/font-awesome.less";
-@import "gn_bootstrap.less";
-
+@import "../lib/style/bootstrap/less/variables.less";
 @import (less) "../lib/ol.css";
 @import (less) "../lib/angular.ext/hotkeys/hotkeys.min.css";
-@import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
-// import the css files as less files so they are included in the final output of wro4j
-@import "../lib/bootstrap.ext/datepicker/datepicker.less";
-@import (less) "../lib/style/datetimepicker.css";
 @import "gn_doc.less";
-@import "gn_icons.less";
-
 @import "ellipsis.less";
-@import "timeline.less";
 
 @fa-version: '4.3.0';
 @fa-font-path: '../catalog/lib/style/font-awesome/fonts';
@@ -26,6 +18,26 @@ div[gn-transfer-ownership] * .list-group {
 .gn-pager {
   .pagination {
     margin: 0;
+  }
+}
+
+.gn-portal {
+  .navbar {
+    display: none;
+  }
+  .container {
+    background: rgba(255, 255, 255, 0.7) !important;
+    margin-top: 20px;
+  }
+  .gn-portal-main-logo {
+    min-width: 150px;
+    min-height: 150px;
+  }
+  a {
+    color: rgb(85, 85, 85);
+  }
+  a:hover {
+    text-decoration: none;
   }
 }
 

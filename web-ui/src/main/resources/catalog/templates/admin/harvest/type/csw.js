@@ -18,6 +18,7 @@ var gnHarvestercsw = {
           "password" : []
         },
         "capabilitiesUrl" : "http://",
+        "xpathFilter" : "",
         "rejectDuplicateResource" : false,
         "xslfilter": [],
         "outputSchema": "",
@@ -71,7 +72,7 @@ var gnHarvestercsw = {
     var body = '<node id="' + h['@id'] + '" '
       + '    type="' + h['@type'] + '">'
       + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
-      + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>' 
+      + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>'
       + '  <site>'
       + '    <name>' + h.site.name + '</name>'
       + '    <rejectDuplicateResource>' + h.site.rejectDuplicateResource + '</rejectDuplicateResource>'
@@ -82,6 +83,7 @@ var gnHarvestercsw = {
       + '      <username>' + h.site.account.username + '</username>'
       + '      <password>' + h.site.account.password + '</password>'
       + '    </account>'
+      + '    <xpathFilter>' + h.site.xpathFilter + '</xpathFilter>'
       + '    <xslfilter>' + h.site.xslfilter + '</xslfilter>'
       + '    <outputSchema>' + h.site.outputSchema + '</outputSchema>'
       + '    <queryScope>' + h.site.queryScope + '</queryScope>'
