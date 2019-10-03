@@ -1,7 +1,7 @@
 <div class="row" data-ng-controller="GnAdminController">
 
     <div class="sidebar">
-  
+
       <div class="sidebar-col-main sidebar-col-full">
         <ul data-ng-if="user.isUserAdmin()" class="nav nav-sidebar" role="menu">
             <li>
@@ -89,8 +89,12 @@
 
 
         <div class="col-md-4 col-sm-8"
-             data-ng-show="searchInfo.count == 0"
+             data-ng-show="isDefaultNode && searchInfo.count == 0"
              data-translate=""> emptyCatalogShouldBeFilled
+        </div>
+        <div class="col-md-4 col-sm-8"
+             data-ng-show="!isDefaultNode && searchInfo.count == 0"
+             data-translate="" data-translate-values="{portal: nodeId}"> emptyPortal
         </div>
       </div>
       <!-- /.gn-row-admin-stats -->

@@ -11,9 +11,18 @@
                    placeholder="{{'filter' | translate}}"/>
             <a class="list-group-item"
                data-ng-class="s.uuid === source.uuid ? 'active' : ''"
+               title="{{::('source-' + s.type) | translate}}"
                data-ng-click="selectSource(s)"
                data-ng-repeat="s in sources | filter:sourcesSearch | orderBy:'name'">
-              {{s.name}} ({{('source-' + s.type) | translate}})
+              <i class="fa fa-fw"
+                 data-ng-class="{'fa-home': s.type === 'portal',
+                 'fa-folder': s.type === 'subportal',
+                 'fa-cloud': s.type === 'externalportal',
+                 'fa-cloud-download': s.type === 'harvester'}"></i>
+              {{::s.name}}
+              <img class="img-circle gn-source-logo"
+                   data-ng-src="{{'../../images/' + (s.type === 'subportal' ? 'harvesting/' +  s.logo : 'logos/' +  s.uuid + '.png')}}"/>
+
             </a>
           </ul>
         </div>
