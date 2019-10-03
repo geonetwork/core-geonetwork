@@ -108,23 +108,51 @@
   </xsl:template>
 
   <xsl:template mode="getTags" match="gmd:MD_Metadata">
+    <xsl:param name="byThesaurus" select="false()"/>
     <section class="gn-md-side">
       <xsl:variable name="tags">
         <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords/
-                                          *[gmd:type/*/@codeListValue = 'theme' and (not(gmd:thesaurusName/*/gmd:identifier/*/gmd:code) or gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() != 'geonetwork.thesaurus.local.theme.sextant-theme')]
-                                          /gmd:keyword">
-            <tag>
+                                          *[gmd:type/*/@codeListValue = 'theme'
+                                          and (not(gmd:thesaurusName/*/gmd:identifier/*/gmd:code)
+                                          or gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/
+                                              text() != 'geonetwork.thesaurus.local.theme.sextant-theme')]">
+          <xsl:variable name="thesaurusTitle">
+            <xsl:for-each select="gmd:thesaurusName/*/gmd:title">
+              <xsl:call-template name="localised">
+                <xsl:with-param name="langId" select="$langId"/>
+              </xsl:call-template>
+            </xsl:for-each>
+          </xsl:variable>
+          <xsl:for-each select="gmd:keyword">
+            <tag thesaurus="{$thesaurusTitle}">
               <xsl:call-template name="localised">
                 <xsl:with-param name="langId" select="$langId"/>
               </xsl:call-template>
             </tag>
+          </xsl:for-each>
         </xsl:for-each>
       </xsl:variable>
 
-      <xsl:for-each select="$tags/tag">
-        <xsl:sort select="."/>
-        <span class="badge"><xsl:value-of select="."/></span>
-      </xsl:for-each>
+      <xsl:choose>
+        <xsl:when test="$byThesaurus">
+          <xsl:for-each-group select="$tags/tag" group-by="@thesaurus">
+            <xsl:sort select="@thesaurus"/>
+            <xsl:value-of select="current-grouping-key()"/>
+            <xsl:for-each select="current-group()">
+              <xsl:sort select="."/>
+              <span class="badge"><xsl:value-of select="."/></span>
+            </xsl:for-each>
+            <hr/>
+          </xsl:for-each-group>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:for-each select="$tags/tag">
+            <xsl:sort select="."/>
+            <span class="badge"><xsl:value-of select="."/></span>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
+
     </section>
   </xsl:template>
 
@@ -136,6 +164,14 @@
     <xsl:value-of select="gmd:identificationInfo/*/gmd:graphicOverview[1]/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
   </xsl:template>
 
+  <xsl:template mode="getExtent" match="gmd:MD_Metadata">
+    <section class="gn-md-side-overview">
+      <xsl:apply-templates mode="render-field"
+                           select=".//gmd:EX_GeographicBoundingBox">
+      </xsl:apply-templates>
+    </section>
+  </xsl:template>
+
   <xsl:template mode="getOverviews" match="gmd:MD_Metadata">
     <section class="gn-md-side-overview">
       <h2>
@@ -145,14 +181,17 @@
         </span>
       </h2>
 
-      <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*">
+      <!-- In Sextant, only the first one is displayed-->
+      <xsl:variable name="overviews"
+                    select="if ($view = 'sextant') then gmd:identificationInfo/*/gmd:graphicOverview[1]/* else gmd:identificationInfo/*/gmd:graphicOverview/*"/>
+      <xsl:for-each select="$overviews">
         <img data-gn-img-modal="md"
              class="gn-img-thumbnail center-block"
              alt="{$schemaStrings/overview}"
              src="{gmd:fileName/*}"/>
 
         <xsl:for-each select="gmd:fileDescription">
-          <div class="gn-img-thumbnail-caption">
+          <div class="gn-img-thumbnail-caption {if ($view = 'sextant') then 'hidden' else ''}">
             <xsl:call-template name="localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
@@ -448,14 +487,18 @@
       <xsl:choose>
         <xsl:when
           test="*/gmd:organisationName and */gmd:individualName">
+          <xsl:if test="normalize-space(*/gmd:individualName) != ''">
+            <xsl:apply-templates mode="render-value"
+                                 select="*/gmd:individualName"/>
+            <xsl:if test="normalize-space(*/gmd:positionName) != ''">
+              (<xsl:apply-templates mode="render-value" select="*/gmd:positionName"/>)
+            </xsl:if>
+            -
+          </xsl:if>
           <!-- Org name may be multilingual -->
           <xsl:apply-templates mode="render-value"
                                select="*/gmd:organisationName"/>
-          - <xsl:apply-templates mode="render-value"
-                  select="*/gmd:individualName"/>
-            <xsl:if test="*/gmd:positionName">
-              (<xsl:apply-templates mode="render-value" select="*/gmd:positionName"/>)
-            </xsl:if>
+
         </xsl:when>
         <xsl:otherwise>
             <xsl:value-of select="*/gmd:organisationName|*/gmd:individualName"/>

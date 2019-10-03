@@ -293,7 +293,6 @@
   <edmerpId>EDMERP id</edmerpId>
   <edmoId>EDMO id</edmoId>
   <addADistributor>Add distributor</addADistributor>
-  <associatedResources>Associated resources</associatedResources>
   <additionalInfo>Additional information</additionalInfo>
   <edmerp-help>
     <div class="row">

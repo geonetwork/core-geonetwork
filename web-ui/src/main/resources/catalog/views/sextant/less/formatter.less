@@ -1,5 +1,17 @@
 @import "../../../style/gn_metadata";
 
+.gn-metadata-view.gn-view-sextant {
+  table.gn-sextant-view-table tr > td:nth-child(1) {
+    width: 23%; /* Align with citation block */
+  }
+  .extent {
+    margin: 0px;
+    .coord {
+      display: none;
+    }
+  }
+}
+
 .gn-metadata-view {
   header div.gn-abstract {
     border: solid 1px @sxt-base-color-dark;
@@ -9,7 +21,7 @@
     margin-bottom: 1em;
   }
 
-  /* Old CSS applied to groovy formatter. */
+    /* Old CSS applied to groovy formatter. */
   .overview {
     dd {
       background-color: #fff;
@@ -38,7 +50,7 @@
   }
 
   dd {
-    padding-left: 1em;
+    //padding-left: 1em;
     text-align: justify;
   }
 
