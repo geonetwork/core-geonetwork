@@ -537,7 +537,7 @@ goog.require('gn_alert');
       $scope.gnUrl = gnGlobalSettings.gnUrl;
       $scope.gnCfg = gnGlobalSettings.gnCfg;
       $scope.proxyUrl = gnGlobalSettings.proxyUrl;
-      $scope.logoPath = gnGlobalSettings.gnUrl + '../images/harvesting/';
+      $scope.logoPath = gnGlobalSettings.gnUrl + '../../images/harvesting/';
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
       $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
