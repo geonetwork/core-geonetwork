@@ -453,7 +453,7 @@ goog.require('gn_alert');
              gnViewerSettings, gnSearchSettings, $cookies,
              gnExternalViewer, gnAlertService) {
       $scope.version = '0.0.1';
-
+      var defaultNode = 'srv';
 
       // Links for social media
       $scope.socialMediaLink = $location.absUrl();
@@ -477,7 +477,7 @@ goog.require('gn_alert');
             return res[1];
           }
         }
-        return detector.default || 'srv';
+        return detector.default || defaultNode;
       }
 
 
@@ -501,6 +501,7 @@ goog.require('gn_alert');
         return detector.default || 'geonetwork';
       }
       $scope.nodeId = detectNode(gnGlobalSettings.gnCfg.nodeDetector);
+      $scope.isDefaultNode = $scope.nodeId === defaultNode;
       $scope.service = detectService(gnGlobalSettings.gnCfg.serviceDetector);
       $scope.redirectUrlAfterSign = window.location.href;
 
