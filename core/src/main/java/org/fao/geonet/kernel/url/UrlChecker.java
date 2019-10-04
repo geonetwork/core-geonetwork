@@ -89,7 +89,8 @@ public class UrlChecker {
     }
 
     private boolean shouldTryGetInsteadOfHead(int statusCode) {
-        return  statusCode == HttpStatus.SC_BAD_REQUEST ||
+        return  statusCode == HttpStatus.SC_NOT_FOUND ||
+                statusCode == HttpStatus.SC_BAD_REQUEST ||
                 statusCode == HttpStatus.SC_METHOD_NOT_ALLOWED ||
                 statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR;
     }
