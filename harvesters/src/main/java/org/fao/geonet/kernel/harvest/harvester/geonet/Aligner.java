@@ -511,7 +511,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
 
         if (!params.xslfilter.equals("")) {
-            md = HarvesterUtil.processMetadata(dataMan.getSchema(ri.schema),
+            md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
                 md, processName, processParams);
         }
         // insert metadata
