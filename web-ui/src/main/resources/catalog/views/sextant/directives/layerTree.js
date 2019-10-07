@@ -488,7 +488,7 @@
                 indexObject.searchWithFacets({}).then(function(data) {
                   if(data.count > 0) {
                     scope.wfs = wfsLink;
-                    var featureType = wfsLink.url + '#' + wfsLink.name;
+
                     var appProfile;
                     try {
                       appProfile = wfsLink.applicationProfile ? JSON.parse(wfsLink.applicationProfile) : {};
@@ -497,20 +497,22 @@
                       console.warn('Erreur lors de la lecture de l\'élément applicationProfile', e);
                     }
 
-                    var minHeatmapCount =  appProfile.compositeLayer && appProfile.compositeLayer.minHeatmapCount || 1000;
-                    var maxTooltipCount =  appProfile.compositeLayer && appProfile.compositeLayer.maxTooltipCount || 1000;
+                    if (appProfile.compositeLayer) {
+                      var featureType = wfsLink.url + '#' + wfsLink.name;
+                      var minHeatmapCount = appProfile.compositeLayer.minHeatmapCount || 1000;
+                      var maxTooltipCount = appProfile.compositeLayer.maxTooltipCount || 1000;
 
-                    var tooltipTemplateUrl = appProfile.tooltipTemplateUrl;
-                    if (!tooltipTemplateUrl) {
-                      console.warn('Pas d\'URL de template de tooltip dans l\'élément applicationProfile,', appProfile);
-                      sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount, undefined);
-                    } else {
-                      $http.get(tooltipTemplateUrl).then(function (response) {
-                        var tooltipTemplate = response.data;
-                        sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount, tooltipTemplate);
-                      }, function () {
-                        console.warn('Le chargement du template de tooltip a échoué');
-                      });
+                      var tooltipTemplateUrl = appProfile.tooltipTemplateUrl;
+                      if (!tooltipTemplateUrl) {
+                        sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount, undefined);
+                      } else {
+                        $http.get(tooltipTemplateUrl).then(function (response) {
+                          var tooltipTemplate = response.data;
+                          sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount, tooltipTemplate);
+                        }, function () {
+                          console.warn('Le chargement du template de tooltip a échoué');
+                        });
+                      }
                     }
                   }
                 });
