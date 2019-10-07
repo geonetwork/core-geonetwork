@@ -943,13 +943,8 @@
                 url = url.substring(0, url.length-1);
               }
 
-              var proxifiedUrl = url;
-              if(getCapLayer.useProxy
-                  && url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
-                proxifiedUrl = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
-              }
               var layer = this.createOlWMS(map, layerParam, {
-                url: proxifiedUrl,
+                url: url,
                 directUrl: url,
                 label: getCapLayer.Title,
                 attribution: attribution,
