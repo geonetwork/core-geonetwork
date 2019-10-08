@@ -15,13 +15,25 @@
       </a>
     </li>
     <li>
-      <a data-ng-href="{{gnUrl}}xml.metadata.get?uuid={{md.getUuid() | encodeURIComponent}}" target="_blank">
+      <a data-ng-href="#/metadata/{{md.getUuid() | encodeURIComponent}}">
+        <i class="fa fa-file-o"/>&nbsp;
+        <span data-translate="">default</span>
+      </a>
+    </li>
+    <li>
+      <a data-ng-href="#/metadata/{{md.getUuid() | encodeURIComponent}}/formatters/xsl-view?root=div&view=advanced">
+        <i class="fa fa-file-text-o"/>&nbsp;
+        <span data-translate="">full</span>
+      </a>
+    </li>
+    <li>
+      <a data-ng-href="{{gnUrl}}../api/records/{{md.getUuid() | encodeURIComponent}}/formatters/xml" target="_blank">
         <i class="fa fa-file-code-o"></i>&nbsp;
         <span data-translate="">sxtExportXML</span>
       </a>
     </li>
     <li>
-      <a data-ng-href="" data-ng-click="mdService.metadataPrint(md.getUuid(), null, gnUrl)">
+      <a data-ng-href="{{gnUrl}}../api/records/{{md.getUuid() | encodeURIComponent}}/formatters/xsl-view?view=advanced&output=pdf" target="_blank">
         <i class="fa fa-file-pdf-o"></i>&nbsp;
         <span data-translate="">sxtExportPDF</span>
       </a>

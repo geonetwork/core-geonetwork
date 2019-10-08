@@ -235,8 +235,11 @@
         var loadFormatter = function() {
           var uuid = gnSearchLocation.getUuid();
           if (uuid) {
+            var formatter = gnSearchLocation.getFormatter();
             gnMdFormatter.load(uuid,
-                selector, $this.getCurrentMdScope());
+                selector, $this.getCurrentMdScope(),
+                formatter ? '../api/records/' + uuid + formatter : undefined
+              );
             $this.setCurrentMdScope();
           }
         };
@@ -324,7 +327,7 @@
           newscope.$parent.md = undefined;
         }
 
-        this.getFormatterUrl(gnSearchSettings.formatter.defaultUrl,
+        this.getFormatterUrl(opt_url || gnSearchSettings.formatter.defaultUrl,
             newscope, uuid).then(function(url) {
           if (url == null) {
             var newscope = scope ? scope.$new() :
