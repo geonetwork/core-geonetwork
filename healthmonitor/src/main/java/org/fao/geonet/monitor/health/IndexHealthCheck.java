@@ -55,7 +55,8 @@ public class IndexHealthCheck implements HealthCheckFactory {
 
                         if (result.isSucceeded()) {
                             return Result.healthy(String.format(
-                                "%s records indexed in remote index currently.", result.getTotal()
+                                "%s records indexed in remote index currently.",
+                                result.getHits(Object.class).size()
                             ));
                         } else {
                             return Result.unhealthy(
