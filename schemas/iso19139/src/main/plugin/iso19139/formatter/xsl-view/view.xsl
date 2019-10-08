@@ -142,7 +142,9 @@
             <xsl:value-of select="current-grouping-key()"/><br/>
             <xsl:for-each select="current-group()">
               <xsl:sort select="."/>
-              <span class="badge"><xsl:value-of select="."/></span>
+              <a href="#/search?keyword={.}">
+                <span class="badge"><xsl:value-of select="."/></span>
+              </a>
             </xsl:for-each>
             <xsl:if test="position() != last()">
               <hr/>
@@ -152,7 +154,9 @@
         <xsl:otherwise>
           <xsl:for-each select="$tags/tag">
             <xsl:sort select="."/>
-            <span class="badge"><xsl:value-of select="."/></span>
+            <a href="#/search?keyword={.}">
+              <span class="badge"><xsl:value-of select="."/></span>
+            </a>
           </xsl:for-each>
         </xsl:otherwise>
       </xsl:choose>

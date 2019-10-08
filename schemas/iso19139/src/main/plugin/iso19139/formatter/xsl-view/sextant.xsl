@@ -27,14 +27,6 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
-                xmlns:gml320="http://www.opengis.net/gml"
-                xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
-                xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
-                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-                xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
-                xmlns:xslUtils="java:org.fao.geonet.util.XslUtil"
                 xmlns:saxon="http://saxon.sf.net/"
                 version="2.0"
                 extension-element-prefixes="saxon"
@@ -47,9 +39,9 @@
   </xsl:template>
 
 
-
   <xsl:template name="sextant-summary-view">
-    <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords/*[gmd:thesaurusName/*/gmd:identifier/*/gmd:code/* = 'geonetwork.thesaurus.local.theme.sextant-theme']/gmd:keyword">
+    <xsl:for-each
+      select="$metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords/*[gmd:thesaurusName/*/gmd:identifier/*/gmd:code/* = 'geonetwork.thesaurus.local.theme.sextant-theme']/gmd:keyword">
       <xsl:variable name="path">
         <xsl:apply-templates mode="localised" select=".">
           <xsl:with-param name="langId" select="$langId"/>
@@ -62,56 +54,60 @@
 
     <table class="table gn-sextant-view-table">
       <tr>
-        <td><xsl:value-of select="$schemaStrings/sxt-view-date"/></td>
+        <td>
+          <xsl:value-of select="$schemaStrings/sxt-view-date"/>
+        </td>
         <td>
 
-            <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*">
-              <div class="row">
-                <div class="col-md-2 text-right">
-                  <xsl:apply-templates mode="render-value" select="gmd:dateType/*/@codeListValue"/>
-                </div>
-                <div class="col-md-10">
-                  <xsl:apply-templates mode="render-value" select="gmd:date"/>
-                </div>
+          <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*">
+            <div class="row">
+              <div class="col-md-5 text-right">
+                <xsl:apply-templates mode="render-value" select="gmd:dateType/*/@codeListValue"/>
               </div>
+              <div class="col-md-7">
+                <xsl:apply-templates mode="render-value" select="gmd:date"/>
+              </div>
+            </div>
+          </xsl:for-each>
+
+          <xsl:variable name="temporalCoverageContent">
+            <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/*">
+              <xsl:variable name="indeterminatePositionLabel">
+                <xsl:apply-templates mode="render-value"
+                                     select="gml:beginPosition/@indeterminatePosition"/>
+              </xsl:variable>
+
+              <xsl:if test="gml:beginPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
+                <xsl:value-of
+                  select="concat ((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ', gml:beginPosition, ' > ')"/>
+              </xsl:if>
+
+              <xsl:variable name="indeterminatePositionLabel">
+                <xsl:apply-templates mode="render-value"
+                                     select="gml:endPosition/@indeterminatePosition"/>
+              </xsl:variable>
+              <xsl:if test="gml:endPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
+                <xsl:value-of
+                  select="concat ((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-to)[1], ' ', gml:endPosition)"/>
+              </xsl:if>
+
+              <xsl:if test="gml:timePosition != ''">
+                <xsl:value-of select="concat ($schemaStrings/sxt-view-temporal-at, ' ', gml:timePosition)"/>
+              </xsl:if>
+              <br/>
             </xsl:for-each>
+          </xsl:variable>
 
-            <xsl:variable name="temporalCoverageContent">
-              <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/*">
-                <xsl:variable name="indeterminatePositionLabel">
-                  <xsl:apply-templates mode="render-value"
-                                       select="gml:beginPosition/@indeterminatePosition"/>
-                </xsl:variable>
-
-                <xsl:if test="gml:beginPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
-                    <xsl:value-of select="concat ((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ', gml:beginPosition, ' > ')"/>
-                </xsl:if>
-
-                <xsl:variable name="indeterminatePositionLabel">
-                  <xsl:apply-templates mode="render-value"
-                                       select="gml:endPosition/@indeterminatePosition"/>
-                </xsl:variable>
-                <xsl:if test="gml:endPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
-                  <xsl:value-of select="concat ((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-to)[1], ' ', gml:endPosition)"/>
-                </xsl:if>
-
-                <xsl:if test="gml:timePosition != ''">
-                  <xsl:value-of select="concat ($schemaStrings/sxt-view-temporal-at, ' ', gml:timePosition)"/>
-                </xsl:if>
-                <br/>
-              </xsl:for-each>
-            </xsl:variable>
-
-            <xsl:if test="$temporalCoverageContent != ''">
-              <div class="row">
-                <div class="col-md-2 text-right">
-                  <xsl:value-of select="$schemaStrings/sxt-view-temporal"/>
-                </div>
-                <div class="col-md-10">
-                  <xsl:copy-of select="$temporalCoverageContent"/>
-                </div>
+          <xsl:if test="$temporalCoverageContent != ''">
+            <div class="row">
+              <div class="col-md-2 text-right">
+                <xsl:value-of select="$schemaStrings/sxt-view-temporal"/>
               </div>
-            </xsl:if>
+              <div class="col-md-10">
+                <xsl:copy-of select="$temporalCoverageContent"/>
+              </div>
+            </div>
+          </xsl:if>
 
         </td>
       </tr>
@@ -119,25 +115,32 @@
                     select="$metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue = 'author']"/>
       <xsl:if test="count($authors) > 0">
         <tr>
-          <td><xsl:value-of select="$schemaStrings/sxt-view-author"/></td>
+          <td>
+            <xsl:value-of select="$schemaStrings/sxt-view-author"/>
+          </td>
           <td>
             <xsl:for-each select="$authors">
               <xsl:apply-templates mode="render-field"
                                    select=".">
                 <xsl:with-param name="layout" select="'short'"/>
-              </xsl:apply-templates><br/>
+              </xsl:apply-templates>
+              <br/>
             </xsl:for-each>
           </td>
         </tr>
       </xsl:if>
       <tr>
-        <td><xsl:value-of select="$schemaStrings/sxt-view-contact"/></td>
         <td>
-          <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue != 'author']">
+          <xsl:value-of select="$schemaStrings/sxt-view-contact"/>
+        </td>
+        <td>
+          <xsl:for-each
+            select="$metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue != 'author']">
             <xsl:apply-templates mode="render-field"
                                  select=".">
               <xsl:with-param name="layout" select="'short'"/>
-            </xsl:apply-templates><br/>
+            </xsl:apply-templates>
+            <br/>
           </xsl:for-each>
         </td>
       </tr>
@@ -165,23 +168,30 @@
                     select="$metadata/gmd:identificationInfo/*/gmd:credit[normalize-space(.) != '']"/>
       <xsl:if test="count($credits) > 0">
         <tr>
-          <td><xsl:value-of select="$schemaStrings/sxt-view-source"/></td>
+          <td>
+            <xsl:value-of select="$schemaStrings/sxt-view-source"/>
+          </td>
           <td>
             <xsl:for-each select="$credits">
-              <xsl:apply-templates mode="render-value" select="."/><br/>
+              <xsl:apply-templates mode="render-value" select="."/>
+              <br/>
             </xsl:for-each>
           </td>
         </tr>
       </xsl:if>
       <tr>
-        <td><xsl:value-of select="$schemaStrings/sxt-view-lineage"/></td>
+        <td>
+          <xsl:value-of select="$schemaStrings/sxt-view-lineage"/>
+        </td>
         <td>
           <xsl:apply-templates mode="render-value"
                                select="$metadata/gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement"/>
         </td>
       </tr>
       <tr>
-        <td><xsl:value-of select="$schemaStrings/sxt-view-constraints"/></td>
+        <td>
+          <xsl:value-of select="$schemaStrings/sxt-view-constraints"/>
+        </td>
         <td>
 
           <xsl:apply-templates mode="render-field"
@@ -199,59 +209,74 @@
           <xsl:value-of select="$schemaStrings/sxt-view-geoinfo"/>
         </td>
         <td>
-          <div class="col-md-6">
-            <table class="table table-condensed">
+          <div class="row">
+            <div class="col-md-6">
               <xsl:if test="$metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType/*/@codeListValue != ''">
-                <tr>
-                  <td><xsl:value-of select="$schemaStrings/sxt-view-spatialRepresentationType"/></td>
-                  <td>
+                <div class="row">
+                  <div class="col-md-5 text-right">
+                    <xsl:value-of select="$schemaStrings/sxt-view-spatialRepresentationType"/>
+                  </div>
+                  <div class="col-md-7">
                     <xsl:apply-templates mode="render-value"
                                          select="$metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType/*/@codeListValue"/>
-                  </td>
-                </tr>
+                  </div>
+                </div>
               </xsl:if>
               <xsl:if test="$metadata/gmd:referenceSystemInfo">
-                <tr>
-                  <td><xsl:value-of select="$schemaStrings/sxt-view-crs"/></td>
-                  <td>
+                <div class="row">
+                  <div class="col-md-5 text-right">
+                    <xsl:value-of select="$schemaStrings/sxt-view-crs"/>
+                  </div>
+                  <div class="col-md-7">
                     <xsl:for-each select="$metadata/gmd:referenceSystemInfo/*/gmd:referenceSystemIdentifier/*/gmd:code">
-                      <xsl:apply-templates mode="render-value" select="." /><br/>
+                      <xsl:apply-templates mode="render-value" select="."/>
+                      <br/>
                     </xsl:for-each>
-                  </td>
-                </tr>
+                  </div>
+                </div>
               </xsl:if>
-            </table>
-          </div>
-          <div class="col-md-6">
-            <table class="table table-condensed">
+            </div>
+            <div class="col-md-6">
               <xsl:variable name="scales"
                             select="$metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:equivalentScale/*/gmd:denominator/*[. != '']"/>
               <xsl:if test="count($scales) > 0">
-                <tr>
-                  <td><xsl:value-of select="$schemaStrings/sxt-view-scale"/></td>
-                  <td>
+                <div class="row">
+                  <div class="col-md-5 text-right">
+                    <xsl:value-of select="$schemaStrings/sxt-view-scale"/>
+                  </div>
+                  <div class="col-md-7">
                     <xsl:for-each select="$scales">
-                      <xsl:value-of select="concat('1:', .)"/><br/>
+                      <xsl:value-of select="concat('1:', .)"/>
+                      <br/>
                     </xsl:for-each>
-                  </td>
-                </tr>
+                  </div>
+                </div>
               </xsl:if>
               <xsl:variable name="resolutions"
                             select="$metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:distance/gco:Distance[. != '']"/>
               <xsl:if test="count($resolutions) > 0">
-                <tr>
-                  <td><xsl:value-of select="$schemaStrings/sxt-view-resolution"/></td>
-                  <td>
+                <div class="row">
+                  <div class="col-md-5 text-right">
+                    <xsl:value-of select="$schemaStrings/sxt-view-resolution"/>
+                  </div>
+                  <div class="col-md-7">
                     <xsl:for-each select="$resolutions">
-                      <xsl:value-of select="concat(., ' ', ./@uom)"/><br/>
+                      <xsl:value-of select="concat(., ' ', ./@uom)"/>
+                      <br/>
                     </xsl:for-each>
-                  </td>
-                </tr>
+                  </div>
+                </div>
               </xsl:if>
-            </table>
+            </div>
           </div>
         </td>
       </tr>
     </table>
+
+    <div gn-related="md"
+         data-user="user"
+         data-types="{$sideRelated}">
+    </div>
+
   </xsl:template>
 </xsl:stylesheet>
