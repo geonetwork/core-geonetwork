@@ -112,10 +112,12 @@
     <section class="gn-md-side">
       <xsl:variable name="tags">
         <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords/
-                                          *[gmd:type/*/@codeListValue = 'theme'
-                                          and (not(gmd:thesaurusName/*/gmd:identifier/*/gmd:code)
-                                          or gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/
-                                              text() != 'geonetwork.thesaurus.local.theme.sextant-theme')]">
+                                          *[
+                                          gmd:type/*/@codeListValue = 'theme'
+                                            and string-join(gmd:keyword//text(), '') != ''
+                                            and (not(gmd:thesaurusName/*/gmd:identifier/*/gmd:code)
+                                            or gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/
+                                                text() != 'geonetwork.thesaurus.local.theme.sextant-theme')]">
           <xsl:variable name="thesaurusTitle">
             <xsl:for-each select="gmd:thesaurusName/*/gmd:title">
               <xsl:call-template name="localised">
@@ -137,12 +139,14 @@
         <xsl:when test="$byThesaurus">
           <xsl:for-each-group select="$tags/tag" group-by="@thesaurus">
             <xsl:sort select="@thesaurus"/>
-            <xsl:value-of select="current-grouping-key()"/>
+            <xsl:value-of select="current-grouping-key()"/><br/>
             <xsl:for-each select="current-group()">
               <xsl:sort select="."/>
               <span class="badge"><xsl:value-of select="."/></span>
             </xsl:for-each>
-            <hr/>
+            <xsl:if test="position() != last()">
+              <hr/>
+            </xsl:if>
           </xsl:for-each-group>
         </xsl:when>
         <xsl:otherwise>
