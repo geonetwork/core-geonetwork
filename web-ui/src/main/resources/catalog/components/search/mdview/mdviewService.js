@@ -240,7 +240,7 @@
             $this.setCurrentMdScope();
           }
         };
-        // loadFormatter();
+        loadFormatter();
         $rootScope.$on('$locationChangeSuccess', loadFormatter);
       };
 
