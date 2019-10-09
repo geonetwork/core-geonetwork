@@ -35,7 +35,6 @@
       ['gn_dashboard_status_controller',
        'gn_dashboard_render_controller',
        'gn_dashboard_record_link_controller',
-       'gn_dashboard_wfs_indexing_controller',
        'gn_vcs_controller']);
 
 
@@ -49,7 +48,7 @@
       $scope.info = {};
       $scope.gnUrl = gnGlobalSettings.gnUrl;
 
-      var tabs = [{
+      $scope.pageMenu.tabs = [{
         type: 'status',
         label: 'status',
         icon: 'fa-dashboard',
@@ -94,21 +93,26 @@
       //       '5b407790-4fa1-11e7-a577-3197d1592a1d?embed=true&_g=()')
       }];
 
-      if ($scope.healthCheck.DashboardAppHealthCheck === true) {
-        tabs = tabs.concat(dashboards);
+
+
+      function loadConditionalTabs() {
+        if ($scope.healthCheck.DashboardAppHealthCheck === true) {
+          $scope.pageMenu.tabs = $scope.pageMenu.tabs.concat(dashboards);
+        }
       }
-      if ($scope.healthCheck.IndexHealthCheck === true) {
-        tabs = tabs.concat({
-          type: 'wfs-indexing',
-          label: 'wfs-indexing',
-          icon: 'fa-globe',
-          href: '#/dashboard/wfs-indexing'
-        });
-      }
+
+      loadConditionalTabs();
+
+      $scope.$watch('healthCheck.DashboardAppHealthCheck', function (n, o) {
+        if (n !== o) {
+          loadConditionalTabs();
+        }
+      });
+
       $scope.pageMenu = {
         folder: 'dashboard/',
         defaultTab: 'status',
-        tabs: tabs
+        tabs: $scope.pageMenu.tabs
       };
 
       $http.get('../api/site/info').
