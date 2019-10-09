@@ -478,7 +478,7 @@
     "metadataUnpublishedError": "Une erreur est survenue lors de la dépublication de la fiche.",
     "categoriesUpdated": "Catégorie mise à jour.",
     "warnPublishDraft": "Lors de la publication d'une fiche ayant un statut brouillon, le statut passera à approuvé. Voulez-vous continuer ?",
-    "canceWorkingCopy": "Annuler la copie de travail",
+    "cancelWorkingCopy": "Annuler la copie de travail",
     "deleteWorkingCopyRecordConfirm": "Voulez-vous vraiment supprimer la copie de travail ?",
     "workingCopy": "Brouillon"
 }
