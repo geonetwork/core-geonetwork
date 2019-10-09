@@ -446,7 +446,7 @@
     "listTypeSmall": "Switch to Small list",
     "layersWithWhiteSpaces": "Some layers on this map contains white spaces on their name. Layers with white spaces may not be properly printed.",
     "unselected": "unselected",
-    "indexingTaskUndefined": "Unknow indexing task (abnormal state)",
+    "indexingTaskUndefined": "Unknown indexing task (abnormal state)",
     "indexingTaskRunning": "Indexing {{total}} records...",
     "indexingTaskFinished": "Indexing finished, {{total}} records processed",
     "indexingTaskFinishedWithErrors": "Indexing finished, {{total}} records processed with {{errors}} errors",
@@ -475,7 +475,7 @@
     "metadataUnpublishedError": "Error occurred while un-publishing metadata.",
     "categoriesUpdated": "Categories updated.",
     "warnPublishDraft": "When publishing records with workflow enabled, the status will change to 'Approve'. Are you sure you want to continue?",
-    "canceWorkingCopy": "Cancel working copy",
+    "cancelWorkingCopy": "Cancel working copy",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{title}}'?",
     "workingCopy": "Working copy"
 }
