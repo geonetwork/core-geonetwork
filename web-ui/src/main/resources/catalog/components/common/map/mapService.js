@@ -34,6 +34,12 @@
     'gn_wfs_service'
   ]);
 
+  var ARCGIS_SERVICES_MAP = {
+    imagery: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    hillshade: 'https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',
+    ocean: 'https://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}'
+  }
+
   /**
    * @ngdoc service
    * @kind function
@@ -1802,8 +1808,17 @@
             switch (type) {
               case 'osm':
                 return new ol.layer.Tile({
+                  _bgId: type,
                   source: new ol.source.OSM(),
                   title: title ||  'OpenStreetMap'
+                });
+              case 'osm-fr':
+                return new ol.layer.Tile({
+                  _bgId: type,
+                  source: new ol.source.XYZ({
+                    url: 'http://a.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'
+                  }),
+                  title: title ||  'OSM FR'
                 });
               //ALEJO: tms support
               case 'tms':
@@ -1816,11 +1831,37 @@
               case 'bing_aerial':
                 return new ol.layer.Tile({
                   preload: Infinity,
+                  _bgId: type,
                   source: new ol.source.BingMaps({
                     key: gnViewerSettings.bingKey,
                     imagerySet: 'Aerial'
                   }),
                   title: title ||  'Bing Aerial'
+                });
+              /**
+               * 'RoadOnDemand',
+               * 'Aerial',
+               * 'AerialWithLabelsOnDemand',
+               * 'CanvasDark',
+               * 'OrdnanceSurvey'
+               */
+              case 'bing':
+                return new ol.layer.Tile({
+                  preload: Infinity,
+                  _bgId: type + '_' + opt.name,
+                  source: new ol.source.BingMaps({
+                    key: gnViewerSettings.bingKey,
+                    imagerySet: opt.name
+                  }),
+                  title: title ||  'Bing ' + opt.name
+                });
+              case 'arcgis':
+                return new ol.layer.Tile({
+                  _bgId: type + '_' + opt.name,
+                  source: new ol.source.XYZ({
+                    url: ARCGIS_SERVICES_MAP[opt.name]
+                  }),
+                  title: title ||  'ArcGIS ' + opt.name
                 });
               case 'stamen':
                 //We make watercolor the default layer

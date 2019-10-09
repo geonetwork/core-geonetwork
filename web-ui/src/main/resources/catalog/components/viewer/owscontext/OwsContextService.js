@@ -482,8 +482,6 @@
 
           if (source instanceof ol.source.OSM) {
             name = '{type=osm}';
-          } else if (source instanceof ol.source.BingMaps) {
-            name = '{type=bing_aerial}';
           } else if (source instanceof ol.source.Stamen) {
             name = '{type=stamen,name=' + layer.getSource().get('type') + '}';
           } else if (source instanceof ol.source.WMTS) {
@@ -504,7 +502,17 @@
               service: 'urn:ogc:serviceType:WMS'
             }];
           } else {
-            return;
+            var _bgId = layer.get('_bgId').split('_');
+            var layerType = _bgId[0]
+            if (layer.get('_bgId') === 'bing_aerial') {
+              name = '{type=bing_aerial}'; // backward compatibility
+            } else if (_bgId.length === 1) {
+              name = '{type=' + layerType + '}';
+            } else if (_bgId.length === 2) {
+              name = '{type=' + layerType + ',name=' + _bgId[1] + '}';
+            } else {
+              return;
+            }
           }
           params.name = name;
           resourceList.layer.push(params);
