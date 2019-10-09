@@ -731,11 +731,6 @@
             var options = layerOptions || {};
 
             var loadFunction;
-            if (options.useProxy && options.url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
-              loadFunction = function (image, src) {
-                image.getImage().src = gnGlobalSettings.proxyUrl + encodeURIComponent(src);
-              };
-            }
 
             var source, olLayer;
             if (gnViewerSettings.singleTileWMS) {
