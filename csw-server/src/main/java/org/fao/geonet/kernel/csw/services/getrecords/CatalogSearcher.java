@@ -118,6 +118,8 @@ public class CatalogSearcher implements MetadataRecordSelector {
     private LuceneSearcher.LanguageSelection _lang;
     private long _searchToken;
     private ApplicationContext _applicationContext;
+    private SettingInfo settingInfo;
+
     public CatalogSearcher(GMLConfiguration configuration,
                            Set<String> selector, Set<String> uuidselector, ApplicationContext applicationContext) {
 //		_tokenizedFieldSet = luceneConfig.getTokenizedField();
@@ -125,8 +127,8 @@ public class CatalogSearcher implements MetadataRecordSelector {
         _configuration = configuration;
         this._applicationContext = applicationContext;
         _uuidselector = uuidselector;
-        _searchToken = -1L;  // means we will get a new IndexSearcher when we
-        // ask for it first time
+        _searchToken = -1L;  // means we will get a new IndexSearcher when we ask for it first time
+        settingInfo = applicationContext.getBean(SettingInfo.class);
     }
 
     /**
@@ -210,7 +212,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
                 if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
                     Log.debug(Geonet.CSW_SEARCH, "after convertphrases:\n" + Xml.getString(luceneExpr));
             }
-            _lang = LuceneSearcher.determineLanguage(context, filterExpr, sm.getSettingInfo());
+            _lang = LuceneSearcher.determineLanguage(context, filterExpr);
 
             indexAndTaxonomy = sm.getIndexReader(_lang.presentationLanguage, _searchToken);
             Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + indexAndTaxonomy.version + " comparing with " + _searchToken);
@@ -464,7 +466,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
         }
 
 
-        boolean requestedLanguageOnTop = sm.getSettingInfo().getRequestedLanguageOnTop();
+        boolean requestedLanguageOnTop = settingInfo.getRequestedLanguageOnTop();
 
         Query data;
         LuceneConfig luceneConfig = getLuceneConfig();
@@ -473,7 +475,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
             Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made null query");
         } else {
             PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(_lang.analyzerLanguage, true);
-            SettingInfo.SearchRequestLanguage requestedLanguageOnly = sm.getSettingInfo().getRequestedLanguageOnly();
+            SettingInfo.SearchRequestLanguage requestedLanguageOnly = settingInfo.getRequestedLanguageOnly();
             data = LuceneSearcher.makeLocalisedQuery(luceneExpr,
                 analyzer, luceneConfig, _lang.presentationLanguage, requestedLanguageOnly);
             Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made query:\n" + data.toString());

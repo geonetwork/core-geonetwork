@@ -441,8 +441,7 @@ public class SearchController {
         }
 
 
-        final SettingInfo settingInfo = context.getBean(SearchManager.class).getSettingInfo();
-        String displayLanguage = LuceneSearcher.determineLanguage(context, filterExpr, settingInfo).presentationLanguage;
+        String displayLanguage = LuceneSearcher.determineLanguage(context, filterExpr).presentationLanguage;
         // retrieve actual metadata for results
         int counter = retrieveMetadataMatchingResults(context, results, summaryAndSearchResults, maxRecords, setName,
             outSchema, elemNames, typeName, resultType, strategy, displayLanguage);

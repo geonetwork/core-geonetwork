@@ -290,8 +290,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      */
     public static LanguageSelection determineLanguage(
         @Nullable ServiceContext srvContext,
-        @Nonnull Element request,
-        @Nonnull SettingInfo settingInfo) {
+        @Nonnull Element request) {
+        SettingInfo settingInfo = srvContext.getBean(SettingInfo.class);
         String finalDetectedLanguage = null;
         if (settingInfo != null && settingInfo.getRequestedLanguageOnly() == SettingInfo.SearchRequestLanguage.OFF) {
             LOGGER.debug("requestedlanguage ignored, using default one ");
@@ -1100,7 +1100,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
         String sBuildSummary = request.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
         boolean buildSummary = sBuildSummary == null || sBuildSummary.equals("true");
-        _language = determineLanguage(srvContext, request, _sm.getSettingInfo());
+        _language = determineLanguage(srvContext, request);
 
         LOGGER.debug("LuceneSearcher initializing search range");
         initSearchRange(srvContext);
@@ -1252,7 +1252,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         // To count the number of values added and stop if maxNumberOfTerms reach
         if (_language == null) {
             final Element request = new Element("request").addContent(new Element("any").setText(searchValue));
-            _language = determineLanguage(srvContext, request, _sm.getSettingInfo());
+            _language = determineLanguage(srvContext, request);
         }
 
         _logSearch = false;

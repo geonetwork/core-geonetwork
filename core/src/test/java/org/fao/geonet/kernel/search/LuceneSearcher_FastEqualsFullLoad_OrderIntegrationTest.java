@@ -48,8 +48,7 @@ public class LuceneSearcher_FastEqualsFullLoad_OrderIntegrationTest extends Abst
         final List<Namespace> theNSs = Arrays.asList(Geonet.Namespaces.GMD);
         final List<Element> nodes = (List<Element>) Xml.selectNodes(result, xpath, theNSs);
 
-        final SettingInfo settingInfo = _serviceContext.getBean(SearchManager.class).getSettingInfo();
-        final LuceneSearcher.LanguageSelection language = LuceneSearcher.determineLanguage(_serviceContext, request, settingInfo);
+        final LuceneSearcher.LanguageSelection language = LuceneSearcher.determineLanguage(_serviceContext, request);
 
         String[] titles = new String[nodes.size()];
         final String langCode;

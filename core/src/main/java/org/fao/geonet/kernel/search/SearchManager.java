@@ -967,7 +967,7 @@ public class SearchManager implements ISearchManager {
         String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
 
         final Element request = new Element("request").addContent(new Element(Geonet.IndexFieldNames.ANY).setText(searchValue));
-        String language = LuceneSearcher.determineLanguage(context, request, context.getBean(SettingInfo.class)).analyzerLanguage;
+        String language = LuceneSearcher.determineLanguage(context, request).analyzerLanguage;
         final PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(language, true);
         String analyzedSearchValue = LuceneSearcher.analyzeText(fieldName, searchValueWithoutWildcard, analyzer);
         boolean startsWithOnly = !searchValue.startsWith("*") && searchValue.endsWith("*");
