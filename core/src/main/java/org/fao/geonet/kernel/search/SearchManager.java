@@ -297,12 +297,6 @@ public class SearchManager implements ISearchManager {
         return clazz.getConstructor(org.apache.lucene.search.Query.class, int.class, Geometry.class, Pair.class);
     }
 
-    public SettingInfo getSettingInfo() {
-
-        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        return applicationContext.getBean(SettingInfo.class);
-    }
-
     /**
      * Creates an analyzer based on its definition in the Lucene config.
      *
