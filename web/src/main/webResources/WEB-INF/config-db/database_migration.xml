@@ -222,6 +222,13 @@
     <entry key="3.7.0">
       <list>
         <value>WEB-INF/classes/setup/sql/migrate/v370/migrate-</value>
+        <value>java:v370.UserCustomSearchesMigration</value>
+        <value>java:v370.HumanizeDatesUiMigration</value>
+      </list>
+    </entry>
+    <entry key="3.9.0">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v390/migrate-</value>
       </list>
     </entry>
   </util:map>

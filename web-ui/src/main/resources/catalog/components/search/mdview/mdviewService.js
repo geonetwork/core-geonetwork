@@ -45,9 +45,10 @@
     'gnSearchSettings',
     'gnUrlUtils',
     'gnUtilityService',
+    '$http',
     function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
-             gnUrlUtils, gnUtilityService) {
+             gnUrlUtils, gnUtilityService, $http) {
 
       // Keep where the metadataview come from to get back on close
       var initFromConfig = function() {
@@ -61,12 +62,27 @@
       this.feedMd = function(index, md, records) {
         gnMdViewObj.loadDetailsFinished = true;
         gnMdViewObj.records = records || gnMdViewObj.records;
-        if (angular.isUndefined(md)) {
-          md = gnMdViewObj.records[index];
+
+        if (records) {
+          for (var i = 0; i < records.length; i++) {
+            if (records[i] == md) {
+              gnMdViewObj.current.index  = i;
+              break;
+            }
+          }
+        } else {
+          gnMdViewObj.current.index = index;
         }
 
-        // Set the route
-        this.setLocationUuid(md.getUuid());
+        if (angular.isUndefined(md)) {
+          md = gnMdViewObj.records[gnMdViewObj.current.index];
+        }
+
+        // Set the route only if not same as before
+        formatter = gnSearchLocation.getFormatter();
+        gnMdViewObj.usingFormatter = formatter !== undefined;
+        this.setLocationUuid(md.getUuid(), formatter);
+
         gnUtilityService.scrollTo();
 
         angular.extend(md, {
@@ -78,11 +94,13 @@
         });
 
         gnMdViewObj.current.record = md;
-        gnMdViewObj.current.index = index;
 
         // TODO: do not add duplicates
         gnMdViewObj.previousRecords.push(md);
 
+        if (!gnMdViewObj.usingFormatter) {
+          $http.post('../api/records/' + md.getUuid() + '/popularity');
+        }
       };
 
       /**
@@ -90,14 +108,16 @@
        * Remove the search path and attributes from location too.
        * @param {string} uuid
        */
-      this.setLocationUuid = function(uuid) {
-        gnSearchLocation.setUuid(uuid);
+      this.setLocationUuid = function(uuid, formatter) {
+        gnSearchLocation.setUuid(uuid, formatter);
       };
 
       // The service needs to keep a reference to the metadata item scope
       var currentMdScope;
-      this.setCurrentMdScope = function(scope) {
+      this.setCurrentMdScope = function(scope, index, records) {
         currentMdScope = scope;
+        gnMdViewObj.records = records;
+        // gnMdViewObj.current.index = index;
       };
       this.getCurrentMdScope = function() {
         return currentMdScope;
@@ -126,41 +146,75 @@
        */
       this.initMdView = function() {
         var that = this;
-        var loadMdView = function() {
+        var loadMdView = function(event, newUrl, oldUrl) {
           gnMdViewObj.loadDetailsFinished = false;
           var uuid = gnSearchLocation.getUuid();
           if (uuid) {
             if (!gnMdViewObj.current.record ||
-                gnMdViewObj.current.record.getUuid() !== uuid) {
+                gnMdViewObj.current.record.getUuid() !== uuid ||
+                newUrl !== oldUrl) {
+
+              //Check if we want the draft version
+              var getDraft = window.location.hash.indexOf("/metadraf/") > 0;
+              var foundMd = false;
 
               // Check if the md is in current search
-              if (angular.isArray(gnMdViewObj.records)) {
+              if (angular.isArray(gnMdViewObj.records)
+                        && !getDraft) {
                 for (var i = 0; i < gnMdViewObj.records.length; i++) {
                   var md = gnMdViewObj.records[i];
                   if (md.getUuid() === uuid) {
+                    foundMd = true;
                     that.feedMd(i, md, gnMdViewObj.records);
-                    return;
                   }
                 }
-              }
+              } 
 
-              // get a new search to pick the md
-              gnMdViewObj.current.record = null;
-              gnSearchManagerService.gnSearch({
-                _uuid_OR__id: uuid,
-                _isTemplate: 'y or n',
-                fast: 'index',
-                _content_type: 'json'
-              }).then(function(data) {
-                if (data.metadata.length == 1) {
-                  data.metadata[0] = new Metadata(data.metadata[0]);
-                  that.feedMd(0, undefined, data.metadata);
-                } else {
-                  gnMdViewObj.loadDetailsFinished = true;
-                }
-              }, function(error) {
-                gnMdViewObj.loadDetailsFinished = true;
-              });
+              if (!foundMd){
+                  // get a new search to pick the md
+                  gnMdViewObj.current.record = null;
+                  gnSearchManagerService.gnSearch({
+                    uuid: uuid,
+                    _isTemplate: 'y or n',
+                    _draft: 'y or n or e',
+                    fast: 'index',
+                    _content_type: 'json'
+                  }).then(function(data) {
+                    if (data.metadata.length > 0) {
+                      //If trying to show a draft that is not a draft, correct url:
+                      if(data.metadata.length == 1 && 
+                          window.location.hash.indexOf("/metadraf/") > 0) {
+                        window.location.hash = 
+                          window.location.hash.replace("/metadraf/", "/metadata/");
+                        //Now the location change event handles this
+                        return;
+                      }
+                      
+                      //If returned more than one, maybe we are looking for the draft
+                      var i = 0;
+                      data.metadata.forEach(function (md, index) {
+                        if(getDraft
+                            && md.draft == 'y') {
+                          //This will only happen if the draft exists
+                          //and the user can see it
+                          i = index;
+                        }
+                      });
+                      
+                      data.metadata[i] = new Metadata(data.metadata[i]);
+                      
+                      //Keep the search results (gnMdViewObj.records)
+                      //and the trace of where in the search result we are
+                      that.feedMd(gnMdViewObj.current.index, 
+                          data.metadata[i], gnMdViewObj.records);
+                    } else {
+                      gnMdViewObj.loadDetailsFinished = true;
+                    }
+                  }, function(error) {
+                    gnMdViewObj.loadDetailsFinished = true;
+                  });
+              }
+              
             } else {
               gnMdViewObj.loadDetailsFinished = true;
             }
@@ -170,7 +224,9 @@
             gnMdViewObj.current.record = null;
           }
         };
-        loadMdView(); // To manage uuid on page loading
+        
+        loadMdView(); 
+        // To manage uuid on page loading
         $rootScope.$on('$locationChangeSuccess', loadMdView);
       };
 
@@ -183,7 +239,7 @@
                 selector, $this.getCurrentMdScope());
           }
         };
-        loadFormatter();
+        // loadFormatter();
         $rootScope.$on('$locationChangeSuccess', loadFormatter);
       };
 
@@ -215,12 +271,14 @@
     '$rootScope',
     '$http',
     '$compile',
+    '$translate',
     '$sce',
     'gnAlertService',
     'gnSearchSettings',
     '$q',
     'gnMetadataManager',
-    function($rootScope, $http, $compile, $sce, gnAlertService,
+    function($rootScope, $http, $compile, $translate,
+             $sce, gnAlertService,
              gnSearchSettings, $q, gnMetadataManager) {
 
 
@@ -280,7 +338,7 @@
           }, function() {
             $rootScope.$broadcast('mdLoadingEnd');
             gnAlertService.addAlert({
-              msg: 'Erreur de chargement de la métadonnée.',
+              msg: $translate.instant('metadataViewLoadError'),
               type: 'danger'
             });
           });

@@ -25,8 +25,13 @@ package org.fao.geonet.web;
 
 import jeeves.constants.Jeeves;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
+import org.fao.geonet.repository.SourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -34,15 +39,18 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
@@ -52,8 +60,7 @@ import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicatio
 
 /**
  * Handles requests where there is no locale and a redirect to a correct (and localized) service is
- * needed.  For example index.html redirects to /srv/eng/home but that redirect should depend on the
- * language of the users browser.
+ * needed.  Redirect should depend on the language of the users browser or the forced language.
  * <p/>
  * Created by Jesse on 12/4/13.
  */
@@ -64,6 +71,8 @@ public class LocaleRedirects {
 
     private static final String LANG_PARAMETER = "hl";
     private static final String ACCEPT_LANGUAGE_HEADER = "Accept-Language";
+    private static final String ACCEPT_HEADER = "Accept";
+    private static final String ACCEPT_VALUE = "text/html";
     private static final String REFERER_PARAMETER = "referer";
     private static final String NODE_PARAMETER = "node";
 
@@ -77,18 +86,116 @@ public class LocaleRedirects {
     }
 
     private String _homeRedirectUrl = "catalog.search";
+    private String _portalHomeRedirectUrl = NodeInfo.DEFAULT_NODE + "/api/sources";
 
     @Autowired
     DefaultLanguage defaultLanguage;
 
-    @RequestMapping(value = "/home")
-    public ModelAndView home(final HttpServletRequest request,
-                             @CookieValue(value = Jeeves.LANG_COOKIE, required = false) String langCookie,
-                             @RequestParam(value = LANG_PARAMETER, required = false) String langParam,
-                             @RequestParam(value = NODE_PARAMETER, required = false) String node,
-                             @RequestHeader(value = ACCEPT_LANGUAGE_HEADER, required = false) final String langHeader) {
+    @Autowired
+    NodeInfo currentNode;
+
+    @Autowired
+    SourceRepository sourceRepository;
+
+    /**
+     * Handle redirect for / to the default node if no extra parameter.
+     * Use /?node=A to redirect to a node
+     * Use /?hl=fre to redirect to a specific language
+     *
+     * @param request
+     * @param langCookie
+     * @param langParam Define which lang to redirect to
+     * @param portal  Define which node to redirect to
+     * @param langHeader
+     * @return
+     */
+    @RequestMapping(value = "/")
+    public ModelAndView redirectRootPath(final HttpServletRequest request,
+                                     @CookieValue(value = Jeeves.LANG_COOKIE, required = false)
+                                         final String langCookie,
+                                     @RequestHeader(value = ACCEPT_HEADER, required = false)
+                                         final String accept,
+                                     @RequestParam(value = LANG_PARAMETER, required = false)
+                                         final String langParam,
+                                     @RequestHeader(value = ACCEPT_LANGUAGE_HEADER, required = false)
+                                         final String langHeader,
+                                      @RequestParam(value = NODE_PARAMETER, required = false) String portal
+                             ) throws ResourceNotFoundException {
         String lang = lang(langParam, langCookie, langHeader);
-        return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, node));
+
+        if (checkPortalExist(portal, !accept.startsWith(ACCEPT_VALUE))) {
+            return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, portal));
+        } else {
+            if (sourceRepository.findByType(SourceType.portal).size() == 0) {
+                return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, NodeInfo.DEFAULT_NODE));
+            }
+            // Redirect to list of portal page if more than one or the default if only one
+            return redirectURL(_portalHomeRedirectUrl);
+        }
+    }
+
+    /**
+     * Handle redirect for /portalId
+     *
+     * @param request
+     * @param portal
+     * @param langCookie
+     * @param langParam
+     * @param langHeader
+     * @return
+     */
+    @RequestMapping(value = "/{portal}")
+    public ModelAndView redirectPortalPath(final HttpServletRequest request,
+                             @PathVariable String portal,
+                             @CookieValue(value = Jeeves.LANG_COOKIE, required = false)
+                                           final String langCookie,
+                             @RequestHeader(value = ACCEPT_HEADER, required = false)
+                                           final String accept,
+                             @RequestParam(value = LANG_PARAMETER, required = false)
+                                           final String langParam,
+                             @RequestHeader(value = ACCEPT_LANGUAGE_HEADER, required = false)
+                                           final String langHeader) throws ResourceNotFoundException {
+        String lang = lang(langParam, langCookie, langHeader);
+
+        if (checkPortalExist(portal, !accept.startsWith(ACCEPT_VALUE))) {
+            return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, portal));
+        } else {
+            if (sourceRepository.findByType(SourceType.subportal).size() == 0) {
+                return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, NodeInfo.DEFAULT_NODE));
+            }
+            // Redirect to list of portal page if more than one or the default if only one
+            return redirectURL(_portalHomeRedirectUrl);
+        }
+    }
+
+    /**
+     * Check that the requested portal exist.
+     *If not return the list of existing ones if requested one is not found.
+     *
+     * @param portal
+     * @throws ResourceNotFoundException
+     */
+    private boolean checkPortalExist(String portal, boolean throwException) throws ResourceNotFoundException {
+        if (portal == null || NodeInfo.DEFAULT_NODE.equals(portal)) {
+            // This is the default node
+            return true;
+        }
+        final Source one = sourceRepository.findOne(portal);
+        if (one == null) {
+            List<String> portalList = new ArrayList<>();
+            portalList.add(NodeInfo.DEFAULT_NODE);
+            sourceRepository.findByType(SourceType.subportal).forEach(e -> {
+                portalList.add(e.getUuid());
+            });
+            if (throwException) {
+                throw new ResourceNotFoundException(String.format(
+                    "No portal found with id '%s'. The list of available portals are: %s",
+                    portal, portalList.toString()
+                ));
+            }
+            return false;
+        }
+        return true;
     }
 
     @RequestMapping(value = "/login.jsp")
@@ -117,18 +224,13 @@ public class LocaleRedirects {
     }
 
     private ModelAndView redirectURL(final String url) {
-
         RedirectView rv = new RedirectView(url);
         rv.setStatusCode(HttpStatus.FOUND);
         return new ModelAndView(rv);
     }
 
     private String createServiceUrl(HttpServletRequest request, String service, String lang, String node) {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        ConfigurableApplicationContext context = getApplicationContextFromServletContext(appContext.getBean(ServletContext.class));
-        String currentNode = context.getBean(NodeInfo.class).getId();
-
-        node = node == null ? currentNode : node;
+        node = node == null ? currentNode.getId() : node;
 
         final Enumeration parameterNames = request.getParameterNames();
         StringBuilder headers = new StringBuilder();

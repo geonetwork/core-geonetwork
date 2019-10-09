@@ -84,6 +84,7 @@
     <value>fin</value>
     <value>fre</value>
     <value>ger</value>
+    <value>por</value>
     <value>ita</value>
     <value>nor</value>
     <value>pol</value>
@@ -132,12 +133,7 @@
     <value>gn_login.js</value>
   </util:list>
 
-  <util:list id="formattersToInitialize" value-type="java.lang.String">
-    <value>full_view</value>
-    <value>xsl-view</value>
-    <value>xml_view</value>
-    <value>hierarchy_view</value>
-  </util:list>
+  <util:list id="formattersToInitialize" value-type="java.lang.String"/>
 
   <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String"></util:set>
   <bean id="threadResources" class="org.mapfish.print.ThreadResources">
@@ -187,5 +183,12 @@
     <constructor-arg name="langCode" value="eng"/>
   </bean>
   -->
+
+
+   <!-- Comment to get non-draft metadata -->
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer"/>
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager"/>
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils"/>
+
 
 </beans>

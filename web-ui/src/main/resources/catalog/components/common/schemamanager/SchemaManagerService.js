@@ -116,9 +116,10 @@
             *
             * Return a promise.
             */
-           getElementInfo: function(config) {
+           getElementInfo: function(config, displayIf) {
              var defer = $q.defer();
-             var fromCache = infoCache.get(config);
+             var cacheKey = config + (displayIf || '');
+             var fromCache = infoCache.get(cacheKey);
              if (fromCache) {
                defer.resolve(fromCache);
              } else {
@@ -130,12 +131,37 @@
                  '/descriptors/' + info[1] + '/details?' +
                  'parent=' + (info[2] || '') +
                  '&xpath=' + (info[3] || '') +
-                 '&isoType=' + (info[4] || '')).
+                 '&isoType=' + (info[4] || '') +
+                 '&displayIf=' + (encodeURIComponent(displayIf) || '')).
                  success(function(data) {
-                   infoCache.put(config, data);
+                   infoCache.put(cacheKey, data);
                    defer.resolve(data);
                  });
                }
+             }
+             return defer.promise;
+           },
+           /**
+            * Load metadata editor associated panel configuration
+            * for a schema.
+            */
+           getEditorAssociationPanelConfig: function(schema, config) {
+             var defer = $q.defer();
+             var cacheKey = schema + '-associatedpanel-' + config;
+             var fromCache = infoCache.get(cacheKey);
+             if (fromCache) {
+               defer.resolve(fromCache);
+             } else {
+               $http.get('../api/standards/' + schema +
+                 '/editor/associatedpanel/config/' +
+                 (config || 'default') + '.json',
+                 { cache: false }).
+               then(function(response) {
+                 infoCache.put(cacheKey, response.data);
+                 defer.resolve(response.data);
+               }, function(response) {
+                 defer.reject(response.data);
+               });
              }
              return defer.promise;
            }

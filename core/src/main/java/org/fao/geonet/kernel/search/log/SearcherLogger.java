@@ -111,8 +111,7 @@ public class SearcherLogger {
             }
         } catch (Exception e) {
             // I dont want the log to cause an exception and hide the real problem.
-            Log.error(Geonet.SEARCH_LOGGER, "Error logging search: " + e.getMessage());
-            e.printStackTrace(); //fixme should be removed after control.
+            Log.error(Geonet.SEARCH_LOGGER, "Error logging search: " + e.getMessage(), e);
         }
     }
 

@@ -106,7 +106,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Check 400 is returned and a message indicating that edit must be defined
-        this.mockMvc.perform(put("/api/records/batchediting?uuids=" + firstMetadataId)
+        this.mockMvc.perform(put("/srv/api/records/batchediting?uuids=" + firstMetadataId)
                 .content(jsonEl.toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .session(this.mockHttpSession)
@@ -140,7 +140,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
         JsonElement jsonEl = gson.toJsonTree(listOfupdates);
 
         // Check 201 is returned
-        this.mockMvc.perform(put("/api/records/batchediting?uuids=" + firstMetadataId)
+        this.mockMvc.perform(put("/srv/api/records/batchediting?uuids=" + firstMetadataId)
                 .content(jsonEl.toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .session(this.mockHttpSession)

@@ -139,11 +139,19 @@
             <xsl:with-param name="btnClass" select="@btnClass"/>
           </xsl:call-template>
         </xsl:when>
+        <xsl:when test="@type = 'suggest' and @process">
+          <xsl:call-template name="render-suggest-button">
+            <xsl:with-param name="process-name" select="@process"/>
+            <xsl:with-param name="process-params" select="@params"/>
+            <xsl:with-param name="btnClass" select="@btnClass"/>
+          </xsl:call-template>
+        </xsl:when>
         <xsl:when test="@type = 'associatedResource'">
           <xsl:variable name="labelKey" select="@name"/>
           <xsl:variable name="label" select="$strings/*[name() = $labelKey]"/>
           <xsl:call-template name="render-associated-resource-button">
             <xsl:with-param name="type" select="@process"/>
+            <xsl:with-param name="options" select="directiveAttributes"/>
             <xsl:with-param name="label" select="if ($label != '') then $label else $labelKey"/>
           </xsl:call-template>
         </xsl:when>

@@ -1,0 +1,1 @@
+Please see https://github.com/geonetwork/docker-geonetwork.git.

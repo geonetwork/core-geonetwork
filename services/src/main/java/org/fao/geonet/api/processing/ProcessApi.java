@@ -57,8 +57,8 @@ import springfox.documentation.annotations.ApiIgnore;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 
 @RequestMapping(value = {
-    "/api/processes",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/processes",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/processes"
 })
 @Api(value = "processes",
@@ -69,6 +69,9 @@ public class ProcessApi {
 
     @Autowired
     IProcessingReportRegistry registry;
+
+    @Autowired
+    DataManager dataMan;
 
     @ApiOperation(
         value = "Get current process reports",
@@ -184,9 +187,6 @@ public class ProcessApi {
         MetadataReplacementProcessingReport report =
             new MetadataReplacementProcessingReport("massive-content-update");
         try {
-            ApplicationContext applicationContext = ApplicationContextHolder.get();
-            DataManager dataMan = applicationContext.getBean(DataManager.class);
-
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, userSession);
 
             report.setTotalRecords(records.size());

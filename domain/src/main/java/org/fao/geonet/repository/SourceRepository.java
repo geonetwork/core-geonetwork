@@ -24,10 +24,12 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Data Access object for accessing {@link Source} entities.
@@ -54,4 +56,12 @@ public interface SourceRepository extends GeonetRepository<Source, String>, JpaS
     public
     @Nullable
     Source findOneByUuid(@Nonnull String uuid);
+
+    public
+    @Nullable
+    List<Source> findByLogo(@Nonnull String logo);
+
+    public
+    @Nullable
+    List<Source> findByType(@Nonnull SourceType sourceType);
 }

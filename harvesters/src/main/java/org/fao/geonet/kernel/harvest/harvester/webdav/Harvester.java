@@ -87,6 +87,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
     private Logger log;
     private ServiceContext context;
     private DataManager dataMan;
+    private IMetadataManager metadataManager;
     private MetadataRepository metadataRepository;
     private CategoryMapper localCateg;
     private GroupMapper localGroups;
@@ -109,6 +110,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         dataMan = gc.getBean(DataManager.class);
+        metadataManager = gc.getBean(IMetadataManager.class);
         schemaMan = gc.getBean(SchemaManager.class);
         metadataRepository = gc.getBean(MetadataRepository.class);
     }
@@ -166,11 +168,11 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
                     log.debug("  - Removing old metadata with local id:" + id);
                 }
                 try {
-                    dataMan.deleteMetadataGroup(context, id);
+                    metadataManager.deleteMetadataGroup(context, id);
                 } catch (Exception e) {
                     log.error("Error occurred while deleting metadata id");
                 }
-                dataMan.flush();
+                metadataManager.flush();
                 result.locallyRemoved++;
 
             }
@@ -315,19 +317,19 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
             setHarvested(true).
             setUuid(params.getUuid()).
             setUri(rf.getPath());
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
         try {
             metadata.getSourceInfo().setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
         } catch (NumberFormatException e) {
         }
 
-        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
-        dataMan.flush();
+        metadataManager.flush();
 
         dataMan.indexMetadata(id, true, null);
         result.addedMetadata++;
@@ -470,7 +472,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
             boolean index = false;
             String language = context.getLanguage();
 
-            final AbstractMetadata metadata = dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
+            final AbstractMetadata metadata = metadataManager.updateMetadata(context, record.id, md, validate, ufo, index, language,
                 date, false);
 
             if(force) {
@@ -484,11 +486,11 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
             //--- the administrator could change privileges and categories using the
             //--- web interface so we have to re-set both
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-            repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(record.id));
-            addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context, log);
+            repository.deleteAllByMetadataId(Integer.parseInt(record.id));
+            addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context);
 
-            metadata.getMetadataCategories().clear();
-            addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
+            metadata.getCategories().clear();
+            addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
             dataMan.flush();
 

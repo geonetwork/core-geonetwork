@@ -115,25 +115,9 @@ public class DataManager {
      * @param force Force reindexing all from scratch
      **/
     public void init(ServiceContext context, Boolean force) throws Exception {
-        // FIXME remove all the inits when/if ever autowiring works fine
-        this.metadataManager = context.getBean(IMetadataManager.class);
-        this.metadataManager.init(context, force);
-        this.metadataUtils = context.getBean(IMetadataUtils.class);
-        this.metadataUtils.init(context, force);
-        this.metadataIndexer = context.getBean(IMetadataIndexer.class);
         this.metadataIndexer.init(context, force);
-        this.metadataValidator = context.getBean(IMetadataValidator.class);
-        this.metadataValidator.init(context, force);
-        this.metadataOperations = context.getBean(IMetadataOperations.class);
-        this.metadataOperations.init(context, force);
-        this.metadataStatus = context.getBean(IMetadataStatus.class);
-        this.metadataStatus.init(context, force);
-        this.metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
-        this.metadataSchemaUtils.init(context, force);
-        this.metadataCategory = context.getBean(IMetadataCategory.class);
-        this.metadataCategory.init(context, force);
-        this.accessManager = context.getBean(AccessManager.class);
-        // remove all the inits when/if ever autowiring works fine
+        this.metadataManager.init(context, force);
+        this.metadataUtils.init(context, force);
 
         // FIXME this shouldn't login automatically ever!
         if (context.getUserSession() == null) {
@@ -272,6 +256,11 @@ public class DataManager {
     @Deprecated
     public String extractUUID(String schema, Element md) throws Exception {
         return metadataUtils.extractUUID(schema, md);
+    }
+
+    @Deprecated
+    public String extractDefaultLanguage(String schema, Element md) throws Exception {
+        return metadataUtils.extractDefaultLanguage(schema, md);
     }
 
     @Deprecated
@@ -436,7 +425,7 @@ public class DataManager {
     }
 
     @Deprecated
-    public synchronized AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
+    public AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
             final boolean validate, final boolean ufo, final boolean index, final String lang, final String changeDate,
             final boolean updateDateStamp) throws Exception {
         return metadataManager.updateMetadata(context, metadataId, md, validate, ufo, index, lang, changeDate, updateDateStamp);
@@ -451,16 +440,6 @@ public class DataManager {
     public Element applyCustomSchematronRules(String schema, int metadataId, Element md, String lang,
             List<MetadataValidation> validations) {
         return metadataValidator.applyCustomSchematronRules(schema, metadataId, md, lang, validations);
-    }
-
-    @Deprecated
-    public synchronized void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
-        metadataManager.deleteMetadata(context, metadataId);
-    }
-
-    @Deprecated
-    public synchronized void deleteMetadataGroup(ServiceContext context, String metadataId) throws Exception {
-        metadataManager.deleteMetadataGroup(context, metadataId);
     }
 
     @Deprecated

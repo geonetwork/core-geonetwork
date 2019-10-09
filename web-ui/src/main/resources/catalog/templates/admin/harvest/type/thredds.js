@@ -5,8 +5,8 @@ var gnHarvesterthredds = {
         return {
             "@id" : "",
             "@type" : "thredds",
-            "owner" : [],
-            "ownerGroup" : [],
+            "owner": [""],
+            "ownerGroup": [""],
             "ownerUser": [""],
             "site" : {
                 "name" : "",
@@ -27,24 +27,12 @@ var gnHarvesterthredds = {
                 "overrideUuid" : "SKIP",
                 "status" : "active",
                 "lang" : "eng",
-                "topic" : "",
-                "createThumbnails" : true,
-                "createAtomicDatasetMd" : false,
-                "ignoreHarvestOnAtomics" : false,
-                "atomicGeneration" : "default",
-                "modifiedOnly": false,
-                "atomicFragmentStylesheet" : "",
-                "atomicMetadataTemplate" : "",
-                "createAtomicSubtemplates" : "",
-                "outputSchemaOnAtomicsDIF" : "",
-                "outputSchemaOnAtomicsFragments" : "",
-                "ignoreHarvestOnCollections" : false,
-                "collectionGeneration" : "default",
-                "collectionFragmentStylesheet" : "",
-                "collectionMetadataTemplate" : "",
-                "createCollectionSubtemplates" : false,
-                "outputSchemaOnCollectionsDIF" : "",
-                "outputSchemaOnCollectionsFragments" : "",
+                "topic" : "oceans",
+                "createServiceMd" : true,
+                "outputSchema" : "iso19139",
+                "datasetTitle" : "",
+                "datasetAbstract" : "",
+                "serviceCategory" : "",
                 "datasetCategory" : ""
             },
             "privileges" : [ {
@@ -84,25 +72,11 @@ var gnHarvesterthredds = {
                 + '    <status>' + h.options.status + '</status>'
                 + '    <lang>' + h.options.lang + '</lang>'
                 + '    <topic>' + h.options.topic + '</topic>'
-                + '    <createThumbnails>' + h.options.createThumbnails + '</createThumbnails>'
                 + '    <createServiceMd>' + h.options.createServiceMd + '</createServiceMd>'
-                + '    <createCollectionDatasetMd>' + h.options.createCollectionDatasetMd + '</createCollectionDatasetMd>'
-                + '    <createAtomicDatasetMd>' + h.options.createAtomicDatasetMd + '</createAtomicDatasetMd>'
-                + '    <ignoreHarvestOnAtomics>' + h.options.ignoreHarvestOnAtomics + '</ignoreHarvestOnAtomics>'
-                + '    <atomicGeneration>' + h.options.atomicGeneration + '</atomicGeneration>'
-                + '    <modifiedOnly>' + h.options.modifiedOnly + '</modifiedOnly>'
-                + '    <atomicFragmentStylesheet>' + h.options.atomicFragmentStylesheet + '</atomicFragmentStylesheet>'
-                + '    <atomicMetadataTemplate>' + h.options.atomicMetadataTemplate + '</atomicMetadataTemplate>'
-                + '    <createAtomicSubtemplates>' + h.options.createAtomicSubtemplates + '</createAtomicSubtemplates>'
-                + '    <outputSchemaOnAtomicsDIF>' + h.options.outputSchemaOnAtomicsDIF + '</outputSchemaOnAtomicsDIF>'
-                + '    <outputSchemaOnAtomicsFragments>' + h.options.outputSchemaOnAtomicsFragments + '</outputSchemaOnAtomicsFragments>'
-                + '    <ignoreHarvestOnCollections>' + h.options.ignoreHarvestOnCollections + '</ignoreHarvestOnCollections>'
-                + '    <collectionGeneration>' + h.options.collectionGeneration + '</collectionGeneration>'
-                + '    <collectionFragmentStylesheet>' + h.options.collectionFragmentStylesheet + '</collectionFragmentStylesheet>'
-                + '    <collectionMetadataTemplate>' + h.options.collectionMetadataTemplate + '</collectionMetadataTemplate>'
-                + '    <createCollectionSubtemplates>' + h.options.createCollectionSubtemplates + '</createCollectionSubtemplates>'
-                + '    <outputSchemaOnCollectionsDIF>' + h.options.outputSchemaOnCollectionsDIF + '</outputSchemaOnCollectionsDIF>'
-                + '    <outputSchemaOnCollectionsFragments>' + h.options.outputSchemaOnCollectionsFragments + '</outputSchemaOnCollectionsFragments>'
+                + '    <outputSchema>' + h.options.outputSchema + '</outputSchema>'
+                + '    <datasetTitle>' + h.options.datasetTitle + '</datasetTitle>'
+                + '    <datasetAbstract>' + h.options.datasetAbstract + '</datasetAbstract>'
+                + '    <serviceCategory>' + h.options.serviceCategory + '</serviceCategory>'
                 + '    <datasetCategory>' + h.options.datasetCategory + '</datasetCategory>'
                 + '  </options>'
                 + '  <content>'

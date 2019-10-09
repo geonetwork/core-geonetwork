@@ -1710,4 +1710,11 @@
   <tag_label>Tags</tag_label>
   <map_label>Carte</map_label>
   <unknown>Unknown</unknown>
+
+  <pdfReportTocTitle>Contents</pdfReportTocTitle>
+  <onTheWeb>Plus d'information</onTheWeb>
+  <format>Format</format>
+  <spatialRepresentationType>Type de donnée</spatialRepresentationType>
+  <updateFrequency>Fréquence de mise à jour</updateFrequency>
+  <lastUpdate>Fiche mise à jour</lastUpdate>
 </strings>

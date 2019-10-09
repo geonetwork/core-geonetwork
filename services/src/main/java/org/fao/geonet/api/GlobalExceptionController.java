@@ -24,20 +24,18 @@
 package org.fao.geonet.api;
 
 import com.google.common.collect.Sets;
-import org.apache.commons.lang.ArrayUtils;
 import org.fao.geonet.api.exception.*;
 import org.fao.geonet.doi.client.DoiClientException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
+import org.json.JSONException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.web.firewall.FirewalledRequest;
 import org.springframework.util.StringUtils;
-import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -50,7 +48,6 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.transform.TransformerConfigurationException;
 import java.io.FileNotFoundException;
 import java.util.Collections;
 import java.util.List;
@@ -85,6 +82,15 @@ public class GlobalExceptionController {
     }
 
     @ResponseBody
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler({
+        SecurityException.class
+    })
+    public Object securityHandler(final Exception exception) {
+        return new ApiError("forbidden", exception.getClass().getSimpleName(), exception.getMessage());
+    }
+
+    @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
         MaxUploadSizeExceededException.class
@@ -103,6 +109,18 @@ public class GlobalExceptionController {
     public ApiError runtimeExceptionHandler(final Exception exception) {
         return new ApiError("runtime_exception", exception.getClass().getSimpleName(), exception.getMessage());
     }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({
+        FeatureNotEnabledException.class
+    })
+    public ApiError runtimeExceptionHandler(final FeatureNotEnabledException exception) {
+        return new ApiError("feature_disabled", exception.getClass().getSimpleName(), exception.getMessage());
+    }
+
+
+
 
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -191,7 +209,8 @@ public class GlobalExceptionController {
     @ExceptionHandler({
         UnsatisfiedServletRequestParameterException.class,
         IllegalArgumentException.class,
-        XSDValidationErrorEx.class,
+        XSDValidationErrorEx.class  ,
+        JSONException.class,
         MultipartException.class,
         DoiClientException.class
     })

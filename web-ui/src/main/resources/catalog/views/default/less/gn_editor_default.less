@@ -3,6 +3,11 @@
 @import "gn_view.less";
 
 
+.gn-results-editor {
+  .gn-status {
+    font-weight: 500;
+  }
+}
 
 [ng-app="gn_editor"] {
   .gn-top-bar {
@@ -333,6 +338,24 @@
         padding-bottom: 0;
       }
     }
+    .gn-control {
+      padding-left: 0;
+      .field-tooltip, [data-gn-field-highlight-remove] {
+        padding: 6px;
+      }
+    }
+    .gn-multi-field {
+      label.gn-required:after, .gn-required > label:after, label.gn-mandatory:after, .gn-mandatory > label:after {
+        margin-top: -7px;
+      }
+      .col-sm-11 {
+        padding-left: 0;
+      }
+      .col-sm-1 {
+        padding-right: 0;
+      }
+    }
+      
   }
   // map
   .gn-drawmap-panel {
@@ -417,6 +440,16 @@ form.gn-editor.gn-label-above-input {
     width: 100%;
     text-align: left;
   }
+  // But do not for section in a well (eg. remove action)
+  // which are in one line label/control mode
+  .well {
+    .col-sm-2 {
+      width: 16.666%;
+    }
+    .col-sm-6 {
+      width: 50%;
+    }
+  }
   // Form field on a second row
   .col-sm-9 {
     width: 90%;
@@ -424,6 +457,10 @@ form.gn-editor.gn-label-above-input {
       padding-left: 0;
       padding-right: 0;
     }
+  }
+  // Date field
+  .col-sm-6 {
+    width: 65%;
   }
   // Cancel offset used in action
   .col-xs-offset-2 {

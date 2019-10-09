@@ -25,14 +25,18 @@ package org.fao.geonet.kernel.harvest;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
-import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetParams;
 
 public abstract class AbstractAligner<P extends AbstractParams> {
 
     protected P params;
 
-    protected int getOwner() {
+    public int getOwner() {
         return Integer.parseInt(
                 (StringUtils.isNumeric(params.getOwnerIdUser()) && params.getOwnerIdUser().length() > 0) ? params.getOwnerIdUser() : params.getOwnerId());
+    }
+
+    protected int getGroupOwner() {
+        return Integer.parseInt(
+                (StringUtils.isNumeric(params.getOwnerIdGroup()) && params.getOwnerIdGroup().length() > 0) ? params.getOwnerIdGroup() : "-1");
     }
 }

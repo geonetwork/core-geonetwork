@@ -3,7 +3,7 @@
          data-ng-show="label">{{label | translate}}</label>
   <select class="form-control" data-ng-model="element">
     <option></option>
-    <option data-ng-repeat="c in categories" value="{{c.id}}"
+    <option data-ng-repeat="c in categories | orderBy:sortByLabel" value="{{c.id}}"
             data-ng-selected="c.id == element">
       <span class="fa gn-icon-{{c.name}}"></span>
       {{c.label[lang] | translate}}

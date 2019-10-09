@@ -48,7 +48,7 @@ public class Get {
      * @return a customelementsets element
      * @throws Exception hmmm
      */
-    @RequestMapping(value = "/{lang}/admin.config.csw.customelementset", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.config.csw.customelementset", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody

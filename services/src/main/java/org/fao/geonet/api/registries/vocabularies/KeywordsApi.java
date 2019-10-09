@@ -120,8 +120,8 @@ import springfox.documentation.annotations.ApiIgnore;
 @Service
 @RequestMapping(
     value = {
-        "/api/registries/vocabularies",
-        "/api/" + API.VERSION_0_1 +
+        "/{portal}/api/registries/vocabularies",
+        "/{portal}/api/" + API.VERSION_0_1 +
             "/registries/vocabularies"
     })
 @Api(
@@ -134,6 +134,23 @@ public class KeywordsApi {
     @Autowired
     LanguageUtils languageUtils;
 
+    @Autowired
+    SettingManager settingManager;
+
+    @Autowired
+    ThesaurusManager thesaurusMan;
+
+    @Autowired
+    IsoLanguagesMapper languagesMapper;
+
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
+
+    @Autowired
+    ThesaurusActivationRepository thesaurusActivationRepository;
+
+    @Autowired
+    GeonetHttpRequestFactory  httpRequestFactory;
 
     /**
      * Search keywords.
@@ -266,14 +283,11 @@ public class KeywordsApi {
 
         KeywordsSearcher searcher;
         // perform the search and save search result into session
-        ThesaurusManager thesaurusMan = applicationContext.getBean(ThesaurusManager.class);
-
         if (Log.isDebugEnabled("KeywordsManager")) {
             Log.debug("KeywordsManager", "Creating new keywords searcher");
         }
         searcher = new KeywordsSearcher(context, thesaurusMan);
 
-        IsoLanguagesMapper languagesMapper = applicationContext.getBean(IsoLanguagesMapper.class);
         String thesauriDomainName = null;
 
         KeywordSearchParamsBuilder builder = parseBuilder(
@@ -421,8 +435,6 @@ public class KeywordsApi {
             }
         }
 
-        GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
-        SettingManager settingManager = context.getBean(SettingManager.class);
         Path convertXsl = dataDirectory.getWebappDir().resolve("xslt/services/thesaurus/convert.xsl");
 
         Element gui = new Element("gui");
@@ -443,6 +455,7 @@ public class KeywordsApi {
                 requestParams.addContent(new Element(e.getKey()).setText(e.getValue()));
             }
         }
+
         root.addContent(requestParams);
         root.addContent(descKeys);
         root.addContent(gui);
@@ -458,7 +471,6 @@ public class KeywordsApi {
      * Gets the thesaurus.
      *
      * @param thesaurus the thesaurus
-     * @param request the request
      * @param response the response
      * @return the thesaurus
      * @throws Exception the exception
@@ -486,15 +498,10 @@ public class KeywordsApi {
                     required = true)
             @PathVariable(value = "thesaurus")
             String thesaurus,
-            HttpServletRequest request,
             HttpServletResponse response
             ) throws Exception {
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        ThesaurusManager manager = gc.getBean(ThesaurusManager.class);
-
-        Thesaurus directory = manager.getThesaurusByName(thesaurus);
+        Thesaurus directory = thesaurusMan.getThesaurusByName(thesaurus);
         if (directory == null)
             throw new IllegalArgumentException("Thesaurus not found --> " + thesaurus);
 
@@ -516,7 +523,6 @@ public class KeywordsApi {
      * Delete thesaurus.
      *
      * @param thesaurus the thesaurus
-     * @param request the request
      * @return the element
      * @throws Exception the exception
      */
@@ -541,36 +547,30 @@ public class KeywordsApi {
                     value = "Thesaurus to delete.",
                     required = true)
             @PathVariable(value = "thesaurus")
-            String thesaurus,
-            HttpServletRequest request
+            String thesaurus
             ) throws Exception {
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        ThesaurusManager manager = gc.getBean(ThesaurusManager.class);
-
-        Thesaurus thesaurusObject = manager.getThesaurusByName(thesaurus);
+        Thesaurus thesaurusObject = thesaurusMan.getThesaurusByName(thesaurus);
         if (thesaurusObject == null) {
             throw new ResourceNotFoundException(String.format(
               "Thesaurus with identifier '%s' not found in the catalogue. Should be one of: %s",
               thesaurus,
-              manager.getThesauriMap().keySet().toString()
+                thesaurusMan.getThesauriMap().keySet().toString()
             ));
         }
         Path item = thesaurusObject.getFile();
 
         // Remove old file from thesaurus manager
-        manager.remove(thesaurus);
+        thesaurusMan.remove(thesaurus);
 
         // Remove file
         if (Files.exists(item)) {
             IO.deleteFile(item, true, Geonet.THESAURUS);
 
             // Delete thesaurus record in the database
-            ThesaurusActivationRepository repo = context.getBean(ThesaurusActivationRepository.class);
             String thesaurusId = thesaurusObject.getFname();
-            if (repo.exists(thesaurusId)) {
-                repo.delete(thesaurusId);
+            if (thesaurusActivationRepository.exists(thesaurusId)) {
+                thesaurusActivationRepository.delete(thesaurusId);
             }
         } else {
             throw new IllegalArgumentException(String.format(
@@ -873,7 +873,6 @@ public class KeywordsApi {
             }
 
             // Convert to SKOS
-            GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
             Path skosTransform = dataDirectory.getWebappDir().resolve("xslt/services/thesaurus/registry-to-skos.xsl");
             Element transform = Xml.transform(documents, skosTransform);
             // Convert to file and return
@@ -904,8 +903,7 @@ public class KeywordsApi {
         Path rdfFile;
         URI uri = new URI(url);
         rdfFile = Files.createTempFile("thesaurus", ".rdf");
-        XmlRequest httpReq = context.getBean(GeonetHttpRequestFactory.class).
-                createXmlRequest(uri.toURL());
+        XmlRequest httpReq = httpRequestFactory.createXmlRequest(uri.toURL());
         httpReq.setAddress(uri.getPath());
         Lib.net.setupProxy(context, httpReq);
         httpReq.executeLarge(rdfFile);
@@ -948,19 +946,14 @@ public class KeywordsApi {
         if (tsXml.getNamespacePrefix().equals("rdf")
                 && tsXml.getName().equals("RDF")) {
 
-            GeonetContext gc = (GeonetContext) context
-                    .getHandlerContext(Geonet.CONTEXT_NAME);
-            ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
-
             // copy to directory according to type
             Path path = thesaurusMan.buildThesaurusFilePath(fname, type, dir);
             try (OutputStream out = Files.newOutputStream(path)) {
                 Xml.writeResponse(new Document(tsXml), out);
             }
 
-            final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-            final IsoLanguagesMapper isoLanguageMapper = context.getBean(IsoLanguagesMapper.class);
-            Thesaurus gst = new Thesaurus(isoLanguageMapper, fname, type, dir, path, siteURL);
+            final String siteURL = settingManager.getSiteURL(context);
+            Thesaurus gst = new Thesaurus(languagesMapper, fname, type, dir, path, siteURL);
             thesaurusMan.addThesaurus(gst, false);
         } else {
             IO.deleteFile(rdfFile, false, Geonet.THESAURUS);
@@ -1006,8 +999,6 @@ public class KeywordsApi {
         }
 
         if (thesauri == null) {
-            ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-            ThesaurusManager thesaurusMan = applicationContext.getBean(ThesaurusManager.class);
             Map<String, Thesaurus> listOfThesaurus = thesaurusMan.getThesauriMap();
             for (String t : listOfThesaurus.keySet()) {
                 parsedParams.addThesaurus(listOfThesaurus.get(t).getKey());

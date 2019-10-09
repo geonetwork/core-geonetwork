@@ -99,6 +99,16 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
         }
     }
 
+    public synchronized void addMetadataError(int metadataId, String error) {
+        if (this.metadataErrors.get(metadataId) == null) {
+            List<Report> errors = new ArrayList<>();
+            errors.add(new ErrorReport(error));
+            this.metadataErrors.put(metadataId, errors);
+        } else {
+            this.metadataErrors.get(metadataId).add(new ErrorReport(error));
+        }
+    }
+
     @XmlElement(name = "infos")
     public Map<Integer, List<InfoReport>> getMetadataInfos() {
         return metadataInfos;

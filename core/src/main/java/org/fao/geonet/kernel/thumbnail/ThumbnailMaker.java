@@ -73,7 +73,7 @@ public class ThumbnailMaker {
             BufferedImage rotatedImage = rotate(originalImage, angle);
             writeImage(rotatedImage, imageFile, extension);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK, "Error rotating thumbnail: " + e.getMessage(), e);
         }
     }
 

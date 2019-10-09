@@ -235,8 +235,10 @@
 
               // print output (skip if readonly)
               if (!ctrl.readOnly) {
+                // GML 3.2.1 is used for ISO19139:2007
+                // TODO: ISO19115-3:2018
                 ctrl.outputPolygonXml =
-                    '<polygon xmlns="http://www.isotc211.org/2005/gmd">' +
+                    '<gmd:polygon xmlns:gmd="http://www.isotc211.org/2005/gmd">' +
                     gnGeometryService.printGeometryOutput(
                     ctrl.map,
                     feature,
@@ -244,8 +246,10 @@
                       crs: outputCrs,
                       format: 'gml'
                     }
-                    ) +
-                    '</polygon>';
+                    ).replace(
+                      /http:\/\/www.opengis.net\/gml"/g,
+                      'http://www.opengis.net/gml/3.2"') +
+                    '</gmd:polygon>';
               }
 
               // update text field (unless geometry was entered manually)

@@ -16,12 +16,36 @@
   <!-- Enable tab view mode or not -->
   <xsl:param name="tabs" select="'true'"/>
 
+  <!-- List of related items to display on top. By default only online links. -->
+  <xsl:param name="related" select="'onlines'"/>
+
+  <!-- List of related items to display on the side panel. By default all except links. -->
+  <xsl:param name="sideRelated" select="'parent|children|services|datasets|hassources|sources|fcats|siblings|associated'"/>
+
+  <!-- Define a specific XSL template to be used for the content of the formatter.
+  This is useful to create a custom view not based on config-editor.xml.
+
+  In ISO19139/formatter/xsl-view/view.xsl, import a new XSL like
+    <xsl:include href="sextant.xsl"/>
+  which then define the view with the template corresponding to this parameter:
+  <xsl:template name="sextant-summary-view">
+    <table class="table">
+    ....
+  -->
+  <xsl:param name="template" select="''"/>
+
   <!-- Define the full portal link. By default, it will link
   to the catalog.search main page of the catalog. To configure a custom
   use {{uuid}} to be replaced by the record UUID.
   eg. http://another.portal.org/${uuid}
   -->
   <xsl:param name="portalLink" select="''"/>
+
+  <!-- To display all views defined in config-editor.xml -->
+  <xsl:param name="viewMenu" select="'false'"/>
+
+  <!-- Define if the formatter output also the record as JSON-LD. -->
+  <xsl:param name="withJsonLd" select="'true'"/>
 
 
   <!-- TODO: schema is not part of the XML -->

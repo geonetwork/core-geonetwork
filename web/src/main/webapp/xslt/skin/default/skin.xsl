@@ -8,7 +8,7 @@
                 exclude-result-prefixes="#all">
 
   <xsl:template name="header">
-    <div class="navbar navbar-default gn-top-bar">
+    <div class="navbar navbar-default gn-top-bar" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button"
@@ -66,36 +66,32 @@
     <xsl:if test="/root/search/response">
       <form action="{$nodeUrl}search"
             class="form-horizontal" role="form">
-        <div class="row gn-top-search" style="margin:15px auto">
-          <div class="col-md-12">
-            <div class="row">
-              <div class="col-md-offset-4 col-md-4 relative">
-                <div class="gn-form-any input-group">
-                  <input type="text"
-                         name="any"
-                         id="gn-any-field"
-                         placeholder="{$t/anyPlaceHolder}"
-                         value="{/root/request/any}"
-                         class="form-control input-lg"
-                         autofocus=""/>
-                  <div class="input-group-btn">
-                    <button type="submit"
-                            class="btn btn-primary btn-lg"
-                            title="{$t/search}">
-                      &#160;&#160;
-                      <i class="fa fa-search">&#160;</i>
-                      &#160;&#160;
-                    </button>
-                    <a href="{$nodeUrl}search"
-                       class="btn btn-link btn-lg"
-                       title="{$t/reset}">
-                      <i class="fa fa-times">&#160;</i>
-                    </a>
-                  </div>
-                </div>
-                <input type="hidden" name="fast" value="index"/>
+        <div class="row gn-top-search" style="margin:20px">
+          <div class="col-md-offset-3 col-md-1 relative"><b><xsl:value-of select="$t/search"/></b></div>
+          <div class="col-md-5 relative">
+            <div class="gn-form-any input-group input-group-lg">
+              <input type="text"
+                      name="any"
+                      id="gn-any-field"
+                      aria-label="{$t/anyPlaceHolder}"
+                      placeholder="{$t/anyPlaceHolder}"
+                      value="{/root/request/any}"
+                      class="form-control"
+                      autofocus=""/>
+              <div class="input-group-btn">
+                <button type="submit"
+                        class="btn btn-default"
+                        title="{$t/search}">
+                  <i class="fa fa-search">&#160;</i>
+                </button>
+                <a href="{$nodeUrl}search"
+                    class="btn btn-default"
+                    title="{$t/reset}">
+                  <i class="fa fa-times">&#160;</i>
+                </a>
               </div>
             </div>
+            <input type="hidden" name="fast" value="index"/>
           </div>
         </div>
       </form>
@@ -104,7 +100,7 @@
 
   <xsl:template name="footer">
 
-    <div class="navbar navbar-default gn-bottom-bar">
+    <div class="navbar navbar-default gn-bottom-bar" role="navigation">
       <ul class="nav navbar-nav">
         <li class="gn-footer-text">
 
@@ -122,7 +118,7 @@
           </a>
         </li>
         <li>
-          <a href="{/root/gui/url}/doc/api" title="{$t/learnTheApi}"><xsl:value-of select="$t/api"/></a>
+          <a href="{/root/gui/url}/doc/api" title="{$t/learnTheApi}"><xsl:value-of select="$t/api"/>&#160;</a>
         </li>
       </ul>
     </div>

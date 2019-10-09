@@ -37,6 +37,20 @@
         <value>gmd:identificationInfo/*/gmd:citation/*/gmd:title/*/gmd:textGroup/gmd:LocalisedCharacterString</value>
       </util:list>
     </property>
+    <property name="analyzedLinks">
+      <util:list value-type="java.lang.String">
+        <bean class="org.fao.geonet.kernel.schema.HttpLink">
+          <property name="xpath"
+                    value="*//gmd:CI_OnlineResource/gmd:linkage/gmd:URL[starts-with(normalize-space(text()), 'http')]/text()"/>
+          <property name="protocol"
+                    value="../../gmd:protocol/gco:CharacterString"/>
+        </bean>
+        <bean class="org.fao.geonet.kernel.schema.HttpLink">
+          <property name="xpath"
+                    value="*//gmd:graphicOverview/*/gmd:fileName/gco:CharacterString[starts-with(normalize-space(text()), 'http')]/text()"/>
+        </bean>
+      </util:list>
+    </property>
     <property name="elementsToProcess">
       <util:list value-type="java.lang.String">
         <value>gco:CharacterString</value>

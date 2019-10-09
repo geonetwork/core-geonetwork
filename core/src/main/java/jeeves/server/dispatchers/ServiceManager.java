@@ -43,6 +43,7 @@ import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.io.EofException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
@@ -72,10 +73,8 @@ import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.Map.Entry;
 
 //=============================================================================
@@ -702,7 +701,31 @@ public class ServiceManager {
                             } finally {
                                 timerContext.stop();
                             }
-                            response = BinaryFile.encode(200, file, "document.pdf", true).getElement();
+
+                            // Checks for a parameter documentFileName with the document file name,
+                            // otherwise uses a default value
+                            String documentName = guiElem.getChildText("documentFileName");
+                            if (StringUtils.isEmpty(documentName)) {
+                                documentName = "document.pdf";
+                            } else {
+                                if (!documentName.endsWith(".pdf")) {
+                                    documentName = documentName + ".pdf";
+                                }
+
+                                Calendar c = Calendar.getInstance();
+
+                                documentName = documentName.replace("{year}", c.get(Calendar.YEAR) + "");
+                                documentName = documentName.replace("{month}", c.get(Calendar.MONTH) + "");
+                                documentName = documentName.replace("{day}", c.get(Calendar.DAY_OF_MONTH) + "");
+
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+                                SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+
+                                documentName = documentName.replace("{date}", dateFormat.format(c.getTime()));
+                                documentName = documentName.replace("{datetime}", datetimeFormat.format(c.getTime()));
+                            }
+
+                            response = BinaryFile.encode(200, file, documentName, true).getElement();
                         } catch (Exception e) {
                             error(" -> exception during XSL/FO transformation for : " + req.getService());
                             error(" -> (C) stylesheet : " + styleSheet);
@@ -897,7 +920,7 @@ public class ServiceManager {
                 // ignore this.
                 // it happens because the stream closes by client.
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.error(Log.JEEVES, e.getMessage(), e);
             }
         }
 

@@ -121,16 +121,6 @@
                 }
               };
 
-              scope.toggleAlwaysOnTop = function() {
-                scope.alwaysOnTop = !scope.alwaysOnTop;
-                var element = angular.element( document.querySelector( '#gn-editor-validation-panel' ) );
-                if(scope.alwaysOnTop) {
-                  element.addClass('gn-fixed-scroll');
-                } else {
-                  element.removeClass('gn-fixed-scroll');
-                }
-              };
-
               // When saving is done, refresh validation report
               scope.$watch('gnCurrentEdit.saving', function(newValue) {
                 if (newValue === false && gnCurrentEdit.showValidationErrors) {

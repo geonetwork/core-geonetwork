@@ -39,6 +39,7 @@ import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.DocumentStoredFieldVisitor;
+import org.apache.lucene.document.FieldType;
 import org.apache.lucene.facet.Facets;
 import org.apache.lucene.facet.FacetsCollector;
 import org.apache.lucene.facet.FacetsConfig;
@@ -51,6 +52,10 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queries.ChainedFilter;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.flexible.core.QueryNodeException;
+import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser;
+import org.apache.lucene.queryparser.flexible.standard.config.NumericConfig;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
@@ -68,7 +73,9 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopFieldCollector;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -80,6 +87,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.AccessManager;
@@ -98,14 +106,17 @@ import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
@@ -117,6 +128,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
 import java.text.CharacterIterator;
+import java.text.NumberFormat;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -332,8 +344,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                         detected = true;
                     }
                 } catch (Exception x) {
-                    LOGGER.error("Error auto-detecting language: {}", x.getMessage());
-                    x.printStackTrace();
+                    LOGGER.error("Error auto-detecting language: {}", x.getMessage(), x);
                 }
 
 
@@ -642,8 +653,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             try {
                 buildFacetSummary(elSummary, summaryConfig, facetConfiguration, facetCollector, taxonomyReader, langCode);
             } catch (Exception e) {
-                e.printStackTrace();
-                LOGGER.warn("BuildFacetSummary error. {}" ,e.getMessage());
+                LOGGER.warn("BuildFacetSummary error. {}" ,e.getMessage(), e);
             }
 
         } else {
@@ -1009,13 +1019,13 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             }
         } catch (Exception e) {
             // TODO why swallow
-            e.printStackTrace();
+            LOGGER.error(Geonet.SEARCH_ENGINE, "analyzeText error:" + e.getMessage(), e);
         } finally {
             if (ts != null) {
                 try {
                     ts.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error(Geonet.SEARCH_ENGINE, "analyzeText error closing TokenStream:" + e.getMessage(), e);
                 }
             }
         }
@@ -1093,13 +1103,12 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         _language = determineLanguage(srvContext, request, _sm.getSettingInfo());
 
         LOGGER.debug("LuceneSearcher initializing search range");
-
         initSearchRange(srvContext);
+
         LOGGER.debug("LuceneSearcher computing query");
-
         computeQuery(srvContext, request, config);
-        LOGGER.debug("LuceneSearcher performing query");
 
+        LOGGER.debug("LuceneSearcher performing query");
         performQuery(srvContext, getFrom() - 1, getTo(), buildSummary);
         updateSearchRange(request);
 
@@ -1486,8 +1495,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 luceneQueryInput.setRequestedLanguageOnly(requestedLanguageOnly);
 
                 _query = new LuceneQueryBuilder(_luceneConfig, _tokenizedFieldSet, SearchManager.getAnalyzer(_language.analyzerLanguage, true), _language.presentationLanguage).build(luceneQueryInput);
-
                 LOGGER.debug("Lucene query: {}", _query);
+
+
+                _query = appendPortalFilter(_query, _luceneConfig);
+
 
                 try {
                     // Rewrite the drilldown query to a query that can be used by the search logger
@@ -1523,11 +1535,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                         Constructor<Query> c = boostClass.getConstructor(clTypesArrayAll);
                         _query = c.newInstance(inParamsArrayAll);
                     } catch (Exception e) {
-                        LOGGER.warn(" Failed to create boosting query: {}. Check Lucene configuration", e.getMessage());
-                        e.printStackTrace();
+                        LOGGER.warn(" Failed to create boosting query: {}. Check Lucene configuration", e.getMessage(), e);
                     }
                 } catch (Exception e1) {
-                    LOGGER.warn(" Error on boosting query initialization: {}. Check Lucene configuration", e1.getMessage());
+                    LOGGER.warn(" Error on boosting query initialization: {}. Check Lucene configuration", e1.getMessage(), e1);
                 }
             }
 
@@ -1569,6 +1580,36 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         LOGGER.debug("sortRequestedLanguageOnTop: {}", sortRequestedLanguageOnTop);
         _sort = LuceneSearcher.makeSort(Collections.singletonList(Pair.read(sortBy, sortOrder)), _language.presentationLanguage, sortRequestedLanguageOnTop);
 
+    }
+
+    public static Query appendPortalFilter(Query q, LuceneConfig luceneConfig) throws ParseException, QueryNodeException {
+        // If the requested portal define a filter
+        // Add it to the request.
+        NodeInfo node = ApplicationContextHolder.get().getBean(NodeInfo.class);
+        SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
+        if (node != null && !NodeInfo.DEFAULT_NODE.equals(node.getId())) {
+            final Source portal = sourceRepository.findOne(node.getId());
+            if (portal == null) {
+                LOGGER.warn("Null portal " + node);
+            }
+            else if (StringUtils.isNotEmpty(portal.getFilter())) {
+                Query portalFilterQuery = null;
+                // Parse Lucene query
+                portalFilterQuery = parseLuceneQuery(portal.getFilter(), luceneConfig);
+                LOGGER.info("Portal filter is :\n" + portalFilterQuery);
+
+                BooleanQuery query = new BooleanQuery();
+                BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+                query.add(q, occur);
+
+                if (portalFilterQuery != null) {
+                    query.add(portalFilterQuery, occur);
+                }
+                q = query;
+                LOGGER.debug("Lucene query (with portal filter): {}", q);
+            }
+        }
+        return q;
     }
 
     /**
@@ -1753,5 +1794,61 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             this.analyzerLanguage = analyzerLanguage;
             this.presentationLanguage = presentationLanguage;
         }
+    }
+    
+    /**
+     * <p> Gets the Lucene version token. Can be used as ETag. </p>
+     */    
+    public long getVersionToken() {
+    	return _versionToken;
+    };
+
+
+    /**
+     * Creates a lucene Query object from a lucene query string using Lucene query syntax.
+     */
+    public static Query parseLuceneQuery(
+        String cswServiceSpecificConstraint, LuceneConfig _luceneConfig)
+        throws ParseException, QueryNodeException {
+//        MultiFieldQueryParser parser = new MultiFieldQueryParser(Geonet.LUCENE_VERSION, fields , SearchManager.getAnalyzer());
+        StandardQueryParser parser = new StandardQueryParser(SearchManager.getAnalyzer());
+        Map<String, NumericConfig> numericMap = new HashMap<String, NumericConfig>();
+        for (LuceneConfigNumericField field : _luceneConfig.getNumericFields().values()) {
+            String name = field.getName();
+            int precisionStep = field.getPrecisionStep();
+            NumberFormat format = NumberFormat.getNumberInstance();
+            FieldType.NumericType type = FieldType.NumericType.valueOf(field.getType().toUpperCase());
+            NumericConfig config = new NumericConfig(precisionStep, format, type);
+            numericMap.put(name, config);
+        }
+        parser.setNumericConfigMap(numericMap);
+        Query q = parser.parse(cswServiceSpecificConstraint, "title");
+
+        // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
+        List<String> SECURITY_FIELDS = Arrays.asList(
+            LuceneIndexField.OWNER,
+            LuceneIndexField.GROUP_OWNER);
+
+        BooleanQuery bq;
+        if (q instanceof BooleanQuery) {
+            bq = (BooleanQuery) q;
+            List<BooleanClause> clauses = bq.clauses();
+
+            Iterator<BooleanClause> it = clauses.iterator();
+            while (it.hasNext()) {
+                BooleanClause bc = it.next();
+
+                for (String fieldName : SECURITY_FIELDS) {
+                    if (bc.getQuery().toString().contains(fieldName + ":")) {
+                        if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                            Log.debug(Geonet.CSW_SEARCH, "LuceneSearcher getCswServiceSpecificConstraintQuery removed security field: " + fieldName);
+                        it.remove();
+
+                        break;
+                    }
+                }
+            }
+        }
+        return q;
     }
 }

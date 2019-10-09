@@ -24,38 +24,6 @@
 (function() {
   goog.provide('gn_formatter_viewer');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   goog.require('gn');
   goog.require('gn_alert');
   goog.require('gn_catalog_service');
@@ -68,12 +36,6 @@
   goog.require('gn_search_default_directive');
   goog.require('gn_utility');
   goog.require('gn_viewer');
-
-
-
-
-
-
 
   var module = angular.module('gn_formatter_viewer', [
     'ngRoute',
@@ -108,7 +70,7 @@
            $scope.loading = false;
          });
 
-         var url = '../api/records/' + $location.url();
+         var url = '../api/records' + $location.url().replace('/metadata', '');
 
          gnMdFormatter.load(mdId, '.formatter-container', $scope, url);
        }]);
@@ -117,13 +79,21 @@
     var tpls = '../../catalog/templates/';
 
     $routeProvider
-        .when(
+      .when(
+        '/metadata/:mdId/formatters/:formatter', {
+          templateUrl: tpls + 'formatter-viewer.html',
+          controller: 'GnFormatterViewer'})
+      .when(
         '/:mdId/formatters/:formatter', {
           templateUrl: tpls + 'formatter-viewer.html',
           controller: 'GnFormatterViewer'})
-        .when(
-        '/:mdId', {
+      .when(
+        '/metadata/:mdId', {
           templateUrl: tpls + 'formatter-viewer.html',
-          controller: 'GnFormatterViewer'});
+          controller: 'GnFormatterViewer'})
+      .when(
+      '/:mdId', {
+        templateUrl: tpls + 'formatter-viewer.html',
+        controller: 'GnFormatterViewer'});
   }]);
 })();

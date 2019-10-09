@@ -32,6 +32,7 @@
         <span data-translate="">listOfCategories</span>
         <a data-ng-repeat="cat in ::md.category"
            title="{{('cat-' + cat) | translate}}"
+           aria-label="{{('cat-' + cat) | translate}}"
            data-ng-href="#/search?_cat={{cat}}">
           <i class="fa">
             <span class="fa gn-icon-{{cat}}"></span>
@@ -44,8 +45,10 @@
           </i>
         </a>
         <a data-ng-repeat="t in md.topicCat"
-           data-ng-href="#/search?topicCat={{t}}">
-          <i class="fa" title="{{t | translate}}">
+           data-ng-href="#/search?topicCat={{t}}"
+           title="{{t | translate}}"
+           aria-label="{{t | translate}}">
+          <i class="fa">
             <span class="fa gn-icon-{{t}}"></span>
           </i>
         </a>
@@ -55,10 +58,12 @@
            class="pull-right"/>
     </div>
     <!--end top row-->
-    <div class="row gn-md-title"
-         data-ng-click="openRecord($index, md, searchResults.records)">
+    <div class="row gn-md-title">
       <h3>
-        <a data-ng-href="#/metadata/{{md.getUuid()}}"
+        <a href=""
+           gn-metadata-open="md"
+           gn-records="searchResults.records"
+           gn-formatter="formatter.defaultUrl"
            title="{{md.title || md.defaultTitle}}">
 
           <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
@@ -68,21 +73,20 @@
 
     <!--start middle row-->
     <div title="{{(md.abstract || md.defaultAbstract) | striptags}}"
-         data-ng-click="openRecord($index, md, searchResults.records)">
+         gn-metadata-open="md"
+         gn-records="searchResults.records"
+         gn-formatter="formatter.defaultUrl">
       <!-- Thumbnail -->
-      <div class="gn-md-thumbnail"
-            data-ng-class="{'gn-md-no-thumbnail': !md.getThumbnails().list[0].url}">
+      <div class="gn-md-thumbnail">
+        <div class="gn-md-no-thumbnail"
+             data-ng-if="!md.getThumbnails().list[0].url"></div>
         <img class="gn-img-thumbnail"
              alt="{{md.title || md.defaultTitle}}"
              data-ng-src="{{md.getThumbnails().list[0].url}}"
              data-ng-if="md.getThumbnails().list[0].url"/>
-
-        <!-- Display the first metadata status (apply to ISO19139 record) -->
-        <div data-ng-if="md.status_text.length > 0"
-             title="{{md.status_text[0]}}"
-             class="gn-status gn-status-{{md.status[0]}}">{{md.status_text[0]}}
-        </div>
+       
       </div>
+      
 
       <div style="float:left; display:block; width: calc(100% - 162px)">
 
@@ -109,12 +113,25 @@
 
     <!--start bottom row-->
     <div>
-      <div gn-grid-related gn-grid-related-uuid="::md.getUuid()"
-           template="../../catalog/views/default/templates/gridRelated.html"></div>
-      <gn-links-btn></gn-links-btn>
+      <!-- Display the first metadata status (apply to ISO19139 record) -->
+      <div data-ng-if="md.status_text.length > 0"
+           title="{{md.status_text[0]}}"
+           class="gn-status gn-status-{{md.status[0]}}">{{md.status_text[0]}}
+      </div> 
+      <div class="gn-toolbar">
+        <gn-links-btn class="pull-right"></gn-links-btn>
+        <div gn-grid-related gn-grid-related-uuid="::md.getUuid()"
+             class="pull-right"
+             template="../../catalog/views/default/templates/gridRelated.html"></div>
+        <div data-ng-if="md.draft == 'e'"
+             title="{{'workingCopy' | translate}}"
+             class="gn-workingcopy-status pull-right">
+          <i class="fa fa-pencil"></i>
+          <span>{{'workingCopy' | translate}}</span>
+        </div>
+      </div>
     </div>
 
-    </div>
     <!--end bottom row-->
     <div style="clear: both;"></div>
   </li>

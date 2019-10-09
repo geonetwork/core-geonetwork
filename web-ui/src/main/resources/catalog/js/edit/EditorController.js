@@ -160,12 +160,17 @@
         promises.push(gnConfigService.load());
         $q.all(promises).then(function(c) {
           // Config loaded
+
+          // Enable workflow functions
+          $scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
+
           if ($routeParams.id) {
             // Check requested metadata exists
             gnSearchManagerService.gnSearch({
               _id: $routeParams.id,
               _content_type: 'json',
               _isTemplate: 'y or n or s',
+              _draft: 'y or n or e',
               fast: 'index'
             }).then(function(data) {
               $scope.metadataFound = data.count !== '0';
@@ -231,6 +236,7 @@
                   id: $routeParams.id,
                   formId: '#gn-editor-' + $routeParams.id,
                   containerId: '#gn-editor-container-' + $routeParams.id,
+                  associatedPanelConfigId: 'default',
                   tab: $location.search()['tab'] || defaultTab,
                   displayAttributes: $location.search()['displayAttributes'] === 'true',
                   displayTooltips: $location.search()['displayTooltips'] === 'true',
@@ -239,6 +245,7 @@
                   formScope: $scope.$new(),
                   sessionStartTime: moment(),
                   formLoadExtraFn: formLoadExtraFunctions,
+                  codelistFilter: '',
                   working: false
                 });
 
@@ -573,7 +580,7 @@
       };
 
       function parseXmlError(error) {
-        if (error.indexOf('<?xml') === 0) {
+        if (error.toString().indexOf('<?xml') === 0) {
           var x = jQuery.parseXML(error),
               d = x.getElementsByTagName('description'),
               m = d[0].textContent;
@@ -582,12 +589,12 @@
         return null;
       };
 
-      $scope.close = function() {
+      $scope.close = function(submit, approve) {
         // if auto unpublish is not set in the settings, or if MD is not
         // published: close w/o confirmation
         if (!$scope.gnCurrentEdit.metadata.isPublished() ||
             !gnConfig['metadata.workflow.automaticUnpublishInvalidMd']) {
-          $scope.confirmClose();
+          $scope.confirmClose(submit, approve);
           return;
         }
 
@@ -599,12 +606,12 @@
           if (hasErrors) {
             $('#confirm-editor-close').modal('show');
           } else {
-            $scope.confirmClose();
+            $scope.confirmClose(submit, approve);
           }
         });
       };
-      $scope.confirmClose = function() {
-        var promise = gnEditor.save(false, null, true)
+      $scope.confirmClose = function(submit, approve) {
+        var promise = gnEditor.save(false, null, true, submit, approve)
             .then(function(form) {
               closeEditor();
             }, function(error) {
@@ -612,13 +619,15 @@
               // the response is in XML. Try to get the message
               message = parseXmlError(error);
 
+              $scope.savedStatus = gnCurrentEdit.savedStatus;
+              $scope.saveError = true;
+
               $rootScope.$broadcast('StatusUpdated', {
                 title: message ?
                 message : $translate.instant('saveMetadataError'),
                 error: message ? undefined : error,
                 timeout: 0,
                 type: 'danger'});
-              closeEditor();
             });
         $scope.savedStatus = gnCurrentEdit.savedStatus;
         return promise;

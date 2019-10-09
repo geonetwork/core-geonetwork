@@ -96,7 +96,7 @@ public class Set implements Service {
             final IMetadataManager metadataRepository = context.getBean(IMetadataManager.class);
             final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
             final Source source = sourceRepository.findOne(currentUuid);
-            Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.isLocal());
+            Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.getType());
             sourceRepository.save(newSource);
 
             PathSpec<Metadata, String> servicesPath = new PathSpec<Metadata, String>() {

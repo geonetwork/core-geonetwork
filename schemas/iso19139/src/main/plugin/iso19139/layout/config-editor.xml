@@ -28,7 +28,7 @@
         xmlns:gmd="http://www.isotc211.org/2005/gmd"
         xmlns:gmx="http://www.isotc211.org/2005/gmx"
         xmlns:srv="http://www.isotc211.org/2005/srv"
-        xmlns:gml="http://www.opengis.net/gml"
+        xmlns:gml="http://www.opengis.net/gml/3.2"
         xmlns:xlink="http://www.w3.org/1999/xlink"
         xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd">
 
@@ -76,6 +76,12 @@
       <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistLimitationsOnPublicAccess-LimitationsOnPublicAccess"
                            data-thesaurus-concept-id-attribute="codeSpace"/>
     </for>
+    -->
+
+    <!-- Example configuration to use the anchor switcher directive
+    <for name="gmd:code" xpath="/gmd:MD_Metadata/gmd:identifier/gmd:MD_Identifier/gmd:code" use="data-gn-anchor-switcher"/>
+    <for name="gmd:supplementalInformation" use="data-gn-anchor-switcher"/>
+    <for name="gmd:organisationName" use="data-gn-anchor-switcher"/>
     -->
 
 
@@ -376,6 +382,7 @@
       <name>gmd:transformationDimensionDescription</name>
       <name>gmd:orientationParameterDescription</name>
       <name>gmd:distance</name>
+      <name>gmd:geometricObjectCount</name>
       <name>srv:name</name>
       <name>srv:invocationName</name>
       <name>srv:serviceTypeVersion</name>
@@ -478,15 +485,18 @@
 
   <!-- View configuration -->
   <views>
-    <!--Turn on INSPIRE according to system settings -->
+    <!--Turn on INSPIRE according to system settings
+    WARNING: INSPIRE view is not compatible with ISO19139:2005 schema.
+    You have to use the default ISO19139:2007 schema.
+    -->
     <view name="inspire" upAndDownControlHidden="true" displayIfServiceInfo="/settings/system/inspire/enable='true'">
       <sidePanel>
+        <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""/>
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
-        <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
@@ -521,7 +531,7 @@
               <snippet>
                 <gmd:hierarchyLevel>
                   <gmd:MD_ScopeCode
-                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+                    codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode"
                     codeListValue="dataset"/>
                 </gmd:hierarchyLevel>
               </snippet>
@@ -536,7 +546,7 @@
               <snippet>
                 <gmd:hierarchyLevel>
                   <gmd:MD_ScopeCode
-                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+                    codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode"
                     codeListValue="service"/>
                 </gmd:hierarchyLevel>
               </snippet>
@@ -652,7 +662,7 @@
             <template>
               <snippet>
                 <gmd:spatialRepresentationType>
-                  <gmd:MD_SpatialRepresentationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode"
+                  <gmd:MD_SpatialRepresentationTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_SpatialRepresentationTypeCode"
                                                         codeListValue="vector"/>
                 </gmd:spatialRepresentationType>
               </snippet>
@@ -1194,7 +1204,7 @@
                               <gco:Date>2010-04-22</gco:Date>
                             </gmd:date>
                             <gmd:dateType>
-                              <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                              <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                                                    codeListValue="publication"/>
                             </gmd:dateType>
                           </gmd:CI_Date>
@@ -1241,7 +1251,7 @@
                     </gmd:keyword>
                     <gmd:type>
                       <gmd:MD_KeywordTypeCode
-                        codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                        codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_KeywordTypeCode"
                         codeListValue="theme"/>
                     </gmd:type>
                     <gmd:thesaurusName>
@@ -1257,7 +1267,7 @@
                             </gmd:date>
                             <gmd:dateType>
                               <gmd:CI_DateTypeCode
-                                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                                 codeListValue="publication"/>
                             </gmd:dateType>
                           </gmd:CI_Date>
@@ -1670,7 +1680,7 @@
                             </gmd:date>
                             <gmd:dateType>
                               <gmd:CI_DateTypeCode
-                                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                                 codeListValue="publication"/>
                             </gmd:dateType>
                           </gmd:CI_Date>
@@ -1740,7 +1750,7 @@
                             </gmd:date>
                             <gmd:dateType>
                               <gmd:CI_DateTypeCode
-                                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                                 codeListValue="publication"/>
                             </gmd:dateType>
                           </gmd:CI_Date>
@@ -1787,7 +1797,7 @@
                                 </gmd:date>
                                 <gmd:dateType>
                                   <gmd:CI_DateTypeCode
-                                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                    codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                                     codeListValue="publication"/>
                                 </gmd:dateType>
                               </gmd:CI_Date>
@@ -1862,7 +1872,7 @@
                             </gmd:date>
                             <gmd:dateType>
                               <gmd:CI_DateTypeCode
-                                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                                 codeListValue="publication"/>
                             </gmd:dateType>
                           </gmd:CI_Date>
@@ -1937,7 +1947,7 @@
                             </gmd:date>
                             <gmd:dateType>
                               <gmd:CI_DateTypeCode
-                                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                                 codeListValue="publication"/>
                             </gmd:dateType>
                           </gmd:CI_Date>
@@ -1987,7 +1997,7 @@
                                 </gmd:date>
                                 <gmd:dateType>
                                   <gmd:CI_DateTypeCode
-                                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                    codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                                     codeListValue="publication"/>
                                 </gmd:dateType>
                               </gmd:CI_Date>
@@ -2050,7 +2060,7 @@
                   <gmd:MD_LegalConstraints>
                     <gmd:accessConstraints>
                       <gmd:MD_RestrictionCode
-                        codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                        codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
                         codeListValue="otherRestrictions"/>
                     </gmd:accessConstraints>
                     <gmd:useConstraints/>
@@ -2105,7 +2115,7 @@
                   <gmd:MD_LegalConstraints>
                     <gmd:accessConstraints>
                       <gmd:MD_RestrictionCode
-                        codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                        codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
                         codeListValue="otherRestrictions"/>
                     </gmd:accessConstraints>
                     <gmd:useConstraints/>
@@ -2174,7 +2184,7 @@
                     </gmd:contactInfo>
                     <gmd:role>
                       <gmd:CI_RoleCode
-                        codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                        codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
                         codeListValue="{{role}}"/>
                     </gmd:role>
                   </gmd:CI_ResponsibleParty>
@@ -2205,7 +2215,7 @@
                       </gmd:CI_Contact>
                     </gmd:contactInfo>
                     <gmd:role>
-                      <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                      <gmd:CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
                                        codeListValue="resourceProvider"/>
                     </gmd:role>
                   </gmd:CI_ResponsibleParty>
@@ -2271,7 +2281,7 @@
                     </gmd:contactInfo>
                     <gmd:role>
                       <gmd:CI_RoleCode
-                        codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                        codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
                         codeListValue="{{role}}"/>
                     </gmd:role>
                   </gmd:CI_ResponsibleParty>
@@ -2303,7 +2313,7 @@
                       </gmd:CI_Contact>
                     </gmd:contactInfo>
                     <gmd:role>
-                      <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                      <gmd:CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
                                        codeListValue="resourceProvider"/>
                     </gmd:role>
                   </gmd:CI_ResponsibleParty>
@@ -2367,7 +2377,7 @@
                     </gmd:contactInfo>
                     <gmd:role>
                       <gmd:CI_RoleCode
-                        codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                        codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
                         codeListValue="{{role}}"/>
                     </gmd:role>
                   </gmd:CI_ResponsibleParty>
@@ -2398,7 +2408,7 @@
                       </gmd:CI_Contact>
                     </gmd:contactInfo>
                     <gmd:role>
-                      <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                      <gmd:CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
                                        codeListValue="pointOfContact"/>
                     </gmd:role>
                   </gmd:CI_ResponsibleParty>
@@ -2790,7 +2800,7 @@
                     <gmd:MD_LegalConstraints>
                       <gmd:accessConstraints>
                         <gmd:MD_RestrictionCode
-                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
                           codeListValue="otherRestrictions"/>
                       </gmd:accessConstraints>
                       <gmd:otherConstraints>
@@ -2817,7 +2827,7 @@
                     <gmd:MD_LegalConstraints>
                       <gmd:accessConstraints>
                         <gmd:MD_RestrictionCode
-                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
                           codeListValue="otherRestrictions"/>
                       </gmd:accessConstraints>
                       <gmd:otherConstraints>
@@ -2845,7 +2855,7 @@
                     <gmd:MD_LegalConstraints>
                       <gmd:accessConstraints>
                         <gmd:MD_RestrictionCode
-                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
                           codeListValue="otherRestrictions"/>
                       </gmd:accessConstraints>
                       <gmd:otherConstraints>
@@ -2875,7 +2885,7 @@
                     <gmd:MD_LegalConstraints>
                       <gmd:accessConstraints>
                         <gmd:MD_RestrictionCode
-                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
                           codeListValue="otherRestrictions"/>
                       </gmd:accessConstraints>
                       <gmd:otherConstraints gco:nilReason="missing">
@@ -2914,7 +2924,7 @@
                     <gmd:MD_LegalConstraints>
                       <gmd:useConstraints>
                         <gmd:MD_RestrictionCode
-                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
                           codeListValue="otherRestrictions"/>
                       </gmd:useConstraints>
                       <gmd:otherConstraints>
@@ -2941,7 +2951,7 @@
                     <gmd:MD_LegalConstraints>
                       <gmd:useConstraints>
                         <gmd:MD_RestrictionCode
-                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
                           codeListValue="otherRestrictions"/>
                       </gmd:useConstraints>
                       <gmd:otherConstraints>
@@ -2969,7 +2979,7 @@
                     <gmd:MD_LegalConstraints>
                       <gmd:useConstraints>
                         <gmd:MD_RestrictionCode
-                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
                           codeListValue="otherRestrictions"/>
                       </gmd:useConstraints>
 
@@ -3000,7 +3010,7 @@
                     <gmd:MD_LegalConstraints>
                       <gmd:useConstraints>
                         <gmd:MD_RestrictionCode
-                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
                           codeListValue="otherRestrictions"/>
                       </gmd:useConstraints>
                       <gmd:otherConstraints gco:nilReason="missing">
@@ -3061,7 +3071,7 @@
                       </gmd:contactInfo>
                       <gmd:role>
                         <gmd:CI_RoleCode
-                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
                           codeListValue="custodian"/>
                       </gmd:role>
                     </gmd:CI_ResponsibleParty>
@@ -3149,6 +3159,7 @@
         In the full view, editor can access and manage the file store and
         thumbnail name and description not supported by the overview manager.
         -->
+        <directive data-gn-validation-report=""/>
         <directive data-gn-overview-manager=""/>
         <directive data-gn-onlinesrc-list=""
                    data-types="onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
@@ -3157,7 +3168,7 @@
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
-        <directive data-gn-validation-report=""/>
+
         <directive data-gn-suggestion-list=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
@@ -3168,6 +3179,7 @@
         <section xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:distributionInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:dataQualityInfo"/>
+        <section xpath="/gmd:MD_Metadata/gmd:contentInfo"/>
         <section name="gmd:MD_Metadata">
           <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
           <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
@@ -3229,12 +3241,12 @@
     </view>
     <view name="advanced">
       <sidePanel>
+        <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""/>
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
-        <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
@@ -3305,12 +3317,12 @@
     </view>
     <view name="xml">
       <sidePanel>
+        <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""/>
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
-        <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>

@@ -327,6 +327,11 @@ Element to match for creating the table.
                 <xs:documentation>Table header label (from strings.xml), if not defined is used the value of attribute 'for' use the related element label from labels.xml</xs:documentation>
               </xs:annotation>
             </xs:attribute>
+            <xs:attribute name="fieldset" type="xs:string" use="optional" fixed="false">
+              <xs:annotation>
+                <xs:documentation>To not to add an extra section around the table. This means that editor can't remove the element targeted by the table.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
             <xs:sequence>
               <xs:element maxOccurs="1" ref="header"/>
               <xs:element maxOccurs="1" ref="row"/>
@@ -684,6 +689,20 @@ A good default config with all directives is:
         <directive data-gn-onlinesrc-list=""
                    types="thumbnail|onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
       </sidePanel>
+
+
+For the online source panel, the list of choices can be overridden with a "config-id" attribute 
+pointing to a JSON configuration file in config/associated-panel. This file allows to customize
+the list of type of link user can set by defining for each type the list of fields to display and
+default values for fields (eg. protocol, function, application profile).
+
+.. code-block:: xml
+
+        <directive data-gn-onlinesrc-list=""
+                   types="thumbnail|onlinesrc|parent|dataset|service|source|sibling|associated|fcats"
+                   config-id="remotesensing"/>
+      </sidePanel>
+
 
 
 To include text block use the following:
@@ -1468,6 +1487,14 @@ Example of a drowdown button with 3 coordinates system to choose from:
           </action>
 
 
+Example of a button to display a suggestion form:
+
+.. code-block:: xml
+
+          <action type="suggest"
+                  process="add-columns-from-csv"/>
+
+
         ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>
@@ -1524,6 +1551,7 @@ For example, for sibling panel, the association type and initiative type could b
           <xs:restriction base="xs:string">
             <xs:enumeration value="add"/>
             <xs:enumeration value="process"/>
+            <xs:enumeration value="suggest"/>
             <xs:enumeration value="associatedResource"/>
           </xs:restriction>
         </xs:simpleType>

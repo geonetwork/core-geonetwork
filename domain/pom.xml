@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.7.0-SNAPSHOT</version>
+    <version>3.9.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -126,7 +126,6 @@
     <plugins>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.5</version>
         <executions>
           <execution>
             <id>test-jar</id>
@@ -159,7 +158,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.9</version>
         <executions>
           <execution>
             <id>add-source</id>
@@ -205,15 +203,16 @@
               <systemPropertyVariables>
                 <postgresqlPerformanceTest>true</postgresqlPerformanceTest>
               </systemPropertyVariables>
+              <runOrder>alphabetical</runOrder>
+              <forkCount>4</forkCount>
             </configuration>
           </plugin>
         </plugins>
       </build>
       <dependencies>
         <dependency>
-          <groupId>commons-dbcp</groupId>
-          <artifactId>commons-dbcp</artifactId>
-          <version>1.4</version>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-dbcp2</artifactId>
           <scope>test</scope>
         </dependency>
         <dependency>

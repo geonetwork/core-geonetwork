@@ -120,11 +120,19 @@ public class Settings {
     public static final String REGION_GETMAP_MAPPROJ = "region/getmap/mapproj";
     public static final String REGION_GETMAP_WIDTH = "region/getmap/width";
     public static final String REGION_GETMAP_SUMMARY_WIDTH = "region/getmap/summaryWidth";
+    public static final String METADATA_WORKFLOW_ENABLE = "metadata/workflow/enable";
     public static final String METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP = "metadata/workflow/draftWhenInGroup";
+    public static final String METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD = "metadata/workflow/allowSumitApproveInvalidMd";
+    public static final String METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD = "metadata/workflow/allowPublishInvalidMd";
+    public static final String METADATA_WORKFLOW_ALLOW_PUBLISH_NON_APPROVED_MD = "metadata/workflow/allowPublishNonApprovedMd";
+
     public static final String METADATA_IMPORT_RESTRICT = "metadata/import/restrict";
     public static final String METADATA_BACKUPARCHIVE_ENABLE = "metadata/backuparchive/enable";
     public static final String METADATA_VCS = "metadata/vcs/enable";
     public static final String VIRTUAL_SETTINGS_SUFFIX_ISDEFINED = "IsDefined";
+    public static final String NODE = "node/id";
+    public static final String NODE_DEFAULT = "node/default";
+    public static final String NODE_NAME = "node/name";
 
     public static class GNSetting {
         private String name;

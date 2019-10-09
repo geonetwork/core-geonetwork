@@ -8,7 +8,7 @@ Feature: GeoNetwork Login
     And I enter "{adminUser}" into input field having xpath "//*[@id='inputUsername']"
     And I enter "{adminPassword}" into input field having xpath "//*[@id='inputPassword']"
     And I click on element having css "form > button.btn-primary"
-    And I wait for 1 sec
+    And I wait 3 seconds for element having css ".gn-user-info" to display
     And I hover over element having css ".gn-user-info"
     When I click on element having css ".fa-sign-out"
 
@@ -19,7 +19,8 @@ Feature: GeoNetwork Login
     And I enter "{adminUser}" into input field having xpath "//*[@id='inputUsername']"
     And I enter "AnInvalidPassword" into input field having xpath "//*[@id='inputPassword']"
     And I click on element having css "form > button.btn-primary"
-    And I wait for 1 sec
-    Then element having xpath "//strong[text() = 'Incorrect username or password.']" should be present
+    And I wait 3 seconds for element having xpath "//p[@data-ng-show='signinFailure']" to display
+    Then element having xpath "//p[@data-ng-show='signinFailure']" should be present
 
 # TODO: Create guest account when enabled or not
+

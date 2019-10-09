@@ -58,33 +58,61 @@
     </div>
     <div class="btn-group">
       <button type="button"
-              class="btn btn-default navbar-btn gn-tooltip"
+              class="btn btn-default navbar-btn"
               aria-label="{{'closeEditor' | translate}}"
               title="{{'closeEditor'|translate}}"
-              gn-click-and-spin="close()"
+              gn-click-and-spin="close(false, false)"
               id="gn-editor-btn-close">
         <i class="fa fa-fw fa-sign-out"/>
         <span class="visible-lg" data-translate="">closeEditor</span>
       </button>
-    </div>
-    <!-- /.btn-group -->
-    <div class="btn-group" title="{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}">
       <button type="button"
-              data-gn-click-and-spin="save(true, false)"
-              id="gn-editor-btn-save"
-              aria-label="{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}"
-              class="btn btn-success navbar-btn">
-        <i class="fa fa-fw fa-save"/>
-        <span class="visible-lg">{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}</span>
-      </button>
-      <button type="button"
-              class="btn btn-success navbar-btn dropdown-toggle"
+              class="btn btn-default navbar-btn dropdown-toggle"
+              data-ng-if="((user.isEditorForGroup(gnCurrentEdit.metadata.groupOwner) || user.isAdmin()) && gnCurrentEdit.metadata.mdStatus == 1 && isMdWorkflowEnable) ||
+              ((user.isReviewerForGroup(gnCurrentEdit.metadata.groupOwner) || user.isAdmin()) && gnCurrentEdit.metadata.mdStatus == 4)"
               aria-label="{{'showOptions' | translate}}"
               data-toggle="dropdown"
               aria-expanded="false">
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu dropdown-menu-right" role="menu">
+        <li role="menuitem" data-ng-if="(user.isEditorForGroup(gnCurrentEdit.metadata.groupOwner) || user.isAdmin()) && gnCurrentEdit.metadata.mdStatus == 1 && isMdWorkflowEnable">
+          <a href=""
+             title="{{'saveAndSubmit' | translate }}"
+             data-gn-click-and-spin="close(true, false)">
+            {{'saveAndSubmit' | translate}}
+          </a>
+        </li>
+        <li role="menuitem" data-ng-if="(user.isReviewerForGroup(gnCurrentEdit.metadata.groupOwner) || user.isAdmin()) && gnCurrentEdit.metadata.mdStatus == 4">
+          <a href=""
+             title="{{'saveAndApprove' | translate }}"
+             data-gn-click-and-spin="close(false, true)">
+            {{'saveAndApprove' | translate}}
+          </a>
+        </li>
+        </ul>
+    </div>
+    <!-- /.btn-group -->
+    <div class="btn-group" title="{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}">
+      <button type="button"
+              data-gn-click-and-spin="save(true, false)"
+              id="gn-editor-btn-save"
+              aria-label="{{(isTemplate() ? 'saveTemplate' : (gnCurrentEdit.metadata.draft === 'y' ? 'saveDraft' : 'saveMetadata')) | translate}}"
+              class="btn btn-success navbar-btn">
+        <i class="fa fa-fw fa-save"/>
+        <span class="visible-lg">{{(isTemplate() ? 'saveTemplate' : (gnCurrentEdit.metadata.draft === 'y' ? 'saveDraft' : 'saveMetadata')) | translate}}</span>
+      </button>
+      <button type="button"
+              data-ng-disabled="gnCurrentEdit.metadata.draft === 'y'"
+              class="btn btn-success navbar-btn dropdown-toggle"
+              aria-label="{{'showOptions' | translate}}"
+              title="{{(gnCurrentEdit.metadata.draft === 'y' ? 'draftCanNoBeATemplateOrMinorEdit' : 'showOptions') | translate}}"
+              data-toggle="dropdown"
+              aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right" role="menu">
+        <!-- A draft can not be a template -->
         <li role="menuitem">
           <a href=""
              title="{{(isTemplate() ? 'saveAsMetadata' : 'saveAsTemplate') | translate}}"
@@ -92,6 +120,10 @@
             {{(isTemplate() ? 'saveAsMetadata' : 'saveAsTemplate') | translate}}
           </a>
         </li>
+        <!-- When editing an approved version, the editor open
+        a draft copy. Saving it will not replaced the initial record
+        and will update the draft. So minor edit does not make much sense
+        as it will require another approval of the draft. -->
         <li class="dropdown-header"
             role="menuitem">
           <label title="{{'minorEditHelp' | translate}}">

@@ -47,6 +47,12 @@
   </type>
   <type>
     <value>@@value@@</value>
+    <type>USER_MAIN_PROFILE</type>
+    <name>UserMainProfile</name>
+    <allowArbitraryValue>true</allowArbitraryValue>
+  </type>
+  <type>
+    <value>@@value@@</value>
     <type>GROUP</type>
     <name>Group</name>
     <allowArbitraryValue>true</allowArbitraryValue>

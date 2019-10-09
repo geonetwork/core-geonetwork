@@ -57,6 +57,8 @@
 
   <bean id="translatorFactory" class="org.fao.geonet.kernel.search.TranslatorFactory"/>
 
+  <bean id="urlAnalyzer" class="org.fao.geonet.kernel.url.UrlAnalyzer" lazy-init="true"/>
+  <bean id="urlChecker" class="org.fao.geonet.kernel.url.UrlChecker" lazy-init="true"/>
   <bean id="SearchManager" class="org.fao.geonet.kernel.search.SearchManager" lazy-init="true"/>
   <bean id="SearchLogger" class="org.fao.geonet.kernel.search.log.SearcherLogger" lazy-init="true"/>
   <bean id="EsSearchManager" class="org.fao.geonet.kernel.search.EsSearchManager" lazy-init="true"/>
@@ -163,15 +165,26 @@
   </bean>
 
 
-    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer"/>
-    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataManager"/>
+    <!--<bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataManager"/>-->
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataValidator"/>
-    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils"/>
+    <!--<bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils"/>-->
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataOperations"/>
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataStatus"/>
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataSchemaUtils"/>
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataCategory"/>
 
-  <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false"/>
+  <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
+    <property name="namingStrategy" ref="namingStrategy"/>
+  </bean>
+  <bean id="namingStrategy"
+        class="org.springframework.jmx.export.naming.KeyNamingStrategy">
+    <property name="mappings">
+      <props>
+        <prop key="jdbcDataSource">org.apache.commons.dbcp2:name=jdbcDataSource</prop>
+      </props>
+    </property>
+  </bean>
+
 
 </beans>

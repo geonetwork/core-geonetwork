@@ -35,6 +35,7 @@ import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.fao.geonet.lib.Lib;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -60,6 +61,12 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 public class AttachmentsActionsApi {
     private final ApplicationContext appContext = ApplicationContextHolder.get();
     private Store store;
+
+    @Autowired
+    DataManager dataMan;
+
+    @Autowired
+    ThumbnailMaker thumbnailMaker;
 
     public AttachmentsActionsApi() {
     }
@@ -91,7 +98,7 @@ public class AttachmentsActionsApi {
         response = MetadataResource.class,
         nickname = "createMetadataOverview")
     @RequestMapping(
-        value = "/api/" + API.VERSION_0_1 +
+        value = "/{portal}/api/" + API.VERSION_0_1 +
         "/records/{metadataUuid}/attachments/print-thumbnail",
         method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.CREATED)
@@ -117,12 +124,9 @@ public class AttachmentsActionsApi {
     )
         throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        DataManager dataMan = appContext.getBean(DataManager.class);
 
         String metadataId = dataMan.getMetadataId(metadataUuid);
         Lib.resource.checkEditPrivilege(context, metadataId);
-
-        ThumbnailMaker thumbnailMaker = appContext.getBean(ThumbnailMaker.class);
 
         Path thumbnailFile = thumbnailMaker.generateThumbnail(
             jsonConfig,

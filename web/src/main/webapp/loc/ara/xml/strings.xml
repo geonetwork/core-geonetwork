@@ -1646,4 +1646,11 @@
   <tag_label>Tags</tag_label>
   <map_label>Map</map_label>
   <unknown>Unknown</unknown>
+
+  <pdfReportTocTitle>Contents</pdfReportTocTitle>
+  <format>Format</format>
+  <onTheWeb>More online information</onTheWeb>
+  <spatialRepresentationType>Data type</spatialRepresentationType>
+  <updateFrequency>Update frequency</updateFrequency>
+  <lastUpdate>Record updated</lastUpdate>
 </strings>

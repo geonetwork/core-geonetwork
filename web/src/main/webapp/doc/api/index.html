@@ -54,7 +54,9 @@
         requestInterceptor: function(requestObj) {
           var headers = requestObj.headers || {};
           headers["X-XSRF-TOKEN"] = csrf;
-          return requestObj;        },
+          requestObj.url = requestObj.url.replace('{portal}', 'srv');
+          return requestObj;        
+        },
         presets: [
           SwaggerUIBundle.presets.apis,
           SwaggerUIStandalonePreset

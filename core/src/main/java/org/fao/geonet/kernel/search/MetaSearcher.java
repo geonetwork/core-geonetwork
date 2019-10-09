@@ -59,6 +59,8 @@ public abstract class MetaSearcher implements Closeable {
     public abstract int getSize();
 
     public abstract Element getSummary() throws Exception;
+    
+    public abstract long getVersionToken();
 
     //--------------------------------------------------------------------------------
     // utilities

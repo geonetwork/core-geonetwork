@@ -1,7 +1,7 @@
 <div>
   <form class="form-horizontal" role="form"
         data-ng-search-form="">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+    <input type="hidden" name="_csrf" value="{{csrf}}"/>
     <div class="onlinesrc-container">
       <div class="form-group">
         <div class="col-sm-10">
@@ -41,10 +41,19 @@
            data-layers="layers"
            data-selection="srcParams.selectedLayers">
       </div>
+
+      <div>
+        <label>
+          <input type="checkbox"
+                 data-ng-model="addOnlineSrcInDataset"/>
+          <span data-translate="">addTheFollowingLinkInDataset</span>
+        </label>
+        <span>{{onlineSrcLink}}</span>
+      </div>
     </div>
     <div class="">
       <button type="button" class="btn navbar-btn btn-success"
-              data-gn-click-and-spin="linkTo()"
+              data-gn-click-and-spin="linkTo(addOnlineSrcInDataset)"
               data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}">
         <i class="fa gn-icon-service"/>&nbsp;
         <span data-translate="" data-ng-show="mode == 'service'">linkToService</span>

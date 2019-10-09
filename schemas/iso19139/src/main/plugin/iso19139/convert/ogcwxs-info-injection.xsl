@@ -28,7 +28,8 @@
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -61,6 +62,16 @@
 
   <!-- Layer name to process -->
   <xsl:param name="Name"
+             select="''"/>
+
+  <!--
+  Editor can change the language once the record is created.
+
+  Multilingual records injection is partially supported for the
+  field title and abstract. Which means that editor can translated
+  the title of a record harvested and those will be preserved.
+  -->
+  <xsl:param name="lang"
              select="''"/>
 
   <xsl:variable name="isBuildingDatasetRecord"
@@ -188,7 +199,7 @@
 
 
 
-  <!-- Insert title. -->
+  <!-- Insert title.   -->
   <xsl:template mode="copy"
                 match="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title"
                 priority="1999">
@@ -198,6 +209,7 @@
       <gco:CharacterString>
         <xsl:value-of select="$serviceTitle"/>
       </gco:CharacterString>
+      <xsl:copy-of select="gmd:PT_FreeText"/>
     </xsl:copy>
   </xsl:template>
 
@@ -210,6 +222,7 @@
       <gco:CharacterString>
         <xsl:value-of select="$layerTitle"/>
       </gco:CharacterString>
+      <xsl:copy-of select="gmd:PT_FreeText"/>
     </xsl:copy>
   </xsl:template>
 
@@ -230,11 +243,12 @@
                        */csw:Capabilities/ows:ServiceIdentification/ows:Abstract|
                        */wcs:Service/wcs:description)/text()"/>
       </gco:CharacterString>
+      <xsl:copy-of select="gmd:PT_FreeText"/>
     </xsl:copy>
   </xsl:template>
 
   <xsl:template mode="copy"
-                match="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString"
+                match="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract"
                 priority="1999">
 
     <xsl:copy>
@@ -255,19 +269,32 @@
           * <xsl:value-of select="concat(local-name(.), ':', ows2:Title, ', ', ows2:Abstract, '(', string-join(wps2:LiteralData/wps2:Format/@mimeType, ', '), ')')"/>
         </xsl:for-each>
       </gco:CharacterString>
+      <xsl:copy-of select="gmd:PT_FreeText"/>
     </xsl:copy>
   </xsl:template>
 
 
 
 
+  <!-- If GetCapabilities define a language with INSPIRE extension use it,
+   if a language is defined in the template or in the record, use it,
+   if a parameter is set on the harvester parameters, use it or default to eng. -->
   <xsl:template mode="copy"
-                match="gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue"
-                priority="1999">
-    <xsl:variable name="language"
-                  select="normalize-space(//inspire_vs:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language/text())"/>
+              match="gmd:MD_Metadata/gmd:language"
+              priority="1999">
+    <xsl:copy>
+      <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/">
+        <xsl:variable name="currentLanguage"
+                      select="*/@codeListValue"/>
+        <xsl:variable name="language"
+                      select="normalize-space(//inspire_vs:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language/text())"/>
 
-    <xsl:value-of select="if ($language != '') then $language else 'eng'"/>
+        <xsl:attribute name="codeListValue"
+                       select="if ($currentLanguage = '' and $language != '') then $language
+                               else if ($currentLanguage != '') then $currentLanguage
+                               else if ($lang != '') then $lang else 'eng'"/>
+      </gmd:LanguageCode>
+    </xsl:copy>
   </xsl:template>
 
 
@@ -552,6 +579,7 @@
       <gco:CharacterString>
         <xsl:value-of select="$getCapabilities//*:Fees"/>
       </gco:CharacterString>
+      <xsl:copy-of select="gmd:PT_FreeText"/>
     </xsl:copy>
   </xsl:template>
 
@@ -713,7 +741,7 @@
         </xsl:for-each>
         <gmd:type>
           <gmd:MD_KeywordTypeCode
-            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+            codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_KeywordTypeCode"
             codeListValue="theme"/>
         </gmd:type>
         <gmd:thesaurusName>
@@ -728,7 +756,7 @@
                 </gmd:date>
                 <gmd:dateType>
                   <gmd:CI_DateTypeCode
-                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                    codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                     codeListValue="publication"/>
                 </gmd:dateType>
               </gmd:CI_Date>
@@ -757,14 +785,14 @@
               ">
             <gmd:accessConstraints>
               <gmd:MD_RestrictionCode
-                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
                 codeListValue="{.}"/>
             </gmd:accessConstraints>
           </xsl:when>
           <xsl:when test="lower-case(.) = 'none'">
             <gmd:accessConstraints>
               <gmd:MD_RestrictionCode
-                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
                 codeListValue="otherRestrictions"/>
             </gmd:accessConstraints>
             <gmd:otherConstraints>
@@ -774,7 +802,7 @@
           <xsl:otherwise>
             <gmd:accessConstraints>
               <gmd:MD_RestrictionCode
-                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
                 codeListValue="otherRestrictions"/>
             </gmd:accessConstraints>
             <gmd:otherConstraints>
@@ -813,13 +841,7 @@
         <gmd:linkage>
           <gmd:URL><xsl:value-of select="@xlink:href|@onlineResource"/></gmd:URL>
         </gmd:linkage>
-        <xsl:if test="$isBuildingDatasetRecord">
-          <gmd:name>
-            <gco:CharacterString>
-              <xsl:value-of select="$Name"/>
-            </gco:CharacterString>
-          </gmd:name>
-        </xsl:if>
+
         <gmd:protocol>
           <gco:CharacterString>
             <xsl:choose>
@@ -831,6 +853,14 @@
             </xsl:choose>
           </gco:CharacterString>
         </gmd:protocol>
+
+        <xsl:if test="$isBuildingDatasetRecord">
+          <gmd:name>
+            <gco:CharacterString>
+              <xsl:value-of select="$Name"/>
+            </gco:CharacterString>
+          </gmd:name>
+        </xsl:if>
 
         <gmd:description>
           <gco:CharacterString>
@@ -883,7 +913,7 @@
                     </gmd:date>
                     <gmd:dateType>
                       <gmd:CI_DateTypeCode
-                        codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                        codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                         codeListValue="revision"/>
                     </gmd:dateType>
                   </gmd:CI_Date>
@@ -1011,7 +1041,7 @@
                         </xsl:when>
                         <xsl:when test="name(.)='WCS_Capabilities'">
                           <xsl:for-each
-                            select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:lonLatEnvelope/gml:pos[1]">
+                            select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:lonLatEnvelope/gml320:pos[1]">
                             <xmin>
                               <xsl:value-of select="substring-before(., ' ')"/>
                             </xmin>
@@ -1020,7 +1050,7 @@
                             </ymin>
                           </xsl:for-each>
                           <xsl:for-each
-                            select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:lonLatEnvelope/gml:pos[2]">
+                            select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:lonLatEnvelope/gml320:pos[2]">
                             <xmax>
                               <xsl:value-of select="substring-before(., ' ')"/>
                             </xmax>
@@ -1108,7 +1138,7 @@
                       </xsl:for-each>
                     </xsl:when>
                     <xsl:when test="$rootName='WCS_Capabilities'">
-                      <xsl:for-each select="$getCapabilities//wcs:lonLatEnvelope/gml:pos[1]">
+                      <xsl:for-each select="$getCapabilities//wcs:lonLatEnvelope/gml320:pos[1]">
                         <xmin>
                           <xsl:value-of select="substring-before(., ' ')"/>
                         </xmin>
@@ -1116,7 +1146,7 @@
                           <xsl:value-of select="substring-after(., ' ')"/>
                         </ymin>
                       </xsl:for-each>
-                      <xsl:for-each select="$getCapabilities//wcs:lonLatEnvelope/gml:pos[2]">
+                      <xsl:for-each select="$getCapabilities//wcs:lonLatEnvelope/gml320:pos[2]">
                         <xmax>
                           <xsl:value-of select="substring-before(., ' ')"/>
                         </xmax>

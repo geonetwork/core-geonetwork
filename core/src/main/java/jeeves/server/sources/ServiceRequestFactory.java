@@ -68,7 +68,11 @@ public final class ServiceRequestFactory {
      * srv/<language>/<service>[!]<parameters>
      */
 
-    public static ServiceRequest create(HttpServletRequest req, HttpServletResponse res,
+    public static ServiceRequest create(HttpServletRequest req,
+                                        HttpServletResponse res,
+                                        String portal,
+                                        String lang,
+                                        String service,
                                         Path uploadDir, int maxUploadSize) throws Exception {
         String url = req.getPathInfo();
 
@@ -86,7 +90,7 @@ public final class ServiceRequestFactory {
             try {
                 req.setCharacterEncoding(Constants.ENCODING);
             } catch (UnsupportedEncodingException ex) {
-                ex.printStackTrace();
+                Log.error(Log.JEEVES, "Create request error: " + ex.getMessage(), ex);
             }
         }
 
@@ -95,8 +99,8 @@ public final class ServiceRequestFactory {
         HttpServiceRequest srvReq = new HttpServiceRequest(res);
 
         srvReq.setDebug(extractDebug(url));
-        srvReq.setLanguage(extractLanguage(url));
-        srvReq.setService(extractService(url));
+        srvReq.setLanguage(lang);
+        srvReq.setService(service);
         srvReq.setJSONOutput(extractJSONFlag(req.getQueryString()));
         String ip = req.getRemoteAddr();
         String forwardedFor = req.getHeader("x-forwarded-for");
@@ -199,28 +203,7 @@ public final class ServiceRequestFactory {
 
         return url.indexOf(JSON_URL_FLAG) != -1;
     }
-    //---------------------------------------------------------------------------
 
-    /**
-     * Extracts the language code from the url.
-     */
-    public static String extractLanguage(String url) {
-        if (url == null) {
-            return null;
-        }
-
-        url = url.substring(1);
-
-        int pos = url.indexOf('/');
-
-        if (pos == -1) {
-            return null;
-        }
-
-        return url.substring(0, pos);
-    }
-
-    //---------------------------------------------------------------------------
 
     /**
      * Extracts the service name from the url
@@ -354,7 +337,7 @@ public final class ServiceRequestFactory {
             byte[] utf8Bytes = file.getBytes("UTF8");
             file = new String(utf8Bytes, "UTF8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Log.error(Log.JEEVES, e.getMessage(), e);
         }
 
         //--- replace whitespace with underscore

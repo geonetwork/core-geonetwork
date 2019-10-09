@@ -1,0 +1,17 @@
+{
+  "config": {
+    "display": "radio",
+    "types": [{
+      "label": "addOnlinesrc",
+      "sources": {
+        "filestore": true,
+        "thumbnailMaker": true
+      },
+      "icon": "fa gn-icon-onlinesrc",
+      "process": "onlinesrc-add",
+      "fields": {
+        "url": {}
+      }
+    }]
+  }
+}

@@ -31,9 +31,11 @@ import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.SettingDataType;
 import org.fao.geonet.domain.Setting_;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.ServletPathFinder;
 
 import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_NAME_PATH;
 
 /**
  * A convenience class for updating and accessing settings.  One of the primary needs of this class
@@ -65,10 +68,20 @@ public class SettingManager {
 
     @PersistenceContext
     private EntityManager _entityManager;
+
     @Autowired
     private ServletContext servletContext;
 
     private ServletPathFinder pathFinder;
+
+    @Autowired
+    NodeInfo node;
+
+    @Autowired
+    SettingRepository repo;
+
+    @Autowired
+    SourceRepository sourceRepository;
 
     @PostConstruct
     private void init() {
@@ -76,7 +89,6 @@ public class SettingManager {
     }
 
     public List<Setting> getAll() {
-        SettingRepository repo = ApplicationContextHolder.get().getBean(SettingRepository.class);
         return repo.findAll(SortUtils.createSort(Setting_.name));
     }
 
@@ -88,8 +100,6 @@ public class SettingManager {
      * @return all settings as xml.
      */
     public Element getAllAsXML(boolean asTree) {
-        SettingRepository repo = ApplicationContextHolder.get().getBean(SettingRepository.class);
-
         Element env = new Element("settings");
         List<Setting> settings = repo.findAll(SortUtils.createSort(Setting_.name));
 
@@ -167,7 +177,6 @@ public class SettingManager {
         if (Log.isDebugEnabled(Geonet.SETTINGS)) {
             Log.debug(Geonet.SETTINGS, "Requested setting with name: " + path);
         }
-        SettingRepository repo = ApplicationContextHolder.get().getBean(SettingRepository.class);
 
         Setting se = repo.findOne(path);
         if (se == null) {
@@ -191,8 +200,6 @@ public class SettingManager {
      * @param keys A list of setting's key to retrieve
      */
     public List<Setting> getSettings(String[] keys) {
-        SettingRepository repo = ApplicationContextHolder.get().getBean(SettingRepository.class);
-
         List<Setting> settings = new ArrayList<>();
         for (int i = 0; i < keys.length; i++) {
             String key = keys[i];
@@ -212,8 +219,6 @@ public class SettingManager {
      * @param keys A list of setting's key to retrieve
      */
     public Element getValues(String[] keys) {
-        SettingRepository repo = ApplicationContextHolder.get().getBean(SettingRepository.class);
-
         Element env = new Element("settings");
         for (int i = 0; i < keys.length; i++) {
             String key = keys[i];
@@ -286,7 +291,6 @@ public class SettingManager {
             Log.debug(Geonet.SETTINGS, "Setting with name: " + key + ", value: " + value);
         }
 
-        SettingRepository repo = ApplicationContextHolder.get().getBean(SettingRepository.class);
         Setting setting = repo.findOne(key);
 
         if (setting == null) {
@@ -331,7 +335,7 @@ public class SettingManager {
             String key = entry.getKey();
             String value = entry.getValue();
             if (StringUtils.isNotEmpty(key)) {
-                setValue(key, value);
+                 setValue(key, value);
             }
         }
         return success;
@@ -351,7 +355,7 @@ public class SettingManager {
     }
 
     public final String getSiteName() {
-        return getValue(Settings.SYSTEM_SITE_NAME_PATH);
+        return getValue(SYSTEM_SITE_NAME_PATH);
     }
 
     public void setSiteUuid(String siteUuid) {
@@ -387,8 +391,7 @@ public class SettingManager {
     public
     @Nonnull
     String getNodeURL() {
-        NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
-        String locServ = getBaseURL() + nodeInfo.getId() + "/";
+        String locServ = getBaseURL() + node.getId() + "/";
         return locServ;
     }
     /**

@@ -121,6 +121,8 @@
                                format, extent, projection) {
         if (url) {
           var defaultVersion = '1.1.0';
+          // Params to remove from input URL if existing
+          var excludedParams = ['request', 'service', 'version'];
           var params = {
             request: 'GetFeature',
             service: 'WFS',
@@ -134,7 +136,7 @@
           if (projection) {
             params.srsName = projection;
           }
-          url = gnOwsCapabilities.mergeParams(url, params);
+          url = gnOwsCapabilities.mergeParams(url, params, excludedParams);
           window.open(url);
         } else {
           console.warn('no url');

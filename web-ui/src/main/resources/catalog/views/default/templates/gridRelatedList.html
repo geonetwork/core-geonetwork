@@ -1,0 +1,22 @@
+<ul class="list-group" ng-if="::relations">
+  <ul ng-repeat="type in ::types"
+      ng-if="::relations[type]"
+      ng-init="displayState[type] = false;"
+      class="gn-related-list">
+    <li class="gn-related-type">
+      {{::relations[type].length}}&nbsp;{{type | translate}}
+    </li>
+    <li ng-repeat="r in ::relations[type]" >
+      <a ng-show="$index < max || displayState[type]"
+         href="{{location.origin}}{{location.pathname}}#/metadata/{{r.id}}"
+         title="{{r.title | gnLocalized: lang}}">
+        {{r.title | gnLocalized: lang}}
+      </a>
+    </li>
+    <li ng-if="relations[type].length > max && !display">
+      <a ng-click="displayState[type] = !displayState[type]">
+        {{relations[type].length - max}}&nbsp;{{(displayState[type] ? 'less' : 'more') | translate}} ...
+      </a>
+    </li>
+  </ul>
+</ul>

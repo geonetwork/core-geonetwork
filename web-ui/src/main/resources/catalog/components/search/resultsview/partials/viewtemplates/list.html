@@ -32,6 +32,7 @@
             <span data-translate="">listOfCategories</span>
             <a data-ng-repeat="cat in ::md.category"
                title="{{('cat-' + cat) | translate}}"
+               aria-label="{{('cat-' + cat) | translate}}"
                data-ng-href="#/search?_cat={{cat}}">
               <i class="fa">
                 <span class="fa gn-icon-{{cat}}"></span>
@@ -44,34 +45,46 @@
               </i>
             </a>
             <a data-ng-repeat="t in md.topicCat"
-               data-ng-href="#/search?topicCat={{t}}">
-              <i class="fa" title="{{t | translate}}">
+               data-ng-href="#/search?topicCat={{t}}"
+               title="{{t | translate}}"
+               aria-label="{{t | translate}}">
+              <i class="fa" >
                 <span class="fa gn-icon-{{t}}"></span>
               </i>
             </a>
           </div>
 
-          <h1 data-ng-click="openRecord($index, md, searchResults.records)"
-          >
-            <!-- Icon for types -->
-            <a data-ng-href="#/metadata/{{md.getUuid()}}"
-               title="{{md.title || md.defaultTitle}}">
+          <h1>
+            <a href=""
+               gn-metadata-open="md"
+               gn-index="$index"
+               gn-records="searchResults.records"
+               gn-formatter="formatter.defaultUrl"
+               title="{{md.title || md.defaultTitle}}"
+               aria-label="{{md.title || md.defaultTitle}}">
               <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
               {{md.title || md.defaultTitle}}</a>
           </h1>
         </div>
 
-        <div class="gn-md-abstract">
+        <div class="gn-md-abstract"
+             gn-metadata-open="md"
+             gn-index="$index"
+             gn-records="searchResults.records"
+             gn-formatter="formatter.defaultUrl">
           <p class="text-justify"
-            data-ng-click="openRecord($index, md, searchResults.records)"
-            dd-text-collapse dd-text-collapse-max-length="350"
-            dd-text-collapse-text="{{md.abstract || md.defaultAbstract}}"></p>
+             dd-text-collapse dd-text-collapse-max-length="350"
+             dd-text-collapse-text="{{md.abstract || md.defaultAbstract}}"></p>
           <address ng-if="md.getContacts().resource">{{::md.getContacts().resource}}</address>
         </div>
 
+        <div gn-grid-related
+             gn-grid-related-uuid="::md.getUuid()"
+             template="../../catalog/views/default/templates/gridRelatedList.html"></div>
+
         <div class="row gn-md-links">
           <div class="btn-group" ng-if="::links.length > 0">
-            <button type="button" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
               <span class="fa fa-link"></span>
               {{::links.length}}
               <ng-pluralize count="::links.length"
@@ -85,7 +98,7 @@
           </div>
 
           <div class="btn-group" ng-if="::downloads.length > 0">
-            <button type="button" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
               <span class="fa fa-download"></span>
               {{::downloads.length}}
               <ng-pluralize count="::downloads.length"
@@ -101,7 +114,7 @@
           </div>
 
           <div class="btn-group" ng-if="layers.length > 0">
-            <button type="button" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
               <span class="fa fa-globe"></span>
               {{::layers.length}}
               <ng-pluralize count="::layers.length"
@@ -123,30 +136,37 @@
               </li>
             </ul>
           </div>
-
+          <!-- Display the first metadata status (apply to ISO19139 record) -->
+          <div data-ng-if="md.status_text.length > 0"
+               title="{{md.status_text[0]}}"
+               class="gn-status gn-status-{{md.status[0]}} pull-right">{{md.status_text[0]}}
+          </div>
           <!--Edit button-->
-          <a class="btn btn-xs btn-default"
+          <a class="btn btn-default pull-left"
              ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}">
             <i class="fa fa-pencil"></i>
             <span data-translate="" class="sr-only">edit</span>
           </a>
+          <div data-ng-if="md.draft == 'e'"
+               title="{{'workingCopy' | translate}}"
+               class="gn-workingcopy-status pull-left">
+            <i class="fa fa-pencil"></i>
+            <span>{{'workingCopy' | translate}}</span>
+          </div>
         </div>
       </div>
       <div class="col-md-2 clearfix">
         <!-- Thumbnail -->
-        <div class="gn-md-thumbnail"
-             data-ng-class="{'gn-md-no-thumbnail': !md.getThumbnails().list[0].url}">
+        <div class="gn-md-thumbnail">
+          <div class="gn-md-no-thumbnail"
+               data-ng-if="!md.getThumbnails().list[0].url"></div>
           <img class="gn-img-thumbnail"
                alt="{{md.title || md.defaultTitle}}"
                data-ng-src="{{md.getThumbnails().list[0].url}}"
                data-ng-if="md.getThumbnails().list[0].url"/>
 
         </div>
-        <!-- Display the first metadata status (apply to ISO19139 record) -->
-        <div data-ng-if="md.status_text.length > 0"
-             title="{{md.status_text[0]}}"
-             class="gn-status gn-status-{{md.status[0]}}">{{md.status_text[0]}}
-       </div>
+
       </div>
     </div>
   </li>

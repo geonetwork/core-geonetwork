@@ -1,12 +1,15 @@
 <div>
   <p class="help-block" data-translate="">ui/config-help</p>
   <fieldset data-ng-repeat="(m, mCfg) in jsonConfig.mods">
-    <legend>
+    <legend data-ng-if="mCfg.enabled !== undefined">
       <input type="checkbox"
              id="{{m}}-checkbox"
              data-ng-model="mCfg.enabled"/>&nbsp;
       <label class="control-label"
              for="{{m}}-checkbox">{{('ui-mod-' + m) | translate}}</label>
+    </legend>
+    <legend data-ng-if="mCfg.enabled === undefined">
+      <label class="control-label">{{('ui-mod-' + m) | translate}}</label>
     </legend>
 
     <p class="help-block"
@@ -14,6 +17,7 @@
       {{('ui-' + m + '-help') | translate}} </p>
 
     <div class="col-sm-12 form-group"
+         data-ng-if="mCfg.enabled === undefined || mCfg.enabled === true"
          data-ng-repeat="(key, value) in mCfg"
          data-ng-switch="key">
 
@@ -47,7 +51,7 @@
             </td>
           </tr>
           <tr>
-            <td>
+            <td colspan="2">
               <a class="btn btn-link"
                  title="{{'add' | translate}}"
                  data-ng-click="addItem(mCfg[key], mCfg[key][mCfg[key].length - 1] * 10)">
@@ -80,7 +84,7 @@
             </td>
           </tr>
           <tr>
-            <td>
+            <td colspan="2">
               <a class="btn btn-link"
                  title="{{'add' | translate}}"
                  data-ng-click="addItem(mCfg[key], {key: 'fieldName'})">
@@ -122,7 +126,7 @@
             </td>
           </tr>
           <tr>
-            <td>
+            <td colspan="2">
               <a class="btn btn-link"
                  title="{{'add' | translate}}"
                  data-ng-click="addItem(mCfg[key], {'iso3code': 'iso2code'})">
@@ -163,7 +167,7 @@
             </td>
           </tr>
           <tr>
-            <td>
+            <td colspan="2">
               <a class="btn btn-link"
                  title="{{'add' | translate}}"
                  data-ng-click="addItem(mCfg[key], {'sortBy': 'fieldName', 'sortOrder': ''})">
@@ -206,7 +210,7 @@
             </td>
           </tr>
           <tr>
-            <td>
+            <td colspan="2">
               <a class="btn btn-link"
                  title="{{'add' | translate}}"
                  data-ng-click="addItem(mCfg[key], {'field': 'value'})">
@@ -253,7 +257,7 @@
             </td>
           </tr>
           <tr>
-            <td>
+            <td colspan="2">
               <a class="btn btn-link"
                  title="{{'add' | translate}}"
                  data-ng-click="addItem(mCfg[key], {'icon': 'fa-fw', 'tplUrl': '', 'tooltip': ''})">
@@ -295,7 +299,7 @@
             </td>
           </tr>
           <tr>
-            <td>
+            <td colspan="2">
               <a class="btn btn-link"
                  title="{{'add' | translate}}"
                  data-ng-click="addItem(mCfg[key].list, {'label': '', 'url': ''})">
@@ -311,9 +315,9 @@
 
 
       <div data-ng-switch-when="linkTypes">
-        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <h3>{{('ui-' + key) | translate}}</h3>
         <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
-          <h3>{{type}}</h3>
+          <label class="control-label">{{type}}</label>
           <table class="table table-striped">
             <tr data-ng-repeat="protocol in value track by $index">
               <td>
@@ -331,7 +335,7 @@
               </td>
             </tr>
             <tr>
-              <td>
+              <td colspan="2">
                 <a class="btn btn-link"
                    title="{{'add' | translate}}"
                    data-ng-click="addItem(mCfg[key][type], 'protocol')">
@@ -347,12 +351,46 @@
       </div>
 
 
+      <!-- user custom searches -->
+      <div data-ng-switch-when="usersearches">
+        <h3>{{('ui-' + key) | translate}}</h3>
+        <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
+
+          <input type="checkbox"
+                 id="{{key + type}}-checkbox"
+                 data-ng-model="mCfg[key][type]"/>&nbsp;
+          <label class="control-label"
+                 for="{{key + type}}-checkbox">{{('ui-' + type) | translate}}</label>
+
+          <p class="help-block"
+             data-ng-show="(('ui-' + key + type + '-help') | translate) != ('ui-' + key + type + '-help')">
+            {{('ui-' + key + type + '-help') | translate}} </p>
+        </div>
+      </div>
+
+      <div data-ng-switch-when="savedSelection">
+        <h3>{{('ui-' + key) | translate}}</h3>
+        <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
+
+          <input type="checkbox"
+                 id="{{key + type}}-checkbox"
+                 data-ng-model="mCfg[key][type]"/>&nbsp;
+          <label class="control-label"
+                 for="{{key + type}}-checkbox">{{('ui-' + type) | translate}}</label>
+
+          <p class="help-block"
+             data-ng-show="(('ui-' + key + type + '-help') | translate) != ('ui-' + key + type + '-help')">
+            {{('ui-' + key + type + '-help') | translate}} </p>
+        </div>
+      </div>
+
+
 
 
       <div data-ng-switch-when="listOfServices">
-        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <h3>{{('ui-' + key) | translate}}</h3>
         <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
-          <h3>{{type}}</h3>
+          <label class="control-label">{{type}}</label>
           <table class="table table-striped">
             <tr data-ng-repeat="s in value track by $index">
               <td>
@@ -378,7 +416,7 @@
               </td>
             </tr>
             <tr>
-              <td>
+              <td colspan="2">
                 <a class="btn btn-link"
                    title="{{'add' | translate}}"
                    data-ng-click="addItem(mCfg[key][type], {'name': 'Service label', 'url': 'http://'})">
@@ -422,7 +460,7 @@
             </td>
           </tr>
           <tr>
-            <td>
+            <td colspan="2">
               <a class="btn btn-link"
                  title="{{'add' | translate}}"
                  data-ng-click="addItem(mCfg[key], {'label': '', 'code': 'EPSG:'})">
@@ -593,8 +631,8 @@
       </div>
 
       <div data-ng-switch-when="grid">
-        <label class="control-label">{{('ui-' + key) | translate}}</label>
-        <h3 translate>gridConfigRelatedTypes</h3>
+        <h3>{{('ui-' + key) | translate}}</h3>
+        <label class="control-label" translate>gridConfigRelatedTypes</label>
         <table class="table table-striped">
           <tr data-ng-repeat="relatedType in mCfg[key]['related'] track by $index">
             <td>
@@ -607,7 +645,7 @@
             </td>
           </tr>
           <tr>
-            <td>
+            <td colspan="2">
               <a class="btn btn-link" title="{{'add' | translate}}" data-ng-click="addItem(mCfg[key]['related'], '')">
                 <i class="fa fa-plus"/>
               </a>
@@ -617,6 +655,18 @@
         <p class="help-block">{{ 'gridConfigRelatedTypes-help' | translate }}</p>
         <p class="help-block"
             data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+      <div data-ng-switch-when="showSocialBarInFooter">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="mCfg[key]"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
           {{('ui-' + key + '-help') | translate}} </p>
       </div>
 
@@ -822,6 +872,43 @@
              ui-externalViewer-valuesSeparator-help</p>
         </div>
       </div>
+
+
+      <div data-ng-switch-when="fluidLayout">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="mCfg[key]"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+      <div data-ng-switch-when="fluidEditorLayout">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="mCfg[key]"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+      <div data-ng-switch-when="humanizeDates">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="mCfg[key]"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
 
       <div data-ng-switch-default>
         <label class="control-label">{{('ui-' + key) | translate}}</label>

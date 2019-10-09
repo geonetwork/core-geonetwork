@@ -41,6 +41,7 @@
         sortbyValues: gnSearchSettings.sortbyValues,
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         selectionBucket: 'b101',
+        filters: gnSearchSettings.filters,
         params: {
           sortBy: 'changeDate',
           _isTemplate: 'y or n',
@@ -94,6 +95,7 @@
             },{
               type: 'transferownership',
               label: 'transfertPrivs',
+              icon: 'fa-user',
               href: '#/tools/transferownership'
             }]
       };
@@ -144,12 +146,11 @@
       $scope.batchSearchTemplateY = true;
       $scope.batchSearchTemplateN = true;
       $scope.batchSearchTemplateS = false;
-      $scope.batchSearchGroups = {};
-      $scope.batchSearchUsers = {};
-      $scope.batchSearchCategories = {};
+      $scope.batchSearchGroups = [];
+      $scope.batchSearchUsers = [];
+      $scope.batchSearchCategories = [];
 
-      $scope.editors = {};
-      $scope.groupinfo = {};
+      $scope.editors = [];
       $scope.editorSelectedId = null;
       $scope.editorGroups = {};
 

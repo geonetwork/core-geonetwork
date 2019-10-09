@@ -271,6 +271,7 @@
 
     <xsl:variable name="ref">
       <xsl:choose>
+        <xsl:when test="string-length( $see ) &gt; 0 and (starts-with($see, 'http') or starts-with($see, 'https'))"><xsl:value-of select="'geonet:element/@ref'"/></xsl:when>
         <xsl:when test="string-length( $see ) &gt; 0"><xsl:value-of select="concat('(',$see,')[1]')"/></xsl:when>
         <xsl:otherwise><xsl:value-of select="'geonet:element/@ref'"/></xsl:otherwise>
       </xsl:choose>

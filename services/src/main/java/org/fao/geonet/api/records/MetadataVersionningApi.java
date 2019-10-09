@@ -32,7 +32,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -44,7 +43,6 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -64,8 +62,8 @@ import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RequestMapping(value = {
-    "/api/records",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/records",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
 @Api(value = API_CLASS_RECORD_TAG,
@@ -77,7 +75,12 @@ public class MetadataVersionningApi {
 
     @Autowired
     LanguageUtils languageUtils;
-
+    @Autowired
+    DataManager dataManager;
+    @Autowired
+    AccessManager accessMan;
+    @Autowired
+    IMetadataUtils metadataRepository;
 
     @ApiOperation(
         value = "(Experimental) Enable version control",
@@ -98,9 +101,6 @@ public class MetadataVersionningApi {
         HttpServletRequest request
     ) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ApplicationContext appContext = ApplicationContextHolder.get();
-
-        DataManager dataManager = appContext.getBean(DataManager.class);
 
         dataManager.versionMetadata(ApiUtils.createServiceContext(request),
             String.valueOf(metadata.getId()), metadata.getXmlData(false));
@@ -146,23 +146,21 @@ public class MetadataVersionningApi {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
 
-            final ApplicationContext context = ApplicationContextHolder.get();
-            final DataManager dataMan = context.getBean(DataManager.class);
-            final AccessManager accessMan = context.getBean(AccessManager.class);
-            final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
-
             for (String uuid : records) {
-                AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
-                if (metadata == null) {
-                    report.incrementNullRecords();
-                } else if (!accessMan.canEdit(
-                    ApiUtils.createServiceContext(request), String.valueOf(metadata.getId()))) {
-                    report.addNotEditableMetadataId(metadata.getId());
-                } else {
-                    dataMan.versionMetadata(ApiUtils.createServiceContext(request),
-                        String.valueOf(metadata.getId()), metadata.getXmlData(false));
-                    report.incrementProcessedRecords();
-                }
+            	if(!metadataRepository.existsMetadataUuid(uuid)) {
+                    report.incrementNullRecords();            		
+            	} else {
+	                for(AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
+		                if (!accessMan.canEdit(
+		                    ApiUtils.createServiceContext(request), String.valueOf(metadata.getId()))) {
+		                    report.addNotEditableMetadataId(metadata.getId());
+		                } else {
+		                    dataManager.versionMetadata(ApiUtils.createServiceContext(request),
+		                        String.valueOf(metadata.getId()), metadata.getXmlData(false));
+		                    report.incrementProcessedRecords();
+		                }
+	                }
+            	}
             }
         } catch (Exception exception) {
             report.addError(exception);

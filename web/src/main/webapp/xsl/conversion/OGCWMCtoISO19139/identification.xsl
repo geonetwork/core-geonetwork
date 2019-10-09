@@ -32,14 +32,14 @@
             </gmd:date>
             <gmd:dateType>
               <gmd:CI_DateTypeCode codeListValue="publication"
-                                   codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"/>
+                                   codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"/>
             </gmd:dateType>
           </gmd:CI_Date>
         </gmd:date>
 
         <gmd:presentationForm>
           <gmd:CI_PresentationFormCode codeListValue="mapDigital"
-                                       codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_PresentationFormCode"
+                                       codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_PresentationFormCode"
           />
         </gmd:presentationForm>
       </gmd:CI_Citation>
@@ -105,7 +105,7 @@
           </gmd:contactInfo>
           <gmd:role>
             <gmd:CI_RoleCode
-              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+              codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
               codeListValue="author"/>
           </gmd:role>
         </gmd:CI_ResponsibleParty>

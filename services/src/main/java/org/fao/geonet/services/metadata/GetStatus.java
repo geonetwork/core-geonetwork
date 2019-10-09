@@ -87,7 +87,7 @@ public class GetStatus implements Service {
 
         MetadataStatus stats = dataMan.getStatus(iLocalId);
 
-        String status = StatusValue.Status.UNKNOWN;
+        String status = StatusValue.Status.DRAFT;
         String userId = "-1"; // no userId
         if (stats != null) {
             status = String.valueOf(stats.getId().getStatusId());

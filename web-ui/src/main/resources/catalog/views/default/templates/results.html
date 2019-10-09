@@ -1,34 +1,36 @@
-<div class="container-fluid"
-     data-ng-search-form=""
+<div data-ng-search-form=""
      data-runSearch="true">
   <div data-ng-include="'../../catalog/views/default/templates/searchForm.html'"></div>
 
   <div gn-grid-related-query="searchResults.records"></div>
   <div class="row gn-row-results">
-    <div class="col-md-3 gn-search-facet">
+    <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
+      <div class="col-md-3 gn-search-facet">
 
-      <div data-ng-show="searchResults.records.length > 0"
-           data-gn-saved-selections-panel="user"></div>
+        <div data-ng-show="searchResults.records.length > 0"
+            data-gn-saved-selections-panel="user"></div>
 
-      <!-- Hierachical facet mode -->
-      <div class="panel panel-default"
-           data-ng-show="searchResults.records.length > 0">
-        <div class="panel-heading" data-gn-slide-toggle="">
-          <i class="fa fa-search"/>&nbsp;
-          <span data-translate="">filter</span>
-        </div>
-        <div class="panel-body">
-          <div data-gn-facet-dimension-list="searchResults.dimension"
-               data-params="searchObj.params"
-               data-facet-type="facetsSummaryType"
-               data-facet-list="facetConfig"
-               data-current-facets="currentFacets">
+        <div data-gn-user-searches-panel="user"></div>
+
+        <!-- Hierachical facet mode -->
+        <div class="panel panel-default"
+            data-ng-show="searchResults.records.length > 0">
+          <div class="panel-heading" data-gn-slide-toggle="">
+            <i class="fa fa-search"/>&nbsp;
+            <span data-translate="">filter</span>
+          </div>
+          <div class="panel-body">
+            <div data-gn-facet-dimension-list="searchResults.dimension"
+                data-params="searchObj.params"
+                data-facet-type="facetsSummaryType"
+                data-facet-list="facetConfig"
+                data-current-facets="currentFacets">
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-md-9 container-fluid">
+      <div class="col-md-9 container-fluid">
       <div class="row" data-ng-show="isFilterTagsDisplayedInSearch">
         <div class="col-xs-12">
           <div data-search-filter-tags="">
@@ -36,7 +38,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row gn-row-tools">
         <div class="col-xs-12 col-md-9"
             data-gn-facet-dimension-list="searchResults.dimension"
             data-params="searchObj.params"
@@ -102,6 +104,9 @@
       </div>
     </div>
     <br>
+  
+  
+    </div>
   </div>
 
   <div data-gn-map-field="searchObj.searchMap"
@@ -112,7 +117,7 @@
 
   <button data-ng-click="toggleMap()"
           title="{{'toggleMiniMap' | translate}}"
-          class="gn-toggle gn-minimap-toggle btn btn-link gn-minimap-button hidden-xs">
+          class="gn-toggle gn-minimap-toggle btn btn-primary gn-minimap-button hidden-xs">
     <i class="fa fa-angle-double-right" ></i>
     <b class="gn-minimap-toggle gn-minimap-text" data-translate="">map</b>
   </button>

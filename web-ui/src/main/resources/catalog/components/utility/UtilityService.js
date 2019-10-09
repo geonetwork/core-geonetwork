@@ -72,22 +72,22 @@
   }]);
 
   module.factory('gnUtilityService',
-      ['gnPopup', '$translate', '$location',
-        function(gnPopup, $translate, $location) {
+      ['gnPopup', '$translate', '$location', '$rootScope', '$timeout',
+        function(gnPopup, $translate, $location, $rootScope, $timeout) {
         /**
        * Scroll page to element.
        */
         var scrollTo = function(elementId, offset, duration, easing) {
           var top = 0, e = $(elementId);
-          if (elementId !== undefined &&  e.length == 1) {
+          if (elementId !== undefined && e.length == 1) {
             top = offset ?
              e.offset().top :
              e.position().top;
           }
           $('body,html').animate({scrollTop: top},
-           duration, easing, function () {
+           duration, easing, function() {
               if (e.length == 1) {
-                e.fadeOut('slow', function () {e.fadeIn()});
+                e.fadeOut('slow', function() {e.fadeIn()});
               }
             });
           $location.search('scrollTo', elementId);
@@ -329,6 +329,25 @@
           });
         };
 
+          /**
+           * Open a popup and compile object content.
+           * Bind to an event to close the popup.
+           * @param {Object} o popup config
+           * @param {Object} scope to build content uppon
+           * @param {string} eventName
+           */
+          var openModal = function(o, scope, eventName) {
+            // var popup = gnPopup.create(o, scope);
+            var popup = gnPopup.createModal(o, scope);
+            var myListener = $rootScope.$on(eventName,
+              function(e, o) {
+                $timeout(function() {
+                  popup.modal('hide');
+                }, 0);
+                myListener();
+              });
+          };
+
         return {
           scrollTo: scrollTo,
           isInView: isInView,
@@ -340,7 +359,8 @@
           CSVToArray: CSVToArray,
           getUrlParameter: getUrlParameter,
           randomUuid: randomUuid,
-          getPermalink: getPermalink
+          getPermalink: getPermalink,
+          openModal: openModal
         };
       }]);
 

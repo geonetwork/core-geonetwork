@@ -103,7 +103,6 @@
         <ref bean="logoutFilter"/>
         <!-- A filter that check if an external service already authenticated user
                      (default implementation does nothing but can be overridden) -->
-        <ref bean="multiNodeAuthenticationFilter"/>
         <ref bean="preAuthenticationFilter"/>
         <ref bean="basicAuthenticationFilter"/>
         <ref bean="formLoginFilter"/>
@@ -117,10 +116,6 @@
   </bean>
   <!-- A filter that check if an external service already authenticated user
                      (default implementation does nothing but can be overridden) -->
-  <bean id="multiNodeAuthenticationFilter"
-        class="jeeves.config.springutil.MultiNodeAuthenticationFilter">
-    <property name="location" value="${wrongNodeRedirectURL}"/>
-  </bean>
   <bean id="preAuthenticationFilter" class="jeeves.config.springutil.PassthroughFilter"/>
   <bean id="securityContextPersistenceFilter"
         class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
@@ -240,7 +235,7 @@
   </bean>
 
   <bean id="defaultAuthenticationEntryPoint"
-        class="jeeves.config.springutil.JeevesNodeAwareLoginUrlEntryPoint">
+        class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
     <constructor-arg name="loginFormUrl" value="${loginForm}"/>
   </bean>
 

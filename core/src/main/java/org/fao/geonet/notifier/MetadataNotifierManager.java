@@ -58,8 +58,8 @@ public class MetadataNotifierManager {
      * Updates all unregistered metadata.
      */
     public void updateMetadataBatch() throws MetadataNotifierException {
-        if (Log.isDebugEnabled("MetadataNotifierManager"))
-            Log.debug("MetadataNotifierManager", "updateMetadata unregistered");
+        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            Log.debug(Geonet.DATA_MANAGER, "updateMetadata unregistered");
 
         MetadataNotifierClient client = ApplicationContextHolder.get().getBean(MetadataNotifierClient.class);
 
@@ -97,8 +97,7 @@ public class MetadataNotifierManager {
                 }
 
             } catch (Exception ex) {
-                Log.error("MetadataNotifierManager", "updateMetadataBatch ERROR: " + ex.getMessage());
-                ex.printStackTrace();
+                Log.error(Geonet.DATA_MANAGER, "updateMetadataBatch ERROR: " + ex.getMessage(), ex);
             }
         }
     }
@@ -139,7 +138,7 @@ public class MetadataNotifierManager {
 
             return metadataNotifierRepository.findAllByEnabled(true);
         } catch (Exception ex) {
-            Log.error("MetadataNotifierManager", "loadNotifiers: " + ex.getMessage(), ex);
+            Log.error(Geonet.DATA_MANAGER, "loadNotifiers: " + ex.getMessage(), ex);
             throw new MetadataNotifierException(ex.getMessage(), ex);
         }
     }
@@ -267,7 +266,7 @@ public class MetadataNotifierManager {
                 Log.debug(Geonet.DATA_MANAGER, "setMetadataNotifiedError finished for metadata with id " + metadataId + "and notitifer " +
                     "with id " + notifier.getId());
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Log.error(Geonet.DATA_MANAGER, "Notifier - setMetadataNotifiedError error: " + ex.getMessage(), ex);
             throw ex;
         }
     }
@@ -297,8 +296,8 @@ public class MetadataNotifierManager {
         public void run() {
             try {
                 String metadataString = Xml.getString(metadataElement);
-                if (Log.isDebugEnabled("MetadataNotifierManager")) {
-                    Log.debug("MetadataNotifierManager", "updateMetadata before (uuid): " + uuid);
+                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                    Log.debug(Geonet.DATA_MANAGER, "updateMetadata before (uuid): " + uuid);
                 }
 
                 final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
@@ -310,32 +309,30 @@ public class MetadataNotifierManager {
                     try {
                         client.webUpdate(service, metadataString, uuid);
 
-                        if (Log.isDebugEnabled("MetadataNotifierManager")) {
-                            Log.debug("MetadataNotifierManager", "updateMetadata (uuid): " + uuid);
+                        if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                            Log.debug(Geonet.DATA_MANAGER, "updateMetadata (uuid): " + uuid);
                         }
 
                         // mark metadata as notified for current notifier service
                         setMetadataNotified(metadataId, uuid, service, false);
 
                     } catch (Exception ex) {
-                        Log.error("MetadataNotifierManager", "updateMetadata ERROR (uuid): " + uuid + "notifier url "
-                            + service.getUrl() + " " + ex.getMessage());
-                        ex.printStackTrace();
+                        Log.error(Geonet.DATA_MANAGER, "updateMetadata ERROR (uuid): " + uuid + "notifier url "
+                            + service.getUrl() + " " + ex.getMessage(), ex);
 
                         // mark metadata as not notified for current notifier service
                         try {
                             setMetadataNotifiedError(metadataId, uuid, service, false, ex.getMessage());
                         } catch (Exception ex2) {
-                            Log.error("MetadataNotifierManager", "updateMetadata ERROR (uuid): " + uuid + "notifier url " +
-                                service.getUrl() + " " + ex2.getMessage());
+                            Log.error(Geonet.DATA_MANAGER, "updateMetadata ERROR (uuid): " + uuid + "notifier url " +
+                                service.getUrl() + " " + ex2.getMessage(), ex2);
                         }
                     }
 
                 }
             } catch (Exception e) {
-                Log.error("MetadataNotifierManager", "updateTask ERROR (uuid): " + uuid + ", (id): " + metadataId
-                    + " " + e.getMessage());
-                e.printStackTrace();
+                Log.error(Geonet.DATA_MANAGER, "updateTask ERROR (uuid): " + uuid + ", (id): " + metadataId
+                    + " " + e.getMessage(), e);
             }
         }
     }
@@ -359,40 +356,33 @@ public class MetadataNotifierManager {
                     String notifierUrl = service.getUrl();
 
                     try {
-                        if (Log.isDebugEnabled("MetadataNotifierManager")) {
-                            Log.debug("MetadataNotifierManager", "deleteMetadata before (uuid): " + uuid);
+                        if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                            Log.debug(Geonet.DATA_MANAGER, "deleteMetadata before (uuid): " + uuid);
                         }
                         client.webDelete(service, uuid);
-                        if (Log.isDebugEnabled("MetadataNotifierManager")) {
-                            Log.debug("MetadataNotifierManager", "deleteMetadata (uuid): " + uuid);
+                        if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                            Log.debug(Geonet.DATA_MANAGER, "deleteMetadata (uuid): " + uuid);
                         }
-
-                        System.out.println("deleteMetadata (id): " + metadataId + " notifier id: " + notifierId);
 
                         // mark metadata as notified for current notifier service
                         setMetadataNotified(metadataId, uuid, service, true);
                     } catch (Exception ex) {
-                        System.out.println("deleteMetadata ERROR:" + ex.getMessage());
-
-                        Log.error("MetadataNotifierManager", "deleteMetadata ERROR (uuid): " + uuid + " " + ex.getMessage());
-                        ex.printStackTrace();
-
+                        Log.error(Geonet.DATA_MANAGER, "deleteMetadata ERROR (uuid): " + uuid + " " + ex.getMessage(), ex);
 
                         // mark metadata as not notified for current notifier service
                         try {
                             setMetadataNotifiedError(metadataId, uuid, service, true, ex.getMessage());
                         } catch (Exception ex2) {
-                            Log.error("MetadataNotifierManager", "updateMetadata ERROR (uuid): " + uuid + "notifier url " +
-                                notifierUrl + " " + ex2.getMessage());
+                            Log.error(Geonet.DATA_MANAGER, "updateMetadata ERROR (uuid): " + uuid + "notifier url " +
+                                notifierUrl + " " + ex2.getMessage(), ex2);
                         }
                     }
 
                 }
 
             } catch (Exception e) {
-                Log.error("MetadataNotifierManager", "deleteTask ERROR (uuid): " + uuid + ", (id): " + metadataId
-                    + " " + e.getMessage());
-                e.printStackTrace();
+                Log.error(Geonet.DATA_MANAGER, "deleteTask ERROR (uuid): " + uuid + ", (id): " + metadataId
+                    + " " + e.getMessage(), e);
             }
         }
     }

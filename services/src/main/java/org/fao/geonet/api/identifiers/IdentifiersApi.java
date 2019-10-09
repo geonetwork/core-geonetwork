@@ -30,6 +30,7 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.MetadataIdentifierTemplate;
 import org.fao.geonet.repository.MetadataIdentifierTemplateRepository;
 import org.fao.geonet.repository.specification.MetadataIdentifierTemplateSpecs;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,8 +42,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequestMapping(value = {
-    "/api/identifiers",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/identifiers",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/identifiers"
 })
 @Api(value = "identifiers",
@@ -55,6 +56,9 @@ public class IdentifiersApi {
     private static final String API_PARAM_IDENTIFIER = "Identifier template identifier";
     private static final String API_PARAM_IDENTIFIER_TEMPLATE_DETAILS = "Identifier template details";
     public static final String MSG_NO_METADATA_IDENTIFIER_FOUND_WITH_ID = "No metadata identifier found with id '%d'.";
+
+    @Autowired
+    private MetadataIdentifierTemplateRepository metadataIdentifierTemplateRepository;
 
     @ApiOperation(
         value = "Get identifier templates",
@@ -87,10 +91,6 @@ public class IdentifiersApi {
         )
             boolean userDefinedOnly
     ) throws Exception {
-        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
-        MetadataIdentifierTemplateRepository metadataIdentifierTemplateRepository =
-            appContext.getBean(MetadataIdentifierTemplateRepository.class);
-
         if (userDefinedOnly) {
             return metadataIdentifierTemplateRepository
                 .findAll(MetadataIdentifierTemplateSpecs.isSystemProvided(false));
@@ -125,10 +125,6 @@ public class IdentifiersApi {
         @RequestBody
             MetadataIdentifierTemplate metadataIdentifierTemplate
     ) throws Exception {
-        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
-        MetadataIdentifierTemplateRepository metadataIdentifierTemplateRepository =
-            appContext.getBean(MetadataIdentifierTemplateRepository.class);
-
         final MetadataIdentifierTemplate existingId = metadataIdentifierTemplateRepository
             .findOne(metadataIdentifierTemplate.getId());
 
@@ -177,10 +173,6 @@ public class IdentifiersApi {
         @RequestBody
             MetadataIdentifierTemplate metadataIdentifierTemplate
     ) throws Exception {
-        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
-        MetadataIdentifierTemplateRepository metadataIdentifierTemplateRepository =
-            appContext.getBean(MetadataIdentifierTemplateRepository.class);
-
         MetadataIdentifierTemplate existing =
             metadataIdentifierTemplateRepository.findOne(identifier);
         if (existing == null) {
@@ -222,10 +214,6 @@ public class IdentifiersApi {
         @PathVariable
             int identifier
     ) throws Exception {
-        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
-        MetadataIdentifierTemplateRepository metadataIdentifierTemplateRepository =
-            appContext.getBean(MetadataIdentifierTemplateRepository.class);
-
         MetadataIdentifierTemplate existing =
             metadataIdentifierTemplateRepository.findOne(identifier);
         if (existing == null) {

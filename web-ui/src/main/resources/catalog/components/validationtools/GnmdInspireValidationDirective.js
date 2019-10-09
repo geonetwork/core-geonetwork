@@ -41,23 +41,36 @@
               scope.isDownloadingRecord = false;
               scope.isDownloadedRecord = false;
               scope.isEnabled = false;
+              scope.testSuites = {}
+
+
 
               scope.$watch('gnCurrentEdit.uuid', function(newValue, oldValue) {
+                if (newValue == undefined) {
+                  return;
+                }
                 scope.isEnabled = true;
                 scope.inspMdUuid = newValue;
+                $http({
+                  method: 'GET',
+                  url: '../api/records/' + scope.inspMdUuid +
+                    '/validate/inspire/testsuites'
+                }).then(function(r) {
+                  scope.testsuites = r.data;
+                });
 
                 gnConfigService.load().then(function(c) {
-                  // INSPIRE validator only support ISO19139 records.
-                  // TODO: For other schema support we may need to convert the record
-                  // to ISO19139 first. eg. ISO19115-3
+                  // INSPIRE validator only support ISO19139/115-3 records.
+                  // This assume that those schema have and ISO19139 formatter
+                  // which is the format supported by the validator
                   scope.isInspireValidationEnabled =
                     gnConfig[gnConfig.key.isInspireEnabled] &&
                     angular.isString(gnConfig['system.inspire.remotevalidation.url']) &&
-                    (gnCurrentEdit.schema === 'iso19139');
+                    gnCurrentEdit.schema.match(/iso19139|iso19115-3/) != null;
                 });
               });
 
-              scope.validateInspire = function() {
+              scope.validateInspire = function(test) {
 
                 if (scope.isEnabled) {
 
@@ -67,7 +80,7 @@
                   $http({
                     method: 'PUT',
                     url: '../api/records/' + scope.inspMdUuid +
-                    '/validate/inspire'
+                    '/validate/inspire?testsuite=' + test
                   }).then(function mySucces(response) {
                     if (angular.isDefined(response.data) && response.data != null) {
                       scope.checkInBackgroud(response.data);

@@ -36,23 +36,23 @@
     <xsl:variable name="map">
       <entry key="dataset" value="http://schema.org/Dataset"/>
       <entry key="series" value="http://schema.org/DataCatalog"/>
-      <entry key="service" value="http://schema.org/DataCatalog"/>
+      <entry key="service" value="http://schema.org/WebAPI"/>
       <entry key="application" value="http://schema.org/SoftwareApplication"/>
       <entry key="collectionHardware" value="http://schema.org/Thing"/>
       <entry key="nonGeographicDataset" value="http://schema.org/Dataset"/>
-      <entry key="dimensionGroup" value="http://schema.org/Dataset"/>
+      <entry key="dimensionGroup" value="http://schema.org/TechArticle"/>
       <entry key="featureType" value="http://schema.org/Dataset"/>
-      <entry key="model" value="http://schema.org/APIReference"/>
+      <entry key="model" value="http://schema.org/TechArticle"/>
       <entry key="tile" value="http://schema.org/Dataset"/>
-      <entry key="fieldSession" value="http://schema.org/Thing"/>
-      <entry key="collectionSession" value="http://schema.org/Thing"/>
+      <entry key="fieldSession" value="http://schema.org/Project"/>
+      <entry key="collectionSession" value="http://schema.org/Project"/>
     </xsl:variable>
 
     <xsl:variable name="match"
                   select="$map/entry[@key = $type]/@value"/>
     <xsl:value-of select="if ($match != '')
                           then $match
-                          else 'http://schema.org/Thing'"/>
+                          else 'http://schema.org/Dataset'"/>
   </xsl:function>
 
   <xsl:function name="gn-fn-core:translate" as="xs:string">

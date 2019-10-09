@@ -65,7 +65,9 @@ public class SelectionSearch implements Service {
         SearchManager searchMan = gc.getBean(SearchManager.class);
 
         String bucket = Util.getParam(params, SELECTION_BUCKET, SELECTION_METADATA);
+        String formatter = Util.getParam(params, "formatter", "");
         params.removeChild(SELECTION_BUCKET);
+        params.removeChild("formatter");
 
         // store or possibly close old searcher
         UserSession session = context.getUserSession();
@@ -115,6 +117,7 @@ public class SelectionSearch implements Service {
 
         Element summary = searcher.getSummary();
         summary.addContent(new Element(SELECTION_BUCKET).setText(bucket));
+        summary.addContent(new Element("formatter").setText(formatter));
         return summary;
 
     }

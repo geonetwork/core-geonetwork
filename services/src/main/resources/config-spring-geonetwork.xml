@@ -34,8 +34,10 @@
   <context:property-placeholder location="${app.properties}"
                                 file-encoding="UTF-8"
                                 ignore-unresolvable="true" />
-
-  <context:component-scan base-package="org.fao.geonet"/>
+  <context:component-scan base-package="org.fao.geonet.api"/>
+  <context:component-scan base-package="org.fao.geonet.guiapi"/>
+  <context:component-scan base-package="org.fao.geonet.guiservices"/>
+  <context:component-scan base-package="org.fao.geonet.services"/>
 
   <bean id="defaultLanguage" class="java.lang.String">
     <constructor-arg index="0" value="\${language.default}"/>
@@ -51,8 +53,44 @@
     <property name="cacheAllRegionsInMemory" value="true"/>
     <property name="thesaurusName" value="external.place.regions"/>
   </bean>
+
   <bean id="MetadataRegionsDAO" class="org.fao.geonet.services.region.MetadataRegionDAO">
     <property name="cacheAllRegionsInMemory" value="false"/>
+  </bean>
+
+  <bean id="InspireValidatorUtils"
+        class="org.fao.geonet.api.records.editing.InspireValidatorUtils"
+        scope="singleton">
+    <property name="testsuites">
+      <map>
+        <entry key="TG version 1.3">
+          <array>
+            <value>Conformance class: INSPIRE Profile based on EN ISO 19115 and EN ISO 19119</value>
+            <value>Conformance class: XML encoding of ISO 19115/19119 metadata</value>
+          </array>
+        </entry>
+        <entry key="TG version 2.0 - Data sets and series">
+          <array>
+            <value>Common Requirements for ISO/TC 19139:2007 based INSPIRE metadata records.</value>
+            <value>Conformance Class 1: INSPIRE data sets and data set series baseline metadata.</value>
+            <value>Conformance Class 2: INSPIRE data sets and data set series interoperability metadata.</value>
+          </array>
+        </entry>
+        <entry key="TG version 2.0 - Spatial data service">
+          <array>
+            <value>Common Requirements for ISO/TC 19139:2007 based INSPIRE metadata records.</value>
+            <value>Conformance Class 1: INSPIRE data sets and data set series baseline metadata.</value>
+            <value>Conformance Class 2: INSPIRE data sets and data set series interoperability metadata.</value>
+            <value>Conformance Class 3: INSPIRE Spatial Data Service baseline metadata.</value>
+            <!--<value>Conformance Class 4: INSPIRE Network Services metadata.</value>
+            <value>Conformance Class 5: INSPIRE Invocable Spatial Data Services metadata.</value>
+            <value>Conformance Class 6: INSPIRE Interoperable Spatial Data Services metadata.</value>
+            <value>Conformance Class 7: INSPIRE Harmonised Spatial Data Services metadata.</value>-->
+          </array>
+        </entry>
+      </map>
+    </property>
+    <property name="defaultTestSuite" value="TG version 1.3"/>
   </bean>
 
   <bean id="resourceUploadHandler"

@@ -309,7 +309,12 @@
                 '<geometry>' +
                 input + '</geometry></gml:feature></featureMembers>';
 
-            var feature = format.readFeatures(fullXml, {
+            var feature = format.readFeatures(
+              fullXml.replace(
+                /http:\/\/www.opengis.net\/gml\/3.2/g,
+                'http://www.opengis.net/gml')
+                .replace(/urn:x-ogc:def:crs:EPSG:6.6:4326/g,
+                  'EPSG:4326'), {
               dataProjection: options.crs,
               featureProjection: outputProjection
             })[0];

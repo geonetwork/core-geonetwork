@@ -43,27 +43,27 @@
             [{
               type: 'report-updated-metadata',
               label: 'reportUpdatedMetadata',
-              icon: 'fa-th',
+              icon: 'fa-check-square-o',
               href: '#/reports/report-updated-metadata'
             },{
               type: 'report-internal-metadata',
               label: 'reportInternalMetadata',
-              icon: 'fa-th',
+              icon: 'fa-sign-in',
               href: '#/reports/report-internal-metadata'
             },{
               type: 'report-fileupload-metadata',
               label: 'reportFileUploadMetadata',
-              icon: 'fa-th',
+              icon: 'fa-upload',
               href: '#/reports/report-fileupload-metadata'
             },{
               type: 'report-filedownload-metadata',
               label: 'reportFileDownloadMetadata',
-              icon: 'fa-th',
+              icon: 'fa-download',
               href: '#/reports/report-filedownload-metadata'
             },{
               type: 'report-users',
               label: 'reportUsers',
-              icon: 'fa-th',
+              icon: 'fa-users',
               href: '#/reports/report-users'
             }]
       };

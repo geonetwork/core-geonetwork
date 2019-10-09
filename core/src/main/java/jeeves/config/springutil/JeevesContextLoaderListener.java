@@ -37,7 +37,6 @@ import java.io.File;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
 
@@ -50,30 +49,7 @@ import javax.servlet.ServletContextListener;
  */
 public class JeevesContextLoaderListener implements ServletContextListener {
 
-
     private JeevesApplicationContext parentAppContext;
-
-    public static String[] getNodeIds(final ServletContext servletContext) {
-        final File[] nodeConfigurationFiles = getNodeConfigurationFiles(servletContext);
-        String[] ids = new String[nodeConfigurationFiles.length];
-
-        for (int i = 0; i < nodeConfigurationFiles.length; i++) {
-            File file = nodeConfigurationFiles[i];
-            ids[i] = Files.getNameWithoutExtension(file.getName());
-        }
-        Arrays.sort(ids);
-        return ids;
-    }
-
-    private static File[] getNodeConfigurationFiles(ServletContext servletContext) {
-
-        final File nodeConfigDir = new File(servletContext.getRealPath("/WEB-INF/config-node"));
-        final File[] files = nodeConfigDir.listFiles();
-        if (files == null) {
-            throw new IllegalStateException("No node configuration file found in: " + nodeConfigDir);
-        }
-        return files;  //To change body of created methods use File | Settings | File Templates.
-    }
 
     @Override
     public void contextInitialized(final ServletContextEvent sce) {
@@ -81,12 +57,7 @@ public class JeevesContextLoaderListener implements ServletContextListener {
             final Pattern nodeNamePattern = Pattern.compile("[a-zA-Z0-9_\\-]+");
             final ServletContext servletContext = sce.getServletContext();
 
-            JeevesApplicationContext defaultContext = null;
-            File[] nodes = getNodeConfigurationFiles(servletContext);
-
-            if (nodes.length == 0) {
-                throw new IllegalArgumentException("Need at least one node defined");
-            }
+            File node = new File(servletContext.getRealPath("/WEB-INF/config-node/srv.xml"));
 
             ConfigurationOverrides overrides = ConfigurationOverrides.DEFAULT;
 
@@ -97,51 +68,35 @@ public class JeevesContextLoaderListener implements ServletContextListener {
             parentAppContext.refresh();
 
             String commonConfigFile = "/WEB-INF/config-spring-geonetwork.xml";
-            for (File node : nodes) {
-                String nodeId = Files.getNameWithoutExtension(node.getName());
-                if (!nodeNamePattern.matcher(nodeId).matches()) {
-                    throw new IllegalArgumentException(nodeId + " has an illegal name.  Node names must be of the form: [a-zA-Z_\\-]+ ");
+            String nodeId = Files.getNameWithoutExtension(node.getName());
+            if (!nodeNamePattern.matcher(nodeId).matches()) {
+                throw new IllegalArgumentException(nodeId + " has an illegal name.  Node names must be of the form: [a-zA-Z_\\-]+ ");
 
-                }
-
-                JeevesApplicationContext jeevesAppContext = new JeevesApplicationContext(overrides, parentAppContext,
-                    "classpath:mapfish-spring-application-context.xml", commonConfigFile, node.toURI().toString());
-
-                jeevesAppContext.setServletContext(servletContext);
-                jeevesAppContext.refresh();
-
-                // initialize all JPA Repositories.  This should be done outside of the init
-                // because spring-data-jpa first looks up named queries (based on method names) and
-                // if the query is not found an exception is thrown.  This exception will set rollback
-                // on the transaction if a transaction is active.
-                //
-                // We want to initialize all repositories here so they are not lazily initialized
-                // at random places through out the code where it may be in a transaction.
-                jeevesAppContext.getBeansOfType(JpaRepository.class, false, true);
-
-                servletContext.setAttribute(User.NODE_APPLICATION_CONTEXT_KEY + nodeId, jeevesAppContext);
-
-                // check if the context is the default context
-                NodeInfo nodeInfo = jeevesAppContext.getBean(NodeInfo.class);
-                nodeInfo.setId(nodeId);
-
-                boolean isDefault = nodeInfo.isDefaultNode();
-
-                if (isDefault) {
-                    if (defaultContext != null) {
-                        throw new IllegalArgumentException("Two nodes where defined as the default.  This is not acceptable.");
-                    }
-                    defaultContext = jeevesAppContext;
-
-                    servletContext.setAttribute(User.NODE_APPLICATION_CONTEXT_KEY, jeevesAppContext);
-                }
             }
 
-            if (defaultContext == null) {
-                throw new IllegalArgumentException("There are no default contexts defined");
-            }
+            JeevesApplicationContext jeevesAppContext = new JeevesApplicationContext(overrides, parentAppContext,
+                "classpath:mapfish-spring-application-context.xml", commonConfigFile, node.toURI().toString());
+
+            jeevesAppContext.setServletContext(servletContext);
+            jeevesAppContext.refresh();
+
+            // initialize all JPA Repositories.  This should be done outside of the init
+            // because spring-data-jpa first looks up named queries (based on method names) and
+            // if the query is not found an exception is thrown.  This exception will set rollback
+            // on the transaction if a transaction is active.
+            //
+            // We want to initialize all repositories here so they are not lazily initialized
+            // at random places through out the code where it may be in a transaction.
+            jeevesAppContext.getBeansOfType(JpaRepository.class, false, true);
+
+            servletContext.setAttribute(User.NODE_APPLICATION_CONTEXT_KEY, jeevesAppContext);
+
+            NodeInfo nodeInfo = jeevesAppContext.getBean(NodeInfo.class);
+            nodeInfo.setId(nodeId);
+
+            servletContext.setAttribute(User.NODE_APPLICATION_CONTEXT_KEY, jeevesAppContext);
         } catch (Throwable e) {
-            e.printStackTrace();
+            Log.error(Log.JEEVES, "JeevesContextLoaderListener: " + e.getMessage(), e);
             JeevesEngine.handleStartupError(e);
         }
     }
@@ -153,14 +108,10 @@ public class JeevesContextLoaderListener implements ServletContextListener {
         /**
          * Destroy all the Spring contexts
          */
-        for (String node : getNodeIds(sce.getServletContext())) {
-            if (!node.trim().isEmpty()) {
-                Log.info(Log.ENGINE, "Destroying the appContext for " + node);
-                JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) servletContext.getAttribute(
-                    User.NODE_APPLICATION_CONTEXT_KEY + node.trim());
-                jeevesAppContext.destroy();
-            }
-        }
+        JeevesApplicationContext jeevesAppContext =
+            (JeevesApplicationContext) servletContext.getAttribute(User.NODE_APPLICATION_CONTEXT_KEY);
+        jeevesAppContext.destroy();
+
         Log.info(Log.ENGINE, "Destroying the parent appContext");
         parentAppContext.destroy();
 

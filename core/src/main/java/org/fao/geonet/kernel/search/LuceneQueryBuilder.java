@@ -103,6 +103,10 @@ public class LuceneQueryBuilder {
      * Template = "n" is added if not set in search criteria.
      */
     private boolean templateCriteriaAdded;
+    /**
+     * No draft is shown if not set explicitly in search criteria.
+     */
+    private boolean draftCriteriaAdded;
 
 
     /**
@@ -276,6 +280,7 @@ public class LuceneQueryBuilder {
         spatialCriteriaAdded = false;
         temporalCriteriaAdded = false;
         templateCriteriaAdded = false;
+        draftCriteriaAdded = false;
 
         for (Iterator<Entry<String, Set<String>>> i = searchCriteria.entrySet().iterator(); i.hasNext(); ) {
             Entry<String, Set<String>> entry = i.next();
@@ -337,6 +342,9 @@ public class LuceneQueryBuilder {
             query.add(q, occur);
             templateCriteriaAdded = true;
         }
+
+        // Search only for non-draft not set by search criteria before
+        draftCriteria(null, query); 
 
         if (StringUtils.isNotEmpty(_language)) {
             if (Log.isDebugEnabled(Geonet.LUCENE))
@@ -516,6 +524,10 @@ public class LuceneQueryBuilder {
             else if (LuceneIndexField.IS_TEMPLATE.equals(fieldName) || SearchParameter.TEMPLATE.equals(fieldName)) {
                 templateCriteria(fieldValue, query);
             }
+            // draft
+            else if (LuceneIndexField.DRAFT.equals(fieldName)) {
+                draftCriteria(fieldValue, query);
+            }
             // all -- mapped to same Lucene field as 'any'
             else if ("all".equals(fieldName)) {
                 addRequiredTextField(fieldValue, LuceneIndexField.ANY, similarity, (criteriaIsASet ? bq : query));
@@ -525,8 +537,10 @@ public class LuceneQueryBuilder {
                 addNotRequiredTextField(fieldValue, LuceneIndexField.ANY, similarity, (criteriaIsASet ? bq : query));
             }
             // without
-            else if ("without".equals(fieldName)) {
-                addProhibitedTextField(fieldValue, LuceneIndexField.ANY, (criteriaIsASet ? bq : query));
+            else if (fieldName.startsWith("without")) {
+                addProhibitedTextField(fieldValue,
+                    fieldName.contains("-") ? fieldName.split("-")[1] : LuceneIndexField.ANY,
+                    (criteriaIsASet ? bq : query));
             }
             // phrase
             else if ("phrase".equals(fieldName)) {
@@ -631,6 +645,32 @@ public class LuceneQueryBuilder {
         }
         if (phraseQ != null) {
             query.add(phraseQ, qOccur);
+        }
+    }
+
+    /**
+     * Adds draft to query.
+     */
+    private void draftCriteria(String fieldValue, BooleanQuery query) {
+    	
+        if (!draftCriteriaAdded) {
+            BooleanClause.Occur templateOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+
+            Query templateQ;
+            if (fieldValue != null) {
+                if (fieldValue.contains(OR_SEPARATOR)) {
+                    templateQ = new BooleanQuery();
+                    addSeparatedTextField(fieldValue, OR_SEPARATOR, LuceneIndexField.DRAFT, (BooleanQuery) templateQ);
+                } else {
+                    templateQ = new TermQuery(new Term(LuceneIndexField.DRAFT, fieldValue));
+                }
+            } else {
+                templateQ = new BooleanQuery();
+                addSeparatedTextField("n or e", OR_SEPARATOR, LuceneIndexField.DRAFT, (BooleanQuery) templateQ);
+            }
+            query.add(templateQ, templateOccur);
+
+            draftCriteriaAdded = true;
         }
     }
 

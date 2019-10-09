@@ -43,9 +43,31 @@
 .gn-margin-left {
   margin-left: @gn-spacing !important;
 }
+//border
+.gn-noborder-top {
+  border-top-width: 0 !important;
+}
+.gn-noborder-right {
+  border-right-width: 0 !important;
+}
+.gn-noborder-bottom {
+  border-bottom-width: 0 !important;
+}
+.gn-noborder-left {
+  border-left-width: 0 !important;
+}
 
 .btn-round {
   border-radius: 50%;
   padding: 11px 15px;
+}
+.btn-truncate {
+  span {
+    display: inline-block;
+    float: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 150px;
+  }
 }
 

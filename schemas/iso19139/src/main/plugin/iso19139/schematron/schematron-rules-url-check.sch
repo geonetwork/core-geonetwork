@@ -2,7 +2,6 @@
 <sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron">
 
     <sch:title xmlns="http://www.w3.org/2001/XMLSchema">URL checks</sch:title>
-    <sch:ns prefix="gml" uri="http://www.opengis.net/gml" />
     <sch:ns prefix="gmd" uri="http://www.isotc211.org/2005/gmd" />
     <sch:ns prefix="srv" uri="http://www.isotc211.org/2005/srv" />
     <sch:ns prefix="gco" uri="http://www.isotc211.org/2005/gco" />
@@ -13,7 +12,7 @@
     <sch:pattern>
         <sch:title>$loc/strings/invalidURLCheck</sch:title>
         <!-- Check specification names and status -->
-        <sch:rule context="//gmd:linkage//gmd:URL">
+        <sch:rule context="//gmd:linkage//gmd:URL[starts-with(text(), 'http')]">
 
             <sch:let name="isValidUrl" value="xslutil:validateURL(text())" />
             <sch:assert test="$isValidUrl = true()">

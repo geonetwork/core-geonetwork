@@ -23,6 +23,9 @@
 package org.fao.geonet.domain;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -64,7 +67,6 @@ import com.vividsolutions.jts.util.Assert;
 @MappedSuperclass
 public abstract class AbstractMetadata extends GeonetEntity {
     static final String ID_SEQ_NAME = "metadata_id_seq";
-    public static final String METADATA_CATEG_JOIN_TABLE_NAME = "MetadataCateg";
     public static final String METADATA_CATEG_JOIN_TABLE_CATEGORY_ID = "categoryId";
     private int _id;
     private String _uuid;
@@ -80,7 +82,7 @@ public abstract class AbstractMetadata extends GeonetEntity {
      * @return the id of the metadata
      */
     @Id
-    @SequenceGenerator(name = Metadata.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+    @SequenceGenerator(name=AbstractMetadata.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(nullable = false)
     public int getId() {
@@ -309,8 +311,59 @@ public abstract class AbstractMetadata extends GeonetEntity {
     }
 
     @Transient
-    public abstract Set<MetadataCategory> getMetadataCategories();
+    public Set<MetadataCategory> getCategories() {
+        return (Set<MetadataCategory>) metadataCategories;
+    }
+    @Transient
+    protected Set<MetadataCategory> metadataCategories = new HashSet<MetadataCategory>();
 
-    public abstract void setMetadataCategories(@Nonnull Set<MetadataCategory> categories);
+	@Override
+	public String toString() {
+		final int maxLen = 3;
+		return this.getClass().getSimpleName() + " [_id=" + _id + ", " + (_uuid != null ? "_uuid=" + _uuid + ", " : "")
+		//		+ (_data != null ? "_data=" + _data + ", " : "")
+				+ (_dataInfo != null ? "_dataInfo=" + _dataInfo + ", " : "")
+				+ (_sourceInfo != null ? "_sourceInfo=" + _sourceInfo + ", " : "")
+				+ (_harvestInfo != null ? "_harvestInfo=" + _harvestInfo + ", " : "")
+				+ (metadataCategories != null ? "metadataCategories=" + toString(metadataCategories, maxLen) : "")
+				+ "]";
+	}
 
+	private String toString(Collection<?> collection, int maxLen) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("[");
+		int i = 0;
+		for (Iterator<?> iterator = collection.iterator(); iterator.hasNext() && i < maxLen; i++) {
+			if (i > 0)
+				builder.append(", ");
+			builder.append(iterator.next());
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
+	@Override
+	@Transient
+	public AbstractMetadata clone() {
+		AbstractMetadata clone = new TransientMetadata();
+
+		//clone.setData(this.getData());
+		clone.setId(this.getId());
+		clone.setUuid(this.getUuid());
+		if(this.getDataInfo() != null) {
+			clone.setDataInfo(this.getDataInfo().clone());
+		}
+		if (this.getHarvestInfo() != null) {
+			clone.setHarvestInfo(this.getHarvestInfo().clone());
+		}
+		if(this.getSourceInfo() != null) {
+			clone.setSourceInfo(this.getSourceInfo().clone());
+		}
+
+		return clone;
+	}
+
+	private class TransientMetadata extends AbstractMetadata {
+
+	}
 }

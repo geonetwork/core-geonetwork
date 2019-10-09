@@ -55,7 +55,7 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
         createSessionForAllButNotCrawlers(request);
 
 //        String path = request.getPathInfo();
-//        if (path != null && path.startsWith("/api")) {
+//        if (path != null && path.startsWith("/{portal}/api")) {
 //            // TODO: Language resolution
 //
 //        }

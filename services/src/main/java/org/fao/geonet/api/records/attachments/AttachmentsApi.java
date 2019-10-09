@@ -73,8 +73,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 @EnableWebMvc
 @Service
-@RequestMapping(value = { "/api/records/{metadataUuid}/attachments",
-        "/api/" + API.VERSION_0_1 + "/records/{metadataUuid}/attachments" })
+@RequestMapping(value = { "/{portal}/api/records/{metadataUuid}/attachments",
+        "/{portal}/api/" + API.VERSION_0_1 + "/records/{metadataUuid}/attachments" })
 @Api(value = "records", tags = "records", description = "Metadata record operations")
 public class AttachmentsApi {
     private final ApplicationContext appContext = ApplicationContextHolder.get();
@@ -125,7 +125,6 @@ public class AttachmentsApi {
         this.store = store;
     }
 
-    @SuppressWarnings("unchecked")
     @PostConstruct
     public void init() {
         if (appContext != null) {
@@ -152,10 +151,11 @@ public class AttachmentsApi {
     public List<MetadataResource> getAllResources(
             @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
             @ApiParam(value = "Sort by", example = "type") @RequestParam(required = false, defaultValue = "name") Sort sort,
+            @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "true") Boolean approved,
             @RequestParam(required = false, defaultValue = FilesystemStore.DEFAULT_FILTER) String filter,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        List<MetadataResource> list = store.getResources(context, metadataUuid, sort, filter);
+        List<MetadataResource> list = store.getResources(context, metadataUuid, sort, filter, approved);
         return list;
     }
 
@@ -167,11 +167,12 @@ public class AttachmentsApi {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delResources(
             @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
+            @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        store.delResource(context, metadataUuid);
+        store.delResource(context, metadataUuid, approved);
 
-        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
+        String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
         if (metadataIdString != null) {
             long metadataId = Long.parseLong(metadataIdString);
             UserSession userSession = ApiUtils.getUserSession(request.getSession());
@@ -191,11 +192,12 @@ public class AttachmentsApi {
             @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
             @ApiParam(value = "The sharing policy", example = "public") @RequestParam(required = false, defaultValue = "public") MetadataResourceVisibility visibility,
             @ApiParam(value = "The file to upload") @RequestParam("file") MultipartFile file,
+            @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        MetadataResource resource = store.putResource(context, metadataUuid, file, visibility);
+        MetadataResource resource = store.putResource(context, metadataUuid, file, visibility, approved);
 
-        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
+        String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
         if (metadataIdString != null && file != null && !file.isEmpty()) {
             long metadataId = Long.parseLong(metadataIdString);
             UserSession userSession = ApiUtils.getUserSession(request.getSession());
@@ -217,11 +219,12 @@ public class AttachmentsApi {
             @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
             @ApiParam(value = "The sharing policy", example = "public") @RequestParam(required = false, defaultValue = "public") MetadataResourceVisibility visibility,
             @ApiParam(value = "The URL to load in the store") @RequestParam("url") URL url,
-            @ApiIgnore HttpServletRequest request) throws Exception {
+            @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
+           @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        MetadataResource resource = store.putResource(context, metadataUuid, url, visibility);
+        MetadataResource resource = store.putResource(context, metadataUuid, url, visibility, approved);
 
-        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
+        String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
         if (metadataIdString != null && url != null) {
             long metadataId = Long.parseLong(metadataIdString);
             UserSession userSession = ApiUtils.getUserSession(request.getSession());
@@ -243,11 +246,12 @@ public class AttachmentsApi {
     public HttpEntity<byte[]> getResource(
             @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
             @ApiParam(value = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
+            @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "true") Boolean approved,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        Path file = store.getResource(context, metadataUuid, resourceId);
-
-        // TODO: Check user privileges
+        Path file = store.getResource(context, metadataUuid, resourceId, approved);
+        
+        ApiUtils.canViewRecord(metadataUuid, request);
 
         MultiValueMap<String, String> headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=\"" + file.getFileName() + "\"");
@@ -268,9 +272,10 @@ public class AttachmentsApi {
             @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
             @ApiParam(value = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
             @ApiParam(value = "The visibility", required = true, example = "public") @RequestParam(required = true) MetadataResourceVisibility visibility,
+            @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        return store.patchResourceStatus(context, metadataUuid, resourceId, visibility);
+        return store.patchResourceStatus(context, metadataUuid, resourceId, visibility, approved);
     }
 
     @ApiOperation(value = "Delete a metadata resource", nickname = "deleteMetadataResource")
@@ -282,11 +287,12 @@ public class AttachmentsApi {
     public void delResource(
             @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
             @ApiParam(value = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
-            @ApiIgnore HttpServletRequest request) throws Exception {
+            @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
+           @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        store.delResource(context, metadataUuid, resourceId);
+        store.delResource(context, metadataUuid, resourceId, approved);
 
-        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
+        String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
         if (metadataIdString != null) {
             long metadataId = Long.parseLong(metadataIdString);
             UserSession userSession = ApiUtils.getUserSession(request.getSession());

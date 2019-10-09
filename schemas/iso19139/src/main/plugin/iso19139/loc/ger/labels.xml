@@ -3685,7 +3685,7 @@
     <description/>
   </element>
   <element name="gco:aName" context="gco:TypeName">
-    <label>Type name</label>
+    <label>Feldtyp</label>
     <description/>
     <helper>
       <option value="BOOLEAN">BOOLEAN</option>

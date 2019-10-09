@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo_;
 import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.domain.OperationAllowed;
@@ -41,6 +42,7 @@ import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.jdom.Element;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import jeeves.interfaces.Service;
@@ -99,7 +101,7 @@ public class Sitemap implements Service {
             OperationAllowedId_.metadataId);
         Sort sortByChangeDateDesc = new Sort(Sort.Direction.DESC, Metadata_.dataInfo.getName() + "." + MetadataDataInfo_.changeDate.getName());
 
-        long metadatataCount = metadataRepository.count(MetadataSpecs.hasMetadataIdIn(list));
+        long metadatataCount = metadataRepository.count((Specification<Metadata>)MetadataSpecs.hasMetadataIdIn(list));
         long pages = (long) Math.ceil((double) metadatataCount / _maxItemsPage);
 
         int doc = Util.getParam(params, "doc", 0);

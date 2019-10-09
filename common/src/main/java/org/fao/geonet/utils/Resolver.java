@@ -28,6 +28,7 @@ import org.apache.xml.resolver.tools.CatalogResolver;
 import org.fao.geonet.Constants;
 import org.fao.geonet.utils.nio.NioPathAwareCatalogResolver;
 
+import java.nio.file.Path;
 import java.util.Vector;
 
 //=============================================================================
@@ -50,6 +51,7 @@ public final class Resolver implements ProxyInfoObserver {
     private ProxyInfo proxyInfo;
     private XmlResolver xmlResolver;
     private CatalogResolver catResolver;
+    private Path oasisCatalogPath;
     /**
      * When path is resolved to a non existing file, return this file.
      */
@@ -58,6 +60,17 @@ public final class Resolver implements ProxyInfoObserver {
     //--------------------------------------------------------------------------
 
     public Resolver() {
+        this.oasisCatalogPath = null;
+        beforeWrite();
+        try {
+            setUpXmlResolver();
+        } finally {
+            afterWrite();
+        }
+    }
+
+    public Resolver(Path oasisCatalogPath) {
+        this.oasisCatalogPath = oasisCatalogPath;
         beforeWrite();
         try {
             setUpXmlResolver();
@@ -72,8 +85,13 @@ public final class Resolver implements ProxyInfoObserver {
         CatalogManager catMan = new CatalogManager();
         catMan.setAllowOasisXMLCatalogPI(false);
         catMan.setCatalogClassName("org.apache.xml.resolver.Catalog");
-        String catFiles = System.getProperty(Constants.XML_CATALOG_FILES);
-        if (catFiles == null) catFiles = "";
+        String catFiles = null;
+        if(this.oasisCatalogPath == null) {
+            catFiles = System.getProperty(Constants.XML_CATALOG_FILES);
+            if (catFiles == null) catFiles = "";
+        } else {
+            catFiles = this.oasisCatalogPath.toString();
+        }
         if (Log.isDebugEnabled(Log.JEEVES))
             Log.debug(Log.JEEVES, "Using oasis catalog files " + catFiles);
 
@@ -90,8 +108,7 @@ public final class Resolver implements ProxyInfoObserver {
         try {
             iCatVerb = Integer.parseInt(catVerbosity);
         } catch (NumberFormatException nfe) {
-            Log.error(Log.JEEVES, "Failed to parse " + Constants.XML_CATALOG_VERBOSITY + " " + catVerbosity);
-            nfe.printStackTrace();
+            Log.error(Log.JEEVES, "Failed to parse " + Constants.XML_CATALOG_VERBOSITY + " " + catVerbosity, nfe);
         }
         if (Log.isDebugEnabled(Log.JEEVES))
             Log.debug(Log.JEEVES, "Using catalog resolver verbosity " + iCatVerb);

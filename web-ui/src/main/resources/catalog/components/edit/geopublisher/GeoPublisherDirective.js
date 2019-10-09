@@ -164,7 +164,7 @@
                 });
               };
               scope.openStyler = function() {
-                window.open(scope.gsNode.stylerUrl +
+                window.open(scope.gsNode.stylerurl +
                     '?namespace=' + scope.gsNode.namespacePrefix +
                     '&layer=' + scope.wmsLayerName);
               };
@@ -200,7 +200,7 @@
                 if (n != o) {
                   scope.checkNode(scope.gsNode.id);
                   scope.hasStyler = !angular.isArray(
-                      scope.gsNode.stylerUrl);
+                      scope.gsNode.stylerurl);
                 }
               });
 

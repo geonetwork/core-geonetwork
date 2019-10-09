@@ -1,0 +1,95 @@
+<div data-ng-controller="GnDashboardRecordLinksController">
+  <div>
+    <div class="row">
+      <div class="col-md-12">
+        <h1 data-translate="">recordLinksDashboard</h1>
+        <p class="text-muted" data-translate="">
+          recordLinksDashboardSubtitle
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pull-right btn-toolbar">
+    <button type="button" class="btn btn-primary"
+            title="{{'analyzeLinks-help' | translate}}"
+            data-gn-click-and-spin="analyzeLinks()">
+      <i class="fa fa-fw fa-cogs"/>&nbsp;
+      <span data-translate="">analyzeLinks</span>
+    </button>
+
+    <button type="button" class="btn btn-primary"
+            data-ng-click="loadLinks()">
+      <i class="fa fa-fw fa-refresh"/>&nbsp;
+      <span data-translate="">refreshLinks</span>
+    </button>
+
+    <button type="button" class="btn btn-danger"
+            data-ng-click="removeAll()"
+            data-gn-confirm-click="{{'removeAllLinksAndStatusConfirm' | translate}}">
+      <i class="fa fa-fw fa-times"/>&nbsp;
+      <span data-translate="">removeAllLinksAndStatus</span>
+    </button>
+  </div>
+
+  <br/>
+  <br/>
+
+  <div data-ng-if="loading" class="row">
+    <br/><br/><br/><br/>
+    <div class="flex-row flex-center">
+      <i class="fa fa-spinner fa-spin"/>
+    </div>
+  </div>
+
+  <div data-ng-if="error" class="row">
+    <div class="alert alert-danger" role="alert">
+      <i class="fa fa-exclamation-triangle fa-fw"/>
+      <span>{{error.description}}</span>
+    </div>
+  </div>
+
+  <div data-ng-if="!loading && !error && links.length > 0">
+    <table class="table table-bordered gn-record-link-table">
+      <thead>
+      <tr>
+        <th data-translate="" class="gn-record-link-table-state-column"></th>
+        <th data-translate="">url</th>
+        <th data-translate="" class="gn-record-link-table-date-column">lastCheck</th>
+        <th data-translate="" class="gn-record-link-table-md-column">associatedRecords</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="l in links">
+        <td>
+          <i class="fa fa-fw fa-2x"
+             data-ng-class="{'fa-question text-muted': l.linkStatus.length === 0,
+                                 'fa-exclamation-triangle text-danger': l.linkStatus[0] && l.linkStatus[0].failing,
+                                 'fa-check text-success': l.linkStatus[0] && !l.linkStatus[0].failing}">&nbsp;</i>
+        </td>
+        <td>
+          <a data-ng-href="l.url">{{l.url}}</a>
+        </td>
+        <td data-gn-humanize-time="{{l.linkStatus[0].checkDate.dateAndTime}}">
+          {{l.linkStatus[0].checkDate.dateAndTime}}
+        </td>
+        <td>
+          <ul>
+            <li data-ng-repeat="r in l.records">
+              <a data-ng-href="catalog.search#/metadata/{{r.metadataUuid}}">
+                {{r.metadataId}}
+              </a>
+              <!-- TODO: Title -->
+            </li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="4">
+          <a data-ng-click="more()" data-translate="">moreLinks</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

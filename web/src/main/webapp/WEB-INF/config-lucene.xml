@@ -182,7 +182,9 @@
       <field name="_logo" tagName="logo"/>
       <field name="standardName" tagName="standardName"/>
       <field name="_groupWebsite" tagName="groupWebsite"/>
-      <field name="attributeTable" tagName="attributeTable"/>
+      <field name="featureTypes" tagName="featureTypes"/>
+      <field name="versionIdentifier" tagName="versionIdentifier"/>
+      <field name="_draft" tagName="draft"/>
     </dumpFields>
   </search>
 

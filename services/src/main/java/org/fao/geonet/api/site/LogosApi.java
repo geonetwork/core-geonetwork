@@ -37,10 +37,13 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -60,7 +63,9 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -68,8 +73,8 @@ import java.util.Set;
  */
 
 @RequestMapping(value = {
-    "/api/logos",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/logos",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/logos"
 })
 @Api(value = "logos",
@@ -193,6 +198,11 @@ public class LogosApi {
         }
     }
 
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
+
+    @Autowired
+    GroupRepository groupRepository;
 
     @ApiOperation(
         value = "Remove a logo",
@@ -219,9 +229,6 @@ public class LogosApi {
             String file
     ) throws Exception {
         checkFileName(file);
-
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
         Path nodeLogoDirectory = dataDirectory.getResourcesDir()
             .resolve("images").resolve("harvesting");
 
@@ -229,6 +236,16 @@ public class LogosApi {
 
         Path logoFile = nodeLogoDirectory.resolve(file);
         if (Files.exists(logoFile)) {
+
+            final List<Group> groups = groupRepository.findByLogo(file);
+            if (groups.size() > 0) {
+                List<String> groupId = new ArrayList<>();
+                groups.forEach(e -> groupId.add(e.getName()));
+                throw new IllegalArgumentException(String.format(
+                    "Logo '%s' is used by %d group(s). Assign another logo to the following groups: %s.",
+                    file, groups.size(), groupId.toString()));
+            }
+
             Files.delete(logoFile);
         } else {
             throw new ResourceNotFoundException(String.format(

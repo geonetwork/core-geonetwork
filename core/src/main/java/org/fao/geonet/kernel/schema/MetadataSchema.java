@@ -107,6 +107,9 @@ public class MetadataSchema {
     private SchematronCriteriaGroupRepository criteriaGroupRepository;
     private SchemaPlugin schemaPlugin;
 
+    private String dependsOn;
+
+
     //---------------------------------------------------------------------------
     //---
     //--- Constructor
@@ -158,7 +161,7 @@ public class MetadataSchema {
                 Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
                 return (Editor) unmarshaller.unmarshal(metadataSchemaConfig.toFile());
             } catch (JAXBException e) {
-                e.printStackTrace();
+                Log.error(Geonet.SCHEMA_MANAGER, " Get config editor. Error is " + e.getMessage(), e);
                 throw new RuntimeException(e);
             }
         }
@@ -592,6 +595,14 @@ public class MetadataSchema {
 
     public void setAppMajorVersionSupported(String appMajorVersionSupported) {
         this.appMajorVersionSupported = appMajorVersionSupported;
+    }
+
+    public String getDependsOn() {
+        return dependsOn;
+    }
+
+    public void setDependsOn(String depends) {
+        this.dependsOn = depends;
     }
 
     public Map<String, String> getTitles() {

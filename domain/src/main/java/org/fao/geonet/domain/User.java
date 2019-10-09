@@ -376,7 +376,7 @@ public class User extends GeonetEntity implements UserDetails {
         ArrayList<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
         final String nodeId = getSecurity().getNodeId();
         if (nodeId != null) {
-            auths.add(new SimpleGrantedAuthority(NODE_APPLICATION_CONTEXT_KEY + nodeId));
+            auths.add(new SimpleGrantedAuthority(NODE_APPLICATION_CONTEXT_KEY));
         }
 
         if (_profile != null) {

@@ -54,6 +54,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
 import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.geometry.BoundingBox;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -201,11 +202,11 @@ public class EsWFSFeatureIndexer {
             new Object[]{url, typeName, index, indexType});
         try {
             long begin = System.currentTimeMillis();
-            client.deleteByQuery(index, indexType, String.format("+featureTypeId:\\\"%s\\\"", getIdentifier(url, typeName)));
+            client.deleteByQuery(index, String.format("+featureTypeId:\\\"%s\\\"", getIdentifier(url, typeName)));
             LOGGER.info("  Features deleted in {} ms.", System.currentTimeMillis() - begin);
 
             begin = System.currentTimeMillis();
-            client.deleteByQuery(index, indexType, String.format("+id:\\\"%s\\\"",
+            client.deleteByQuery(index, String.format("+id:\\\"%s\\\"",
                 getIdentifier(url, typeName)));
             LOGGER.info("  Report deleted in {} ms.", System.currentTimeMillis() - begin);
 
@@ -272,8 +273,13 @@ public class EsWFSFeatureIndexer {
                         if (attributeValue == null) {
 
                         } else if (tokenizedFields != null && tokenizedFields.get(attributeName) != null) {
+                            String rawValue = (String) attributeValue;
+                            String value = rawValue.startsWith(CDATA_START) ?
+                                rawValue.replaceFirst(CDATA_START_REGEX, "").substring(0, rawValue.length() - CDATA_END.length() - CDATA_START.length()) :
+                                rawValue;
+
                             String separator = tokenizedFields.get(attributeName);
-                            String[] tokens = ((String) attributeValue).split(separator);
+                            String[] tokens = value.split(separator);
                             ArrayNode arrayNode = jacksonMapper.createArrayNode();
                             for (String token : tokens) {
                                 arrayNode.add(token.trim());
@@ -312,6 +318,15 @@ public class EsWFSFeatureIndexer {
                             } else {
                                 report.setPointOnlyForGeomsFalse();
                             }
+
+                            // Populate bbox coordinates to be able to compute
+                            // global bbox of search results
+                            final BoundingBox bbox = feature.getBounds();
+                            rootNode.put("bbox_xmin", bbox.getMinX());
+                            rootNode.put("bbox_ymin", bbox.getMinY());
+                            rootNode.put("bbox_xmax", bbox.getMaxX());
+                            rootNode.put("bbox_ymax", bbox.getMaxY());
+
                         } else {
                             String value = attributeValue.toString();
                             rootNode.put(getDocumentFieldName(attributeName),
@@ -382,7 +397,7 @@ public class EsWFSFeatureIndexer {
             titleResolver = new TitleResolver() {
                 @Override
                 public void setTitle(ObjectNode objectNode, SimpleFeature simpleFeature) {
-                    objectNode.put("resourceTitle", state.getFields().get(defaultTitleAttribute).toString());
+                    objectNode.put("resourceTitle", simpleFeature.getAttribute(defaultTitleAttribute).toString());
                 }
             };
         } else {
@@ -440,7 +455,7 @@ public class EsWFSFeatureIndexer {
         public boolean saveHarvesterReport() {
             Index search = new Index.Builder(report)
                 .index(index)
-                .type(indexType)
+                .type("_doc")
                 .id(report.get("id").toString()).build();
             try {
                 DocumentResult response = client.getClient().execute(search);
@@ -487,7 +502,7 @@ public class EsWFSFeatureIndexer {
             this.url = url;
             this.firstFeatureIndex = firstFeatureIndex;
             this.report = report;
-            this.bulk = new Bulk.Builder().defaultIndex(index).defaultType(indexType);
+            this.bulk = new Bulk.Builder().defaultIndex(index);
             this.bulkSize = 0;
             LOGGER.debug("  {} - from {}, {} features to index, preparing bulk.", typeName, firstFeatureIndex, featureCommitInterval);
         }

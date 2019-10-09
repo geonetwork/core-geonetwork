@@ -220,4 +220,7 @@
   <sds-section-custodian>Responsible custodian</sds-section-custodian>
   <sds-addOperation>Add Operation</sds-addOperation>
 
+  <trueValue>Si</trueValue>
+  <falseValue>No</falseValue>
+  <nilValue>Sense definir</nilValue>
 </strings>

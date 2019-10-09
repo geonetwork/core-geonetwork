@@ -19,6 +19,8 @@
 @import "gn_footer_default.less";
 // infolists on the homepage
 @import "gn_infolist_default.less";
+// alert messages
+@import "gn_alerts_default.less";
 // variables for manipulating the theme
 @import "gn_variables_default.less"; // must be last
 
@@ -41,6 +43,8 @@
   padding-bottom: calc(~"@{gn-bottombar-height} + 10px");
   .badge {
       margin-right: 5px;
+      background-color: #333;
+      font-weight: normal;
     }
   .nav-pills {
     margin-bottom: 1em;
@@ -67,6 +71,7 @@
     position: relative;
     padding-top: 2em;
     padding-bottom: 2em;
+    background-color: #fff;
     [typeahead] {
       vertical-align: middle;
       display: inline-block;
@@ -87,6 +92,25 @@
       button.btn-lg, input[type="text"].input-lg {
         height: 46px;
       }
+      input[type="text"].input-lg {
+        &:focus {
+          border-color: @gn-search-outline-color;
+          box-shadow: rgba(0, 0, 0, 0.075) 0px 1px 1px inset, rgba(@gn-search-outline-color-red, @gn-search-outline-color-green, @gn-search-outline-color-blue, 0.6) 0px 0px 8px;
+        }
+      }
+      button.btn-primary.btn-lg {
+        background-color: @gn-search-button-background-color;
+        border-color: darken(@gn-search-button-background-color, 5%);
+        color: @gn-search-button-color;
+        &:hover {
+          background-color: darken(@gn-search-button-background-color, 10%);
+          border-color: darken(@gn-search-button-background-color, 15%);
+        }
+      }
+      .dropdown-menu > .active > a {
+        background-color: @gn-search-button-background-color;
+        color: @gn-search-button-color;
+      }
     }
   }
   .loading {
@@ -101,6 +125,21 @@
     padding: .2em;
   }
 }
+// user search panel
+.gn-search-user {
+  .list-group {
+    margin-bottom: 10px;
+    .list-group-item {
+      margin-top: 1px;
+      padding-left: 0;
+      padding-right: 0;
+      border-radius: 0;
+      border: 0;
+      border-bottom: 1px solid @list-group-border;
+    }
+  }
+}
+
 // advanced search
 .gn-search-filter {
   padding: 5px;
@@ -116,6 +155,13 @@
   }
   .control-label {
     padding: 3px 0 2px 0;
+    display: inline;
+    text-align: left;
+    .control-label-span {
+      display: block;
+      margin-bottom: 2px;
+      margin-top: 3px;
+    }
   }
   .bootstrap-tagsinput {
     padding-top: 6px;
@@ -308,6 +354,47 @@ li.list-group-item.gn-map-item {
       .gn-img-thumbnail-caption::after {
         background: linear-gradient(to bottom, fade(@result-hover-color, 0%) 0%, @result-hover-color 100%);
       }
+    }
+  }
+}
+
+// draft
+.see-draft-pill {
+  border: 1px solid @btn-default-border;
+  margin-top: 5px;
+  border-radius: 20px;
+  padding: 2px 0  4px 0;
+  display: block;
+  cursor: pointer;
+  color: @gray-dark;
+  &:hover {
+    color: @gray-darker;
+    text-decoration: none;
+  }
+  small small {
+    padding: 7px 2px 8px 8px;
+  }
+  label {
+    margin: 0 15px 0 10px;
+    font-weight: 400;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  @media (max-width: @screen-md-min) {
+    margin-bottom: 5px;
+  }
+}
+
+// nojs styles
+.gn-nojs {
+  .gn-top-search {
+    padding: 30px 0;
+    margin-bottom: 30px;
+    .gn-form-any input.input-lg {
+      height: 46px;
+    }
+    .btn-lg {
+      padding: 13px 16px;
     }
   }
 }

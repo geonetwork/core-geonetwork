@@ -96,6 +96,7 @@ public final class Geonet {
     public static final String CLASSIFIER = GEONETWORK + ".classifier";
     public static final String CORS = GEONETWORK + ".cors";
 
+
     /**
      * Container for file names.
      */
@@ -111,6 +112,7 @@ public final class Geonet {
         public static final String UPDATE_FIXED_INFO_SUBTEMPLATE = "update-fixed-info-subtemplate.xsl";
         public static final String UPDATE_CHILD_FROM_PARENT_INFO = "update-child-from-parent-info.xsl";
         public static final String EXTRACT_UUID = "extract-uuid.xsl";
+        public static final String EXTRACT_DEFAULT_LANGUAGE = "extract-default-language.xsl";
         public static final String EXTRACT_SKOS_FROM_ISO19135 = "xml_iso19135ToSKOS.xsl";
         public static final String EXTRACT_DATE_MODIFIED = "extract-date-modified.xsl";
         public static final String SET_UUID = "set-uuid.xsl";
@@ -202,8 +204,8 @@ public final class Geonet {
         public static final String CONV_STYLESHEETS = STYLESHEETS + "/conversion";
         public static final String IMPORT_STYLESHEETS = CONV_STYLESHEETS + "/import";
         public static final String WFS_STYLESHEETS = "convert/WFSToFragments";
-        public static final String DIF_STYLESHEETS = "convert/ThreddsDIFToISO";
         public static final String TDS_STYLESHEETS = "convert/ThreddsToFragments";
+        public static final String TDS_19119_19139_STYLESHEETS = "convert/ThreddsCatalogto19119";
         public static final String ISO19119TOJZKIT_STYLESHEET = "convert/19119ToJZKitRepository.xsl";
         public static final String OGC_STYLESHEETS = "convert/OGCWxSGetCapabilitiesto19119";
         public static final String CONVERT_STYLESHEETS = "convert/";
@@ -415,6 +417,18 @@ public final class Geonet {
          * engine. Default is 10 results
          */
         public static final String HITS_PER_PAGE = "hitsPerPage";
+
+        /**
+         * Parameter name: {@value #MAX_RECORDS} - Number of maximum results returned by the search
+         * engine, given the from / to user provided parameters. Default is 100 results.
+         */
+        public static final String MAX_RECORDS = "maxRecords";
+
+        /**
+         * Parameter name: {@value #ALLOW_UNBOUNDED_QUERIES} - Allow XmlSearch to return as many 
+         * records as the search returns (this was the default behaviour before 3.8.x).
+         */
+        public static final String ALLOW_UNBOUNDED_QUERIES = "allowUnboundedQueries";
 
         /**
          * Parameter name: {@value #SIMILARITY} - Use the Lucene FuzzyQuery. Values range from 0.0
@@ -632,6 +646,7 @@ public final class Geonet {
         public static final Namespace OWS = Namespace.getNamespace("ows", "http://www.opengis.net/ows");
         public static final Namespace OGC = Namespace.getNamespace("ogc", "http://www.opengis.net/ogc");
         public static final Namespace GML = Namespace.getNamespace("gml", "http://www.opengis.net/gml");
+        public static final Namespace GML32 = Namespace.getNamespace("gml", "http://www.opengis.net/gml/3.2");
         public static final Namespace SVRL = Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
         public static final Namespace SLD = Namespace.getNamespace("sld", "http://www.opengis.net/sld");
         public static final Namespace SE = Namespace.getNamespace("se", "http://www.opengis.net/se");
@@ -671,5 +686,6 @@ public final class Geonet {
         public static final String LOCALE = "locale";
 		public static final String IS_PUBLISHED_TO_ALL = "_isPublishedToAll";
         public static final String FEEDBACKCOUNT = "feedbackCount";
+        public static final String DRAFT = "_draft";
     }
 }

@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.7.0-SNAPSHOT</version>
+    <version>3.9.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -135,14 +135,20 @@
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>fop</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>fop-pdf-images</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.apache.jcs</groupId>
       <artifactId>jcs</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>commons-dbcp</groupId>
-      <artifactId>commons-dbcp</artifactId>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-dbcp2</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-pool</groupId>
@@ -235,7 +241,7 @@
       <artifactId>pcj</artifactId>
     </dependency>
     <dependency>
-      <groupId>batik</groupId>
+      <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-ext</artifactId>
     </dependency>
     <dependency>
@@ -392,6 +398,10 @@
           <groupId>com.vividsolutions</groupId>
           <artifactId>jts</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>org.apache.xmlgraphics</groupId>
+          <artifactId>batik-transcoder</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
 
@@ -455,7 +465,7 @@
     <dependency>
       <groupId>edu.ucar</groupId>
       <artifactId>netcdf</artifactId>
-      <version>4.0.patch</version>
+      <version>4.3.23</version>
     </dependency>
 
     <!-- language detection -->
@@ -500,10 +510,6 @@
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring-jmx</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
       <scope>compile</scope>
     </dependency>
@@ -513,7 +519,6 @@
     <plugins>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.5</version>
         <executions>
           <execution>
             <id>test-jar</id>
@@ -526,7 +531,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.5</version>
         <executions>
           <execution>
             <id>copy-filter-resource</id>

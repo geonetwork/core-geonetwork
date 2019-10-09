@@ -23,30 +23,36 @@
 
 package org.fao.geonet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.entitylistener.SourceEntityListenerManager;
 import org.fao.geonet.repository.LanguageRepository;
 
 import java.util.Map;
+import java.util.UUID;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
- * Entity representing a metadata source.
+ * Entity representing a source catalogue.
+ *
+ * A source is created for the default catalogue,
+ * when a harvester is created,
+ * when a MEF is imported flagging an external catalogue,
+ * and when a subportal is created.
  *
  * @author Jesse
  */
@@ -55,9 +61,13 @@ import javax.persistence.Transient;
 @Table(name = "Sources")
 @EntityListeners(SourceEntityListenerManager.class)
 public class Source extends Localized {
-    private String _uuid;
+    private String _uuid = UUID.randomUUID().toString();
     private String _name;
-    private char _local = Constants.YN_TRUE;
+    private SourceType type = null;
+    private String logo;
+    private String filter;
+    private String uiConfig;
+    private ISODate creationDate = new ISODate();
 
     /**
      * Default constructor.  Required by framework.
@@ -67,12 +77,11 @@ public class Source extends Localized {
 
     /**
      * Convenience constructor for quickly making a Source object.
-     *
-     * @param uuid  the uuid of the source (also the ID)
+     *  @param uuid  the uuid of the source (also the ID)
      * @param name  the name
-     * @param local if the source is the local system
+     * @param type
      */
-    public Source(String uuid, String name, Map<String, String> translations, boolean local) {
+    public Source(String uuid, String name, Map<String, String> translations, SourceType type) {
         this._uuid = uuid;
         setName(name);
         if (translations != null && translations.size() != 0) {
@@ -89,7 +98,7 @@ public class Source extends Localized {
                 }
             }
         }
-        this._local = Constants.toYN_EnabledChar(local);
+        this.type = type;
     }
 
     /**
@@ -132,49 +141,6 @@ public class Source extends Localized {
         this._name = name;
         return this;
     }
-
-    /**
-     * For backwards compatibility we need the islocal column to be either 'n' or 'y'. This is a
-     * workaround to allow this until future versions of JPA that allow different ways of
-     * controlling how types are mapped to the database.
-     */
-    @Column(name = "isLocal", nullable = false, length = 1)
-    @JsonIgnore
-    protected char getIsLocal_JpaWorkaround() {
-        return _local;
-    }
-
-    /**
-     * Set the column values.
-     *
-     * @param local Constants.YN_ENABLED or Constants.YN_DISABLED
-     */
-    protected void setIsLocal_JpaWorkaround(char local) {
-        _local = local;
-    }
-
-    /**
-     * Return true is the source refers to the local geonetwork.
-     *
-     * @return true is the source refers to the local geonetwork.
-     */
-    @Transient
-    @JsonIgnore
-    public boolean isLocal() {
-        return Constants.toBoolean_fromYNChar(getIsLocal_JpaWorkaround());
-    }
-
-    /**
-     * Set true is the source refers to the local geonetwork.
-     *
-     * @param local true is the source refers to the local geonetwork.
-     * @return this entity
-     */
-    public Source setLocal(boolean local) {
-        setIsLocal_JpaWorkaround(Constants.toYN_EnabledChar(local));
-        return this;
-    }
-
     @Override
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
     @CollectionTable(joinColumns = @JoinColumn(name = "idDes"), name = "SourcesDes")
@@ -191,7 +157,6 @@ public class Source extends Localized {
 
         Source source = (Source) o;
 
-        if (_local != source._local) return false;
         if (_name != null ? !_name.equals(source._name) : source._name != null) return false;
         if (_uuid != null ? !_uuid.equals(source._uuid) : source._uuid != null) return false;
 
@@ -202,7 +167,90 @@ public class Source extends Localized {
     public int hashCode() {
         int result = _uuid != null ? _uuid.hashCode() : 0;
         result = 31 * result + (_name != null ? _name.hashCode() : 0);
-        result = 31 * result + (int) _local;
         return result;
     }
+
+    /**
+     * Property indicating if the source is the local catalogue,
+     * an external one, a harvester source or a sub portal.
+     * @return
+     */
+    @Column(nullable = true, name = "type")
+    @Enumerated(EnumType.STRING)
+    public SourceType getType() {
+        return type;
+    }
+
+    public Source setType(SourceType type) {
+        this.type = type;
+        return this;
+    }
+
+    /**
+     * Only applies to subportal.
+     * @return
+     */
+    public String getLogo() {
+        return logo;
+    }
+
+    public Source setLogo(String logo) {
+        this.logo = logo;
+        return this;
+    }
+
+
+    /**
+     * Only applies to subportal.
+     * @return
+     */
+    public String getFilter() {
+        return filter;
+    }
+
+    public Source setFilter(String filter) {
+        this.filter = filter;
+        return this;
+    }
+
+    /**
+     * Only applies to subportal.
+     * @return
+     */
+    public String getUiConfig() {
+        return uiConfig;
+    }
+
+    public Source setUiConfig(String uiConfig) {
+        this.uiConfig = uiConfig;
+        return this;
+    }
+
+
+    /**
+     * Get the date that the source was created.
+     *
+     * @return the creation date.
+     */
+    @AttributeOverride(
+        name = "dateAndTime",
+        column = @Column(
+            name = "creationDate",
+            nullable = true,
+            length = 30))
+    public ISODate getCreationDate() {
+        return creationDate;
+    }
+
+    /**
+     * Set the date that the source was created.
+     *
+     * @param creationDate the creation date.
+     * @return this data info object
+     */
+    public Source setCreationDate(ISODate creationDate) {
+        this.creationDate = creationDate;
+        return this;
+    }
+
 }
