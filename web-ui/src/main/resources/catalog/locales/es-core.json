@@ -478,7 +478,7 @@
     "metadataUnpublishedError": "Error occurred while un-publishing metadata.",
     "categoriesUpdated": "Categories updated.",
     "warnPublishDraft": "When publishing records with workflow enabled, the status will change to 'Approve'. Are you sure you want to continue?",
-    "canceWorkingCopy": "Cancel working copy",
+    "cancelWorkingCopy": "Cancel working copy",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{title}}'?",
     "workingCopy": "Working copy"
 }

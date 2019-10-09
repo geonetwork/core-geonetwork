@@ -478,7 +478,7 @@
     "metadataUnpublishedError": "Při publikování metadat došlo k chybě.",
     "categoriesUpdated": "Kategorie aktualizovány.",
     "warnPublishDraft": "Při publikování záznamů s povoleným pracovním postupem se stav změní na 'Schválit'. Jste si jistý, že chcete pokračovat?",
-    "canceWorkingCopy": "Zrušit pracovní kopii",
+    "cancelWorkingCopy": "Zrušit pracovní kopii",
     "deleteWorkingCopyRecordConfirm": "Opravdu chcete odstranit pracovní kopii '{{title}}'?",
     "workingCopy": "Pracovní kopie"
 }

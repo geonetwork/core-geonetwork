@@ -478,7 +478,7 @@
     "metadataUnpublishedError": "Er is een fout opgetreden tijdens het de-publiceren. van de metadata",
     "categoriesUpdated": "Categoriën geupdated.",
     "warnPublishDraft": "Waneer de workflow is geactiveerd en de records worden gepubliceerd dan veranderd de status in 'Goedgekeurd'. Doorgaan?",
-    "canceWorkingCopy": "Annuleer werk kopie",
+    "cancelWorkingCopy": "Annuleer werk kopie",
     "deleteWorkingCopyRecordConfirm": "Weet je zeker dat je werk kopie '{{title}}' wilt verwijderen?",
     "workingCopy": "Werk kopie"
 }

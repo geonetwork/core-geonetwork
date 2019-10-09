@@ -478,7 +478,7 @@
     "metadataUnpublishedError": "Beim Aufheben der Veröffentlichung von Metadaten ist ein Fehler aufgetreten.",
     "categoriesUpdated": "Kategorien aktualisiert.",
     "warnPublishDraft": "Wenn Sie Datensätze mit aktiviertem Workflow veröffentlichen, ändert sich der Status in  'genehmigt'. Sind Sie sicher, dass Sie fortfahren möchten?",
-    "canceWorkingCopy": "Arbeitskopie abbrechen",
+    "cancelWorkingCopy": "Arbeitskopie abbrechen",
     "deleteWorkingCopyRecordConfirm": "Möchten Sie die Arbeitskopie '{{title}}' wirklich entfernen?",
     "workingCopy": "Arbeitskopie"
 }

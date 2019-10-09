@@ -478,7 +478,7 @@
     "metadataUnpublishedError": "Villa kom upp þegar lýsigögn voru tekin úr birtingu. ",
     "categoriesUpdated": "Flokkar uppfærðir.",
     "warnPublishDraft": "Þegar færslur eru birtar með vinnuflæði virkt, mun staðan breytast yfir í  'Samþykkt. Ertu viss um að þú viljir halda áfram?",
-    "canceWorkingCopy": "Hætta við vinnuafrit",
+    "cancelWorkingCopy": "Hætta við vinnuafrit",
     "deleteWorkingCopyRecordConfirm": "Ertu viss um að þú viljir fjarlægja vinnuafritið '{{titill}}'?",
     "workingCopy": "Vinnuafrit"
 }

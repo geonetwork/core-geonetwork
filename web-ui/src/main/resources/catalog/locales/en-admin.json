@@ -1413,7 +1413,6 @@
     "metadata/pdfReport/footerLeft": "Footer text (left)",
     "metadata/pdfReport/footerLeft-help": "The following template values are allowed: {date}, {siteInfo}.",
     "metadata/pdfReport/footerRight": "Footer text (right)",
-    "metadata/pdfReport/headerRight-help": "The following template values are allowed: {date}, {siteInfo}.",
     "metadata/pdfReport/tocPage": "Add table of contents (TOC) page",
     "metadata/pdfReport/pdfName": "Report file name",
     "metadata/pdfReport/pdfName-help": "Report file name. The following template fields are allowed to be used: {year}, {month}, {day}, {date} and {datetime}. Template fields are replaced with the related date values. {date} uses 'yyyyMMdd' format and {datetime} uses 'yyyyMMddHHmmss' format.",

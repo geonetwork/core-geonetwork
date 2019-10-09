@@ -478,7 +478,7 @@
     "metadataUnpublishedError": "메타데이터 발행을 취소하는 중 오류가 발생했습니다.",
     "categoriesUpdated": "카테고리를 갱신하였습니다.",
     "warnPublishDraft": "When publishing records with workflow enabled, the status will change to 'Approve'. Are you sure you want to continue?",
-    "canceWorkingCopy": "Cancel working copy",
+    "cancelWorkingCopy": "Cancel working copy",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{title}}'?",
     "workingCopy": "Working copy"
 }
