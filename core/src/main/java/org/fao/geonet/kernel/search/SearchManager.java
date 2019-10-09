@@ -515,11 +515,6 @@ public class SearchManager implements ISearchManager {
         _luceneOptimizerManager.shutdown();
     }
 
-    @Override
-    public MetaSearcher newSearcher(String stylesheetName) throws Exception {
-        return null;
-    }
-
     private void createDocumentBoost() {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         LuceneConfig luceneConfig = applicationContext.getBean(LuceneConfig.class);

@@ -205,12 +205,6 @@ public class EsSearchManager implements ISearchManager {
     public void end() throws Exception {
     }
 
-    @Override
-    public MetaSearcher newSearcher(String stylesheetName) throws Exception {
-        //TODO
-        return null;
-    }
-
     private int commitInterval = 200;
     private Map<String, String> listOfDocumentsToIndex = new HashMap<>();
     private Map<String, String> listOfPublicDocumentsToIndex = new HashMap<>();
