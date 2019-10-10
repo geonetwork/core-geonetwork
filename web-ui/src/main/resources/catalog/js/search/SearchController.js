@@ -124,7 +124,7 @@
                 for (var i = 0; i < data.length; i++) {
                   res.push({
                     id: data[i].name,
-                    name: data[i].label.eng
+                    name: data[i].label[$scope.lang]
                   });
                 }
                 res = orderByFilter(res,'name',false);
