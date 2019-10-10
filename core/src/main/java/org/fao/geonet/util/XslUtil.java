@@ -25,7 +25,6 @@ package org.fao.geonet.util;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Function;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.vividsolutions.jts.geom.Envelope;
@@ -36,18 +35,14 @@ import jeeves.server.context.ServiceContext;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.IsoLanguage;
+import org.fao.geonet.domain.LinkStatus;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.UiSetting;
 import org.fao.geonet.domain.User;
@@ -59,6 +54,7 @@ import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.url.UrlChecker;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.IsoLanguageRepository;
@@ -66,12 +62,10 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UiSettingsRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
-import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.gml3.GMLConfiguration;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Parser;
@@ -83,11 +77,9 @@ import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.client.ClientHttpResponse;
 import org.w3c.dom.Node;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
@@ -580,7 +572,6 @@ public final class XslUtil {
         }
     }
 
-
     /**
      * Returns the HTTP code  or error message if error occurs during URL connection.
      *
@@ -588,63 +579,12 @@ public final class XslUtil {
      * @return the numeric code of the HTTP request or a String with an error.
      */
     public static String getUrlStatus(String url) {
-        return getUrlStatus(url, 5);
-
-    }
-
-    /**
-     * Returns the HTTP code  or error message if error occurs during URL connection.
-     *
-     * @param url       The URL to ckeck.
-     * @param tryNumber the number of remaining tries.
-     */
-    public static String getUrlStatus(String url, int tryNumber) {
-        if (tryNumber < 1) {
-            // protect against redirect loops
-            return "ERR_TOO_MANY_REDIRECTS";
+        UrlChecker urlChecker = ApplicationContextHolder.get().getBean(UrlChecker.class);
+        LinkStatus urlStatus = urlChecker.getUrlStatus(url);
+        if (urlStatus.getStatusValue().equalsIgnoreCase("4XX") || urlStatus.getStatusValue().equalsIgnoreCase("310")) {
+           return urlStatus.getStatusInfo();
         }
-        HttpHead head = new HttpHead(url);
-        GeonetHttpRequestFactory requestFactory = ApplicationContextHolder.get().getBean(GeonetHttpRequestFactory.class);
-        ClientHttpResponse response = null;
-        try {
-            response = requestFactory.execute(head, new Function<HttpClientBuilder, Void>() {
-                @Nullable
-                @Override
-                public Void apply(@Nullable HttpClientBuilder originalConfig) {
-                    RequestConfig.Builder config = RequestConfig.custom()
-                        .setConnectTimeout(1000)
-                        .setConnectionRequestTimeout(3000)
-                        .setSocketTimeout(5000);
-                    RequestConfig requestConfig = config.build();
-                    originalConfig.setDefaultRequestConfig(requestConfig);
-
-                    return null;
-                }
-            });
-            //response = requestFactory.execute(head);
-            if (response.getRawStatusCode() == HttpStatus.SC_BAD_REQUEST
-                || response.getRawStatusCode() == HttpStatus.SC_METHOD_NOT_ALLOWED
-                || response.getRawStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                // the website doesn't support HEAD requests. Need to do a GET...
-                response.close();
-                HttpGet get = new HttpGet(url);
-                response = requestFactory.execute(get);
-            }
-
-            if (response.getStatusCode().is3xxRedirection() && response.getHeaders().containsKey("Location")) {
-                // follow the redirects
-                return getUrlStatus(response.getHeaders().getFirst("Location"), tryNumber - 1);
-            }
-
-            return String.valueOf(response.getRawStatusCode());
-        } catch (IOException e) {
-            Log.error(Geonet.GEONETWORK, "IOException validating  " + url + " URL. " + e.getMessage(), e);
-            return e.getMessage();
-        } finally {
-            if (response != null) {
-                response.close();
-            }
-        }
+        return urlStatus.getStatusValue();
     }
 
     public static String threeCharLangCode(String langCode) {
