@@ -1170,6 +1170,16 @@ public class SearchManager implements ISearchManager {
 
         defaultLang.removeContent();
         defaultLang.addContent(toInclude);
+
+        for (Element element : otherLanguages) {
+            toInclude.clear();
+            for (Element index : (List<Element>) element.getChildren()) {
+                toInclude.add(index);
+            }
+            element.removeContent();
+            element.addContent(toInclude);
+        }
+
     }
 
     // utilities

@@ -95,6 +95,27 @@ public class SearchManagerTest {
     }
 
 
+    @Test
+    public void mergeDefinedTwiceInLocal() {
+        SearchManager toTest = new SearchManager();
+        Element indexFromDefault = singletonIndexList("default", "fre");
+        Element indexFromFreLocale = singletonIndexList("locale", "fre");
+        Element indexFromEngLocale = singletonIndexList("indexedTwice", "eng");
+        indexFromEngLocale.addContent(indexFromEngLocale.cloneContent());
+        Element indexFromGerLocale = singletonIndexList("locale", "ger");
+        List<Element> indexFromLocales= new ArrayList<>();
+        indexFromLocales.add(indexFromFreLocale);
+        indexFromLocales.add(indexFromEngLocale);
+        indexFromLocales.add(indexFromGerLocale);
+
+        toTest.mergeDefaultLang(indexFromDefault, indexFromLocales);
+
+        assertNotNull(indexFromEngLocale.getChild("momo_from_indexedTwice_eng"));
+        assertEquals(2, indexFromDefault.getContentSize());
+        assertEquals(1, indexFromEngLocale.getContentSize());
+
+    }
+
     private Element singletonIndexList(String source, String language) {
         String elementName = "momo_from_" + source + "_" + language;
         Element indexFromDefault = new Element("Document").setAttribute(Geonet.IndexFieldNames.LOCALE, language);
