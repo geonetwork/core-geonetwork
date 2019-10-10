@@ -55,7 +55,7 @@
         link: function(scope, element, attrs) {
           scope.iconOnly = attrs.iconOnly === 'true';
           var helpBaseUrl = gnGlobalSettings.docUrl ||
-              'https://geonetwork-opensource.org/manuals/3.6.x/';
+              'https://geonetwork-opensource.org/manuals/3.8.x/';
 
           var testAndOpen = function(url) {
             var defer = $q.defer();
