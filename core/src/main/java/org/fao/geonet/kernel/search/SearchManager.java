@@ -141,6 +141,41 @@ import static org.fao.geonet.constants.Geonet.IndexFieldNames.DATABASE_CHANGE_DA
  * Indexes metadata using Lucene.
  */
 public class SearchManager implements ISearchManager {
+    public static final Comparator<Element> INDEX_COMPARATOR = new Comparator<Element>() {
+        public int compare(Element o1, Element o2) {
+            // <Field name="_locale" string="{string($iso3LangId)}" store="true" index="true" token="false"/>
+            int name = compare(o1, o2, "name");
+            int string = compare(o1, o2, "string");
+            int store = compare(o1, o2, "store");
+            int index = compare(o1, o2, "index");
+            if (name != 0) {
+                return name;
+            }
+            if (string != 0) {
+                return string;
+            }
+            if (store != 0) {
+                return store;
+            }
+            if (index != 0) {
+                return index;
+            }
+            return 0;
+        }
+
+        private int compare(Element o1, Element o2, String attName) {
+            return safeGet(o1, attName).compareTo(safeGet(o2, attName));
+        }
+
+        public String safeGet(Element e, String attName) {
+            String att = e.getAttributeValue(attName);
+            if (att == null) {
+                return "";
+            } else {
+                return att;
+            }
+        }
+    };
     private static Logger SE_LOGGER = LoggerFactory.getLogger(Geonet.SEARCH_ENGINE);
     private static Logger LU_LOGGER = LoggerFactory.getLogger(Geonet.LUCENE);
     private static Logger IE_LOGGER = LoggerFactory.getLogger(Geonet.INDEX_ENGINE);
@@ -1118,41 +1153,7 @@ public class SearchManager implements ISearchManager {
             }
         }
 
-        SortedSet<Element> toInclude = new TreeSet<Element>(new Comparator<Element>() {
-            public int compare(Element o1, Element o2) {
-                // <Field name="_locale" string="{string($iso3LangId)}" store="true" index="true" token="false"/>
-                int name = compare(o1, o2, "name");
-                int string = compare(o1, o2, "string");
-                int store = compare(o1, o2, "store");
-                int index = compare(o1, o2, "index");
-                if (name != 0) {
-                    return name;
-                }
-                if (string != 0) {
-                    return string;
-                }
-                if (store != 0) {
-                    return store;
-                }
-                if (index != 0) {
-                    return index;
-                }
-                return 0;
-            }
-
-            private int compare(Element o1, Element o2, String attName) {
-                return safeGet(o1, attName).compareTo(safeGet(o2, attName));
-            }
-
-            public String safeGet(Element e, String attName) {
-                String att = e.getAttributeValue(attName);
-                if (att == null) {
-                    return "";
-                } else {
-                    return att;
-                }
-            }
-        });
+        SortedSet<Element> toInclude = new TreeSet<Element>(INDEX_COMPARATOR);
 
         for (Element element : (List<Element>) defaultLang.getChildren()) {
             toInclude.add(element);
