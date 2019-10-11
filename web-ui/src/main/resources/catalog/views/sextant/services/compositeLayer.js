@@ -47,6 +47,8 @@
 
       return {
         init: function (layer, map, featureType, heatmapMinCount, tooltipMaxCount, tooltipTemplate) {
+          var me = this;
+
           // create base group & copy properties
           var group = new ol.layer.Group();
           group.setProperties(layer.getProperties());
@@ -79,7 +81,7 @@
           });
           var tooltipLayer = new ol.layer.Vector({
             source: tooltipSource,
-            opacity: 0
+            style: this.getFeatureBaseStyle()
           });
           group.getLayers().push(heatmapLayer);
           group.getLayers().push(tooltipLayer);
@@ -107,32 +109,13 @@
           map.addOverlay(tooltipOverlay);
 
           var cellHoverStyle = gnHeatmapService.getCellHoverStyle();
+          var hoveredCell = null;
+          var featureHoverStyle = this.getFeatureHoverStyle();
+          var featureSelectedStyle = this.getFeatureSelectedStyle();
           var hoveredFeature = null;
           var selectedFeature = null;
 
-          function resetTooltips(clearSelected) {
-            heatmapOverlay.setPosition();
-            if (clearSelected) {
-              selectedFeature = null;
-            }
-            if (!selectedFeature) {
-              tooltipOverlay.setPosition();
-            }
-            if (hoveredFeature) {
-              hoveredFeature.setStyle(null);
-              hoveredFeature = null;
-            }
-          }
-
-          // show a tooltip when hovering a heatmap cell, with the feature count in it
-          var hoverHeatmapFeature = function(feature) {
-            if (hoveredFeature) {
-              hoveredFeature.setStyle(null);
-            }
-            hoveredFeature = feature;
-            hoveredFeature.setStyle(cellHoverStyle(feature));
-
-            // position overlay on feature
+          function showHeatmapTooltip(feature) {
             var center =
               ol.extent.getCenter(feature.getGeometry().getExtent());
             var topleft =
@@ -141,20 +124,25 @@
             heatmapOverlay.getElement().innerText =
               $translate.instant('featureCount') + ': '
               + feature.get('count');
-          };
-
-          // show a tooltip when hovering an actual feature, generated from the feature properties
-          var hoverTooltipFeature = function(feature, clicked) {
-            if (selectedFeature && !clicked) {
-              return;
+          }
+          function hideHeatmapTooltip() {
+            heatmapOverlay.setPosition();
+          }
+          function handleHeatmapHover(feature) {
+            if (hoveredCell) {
+              hoveredCell.setStyle(null);
             }
-
-            if (!clicked) {
-              hoveredFeature = feature;
-            } else {
-              selectedFeature = feature;
+            hoveredCell = feature;
+            hoveredCell.setStyle(cellHoverStyle(feature));
+            showHeatmapTooltip(hoveredCell);
+          }
+          function handleHeatmapHoverNoHit() {
+            if (hoveredCell) {
+              hoveredCell.setStyle(null);
             }
-
+            hideHeatmapTooltip();
+          }
+          function showFeatureTooltip(feature, sticky) {
             // position overlay on feature
             var center =
               ol.extent.getCenter(feature.getGeometry().getExtent());
@@ -172,7 +160,7 @@
             var token;
             while (!!(matches = TOOLTIP_ATTR_SUMMARY_REGEX.exec(html))) {
               token = matches[0];
-              attributesSummaryHtml = attributesSummaryHtml || this.getFeatureAttributesHtml(feature);
+              attributesSummaryHtml = attributesSummaryHtml || me.getFeatureAttributesHtml(feature);
               html = html.replace(token, attributesSummaryHtml);
             }
 
@@ -187,24 +175,72 @@
             // hide close btn
             var closeBtn = tooltipOverlay.getElement().querySelector('.close');
             if (closeBtn) {
-              closeBtn.style.display = clicked ? 'block' : 'none';
-              if (clicked) {
+              closeBtn.style.display = sticky ? 'block' : 'none';
+              if (sticky) {
                 closeBtn.onclick = function() {
-                  tooltipOverlay.setPosition();
+                  handleFeatureClickNoHit();
                   closeBtn.blur();
                   return false;
                 }
               }
             }
-          }.bind(this);
+          }
+          function hideFeatureTooltip() {
+            tooltipOverlay.setPosition();
+          }
+          function handleFeatureHover(feature) {
+            if (hoveredFeature) {
+              hoveredFeature.setStyle(null);
+            }
+            if (feature !== selectedFeature) {
+              hoveredFeature = feature;
+              hoveredFeature.setStyle(featureHoverStyle);
+              if (!selectedFeature) {
+                showFeatureTooltip(hoveredFeature);
+              }
+            } else {
+              hoveredFeature = null;
+            }
+          }
+          function handleFeatureHoverNoHit() {
+            if (hoveredFeature) {
+              hoveredFeature.setStyle(null);
+            }
+            if (!selectedFeature) {
+              hideFeatureTooltip();
+            }
+          }
+          function handleFeatureClick(feature) {
+            if (selectedFeature) {
+              selectedFeature.setStyle(null);
+            }
+            if (hoveredFeature) {
+              hoveredFeature.setStyle(null);
+              hoveredFeature = null;
+            }
+            selectedFeature = feature;
+            selectedFeature.setStyle(featureSelectedStyle);
+            showFeatureTooltip(selectedFeature, true);
+          }
+          function handleFeatureClickNoHit() {
+            if (selectedFeature) {
+              selectedFeature.setStyle(null);
+              selectedFeature = null;
+            }
+            hideFeatureTooltip();
+          }
 
           map.on('pointermove', function(evt) {
+            var heatmapHit;
+            var featureHit;
             var hit = map.forEachFeatureAtPixel(evt.pixel,
               function(feature, layer) {
                 if (layer === heatmapLayer) {
-                  hoverHeatmapFeature(feature);
+                  handleHeatmapHover(feature);
+                  heatmapHit = true;
                 } else {
-                  hoverTooltipFeature(feature);
+                  handleFeatureHover(feature);
+                  featureHit = true;
                 }
                 return true;
               },
@@ -213,18 +249,19 @@
                 return layer === tooltipLayer || layer === heatmapLayer;
               });
 
-            if (!hit) {
-              resetTooltips();
+            if (!heatmapHit) {
+              handleHeatmapHoverNoHit()
+            }
+            if (!featureHit) {
+              handleFeatureHoverNoHit()
             }
             map.getTargetElement().style.cursor = hit ? 'pointer' : 'default';
           });
 
-          map.on('click', function(evt) {
-            resetTooltips();
-
+          map.on('singleclick', function(evt) {
             var hit = map.forEachFeatureAtPixel(evt.pixel,
               function (feature) {
-                hoverTooltipFeature(feature, true);
+                handleFeatureClick(feature);
                 return true;
               },
               undefined,
@@ -233,12 +270,10 @@
               });
 
             if (!hit) {
-              selectedFeature = null;
-              resetTooltips(true);
+              handleFeatureClickNoHit();
             }
           });
 
-          var me = this;
           function refresh() {
             me.requestCount(featureType, map)
               .then(function (count) {
@@ -248,13 +283,12 @@
                     .then(function (cells) {
                       // add cells as features
                       heatmapSource.clear();
-                      resetTooltips(true);
                       heatmapSource.addFeatures(cells);
                     });
                 } else {
                   layer.setVisible(true);
                   heatmapSource.clear();
-                  resetTooltips();
+                  hideHeatmapTooltip();
                 }
                 if (count <= tooltipMaxCount) {
                   group.set('tooltipsVisible', true);
@@ -267,6 +301,7 @@
                 } else {
                   group.set('tooltipsVisible', false);
                   tooltipSource.clear();
+                  hideFeatureTooltip();
                 }
               });
           }
@@ -375,6 +410,50 @@
             result += currentAttribute;
           }
           return '<ul>' + result + '</ul>';
+        },
+
+        getFeatureBaseStyle: function () {
+          return new ol.style.Style({
+            image: new ol.style.Circle({
+              radius: 6,
+              fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.01)'
+              })
+            }),
+            zIndex: Infinity
+          })
+        },
+
+        getFeatureHoverStyle: function () {
+          return new ol.style.Style({
+            image: new ol.style.Circle({
+              radius: 6,
+              fill: new ol.style.Fill({
+                color: '#becad3'
+              }),
+              stroke: new ol.style.Stroke({
+                color: 'white',
+                width: 3
+              })
+            }),
+            zIndex: Infinity
+          })
+        },
+
+        getFeatureSelectedStyle: function () {
+          return new ol.style.Style({
+            image: new ol.style.Circle({
+              radius: 6,
+              fill: new ol.style.Fill({
+                color: '#5cff6c'
+              }),
+              stroke: new ol.style.Stroke({
+                color: 'white',
+                width: 3
+              })
+            }),
+            zIndex: Infinity
+          })
         }
       }
     }
