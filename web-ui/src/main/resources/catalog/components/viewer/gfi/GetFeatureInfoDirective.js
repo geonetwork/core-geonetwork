@@ -148,6 +148,18 @@
               layer.getVisible();
         }).reverse();
 
+        // SEXTANT SPECIFIC
+        // add layers inside a group (composite layers)
+        // do not include in GFI if in tooltip mode (ie the vector layer is visible)
+        var compositeLayers = map.getLayers().getArray().filter(function(layer) {
+          return (layer instanceof ol.layer.Group && layer.get('originalWms') &&
+            !layer.get('tooltipsVisible') && layer.getVisible());
+        }).map(function(group) {
+          return group.get('originalWms');
+        }).reverse();
+        Array.prototype.push.apply(layers, compositeLayers);
+        // END SEXTANT SPECIFIC
+
         coordinates = e.coordinate;
         this.registerTables(layers, e.coordinate);
 

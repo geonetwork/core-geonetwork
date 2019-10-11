@@ -57,6 +57,7 @@
           group.visible = layer.visible;
           group.displayInLayerManager = layer.displayInLayerManager;
           group.set('originalWms', layer);
+          group.set('tooltipsVisible', false);
           group.getSource = function() { return false; };
           ngeoDecorateLayer(group);
 
@@ -256,6 +257,7 @@
                   resetTooltips();
                 }
                 if (count <= tooltipMaxCount) {
+                  group.set('tooltipsVisible', true);
                   me.requestFeatures(featureType, map, count).then(
                     function (features) {
                       tooltipSource.clear();
@@ -263,6 +265,7 @@
                     }
                   );
                 } else {
+                  group.set('tooltipsVisible', false);
                   tooltipSource.clear();
                 }
               });
