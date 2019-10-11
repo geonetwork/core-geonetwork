@@ -140,19 +140,6 @@
       </button>
     </div>
 
-    <div ng-if="hmActive">
-      <label ng-show="map" ng-show="source.getFeatures().length > 0">
-        <input type="checkbox"
-               ng-model="isHeatMapVisible"/>
-        <span translate>displayHeatMap</span>
-      </label>
-      <gn-heatmap ng-if="map" map="map"
-        feature-type="wfsUrl + '#' + featureTypeName"
-        filter="{ params: output, geometry: filterGeometry, any: searchInput}"
-        enabled="isHeatMapVisible"/>
-    </div>
-
-
     <hr>
     <button data-gn-click-and-spin="resetFacets().then(filterWMS)"
             class="btn btn-primary gn-reset-facets">
