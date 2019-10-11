@@ -9,7 +9,7 @@
     '  <div class="panel-heading">Informations' +
     '    <a class="close" style="line-height: 1.9em;">&times</a>' +
     '  </div>'+
-    '  <div class="panel-body" style="max-width: 30em; max-height: 30em; font-size: 0.9em; overflow: auto;">'+
+    '  <div class="panel-body" style="max-width: 50em; max-height: 30em; font-size: 0.9em; overflow: auto;">'+
     '    {ATTRIBUTES} '+
     '  </div>'+
     '</div>';
@@ -39,8 +39,8 @@
    * on the feature count in the viewport
    */
   module.factory('sxtCompositeLayer', [
-    '$http', 'ngeoDecorateLayer', '$translate', 'gnHeatmapService', 'gnIndexRequestManager',
-    function($http, ngeoDecorateLayer, $translate, gnHeatmapService, gnIndexRequestManager) {
+    '$http', 'ngeoDecorateLayer', '$translate', 'gnHeatmapService', 'gnIndexRequestManager', '$filter',
+    function($http, ngeoDecorateLayer, $translate, gnHeatmapService, gnIndexRequestManager, $filter) {
       var BUFFER_RATIO = 1;
       var indexObject = gnIndexRequestManager.register('WfsFilter', 'compositeLayer');
       var GeoJSON = new ol.format.GeoJSON();
@@ -422,14 +422,32 @@
         getFeatureAttributesHtml: function (feature) {
           var result = '';
           var props = feature.getProperties();
+
+          function processValue(value) {
+            if (typeof value !== 'string') {
+              return value;
+            }
+            var link = $filter('linky')(value, '_blank');
+            if (link) {
+              return link;
+            } else {
+              return value;
+            }
+          }
+
           for (var prop in props) {
             if (feature.getGeometryName() === prop) {
               continue;
             }
-            var currentAttribute = '<li>' + prop + '<br>' + props[prop] + '</li>';
+            var currentAttribute = '<tr><td>' + prop + '</td>' +
+                '<td>' + processValue(props[prop]) + '</td>' +
+              '</tr>';
             result += currentAttribute;
           }
-          return '<ul>' + result + '</ul>';
+          return '<table>' +
+            '<tr><th>Nom</th><th>Valeur</th></tr>' +
+            result +
+            '</table>';
         },
 
         getFeatureBaseStyle: function () {
