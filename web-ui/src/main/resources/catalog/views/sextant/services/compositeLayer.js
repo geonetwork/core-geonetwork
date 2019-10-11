@@ -230,6 +230,23 @@
             hideFeatureTooltip();
           }
 
+          // looks for a feature with the same id as the selected one
+          function handleFeatureRefresh() {
+            if (!selectedFeature) {
+              return;
+            }
+            var id = selectedFeature.getId();
+            selectedFeature.setStyle(null);
+            selectedFeature = null;
+
+            var newSelected = tooltipSource.getFeatureById(id);
+            if (newSelected) {
+              selectedFeature = newSelected;
+              selectedFeature.setStyle(featureSelectedStyle);
+              showFeatureTooltip(selectedFeature, true);
+            }
+          }
+
           map.on('pointermove', function(evt) {
             var heatmapHit;
             var featureHit;
@@ -296,6 +313,7 @@
                     function (features) {
                       tooltipSource.clear();
                       tooltipSource.addFeatures(features);
+                      handleFeatureRefresh();
                     }
                   );
                 } else {
@@ -394,7 +412,9 @@
                 });
 
                 // create feature with cell data
-                return new ol.Feature(props);
+                var feature = new ol.Feature(props);
+                feature.setId(hit._id);
+                return feature;
               });
             });
         },
