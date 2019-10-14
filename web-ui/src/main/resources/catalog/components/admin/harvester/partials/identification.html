@@ -28,9 +28,13 @@
   <div id="gn-harvest-settings-selected-group-row" data-ng-show="groups.length"
     data-ng-class="harvester.site.ownerGroup == '' ? 'has-error' : ''">
     <label id="gn-harvest-settings-selected-group-label" class="control-label" data-translate="">harvesterGroup</label>
-    <div id="gn-harvest-settings-selected-group-list" data-groups-combo="" data-owner-group="harvester.ownerGroup[0]"
-      lang="lang" groups="groups" data-optional
-      data-exclude-special-groups="true" />
+    <div id="gn-harvest-settings-selected-group-list"
+         data-groups-combo=""
+         data-owner-group="harvester.ownerGroup[0]"
+         lang="lang"
+         groups="groups"
+         data-optional="{{::$parent.user.isAdministrator()}}"
+         data-exclude-special-groups="true" />
 
     <p class="help-block" data-translate="">harvesterGroupHelp</p>
   </div>

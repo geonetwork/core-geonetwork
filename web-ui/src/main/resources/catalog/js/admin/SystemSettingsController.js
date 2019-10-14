@@ -265,6 +265,12 @@
             "configuration": (isUpdate ? $scope.uiConfiguration.configuration : JSON.stringify(gnGlobalSettings.gnCfg))
           }, {responseType: 'text'}).then(function(r) {
             loadUiConfigurations();
+          }, function(r) {
+            $rootScope.$broadcast('StatusUpdated', {
+              title: $translate.instant('uiConfigUpdateError'),
+              error: r.data,
+              timeout: 0,
+              type: 'danger'});
           });
         }
       };
@@ -406,7 +412,7 @@
           $scope.filterMain(fieldsetParent);
         }
       };
-      
+
       // filter the main parent (for Settings)
       $scope.filterMain = function(element) {
 

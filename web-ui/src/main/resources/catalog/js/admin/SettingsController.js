@@ -61,6 +61,18 @@
   module.controller('GnSettingsController', ['$scope',
     function($scope) {
 
+      var userAdminTabs = [{
+        type: 'sources',
+        icon: 'fa-database',
+        label: 'manageSources',
+        href: '#/settings/sources'
+      }, {
+        type: 'ui',
+        label: 'ui',
+        icon: 'fa-puzzle-piece',
+        href: '#/settings/ui'
+      }];
+
       $scope.pageMenu = {
         folder: 'settings/',
         defaultTab: 'system',
@@ -111,5 +123,22 @@
               label: 'manageMapServers',
               href: '#/settings/mapservers'
             }]};
+
+
+      function loadConditionalTabs() {
+        if ($scope.user.profile === 'UserAdmin') {
+          $scope.pageMenu.tabs = userAdminTabs;
+          $scope.pageMenu.defaultTab = 'sources';
+        }
+      }
+
+      loadConditionalTabs();
+
+      $scope.$watchCollection('user', function (n, o) {
+        if (n !== o) {
+          loadConditionalTabs();
+        }
+      });
+
     }]);
 })();

@@ -30,6 +30,7 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.GeonetEntity;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.Source;
@@ -52,6 +53,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -97,8 +99,20 @@ public class SourcesApi {
         @ApiResponse(code = 200, message = "List of source catalogues.")
     })
     @ResponseBody
-    public List<Source> getSources() throws Exception {
-        return sourceRepository.findAll(SortUtils.createSort(Source_.name));
+    public List<Source> getSources(
+        @ApiParam(
+            value = "Group owner of the source (only applies to subportal)."
+        )
+        @RequestParam(
+            value = "group",
+            required = false)
+        Integer group
+    ) throws Exception {
+        if (group != null) {
+            return sourceRepository.findByGroupOwner(group);
+        } else {
+            return sourceRepository.findAll(SortUtils.createSort(Source_.name));
+        }
     }
 
     @ApiOperation(
@@ -287,6 +301,7 @@ public class SourcesApi {
             entity.setUuid(source.getUuid());
             entity.setType(source.getType());
             entity.setFilter(source.getFilter());
+            entity.setGroupOwner(source.getGroupOwner());
             entity.setUiConfig(source.getUiConfig());
             entity.setLogo(source.getLogo());
             Map<String, String> labelTranslations = source.getLabelTranslations();
