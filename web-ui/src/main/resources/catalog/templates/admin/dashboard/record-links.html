@@ -68,7 +68,7 @@
                                  'fa-check text-success': l.linkStatus[0] && !l.linkStatus[0].failing}">&nbsp;</i>
         </td>
         <td>
-          <a data-ng-href="l.url">{{l.url}}</a>
+          <a data-ng-href="{{l.url}}">{{l.url}}</a>
         </td>
         <td data-gn-humanize-time="{{l.linkStatus[0].checkDate.dateAndTime}}">
           {{l.linkStatus[0].checkDate.dateAndTime}}
