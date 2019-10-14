@@ -114,7 +114,9 @@
 
              scope.add = function() {
                return gnEditor.add(gnCurrentEdit.id,
-               scope.elementRef, scope.elementName, scope.domId, 'before');
+               scope.elementRef, scope.elementName, scope.domId, 'before').then(function() {
+                 gnEditor.save(gnCurrentEdit.id, true);
+               });
              };
 
              scope.addThesaurus = function(thesaurusIdentifier) {
