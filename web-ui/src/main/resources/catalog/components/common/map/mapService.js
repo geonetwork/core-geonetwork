@@ -938,8 +938,7 @@
                 }
               }
 
-              url = url || getCapLayer.url;
-              // url = getCapLayer.url || url;
+              url = getCapLayer.url || url;
               if (url.slice(-1) === '?') {
                 url = url.substring(0, url.length-1);
               }
