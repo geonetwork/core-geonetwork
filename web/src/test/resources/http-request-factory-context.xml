@@ -27,4 +27,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
   <bean id="httpRequestFactory" class="org.fao.geonet.utils.GeonetHttpRequestFactory"/>
+
+  <bean id="urlChecker" class="org.fao.geonet.kernel.url.UrlChecker"/>
 </beans>
