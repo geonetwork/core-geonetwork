@@ -561,8 +561,6 @@
             scope.output = {};
             scope.lastClickedField = null;
 
-            scope.resetSLDFilters();
-
             // reset expanded status
             angular.forEach(scope.fields, function(f) {
               f.expanded = false;
