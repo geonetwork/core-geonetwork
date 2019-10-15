@@ -213,8 +213,7 @@
             if (map.get('addedExtent') &&
                 !ol.extent.isEmpty(map.get('addedExtent')) &&
                 map.getSize() && map.getSize()[0] > 0 && map.getSize()[1] > 0) {
-              map.getView().fit(map.get('addedExtent'), map.getSize(),
-                { nearest: true });
+              map.getView().fit(map.get('addedExtent'), map.getSize());
 
               // clear the property (this should happen only once)
               map.unset('addedExtent')
