@@ -74,7 +74,7 @@ public class ValidationService implements ApplicationContextAware {
      *
      * @param uuid One or more UUIDs to validate
      */
-    @RequestMapping(value = "/{lang}/md.validation",
+    @RequestMapping(value = "/{portal}/{lang}/md.validation",
         produces = {
             MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE})
@@ -133,7 +133,7 @@ public class ValidationService implements ApplicationContextAware {
 	                    this.report.get("validRecords").add(record.getId());
 	                }
 	                this.report.get("records").add(record.getId());
-	
+
 	            }
             }
         }

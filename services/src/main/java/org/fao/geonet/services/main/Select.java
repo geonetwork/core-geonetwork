@@ -64,7 +64,7 @@ public class Select implements ApplicationContextAware {
      * @param type     Only metadata can be selected. Unused for now. Leave blank
      * @return The number of select records
      */
-    @RequestMapping(value = {"/{lang}/metadata.select", "/{lang}/md.select"},
+    @RequestMapping(value = {"/{portal}/{lang}/metadata.select", "/{portal}/{lang}/md.select"},
         produces = {MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
@@ -88,7 +88,7 @@ public class Select implements ApplicationContextAware {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/{lang}/md.selected",
+    @RequestMapping(value = "/{portal}/{lang}/md.selected",
         produces = {MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
@@ -108,7 +108,7 @@ public class Select implements ApplicationContextAware {
     /**
      * @deprecated Use the service with JSON format as output
      */
-    @RequestMapping(value = "/{lang}/metadata.select",
+    @RequestMapping(value = "/{portal}/{lang}/metadata.select",
         produces = {MediaType.APPLICATION_XML_VALUE})
     public
     @ResponseBody
