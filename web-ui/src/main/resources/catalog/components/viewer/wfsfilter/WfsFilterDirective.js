@@ -262,7 +262,7 @@
             }
             scope.hmActive = appProfile ? appProfile.heatmap : true;
 
-            scope.resetFacets().then(scope.restoreInitialFilters);
+            scope.resetFacets(true).then(scope.restoreInitialFilters);
           }
           function getDataModelLabel(fieldId) {
             for (var j = 0; j < scope.md.attributeTable.length; j++) {
@@ -556,10 +556,15 @@
            * reset and init the facet structure.
            * call the index service to get info on all facet fields and bind it
            * to the output structure to generate the ui.
+           * @param init Tells if it's call for init or reset
            */
-          scope.resetFacets = function() {
+          scope.resetFacets = function(init) {
             scope.output = {};
             scope.lastClickedField = null;
+
+            if(!init) {
+              scope.resetSLDFilters();
+            }
 
             // reset expanded status
             angular.forEach(scope.fields, function(f) {
