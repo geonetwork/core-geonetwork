@@ -1834,7 +1834,7 @@
                 return new ol.layer.Tile({
                   _bgId: type,
                   source: new ol.source.XYZ({
-                    url: 'http://a.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'
+                    url: 'https://{a-c}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'
                   }),
                   title: title ||  'OSM FR'
                 });
