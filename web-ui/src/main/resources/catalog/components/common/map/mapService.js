@@ -1400,6 +1400,8 @@
                             var wfsConfig = wfsConfigs[0];
                             var esObj = wfsFilterService.getEsObject(wfsConfig.url, wfsConfig.name);
                             if(esObj && esObj.initialFilters) {
+                              esObj.pushState(esObj.initialFilters);
+                              olL.set('indexObject', esObj);
                               var sldConfig = wfsFilterService.createSLDConfig(esObj.initialFilters.qParams);
                               if (sldConfig.filters.length > 0) {
                                 wfsFilterService.getSldUrl(sldConfig, olL.get('url'), wfsConfig.name).success(function(sldURL) {
