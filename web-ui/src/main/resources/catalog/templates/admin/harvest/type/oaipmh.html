@@ -1,4 +1,5 @@
-<form data-ng-keypress="updatingHarvester()">
+<form name="harvesterForm"
+      data-ng-keypress="updatingHarvester()">
   <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
   <div class="row">
@@ -21,7 +22,7 @@
 
     <fieldset id="gn-harvest-settings-oai-basic-filter-row" class="form-horizontal">
       <legend id="gn-harvest-settings-oai-basic-filter-title" data-translate="">harvesterFilter</legend>
-      
+
       <div id="gn-harvest-settings-oai-basic-filter-from-row">
         <label id="gn-harvest-settings-oai-basic-filter-from-label" class="control-label col-lg-4" data-translate="">from</label>
         <div class="col-lg-8">
