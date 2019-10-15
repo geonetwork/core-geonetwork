@@ -502,15 +502,18 @@
               service: 'urn:ogc:serviceType:WMS'
             }];
           } else {
-            var _bgId = layer.get('_bgId').split('_');
-            var layerType = _bgId[0]
-            if (layer.get('_bgId') === 'bing_aerial') {
-              name = '{type=bing_aerial}'; // backward compatibility
-            } else if (_bgId.length === 1) {
-              name = '{type=' + layerType + '}';
-            } else if (_bgId.length === 2) {
-              name = '{type=' + layerType + ',name=' + _bgId[1] + '}';
-            } else {
+            var _bgId = layer.get('_bgId') && layer.get('_bgId').split('_');
+            if (_bgId) {
+              var layerType = _bgId[0]
+              if (layer.get('_bgId') === 'bing_aerial') {
+                name = '{type=bing_aerial}'; // backward compatibility
+              } else if (_bgId.length === 1) {
+                name = '{type=' + layerType + '}';
+              } else if (_bgId.length === 2) {
+                name = '{type=' + layerType + ',name=' + _bgId[1] + '}';
+              }
+            }
+            if (!name) {
               return;
             }
           }
