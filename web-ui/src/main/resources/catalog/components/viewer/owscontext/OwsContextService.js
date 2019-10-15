@@ -550,8 +550,12 @@
           var esObj = layer.get('indexObject');
           if (esObj) {
             var filters = null;
-            if (esObj && esObj.getState()) {
-              filters = esObj.getState();
+            var state = esObj.getState();
+            if (esObj && state) {
+              filters = {
+                qParams: state.qParams,
+                geometry: state.geometry
+              }
             }
           }
 
