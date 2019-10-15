@@ -288,7 +288,7 @@ public class UsersApi {
         @ApiResponse(code = 404, message = "A property with that value already exist."),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
-    public ResponseEntity<HttpStatus> checkHarvesterPropertyExist(
+    public ResponseEntity<HttpStatus> checkUserPropertyExist(
         @ApiParam(
             value = "The user property to check"
         )
@@ -300,13 +300,11 @@ public class UsersApi {
         @RequestParam
             String exist) {
         if ("userid".equals(property)) {
-            final User user = userRepository.findOneByUsername(exist);
-            if (user != null) {
+            if (userRepository.count(where(UserSpecs.hasUserName(exist))) > 0) {
                 return new ResponseEntity<>(HttpStatus.OK);
             }
         } else if ("email".equals(property)) {
-            List<User> existingUsers = userRepository.findByUsernameIgnoreCase(exist);
-            if (!existingUsers.isEmpty()) {
+            if (userRepository.count(where(UserSpecs.hasEmail(exist))) > 0) {
                 return new ResponseEntity<>(HttpStatus.OK);
             }
         } else {
