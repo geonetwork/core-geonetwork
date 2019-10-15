@@ -26,11 +26,16 @@ package org.fao.geonet.api.users;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.users.model.UserDto;
 import org.fao.geonet.constants.Params;
@@ -49,6 +54,7 @@ import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.util.PasswordUtil;
+import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
@@ -60,6 +66,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -262,6 +269,50 @@ public class UsersApi {
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
+    @ApiOperation(
+        value = "Check if a user property already exist",
+        notes = "",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
+        nickname = "checkUserPropertyExist")
+    @RequestMapping(
+        value = "/properties/{property}",
+        method = RequestMethod.GET
+    )
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasRole('UserAdmin')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Property does not exist."),
+        @ApiResponse(code = 404, message = "A property with that value already exist."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
+    public ResponseEntity<HttpStatus> checkUserPropertyExist(
+        @ApiParam(
+            value = "The user property to check"
+        )
+        @PathVariable
+            String property,
+        @ApiParam(
+            value = "The value to search"
+        )
+        @RequestParam
+            String exist) {
+        if ("userid".equals(property)) {
+            if (userRepository.count(where(UserSpecs.hasUserName(exist))) > 0) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+        } else if ("email".equals(property)) {
+            if (userRepository.count(where(UserSpecs.hasEmail(exist))) > 0) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+        } else {
+            throw new IllegalArgumentException(String.format("Property '%s' is not supported. You can only check username and email"));
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
 
     @ApiOperation(
         value = "Creates a user",
