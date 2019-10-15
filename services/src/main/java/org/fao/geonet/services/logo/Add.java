@@ -54,7 +54,7 @@ public class Add implements ApplicationContextAware {
         this.context = context;
     }
 
-    @RequestMapping(value = "/{lang}/admin.logo.upload",
+    @RequestMapping(value = "/{portal}/{lang}/admin.logo.upload",
         consumes = {MediaType.ALL_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE})
     public
@@ -64,7 +64,7 @@ public class Add implements ApplicationContextAware {
         return exec(fname);
     }
 
-    @RequestMapping(value = "/{lang}/admin.logo.upload", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.logo.upload", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody

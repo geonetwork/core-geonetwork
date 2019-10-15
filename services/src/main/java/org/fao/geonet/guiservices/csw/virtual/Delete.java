@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Deprecated
 public class Delete {
 
-    @RequestMapping(value = "/{lang}/admin.config.virtualcsw.remove", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.config.virtualcsw.remove", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody

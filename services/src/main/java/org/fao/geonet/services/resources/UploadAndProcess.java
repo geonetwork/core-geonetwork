@@ -69,7 +69,7 @@ public class UploadAndProcess {
     @Autowired
     private ServiceManager serviceManager;
 
-    @RequestMapping(value = {"/{lang}/resource.upload.and.link", "/{lang}/resource-onlinesrc-upload"}, produces = {
+    @RequestMapping(value = {"/{portal}/{lang}/resource.upload.and.link", "/{portal}/{lang}/resource-onlinesrc-upload"}, produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public IdResponse exec(HttpServletRequest request,

@@ -63,7 +63,7 @@ public class Update {
         "_content_type"
     };
 
-    @RequestMapping(value = "/{lang}/admin.config.virtualcsw.update", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.config.virtualcsw.update", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody

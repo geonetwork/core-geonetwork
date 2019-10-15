@@ -68,7 +68,7 @@ public class RemoveAndProcess {
     @Autowired
     private ServiceManager serviceManager;
 
-    @RequestMapping(value = {"/{lang}/resource.del.and.detach"}, produces = {
+    @RequestMapping(value = {"/{portal}/{lang}/resource.del.and.detach"}, produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody

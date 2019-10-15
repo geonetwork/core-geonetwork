@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller("admin.config.virtualcsw.list")
 @Deprecated
 public class List {
-    @RequestMapping(value = "/{lang}/admin.config.virtualcsw.list", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.config.virtualcsw.list", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody

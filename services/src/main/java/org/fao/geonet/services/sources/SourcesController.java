@@ -72,7 +72,7 @@ public class SourcesController {
     @Autowired
     private HarvesterSettingRepository harvesterSettingRepository;
 
-    @RequestMapping("/{lang}/source/{uuid}")
+    @RequestMapping("/{portal}/{lang}/source/{uuid}")
     @ResponseBody
     public OkResponse updateTranslations(
         @PathVariable String lang,

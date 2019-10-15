@@ -75,7 +75,7 @@ import jeeves.services.ReadWriteController;
 @Deprecated
 public class XslProcessing {
 
-    @RequestMapping(value = {"/{lang}/md.processing", "/{lang}/xml.metadata.processing", "/{lang}/metadata.processing.new"}, produces = {
+    @RequestMapping(value = {"/{portal}/{lang}/md.processing", "/{portal}/{lang}/xml.metadata.processing", "/{portal}/{lang}/metadata.processing.new"}, produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public XsltMetadataProcessingReport xmlProcessing(@RequestParam(value = Params.PROCESS) String process,

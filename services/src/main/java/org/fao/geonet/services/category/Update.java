@@ -49,7 +49,7 @@ import javax.annotation.Nonnull;
 @Deprecated
 public class Update {
 
-    @RequestMapping(value = "/{lang}/admin.category.update", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.category.update", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public CategoryUpdateResponse exec(
