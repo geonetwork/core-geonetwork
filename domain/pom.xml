@@ -197,6 +197,22 @@
       <build>
         <plugins>
           <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>3.0.0</version>
+            <executions>
+              <execution>
+                <id>get-cpu-count</id>
+                <goals>
+                  <goal>cpu-count</goal>
+                </goals>
+                <configuration>
+                  <cpuCount>system.numCores</cpuCount>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
@@ -204,7 +220,7 @@
                 <postgresqlPerformanceTest>true</postgresqlPerformanceTest>
               </systemPropertyVariables>
               <runOrder>alphabetical</runOrder>
-              <forkCount>4</forkCount>
+              <forkCount>${system.numCores}</forkCount>
             </configuration>
           </plugin>
         </plugins>
