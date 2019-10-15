@@ -262,7 +262,7 @@
             }
             scope.hmActive = appProfile ? appProfile.heatmap : true;
 
-            scope.resetFacets().then(scope.restoreInitialFilters).then(scope.filterWMS);
+            scope.resetFacets().then(scope.restoreInitialFilters);
           }
           function getDataModelLabel(fieldId) {
             for (var j = 0; j < scope.md.attributeTable.length; j++) {

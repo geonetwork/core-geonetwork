@@ -68,10 +68,11 @@
       'gnGlobalSettings',
       'gnViewerSettings',
       'gnViewerService',
+      'wfsFilterService',
       function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
-          gnGlobalSettings, gnViewerSettings, gnViewerService) {
+          gnGlobalSettings, gnViewerSettings, gnViewerService, wfsFilterService) {
 
         /**
          * @description
@@ -1394,6 +1395,22 @@
                         then(gnViewerSettings.getPreAddLayerPromise).
                         finally(
                         function() {
+                          var wfsConfigs = olL.get('wfs');
+                          if (wfsConfigs) {
+                            var wfsConfig = wfsConfigs[0];
+                            var esObj = wfsFilterService.getEsObject(wfsConfig.url, wfsConfig.name);
+                            if(esObj && esObj.initialFilters) {
+                              var sldConfig = wfsFilterService.createSLDConfig(esObj.initialFilters.qParams);
+                              if (sldConfig.filters.length > 0) {
+                                wfsFilterService.getSldUrl(sldConfig, olL.get('url'), wfsConfig.name).success(function(sldURL) {
+                                  olL.getSource().updateParams({
+                                    SLD: sldURL
+                                  });
+                                })
+                              }
+                            }
+                          }
+
                           if (!createOnly) {
                             map.addLayer(olL);
                           }
