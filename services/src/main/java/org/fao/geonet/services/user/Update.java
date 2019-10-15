@@ -65,7 +65,7 @@ import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 public class Update {
 
 
-    @RequestMapping(value = "/{lang}/admin.user.resetpassword", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.user.resetpassword", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
@@ -87,7 +87,7 @@ public class Update {
         return new OkResponse();
     }
 
-    @RequestMapping(value = "/{lang}/admin.user.update", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.user.update", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody

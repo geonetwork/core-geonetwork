@@ -50,7 +50,7 @@ import javax.xml.bind.annotation.XmlValue;
 @Deprecated
 public class XmlUpdate {
 
-    @RequestMapping(value = "/{lang}/admin.category.update.labels", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.category.update.labels", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public OkResponse serviceSpecificExec(@RequestBody String request) throws Exception {

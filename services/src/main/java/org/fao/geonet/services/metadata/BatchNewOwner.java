@@ -64,7 +64,7 @@ import jeeves.services.ReadWriteController;
 @Deprecated
 public class BatchNewOwner {
 
-    @RequestMapping(value = "/{lang}/metadata.batch.newowner", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/metadata.batch.newowner", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public NewOwnerResult exec(
