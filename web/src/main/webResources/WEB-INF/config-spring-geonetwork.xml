@@ -35,6 +35,7 @@
   <context:annotation-config/>
 
   <context:property-placeholder location="${app.properties}"
+                                order="1"
                                 file-encoding="UTF-8"
                                 ignore-unresolvable="true" />
 
