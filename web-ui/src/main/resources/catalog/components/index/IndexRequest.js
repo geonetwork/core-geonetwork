@@ -859,7 +859,8 @@
     var params = {
       from: start !== undefined ? start : this.page.start,
       size: rows !== undefined ? rows : this.page.rows,
-      aggs: aggs
+      aggs: aggs,
+      track_total_hits: true
     };
 
     params.query = {
