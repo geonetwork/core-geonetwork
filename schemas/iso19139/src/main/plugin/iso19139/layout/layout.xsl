@@ -61,6 +61,7 @@
   <xsl:template mode="mode-iso19139" match="gn:child" priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="overrideLabel" required="no"/>
 
 
     <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
@@ -82,7 +83,6 @@
       <xsl:variable name="label"
                     select="gn-fn-metadata:getLabel($schema, $name, $labels, name(..), '', '')"/>
 
-
       <xsl:choose>
         <!-- Specifc case when adding a new keyword using the gn-thesaurus-selector
         in a view where descriptiveKeyword is a flat mode exception. In this case
@@ -100,14 +100,26 @@
           <xsl:variable name="freeTextKeywordTarget"
                         select="if ($isFreeTextKeywordBlockExist) then $freeTextKeywordBlocks[1]/*/gn:child[@name = 'keyword'] else ."/>
 
+          <xsl:variable name="directive" as="node()?">
+            <xsl:for-each select="$directive">
+              <xsl:copy>
+                <xsl:copy-of select="@*"/>
+                <directiveAttributes data-freekeyword-element-ref="{$freeTextKeywordTarget/../gn:element/@ref}"
+                                     data-freekeyword-element-name="{concat($freeTextKeywordTarget/@prefix, ':', $freeTextKeywordTarget/@name)}">
+                  <xsl:copy-of select="directiveAttributes/@*"/>
+                </directiveAttributes>
+              </xsl:copy>
+            </xsl:for-each>
+          </xsl:variable>
+
           <xsl:call-template name="render-element-to-add">
             <xsl:with-param name="label" select="$label/label"/>
             <xsl:with-param name="class" select="if ($label/class) then $label/class else ''"/>
             <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
             <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
             <xsl:with-param name="directive" select="$directive"/>
-            <xsl:with-param name="childEditInfo" select="$freeTextKeywordTarget"/>
-            <xsl:with-param name="parentEditInfo" select="$freeTextKeywordTarget/../gn:element"/>
+            <xsl:with-param name="childEditInfo" select="."/>
+            <xsl:with-param name="parentEditInfo" select="../gn:element"/>
             <xsl:with-param name="isFirst" select="count(preceding-sibling::*[name() = $name]) = 0"/>
           </xsl:call-template>
         </xsl:when>
