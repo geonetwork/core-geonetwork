@@ -62,6 +62,8 @@
              mode: '@gnThesaurusSelector',
              elementName: '@',
              elementRef: '@',
+             freekeywordElementName: '@',
+             freekeywordElementRef: '@',
              domId: '@',
              selectorOnly: '@',
              transformation: '@',
@@ -114,7 +116,11 @@
 
              scope.add = function() {
                return gnEditor.add(gnCurrentEdit.id,
-               scope.elementRef, scope.elementName, scope.domId, 'before');
+                   scope.freekeywordElementRef || scope.elementRef,
+                 scope.freekeywordElementName || scope.elementName,
+                        scope.domId, 'before').then(function() {
+                 gnEditor.save(gnCurrentEdit.id, true);
+               });
              };
 
              scope.addThesaurus = function(thesaurusIdentifier) {
