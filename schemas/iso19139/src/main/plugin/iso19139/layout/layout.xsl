@@ -104,14 +104,26 @@
           <xsl:variable name="freeTextKeywordTarget"
                         select="if ($isFreeTextKeywordBlockExist) then $freeTextKeywordBlocks[1]/*/gn:child[@name = 'keyword'] else ."/>
 
+          <xsl:variable name="directive" as="node()?">
+            <xsl:for-each select="$directive">
+              <xsl:copy>
+                <xsl:copy-of select="@*"/>
+                <directiveAttributes data-freekeyword-element-ref="{$freeTextKeywordTarget/../gn:element/@ref}"
+                                     data-freekeyword-element-name="{concat($freeTextKeywordTarget/@prefix, ':', $freeTextKeywordTarget/@name)}">
+                  <xsl:copy-of select="directiveAttributes/@*"/>
+                </directiveAttributes>
+              </xsl:copy>
+            </xsl:for-each>
+          </xsl:variable>
+
           <xsl:call-template name="render-element-to-add">
             <xsl:with-param name="label" select="$label/label"/>
             <xsl:with-param name="class" select="if ($label/class) then $label/class else ''"/>
             <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
             <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
             <xsl:with-param name="directive" select="$directive"/>
-            <xsl:with-param name="childEditInfo" select="$freeTextKeywordTarget"/>
-            <xsl:with-param name="parentEditInfo" select="$freeTextKeywordTarget/../gn:element"/>
+            <xsl:with-param name="childEditInfo" select="."/>
+            <xsl:with-param name="parentEditInfo" select="../gn:element"/>
             <xsl:with-param name="isFirst" select="count(preceding-sibling::*[name() = $name]) = 0"/>
           </xsl:call-template>
         </xsl:when>
