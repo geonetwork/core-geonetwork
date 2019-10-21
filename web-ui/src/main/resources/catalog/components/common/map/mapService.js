@@ -1695,7 +1695,10 @@
 
               //OpenLayers expects an array of style objects having isDefault property
               angular.forEach(cap.Contents.Layer,function(l){
-                if (!angular.isArray(l.Style)){ l.Style=[{Identifier:l.Style,isDefault:true}] };
+                if (!angular.isArray(l.Style)){
+                  // use "default" for style if empty
+                  l.Style=[{Identifier:l.Style || 'default',isDefault:true}]
+                }
               });
 
               var options = ol.source.WMTS.optionsFromCapabilities(cap, {
