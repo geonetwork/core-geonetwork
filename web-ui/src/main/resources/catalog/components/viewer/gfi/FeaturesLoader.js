@@ -433,13 +433,13 @@
         return JSON.stringify(queryObject);
       }.bind(this),
       responseHandler: function(res) {
-        this.count = res.hits.total;
+        this.count = res.hits.total.value;
         var rows = [];
         for (var i = 0; i < res.hits.hits.length; i++) {
           rows.push(res.hits.hits[i]._source);
         }
         return {
-          total: res.hits.total,
+          total: res.hits.total.value,
           rows: rows
         };
       }.bind(this),
