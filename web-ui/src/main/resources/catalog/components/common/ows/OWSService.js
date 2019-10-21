@@ -522,7 +522,7 @@
               if (layerName.indexOf(',')) {
                 needles[0].Name = layerName;
                 // Parameters 'styles' and 'layers' should have the same number of values.
-                needles[0].Style = new Array(layerList.length).join(',');
+                //needles[0].Style = new Array(layerList.length).join(',');
               }
               return needles[0];
             }
