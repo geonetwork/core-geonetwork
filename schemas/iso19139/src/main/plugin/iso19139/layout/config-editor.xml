@@ -530,7 +530,6 @@
                             'geonetwork.thesaurus.local.theme.sextant-theme' and
                           */gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() !=
                             'geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme']"/>
-<!--          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[not(*/gmd:thesaurusName)]/*/gmd:keyword"/>-->
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[not(*/gmd:thesaurusName)]/*/gmd:keyword"
                  or="descriptiveKeywords"
                  in="/gmd:MD_Metadata/gmd:identificationInfo/*"/>
@@ -961,6 +960,9 @@
       <flatModeExceptions>
         <for name="gmd:descriptiveKeywords"/>
         <for name="gmd:resolution"/>
+        <for name="gmd:date"/>
+        <for name="gmd:processStep"/>
+        <for name="gmd:referenceSystemInfo"/>
       </flatModeExceptions>
     </view>
     <view name="default" disabled="true">
