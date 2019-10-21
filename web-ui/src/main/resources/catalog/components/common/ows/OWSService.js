@@ -529,7 +529,8 @@
               if (layerName.indexOf(',')) {
                 needles[0].Name = layerName;
                 // Parameters 'styles' and 'layers' should have the same number of values.
-                needles[0].Style = new Array(layerList.length).join(',');
+                // SEXTANT SPECIFIC: disable this as we don't need style switching
+                //needles[0].Style = new Array(layerList.length).join(',');
               }
               return needles[0];
             }
