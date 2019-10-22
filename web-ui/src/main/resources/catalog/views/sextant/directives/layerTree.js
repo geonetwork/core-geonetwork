@@ -403,7 +403,30 @@
           scope.isFolded = function () {
             return scope.member.state && scope.member.state.folded;
           }
-
+          scope.toggleChildrenNodes = function (event, e) {
+            $(event.currentTarget).toggleClass('fa-check-square-o fa-square-o');
+            var visible = $(event.currentTarget).hasClass('fa-check-square-o') ? true : false;
+            while (e.hasOwnProperty('nodes')) {
+              var currentElements = e.nodes;
+              for (var i=0; i< currentElements.length; i++) {
+                e = currentElements[i];
+                if (e.hasOwnProperty('visible')) {
+                  e.set('visible', visible);
+                }
+              }
+            }
+          }
+          scope.hasCheckedChildren = function (e) {
+            while (e.hasOwnProperty('nodes')) {
+              var currentElements = e.nodes;
+              for (var i=0; i< currentElements.length; i++) {
+                e = currentElements[i];
+                if (e.hasOwnProperty('visible') && e.get('visible')===true) {
+                  return true;
+                }
+              }
+            }
+          }
           scope.indexWFSFeatures = function(url, type) {
             $http.get('wfs.harvest?' +
                 'uuid=' + '' +
