@@ -62,9 +62,13 @@
       <strong>{{(ownerGroup.label[lang] || '...') | translate}}</strong>
     </div>
     <div class="col-sm-8">
-      <div data-groups-combo="" data-owner-group="ownerGroup" lang="lang"
-           data-groups="groups" data-profile="Editor" data-exclude-special-groups="true">
-      </div>
+      <div data-groups-combo=""
+         data-optional="{{user.isAdministrator()}}"
+         data-owner-group="ownerGroup"
+         lang="lang"
+         data-groups="groups"
+         data-profile="Editor"
+         data-exclude-special-groups="true"/>
     </div>
   </div>
   <div class="row" data-ng-show="hasTemplates && !generateUuid">
