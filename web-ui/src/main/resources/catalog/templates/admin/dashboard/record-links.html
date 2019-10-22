@@ -13,6 +13,7 @@
   <div class="pull-right btn-toolbar">
     <button type="button" class="btn btn-primary"
             title="{{'analyzeLinks-help' | translate}}"
+            data-ng-disabled="!user.isAdministrator()"
             data-gn-click-and-spin="analyzeLinks()">
       <i class="fa fa-fw fa-cogs"/>&nbsp;
       <span data-translate="">analyzeLinks</span>
