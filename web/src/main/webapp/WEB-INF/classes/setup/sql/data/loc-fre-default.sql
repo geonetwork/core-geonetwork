@@ -509,11 +509,11 @@ INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (482,'fre','Pas de co
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (483,'fre','N''ko');
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (484,'fre','Zaza; dimili; dimli; kirdki; kirmanjki');
 
-INSERT INTO OperationsDes  (iddes, langid, label) VALUES (0,'fre','Publier');
+INSERT INTO OperationsDes  (iddes, langid, label) VALUES (0,'fre','Consulter');
 INSERT INTO OperationsDes  (iddes, langid, label) VALUES (1,'fre','Télécharger');
-INSERT INTO OperationsDes  (iddes, langid, label) VALUES (2,'fre','Editer');
+INSERT INTO OperationsDes  (iddes, langid, label) VALUES (2,'fre','Éditer');
 INSERT INTO OperationsDes  (iddes, langid, label) VALUES (3,'fre','Notifier');
-INSERT INTO OperationsDes  (iddes, langid, label) VALUES (5,'fre','Carte interactive');
+INSERT INTO OperationsDes  (iddes, langid, label) VALUES (5,'fre','Visualiser');
 INSERT INTO OperationsDes  (iddes, langid, label) VALUES (6,'fre','Epingler');
 
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (0,'fre','Inconnu');
