@@ -28,6 +28,7 @@
                data-ng-model="harvester.site.name"
                data-ng-model-options="{debounce: 200}"
                data-gn-duplicate-check="harvester.site.name"
+               data-gn-duplicate-check-apply="$parent.$parent.harvesterNew"
                data-gn-duplicate-check-remote="../api/harvesters/properties/name?exist={value}"/>
       </div>
       <div id="gn-harvest-settings-selected-name-list" class="input-group-btn" gn-logo-picker="harvester.site.icon"
