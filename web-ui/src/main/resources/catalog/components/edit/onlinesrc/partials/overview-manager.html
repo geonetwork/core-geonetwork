@@ -16,6 +16,7 @@
 
         <a href="" class="onlinesrc-remove"
            data-ng-if="readonly !== true"
+           data-gn-confirm-click="{{'removeThumbnailConfirm' | translate:{url: thumb.lUrl} }}"
            data-gn-click-and-spin="removeOverview(thumb)"
            title="{{'removeThumbnail' | translate}}">
           <i class="btn fa fa-times text-danger"></i>
