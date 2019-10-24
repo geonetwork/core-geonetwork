@@ -64,7 +64,7 @@ import com.google.common.io.CharStreams;
 
 import javassist.NotFoundException;
 
-// A static style interface for methods in Inspire Service.
+// Utility class to access methods in Inspire Service.
 // Based on ETF Web API v.2 BETA
 public class InspireValidatorUtils {
 
@@ -527,7 +527,12 @@ public class InspireValidatorUtils {
         }
     }
 
-    // Executes the HttpUriRequest
+    /**
+     *  Executes the HttpUriRequest
+        * @param request
+        * @return response of execute method
+        * @throws IOException
+     */
     private ClientHttpResponse execute(HttpUriRequest request) throws IOException {
 
         boolean useProxy = settingManager.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
