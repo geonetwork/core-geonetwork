@@ -30,14 +30,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.json.JSONArray;
@@ -46,6 +59,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.ClientHttpResponse;
 
+import com.google.common.base.Function;
 import com.google.common.io.CharStreams;
 
 import javassist.NotFoundException;
@@ -56,6 +70,9 @@ public class InspireValidatorUtils {
 
     @Autowired
     private GeonetHttpRequestFactory requestFactory;
+
+    @Autowired
+    SettingManager settingManager;
 
     /**
      * The Constant USER_AGENT.
@@ -128,7 +145,7 @@ public class InspireValidatorUtils {
         ClientHttpResponse response = null;
 
         try {
-            response = requestFactory.execute(request);
+            response = this.execute(request);
         } catch (Exception e) {
             Log.warning(Log.SERVICE, "Error calling INSPIRE service: " + endPoint, e);
             return false;
@@ -171,7 +188,7 @@ public class InspireValidatorUtils {
 
             request.setEntity(entity);
 
-            response = requestFactory.execute(request);
+            response = this.execute(request);
 
             if (response.getStatusCode().value() == 200) {
 
@@ -216,7 +233,7 @@ public class InspireValidatorUtils {
         try {
             String[] tests = testsuites.get(testsuite);
 
-            response = requestFactory.execute(request);
+            response = this.execute(request);
 
             if (response.getStatusCode().value() == 200) {
 
@@ -303,7 +320,7 @@ public class InspireValidatorUtils {
             StringEntity entity = new StringEntity(json.toString());
             request.setEntity(entity);
 
-            response = requestFactory.execute(request);
+            response = this.execute(request);
 
             if (response.getStatusCode().value() == 201) {
 
@@ -351,7 +368,7 @@ public class InspireValidatorUtils {
         ClientHttpResponse response = null;
 
         try {
-            response = requestFactory.execute(request);
+            response = this.execute(request);
 
             if (response.getStatusCode().value() == 200) {
                 String body = CharStreams.toString(new InputStreamReader(response.getBody()));
@@ -408,7 +425,7 @@ public class InspireValidatorUtils {
 
         try {
 
-            response = requestFactory.execute(request);
+            response = this.execute(request);
 
             if (response.getStatusCode().value() == 200) {
 
@@ -509,4 +526,49 @@ public class InspireValidatorUtils {
             // client.close();
         }
     }
+
+    // Executes the HttpUriRequest
+    private ClientHttpResponse execute(HttpUriRequest request) throws IOException {
+
+        boolean useProxy = settingManager.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
+        if (useProxy) {
+            String proxyHost = settingManager.getValue(Settings.SYSTEM_PROXY_HOST);
+            String proxyPort = settingManager.getValue(Settings.SYSTEM_PROXY_PORT);
+            String username = settingManager.getValue(Settings.SYSTEM_PROXY_USERNAME);
+            String password = settingManager.getValue(Settings.SYSTEM_PROXY_PASSWORD);
+
+            final Function<HttpClientBuilder, Void> proxyConfiguration = new Function<HttpClientBuilder, Void>() {
+                @Nullable
+                @Override
+                public Void apply(@Nonnull HttpClientBuilder input) {
+
+                    HttpHost proxy = null;
+                    if(StringUtils.isNotBlank(proxyPort)) {
+                        proxy = new HttpHost(proxyHost, Integer.valueOf(proxyPort));
+                    } else {
+                        proxy = new HttpHost(proxyHost);
+                    }
+
+                    input.setProxy(proxy);
+
+                    boolean isAuthenticationEnabled = StringUtils.isNotBlank(username);
+
+                    if (isAuthenticationEnabled) {
+                        Credentials credentials = new UsernamePasswordCredentials(username, password);
+                        AuthScope authScope = new AuthScope(proxyHost, Integer.parseInt(StringUtils.isNotBlank(proxyPort)?proxyPort:"80"));
+                        final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                        credentialsProvider.setCredentials(authScope, credentials);
+                        input.setDefaultCredentialsProvider(credentialsProvider);
+                    }
+
+                    return null;
+                }
+            };
+
+            return requestFactory.execute(request, proxyConfiguration);
+        } else {
+            return requestFactory.execute(request);
+        }
+    }
+
 }
