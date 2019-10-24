@@ -376,6 +376,10 @@
         updateGroupsByProfile(groups);
       });
 
+      $scope.sortByLabel = function(group) {
+        return group.label[$scope.lang];
+      };
+
       /**
        * Compute user profile based on group/profile select
        * list. This is closely related to the template manipulating
