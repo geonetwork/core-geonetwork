@@ -1,4 +1,5 @@
-<div class="search-container" data-ng-class="{open : !collapsed}">
+<div class="search-container"
+     data-ng-class="{open : !collapsed, 'hidden': locToolDisabled}">
   <span class="fa fa-times-circle clear"
         data-ng-click="clearInput()"
         data-ng-hide="query==''"
