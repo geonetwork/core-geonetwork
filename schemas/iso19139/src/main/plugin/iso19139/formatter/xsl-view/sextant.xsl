@@ -58,57 +58,60 @@
           <xsl:value-of select="$schemaStrings/sxt-view-date"/>
         </td>
         <td>
-
-          <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*">
-            <div class="row">
-              <div class="col-md-2">
-                <xsl:apply-templates mode="render-value" select="gmd:dateType/*/@codeListValue"/>
-              </div>
-              <div class="col-md-10">
-                <xsl:apply-templates mode="render-value" select="gmd:date"/>
-              </div>
+          <div class="row">
+            <div class="col-md-6">
+              <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*">
+                <dl>
+                  <dt>
+                    <xsl:apply-templates mode="render-value" select="gmd:dateType/*/@codeListValue"/>
+                  </dt>
+                  <dd>
+                    <xsl:apply-templates mode="render-value" select="gmd:date"/>
+                  </dd>
+                </dl>
+              </xsl:for-each>
             </div>
-          </xsl:for-each>
+            <div class="col-md-6">
+              <xsl:variable name="temporalCoverageContent">
+                <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/*">
+                  <xsl:variable name="indeterminatePositionLabel">
+                    <xsl:apply-templates mode="render-value"
+                                         select="gml:beginPosition/@indeterminatePosition"/>
+                  </xsl:variable>
 
-          <xsl:variable name="temporalCoverageContent">
-            <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/*">
-              <xsl:variable name="indeterminatePositionLabel">
-                <xsl:apply-templates mode="render-value"
-                                     select="gml:beginPosition/@indeterminatePosition"/>
+                  <xsl:if test="gml:beginPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
+                    <xsl:value-of
+                      select="concat ((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ', gml:beginPosition, ' > ')"/>
+                  </xsl:if>
+
+                  <xsl:variable name="indeterminatePositionLabel">
+                    <xsl:apply-templates mode="render-value"
+                                         select="gml:endPosition/@indeterminatePosition"/>
+                  </xsl:variable>
+                  <xsl:if test="gml:endPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
+                    <xsl:value-of
+                      select="concat ((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-to)[1], ' ', gml:endPosition)"/>
+                  </xsl:if>
+
+                  <xsl:if test="gml:timePosition != ''">
+                    <xsl:value-of select="concat ($schemaStrings/sxt-view-temporal-at, ' ', gml:timePosition)"/>
+                  </xsl:if>
+                  <br/>
+                </xsl:for-each>
               </xsl:variable>
 
-              <xsl:if test="gml:beginPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
-                <xsl:value-of
-                  select="concat ((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ', gml:beginPosition, ' > ')"/>
+              <xsl:if test="$temporalCoverageContent != ''">
+                <dl>
+                  <dt>
+                    <xsl:value-of select="$schemaStrings/sxt-view-temporal"/>
+                  </dt>
+                  <dd>
+                    <xsl:copy-of select="$temporalCoverageContent"/>
+                  </dd>
+                </dl>
               </xsl:if>
-
-              <xsl:variable name="indeterminatePositionLabel">
-                <xsl:apply-templates mode="render-value"
-                                     select="gml:endPosition/@indeterminatePosition"/>
-              </xsl:variable>
-              <xsl:if test="gml:endPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
-                <xsl:value-of
-                  select="concat ((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-to)[1], ' ', gml:endPosition)"/>
-              </xsl:if>
-
-              <xsl:if test="gml:timePosition != ''">
-                <xsl:value-of select="concat ($schemaStrings/sxt-view-temporal-at, ' ', gml:timePosition)"/>
-              </xsl:if>
-              <br/>
-            </xsl:for-each>
-          </xsl:variable>
-
-          <xsl:if test="$temporalCoverageContent != ''">
-            <div class="row">
-              <div class="col-md-2">
-                <xsl:value-of select="$schemaStrings/sxt-view-temporal"/>
-              </div>
-              <div class="col-md-10">
-                <xsl:copy-of select="$temporalCoverageContent"/>
-              </div>
             </div>
-          </xsl:if>
-
+          </div>
         </td>
       </tr>
       <xsl:variable name="authors"
@@ -275,8 +278,9 @@
 
     <div gn-related="md"
          data-user="user"
-         data-types="{$sideRelated}">
+         data-types="{$sideRelated}"><xsl:comment>.</xsl:comment>
     </div>
 
+    <br/>
   </xsl:template>
 </xsl:stylesheet>

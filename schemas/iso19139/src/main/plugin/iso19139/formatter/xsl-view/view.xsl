@@ -327,10 +327,9 @@
             </xsl:for-each>
 
             <br/>
-            <!-- Link -->
             <xsl:variable name="url"
                           select="concat($nodeUrl, 'api/records/', $metadataUuid)"/>
-            <a href="{url}">
+            <a href="{$url}">
               <xsl:value-of select="$url"/>
             </a>
             <br/>

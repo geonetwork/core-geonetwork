@@ -294,7 +294,7 @@
             </xsl:if>
 
 
-            <xsl:if test="$sideRelated != ''">
+            <!--<xsl:if test="$sideRelated != ''">
               <section class="gn-md-side-associated">
                 <h2>
                   <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
@@ -306,7 +306,7 @@
                   Not available
                 </div>
               </section>
-            </xsl:if>
+            </xsl:if>-->
           </div>
         </div>
 
