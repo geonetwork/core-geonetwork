@@ -40,7 +40,7 @@
 
 
   <xsl:template name="sextant-summary-view">
-    <xsl:for-each
+    <!--<xsl:for-each
       select="$metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords/*[gmd:thesaurusName/*/gmd:identifier/*/gmd:code/* = 'geonetwork.thesaurus.local.theme.sextant-theme']/gmd:keyword">
       <xsl:variable name="path">
         <xsl:apply-templates mode="localised" select=".">
@@ -49,7 +49,7 @@
       </xsl:variable>
 
       <xsl:value-of select="string-join(tokenize($path, '/'), ' > ')"/>
-    </xsl:for-each>
+    </xsl:for-each>-->
 
 
     <table class="table gn-sextant-view-table">
@@ -212,60 +212,60 @@
           <div class="row">
             <div class="col-md-6">
               <xsl:if test="$metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType/*/@codeListValue != ''">
-                <div class="row">
-                  <div class="col-md-5">
+                <dl>
+                  <dt>
                     <xsl:value-of select="$schemaStrings/sxt-view-spatialRepresentationType"/>
-                  </div>
-                  <div class="col-md-7">
+                  </dt>
+                  <dd>
                     <xsl:apply-templates mode="render-value"
                                          select="$metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType/*/@codeListValue"/>
-                  </div>
-                </div>
+                  </dd>
+                </dl>
               </xsl:if>
               <xsl:if test="$metadata/gmd:referenceSystemInfo">
-                <div class="row">
-                  <div class="col-md-5">
+                <dl>
+                  <dt>
                     <xsl:value-of select="$schemaStrings/sxt-view-crs"/>
-                  </div>
-                  <div class="col-md-7">
+                  </dt>
+                  <dd>
                     <xsl:for-each select="$metadata/gmd:referenceSystemInfo/*/gmd:referenceSystemIdentifier/*/gmd:code">
                       <xsl:apply-templates mode="render-value" select="."/>
                       <br/>
                     </xsl:for-each>
-                  </div>
-                </div>
+                  </dd>
+                </dl>
               </xsl:if>
             </div>
             <div class="col-md-6">
               <xsl:variable name="scales"
                             select="$metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:equivalentScale/*/gmd:denominator/*[. != '']"/>
               <xsl:if test="count($scales) > 0">
-                <div class="row">
-                  <div class="col-md-5">
+                <dl>
+                 <dt>
                     <xsl:value-of select="$schemaStrings/sxt-view-scale"/>
-                  </div>
-                  <div class="col-md-7">
+                  </dt>
+                  <dd>
                     <xsl:for-each select="$scales">
                       <xsl:value-of select="concat('1:', .)"/>
                       <br/>
                     </xsl:for-each>
-                  </div>
-                </div>
+                  </dd>
+                </dl>
               </xsl:if>
               <xsl:variable name="resolutions"
                             select="$metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:distance/gco:Distance[. != '']"/>
               <xsl:if test="count($resolutions) > 0">
-                <div class="row">
-                  <div class="col-md-5">
+                <dl>
+                  <dt>
                     <xsl:value-of select="$schemaStrings/sxt-view-resolution"/>
-                  </div>
-                  <div class="col-md-7">
+                  </dt>
+                  <dd>
                     <xsl:for-each select="$resolutions">
                       <xsl:value-of select="concat(., ' ', ./@uom)"/>
                       <br/>
                     </xsl:for-each>
-                  </div>
-                </div>
+                  </dd>
+                </dl>
               </xsl:if>
             </div>
           </div>

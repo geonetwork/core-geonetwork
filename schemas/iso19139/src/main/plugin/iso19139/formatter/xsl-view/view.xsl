@@ -117,7 +117,7 @@
                                             and string-join(gmd:keyword//text(), '') != ''
                                             and (not(gmd:thesaurusName/*/gmd:identifier/*/gmd:code)
                                             or gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/
-                                                text() != 'geonetwork.thesaurus.local.theme.sextant-theme')]">
+                                                text() != '')]">
           <xsl:variable name="thesaurusTitle">
             <xsl:for-each select="gmd:thesaurusName/*/gmd:title">
               <xsl:call-template name="localised">
@@ -266,10 +266,10 @@
     <!-- Citation -->
     <blockquote>
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-1">
           <i class="fa fa-quote-left pull-right"><xsl:comment select="'icon'"/></i>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-11">
           <h2 title="{$schemaStrings/citationProposal-help}"><xsl:comment select="name()"/>
             <xsl:value-of select="$schemaStrings/citationProposal"/>
             <i class="fa fa-info-circle"><xsl:comment select="'icon'"/></i>
