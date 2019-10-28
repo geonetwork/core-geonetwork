@@ -201,7 +201,7 @@
           $scope.settingsLoading = false;
 
           var key = savedJob.wfsHarvesterParam.url + '#' + savedJob.wfsHarvesterParam.typeName;
-          $scope.jobs[key] = angular.merge({}, $scope.jobs[key], {
+          angular.merge($scope.jobs[key], {
             url: savedJob.wfsHarvesterParam.url,
             featureType: savedJob.wfsHarvesterParam.typeName,
             status: 'not started',

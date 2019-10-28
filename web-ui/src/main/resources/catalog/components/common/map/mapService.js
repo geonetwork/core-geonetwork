@@ -34,6 +34,12 @@
     'gn_wfs_service'
   ]);
 
+  var ARCGIS_SERVICES_MAP = {
+    imagery: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    hillshade: 'https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',
+    ocean: 'https://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}'
+  }
+
   /**
    * @ngdoc service
    * @kind function
@@ -63,10 +69,12 @@
       'gnViewerSettings',
       'gnViewerService',
       'gnAlertService',
+      'wfsFilterService',
       function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
-          gnGlobalSettings, gnViewerSettings, gnViewerService, gnAlertService) {
+          gnGlobalSettings, gnViewerSettings, gnViewerService, gnAlertService,
+               wfsFilterService) {
 
         /**
          * @description
@@ -731,11 +739,6 @@
             var options = layerOptions || {};
 
             var loadFunction;
-            if (options.useProxy && options.url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
-              loadFunction = function (image, src) {
-                image.getImage().src = gnGlobalSettings.proxyUrl + encodeURIComponent(src);
-              };
-            }
 
             var source, olLayer;
             if (gnViewerSettings.singleTileWMS) {
@@ -969,19 +972,13 @@
                 }
               }
 
-              url = url || getCapLayer.url;
-              // url = getCapLayer.url || url;
+              url = getCapLayer.url || url;
               if (url.slice(-1) === '?') {
                 url = url.substring(0, url.length-1);
               }
 
-              var proxifiedUrl = url;
-              if(getCapLayer.useProxy
-                  && url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
-                proxifiedUrl = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
-              }
               var layer = this.createOlWMS(map, layerParam, {
-                url: proxifiedUrl,
+                url: url,
                 directUrl: url,
                 label: getCapLayer.Title,
                 attribution: attribution,
@@ -1436,6 +1433,24 @@
                         then(gnViewerSettings.getPreAddLayerPromise).
                         finally(
                         function() {
+                          var wfsConfigs = olL.get('wfs');
+                          if (wfsConfigs) {
+                            var wfsConfig = wfsConfigs[0];
+                            var esObj = wfsFilterService.getEsObject(wfsConfig.url, wfsConfig.name);
+                            if(esObj && esObj.initialFilters) {
+                              esObj.pushState(esObj.initialFilters);
+                              olL.set('indexObject', esObj);
+                              var sldConfig = wfsFilterService.createSLDConfig(esObj.initialFilters.qParams);
+                              if (sldConfig.filters.length > 0) {
+                                wfsFilterService.getSldUrl(sldConfig, olL.get('url'), wfsConfig.name).success(function(sldURL) {
+                                  olL.getSource().updateParams({
+                                    SLD: sldURL
+                                  });
+                                })
+                              }
+                            }
+                          }
+
                           if (!createOnly) {
                             map.addLayer(olL);
                           }
@@ -1854,8 +1869,17 @@
             switch (type) {
               case 'osm':
                 return new ol.layer.Tile({
+                  _bgId: type,
                   source: new ol.source.OSM(),
                   title: title ||  'OpenStreetMap'
+                });
+              case 'osm-fr':
+                return new ol.layer.Tile({
+                  _bgId: type,
+                  source: new ol.source.XYZ({
+                    url: 'https://{a-c}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'
+                  }),
+                  title: title ||  'OSM FR'
                 });
               //ALEJO: tms support
               case 'tms':
@@ -1868,11 +1892,37 @@
               case 'bing_aerial':
                 return new ol.layer.Tile({
                   preload: Infinity,
+                  _bgId: type,
                   source: new ol.source.BingMaps({
                     key: gnViewerSettings.bingKey,
                     imagerySet: 'Aerial'
                   }),
                   title: title ||  'Bing Aerial'
+                });
+              /**
+               * 'RoadOnDemand',
+               * 'Aerial',
+               * 'AerialWithLabelsOnDemand',
+               * 'CanvasDark',
+               * 'OrdnanceSurvey'
+               */
+              case 'bing':
+                return new ol.layer.Tile({
+                  preload: Infinity,
+                  _bgId: type + '_' + opt.name,
+                  source: new ol.source.BingMaps({
+                    key: gnViewerSettings.bingKey,
+                    imagerySet: opt.name
+                  }),
+                  title: title ||  'Bing ' + opt.name
+                });
+              case 'arcgis':
+                return new ol.layer.Tile({
+                  _bgId: type + '_' + opt.name,
+                  source: new ol.source.XYZ({
+                    url: ARCGIS_SERVICES_MAP[opt.name]
+                  }),
+                  title: title ||  'ArcGIS ' + opt.name
                 });
               case 'stamen':
                 //We make watercolor the default layer

@@ -3212,7 +3212,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
 
   </element>
   <element name="gmd:referenceSystemInfo" id="13.0">
-    <label>Information sur le système de référence</label>
+    <label>Système de coordonnées</label>
     <description>Description des références spatiale et temporelle utilisées dans le jeu de données</description>
     <help>Description des systèmes de référence spatiale et temporelle utilisés dans le jeu de données. Ces informations sont gérées dans la classe MD_ReferenceSystem.</help>
     <condition/>

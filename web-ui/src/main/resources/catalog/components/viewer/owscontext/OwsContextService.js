@@ -482,8 +482,6 @@
 
           if (source instanceof ol.source.OSM) {
             name = '{type=osm}';
-          } else if (source instanceof ol.source.BingMaps) {
-            name = '{type=bing_aerial}';
           } else if (source instanceof ol.source.Stamen) {
             name = '{type=stamen,name=' + layer.getSource().get('type') + '}';
           } else if (source instanceof ol.source.WMTS) {
@@ -504,7 +502,20 @@
               service: 'urn:ogc:serviceType:WMS'
             }];
           } else {
-            return;
+            var _bgId = layer.get('_bgId') && layer.get('_bgId').split('_');
+            if (_bgId) {
+              var layerType = _bgId[0]
+              if (layer.get('_bgId') === 'bing_aerial') {
+                name = '{type=bing_aerial}'; // backward compatibility
+              } else if (_bgId.length === 1) {
+                name = '{type=' + layerType + '}';
+              } else if (_bgId.length === 2) {
+                name = '{type=' + layerType + ',name=' + _bgId[1] + '}';
+              }
+            }
+            if (!name) {
+              return;
+            }
           }
           params.name = name;
           resourceList.layer.push(params);
@@ -549,8 +560,12 @@
           var esObj = layer.get('indexObject');
           if (esObj) {
             var filters = null;
-            if (esObj && esObj.getState()) {
-              filters = esObj.getState();
+            var state = esObj.getState();
+            if (esObj && state) {
+              filters = {
+                qParams: state.qParams,
+                geometry: state.geometry
+              }
             }
           }
 

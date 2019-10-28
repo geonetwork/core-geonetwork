@@ -145,10 +145,10 @@
 
 
 
-  <!-- Expand optional element gmd:type (gmd:keyword is mandatory and will be expanded) -->
+  <!-- Expand optional element gmd:type (gmd:keyword is mandatory and will be expanded) 
   <field name="gmd:MD_Keywords">
     <suggest name="gmd:type"/>
-  </field>
+  </field>-->
 
   <!-- Expand optional element gmd:type and gmd:thesaurusName. gmd:thesaurusName will
     be expanded including all its mandatory children and optional suggestion. In that
