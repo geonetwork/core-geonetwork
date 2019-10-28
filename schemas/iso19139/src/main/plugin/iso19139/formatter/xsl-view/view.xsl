@@ -109,7 +109,7 @@
 
   <xsl:template mode="getTags" match="gmd:MD_Metadata">
     <xsl:param name="byThesaurus" select="false()"/>
-    <section class="gn-md-side">
+    <section class="gn-md-side gn-md-side-overview">
       <xsl:variable name="tags">
         <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords/
                                           *[
@@ -498,15 +498,15 @@
           <xsl:if test="normalize-space(*/gmd:individualName) != ''">
             <xsl:apply-templates mode="render-value"
                                  select="*/gmd:individualName"/>
-            <xsl:if test="normalize-space(*/gmd:positionName) != ''">
+          <!--  <xsl:if test="normalize-space(*/gmd:positionName) != ''">
               (<xsl:apply-templates mode="render-value" select="*/gmd:positionName"/>)
             </xsl:if>
-            -
+            - -->
           </xsl:if>
-          <!-- Org name may be multilingual -->
-          <xsl:apply-templates mode="render-value"
-                               select="*/gmd:organisationName"/>
-
+          <xsl:if test="normalize-space(*/gmd:organisationName) != ''">
+            (<xsl:apply-templates mode="render-value"
+                               select="*/gmd:organisationName"/>)
+          </xsl:if>
         </xsl:when>
         <xsl:otherwise>
             <xsl:value-of select="*/gmd:organisationName|*/gmd:individualName"/>
@@ -517,8 +517,9 @@
     <xsl:variable name="label">
       <xsl:choose>
         <xsl:when test="$email">
+          <xsl:copy-of select="$displayName"/><xsl:comment select="'email'"/>
           <a href="mailto:{normalize-space($email)}">
-            <xsl:copy-of select="$displayName"/><xsl:comment select="'email'"/>
+            <sup class="fa fa-envelope"></sup>
           </a>
         </xsl:when>
         <xsl:otherwise>

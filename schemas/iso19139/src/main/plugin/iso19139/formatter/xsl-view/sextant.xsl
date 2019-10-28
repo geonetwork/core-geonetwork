@@ -61,10 +61,10 @@
 
           <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*">
             <div class="row">
-              <div class="col-md-5 text-right">
+              <div class="col-md-2">
                 <xsl:apply-templates mode="render-value" select="gmd:dateType/*/@codeListValue"/>
               </div>
-              <div class="col-md-7">
+              <div class="col-md-10">
                 <xsl:apply-templates mode="render-value" select="gmd:date"/>
               </div>
             </div>
@@ -100,7 +100,7 @@
 
           <xsl:if test="$temporalCoverageContent != ''">
             <div class="row">
-              <div class="col-md-2 text-right">
+              <div class="col-md-2">
                 <xsl:value-of select="$schemaStrings/sxt-view-temporal"/>
               </div>
               <div class="col-md-10">
@@ -213,7 +213,7 @@
             <div class="col-md-6">
               <xsl:if test="$metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType/*/@codeListValue != ''">
                 <div class="row">
-                  <div class="col-md-5 text-right">
+                  <div class="col-md-5">
                     <xsl:value-of select="$schemaStrings/sxt-view-spatialRepresentationType"/>
                   </div>
                   <div class="col-md-7">
@@ -224,7 +224,7 @@
               </xsl:if>
               <xsl:if test="$metadata/gmd:referenceSystemInfo">
                 <div class="row">
-                  <div class="col-md-5 text-right">
+                  <div class="col-md-5">
                     <xsl:value-of select="$schemaStrings/sxt-view-crs"/>
                   </div>
                   <div class="col-md-7">
@@ -241,7 +241,7 @@
                             select="$metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:equivalentScale/*/gmd:denominator/*[. != '']"/>
               <xsl:if test="count($scales) > 0">
                 <div class="row">
-                  <div class="col-md-5 text-right">
+                  <div class="col-md-5">
                     <xsl:value-of select="$schemaStrings/sxt-view-scale"/>
                   </div>
                   <div class="col-md-7">
@@ -256,7 +256,7 @@
                             select="$metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:distance/gco:Distance[. != '']"/>
               <xsl:if test="count($resolutions) > 0">
                 <div class="row">
-                  <div class="col-md-5 text-right">
+                  <div class="col-md-5">
                     <xsl:value-of select="$schemaStrings/sxt-view-resolution"/>
                   </div>
                   <div class="col-md-7">
