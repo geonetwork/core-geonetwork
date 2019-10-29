@@ -264,7 +264,7 @@
             reloadOnSearch: false,
             resolve: {
               permission: function() {
-                authorizationService.$get[0]().check('Administrator');
+                authorizationService.$get[0]().check('UserAdmin');
               }
             }
           }).
@@ -273,7 +273,7 @@
             controller: 'GnSettingsController',
             resolve: {
               permission: function() {
-                authorizationService.$get[0]().check('Administrator');
+                authorizationService.$get[0]().check('UserAdmin');
               }
             }
           }).
