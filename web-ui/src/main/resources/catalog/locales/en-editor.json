@@ -204,7 +204,7 @@
     "onlineDiscoverINSPIREView": "View service INSPIRE",
     "onlineDiscoverINSPIREView-help": "WMS service conformant to INSPIRE technical guidelines on view service",
     "onlineDiscoverWMTS": "View service WMTS",
-    "onlineDiscoverWMTS-help": "WMTS service URL to be used in desktop GIS or other app serving pre-rendered georeferenced map tiles over the Internet",  
+    "onlineDiscoverWMTS-help": "WMTS service URL to be used in desktop GIS or other app serving pre-rendered georeferenced map tiles over the Internet",
     "onlineDiscoverArcGIS": "View service ArcGIS",
     "onlineDiscoverArcGISTiled": "View service ArcGIS (Tiled)",
     "onlineDiscoverArcGIS-help": "ArcGIS service URL to be used in desktop GIS or other app",
