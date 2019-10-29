@@ -78,8 +78,6 @@
       </xsl:call-template>
     </xsl:if>
 
-
-    <!-- TODO: this should be common to all schemas -->
     <xsl:if test="$isEditing and
       (not($isFlatMode) or $flatModeException)">
 
@@ -87,18 +85,61 @@
                     select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
       <xsl:variable name="label"
                     select="gn-fn-metadata:getLabel($schema, $name, $labels, name(..), '', '')"/>
-      <xsl:call-template name="render-element-to-add">
-        <!-- TODO: add xpath and isoType to get label ? -->
-        <xsl:with-param name="label" select="$label/label"/>
-        <xsl:with-param name="class" select="if ($label/class) then $label/class else ''"/>
-        <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
-        <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
-        <xsl:with-param name="directive" select="$directive"/>
-        <xsl:with-param name="childEditInfo" select="."/>
-        <xsl:with-param name="parentEditInfo" select="../gn:element"/>
-        <xsl:with-param name="isFirst" select="count(preceding-sibling::*[name() = $name]) = 0"/>
-      </xsl:call-template>
 
+
+      <xsl:choose>
+        <!-- Specifc case when adding a new keyword using the gn-thesaurus-selector
+        in a view where descriptiveKeyword is a flat mode exception. In this case
+        the "Add keyword" button will add a new descriptiveKeyword block if none exists
+        and it will insert a keyword in the first descriptiveKeyword block (not referencing thesaurus)
+        ie. free text keyword block.
+
+        The goal here is to avoid to have multiple free text descriptiveKeyword sections.
+        -->
+        <xsl:when test="$flatModeException and $name = 'gmd:descriptiveKeywords'">
+          <xsl:variable name="freeTextKeywordBlocks"
+                        select="../gmd:descriptiveKeywords[not(*/gmd:thesaurusName)]"/>
+          <xsl:variable name="isFreeTextKeywordBlockExist"
+                        select="count($freeTextKeywordBlocks) > 0"/>
+          <xsl:variable name="freeTextKeywordTarget"
+                        select="if ($isFreeTextKeywordBlockExist) then $freeTextKeywordBlocks[1]/*/gn:child[@name = 'keyword'] else ."/>
+
+          <xsl:variable name="directive" as="node()?">
+            <xsl:for-each select="$directive">
+              <xsl:copy>
+                <xsl:copy-of select="@*"/>
+                <directiveAttributes data-freekeyword-element-ref="{$freeTextKeywordTarget/../gn:element/@ref}"
+                                     data-freekeyword-element-name="{concat($freeTextKeywordTarget/@prefix, ':', $freeTextKeywordTarget/@name)}">
+                  <xsl:copy-of select="directiveAttributes/@*"/>
+                </directiveAttributes>
+              </xsl:copy>
+            </xsl:for-each>
+          </xsl:variable>
+
+          <xsl:call-template name="render-element-to-add">
+            <xsl:with-param name="label" select="$label/label"/>
+            <xsl:with-param name="class" select="if ($label/class) then $label/class else ''"/>
+            <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
+            <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
+            <xsl:with-param name="directive" select="$directive"/>
+            <xsl:with-param name="childEditInfo" select="."/>
+            <xsl:with-param name="parentEditInfo" select="../gn:element"/>
+            <xsl:with-param name="isFirst" select="count(preceding-sibling::*[name() = $name]) = 0"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="render-element-to-add">
+            <xsl:with-param name="label" select="$label/label"/>
+            <xsl:with-param name="class" select="if ($label/class) then $label/class else ''"/>
+            <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
+            <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
+            <xsl:with-param name="directive" select="$directive"/>
+            <xsl:with-param name="childEditInfo" select="."/>
+            <xsl:with-param name="parentEditInfo" select="../gn:element"/>
+            <xsl:with-param name="isFirst" select="count(preceding-sibling::*[name() = $name]) = 0"/>
+          </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
   </xsl:template>
 
