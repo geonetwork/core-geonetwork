@@ -17,7 +17,7 @@
              data-ng-class="g.id === groupSelected.id ? 'active' : ''"
              data-ng-click="selectGroup(g)"> {{g.label[lang]|empty:g.name}} </a>
           <span data-gn-pagination-list=""
-                data-items="groups | filter:groupSearch | orderBy:'name'"
+                data-items="groups | filter:groupSearch | orderBy:sortByLabel"
                 data-cache="groups"/>
         </div>
 
