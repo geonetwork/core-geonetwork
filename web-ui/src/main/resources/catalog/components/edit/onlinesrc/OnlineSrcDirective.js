@@ -343,12 +343,19 @@
                 // directive and the SearchFormController scope that
                 // is contained by the directive
                 scope.stateObj = {};
+                var projectedExtent = null;
+
 
                 function loadLayers() {
                   if (!angular.isArray(scope.map.getSize()) ||
                       scope.map.getSize().indexOf(0) >= 0) {
                     $timeout(function() {
                       scope.map.updateSize();
+                      if (projectedExtent != null) {
+                        scope.map.getView().fit(
+                          projectedExtent,
+                          scope.map.getSize());
+                      }
                     }, 300);
                   }
 
@@ -359,20 +366,28 @@
 
                   var conf = gnMap.getMapConfig();
 
-                  if (conf.useOSM) {
-                    scope.map.addLayer(new ol.layer.Tile({source:  new ol.source.OSM()}));
-                  }
-                  else {
-                    conf['map-editor'].layers.forEach(function(layerInfo) {
-                        gnMap.createLayerFromProperties(layerInfo, scope.map)
-                            .then(function(layer) {
-                              if (layer) {
-                                scope.map.addLayer(layer);
-                              }
-                            });
-                      });
-                  }
-
+                  scope.map.addLayer(new ol.layer.Tile({
+                    source:  new ol.source.OSM()
+                  }));
+                  // TODO: Add base layer from config
+                  // This does not work because createLayerFromProperties
+                  // return a promise and base layer is added twice.
+                  // if (conf.useOSM) {
+                  //   scope.map.addLayer(new ol.layer.Tile({
+                  //     source:  new ol.source.OSM(),
+                  //     type: 'base'
+                  //   }));
+                  // }
+                  // else {
+                  //   conf['map-editor'].layers.forEach(function(layerInfo) {
+                  //     gnMap.createLayerFromProperties(layerInfo, scope.map)
+                  //       .then(function(layer) {
+                  //         if (layer) {
+                  //           scope.map.addLayer(layer);
+                  //         }
+                  //       });
+                  //   });
+                  // }
                   // Add each WMS layer to the map
                   scope.layers = scope.gnCurrentEdit.layerConfig;
                   angular.forEach(scope.gnCurrentEdit.layerConfig,
@@ -388,12 +403,11 @@
                         }));
                       });
 
-                  var listenerExtent = scope.$watch(
-                		  'angular.isArray(scope.gnCurrentEdit.extent)', function() {
 
-                	  if (angular.isArray(scope.gnCurrentEdit.extent)) {
+                  var listenerExtent = scope.$watch(
+                    'angular.isArray(scope.gnCurrentEdit.extent)', function() {
+                        if (angular.isArray(scope.gnCurrentEdit.extent)) {
                           // FIXME : only first extent is took into account
-                          var projectedExtent;
                           var extent = scope.gnCurrentEdit.extent &&
                               scope.gnCurrentEdit.extent[0];
                           var proj = ol.proj.get(gnMap.getMapConfig().projection);
@@ -424,10 +438,10 @@
                   //Added mandatory custom params here to avoid
                   //changing other printing services
                   jsonSpec = angular.extend(
-                		  scope.jsonSpec,
-                		  {
-                			  hasNoTitle: true
-                		  });
+                    scope.jsonSpec,
+                    {
+                      hasNoTitle: true
+                    });
 
                   return $http.put('../api/0.1/records/' +
                       scope.gnCurrentEdit.uuid +
