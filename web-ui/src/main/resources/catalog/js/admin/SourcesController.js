@@ -36,11 +36,16 @@
       $scope.source = null;
       $scope.selectSource = function(source) {
         source.uiConfig = source.uiConfig && source.uiConfig.toString();
+        source.groupOwner = source.groupOwner != null ? source.groupOwner + '' : null;
         $scope.source = source;
       };
 
       function loadSources() {
-        $http.get('../api/sources')
+        var url = '../api/sources';
+        if ($scope.user.profile === 'UserAdmin') {
+          url += '?group=' + $scope.user.groupsWithUserAdmin.join('&group=');
+        }
+        $http.get(url)
             .success(function(data) {
               $scope.sources = data;
               $scope.isNew = false;
@@ -70,7 +75,8 @@
           name: '',
           logo: '',
           uiConfig: '',
-          filter: ''
+          filter: '',
+          groupOwner: null
         };
         // TODO: init labels
       };
