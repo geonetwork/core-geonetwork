@@ -995,6 +995,111 @@ gn-md-type-widget {
   }
 }
 
+
+// map
+.gn-drawmap-panel {
+  input[type="number"] {
+    margin: 0;
+    text-align: left;
+  }
+  .gn-editor-map {
+    padding: 15px;
+    position: relative;
+    margin-top: 30px;
+    [ngeo-map] {
+      border: 1px solid @input-border;
+      border-radius: @border-radius-base;
+    }
+  }
+  .coord {
+    position: absolute;
+    width: 200px;
+    z-index: 20;
+  }
+  .coord-north {
+    top: -0.25em;
+    left: 50%;
+    margin-left: -75px;
+  }
+  .coord-south {
+    bottom: -0.25em;
+    left: 50%;
+    margin-left: -75px;
+  }
+  .coord-east {
+    right: -15px;
+    top: 50%;
+    margin-top: -1.25em;
+  }
+  .coord-west {
+    left: -15px;
+    top: 50%;
+    margin-top: -1.25em;
+  }
+  @media (max-width: @screen-xs-max) {
+    .coord {
+      width: 150px;
+    }
+    .coord-east {
+      right: -30px;
+    }
+    .coord-west {
+      left: -30px;
+    }
+  }
+  table  {
+    .form-group {
+      width: 150px;
+    }
+    .btn-group {
+      margin-left: 15px;
+    }
+  }
+  .form-group {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+  .col-left, .col-right {
+    width: 25%;
+  }
+  .col-middle {
+    width: 50%;
+  }
+  table {
+    width:100%
+  }
+  .map {
+    height: 300px;
+    width: 100%;
+  }
+
+  .gn-proj-select {
+    width: 250px;
+    vertical-align: top;
+  }
+  [data-gn-region-picker], [gn-region-picker] {
+    .fa {
+      position: absolute;
+      top: 11px;
+      z-index: 20;
+      right: 10px;
+      &.fa-spinner {
+        right: 25px;
+      }
+      &.fa-times-circle {
+        cursor: pointer;
+      }
+    }
+  }
+  input[type=number] {
+    text-align: center;
+  }
+  .dropdown-menu {
+    font-size: 13px;
+    text-align: left;
+  }
+}
+
 // indexing task status
 gn-indexing-task-status {
   .progress {
