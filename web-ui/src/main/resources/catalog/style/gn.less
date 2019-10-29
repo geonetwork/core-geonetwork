@@ -345,13 +345,16 @@ div.gn-scroll-spy {
     width: 90vw;
     max-height: 90vh;
     .modal-body {
-      max-height: 76vh;
+      max-height: 80vh;
       overflow: auto;
       min-height: 500px;
       .gn-modal-content {
         // height of modal body - 2 * padding - height of button(s)
-        max-height: calc(~"76vh - 30px - 30px");
+        max-height: calc(~"76vh - 30px - 28px");
         overflow: auto;
+        .img-thumbnail {
+          max-height: 250px;
+        }
       }
     }
   }
