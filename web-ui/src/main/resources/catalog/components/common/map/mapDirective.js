@@ -55,6 +55,7 @@
              description: '@',
              dcRef: '@',
              extentXml: '=?',
+             extent: '=?',
              lang: '=',
              schema: '@',
              location: '@'
@@ -131,17 +132,12 @@
 
                // Format extent values with at least 2 decimals
                if (scope.extent.md) {
-                 scope.extent.md[0] = scope.extent.md[0].toFixed(
-                   Math.max(2, getPrecision(scope.extent.md[0])));
-
-                 scope.extent.md[1] = scope.extent.md[1].toFixed(
-                   Math.max(2, getPrecision(scope.extent.md[1])));
-
-                 scope.extent.md[2] = scope.extent.md[2].toFixed(
-                   Math.max(2, getPrecision(scope.extent.md[2])));
-
-                 scope.extent.md[3] = scope.extent.md[3].toFixed(
-                   Math.max(2, getPrecision(scope.extent.md[3])));
+                 scope.extent.md.forEach(function (v, i) {
+                   if (v != null) {
+                     scope.extent.md[i] = v.toFixed(
+                       Math.max(2, getPrecision(v)));
+                   }
+                 });
                }
 
                xmlExtentFn(scope.extent.md, scope.location);
@@ -177,7 +173,7 @@
                formLabel: gnMap.getMapConfig().projectionList[0].label
              };
 
-             scope.extent = {
+             scope.extent = scope.extent || {
                md: null,
                map: [],
                form: []
