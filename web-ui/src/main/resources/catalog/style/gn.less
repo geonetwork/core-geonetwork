@@ -4,6 +4,7 @@
 @import (less) "../lib/ol.css";
 @import (less) "../lib/angular.ext/hotkeys/hotkeys.min.css";
 @import "gn_doc.less";
+@import "gn_icons.less";
 @import "ellipsis.less";
 
 @fa-version: '4.3.0';
@@ -317,6 +318,11 @@ div.gn-scroll-spy {
   li.disabled {
     a {
       pointer-events: none;
+    }
+  }
+  li {
+    a {
+      min-width: max-content;
     }
   }
 }
