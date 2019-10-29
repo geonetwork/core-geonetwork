@@ -261,19 +261,21 @@
             url: $filter('gnLocalized')(link.url) || link.url
           };
 
+          var title = link.title;
+          var name = link.name;
           if (angular.isObject(link.title)) {
-            link.title = $filter('gnLocalized')(link.title);
+            title = $filter('gnLocalized')(link.title);
           }
           if (angular.isObject(link.name)) {
-            link.name = $filter('gnLocalized')(link.name);
+            name = $filter('gnLocalized')(link.name);
           }
 
-          if (link.name && link.name !== '') {
-            config.name = link.name;
+          if (name && name !== '') {
+            config.name = name;
             config.group = link.group;
             // Related service return a property title for the name
-          } else if (link.title) {
-            config.name = link.title;
+          } else if (title) {
+            config.name = title;
           }
 
           // if an external viewer is defined, use it here
@@ -285,7 +287,7 @@
               type: config.type,
               url: config.url,
               name: config.name,
-              title: link.title
+              title: title
             });
             return;
           }
