@@ -408,6 +408,7 @@
     "filterTool": "Search & filter features",
     "contextsTool": "Manage maps",
     "printTool": "Print map",
+    "legendTool": "Legend",
     "mInteractionTool": "Measures",
     "graticuleTool": "Display graticules",
     "syncAllLayersTool": "Synchronize search and main map",
