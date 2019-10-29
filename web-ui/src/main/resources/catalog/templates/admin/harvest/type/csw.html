@@ -1,4 +1,5 @@
-<form data-ng-keypress="updatingHarvester()">
+<form name="harvesterForm"
+      data-ng-keypress="updatingHarvester()">
   <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
   <div class="row">
@@ -52,6 +53,18 @@
         <div class="col-lg-8">
           <input type="text" class="form-control gn-csw-criteria" id="csw-{{c}}"
                  data-ng-model="harvesterSelected.searches[0][c].value"/>
+        </div>
+      </div>
+
+      <div class="form-group"
+           data-ng-show="cswBboxFilter">
+        <label class="control-label col-lg-4" data-translate="">bbox</label>
+        <div class="col-lg-8">
+          <div class=""
+               data-gn-draw-bbox=""
+               data-extent="extent"
+               data-lang="$parent.$parent.lang">
+          </div>
         </div>
       </div>
     </fieldset>

@@ -87,6 +87,8 @@
       <xsl:variable name="label"
                     select="gn-fn-metadata:getLabel($schema, $name, $labels, name(..), '', '')"/>
 
+
+
       <xsl:choose>
         <!-- Specifc case when adding a new keyword using the gn-thesaurus-selector
         in a view where descriptiveKeyword is a flat mode exception. In this case

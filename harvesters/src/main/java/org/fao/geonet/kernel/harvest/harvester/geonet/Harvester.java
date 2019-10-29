@@ -67,31 +67,13 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-//=============================================================================
-
 class Harvester implements IHarvester<HarvestResult> {
     private final AtomicBoolean cancelMonitor;
-    //--------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //--------------------------------------------------------------------------
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
     private Logger log;
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //--------------------------------------------------------------------------
     private GeonetParams params;
     private ServiceContext context;
 
-    //---------------------------------------------------------------------------
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
@@ -105,12 +87,6 @@ class Harvester implements IHarvester<HarvestResult> {
         this.context = context;
         this.params = params;
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Sources update
-    //---
-    //---------------------------------------------------------------------------
 
     public HarvestResult harvest(Logger log) throws Exception {
         this.log = log;
@@ -168,7 +144,7 @@ class Harvester implements IHarvester<HarvestResult> {
         SortedSet<RecordInfo> records = new TreeSet<>(Comparator.comparing(RecordInfo::getUuid));
 
         // Do a search and set from=1 and to=2, try to find out maxPageSize
-        // xml.search service returns maxPageSize in 3.8.x onwards, if not set then 
+        // xml.search service returns maxPageSize in 3.8.x onwards, if not set then
         // use 100. If set but is greater than the one defined by client use the client one.
         int pageSize = 100;
 
@@ -456,7 +432,3 @@ class Harvester implements IHarvester<HarvestResult> {
         return errors;
     }
 }
-
-//=============================================================================
-
-

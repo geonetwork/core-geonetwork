@@ -364,11 +364,9 @@
               </tr>
               </tbody>
             </table>
-
           </div>
 
-
-          <table class="table table-striped">
+          <table class="table table-striped t">
             <tbody>
             <tr data-ng-if="mdView.current.record.updateFrequency">
               <th data-translate="">updateFrequency</th>
@@ -419,29 +417,23 @@
                 <p data-ng-bind-html="mdView.current.record.lineage | linky | newlines"/>
               </td>
             </tr>
-            <tr>
-              <th></th>
-              <td>
-                <div data-gn-related-observer>
-                  <div data-gn-related="mdView.current.record"
-                      data-user="user"
-                      data-types="sources"
-                      data-has-results="hasRelations.sources"
-                      data-title="{{'sourceDatasets' | translate}}">
-                  </div>
-
-
-                  <div data-gn-related="mdView.current.record"
-                      data-user="user"
-                      data-types="hassources"
-                      data-has-results="hasRelations.hassources"
-                      data-title="{{'isSourceOfDatasets' | translate}}">
-                  </div>
-                </div>
-              </td>
-            </tr>
             </tbody>
           </table>
+
+          <div data-gn-related-observer>
+            <div data-gn-related="mdView.current.record"
+                data-user="user"
+                data-types="sources"
+                data-has-results="hasRelations.sources"
+                data-title="{{'sourceDatasets' | translate}}">
+            </div>
+            <div data-gn-related="mdView.current.record"
+                data-user="user"
+                data-types="hassources"
+                data-has-results="hasRelations.hassources"
+                data-title="{{'isSourceOfDatasets' | translate}}">
+            </div>
+          </div>
 
           <h2 data-translate="">metadataInformation</h2>
 
@@ -641,11 +633,6 @@
               title="{{'shareOnTwitter' | translate}}"
               target="_blank"
               class="btn btn-default"><i class="fa fa-fw fa-twitter"></i></a>
-            <a
-              data-ng-href="https://plus.google.com/share?url={{socialMediaLink | encodeURIComponent}}"
-              title="{{'shareOnGooglePlus' | translate}}"
-              target="_blank"
-              class="btn btn-default"><i class="fa fa-fw fa-google-plus"></i></a>
             <a
               data-ng-href="https://www.facebook.com/sharer.php?u={{socialMediaLink | encodeURIComponent}}"
               title="{{'shareOnFacebook' | translate}}"

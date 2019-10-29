@@ -45,7 +45,7 @@ import java.util.List;
 @Deprecated
 @Controller("metadataIdentifierTemplates")
 public class MetadataIdentifierTemplatesController {
-    @RequestMapping(value = "/{lang}/metadataIdentifierTemplates", method = RequestMethod.POST)
+    @RequestMapping(value = "/{portal}/{lang}/metadataIdentifierTemplates", method = RequestMethod.POST)
     @ResponseBody
     public OkResponse updateUrnTemplate(
         @RequestParam final Integer id,
@@ -78,7 +78,7 @@ public class MetadataIdentifierTemplatesController {
         return new OkResponse();
     }
 
-    @RequestMapping(value = "/{lang}/metadataIdentifierTemplates",
+    @RequestMapping(value = "/{portal}/{lang}/metadataIdentifierTemplates",
         method = RequestMethod.DELETE)
     @ResponseBody
     public OkResponse deleteMetadataURNTemplate(@RequestParam final Integer id) {
@@ -91,7 +91,7 @@ public class MetadataIdentifierTemplatesController {
         return new OkResponse();
     }
 
-    @RequestMapping(value = "/{lang}/metadataIdentifierTemplates",
+    @RequestMapping(value = "/{portal}/{lang}/metadataIdentifierTemplates",
         method = RequestMethod.GET, produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody

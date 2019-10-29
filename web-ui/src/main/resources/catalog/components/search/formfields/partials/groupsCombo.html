@@ -1,5 +1,5 @@
 <div class="dynamic-list">
-  <select class="form-control " data-ng-model="ownerGroup">
+  <select class="form-control " data-ng-model="ownerGroup" data-ng-disabled="disabled">
     <option data-ng-repeat="g in groups | orderBy:'name'" value="{{g['@id'] || g.id}}"
             data-ng-selected="ownerGroup == (g['@id'] ? g['@id'] : g.id)">
       {{g.label[lang]|empty:g.name}}

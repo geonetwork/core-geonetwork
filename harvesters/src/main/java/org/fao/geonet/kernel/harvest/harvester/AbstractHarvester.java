@@ -818,11 +818,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     protected abstract void doHarvest(Logger l) throws Exception;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Protected storage methods
-    //---
-    //---------------------------------------------------------------------------
 
     /**
      * Invoked from doAdd and doUpdate in sub class implementations.
@@ -859,6 +854,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         harvesterSettingsManager.add(ID_PREFIX + optionsId, "every", params.getEvery());
         harvesterSettingsManager.add(ID_PREFIX + optionsId, "oneRunOnly", params.isOneRunOnly());
         harvesterSettingsManager.add(ID_PREFIX + optionsId, "overrideUUID", params.getOverrideUuid());
+        harvesterSettingsManager.add(ID_PREFIX + optionsId, "ifRecordExistAppendPrivileges", params.isIfRecordExistAppendPrivileges());
         harvesterSettingsManager.add(ID_PREFIX + optionsId, "status", status);
 
         //--- setup content node ---------------------------------------
@@ -941,6 +937,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             add(res, "badFormat", result.badFormat);
             add(res, "collectionDatasetRecords", result.collectionDatasetRecords);
             add(res, "datasetUuidExist", result.datasetUuidExist);
+            add(res, "privilegesAppendedOnExistingRecord", result.privilegesAppendedOnExistingRecord);
             add(res, "doesNotValidate", result.doesNotValidate);
             add(res, "xpathFilterExcluded", result.xpathFilterExcluded);
             add(res, "duplicatedResource", result.duplicatedResource);

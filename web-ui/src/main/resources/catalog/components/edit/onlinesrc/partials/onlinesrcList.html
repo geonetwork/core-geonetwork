@@ -125,6 +125,7 @@
              class="onlinesrc-remove"
              data-ng-if="readonly !== true"
              data-ng-click="onlinesrcService.removeThumbnail(thumb)"
+             data-gn-confirm-click="{{'removeThumbnailConfirm' | translate:{url: thumb.lUrl} }}"
              title="{{'removeThumbnail' | translate}}"
              aria-label="{{'removeThumbnail' | translate}}">
             <i class="btn fa fa-times text-danger"></i>
@@ -211,6 +212,7 @@
                  title="{{'remove' | translate}} {{resource.title | gnLocalized: lang}}"
                  aria-label="{{'remove' | translate}} {{resource.title | gnLocalized: lang}}"
                  data-ng-if="readonly !== true"
+                 data-gn-confirm-click="{{'removeOnlinesrcConfirm' | translate:{url: resource.lUrl} }}"
                  data-gn-click-and-spin="onlinesrcService.removeOnlinesrc(resource)">
                 <i class="fa fa-times text-danger"></i>
               </a>

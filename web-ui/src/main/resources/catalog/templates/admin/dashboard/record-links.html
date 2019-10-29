@@ -13,6 +13,7 @@
   <div class="pull-right btn-toolbar">
     <button type="button" class="btn btn-primary"
             title="{{'analyzeLinks-help' | translate}}"
+            data-ng-disabled="!user.isAdministrator()"
             data-gn-click-and-spin="analyzeLinks()">
       <i class="fa fa-fw fa-cogs"/>&nbsp;
       <span data-translate="">analyzeLinks</span>
@@ -68,7 +69,7 @@
                                  'fa-check text-success': l.linkStatus[0] && !l.linkStatus[0].failing}">&nbsp;</i>
         </td>
         <td>
-          <a data-ng-href="l.url">{{l.url}}</a>
+          <a data-ng-href="{{l.url}}">{{l.url}}</a>
         </td>
         <td data-gn-humanize-time="{{l.linkStatus[0].checkDate.dateAndTime}}">
           {{l.linkStatus[0].checkDate.dateAndTime}}

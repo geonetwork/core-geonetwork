@@ -274,6 +274,8 @@
             ownerGroup: '=',
             lang: '=',
             groups: '=',
+            disabled: '=?',
+            optional: '@?',
             excludeSpecialGroups: '='
           },
 
@@ -282,7 +284,9 @@
             if (attrs.profile) {
               url = '../api/groups?profile=' + attrs.profile;
             }
-            var optional = attrs.hasOwnProperty('optional');
+            var optional = scope.optional != 'false' ? true : false;
+            var setDefaultValue = attrs['setDefaultValue'] == 'false' ? false : true;
+            scope.disabled = scope.disabled ? true : false;
 
             $http.get(url, {cache: true}).
                 success(function(data) {
@@ -300,7 +304,7 @@
                   }
 
                   // Select by default the first group.
-                  if ((angular.isUndefined(scope.ownerGroup) ||
+                  if (setDefaultValue && (angular.isUndefined(scope.ownerGroup) ||
                     scope.ownerGroup === '' ||
                     scope.ownerGroup === null) && data) {
                     // Requires to be converted to string, otherwise
@@ -315,7 +319,6 @@
                   }
                 });
           }
-
         };
       }])
 

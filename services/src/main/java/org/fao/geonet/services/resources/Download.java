@@ -70,7 +70,7 @@ public class Download {
     @Autowired
     private ServiceManager serviceManager;
 
-    @RequestMapping(value = "/{lang}/resources.get")
+    @RequestMapping(value = "/{portal}/{lang}/resources.get")
     public HttpEntity<byte[]> exec(@PathVariable String lang,
                                    @RequestParam(value = Params.ID, required = false) String idParam,
                                    @RequestParam(value = Params.UUID, required = false) String uuidParam,

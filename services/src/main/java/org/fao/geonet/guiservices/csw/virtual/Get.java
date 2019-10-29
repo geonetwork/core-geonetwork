@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Deprecated
 public class Get {
 
-    @RequestMapping(value = "/{lang}/admin.config.virtualcsw.get", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.config.virtualcsw.get", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody

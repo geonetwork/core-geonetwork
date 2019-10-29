@@ -32,7 +32,7 @@
     // columnOrder: ['view', 'dynamic', 'download', 'editing', 'notify'],
     columnOrder: ['view', 'dynamic', 'download', 'editing'],
     icons: {
-      'view': 'fa-share-alt',
+      'view': 'fa-unlock',
       'dynamic': 'fa-globe',
       'download': 'fa-download',
       'notify': 'fa-envelope',

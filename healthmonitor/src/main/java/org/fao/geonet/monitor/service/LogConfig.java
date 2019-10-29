@@ -98,7 +98,7 @@ public class LogConfig {
     /**
      * Download the log file in a ZIP.
      */
-    @RequestMapping(value = "/{lang}/log/file", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/log/file", produces = {
         MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
     public void getLog(HttpServletResponse response) throws IOException {
@@ -144,7 +144,7 @@ public class LogConfig {
      *
      * @param lines Number of lines to return. Default 2000. Max number of lines returned 20000.
      */
-    @RequestMapping(value = "/{lang}/log/activity", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/log/activity", produces = {
         MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
     public String activity(@RequestParam(value = "lines",

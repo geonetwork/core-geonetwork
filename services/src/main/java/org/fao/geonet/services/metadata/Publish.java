@@ -92,7 +92,7 @@ public class Publish {
     boolean testing = false;
 
 
-    @RequestMapping(value = "/{lang}/md.publish", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/md.publish", produces = {
         MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseBody
     public PublishReport publish(
@@ -108,7 +108,7 @@ public class Publish {
     }
 
 
-    @RequestMapping(value = "/{lang}/md.unpublish", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/md.unpublish", produces = {
         MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseBody
     public PublishReport unpublish(

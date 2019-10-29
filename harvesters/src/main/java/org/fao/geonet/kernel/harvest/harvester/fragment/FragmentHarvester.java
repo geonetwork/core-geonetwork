@@ -42,7 +42,6 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
@@ -407,9 +406,9 @@ public class FragmentHarvester extends BaseAligner {
 
         String id = String.valueOf(metadata.getId());
 
-        // Note: we use fragmentAllPrivs here because subtemplates need to be 
+        // Note: we use fragmentAllPrivs here because subtemplates need to be
         // visible/accessible to all
-        addPrivileges(id, fragmentAllPrivs, localGroups, dataMan, context);
+        addPrivileges(id, fragmentAllPrivs, localGroups, context);
         dataMan.indexMetadata(id, true, null);
 
         metadataManager.flush();
@@ -582,17 +581,17 @@ public class FragmentHarvester extends BaseAligner {
         repository.deleteAllByMetadataId(iId);
 
         if (isSubtemplate) {
-          // Note: we use fragmentAllPrivs here because subtemplates need to be 
+          // Note: we use fragmentAllPrivs here because subtemplates need to be
           // visible/accessible to all
-          addPrivileges(id, fragmentAllPrivs, localGroups, dataMan, context);
+          addPrivileges(id, fragmentAllPrivs, localGroups, context);
         } else {
-          addPrivileges(id, params.privileges, localGroups, dataMan, context);
+          addPrivileges(id, params.privileges, localGroups, context);
         }
 
         metadata.getCategories().clear();
         addCategories(metadata, params.categories, localCateg, context, null, true);
 
-        if (isSubtemplate) { 
+        if (isSubtemplate) {
             dataMan.setSubtemplateTypeAndTitleExt(iId, title);
         }
         dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
@@ -644,7 +643,7 @@ public class FragmentHarvester extends BaseAligner {
         if (log.isDebugEnabled()) {
             log.debug("	- Set privileges, category, template and harvested");
         }
-        addPrivileges(id, params.privileges, localGroups, dataMan, context);
+        addPrivileges(id, params.privileges, localGroups, context);
 
         dataMan.indexMetadata(id, true, null);
 

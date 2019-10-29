@@ -1,11 +1,15 @@
 <fieldset>
   <legend data-translate="">harvesterIdentification</legend>
   <div id="gn-harvest-settings-selected-name-row"
-       data-ng-class="harvester.site.name == '' ? 'has-error' : ''">
-    <label id="gn-harvest-settings-selected-name-label" class="control-label"> <span data-translate="">harvesterName</span>
+       data-ng-class="
+        $parent.harvesterForm.harvesterSiteName.$error.required ||
+        $parent.harvesterForm.harvesterSiteName.$error.gnDuplicateCheck ? 'has-error' : ''">
+    <label id="gn-harvest-settings-selected-name-label" class="control-label">
+      <span data-translate="">harvesterName</span>
       <span data-ng-hide="harvester['@type'] == 'geonetwork'"
       data-translate="">andNodeLogo</span>
-    </label> <input type="hidden" class="form-control"
+    </label>
+    <input type="hidden" class="form-control"
       data-ng-model="harvester.site.icon" />
 
     <div class="input-group">
@@ -16,21 +20,36 @@
            href="#/settings/sources"
            title="{{'sourceTranslations' | translate}}"> <i
           class="fa fa-database fa-fw"></i>
-        </a> <input id="gn-harvest-settings-selected-name-input" type="text" class="form-control"
-          data-ng-model="harvester.site.name" />
+        </a>
+        <input type="text"
+               class="form-control"
+               name="harvesterSiteName"
+               required=""
+               data-ng-model="harvester.site.name"
+               data-ng-model-options="{debounce: 200}"
+               data-gn-duplicate-check="harvester.site.name"
+               data-gn-duplicate-check-apply="$parent.$parent.harvesterNew"
+               data-gn-duplicate-check-remote="../api/harvesters/properties/name?exist={value}"/>
       </div>
       <div id="gn-harvest-settings-selected-name-list" class="input-group-btn" gn-logo-picker="harvester.site.icon"
         data-ng-hide="harvester['@type'] == 'geonetwork' || harvester['@type'] == 'geonetwork20'">
       </div>
     </div>
     <p class="help-block" data-translate="">harvesterNameHelp</p>
+    <p class="help-block"
+       ng-if="$parent.harvesterForm.harvesterSiteName.$error.gnDuplicateCheck"
+       data-translate="">duplicatedValueFoundHarvesterName</p>
   </div>
   <div id="gn-harvest-settings-selected-group-row" data-ng-show="groups.length"
     data-ng-class="harvester.site.ownerGroup == '' ? 'has-error' : ''">
     <label id="gn-harvest-settings-selected-group-label" class="control-label" data-translate="">harvesterGroup</label>
-    <div id="gn-harvest-settings-selected-group-list" data-groups-combo="" data-owner-group="harvester.ownerGroup[0]"
-      lang="lang" groups="groups" data-optional
-      data-exclude-special-groups="true" />
+    <div id="gn-harvest-settings-selected-group-list"
+         data-groups-combo=""
+         data-owner-group="harvester.ownerGroup[0]"
+         lang="lang"
+         groups="groups"
+         data-optional="{{::$parent.user.isAdministrator()}}"
+         data-exclude-special-groups="true" />
 
     <p class="help-block" data-translate="">harvesterGroupHelp</p>
   </div>

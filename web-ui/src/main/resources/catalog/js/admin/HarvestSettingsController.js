@@ -42,10 +42,10 @@
   module.controller('GnHarvestSettingsController', [
     '$scope', '$http', '$translate', '$injector', '$rootScope',
     'gnSearchManagerService', 'gnUtilityService', '$timeout',
-    'Metadata',
+    'Metadata', 'gnMapsManager',
     function($scope, $http, $translate, $injector, $rootScope,
              gnSearchManagerService, gnUtilityService, $timeout,
-             Metadata) {
+             Metadata, gnMapsManager) {
 
       $scope.searchObj = {
         internal: true,
@@ -95,7 +95,21 @@
                 if ($scope.harvesterSelected.searches[0].until) {
                   $scope.harvesterSelected.searches[0].until =
                   new Date($scope.harvesterSelected.searches[0].until);
+                }
 
+                if ($scope.harvesterSelected.searches[0]['bbox-xmin']) {
+                  $scope.extent.md = [
+                    parseFloat($scope.harvesterSelected.searches[0]['bbox-xmin'].value),
+                    parseFloat($scope.harvesterSelected.searches[0]['bbox-ymin'].value),
+                    parseFloat($scope.harvesterSelected.searches[0]['bbox-xmax'].value),
+                    parseFloat($scope.harvesterSelected.searches[0]['bbox-ymax'].value)
+                  ];
+                  $scope.extent.form = [
+                    parseFloat($scope.harvesterSelected.searches[0]['bbox-xmin'].value),
+                    parseFloat($scope.harvesterSelected.searches[0]['bbox-ymin'].value),
+                    parseFloat($scope.harvesterSelected.searches[0]['bbox-xmax'].value),
+                    parseFloat($scope.harvesterSelected.searches[0]['bbox-ymax'].value)
+                  ];
                 }
               }
             }).error(function(data) {
@@ -234,7 +248,8 @@
           groups +=
               '<group id="' + p['@id'] + '">' + ops + '</group>';
         });
-        return '<privileges>' + groups + '</privileges>';
+        return '<privileges>' + groups + '</privileges>' +
+          '<ifRecordExistAppendPrivileges>' + h.ifRecordExistAppendPrivileges + '</ifRecordExistAppendPrivileges>';
       };
       $scope.buildResponseCategory = function(h) {
         var cats = '';
@@ -536,6 +551,24 @@
       // TODO: Should move to a CSW controller
       $scope.cswCriteria = [];
       $scope.cswCriteriaInfo = null;
+      $scope.extent = {
+        md: null,
+        map: [],
+        form: []
+      };
+
+      $scope.$watchCollection('extent', function(n, o) {
+        if (n !== o && $scope.harvesterSelected
+          && $scope.harvesterSelected.searches
+          && $scope.harvesterSelected.searches[0]
+          && $scope.harvesterSelected.searches[0]['bbox-xmin']
+          && angular.isDefined($scope.harvesterSelected.searches[0]['bbox-xmin'].value)) {
+          $scope.harvesterSelected.searches[0]['bbox-xmin'].value = n.md[0];
+          $scope.harvesterSelected.searches[0]['bbox-ymin'].value = n.md[1];
+          $scope.harvesterSelected.searches[0]['bbox-xmax'].value = n.md[2];
+          $scope.harvesterSelected.searches[0]['bbox-ymax'].value = n.md[3];
+        }
+      });
 
       /**
        * Retrieve GetCapabilities document to retrieve
@@ -558,8 +591,6 @@
             .indexOf('https://') != -1
             )
         ) {
-
-
           var url = $scope.harvesterSelected.site.capabilitiesUrl;
 
           // Add GetCapabilities if not already in URL
@@ -610,11 +641,24 @@
                       $(this).find('ows\\:Value').each(parseCriteriaFn);
                     }
                   };
-                  // For Chrome and IE
+                  $scope.cswBboxFilter = false;
+                  var bboxProperties = ['bbox-xmin', 'bbox-ymin', 'bbox-xmax', 'bbox-ymax']
+                  var checkSpatialCapabilities = function() {
+                    if ($(this).attr("name") === 'BBOX') {
+                      $scope.cswBboxFilter = true;
+                      for (var i = 0; i < bboxProperties.length; i ++) {
+                      if (!$scope.harvesterSelected.searches[0][bboxProperties[i]])
+                        $scope.harvesterSelected.searches[0][bboxProperties[i]] = {value: ''};
+                      }
+                    }
+                  };
+                  // For IE
                   $xml.find('Constraint').each(parseQueryablesFn);
-                  // For FF, namespace parsing is different
+                  $xml.find('SpatialOperator').each(checkSpatialCapabilities);
+                  // For Chrome & FF, namespace parsing is different
                   if ($scope.cswCriteria.length === 0) {
                     $xml.find('ows\\:Constraint').each(parseQueryablesFn);
+                    $xml.find('ogc\\:SpatialOperator').each(checkSpatialCapabilities);
                   }
 
                   $scope.cswCriteria.sort();

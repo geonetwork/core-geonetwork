@@ -45,7 +45,7 @@ public class UpdateSystemInfo {
     @Autowired
     private SystemInfo info;
 
-    @RequestMapping(value = "/{lang}/systeminfo/staging", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/systeminfo/staging", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public OkResponse update(@RequestParam(required = true) String newProfile) {

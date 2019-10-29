@@ -7,7 +7,7 @@
     <select multiple=""
             class="form-control"
             data-ng-model="currentSelectionLeft">
-      <option data-ng-repeat="e in options | filter:optionsSearch"
+      <option data-ng-repeat="e in options | filter:optionsSearch | orderBy:'langlabel'"
               value="{{e.id}}"
               data-ng-dblclick="select(e)">{{e.langlabel}}
       </option>
@@ -28,7 +28,7 @@
     <select multiple=""
             class="form-control"
             data-ng-model="currentSelectionRight">
-      <option data-ng-repeat="e in selected | filter:selectedSearch"
+      <option data-ng-repeat="e in selected | filter:selectedSearch | orderBy:'langlabel'"
               value="{{e.id}}"
               data-ng-dblclick="unselect(e)">{{e.langlabel}}
       </option>
