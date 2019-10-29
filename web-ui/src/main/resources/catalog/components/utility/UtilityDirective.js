@@ -251,7 +251,7 @@
                 var v = scope.list[i];
                 if (angular.isObject(v)) {
                   for (var j = 0; j < path.length; j++) {
-                    v = v[path[j]]
+                    v = v[path[j]];
                     existingValues.push(v);
                   }
                 }
