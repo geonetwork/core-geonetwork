@@ -185,6 +185,7 @@
     "none": "None",
     "notFoundInThesaurus": "<strong>Warning! Keywords {{keywords}} not found in thesaurus.</strong> This may happen when keywords are in a language that is not in the current user interface language. Multilingual keywords editing is not supported. <strong>Those keywords will not be modified by this editing session</strong> unless you remove this thesaurus section.",
     "ocean": "Ocean",
+    "isPublishedToAll": "Public",
     "oneLanguage": "One",
     "oneLanguage-help": "Choose one language to edit using the selector",
     "onlinesrc": "Online resources",
