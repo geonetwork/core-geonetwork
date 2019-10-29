@@ -33,24 +33,19 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.json.JSONArray;
@@ -63,6 +58,7 @@ import com.google.common.base.Function;
 import com.google.common.io.CharStreams;
 
 import javassist.NotFoundException;
+import jeeves.server.context.ServiceContext;
 
 // Utility class to access methods in Inspire Service.
 // Based on ETF Web API v.2 BETA
@@ -70,9 +66,6 @@ public class InspireValidatorUtils {
 
     @Autowired
     private GeonetHttpRequestFactory requestFactory;
-
-    @Autowired
-    SettingManager settingManager;
 
     /**
      * The Constant USER_AGENT.
@@ -135,7 +128,7 @@ public class InspireValidatorUtils {
      * @return true, if successful
      * @throws IOException
      */
-    public boolean checkServiceStatus(String endPoint) throws IOException {
+    public boolean checkServiceStatus(ServiceContext context, String endPoint) throws IOException {
 
         HttpGet request = new HttpGet(endPoint + CheckStatus_URL);
 
@@ -145,7 +138,7 @@ public class InspireValidatorUtils {
         ClientHttpResponse response = null;
 
         try {
-            response = this.execute(request);
+            response = this.execute(context, request);
         } catch (Exception e) {
             Log.warning(Log.SERVICE, "Error calling INSPIRE service: " + endPoint, e);
             return false;
@@ -171,7 +164,7 @@ public class InspireValidatorUtils {
      * @param client the client (optional)
      * @return the string
      */
-    private String uploadMetadataFile(String endPoint, InputStream xml) {
+    private String uploadMetadataFile(ServiceContext context, String endPoint, InputStream xml) {
 
         HttpPost request = new HttpPost(endPoint + TestObjects_URL + "?action=upload");
 
@@ -188,7 +181,7 @@ public class InspireValidatorUtils {
 
             request.setEntity(entity);
 
-            response = this.execute(request);
+            response = this.execute(context, request);
 
             if (response.getStatusCode().value() == 200) {
 
@@ -219,7 +212,7 @@ public class InspireValidatorUtils {
      * @param client the client (optional)
      * @return the tests
      */
-    private List<String> getTests(String endPoint, String testsuite) {
+    private List<String> getTests(ServiceContext context, String endPoint, String testsuite) {
         if (testsuite == null) {
             testsuite = getDefaultTestSuite();
         }
@@ -233,7 +226,7 @@ public class InspireValidatorUtils {
         try {
             String[] tests = testsuites.get(testsuite);
 
-            response = this.execute(request);
+            response = this.execute(context, request);
 
             if (response.getStatusCode().value() == 200) {
 
@@ -289,7 +282,7 @@ public class InspireValidatorUtils {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
      */
-    private String testRun(String endPoint, String fileId, List<String> testList, String testTitle) {
+    private String testRun(ServiceContext context, String endPoint, String fileId, List<String> testList, String testTitle) {
 
         HttpPost request = new HttpPost(endPoint + TestRuns_URL);
         request.setHeader("Content-type", ACCEPT);
@@ -320,7 +313,7 @@ public class InspireValidatorUtils {
             StringEntity entity = new StringEntity(json.toString());
             request.setEntity(entity);
 
-            response = this.execute(request);
+            response = this.execute(context, request);
 
             if (response.getStatusCode().value() == 201) {
 
@@ -356,7 +349,7 @@ public class InspireValidatorUtils {
      * @return true, if is ready
      * @throws Exception
      */
-    public boolean isReady(String endPoint, String testId) throws Exception {
+    public boolean isReady(ServiceContext context, String endPoint, String testId) throws Exception {
         if (testId == null) {
             return false;
         }
@@ -368,7 +361,7 @@ public class InspireValidatorUtils {
         ClientHttpResponse response = null;
 
         try {
-            response = this.execute(request);
+            response = this.execute(context, request);
 
             if (response.getStatusCode().value() == 200) {
                 String body = CharStreams.toString(new InputStreamReader(response.getBody()));
@@ -378,7 +371,7 @@ public class InspireValidatorUtils {
                 // Completed when estimated number of Test Steps is equal to completed Test Steps
                 // Somehow this condition is necessary but not sufficient
                 // so another check on real value of test is evaluated
-                return jsonRoot.getInt("val") == jsonRoot.getInt("max") & isPassed(endPoint, testId) != null;
+                return jsonRoot.getInt("val") == jsonRoot.getInt("max") & isPassed(context, endPoint, testId) != null;
 
             } else if (response.getStatusCode().value() == 404) {
 
@@ -411,7 +404,7 @@ public class InspireValidatorUtils {
      * @return the string
      * @throws Exception
      */
-    public String isPassed(String endPoint, String testId) throws Exception {
+    public String isPassed(ServiceContext context, String endPoint, String testId) throws Exception {
 
         if (testId == null) {
             throw new Exception("");
@@ -425,7 +418,7 @@ public class InspireValidatorUtils {
 
         try {
 
-            response = this.execute(request);
+            response = this.execute(context, request);
 
             if (response.getStatusCode().value() == 200) {
 
@@ -493,15 +486,15 @@ public class InspireValidatorUtils {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
      */
-    public String submitFile(String serviceEndpoint, InputStream record, String testsuite, String testTitle)
+    public String submitFile(ServiceContext context, String serviceEndpoint, InputStream record, String testsuite, String testTitle)
             throws IOException, JSONException {
 
         try {
-            if (checkServiceStatus(serviceEndpoint)) {
+            if (checkServiceStatus(context, serviceEndpoint)) {
                 // Get the tests to execute
-                List<String> tests = getTests(serviceEndpoint, testsuite);
+                List<String> tests = getTests(context, serviceEndpoint, testsuite);
                 // Upload file to test
-                String testFileId = uploadMetadataFile(serviceEndpoint, record);
+                String testFileId = uploadMetadataFile(context, serviceEndpoint, record);
 
                 if (testFileId == null) {
                     Log.error(Log.SERVICE, "File not valid.", new IllegalArgumentException());
@@ -515,7 +508,7 @@ public class InspireValidatorUtils {
                     return null;
                 }
                 // Return test id from Inspire service
-                return testRun(serviceEndpoint, testFileId, tests, testTitle);
+                return testRun(context, serviceEndpoint, testFileId, tests, testTitle);
 
             } else {
                 ServiceNotFoundEx ex = new ServiceNotFoundEx(serviceEndpoint);
@@ -529,51 +522,20 @@ public class InspireValidatorUtils {
 
     /**
      *  Executes the HttpUriRequest
-        * @param request
-        * @return response of execute method
-        * @throws IOException
+     * @param request
+     * @return response of execute method
+     * @throws IOException
      */
-    private ClientHttpResponse execute(HttpUriRequest request) throws IOException {
+    private ClientHttpResponse execute(ServiceContext context, HttpUriRequest request) throws IOException {
 
-        boolean useProxy = settingManager.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
-        if (useProxy) {
-            String proxyHost = settingManager.getValue(Settings.SYSTEM_PROXY_HOST);
-            String proxyPort = settingManager.getValue(Settings.SYSTEM_PROXY_PORT);
-            String username = settingManager.getValue(Settings.SYSTEM_PROXY_USERNAME);
-            String password = settingManager.getValue(Settings.SYSTEM_PROXY_PASSWORD);
-
-            final Function<HttpClientBuilder, Void> proxyConfiguration = new Function<HttpClientBuilder, Void>() {
-                @Nullable
-                @Override
-                public Void apply(@Nonnull HttpClientBuilder input) {
-
-                    HttpHost proxy = null;
-                    if(StringUtils.isNotBlank(proxyPort)) {
-                        proxy = new HttpHost(proxyHost, Integer.valueOf(proxyPort));
-                    } else {
-                        proxy = new HttpHost(proxyHost);
-                    }
-
-                    input.setProxy(proxy);
-
-                    boolean isAuthenticationEnabled = StringUtils.isNotBlank(username);
-
-                    if (isAuthenticationEnabled) {
-                        Credentials credentials = new UsernamePasswordCredentials(username, password);
-                        AuthScope authScope = new AuthScope(proxyHost, Integer.parseInt(StringUtils.isNotBlank(proxyPort)?proxyPort:"80"));
-                        final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-                        credentialsProvider.setCredentials(authScope, credentials);
-                        input.setDefaultCredentialsProvider(credentialsProvider);
-                    }
-
-                    return null;
-                }
-            };
-
-            return requestFactory.execute(request, proxyConfiguration);
-        } else {
-            return requestFactory.execute(request);
-        }
+        final Function<HttpClientBuilder, Void> proxyConfiguration = new Function<HttpClientBuilder, Void>() {
+            @Nullable
+            @Override
+            public Void apply(@Nonnull HttpClientBuilder input) {
+                Lib.net.setupProxy(context, input, request.getURI().getHost());
+                return null;                }
+        };
+        return requestFactory.execute(request, proxyConfiguration);
     }
 
 }
