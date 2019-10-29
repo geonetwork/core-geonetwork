@@ -353,7 +353,6 @@
   "privilegesBatchAlert": "The privileges will be updated for all editable records in the selection. The privilege form is empty and does not reflect the selected records current privileges! Privileges are reset and replaced by the new one.",
   "permalink" : "Permalink",
   "permalinkTo": "Permalink to {{title}}",
-  "shareOnGooglePlus": "Share on Google+",
   "shareOnTwitter": "Share on Twitter",
   "shareOnFacebook": "Share on Facebook",
   "shareOnLinkedIn": "Share on LinkedIn",
