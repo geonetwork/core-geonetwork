@@ -38,6 +38,8 @@
   "saveMapAsImage": "PNG image",
   "saveMapInCatalog": "Save current map in the catalog",
   "saveMapInCatalogAction": "Save as metadata record",
+  "saveInCatalogAndPublish-help": "Create metadata record and make it public.",
+  "saveMapInCatalogActionAndPublish": "Save as public record",
   "mapSavedInCatalog": "<a href='#/metadata/{{uuid}}'>View map metadata record</a>.",
   "mapAbstract": "Map abstract",
   "loadAMap": "Load a map",

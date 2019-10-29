@@ -616,6 +616,7 @@ public class MetadataInsertDeleteApi {
             @ApiParam(value = "Map overview as PNG (base64 encoded)", required = false) @RequestParam(value = "overview", required = false) final String overview,
             @ApiParam(value = "Map overview filename", required = false) @RequestParam(value = "overviewFilename", required = false) final String overviewFilename,
             @ApiParam(value = "Topic category", required = false) @RequestParam(value = "topic", required = false) final String topic,
+            @ApiParam(value = "Publish record.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean publishToAll,
             @ApiParam(value = API_PARAM_RECORD_UUID_PROCESSING, required = false, defaultValue = "NOTHING") @RequestParam(required = false, defaultValue = "NOTHING") final MEFLib.UuidAction uuidProcessing,
             @ApiParam(value = API_PARAM_RECORD_GROUP, required = false) @RequestParam(required = false) final String group,
             HttpServletRequest request) throws Exception {
@@ -713,6 +714,19 @@ public class MetadataInsertDeleteApi {
                     onlineSrcParams);
             dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(),
                     null, true);
+        }
+
+        int iId = Integer.parseInt(id.get(0));
+        if (publishToAll) {
+            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.view.getId());
+            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.download.getId());
+            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.dynamic.getId());
+        }
+        if (StringUtils.isNotEmpty(group)) {
+            int gId = Integer.parseInt(group);
+            dataManager.setOperation(context, iId, gId, ReservedOperation.view.getId());
+            dataManager.setOperation(context, iId, gId, ReservedOperation.download.getId());
+            dataManager.setOperation(context, iId, gId, ReservedOperation.dynamic.getId());
         }
 
         dataManager.indexMetadata(id);
