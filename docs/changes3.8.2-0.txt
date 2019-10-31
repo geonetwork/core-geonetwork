@@ -1,0 +1,72 @@
+================================================================================
+===
+=== GeoNetwork 3.8.2: List of changes
+===
+================================================================================
+- Update doc submodule.
+- SQL / DOI password is internal.
+- API / Processing / XSL / Add parameter to update or not datestamp (#4159)
+- Updates from transifex.
+- Editor / Thumbnail creation fails due to PDF box update and conflict with mapfish print (#4075)
+- i18n / Add ESRI Tiled service (#4151)
+- Map / Feature info / Bad link
+- Editor / Keyword / i18n / Add missing key
+- Map viewer / Save map as metadata / Options to choose group and (#4146)
+- Inspire validator proxy geonet (#4135)
+- Prevent mutating the index record when clicking on view WMS
+- ISO19139 / Update some FR strings (#4149)
+- Update ISO19115-3 submodule.
+- Update ISO19115-3 submodule.
+- Update ISO19115-3 submodule.
+- Editor / Flat mode / When adding free text keyword, insert keyword in existing one or create a new block if not. Fix insertion point ref. Add title. Propose first from thesaurus, then free text.
+- Editor / Online resources / Add a maximum height to the thumbnail image. Try to minimize the amount of scrollbars. (#4143)
+- Portal id / Exclude webapp root folder. (#4140)
+- Fix the localisation style for Chrome 78 (#4139)
+- Editor / Add confirmation before removal. (#4138)
+- position Source dataset in detail view out of table (#4137)
+- Fix for breaking dropdowns in Chrome and missing icons (#4136)
+- Editor / Online resource / Removal is broken (#4134)
+- i18n / Missing key (#4132)
+- API / Translation should never be null (#4131)
+- Gazetteer checkbox in user interface settings is not respected #4106. (#4133)
+- i18n / Missing key (#4130)
+- Admin / Alpha order for group list in group managment and multiselect. (#4129)
+- CSS / Fix timeline missing dependency (#4128)
+- i18n / Invalid key (#4127)
+- Sharing / Change public state logo to unlock to be consistent with other UI. Improve french translations. (#4126)
+- Warn user if harvester is already taken on harvester creation only (#4125)
+- Record view / Google plus is not available anymore (#4124)
+- New metadata / Force to set groupOwner when user is not an administrator / Vertical mode
+- New metadata / Force to set groupOwner when user is not an administrator
+- Keyword encoding / Add multilingual anchor support.
+- Set threads based on number of cores.
+- Portal / Add link to group (#4098)
+- Harvester / CSW / Bbox filter. (#4076)
+- Harvester / Add option to append privileges in case of override
+- Make the modal dialog a bit wider (still fits the screen) so all languages will fit in the window
+- Hide the button and dropdown when VCS (Version Control System) in not enabled.
+- Record link / Disable analyze button (only allowed for admin user)
+- Portal list / Fix link to main catalogue
+- Logo picker / Order by file name & allow filtering when more than 10 logos
+- Property file / Ensure the one in WEB-INF is loaded (and not one from a JAR)
+- Admin / Source / Display full logo
+- (gn) fix total hit count property in index table loader
+- fix(featuretable) initialize with correct layer
+- Update legacy services mapping
+- Dashboard / Record links / Fix link url
+- Warn user if harvester or userid is already taken (#4038)
+- Subtemplates - support Anchor for title in gmd:DQ_DomainConsistency
+- URL Checker / Mutualise with XSL call eg. schematron and consider http 404 on HEAD as 405 - fix test
+- Update NeedHelpDirective.js
+- URL Checker / Mutualise with XSL call eg. schematron and consider http 404 on HEAD as 405
+- Admin console / Move WFS feature harvester to the harvester section (instead of status & information).
+- ES / Index health check / Fix due to incompatibility between JEST 6.3.1 and ES 7.x
+- Replace the hardcoded 'eng' with the language from the scope (#4094)
+- SQL / Migration / Set source types
+- Harvester / GeoNetwork / Profiles / Source transform for harvested metadata format (#4081)
+- Harvester / CSW / Add XPath filter (#4066)
+- API / Related / Errors in case a feature catalogue is linked but not found
+- Portal / Add message when a portal is empty. (#4067)
+- Admin / Dashboard / Do not propose WFS indexing if ES is not setup
+- Admin / Logo / Improve styling (#4073)
+- Portal list / Force content type to text/html
