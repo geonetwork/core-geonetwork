@@ -62,13 +62,14 @@ public class XslProcessUtils {
     /**
      * Process a metadata record and add information about the processing to one or more sets for
      * reporting.
-     *
-     * @param id      The metadata identifier corresponding to the metadata record to process
+     *  @param id      The metadata identifier corresponding to the metadata record to process
      * @param process The process name
+     * @param updateDateStamp
      */
     public static Element process(ServiceContext context, String id,
                                   String process,
                                   boolean save, boolean index,
+                                  boolean updateDateStamp,
                                   XsltMetadataProcessingReport report,
                                   String siteUrl,
                                   Map<String, String[]> params) throws Exception {
@@ -180,8 +181,6 @@ public class XslProcessUtils {
                         }
                     }
 
-                    // Always udpate metadata date stamp on metadata processing (minor edit has no effect).
-                    boolean updateDateStamp = true;
                     dataMan.updateMetadata(context, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
                     if (index) {
                         dataMan.indexMetadata(id, true, null);
