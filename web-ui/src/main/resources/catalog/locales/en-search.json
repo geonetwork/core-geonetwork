@@ -417,6 +417,7 @@
   "print_legend": "Legend",
   "print_legend_field": "Include legends",
   "landscape": "Landscape",
+  "overviewPrintTemplate": "Overview",
   "portrait": "Portrait",
   "wfsDownloadDataInstruction": "Choose a data format to download:",
   "wfsTypenameNotAvailable": "The featuretype '{{typename}}' is not available in the WFS service. You can select from available featuretypes instead",
