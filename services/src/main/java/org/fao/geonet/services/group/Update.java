@@ -224,7 +224,10 @@ public class Update extends NotInReadOnlyModeService {
             final Resources resources = context.getBean(Resources.class);
             Path logoDir = resources.locateLogosDir(context);
             logoUUID = UUID.randomUUID().toString();
-            resources.copyFile(input, logoDir, logoUUID + ".png");
+            try(Resources.ResourceHolder outputResource =
+                    resources.getWritableImage(context, logoUUID + ".png", logoDir)) {
+                java.nio.file.Files.copy(input, outputResource.getPath());
+            }
         }
 
         return logoUUID;
@@ -240,7 +243,10 @@ public class Update extends NotInReadOnlyModeService {
                     ImageIO.read(in); // check it parses
                 }
                 String extension = FilenameUtils.getExtension(harvestLogo.getRelativePath());
-                resources.copyFile(harvestLogo.getPath(), resources.locateLogosDir(context), logoUUID + "." + extension);
+                try(Resources.ResourceHolder outputResource =
+                        resources.getWritableImage(context, logoUUID + "." + extension, resources.locateLogosDir(context))) {
+                    java.nio.file.Files.copy(harvestLogo.getPath(), outputResource.getPath());
+                }
             } else {
                 throw new IOException("Cannot find " + logoFile + " in " + harvesterDir);
             }

@@ -24,37 +24,25 @@
 package org.fao.geonet.resources;
 
 import com.google.common.collect.Sets;
-import com.google.common.io.Files;
 
+import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.MetadataResource;
-import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.XmlRequest;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -72,11 +60,11 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  * <p/>
  * User: jeichar Date: 1/17/12 Time: 5:51 PM
  */
-public class Resources {
+public abstract class Resources {
 
-    private final static Set<String> IMAGE_READ_SUFFIXES;
-    private final static Set<String> IMAGE_WRITE_SUFFIXES;
-    private static final Set<String> IMAGE_EXTENSIONS = Sets.newHashSet(ImageIO.getReaderFileSuffixes());
+    protected final static Set<String> IMAGE_READ_SUFFIXES;
+    protected final static Set<String> IMAGE_WRITE_SUFFIXES;
+    protected static final Set<String> IMAGE_EXTENSIONS = Sets.newHashSet(ImageIO.getReaderFileSuffixes());
 
     static {
         HashSet<String> suffixes = new HashSet<>();
@@ -114,59 +102,26 @@ public class Resources {
      * @param logosDir  the directory to search
      * @return null if the image does not exist in the logosDir or a path to the image.
      */
-    private @Nullable Path findImagePath(String imageName, Path logosDir) throws IOException {
-        if (imageName.indexOf('.') > -1) {
-            final Path imagePath = logosDir.resolve(imageName);
-            if (java.nio.file.Files.exists(imagePath)) {
-                return imagePath;
-            }
-        } else {
-            try (DirectoryStream<Path> possibleLogos = java.nio.file.Files.newDirectoryStream(logosDir, imageName + ".*")) {
-                for (final Path next: possibleLogos) {
-                    String ext = Files.getFileExtension(next.getFileName().toString());
-                    if (IMAGE_EXTENSIONS.contains(ext.toLowerCase())) {
-                        return next;
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
+    protected abstract @Nullable Path findImagePath(String imageName, Path logosDir) throws IOException;
 
     /**
      * Get a ResourceHolder pointing to an existing image.
      */
-    public @Nullable ResourceHolder getImage(ServiceContext context, String imageName, Path logosDir) throws IOException {
-        Path path = findImagePath(imageName, logosDir);
-        if (path != null) {
-            return new FileResourceHolder(getBasePath(context), path);
-        } else {
-            return null;
-        }
-    }
+    public abstract @Nullable ResourceHolder getImage(ServiceContext context, String imageName,
+                                                      Path logosDir) throws IOException;
 
     /**
      * Like {@link #getImage(ServiceContext, String, Path)} but doesn't return null if the file doesn't exist and the caller can modify
      * the returned image.
      */
-    public ResourceHolder getWritableImage(ServiceContext context, String imageName, Path logosDir) {
-        final Path path = logosDir.resolve(imageName);
-        return new FileResourceHolder(getBasePath(context), path);
-    }
+    public abstract ResourceHolder getWritableImage(ServiceContext context, String imageName, Path logosDir);
 
     private Path getPath(final ServiceContext context, final String logos) {
         final Path base = getBasePath(context);
-        Path path = base.resolve("images").resolve(logos);
-        try {
-            java.nio.file.Files.createDirectories(path);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return path;
+        return base.resolve("images").resolve(logos);
     }
 
-    private Path getBasePath(final ServiceContext context) {
+    protected Path getBasePath(final ServiceContext context) {
         ServletContext servletContext = null;
         if (context.getServlet() != null) {
             servletContext = context.getServlet().getServletContext();
@@ -190,11 +145,7 @@ public class Resources {
      * The same as {@link #locateHarvesterLogosDir(ServiceContext)} but for Spring MVC
      */
     public Path locateHarvesterLogosDirSMVC(ApplicationContext applicationContext) throws IOException {
-        Path path = locateResourcesDir(null, applicationContext).resolve("images").resolve("harvesting");
-
-        java.nio.file.Files.createDirectories(path);
-
-        return path;
+        return locateResourcesDir(null, applicationContext).resolve("images").resolve("harvesting");
     }
 
     /**
@@ -208,7 +159,7 @@ public class Resources {
      * @return the root of data images. Subdirectories such as logos and harvesting likely contain
      * the actual images
      */
-    private Path locateResourcesDir(ServiceContext context) {
+    protected Path locateResourcesDir(ServiceContext context) {
         if (context.getServlet() != null) {
             return locateResourcesDir(context.getServlet().getServletContext(), context.getApplicationContext());
         }
@@ -274,29 +225,9 @@ public class Resources {
      * does not exist</li> <li> loadSince is >= file.lastModified<li> </ul> The defaultValue will be
      * returned
      */
-    Pair<byte[], Long> loadResource(Path resourcesDir,
+    abstract Pair<byte[], Long> loadResource(Path resourcesDir,
                                     ServletContext context, Path appPath, String filename,
-                                    byte[] defaultValue, long loadSince) throws IOException {
-        Path file = locateResource(resourcesDir, context, appPath, filename);
-
-        if (java.nio.file.Files.exists(file)) {
-
-            try {
-                final long lastModified = java.nio.file.Files.getLastModifiedTime(file).to(TimeUnit.MILLISECONDS);
-                if (loadSince < 0 || lastModified > loadSince) {
-                    ByteArrayOutputStream data = new ByteArrayOutputStream();
-                    java.nio.file.Files.copy(file, data);
-                    return Pair.read(data.toByteArray(), lastModified);
-                } else {
-                    Pair.read(defaultValue, loadSince);
-                }
-            } catch (IOException e) {
-                Log.warning(Geonet.RESOURCES, "Unable to find resource: "
-                    + filename);
-            }
-        }
-        return Pair.read(defaultValue, -1L);
-    }
+                                    byte[] defaultValue, long loadSince) throws IOException;
 
     /**
      * Load a data image. The "imagesDir" ( {@link #locateResourcesDir(javax.servlet.ServletContext,
@@ -325,78 +256,9 @@ public class Resources {
         return loadResource(null, context, appPath, filename, defaultValue, -1);
     }
 
-    private Path locateResource(@Nullable Path resourcesDir,
-                                ServletContext context, Path appPath, @Nonnull String filename)
-        throws IOException {
-        if (filename.charAt(0) == '/' || filename.charAt(0) == '\\') {
-            filename = filename.substring(1);
-        }
-
-        Path file;
-        if (resourcesDir != null) {
-            file = resourcesDir.resolve(filename);
-        } else {
-            file = IO.toPath(filename);
-        }
-
-        if (!java.nio.file.Files.exists(file)) {
-            Path webappCopy = null;
-            if (context != null) {
-                final String realPath = context.getRealPath(filename);
-                if (realPath != null) {
-                    webappCopy = IO.toPath(realPath);
-                }
-            }
-
-            if (webappCopy == null) {
-                webappCopy = appPath.resolve(filename);
-            }
-            if (java.nio.file.Files.exists(webappCopy)) {
-                IO.copyDirectoryOrFile(webappCopy, file, false);
-            }
-
-            final String fileName = file.getFileName().toString();
-            final int indexOfDot = fileName.lastIndexOf(".");
-            final String suffixless = Files.getNameWithoutExtension(fileName);
-            final String suffix = Files.getFileExtension(fileName);
-
-            if (!java.nio.file.Files.exists(file) && IMAGE_WRITE_SUFFIXES.contains(suffix.toLowerCase())) {
-                // find a different format and convert it to our desired format
-                DirectoryStream.Filter<Path> filter = new DirectoryStream.Filter<Path>() {
-
-                    @Override
-                    public boolean accept(Path entry) throws IOException {
-                        String name = entry.getFileName().toString();
-                        boolean startsWith = name.startsWith(suffixless);
-                        final String ext = Files.getFileExtension(name).toLowerCase();
-                        boolean canReadImage = name.length() > indexOfDot && IMAGE_READ_SUFFIXES.contains(ext);
-                        return startsWith && canReadImage;
-                    }
-                };
-                try (DirectoryStream<Path> paths = java.nio.file.Files.newDirectoryStream(file.getParent(), filter)) {
-                    Iterator<Path> iter = paths.iterator();
-                    if (iter.hasNext()) {
-                        Path path = iter.next();
-                        try (
-                            InputStream in = IO.newInputStream(path);
-                            OutputStream out = java.nio.file.Files.newOutputStream(file)
-                        ) {
-                            try {
-                                BufferedImage image = ImageIO.read(in);
-                                ImageIO.write(image, suffix, out);
-                            } catch (IOException e) {
-                                if (context != null) {
-                                    context.log("Unable to convert image from " + path + " to " + file, e);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return file;
-    }
+    protected abstract Path locateResource(@Nullable Path resourcesDir,
+                                           ServletContext context, Path appPath, @Nonnull String filename)
+        throws IOException;
 
     // ---------------------------------------------------------------------------
 
@@ -410,31 +272,30 @@ public class Resources {
      * @param destName the name of the final image (in logos directory) so just the name.
      */
     public void copyLogo(ServiceContext context, String icon,
-                                String destName) {
+                         String destName) {
         ServletContext servletContext = null;
         if (context.getServlet() != null) {
             servletContext = context.getServlet().getServletContext();
         }
         Path appDir = context.getAppPath();
 
-        Path des = null;
+        final Path logosDir = locateLogosDir(context);
         try {
-            Path src = locateResource(
-                locateResourcesDir(context), servletContext,
-                appDir, icon);
-
-            String extension = Files.getFileExtension(src.getFileName().toString());
-            des = locateLogosDir(context).resolve(destName + "." + extension);
-
-            if (java.nio.file.Files.exists(src)) {
-                java.nio.file.Files.copy(src, des, REPLACE_EXISTING, NOFOLLOW_LINKS);
+            Path srcPath = locateResource(locateResourcesDir(context), servletContext, appDir, icon);
+            String extension = Files.getFileExtension(srcPath.getFileName().toString());
+            try(ResourceHolder src = getImage(context, srcPath.getFileName().toString(), appDir);
+                ResourceHolder des = getWritableImage(context, destName + "." + extension,
+                                                      logosDir)) {
+                if (src != null) {
+                    java.nio.file.Files.copy(src.getPath(), des.getPath(), REPLACE_EXISTING, NOFOLLOW_LINKS);
+                }
             }
         } catch (IOException e) {
             // --- we ignore exceptions here, just log them
 
             context.warning("Cannot copy icon -> " + e.getMessage());
             context.warning(" (C) Source : " + icon);
-            context.warning(" (C) Destin : " + des);
+            context.warning(" (C) Destin : " + logosDir);
         }
     }
 
@@ -475,87 +336,37 @@ public class Resources {
         return result;
     }
 
-    private void addFiles(DirectoryStream.Filter<Path> iconFilter, Path webappDir, HashSet<Path> result) {
-
-        HashSet<Path> names = new HashSet<>();
-        try (DirectoryStream<Path> paths = java.nio.file.Files.newDirectoryStream(webappDir, iconFilter)) {
-            for (Path file : paths) {
-                if (!names.contains(file.getFileName())) {
-                    result.add(file);
-                    names.add(file.getFileName());
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    protected abstract void addFiles(DirectoryStream.Filter<Path> iconFilter, Path webappDir,
+                                     HashSet<Path> result);
 
     @Nullable
-    public FileTime getLastModified(Path resourcesDir, ServletContext context, Path appPath, String filename) throws IOException {
-        Path file = locateResource(resourcesDir, context, appPath, filename);
-        if (file != null && java.nio.file.Files.exists(file)) {
-            return java.nio.file.Files.getLastModifiedTime(file);
+    public abstract FileTime getLastModified(Path resourcesDir, ServletContext context, Path appPath,
+                                             String filename) throws IOException;
+
+    public abstract void deleteImageIfExists(final String image, final Path dir) throws IOException;
+
+    public void createImageFromReq(ServiceContext context, final Path logoDir, final String filename,
+                                   final XmlRequest req) throws IOException {
+        try(ResourceHolder file = getWritableImage(context, filename, logoDir)) {
+            try {
+                req.executeLarge(file.getPath());
+            } catch (IOException e) {
+                file.abort();
+                throw e;
+            }
+
         }
-        return null;
-    }
-
-    public void deleteImageIfExists(final String image, final Path dir) throws IOException {
-        Path icon = findImagePath(image, dir);
-        if (icon != null) {
-            java.nio.file.Files.deleteIfExists(icon);
-        }
-
-    }
-
-    public void createImageFromReq(final Path logoDir, final String filename, final XmlRequest req) throws IOException {
-        final Path logoFile = logoDir.resolve(filename);
-        try {
-            req.executeLarge(logoFile);
-        } catch (IOException e) {
-            IO.deleteFile(logoFile, false, Geonet.GEONETWORK);
-            throw e;
-        }
-    }
-
-    public void copyFile(final Path input, final Path logoDir, final String filename) throws IOException {
-        Path output = logoDir.resolve(filename);
-        java.nio.file.Files.copy(input, output);
-
     }
 
     public interface ResourceHolder extends Closeable {
         Path getPath();
         String getRelativePath();
         FileTime getLastModifiedTime() throws IOException;
+
+        /**
+         * In case of writable ResourceHolder, aborts the creation
+         */
+        void abort();
     }
 
-    private static class FileResourceHolder implements ResourceHolder {
-        private String relativePath;
-        private final Path path;
-
-        public FileResourceHolder(final Path basePath, final Path path) {
-            this.relativePath = basePath.relativize(path).toString().replace('\\', '/');
-            this.path = path;
-        }
-
-        @Override
-        public Path getPath() {
-            return path;
-        }
-
-        @Override
-        public String getRelativePath() {
-            return relativePath;
-        }
-
-        @Override
-        public FileTime getLastModifiedTime() throws IOException {
-            return java.nio.file.Files.getLastModifiedTime(path);
-        }
-
-        @Override
-        public void close() {
-            // nothing to do
-        }
-    }
 }
