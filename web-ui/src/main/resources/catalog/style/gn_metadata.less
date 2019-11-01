@@ -4,6 +4,35 @@
   width: 100%;
 }
 
+blockquote {
+  padding: 0px;
+  margin: 20px 0px 0px 0px;
+  font-size: 100%;
+  border: none;
+
+  h2 {
+    font-size: 16px !important;
+    margin: 0px !important;
+  }
+  div.col-md-3 {
+    color: #ebecec;
+    font-size: 75px;
+  }
+  div.col-md-9 {
+    padding: 20px 20px;
+    background-color: #ebecec;
+  }
+}
+
+header div.gn-abstract {
+  border: solid 1px #ebecec;
+  border-radius: 2px;
+  background-color: mix(white, #ebecec, 50%);
+  padding: .5em;
+  margin-bottom: 1em;
+}
+
+
 /* Angular view */
 .gn-md-view {
   table {
@@ -306,6 +335,9 @@
       }
     }
   }
+  .gn-related-title {
+    display: block;
+  }
   p {
     word-wrap: break-word;
   }
@@ -445,7 +477,7 @@ ul.container-list {
             }
           }
         }
-       
+
       }
     }
   }

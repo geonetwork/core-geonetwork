@@ -57,7 +57,7 @@
               }
             }
           }
-        } 
+        }
       }
     }
   }
@@ -77,6 +77,12 @@
   .gn-search-facet {
     padding-top: 55px;
     padding-bottom: 15px;
+  }
+  // modal dialog (wider for for multilingual)
+  @media (min-width: @screen-sm-min) {
+    .modal-dialog {
+      width: 760px;
+    }
   }
   form.gn-editor {
     // tabs above editor
@@ -355,59 +361,7 @@
         padding-right: 0;
       }
     }
-      
-  }
-  // map
-  .gn-drawmap-panel {
-    input[type="number"] {
-      margin: 0;
-      text-align: left;
-    }
-    .gn-editor-map {
-      padding: 15px;
-      position: relative;
-      margin-top: 30px;
-      [ngeo-map] {
-        border: 1px solid @input-border;
-        border-radius: @border-radius-base;
-      }
-    }
-    .coord {
-      position: absolute;
-      width: 200px;
-      z-index: 20;
-    }
-    .coord-north {
-      top: -0.25em;
-      left: 50%;
-      margin-left: -75px;
-    }
-    .coord-south {
-      bottom: -0.25em;
-      left: 50%;
-      margin-left: -75px;
-    }
-    .coord-east {
-      right: -15px;
-      top: 50%;
-      margin-top: -1.25em;
-    }
-    .coord-west {
-      left: -15px;
-      top: 50%;
-      margin-top: -1.25em;
-    }
-    @media (max-width: @screen-xs-max) {
-      .coord {
-        width: 150px;
-      }
-      .coord-east {
-        right: -30px;
-      }
-      .coord-west {
-        left: -30px;
-      }
-    }
+
   }
   // sidebar in the editor
   .gn-editor-tools-container {

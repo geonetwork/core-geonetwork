@@ -143,7 +143,10 @@ public class GeonetTestFixture {
         final GeonetworkDataDirectory dataDir = configureDataDir(test, webappDir, currentFs.dataDir);
         configureNewSchemaManager(dataDir, webappDir);
 
-        assertCorrectDataDir();
+        // TODO: I don't know why but this corrupts other tests that will fail depending on the run order:
+        //  assertCorrectDataDir();
+        // for example, running GeonetworkDataDirectoryMultiNodeServiceConfigOnlySystemDataDirSetTest, then
+        // GeonetworkDataDirectoryMultiNodeSystemPropertyOnlySystemDataDirSetTest with that line enabled, the second fails.
 
 //        if (test.resetLuceneIndex()) {
 //            _directoryFactory.resetIndex();

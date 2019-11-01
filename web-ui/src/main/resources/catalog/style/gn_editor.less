@@ -1,10 +1,9 @@
+@import "gn_bootstrap.less";
+
 @import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
 // import the css files as less files so they are included in the final output of wro4j
-@import (less) "../lib/style/ol.css";
-@import (less) "../lib/style/datetimepicker.css";
 @import (less) "../lib/jquery.ext/jquery.fileupload-ui.css";
 @import "gn.less";
-
 
 @import "../lib/style/bootstrap/less/glyphicons.less";
 
@@ -31,61 +30,6 @@ input[type=text], input[type=number], select {
 }
 
 
-.gn-drawmap-panel {
-  table  {
-    .form-group {
-      width: 150px;
-    }
-    .btn-group {
-      margin-left: 15px;
-    }
-  }
-  .form-group {
-    margin-left: 0px;
-    margin-right: 0px;
-  }
-  .col-left, .col-right {
-   width: 25%;
-  }
-  .col-middle {
-   width: 50%;
-  }
-  table {
-   width:100%
-  }
-  .map {
-   height: 300px;
-   width: 100%;
-  }
-
-  .gn-proj-select {
-    width: 250px;
-    vertical-align: top;
-  }
-  [data-gn-region-picker], [gn-region-picker] {
-    .fa {
-      position: absolute;
-      top: 11px;
-      z-index: 20;
-      right: 10px;
-      &.fa-spinner {
-        right: 25px;
-      }
-      &.fa-times-circle {
-        cursor: pointer;
-      }
-    }
-  }
-  input[type=number] {
-    margin-top: 15px;
-    margin-bottom: 15px;
-    text-align: center;
-  }
-  .dropdown-menu {
-    font-size: 13px;
-    text-align: left;
-  }
-}
 .gn-geopublisher-panel {
   .map {
    height: 300px;
@@ -520,6 +464,12 @@ form.gn-editor {
     .twitter-typeahead span.label {
       right: 2px;
       top: 2px;
+    }
+  }
+  .gn-validation-report {
+    .list-group-item {
+      margin-left: 10px;
+      margin-right: 10px;
     }
   }
 }
@@ -976,23 +926,29 @@ gn-draft-validation-widget {
   }
 }
 
-.gn-fixed-scroll {
-  position:fixed;
-  top: 70px;
-  margin-right: 15px;
-  z-index: 10;
-  .gn-btn-fix {
-    color: #333;
-    background-color: #e6e6e6;
-    border-color: #adadad;
-    outline: 0;
-    background-image: none;
-    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+.gn-editor-sidebar {
+  margin-top: 15px;
+  padding-bottom: 150px;
+}
+@media (min-width: @screen-md-min) {
+  .scrollbar-white() {
+    &::-webkit-scrollbar-track, &::-webkit-scrollbar-thumb {
+      -webkit-box-shadow: inset 0 0 6px #fff;
+    }
+    &::-webkit-scrollbar-thumb:window-inactive {
+      background: #fff;
+    }
+  }
+  .gn-editor-sidebar {
+    margin-top: 0;
+    position: fixed;
+    right: 0;
+    overflow: auto;
+    max-height: 100%;
+    padding-bottom: 110px;
+    .scrollbar-white();
   }
 }
-
-
 
 gn-bounding-polygon {
   label {
@@ -1006,3 +962,10 @@ gn-bounding-polygon {
     font-size: 0.9em;
   }
 }
+
+ // scrollspy
+  .gn-scroll-spy {
+    .btn.btn-round {
+      border-radius: 50% !important;
+    }
+  }

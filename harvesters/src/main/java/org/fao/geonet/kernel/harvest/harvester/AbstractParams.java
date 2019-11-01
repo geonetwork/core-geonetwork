@@ -57,7 +57,7 @@ import static org.quartz.JobBuilder.newJob;
 public abstract class AbstractParams {
     public static final String TRANSLATIONS = "translations";
     private static final long MAX_EVERY = Integer.MAX_VALUE;
-    
+
 
     public enum OverrideUuid {
         SKIP, OVERRIDE, RANDOM
@@ -85,25 +85,20 @@ public abstract class AbstractParams {
     private String ownerIdUser;
     private OverrideUuid overrideUuid;
 
+    /**
+     *  When more than one harvester harvest the same record, then record is usually rejected.
+     *  It can override existing, but the privileges are not preserved. This option
+     *  preserve privileges set in the different harvesters.
+     */
+    private boolean ifRecordExistAppendPrivileges;
+
 
     private List<Privileges> alPrivileges = new ArrayList<>();
     private List<String> alCategories = new ArrayList<>();
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //---------------------------------------------------------------------------
-
     public AbstractParams(DataManager dm) {
         this.dm = dm;
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
 
     private static HarvestValidationEnum readValidateFromParams(Element content) {
         String validationString = Util.getParam(content, "validate", HarvestValidationEnum.NOVALIDATION.toString());
@@ -188,6 +183,8 @@ public abstract class AbstractParams {
                 OverrideUuid.valueOf(
                         Util.getParam(opt, "overrideUuid",  OverrideUuid.SKIP.name())));
 
+        setIfRecordExistAppendPrivileges("true".equals(node.getChildTextTrim("ifRecordExistAppendPrivileges")));
+
         getTrigger();
 
         setImportXslt(Util.getParam(content, "importxslt", "none"));
@@ -244,7 +241,7 @@ public abstract class AbstractParams {
                 setOwnerIdUser(ownerIdUserE.getText());
             }
         }
-        
+
         Element ownerIdGroupE = node.getChild("ownerGroup");
         if (ownerIdGroupE != null) {
             Element idE = ownerIdGroupE.getChild("id");
@@ -265,6 +262,7 @@ public abstract class AbstractParams {
         setOverrideUuid(
                 OverrideUuid.valueOf(
                         Util.getParam(opt, "overrideUuid", getOverrideUuid().name())));
+        setIfRecordExistAppendPrivileges("true".equals(node.getChildTextTrim("ifRecordExistAppendPrivileges")));
 
         getTrigger();
 
@@ -296,11 +294,6 @@ public abstract class AbstractParams {
         return alCategories;
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Protected methods
-    //---
-    //---------------------------------------------------------------------------
 
     /**
      * @param copy
@@ -320,6 +313,7 @@ public abstract class AbstractParams {
         copy.setEvery(getEvery());
         copy.setOneRunOnly(isOneRunOnly());
         copy.setOverrideUuid(getOverrideUuid());
+        copy.setIfRecordExistAppendPrivileges(isIfRecordExistAppendPrivileges());
 
         copy.setImportXslt(getImportXslt());
         copy.setValidate(getValidate());
@@ -595,4 +589,11 @@ public abstract class AbstractParams {
         this.overrideUuid = overrideUuid;
     }
 
+    public boolean isIfRecordExistAppendPrivileges() {
+        return ifRecordExistAppendPrivileges;
+    }
+
+    public void setIfRecordExistAppendPrivileges(boolean ifRecordExistAppendPrivileges) {
+        this.ifRecordExistAppendPrivileges = ifRecordExistAppendPrivileges;
+    }
 }

@@ -82,7 +82,7 @@ public class Set {
     private static final String FNAME_PARAM = "fname=";
 
 
-    @RequestMapping(value = {"/{lang}/md.thumbnail.upload"}, produces = {
+    @RequestMapping(value = {"/{portal}/{lang}/md.thumbnail.upload"}, produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public Response serviceSpecificExec(HttpServletRequest request,

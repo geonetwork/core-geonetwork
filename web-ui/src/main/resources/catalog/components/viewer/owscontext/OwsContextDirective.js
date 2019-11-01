@@ -172,13 +172,20 @@
 
           var defaultMapProps = {
             title: '',
-            recordAbstract: ''
+            recordAbstract: '',
+            group: null,
+            publishToAll: false
           };
 
           scope.mapProps = angular.extend({}, defaultMapProps);
 
-          scope.saveInCatalog = function($event) {
+          scope.saveInCatalog = function($event, publishToAll) {
             var defer = $q.defer();
+            if (publishToAll) {
+              scope.mapProps.publishToAll = true;
+            } else {
+              scope.mapProps.publishToAll = false;
+            }
 
             getMapAsImage($event, .66).then(function(data) {
               scope.mapUuid = null;

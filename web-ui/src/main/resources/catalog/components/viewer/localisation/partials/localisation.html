@@ -1,11 +1,12 @@
-<div class="search-container" data-ng-class="{open : !collapsed}">
+<div class="search-container"
+     data-ng-class="{open : !collapsed, 'hidden': locToolDisabled}">
   <span class="fa fa-times-circle clear"
         data-ng-click="clearInput()"
         data-ng-hide="query==''"
         title="{{'clear'|translate}}"></span>
   <div class="input-group">
     <span class="input-group-addon">
-      <i class="fa fa-map-signs"/>&nbsp;
+      <i class="fa fa-map-signs"/>
     </span>
     <input data-ng-model="query"
            data-ng-model-options="modelOptions"

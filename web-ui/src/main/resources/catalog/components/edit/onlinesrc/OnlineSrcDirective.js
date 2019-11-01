@@ -343,12 +343,19 @@
                 // directive and the SearchFormController scope that
                 // is contained by the directive
                 scope.stateObj = {};
+                var projectedExtent = null;
+
 
                 function loadLayers() {
                   if (!angular.isArray(scope.map.getSize()) ||
                       scope.map.getSize().indexOf(0) >= 0) {
                     $timeout(function() {
                       scope.map.updateSize();
+                      if (projectedExtent != null) {
+                        scope.map.getView().fit(
+                          projectedExtent,
+                          scope.map.getSize());
+                      }
                     }, 300);
                   }
 
@@ -357,8 +364,30 @@
                     scope.map.removeLayer(layer);
                   });
 
-                  scope.map.addLayer(gnMap.getLayersFromConfig());
+                  var conf = gnMap.getMapConfig();
 
+                  scope.map.addLayer(new ol.layer.Tile({
+                    source:  new ol.source.OSM()
+                  }));
+                  // TODO: Add base layer from config
+                  // This does not work because createLayerFromProperties
+                  // return a promise and base layer is added twice.
+                  // if (conf.useOSM) {
+                  //   scope.map.addLayer(new ol.layer.Tile({
+                  //     source:  new ol.source.OSM(),
+                  //     type: 'base'
+                  //   }));
+                  // }
+                  // else {
+                  //   conf['map-editor'].layers.forEach(function(layerInfo) {
+                  //     gnMap.createLayerFromProperties(layerInfo, scope.map)
+                  //       .then(function(layer) {
+                  //         if (layer) {
+                  //           scope.map.addLayer(layer);
+                  //         }
+                  //       });
+                  //   });
+                  // }
                   // Add each WMS layer to the map
                   scope.layers = scope.gnCurrentEdit.layerConfig;
                   angular.forEach(scope.gnCurrentEdit.layerConfig,
@@ -374,12 +403,11 @@
                         }));
                       });
 
-                  var listenerExtent = scope.$watch(
-                		  'angular.isArray(scope.gnCurrentEdit.extent)', function() {
 
-                	  if (angular.isArray(scope.gnCurrentEdit.extent)) {
+                  var listenerExtent = scope.$watch(
+                    'angular.isArray(scope.gnCurrentEdit.extent)', function() {
+                        if (angular.isArray(scope.gnCurrentEdit.extent)) {
                           // FIXME : only first extent is took into account
-                          var projectedExtent;
                           var extent = scope.gnCurrentEdit.extent &&
                               scope.gnCurrentEdit.extent[0];
                           var proj = ol.proj.get(gnMap.getMapConfig().projection);
@@ -409,9 +437,11 @@
                 scope.generateThumbnail = function() {
                   //Added mandatory custom params here to avoid
                   //changing other printing services
-                  jsonSpec = angular.extend(scope.jsonSpec, {
-                    hasNoTitle: true
-                  });
+                  jsonSpec = angular.extend(
+                    scope.jsonSpec,
+                    {
+                      hasNoTitle: true
+                    });
 
                   return $http.put('../api/0.1/records/' +
                       scope.gnCurrentEdit.uuid +
@@ -480,7 +510,16 @@
                   return scope.config.types[0];
                 }
 
-                gnOnlinesrc.register('onlinesrc', function(linkToEdit) {
+                gnOnlinesrc.register('onlinesrc', function(linkToEditOrType) {
+                  var linkToEdit = undefined, linkType = undefined;
+                  if (angular.isDefined(linkToEditOrType)) {
+                    if (angular.isObject(linkToEditOrType)) {
+                        linkToEdit = linkToEditOrType;
+                      } else if (angular.isString(linkToEditOrType)) {
+                        linkType = linkToEditOrType;
+                      }
+                  }
+
                   scope.isEditing = angular.isDefined(linkToEdit);
                   scope.codelistFilter = scope.gnCurrentEdit && scope.gnCurrentEdit.codelistFilter;
 
@@ -488,9 +527,19 @@
                   scope.schema = gnCurrentEdit.schema;
 
                   var init = function() {
+                    function getType(linkType) {
+                      for (var i = 0; i < scope.config.types.length; i++) {
+                          var t = scope.config.types[i];
+                          if (t.label === linkType) {
+                              return t;
+                            }
+                        }
+                      return scope.config.types[0];
+                    };
+
                     var typeConfig = linkToEdit ?
                       getTypeConfig(linkToEdit) :
-                      scope.config.types[0];
+                      getType(linkType);
                     scope.config.multilingualFields = [];
                     angular.forEach(typeConfig.fields, function(f, k) {
                     if (scope.isMdMultilingual &&
@@ -594,9 +643,9 @@
                         selectedLayers: []
                       };
                     } else {
-                      scope.editingKey= null;
-                      scope.params.linkType= scope.config.types[0];
-                      scope.params.protocol= null;
+                      scope.editingKey = null;
+                      scope.params.linkType = typeConfig;
+                      scope.params.protocol = null;
                       scope.params.name= '';
                       scope.params.desc= '';
                       initMultilingualFields();
@@ -1424,7 +1473,22 @@
                    * Register a method on popup open to reset
                    * the search form and trigger a search.
                    */
-                  gnOnlinesrc.register('sibling', function() {
+                  gnOnlinesrc.register('sibling', function(config) {
+                    if (config && !angular.isObject(config)) {
+                      config = angular.fromJson(config);
+                    }
+
+                    scope.config = {
+                      associationTypeForced:
+                        angular.isDefined(config && config.associationType),
+                      associationType:
+                        (config && config.associationType) || null,
+                      initiativeTypeForced:
+                        angular.isDefined(config && config.initiativeType),
+                      initiativeType:
+                        (config && config.initiativeType) || null
+                    };
+
                     $(scope.popupid).modal('show');
 
                     scope.$broadcast('resetSearch');

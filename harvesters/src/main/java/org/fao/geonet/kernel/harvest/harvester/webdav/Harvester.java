@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -35,7 +34,6 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
@@ -245,6 +243,12 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
                 updateMetadata(rf, existingRecordInfo, true);
                 log.info("Overriding record with uuid " + uuid);
                 result.updatedMetadata++;
+
+                if (params.isIfRecordExistAppendPrivileges()) {
+                    addPrivileges(dataMan.getMetadataId(uuid),
+                        params.getPrivileges(), localGroups, context);
+                    result.privilegesAppendedOnExistingRecord++;
+                }
                 return;
             case RANDOM:
                 log.info("Generating random uuid for remote record with uuid " + uuid);
@@ -327,7 +331,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
         metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         metadataManager.flush();
 
@@ -482,12 +486,12 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
 
                 context.getBean(IMetadataManager.class).save(metadata);
             }
-            
+
             //--- the administrator could change privileges and categories using the
             //--- web interface so we have to re-set both
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
             repository.deleteAllByMetadataId(Integer.parseInt(record.id));
-            addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context);
+            addPrivileges(record.id, params.getPrivileges(), localGroups, context);
 
             metadata.getCategories().clear();
             addCategories(metadata, params.getCategories(), localCateg, context, null, true);

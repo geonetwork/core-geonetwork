@@ -37,6 +37,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 
+
 @Ignore
 public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMockedSingletons {
 
@@ -82,6 +83,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
     }
 
     @Test
+    @Ignore(value = "Doesn't run along the others in core")
     public void updateHasToTriggerIndexation() throws Exception {
         URL contactResource = AbstractCoreIntegrationTest.class.getResource("kernel/babarContact.xml");
         Element contactElement = Xml.loadStream(contactResource.openStream());

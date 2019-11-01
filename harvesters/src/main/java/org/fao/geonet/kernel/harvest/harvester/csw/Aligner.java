@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -53,12 +54,14 @@ import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
 
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -69,6 +72,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.GET;
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
+
 
 
 public class Aligner extends BaseAligner<CswParams> {
@@ -82,11 +86,7 @@ public class Aligner extends BaseAligner<CswParams> {
     private IMetadataUtils metadataUtils;
     private IMetadataManager metadataManager;
     private IMetadataIndexer metadataIndexer;
-    //--------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //--------------------------------------------------------------------------
+
     private HarvestResult result;
     private GetRecordByIdRequest request;
     private String processName;
@@ -108,6 +108,7 @@ public class Aligner extends BaseAligner<CswParams> {
         result.unretrievable = 0;
         result.uuidSkipped = 0;
         result.couldNotInsert = 0;
+        result.xpathFilterExcluded = 0;
 
         //--- setup get-record-by-id request
 
@@ -184,7 +185,6 @@ public class Aligner extends BaseAligner<CswParams> {
             }
 
             try {
-
                 String id = metadataUtils.getMetadataId(ri.uuid);
 
                 if (id == null) {
@@ -200,6 +200,11 @@ public class Aligner extends BaseAligner<CswParams> {
                             updateMetadata(ri, Integer.toString(metadataUtils.findOneByUuid(ri.uuid).getId()), true);
                             log.debug("Overriding record with uuid " + ri.uuid);
                             result.updatedMetadata++;
+
+                            if (params.isIfRecordExistAppendPrivileges()) {
+                                addPrivileges(id, params.getPrivileges(), localGroups, context);
+                                result.privilegesAppendedOnExistingRecord++;
+                            }
                             break;
                         case RANDOM:
                             log.debug("Generating random uuid for remote record with uuid " + ri.uuid);
@@ -215,6 +220,10 @@ public class Aligner extends BaseAligner<CswParams> {
                     //record exists and belongs to this harvester
                     updateMetadata(ri, id, false);
 
+                    if (params.isIfRecordExistAppendPrivileges()) {
+                        addPrivileges(id, params.getPrivileges(), localGroups, context);
+                        result.privilegesAppendedOnExistingRecord++;
+                    }
                 }
 
                 result.totalMetadata++;
@@ -269,12 +278,19 @@ public class Aligner extends BaseAligner<CswParams> {
         }
 
         String schema = dataMan.autodetectSchema(md, null);
-
         if (schema == null) {
             log.debug("  - Metadata skipped due to unknown schema. uuid:" + ri.uuid);
             result.unknownSchema++;
-
             return;
+        }
+
+        if (StringUtils.isNotEmpty(params.xpathFilter)) {
+            Object xpathResult = Xml.selectSingle(md, params.xpathFilter, new ArrayList<Namespace>(dataMan.getSchema(schema).getNamespaces()));
+            boolean match = xpathResult instanceof Boolean && ((Boolean) xpathResult).booleanValue();
+            if(!match) {
+                result.xpathFilterExcluded ++;
+                return;
+            }
         }
 
         log.debug("  - Adding metadata with remote uuid:" + ri.uuid + " schema:" + schema);
@@ -317,17 +333,12 @@ public class Aligner extends BaseAligner<CswParams> {
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         metadataIndexer.indexMetadata(id, true);
         result.addedMetadata++;
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Private methods : updateMetadata
-    //---
-    //--------------------------------------------------------------------------
     private void updateMetadata(RecordInfo ri, String id, Boolean force) throws Exception {
         String date = localUuids.getChangeDate(ri.uuid);
 
@@ -346,7 +357,6 @@ public class Aligner extends BaseAligner<CswParams> {
             }
         }
     }
-
     @Transactional(value = TxType.REQUIRES_NEW)
     private boolean updatingLocalMetadata(RecordInfo ri, String id, Boolean force) throws Exception {
         Element md = retrieveMetadata(ri.uuid);
@@ -381,7 +391,7 @@ public class Aligner extends BaseAligner<CswParams> {
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByMetadataId(Integer.parseInt(id));
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         metadata.getCategories().clear();
         addCategories(metadata, params.getCategories(), localCateg, context, null, true);
@@ -456,6 +466,10 @@ public class Aligner extends BaseAligner<CswParams> {
      * metadata may be slightly different depending on the author, but the resource is the same.
      * When harvesting, some users would like to have the capability to exclude "duplicate"
      * description of the same dataset.
+     * <p>
+     * The check is made searching the identifier field in the index using {@link
+     * org.fao.geonet.kernel.search.LuceneSearcher#getAllMetadataFromIndexFor(String, String,
+     * String, java.util.Set, boolean)}
      *
      * @param uuid     the metadata unique identifier
      * @param response the XML document to check

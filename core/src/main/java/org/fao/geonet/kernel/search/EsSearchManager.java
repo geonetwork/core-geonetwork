@@ -57,12 +57,14 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -90,7 +92,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.fao.geonet.kernel.search.IndexFields.SOURCE_CATALOGUE;
 
 
 public class EsSearchManager implements ISearchManager {
@@ -360,6 +361,9 @@ public class EsSearchManager implements ISearchManager {
         updateFieldsAsynch(id, updates);
     }
 
+    @Autowired
+    SourceRepository sourceRepository;
+
     @Override
     public void index(Path schemaDir, Element metadata, String id,
                       Map<String, Object> dbFields,
@@ -374,11 +378,15 @@ public class EsSearchManager implements ISearchManager {
         ObjectNode doc = documentToJson(docs);
 
         // ES does not allow a _source field
-        JsonNode source = doc.get("source");
-        if (source != null) {
-            String catalog = source.asText();
-            doc.remove("source");
-            doc.put(SOURCE_CATALOGUE, catalog);
+        String catalog = doc.get("source").asText();
+        doc.remove("source");
+        if (StringUtils.isNotEmpty(catalog)) {
+            doc.put("sourceCatalogue", catalog);
+            final Source source = sourceRepository.findOne(catalog);
+            if (source != null) {
+                source.getLabelTranslations()
+                    .forEach((key, value) -> doc.put("sourceCatalogueName_lang" + key, value));
+            }
         }
 //        doc.put("indexingDate", new Date());
 

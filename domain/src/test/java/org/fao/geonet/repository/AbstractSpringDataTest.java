@@ -23,12 +23,14 @@
 
 package org.fao.geonet.repository;
 
+import net.sf.ehcache.CacheManager;
 import org.fao.geonet.ApplicationContextHolder;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
@@ -62,6 +64,7 @@ import static org.junit.Assert.fail;
     AbstractSpringDataTest.CLASSPATH_CONFIG_SPRING_GEONETWORK_PARENT_XML,
     AbstractSpringDataTest.CLASSPATH_CONFIG_SPRING_GEONETWORK_XML,
     AbstractSpringDataTest.CLASSPATH_REPOSITORY_TEST_CONTEXT_XML})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Transactional(propagation = Propagation.REQUIRED)
 public abstract class AbstractSpringDataTest {
 
@@ -75,8 +78,11 @@ public abstract class AbstractSpringDataTest {
     private ConfigurableApplicationContext _appContext;
 
     @AfterClass
-    public static void shutdownTransactionlessTesting() {
+    public static void shutdown() {
         TransactionlessTesting.shutdown();
+        CacheManager.ALL_CACHE_MANAGERS.forEach(CacheManager::shutdown);
+        assertEquals(0, CacheManager.ALL_CACHE_MANAGERS.size());
+        ApplicationContextHolder.clear();
     }
 
     /**
@@ -153,8 +159,8 @@ public abstract class AbstractSpringDataTest {
 
     }
 
-    public static interface TestTask {
-        public void run() throws Exception;
+    public interface TestTask {
+        void run() throws Exception;
     }
 
     /**

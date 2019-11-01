@@ -444,15 +444,7 @@
     <!-- Loop on locales in order to preserve order.
         Keep main language on top.
         Translations having no locale are ignored. eg. when removing a lang. -->
-    <xsl:for-each select="$locales[@id = $mainLanguageId]">
-      <xsl:variable name="localId"
-                    select="@id"/>
-
-      <xsl:variable name="element"
-                    select="$freeText[*/@locale = concat('#', $localId)]"/>
-
-      <xsl:apply-templates select="$element"/>
-    </xsl:for-each>
+    <xsl:apply-templates select="$freeText[*/@locale = concat('#', $mainLanguageId)]"/>
 
     <xsl:for-each select="$locales[@id != $mainLanguageId]">
       <xsl:variable name="localId"
@@ -463,39 +455,6 @@
 
       <xsl:apply-templates select="$element"/>
     </xsl:for-each>
-  </xsl:template>
-
-  <!-- For multilingual elements. Check that the local
-  is defined in record. If not, remove the element. -->
-  <xsl:template match="gmd:textGroup">
-    <xsl:variable name="elementLocalId"
-                  select="replace(gmd:LocalisedCharacterString/@locale, '^#', '')"/>
-    <xsl:choose>
-      <xsl:when test="count($locales[@id = $elementLocalId]) > 0">
-        <gmd:textGroup>
-          <gmd:LocalisedCharacterString>
-            <xsl:variable name="currentLocale"
-                          select="replace(gmd:LocalisedCharacterString/@locale, '^#', '')"/>
-            <xsl:variable name="ptLocale"
-                          select="$locales[@id = string($currentLocale)]"/>
-            <xsl:variable name="id"
-                          select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue[. != '']))"/>
-            <xsl:apply-templates select="@*"/>
-            <xsl:if test="$id != ''">
-              <xsl:attribute name="locale">
-                <xsl:value-of select="concat('#',$id)"/>
-              </xsl:attribute>
-            </xsl:if>
-
-            <xsl:apply-templates select="gmd:LocalisedCharacterString/text()"/>
-          </gmd:LocalisedCharacterString>
-        </gmd:textGroup>
-      </xsl:when>
-      <xsl:otherwise>
-        <!--<xsl:message>Removing <xsl:copy-of select="."/>.
-        This element was removed because not declared in record locales.</xsl:message>-->
-      </xsl:otherwise>
-    </xsl:choose>
   </xsl:template>
 
   <!-- ================================================================= -->
@@ -529,64 +488,6 @@
       </xsl:attribute>
     </xsl:copy>
   </xsl:template>
-  <!-- ================================================================= -->
-  <!-- online resources: download -->
-  <!-- ================================================================= -->
-
-  <xsl:template
-    match="gmd:CI_OnlineResource[matches(gmd:protocol/gco:CharacterString,'^WWW:DOWNLOAD-.*-http--download.*') and gmd:name]">
-    <xsl:variable name="fname" select="gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType"/>
-    <xsl:variable name="mimeType">
-      <xsl:call-template name="getMimeTypeFile">
-        <xsl:with-param name="datadir" select="/root/env/datadir"/>
-        <xsl:with-param name="fname" select="$fname"/>
-      </xsl:call-template>
-    </xsl:variable>
-
-    <xsl:copy>
-      <xsl:copy-of select="@*"/>
-      <gmd:linkage>
-        <gmd:URL>
-          <xsl:value-of select="gmd:linkage/gmd:URL"/>
-        </gmd:URL>
-      </gmd:linkage>
-      <xsl:copy-of select="gmd:protocol"/>
-      <xsl:copy-of select="gmd:applicationProfile"/>
-      <gmd:name>
-        <gmx:MimeFileType type="{$mimeType}">
-          <xsl:value-of select="$fname"/>
-        </gmx:MimeFileType>
-      </gmd:name>
-      <xsl:copy-of select="gmd:description"/>
-      <xsl:copy-of select="gmd:function"/>
-    </xsl:copy>
-  </xsl:template>
-
-  <!-- ================================================================= -->
-  <!-- Add mime type for downloadable online resources -->
-  <!-- ================================================================= -->
-
-  <xsl:template
-    match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'WWW:LINK-') and contains(gmd:protocol/gco:CharacterString,'http--download')]">
-    <xsl:variable name="mimeType">
-      <xsl:call-template name="getMimeTypeUrl">
-        <xsl:with-param name="linkage" select="gmd:linkage/gmd:URL"/>
-      </xsl:call-template>
-    </xsl:variable>
-
-    <xsl:copy>
-      <xsl:copy-of select="@*"/>
-      <xsl:copy-of select="gmd:linkage"/>
-      <xsl:copy-of select="gmd:protocol"/>
-      <xsl:copy-of select="gmd:applicationProfile"/>
-      <gmd:name>
-        <gmx:MimeFileType type="{$mimeType}"/>
-      </gmd:name>
-      <xsl:copy-of select="gmd:description"/>
-      <xsl:copy-of select="gmd:function"/>
-    </xsl:copy>
-  </xsl:template>
-
 
   <!-- ================================================================= -->
 
@@ -659,8 +560,7 @@
     <xsl:attribute name="xlink:href"
                    select="concat(
                     $urlBase,
-                    '?lang=', $mainLanguage, ',',
-                    string-join($locales//gmd:LanguageCode/@codeListValue[. != $mainLanguage], ','),
+                    '?lang=', string-join(($mainLanguage, $locales//gmd:LanguageCode/@codeListValue[. != $mainLanguage]), ','),
                     '&amp;',
                     string-join($listOfAllParameters/param/@value, '&amp;'))"/>
   </xsl:template>

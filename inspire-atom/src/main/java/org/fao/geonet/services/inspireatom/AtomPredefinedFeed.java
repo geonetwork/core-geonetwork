@@ -77,6 +77,7 @@ import java.util.Map;
  */
 
 @Controller
+@RequestMapping(value = "/{portal}")
 public class AtomPredefinedFeed {
 
     /**

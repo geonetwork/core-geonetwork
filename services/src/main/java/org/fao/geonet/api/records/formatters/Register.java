@@ -75,7 +75,7 @@ import static org.fao.geonet.api.records.formatters.FormatterConstants.VIEW_XSL_
 public class Register extends AbstractFormatService {
 
 
-    @RequestMapping(value = {"/{lang}/md.formatter.register"}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = {"/{portal}/{lang}/md.formatter.register"}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public JSONObject serviceSpecificExec(HttpServletRequest request,
                                           @PathVariable String lang,

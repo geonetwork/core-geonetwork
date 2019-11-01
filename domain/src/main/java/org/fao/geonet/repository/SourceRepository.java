@@ -31,6 +31,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Data Access object for accessing {@link Source} entities.
@@ -65,6 +66,13 @@ public interface SourceRepository extends GeonetRepository<Source, String>, JpaS
 
     public
     @Nullable
-    List<Source> findByType(@Nonnull SourceType type, Sort sort);
+    List<Source> findByType(@Nonnull SourceType sourceType, Sort sort);
 
+    public
+    @Nullable
+    List<Source> findByGroupOwner(@Nonnull int groupOwner);
+
+    public
+    @Nullable
+    List<Source> findByGroupOwnerIn(Set<Integer> groupOwner);
 }

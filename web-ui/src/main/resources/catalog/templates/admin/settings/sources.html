@@ -11,9 +11,18 @@
                    placeholder="{{'filter' | translate}}"/>
             <a class="list-group-item"
                data-ng-class="s.uuid === source.uuid ? 'active' : ''"
+               title="{{::('source-' + s.type) | translate}}"
                data-ng-click="selectSource(s)"
                data-ng-repeat="s in sources | filter:sourcesSearch | orderBy:'name'">
-              {{s.name}} ({{('source-' + s.type) | translate}})
+              <i class="fa fa-fw"
+                 data-ng-class="{'fa-home': s.type === 'portal',
+                 'fa-folder': s.type === 'subportal',
+                 'fa-cloud': s.type === 'externalportal',
+                 'fa-cloud-download': s.type === 'harvester'}"></i>
+              {{::s.name}}
+              <img class="gn-source-logo"
+                   data-ng-src="{{'../../images/' + (s.type === 'subportal' ? 'harvesting/' +  s.logo : 'logos/' +  s.uuid + '.png')}}"/>
+
             </a>
           </ul>
         </div>
@@ -32,19 +41,19 @@
     </div>
   </div>
 
-  <div class="col-lg-8" data-ng-hide="!source">
+  <div class="col-lg-8" data-ng-if="source">
     <div class="panel panel-default">
       <div class="panel-heading">
         {{source.name}} ({{('source-' + source.type) | translate}})
         <div class="btn-toolbar">
           <button type="button" class="btn btn-primary pull-right"
-                  data-ng-disabled="!gnSourceForm.$valid"
+                  data-ng-disabled="source.type === 'subportal' && !gnSourceForm.$valid"
                   data-ng-click="updateSource()">
             <i class="fa fa-floppy-o"></i>&nbsp;
             <span data-translate="">save</span>
           </button>
           <button type="button" class="btn btn-danger pull-right"
-                  data-ng-disabled="source.type !== 'subportal' && !user.isAdministrator()"
+                  data-ng-disabled="source.type !== 'subportal' || (source.type === 'subportal' && !user.isAdministrator())"
                   data-gn-click-and-spin="removeSource()">
             <i class="fa fa-times"></i>&nbsp;
             <span data-translate="">removeSource</span>
@@ -58,6 +67,7 @@
             <label data-translate="" class="gn-required">sourceUuid</label>
             <input type="text"
                    class="form-control"
+                   data-ng-disabled="::!user.isAdministrator()"
                    data-ng-pattern="/^[A-Za-z0-9\-_]+$/"
                    data-ng-model="source.uuid"/>
             <p class="help-block" data-translate="">sourceUuid-help</p>
@@ -140,6 +150,20 @@
                   data-ng-options="c.id as c.id for (key, c) in uiConfigurations | orderBy: 'id'"
                   data-ng-model="source.uiConfig"></select>
           <p class="help-block" data-translate="">sourceUiConfig-help</p>
+
+
+          <div data-ng-show="groups.length">
+            <label class="control-label" data-translate="">subPortalGroupOwner</label>
+            <div data-groups-combo=""
+                 data-owner-group="source.groupOwner"
+                 data-set-default-value="false"
+                 data-optional="{{::$parent.user.isAdministrator()}}"
+                 lang="lang"
+                 groups="groups"
+                 data-exclude-special-groups="true" />
+
+            <p class="help-block" data-translate="">subPortalGroupOwnerHelp</p>
+          </div>
         </div>
 
         <table class="table table-striped">

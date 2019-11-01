@@ -27,6 +27,7 @@
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 version="2.0">
 
@@ -53,9 +54,18 @@
         /gfc:FC_FeatureType/gfc:definition/gco:CharacterString"/>
       </resourceAbstract>
 
+      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+      <!-- === Version identifier === -->
+      <versionIdentifier>
+        <xsl:value-of select="string(/gfc:FC_FeatureCatalogue/gmx:versionNumber/gco:CharacterString|
+        /gfc:FC_FeatureCatalogue/gfc:versionNumber/gco:CharacterString)"/>
+      </versionIdentifier>
+
+      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+      <!-- === Revision date === -->
       <xsl:for-each select="/gfc:FC_FeatureCatalogue/gmx:versionDate/gco:Date|
         /gfc:FC_FeatureCatalogue/gfc:versionDate/gco:Date">
-        <Field name="revisionDate" string="{string(.)}" store="true" index="true"/>
+        <revisionDate><xsl:value-of select="string(.)"/></revisionDate>
       </xsl:for-each>
 
 <!--      <xsl:apply-templates select="/gfc:FC_FeatureCatalogue/@uuid|/gfc:FC_FeatureType/@uuid">
@@ -111,14 +121,15 @@
       <Field name="featureTypes" index="true" store="true"
              string="{$jsonFeatureTypes}"/>-->
 
-      <xsl:for-each
-        select="/gfc:FC_FeatureCatalogue/gfc:producer/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString">
-        <xsl:variable name="role" select="../../gmd:role/*/@codeListValue"/>
-        <xsl:variable name="logo" select="descendant::*/gmx:FileName/@src"/>
 
-        <Field name="orgName" string="{string(.)}" store="false" index="true"/>
-        <Field name="responsibleParty" string="{concat($role, '|metadata|', ., '|', $logo)}"
-               store="true" index="false"/>
+      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      <xsl:for-each select="/gfc:FC_FeatureCatalogue/gfc:producer">
+        <xsl:apply-templates mode="index-contact"
+                             select="gmd:CI_ResponsibleParty|*[@gco:isoType = 'gmd:CI_ResponsibleParty']">
+          <xsl:with-param name="type" select="'resource'"/>
+          <xsl:with-param name="fieldPrefix" select="'responsibleParty'"/>
+          <xsl:with-param name="position" select="position()"/>
+        </xsl:apply-templates>
       </xsl:for-each>
 
       <Field name="any" store="false" index="true">
@@ -134,4 +145,5 @@
 
     </doc>
   </xsl:template>
+
 </xsl:stylesheet>

@@ -85,17 +85,21 @@
   var unmarshaller100 = context100.createUnmarshaller();
   var unmarshaller110 = context110.createUnmarshaller();
   var unmarshaller20 = context20.createUnmarshaller();
+  var cachedGetCapabilitiesUrls = {};
+  // var timeout = -1;
+  var timeout = 60 * 1000;
 
   module.provider('gnOwsCapabilities', function() {
     this.$get = ['$http', '$q', '$translate',
       'gnUrlUtils', 'gnGlobalSettings',
       function($http, $q, $translate,
                gnUrlUtils, gnGlobalSettings) {
-
-        var displayFileContent = function(data, withGroupLayer) {
-          var parser = new ol.format.WMSCapabilities();
-          var result = parser.read(data);
-
+        var displayFileContent = function(data, withGroupLayer, getCapabilitiesUrl) {
+          if (!cachedGetCapabilitiesUrls.hasOwnProperty(getCapabilitiesUrl)) {
+            var parser = new ol.format.WMSCapabilities();
+            cachedGetCapabilitiesUrls[getCapabilitiesUrl] = parser.read(data);
+          }
+          var result = cachedGetCapabilitiesUrls[getCapabilitiesUrl];
           var layers = [];
           var url = result.Capability.Request.GetMap.
               DCPType[0].HTTP.Get.OnlineResource;
@@ -275,11 +279,11 @@
               if (true) {
                 $http.get(url, {
                   cache: true,
-                  timeout: 5000
+                  timeout: timeout
                 })
                     .success(function(data) {
                       try {
-                        defer.resolve(displayFileContent(data, withGroupLayer));
+                        defer.resolve(displayFileContent(data, withGroupLayer, url));
                       } catch (e) {
                         defer.reject(
                         $translate.instant('failedToParseCapabilities'));
@@ -311,7 +315,7 @@
 
                 $http.get(url, {
                   cache: true,
-                  timeout: 5000
+                  timeout: timeout
                 })
                     .success(function(data, status, headers, config) {
                       if (data) {
@@ -343,7 +347,7 @@
               if (gnUrlUtils.isValid(url)) {
                 $http.get(url, {
                   cache: true,
-                  timeout: 5000
+                  timeout: timeout
                 })
                     .success(function(data, status, headers, config) {
                       var xfsCap = parseWFSCapabilities(data);
@@ -443,7 +447,7 @@
             return extent;
           },
 
-          
+
           getLayerInfoFromCap: function(layerName, capObj, uuid) {
             var needles = [];
             var layers = capObj.layers || capObj.Layer;
@@ -463,7 +467,7 @@
                 if (capObj.Request) {
                   layers[i].capRequest = capObj.Request;
                 }
-                
+
                 //check layername
                 var lId = layers[i].Identifier;
                 var capName = layers[i].Name ||
@@ -508,7 +512,7 @@
                 }
               }
             }
-            
+
             //FIXME: remove duplicates
             if (needles.length >= layerList.length) {
               if (capObj.version) {

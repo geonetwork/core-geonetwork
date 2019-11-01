@@ -39,46 +39,51 @@
     this.generateEsRequest = function(p, searchState, searchConfigId) {
       var params = {};
       var luceneQueryString = gnEsLuceneQueryParser.facetsToLuceneQuery(searchState.filters);
-      // var query = {
-      //   "function_score": {
-      //     "query": {
-      //       bool: {
-      //         must: []
-      //       }
-      //     },
-      //     // Score experiments:
-      //     // a)Score down old records
-      //     // "gauss": {
-      //     //   "dateStamp": {
-      //     //     "scale":  "200d"
-      //     //   }
-      //     // }
-      //     // b)Promote grids!
-      //     // "boost": "5",
-      //     // "functions": [
-      //     //   {
-      //     //     "filter": { "match": { "codelist_spatialRepresentationType": "vector" } },
-      //     //     "random_score": {},
-      //     //     "weight": 23
-      //     //   },
-      //     //   {
-      //     //     "filter": { "match": { "codelist_spatialRepresentationType": "grid" } },
-      //     //     "weight": 42
-      //     //   }
-      //     // ],
-      //     // "max_boost": 42,
-      //     // "score_mode": "max",
-      //     // "boost_mode": "multiply",
-      //     // "min_score" : 42
-      //   }
-      // };
-      // var queryHook = query.function_score.query.bool.must;
       var query = {
-        bool: {
-          must: []
+        "function_score": {
+          "query": {
+            bool: {
+              must: []
+            }
+          },
+          // Score experiments:
+          // a)Score down old records
+          // "gauss": {
+          //   "dateStamp": {
+          //     "scale":  "200d"
+          //   }
+          // }
+          // b)Promote grids!
+          // "boost": "5",
+          // "functions": [
+          //   {
+          //     "filter": { "match": { "codelist_spatialRepresentationType": "vector" } },
+          //     "random_score": {},
+          //     "weight": 23
+          //   },
+          //   {
+          //     "filter": { "match": { "codelist_spatialRepresentationType": "grid" } },
+          //     "weight": 42
+          //   }
+          // ],
+          // "max_boost": 42,
+          // "score_mode": "max",
+          // "boost_mode": "multiply",
+          // "min_score" : 42
+          "script_score" : {
+            "script" : {
+              "source": "Math.log(2 + doc['rating'].value)"
+            }
+          }
         }
       };
-      var queryHook = query.bool.must;
+      var queryHook = query.function_score.query.bool.must;
+      // var query = {
+      //   bool: {
+      //     must: []
+      //   }
+      // };
+      // var queryHook = query.bool.must;
 
       var query_string;
       var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',

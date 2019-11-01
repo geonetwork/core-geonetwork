@@ -58,7 +58,6 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -152,8 +151,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
     }
 
-    //--------------------------------------------------------------------------
-
     public HarvestResult align(SortedSet<RecordInfo> records, List<HarvestError> errors) throws Exception {
         log.info("Start of alignment for : " + params.getName());
 
@@ -192,9 +189,8 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 result.unchangedMetadata++;
             }
         }
-        //-----------------------------------------------------------------------
         //--- insert/update new metadata
-// Load preferred schema and set to iso19139 by default
+        // Load preferred schema and set to iso19139 by default
         preferredSchema = context.getBean(ServiceConfig.class).getMandatoryValue("preferredSchema");
         if (preferredSchema == null) {
             preferredSchema = "iso19139";
@@ -223,7 +219,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
                     // look up value of localrating/enable
                     SettingManager settingManager = context.getBean(SettingManager.class);
                     String localRating = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
-                    final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
                     if (id == null) {
                         //record doesn't exist (so it doesn't belong to this harvester)
@@ -232,15 +227,21 @@ public class Aligner extends BaseAligner<GeonetParams> {
                     } else if (localUuids.getID(ri.uuid) == null) {
                         //record doesn't belong to this harvester but exists
                         result.datasetUuidExist++;
+
                         switch (params.getOverrideUuid()) {
                             case OVERRIDE:
                                 updateMetadata(ri,
-                                    Integer.toString(metadataRepository.findOneByUuid(ri.uuid).getId()),
+                                    id,
                                     localRating.equals(RatingsSetting.BASIC),
                                     params.useChangeDateForUpdate(),
                                     localUuids.getChangeDate(ri.uuid), true);
                                 log.info("Overriding record with uuid " + ri.uuid);
                                 result.updatedMetadata++;
+
+                                if (params.isIfRecordExistAppendPrivileges()) {
+                                    addPrivileges(id, params.getPrivileges(), localGroups, context);
+                                    result.privilegesAppendedOnExistingRecord++;
+                                }
                                 break;
                             case RANDOM:
                                 log.info("Generating random uuid for remote record with uuid " + ri.uuid);
@@ -259,6 +260,11 @@ public class Aligner extends BaseAligner<GeonetParams> {
                             localRating.equals(RatingsSetting.BASIC),
                             params.useChangeDateForUpdate(),
                             localUuids.getChangeDate(ri.uuid), false);
+
+                        if (params.isIfRecordExistAppendPrivileges()) {
+                            addPrivileges(id, params.getPrivileges(), localGroups, context);
+                            result.privilegesAppendedOnExistingRecord++;
+                        }
                     }
 
                 }
@@ -276,17 +282,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
         return result;
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //--------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Private methods : addMetadata
-    //---
-    //--------------------------------------------------------------------------
     private Element extractValidMetadataForImport(DirectoryStream<Path> files, Element info) throws IOException, JDOMException {
         Element metadataValidForImport;
         final String finalPreferredSchema = preferredSchema;
@@ -376,8 +371,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
         return metadataValidForImport;
     }
-
-    //--------------------------------------------------------------------------
 
     private void addMetadata(final RecordInfo ri, final boolean localRating, String uuid) throws Exception {
         final String id[] = {null};
@@ -482,12 +475,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //--------------------------------------------------------------------------
-
     private String addMetadata(RecordInfo ri, Element md, Element info, boolean localRating, String uuid) throws Exception {
         Element general = info.getChild("general");
 
@@ -512,7 +499,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
 
         if (!params.xslfilter.equals("")) {
-            md = HarvesterUtil.processMetadata(dataMan.getSchema(ri.schema),
+            md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
                 md, processName, processParams);
         }
         // insert metadata
@@ -569,7 +556,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
             }
         }
         if (((ArrayList<Group>) params.getGroupCopyPolicy()).size() == 0) {
-            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+            addPrivileges(id, params.getPrivileges(), localGroups, context);
         } else {
             addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
         }
@@ -850,11 +837,9 @@ public class Aligner extends BaseAligner<GeonetParams> {
             }
         }
 
-        OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-        repository.deleteAllByMetadataId(Integer.parseInt(id));
         if (((ArrayList<Group>) params.getGroupCopyPolicy()).size() == 0) {
-            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
-        } else {
+            addPrivileges(id, params.getPrivileges(), localGroups, context);
+        } else if (info != null){
             addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
         }
 

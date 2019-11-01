@@ -1,4 +1,5 @@
-<form data-ng-keypress="updatingHarvester()">
+<form name="harvesterForm"
+      data-ng-keypress="updatingHarvester()">
   <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
   <div class="row">
@@ -84,7 +85,7 @@
         <label id="gn-harvest-settings-ogc-advanced-records-template-label" class="control-label">
           <span data-translate="">ogcwxs-datasetTemplateUuid</span>
         </label>
-        <select id="gn-harvest-settings-ogc-advanced-records-template-list" 
+        <select id="gn-harvest-settings-ogc-advanced-records-template-list"
                 data-ng-show="harvesterSelected.site.ogctype.match('^(WMS|WFS|WCS|SOS|WPS)') != null"
                 class="form-control"
                 data-ng-model="harvesterSelected.options.datasetTemplateUuid"
@@ -114,7 +115,7 @@
       </div>
 
       <div id="gn-harvest-settings-ogc-advanced-records-category-row"
-           data-gn-category="harvesterSelected.options.datasetCategory" 
+           data-gn-category="harvesterSelected.options.datasetCategory"
            data-lang="{{lang}}"
            data-label="ogcwxs-datasetCategory"/>
     </div>

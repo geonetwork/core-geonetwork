@@ -30,7 +30,7 @@
                 &centerdot;
                 <small class="text-muted gn-status"
                       data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
-                      data-ng-if="md.mdStatus<50">{{('status-' + md.mdStatus) | translate}}</small>
+                      data-ng-if="md.mdStatus < 50 && isMdWorkflowEnable">{{('status-' + md.mdStatus) | translate}}</small>
                 
                 <small class="text-muted gn-status"
                       data-ng-class="text-warning"
@@ -38,10 +38,6 @@
                       data-ng-translate="">{{'status-no-status' | translate}}</small>
               </div> 
             </div>
-
-            <span class="pull-right text-muted"
-                  data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
-                  data-ng-if="md.mdStatus<50 && isMdWorkflowEnable">{{('status-' + md.mdStatus) | translate}}</span>
           </div>
           <gn-draft-validation-widget data-ng-if="md.draft == 'e'" metadata="md"></gn-draft-validation-widget>
         </div>

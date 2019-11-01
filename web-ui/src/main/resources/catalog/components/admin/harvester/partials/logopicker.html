@@ -8,7 +8,13 @@
   <span class="caret"/>
 </button>
 <ul class="dropdown-menu" role="menu">
-  <li data-ng-repeat="i in icons" title="{{i}}">
+  <li>
+    <input class="form-control"
+           data-ng-show="icons.length > 10"
+           data-ng-model="search.$" autofocus=""
+           placeholder="{{'filter' | translate}}"/>
+  </li>
+  <li data-ng-repeat="i in icons | filter:search  | orderBy: i" title="{{i}}">
     <a data-ng-click="setIcon(i)">
       <img class="gn-logo harvester-logo" data-ng-src="../../images/harvesting/{{i}}" />
     </a>

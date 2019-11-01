@@ -41,7 +41,6 @@ import org.openrdf.sesame.query.MalformedQueryException;
 import org.openrdf.sesame.query.QueryEvaluationException;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -125,6 +124,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
 
     @Test
     public void testAddElementKeywordBean() throws Exception {
+        writableThesaurus.clear();
         String label = "Hello";
         String note = "note";
         String code = "http://thesaurus.test#0";

@@ -44,7 +44,6 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
@@ -367,7 +366,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         metadataManager.flush();
 
@@ -498,7 +497,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
             repository.deleteAllByMetadataId(Integer.parseInt(id));
-            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+            addPrivileges(id, params.getPrivileges(), localGroups, context);
 
             metadata.getCategories().clear();
             addCategories(metadata, params.getCategories(), localCateg, context, null, true);

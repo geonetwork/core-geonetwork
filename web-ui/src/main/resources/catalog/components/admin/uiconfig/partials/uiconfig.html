@@ -17,6 +17,7 @@
       {{('ui-' + m + '-help') | translate}} </p>
 
     <div class="col-sm-12 form-group"
+         data-ng-if="mCfg.enabled === undefined || mCfg.enabled === true"
          data-ng-repeat="(key, value) in mCfg"
          data-ng-switch="key">
 

@@ -66,15 +66,9 @@
               .success(function(data) {
                 scope.icons = data[0];
               });
-          // $http.get('admin.usergroups.list@json?id=' + 1)
-          //          .success(function(data) {
           $http.get('info?_content_type=json&type=languages', {cache: true})
               .success(function(data) {
                 scope.languages = data.language;
-              });
-          $http.get('admin.group.list@json', {cache: true})
-              .success(function(data) {
-                scope.groups = data !== 'null' ? data : null;
               });
         }
       };
@@ -265,7 +259,7 @@
             }
           };
         }]);
-  
+
   /**
    * Extra fields common for all harvesters
    */

@@ -30,6 +30,7 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.persistence.criteria.*;
 
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * Specifications for querying {@link UserRepository}.
@@ -74,6 +75,14 @@ public final class UserSpecs {
         };
     }
 
+    public static Specification<User> hasEmail(final String email) {
+        return new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return cb.isMember(email, root.get(User_.emailAddresses));
+            }
+        };
+    }
 
     public static Specification<User> hasNullAuthType() {
         return new Specification<User>() {

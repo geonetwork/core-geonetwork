@@ -48,12 +48,9 @@
           gnGridRelatedList.types = types;
 
           scope.$watch('records', function(mds) {
-            var uuids = mds.map(function(md) {
-              return md.uuid;
-            });
-            if (uuids.length) {
+            if (mds.length) {
               gnGridRelatedList.promise =
-                  gnRelatedService.getMdsRelated(uuids, types).then(
+                  gnRelatedService.getMdsRelated(mds, types).then(
                   function(response) {
                     gnGridRelatedList.list = response.data;
                   });

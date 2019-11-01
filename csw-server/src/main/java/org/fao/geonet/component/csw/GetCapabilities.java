@@ -29,6 +29,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -37,6 +38,7 @@ import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.csw.common.exceptions.VersionNegotiationFailedEx;
 import org.fao.geonet.domain.Address;
 import org.fao.geonet.domain.Language;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
@@ -49,6 +51,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.CswCapabilitiesInfo;
 import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
 import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -71,12 +74,6 @@ import static org.fao.geonet.kernel.setting.SettingManager.isPortRequired;
  */
 @Component(CatalogService.BEAN_PREFIX + GetCapabilities.NAME)
 public class GetCapabilities extends AbstractOperation implements CatalogService {
-    //---------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //---------------------------------------------------------------------------
-
     static final String NAME = "GetCapabilities";
     @Autowired
     private CatalogConfiguration _catalogConfig;
@@ -84,19 +81,15 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
     private FieldMapper _fieldMapper;
     @Autowired
     private SchemaManager _schemaManager;
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
+    @Autowired
+    private NodeInfo nodeinfo;
+    @Autowired
+    private SourceRepository sourceRepository;
 
     public String getName() {
         return NAME;
     }
 
-    /**
-     * TODO javadoc.
-     */
     public Element execute(Element request, ServiceContext context) throws CatalogException {
 
         checkService(request);
@@ -264,15 +257,6 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         return null;
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //---------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     */
     private void checkAcceptVersions(Element request) throws CatalogException {
         Element versions = request.getChild("AcceptVersions", Csw.NAMESPACE_OWS);
 
@@ -335,9 +319,6 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
     }
 
-    /**
-     * TODO javadoc.
-     */
     private void substitute(ServiceContext context, Element capab, CswCapabilitiesInfo cswCapabilitiesInfo, User contact, String langId) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
@@ -392,8 +373,17 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             vars.put("$HOUROFSERVICE", "");
             vars.put("$CONTACT_INSTRUCTION", "");
         }
-
-        vars.put("$TITLE", cswCapabilitiesInfo.getTitle());
+        boolean isTitleDefined = false;
+        if (!NodeInfo.DEFAULT_NODE.equals(nodeinfo.getId())) {
+            final Source source = sourceRepository.findOne(nodeinfo.getId());
+            if (source != null) {
+                vars.put("$TITLE", source.getLabelTranslations().get(langId));
+                isTitleDefined = true;
+            }
+        }
+        if (!isTitleDefined) {
+            vars.put("$TITLE", cswCapabilitiesInfo.getTitle());
+        }
         vars.put("$ABSTRACT", cswCapabilitiesInfo.getAbstract());
         vars.put("$FEES", cswCapabilitiesInfo.getFees());
         vars.put("$ACCESS_CONSTRAINTS", cswCapabilitiesInfo.getAccessConstraints());

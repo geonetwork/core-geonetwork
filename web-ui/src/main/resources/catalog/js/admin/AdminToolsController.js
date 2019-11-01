@@ -95,6 +95,7 @@
             },{
               type: 'transferownership',
               label: 'transfertPrivs',
+              icon: 'fa-user',
               href: '#/tools/transferownership'
             }]
       };

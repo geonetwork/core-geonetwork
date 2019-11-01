@@ -75,14 +75,89 @@
       return (promise);
     };
 
-    this.getMdsRelated = function(uuids, types) {
-      var url = '../api/related';
-      return $http.get(url, {
-        params: {
-          type: types,
-          uuid: uuids
-        }
+    this.getMdsRelated = function(mds, types) {
+      var uuids = mds.map(function(md) {
+        return md.uuid;
       });
+      // relatedIndexFields = ImmutableMap.<String, String>builder()
+      //   .put("children", "parentUuid")
+      //   .put("services", "recordOperateOn")
+      //   .put("hasfeaturecats", "hasfeaturecat")
+      //   .put("hassources", "hassources")
+      //   .put("associated", "agg_associated")
+      //   .put("datasets", "uuid")
+      //   .put("fcats", "uuid")
+      //   .put("sources", "uuid")
+      //   .put("parent", "uuid")
+      //   .build();
+      // type:children > Is a children: If record.parentUuid then uuid: record.parentUuid
+      // Is a service: If record.operatesOn then uuid: record.operatesOn
+      // Is a sibling?: agg_associated: record.uuid
+      //
+      //
+      var promise = $q.defer();
+      var body = '';
+      var searchFields = {
+        'children': 'parentUuid',
+        'services': 'recordOperateOn',
+        'hassources': 'hassources',
+        'associated': 'agg_associated',
+        'hasfeaturecats': 'hasfeaturecats'
+      };
+      for (var j = 0; j < mds.length; j++) {
+        for (var i = 0; i < types.length; i++) {
+          body += '{"index": "records"}\n';
+          switch (types[i]) {
+            case 'services':
+              body += '{' +
+                '"query": {"terms": {' +
+                '"' + (searchFields[types[i]] || 'uuid') + '": ["' + mds[j].uuid + '"]}}, ' +
+                '"_source":["resourceTitle*", "id"]}\n';
+              break;
+            case 'children':
+              body += '{' +
+                '"query": {"terms": {' +
+                '"' + (searchFields[types[i]] || 'uuid') + '": ["' + mds[j].uuid + '"]}}, ' +
+                '"_source":["resourceTitle*", "id"]}\n';
+              break;
+            default:
+              body += '{"query": {"match_all": {}}, "from": 0, "size": 0}\n'
+          }
+        }
+      }
+      $http.post('../api/search/records/_msearch', body).then(function (r) {
+        var related = {};
+        for (var j = 0; j < mds.length; j++) {
+          var uuid = mds[j].uuid;
+          related[uuid] = {};
+          for (var i = 0; i < types.length; i++) {
+            var t = types[i];
+            var values = [];
+            var results = r.data.responses[i + j];
+            if (results.hits.total.value > 0) {
+              for (var k = 0; k < results.hits.hits.length; k ++) {
+                var record = results.hits.hits[k];
+                values.push({
+                  id: record._source.id,
+                  title: {eng: record._source.resourceTitle}
+                });
+              }
+            }
+            related[uuid][t] = values.length > 0 ? values : undefined;
+          }
+        }
+        console.log(related);
+        promise.resolve({data: related});
+      });
+
+      return promise.promise;
+      // var url = '../api/related';
+      // return $http.get(url, {
+      //   params: {
+      //     type: types,
+      //     uuid: uuids
+      //   }
+      // });
     };
   }]);
   module

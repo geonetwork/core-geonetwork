@@ -24,6 +24,7 @@
 package org.fao.geonet.services;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -35,5 +36,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @WebAppConfiguration()
 @ContextConfiguration(inheritLocations = true,
     locations = {"classpath:services-repository-test-context.xml", "classpath:services-web-test-context.xml"})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class AbstractServiceIntegrationTest extends AbstractCoreIntegrationTest {
 }

@@ -11,6 +11,7 @@
       data-ng-show="user.canEditRecord(mdView.current.record)">
       {{'seeDraft' | translate}}
     </a>
+
     <!-- If approved exists, show a link -->
     <a data-ng-if="mdView.current.record.draft == 'y'"
       class="see-draft see-draft-approved"
@@ -20,7 +21,7 @@
       {{'seeNoDraft' | translate}}
     </a>
   </div>
-  
+
   <div class="container">
     <div class="alert alert-warning"
         data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
@@ -37,7 +38,7 @@
         data-ng-show="mdView.current.record">
 
       <div class="btn-toolbar" role="toolbar">
-        
+
         <div class="btn-group" role="group">
           <button class="btn btn-default"
                   data-ng-click="closeRecord(mdView.current.record)">
@@ -98,7 +99,7 @@
 
         <div class="gn-md-actions-btn pull-right"
             data-gn-md-actions-menu="mdView.current.record"/>
-        
+
         <div class="btn-group pull-right" role="group">
           <a class="btn btn-default"
             data-ng-show="user.canEditRecord(mdView.current.record)
@@ -290,8 +291,6 @@
                 </td>
               </tr>
 
-
-
               <tr data-ng-if="mdView.current.record.MD_ConstraintsUseLimitation">
                 <th data-translate="">resourceConstraints</th>
                 <td>
@@ -307,15 +306,22 @@
                   <div data-gn-metadata-contacts="mdView.current.record.contactForResource" data-gn-mode="org-role" />
                 </td>
               </tr>
+
               <tr data-ng-if="mdView.current.record.resourceCredit">
                 <th data-translate="">credit</th>
                 <td><p data-ng-repeat="c in mdView.current.record.resourceCredit">{{c}}</p></td>
               </tr>
+
               <tr data-ng-if="mdView.current.record.codelist_status_text.length > 0">
                 <th data-translate="">resourceStatus</th>
                 <td>
                   <p data-ng-repeat="c in mdView.current.record.codelist_status_text">{{c}}</p>
                 </td>
+              </tr>
+
+              <tr data-ng-if="mdView.current.record.versionIdentifier">
+                <th data-translate="">versionIdentifier</th>
+                <td>{{mdView.current.record.versionIdentifier}}</td>
               </tr>
             </tbody>
           </table>
@@ -369,11 +375,9 @@
               </tr>
               </tbody>
             </table>
-
           </div>
 
-
-          <table class="table table-striped">
+          <table class="table table-striped t">
             <tbody>
             <tr data-ng-if="mdView.current.record.codelist_maintenanceAndUpdateFrequency_text.length > 0">
               <th data-translate="">updateFrequency</th>
@@ -432,29 +436,23 @@
                 <p data-ng-bind-html="mdView.current.record.lineage | linky | newlines"/>
               </td>
             </tr>
-            <tr>
-              <th></th>
-              <td>
-                <div data-gn-related-observer>
-                  <div data-gn-related="mdView.current.record"
-                      data-user="user"
-                      data-types="sources"
-                      data-has-results="hasRelations.sources"
-                      data-title="{{'sourceDatasets' | translate}}">
-                  </div>
-
-
-                  <div data-gn-related="mdView.current.record"
-                      data-user="user"
-                      data-types="hassources"
-                      data-has-results="hasRelations.hassources"
-                      data-title="{{'isSourceOfDatasets' | translate}}">
-                  </div>
-                </div>
-              </td>
-            </tr>
             </tbody>
           </table>
+
+          <div data-gn-related-observer>
+            <div data-gn-related="mdView.current.record"
+                data-user="user"
+                data-types="sources"
+                data-has-results="hasRelations.sources"
+                data-title="{{'sourceDatasets' | translate}}">
+            </div>
+            <div data-gn-related="mdView.current.record"
+                data-user="user"
+                data-types="hassources"
+                data-has-results="hasRelations.hassources"
+                data-title="{{'isSourceOfDatasets' | translate}}">
+            </div>
+          </div>
 
           <h2 data-translate="">metadataInformation</h2>
 
@@ -467,7 +465,7 @@
           <table class="table table-striped">
             <tbody>
             <tr data-ng-if="mdView.current.record.contact">
-              <th data-translate="">contact</th>
+             <th data-translate="">contact</th>
               <td>
                 <div data-gn-metadata-contacts="mdView.current.record.contact"
                      data-gn-mode="org-role" />

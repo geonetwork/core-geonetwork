@@ -14,7 +14,7 @@
     </button>
   </div>
 
-  <div ng-if="!isTabMode && (facet.items.length > 0 || facet.dates.length > 0)"
+  <div ng-if="!isTabMode "
        ng-repeat="facet in ctrl.list track by facet.key"
        class="gn-facet">
     <a href
@@ -23,7 +23,7 @@
        ng-class="{'gn-facet-panel-active': ctrl.searchCtrl.isInSearch([facet.key])}"
        gn-collapsible="::ctrl.fLvlCollapse[facet.key]">
       <span class="flex-shrink text-ellipsis"
-            translate>{{facet.key | uppercase}}</span>
+            translate>{{facet.key}}</span>
       <span class="fa fa-fw"
             ng-class="ctrl.fLvlCollapse[facet.key] ? 'fa-caret-right' : 'fa-caret-down'"></span>
     </a>
@@ -50,7 +50,7 @@
          class="gn-facet-more"
          ng-if="facet.more"
          ng-click="ctrl.loadMoreTerms(facet)">
-        <span translate>loadMoreResults</span>
+        <span translate>more</span>
       </a>
     </div>
   </div>

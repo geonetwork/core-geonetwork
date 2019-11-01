@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>3.7.0-SNAPSHOT</version>
+  <version>3.9.0-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -289,14 +289,30 @@
       </plugin>
       <!-- run integration tests after unit tests -->
       <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>get-cpu-count</id>
+            <goals>
+              <goal>cpu-count</goal>
+            </goals>
+            <configuration>
+              <cpuCount>system.numCores</cpuCount>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>-Dfile.encoding=UTF-8 -Xmx512M</argLine>
+          <argLine>-Dfile.encoding=UTF-8 -Xmx1G</argLine>
           <!--<rerunFailingTestsCount>5</rerunFailingTestsCount>-->
           <runOrder>alphabetical</runOrder>
+          <forkCount>${system.numCores}</forkCount>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
-          <forkCount>4</forkCount>
           <excludes>
             <exclude>**/*PerformanceTest.java</exclude>
           </excludes>
@@ -1192,6 +1208,12 @@
       <url>http://maven.seasar.org/maven2</url>
     </repository>
 
+    <repository>
+      <id>georchestra-mfprint</id>
+      <name>build-releases</name>
+      <url>https://packages.georchestra.org/artifactory/mapfish-print</url>
+    </repository>
+
   </repositories>
 
 
@@ -1384,7 +1406,7 @@
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <print-lib.version>2.1.4</print-lib.version>
+    <print-lib.version>2.1.6</print-lib.version>
     <flying-saucer>9.0.7</flying-saucer>
     <camel.version>2.14.4</camel.version>
     <log4j.version>1.2.17</log4j.version>

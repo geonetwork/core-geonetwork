@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller("admin.config.csw")
 public class Get {
 
-    @RequestMapping(value = "/{lang}/admin.config.csw", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.config.csw", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody

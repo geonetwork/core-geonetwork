@@ -44,7 +44,8 @@
     'gnSearchManagerService',
     'gnSearchSettings',
     'gnUrlUtils',
-    'gnUtilityService', '$http',
+    'gnUtilityService',
+    '$http',
     function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
              gnUrlUtils, gnUtilityService, $http) {
@@ -96,6 +97,9 @@
         // TODO: do not add duplicates
         gnMdViewObj.previousRecords.push(md);
 
+        if (!gnMdViewObj.usingFormatter) {
+          $http.post('../api/records/' + md.getUuid() + '/popularity');
+        }
       };
 
       /**
@@ -183,12 +187,12 @@
                       //If trying to show a draft that is not a draft, correct url:
                       if(r.data.hits.total.value == 1 &&
                           window.location.hash.indexOf("/metadraf/") > 0) {
-                        window.location.hash = 
+                        window.location.hash =
                           window.location.hash.replace("/metadraf/", "/metadata/");
                         //Now the location change event handles this
                         return;
                       }
-                      
+
                       //If returned more than one, maybe we are looking for the draft
                       var i = 0;
                       r.data.hits.hits.forEach(function (md, index) {
@@ -199,7 +203,7 @@
                           i = index;
                         }
                       });
-                      
+
                       var metadata = [];
                       metadata.push(new Metadata(r.data.hits.hits[i]));
                       data = {metadata: metadata};
@@ -208,7 +212,7 @@
                       // that.feedMd(0, undefined, data.metadata);
                       //and the trace of where in the search result we are
                       // TODOES: Review
-                      that.feedMd(gnMdViewObj.current.index, 
+                      that.feedMd(gnMdViewObj.current.index,
                           data.metadata[0], gnMdViewObj.records);
                     } else {
                       gnMdViewObj.loadDetailsFinished = true;
@@ -226,8 +230,8 @@
             gnMdViewObj.current.record = null;
           }
         };
-        
-        loadMdView(); 
+
+        loadMdView();
         // To manage uuid on page loading
         $rootScope.$on('$locationChangeSuccess', loadMdView);
       };

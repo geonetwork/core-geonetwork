@@ -287,7 +287,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             formatType,
             request.getNativeRequest(HttpServletRequest.class));
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
-        
+
         if(approved) {
         	metadata = context.getBean(MetadataRepository.class).findOneByUuid(metadataUuid);
         }
@@ -354,7 +354,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      * @param mdPath   (optional) the xpath to the metadata node if it's not the root node of the
      *                 XML
      */
-    @RequestMapping(value = "/{lang}/xml.format.{type}")
+    @RequestMapping(value = "/{portal}/{lang}/xml.format.{type}")
     @ResponseBody
     @Deprecated
     public void execXml(
@@ -406,7 +406,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      * This is a service to use if there is process to keep the cache at least periodically
      * up-to-date and if maximum performance is required.
      */
-    @RequestMapping(value = "/{lang}/md.format.public.{type}")
+    @RequestMapping(value = "/{portal}/{lang}/md.format.public.{type}")
     public HttpEntity<byte[]> getCachedPublicMetadata(
         @PathVariable final String lang,
         @PathVariable final String type,
@@ -442,7 +442,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      *                       enum values: {@link org.fao.geonet.api.records.formatters.FormatterWidth}
      *                       The default is _100 (100% of the screen)
      */
-    @RequestMapping(value = "/{lang}/md.format.{type}")
+    @RequestMapping(value = "/{portal}/{lang}/md.format.{type}")
     @ResponseBody
     public void exec(
         @PathVariable final String lang,
