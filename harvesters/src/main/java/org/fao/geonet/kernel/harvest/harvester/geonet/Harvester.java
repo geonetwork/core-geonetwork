@@ -417,7 +417,7 @@ class Harvester implements IHarvester<HarvestResult> {
         final Path logoDir = resources.locateLogosDir(context);
 
         try {
-            resources.createImageFromReq(logoDir, logo, req);
+            resources.createImageFromReq(context, logoDir, logo, req);
         } catch (IOException e) {
             context.warning("Cannot retrieve logo file from : " + url);
             context.warning("  (C) Logo  : " + logo);

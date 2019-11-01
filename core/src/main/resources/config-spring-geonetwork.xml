@@ -206,5 +206,5 @@
     <constructor-arg index="0" ref="filesystemStore"/>
   </bean>
 
-  <bean id="resources" class="org.fao.geonet.resources.Resources"/>
+  <bean id="resources" class="org.fao.geonet.resources.FileResources"/>
 </beans>
