@@ -93,6 +93,7 @@
                     select="util:getSettingValue('region/getmap/mapproj')"/>
 
       <img class="gn-img-extent"
+           data-gn-img-modal=""
            alt="{$schemaStrings/thumbnail}"
            src="{$nodeUrl}eng/region.getmap.png?mapsrs={if ($mapproj != '')
                                          then $mapproj

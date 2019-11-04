@@ -1140,11 +1140,14 @@ to a common CSS class?
     h2 {
       display: none;
     }
-    .gn-img-thumbnail {
-      max-height: none;
-      max-width: 100%;
-      min-width: 100%;
+    .gn-img-thumbnail, .gn-img-extent {
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      overflow: hidden;
+      max-height: 235px;
     }
+    height: 250px;
   }
   section.gn-md-side-associated {
     h2 > i {
@@ -1155,7 +1158,7 @@ to a common CSS class?
   section.gn-md-side-social, section.gn-md-side-providedby,
   section.gn-md-side-permalink, section.gn-md-side-associated {
     margin: 0 0 1.5em;
-    padding: 1em;
+    padding: 0.4em;
     box-shadow: @sxt-shadow;
     text-align: center;
     position: relative;
