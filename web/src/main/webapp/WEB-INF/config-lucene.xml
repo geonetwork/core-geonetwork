@@ -118,7 +118,7 @@
       <field name="_featured" tagName="featured"/>
       <field name="_owner" tagName="owner"/>
       <field name="_userinfo" tagName="userinfo"/>
-      <field name="_ownername" tagName="ownername"/>
+      <field name="recordOwner" tagName="recordOwner"/>
       <field name="_cat" tagName="category"/>
       <field name="topicCat" tagName="topicCat"/>
       <field name="inspirethemewithac" tagName="inspirethemewithac"/>

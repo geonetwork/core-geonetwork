@@ -23,25 +23,11 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.constants.Geonet;
@@ -102,12 +88,23 @@ import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.xlink.Processor;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
 
@@ -454,6 +451,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 if (user != null) {
                     moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.USERINFO, user.getUsername() + "|"
                         + user.getSurname() + "|" + user.getName() + "|" + user.getProfile(), true, false));
+                    moreFields.add(SearchManager.makeField(
+                        Geonet.IndexFieldNames.OWNERNAME,
+                        user.getName() + " " + user.getSurname(),
+                        true, true));
                 }
             }
 
