@@ -251,7 +251,8 @@
 
             // time
             var time = scope.layer.get('time');
-            if (time) {
+            if (time && scope.params.TIME) {
+
               // initial values
               if (scope.isLayerOceanotron()) {
                 parts = scope.params.TIME.split('/');
@@ -259,6 +260,8 @@
                   from: moment(parts[0]).format('DD-MM-YYYY'),
                   to: moment(parts[1]).format('DD-MM-YYYY')
                 };
+              } else if (scope.isLayerNcwms()) {
+                scope.ncTime.value = moment(scope.params.TIME).format('DD-MM-YYYY');
               }
             }
 

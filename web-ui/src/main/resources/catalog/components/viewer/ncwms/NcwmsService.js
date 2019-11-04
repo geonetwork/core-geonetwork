@@ -112,19 +112,22 @@
       this.formatNcwmsAvailableDates = function(layer) {
         if (!layer.get('time')) { return; }
 
-        // Oceanotron: convert date range (start/end) to an array of all days
-        if (this.isLayerOceanotron(layer)) {
+        var isRange = layer.get('time').values[0] && layer.get('time').values[0].indexOf('/') > -1;
+
+        // convert date range (start/end) to an array of all days
+        if (isRange) {
           var dates = [];
           var dateParts = layer.get('time').values[0].split('/');
-          var current = moment(dateParts[0], 'YYYY-MM-DD');
-          var end = moment(dateParts[1], 'YYYY-MM-DD');
-          while (current.isBefore(end)) {
+          var current = moment(dateParts[0]);
+          var end = moment(dateParts[1]);
+          var interval = dateParts.length > 2 ? moment.duration(dateParts[2]) : moment.duration(1, 'd');
+          while (!current.isAfter(end)) {
             dates.push(current.valueOf());
-            current.add(1, 'day');
+            current.add(interval);
           }
           layer.get('time').values = dates;
         }
-        // NCWMS: dates are reformatted from iso8601 string to epoch int
+        // dates are reformatted from iso8601 string to epoch int
         else {
           layer.get('time').values = layer.get('time').values.map(function(date) {
             return moment(date).valueOf();
