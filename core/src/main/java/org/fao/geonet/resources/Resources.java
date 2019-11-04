@@ -288,6 +288,8 @@ public abstract class Resources {
                                                       logosDir)) {
                 if (src != null) {
                     java.nio.file.Files.copy(src.getPath(), des.getPath(), REPLACE_EXISTING, NOFOLLOW_LINKS);
+                } else {
+                    des.abort();
                 }
             }
         } catch (IOException e) {

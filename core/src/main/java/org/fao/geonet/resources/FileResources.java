@@ -1,7 +1,7 @@
 package org.fao.geonet.resources;
 
-import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.utils.IO;
@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.HashSet;
@@ -23,21 +24,18 @@ import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 
-import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-
 public class FileResources extends Resources {
     @Override
     protected @Nullable Path findImagePath(String imageName, Path logosDir) throws IOException {
         if (imageName.indexOf('.') > -1) {
             final Path imagePath = logosDir.resolve(imageName);
-            if (java.nio.file.Files.exists(imagePath)) {
+            if (Files.exists(imagePath)) {
                 return imagePath;
             }
         } else {
-            try (DirectoryStream<Path> possibleLogos = java.nio.file.Files.newDirectoryStream(logosDir, imageName + ".*")) {
+            try (DirectoryStream<Path> possibleLogos = Files.newDirectoryStream(logosDir, imageName + ".*")) {
                 for (final Path next: possibleLogos) {
-                    String ext = Files.getFileExtension(next.getFileName().toString());
+                    String ext = FilenameUtils.getExtension(next.getFileName().toString());
                     if (IMAGE_EXTENSIONS.contains(ext.toLowerCase())) {
                         return next;
                     }
@@ -64,16 +62,16 @@ public class FileResources extends Resources {
                                     byte[] defaultValue, long loadSince) throws IOException {
         Path file = locateResource(resourcesDir, context, appPath, filename);
 
-        if (java.nio.file.Files.exists(file)) {
+        if (Files.exists(file)) {
 
             try {
-                final long lastModified = java.nio.file.Files.getLastModifiedTime(file).to(TimeUnit.MILLISECONDS);
+                final long lastModified = Files.getLastModifiedTime(file).to(TimeUnit.MILLISECONDS);
                 if (loadSince < 0 || lastModified > loadSince) {
                     ByteArrayOutputStream data = new ByteArrayOutputStream();
-                    java.nio.file.Files.copy(file, data);
+                    Files.copy(file, data);
                     return Pair.read(data.toByteArray(), lastModified);
                 } else {
-                    Pair.read(defaultValue, loadSince);
+                    return Pair.read(defaultValue, loadSince);
                 }
             } catch (IOException e) {
                 Log.warning(Geonet.RESOURCES, "Unable to find resource: "
@@ -86,7 +84,7 @@ public class FileResources extends Resources {
     @Override
     public ResourceHolder getWritableImage(ServiceContext context, String imageName, Path logosDir) {
         try {
-            java.nio.file.Files.createDirectories(logosDir);
+            Files.createDirectories(logosDir);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -95,8 +93,8 @@ public class FileResources extends Resources {
     }
 
     protected Path locateResource(@Nullable Path resourcesDir,
-                                  ServletContext context, Path appPath, @Nonnull String filename)
-        throws IOException {
+                                  ServletContext context, Path appPath,
+                                  @Nonnull String filename) throws IOException {
         if (filename.charAt(0) == '/' || filename.charAt(0) == '\\') {
             filename = filename.substring(1);
         }
@@ -108,7 +106,7 @@ public class FileResources extends Resources {
             file = IO.toPath(filename);
         }
 
-        if (!java.nio.file.Files.exists(file)) {
+        if (!Files.exists(file)) {
             Path webappCopy = null;
             if (context != null) {
                 final String realPath = context.getRealPath(filename);
@@ -120,35 +118,31 @@ public class FileResources extends Resources {
             if (webappCopy == null) {
                 webappCopy = appPath.resolve(filename);
             }
-            if (java.nio.file.Files.exists(webappCopy)) {
+            if (Files.exists(webappCopy)) {
                 IO.copyDirectoryOrFile(webappCopy, file, false);
             }
 
             final String fileName = file.getFileName().toString();
             final int indexOfDot = fileName.lastIndexOf(".");
-            final String suffixless = Files.getNameWithoutExtension(fileName);
-            final String suffix = Files.getFileExtension(fileName);
+            final String suffixless = FilenameUtils.removeExtension(fileName);
+            final String suffix = FilenameUtils.getExtension(fileName);
 
-            if (!java.nio.file.Files.exists(file) && IMAGE_WRITE_SUFFIXES.contains(suffix.toLowerCase())) {
+            if (!Files.exists(file) && IMAGE_WRITE_SUFFIXES.contains(suffix.toLowerCase())) {
                 // find a different format and convert it to our desired format
-                DirectoryStream.Filter<Path> filter = new DirectoryStream.Filter<Path>() {
-
-                    @Override
-                    public boolean accept(Path entry) throws IOException {
-                        String name = entry.getFileName().toString();
-                        boolean startsWith = name.startsWith(suffixless);
-                        final String ext = Files.getFileExtension(name).toLowerCase();
-                        boolean canReadImage = name.length() > indexOfDot && IMAGE_READ_SUFFIXES.contains(ext);
-                        return startsWith && canReadImage;
-                    }
+                DirectoryStream.Filter<Path> filter = entry -> {
+                    String name = entry.getFileName().toString();
+                    boolean startsWith = name.startsWith(suffixless);
+                    final String ext = FilenameUtils.getExtension(name).toLowerCase();
+                    boolean canReadImage = name.length() > indexOfDot && IMAGE_READ_SUFFIXES.contains(ext);
+                    return startsWith && canReadImage;
                 };
-                try (DirectoryStream<Path> paths = java.nio.file.Files.newDirectoryStream(file.getParent(), filter)) {
+                try (DirectoryStream<Path> paths = Files.newDirectoryStream(file.getParent(), filter)) {
                     Iterator<Path> iter = paths.iterator();
                     if (iter.hasNext()) {
                         Path path = iter.next();
                         try (
                             InputStream in = IO.newInputStream(path);
-                            OutputStream out = java.nio.file.Files.newOutputStream(file)
+                            OutputStream out = Files.newOutputStream(file)
                         ) {
                             try {
                                 BufferedImage image = ImageIO.read(in);
@@ -168,13 +162,9 @@ public class FileResources extends Resources {
     }
 
     protected void addFiles(DirectoryStream.Filter<Path> iconFilter, Path webappDir, HashSet<Path> result) {
-        HashSet<Path> names = new HashSet<>();
-        try (DirectoryStream<Path> paths = java.nio.file.Files.newDirectoryStream(webappDir, iconFilter)) {
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(webappDir, iconFilter)) {
             for (Path file : paths) {
-                if (!names.contains(file.getFileName())) {
-                    result.add(file);
-                    names.add(file.getFileName());
-                }
+                result.add(file);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -183,8 +173,8 @@ public class FileResources extends Resources {
 
     public FileTime getLastModified(Path resourcesDir, ServletContext context, Path appPath, String filename) throws IOException {
         Path file = locateResource(resourcesDir, context, appPath, filename);
-        if (file != null && java.nio.file.Files.exists(file)) {
-            return java.nio.file.Files.getLastModifiedTime(file);
+        if (file != null && Files.exists(file)) {
+            return Files.getLastModifiedTime(file);
         }
         return null;
     }
@@ -192,7 +182,7 @@ public class FileResources extends Resources {
     public void deleteImageIfExists(final String image, final Path dir) throws IOException {
         Path icon = findImagePath(image, dir);
         if (icon != null) {
-            java.nio.file.Files.deleteIfExists(icon);
+            Files.deleteIfExists(icon);
         }
     }
 
@@ -200,7 +190,7 @@ public class FileResources extends Resources {
         private String relativePath;
         private final Path path;
 
-        public FileResourceHolder(final Path basePath, final Path path) {
+        private FileResourceHolder(final Path basePath, final Path path) {
             this.relativePath = basePath.relativize(path).toString().replace('\\', '/');
             this.path = path;
         }
@@ -217,7 +207,7 @@ public class FileResources extends Resources {
 
         @Override
         public FileTime getLastModifiedTime() throws IOException {
-            return java.nio.file.Files.getLastModifiedTime(path);
+            return Files.getLastModifiedTime(path);
         }
 
         @Override

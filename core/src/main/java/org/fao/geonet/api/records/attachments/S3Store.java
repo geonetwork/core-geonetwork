@@ -25,16 +25,12 @@
 package org.fao.geonet.api.records.attachments;
 
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.client.builder.AwsClientBuilder;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CopyObjectResult;
 import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FilenameUtils;
@@ -42,6 +38,8 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.resources.S3Credentials;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,67 +50,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
-import javax.annotation.PostConstruct;
 
 public class S3Store extends AbstractStore {
-    private AmazonS3 s3 = null;
-    private AmazonS3ClientBuilder builder = AmazonS3ClientBuilder.standard();
-
-    private String keyPrefix = "";
-    private String bucket = null;
-    private String accessKey = null;
-    private String secretKey = null;
-    private String region = null;
-    private String endpoint = null;
-
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-    }
-
-    public void setAccessKey(String accessKey) {
-        this.accessKey = accessKey;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
-    public void setKeyPrefix(String keyPrefix) {
-        if (keyPrefix.endsWith("/")) {
-            this.keyPrefix = keyPrefix;
-        } else {
-            this.keyPrefix = keyPrefix + "/";
-        }
-    }
-
-    public void setBucket(String bucket) {
-        this.bucket = bucket;
-    }
-
-    @PostConstruct
-    public void init() {
-        if (accessKey != null && secretKey != null) {
-            builder.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)));
-            accessKey = null;
-            secretKey = null;
-        }
-        if (region != null) {
-            if (endpoint != null) {
-                builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, region));
-            } else {
-                builder.withRegion(region);
-            }
-        }
-        s3 = builder.build();
-        builder = null;
-        if (bucket == null) {
-            throw new RuntimeException("Missing the bucket configuration");
-        }
-    }
+    @Autowired
+    S3Credentials s3;
 
     @Override
     public List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid,
@@ -126,7 +67,7 @@ public class S3Store extends AbstractStore {
         if (filter == null) {
             filter = FilesystemStore.DEFAULT_FILTER;
         }
-        final ListObjectsV2Result objects = s3.listObjectsV2(bucket, resourceTypeDir);
+        final ListObjectsV2Result objects = s3.getClient().listObjectsV2(s3.getBucket(), resourceTypeDir);
         for (S3ObjectSummary object: objects.getObjectSummaries()) {
             final String key = object.getKey();
             final String filename = getFilename(key);
@@ -159,7 +100,8 @@ public class S3Store extends AbstractStore {
         // Those characters should not be allowed by URL structure
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
         try {
-            final S3Object object = s3.getObject(bucket, getKey(metadataUuid, metadataId, visibility, resourceId));
+            final S3Object object = s3.getClient().getObject(
+                s3.getBucket(), getKey(metadataUuid, metadataId, visibility, resourceId));
             final SettingManager settingManager = context.getBean(SettingManager.class);
             return new ResourceHolderImpl(object, createResourceDescription(settingManager, metadataUuid, visibility, resourceId,
                                                                             object.getObjectMetadata().getContentLength(),
@@ -187,7 +129,7 @@ public class S3Store extends AbstractStore {
         if (changeDate != null) {
             metadata.setLastModified(changeDate);
         }
-        final PutObjectResult putAnswer = s3.putObject(bucket, key, is, metadata);
+        final PutObjectResult putAnswer = s3.getClient().putObject(s3.getBucket(), key, is, metadata);
         return createResourceDescription(settingManager, metadataUuid, visibility, filename, putAnswer.getMetadata().getContentLength(),
                                          putAnswer.getMetadata().getLastModified());
     }
@@ -203,7 +145,7 @@ public class S3Store extends AbstractStore {
         for (MetadataResourceVisibility sourceVisibility: MetadataResourceVisibility.values()) {
             final String key = getKey(metadataUuid, metadataId, sourceVisibility, resourceId);
             try {
-                metadata = s3.getObjectMetadata(bucket, key);
+                metadata = s3.getClient().getObjectMetadata(s3.getBucket(), key);
                 if (sourceVisibility != visibility) {
                     sourceKey = key;
                     break;
@@ -218,8 +160,9 @@ public class S3Store extends AbstractStore {
         }
         if (sourceKey != null) {
             final String destKey = getKey(metadataUuid, metadataId, visibility, resourceId);
-            final CopyObjectResult copyResult = s3.copyObject(bucket, sourceKey, bucket, destKey);
-            s3.deleteObject(bucket, sourceKey);
+            final CopyObjectResult copyResult = s3.getClient().copyObject(
+                s3.getBucket(), sourceKey, s3.getBucket(), destKey);
+            s3.getClient().deleteObject(s3.getBucket(), sourceKey);
             return createResourceDescription(settingManager, metadataUuid, visibility, resourceId, metadata.getContentLength(),
                                              copyResult.getLastModifiedDate());
         } else {
@@ -232,9 +175,10 @@ public class S3Store extends AbstractStore {
     public String delResources(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
         try {
-            final ListObjectsV2Result objects = s3.listObjectsV2(bucket, getMetadataDir(metadataId));
+            final ListObjectsV2Result objects = s3.getClient().listObjectsV2(
+                s3.getBucket(), getMetadataDir(metadataId));
             for (S3ObjectSummary object: objects.getObjectSummaries()) {
-                s3.deleteObject(bucket, object.getKey());
+                s3.getClient().deleteObject(s3.getBucket(), object.getKey());
             }
             return String.format("Metadata '%s' directory removed.", metadataId);
         } catch (AmazonServiceException e) {
@@ -268,8 +212,8 @@ public class S3Store extends AbstractStore {
     private boolean tryDelResource(final String metadataUuid, final int metadataId, final MetadataResourceVisibility visibility,
             final String resourceId) throws Exception {
         final String key = getKey(metadataUuid, metadataId, visibility, resourceId);
-        if (s3.doesObjectExist(bucket, key)) {
-            s3.deleteObject(bucket, key);
+        if (s3.getClient().doesObjectExist(s3.getBucket(), key)) {
+            s3.getClient().deleteObject(s3.getBucket(), key);
             return true;
         }
         return false;
@@ -282,7 +226,7 @@ public class S3Store extends AbstractStore {
         final String key = getKey(metadataUuid, metadataId, visibility, filename);
         SettingManager settingManager = context.getBean(SettingManager.class);
         try {
-            final ObjectMetadata metadata = s3.getObjectMetadata(bucket, key);
+            final ObjectMetadata metadata = s3.getClient().getObjectMetadata(s3.getBucket(), key);
             return createResourceDescription(settingManager, metadataUuid, visibility, filename, metadata.getContentLength(),
                                              metadata.getLastModified());
         } catch (AmazonServiceException e) {
@@ -291,7 +235,7 @@ public class S3Store extends AbstractStore {
     }
 
     private String getMetadataDir(final int metadataId) {
-        return this.keyPrefix + metadataId;
+        return s3.getKeyPrefix() + metadataId;
     }
 
     private static class ResourceHolderImpl implements ResourceHolder {
@@ -301,7 +245,9 @@ public class S3Store extends AbstractStore {
         public ResourceHolderImpl(final S3Object object, MetadataResource metadata) throws IOException {
             path = Files.createTempFile("", getFilename(object.getKey()));
             this.metadata = metadata;
-            Files.copy(object.getObjectContent(), path, StandardCopyOption.REPLACE_EXISTING);
+            try (S3ObjectInputStream in = object.getObjectContent()) {
+                Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
+            }
         }
 
         @Override

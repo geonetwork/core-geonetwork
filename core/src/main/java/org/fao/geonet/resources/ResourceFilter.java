@@ -112,7 +112,6 @@ public class ResourceFilter implements Filter {
             return ((HttpServletRequest) request).getMethod().equalsIgnoreCase("GET");
         }
 
-        // TODO: pvi
         public void execute() throws IOException {
             if (isGet(request)) {
                 String filename =  ((HttpServletRequest) request).getPathInfo();

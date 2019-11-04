@@ -562,13 +562,13 @@ public class Geonetwork implements ApplicationHandler {
         try {
             final Resources resources = context.getBean(Resources.class);
             Path logosDir = resources.locateLogosDir(context);
-            Path logo = logosDir.resolve(nodeUuid + ".png");
-            if (!Files.exists(logo)) {
+//            Path logo = logosDir.resolve(nodeUuid + ".png");
+//            if (!Files.exists(logo)) {
                 final ServletContext servletContext = context.getServlet().getServletContext();
                 byte[] logoData = resources.loadImage(servletContext, appPath,
                     "images/harvesting/GN3.png", new byte[0]).one();
-                Files.write(logo, logoData);
-            }
+                // Files.write(logo, logoData);
+//            }
         } catch (Throwable e) {
             logger.error("      Error when setting the logo: " + e.getMessage());
         }
