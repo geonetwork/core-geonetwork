@@ -73,8 +73,6 @@ import java.util.Set;
  *
  */
 
-// TODO: pvi
-
 @RequestMapping(value = {
     "/{portal}/api/logos",
     "/{portal}/api/" + API.VERSION_0_1 +
@@ -89,7 +87,7 @@ public class LogosApi {
     private DirectoryStream.Filter<Path> iconFilter = new DirectoryStream.Filter<Path>() {
         @Override
         public boolean accept(Path file) {
-            if (file == null || !Files.isRegularFile(file))
+            if (file == null || (Files.exists(file) && !Files.isRegularFile(file)))
                 return false;
             if (file.getFileName() != null) {
                 String name = file.getFileName().toString();
@@ -179,13 +177,14 @@ public class LogosApi {
         }
 
         for (MultipartFile f : file) {
-            String fileName = f.getName();
+            String fileName = f.getOriginalFilename();
 
             checkFileName(fileName);
 
             try (Resources.ResourceHolder holder = resources.getWritableImage(serviceContext, fileName, directoryPath)) {
                 if (Files.exists(holder.getPath()) && !overwrite) {
-                    throw new ResourceAlreadyExistException(f.getOriginalFilename());
+                    holder.abort();
+                    throw new ResourceAlreadyExistException(fileName);
                 }
                 Files.copy(f.getInputStream(), holder.getPath());
             }
