@@ -106,6 +106,7 @@
     <facet name="sourceCatalog" indexKey="_source" label="sourceCatalog"/>
     <facet name="standard" indexKey="_schema" label="standards"/>
     <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
+    <facet name="recordOwner" indexKey="recordOwner" label="recordOwner"/>
     <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
     <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
 	  <facet name="isPublishedToAll" indexKey="_isPublishedToAll" label="isPublishedToAll" />
@@ -126,7 +127,7 @@
 
     <facet name="maintenanceAndUpdateFrequency" indexKey="cl_maintenanceAndUpdateFrequency"
            label="maintenanceAndUpdateFrequencies"/>
-    <facet name="mdActions" indexKey="_mdActions" label="mdActions"/> 
+    <facet name="mdActions" indexKey="_mdActions" label="mdActions"/>
   </facets>
 
   <summaryTypes>
@@ -171,6 +172,7 @@
       <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>
       <item facet="groupOwner" max="199" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+      <item facet="recordOwner" max="45" sortBy="value"/>
       <item facet="publishedForGroup" max="199" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
       <item facet="standard" max="15" sortBy="value"/>
@@ -208,6 +210,7 @@
       <item facet="groupOwner" max="99" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
       <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>
+      <item facet="recordOwner" max="45" sortBy="value"/>
     </summaryType>
     <summaryType name="contact" format="DIMENSION">
       <item facet="orgNameTree" max="99"/>
