@@ -172,7 +172,7 @@
     <facet name="lops-projets" indexKey="thesaurus-local.theme.lops_projets" label="lops-projets"/>
     
     <facet name="simm-reglementaire" indexKey="thesaurus-local.theme.simm.reglementaire" label="simm-reglementaire"/>
-    <facet name="simm-thematiques" indexKey="thesaurus-local.theme.theme.simm.thematiques" label="simm-thematiques"/>
+    <facet name="simm-thematiques" indexKey="thesaurus-local.theme.simm.thematiques" label="simm-thematiques"/>
 
     <facet name="mdActions" indexKey="_mdActions" label="mdActions"/>
   </facets>
