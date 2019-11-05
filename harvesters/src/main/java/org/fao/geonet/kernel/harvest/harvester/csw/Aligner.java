@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
@@ -38,6 +39,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.kernel.BatchEditParameter;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
@@ -64,6 +66,7 @@ import javax.transaction.Transactional.TxType;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -309,6 +312,16 @@ public class Aligner extends BaseAligner<CswParams> {
             }
         }
 
+        if (StringUtils.isNotEmpty(params.getBatchEdits())) {
+            String batchEditsConfig = params.getBatchEdits();
+            ObjectMapper mapper = new ObjectMapper();
+
+            BatchEditParameter[] listOfUpdates = mapper.readValue(params.getBatchEdits(), BatchEditParameter[].class);
+            if (listOfUpdates.length == 0) {
+                throw new IllegalArgumentException("At least one edit must be defined.");
+            }
+
+        }
         //
         // insert metadata
         //
