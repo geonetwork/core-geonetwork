@@ -402,31 +402,35 @@
           };
           scope.isFolded = function () {
             return scope.member.state && scope.member.state.folded;
-          }
-          scope.toggleChildrenNodes = function (event, e) {
-            $(event.currentTarget).toggleClass('fa-check-square-o fa-square-o');
-            var visible = $(event.currentTarget).hasClass('fa-check-square-o') ? true : false;
-            while (e.hasOwnProperty('nodes')) {
-              var currentElements = e.nodes;
-              for (var i=0; i< currentElements.length; i++) {
-                e = currentElements[i];
-                if (e.hasOwnProperty('visible')) {
-                  e.set('visible', visible);
-                }
+          };
+          scope.toggleChildrenNodes = function (event, e, forceVisible) {
+            let visible = forceVisible !== undefined ? forceVisible : !scope.hasCheckedChildren(e);
+            e.nodes.forEach(function(n) {
+              if (n instanceof ol.layer.Base) {
+                n.set('visible', visible);
               }
-            }
-          }
+              else {
+                scope.toggleChildrenNodes(null, n, visible);
+              }
+            });
+          };
+
           scope.hasCheckedChildren = function (e) {
-            while (e.hasOwnProperty('nodes')) {
-              var currentElements = e.nodes;
-              for (var i=0; i< currentElements.length; i++) {
-                e = currentElements[i];
-                if (e.hasOwnProperty('visible') && e.get('visible')===true) {
+            let hasChecked = false;
+            for (var n = 0 ; n < e.nodes.length; n++) {
+              if (e.nodes[n] instanceof (ol.layer.Base)) {
+                if (e.nodes[n].get('visible') === true) {
                   return true;
                 }
               }
+              else {
+                hasChecked = hasChecked || scope.hasCheckedChildren(e.nodes[n]);
+              }
             }
-          }
+            return hasChecked;
+
+          };
+
           scope.indexWFSFeatures = function(url, type) {
             $http.get('wfs.harvest?' +
                 'uuid=' + '' +
@@ -459,7 +463,7 @@
 
             /**
              * On top of `switchGroupCombo` that set visible to false to all
-             * layers exept the clicked one, here we set the clicked layer
+             * layers except the clicked one, here we set the clicked layer
              * visibility.
              *
              * @param {string} groupcombo Group id.
