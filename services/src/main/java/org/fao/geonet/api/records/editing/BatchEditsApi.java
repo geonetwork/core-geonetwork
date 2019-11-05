@@ -37,7 +37,7 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.IProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
-import org.fao.geonet.api.records.model.BatchEditParameter;
+import org.fao.geonet.kernel.BatchEditParameter;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.kernel.AccessManager;
