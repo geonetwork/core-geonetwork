@@ -118,8 +118,8 @@
         if (isRange) {
           var dates = [];
           var dateParts = layer.get('time').values[0].split('/');
-          var current = moment(dateParts[0]);
-          var end = moment(dateParts[1]);
+          var current = moment.utc(dateParts[0]);
+          var end = moment.utc(dateParts[1]);
           var interval = dateParts.length > 2 ? moment.duration(dateParts[2]) : moment.duration(1, 'd');
           while (!current.isAfter(end)) {
             dates.push(current.valueOf());
