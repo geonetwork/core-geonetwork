@@ -143,7 +143,7 @@ public abstract class BaseAligner<P extends AbstractParams> extends AbstractAlig
      * @return true if the owner is the same
      */
     protected boolean canOverwriteRecord(Metadata recordToOverwrite) {
-        return Integer.compare(recordToOverwrite.getSourceInfo().getOwner(), getOwnerId(params)) == 0 && Integer.compare(recordToOverwrite.getSourceInfo().getGroupOwner(), getOwnerGroupId(params)) == 0;
+        return Integer.compare(recordToOverwrite.getSourceInfo().getOwner(), getOwner()) == 0 && Integer.compare(recordToOverwrite.getSourceInfo().getGroupOwner(), getGroupOwner()) == 0;
     }
 
 }
