@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div data-ng-class="fluidHeaderLayout ? 'container-fluid' : 'container'">
   <div class="navbar-header">
     <a class="hidden-sm hidden-md hidden-lg pull-left gn-logo-link" data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}" data-ng-hide="{{gnCfg.mods.header.isLogoInHeader}}">
       <img class="gn-logo"
@@ -33,6 +33,7 @@
                 data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
         </a>
         <a class="pull-left hidden-sm"
+           data-ng-if="gnCfg.mods.header.showGNName"
            data-ng-class="gnCfg.mods.header.isLogoInHeader ? '' : 'gn-nopadding-left'"
            data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
           <span class="gn-name"
