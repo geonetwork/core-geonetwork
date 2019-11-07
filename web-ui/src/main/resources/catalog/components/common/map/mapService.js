@@ -1396,7 +1396,7 @@
                         finally(
                         function() {
                           var wfsConfigs = olL.get('wfs');
-                          if (wfsConfigs) {
+                          if (wfsConfigs && wfsConfigs.length) {
                             var wfsConfig = wfsConfigs[0];
                             var esObj = wfsFilterService.getEsObject(wfsConfig.url, wfsConfig.name);
                             if(esObj && esObj.initialFilters) {
