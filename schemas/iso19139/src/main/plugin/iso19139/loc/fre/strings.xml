@@ -538,7 +538,7 @@
   <sxt-view-author>Auteur(s)</sxt-view-author>
   <sxt-view-keyword>Mots-clés</sxt-view-keyword>
   <sxt-view-source>Source</sxt-view-source>
-  <sxt-view-lineage>Provenance</sxt-view-lineage>
+  <sxt-view-lineage>Généalogie</sxt-view-lineage>
   <sxt-view-constraints>Contraintes</sxt-view-constraints>
   <sxt-view-spatialRepresentationType>Type de données</sxt-view-spatialRepresentationType>
   <sxt-view-geoinfo>Informations géographiques</sxt-view-geoinfo>
@@ -550,4 +550,5 @@
   <sxt-view-temporal-to>à</sxt-view-temporal-to>
   <sxt-view-temporal-at>Le</sxt-view-temporal-at>
   <sxt-view-temporal>Couverture temporelle</sxt-view-temporal>
+  <sxt-keyword-section>Mots clés</sxt-keyword-section>
 </strings>

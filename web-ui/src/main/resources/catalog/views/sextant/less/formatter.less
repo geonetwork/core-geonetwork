@@ -1,6 +1,16 @@
 @import "../../../style/gn_metadata";
 
 .gn-metadata-view.gn-view-sextant {
+  table td {
+    border-top: none;
+  }
+  dt {
+    float: left;
+    &:after {
+      content: ' :';
+    }
+    margin-right: 2px;
+  }
   table.gn-sextant-view-table tr > td:nth-child(1) {
     width: 23%; /* Align with citation block */
   }

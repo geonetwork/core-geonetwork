@@ -66,7 +66,7 @@
                     <xsl:apply-templates mode="render-value" select="gmd:dateType/*/@codeListValue"/>
                   </dt>
                   <dd>
-                    <xsl:apply-templates mode="render-value" select="gmd:date"/>
+                    <xsl:apply-templates mode="render-value" select="gmd:date/*"/>
                   </dd>
                 </dl>
               </xsl:for-each>
@@ -80,8 +80,9 @@
                   </xsl:variable>
 
                   <xsl:if test="gml:beginPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
-                    <xsl:value-of
-                      select="concat ((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ', gml:beginPosition, ' > ')"/>
+                    <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ')"/>
+                    <xsl:apply-templates mode="render-value" select="gml:beginPosition"/>
+                    <xsl:value-of select="' > '"/>
                   </xsl:if>
 
                   <xsl:variable name="indeterminatePositionLabel">
@@ -89,8 +90,8 @@
                                          select="gml:endPosition/@indeterminatePosition"/>
                   </xsl:variable>
                   <xsl:if test="gml:endPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
-                    <xsl:value-of
-                      select="concat ((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-to)[1], ' ', gml:endPosition)"/>
+                    <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-to)[1], ' ')"/>
+                    <xsl:apply-templates mode="render-value" select="gml:endPosition"/>
                   </xsl:if>
 
                   <xsl:if test="gml:timePosition != ''">
@@ -132,21 +133,27 @@
           </td>
         </tr>
       </xsl:if>
-      <tr>
-        <td>
-          <xsl:value-of select="$schemaStrings/sxt-view-contact"/>
-        </td>
-        <td>
-          <xsl:for-each
-            select="$metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue != 'author']">
-            <xsl:apply-templates mode="render-field"
-                                 select=".">
-              <xsl:with-param name="layout" select="'short'"/>
-            </xsl:apply-templates>
-            <br/>
-          </xsl:for-each>
-        </td>
-      </tr>
+
+
+      <xsl:variable name="contacts"
+                    select="$metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue != 'author']"/>
+      <xsl:if test="count($contacts) > 0">
+        <tr>
+          <td>
+            <xsl:value-of select="$schemaStrings/sxt-view-contact"/>
+          </td>
+          <td>
+            <xsl:for-each select="$contacts">
+<!--            <xsl:for-each select="$contacts" group-by="">-->
+              <xsl:apply-templates mode="render-field"
+                                   select=".">
+                <xsl:with-param name="layout" select="'short'"/>
+              </xsl:apply-templates>
+              <br/>
+            </xsl:for-each>
+          </td>
+        </tr>
+      </xsl:if>
       <!--<tr>
         <td></td>
         <td>

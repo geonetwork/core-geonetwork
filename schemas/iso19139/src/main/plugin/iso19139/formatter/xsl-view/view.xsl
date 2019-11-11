@@ -109,7 +109,10 @@
 
   <xsl:template mode="getTags" match="gmd:MD_Metadata">
     <xsl:param name="byThesaurus" select="false()"/>
-    <section class="gn-md-side gn-md-side-overview">
+
+    <section class="gn-md-side-social">
+      <h3><xsl:value-of select="$schemaStrings/sxt-keyword-section"/></h3>
+
       <xsl:variable name="tags">
         <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords/
                                           *[
@@ -1048,7 +1051,9 @@
   </xsl:template>
 
   <xsl:template mode="render-value"
-                match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
+                match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
+                      |gml:beginPosition[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
+                      |gml:endPosition[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
     <span data-gn-humanize-time="{.}" data-format="DD MMM YYYY"><xsl:comment select="name()"/>
       <xsl:value-of select="."/>
     </span>

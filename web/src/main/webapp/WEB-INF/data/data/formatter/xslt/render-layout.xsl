@@ -64,7 +64,7 @@
   </xsl:template>
 
   <xsl:template name="render-record">
-    <div class="container-fluid gn-metadata-view gn-view-{$view} gn-schema-{$schema}">
+    <div class="container gn-metadata-view gn-view-{$view} gn-schema-{$schema}">
 
       <xsl:choose>
         <!-- Avoid script injection. Only allows letters, digits and '-', '_' in API id-->
@@ -206,6 +206,9 @@
                     <i class="fa fa-fw fa-share-square-o"><xsl:comment select="'icon'"/></i>
                     <span><xsl:value-of select="$schemaStrings/shareOnSocialSite"/></span>
                   </h2>
+
+                  <div sxt-md-actions-menu="md"><xsl:comment select="'actions'"/></div>
+
                   <a href="https://twitter.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                      target="_blank"
                      aria-label="Twitter"
