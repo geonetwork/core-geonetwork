@@ -36,6 +36,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -53,6 +54,8 @@ import org.fao.geonet.api.records.model.MetadataWorkflowStatusResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.MetadataStatusId_;
@@ -70,14 +73,17 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -120,6 +126,9 @@ public class MetadataWorkflowApi {
 
     @Autowired
     MetadataStatusRepository metadataStatusRepository;
+
+    @Autowired
+    MetadataDraftRepository metadatadraftRepository;
 
     @Autowired
     StatusValueRepository statusValueRepository;
@@ -503,11 +512,11 @@ public class MetadataWorkflowApi {
             throw new NotAllowedException("The recover for this element is not supported");
         }
 
-        String metadataId = metadataStatusId.getMetadataId() + "";
+        int metadataId = metadataStatusId.getMetadataId();
 
         AbstractMetadata metadata = null;
         try {
-            metadata = ApiUtils.canEditRecord(metadataId, request);
+            metadata = ApiUtils.canEditRecord(Integer.toString(metadataId), request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
@@ -516,14 +525,30 @@ public class MetadataWorkflowApi {
         ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
 
         String xmlBefore = metadata.getData();
-        Element md = Xml.loadString(status.getPreviousState(), false);
-        dataMan.updateMetadata(context, metadataId, md, false, true, true, context.getLanguage(), null, true);
+
+        MetadataDraft draft = metadatadraftRepository.findOneByUuid(metadata.getUuid());
+        // If there is a draft record, the restore is made over the Draft record and not the approved one.
+        if(draft != null) {
+            context.getBean(IMetadataManager.class).update(draft.getId(), new Updater<MetadataDraft>() {
+                @Override
+                public void apply(@Nonnull MetadataDraft metadata) {
+                    metadata.setData(status.getPreviousState());
+                }
+            });
+        } else {
+            context.getBean(IMetadataManager.class).update(metadataId, new Updater<Metadata>() {
+                @Override
+                public void apply(@Nonnull Metadata metadata) {
+                    metadata.setData(status.getPreviousState());
+                }
+            });
+        }
 
         if(metadataStatusId.getStatusId() != Integer.parseInt(StatusValue.Events.RECORDRESTORED)) {
             // Create a new event
             String xmlAfter = status.getPreviousState();
             UserSession session = ApiUtils.getUserSession(request.getSession());
-            new RecordRestoredEvent(Long.parseLong(metadataId), session.getUserIdAsInt(), xmlBefore, xmlAfter).publish(applicationContext);
+            new RecordRestoredEvent(metadataId, session.getUserIdAsInt(), xmlBefore, xmlAfter).publish(applicationContext);
         } else {
             // Remove restore event
             metadataStatusRepository.delete(status);
