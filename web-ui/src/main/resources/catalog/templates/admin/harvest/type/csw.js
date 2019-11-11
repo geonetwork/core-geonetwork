@@ -100,7 +100,7 @@ var gnHarvestercsw = {
       + '  </options>'
       + '  <content>'
       + '    <validate>' + h.content.validate + '</validate>'
-      + '    <batchEdits>' + h.content.batchEdits + '</batchEdits>'
+      + '    <batchEdits><![CDATA[' + h.content.batchEdits + ']]></batchEdits>'
       + '  </content>'
       + $scope.buildResponseGroup(h)
       + $scope.buildResponseCategory(h) + '</node>';
