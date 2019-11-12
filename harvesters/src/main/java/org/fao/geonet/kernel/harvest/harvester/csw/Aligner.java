@@ -340,13 +340,20 @@ public class Aligner extends BaseAligner<CswParams> {
                     AddElemValue propertyValue =
                         new AddElemValue(batchEditParameter.getValue());
 
-                    metadataChanged = editLib.addElementOrFragmentFromXpath(
-                        md,
-                        metadataSchema,
-                        batchEditParameter.getXpath(),
-                        propertyValue,
-                        createXpathNodeIfNotExists
-                    ) || metadataChanged;
+                    boolean applyEdit = true;
+                    if (StringUtils.isNotEmpty(batchEditParameter.getCondition())) {
+                        final Object node = Xml.selectSingle(md, batchEditParameter.getCondition(), metadataSchema.getNamespaces());
+                        applyEdit = (node != null) || (node instanceof Boolean && (Boolean)node != false);
+                    }
+                    if (applyEdit) {
+                        metadataChanged = editLib.addElementOrFragmentFromXpath(
+                            md,
+                            metadataSchema,
+                            batchEditParameter.getXpath(),
+                            propertyValue,
+                            createXpathNodeIfNotExists
+                        ) || metadataChanged;
+                    }
                 }
                 if (metadataChanged) {
                     log.debug("  - Record updated by batch edit configuration:" + ri.uuid);
