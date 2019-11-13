@@ -30,7 +30,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -43,7 +42,6 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.FilePathChecker;
-import org.fao.geonet.utils.IO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -60,7 +58,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -68,10 +65,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-/**
- *
- */
+import java.util.stream.Collectors;
 
 @RequestMapping(value = {
     "/{portal}/api/logos",
@@ -131,8 +125,6 @@ public class LogosApi {
         return iconsList;
     }
 
-    private volatile Path logoDirectory;
-
     @ApiOperation(
         value = "Add a logo",
         notes = "",
@@ -166,15 +158,9 @@ public class LogosApi {
             HttpServletRequest request
     ) throws Exception {
         final ApplicationContext appContext = ApplicationContextHolder.get();
-        final Path directoryPath;
         final Resources resources = appContext.getBean(Resources.class);
         final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-        synchronized (this) {
-            if (this.logoDirectory == null) {
-                this.logoDirectory = resources.locateHarvesterLogosDirSMVC(appContext);
-            }
-            directoryPath = this.logoDirectory;
-        }
+        final Path directoryPath = resources.locateHarvesterLogosDirSMVC(appContext);
 
         for (MultipartFile f : file) {
             String fileName = f.getOriginalFilename();
@@ -228,30 +214,33 @@ public class LogosApi {
     public void deleteLogo(
         @ApiParam(value = "The logo filename to delete")
         @PathVariable
-            String file
+        String file,
+        HttpServletRequest request
     ) throws Exception {
         checkFileName(file);
-        Path nodeLogoDirectory = dataDirectory.getResourcesDir()
-            .resolve("images").resolve("harvesting");
-
         FilePathChecker.verify(file);
 
-        Path logoFile = nodeLogoDirectory.resolve(file);
-        if (Files.exists(logoFile)) {
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final Resources resources = appContext.getBean(Resources.class);
+        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        final Path nodeLogoDirectory = resources.locateHarvesterLogosDirSMVC(appContext);
 
-            final List<Group> groups = groupRepository.findByLogo(file);
-            if (groups.size() > 0) {
-                List<String> groupId = new ArrayList<>();
-                groups.forEach(e -> groupId.add(e.getName()));
-                throw new IllegalArgumentException(String.format(
-                    "Logo '%s' is used by %d group(s). Assign another logo to the following groups: %s.",
-                    file, groups.size(), groupId.toString()));
+        try (Resources.ResourceHolder image = resources.getImage(serviceContext, file, nodeLogoDirectory)){
+            if (image != null) {
+                final List<Group> groups = groupRepository.findByLogo(file);
+                if (groups != null && groups.size() > 0) {
+                    final List<String> groupIds =
+                        groups.stream().map(Group::getName).collect(Collectors.toList());
+                    throw new IllegalArgumentException(String.format(
+                        "Logo '%s' is used by %d group(s). Assign another logo to the following groups: %s.",
+                        file, groups.size(), groupIds.toString()));
+                }
+
+                resources.deleteImageIfExists(file, nodeLogoDirectory);
+            } else {
+                throw new ResourceNotFoundException(String.format(
+                    "No logo found with filename '%s'.", file));
             }
-
-            Files.delete(logoFile);
-        } else {
-            throw new ResourceNotFoundException(String.format(
-                "No logo found with filename '%s'.", file));
         }
     }
 }
