@@ -144,7 +144,7 @@ public abstract class Resources {
     /**
      * The same as {@link #locateHarvesterLogosDir(ServiceContext)} but for Spring MVC
      */
-    public Path locateHarvesterLogosDirSMVC(ApplicationContext applicationContext) throws IOException {
+    public Path locateHarvesterLogosDirSMVC(ApplicationContext applicationContext) {
         return locateResourcesDir(null, applicationContext).resolve("images").resolve("harvesting");
     }
 
