@@ -736,18 +736,18 @@ public class SiteApi {
 
                 if (asFavicon) {
                     try (Resources.ResourceHolder favicon =
-                             resources.getWritableImage(serviceContext, "harvesting/images/favicon.png",
+                             resources.getWritableImage(serviceContext, "images/logos/favicon.png",
                                                         resourcesDir)) {
                         ApiUtils.createFavicon(source, favicon.getPath());
                     }
                 } else {
                     try (Resources.ResourceHolder logo =
                              resources.getWritableImage(serviceContext,
-                                                        "harvesting/images/logos/" + nodeUuid + ".png",
+                                                        "images/logos/" + nodeUuid + ".png",
                                                         resourcesDir);
                          Resources.ResourceHolder defaultLogo =
                              resources.getWritableImage(serviceContext,
-                                                        "harvesting/images/logo.png", resourcesDir)) {
+                                                        "images/logo.png", resourcesDir)) {
                         if (!file.endsWith(".png")) {
                             try (
                                 OutputStream logoOut = Files.newOutputStream(logo.getPath());
