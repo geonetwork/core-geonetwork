@@ -40,7 +40,7 @@
   <xsl:template match="/">
     <doc>
       <docType>metadata</docType>
-      <documentStandard>iso19139</documentStandard>
+      <documentStandard>iso19110</documentStandard>
 
       <resourceTitle>
         <xsl:value-of select="/gfc:FC_FeatureCatalogue/gmx:name/gco:CharacterString|
