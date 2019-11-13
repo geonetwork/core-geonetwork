@@ -51,7 +51,7 @@ public class BatchEditParameter implements Serializable {
         this.condition = condition;
     }
     public BatchEditParameter(String xpath, String value) {
-        new BatchEditParameter(xpath, value, null);
+        this(xpath, value, null);
     }
 
     @XmlElement(required = true)
