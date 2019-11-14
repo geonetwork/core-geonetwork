@@ -40,7 +40,7 @@
         <sch:rule
             context="//gmd:MD_Metadata|//*[@gco:isoType='gmd:MD_Metadata']">
         	<sch:let name="language"
-                   value="gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue"/>
+                   value="if(normalize-space(gmd:language/gmd:LanguageCode/@codeListValue) != '') then gmd:language/gmd:LanguageCode/@codeListValue else gmd:language/gco:CharacterString"/>
           <sch:let name="localeAndNoLanguage"
                    value="gmd:locale and (gmd:language/@gco:nilReason='missing' or not(gmd:language))"/>
 

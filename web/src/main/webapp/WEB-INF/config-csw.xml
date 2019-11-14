@@ -108,7 +108,7 @@
 
         <parameter name="Language" field="language" type="SupportedISOQueryables">
           <xpath schema="iso19139"
-                 path="gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue"/>
+                 path="if (normalize-space(gmd:language/gmd:LanguageCode/@codeListValue) != '') then gmd:language/gmd:LanguageCode/@codeListValue else gmd:language/gco:CharacterString"/>
         </parameter>
 
         <parameter name="ResourceIdentifier" field="identifier" type="SupportedISOQueryables">

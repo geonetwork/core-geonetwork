@@ -51,7 +51,7 @@
         <!-- Check specification names and status -->
         <sch:rule context="//gmd:dataQualityInfo/*[name() != 'geonet:element']">
 
-            <sch:let name="lang" value="normalize-space(/*/gmd:language/gco:CharacterString|/*/gmd:language/gmd:LanguageCode/@codeListValue)" />
+            <sch:let name="lang" value="if(normalize-space(/*/gmd:language/gmd:LanguageCode/@codeListValue) != '') then normalize-space(/*/gmd:language/gmd:LanguageCode/@codeListValue) else normalize-space(/*/gmd:language/gco:CharacterString)" />
             <sch:let name="langCodeMap">
                 <ger>#DE</ger>
                 <eng>#EN</eng>

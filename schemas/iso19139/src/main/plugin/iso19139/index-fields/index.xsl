@@ -296,7 +296,7 @@
         </xsl:for-each>
 
         <xsl:for-each
-          select="gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue">
+          select="gmd:language/gmd:LanguageCode/@codeListValue|gmd:language/gco:CharacterString">
           <resourceLanguage>
             <xsl:value-of select="."/>
           </resourceLanguage>

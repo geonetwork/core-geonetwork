@@ -214,12 +214,11 @@
       for that process -->
   <xsl:template name="analyze-inspire-themes-and-topiccategory">
     <xsl:param name="root"/>
-    <xsl:variable name="lang" select="if (normalize-space($root//gmd:MD_Metadata/gmd:language/gco:CharacterString
-            |$root//gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue)='')
-            then 'en'
-            else
-            substring($root//gmd:MD_Metadata/gmd:language/gco:CharacterString
-            |$root//gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue, 1, 2)
+    <xsl:variable name="lang" select="if (normalize-space($root//gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue) != '' )
+            then substring(normalize-space($root//gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue), 1, 2)
+            else if (normalize-space($root//gmd:MD_Metadata/gmd:language/gco:CharacterString) != '')
+            then substring(normalize-space($root//gmd:MD_Metadata/gmd:language/gco:CharacterString), 1, 2)
+            else 'en'
             "/>
     <xsl:variable name="mappingAvailable">
       <!-- For all theme in metadata language -->
@@ -295,13 +294,12 @@
       <!-- Default language is english if not set
           else use the 2 first letter of the language code (skos xml:lang attribute is ISO 2 letters code)
       -->
-      <xsl:variable name="lang" select="if (normalize-space(//gmd:MD_Metadata/gmd:language/gco:CharacterString
-                |//gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue)='')
-                then 'en'
-                else
-                substring(//gmd:MD_Metadata/gmd:language/gco:CharacterString
-                |//gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue, 1, 2)
-                "/>
+    <xsl:variable name="lang" select="if (normalize-space(//gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue) != '' )
+            then substring(normalize-space(//gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue), 1, 2)
+            else if (normalize-space(//gmd:MD_Metadata/gmd:language/gco:CharacterString) != '')
+            then substring(normalize-space(//gmd:MD_Metadata/gmd:language/gco:CharacterString), 1, 2)
+            else 'en'
+            "/>
       <xsl:variable name="mdKeywords" select="gmd:descriptiveKeywords"/>
       <xsl:variable name="missing-inspirethemes">
         <xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">

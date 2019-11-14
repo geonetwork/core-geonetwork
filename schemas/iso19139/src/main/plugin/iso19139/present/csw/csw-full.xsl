@@ -195,7 +195,14 @@
 
       <xsl:for-each select="$identification/gmd:language">
         <dc:language>
-          <xsl:value-of select="gco:CharacterString|gmd:LanguageCode/@codeListValue"/>
+          <xsl:choose>
+            <xsl:when test="gmd:LanguageCode/@codeListValue">
+              <xsl:value-of select="gmd:LanguageCode/@codeListValue"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:value-of select="gco:CharacterString"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </dc:language>
       </xsl:for-each>
 

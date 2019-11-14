@@ -195,7 +195,7 @@ USA.
                 <sch:value-of select="$loc/strings/alert.M55/div"/>
             </sch:assert>
 
-            <sch:let name="resourceLanguage" value="string-join(gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue, ', ')"/>
+            <sch:let name="resourceLanguage" value="if (normalize-space(gmd:language/gmd:LanguageCode/@codeListValue) != '') then string-join(gmd:language/gmd:LanguageCode/@codeListValue, ', ') else string-join(gmd:language/gco:CharacterString, ', ')"/>
             <sch:let name="euLanguage" value="
 				not(gmd:language/@gco:nilReason='missing') and
 				geonet:contains-any-of($resourceLanguage,
@@ -732,7 +732,7 @@ USA.
 
 
             <!--  Language -->
-            <sch:let name="language" value="gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue"/>
+            <sch:let name="language" value="if(normalize-space(gmd:language/gmd:LanguageCode/@codeListValue) != '') then gmd:language/gmd:LanguageCode/@codeListValue else gmd:language/gco:CharacterString"/>
             <sch:let name="language_present" value="geonet:contains-any-of($language,
 				('eng', 'fre', 'ger', 'spa', 'dut', 'ita', 'cze', 'lav', 'dan', 'lit', 'mlt',
 				'pol', 'est', 'por', 'fin', 'rum', 'slo', 'slv', 'gre', 'bul',

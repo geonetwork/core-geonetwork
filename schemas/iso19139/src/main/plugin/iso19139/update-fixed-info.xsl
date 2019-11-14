@@ -77,9 +77,11 @@
 
   <!-- The default language is also added as gmd:locale
   for multilingual metadata records. -->
-  <xsl:variable name="mainLanguage"
-                select="/root/*/gmd:language/gco:CharacterString/text()|
-                        /root/*/gmd:language/gmd:LanguageCode/@codeListValue"/>
+ <xsl:variable name="mainLanguage">
+      <xsl:call-template name="langId_from_gmdlanguage19139">
+          <xsl:with-param name="gmdlanguage" select="/root/*/gmd:language"/>
+      </xsl:call-template>
+  </xsl:variable>
 
   <xsl:variable name="isMultilingual"
                 select="count(/root/*/gmd:locale[*/gmd:languageCode/*/@codeListValue != $mainLanguage]) > 0"/>
@@ -433,6 +435,10 @@
           </xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
+
+      <!-- Apply other elements that we are not handling in this template -->
+      <xsl:apply-templates select="node()[not(self::gco:CharacterString|self::gmx:Anchor|self::gmd:PT_FreeText)]"/>
+
     </xsl:copy>
   </xsl:template>
 
