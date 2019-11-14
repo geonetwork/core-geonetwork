@@ -334,9 +334,9 @@
                                             @locale = concat('#', $mainLanguageId)])"/>
 
       <!-- Add nileason if text is empty -->
-      <xsl:variable name="isEmpty"
+      <xsl:variable name="isMainLanguageEmpty"
                     select="if ($isMultilingual and not($excluded))
-                            then $valueInPtFreeTextForMainLanguage = ''
+                            then ($valueInPtFreeTextForMainLanguage = '' and normalize-space(gco:CharacterString|gmx:Anchor) = '')
                             else if ($valueInPtFreeTextForMainLanguage != '')
                             then $valueInPtFreeTextForMainLanguage = ''
                             else normalize-space(gco:CharacterString|gmx:Anchor) = ''"/>
@@ -347,7 +347,7 @@
 
 
       <xsl:choose>
-        <xsl:when test="$isEmpty">
+        <xsl:when test="$isMainLanguageEmpty">
           <xsl:attribute name="gco:nilReason">
             <xsl:choose>
               <xsl:when test="@gco:nilReason">
@@ -357,7 +357,7 @@
             </xsl:choose>
           </xsl:attribute>
         </xsl:when>
-        <xsl:when test="@gco:nilReason != 'missing' and not($isEmpty)">
+        <xsl:when test="@gco:nilReason != 'missing' and not($isMainLanguageEmpty)">
           <xsl:copy-of select="@gco:nilReason"/>
         </xsl:when>
       </xsl:choose>
