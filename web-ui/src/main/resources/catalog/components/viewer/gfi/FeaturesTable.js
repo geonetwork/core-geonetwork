@@ -24,10 +24,10 @@
 (function() {
   goog.provide('gn_featurestable_directive');
 
-  var module = angular.module('gn_featurestable_directive', []);
+  var module = angular.module('gn_featurestable_directive', ['gn_utility_service']);
 
-  module.directive('gnFeaturesTable', ['$http', 'gfiTemplateURL', 'gnLangs',
-    function($http, gfiTemplateURL, gnLangs) {
+  module.directive('gnFeaturesTable', ['$http', 'gfiTemplateURL', 'getBsTableLang',
+    function($http, gfiTemplateURL, getBsTableLang) {
 
       return {
         restrict: 'E',
@@ -46,7 +46,7 @@
         templateUrl: '../../catalog/components/viewer/gfi/partials/' +
             'featurestable.html',
         link: function(scope, element, attrs, ctrls) {
-          ctrls.ctrl.initTable(element.find('table'), scope, gnLangs);
+          ctrls.ctrl.initTable(element.find('table'), scope, getBsTableLang);
         }
       };
     }]);
@@ -55,7 +55,7 @@
     this.promise = this.loader.loadAll();
   };
 
-  GnFeaturesTableController.prototype.initTable = function(element, scope, gnLangs) {
+  GnFeaturesTableController.prototype.initTable = function(element, scope, getBsTableLang) {
 
     // this returns a valid xx_XX language code based on available locales in bootstrap-table
     // if none found, return 'en'
@@ -70,6 +70,30 @@
         }
       });
       return lang;
+    }
+
+    // See http://stackoverflow.com/a/13382873/29655
+    function getScrollbarWidth() {
+      var outer = document.createElement('div');
+      outer.style.visibility = 'hidden';
+      outer.style.width = '100px';
+      outer.style.msOverflowStyle = 'scrollbar';
+      document.body.appendChild(outer);
+      var widthNoScroll = outer.offsetWidth;
+      outer.style.overflow = 'scroll';
+      var inner = document.createElement('div');
+      inner.style.width = '100%';
+      outer.appendChild(inner);
+      var widthWithScroll = inner.offsetWidth;
+      outer.parentNode.removeChild(outer);
+      return widthNoScroll - widthWithScroll;
+    }
+
+    // Force the table to resetWidth on window resize
+    // this enables the header and the rows to be aligned
+    function resizeBsTable() {
+      element.bootstrapTable('resetWidth');
+      element.bootstrapTable('resetView');
     }
 
     this.loader.getBsTableConfig().then(function(bstConfig) {

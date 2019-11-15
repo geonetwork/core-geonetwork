@@ -32,9 +32,11 @@ import org.fao.geonet.domain.LinkStatus;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.ClientHttpResponse;
+import sun.net.ftp.FtpLoginException;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.net.URL;
 
 public class UrlChecker {
 
@@ -57,7 +59,27 @@ public class UrlChecker {
     protected GeonetHttpRequestFactory requestFactory;
 
     public LinkStatus getUrlStatus(String url) {
+        if (url.startsWith("ftp")) {
+            return getFTPStatus(url);
+        }
+
         return getUrlStatus(url, 5);
+    }
+
+    private LinkStatus getFTPStatus(String url) {
+        LinkStatus linkStatus = new LinkStatus();
+        linkStatus.setFailing(false);
+        try {
+            new URL(url).openStream().close();
+            linkStatus.setStatusValue("OK");
+            linkStatus.setStatusInfo("new URL(url).openStream() success.");
+        } catch (FtpLoginException e) {
+            linkStatus.setStatusValue("Need username/password");
+            linkStatus.setStatusInfo("new URL(url).openStream() need username/password.");
+        } catch (IOException e) {
+            return buildIOExceptionStatus(e);
+        }
+        return linkStatus;
     }
 
     private LinkStatus getUrlStatus(String url, int tryNumber) {

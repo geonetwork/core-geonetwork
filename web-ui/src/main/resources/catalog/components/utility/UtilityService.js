@@ -464,6 +464,45 @@
       };
     }]);
 
+
+  module.service('gnHumanizeTimeService', ['gnGlobalSettings', function(gnGlobalSettings) {
+    return function(date, format, contextAllowToUseFromNow) {
+        function isDateGmlFormat(date) {
+          return date.match('[Zz]$') !== null;
+        }
+        var settingAllowToUseFromNow = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
+        var parsedDate = null;
+        if (isDateGmlFormat(date)) {
+          parsedDate = moment(date, 'YYYY-MM-DDtHH-mm-SSSZ');
+        } else {
+          parsedDate = moment(date);
+        }
+        if (parsedDate.isValid()) {
+          var fromNow = parsedDate.fromNow();
+          if (settingAllowToUseFromNow && contextAllowToUseFromNow) {
+            return {value: fromNow, title: format ? parsedDate.format(format) : parsedDate.toString()};
+          } else {
+            return {title: fromNow, value: format ? parsedDate.format(format) : parsedDate.toString()};
+          }
+        }
+      };
+    }]);
+
+  module.service('getBsTableLang', ['gnLangs', function(gnLangs) {
+    return function() {
+      var iso2 = gnLangs.getIso2Lang(gnLangs.getCurrent());
+      var locales = Object.keys($.fn.bootstrapTable.locales);
+      var lang = 'en';
+      locales.forEach(function (locale) {
+        if (locale.startsWith(iso2)) {
+          lang = locale;
+          return true;
+        }
+      });
+      return lang;
+    };
+  }]);
+
   module.service('gnTreeFromSlash', [function() {
     var findChild = function(node, name) {
       var n;
