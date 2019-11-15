@@ -738,10 +738,6 @@ public class Thesaurus {
                 this.defaultNamespace = DEFAULT_THESAURUS_NAMESPACE;
             }
 
-            if (!this.defaultNamespace.endsWith("#")) {
-                this.defaultNamespace += "#";
-            }
-
             Element dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued|skos:Collection/dc:date", theNSs);
 
             Date thesaususDate = parseThesaurusDate(dateEl);
