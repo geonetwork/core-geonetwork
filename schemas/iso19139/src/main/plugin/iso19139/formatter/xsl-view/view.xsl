@@ -280,17 +280,18 @@
           <br/>
           <p>
             <!-- Custodians -->
-            <xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/
-                              *[gmd:role/*/@codeListValue = ('custodian', 'author')]">
+            <xsl:for-each-group select="gmd:identificationInfo/*/gmd:pointOfContact/
+                              *[gmd:role/*/@codeListValue = ('custodian', 'author')]"
+                          group-by="gmd:individualName/gco:CharacterString">
               <xsl:variable name="name"
-                            select="normalize-space(gmd:individualName)"/>
+                            select="normalize-space(current-grouping-key())"/>
 
               <xsl:value-of select="$name"/>
               <xsl:if test="$name != ''">&#160;(</xsl:if>
               <xsl:value-of select="gmd:organisationName/*"/>
               <xsl:if test="$name">)</xsl:if>
               <xsl:if test="position() != last()">&#160;-&#160;</xsl:if>
-            </xsl:for-each>
+            </xsl:for-each-group>
 
             <!-- Publication year: use last publication date -->
             <xsl:variable  name="publicationDate">
@@ -497,18 +498,24 @@
       <xsl:choose>
         <xsl:when
           test="*/gmd:organisationName and */gmd:individualName">
-          <xsl:if test="normalize-space(*/gmd:individualName) != ''">
-            <xsl:apply-templates mode="render-value"
-                                 select="*/gmd:individualName"/>
-          <!--  <xsl:if test="normalize-space(*/gmd:positionName) != ''">
-              (<xsl:apply-templates mode="render-value" select="*/gmd:positionName"/>)
-            </xsl:if>
-            - -->
-          </xsl:if>
-          <xsl:if test="normalize-space(*/gmd:organisationName) != ''">
-            (<xsl:apply-templates mode="render-value"
-                               select="*/gmd:organisationName"/>)
-          </xsl:if>
+          <xsl:variable name="hasIndividualName"
+                        select="normalize-space(*/gmd:individualName) != ''"/>
+          <xsl:choose>
+            <xsl:when test="$hasIndividualName">
+              <xsl:apply-templates mode="render-value"
+                                   select="*/gmd:individualName"/>
+              <!--  <xsl:if test="normalize-space(*/gmd:positionName) != ''">
+                  (<xsl:apply-templates mode="render-value" select="*/gmd:positionName"/>)
+                </xsl:if>
+                - -->
+              (<xsl:apply-templates mode="render-value"
+                                    select="*/gmd:organisationName"/>)
+            </xsl:when>
+            <xsl:when test="normalize-space(*/gmd:organisationName) != ''">
+              <xsl:apply-templates mode="render-value"
+                                   select="*/gmd:organisationName"/>
+            </xsl:when>
+          </xsl:choose>
         </xsl:when>
         <xsl:otherwise>
             <xsl:value-of select="*/gmd:organisationName|*/gmd:individualName"/>

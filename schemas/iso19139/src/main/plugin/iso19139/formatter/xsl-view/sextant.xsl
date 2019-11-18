@@ -27,6 +27,7 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:saxon="http://saxon.sf.net/"
                 version="2.0"
                 extension-element-prefixes="saxon"
@@ -66,7 +67,8 @@
                     <xsl:apply-templates mode="render-value" select="gmd:dateType/*/@codeListValue"/>
                   </dt>
                   <dd>
-                    <xsl:apply-templates mode="render-value" select="gmd:date/*"/>
+                    <xsl:value-of select="format-date(xs:date(substring-before(gmd:date/*, 'T')), '[D01]-[M01]-[Y0001]')"/>
+<!--                    <xsl:apply-templates mode="render-value" select="gmd:date/*"/>-->
                   </dd>
                 </dl>
               </xsl:for-each>
@@ -81,7 +83,8 @@
 
                   <xsl:if test="gml:beginPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
                     <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ')"/>
-                    <xsl:apply-templates mode="render-value" select="gml:beginPosition"/>
+                    <xsl:value-of select="format-date(xs:date(substring-before(gml:beginPosition, 'T')), '[D01]-[M01]-[Y0001]')"/>
+                    <!--                    <xsl:apply-templates mode="render-value" select="gml:beginPosition"/>-->
                     <xsl:value-of select="' > '"/>
                   </xsl:if>
 
@@ -91,7 +94,8 @@
                   </xsl:variable>
                   <xsl:if test="gml:endPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
                     <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-to)[1], ' ')"/>
-                    <xsl:apply-templates mode="render-value" select="gml:endPosition"/>
+                    <xsl:value-of select="format-date(xs:date(substring-before(gml:endPosition, 'T')), '[D01]-[M01]-[Y0001]')"/>
+<!--                    <xsl:apply-templates mode="render-value" select="gml:endPosition"/>-->
                   </xsl:if>
 
                   <xsl:if test="gml:timePosition != ''">

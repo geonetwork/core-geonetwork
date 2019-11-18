@@ -1141,13 +1141,16 @@ to a common CSS class?
       display: none;
     }
     .gn-img-thumbnail, .gn-img-extent {
-      width:100%;
-      height:100%;
-      object-fit: cover;
-      overflow: hidden;
-      max-height: 235px;
+      object-fit: contain;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
     }
     height: 250px;
+    .extent {
+      height: 235px;
+    }
   }
   section.gn-md-side-associated {
     h2 > i {
@@ -1162,6 +1165,7 @@ to a common CSS class?
     box-shadow: @sxt-shadow;
     text-align: center;
     position: relative;
+    word-break: break-all;
     .gn-md-links {
       display: inline-block;
       width: auto;
