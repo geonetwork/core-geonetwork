@@ -36,6 +36,7 @@ import sun.net.ftp.FtpLoginException;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class UrlChecker {
@@ -63,14 +64,13 @@ public class UrlChecker {
             if (url.startsWith("ftp")) {
                 return getFTPStatus(url);
             }
-
             return getUrlStatus(url, 5);
         } catch (Exception e) {
             return buildExceptionStatus(e);
         }
     }
 
-    private LinkStatus getFTPStatus(String url) {
+    private LinkStatus getFTPStatus(String url) throws IOException {
         LinkStatus linkStatus = new LinkStatus();
         linkStatus.setFailing(false);
         try {
@@ -80,8 +80,6 @@ public class UrlChecker {
         } catch (FtpLoginException e) {
             linkStatus.setStatusValue("Need username/password");
             linkStatus.setStatusInfo("new URL(url).openStream() need username/password.");
-        } catch (IOException e) {
-            return buildExceptionStatus(e);
         }
         return linkStatus;
     }
