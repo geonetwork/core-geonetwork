@@ -61,13 +61,13 @@
         <td>
           <div class="row">
             <div class="col-md-6">
-              <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*">
+              <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[gmd:date/* != '']">
                 <dl>
                   <dt>
                     <xsl:apply-templates mode="render-value" select="gmd:dateType/*/@codeListValue"/>
                   </dt>
                   <dd>
-                    <xsl:value-of select="format-date(xs:date(substring-before(gmd:date/*, 'T')), '[D01]-[M01]-[Y0001]')"/>
+                    <xsl:value-of select="format-date(xs:date(tokenize(gmd:date/*, 'T')[1]), '[D01]-[M01]-[Y0001]')"/>
 <!--                    <xsl:apply-templates mode="render-value" select="gmd:date/*"/>-->
                   </dd>
                 </dl>
@@ -83,7 +83,7 @@
 
                   <xsl:if test="gml:beginPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
                     <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ')"/>
-                    <xsl:value-of select="format-date(xs:date(substring-before(gml:beginPosition, 'T')), '[D01]-[M01]-[Y0001]')"/>
+                    <xsl:value-of select="format-date(xs:date(tokenize(gml:beginPosition, 'T')[1]), '[D01]-[M01]-[Y0001]')"/>
                     <!--                    <xsl:apply-templates mode="render-value" select="gml:beginPosition"/>-->
                     <xsl:value-of select="' > '"/>
                   </xsl:if>
@@ -94,7 +94,7 @@
                   </xsl:variable>
                   <xsl:if test="gml:endPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
                     <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-to)[1], ' ')"/>
-                    <xsl:value-of select="format-date(xs:date(substring-before(gml:endPosition, 'T')), '[D01]-[M01]-[Y0001]')"/>
+                    <xsl:value-of select="format-date(xs:date(tokenize(gml:endPosition, 'T')[1]), '[D01]-[M01]-[Y0001]')"/>
 <!--                    <xsl:apply-templates mode="render-value" select="gml:endPosition"/>-->
                   </xsl:if>
 
