@@ -110,7 +110,7 @@ public class LinksApi {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     public Page<Link> getRecordLinks(
-            @ApiParam(value = "Filter, e.g. \"{url: 'png', lastState: 'ko'}\", lastState being 'ok'/'ko'/'unknown'", required = false) @RequestParam(required = false) JSONObject filter,
+            @ApiParam(value = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421'}\", lastState being 'ok'/'ko'/'unknown'", required = false) @RequestParam(required = false) JSONObject filter,
             @ApiIgnore Pageable pageRequest) throws JSONException {
 
         if (filter != null) {
