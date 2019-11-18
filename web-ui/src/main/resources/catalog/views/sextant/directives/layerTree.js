@@ -404,6 +404,7 @@
             return scope.member.state && scope.member.state.folded;
           };
           scope.toggleChildrenNodes = function (event, e, forceVisible) {
+            if ($(event.currentTarget).hasClass('inactiveLayerNode')) {return}
             var visible = forceVisible !== undefined ? forceVisible : !scope.hasCheckedChildren(e);
             e.nodes.forEach(function(n) {
               if (n instanceof ol.layer.Base) {
@@ -429,6 +430,21 @@
             }
             return hasChecked;
           };
+
+          scope.hasOnlyComboLayers = function (e) {
+            var hasCombo = false;
+            for (var n = 0 ; n < e.nodes.length; n++) {
+              if (e.nodes[n] instanceof (ol.layer.Base)) {
+                if (e.nodes[n].get('groupcombo')) {
+                  return true;
+                }
+              } else {
+                hasCombo = hasCombo || scope.hasOnlyComboLayers(e.nodes[n]);
+              }
+            }
+            return hasCombo;
+
+          }
 
           scope.indexWFSFeatures = function(url, type) {
             $http.get('wfs.harvest?' +
