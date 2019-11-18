@@ -404,7 +404,7 @@
             return scope.member.state && scope.member.state.folded;
           };
           scope.toggleChildrenNodes = function (event, e, forceVisible) {
-            let visible = forceVisible !== undefined ? forceVisible : !scope.hasCheckedChildren(e);
+            var visible = forceVisible !== undefined ? forceVisible : !scope.hasCheckedChildren(e);
             e.nodes.forEach(function(n) {
               if (n instanceof ol.layer.Base) {
                 n.set('visible', visible);
@@ -416,7 +416,7 @@
           };
 
           scope.hasCheckedChildren = function (e) {
-            let hasChecked = false;
+            var hasChecked = false;
             for (var n = 0 ; n < e.nodes.length; n++) {
               if (e.nodes[n] instanceof (ol.layer.Base)) {
                 if (e.nodes[n].get('visible') === true) {
@@ -428,7 +428,6 @@
               }
             }
             return hasChecked;
-
           };
 
           scope.indexWFSFeatures = function(url, type) {
