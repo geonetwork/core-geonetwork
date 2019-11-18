@@ -107,9 +107,9 @@
                   field: 'url',
                   title: $translate.instant('url'),
                   titleTooltip: $translate.instant('url'),
-                  search: true,
                   sortable: true,
                   filterControl: 'input',
+                  filterControlPlaceholder: '',
                   formatter: function(val, row) {
                     return '<a href="' + row.url + '">' + row.url + '</a>';
                   }.bind(this)}, {
