@@ -25,10 +25,12 @@ package org.fao.geonet.repository.specification;
 
 import org.fao.geonet.domain.Link;
 import org.fao.geonet.domain.Link_;
+import org.fao.geonet.domain.MetadataLink;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -39,7 +41,7 @@ public class LinkSpecs {
     private LinkSpecs() {
     }
 
-    public static Specification<Link> filter(String urlPartToContain, Integer state) {
+    public static Specification<Link> filter(String urlPartToContain, Integer state, String associatedRecord) {
 
         return new Specification<Link>() {
             @Override
@@ -54,6 +56,11 @@ public class LinkSpecs {
                 if (urlPartToContain!= null) {
                     Path<String> urlPath = root.get(Link_.url);
                     predicates.add(cb.like(urlPath, cb.literal(String.format("%%%s%%", urlPartToContain))));
+                }
+
+                if (associatedRecord!= null) {
+                    Join<Link, MetadataLink> metadataJoin = root.join(Link_.records);
+                    predicates.add(cb.like(metadataJoin.get("metadataUuid"), cb.literal(String.format("%%%s%%", associatedRecord))));
                 }
                 return cb.and(predicates.toArray(new Predicate[] {}));
             }

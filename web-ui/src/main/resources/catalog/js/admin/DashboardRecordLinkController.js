@@ -129,6 +129,8 @@
                   title: $translate.instant('associatedRecords'),
                   titleTooltip: $translate.instant('associatedRecords'),
                   sortable: false,
+                  filterControl: 'input',
+                  filterControlPlaceholder: '',
                   formatter: function(val, row) {
                     var ulElem = '<ul>';
                     for (var i = 0; i < row.records.length; i++) {

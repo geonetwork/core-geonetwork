@@ -116,6 +116,7 @@ public class LinksApi {
         if (filter != null) {
             Integer stateToMatch = null;
             String url = null;
+            String associatedRecord = null;
             if (filter.has("lastState")) {
                 stateToMatch = 0;
                 if (filter.getString("lastState").equalsIgnoreCase("ok")) {
@@ -129,7 +130,11 @@ public class LinksApi {
                 url = filter.getString("url");
             }
 
-            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch), pageRequest);
+            if (filter.has("records")) {
+                associatedRecord = filter.getString("records");
+            }
+
+            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecord), pageRequest);
         } else {
             return linkRepository.findAll(pageRequest);
         }
