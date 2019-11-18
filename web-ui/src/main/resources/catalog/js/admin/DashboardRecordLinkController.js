@@ -111,7 +111,7 @@
                   filterControl: 'input',
                   filterControlPlaceholder: '',
                   formatter: function(val, row) {
-                    return '<a href="' + row.url + '">' + row.url + '</a>';
+                    return '<a href="' + row.url + '" target="_blank">' + row.url + '</a>';
                   }.bind(this)}, {
 
                   field: 'lastCheck',
@@ -135,7 +135,7 @@
                     var ulElem = '<ul>';
                     for (var i = 0; i < row.records.length; i++) {
                       var record = row.records[i];
-                      var aElem = '<li><a href="catalog.search#/metadata/' + record.metadataUuid + '">' + record.metadataUuid + '</a></li>';
+                      var aElem = '<li><a href="catalog.search#/metadata/' + record.metadataUuid + '" target="_blank">' + record.metadataUuid + '</a></li>';
                       ulElem = ulElem + aElem;
                     }
                     ulElem = ulElem + '</ul>';
