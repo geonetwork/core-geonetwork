@@ -36,7 +36,6 @@ import sun.net.ftp.FtpLoginException;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class UrlChecker {
