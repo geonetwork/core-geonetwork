@@ -59,11 +59,15 @@ public class UrlChecker {
     protected GeonetHttpRequestFactory requestFactory;
 
     public LinkStatus getUrlStatus(String url) {
-        if (url.startsWith("ftp")) {
-            return getFTPStatus(url);
-        }
+        try {
+            if (url.startsWith("ftp")) {
+                return getFTPStatus(url);
+            }
 
-        return getUrlStatus(url, 5);
+            return getUrlStatus(url, 5);
+        } catch (Exception e) {
+            return buildExceptionStatus(e);
+        }
     }
 
     private LinkStatus getFTPStatus(String url) {
@@ -77,12 +81,12 @@ public class UrlChecker {
             linkStatus.setStatusValue("Need username/password");
             linkStatus.setStatusInfo("new URL(url).openStream() need username/password.");
         } catch (IOException e) {
-            return buildIOExceptionStatus(e);
+            return buildExceptionStatus(e);
         }
         return linkStatus;
     }
 
-    private LinkStatus getUrlStatus(String url, int tryNumber) {
+    private LinkStatus getUrlStatus(String url, int tryNumber) throws IOException {
         if (tryNumber < 1) {
             return buildTooManyRedirectStatus();
         }
@@ -94,8 +98,6 @@ public class UrlChecker {
                 return getUrlStatus(response.getHeaders().getFirst("Location"), tryNumber - 1);
             }
             return buildStatus(response, !statusCode.is2xxSuccessful());
-        } catch (IOException e) {
-            return buildIOExceptionStatus(e);
         }
     }
 
@@ -125,7 +127,7 @@ public class UrlChecker {
         return linkStatus;
     }
 
-    private LinkStatus buildIOExceptionStatus(IOException e) {
+    private LinkStatus buildExceptionStatus(Exception e) {
         LinkStatus linkStatus = new LinkStatus();
         linkStatus.setStatusValue("4XX");
         linkStatus.setStatusInfo(e.getMessage());
