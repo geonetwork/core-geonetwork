@@ -82,6 +82,8 @@
     <jsSource webappPath="/catalog/lib/bootstrap-select/bootstrap-select.min.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap-table/dist/extensions/angular/bootstrap-table-angular.js"
+              minimize="false"/>
     <jsSource webappPath="/catalog/lib/FileSaver/FileSaver.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/tableExport/tableExport.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js" minimize="false"/>
@@ -158,6 +160,8 @@
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap-table/dist/extensions/angular/bootstrap-table-angular.js"
+              minimize="false"/>
     <jsSource webappPath="/catalog/lib/FileSaver/FileSaver.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/tableExport/tableExport.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js" minimize="false"/>
@@ -227,6 +231,8 @@
     <jsSource webappPath="/catalog/lib/bootstrap-select/bootstrap-select.min.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap-table/dist/extensions/angular/bootstrap-table-angular.js"
+              minimize="false"/>
     <jsSource webappPath="/catalog/lib/FileSaver/FileSaver.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/tableExport/tableExport.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js" minimize="false"/>
@@ -290,6 +296,8 @@
     <jsSource webappPath="/catalog/lib/bootstrap-select/bootstrap-select.min.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap-table/dist/extensions/angular/bootstrap-table-angular.js"
+              minimize="false"/>
     <jsSource webappPath="/catalog/lib/FileSaver/FileSaver.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/tableExport/tableExport.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js" minimize="false"/>

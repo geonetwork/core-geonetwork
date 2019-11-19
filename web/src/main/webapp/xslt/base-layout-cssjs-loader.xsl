@@ -160,6 +160,7 @@
         <script
           src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/angular/bootstrap-table-angular.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/FileSaver/FileSaver.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/tableExport/tableExport.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js?v={$buildNumber}"></script>
