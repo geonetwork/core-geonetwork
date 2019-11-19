@@ -1424,7 +1424,7 @@
     <cors.allowedHosts>*</cors.allowedHosts>
 
 
-    <jetty.version>9.4.12.v20180830</jetty.version>
+    <jetty.version>9.4.22.v20191022</jetty.version>
     <jetty.file>jetty-distribution-9.4.12.v20180830</jetty.file>
     <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.12.v20180830/${jetty.file}.tar.gz</jetty.download>
 
