@@ -9,9 +9,12 @@
         ng-click="toggleNode($event)">
       </i>&nbsp;
       <i ng-if="!groupCombo" class="fa fa-fw sxt-layer-visibility"
-         ng-class="hasCheckedChildren(member) ? 'fa-check-square-o' : 'fa-square-o'"
+         ng-class="{
+         'inactiveLayerNode': hasOnlyComboLayers(member),
+         'fa-check-square-o': hasCheckedChildren(member),
+         'fa-square-o': !hasCheckedChildren(member)}"
          ng-click="toggleChildrenNodes($event, member)"
-         title="{{'groupVisible'|translate}}">
+         title="{{(hasOnlyComboLayers(member) ? 'groupVisible' : 'nodedesactivated')|translate}}">
       </i>
       <span>{{member.name || member.get('label')}}</span>
     </div>
