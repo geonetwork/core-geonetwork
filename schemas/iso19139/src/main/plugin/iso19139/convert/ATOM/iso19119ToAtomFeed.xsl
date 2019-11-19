@@ -195,7 +195,7 @@
             </atom:subtitle>
         </xsl:if>
         <xsl:if test="$isServiceEntry">
-            <xsl:for-each select="gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[upper-case(gmd:protocol/gco:CharacterString) = $protocol and gmd:applicationProfile/gco:CharacterString=$applicationProfile]/gmd:description">
+            <xsl:for-each select="gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[upper-case(gmd:protocol/gco:CharacterString) = $protocol and gmd:applicationProfile/*/text()=$applicationProfile]/gmd:description">
                 <xsl:variable name="crs" select="normalize-space(.)"/>
                 <xsl:variable name="crsLabel" select="/root/gui/schemas/iso19139/labels/element[@name = 'gmd:description']/helper/option[@value=$crs]"/>
                 <atom:category term="{$crs}" label="{$crsLabel}"/>
@@ -353,7 +353,7 @@
                     <xsl:value-of select="$authorEmail"/>
                 </atom:email>
             </atom:author>
-            <xsl:for-each select="gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[upper-case(gmd:protocol/gco:CharacterString) = $protocol and gmd:applicationProfile/gco:CharacterString=$applicationProfile]">
+            <xsl:for-each select="gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[upper-case(gmd:protocol/gco:CharacterString) = $protocol and gmd:applicationProfile/*/text()=$applicationProfile]">
                 <xsl:variable name="crs" select="normalize-space(gmd:description)"/>
                 <xsl:if test="$requestedCRS='' or $requestedCRS=$crs">
                     <atom:entry>
