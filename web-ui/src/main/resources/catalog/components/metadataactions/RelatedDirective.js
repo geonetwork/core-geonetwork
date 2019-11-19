@@ -116,6 +116,7 @@
               title: '@',
               list: '@',
               filter: '@',
+              container: '@',
               user: '=',
               hasResults: '=?'
             },
@@ -123,7 +124,9 @@
             link: function(scope, element, attrs, controller) {
               scope.location = window.location;
               var promise;
-              scope.container = scope.$parent.container || '.links';
+              if (angular.isUndefined(scope.container)) {
+                scope.container = scope.$parent.container || '.links';
+              }
               var elem = element[0];
               scope.lang = scope.lang || scope.$parent.lang;
               element.on('$destroy', function() {
@@ -173,9 +176,14 @@
                            scope.relations[idx] = value;
                          }
                        });
+
+                       if (angular.isDefined(scope.container)
+                           && scope.relations == null) {
+                         $(scope.container).hide();
+                       }
                        if (controller) {
-                          controller.finishRequest(elem, scope.relationFound);
-                        }
+                         controller.finishRequest(elem, scope.relationFound);
+                       }
                      } , function() {
                       if (controller) {
                         controller.finishRequest(elem, false);
