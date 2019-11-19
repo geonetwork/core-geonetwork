@@ -16,6 +16,8 @@
     "advancedCssProps": "Advanced properties",
     "allowedCategories": "Allowed Categories",
     "allowedCategoriesDescriptionHelp": "Categories that can be applied to this group",
+    "harvesterBatchEdits": "Batch edits",
+    "harvesterBatchEditsHelp": "Batch edits allow to update harvested records. It can be use to add, replace or delete element.",
     "andNodeLogo": " and logo",
     "applyXSLToRecord": "XSL transformation to apply",
     "applyXSLToRecordHelp": "The referenced XSL transform will be applied to each metadata record before it is added to Geonetwork",
