@@ -34,6 +34,8 @@
     "recordType-s": "Annuaire",
     "recordType-t": "Gabarit pour élément d'annuaire",
     "UserAdmin": "Utilisateur administrateur",
+    "duplicatedValueFound": "La valeur '{{value}}' existe déjà. Choisissez-en une autre.",
+    "duplicatedValueFoundHarvesterName": "Le nom du moissonneur '{{valeur}}' existe déjà. Vous devriez en choisir un autre.",
     "tooManyItemsInSelection": "Trop d'éléments dans la sélection. La limite est fixée à {{maxSize}}",
     "_cat": "Catégorie",
     "categories": "Catégories",
@@ -421,6 +423,7 @@
     "filterTool": "Rechercher et filtrer les données",
     "contextsTool": "Gérer les cartes",
     "printTool": "Imprimer la carte",
+    "legendTool": "Légende",
     "mInteractionTool": "Mesurer",
     "graticuleTool": "Afficher les graticules",
     "syncAllLayersTool": "Synchroniser les cartes pour la recherche et le visualiseur",
@@ -490,7 +493,7 @@
     "metadataUnpublishedError": "Une erreur est survenue lors de la dépublication de la fiche.",
     "categoriesUpdated": "Catégorie mise à jour.",
     "warnPublishDraft": "Lors de la publication d'une fiche ayant un statut brouillon, le statut passera à approuvé. Voulez-vous continuer ?",
-    "canceWorkingCopy": "Annuler la copie de travail",
+    "cancelWorkingCopy": "Annuler la copie de travail",
     "deleteWorkingCopyRecordConfirm": "Voulez-vous vraiment supprimer la copie de travail ?",
     "workingCopy": "Brouillon"
 }

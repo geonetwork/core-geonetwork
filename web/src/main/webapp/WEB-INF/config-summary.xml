@@ -125,7 +125,7 @@
     <facet name="hasDqEmptyCptMeasures" indexKey="hasDqEmptyCptMeasures" label="hasDqEmptyCptMeasures"/>
     <facet name="hasDqCptNotCovered" indexKey="hasDqCptNotCovered" label="hasDqCptNotCovered"/>
     <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
-
+    <facet name="recordOwner" indexKey="recordOwner" label="recordOwner"/>
     <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
     <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
 	  <facet name="isPublishedToAll" indexKey="_isPublishedToAll" label="isPublishedToAll" />
@@ -170,7 +170,7 @@
     <facet name="odatis_type_jeux_donnee" indexKey="thesaurus-local.theme.type_jeux_donnee" label="odatis_type_jeux_donnee"/>
 
     <facet name="lops-projets" indexKey="thesaurus-local.theme.lops_projets" label="lops-projets"/>
-    
+
     <facet name="simm-reglementaire" indexKey="thesaurus-local.theme.simm.reglementaire" label="simm-reglementaire"/>
     <facet name="simm-thematiques" indexKey="thesaurus-local.theme.theme.simm.thematiques" label="simm-thematiques"/>
 
@@ -235,6 +235,7 @@
       <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>
       <item facet="groupOwner" max="199" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+      <item facet="recordOwner" max="45" sortBy="value"/>
       <item facet="publishedForGroup" max="199" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
       <item facet="standard" max="15" sortBy="value"/>
@@ -306,7 +307,7 @@
       <item facet="odatis_type_jeux_donnee" max="300"/>
       <item facet="lops-projets" max="300"/>
       <item facet="simm-reglementaire" max="300"/>
-      <item facet="simm-thematiques" max="300"/>      
+      <item facet="simm-thematiques" max="300"/>
       <item facet="mdActions"/>
       <!--<item facet="metadataPOC" max="15"/>-->
     </summaryType>
@@ -315,6 +316,7 @@
       <item facet="groupOwner" max="99" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
       <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>
+      <item facet="recordOwner" max="45" sortBy="value"/>
     </summaryType>
     <summaryType name="contact" format="DIMENSION">
       <item facet="orgNameTree" max="99"/>

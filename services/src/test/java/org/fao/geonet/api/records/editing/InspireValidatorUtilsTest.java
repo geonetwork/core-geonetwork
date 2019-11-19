@@ -1,14 +1,17 @@
 package org.fao.geonet.api.records.editing;
 
-import javassist.NotFoundException;
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
+import javassist.NotFoundException;
+import jeeves.server.context.ServiceContext;
 
 public class InspireValidatorUtilsTest extends AbstractServiceIntegrationTest {
 
@@ -16,6 +19,13 @@ public class InspireValidatorUtilsTest extends AbstractServiceIntegrationTest {
 
     @Autowired
     InspireValidatorUtils inspireValidatorUtils;
+
+    private ServiceContext context;
+
+    @Before
+    public void setUp() throws Exception {
+        this.context = createServiceContext();
+    }
 
     @Test
     public void testGetReportUrl() {
@@ -37,15 +47,15 @@ public class InspireValidatorUtilsTest extends AbstractServiceIntegrationTest {
     @Ignore
     public void testLifeCycle() throws IOException {
 
-        assertEquals(inspireValidatorUtils.checkServiceStatus("http://wrong.url.eu"), false);
+        assertEquals(inspireValidatorUtils.checkServiceStatus(context, "http://wrong.url.eu"), false);
 
         // FIRST TEST IF OFFICIAL ETF IS AVAILABLE
         // Needed to avoid GN errors when ETF is not available
-        if (inspireValidatorUtils.checkServiceStatus(URL)) {
+        if (inspireValidatorUtils.checkServiceStatus(context, URL)) {
 
             try {
                 // No file
-                inspireValidatorUtils.submitFile(URL, null, "Metadata (TG version 1.3)", "GN UNIT TEST ");
+                inspireValidatorUtils.submitFile(context, URL, null, "Metadata (TG version 1.3)", "GN UNIT TEST ");
             } catch (IllegalArgumentException e) {
                 // RIGHT EXCEPTION
             } catch (Exception e) {
@@ -54,7 +64,7 @@ public class InspireValidatorUtilsTest extends AbstractServiceIntegrationTest {
 
             try {
                 // Valid but not found test ID
-                inspireValidatorUtils.isReady(URL, "IED123456789012345678901234567890123");
+                inspireValidatorUtils.isReady(context, URL, "IED123456789012345678901234567890123");
                 assertEquals("No exception!", "NotFoundException", "No Exception");
             } catch (NotFoundException e) {
                 // RIGHT EXCEPTION
@@ -64,7 +74,7 @@ public class InspireValidatorUtilsTest extends AbstractServiceIntegrationTest {
 
             try {
                 // Test ID in wrong format
-                assertEquals(inspireValidatorUtils.isPassed(URL, "1"), null);
+                assertEquals(inspireValidatorUtils.isPassed(context, URL, "1"), null);
             } catch (Exception e) {
                 assertEquals("Unexpected exception.", "Exception", "No Exception");
             }

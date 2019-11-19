@@ -33,6 +33,8 @@
     "recordType-s": "Skrá færslu",
     "recordType-t": "Sniðmát fyrir skráarfærslu",
     "UserAdmin": "Notandastjóri",
+    "duplicatedValueFound": "Value '{{value}}' already exist. Choose another one.",
+    "duplicatedValueFoundHarvesterName": "Harvester name '{{value}}' already exist. It is recommended to choose another name.",
     "tooManyItemsInSelection": "Of mörg atriði valin. Hámarksfjöldi {{maxSize}} sem er leyfður",
     "_cat": "Flokkur",
     "categories": "Flokkar",
@@ -406,6 +408,7 @@
     "filterTool": "Leita & og sía fitjur",
     "contextsTool": "Stjórna kortum",
     "printTool": "Prenta kort",
+    "legendTool": "Skýringatexti",
     "mInteractionTool": "Mælingar",
     "graticuleTool": "Birta bauganet",
     "syncAllLayersTool": "Samstilla leit og aðalkort",
@@ -475,7 +478,7 @@
     "metadataUnpublishedError": "Villa kom upp þegar lýsigögn voru tekin úr birtingu. ",
     "categoriesUpdated": "Flokkar uppfærðir.",
     "warnPublishDraft": "Þegar færslur eru birtar með vinnuflæði virkt, mun staðan breytast yfir í  'Samþykkt. Ertu viss um að þú viljir halda áfram?",
-    "canceWorkingCopy": "Hætta við vinnuafrit",
+    "cancelWorkingCopy": "Hætta við vinnuafrit",
     "deleteWorkingCopyRecordConfirm": "Ertu viss um að þú viljir fjarlægja vinnuafritið '{{titill}}'?",
     "workingCopy": "Vinnuafrit"
 }

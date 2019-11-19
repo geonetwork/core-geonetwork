@@ -79,8 +79,10 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
                     "gco:CharacterString[not(starts-with(normalize-space(text()), 'http'))]";
     private static final String XPATH_THUMBNAIL_WITH_URL =
             "*//gmd:graphicOverview/gmd:MD_BrowseGraphic[gmd:fileDescription/gco:CharacterString]/gmd:fileName/gco:CharacterString[starts-with(normalize-space(text()), 'http')]";
+
     private static final String XPATH_ATTACHMENTS_WITH_URL =
-            "*//gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'WWW:DOWNLOAD-1.0-http--download']/gmd:linkage/gmd:URL";
+            "*//gmd:CI_OnlineResource/gmd:linkage/gmd:URL";
+    private static final String URL_ATTACHED_RESOURCES = "api/records/%s/attachments/";
 
     private static final Pattern pattern = Pattern.compile(
             "(.*)\\/([a-zA-Z0-9_\\-]+)\\/([a-z]{2,3})\\/{1,2}resources.get\\?.*fname=([\\p{L}\\w\\s\\.\\-]+)(&.*|$)");
@@ -113,7 +115,7 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
                                     "api/records/" + uuid + "/attachments/$4"));
                 changed = true;
             }
-            
+
             // ATTACHMENTS
             // This fix the imports of metadata with attachments
             @SuppressWarnings("unchecked") final List<Element> linksAttachmentsUrl =
@@ -122,7 +124,8 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
 
             for (Element element : linksAttachmentsUrl) {
                 final String url = element.getText();
-                if(url.indexOf("api/records/") > 0) {
+                // Extra check if the URL contains the current UUID and rest API url pattern
+                if(url.indexOf(String.format(URL_ATTACHED_RESOURCES, uuid)) > 0) {
                     element.setText(url.replace(url.substring(0, url.indexOf("api/records/")), settingManager.getNodeURL()));
                     changed = true;
                 }

@@ -215,11 +215,16 @@
 
   };
 
+  geonetwork.GnFeaturesGFILoader.prototype.formatUrlValues_ = function(url) {
+    return '<a href="' + url + '" target="_blank">' + linkTpl + '</a>';
+  };
+
   geonetwork.GnFeaturesGFILoader.prototype.getBsTableConfig = function() {
     var pageList = [5, 10, 50, 100];
     var exclude = ['FID', 'boundedBy', 'the_geom', 'thegeom'];
     var $filter = this.$injector.get('$filter');
     var $q = this.$injector.get('$q');
+    var that = this;
 
     var promises = [
       this.promise,
@@ -243,7 +248,15 @@
             if (!(obj[key] instanceof Object)) {
               //Make sure it is a string and not a number
               obj[key] = obj[key]+'';
-              obj[key] = $filter('linky')(obj[key], '_blank');
+
+              // Linky directive may create invalid link if a full HTTP
+              // URL is provided with character like ")" which will be
+              // considered as text (eg. Kibana link with filters).
+              if (that.urlUtils.isValid(obj[key])) {
+                obj[key] = that.formatUrlValues_(obj[key]);
+              } else {
+                obj[key] = $filter('linky')(obj[key], '_blank');
+              }
               if (obj[key]) {
                 obj[key] = obj[key].replace(/>(.)*</, ' ' +
                     'target="_blank">' + linkTpl + '<');

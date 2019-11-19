@@ -201,7 +201,7 @@ public class MetadataProcessApi {
         try {
             final String siteURL = sm.getSiteURL(context);
             processedMetadata = XslProcessUtils.process(context, String.valueOf(metadata.getId()), process, save, true,
-                    report, siteURL, request.getParameterMap());
+                true, report, siteURL, request.getParameterMap());
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed",
                         "Not found:" + report.getNumberOfRecordNotFound() + ", Not owner:"
