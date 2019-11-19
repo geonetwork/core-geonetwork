@@ -21,9 +21,9 @@
         </strong>
         <strong data-ng-if="(mainType !== 'WMS') && (mainType !== 'WMSSERVICE') && (mainType !== 'WMTS') &&
                             (mainType !== 'WMTSSERVICE') && (mainType !== 'WFS') && (mainType !== 'WCS')">
-          <i class="fa"
-             data-ng-class="config.getClassIcon(mainType)"/>&nbsp;
-        </strong>
+         <!-- <i class="fa"
+             data-ng-class="config.getClassIcon(mainType)"/>&nbsp;-->
+          {{('link-' + type) | translate}}
         </strong>
       </div>
       <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-8 col-sm-8'">
@@ -168,7 +168,7 @@
               <span class="gn-related-title">
                 <a href="#/metadata/{{r.id}}">
                   {{(r.title | gnLocalized: lang) }}
-                </a> ({{(config.getLabel(mainType, type)) | translate}})
+                </a> <!--({{(config.getLabel(mainType, type)) | translate}})-->
               </span>
               <span class="gn-related-description">
                 {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a href="#/metadata/{{r.id}}">{{'more' |

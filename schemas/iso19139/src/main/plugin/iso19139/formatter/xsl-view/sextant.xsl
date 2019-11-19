@@ -285,13 +285,18 @@
           </div>
         </td>
       </tr>
+      <tr>
+        <td>
+          <xsl:value-of select="$schemaStrings/sxt-view-related"/>
+        </td>
+        <td>
+          <div gn-related="md"
+               data-user="user"
+               data-types="{$sideRelated}"><xsl:comment>.</xsl:comment>
+          </div>
+        </td>
+      </tr>
     </table>
-
-    <div gn-related="md"
-         data-user="user"
-         data-types="{$sideRelated}"><xsl:comment>.</xsl:comment>
-    </div>
-
     <br/>
   </xsl:template>
 </xsl:stylesheet>
