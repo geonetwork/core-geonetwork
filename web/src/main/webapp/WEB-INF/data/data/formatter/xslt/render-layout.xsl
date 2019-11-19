@@ -158,10 +158,9 @@
                   </div>
                 </xsl:otherwise>
               </xsl:choose>
+
+              <xsl:apply-templates mode="getMetadataCitation" select="$metadata"/>
             </div>
-
-            <xsl:apply-templates mode="getMetadataCitation" select="$metadata"/>
-
           </div>
           <div class="gn-md-side gn-md-side-advanced col-md-3">
 
@@ -202,12 +201,13 @@
 
               <xsl:if test="$isSocialbarEnabled">
                 <section class="gn-md-side-social">
-                  <h2>
-                    <i class="fa fa-fw fa-share-square-o"><xsl:comment select="'icon'"/></i>
+                  <h3>
+<!--                    <i class="fa fa-fw fa-share-square-o"><xsl:comment select="'icon'"/></i>-->
                     <span><xsl:value-of select="$schemaStrings/shareOnSocialSite"/></span>
-                  </h2>
+                  </h3>
 
-                  <a href="{$nodeUrl}api/records/{$metadataUuid}"
+                  <!-- href="{$nodeUrl}api/records/{$metadataUuid}" -->
+                  <a data-ng-click="getSextantPermalink(md)"
                      class="btn btn-default">
                     <i class="fa fa-fw fa-link"/>
                   </a>

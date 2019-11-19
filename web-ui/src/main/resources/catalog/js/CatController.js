@@ -467,6 +467,11 @@ goog.require('gn_alert');
       // Links for social media
       $scope.socialMediaLink = $location.absUrl();
       $scope.getPermalink = gnUtilityService.getPermalink;
+      $scope.getSextantPermalink = function(md) {
+        var url = $location.absUrl().split('#')[0] + '#/metadata/' +
+          md.getUuid();
+        gnUtilityService.getPermalink(md.title || md.defaultTitle, url);
+      };
       $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
 
       var url = gnGlobalSettings.gnUrl || location.href;
