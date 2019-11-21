@@ -92,5 +92,6 @@
   "emodnetOrgType-Business": "Entreprise / Société privée",
   "emodnetOrgType-NGO": "ONG / Société civile",
   "emodnetOrgType-Other": "Autre",
-  "profileGraph": "Profil"
+  "profileGraph": "Profil",
+  "nodeDesactivated": "Seule une couche par groupe combo peut-être activée"
 }

@@ -3,10 +3,19 @@
 
   <!-- Group heading (parent node) -->
   <div ng-if="::isParentNode()">
-    <div class="list-group-heading" ng-click="toggleNode($event)">
+    <div class="list-group-heading">
       <i class="sxt-layer-visibility fa"
-        ng-class="{'fa-minus-square': !isFolded(), 'fa-plus-square': isFolded()}">
+        ng-class="{'fa-minus-square': !isFolded(), 'fa-plus-square': isFolded()}"
+        ng-click="toggleNode($event)">
       </i>&nbsp;
+      <i ng-if="!groupCombo" class="fa fa-fw sxt-layer-visibility"
+         ng-class="{
+         'inactiveLayerNode': hasOnlyComboLayers(member),
+         'fa-check-square-o': hasCheckedChildren(member),
+         'fa-square-o': !hasCheckedChildren(member)}"
+         ng-click="toggleChildrenNodes($event, member)"
+         title="{{(hasOnlyComboLayers(member) ? 'groupVisible' : 'nodeDesactivated')|translate}}">
+      </i>
       <span>{{member.name || member.get('label')}}</span>
     </div>
 

@@ -267,6 +267,17 @@
     <url-pattern>/map/*</url-pattern>
   </filter-mapping>
 
+  <!-- This filter will prevent the default servlet from adding a ETag header
+       down the line as it breaks the caching logic in cross-domain context -->
+  <filter>
+    <filter-name>sextantETagFilter</filter-name>
+    <filter-class>org.fao.geonet.web.SextantETagFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>sextantETagFilter</filter-name>
+    <servlet-name>default</servlet-name>
+  </filter-mapping>
+
   <!-- Print servlet -->
   <servlet>
     <servlet-name>mapfish.print</servlet-name>

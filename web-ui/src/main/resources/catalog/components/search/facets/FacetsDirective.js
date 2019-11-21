@@ -272,7 +272,7 @@
                 //   p = [p];
                 // }
                 // END SEXTANT SPECIFIC
-                return p && p.indexOf(value) >= 0;
+                return p && p.split(' or ').indexOf(value) >= 0;
                 //return scope.searchObj.params[scope.facetConfig.key] &&
                 //    scope.searchObj.params[scope.facetConfig.key]
                 //    .split(delimiter)
@@ -299,19 +299,17 @@
                   scope.searchObj.params[key] = value;
                 }
                 else {
-                  if(search.indexOf(value) > -1) {
-                    scope.searchObj.params[key] = search.replace(new RegExp(value, 'g'), '');
+                  var p = search.split(' or ');
+                  if (p.indexOf(value) > -1) {
+                    p = p.filter(function (param) {
+                      return param !== value;
+                    });
                   }
                   else {
-                    scope.searchObj.params[key] += ' or ' + value;
+                    p.push(value);
                   }
+                  scope.searchObj.params[key] = p.join(' or ');
                 }
-
-                // cleanup excess of 'or' clauses
-                var joined = scope.searchObj.params[key].split(' or ');
-                scope.searchObj.params[key] = joined.filter(function (v) {
-                  return v;
-                }).join(' or ');
 
                 // END SEXTANT SPECIFIC
 
