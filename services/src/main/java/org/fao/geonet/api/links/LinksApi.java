@@ -45,11 +45,14 @@ import org.jdom.JDOMException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jmx.export.MBeanExporter;
+import org.springframework.jmx.export.naming.SelfNaming;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,9 +65,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.annotation.PostConstruct;
+import javax.management.MalformedObjectNameException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Set;
 
@@ -82,6 +88,8 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
     tags = "links",
     description = "Record link operations")
 public class LinksApi {
+    private static final int NUMBER_OF_SUBSEQUENT_PROCESS_MBEAN_TO_KEEP = 5;
+
     @Autowired
     LinkRepository linkRepository;
 
@@ -93,6 +101,27 @@ public class LinksApi {
 
     @Autowired
     UrlAnalyzer urlAnalyser;
+
+    @Autowired
+    MBeanExporter mBeanExporter;
+
+    @Autowired
+    protected ApplicationContext appContext;
+
+    private ArrayDeque<SelfNaming> mAnalyseProcesses = new ArrayDeque<>(NUMBER_OF_SUBSEQUENT_PROCESS_MBEAN_TO_KEEP);
+
+    @PostConstruct
+    public void iniMBeansSlidingWindowWithEmptySlot() {
+        for (int i = 0; i < NUMBER_OF_SUBSEQUENT_PROCESS_MBEAN_TO_KEEP; i++) {
+            EmptySlot emptySlot = new EmptySlot(i);
+            mAnalyseProcesses.addFirst(emptySlot);
+            try {
+                mBeanExporter.registerManagedResource(emptySlot, emptySlot.getObjectName());
+            } catch (MalformedObjectNameException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @ApiOperation(
             value = "Get record links",
@@ -177,8 +206,10 @@ public class LinksApi {
         @ApiIgnore
             HttpServletRequest request
     ) throws IOException, JDOMException {
+        MAnalyseProcess registredMAnalyseProcess = getRegistredMAnalyseProcess();
+
         if (removeFirst) {
-            urlAnalyser.deleteAll();
+            registredMAnalyseProcess.deleteAll();
         }
 
         UserSession session = ApiUtils.getUserSession(httpSession);
@@ -210,14 +241,7 @@ public class LinksApi {
             }
         }
 
-        for (int i : ids) {
-            final Metadata metadata = metadataRepository.findOne(i);
-            urlAnalyser.processMetadata(metadata.getXmlData(false), metadata);
-        }
-
-        if (analyze) {
-            linkRepository.findAll().stream().forEach(urlAnalyser::testLink);
-        }
+        registredMAnalyseProcess.processMetadataAndTestLink(analyze, ids);
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
@@ -235,5 +259,17 @@ public class LinksApi {
     public ResponseEntity purgeAll() throws IOException, JDOMException {
         urlAnalyser.deleteAll();
         return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    private MAnalyseProcess getRegistredMAnalyseProcess() {
+        MAnalyseProcess mAnalyseProcess = new MAnalyseProcess(linkRepository, metadataRepository, urlAnalyser, appContext);
+        mBeanExporter.registerManagedResource(mAnalyseProcess, mAnalyseProcess.getObjectName());
+        try {
+            mBeanExporter.unregisterManagedResource(mAnalyseProcesses.removeLast().getObjectName());
+        } catch (MalformedObjectNameException e) {
+            e.printStackTrace();
+        }
+        mAnalyseProcesses.addFirst(mAnalyseProcess);
+        return mAnalyseProcess;
     }
 }
