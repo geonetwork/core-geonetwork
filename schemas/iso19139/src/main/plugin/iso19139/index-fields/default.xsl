@@ -1036,7 +1036,7 @@
              string="{*/@codeListValue}"
              store="true" index="true"/>
       <Field name="cl_{concat(local-name(), '_text')}"
-             string="{util:getCodelistTranslation(name(.), string(*/@codeListValue), string($isoLangId))}"
+             string="{util:getCodelistTranslation(name(*), string(*/@codeListValue), string($isoLangId))}"
              store="true" index="true"/>
     </xsl:for-each>
   </xsl:template>
