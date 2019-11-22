@@ -182,7 +182,10 @@
         </xsl:otherwise>
       </xsl:choose>
       <xsl:text>"</xsl:text>
-      <xsl:value-of select="$sep"/>
+      <!-- <xsl:value-of select="$sep"/> -->
+       <xsl:if test="position() != last()">
+                <xsl:value-of select="$sep"/>
+        </xsl:if>
     </xsl:for-each>
 
     <xsl:call-template name="newLine"/>
