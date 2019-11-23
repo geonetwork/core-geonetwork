@@ -115,7 +115,7 @@
       <xsl:choose>
         <xsl:when test="$md/gmd:language/gmd:LanguageCode/@codeListValue|
                                 $md/gmd:language/gco:CharacterString">
-           <xsl:call-template name="langId_from_gmdlanguage19139">
+           <xsl:call-template name="getLangIdFromGmdlanguage">
              <xsl:with-param name="gmdlanguage" select="$md/gmd:language"/>
            </xsl:call-template>
         </xsl:when>
