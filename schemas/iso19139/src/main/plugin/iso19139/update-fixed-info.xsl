@@ -421,11 +421,11 @@
 
               <!-- Populate PT_FreeText for default language if not existing and it is not null. -->
               <xsl:apply-templates select="gco:CharacterString|gmx:Anchor"/>
-              <xsl:if test="normalize-space(gco:CharacterString) != ''">
+              <xsl:if test="normalize-space(gco:CharacterString|gmx:Anchor) != ''">
                 <gmd:PT_FreeText>
                   <gmd:textGroup>
                     <gmd:LocalisedCharacterString locale="#{$mainLanguageId}">
-                      <xsl:value-of select="gco:CharacterString"/>
+                      <xsl:value-of select="gco:CharacterString|gmx:Anchor"/>
                     </gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                   <xsl:call-template name="populate-free-text"/>
