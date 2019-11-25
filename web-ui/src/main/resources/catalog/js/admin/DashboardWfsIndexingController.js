@@ -335,6 +335,7 @@
       $scope.currentJob = null;
       $scope.settingsLoading = false;
       $scope.settingsError = null;
+      $scope.settingsErrorIsDelete = false;
 
       var settingsModal = $('#gn-indexing-schedule');
 
@@ -375,6 +376,7 @@
           settingsModal.modal('hide');
         }, function(error) {
           $scope.settingsLoading = false;
+          $scope.settingsErrorIsDelete = false;
           $scope.settingsError = error && error.data && error.data.message;
         });
       };
@@ -382,23 +384,21 @@
       $scope.deleteSchedule = function(job) {
         if (job.cronScheduleProducerId === null) { return }
 
-        job.deleteLoading = true;
+        $scope.settingsLoading = true;
 
         $http.delete($scope.messageProducersApiUrl + '/' + job.cronScheduleProducerId)
           .then(function() {
-            job.deleteLoading = false;
+            $scope.settingsLoading = false;
 
             var key = job.url + '#' + job.featureType;
             $scope.jobs[key].cronScheduleExpression = null;
             $scope.jobs[key].cronScheduleProducerId = null;
+
+            settingsModal.modal('hide');
           }, function(error) {
-            var cause = error.status == 404 ? 'wfsIndexingScheduleDeleteNotFoundError' : 'wfsIndexingScheduleDeleteUnknownError';
-            gnAlertService.addAlert({
-              msg: $translate.instant('wfsIndexingScheduleDeleteError') + ' ' +
-                $translate.instant(cause),
-              type: 'danger'
-            });
-            job.deleteLoading = false;
+            $scope.settingsLoading = false;
+            $scope.settingsErrorIsDelete = true;
+            $scope.settingsError = error && error.data && error.data.message;
           });
       };
 

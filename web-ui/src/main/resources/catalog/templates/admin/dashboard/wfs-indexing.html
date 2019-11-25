@@ -113,13 +113,21 @@
 
             <div class="alert alert-danger" role="alert" ng-if="settingsError">
               <i class="fa fa-exclamation-triangle" />
-              <span translate>wfsIndexingScheduleSettingsError</span>
+              <span ng-if="!settingsErrorIsDelete" translate>wfsIndexingScheduleSettingsError</span>
+              <span ng-if="settingsErrorIsDelete" translate>wfsIndexingScheduleDeleteError</span>
               <span>{{settingsError}}</span>
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">
               <span class="fa fa-times"></span>&nbsp;{{"cancel"|translate}}
+            </button>
+            <button type="button" class="btn btn-danger"
+                    ng-disabled="settingsLoading || !scheduleSettingsForm.$valid"
+                    ng-if="currentJob.cronScheduleProducerId"
+                    ng-click="deleteSchedule(currentJob)">
+              <span class="fa" ng-class="settingsLoading ? 'fa-spinner fa-spin' : 'fa-times'"></span>
+              <span translate>wfsIndexingDeleteSchedule</span>
             </button>
             <button type="button" class="btn btn-primary"
                     ng-disabled="settingsLoading || !scheduleSettingsForm.$valid"
