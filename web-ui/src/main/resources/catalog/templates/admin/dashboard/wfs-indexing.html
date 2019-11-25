@@ -13,7 +13,8 @@
     <div class="row">
       <div class="col-md-12 flex-row flex-end">
         <button type="button" class="btn btn-primary" ng-click="refreshJobList()">
-          <i class="fa fa-refresh"/>&nbsp;
+          <i class="fa" ng-class="loading ? 'fa-spinner fa-spin' : 'fa-refresh'"
+             ng-disabled="loading"/>&nbsp;
           <span translate>refresh</span>
         </button>
         <div class="flex-spacer"></div>
@@ -28,16 +29,6 @@
 
     <div class="row">
       <div class="col-md-12">
-        <table ng-if="bsTableControl" bs-table-control="bsTableControl">
-        </table>
-
-        <div ng-if="loading" class="row">
-          <br /><br /><br /><br />
-          <div class="flex-row flex-center">
-            <i class="fa fa-spinner fa-spin"/>
-          </div>
-        </div>
-
         <div ng-if="error" class="row">
           <div class="alert alert-danger" role="alert">
             <i class="fa fa-exclamation-triangle" />
@@ -45,6 +36,9 @@
             <span>{{error}}</span>
           </div>
         </div>
+
+        <table ng-if="bsTableControl" bs-table-control="bsTableControl">
+        </table>
       </div>
     </div>
 
