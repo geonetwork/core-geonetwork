@@ -727,6 +727,23 @@
             }
           };
 
+          scope.getIsAllowedValuesRange = function(allowedValues) {
+            if (!allowedValues || !allowedValues.valueOrRange) {
+              return false;
+            }
+            return allowedValues.valueOrRange[0].TYPE_NAME === 'OWS_1_1_0.RangeType';
+          };
+          scope.getMinValueFromAllowedValues = function(allowedValues) {
+            if (scope.getIsAllowedValuesRange(allowedValues)) {
+              return Math.max(Number.MIN_SAFE_INTEGER, parseFloat(allowedValues.valueOrRange[0].minimumValue.value));
+            }
+          };
+          scope.getMaxValueFromAllowedValues = function(allowedValues) {
+            if (scope.getIsAllowedValuesRange(allowedValues)) {
+              return Math.min(Number.MAX_SAFE_INTEGER, parseFloat(allowedValues.valueOrRange[0].maximumValue.value));
+            }
+          };
+
           // get/set input values
           // note: this will return values from WFS filters if applicable
           scope.getInputsByName = function(name) {

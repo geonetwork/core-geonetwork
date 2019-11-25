@@ -86,7 +86,7 @@
                 <div class="input-group"
                   ng-repeat="field in getInputsByName(input.identifier.value)">
                   <select class="form-control input-sm"
-                    ng-if="::input.literalData.allowedValues"
+                    ng-if="::input.literalData.allowedValues && !getIsAllowedValuesRange(input.literalData.allowedValues)"
                     ng-model="field.value"
                     ng-required="$index < input.minOccurs"
                     ng-disabled="inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)">
@@ -94,12 +94,13 @@
                       value="{{::value.value}}">{{::value.value}}</option>
                   </select>
                   <input class="form-control input-sm"
-                    ng-if="::!input.literalData.allowedValues"
-                    type="{{::getInputType(input.literalData.dataType.value)}}"
-                    ng-model="field.value"
-                    ng-required="$index < input.minOccurs"
-                    ng-disabled="inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)">
-                  </input>
+                         ng-if="::!input.literalData.allowedValues || getIsAllowedValuesRange(input.literalData.allowedValues)"
+                         type="{{::getInputType(input.literalData.dataType.value)}}"
+                         min="{{::getMinValueFromAllowedValues(input.literalData.allowedValues) || ''}}"
+                         max="{{::getMaxValueFromAllowedValues(input.literalData.allowedValues) || ''}}"
+                         ng-model="field.value"
+                         ng-required="$index < input.minOccurs"
+                         ng-disabled="inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)"/>
 
                   <!-- delete button (disabled for mandatory values) -->
                   <a class="input-group-addon btn btn-default btn-icon"
