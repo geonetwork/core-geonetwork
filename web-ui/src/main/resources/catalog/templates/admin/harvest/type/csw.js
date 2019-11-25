@@ -21,12 +21,13 @@ var gnHarvestercsw = {
         "xpathFilter" : "",
         "rejectDuplicateResource" : false,
         "xslfilter": [],
-        "outputSchema": "",
+        "outputSchema": "http://www.isotc211.org/2005/gmd",
         "queryScope": "local",
         "hopCount": 2
       },
       "content" : {
-        "validate" : "NOVALIDATION"
+        "validate" : "NOVALIDATION",
+        "batchEdits" : ""
       },
       "options" : {
         "every" : "0 0 0 ? * *",
@@ -99,6 +100,7 @@ var gnHarvestercsw = {
       + '  </options>'
       + '  <content>'
       + '    <validate>' + h.content.validate + '</validate>'
+      + '    <batchEdits><![CDATA[' + h.content.batchEdits + ']]></batchEdits>'
       + '  </content>'
       + $scope.buildResponseGroup(h)
       + $scope.buildResponseCategory(h) + '</node>';

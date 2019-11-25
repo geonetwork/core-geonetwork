@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fao.geonet.api.records.model.BatchEditParameter;
+import org.fao.geonet.kernel.BatchEditParameter;
 import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;

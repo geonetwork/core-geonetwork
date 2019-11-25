@@ -31,13 +31,14 @@ import io.swagger.annotations.ApiResponses;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.IProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
-import org.fao.geonet.api.records.model.BatchEditParameter;
+import org.fao.geonet.kernel.BatchEditParameter;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.kernel.AccessManager;
@@ -50,6 +51,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -199,13 +201,20 @@ public class BatchEditsApi implements ApplicationContextAware {
                         AddElemValue propertyValue =
                             new AddElemValue(batchEditParameter.getValue());
 
-                        metadataChanged = editLib.addElementOrFragmentFromXpath(
-                            metadata,
-                            metadataSchema,
-                            batchEditParameter.getXpath(),
-                            propertyValue,
-                            createXpathNodeIfNotExists
-                        ) || metadataChanged;
+                        boolean applyEdit = true;
+                        if (StringUtils.isNotEmpty(batchEditParameter.getCondition())) {
+                            final Object node = Xml.selectSingle(metadata, batchEditParameter.getCondition(), metadataSchema.getNamespaces());
+                            applyEdit = (node != null) || (node instanceof Boolean && (Boolean)node != false);
+                        }
+                        if (applyEdit) {
+                            metadataChanged = editLib.addElementOrFragmentFromXpath(
+                                metadata,
+                                metadataSchema,
+                                batchEditParameter.getXpath(),
+                                propertyValue,
+                                createXpathNodeIfNotExists
+                            ) || metadataChanged;
+                        }
                     }
                     if (metadataChanged) {
                         boolean validate = false;
