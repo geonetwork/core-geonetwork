@@ -177,6 +177,8 @@
               <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode"
                                        codeListValue="{$defaultEncoding}"/>
             </gmd:characterEncoding>
+            <!-- Apply country if it exists.  -->
+            <xsl:apply-templates select="gmd:locale/gmd:PT_Locale[gmd:languageCode/*/@codeListValue = $mainLanguage]/gmd:country"/>
           </gmd:PT_Locale>
         </gmd:locale>
       </xsl:if>
@@ -465,6 +467,47 @@
   <xsl:template match="gmd:LanguageCode[@codeListValue]" priority="10">
     <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/">
       <xsl:apply-templates select="@*[name(.)!='codeList']"/>
+
+      <!-- Update the language code text value if it exists
+           It will attempt to detect the existing format and update it.
+           Formats include
+              - 2 character lang code
+              - 3 character lang code
+              - character language code + country code (i.e. eng; USA)
+           if format can not be determined then it will keep the same value -->
+      <xsl:if test="normalize-space(./text()) != ''">
+        <xsl:choose>
+          <!-- If the length is 3 characters then assume the text is equal to the code list value -->
+          <xsl:when test="string-length(normalize-space(./text())) = 3 and @codeListValue != ''">
+            <xsl:value-of  select="normalize-space(@codeListValue)"/>
+          </xsl:when>
+          <!-- If the length is 2 characters then assume the text is equal to the code list value as a 2 char code-->
+          <xsl:when test="string-length(normalize-space(./text())) = 2 and @codeListValue != ''">
+            <xsl:value-of  select="normalize-space(upper-case(java:twoCharLangCode(@codeListValue, '')))"/>
+          </xsl:when>
+          <!-- If contains a ";" then assume language is in the format of "eng; USA" if there is a semicolon so we will update the language -->
+          <xsl:when test="contains(./text(),';') and @codeListValue != ''">
+            <xsl:value-of  select="normalize-space(@codeListValue)"/>
+            <xsl:text>; </xsl:text>
+            <xsl:variable name="langCode" select="@codeListValue"/>
+            <xsl:variable name="countryCode">
+              <xsl:value-of  select="normalize-space(/root/*/gmd:locale/gmd:PT_Locale[gmd:languageCode/*/@codeListValue = $langCode]/gmd:country/gmd:Country/@codeListValue)"/>
+            </xsl:variable>
+            <xsl:choose>
+              <xsl:when test="$countryCode != ''">
+                <xsl:value-of  select="$countryCode"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of  select="substring-after(./text(),';')"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:when>
+          <!-- unknown format just keep it as is?? -->
+          <xsl:otherwise>
+            <xsl:value-of select="./text()"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
     </gmd:LanguageCode>
   </xsl:template>
 
