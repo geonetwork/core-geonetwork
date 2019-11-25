@@ -158,12 +158,13 @@
           try {
             indexResults.data.hits.hits.forEach(function (hit) {
               var source = hit._source;
+
               var infos = decodeURIComponent(source.id).split('#');
               $scope.jobs[infos[0] + '#' + infos[1]] = {
                 url: infos[0],
                 featureType: infos[1],
                 featureCount: source.totalRecords_i || 0,
-                status: source.endDate_dt === undefined ? 'ongoing' : source.status_s,
+                status: source.endDate_dt === undefined ? 'ongoing' : source.error_ss ? 'error' : source.status_s,
                 mdUuid: source.parent,
                 error: source.error_ss,
                 endDate: source.endDate_dt,
@@ -274,8 +275,9 @@
                   field: 'status',
                   title: $translate.instant('status'),
                   formatter: function(value, row) {
-                    return '<span class="label label-' + $scope.getLabelClass(row.status) + '">' + row.status + '</span>';
-                    // TODO: error tooltip if any
+                    return '<span class="label label-' + $scope.getLabelClass(row.status) + '" ' +
+                      'title="' + (row.error || '') + '">' +
+                      row.status + '</span>';
                   },
                   sortable: true
                 }, {
