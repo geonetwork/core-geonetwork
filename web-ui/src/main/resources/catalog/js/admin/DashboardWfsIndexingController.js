@@ -145,7 +145,8 @@
             'query_string': {
               'query': 'docType:harvesterReport'
             }
-          }
+          },
+          'size': 10000
         });
         var apiQuery = $http.get($scope.messageProducersApiUrl);
 
