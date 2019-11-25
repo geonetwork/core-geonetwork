@@ -25,14 +25,14 @@
           </div>
         </div>
         <div class="navbar-right">
-          
+
           <select ng-change="updateProfile()" class="form-control"
                   data-ng-model="systemInfo.stagingProfile">
             <option data-ng-repeat="p in stagingProfiles" value="{{p}}"
                     ng-selected="p === systemInfo.stagingProfile">{{p | translate}}
             </option>
           </select>
-
+          &nbsp;
           <button type="submit" class="btn btn-primary"
                   id="gn-btn-settings-save"
                   data-ng-disabled="!gnSettings.$valid"
@@ -51,6 +51,9 @@
            data-all-depth="true"/>
       <div class="panel-heading">
         <span data-translate="">settings</span>
+
+        <div data-gn-need-help="administrator-guide/configuring-the-catalog/system-configuration.html"
+             class="pull-right"></div>
       </div>
       <div class="panel-body">
         <form id="gn-settings" name="gnSettings" class="form-horizontal">
@@ -61,7 +64,24 @@
             <fieldset data-ng-repeat="section2 in section1.children | orderObjectBy:'position'"
                       id="{{section2.name.replace('/', '-')}}"
                       data-ng-show="section2.name">
-              <legend>{{section2.name | translate}}</legend>
+              <legend>{{section2.name | translate}}
+
+                <div data-ng-if="::section2.name === 'system/inspire'"
+                     data-gn-need-help="administrator-guide/configuring-the-catalog/inspire-configuration.html"
+                     class="pull-right"></div>
+                <div data-ng-if="::section2.name === 'system/publication'"
+                     data-gn-need-help="user-guide/associating-resources/doi.html"
+                     class="pull-right"></div>
+                <div data-ng-if="::section2.name === 'metadata/workflow'"
+                     data-gn-need-help="user-guide/workflow/life-cycle.html"
+                     class="pull-right"></div>
+                <div data-ng-if="::section2.name === 'system/userSelfRegistration'"
+                     data-gn-need-help="administrator-guide/managing-users-and-groups/user-self-registration.html"
+                     class="pull-right"></div>
+                <div data-ng-if="::section2.name === 'system/csw'"
+                     data-gn-need-help="administrator-guide/configuring-the-catalog/csw-configuration.html"
+                     class="pull-right"></div>
+              </legend>
               <!-- According to data type -->
               <div data-ng-repeat="s in section2.children | hideLanguages | hideGeoNetworkInternalSettings | orderObjectBy:'position'"
                   data-ng-switch="s.dataType"
@@ -91,7 +111,7 @@
                     translate}}</label>
                   <!-- According to entry -->
                   <div class="col-sm-8" data-ng-switch="s['name']">
-                    
+
                     <div data-ng-switch-when="metadata/workflow/draftWhenInGroup">
                       <input type="radio" class="gn-no-setting" data-ng-model="draftInAllGroups"
                              data-ng-value="true" /> {{'draftWhenInGroup-all' | translate}}<br>
@@ -405,9 +425,6 @@
           </fieldset>
           </div>
         </form>
-
-        <div data-gn-need-help="administrator-guide/configuring-the-catalog/system-configuration.html"
-            class="pull-right"></div>
       </div>
     </div>
   </div>
