@@ -182,10 +182,11 @@
                 .filter(function(l) {
                   return (l.getVisible() && !l.background); // remove background layers
                 })
-
-            }
+            };
             scope.applyMapLayersToInput = function () {
-              if (!scope.applicationProfile) return;
+              if (!scope.applicationProfile || !scope.applicationProfile.inputs) {
+                return;
+              }
               var availableLayers = scope.filterAvailableLayers()
                 .filter(function(ll) {
                   return ll.get('qi_list') != undefined;
@@ -203,7 +204,7 @@
                   });
                 }
               });
-            }
+            };
             scope.sortKeyValue = '&#9660;';
             scope.reOrderLayerInputs = function(key){
               scope.removeAllInputValuesByName(scope.emodnetSortInputKey);
