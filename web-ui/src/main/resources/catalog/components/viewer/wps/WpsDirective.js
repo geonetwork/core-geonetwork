@@ -586,6 +586,7 @@
                   function(response) {
                     scope.executeState = 'failed';
                     scope.executeResponse = response;
+                    scope.running = false;
                   }
               );
             };
@@ -593,6 +594,7 @@
             processResponse = function(response) {
               if (response.TYPE_NAME === 'OWS_1_1_0.ExceptionReport') {
                 scope.executeState = 'finished';
+                scope.running = false;
               }
               if (response.TYPE_NAME === 'WPS_1_0_0.ExecuteResponse') {
                 if (response.status != undefined) {
@@ -607,11 +609,14 @@
                   if (response.status.processSucceeded != undefined ||
                       response.status.processFailed != undefined) {
                     scope.executeState = 'finished';
+                    scope.running = false;
 
-                    if (response.status.processSucceeded &&
-                        gnWpsService.responseHasWmsService(response)) {
-                      gnWpsService.extractWmsLayerFromResponse(
-                          response, scope.map, scope.wpsLink.layer);
+                    if (response.status.processSucceeded) {
+                      var wmsOutput = gnWpsService.responseHasWmsService(response);
+                      if (wmsOutput !== null) {
+                        gnWpsService.extractWmsLayerFromResponse(
+                          response, wmsOutput, scope.map, scope.wpsLink.layer);
+                      }
                     }
                   }
                 }
@@ -661,11 +666,9 @@
                 function(response) {
                   scope.executeState = 'failed';
                   scope.executeResponse = response;
-                }
-            ).finally(
-                function() {
                   scope.running = false;
-                });
+                }
+            );
 
             // update local storage
             if ($window.localStorage) {
@@ -698,6 +701,7 @@
             if ($timeout.cancel(scope.statusPromise)) {
               scope.statusPromise = undefined;
               scope.executeState = 'cancelled';
+              scope.running = false;
             }
           };
 
