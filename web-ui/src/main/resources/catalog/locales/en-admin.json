@@ -1431,5 +1431,7 @@
     "refreshLinks": "Refresh",
     "removeAllLinksAndStatus": "Remove all",
     "removeAllLinksAndStatusConfirm": "Are you sure to remove all links and status history?",
-    "moreLinks": "More links ..."
+    "moreLinks": "More links ...",
+    "ui-defaultSearchString":"Default search",
+    "ui-defaultSearchString-help":"This configuration lets you define a default filter for the search. The syntax is the one used in the angular facet query array."
 }
