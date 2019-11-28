@@ -93,5 +93,6 @@
   "emodnetOrgType-NGO": "ONG / Société civile",
   "emodnetOrgType-Other": "Autre",
   "profileGraph": "Profil",
-  "nodeDesactivated": "Seule une couche par groupe combo peut-être activée"
+  "nodeDesactivated": "Seule une couche par groupe combo peut-être activée",
+  "groupVisible": "Groupe visible"
 }

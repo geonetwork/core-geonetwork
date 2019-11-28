@@ -13,109 +13,33 @@
     <div class="row">
       <div class="col-md-12 flex-row flex-end">
         <button type="button" class="btn btn-primary" ng-click="refreshJobList()">
-          <i class="fa fa-refresh"/>&nbsp;
+          <i class="fa" ng-class="loading ? 'fa-spinner fa-spin' : 'fa-refresh'"
+             ng-disabled="loading"/>&nbsp;
           <span translate>refresh</span>
         </button>
         <div class="flex-spacer"></div>
-        <button type="button" class="btn btn-success" ng-click="openScheduleSettings({ isNew: true })">
+        <button type="button" class="btn btn-success" ng-click="openScheduleSettings()">
           <i class="fa fa-plus"/>&nbsp;
           <span translate>wfsIndexingNewSchedule</span>
         </button>
       </div>
     </div>
 
-    <div ng-if="loading" class="row">
-      <br /><br /><br /><br />
-      <div class="flex-row flex-center">
-        <i class="fa fa-spinner fa-spin"/>
+    <br>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div ng-if="error" class="row">
+          <div class="alert alert-danger" role="alert">
+            <i class="fa fa-exclamation-triangle" />
+            <span translate>wfsIndexingRefreshError</span>
+            <span>{{error}}</span>
+          </div>
+        </div>
+
+        <table ng-if="bsTableControl" bs-table-control="bsTableControl">
+        </table>
       </div>
-    </div>
-
-    <div ng-if="error" class="row">
-      <div class="alert alert-danger" role="alert">
-        <i class="fa fa-exclamation-triangle" />
-        <span translate>wfsIndexingRefreshError</span>
-        <span>{{error}}</span>
-      </div>
-    </div>
-
-    <div class="jobs-list row" ng-if="!loading && !error">
-      <table class="table">
-        <thead>
-          <tr>
-            <th translate>wfsIndexingMetadata</th>
-            <th translate>wfsurl</th>
-            <th translate>featureCount</th>
-            <th translate>wfsIndexingEndDate</th>
-            <th translate>status</th>
-            <th translate>harvesterSchedule</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="job in jobsArray">
-            <td>
-              <div ng-if="job.mdUuid">
-                <span ng-if="job.md.error">
-                  <span translate>{{job.md.error}}</span>
-                </span>
-                <span ng-if="job.md && !job.md.error">
-                  <a href="catalog.search#/metadata/{{job.md.getUuid()}}">
-                    {{job.md.title || ('recordWithNoTitle' | translate)}}
-                  </a>
-                </span>
-                <i ng-if="!job.md" class="fa fa-spinner fa-spin"/>
-              </div>
-              <code>{{job.mdUuid}}</code>
-            </td>
-
-            <td>
-              <a href="{{job.url}}">{{job.url}}</a> - <a href="{{job.url | asGetCapabilities:'WFS'}}">GetCapabilities</a><br>
-              <span translate>wfsIndexingFeatureType</span>: <code>{{job.featureType}}</code>
-            </td>
-
-            <td>{{job.featureCount}}</td>
-
-            <td>{{job.endDate | date:'dd-M-yyyy H:mm'}}</td>
-
-            <td>
-              <span class="label" ng-class="'label-' + getLabelClass(job.status)">{{job.status}}</span>
-              <div ng-if="job.error" class="text-danger">{{job.error}}</div>
-            </td>
-
-            <td class="text-no-wrap">
-              <button ng-if="!job.cronScheduleProducerId"
-                      ng-click="openScheduleSettings(job)"
-                      type="button" class="btn btn-sm btn-default btn-success">
-                <span class="fa fa-clock-o"></span>
-                <span translate>wfsIndexingAddSchedule</span>
-              </button>
-              <button ng-if="job.cronScheduleProducerId"
-                      ng-click="openScheduleSettings(job)"
-                      type="button" class="btn btn-sm btn-default btn-primary">
-                <span class="fa fa-clock-o"></span>
-                <span translate>wfsIndexingEditSchedule</span>
-              </button>
-              <button ng-if="job.cronScheduleProducerId"
-                      type="button" class="btn btn-sm btn-default btn-danger"
-                      ng-disabled="job.deleteLoading"
-                      ng-click="deleteSchedule(job)">
-                <span class="fa"
-                      ng-class="job.deleteLoading ? 'fa-spinner fa-spin' : 'fa-times'"></span>
-                <span translate>wfsIndexingDeleteSchedule</span>
-              </button>
-            </td>
-
-            <td>
-              <button ng-click="triggerIndexing(job)"
-                      type="button" class="btn btn-sm btn-default btn-primary">
-                <span class="fa fa-play-circle"></span>
-                <span translate>wfsIndexingTrigger</span>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
 
     <div class="modal fade" tabindex="-1" role="dialog"
@@ -183,13 +107,21 @@
 
             <div class="alert alert-danger" role="alert" ng-if="settingsError">
               <i class="fa fa-exclamation-triangle" />
-              <span translate>wfsIndexingScheduleSettingsError</span>
+              <span ng-if="!settingsErrorIsDelete" translate>wfsIndexingScheduleSettingsError</span>
+              <span ng-if="settingsErrorIsDelete" translate>wfsIndexingScheduleDeleteError</span>
               <span>{{settingsError}}</span>
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">
               <span class="fa fa-times"></span>&nbsp;{{"cancel"|translate}}
+            </button>
+            <button type="button" class="btn btn-danger"
+                    ng-disabled="settingsLoading || !scheduleSettingsForm.$valid"
+                    ng-if="currentJob.cronScheduleProducerId"
+                    ng-click="deleteSchedule(currentJob)">
+              <span class="fa" ng-class="settingsLoading ? 'fa-spinner fa-spin' : 'fa-times'"></span>
+              <span translate>wfsIndexingDeleteSchedule</span>
             </button>
             <button type="button" class="btn btn-primary"
                     ng-disabled="settingsLoading || !scheduleSettingsForm.$valid"

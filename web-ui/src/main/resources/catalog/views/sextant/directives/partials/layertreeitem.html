@@ -14,7 +14,7 @@
          'fa-check-square-o': hasCheckedChildren(member),
          'fa-square-o': !hasCheckedChildren(member)}"
          ng-click="toggleChildrenNodes($event, member)"
-         title="{{(hasOnlyComboLayers(member) ? 'groupVisible' : 'nodeDesactivated')|translate}}">
+         title="{{(hasOnlyComboLayers(member) ? 'nodeDesactivated' : 'groupVisible')|translate}}">
       </i>
       <span>{{member.name || member.get('label')}}</span>
     </div>

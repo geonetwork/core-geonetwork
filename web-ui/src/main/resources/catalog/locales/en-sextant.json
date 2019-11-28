@@ -92,5 +92,6 @@
   "emodnetOrgType-Business": "Business and Private Company",
   "emodnetOrgType-NGO": "NGOs/Civil Society",
   "emodnetOrgType-Other": "Other",
-  "nodeDesactivated": "Only one layer per combo group can be visible"
+  "nodeDesactivated": "Only one layer per combo group can be visible",
+  "groupVisible": "Visible Group"
 }
