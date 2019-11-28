@@ -145,4 +145,110 @@
             }
         };
     }]);
+
+  var STATUS_UNDEFINED = 0;
+  var STATUS_PROBABLE = 1;
+  var STATUS_INPROGRESS = 2;
+  var STATUS_FINISHED = 3;
+  var STATUS_ERRORS = 4;
+
+  var ANALYZE_RECORD_LABEL = [
+    'taskUndefined',
+    'taskProbable',
+    'analyseRecordRunning',
+    'analyseRecordFinished',
+    'analyseRecordFinishedWithErrors'
+  ];
+
+  var TEST_LINK_LABEL = ['taskUndefined', 'taskProbable', 'testLinkRunning', 'testLinkFinished'];
+  var ICON = ['fa-question', 'fa-question', 'fa-spinner fa-spin', 'fa-check', 'fa-exclamation-triangle'];
+  var CLASS = ['', '', '', 'success', 'warning'];
+
+  module.directive('gnDashboardRecordLinksProcessesContainer', ['$http', function($http) {
+    return {
+      restrict: 'E',
+      scope: {},
+      templateUrl: '../../catalog/components/admin/recordlink/partials/recordlinksanalyseprocesscontainer.html',
+      link: function(scope, element, attrs) {},
+      controllerAs: 'ctrl',
+      controller: ['$scope', '$element', '$attrs', function($scope, $element, $attrs) {
+        this.tasks = [];
+        var me = this;
+
+        this.getStatusCode = function(errors, processed, total) {
+           if (total === -1) {
+             return STATUS_PROBABLE;
+           }
+           if (total > processed + errors) {
+             return STATUS_INPROGRESS;
+           }
+           if (total === processed) {
+             return STATUS_FINISHED;
+           }
+           if (total === processed + errors) {
+             return STATUS_ERRORS;
+           }
+           return STATUS_UNDEFINED;
+         };
+
+        this.getProcessRatio = function(processedErrorOrNot, total) {
+           return Math.round(1000 * processedErrorOrNot / total) * 0.001;
+        };
+
+        this.refresh = function() {
+          $http.get('../../jolokia/read/geonetwork:name=url-check,idx=*').then(function(result) {
+
+            if (!result.data || !result.data.value) { return; }
+
+            me.tasks = [];
+            var probes = Object.values(result.data.value);
+            probes.sort(function(a, b) {return b.AnalyseMdDate - a.AnalyseMdDate;});
+            probes.forEach(function(probe) {
+              var probeName = probe.ObjectName.objectName;
+              if (probeName && !probeName.includes('empty-slot')) {
+                var analyzeRecordStatus = me.getStatusCode(probe.MetadataNotAnalysedInError, probe.MetadataAnalysed, probe.MetadataToAnalyseCount);
+                var testLinkStatus = me.getStatusCode(0, probe.UrlChecked, probe.UrlToCheckCount);
+                me.tasks.push({
+                  id: probeName,
+                  records: {
+                    errors: probe.MetadataNotAnalysedInError,
+                    processed: probe.MetadataAnalysed,
+                    total: probe.MetadataToAnalyseCount,
+                    label: ANALYZE_RECORD_LABEL[analyzeRecordStatus],
+                    class: CLASS[analyzeRecordStatus],
+                    icon: ICON[analyzeRecordStatus],
+                    ratio: me.getProcessRatio(
+                      probe.MetadataNotAnalysedInError + probe.MetadataAnalysed,
+                      probe.MetadataToAnalyseCount)
+                  },
+                  links: {
+                    errors: 0,
+                    processed: probe.UrlChecked,
+                    total: probe.UrlToCheckCount,
+                    label: TEST_LINK_LABEL[testLinkStatus],
+                    class: CLASS[testLinkStatus],
+                    icon: ICON[testLinkStatus],
+                    ratio: me.getProcessRatio(probe.UrlChecked, probe.UrlToCheckCount)
+                  }
+                });
+              }
+            });
+            setTimeout(me.refresh, 1000);
+          });
+        };
+
+        this.refresh();
+      }]
+    };
+  }]);
+
+  module.directive('gnDashboardRecordLinksProcessesStatus', [
+    function() {
+      return {
+        restrict: 'E',
+        scope: {taskInfo: '<'},
+        templateUrl: '../../catalog/components/admin/recordlink/partials/recordlinksanalyseprocessstatus.html',
+        link: function(scope, element, attrs) {}
+    };
+  }]);
 })();
