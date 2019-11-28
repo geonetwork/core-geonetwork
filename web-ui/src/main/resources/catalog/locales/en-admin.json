@@ -16,6 +16,8 @@
     "advancedCssProps": "Advanced properties",
     "allowedCategories": "Allowed Categories",
     "allowedCategoriesDescriptionHelp": "Categories that can be applied to this group",
+    "harvesterBatchEdits": "Batch edits",
+    "harvesterBatchEditsHelp": "Batch edits allow to update harvested records. It can be use to add, replace or delete element.",
     "andNodeLogo": " and logo",
     "applyXSLToRecord": "XSL transformation to apply",
     "applyXSLToRecordHelp": "The referenced XSL transform will be applied to each metadata record before it is added to Geonetwork",
@@ -1399,6 +1401,10 @@
     "ui-fluidLayout-help": "If enabled, the layout of the application has a full width container, when disabled the layout has a fixed width and centered container",
     "ui-fluidEditorLayout": "Fluid container for the Editor",
     "ui-fluidEditorLayout-help": "If enabled, the layout of the application has a full width container, when disabled the layout has a fixed width and centered container",
+    "ui-fluidHeaderLayout": "Fluid container for Header and Top menu",
+    "ui-fluidHeaderLayout-help": "If enabled, the layout of the header and top menu has a full width container, when disabled the layout has a fixed width and centered container",
+    "ui-showGNName": "Show the catalog name in the Top menu",
+    "ui-showGNName-help": "If enabled, the name of GeoNetwork will be shown in the top menu, when disabled the name will be hidden",
     "styleVariable-gnMenubarBackgroundHover": "Background color on hover",
     "styleVariable-gnMenubarColorActive": "Color when active",
     "metadata/pdfReport": "Metadata selection - pdf report",
@@ -1425,5 +1431,7 @@
     "refreshLinks": "Refresh",
     "removeAllLinksAndStatus": "Remove all",
     "removeAllLinksAndStatusConfirm": "Are you sure to remove all links and status history?",
-    "moreLinks": "More links ..."
+    "moreLinks": "More links ...",
+    "ui-defaultSearchString":"Default search",
+    "ui-defaultSearchString-help":"This configuration lets you define a default filter for the search. The syntax is the one used in the angular facet query array."
 }

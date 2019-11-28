@@ -91,7 +91,7 @@ public class EditLib {
 
     private SchemaManager scm;
     private static final Map<String, Integer> htVersions = new ConcurrentHashMap<String, Integer>();
-    
+
     public EditLib(SchemaManager scm) {
         this.scm = scm;
         htVersions.clear();
@@ -537,24 +537,27 @@ public class EditLib {
                 if (indexOfRequiredPortion > 0) {
                     final String requiredXPath =
                         xpathProperty.substring(0, indexOfRequiredPortion);
-                    Object elem = trySelectNode(metadataRecord,
+                    final SelectResult selectResult = trySelectNode(metadataRecord,
                         metadataSchema,
                         requiredXPath,
-                        false).result;
-                    if (elem == null) {
-                        isUpdated = createAndAddFromXPath(metadataRecord,
-                            metadataSchema,
-                            requiredXPath,
-                            value);
-                    } else if (elem instanceof Element) {
-                        Element element = (Element) elem;
+                        false);
+                    if (selectResult != null) {
+                        Object elem = selectResult.result;
+                        if (elem == null) {
+                            isUpdated = createAndAddFromXPath(metadataRecord,
+                                metadataSchema,
+                                requiredXPath,
+                                value);
+                        } else if (elem instanceof Element) {
+                            Element element = (Element) elem;
 
-                        isUpdated = createAndAddFromXPath(element,
-                            metadataSchema,
-                            xpathProperty.substring(indexOfRequiredPortion),
-                            value);
-                    } else {
-                        isUpdated = false;
+                            isUpdated = createAndAddFromXPath(element,
+                                metadataSchema,
+                                xpathProperty.substring(indexOfRequiredPortion),
+                                value);
+                        } else {
+                            isUpdated = false;
+                        }
                     }
                 } else {
                     isUpdated = createAndAddFromXPath(metadataRecord,

@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javassist.NotFoundException;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -359,7 +360,7 @@ public class InspireAtomUtil {
         for(String uuid : datasetsUuids) {
             String id = dataManager.getMetadataId(uuid);
             if (StringUtils.isEmpty(id))
-                throw new MetadataNotFoundEx(uuid);
+                throw new NotFoundException(String.format("Dataset '%s' attached to the requested service was not found. Check the link between the 2 records (see operatesOn element).", uuid));
             Element ds = dataManager.getMetadata(id);
             datasetElt.addContent(ds);
         }
@@ -476,7 +477,8 @@ public class InspireAtomUtil {
 
         } finally {
             if (datasetMd == null) {
-                throw new ObjectNotFoundEx("metadata " + spIdentifier + " not found");
+                throw new NotFoundException(String.format(
+                    "No dataset found with resource identifier '%s'. Check that a record exist with hierarchy level is set to 'dataset' with a resource identifier set to '%s'.", spIdentifier, spIdentifier));
             }
         }
 
@@ -485,7 +487,7 @@ public class InspireAtomUtil {
             Lib.resource.checkPrivilege(context, String.valueOf(datasetMd.getId()), ReservedOperation.view);
         } catch (Exception e) {
             // This does not return a 403 as expected Oo
-            throw new UnAuthorizedException("Access denied to metadata " +datasetMd.getUuid(), e);
+            throw new UnAuthorizedException("Access denied to metadata " + datasetMd.getUuid(), e);
         }
 
         String serviceMdUuid = null;
@@ -504,7 +506,7 @@ public class InspireAtomUtil {
             serviceMdUuid = uuidTxt.getText();
         } finally {
             if (serviceMdUuid == null) {
-                throw new ObjectNotFoundEx("No related service metadata found");
+                throw new NotFoundException(String.format("No service operating the dataset '%s'. Check that a service is attached to that dataset and that its service type is set to 'download'.", datasetMd.getUuid()));
             }
         }
 
