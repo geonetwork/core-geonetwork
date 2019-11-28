@@ -70,8 +70,8 @@
     <hiddenInEditMode>Those values are defined in the standard but hidden when editing.
     </hiddenInEditMode>
     <instruction>Instruction</instruction>
-    <nbOfViews>This standard can be encoded using</nbOfViews>
-    <views>view(s).</views>
+    <nbOfViews>This standard can be encoded using </nbOfViews>
+    <views> view(s).</views>
     <context>Context</context>
   </eng>
   <fre>
