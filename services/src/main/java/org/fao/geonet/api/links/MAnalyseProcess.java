@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static jeeves.transaction.TransactionManager.CommitBehavior.ALWAYS_COMMIT;
 import static jeeves.transaction.TransactionManager.TransactionRequirement.CREATE_NEW;
@@ -41,7 +42,7 @@ public class MAnalyseProcess implements SelfNaming {
     private int metadataAnalysed = 0;
     private int metadataNotAnalysedInError = 0;
     private int urlToCheckCount = -1;
-    private int urlChecked = 0;
+    private AtomicInteger urlChecked = new AtomicInteger(0);
     private long deleteAllDate = Long.MAX_VALUE;
     private long analyseMdDate = Long.MAX_VALUE;
     private long testLinkDate = Long.MAX_VALUE;
@@ -64,7 +65,7 @@ public class MAnalyseProcess implements SelfNaming {
 
     @ManagedAttribute
     public int getUrlChecked() {
-        return urlChecked;
+        return urlChecked.get();
     }
 
     @ManagedAttribute
@@ -149,7 +150,7 @@ public class MAnalyseProcess implements SelfNaming {
                     testLinkDate = System.currentTimeMillis();
                     List<Link> all = linkRepository.findAll();
                     urlToCheckCount = all.size();
-                    all.stream().peek(urlAnalyser::testLink).forEach(x -> urlChecked++);
+                    all.parallelStream().peek(urlAnalyser::testLink).forEach(x -> urlChecked.getAndIncrement());
                     return null;
                 }
             });
