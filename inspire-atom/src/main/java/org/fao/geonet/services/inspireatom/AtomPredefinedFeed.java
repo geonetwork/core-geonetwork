@@ -39,6 +39,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
@@ -73,7 +74,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import javassist.NotFoundException;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
@@ -177,7 +177,7 @@ public class AtomPredefinedFeed {
         Element md = dm.getMetadata(id);
         String schema = dm.getMetadataSchema(id);
         if (!InspireAtomUtil.isServiceMetadata(dm, schema, md)) {
-            throw new NotFoundException("No service metadata found with uuid:" + uuid);
+            throw new ResourceNotFoundException("No service metadata found with uuid:" + uuid);
         }
 
         String defaultLanguage = dm.extractDefaultLanguage(schema, md);
@@ -373,7 +373,7 @@ public class AtomPredefinedFeed {
         Element md = dm.getMetadata(id);
         String schema = dm.getMetadataSchema(id);
         if (!InspireAtomUtil.isServiceMetadata(dm, schema, md)) {
-            throw new NotFoundException("No service metadata found with uuid:" + uuid);
+            throw new ResourceNotFoundException("No service metadata found with uuid:" + uuid);
         }
 
         String defaultLanguage = dm.extractDefaultLanguage(schema, md);
