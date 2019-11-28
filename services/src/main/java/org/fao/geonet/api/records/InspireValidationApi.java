@@ -28,7 +28,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import javassist.NotFoundException;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.http.HttpStatus;
@@ -36,6 +35,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.editing.InspireValidatorUtils;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterApi;
@@ -170,8 +170,7 @@ public class InspireValidationApi {
         @ApiIgnore
             HttpServletRequest request,
         @ApiParam(hidden = true)
-        @ApiIgnore
-        final NativeWebRequest nativeRequest,
+        @ApiIgnore final NativeWebRequest nativeRequest,
         @ApiParam(hidden = true)
         @ApiIgnore
             HttpSession session
@@ -318,7 +317,7 @@ public class InspireValidationApi {
 
                 return values;
             }
-        } catch (NotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             response.setStatus(HttpStatus.SC_NOT_FOUND);
             return new HashMap<>();
         } catch (Exception e) {
