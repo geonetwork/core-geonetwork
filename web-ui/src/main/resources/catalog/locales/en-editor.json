@@ -217,6 +217,7 @@
     "onlineDownloadWWW": "Download from website",
     "onlineDownloadWFS": "Download service WFS",
     "onlineDownloadINSPIRE": "Download service INSPIRE",
+    "onlineDownloadINSPIREATOM": "Download from ATOM feed",
     "onlineDownloadWCS": "Download service WCS",
     "onlineUse": "Use the resource",
     "onlineUseFcats": "Resource data model",
