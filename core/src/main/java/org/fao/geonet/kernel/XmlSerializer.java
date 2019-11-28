@@ -156,7 +156,7 @@ public abstract class XmlSerializer {
      * and the string read is converted into xml.
      *
      * @param isIndexingTask If true, then withheld elements are not removed.
-     * @param applyOperationsFilters If true, then withheld elements are not removed.
+     * @param applyOperationsFilters If true, then withheld elements are filtered according to user privileges.
      */
     protected Element internalSelect(String id, boolean isIndexingTask, boolean applyOperationsFilters) throws Exception {
         IMetadataUtils _metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
