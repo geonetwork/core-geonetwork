@@ -316,9 +316,10 @@
                 // load extension content (JSON)
                 if (layer.extension && layer.extension.any) {
                   var extension = JSON.parse(layer.extension.any);
-
+                  var loadingId = layer.name;
                   if (extension.style) {
                     currentStyle = {Name: extension.style};
+                    loadingId += ' ' + extension.style;
                   }
 
                   // import saved filters if available
@@ -345,7 +346,7 @@
 
                   var loadingLayer = new ol.layer.Image({
                     loading: true,
-                    label: layer.name || 'loading',
+                    label: loadingId || 'loading',
                     name: id,
                     url: '',
                     visible: false,

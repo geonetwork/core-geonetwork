@@ -2,7 +2,7 @@
   <div data-ng-hide="layout === 'select'">
     <h5>{{styles.length + '&nbsp;' + ('layerStylesAvailable' | translate)}}</h5>
     <ul>
-      <li data-ng-repeat="s in styles track by $index"
+      <li data-ng-repeat="s in styles | orderBy:'Title'"
           class="flex-row width-100">
         <div class="btn-group" role="group">
           <div class="flex-row">

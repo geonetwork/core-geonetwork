@@ -94,7 +94,9 @@ goog.require('gn_alert');
             'slo': 'sk'
           },
           'isLogoInHeader': false,
-          'logoInHeaderPosition': 'left'
+          'logoInHeaderPosition': 'left',
+          'fluidHeaderLayout': true,
+          'showGNName': true
         },
         'home': {
           'enabled': true,
@@ -473,6 +475,8 @@ goog.require('gn_alert');
         gnUtilityService.getPermalink(md.title || md.defaultTitle, url);
       };
       $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
+      $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
+      $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
 
       var url = gnGlobalSettings.gnUrl || location.href;
       try {

@@ -85,15 +85,15 @@
          * @param {string} url of the service
          * @return {boolean} true if layer is in the map
          */
-        var isLayerInMap = function(map, name, url) {
-          return getLayerInMap(map, name, url) !== null;
+        var isLayerInMap = function(map, name, url, style) {
+          return getLayerInMap(map, name, url, style) !== null;
         };
-        var getLayerInMap = function(map, name, url) {
-          if (gnWmsQueue.isPending(url, name)) {
+        var getLayerInMap = function(map, name, url, style) {
+          if (gnWmsQueue.isPending(url, name, style)) {
             return true;
           }
 
-          if(getTheLayerFromMap(map, name, url) != null) {
+          if(getTheLayerFromMap(map, name, url, style) != null) {
             return true;
           }
           return null;
@@ -107,7 +107,7 @@
          * @param {string} name of the layer
          * @param {string} url of the service
          */
-        var getTheLayerFromMap = function(map, name, url) {
+        var getTheLayerFromMap = function(map, name, url, style) {
           for (var i = 0; i < map.getLayers().getLength(); i++) {
             var l = map.getLayers().item(i);
             var source = l.getSource();
@@ -120,6 +120,7 @@
             else if (source instanceof ol.source.TileWMS ||
                 source instanceof ol.source.ImageWMS) {
               if (source.getParams().LAYERS == name &&
+                  source.getParams().STYLES == style &&
                   l.get('url').split('?')[0] == url.split('?')[0]) {
                 return l;
               }
@@ -1371,8 +1372,8 @@
             var defer = $q.defer();
             var $this = this;
 
-            if (!isLayerInMap(map, name, url)) {
-              gnWmsQueue.add(url, name);
+            if (!isLayerInMap(map, name, url, style)) {
+              gnWmsQueue.add(url, name, style ? style.Name : '');
               gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
                 var capL = gnOwsCapabilities.getLayerInfoFromCap(
                     name, capObj, md && md.getUuid && md.getUuid()),
@@ -1454,7 +1455,7 @@
                           if (!createOnly) {
                             map.addLayer(olL);
                           }
-                          gnWmsQueue.removeFromQueue(url, name);
+                          gnWmsQueue.removeFromQueue(url, name, style ? style.Name : '');
                           defer.resolve(olL);
                         });
                   };

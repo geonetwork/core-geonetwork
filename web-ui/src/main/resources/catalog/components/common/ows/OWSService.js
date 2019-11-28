@@ -526,8 +526,7 @@
                 needles[0].version = capObj.version;
               }
               // Multiple layers from the same service
-              if (layerName.indexOf(',')) {
-                needles[0].Name = layerName;
+              if (layerName.indexOf(',') !== -1) {
                 // Parameters 'styles' and 'layers' should have the same number of values.
                 // SEXTANT SPECIFIC: disable this as we don't need style switching
                 //needles[0].Style = new Array(layerList.length).join(',');
