@@ -132,7 +132,7 @@
           scope.datasetLinks = null; // datasetfeed links in service feed
           scope.atom = null; //feed content
           scope.layerSelected = null; // layer selected from service
-          scope.isAtomAvailable = false; // if $hhtp.get fails
+          scope.isAtomAvailable = false; // if $http.get fails
           scope.isLayerInAtom = false; // dataset is found in service feed
           scope.atomChecked = false; // request to atom is running
           var init = function() {
@@ -176,58 +176,66 @@
             var datasetLinks = [];
             var isService = false;
 
+            // Pre-defined Dataset Download Service implementations shall publish separate
+            // datasets as individual entries within an Atom feed
             scope.atom.find('entry').each(function() {
-
               var atomLink = {};
-
               try {
-                //check if links have type atom
+                atomLink = {
+                  id: $(this).find('id').text(),
+                  title: $(this).find('title').first().text(),
+                  //check if entry has inspire extension
+                  uuid: $(this).find('spatial_dataset_identifier_code').text(),
+                  namespace: $(this).find('spatial_dataset_identifier_namespace').text(),
+                  links: []
+                };
+
+                // The Download Service Feed shall contain an Atom ‗link‘ element that
+                // contains an HTTP URI for the Download Service Feed document. The value
+                // of the ‗rel‘ attribute of this element shall be ―self,
+                // the ‗hreflang‘ attribute shall use the appropriate language code
+                // and the value of the ‗type‘ attribute shall be application/atom+xml.
                 $(this).find('link').each(function() {
-                  if ($(this).attr('type') == 'application/atom+xml') {
+                  if ($(this).attr('type') === 'application/atom+xml') {
                     atomLink.url = $(this).attr('href');
                     isService = true;
                   }
                 });
-                atomLink.id = $(this).find('id').text();
-                atomLink.title = $(this).find('title').first().text();
 
-                //check if entry has inspire extension
-                atomLink.uuid = $(this).find(
-                    'spatial_dataset_identifier_code').text();
-                atomLink.namespace = $(this).find(
-                    'spatial_dataset_identifier_namespace').text();
-                if (atomLink.uuid) {
+                if (angular.isUndefined(atomLink.uuid)) {
                   isService = true;
                 }
-
               } catch (e) {
-
+                console.warn('Error while parsing ATOM entry.');
               }
 
 
-              if (!isService) {
-                try {
-                  atomLink.url = $(this).find('link').first().attr('href');
-                  atomLink.type = $(this).find('link').first().attr('type');
-                  atomLink.length = Math.round(
-                      ($(this).find('link').first().attr('length') ||
-                      0) / 10485.76) / 100;
-                  atomLink.crs = $(this).find('category').attr('label');
-                  atomLink.geom = $(this).find('georss:polygon').text();
-                } catch (e) {
-                }
-                atomLinks.push(atomLink);
-              } else {
+              if (isService) {
                 datasetLinks.push(atomLink);
+              } else {
+                try {
+                  var defaultCrs = $(this).find('category').attr('label'),
+                    defaultGeom = $(this).find('georss:polygon').text();
+                  $(this).find('link').each(function() {
+                    var link = {
+                      title: $(this).attr('title') || atomLink.title,
+                      url: $(this).attr('href'),
+                      type: $(this).attr('type'),
+                      length: Math.round(($(this).attr('length') || 0) / 10485.76) / 100,
+                      crs: defaultCrs,
+                      geom: $(this).attr('bbox') || defaultGeom
+                    }
+                    atomLink.links.push(link);
+                    atomLinks.push(link);
+                  });
+                } catch (e) {
+                  console.warn('Error while parsing ATOM entry link.');
+                }
               }
-
-
             });
 
-            //if service feed
+
             if (isService) {
-
-
               //check if layer in feed (by name=id or uuid=uuid)
               scope.layerSelected = null;
               $(datasetLinks).each(function() {
@@ -241,17 +249,14 @@
               });
               //list dataset links
               scope.atomDatasets = datasetLinks;
-
             } else {
               //else dataset feed
               //list dataset links
               scope.atomLinks = atomLinks;
               scope.isAtomAvailable = true;
               scope.isLayerInAtom = true;
-
             }
           };
-
 
           init();
         }
