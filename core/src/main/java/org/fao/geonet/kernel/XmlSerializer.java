@@ -156,9 +156,9 @@ public abstract class XmlSerializer {
      * and the string read is converted into xml.
      *
      * @param isIndexingTask If true, then withheld elements are not removed.
-     * @param forEditing If true, then withheld elements are not removed.
+     * @param applyOperationsFilters If true, then withheld elements are not removed.
      */
-    protected Element internalSelect(String id, boolean isIndexingTask, boolean forEditing) throws Exception {
+    protected Element internalSelect(String id, boolean isIndexingTask, boolean applyOperationsFilters) throws Exception {
         IMetadataUtils _metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
 
         AbstractMetadata metadata = _metadataUtils.findOne(Integer.parseInt(id));
@@ -166,17 +166,17 @@ public abstract class XmlSerializer {
         if (metadata == null)
             return null;
 
-        return removeHiddenElements(isIndexingTask, metadata, forEditing);
+        return removeHiddenElements(isIndexingTask, metadata, applyOperationsFilters);
     }
 
-    public Element removeHiddenElements(boolean isIndexingTask, AbstractMetadata metadata, boolean forEditing) throws Exception {
+    public Element removeHiddenElements(boolean isIndexingTask, AbstractMetadata metadata, boolean applyOperationsFilters) throws Exception {
         AccessManager accessManager = ApplicationContextHolder.get().getBean(AccessManager.class);
         DataManager _dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
 
         String id = String.valueOf(metadata.getId());
         Element metadataXml = metadata.getXmlData(false);
-
-        if (!isIndexingTask && !forEditing) {
+System.out.println(String.format("isIndexing: %s, applyFilter: %s", isIndexingTask, applyOperationsFilters));
+        if (!isIndexingTask && applyOperationsFilters) {
             ServiceContext context = ServiceContext.get();
             MetadataSchema mds = _dataManager.getSchema(metadata.getDataInfo().getSchemaId());
 
@@ -196,7 +196,10 @@ public abstract class XmlSerializer {
                 Pair<String, Element> downloadXpathFilter = mds.getOperationFilter(ReservedOperation.download);
                 if (downloadXpathFilter != null) {
                     boolean canDownload = accessManager.canDownload(context, id);
+                    System.out.println(String.format("Can download %s", canDownload));
                     if (!canDownload) {
+
+                        System.out.println(String.format("Download filter"));
                         removeFilteredElement(metadataXml, downloadXpathFilter, namespaces);
                     }
                 }
@@ -299,7 +302,7 @@ public abstract class XmlSerializer {
      */
     public abstract Element select(ServiceContext context, String id) throws Exception;
 
-    public abstract Element selectNoXLinkResolver(String id, boolean isIndexingTask, boolean forEditing)
+    public abstract Element selectNoXLinkResolver(String id, boolean isIndexingTask, boolean applyOperationsFilters)
         throws Exception;
 
     public static class ThreadLocalConfiguration {

@@ -121,7 +121,7 @@ public class XslProcessUtils {
             Element processedMetadata = null;
             try {
                 boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
-                Element md = dataMan.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+                Element md = metadataManager.getMetadata(context, id, forEditing, false, withValidationErrors, keepXlinkAttributes);
 
                 Map<String, Object> xslParameter = new HashMap<>();
 
