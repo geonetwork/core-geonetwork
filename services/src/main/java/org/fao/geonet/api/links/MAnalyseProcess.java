@@ -38,13 +38,13 @@ public class MAnalyseProcess implements SelfNaming {
 
     private ObjectName probeName;
     private int metadataToAnalyseCount = -1;
-    private int urlToCheckCount = -1;
     private int metadataAnalysed = 0;
     private int metadataNotAnalysedInError = 0;
+    private int urlToCheckCount = -1;
     private int urlChecked = 0;
-    private Date deleteAllDate = new GregorianCalendar(0, 0, 0, 0,0).getTime();
-    private Date analyseMdDate = new GregorianCalendar(0, 0, 0, 0,0).getTime();
-    private Date testLinkDate = new GregorianCalendar(0, 0, 0, 0,0).getTime();
+    private long deleteAllDate = Long.MAX_VALUE;
+    private long analyseMdDate = Long.MAX_VALUE;
+    private long testLinkDate = Long.MAX_VALUE;
 
 
     @ManagedAttribute
@@ -73,17 +73,17 @@ public class MAnalyseProcess implements SelfNaming {
     }
 
     @ManagedAttribute
-    public Date getDeleteAllDate() {
+    public long getDeleteAllDate() {
         return deleteAllDate;
     }
 
     @ManagedAttribute
-    public Date getAnalyseMdDate() {
+    public long getAnalyseMdDate() {
         return analyseMdDate;
     }
 
     @ManagedAttribute
-    public Date getTestLinkDate() {
+    public long getTestLinkDate() {
         return testLinkDate;
     }
 
@@ -108,7 +108,7 @@ public class MAnalyseProcess implements SelfNaming {
         runInNewTransaction("manalyseprocess-deleteall", new TransactionTask<Object>() {
             @Override
             public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                deleteAllDate = new GregorianCalendar().getTime();
+                deleteAllDate = System.currentTimeMillis();
                 urlAnalyser.deleteAll();
                 return null;
             }
@@ -117,7 +117,7 @@ public class MAnalyseProcess implements SelfNaming {
 
     public void processMetadataAndTestLink(boolean testLink, Set<Integer> ids) throws JDOMException, IOException {
         metadataToAnalyseCount = ids.size();
-        analyseMdDate = new GregorianCalendar().getTime();
+        analyseMdDate = System.currentTimeMillis();
         for (int i : ids) {
             try {
                 Metadata metadata = metadataRepository.findOne(i);
@@ -146,7 +146,7 @@ public class MAnalyseProcess implements SelfNaming {
             runInNewTransaction("manalyseprocess-testlink", new TransactionTask<Object>() {
                 @Override
                 public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                    testLinkDate = new GregorianCalendar().getTime();
+                    testLinkDate = System.currentTimeMillis();
                     List<Link> all = linkRepository.findAll();
                     urlToCheckCount = all.size();
                     all.stream().peek(urlAnalyser::testLink).forEach(x -> urlChecked++);
