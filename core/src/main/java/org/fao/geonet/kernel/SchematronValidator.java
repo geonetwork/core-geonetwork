@@ -172,6 +172,7 @@ public class SchematronValidator {
             params.put("lang", lang);
             params.put("rule", ruleId);
             params.put("thesaurusDir", thesaurusManager.getThesauriDirectory().toString());
+            params.put("schemaDir", schemaDir.toString());
 
             Path file = schemaDir.resolve(SCHEMATRON_DIR).resolve(schematron.getFile());
             Element xmlReport = Xml.transform(md, file, params);

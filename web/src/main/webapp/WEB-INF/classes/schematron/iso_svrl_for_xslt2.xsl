@@ -209,6 +209,7 @@
     <axsl:param name="lang"/>
     <axsl:param name="thesaurusDir"/>
     <axsl:param name="rule"/>
+    <axsl:param name="schemaDir"/>
 
     <axsl:variable name="loc" select="document(concat('../loc/', $lang, '/', $rule, '.xml'))"/>
   </xsl:template>
