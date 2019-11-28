@@ -1,0 +1,16 @@
+<div class="panel-body alert-{{taskInfo.class}}">
+  <p>
+    <span class="fa {{taskInfo.icon}}"></span>&nbsp;
+    <span translate translate-values="{ total: taskInfo.total, errors: taskInfo.errors }">
+      {{taskInfo.label}}
+    </span>
+    </p>
+    <div class="progress">
+    <div class="progress-bar progress-bar-striped progress-bar-{{taskInfo.class}}"
+      ng-class="{'active': taskInfo.total > taskInfo.processed}"
+      role="progressbar" style="width: {{taskInfo.ratio * 100}}%">
+        {{taskInfo.processed}} / {{taskInfo.total}}
+    </div>
+  </div>
+</div>
+
