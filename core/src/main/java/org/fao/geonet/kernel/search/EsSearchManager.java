@@ -299,7 +299,7 @@ public class EsSearchManager implements ISearchManager {
                 }
             }
         } catch (Exception cnce) {
-            final String message = String.format("Could not connect to index '%s'. Error is %s. Is the index server is up and running?",
+            final String message = String.format("Could not connect to index '%s'. Error is %s. Is the index server  up and running?",
                 defaultIndex, cnce.getMessage());
             LOGGER.error(message);
             throw new IOException(message);
