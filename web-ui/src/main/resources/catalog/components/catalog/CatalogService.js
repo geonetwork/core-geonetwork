@@ -738,14 +738,14 @@
             } else if (s[0] === 'overview') {
               images.big = s[1];
             }
-            
+
             //Is it a draft?
-            if( s[1].indexOf("/api/records/") >= 0 
+            if( s[1].indexOf("/api/records/") >= 0
                 &&  s[1].indexOf("/api/records/")<  s[1].indexOf("/attachments/")) {
               s[1] += "?approved=" + (this.draft != 'y');
             }
-              
-            
+
+
             images.list[insertFn]({url: s[1], label: s[2]});
           }
         }
@@ -771,7 +771,8 @@
               name: s[5] || '',
               position: s[6] || '',
               address: s[7] || '',
-              phone: s[8] || ''
+              phone: s[8] || '',
+              website: s[11] || ''
             };
             if (s[1] === 'resource') {
               this.allContacts.resource.push(contact);
