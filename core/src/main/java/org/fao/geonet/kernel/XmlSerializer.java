@@ -175,7 +175,6 @@ public abstract class XmlSerializer {
 
         String id = String.valueOf(metadata.getId());
         Element metadataXml = metadata.getXmlData(false);
-System.out.println(String.format("isIndexing: %s, applyFilter: %s", isIndexingTask, applyOperationsFilters));
         if (!isIndexingTask && applyOperationsFilters) {
             ServiceContext context = ServiceContext.get();
             MetadataSchema mds = _dataManager.getSchema(metadata.getDataInfo().getSchemaId());
@@ -196,10 +195,7 @@ System.out.println(String.format("isIndexing: %s, applyFilter: %s", isIndexingTa
                 Pair<String, Element> downloadXpathFilter = mds.getOperationFilter(ReservedOperation.download);
                 if (downloadXpathFilter != null) {
                     boolean canDownload = accessManager.canDownload(context, id);
-                    System.out.println(String.format("Can download %s", canDownload));
                     if (!canDownload) {
-
-                        System.out.println(String.format("Download filter"));
                         removeFilteredElement(metadataXml, downloadXpathFilter, namespaces);
                     }
                 }
