@@ -1715,6 +1715,7 @@
   <onTheWeb>Plus d'information</onTheWeb>
   <format>Format</format>
   <spatialRepresentationType>Type de donnée</spatialRepresentationType>
+  <constraints>Contraintes d’accès et d’utilisation</constraints>
   <updateFrequency>Fréquence de mise à jour</updateFrequency>
   <lastUpdate>Fiche mise à jour</lastUpdate>
 </strings>
