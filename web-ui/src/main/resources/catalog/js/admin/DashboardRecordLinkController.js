@@ -34,6 +34,12 @@
     '$scope', '$routeParams', '$http', '$rootScope', '$translate', 'gnLangs', '$compile', 'gnHumanizeTimeService', '$window', 'getBsTableLang',
     function($scope, $routeParams, $http, $rootScope, $translate, gnLangs, $compile, gnHumanizeTimeService, $window, getBsTableLang) {
 
+      $scope.groupId = '';
+
+      $scope.triggerSearch = function () {
+        $('#bstable').bootstrapTable('refresh')
+      }
+
       $scope.analyzeLinks = function() {
         $http.post('../api/records/links?analyze=true');
       };
@@ -76,6 +82,7 @@
 
                 queryParams: function(params) {
                   return {
+                    groupIdFilter: $scope.groupId,
                     filter: params.filter,
                     page: params.pageNumber - 1,
                     size: params.pageSize,

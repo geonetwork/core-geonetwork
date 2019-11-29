@@ -37,11 +37,18 @@
     </div>
   </div>
 
-  <table bs-table-control="bsTableControl">
+  <form name="form">
+    <label>Group id:
+      <input type="text" formControlName="groupId" name="groupId" ng-model="groupId" ng-pattern="/^(\s*|\d+)$/" ng-change="triggerSearch()">
+      <span ng-show="!form.groupId.$valid">Integer input only</span>
+    </label>
+  </form>
+  <table id="bstable" bs-table-control="bsTableControl" ng-model="tc">
   </table>
 
   <br>
 
   <gn-dashboard-record-links-processes-container/>
+
 
 </div>
