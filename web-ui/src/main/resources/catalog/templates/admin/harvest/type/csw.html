@@ -113,6 +113,18 @@
       <div id="gn-harvest-settings-csw-advanced-validate-list" data-gn-harvester-validation="harvesterSelected.content.validate"/>
       <p class="help-block" data-translate="">harvesterValidateHelp</p>
     </div>
+
+    <div id="gn-harvest-settings-csw-advanced-batchEdits-row">
+      <label id="gn-harvest-settings-csw-advanced-batchEdits-label" class="control-label">
+        <span data-translate="">harvesterBatchEdits</span>
+      </label>
+      <div id="gn-harvest-settings-csw-advanced-validate-list"
+           style="height: 300px"
+           ui-ace="{useWrapMode:true, showGutter:true, mode:'json'}"
+           data-ng-model="harvesterSelected.content.batchEdits"/>
+      <p class="help-block" data-translate="">harvesterBatchEditsHelp</p>
+    </div>
+
     <div id="gn-harvest-settings-csw-advanced-xsl-row">
       <label id="gn-harvest-settings-csw-advanced-xsl-label" class="control-label" data-translate="">applyXSLToRecord</label>
       <div id="gn-harvest-settings-csw-advanced-xsl-list" data-gn-import-xsl="harvesterSelected.site.xslfilter"/>

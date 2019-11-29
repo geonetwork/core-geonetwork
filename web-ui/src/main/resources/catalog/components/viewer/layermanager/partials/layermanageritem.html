@@ -78,7 +78,7 @@
               <li class="" data-gn-wfs-download="layer"
                            data-init-on-demand="true"
                            data-mode="select"
-                           ng-show="hasDownload" 
+                           ng-show="hasDownload"
                            has-download="hasDownload" data-map="map" role="menuitem">
               </li>
 
@@ -121,7 +121,7 @@
               data-ng-click="removeLayer(layer, map)"
              title="{{'layerDelete'|translate}}"></a>
         </span>
-        <label for="layer-{{$index}}">
+        <label class="gn-map-layer" for="layer-{{$index}}">
           <span data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''">
             {{layer.get('label')}}
             <small><em>

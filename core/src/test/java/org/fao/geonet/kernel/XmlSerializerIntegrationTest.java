@@ -178,7 +178,7 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
     @Test
     public void testInternalCompleteHidingHiddenElement() throws Exception {
         try (Closeable ignored = configureXmlSerializerAndServiceContext(false, false, false)) {
-            Element loadedMetadata = _xmlSerializer.internalSelect("1", false, false);
+            Element loadedMetadata = _xmlSerializer.internalSelect("1", false, true);
             List<?> withheld = Xml.selectNodes(loadedMetadata, "*//*[@gco:nilReason = 'withheld']", Arrays.asList(Geonet.Namespaces.GCO));
 
             assertEquals(0, withheld.size());
@@ -244,7 +244,7 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
             numberAttributes = 2;
         }
 
-        Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false, false);
+        Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false, true);
         List<?> resolutionElem = Xml.selectNodes(loadedMetadata,
             "*//gmd:MD_Resolution",
             XML_SELECT_NAMESPACE);
@@ -272,7 +272,7 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
 
     private void assertDownloadElements(boolean isEnabled) throws Exception {
         final int numberDownload = isEnabled ? 1 : 0;
-        Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false, false);
+        Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false, true);
         @SuppressWarnings("unchecked")
         List<Element> withheld = (List<Element>) Xml.selectNodes(loadedMetadata,
             XPATH_DOWNLOAD,
@@ -282,7 +282,7 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
 
     private void assertDynamicElements(boolean isEnabled) throws Exception {
         final int numberDownload = isEnabled ? 1 : 0;
-        Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false, false);
+        Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false, true);
         @SuppressWarnings("unchecked")
         List<Element> withheld = (List<Element>) Xml.selectNodes(loadedMetadata,
             XPATH_DYNAMIC,

@@ -422,7 +422,7 @@ public final class Geonet {
         public static final String MAX_RECORDS = "maxRecords";
 
         /**
-         * Parameter name: {@value #ALLOW_UNBOUNDED_QUERIES} - Allow XmlSearch to return as many 
+         * Parameter name: {@value #ALLOW_UNBOUNDED_QUERIES} - Allow XmlSearch to return as many
          * records as the search returns (this was the default behaviour before 3.8.x).
          */
         public static final String ALLOW_UNBOUNDED_QUERIES = "allowUnboundedQueries";
@@ -662,6 +662,7 @@ public final class Geonet {
         public static final String UUID = "uuid";
         public static final String IS_HARVESTED = "isHarvested";
         public static final String OWNER = "owner";
+        public static final String OWNERNAME = "recordOwner";
         public static final String POPULARITY = "_popularity";
         public static final String RATING = "_rating";
         public static final String DISPLAY_ORDER = "_displayOrder";

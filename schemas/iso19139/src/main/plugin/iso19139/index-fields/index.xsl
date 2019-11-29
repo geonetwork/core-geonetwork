@@ -1044,6 +1044,7 @@
                   select="replace(*[1]/gmd:role/*/@codeListValue, ' ', '')"
                   as="xs:string?"/>
     <xsl:variable name="logo" select=".//gmx:FileName/@src"/>
+    <xsl:variable name="website" select=".//gmd:onlineResource/*/gmd:linkage/gmd:URL"/>
     <xsl:variable name="email"
                   select="*[1]/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString"/>
     <xsl:variable name="phone"
@@ -1070,6 +1071,7 @@
         select="gn-fn-index:json-escape($organisationName)"/>",
       "role":"<xsl:value-of select="$role"/>",
       "email":"<xsl:value-of select="$email"/>",
+      "website":"<xsl:value-of select="$website"/>",
       "logo":"<xsl:value-of select="$logo"/>",
       "individual":"<xsl:value-of select="gn-fn-index:json-escape($individualName)"/>",
       "position":"<xsl:value-of select="gn-fn-index:json-escape($positionName)"/>",

@@ -28,7 +28,8 @@ Stylesheet used to remove a reference to a online resource.
 <xsl:stylesheet xmlns:geonet="http://www.fao.org/geonetwork" xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="2.0">
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                version="2.0" exclude-result-prefixes="#all">
 
   <xsl:param name="uuidref"/>
 
@@ -42,7 +43,8 @@ Stylesheet used to remove a reference to a online resource.
   <xsl:template
     match="geonet:*|
            srv:coupledResource[normalize-space(srv:SV_CoupledResource/srv:identifier/gco:CharacterString) = $uuidref]|
-           srv:operatesOn[@uuidref = $uuidref]"
+           srv:operatesOn[@uuidref = $uuidref]|
+           srv:operatesOn[contains(@xlink.href,$uuidref)]"
     priority="2"/>
 
 </xsl:stylesheet>

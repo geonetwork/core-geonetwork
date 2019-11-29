@@ -40,8 +40,8 @@
     <msg id="b" xml:lang="fre">). Exécuter cette action pour essayer de calculer l'emprise à partir
       des thésaurus.
     </msg>
-    <msg id="a" xml:lang="dut">Het trefwoord veld bevat plaatszoekwoorden (ie.</msg>
-    <msg id="b" xml:lang="dut">). Probeer metadata extent te berekenen met behulp van de thesaurus.</msg>
+    <msg id="a" xml:lang="dut">Er zijn trefwoorden opgenomen die een locatie beschrijven (ie.</msg>
+    <msg id="b" xml:lang="dut">). Probeer metadata dekking te berekenen met behulp van de opgenomen trefwoorden.</msg>
   </xsl:variable>
 
   <!-- GeoNetwork base url -->

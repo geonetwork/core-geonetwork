@@ -1736,6 +1736,36 @@ An autocompletion list based on a thesaurus.
                 ]]></xs:documentation>
               </xs:annotation>
             </xs:enumeration>
+            <xs:enumeration value="data-gn-anchor-switcher">
+              <xs:annotation>
+                <xs:documentation>Facilitates easy conversion between Characterstring and Anchor.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-logo-selector">
+              <xs:annotation>
+                <xs:documentation>Users can upload a file into the file storage of a record. The link to the file will be stored as Anchor.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-checkbox-with-nilreason">
+              <xs:annotation>
+                <xs:documentation>Boolean field with explicit true, false and nill options</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-field-upload-div">
+              <xs:annotation>
+                <xs:documentation>Option to upload a document, link and title are stored in an Anchor element.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-codelist-picker">
+              <xs:annotation>
+                <xs:documentation>Select a value from an ISO codelist</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-draw-bbox">
+              <xs:annotation>
+                <xs:documentation>Interactive map facilitating to draw a bounds element</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
           </xs:restriction>
         </xs:simpleType>
       </xs:union>
@@ -1759,8 +1789,23 @@ An autocompletion list based on a thesaurus.
             <xs:enumeration value="data-gn-directory-entry-selector">
               <xs:annotation>
                 <xs:documentation><![CDATA[
-                  A classic add control with a popup to choose from contact directory and an autocompletion list to search in the contact directory and add a contact.
-                  ]]></xs:documentation>
+This field facilitates users in selecting a `subtemplate` (also known as xml-snippet) from the catalogue. Subtemplates are mostly used to store contact details, 
+but can also be used to store snippets of xml having Quality reports, Access constraints, CRS definitions, etc. 
+
+.. code-block:: xml
+
+    <for name="gmd:report" 
+      addDirective="data-gn-directory-entry-selector" 
+      xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result">
+      <directiveAttributes 
+        data-template-add-action="true" 
+        data-search-action="true" 
+        data-popup-action="false" 
+        data-filter='{"_root": "gmd:DQ_DomainConsistency"}' 
+        data-template-type="report" 
+        data-insert-modes="text" />
+    </for>
+                ]]></xs:documentation>
               </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="data-gn-thesaurus-selector">

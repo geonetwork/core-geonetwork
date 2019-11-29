@@ -181,6 +181,7 @@
               title: '@',
               list: '@',
               filter: '@',
+              container: '@',
               user: '=',
               hasResults: '=?'
             },
@@ -236,9 +237,14 @@
                            scope.relations[idx] = value;
                          }
                        });
+                    
+                       if (angular.isDefined(scope.container) 
+                           && scope.relations == null) {
+                         $(scope.container).hide();
+                       }
                        if (controller) {
-                          controller.finishRequest(elem, scope.relationFound);
-                        }
+                         controller.finishRequest(elem, scope.relationFound);
+                       }
                      } , function() {
                       if (controller) {
                         controller.finishRequest(elem, false);

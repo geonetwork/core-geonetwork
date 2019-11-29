@@ -334,9 +334,9 @@
                                             @locale = concat('#', $mainLanguageId)])"/>
 
       <!-- Add nileason if text is empty -->
-      <xsl:variable name="isEmpty"
+      <xsl:variable name="isMainLanguageEmpty"
                     select="if ($isMultilingual and not($excluded))
-                            then $valueInPtFreeTextForMainLanguage = ''
+                            then ($valueInPtFreeTextForMainLanguage = '' and normalize-space(gco:CharacterString|gmx:Anchor) = '')
                             else if ($valueInPtFreeTextForMainLanguage != '')
                             then $valueInPtFreeTextForMainLanguage = ''
                             else normalize-space(gco:CharacterString|gmx:Anchor) = ''"/>
@@ -347,7 +347,7 @@
 
 
       <xsl:choose>
-        <xsl:when test="$isEmpty">
+        <xsl:when test="$isMainLanguageEmpty">
           <xsl:attribute name="gco:nilReason">
             <xsl:choose>
               <xsl:when test="@gco:nilReason">
@@ -357,7 +357,7 @@
             </xsl:choose>
           </xsl:attribute>
         </xsl:when>
-        <xsl:when test="@gco:nilReason != 'missing' and not($isEmpty)">
+        <xsl:when test="@gco:nilReason != 'missing' and not($isMainLanguageEmpty)">
           <xsl:copy-of select="@gco:nilReason"/>
         </xsl:when>
       </xsl:choose>
@@ -419,16 +419,18 @@
             </xsl:when>
             <xsl:otherwise>
 
-              <!-- Populate PT_FreeText for default language if not existing. -->
+              <!-- Populate PT_FreeText for default language if not existing and it is not null. -->
               <xsl:apply-templates select="gco:CharacterString|gmx:Anchor"/>
-              <gmd:PT_FreeText>
-                <gmd:textGroup>
-                  <gmd:LocalisedCharacterString locale="#{$mainLanguageId}">
-                    <xsl:value-of select="gco:CharacterString"/>
-                  </gmd:LocalisedCharacterString>
-                </gmd:textGroup>
-                <xsl:call-template name="populate-free-text"/>
-              </gmd:PT_FreeText>
+              <xsl:if test="normalize-space(gco:CharacterString|gmx:Anchor) != ''">
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#{$mainLanguageId}">
+                      <xsl:value-of select="gco:CharacterString|gmx:Anchor"/>
+                    </gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <xsl:call-template name="populate-free-text"/>
+                </gmd:PT_FreeText>
+              </xsl:if>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:otherwise>

@@ -283,10 +283,7 @@ public class MetadataSharingApi {
         //--- and are not sent to the server. So we cannot remove them
         UserSession us = ApiUtils.getUserSession(session);
         boolean isAdmin = Profile.Administrator == us.getProfile();
-        boolean isReviewer = Profile.Reviewer == us.getProfile();
-        if (us.getUserIdAsInt() == metadata.getSourceInfo().getOwner() &&
-            !isAdmin &&
-            !isReviewer) {
+        if (!isAdmin && !accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
             skip = true;
         }
 
@@ -1014,10 +1011,7 @@ public class MetadataSharingApi {
         //--- and are not sent to the server. So we cannot remove them
         UserSession us = ApiUtils.getUserSession(session);
         boolean isAdmin = Profile.Administrator == us.getProfile();
-        boolean isReviewer = Profile.Reviewer == us.getProfile();
-        if (us.getUserIdAsInt() == metadata.getSourceInfo().getOwner() &&
-            !isAdmin &&
-            !isReviewer) {
+        if (!isAdmin && !accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
             throw new Exception("User not allowed to publish the metadata " + metadataUuid);
 
         }
@@ -1067,7 +1061,6 @@ public class MetadataSharingApi {
 
             UserSession us = ApiUtils.getUserSession(session);
             boolean isAdmin = Profile.Administrator == us.getProfile();
-            boolean isReviewer = Profile.Reviewer == us.getProfile();
 
             ServiceContext context = ApiUtils.createServiceContext(request);
 
@@ -1081,9 +1074,7 @@ public class MetadataSharingApi {
                     report.addNotEditableMetadataId(metadata.getId());
                 } else {
                     boolean skip = false;
-                    if (us.getUserIdAsInt() == metadata.getSourceInfo().getOwner() &&
-                        !isAdmin &&
-                        !isReviewer) {
+                    if (!isAdmin && accessMan.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
                         skip = true;
                     }
 

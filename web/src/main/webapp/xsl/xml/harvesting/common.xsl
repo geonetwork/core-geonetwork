@@ -63,6 +63,9 @@
         <importxslt>
           <xsl:value-of select="$con/importxslt/value"/>
         </importxslt>
+        <batchEdits>
+          <xsl:value-of select="$con/batchEdits/value"/>
+        </batchEdits>
       </content>
 
       <options>

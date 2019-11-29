@@ -860,6 +860,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         //--- setup content node ---------------------------------------
 
         harvesterSettingsManager.add(ID_PREFIX + contentId, "importxslt", params.getImportXslt());
+        harvesterSettingsManager.add(ID_PREFIX + contentId, "batchEdits", params.getBatchEdits());
         harvesterSettingsManager.add(ID_PREFIX + contentId, "validate", params.getValidate());
 
         //--- setup stats node ----------------------------------------

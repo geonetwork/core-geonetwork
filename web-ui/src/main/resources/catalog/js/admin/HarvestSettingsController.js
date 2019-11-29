@@ -86,6 +86,11 @@
               }
               $scope.isLoadingOneHarvester = false;
 
+              if ($scope.harvesterSelected.content && $scope.harvesterSelected.content.batchEdits) {
+                if (angular.isObject($scope.harvesterSelected.content.batchEdits)) {
+                  $scope.harvesterSelected.content.batchEdits = angular.toJson($scope.harvesterSelected.content.batchEdits, true);
+                }
+              }
               if ($scope.harvesterSelected.searches) {
                 if ($scope.harvesterSelected.searches[0].from) {
                   $scope.harvesterSelected.searches[0].from =

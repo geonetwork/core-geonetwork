@@ -303,8 +303,12 @@
                * }
                  *
                  */
+                scope.orgWebsite = {};
                 scope.mdContactsByOrgRole = _.groupBy(scope.mdContacts,
                   function(contact) {
+                    if (contact.website !== '') {
+                     scope.orgWebsite[contact.organisation] = contact.website;
+                    }
                     return contact.organisation;
                   });
 

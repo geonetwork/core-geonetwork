@@ -23,15 +23,13 @@
 
 package org.fao.geonet.services.inspireatom;
 
-import javassist.NotFoundException;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
@@ -40,7 +38,6 @@ import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
@@ -167,7 +164,7 @@ public class AtomPredefinedFeed {
         Element md = dm.getMetadata(id);
         String schema = dm.getMetadataSchema(id);
         if (!InspireAtomUtil.isServiceMetadata(dm, schema, md)) {
-            throw new NotFoundException("No service metadata found with uuid:" + uuid);
+            throw new ResourceNotFoundException("No service metadata found with uuid:" + uuid);
         }
 
         String defaultLanguage = dm.extractDefaultLanguage(schema, md);
@@ -363,7 +360,7 @@ public class AtomPredefinedFeed {
         Element md = dm.getMetadata(id);
         String schema = dm.getMetadataSchema(id);
         if (!InspireAtomUtil.isServiceMetadata(dm, schema, md)) {
-            throw new NotFoundException("No service metadata found with uuid:" + uuid);
+            throw new ResourceNotFoundException("No service metadata found with uuid:" + uuid);
         }
 
         String defaultLanguage = dm.extractDefaultLanguage(schema, md);

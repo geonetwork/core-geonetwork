@@ -4369,6 +4369,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
       <option value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</option>
       <option value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</option>
       <option value="OGC:WFS">OGC-WFS Web Feature Service</option>
+      <option value="INSPIRE Atom">INSPIRE Atom</option>
       <option value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</option>
       <option value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
       <option value="OGC:WMC">OGC-WMC Web Map Context</option>

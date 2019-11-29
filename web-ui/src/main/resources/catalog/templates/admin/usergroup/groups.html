@@ -29,11 +29,11 @@
           <i class="fa fa-plus"/>
           <span data-translate="">newGroup</span>
         </button>
-
-        <div
-          data-gn-need-help="administrator-guide/managing-users-and-groups/creating-group.html"></div>
       </div>
     </div>
+
+    <div
+      data-gn-need-help="administrator-guide/managing-users-and-groups/creating-group.html"></div>
   </div>
 
 
@@ -73,17 +73,32 @@
           <fieldset>
             <input type="hidden" name="id" data-ng-model="groupSelected.id"
                    value="{{groupSelected.id}}"/>
-            <div data-ng-class="gnGroupEdit.name.$error.required ? 'has-error' : ''">
+            <div data-ng-class="gnGroupEdit.name.$error.required || gnGroupEdit.name.$error.maxlength ? 'has-error' : ''">
               <label class="control-label" data-translate="">groupName</label>
               <input type="text" id="groupname" name="name" class="form-control"
                      data-ng-model="groupSelected.name"
+                     data-ng-maxlength="32"
                      data-ng-required="true"/>
               <p class="help-block" data-translate="">groupNameHelp</p>
+              <p class="help-block">
+                <span class="error" data-ng-show="gnGroupEdit.name.$error.maxlength"
+                      data-translate="">groupNameMaxlength</span>
+              </p>
             </div>
-            <label data-translate="">groupDescription</label>
-            <textarea name="description" class="form-control"
-                      data-ng-model="groupSelected.description"/>
-            <p class="help-block" data-translate="">groupDescriptionHelp</p>
+
+
+            <div
+              data-ng-class="gnGroupEdit.description.$error.maxlength  ? 'has-error' : ''">
+              <label data-translate="">groupDescription</label>
+              <textarea name="description" class="form-control"
+                        data-ng-model="groupSelected.description"
+                        data-ng-maxlength="255"/>
+              <p class="help-block" data-translate="">groupDescriptionHelp</p>
+              <p class="help-block">
+                  <span class="error" data-ng-show="gnGroupEdit.description.$error.maxlength"
+                        data-translate="">groupDescriptionMaxlength</span>
+              </p>
+            </div>
 
             <label data-translate="">category</label>
             <select name="category"
@@ -94,11 +109,16 @@
             <p class="help-block" data-translate="">categoryDescriptionHelp</p>
 
             <div
-              data-ng-class="gnGroupEdit.email.$error.email || gnGroupEdit.email.$error.required ? 'has-error' : ''">
+              data-ng-class="gnGroupEdit.email.$error.email || gnGroupEdit.email.$error.required || gnGroupEdit.email.$error.maxlength  ? 'has-error' : ''">
               <label class="control-label" data-translate="">groupEmail</label>
               <input type="email" name="email" class="form-control"
-                     data-ng-model="groupSelected.email"/>
+                     data-ng-model="groupSelected.email"
+                     data-ng-maxlength="128"/>
               <p class="help-block" data-translate="">groupEmailHelp</p>
+              <p class="help-block">
+                <span class="error" data-ng-show="gnGroupEdit.email.$error.maxlength"
+                      data-translate="">groupEmailMaxlength</span>
+              </p>
             </div>
             <div>
               <label class="control-label" data-translate="">groupWebsite</label>

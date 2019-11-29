@@ -31,12 +31,14 @@
 
   <!-- i18n information -->
   <xsl:variable name="scale-denominator-loc">
-    <msg id="a" xml:lang="eng">The following values are not recommended for scale denominator:</msg>
-    <msg id="b" xml:lang="eng">. Run this task to try to fix it(them).</msg>
+    <msg id="a" xml:lang="eng">The following values are not recommended for scale denominator: </msg>
+    <msg id="b" xml:lang="eng">. Run this task to try to fix it (them).</msg>
     <msg id="a" xml:lang="fre">Les valeurs suivantes ne sont pas recommandées pour le dénominateur
       de l'échelle :
     </msg>
-    <msg id="b" xml:lang="fre">). Exécuter cette action pour le corriger.</msg>
+    <msg id="b" xml:lang="fre">. Exécuter cette action pour le corriger.</msg>
+    <msg id="a" xml:lang="dut">De volgende waardes worden zijn niet aanbevolen in het element schaal: </msg>
+    <msg id="b" xml:lang="dut">. Voer deze functie uit om het bij te werken.</msg>
   </xsl:variable>
 
   <xsl:template name="list-scale-denominator-formatter">

@@ -133,7 +133,27 @@
             scope.isInFilter = function(category, $event) {
               return gnFacetConfigService.isInFilter(scope, category);
             };
+          } else {
+            scope.$watch('dimension', function(n, o) {
+              if (n !== o && scope.dimension.length > 0) {
+                if (hasOverridenConfig) {
+                  // reorder dimension based on the configuration
+                  var orderedDimension = [];
+                  for (var i = 0; i < scope.facetList.length; i++) {
+                    var f = scope.facetList[i].key;
+                    for (var j = 0; j < scope.dimension.length; j++) {
+                      if (f === scope.dimension[j]['@name']) {
+                        orderedDimension.push(scope.dimension[j]);
+                        break;
+                      }
+                    }
+                  }
+                  scope.dimension = orderedDimension;
+                }
+              }
+            }, true);
           }
+
 
           scope.isDisplayed = function(facet) {
             if (hasOverridenConfig) {

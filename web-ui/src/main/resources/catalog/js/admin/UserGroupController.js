@@ -712,12 +712,15 @@
         $scope.groupUpdated = true;
       };
 
-      $scope.$watch('user', function(n, o) {
-        if (n && n.profile) {
+      var userAndGroupInitialized = false;
+      var unregister = $scope.$watch('user', function(n, o) {
+        if (!userAndGroupInitialized && n && n.profile) {
+          userAndGroupInitialized = true;
+          unregister();
           loadGroups();
           loadUsers();
         }
-      });
+      }, true);
     }]);
 
   module.filter('loggedUserIsUseradminOrMore', function() {

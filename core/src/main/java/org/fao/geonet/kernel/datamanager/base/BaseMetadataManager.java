@@ -419,7 +419,7 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     /**
-     * @param context    
+     * @param context
      * @param metadataId
      * @throws Exception
      */
@@ -652,14 +652,19 @@ public class BaseMetadataManager implements IMetadataManager {
      *
      * @param forEditing          Add extra element to build metadocument
      *                            {@link EditLib#expandElements(String, Element)}
+     * @param applyOperationsFilters Filter elements based on operation filters
+     *                              eg. Remove WMS if not dynamic. For example, when processing
+     *                              a record, the complete records need to be processed and saved (not a filtered version). If editing, set it to false.
+     *                            {@link EditLib#expandElements(String, Element)}
      * @param keepXlinkAttributes When XLinks are resolved in non edit mode, do not remove XLink
      *                            attributes.
      */
     @Override
-    public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing,
+    public Element getMetadata(ServiceContext srvContext, String id,
+                               boolean forEditing, boolean applyOperationsFilters,
                                boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
         boolean doXLinks = getXmlSerializer().resolveXLinks();
-        Element metadataXml = getXmlSerializer().selectNoXLinkResolver(id, false, forEditing);
+        Element metadataXml = getXmlSerializer().selectNoXLinkResolver(id, false, applyOperationsFilters);
         if (metadataXml == null)
             return null;
 
@@ -723,7 +728,7 @@ public class BaseMetadataManager implements IMetadataManager {
      */
     @Override
     public Element getMetadata(String id) throws Exception {
-        Element md = getXmlSerializer().selectNoXLinkResolver(id, false, false);
+        Element md = getXmlSerializer().selectNoXLinkResolver(id, false, true);
         if (md == null)
             return null;
         md.detach();
@@ -1054,7 +1059,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
         // --- get parent metadata in read/only mode
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-        Element parent = getMetadata(srvContext, parentId, forEditing, withValidationErrors, keepXlinkAttributes);
+        Element parent = getMetadata(srvContext, parentId, forEditing, false, withValidationErrors, keepXlinkAttributes);
 
         Element env = new Element("update");
         env.addContent(new Element("parentUuid").setText(parentUuid));
@@ -1074,7 +1079,7 @@ public class BaseMetadataManager implements IMetadataManager {
                 continue;
             }
 
-            Element child = getMetadata(srvContext, childId, forEditing, withValidationErrors, keepXlinkAttributes);
+            Element child = getMetadata(srvContext, childId, forEditing, false, withValidationErrors, keepXlinkAttributes);
 
             String childSchema = child.getChild(Edit.RootChild.INFO, Edit.NAMESPACE)
                 .getChildText(Edit.Info.Elem.SCHEMA);

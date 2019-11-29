@@ -60,7 +60,6 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
@@ -100,12 +99,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
 
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
 
@@ -450,6 +449,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 if (user != null) {
                     fields.put(Geonet.IndexFieldNames.USERINFO, user.getUsername() + "|" + user.getSurname() + "|" + user
                         .getName() + "|" + user.getProfile());
+                    fields.put(Geonet.IndexFieldNames.OWNERNAME, user.getName() + " " + user.getSurname());
                 }
             }
 
