@@ -283,6 +283,17 @@
                                         select="string-join(keyword, ', ')"/>
                       </xsl:call-template>
 
+                      <xsl:if test="legalConstraints">
+                        <xsl:call-template name="info-rows">
+                          <xsl:with-param name="label" select="$oldGuiStrings/constraints"/>
+                          <xsl:with-param name="value">
+                            <xsl:for-each select="legalConstraints">- <xsl:value-of select="."/><xsl:text>
+                            </xsl:text>
+                            </xsl:for-each>
+                          </xsl:with-param>
+                        </xsl:call-template>
+                      </xsl:if>
+
                       <xsl:if test="spatialRepresentationType_text">
                         <xsl:call-template name="info-rows">
                           <xsl:with-param name="label" select="$oldGuiStrings/spatialRepresentationType"/>

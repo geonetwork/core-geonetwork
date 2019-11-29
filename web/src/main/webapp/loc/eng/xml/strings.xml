@@ -1674,6 +1674,7 @@
   <format>Format</format>
   <onTheWeb>More online information</onTheWeb>
   <spatialRepresentationType>Data type</spatialRepresentationType>
+  <constraints>Access and use constraints</constraints>
   <updateFrequency>Update frequency</updateFrequency>
   <lastUpdate>Record updated</lastUpdate>
 </strings>
