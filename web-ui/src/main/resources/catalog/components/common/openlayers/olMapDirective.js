@@ -23,128 +23,46 @@
 
 (function () {
 
-  goog.provide('gn_olDecorateLayerLoading')
+  goog.provide('gn_olMapDirective')
 
-  var module = angular.module('gn_olDecorateLayerLoading', [])
+  var module = angular.module('gn_olMapDirective', [])
 
   /**
-   * Provides a function that adds a 'loading 'property (using
-   * `Object.defineProperty`) to an ol.layer.Group or a layer with
-   * an ol.source.Tile or an ol.source.Image source.
-   * This property is true when the layer is loading and false otherwise.
+   * Provides a directive used to insert a user-defined OpenLayers
+   * map in the DOM. The directive does not create an isolate scope.
    *
    * Example:
    *
-   *      <span ng-if="layer.loading">please wait</span>
+   *      <div ol-map="ctrl.map"></div>
    *
-   * @typedef {function(ol.layer.Base, angular.Scope)}
-   * @ngdoc service
-   * @ngname ngeoDecorateLayerLoading
+   * See our live examples:
+   * {@link ../examples/permalink.html}
+   * {@link ../examples/simple.html}
+   *
+   * @htmlAttribute {ol.Map} ol-map The map.
+   * @return {angular.Directive} Directive Definition Object.
+   * @ngInject
+   * @ngdoc directive
+   * @ngname olMap
    */
-
-  /**
-   * @param {ol.layer.Base} layer Layer to decorate.
-   * @param {angular.Scope} $scope Scope.
-   */
-  var decorateLayerLoading = function(layer, $scope) {
-
-    var source;
-
-    /**
-     * @type {Array<string>|null}
-     */
-    var incrementEvents = null;
-
-    /**
-     * @type {Array<string>|null}
-     */
-    var decrementEvents = null;
-
-    /**
-     * @function
-     * @private
-     */
-    var incrementLoadCount_ = increment_;
-
-    /**
-     * @function
-     * @private
-     */
-    var decrementLoadCount_ = decrement_;
-
-    layer.set('load_count', 0, true);
-
-    if (layer instanceof ol.layer.Group) {
-      layer.getLayers().on('add', function(olEvent) {
-        var newLayer = olEvent.element;
-        newLayer.set('parent_group', layer);
-      });
-    }
-
-    if (layer instanceof ol.layer.Layer) {
-      source = layer.getSource();
-      if (source === null) {
-        return;
-      } else if (source instanceof ol.source.Tile) {
-        incrementEvents = ['tileloadstart'];
-        decrementEvents = ['tileloadend', 'tileloaderror'];
-      } else if (source instanceof ol.source.Image) {
-        incrementEvents = ['imageloadstart'];
-        decrementEvents = ['imageloadend', 'imageloaderror'];
-      } else {
-        goog.asserts.fail('unsupported source type');
-      }
-
-      source.on(incrementEvents, function() {
-        incrementLoadCount_(layer);
-        $scope.$applyAsync();
-      });
-
-      source.on(decrementEvents, function() {
-        decrementLoadCount_(layer);
-        $scope.$applyAsync();
-      });
-    }
-
-    Object.defineProperty(layer, 'loading', {
-      configurable: true,
-      get:
+  var mapDirective = function() {
+    return {
+      restrict: 'A',
+      link:
         /**
-         * @return {boolean} Loading.
+         * @param {angular.Scope} scope Scope.
+         * @param {angular.JQLite} element Element.
+         * @param {angular.Attributes} attrs Attributes.
          */
-        function() {
-          return /** @type {number} */ (layer.get('load_count')) > 0;
+        function(scope, element, attrs) {
+          var attr = 'olMap';
+          var prop = attrs[attr];
+
+          var map = scope.$eval(prop);
+          map.setTarget(element[0]);
         }
-    });
-
-    /**
-     * @function
-     * @param {ol.layer.Base} layer Layer
-     * @private
-     */
-    function increment_(layer) {
-      var load_count = layer.get('load_count');
-      var parent = layer.get('parent_group');
-      layer.set('load_count', ++load_count, true);
-      if (parent) {
-        increment_(parent);
-      }
-    }
-
-    /**
-     * @function
-     * @param {ol.layer.Base} layer Layer
-     * @private
-     */
-    function decrement_(layer) {
-      var load_count = layer.get('load_count');
-      var parent = layer.get('parent_group');
-      layer.set('load_count', --load_count, true);
-      if (parent) {
-        decrement_(parent);
-      }
-    }
+    };
   };
 
-  module.value('olDecorateLayerLoading', decorateLayerLoading)
+  module.directive('olMap', mapDirective)
 })()

@@ -26,11 +26,13 @@
 
   goog.require('gn_olDecorateLayer');
   goog.require('gn_olDecorateLayerLoading');
+  goog.require('gn_olMapDirective');
   goog.require('gn_olDecorateInteraction');
 
   angular.module('gn_openlayers', [
     'gn_olDecorateLayer',
     'gn_olDecorateLayerLoading',
+    'gn_olMapDirective',
     'gn_olDecorateInteraction'
   ]);
 })();
