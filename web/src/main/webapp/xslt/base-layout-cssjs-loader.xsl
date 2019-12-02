@@ -80,7 +80,7 @@
 
 
     <xsl:if test="$is3DModeAllowed">
-      <script>var CESIUM_BASE_URL = '<xsl:value-of select="$uiResourcesPath"/>lib/ol3cesium/Cesium/';
+      <script>var CESIUM_BASE_URL = '<xsl:value-of select="$uiResourcesPath"/>lib/olcesium/Cesium/';
       </script>
     </xsl:if>
 
@@ -130,8 +130,9 @@
 
         <xsl:choose>
           <xsl:when test="$is3DModeAllowed">
-            <script src="{$uiResourcesPath}lib/ol3cesium/Cesium/Cesium.js?v={$buildNumber}"></script>
-            <script src="{$uiResourcesPath}lib/ol3cesium/ngeool3cesium-debug.js?v={$buildNumber}"></script>
+            <script src="{$uiResourcesPath}lib/openlayers/ol.js?v={$buildNumber}"></script>
+            <script src="{$uiResourcesPath}lib/olcesium/Cesium/Cesium.js?v={$buildNumber}"></script>
+            <script src="{$uiResourcesPath}lib/olcesium/olcesium.js?v={$buildNumber}"></script>
           </xsl:when>
           <xsl:otherwise>
             <script src="{$uiResourcesPath}lib/openlayers/ol.js?v={$buildNumber}"></script>
@@ -202,7 +203,7 @@
 
         <xsl:choose>
           <xsl:when test="$is3DModeAllowed">
-            <script src="{$uiResourcesPath}lib/ol3cesium/Cesium/Cesium.js?v={$buildNumber}"></script>
+            <script src="{$uiResourcesPath}lib/olcesium/Cesium/Cesium.js?v={$buildNumber}"></script>
             <script src="{/root/gui/url}/static/lib3d.js?v={$buildNumber}"></script>
           </xsl:when>
           <xsl:otherwise>
