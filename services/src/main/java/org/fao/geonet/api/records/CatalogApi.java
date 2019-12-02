@@ -23,7 +23,6 @@
 
 package org.fao.geonet.api.records;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -39,7 +38,6 @@ import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -47,7 +45,6 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.rdf.RdfOutputManager;
 import org.fao.geonet.api.records.rdf.RdfSearcher;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.guiapi.search.XsltResponseWriter;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -56,15 +53,11 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.search.IndexFields;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
@@ -93,7 +86,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -406,17 +398,24 @@ public class CatalogApi {
                         t.setText(linkProperties.get("description") + "|" + linkProperties.get("name") + "|" + linkProperties.get("url") + "|" + linkProperties.get("protocol"));
                         r.addContent(t);
                     });
-                } else if (v instanceof ArrayList) {
-                    ((ArrayList) v).forEach(i -> {
-                        Element t = new Element(e.getKey());
-                        t.setText((String) i);
-                        r.addContent(t);
-                    });
                 } else if (v instanceof HashMap && e.getKey().equals("overview")) {
                     Element t = new Element(e.getKey());
                     Map<String, String> overviewProperties = (HashMap) v;
                     t.setText(overviewProperties.get("url") + "|" + overviewProperties.get("name"));
                     r.addContent(t);
+                } else if (v instanceof ArrayList) {
+                    ((ArrayList) v).forEach(i -> {
+                        if (i instanceof HashMap && e.getKey().equals("overview")) {
+                            Element t = new Element(e.getKey());
+                            Map<String, String> overviewProperties = (HashMap) i;
+                            t.setText(overviewProperties.get("url") + "|" + overviewProperties.get("name"));
+                            r.addContent(t);
+                        } else {
+                            Element t = new Element(e.getKey());
+                            t.setText((String) i);
+                            r.addContent(t);
+                        }
+                    });
                 }
             });
             response.addContent(r);
@@ -562,7 +561,7 @@ public class CatalogApi {
         int from = (allRequestParams.get("from") != null ? Integer.parseInt(allRequestParams.get("from")) : 0);
         int to = (allRequestParams.get("to") != null ? Integer.parseInt(allRequestParams.get("to")) : 0);
 
-        //If the paging parameters (from, hitsPerPage) are not included in the request, redirect the client to the first in-sequence page resource. Use default paging parameter values. 
+        //If the paging parameters (from, hitsPerPage) are not included in the request, redirect the client to the first in-sequence page resource. Use default paging parameter values.
         if (hitsPerPage <= 0 || from <= 0) {
             if (hitsPerPage <= 0) {
                 hitsPerPage = 10;
@@ -665,7 +664,7 @@ public class CatalogApi {
             }
             response.addHeader("Link", "<" + lastPage + "> ; rel=\"last\"");
 
-            //Write the paged RDF result to the message body 
+            //Write the paged RDF result to the message body
             while ((bytesRead = in.read(bytes)) != -1) {
                 out.write(bytes, 0, bytesRead);
             }
