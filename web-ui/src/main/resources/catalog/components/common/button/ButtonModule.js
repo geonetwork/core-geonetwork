@@ -22,16 +22,11 @@
  */
 
 (function() {
-  goog.provide('gn_formfields');
+  goog.provide('gn_button');
 
-  goog.require('gn_formfields_directive');
-  goog.require('gn_formfields_service');
+  goog.require('gn_button_directive');
 
-  goog.require('gn_button');
-
-  angular.module('gn_formfields', [
-    'gn_formfields_directive',
-    'gn_formfields_service',
-    'gn_button'
+  angular.module('gn_button', [
+    'gn_button_directive'
   ]);
 })();

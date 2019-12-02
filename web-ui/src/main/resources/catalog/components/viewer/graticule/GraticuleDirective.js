@@ -24,7 +24,9 @@
 (function() {
   goog.provide('gn_graticule');
 
-  var module = angular.module('gn_graticule', []);
+  goog.require('gn_button');
+
+  var module = angular.module('gn_graticule', ['gn_button']);
 
   /**
    * @ngdoc directive
