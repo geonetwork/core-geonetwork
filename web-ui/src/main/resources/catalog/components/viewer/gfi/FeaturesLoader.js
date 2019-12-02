@@ -132,7 +132,7 @@
       layer.infoFormat = infoFormat;
     }
 
-    var uri = layer.getSource().getGetFeatureInfoUrl(
+    var uri = layer.getSource().getFeatureInfoUrl(
         coordinates,
         map.getView().getResolution(),
         map.getView().getProjection(),
