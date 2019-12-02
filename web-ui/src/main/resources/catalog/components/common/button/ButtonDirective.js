@@ -132,6 +132,9 @@
     return this.buttons_.length - 1;
   };
 
+  BtnGroupController['$inject'] = [
+    '$scope'
+  ];
 
   module.controller('gnBtnGroupController', BtnGroupController);
 
