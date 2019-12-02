@@ -1,7 +1,7 @@
 /**
  * Cesium - https://github.com/AnalyticalGraphicsInc/cesium
  *
- * Copyright 2011-2015 Cesium Contributors
+ * Copyright 2011-2017 Cesium Contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,4 +20,4 @@
  * Portions licensed separately.
  * See https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md for full licensing details.
  */
-"undefined"==typeof self&&(self={}),self.onmessage=function(e){"use strict";var s=e.data.array,a=self.webkitPostMessage||self.postMessage;try{a({array:s},[s.buffer])}catch(f){a({})}};
+"undefined"==typeof self&&(self={}),self.onmessage=function(e){"use strict";var s=e.data.array,a=self.webkitPostMessage||self.postMessage;try{a({array:s},[s.buffer])}catch(e){a({})}};
