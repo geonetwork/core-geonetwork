@@ -106,7 +106,7 @@
           } else {
             // FIXME
             var src = deregister[i].src || deregister[i].target;
-            src.unByKey(deregister[i]);
+            ol.Observable.unByKey(deregister[i]);
           }
         }
       }

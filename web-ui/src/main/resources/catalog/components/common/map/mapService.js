@@ -831,7 +831,7 @@
                     timeout: 0,
                     type: 'danger'});
                   olLayer.get('errors').push(msg);
-                  olLayer.getSource().unByKey(unregisterEventKey);
+                  ol.Observable.unByKey(unregisterEventKey);
 
                   gnWmsQueue.error({
                     url: url,

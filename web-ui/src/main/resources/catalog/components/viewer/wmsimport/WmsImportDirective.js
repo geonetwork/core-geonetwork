@@ -367,7 +367,7 @@
               var listenerKey = vector.getSource().on('change',
                   function(evt) {
                     if (vector.getSource().getState() == 'ready') {
-                      vector.getSource().unByKey(listenerKey);
+                      ol.Observable.unByKey(listenerKey);
                       scope.addToMap(vector, scope.map);
                       entry.loading = false;
                     }
