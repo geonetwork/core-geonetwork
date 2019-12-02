@@ -48,7 +48,7 @@
         'gnOwsCapabilities',
         'gnSearchSettings',
         'gnViewerSettings',
-        'ngeoDecorateLayer',
+        'olDecorateLayer',
         'gnSearchLocation',
         'gnOwsContextService',
         'gnWfsService',
@@ -56,7 +56,7 @@
         '$filter',
         'gnExternalViewer',
         function(gnMap, gnOwsCapabilities, gnSearchSettings, gnViewerSettings,
-            ngeoDecorateLayer, gnSearchLocation, gnOwsContextService,
+            olDecorateLayer, gnSearchLocation, gnOwsContextService,
             gnWfsService, gnAlertService, $filter, gnExternalViewer) {
 
           this.configure = function(options) {

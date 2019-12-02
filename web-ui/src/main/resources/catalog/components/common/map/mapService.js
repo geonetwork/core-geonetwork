@@ -46,7 +46,7 @@
    */
   module.provider('gnMap', function() {
     this.$get = [
-      'ngeoDecorateLayer',
+      'olDecorateLayer',
       'gnOwsCapabilities',
       'gnConfig',
       '$log',
@@ -63,7 +63,7 @@
       'gnViewerSettings',
       'gnViewerService',
       'gnAlertService',
-      function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log,
+      function(olDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
           gnGlobalSettings, gnViewerSettings, gnViewerService, gnAlertService) {
@@ -657,7 +657,7 @@
               label: name
             });
 
-            ngeoDecorateLayer(vector);
+            olDecorateLayer(vector);
             vector.displayInLayerManager = true;
             map.getLayers().push(vector);
           },
@@ -690,7 +690,7 @@
               label: name
             });
 
-            ngeoDecorateLayer(vector);
+            olDecorateLayer(vector);
             vector.displayInLayerManager = true;
             map.getLayers().push(vector);
           },
@@ -808,7 +808,7 @@
                 olLayer.set('metadataUuid', uuid);
               }
             }
-            ngeoDecorateLayer(olLayer);
+            olDecorateLayer(olLayer);
             olLayer.displayInLayerManager = true;
 
             var unregisterEventKey = olLayer.getSource().on(
@@ -1249,7 +1249,7 @@
               layer.set('featureTooltip', true);
               layer.set('url', url);
               layer.set('wfs', url);
-              ngeoDecorateLayer(layer);
+              olDecorateLayer(layer);
               layer.displayInLayerManager = true;
               layer.set('label', getCapLayer.title ||
                 (getCapLayer.name.prefix + ':' + getCapLayer.name.localPart));
@@ -1780,7 +1780,7 @@
               });
 
               //Add GN extras to layer
-              ngeoDecorateLayer(olLayer);
+              olDecorateLayer(olLayer);
               olLayer.displayInLayerManager = true;
 
               //Like add a link to metadata
