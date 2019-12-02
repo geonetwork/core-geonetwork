@@ -1,12 +1,12 @@
 <div class="btn-group baselayer"
-     data-ngeo-popover
-     data-ngeo-popover-placement="bottom"
+     gn-popover
+     gn-popover-placement="bottom"
      data-ng-show="layers.length > 1">
-  <button type="button" class="btn btn-default dropdown-toggle" data-ngeo-popover-anchor>
+  <button type="button" class="btn btn-default dropdown-toggle" gn-popover-anchor>
     <span data-translate="">backgroundMap</span>&nbsp;{{map.getLayers().item(0).get('title')}} <span
     class="caret"></span>
   </button>
-  <div data-ngeo-popover-content class="gn-baselayer-switcher-content">
+  <div gn-popover-content class="gn-baselayer-switcher-content">
     <ul class="gn-baselayer-switcher-menu" role="menu">
       <li ng-if="::layer" ng-repeat="layer in layers" ng-click="changeBackground(layer);popoverCtrl.dismissPopover()"
           role="menuitem">
