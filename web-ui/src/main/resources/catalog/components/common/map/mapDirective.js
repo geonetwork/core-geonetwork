@@ -37,8 +37,8 @@
       [
        'gnMap',
        'gnMapsManager',
-       'ngeoDecorateInteraction',
-       function(gnMap, gnMapsManager, ngeoDecorateInteraction) {
+       'olDecorateInteraction',
+       function(gnMap, gnMapsManager, olDecorateInteraction) {
          return {
            restrict: 'A',
            replace: true,

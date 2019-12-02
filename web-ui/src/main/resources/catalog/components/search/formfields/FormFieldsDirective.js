@@ -723,14 +723,14 @@
    * @name gn_formfields.directive:gnBboxInput
    * @restrict A
    * @requires gnMap
-   * @requires ngeoDecorateInteraction
+   * @requires olDecorateInteraction
    *
    * @description
    * The `gnBboxInput` directive provides an input widget for bounding boxes.
    */
       .directive('gnBboxInput', [
         'gnMap',
-        'ngeoDecorateInteraction',
+        'olDecorateInteraction',
         function(gnMap, goDecoI) {
 
           var extentFromValue = function(str) {

@@ -21,14 +21,42 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_openlayers');
+(function () {
 
-  goog.require('gn_olDecorateLayer');
-  goog.require('gn_olDecorateInteraction');
+  goog.provide('gn_olDecorateInteraction')
 
-  angular.module('gn_openlayers', [
-    'gn_olDecorateLayer',
-    'gn_olDecorateInteraction'
-  ]);
-})();
+  var module = angular.module('gn_olDecorateInteraction', [])
+
+  /**
+   * Provides a function that adds an "active" property (using
+   * `Object.defineProperty`) to an interaction, making it possible to use ngModel
+   * to activate/deactivate interactions.
+   *
+   * Example:
+   *
+   *      <input type="checkbox" ngModel="interaction.active" />
+   *
+   * See our live example: {@link ../examples/interactiontoggle.html}
+   *
+   * @typedef {function(ol.interaction.Interaction)}
+   * @ngdoc service
+   * @ngname olDecorateInteraction
+   */
+
+  /**
+   * @param {ol.interaction.Interaction} interaction Interaction to decorate.
+   */
+  var decorateInteraction = function(interaction) {
+
+    Object.defineProperty(interaction, 'active', {
+      get: function() {
+        return interaction.getActive();
+      },
+      set: function(val) {
+        interaction.setActive(val);
+      }
+    });
+  };
+
+  module.value('olDecorateInteraction', decorateInteraction)
+})()
