@@ -25,7 +25,6 @@
   goog.provide('gn_measure');
 
   var module = angular.module('gn_measure', [
-    'ngeo',
     'ui.bootstrap.buttons'
   ]);
 

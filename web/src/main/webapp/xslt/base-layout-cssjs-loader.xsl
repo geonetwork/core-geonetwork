@@ -134,7 +134,7 @@
             <script src="{$uiResourcesPath}lib/ol3cesium/ngeool3cesium-debug.js?v={$buildNumber}"></script>
           </xsl:when>
           <xsl:otherwise>
-            <script src="{$uiResourcesPath}lib/ngeo/ngeo-debug.js?v={$buildNumber}"></script>
+            <script src="{$uiResourcesPath}lib/openlayers/ol.js?v={$buildNumber}"></script>
           </xsl:otherwise>
         </xsl:choose>
 

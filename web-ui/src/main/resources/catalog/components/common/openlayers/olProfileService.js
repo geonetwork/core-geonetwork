@@ -32,7 +32,7 @@
    * profile chart.
    *
    *     var selection = d3.select('#element_id');
-   *     var profile = ngeo.profile({
+   *     var profile = profileService({
    *       distanceExtractor: function (item) {return item['dist'];},
    *       linesConfiguration: {
    *         'lineZ1': {

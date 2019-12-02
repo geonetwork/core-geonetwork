@@ -30,7 +30,6 @@
 
   var module = angular.module('gn_map_service', [
     'gn_ows',
-    'ngeo',
     'gn_wfs_service'
   ]);
 

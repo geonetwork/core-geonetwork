@@ -28,8 +28,7 @@
 
 
   var module = angular.module('gn_maps_manager', [
-    'gn_ows',
-    'ngeo'
+    'gn_ows'
   ]);
 
   var configProjections = function(projectionConfig) {

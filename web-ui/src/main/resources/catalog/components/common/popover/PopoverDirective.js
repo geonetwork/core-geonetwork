@@ -162,7 +162,12 @@
     $scope.$on('$destroy', function() {
       angular.element('body').off('mousedown', onMouseDown);
     });
+
   };
+
+  PopoverController['$inject'] = [
+    '$scope'
+  ];
 
 
   /**

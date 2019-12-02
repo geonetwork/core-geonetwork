@@ -61,7 +61,7 @@
     <jsSource webappPath="/catalog/lib/tinycolor.js"/>
     <jsSource webappPath="/catalog/lib/style/bootstrap/dist/js/bootstrap.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/proj4js-compressed.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/ngeo/ngeo.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/openlayers/ol.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/d3.v3.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/nv.d3.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/jsonix/jsonix/Jsonix-min.js" minimize="false"/>
