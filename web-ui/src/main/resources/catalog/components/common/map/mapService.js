@@ -437,7 +437,7 @@
                 geometry = new ol.geom.Point([extent[0][0], extent[0][1]]);
               } else {
                 // Build multipolygon from the set of bboxes
-                geometry = new ol.geom.MultiPolygon(null);
+                geometry = new ol.geom.MultiPolygon([]);
                 for (var j = 0; j < extent.length; j++) {
                   // TODO: Point will not be supported in multi geometry
                   var projectedExtent = ol.proj.transformExtent(extent[j], 'EPSG:4326', proj);
