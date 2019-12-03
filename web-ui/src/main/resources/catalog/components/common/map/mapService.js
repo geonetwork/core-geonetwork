@@ -1838,17 +1838,12 @@
            */
           zoom: function(map, delta) {
             var view = map.getView();
-            var currentResolution = view.getResolution();
-            if (angular.isDefined(currentResolution)) {
-              map.beforeRender(ol.animation.zoom({
-                resolution: currentResolution,
-                duration: 250,
-                easing: ol.easing.easeOut
-              }));
-              var newResolution = view.constrainResolution(
-                  currentResolution, delta);
-              view.setResolution(newResolution);
-            }
+            var zoom = view.getZoom();
+            view.animate({
+              zoom: zoom + delta,
+              duration: 250,
+              easing: ol.easing.easeOut
+            });
           },
 
           /**
