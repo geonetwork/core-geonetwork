@@ -249,7 +249,7 @@
                     loadingLayer.set('bgLayer', true);
                   }
 
-                  var layerIndex = bgLayers.push(loadingLayer);
+                  var layerIndex = bgLayers.push(loadingLayer) - 1;
                   var p = self.createLayer(layer, map, 'do not add');
 
                   (function(idx, loadingLayer) {
@@ -312,7 +312,7 @@
 
                   loadingLayer.displayInLayerManager = true;
 
-                  var layerIndex = map.getLayers().push(loadingLayer);
+                  var layerIndex = map.getLayers().push(loadingLayer) - 1;
                   var p = self.createLayer(layer, map, undefined, i, currentStyle);
                   loadingLayer.set('index', layerIndex);
 
