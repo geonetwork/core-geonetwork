@@ -930,24 +930,8 @@
               if (getCapLayer.version) {
                 layerParam.VERSION = getCapLayer.version;
               }
-              if (requestedStyle) {
-                layerParam.STYLES = requestedStyle.Name;
-              } else {
-                // The first style element is the default style
-                var defaultStyle;
-                if (this.containsStyles(getCapLayer)) {
-                  defaultStyle = getCapLayer.Style[0];
-                }
-                if(defaultStyle) {
-                  // Set a casual style if available
-                  // to avoid issues on ESRI services
-                  layerParam.STYLES = defaultStyle.Name;
-                } else {
-                  // This is a problem for ESRI services
-                  // where STYLES is a mandatory field
-                  layerParam.STYLES = '';
-                }
-              }
+
+              layerParam.STYLES = requestedStyle?requestedStyle.Name:'';
 
               var projCode = map.getView().getProjection().getCode();
               if (getCapLayer.CRS) {
