@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.file.Path;
@@ -19,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 public class XslIndexTest {
 
     @Test
+    @Ignore
     public void nominal() throws Exception {
         TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
         Element metadata = Xml.loadFile(this.getClass().getResource("xsl/process/input.xml"));

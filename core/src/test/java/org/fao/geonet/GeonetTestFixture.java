@@ -69,7 +69,7 @@ public class GeonetTestFixture {
     private volatile static FileSystemPool.CreatedFs templateFs;
     private volatile static SchemaManager templateSchemaManager;
     @Autowired
-    private static EsSearchManager templateSearchManager;
+    private EsSearchManager templateSearchManager;
     @Autowired
     protected DataStore dataStore;
     @Autowired
@@ -106,13 +106,10 @@ public class GeonetTestFixture {
                                 !entry.toString().contains("removed") &&
                                 !entry.toString().contains("metadata_subversion") &&
                                 !entry.toString().contains("upload") &&
-                                !entry.toString().contains("index") &&
                                 !entry.toString().contains("resources");
                         }
                     });
 
-                    // Create ES index
-                    _applicationContext.getBean(EsSearchManager.class).init(false, Optional.empty());
 
                     Path schemaPluginsDir = templateDataDirectory.resolve("config/schema_plugins");
                     deploySchema(webappDir, schemaPluginsDir);
@@ -123,6 +120,9 @@ public class GeonetTestFixture {
                     final ServiceConfig serviceConfig = new ServiceConfig(Lists.<Element>newArrayList());
                     geonetworkDataDirectory.init("geonetwork", webappDir, templateDataDirectory, serviceConfig, null);
                     test.addTestSpecificData(geonetworkDataDirectory);
+
+                    // Create ES index
+                   _applicationContext.getBean(EsSearchManager.class).init(false, Optional.empty());
 
                     templateSchemaManager = initSchemaManager(webappDir, geonetworkDataDirectory);
 

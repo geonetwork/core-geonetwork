@@ -32,7 +32,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
@@ -78,8 +78,10 @@ import org.springframework.data.jpa.domain.Specifications;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -279,7 +281,11 @@ public class EsSearchManager implements ISearchManager {
                 // Create it if not
                 Path indexConfiguration = dataDirectory.getConfigDir().resolve(INDEX_DIRECTORY).resolve(indexId + ".json");
                 if (Files.exists(indexConfiguration)) {
-                    String configuration = FileUtils.readFileToString(indexConfiguration.toFile());
+                    String configuration;
+                    try (InputStream is = Files.newInputStream(indexConfiguration, StandardOpenOption.READ)) {
+                        configuration = IOUtils.toString(is);
+                    }
+
                     CreateIndexRequest createIndexRequest = new CreateIndexRequest(indexName);
                     createIndexRequest.source(configuration, XContentType.JSON);
                     CreateIndexResponse createIndexResponse = client.getClient().indices().create(createIndexRequest, RequestOptions.DEFAULT);
