@@ -33,8 +33,20 @@
   left: 0px;
   right: 0px;
   .ol-attribution {
+    bottom: 1em;
     right: auto;
-    left: .5em;
+    left: 1em;
+    height: auto;
+    padding: 5px;
+    border-radius: 0;
+    ul {
+      font-size: 1rem;
+      padding-left: 0;
+      padding-right: 10px;
+      li {
+        white-space: nowrap;
+      }
+    }
     button {
       background-color: @brand-primary;
     }
@@ -114,8 +126,19 @@
   [ol-map] {
     background: @body-bg;
     .ol-attribution {
-      li, a {
-        font-size: 10px;
+      bottom: 4px;
+      right: auto;
+      left: 4px;
+      height: auto;
+      padding: 5px;
+      border-radius: 0;
+      ul {
+        font-size: 1rem;
+        padding-left: 0;
+        padding-right: 10px;
+        li {
+          white-space: nowrap;
+        }
       }
     }
   }
