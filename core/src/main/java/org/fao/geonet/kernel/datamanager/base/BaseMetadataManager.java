@@ -297,7 +297,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
         // remove from index metadata not in DBMS
         for (String id : docs.keySet()) {
-            getSearchManager().delete(String.format("id:%d", id));
+            getSearchManager().delete(String.format("+id:%d", id));
             LOGGER_DATA_MANAGER.debug("- removed record ({}) from index", id);
         }
     }
