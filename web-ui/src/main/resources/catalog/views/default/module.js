@@ -50,6 +50,7 @@
         internal: true,
         filters: gnSearchSettings.filters,
         params: {
+          isTemplate: 'n',
           sortBy: 'popularity',
           from: 1,
           to: 12
@@ -66,6 +67,7 @@
         internal: true,
         filters: gnSearchSettings.filters,
         params: {
+          isTemplate: 'n',
           sortBy: 'changeDate',
           from: 1,
           to: 12
@@ -86,6 +88,7 @@
           'type': 'interactiveMap'
         },
         params: {
+          isTemplate: 'n',
           sortBy: 'changeDate',
           from: 1,
           to: 30
@@ -246,7 +249,7 @@
       $scope.toggleListType = function(type) {
         $scope.type = type;
       };
-      
+
       $scope.infoTabs = {
         lastRecords: {
           title: 'lastRecords',
@@ -358,10 +361,12 @@
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         filters: gnSearchSettings.filters,
         defaultParams: {
+          isTemplate: 'n',
           sortBy: sortConfig[0] || 'relevance',
           sortOrder: sortConfig[1] || ''
         },
         params: {
+          isTemplate: 'n',
           sortBy: sortConfig[0] || 'relevance',
           sortOrder: sortConfig[1] || ''
         },
