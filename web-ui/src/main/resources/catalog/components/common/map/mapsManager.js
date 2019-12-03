@@ -39,6 +39,7 @@
           try {
             // definition and set it's extent.
             proj4.defs(p.code, p.def);
+            ol.proj.proj4.register(proj4);
           } catch (e) {
             console.error("Trying to use incorrectly defined projection '" + p.code +
               "'. Please update definitions on Admin > Settings.");

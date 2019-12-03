@@ -585,6 +585,7 @@ goog.require('gn_alert');
           angular.forEach(gnConfig['map.proj4js'], function(item) {
             proj4.defs(item.code, item.value);
           });
+          ol.proj.proj4.register(proj4);
         }
       });
 
