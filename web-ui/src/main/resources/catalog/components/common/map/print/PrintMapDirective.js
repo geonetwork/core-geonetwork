@@ -123,6 +123,9 @@
       var initMapEvents = function() {
         deregister = [
           $scope.map.getView().on('change:resolution', function(event) {
+            if ($scope.map.getView().getAnimating()) {
+              return;
+            }
             if ($scope.auto) {
               fitRectangleToView();
               $scope.$apply();
