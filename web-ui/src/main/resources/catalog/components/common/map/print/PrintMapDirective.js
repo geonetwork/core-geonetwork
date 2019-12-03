@@ -178,13 +178,14 @@
     };
     $scope.refreshComp = refreshComp;
 
-    var fitRectangleToView = function() {
+    this.fitRectangleToView = function() {
       $scope.config.scale = gnPrint.getOptimalScale($scope.map,
-          $scope.config.scales,
-          $scope.config.layout);
+        $scope.config.scales,
+        $scope.config.layout);
 
       refreshComp();
     };
+    var fitRectangleToView = this.fitRectangleToView;
 
     $scope.downloadUrl = function(url) {
       $window.location = url;
@@ -401,6 +402,14 @@
                 }
               }
             });
+
+            scope.$watch('config.layout', function(newV, oldV) {
+              if (!newV) {
+                return;
+              }
+              ctrl.fitRectangleToView.call(ctrl);
+            });
+
           }
         };
       }]);
