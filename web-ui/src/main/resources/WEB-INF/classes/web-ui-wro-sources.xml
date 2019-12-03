@@ -92,6 +92,7 @@
     <jsSource webappPath="/catalog/lib/recaptcha/angular-recaptcha.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/geohash.js"/>
     <jsSource webappPath="/catalog/lib/xml2json/xml2json.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/dom-to-image/dom-to-image.min.js" minimize="false"/>
   </declarative>
   <!-- Same as previous + olcesium -->
   <declarative name="lib3d" pathOnDisk="web-ui/src/main/resources">
@@ -161,5 +162,6 @@
     <jsSource webappPath="/catalog/lib/recaptcha/angular-recaptcha.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/geohash.js"/>
     <jsSource webappPath="/catalog/lib/xml2json/xml2json.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/dom-to-image/dom-to-image.min.js" minimize="false"/>
   </declarative>
 </sources>
