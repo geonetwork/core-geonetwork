@@ -548,7 +548,12 @@ public class EsSearchManager implements ISearchManager {
             }
 
             if (name.equals("geom")) {
-                doc.put("geom", nodeElements.get(0).getTextNormalize());
+                try {
+                    doc.put("geom", mapper.readTree(nodeElements.get(0).getTextNormalize()));
+                } catch (IOException e) {
+                    LOGGER.error("Parsing invalid geometry for JSON node {}. Error is: {}",
+                        new Object[]{nodeElements.get(0).getTextNormalize(), e.getMessage()});
+                }
                 continue;
             }
 
