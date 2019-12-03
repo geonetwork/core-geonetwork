@@ -56,7 +56,7 @@
 
           // WMS settings
           // If 3D mode is activated, single tile WMS mode is
-          // not supported by ol3cesium, so force tiling.
+          // not supported by olcesium, so force tiling.
           if (viewerSettings.mapConfig.is3DModeAllowed) {
             viewerSettings.singleTileWMS = false;
             // Configure Cesium to use a proxy. This is required when
@@ -110,7 +110,8 @@
               'OGC:WMTS',
               'OGC:WMS-1.1.1-http-get-map',
               'OGC:WMS-1.3.0-http-get-map',
-              'OGC:WFS'
+              'OGC:WFS',
+              'ESRI:REST'
               ],
             services: [
               'OGC:WMS-1.3.0-http-get-capabilities',

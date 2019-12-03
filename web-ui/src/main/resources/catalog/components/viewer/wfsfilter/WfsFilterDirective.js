@@ -114,11 +114,10 @@
     'gnIndexService',
     'gnGlobalSettings',
     'gnSearchSettings',
-    'ngeoDebounce',
     'gnFeaturesTableManager',
     function($http, wfsFilterService, $q, $rootScope,
              gnIndexRequestManager, gnIndexService, gnGlobalSettings,
-             gnSearchSettings, ngeoDebounce, gnFeaturesTableManager) {
+             gnSearchSettings, gnFeaturesTableManager) {
       return {
         restrict: 'A',
         replace: true,
@@ -327,8 +326,8 @@
 
             var fieldName = field.name;
             var facetKey = facet.value;
-
             var output = scope.output;
+            scope.lastClickedField = null;
 
             if (output[fieldName]) {
               if (output[fieldName].values[facetKey]) {
@@ -338,10 +337,12 @@
                 }
               }
               else {
+                scope.lastClickedField = fieldName;
                 output[fieldName].values[facetKey] = true;
               }
             }
             else {
+              scope.lastClickedField = fieldName;
               output[fieldName] = {
                 type: field.type,
                 query: facet.query,
@@ -519,6 +520,7 @@
            */
           scope.resetFacets = function() {
             scope.output = {};
+            scope.lastClickedField = null;
 
             scope.resetSLDFilters();
 
@@ -546,7 +548,16 @@
           function searchResponseHandler(resp) {
             indexObject.pushState();
             scope.count = resp.count;
-            scope.fields = resp.facets;
+
+            // if a facet was clicked, keep the previous facet object
+            var lastClickedFacet = scope.fields.filter(function(e){
+              return e.name === scope.lastClickedField;
+            })[0];
+            scope.fields = resp.facets.map(function(e){
+              return lastClickedFacet && lastClickedFacet.name === e.name ?
+                lastClickedFacet : e;
+            });
+
             scope.sortAggregation();
             resp.indexData.aggregations &&
             setFeatureExtent(resp.indexData.aggregations);

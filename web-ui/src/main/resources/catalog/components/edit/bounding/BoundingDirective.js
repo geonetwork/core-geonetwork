@@ -62,7 +62,7 @@
           '$http',
           'gnMap',
           'gnMapsManager',
-          'ngeoDecorateInteraction',
+          'olDecorateInteraction',
           'gnGeometryService',
           function BoundingPolygonController(
               $scope,
@@ -70,7 +70,7 @@
               $http,
               gnMap,
               gnMapsManager,
-              ngeoDecorateInteraction,
+              olDecorateInteraction,
               gnGeometryService) {
             var ctrl = this;
 
@@ -108,9 +108,9 @@
             });
 
             // add our layer&interactions to the map
-            ngeoDecorateInteraction(ctrl.drawInteraction);
-            ngeoDecorateInteraction(ctrl.drawLineInteraction);
-            ngeoDecorateInteraction(ctrl.modifyInteraction);
+            olDecorateInteraction(ctrl.drawInteraction);
+            olDecorateInteraction(ctrl.drawLineInteraction);
+            olDecorateInteraction(ctrl.modifyInteraction);
             ctrl.drawInteraction.active = false;
             ctrl.drawLineInteraction.active = false;
             ctrl.modifyInteraction.active = false;

@@ -52,6 +52,7 @@
   goog.require('gn_wps');
   goog.require('gn_gazetteer');
   goog.require('gn_legendpanel_directive');
+  goog.require('gn_popover');
 
 
   /**
@@ -89,7 +90,8 @@
     'gn_profile',
     'gn_heatmap',
     'gn_gazetteer',
-    'gn_legendpanel_directive'
+    'gn_legendpanel_directive',
+    'gn_popover'
   ]);
 
   module.controller('gnViewerController', [

@@ -22,7 +22,12 @@
  */
 package org.fao.geonet.web;
 
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -35,7 +40,9 @@ import java.io.IOException;
 import static org.fao.geonet.web.CORSResponseFilter.ALLOWED_HOSTS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by francois on 07/11/16.
@@ -47,6 +54,17 @@ public class CORSResponseFilterTest {
         MockFilterConfig filterConfig = new MockFilterConfig();
         filterConfig.addInitParameter(ALLOWED_HOSTS, allowedHosts);
         filter.init(filterConfig);
+
+        SettingManager settingManager = mock(SettingManager.class);
+        when(settingManager.getValue(Settings.SYSTEM_SERVER_HOST))
+                .thenReturn("server.host");
+        when(settingManager.getValue(Settings.SYSTEM_CORS_ALLOWEDHOSTS))
+                .thenReturn("www.geonetwork-opensource.org,osgeo.org");
+
+        final ConfigurableApplicationContext applicationContext = Mockito.mock(ConfigurableApplicationContext.class);
+        ApplicationContextHolder.set(applicationContext);
+        Mockito.when(applicationContext.getBean(SettingManager.class)).thenReturn(settingManager);
+
         return filter;
     }
 
@@ -96,18 +114,14 @@ public class CORSResponseFilterTest {
     }
 
 
-//    @Test
-//    public void testCorsHeaderAddedBasedOnDb() throws IOException, ServletException {
-//        SettingManager settingManager = mock(SettingManager.class);
-//        when(settingManager.getValue(Settings.SYSTEM_CORS_ALLOWEDHOSTS))
-//            .thenReturn("www.geonetwork-opensource.org,osgeo.org");
-//
-//        HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
-//        HttpServletResponse httpServletResponse = spy(new MockHttpServletResponse());
-//        FilterChain filterChain = mock(FilterChain.class);
-//
-//        when(httpServletRequest.getHeader("origin")).thenReturn("http://www.geonetwork-opensource.org");
-//        buildFilter("db").doFilter(httpServletRequest, httpServletResponse, filterChain);
-//        assertEquals("*", httpServletResponse.getHeader("Access-Control-Allow-Origin"));
-//    }
+    @Test
+    public void testCorsHeaderAddedBasedOnDb() throws IOException, ServletException {
+        HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
+        HttpServletResponse httpServletResponse = spy(new MockHttpServletResponse());
+        FilterChain filterChain = mock(FilterChain.class);
+
+        when(httpServletRequest.getHeader("origin")).thenReturn("http://www.geonetwork-opensource.org");
+        buildFilter("db").doFilter(httpServletRequest, httpServletResponse, filterChain);
+        assertEquals("*", httpServletResponse.getHeader("Access-Control-Allow-Origin"));
+    }
 }

@@ -199,10 +199,10 @@
    */
 
   module.directive('gnKmlImport', [
-    'ngeoDecorateLayer',
+    'olDecorateLayer',
     'gnAlertService',
     '$translate',
-    function(ngeoDecorateLayer, gnAlertService, $translate) {
+    function(olDecorateLayer, gnAlertService, $translate) {
       return {
         restrict: 'A',
         replace: true,
@@ -254,7 +254,7 @@
             };
 
             $scope.addToMap = function(layer, map) {
-              ngeoDecorateLayer(layer);
+              olDecorateLayer(layer);
               layer.displayInLayerManager = true;
               map.getLayers().push(layer);
               map.getView().fit(layer.getSource().getExtent(),
@@ -367,7 +367,7 @@
               var listenerKey = vector.getSource().on('change',
                   function(evt) {
                     if (vector.getSource().getState() == 'ready') {
-                      vector.getSource().unByKey(listenerKey);
+                      ol.Observable.unByKey(listenerKey);
                       scope.addToMap(vector, scope.map);
                       entry.loading = false;
                     }
