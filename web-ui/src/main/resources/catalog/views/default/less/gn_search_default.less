@@ -316,26 +316,6 @@ li.list-group-item.gn-map-item {
     }
   }
 
-  .gn-top-records [data-gn-results-container]  & {
-    padding: 14px;
-    height: 205px;
-
-    .gn-img-thumbnail-caption {
-      margin: 5px 0px;
-    }
-
-    &:hover {
-      cursor: pointer;
-
-      // note, this may not be correct if a theme is applied,
-      // as the actual result hover color is transparent black
-      @result-hover-color: rgb(234, 234, 234);
-      .gn-img-thumbnail-caption::after {
-        background: linear-gradient(to bottom, fade(@result-hover-color, 0%) 0%, @result-hover-color 100%);
-      }
-    }
-  }
-
   [gn-ows-context] ul.gn-resultview & {
     padding: 5px;
     height: 205px;

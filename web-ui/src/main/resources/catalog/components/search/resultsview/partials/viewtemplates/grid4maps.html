@@ -1,22 +1,30 @@
-<ul class="list-group gn-resultview gn-resultview-sumup">
-  <li class="list-group-item gn-grid gn-map-item flex-col flex-align-stretch"
-      data-ng-repeat="md in searchResults.records"
-      data-gn-fix-mdlinks=""
-      title="{{(md.abstract || md.defaultAbstract) | striptags}}"
-      ng-click="loadMap(maps[0], md)">
+<ul class="row gn-info-list">
+  <li data-ng-repeat="md in searchResults.records"
+      data-gn-fix-mdlinks="">
 
-    <div class="gn-md-thumbnail flex-grow"
-         ng-style="{ 'background-image': md.getThumbnails().list[0].url && 'url(' + md.getThumbnails().list[0].url + ')' }">
-    </div>
+    <section class="resultcard clearfix"
+             data-ng-class="md.getThumbnails().list[0].url ? 'hasThumbnail' : 'noThumbnail'">
 
-    <div class="gn-img-thumbnail-caption">
-      {{md.title || md.defaultTitle}}
-    </div>
-
-    <a class=""
-        ng-href="#/metadata/{{md.getUuid()}}"
-        title="{{'openRecord' | translate}}" translate>
-      openRecord
-    </a>
+      <div class="title">
+        <a ng-href="#/metadata/{{md.getUuid()}}">
+          <h4>{{md.title || md.defaultTitle}}&nbsp;</h4>
+        </a>
+      </div>
+      
+      <div class="gn-md-thumbnail">
+        <a href="">
+          <div class="gn-img-thumbnail"
+               ng-click="resultviewFns.loadMap(maps[0], md)"
+               ng-style="{ 'background-image': md.getThumbnails().list[0].url && 'url(' + md.getThumbnails().list[0].url + ')' }">
+          </div>
+        </a>
+      </div>
+      
+      <div class="content">
+        <div class="abstract">
+          {{md.abstract || defaultAbstract}}
+        </div>
+      </div>
+    </section>
   </li>
 </ul>
