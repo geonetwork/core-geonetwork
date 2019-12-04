@@ -169,16 +169,18 @@
   <xsl:variable name="defaultLang">eng</xsl:variable>
 
   <xsl:template name="langId19139">
+    <xsl:param name="md" select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']"/>
+    <xsl:param name="defaultLanguage" select="$defaultLang"/>
     <xsl:variable name="tmp">
       <xsl:choose>
-        <xsl:when test="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:language/gmd:LanguageCode/@codeListValue|
-                                /*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:language/gco:CharacterString">
-           <xsl:call-template name="langId_from_gmdlanguage19139">
-             <xsl:with-param name="gmdlanguage" select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:language"/>
-           </xsl:call-template>
+        <xsl:when test="$md/gmd:language/gmd:LanguageCode/@codeListValue|
+                                $md/gmd:language/gco:CharacterString">
+          <xsl:call-template name="langId_from_gmdlanguage19139">
+            <xsl:with-param name="gmdlanguage" select="$md/gmd:language"/>
+          </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:value-of select="$defaultLang"/>
+          <xsl:value-of select="$defaultLanguage"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>

@@ -31,6 +31,8 @@
                 version="2.0"
                 exclude-result-prefixes="#all">
 
+  <!-- include extra functions langId19139 and langId_from_gmdlanguage19139 -->
+  <xsl:include href="../../iso19139/convert/functions.xsl"/>
 
   <!-- Template used to return a gco:CharacterString element
       in default metadata language or in a specific locale
@@ -85,46 +87,6 @@
       <xsl:with-param name="lang" select="$langGui"/>
       <xsl:with-param name="md" select="$md"/>
     </xsl:call-template>
-  </xsl:template>
-
-  <!-- iso3code from the supplied gmdlanguage
-       It will prefer LanguageCode if it exists over CharacterString -->
-  <xsl:template name="getLangIdFromGmdlanguage">
-    <xsl:param name="gmdlanguage" required="yes"/>
-    <xsl:variable name="tmp">
-      <xsl:choose>
-        <xsl:when test="normalize-space($gmdlanguage/gmd:LanguageCode/@codeListValue) != ''">
-          <xsl:value-of select="$gmdlanguage/gmd:LanguageCode/@codeListValue"/>
-        </xsl:when>
-        <xsl:when test="contains($gmdlanguage/gco:CharacterString,';')">
-               <xsl:value-of  select="normalize-space(substring-before($gmdlanguage/gco:CharacterString,';'))"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$gmdlanguage/gco:CharacterString"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:value-of select="normalize-space(string($tmp))"></xsl:value-of>
-  </xsl:template>
-
-  <!-- main iso3code for supplied metadata -->
-
-  <xsl:template name="getMainLangFromMetadata">
-    <xsl:param name="md" required="yes"/>
-    <xsl:variable name="tmp">
-      <xsl:choose>
-        <xsl:when test="$md/gmd:language/gmd:LanguageCode/@codeListValue|
-                                $md/gmd:language/gco:CharacterString">
-           <xsl:call-template name="getLangIdFromGmdlanguage">
-             <xsl:with-param name="gmdlanguage" select="$md/gmd:language"/>
-           </xsl:call-template>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="eng"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:value-of select="normalize-space(string($tmp))"></xsl:value-of>
   </xsl:template>
 
   <!-- Get lang #id in metadata PT_Locale section,  deprecated: if not return the 2 first letters

@@ -4239,7 +4239,7 @@
         <xsl:variable name="ptFreeTextTree" select="exslt:node-set($tmpFreeText)"/>
 
         <xsl:variable name="mainLang">
-           <xsl:call-template name="getMainLangFromMetadata">
+           <xsl:call-template name="langId19139">
               <xsl:with-param name="md" select="/root/*"/>
            </xsl:call-template>
         </xsl:variable>
@@ -4412,7 +4412,7 @@
   -->
   <xsl:template name="PT_FreeText_Tree">
    <xsl:variable name="mainLang">
-      <xsl:call-template name="getMainLangFromMetadata">
+      <xsl:call-template name="langId19139">
          <xsl:with-param name="md" select="/root/*"/>
       </xsl:call-template>
    </xsl:variable>
