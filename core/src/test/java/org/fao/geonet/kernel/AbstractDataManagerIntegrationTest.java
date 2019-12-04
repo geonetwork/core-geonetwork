@@ -9,6 +9,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.Xml;
@@ -24,7 +25,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class AbstractDataManagerIntegrationTest extends AbstractCoreIntegrationTest {
+public abstract class AbstractDataManagerIntegrationTest extends AbstractCoreIntegrationTest {
 
     @Autowired
     protected DataManager dataManager;
@@ -34,6 +35,9 @@ public class AbstractDataManagerIntegrationTest extends AbstractCoreIntegrationT
 
     @Autowired
     protected MetadataRepository metadataRepository;
+
+    @Autowired
+    protected MetadataCategoryRepository metadataCategoryRepository;
 
     protected void doSetHarvesterDataTest() throws Exception {
         ServiceContext serviceContext = createContextAndLogAsAdmin();

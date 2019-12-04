@@ -65,17 +65,31 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
     @Autowired
     private EsSearchManager searchManager;
 
+    @Autowired
+    private SourceRepository sourceRepository;
+
+    @Autowired
+    private GroupRepository groupRepository;
+
     @Test
     public void testDeleteMetadata() throws Exception {
         ServiceContext serviceContext = createContextAndLogAsAdmin();
         long count = metadataRepository.count();
-
-        UserSession userSession = serviceContext.getUserSession();
-        String mdId = dataManager.insertMetadata(serviceContext, "iso19139", new Element("MD_Metadata"), "uuid",
-            userSession.getUserIdAsInt(),
-            "" + ReservedGroup.all.getId(), "sourceid", "n", "doctype", null, new ISODate().getDateAndTime(), new ISODate().getDateAndTime(),
-            false, false);
-
+        String mdId = dataManager.insertMetadata(
+                serviceContext,
+                "iso19139",
+                new Element("MD_Metadata"),
+                "uuid",
+                serviceContext.getUserSession().getUserIdAsInt(),
+                "" + ReservedGroup.all.getId(),
+                "sourceid",
+                "n",
+                "doctype",
+                null,
+                new ISODate().getDateAndTime(),
+                new ISODate().getDateAndTime(),
+                false,
+                false);
         assertEquals(count + 1, metadataRepository.count());
 
         metadataManager.deleteMetadata(serviceContext, mdId);
@@ -86,21 +100,29 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
     @Test
     public void testBuildPrivilegesMetadataInfo() throws Exception {
         ServiceContext serviceContext = createContextAndLogAsAdmin();
-        UserSession userSession = serviceContext.getUserSession();
         Element sampleMetadataXml = getSampleMetadataXml();
-        String schema = dataManager.autodetectSchema(sampleMetadataXml);
-
-        String mdId1 = dataManager.insertMetadata(serviceContext, schema, new Element(sampleMetadataXml.getName(),
-                sampleMetadataXml.getNamespace()), "uuid", userSession.getUserIdAsInt(), "" + ReservedGroup.all.getId(),
-            "sourceid", "n", "doctype", null, new ISODate().getDateAndTime(), new ISODate().getDateAndTime(),
-            false, false);
-
-
+        String mdId = dataManager.insertMetadata(
+                serviceContext,
+                dataManager.autodetectSchema(sampleMetadataXml),
+                new Element(sampleMetadataXml.getName(), sampleMetadataXml.getNamespace()),
+                "uuid",
+                serviceContext.getUserSession().getUserIdAsInt(),
+                "" + ReservedGroup.all.getId(),
+                "sourceid",
+                "n",
+                "doctype",
+                null,
+                new ISODate().getDateAndTime(),
+                new ISODate().getDateAndTime(),
+                false,
+                false);
         Element info = new Element("info", Geonet.Namespaces.GEONET);
         Map<String, Element> map = Maps.newHashMap();
-        map.put(mdId1, info);
+        map.put(mdId, info);
         info.removeContent();
+
         dataManager.buildPrivilegesMetadataInfo(serviceContext, map);
+
         assertEqualsText("true", info, "edit");
         assertEqualsText("true", info, "owner");
         assertEqualsText("true", info, "isPublishedToAll");
@@ -114,22 +136,15 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
     @Test
     public void testCreateMetadataWithTemplateMetadata() throws Exception {
         ServiceContext serviceContext = createContextAndLogAsAdmin();
-
         User principal = serviceContext.getUserSession().getPrincipal();
-
-        GroupRepository bean = serviceContext.getBean(GroupRepository.class);
-        IMetadataManager metadataManager = serviceContext.getBean(IMetadataManager.class);
-        Group group = bean.findAll().get(0);
-
-        MetadataCategory category = serviceContext.getBean(MetadataCategoryRepository.class).findAll().get(0);
-
-        SourceRepository sourceRepository = serviceContext.getBean(SourceRepository.class);
+        Group group = groupRepository.findAll().get(0);
+        MetadataCategory category = metadataCategoryRepository.findAll().get(0);
         Source source = sourceRepository.save(new Source().setType(SourceType.portal).setName("GN").setUuid("sourceuuid"));
 
         Element sampleMetadataXml = super.getSampleMetadataXml();
-        AbstractMetadata metadata = new Metadata();
-        metadata.setDataAndFixCR(sampleMetadataXml)
-            .setUuid(UUID.randomUUID().toString());
+        AbstractMetadata metadata = new Metadata()
+                .setDataAndFixCR(sampleMetadataXml)
+                .setUuid(UUID.randomUUID().toString());
         metadata.getCategories().add(category);
         metadata.getDataInfo().setSchemaId("iso19139");
         metadata.getSourceInfo().setSourceId(source.getUuid()).setOwner(1);
@@ -195,7 +210,6 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
         String parentUuid = UUID.randomUUID().toString();
         Element updateMd = dataManager.updateFixedInfo("iso19139", Optional.<Integer>absent(), uuid, md, parentUuid,
             UpdateDatestamp.YES, serviceContext);
-
 
         List<Namespace> namespaces = dataManager.getSchema("iso19139").getNamespaces();
         assertEquals(uuid, Xml.selectString(updateMd, "gmd:fileIdentifier/gco:CharacterString", namespaces));

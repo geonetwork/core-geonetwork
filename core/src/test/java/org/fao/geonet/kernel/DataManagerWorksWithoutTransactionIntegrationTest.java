@@ -45,9 +45,6 @@ import jeeves.server.context.ServiceContext;
 
 public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractDataManagerIntegrationTest {
 
-    @Autowired
-    private MetadataCategoryRepository metadataCategoryRepository;
-
     @Test
     public void testDataManagerCutpoints() throws Exception {
         TransactionlessTesting.get().run
