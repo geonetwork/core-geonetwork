@@ -33,7 +33,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
  *
  * User: Jesse Date: 10/17/13 Time: 9:53 AM
  */
-@WebAppConfiguration()
+@WebAppConfiguration(value = "/src/test/resources")
 @ContextConfiguration(inheritLocations = true,
     locations = {"classpath:services-repository-test-context.xml", "classpath:services-web-test-context.xml"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
