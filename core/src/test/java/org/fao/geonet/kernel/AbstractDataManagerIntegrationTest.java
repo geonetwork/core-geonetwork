@@ -90,6 +90,13 @@ public class AbstractDataManagerIntegrationTest extends AbstractCoreIntegrationT
                 ReservedGroup.all.getId(), Params.GENERATE_UUID);
     }
 
+    protected int importMetadata(ServiceContext serviceContext, String uuid) throws Exception {
+        Element sampleMetadataXml = getSampleMetadataXml();
+        ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
+        return importMetadataXML(serviceContext, uuid, stream, MetadataType.METADATA,
+                ReservedGroup.all.getId(), Params.NOTHING);
+    }
+
     protected ServiceContext createContextAndLogAsAdmin() throws Exception {
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);

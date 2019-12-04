@@ -172,19 +172,18 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
     @Test
     public void testDeleteBatchMetadata() throws Exception {
         ServiceContext serviceContext = createContextAndLogAsAdmin();
+        String uuid1 = UUID.randomUUID().toString();
+        String uuid2 = UUID.randomUUID().toString();
+        Specification<Metadata> spec = where((Specification<Metadata>)MetadataSpecs.hasMetadataUuid(uuid1)).or((Specification<Metadata>)MetadataSpecs.hasMetadataUuid(uuid2));
+        importMetadata(serviceContext, uuid1);
+        importMetadata(serviceContext, uuid2);
+        assertEquals(2, metadataRepository.findAll(spec).size());
+        assertEquals(2, searchManager.query(String.format("uuid:(%s OR %s)", uuid1, uuid2), null, 0, 10).getHits().getTotalHits().value);
 
-        long startMdCount = metadataRepository.count();
-        int md1 = importMetadata(serviceContext);
-        int md2 = importMetadata(serviceContext);
-
-        assertEquals(startMdCount + 2, metadataRepository.count());
-        assertEquals(2, searchManager.query(String.format("id:(%d OR %d)",md1, md2), null, 0, 10).getHits().getTotalHits().value);
-
-        Specification<Metadata> spec = where((Specification<Metadata>)MetadataSpecs.hasMetadataId(md1)).or((Specification<Metadata>)MetadataSpecs.hasMetadataId(md2));
         dataManager.batchDeleteMetadataAndUpdateIndex(spec);
 
-        assertEquals(startMdCount, metadataRepository.count());
-        assertEquals(0, searchManager.query(String.format("id:%d OR id:%d",md1, md2), null, 0, 10).getHits().getTotalHits().value);
+        assertEquals(0, metadataRepository.findAll(spec).size());
+        assertEquals(0, searchManager.query(String.format("uuid:(%s OR %s)", uuid1, uuid2), null, 0, 10).getHits().getTotalHits().value);
     }
 
     @Test
