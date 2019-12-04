@@ -43,11 +43,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
-/**
- * Test that the aspect defined work correctly.
- * <p/>
- * Created by Jesse on 3/10/14.
- */
 public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractDataManagerIntegrationTest {
 
     @Autowired
@@ -81,7 +76,6 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractD
                     assertTrue(hasNext);
                 }
             });
-
     }
 
     @Test
@@ -98,7 +92,6 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractD
                     doSetHarvesterDataTest(metadataId);
                 }
             });
-
     }
 
 }

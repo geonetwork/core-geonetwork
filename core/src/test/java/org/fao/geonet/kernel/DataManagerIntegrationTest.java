@@ -60,12 +60,6 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
-
-/**
- * Tests for the DataManager.
- * <p/>
- * User: Jesse Date: 10/24/13 Time: 5:30 PM
- */
 public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTest {
 
     @Autowired
