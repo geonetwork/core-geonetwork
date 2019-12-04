@@ -171,6 +171,19 @@
                          } else {
                            scope.relations[idx] = value;
                          }
+                         
+                         if (scope.relations.siblings && scope.relations.associated) {
+                           for (var i = 0; i < scope.relations.associated.length; i++) {
+                             if (scope.relations.siblings.filter(function (e) {
+                               return e.id === scope.relations.associated[i].id;
+                             }).length > 0) {
+                               /* siblings object contains associated element */
+                             } else {
+                               scope.relations.siblings.push(scope.relations.associated[i])
+                             }
+                           }
+                           scope.relations.associated = {};
+                         }
                        });
                     
                        if (angular.isDefined(scope.container) 
