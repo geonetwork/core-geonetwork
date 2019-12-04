@@ -42,7 +42,7 @@ public class AbstractDataManagerIntegrationTest extends AbstractCoreIntegrationT
         assertNull(metadata.getHarvestInfo().getUri());
         assertFalse(metadata.getHarvestInfo().isHarvested());
 
-        final String harvesterUuid = "harvesterUuid";
+        String harvesterUuid = "harvesterUuid";
         dataManager.setHarvestedExt(metadataId, harvesterUuid);
         metadata = metadataRepository.findOne(metadataId);
         assertEquals(harvesterUuid, metadata.getHarvestInfo().getUuid());
@@ -50,7 +50,7 @@ public class AbstractDataManagerIntegrationTest extends AbstractCoreIntegrationT
         assertNull(metadata.getHarvestInfo().getUri());
 
 
-        final String newSource = "newSource";
+        String newSource = "newSource";
         // check that another update doesn't break the last setting
         // there used to a bug where this was the case because entity manager wasn't being flushed
         metadataRepository.update(metadataId, new Updater<Metadata>() {
@@ -65,8 +65,8 @@ public class AbstractDataManagerIntegrationTest extends AbstractCoreIntegrationT
         assertTrue(metadata.getHarvestInfo().isHarvested());
         assertNull(metadata.getHarvestInfo().getUri());
 
-        final String harvesterUuid2 = "harvesterUuid2";
-        final String harvesterUri = "harvesterUri";
+        String harvesterUuid2 = "harvesterUuid2";
+        String harvesterUri = "harvesterUri";
         dataManager.setHarvestedExt(metadataId, harvesterUuid2, Optional.of(harvesterUri));
         metadata = metadataRepository.findOne(metadataId);
         assertEquals(harvesterUuid2, metadata.getHarvestInfo().getUuid());
@@ -81,8 +81,8 @@ public class AbstractDataManagerIntegrationTest extends AbstractCoreIntegrationT
     }
 
     protected int importMetadata(ServiceContext serviceContext) throws Exception {
-        final Element sampleMetadataXml = getSampleMetadataXml();
-        final ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
+        Element sampleMetadataXml = getSampleMetadataXml();
+        ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
         return importMetadataXML(serviceContext, "uuid", stream, MetadataType.METADATA,
                 ReservedGroup.all.getId(), Params.GENERATE_UUID);
     }

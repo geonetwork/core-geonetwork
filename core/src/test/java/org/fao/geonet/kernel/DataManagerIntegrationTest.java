@@ -70,8 +70,8 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
         ServiceContext serviceContext = createContextAndLogAsAdmin();
         long count = metadataRepository.count();
 
-        final UserSession userSession = serviceContext.getUserSession();
-        final String mdId = dataManager.insertMetadata(serviceContext, "iso19139", new Element("MD_Metadata"), "uuid",
+        UserSession userSession = serviceContext.getUserSession();
+        String mdId = dataManager.insertMetadata(serviceContext, "iso19139", new Element("MD_Metadata"), "uuid",
             userSession.getUserIdAsInt(),
             "" + ReservedGroup.all.getId(), "sourceid", "n", "doctype", null, new ISODate().getDateAndTime(), new ISODate().getDateAndTime(),
             false, false);
@@ -86,11 +86,11 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
     @Test
     public void testBuildPrivilegesMetadataInfo() throws Exception {
         ServiceContext serviceContext = createContextAndLogAsAdmin();
-        final UserSession userSession = serviceContext.getUserSession();
-        final Element sampleMetadataXml = getSampleMetadataXml();
+        UserSession userSession = serviceContext.getUserSession();
+        Element sampleMetadataXml = getSampleMetadataXml();
         String schema = dataManager.autodetectSchema(sampleMetadataXml);
 
-        final String mdId1 = dataManager.insertMetadata(serviceContext, schema, new Element(sampleMetadataXml.getName(),
+        String mdId1 = dataManager.insertMetadata(serviceContext, schema, new Element(sampleMetadataXml.getName(),
                 sampleMetadataXml.getNamespace()), "uuid", userSession.getUserIdAsInt(), "" + ReservedGroup.all.getId(),
             "sourceid", "n", "doctype", null, new ISODate().getDateAndTime(), new ISODate().getDateAndTime(),
             false, false);
@@ -115,27 +115,27 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
     public void testCreateMetadataWithTemplateMetadata() throws Exception {
         ServiceContext serviceContext = createContextAndLogAsAdmin();
 
-        final User principal = serviceContext.getUserSession().getPrincipal();
+        User principal = serviceContext.getUserSession().getPrincipal();
 
-        final GroupRepository bean = serviceContext.getBean(GroupRepository.class);
-        final IMetadataManager metadataManager = serviceContext.getBean(IMetadataManager.class);
+        GroupRepository bean = serviceContext.getBean(GroupRepository.class);
+        IMetadataManager metadataManager = serviceContext.getBean(IMetadataManager.class);
         Group group = bean.findAll().get(0);
 
         MetadataCategory category = serviceContext.getBean(MetadataCategoryRepository.class).findAll().get(0);
 
-        final SourceRepository sourceRepository = serviceContext.getBean(SourceRepository.class);
+        SourceRepository sourceRepository = serviceContext.getBean(SourceRepository.class);
         Source source = sourceRepository.save(new Source().setType(SourceType.portal).setName("GN").setUuid("sourceuuid"));
 
-        final Element sampleMetadataXml = super.getSampleMetadataXml();
-        final AbstractMetadata metadata = new Metadata();
+        Element sampleMetadataXml = super.getSampleMetadataXml();
+        AbstractMetadata metadata = new Metadata();
         metadata.setDataAndFixCR(sampleMetadataXml)
             .setUuid(UUID.randomUUID().toString());
         metadata.getCategories().add(category);
         metadata.getDataInfo().setSchemaId("iso19139");
         metadata.getSourceInfo().setSourceId(source.getUuid()).setOwner(1);
 
-        final AbstractMetadata templateMd = metadataManager.save(metadata);
-        final String newMetadataId = dataManager.createMetadata(serviceContext, "" + metadata.getId(), "" + group.getId(), source.getUuid(),
+        AbstractMetadata templateMd = metadataManager.save(metadata);
+        String newMetadataId = dataManager.createMetadata(serviceContext, "" + metadata.getId(), "" + group.getId(), source.getUuid(),
             principal.getId(), templateMd.getUuid(), MetadataType.METADATA.codeString, true);
 
         AbstractMetadata newMetadata = metadataRepository.findOne(newMetadataId);
@@ -149,17 +149,17 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
     public void testSetStatus() throws Exception {
         ServiceContext serviceContext = createContextAndLogAsAdmin();
 
-        final int metadataId = importMetadata(serviceContext);
+        int metadataId = importMetadata(serviceContext);
 
-        final MetadataStatus status = dataManager.getStatus(metadataId);
+        MetadataStatus status = dataManager.getStatus(metadataId);
 
         assertEquals(null, status);
 
-        final ISODate changeDate = new ISODate();
-        final String changeMessage = "Set to draft";
+        ISODate changeDate = new ISODate();
+        String changeMessage = "Set to draft";
         dataManager.setStatus(serviceContext, metadataId, 0, changeDate, changeMessage);
 
-        final MetadataStatus loadedStatus = dataManager.getStatus(metadataId);
+        MetadataStatus loadedStatus = dataManager.getStatus(metadataId);
 
         assertEquals(changeDate, loadedStatus.getId().getChangeDate());
         assertEquals(changeMessage, loadedStatus.getChangeMessage());
@@ -173,7 +173,7 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
     public void testSetHarvesterData() throws Exception {
         ServiceContext serviceContext = createContextAndLogAsAdmin();
 
-        final int metadataId = importMetadata( serviceContext);
+        int metadataId = importMetadata(serviceContext);
 
         doSetHarvesterDataTest(metadataId);
     }
@@ -182,7 +182,7 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
     public void testDeleteBatchMetadata() throws Exception {
         ServiceContext serviceContext = createContextAndLogAsAdmin();
 
-        final long startMdCount = metadataRepository.count();
+        long startMdCount = metadataRepository.count();
         int md1 = importMetadata(serviceContext);
         int md2 = importMetadata(serviceContext);
 
@@ -206,7 +206,8 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
         Element updateMd = dataManager.updateFixedInfo("iso19139", Optional.<Integer>absent(), uuid, md, parentUuid,
             UpdateDatestamp.YES, serviceContext);
 
-        final List<Namespace> namespaces = dataManager.getSchema("iso19139").getNamespaces();
+
+        List<Namespace> namespaces = dataManager.getSchema("iso19139").getNamespaces();
         assertEquals(uuid, Xml.selectString(updateMd, "gmd:fileIdentifier/gco:CharacterString", namespaces));
         assertEquals(parentUuid, Xml.selectString(updateMd, "gmd:parentIdentifier/gco:CharacterString", namespaces));
         assertEquals(0, Xml.selectNodes(updateMd, "*//node()[string-length(@locale) > 3]").size());

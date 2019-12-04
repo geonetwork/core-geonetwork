@@ -56,12 +56,12 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractD
                 public void run() throws Exception {
                     ServiceContext serviceContext = createContextAndLogAsAdmin();
 
-                    final String metadataCategory = metadataCategoryRepository.findAll().get(0).getName();
-                    final Element sampleMetadataXml = getSampleMetadataXml();
-                    final UserSession userSession = serviceContext.getUserSession();
-                    final int userIdAsInt = userSession.getUserIdAsInt();
+                    String metadataCategory = metadataCategoryRepository.findAll().get(0).getName();
+                    Element sampleMetadataXml = getSampleMetadataXml();
+                    UserSession userSession = serviceContext.getUserSession();
+                    int userIdAsInt = userSession.getUserIdAsInt();
                     String schema = dataManager.autodetectSchema(sampleMetadataXml);
-                    final String mdId = dataManager.insertMetadata(serviceContext, schema, sampleMetadataXml,
+                    String mdId = dataManager.insertMetadata(serviceContext, schema, sampleMetadataXml,
                         UUID.randomUUID().toString(), userIdAsInt, "2", "source",
                         MetadataType.METADATA.codeString, null, metadataCategory, new ISODate().getDateAndTime(),
                         new ISODate().getDateAndTime(), false, false);
@@ -71,7 +71,7 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractD
                     AbstractMetadata updateMd = dataManager.updateMetadata(serviceContext, mdId, newMd, false, false, false, "eng",
                         new ISODate().getDateAndTime(), false);
                     assertNotNull(updateMd);
-                    final boolean hasNext = updateMd.getCategories().iterator().hasNext();
+                    boolean hasNext = updateMd.getCategories().iterator().hasNext();
                     assertTrue(hasNext);
                 }
             });
@@ -85,7 +85,7 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractD
                 public void run() throws Exception {
                     ServiceContext serviceContext = createContextAndLogAsAdmin();
 
-                    final int metadataId = importMetadata(serviceContext);
+                    int metadataId = importMetadata(serviceContext);
 
                     doSetHarvesterDataTest(metadataId);
                 }
