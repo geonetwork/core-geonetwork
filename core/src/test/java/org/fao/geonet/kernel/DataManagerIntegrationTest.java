@@ -29,7 +29,6 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ISODate;
@@ -45,9 +44,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -56,16 +53,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.annotation.Nonnull;
-import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 
@@ -74,88 +66,27 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  * <p/>
  * User: Jesse Date: 10/24/13 Time: 5:30 PM
  */
-public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
-    @Autowired
-    DataManager _dataManager;
+public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTest {
 
     @Autowired
-    IMetadataManager metadataManager;
-
-    @Autowired
-    MetadataRepository _metadataRepository;
-
-    @Autowired
-    EsSearchManager searchManager;
-
-
-    static void doSetHarvesterDataTest(MetadataRepository metadataRepository, DataManager dataManager, int metadataId) throws Exception {
-        AbstractMetadata metadata = metadataRepository.findOne(metadataId);
-
-        assertNull(metadata.getHarvestInfo().getUuid());
-        assertNull(metadata.getHarvestInfo().getUri());
-        assertFalse(metadata.getHarvestInfo().isHarvested());
-
-        final String harvesterUuid = "harvesterUuid";
-        dataManager.setHarvestedExt(metadataId, harvesterUuid);
-        metadata = metadataRepository.findOne(metadataId);
-        assertEquals(harvesterUuid, metadata.getHarvestInfo().getUuid());
-        assertTrue(metadata.getHarvestInfo().isHarvested());
-        assertNull(metadata.getHarvestInfo().getUri());
-
-
-        final String newSource = "newSource";
-        // check that another update doesn't break the last setting
-        // there used to a bug where this was the case because entity manager wasn't being flushed
-        metadataRepository.update(metadataId, new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata entity) {
-                entity.getSourceInfo().setSourceId(newSource);
-            }
-        });
-
-        assertEquals(newSource, metadata.getSourceInfo().getSourceId());
-        assertEquals(harvesterUuid, metadata.getHarvestInfo().getUuid());
-        assertTrue(metadata.getHarvestInfo().isHarvested());
-        assertNull(metadata.getHarvestInfo().getUri());
-
-        final String harvesterUuid2 = "harvesterUuid2";
-        final String harvesterUri = "harvesterUri";
-        dataManager.setHarvestedExt(metadataId, harvesterUuid2, Optional.of(harvesterUri));
-        metadata = metadataRepository.findOne(metadataId);
-        assertEquals(harvesterUuid2, metadata.getHarvestInfo().getUuid());
-        assertTrue(metadata.getHarvestInfo().isHarvested());
-        assertEquals(harvesterUri, metadata.getHarvestInfo().getUri());
-
-        dataManager.setHarvestedExt(metadataId, null);
-        metadata = metadataRepository.findOne(metadataId);
-        assertNull(metadata.getHarvestInfo().getUuid());
-        assertNull(metadata.getHarvestInfo().getUri());
-        assertFalse(metadata.getHarvestInfo().isHarvested());
-    }
-
-    static int importMetadata(AbstractCoreIntegrationTest test, ServiceContext serviceContext) throws Exception {
-        final Element sampleMetadataXml = test.getSampleMetadataXml();
-        final ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
-        return test.importMetadataXML(serviceContext, "uuid", stream, MetadataType.METADATA,
-            ReservedGroup.all.getId(), Params.GENERATE_UUID);
-    }
+    private EsSearchManager searchManager;
 
     @Test
     public void testDeleteMetadata() throws Exception {
-        int count = (int) _metadataRepository.count();
+        int count = (int) metadataRepository.count();
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
         final UserSession userSession = serviceContext.getUserSession();
-        final String mdId = _dataManager.insertMetadata(serviceContext, "iso19139", new Element("MD_Metadata"), "uuid",
+        final String mdId = dataManager.insertMetadata(serviceContext, "iso19139", new Element("MD_Metadata"), "uuid",
             userSession.getUserIdAsInt(),
             "" + ReservedGroup.all.getId(), "sourceid", "n", "doctype", null, new ISODate().getDateAndTime(), new ISODate().getDateAndTime(),
             false, false);
 
-        assertEquals(count + 1, _metadataRepository.count());
+        assertEquals(count + 1, metadataRepository.count());
 
         metadataManager.deleteMetadata(serviceContext, mdId);
 
-        assertEquals(count, _metadataRepository.count());
+        assertEquals(count, metadataRepository.count());
     }
 
     @Test
@@ -164,9 +95,9 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         loginAsAdmin(serviceContext);
         final UserSession userSession = serviceContext.getUserSession();
         final Element sampleMetadataXml = getSampleMetadataXml();
-        String schema = _dataManager.autodetectSchema(sampleMetadataXml);
+        String schema = dataManager.autodetectSchema(sampleMetadataXml);
 
-        final String mdId1 = _dataManager.insertMetadata(serviceContext, schema, new Element(sampleMetadataXml.getName(),
+        final String mdId1 = dataManager.insertMetadata(serviceContext, schema, new Element(sampleMetadataXml.getName(),
                 sampleMetadataXml.getNamespace()), "uuid", userSession.getUserIdAsInt(), "" + ReservedGroup.all.getId(),
             "sourceid", "n", "doctype", null, new ISODate().getDateAndTime(), new ISODate().getDateAndTime(),
             false, false);
@@ -176,7 +107,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         Map<String, Element> map = Maps.newHashMap();
         map.put(mdId1, info);
         info.removeContent();
-        _dataManager.buildPrivilegesMetadataInfo(serviceContext, map);
+        dataManager.buildPrivilegesMetadataInfo(serviceContext, map);
         assertEqualsText("true", info, "edit");
         assertEqualsText("true", info, "owner");
         assertEqualsText("true", info, "isPublishedToAll");
@@ -212,10 +143,10 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         metadata.getSourceInfo().setSourceId(source.getUuid()).setOwner(1);
 
         final AbstractMetadata templateMd = metadataManager.save(metadata);
-        final String newMetadataId = _dataManager.createMetadata(serviceContext, "" + metadata.getId(), "" + group.getId(), source.getUuid(),
+        final String newMetadataId = dataManager.createMetadata(serviceContext, "" + metadata.getId(), "" + group.getId(), source.getUuid(),
             principal.getId(), templateMd.getUuid(), MetadataType.METADATA.codeString, true);
 
-        AbstractMetadata newMetadata = _metadataRepository.findOne(newMetadataId);
+        AbstractMetadata newMetadata = metadataRepository.findOne(newMetadataId);
         assertEquals(1, newMetadata.getCategories().size());
         assertEquals(category, newMetadata.getCategories().iterator().next());
         assertEqualsText(metadata.getUuid(), newMetadata.getXmlData(false), "gmd:parentIdentifier/gco:CharacterString");
@@ -227,17 +158,17 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
 
-        final int metadataId = importMetadata(this, serviceContext);
+        final int metadataId = importMetadata(serviceContext);
 
-        final MetadataStatus status = _dataManager.getStatus(metadataId);
+        final MetadataStatus status = dataManager.getStatus(metadataId);
 
         assertEquals(null, status);
 
         final ISODate changeDate = new ISODate();
         final String changeMessage = "Set to draft";
-        _dataManager.setStatus(serviceContext, metadataId, 0, changeDate, changeMessage);
+        dataManager.setStatus(serviceContext, metadataId, 0, changeDate, changeMessage);
 
-        final MetadataStatus loadedStatus = _dataManager.getStatus(metadataId);
+        final MetadataStatus loadedStatus = dataManager.getStatus(metadataId);
 
         assertEquals(changeDate, loadedStatus.getId().getChangeDate());
         assertEquals(changeMessage, loadedStatus.getChangeMessage());
@@ -252,9 +183,9 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
 
-        final int metadataId = importMetadata(this, serviceContext);
+        final int metadataId = importMetadata( serviceContext);
 
-        doSetHarvesterDataTest(_metadataRepository, _dataManager, metadataId);
+        doSetHarvesterDataTest(metadataId);
     }
 
     @Test
@@ -262,17 +193,17 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
 
-        final long startMdCount = _metadataRepository.count();
-        int md1 = importMetadata(this, context);
-        int md2 = importMetadata(this, context);
+        final long startMdCount = metadataRepository.count();
+        int md1 = importMetadata(context);
+        int md2 = importMetadata(context);
 
-        assertEquals(startMdCount + 2, _metadataRepository.count());
+        assertEquals(startMdCount + 2, metadataRepository.count());
         assertEquals(2, searchManager.query(String.format("id:(%d OR %d)",md1, md2), null, 0, 10).getHits().getTotalHits().value);
 
         Specification<Metadata> spec = where((Specification<Metadata>)MetadataSpecs.hasMetadataId(md1)).or((Specification<Metadata>)MetadataSpecs.hasMetadataId(md2));
-        _dataManager.batchDeleteMetadataAndUpdateIndex(spec);
+        dataManager.batchDeleteMetadataAndUpdateIndex(spec);
 
-        assertEquals(startMdCount, _metadataRepository.count());
+        assertEquals(startMdCount, metadataRepository.count());
         assertEquals(0, searchManager.query(String.format("id:%d OR id:%d",md1, md2), null, 0, 10).getHits().getTotalHits().value);
     }
 
@@ -284,18 +215,13 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         String uuid = UUID.randomUUID().toString();
         String parentUuid = UUID.randomUUID().toString();
         Element md = Xml.loadFile(AbstractCoreIntegrationTest.class.getResource("kernel/multilingual-metadata.xml"));
-        final Element updateMd = _dataManager.updateFixedInfo("iso19139", Optional.<Integer>absent(), uuid, md, parentUuid,
+        final Element updateMd = dataManager.updateFixedInfo("iso19139", Optional.<Integer>absent(), uuid, md, parentUuid,
             UpdateDatestamp.YES, context);
 
-        final List<Namespace> namespaces = _dataManager.getSchema("iso19139").getNamespaces();
+        final List<Namespace> namespaces = dataManager.getSchema("iso19139").getNamespaces();
         assertEquals(uuid, Xml.selectString(updateMd, "gmd:fileIdentifier/gco:CharacterString", namespaces));
         assertEquals(parentUuid, Xml.selectString(updateMd, "gmd:parentIdentifier/gco:CharacterString", namespaces));
         assertEquals(0, Xml.selectNodes(updateMd, "*//node()[string-length(@locale) > 3]").size());
         assertEquals(0, Xml.selectNodes(updateMd, "*//gmd:PT_Locale[string-length(@id) > 2]").size());
     }
-
-    private long numDocs(EsSearchManager searchManager, String lang) throws Exception {
-        return searchManager.getNumDocs();
-    }
-
 }
