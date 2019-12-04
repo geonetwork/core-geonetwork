@@ -87,4 +87,10 @@ public class AbstractDataManagerIntegrationTest extends AbstractCoreIntegrationT
                 ReservedGroup.all.getId(), Params.GENERATE_UUID);
     }
 
+    protected ServiceContext createContextAndLogAsAdmin() throws Exception {
+        ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        return context;
+    }
+
 }

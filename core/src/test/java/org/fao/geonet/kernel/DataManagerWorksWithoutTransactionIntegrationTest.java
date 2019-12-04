@@ -54,8 +54,7 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractD
             (new TestTask() {
                 @Override
                 public void run() throws Exception {
-                    final ServiceContext serviceContext = createServiceContext();
-                    loginAsAdmin(serviceContext);
+                    ServiceContext serviceContext = createContextAndLogAsAdmin();
 
                     final String metadataCategory = metadataCategoryRepository.findAll().get(0).getName();
                     final Element sampleMetadataXml = getSampleMetadataXml();
@@ -84,8 +83,7 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractD
             (new TestTask() {
                 @Override
                 public void run() throws Exception {
-                    final ServiceContext serviceContext = createServiceContext();
-                    loginAsAdmin(serviceContext);
+                    ServiceContext serviceContext = createContextAndLogAsAdmin();
 
                     final int metadataId = importMetadata(serviceContext);
 

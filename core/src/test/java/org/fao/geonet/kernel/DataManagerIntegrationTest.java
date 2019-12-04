@@ -67,9 +67,9 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
 
     @Test
     public void testDeleteMetadata() throws Exception {
-        int count = (int) metadataRepository.count();
-        final ServiceContext serviceContext = createServiceContext();
-        loginAsAdmin(serviceContext);
+        ServiceContext serviceContext = createContextAndLogAsAdmin();
+        long count = metadataRepository.count();
+
         final UserSession userSession = serviceContext.getUserSession();
         final String mdId = dataManager.insertMetadata(serviceContext, "iso19139", new Element("MD_Metadata"), "uuid",
             userSession.getUserIdAsInt(),
@@ -85,8 +85,7 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
 
     @Test
     public void testBuildPrivilegesMetadataInfo() throws Exception {
-        final ServiceContext serviceContext = createServiceContext();
-        loginAsAdmin(serviceContext);
+        ServiceContext serviceContext = createContextAndLogAsAdmin();
         final UserSession userSession = serviceContext.getUserSession();
         final Element sampleMetadataXml = getSampleMetadataXml();
         String schema = dataManager.autodetectSchema(sampleMetadataXml);
@@ -114,8 +113,7 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
 
     @Test
     public void testCreateMetadataWithTemplateMetadata() throws Exception {
-        final ServiceContext serviceContext = createServiceContext();
-        loginAsAdmin(serviceContext);
+        ServiceContext serviceContext = createContextAndLogAsAdmin();
 
         final User principal = serviceContext.getUserSession().getPrincipal();
 
@@ -149,8 +147,7 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
 
     @Test
     public void testSetStatus() throws Exception {
-        final ServiceContext serviceContext = createServiceContext();
-        loginAsAdmin(serviceContext);
+        ServiceContext serviceContext = createContextAndLogAsAdmin();
 
         final int metadataId = importMetadata(serviceContext);
 
@@ -174,8 +171,7 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
 
     @Test
     public void testSetHarvesterData() throws Exception {
-        final ServiceContext serviceContext = createServiceContext();
-        loginAsAdmin(serviceContext);
+        ServiceContext serviceContext = createContextAndLogAsAdmin();
 
         final int metadataId = importMetadata( serviceContext);
 
@@ -184,12 +180,11 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
 
     @Test
     public void testDeleteBatchMetadata() throws Exception {
-        ServiceContext context = createServiceContext();
-        loginAsAdmin(context);
+        ServiceContext serviceContext = createContextAndLogAsAdmin();
 
         final long startMdCount = metadataRepository.count();
-        int md1 = importMetadata(context);
-        int md2 = importMetadata(context);
+        int md1 = importMetadata(serviceContext);
+        int md2 = importMetadata(serviceContext);
 
         assertEquals(startMdCount + 2, metadataRepository.count());
         assertEquals(2, searchManager.query(String.format("id:(%d OR %d)",md1, md2), null, 0, 10).getHits().getTotalHits().value);
@@ -203,14 +198,13 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
 
     @Test
     public void testUpdateFixedInfo() throws Exception {
-        ServiceContext context = createServiceContext();
-        loginAsAdmin(context);
+        ServiceContext serviceContext = createContextAndLogAsAdmin();
+        Element md = Xml.loadFile(AbstractCoreIntegrationTest.class.getResource("kernel/multilingual-metadata.xml"));
 
         String uuid = UUID.randomUUID().toString();
         String parentUuid = UUID.randomUUID().toString();
-        Element md = Xml.loadFile(AbstractCoreIntegrationTest.class.getResource("kernel/multilingual-metadata.xml"));
-        final Element updateMd = dataManager.updateFixedInfo("iso19139", Optional.<Integer>absent(), uuid, md, parentUuid,
-            UpdateDatestamp.YES, context);
+        Element updateMd = dataManager.updateFixedInfo("iso19139", Optional.<Integer>absent(), uuid, md, parentUuid,
+            UpdateDatestamp.YES, serviceContext);
 
         final List<Namespace> namespaces = dataManager.getSchema("iso19139").getNamespaces();
         assertEquals(uuid, Xml.selectString(updateMd, "gmd:fileIdentifier/gco:CharacterString", namespaces));
@@ -218,4 +212,5 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
         assertEquals(0, Xml.selectNodes(updateMd, "*//node()[string-length(@locale) > 3]").size());
         assertEquals(0, Xml.selectNodes(updateMd, "*//gmd:PT_Locale[string-length(@id) > 2]").size());
     }
+
 }
