@@ -46,7 +46,11 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.client.security.RefreshPolicy;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.QueryStringQueryBuilder;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.script.ScriptType;
 import org.elasticsearch.search.sort.FieldSortBuilder;
@@ -781,14 +785,22 @@ public class EsSearchManager implements ISearchManager {
 
     @Override
     public void delete(String txt) throws Exception {
-        client.deleteByQuery(defaultIndex, txt);
-//        client.commit();
+        DeleteByQueryRequest request = new DeleteByQueryRequest();
+        request.indices(defaultIndex);
+        request.setQuery(new QueryStringQueryBuilder(txt));
+        request.setRefresh(true);
+        client.getClient().deleteByQuery(request, RequestOptions.DEFAULT);
     }
 
     @Override
-    public void delete(List<String> txts) throws Exception {
-//        client.deleteById(txts);
-//        client.commit();
+    public void delete(List<Integer> metadataIds) throws Exception {
+        metadataIds.stream().forEach(metadataId -> {
+            try {
+                this.delete(String.format("+id:%d", metadataId));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override

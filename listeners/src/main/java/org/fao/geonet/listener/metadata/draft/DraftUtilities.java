@@ -169,7 +169,7 @@ public class DraftUtilities {
 
             // --- remove metadata
             xmlSerializer.delete(String.valueOf(id), ServiceContext.get());
-            searchManager.delete(id + "");
+            searchManager.delete(String.format("+id:%d", id ));
         } catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, "Couldn't cleanup draft " + draft, e);
         }

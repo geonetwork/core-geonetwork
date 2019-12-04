@@ -94,7 +94,7 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
         }
 
         // --- update search criteria
-        getSearchManager().delete(String.format("+id:%d", metadataId));
+        getSearchManager().delete(String.format("+id:%s", metadataId));
         // _entityManager.flush();
         // _entityManager.clear();
     }

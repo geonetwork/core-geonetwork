@@ -84,6 +84,10 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
     MetadataRepository _metadataRepository;
 
+    @Autowired
+    EsSearchManager searchManager;
+
+
     static void doSetHarvesterDataTest(MetadataRepository metadataRepository, DataManager dataManager, int metadataId) throws Exception {
         AbstractMetadata metadata = metadataRepository.findOne(metadataId);
 
@@ -258,25 +262,18 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
 
-        final EsSearchManager searchManager = context.getBean(EsSearchManager.class);
         final long startMdCount = _metadataRepository.count();
-        final String lang = "eng";
-        final long startIndexDocs = numDocs(searchManager, lang);
-
         int md1 = importMetadata(this, context);
-        final long numDocsPerMd = numDocs(searchManager, lang) - startIndexDocs;
         int md2 = importMetadata(this, context);
 
-
-        assertEquals(startIndexDocs + (2 * numDocsPerMd), numDocs(searchManager, lang));
         assertEquals(startMdCount + 2, _metadataRepository.count());
+        assertEquals(2, searchManager.query(String.format("id:(%d OR %d)",md1, md2), null, 0, 10).getHits().getTotalHits().value);
 
         Specification<Metadata> spec = where((Specification<Metadata>)MetadataSpecs.hasMetadataId(md1)).or((Specification<Metadata>)MetadataSpecs.hasMetadataId(md2));
         _dataManager.batchDeleteMetadataAndUpdateIndex(spec);
 
         assertEquals(startMdCount, _metadataRepository.count());
-
-        assertEquals(startIndexDocs, numDocs(searchManager, lang));
+        assertEquals(0, searchManager.query(String.format("id:%d OR id:%d",md1, md2), null, 0, 10).getHits().getTotalHits().value);
     }
 
     @Test

@@ -90,7 +90,7 @@ public interface ISearchManager {
     /**
      * deletes a list of documents.
      */
-    void delete(List<String> txts) throws Exception;
+    void delete(List<Integer> metadataIds) throws Exception;
 
     long getNumDocs() throws Exception;
 
