@@ -1,6 +1,7 @@
 dist: trusty
 sudo: false
 language: java
+script: mvn clean verify -Pit
 jdk:
   - oraclejdk8
 before_install:
