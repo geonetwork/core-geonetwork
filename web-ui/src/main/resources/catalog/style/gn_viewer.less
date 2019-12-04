@@ -20,8 +20,9 @@
     clip: rect(1px, 1px, 1px, 1px);
     right: 0;
   }
-
-  button:focus [role=tooltip],
+  button:focus {
+    outline: 0;
+  }
   button:hover [role=tooltip] {
     clip: auto;
     right: 3.5em;
@@ -35,7 +36,6 @@
     z-index: 9000;
   }
   .search-container {
-    button:focus [role=tooltip],
     button:hover [role=tooltip] {
       right: auto;
       margin-left: 1.5em;
@@ -45,12 +45,14 @@
   }
   @media screen and (max-height: 768px) {
     .control-tools {
-      button:focus [role=tooltip],
       button:hover [role=tooltip] {
         right: auto;
         margin-left: 1.5em;
         margin-top: -7px;
         padding-top: 9px;
+      }
+      .btn-3d:hover [role=tooltip] {
+        margin-left: -1.7em;
       }
     }
   }
@@ -176,8 +178,25 @@
     top: auto;
     bottom: calc(~"50px + 1em");
     position: fixed;
+    .badge-2d, .badge-3d {
+      background-color: @brand-danger;
+      z-index: 9001;
+    }
+    .badge-left {
+      margin: -30px 0 0 -34px;
+    }
+    .badge-right {
+      margin-top: -30px;
+      display: none;
+    }
     @media screen and (max-height: 768px) {
       left: @viewport-padding;
+      .badge-right {
+        display: inline-block;
+      }
+      .badge-left {
+        display: none;
+      }
     }
   }
 
