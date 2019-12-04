@@ -83,11 +83,7 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractD
             (new TestTask() {
                 @Override
                 public void run() throws Exception {
-                    ServiceContext serviceContext = createContextAndLogAsAdmin();
-
-                    int metadataId = importMetadata(serviceContext);
-
-                    doSetHarvesterDataTest(metadataId);
+                    doSetHarvesterDataTest();
                 }
             });
     }

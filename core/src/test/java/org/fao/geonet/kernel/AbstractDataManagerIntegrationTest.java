@@ -35,7 +35,10 @@ public class AbstractDataManagerIntegrationTest extends AbstractCoreIntegrationT
     @Autowired
     protected MetadataRepository metadataRepository;
 
-    protected void doSetHarvesterDataTest(int metadataId) throws Exception {
+    protected void doSetHarvesterDataTest() throws Exception {
+        ServiceContext serviceContext = createContextAndLogAsAdmin();
+        int metadataId = importMetadata(serviceContext);
+
         AbstractMetadata metadata = metadataRepository.findOne(metadataId);
 
         assertNull(metadata.getHarvestInfo().getUuid());

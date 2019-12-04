@@ -148,19 +148,14 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
     @Test
     public void testSetStatus() throws Exception {
         ServiceContext serviceContext = createContextAndLogAsAdmin();
-
         int metadataId = importMetadata(serviceContext);
-
-        MetadataStatus status = dataManager.getStatus(metadataId);
-
-        assertEquals(null, status);
+        assertEquals(null, dataManager.getStatus(metadataId));
 
         ISODate changeDate = new ISODate();
         String changeMessage = "Set to draft";
         dataManager.setStatus(serviceContext, metadataId, 0, changeDate, changeMessage);
 
         MetadataStatus loadedStatus = dataManager.getStatus(metadataId);
-
         assertEquals(changeDate, loadedStatus.getId().getChangeDate());
         assertEquals(changeMessage, loadedStatus.getChangeMessage());
         assertEquals(0, loadedStatus.getStatusValue().getId());
@@ -171,11 +166,7 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
 
     @Test
     public void testSetHarvesterData() throws Exception {
-        ServiceContext serviceContext = createContextAndLogAsAdmin();
-
-        int metadataId = importMetadata(serviceContext);
-
-        doSetHarvesterDataTest(metadataId);
+        doSetHarvesterDataTest();
     }
 
     @Test
