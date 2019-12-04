@@ -475,12 +475,32 @@
 
   [gn-localisation-input] {
     .dropdown-menu {
+      top: calc(~"100% - 2px");
+      width: auto;
+      max-width: 85vw;
       padding-bottom: 0;
       border-radius: 0;
       .list-group-item {
         border-radius: 0;
         border-left: 0;
         border-right: 0;
+        a {
+          display: block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 85vw;
+          min-width: auto;
+          @media (max-width: @screen-xs-max) {
+            em {
+              display: block;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 85vw;
+            }
+          }
+        }
       }
     }
   }
