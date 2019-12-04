@@ -196,7 +196,7 @@ public class Link implements Serializable {
         linkStatus.setLink(this);
         this.linkStatus.add(linkStatus);
         this.lastState = convertStatusToState(linkStatus);
-        this.lastCheck = linkStatus.getcheckDate();
+        this.lastCheck = linkStatus.getCheckDate();
     }
 
     private Integer convertStatusToState(LinkStatus lastStatus) {
