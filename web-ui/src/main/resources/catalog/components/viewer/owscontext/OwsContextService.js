@@ -263,6 +263,7 @@
                         olLayer.background = true;
                         olLayer.set('group', layer_.group);
                         bgLayers[idx - 1] = olLayer;
+                        console.log( idx, bgLayers)
 
                         if (loadingLayer.get('bgLayer')) {
                           map.getLayers().setAt(0, olLayer);
@@ -288,7 +289,7 @@
                     loadingLayer.set('bgLayer', true);
                   }
 
-                  var layerIndex = bgLayers.push(loadingLayer) - 1;
+                  var layerIndex = bgLayers.push(loadingLayer);
                   var p = self.createLayer(layer, map, 'do not add');
 
                   (function(idx, loadingLayer) {
