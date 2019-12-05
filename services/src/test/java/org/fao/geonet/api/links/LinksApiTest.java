@@ -41,6 +41,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
@@ -56,8 +57,12 @@ import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class LinksApiTest extends AbstractServiceIntegrationTest {
 
@@ -115,13 +120,12 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
             .session(httpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$[0].url").value(equalTo("http://services.sandre.eaufrance.fr/geo/ouvrage")))
-            // FIXME: Should return one metadata related to that URL.
-            .andExpect(jsonPath("$[0].records", hasSize(1)))
-            .andExpect(jsonPath("$[0].records[0].metadataId").value(equalTo(this.id)))
-            .andExpect(jsonPath("$[0].records[0].metadataUuid").value(equalTo(md.getUuid())));;
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(jsonPath("$.content", hasSize(1)))
+            .andExpect(jsonPath("$.content[0].url").value(equalTo("http://services.sandre.eaufrance.fr/geo/ouvrage")))
+            .andExpect(jsonPath("$.content[0].records", hasSize(1)))
+            .andExpect(jsonPath("$.content[0].records[0].metadataId").value(equalTo(this.id)))
+            .andExpect(jsonPath("$.content[0].records[0].metadataUuid").value(equalTo(md.getUuid())));;
 
         this.mockMvc.perform(delete("/srv/api/records/links")
             .session(httpSession)
