@@ -146,9 +146,10 @@
           }
           overlay.setPosition(coordinate);
           $(overlay.getElement()).show();
-        }, this, function(layer) {
-          return layer.get('getinfo');
-        });
+        }.bind(this),  {
+          layerFilter: function(layer) {
+            return layer.get('getinfo');
+        }});
         if (!f) {
           hidetimer = $timeout(function() {
             $(div).hide();

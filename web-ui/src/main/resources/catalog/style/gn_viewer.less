@@ -475,12 +475,32 @@
 
   [gn-localisation-input] {
     .dropdown-menu {
+      top: calc(~"100% - 2px");
+      width: auto;
+      max-width: 85vw;
       padding-bottom: 0;
       border-radius: 0;
       .list-group-item {
         border-radius: 0;
         border-left: 0;
         border-right: 0;
+        a {
+          display: block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 85vw;
+          min-width: auto;
+          @media (max-width: @screen-xs-max) {
+            em {
+              display: block;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 85vw;
+            }
+          }
+        }
       }
     }
   }
@@ -810,4 +830,22 @@ gn-geometry-tool .btn-group {
   line-height: 1em;
   color: white;
   pointer-events: none;
+}
+
+// attribution mixin
+.gn-attribution() {
+  bottom: 4px;
+  right: auto;
+  left: 4px;
+  height: auto;
+  padding: 5px;
+  border-radius: 0;
+  ul {
+    font-size: 1rem;
+    padding-left: 0;
+    padding-right: 10px;
+    li {
+      white-space: nowrap;
+    }
+  }
 }
