@@ -45,8 +45,9 @@
      */
     var overlayCanvas = document.createElement('canvas');
     overlayCanvas.style.position = 'absolute';
+    overlayCanvas.style.width = '100%';
+    overlayCanvas.style.height = '100%';
     var overlayLayer = new ol.layer.Layer({
-      className: 'abcd',
       render: function() {
         // print rectangle might not be ready if config is loading
         if (!printRectangle) {
@@ -54,11 +55,12 @@
         }
 
         var size = $scope.map.getSize();
-        overlayCanvas.width = size[0];
-        overlayCanvas.height = size[1];
-        var ctx = overlayCanvas.getContext('2d');
         var height = size[1] * ol.has.DEVICE_PIXEL_RATIO;
         var width = size[0] * ol.has.DEVICE_PIXEL_RATIO;
+        overlayCanvas.width = width;
+        overlayCanvas.height = height;
+        var ctx = overlayCanvas.getContext('2d');
+        
 
         var minx, miny, maxx, maxy;
         minx = printRectangle[0], miny = printRectangle[1],
