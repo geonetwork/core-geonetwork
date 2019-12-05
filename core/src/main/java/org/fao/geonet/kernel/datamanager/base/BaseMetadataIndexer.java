@@ -23,8 +23,6 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
@@ -86,8 +84,6 @@ import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -186,13 +182,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         }
 
         // Remove records from the index
-        searchManager.delete(Lists.transform(idsOfMetadataToDelete, new Function<Integer, String>() {
-            @Nullable
-            @Override
-            public String apply(@Nonnull Integer input) {
-                return input.toString();
-            }
-        }));
+        searchManager.delete(idsOfMetadataToDelete);
 
         // Remove records from the database
         metadataManager.deleteAll(specification);

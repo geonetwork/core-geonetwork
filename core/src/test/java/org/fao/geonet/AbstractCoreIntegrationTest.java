@@ -25,9 +25,12 @@ package org.fao.geonet;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
+import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import jeeves.server.sources.ServiceRequest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
@@ -60,6 +63,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,14 +80,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import jeeves.constants.ConfigFile;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.sources.ServiceRequest;
 
 import static java.lang.Math.round;
 import static org.junit.Assert.assertTrue;

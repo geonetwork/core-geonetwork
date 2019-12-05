@@ -44,6 +44,7 @@ import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
@@ -222,7 +223,7 @@ public class EsRestClient implements InitializingBean {
         }
 
         BulkRequest request = new BulkRequest();
-
+        request.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
         Iterator iterator = docs.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, String> entry = (Map.Entry) iterator.next();
@@ -375,6 +376,7 @@ public class EsRestClient implements InitializingBean {
         }
 
         DeleteByQueryRequest request = new DeleteByQueryRequest();
+        request.setRefresh(true);
         request.indices(index);
         request.setQuery(new QueryStringQueryBuilder(query));
 
