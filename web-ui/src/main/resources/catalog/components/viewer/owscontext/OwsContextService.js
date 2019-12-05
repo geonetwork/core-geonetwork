@@ -263,7 +263,6 @@
                         olLayer.background = true;
                         olLayer.set('group', layer_.group);
                         bgLayers[idx - 1] = olLayer;
-                        console.log( idx, bgLayers)
 
                         if (loadingLayer.get('bgLayer')) {
                           map.getLayers().setAt(0, olLayer);
