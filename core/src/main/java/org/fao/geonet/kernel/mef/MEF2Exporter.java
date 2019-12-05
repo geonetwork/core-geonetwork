@@ -209,36 +209,6 @@ class MEF2Exporter {
                                 )))
                         ))
                     )));
-                    csvBuilder.append('"').append(cleanForCsv(mdSchema)).append("\";\"").
-                    append(cleanUUID).append("\";\"").
-                    append(cleanForCsv(id)).append("\";\"").
-                    append(mdType.toString()).append("\";\"").
-                    append(cleanForCsv(isHarvested)).append("\";\"").
-                    append(cleanForCsv(mdTitle)).append("\";\"").
-                    append(cleanForCsv(mdAbstract)).append("\"\n");
-
-                    body.addContent(new Element("div").setAttribute("class", "entry").addContent(Arrays.asList(
-                        new Element("h4").setAttribute("class", "title").addContent(
-                            new Element("a").setAttribute("href", uuid).setText(cleanXml(mdTitle))),
-                        new Element("p").setAttribute("class", "abstract").setText(cleanXml(mdAbstract)),
-                        new Element("table").setAttribute("class", "table").addContent(Arrays.asList(
-                            new Element("thead").addContent(
-                                new Element("tr").addContent(Arrays.asList(
-                                    new Element("th").setText("ID"),
-                                    new Element("th").setText("UUID"),
-                                    new Element("th").setText("Type"),
-                                    new Element("th").setText("isHarvested")
-                                ))),
-                            new Element("tbody").addContent(
-                                new Element("tr").addContent(Arrays.asList(
-                                    new Element("td").setAttribute("class", "id").setText(id),
-                                    new Element("td").setAttribute("class", "uuid").setText(xmlContentEscaper().escape
-                                        (uuid)),
-                                    new Element("td").setAttribute("class", "type").setText(mdType.toString()),
-                                    new Element("td").setAttribute("class", "isHarvested").setText(isHarvested)
-                                )))
-                        ))
-                    )));
                     createMetadataFolder(context, md, zipFs, skipUUID, stylePath,
                     format, resolveXlink, removeXlinkAttribute, addSchemaLocation);                } catch (Throwable t) {
                     if (skipError) {
