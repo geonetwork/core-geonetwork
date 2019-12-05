@@ -309,6 +309,7 @@
         },
         loadMap: function (map, md) {
           gnOwsContextService.loadContextFromUrl(map.url, viewerMap);
+          gnSearchLocation.setMap();
         }
       };
 

@@ -14,7 +14,7 @@
       <div class="gn-md-thumbnail">
         <a href="">
           <div class="gn-img-thumbnail"
-               ng-click="resultviewFns.loadMap(maps[0], md)"
+               ng-click="resultviewFns && resultviewFns.loadMap ? resultviewFns.loadMap(maps[0], md) : loadMap(maps[0], md)"
                ng-style="{ 'background-image': md.getThumbnails().list[0].url && 'url(' + md.getThumbnails().list[0].url + ')' }">
           </div>
         </a>
