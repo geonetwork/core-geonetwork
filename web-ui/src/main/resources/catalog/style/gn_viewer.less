@@ -20,6 +20,7 @@
     clip: rect(1px, 1px, 1px, 1px);
     right: 0;
   }
+  button:focus [role=tooltip],
   button:focus {
     outline: 0;
   }
@@ -36,6 +37,7 @@
     z-index: 9000;
   }
   .search-container {
+    button:focus [role=tooltip],
     button:hover [role=tooltip] {
       right: auto;
       margin-left: 1.5em;
@@ -45,12 +47,14 @@
   }
   @media screen and (max-height: 768px) {
     .control-tools {
+      button:focus [role=tooltip],
       button:hover [role=tooltip] {
         right: auto;
         margin-left: 1.5em;
         margin-top: -7px;
         padding-top: 9px;
       }
+      .btn-3d:focus [role=tooltip],
       .btn-3d:hover [role=tooltip] {
         margin-left: -1.7em;
       }
