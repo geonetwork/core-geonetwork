@@ -44,8 +44,8 @@
     'gnPopup',
     '$http',
     '$q',
-    'ngeoDecorateInteraction',
-    function(gnHttp, gnNcWms, gnPopup, $http, $q, ngeoDecorateInteraction) {
+    'olDecorateInteraction',
+    function(gnHttp, gnNcWms, gnPopup, $http, $q, olDecorateInteraction) {
       return {
         restrict: 'A',
         scope: {
@@ -138,7 +138,7 @@
                 });
               }, this);
 
-            ngeoDecorateInteraction(drawInteraction);
+            olDecorateInteraction(drawInteraction);
             map.addInteraction(drawInteraction);
           };
           var disableInteractionWatchFn = function(nv, ov) {

@@ -198,7 +198,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
         boolean keepXlinkAttributes = true;
         boolean forEditing = false;
         boolean withValidationErrors = false;
-        Element metadataBeforeAnyChanges = metadataManager.getMetadata(context, id, forEditing,
+        Element metadataBeforeAnyChanges = metadataManager.getMetadata(context, id, forEditing, false,
             withValidationErrors, keepXlinkAttributes);
         context.getUserSession().setProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id, metadataBeforeAnyChanges);
         return Integer.valueOf(id);
@@ -548,7 +548,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @SuppressWarnings("unchecked")
     @Override
     public Element getMetadataNoInfo(ServiceContext srvContext, String id) throws Exception {
-        Element md = metadataManager.getMetadata(srvContext, id, false, false, false);
+        Element md = metadataManager.getMetadata(srvContext, id, false, true, false, false);
         md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
 
         // Drop Geonet namespace declaration. It may be contained
@@ -684,7 +684,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     private void manageThumbnail(ServiceContext context, String id, boolean small, Element env, String styleSheet,
                                  boolean indexAfterChange) throws Exception {
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
-        Element md = context.getBean(IMetadataManager.class).getMetadata(context, id, forEditing, withValidationErrors,
+        Element md = context.getBean(IMetadataManager.class).getMetadata(context, id, forEditing, false, withValidationErrors,
             keepXlinkAttributes);
 
         if (md == null)

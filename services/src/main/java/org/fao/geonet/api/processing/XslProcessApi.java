@@ -147,16 +147,6 @@ public class XslProcessApi {
             required = false
         )
             String bucket,
-        @ApiParam(
-            value = ApiParams.API_PARAM_UPDATE_DATESTAMP,
-            required = false,
-            defaultValue = "true"
-        )
-        @RequestParam(
-            required = false,
-            defaultValue = "true"
-        )
-            boolean updateDateStamp,
         @ApiParam(value = "Append documents before processing",
             required = false,
             example = "false")
@@ -209,13 +199,13 @@ public class XslProcessApi {
                     // Save processed metadata
                     if (isText) {
                         output.append(XslProcessUtils.processAsText(ApiUtils.createServiceContext(request),
-                            id, process, true,
+                            id, process, false,
                             xslProcessingReport, siteURL, request.getParameterMap())
                         );
                     } else {
                         Element record = XslProcessUtils.process(ApiUtils.createServiceContext(request),
-                            id, process, true, true,
-                            updateDateStamp, xslProcessingReport, siteURL, request.getParameterMap());
+                            id, process, false, false,
+                            false, xslProcessingReport, siteURL, request.getParameterMap());
                         if (record != null) {
                             preview.addContent(record.detach());
                         }

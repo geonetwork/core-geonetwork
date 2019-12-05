@@ -1,4 +1,5 @@
 <div class="context">
+  <a href="" class="hidden download-element"></a>
   <form class="form-horizontal clearfix"
         role="form"
         data-ng-controller="gnsMapSearchController"
@@ -42,15 +43,13 @@
   <div class="btn-group" role="group">
     <a class="btn btn-default"
         data-ng-click="save($event)"
-        title="{{'downloadContext'|translate}}"
-        download="{{mapFileName}}.xml">
+        title="{{'downloadContext'|translate}}">
       <i class="fa fa-file-code-o"></i>&nbsp;
       <span data-translate="">saveMapAsContext</span>
     </a>
     <a class="btn btn-default"
         data-ng-if="isExportMapAsImageEnabled"
-        data-ng-click="saveMapAsImage($event)"
-        download="{{mapFileName}}.png">
+        data-ng-click="saveMapAsImage($event)">
       <i class="fa fa-file-image-o"></i>&nbsp;
       <span data-translate="">saveMapAsImage</span>
     </a>

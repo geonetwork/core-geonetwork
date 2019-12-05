@@ -114,6 +114,12 @@
                   sosLinkDetails</span>
           </div>
 
+          <div data-ng-switch-when="ESRI:REST">
+            <span data-translate=""
+                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                  esriRestLinkDetails</span>
+          </div>
+
           <div data-ng-switch-when="WCS">
             <p class="text-muted">
             <span data-translate=""

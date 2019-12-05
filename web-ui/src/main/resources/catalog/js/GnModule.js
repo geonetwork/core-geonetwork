@@ -42,6 +42,7 @@
   goog.require('gn_search_manager');
   goog.require('gn_search_sextant_commonconfig');
   goog.require('gn_utility');
+  goog.require('gn_openlayers');
 
   /**
    * GnModule just manage angular injection with
@@ -67,6 +68,7 @@
     'gn_alert',
     'gn_admin_menu',
     'gn_cors_interceptor',
+    'gn_openlayers',
     'gn_indexingtask'
   ]);
 

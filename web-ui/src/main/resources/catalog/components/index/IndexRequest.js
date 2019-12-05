@@ -220,7 +220,7 @@
       } else {
         defer.reject(r);
       }
-    });
+    }.bind(this));
     return defer.promise;
   };
 

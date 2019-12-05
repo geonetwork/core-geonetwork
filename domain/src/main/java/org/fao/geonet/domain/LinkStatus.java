@@ -151,6 +151,7 @@ public class LinkStatus extends GeonetEntity implements Comparable<LinkStatus> {
      *
      * @return The moment that the check completed.
      */
+
     @AttributeOverride(name = "dateAndTime",
         column = @Column(name = "checkDate", length = 30))
     public ISODate getCheckDate() {

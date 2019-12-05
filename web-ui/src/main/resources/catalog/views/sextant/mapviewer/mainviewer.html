@@ -4,7 +4,7 @@
 
     <sxt-tab-switcher />
   </div>
-  <div id="map" ngeo-map="map" class="map"></div>
+  <div id="map" ol-map="map" class="map"></div>
   <div gn-gfi="" dismiss=".popover" map="map"></div>
   <gn-features-tables gn-features-tables-map="map"
     gn-active="isContainerOpened()"></gn-features-tables>
@@ -231,9 +231,9 @@
             <div class="alert alert-warning hidden-print" translate>measure_instruction</div>
             <dl class="dl-horizontal">
               <dt>{{'Distance' | translate}}</dt>
-              <dd>{{measureObj.distance | measure}}</dd>
+              <dd>{{measureObj.distance}}</dd>
               <dt>{{'Surface' | translate}}</dt>
-              <dd>{{measureObj.surface | measure:'area':['km&sup2', ' m&sup2']}}</dd>
+              <dd ng-bind-html="measureObj.surface"></dd>
             </dl>
           </div>
         </div>

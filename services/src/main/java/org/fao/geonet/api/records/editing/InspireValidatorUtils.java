@@ -42,6 +42,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -57,7 +58,6 @@ import org.springframework.http.client.ClientHttpResponse;
 import com.google.common.base.Function;
 import com.google.common.io.CharStreams;
 
-import javassist.NotFoundException;
 import jeeves.server.context.ServiceContext;
 
 // Utility class to access methods in Inspire Service.
@@ -375,13 +375,13 @@ public class InspireValidatorUtils {
 
             } else if (response.getStatusCode().value() == 404) {
 
-                throw new NotFoundException("Test not found");
+                throw new ResourceNotFoundException("Test not found");
 
             } else {
                 Log.warning(Log.SERVICE, "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for "
                         + TestRuns_URL + "?view=progress");
             }
-        } catch (NotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             throw e;
         } catch (Exception e) {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
@@ -400,7 +400,6 @@ public class InspireValidatorUtils {
      *
      * @param endPoint the end point
      * @param testId the test id
-     * @param client the client (optional)
      * @return the string
      * @throws Exception
      */
@@ -435,7 +434,7 @@ public class InspireValidatorUtils {
 
             } else if (response.getStatusCode().value() == 404) {
 
-                throw new NotFoundException("Test not found");
+                throw new ResourceNotFoundException("Test not found");
 
             } else {
                 Log.warning(Log.SERVICE, "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for "

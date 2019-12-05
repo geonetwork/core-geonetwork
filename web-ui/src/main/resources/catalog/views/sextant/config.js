@@ -13,6 +13,9 @@
   module.value('baselayerTemplateURL', '../../catalog/views/sextant/templates/baselayer.html');
   module.value('kmlimportTemplateURL', '../../catalog/views/sextant/templates/kmlimport.html');
 
+  module.value('gnTplResultlistLinksbtn',
+    '../../catalog/views/default/directives/partials/linksbtn.html');
+
   module.run([
     'gnSearchSettings',
     'gnViewerSettings',

@@ -3,7 +3,7 @@
 @btn-link-disabled-color: #707070;
 @dropdown-link-disabled-color: #707070;
 
-[data-gn-map-field] > [ngeo-map] {
+[data-gn-map-field] > [ol-map] {
   border: 1px solid #ccc;
   border-radius: 3px;
   right: 0;
@@ -33,8 +33,20 @@
   left: 0px;
   right: 0px;
   .ol-attribution {
+    bottom: 1em;
     right: auto;
-    left: .5em;
+    left: 1em;
+    height: auto;
+    padding: 5px;
+    border-radius: 0;
+    ul {
+      font-size: 1rem;
+      padding-left: 0;
+      padding-right: 10px;
+      li {
+        white-space: nowrap;
+      }
+    }
     button {
       background-color: @brand-primary;
     }
@@ -44,6 +56,7 @@
   }
 
   .panel-tools {
+    max-height: ~"calc(100% - 2em - @{gn-bottombar-height} + 3px)";
     .panel-heading {
       background-color: transparent;
     }
@@ -107,15 +120,32 @@
       }
     }
   }
+  gn-features-tables, .gn-viewer-info-pane {
+    bottom: calc(~"@{gn-bottombar-height} - 3px");
+    .gn-features-table {
+      box-shadow: none;
+    }
+  }
 }
 
 // minimap on search results
 .gn-search-map {
-  [ngeo-map] {
+  [ol-map] {
     background: @body-bg;
     .ol-attribution {
-      li, a {
-        font-size: 10px;
+      bottom: 4px;
+      right: auto;
+      left: 4px;
+      height: auto;
+      padding: 5px;
+      border-radius: 0;
+      ul {
+        font-size: 1rem;
+        padding-left: 0;
+        padding-right: 10px;
+        li {
+          white-space: nowrap;
+        }
       }
     }
   }

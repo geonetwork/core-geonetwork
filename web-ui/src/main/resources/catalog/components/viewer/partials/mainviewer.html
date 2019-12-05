@@ -1,7 +1,7 @@
 <div class="wrapper" data-ng-controller="gnViewerController as ctrl">
 
   <div id="map"
-       ngeo-map="map"
+       ol-map="map"
        class="map"
        gn-vector-feature-tool-tip="map">
 
@@ -276,9 +276,9 @@
         <div class="text-muted hidden-print" translate>measure_instruction</div>
         <dl class="dl-horizontal">
           <dt>{{'Distance' | translate}}</dt>
-          <dd>{{measureObj.distance | measure}}</dd>
+          <dd>{{measureObj.distance}}</dd>
           <dt>{{'Surface' | translate}}</dt>
-          <dd>{{measureObj.surface | measure:'area':['km&sup2', ' m&sup2']}}</dd>
+          <dd data-ng-bind-html="measureObj.surface"></dd>
         </dl>
       </div>
     </div>

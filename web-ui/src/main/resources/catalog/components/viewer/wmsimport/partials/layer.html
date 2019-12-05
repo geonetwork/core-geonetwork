@@ -20,15 +20,15 @@
       <div class="flex-col">
         <div class="gn-layer-actions"
              data-ng-if="!isParentNode && member.Style.length > 1">
-          <div ngeo-popover
-               ngeo-popover-placement="bottom">
-            <a ngeo-popover-anchor role="button"
+          <div gn-popover
+               gn-popover-placement="bottom">
+            <a gn-popover-anchor role="button"
                tabindex="0"
                class="fa fa-paint-brush">
               <i class="fa fa-fw fa-caret-down"></i>
             </a>
 
-            <div ngeo-popover-content>
+            <div gn-popover-content>
               <div data-gn-layer-styles="member.Style"
                    data-gn-layer-styles-on-click="addLayer(style)"/>
             </div>

@@ -39,8 +39,8 @@
    * on the feature count in the viewport
    */
   module.factory('sxtCompositeLayer', [
-    '$http', 'ngeoDecorateLayer', '$translate', 'gnHeatmapService', 'gnIndexRequestManager', '$filter',
-    function($http, ngeoDecorateLayer, $translate, gnHeatmapService, gnIndexRequestManager, $filter) {
+    '$http', 'olDecorateLayer', '$translate', 'gnHeatmapService', 'gnIndexRequestManager', '$filter',
+    function($http, olDecorateLayer, $translate, gnHeatmapService, gnIndexRequestManager, $filter) {
       var BUFFER_RATIO = 1;
       var indexObject = gnIndexRequestManager.register('WfsFilter', 'compositeLayer');
       var GeoJSON = new ol.format.GeoJSON();
@@ -61,7 +61,7 @@
           group.set('originalWms', layer);
           group.set('tooltipsVisible', false);
           group.getSource = function() { return false; };
-          ngeoDecorateLayer(group);
+          olDecorateLayer(group);
 
           // add to map instead of WMS
           map.getLayers().remove(layer);
@@ -260,10 +260,10 @@
                   featureHit = true;
                 }
                 return true;
-              },
-              undefined,
-              function (layer) {
-                return layer === tooltipLayer || layer === heatmapLayer;
+              }, {
+                layerFilter: function (layer) {
+                  return layer === tooltipLayer || layer === heatmapLayer;
+                }
               });
 
             if (!heatmapHit) {

@@ -4,13 +4,13 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javassist.NotFoundException;
 import jeeves.server.context.ServiceContext;
 
 public class InspireValidatorUtilsTest extends AbstractServiceIntegrationTest {
@@ -66,7 +66,7 @@ public class InspireValidatorUtilsTest extends AbstractServiceIntegrationTest {
                 // Valid but not found test ID
                 inspireValidatorUtils.isReady(context, URL, "IED123456789012345678901234567890123");
                 assertEquals("No exception!", "NotFoundException", "No Exception");
-            } catch (NotFoundException e) {
+            } catch (ResourceNotFoundException e) {
                 // RIGHT EXCEPTION
             } catch (Exception e) {
                 assertEquals("Wrong exception.", "NotFoundException", "Exception");

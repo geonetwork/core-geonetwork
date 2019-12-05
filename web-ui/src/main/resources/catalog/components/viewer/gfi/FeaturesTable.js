@@ -137,18 +137,12 @@
               }
               var feature = this.loader.getFeatureFromRow(row);
               if (feature && feature.getGeometry()) {
-                var pan = ol.animation.pan({
-                  duration: 500,
-                  source: this.map.getView().getCenter()
-                });
-                this.map.beforeRender(pan);
                 this.map.getView().fit(
                     feature.getGeometry(),
                     this.map.getSize(),
-                    { minResolution: 40 }
+                    { minResolution: 40, duration: 500 }
                 );
               }
-
             }.bind(this),
             showExport: true,
             exportTypes: ['csv'],

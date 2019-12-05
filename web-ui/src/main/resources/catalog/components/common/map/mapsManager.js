@@ -28,8 +28,7 @@
 
 
   var module = angular.module('gn_maps_manager', [
-    'gn_ows',
-    'ngeo'
+    'gn_ows'
   ]);
 
   var configProjections = function(projectionConfig) {
@@ -40,6 +39,7 @@
           try {
             // definition and set it's extent.
             proj4.defs(p.code, p.def);
+            ol.proj.proj4.register(proj4);
           } catch (e) {
             console.error("Trying to use incorrectly defined projection '" + p.code +
               "'. Please update definitions on Admin > Settings.");

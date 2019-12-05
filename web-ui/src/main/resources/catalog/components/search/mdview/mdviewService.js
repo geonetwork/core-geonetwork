@@ -88,7 +88,7 @@
         angular.extend(md, {
           links: md.getLinksByType('LINK'),
           downloads: md.getLinksByType('DOWNLOAD'),
-          layers: md.getLinksByType('OGC', 'kml'),
+          layers: md.getLinksByType('OGC', 'kml', 'ESRI:REST'),
           contacts: md.getContacts(),
           overviews: md.getThumbnails() ? md.getThumbnails().list : undefined
         });

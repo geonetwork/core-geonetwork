@@ -48,7 +48,7 @@
         'gnOwsCapabilities',
         'gnSearchSettings',
         'gnViewerSettings',
-        'ngeoDecorateLayer',
+        'olDecorateLayer',
         'gnSearchLocation',
         'gnOwsContextService',
         'gnWfsService',
@@ -56,7 +56,7 @@
         '$filter',
         'gnExternalViewer',
         function(gnMap, gnOwsCapabilities, gnSearchSettings, gnViewerSettings,
-            ngeoDecorateLayer, gnSearchLocation, gnOwsContextService,
+            olDecorateLayer, gnSearchLocation, gnOwsContextService,
             gnWfsService, gnAlertService, $filter, gnExternalViewer) {
 
           this.configure = function(options) {
@@ -80,7 +80,7 @@
           };
 
           var addWMSToMap = gnViewerSettings.resultviewFns.addMdLayerToMap;
-
+          var addEsriRestToMap = gnViewerSettings.resultviewFns.addMdLayerToMap;
 
           var addWFSToMap = function(link, md) {
             var url = $filter('gnLocalized')(link.url) || link.url;
@@ -208,6 +208,11 @@
               iconClass: 'fa-globe',
               label: 'addToMap',
               action: addWFSToMap
+            },
+            'ESRI:REST' : {
+              iconClass: 'fa-globe',
+              label: 'addToMap',
+              action: addEsriRestToMap
             },
             'ATOM' : {
               iconClass: 'fa-globe',
@@ -350,6 +355,8 @@
                 } else {
                   return 'WMSSERVICE';
                 }
+              } else if (protocolOrType.match(/esri/i)) {
+                return 'ESRI:REST';
               } else if (protocolOrType.match(/wmts/i)) {
                 return 'WMTS';
               } else if (protocolOrType.match(/tms/i)) {
