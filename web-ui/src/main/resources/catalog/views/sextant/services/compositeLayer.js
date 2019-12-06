@@ -458,7 +458,6 @@
             result += currentAttribute;
           }
           return '<table>' +
-            '<tr><th>Nom</th><th>Valeur</th></tr>' +
             result +
             '</table>';
         },
