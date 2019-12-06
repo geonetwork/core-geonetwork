@@ -62,8 +62,8 @@
 
         // data precision is deduced from current zoom view
         var geohashLength = 2;
-        if (zoom > 3) { geohashLength = 3; }
-        if (zoom > 5) { geohashLength = 4; }
+        if (zoom > 3.3) { geohashLength = 3; }
+        if (zoom > 5.6) { geohashLength = 4; }
 
         // viewbox filter
         var topLeft = ol.proj.toLonLat(ol.extent.getTopLeft(extent));
