@@ -514,15 +514,15 @@
       });
 
       viewerMap.get('creationPromise').then(function() {
-        //Fix change view contraints
-        //TODO: Wait for fix in ol3: https://github.com/openlayers/ol3/issues/4265
+        // apply extent constraint if any
         if(mapsConfig.extent) {
           var view = viewerMap.getView();
-          view.on('change:center', function(e) {
-            if(!ol.extent.containsCoordinate(mapsConfig.extent, view.getCenter())) {
-              view.setCenter(view.constrainCenter(view.getCenter()));
-            }
-          });
+          viewerMap.setView(new ol.View({
+            center: view.getCenter(),
+            resolution: view.getResolution(),
+            projection: view.getProjection(),
+            extent: mapsConfig.extent
+          }));
         }
       });
 
