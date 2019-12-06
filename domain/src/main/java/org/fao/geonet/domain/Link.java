@@ -70,6 +70,7 @@ public class Link implements Serializable {
     private Set<MetadataLink> records = new HashSet<>();
     private Set<LinkStatus> linkStatus = new TreeSet<>();
     private Integer lastState = 0;
+    private ISODate lastCheck;
 
     /**
      * Get the id of the link.
@@ -152,6 +153,14 @@ public class Link implements Serializable {
         this.lastState = lastState;
     }
 
+    public ISODate getLastCheck() {
+        return lastCheck;
+    }
+
+    public void setLastCheck(ISODate lastCheck) {
+        this.lastCheck = lastCheck;
+    }
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
         mappedBy = "link",
         orphanRemoval = true)
@@ -187,6 +196,7 @@ public class Link implements Serializable {
         linkStatus.setLink(this);
         this.linkStatus.add(linkStatus);
         this.lastState = convertStatusToState(linkStatus);
+        this.lastCheck = linkStatus.getCheckDate();
     }
 
     private Integer convertStatusToState(LinkStatus lastStatus) {

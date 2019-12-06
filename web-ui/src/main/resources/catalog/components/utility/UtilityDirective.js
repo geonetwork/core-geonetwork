@@ -488,8 +488,8 @@
       };
     }]);
 
-  module.directive('gnHumanizeTime', ['gnGlobalSettings',
-    function(gnGlobalSettings) {
+  module.directive('gnHumanizeTime', ['gnGlobalSettings', 'gnHumanizeTimeService',
+    function(gnGlobalSettings, gnHumanizeTimeService) {
       return {
         restrict: 'A',
         template: '<span title="{{title}}">{{value}}</span>',
@@ -502,25 +502,10 @@
           var useFromNowSetting = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
           scope.$watch('date', function(originalDate) {
             if (originalDate) {
-              // Moment will properly parse YYYY, YYYY-MM,
-              // YYYY-MM-DDTHH:mm:ss which are the formats
-              // used in the common metadata standards.
-              // By the way check Z which may be used in GML times
-              var date = null;
-              if (originalDate.match('[Zz]$') !== null) {
-                date = moment(originalDate, 'YYYY-MM-DDtHH-mm-SSSZ');
-              } else {
-                date = moment(originalDate);
-              }
-              if (date.isValid()) {
-                var fromNow = date.fromNow();
-                var formattedDate = scope.format ?
-                    date.format(scope.format) :
-                    date.toString();
-                scope.value = scope.fromNow !== undefined && useFromNowSetting ?
-                    fromNow : formattedDate;
-                scope.title = scope.fromNow !== undefined && useFromNowSetting ?
-                    formattedDate : fromNow;
+              var attempt = gnHumanizeTimeService(originalDate, scope.format, scope.fromNow !== undefined)
+              if (attempt !== undefined) {
+                scope.value = attempt.value;
+                scope.title = attempt.title;
               }
             }
           });

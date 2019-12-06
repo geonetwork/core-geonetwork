@@ -67,7 +67,7 @@ public class StatusApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json"))
             .session(this.mockHttpSession))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$", hasSize(statusValueCount.intValue())));
     }
 }

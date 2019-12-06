@@ -32,9 +32,11 @@ import org.fao.geonet.domain.LinkStatus;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.ClientHttpResponse;
+import sun.net.ftp.FtpLoginException;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.net.URL;
 
 public class UrlChecker {
 
@@ -57,10 +59,31 @@ public class UrlChecker {
     protected GeonetHttpRequestFactory requestFactory;
 
     public LinkStatus getUrlStatus(String url) {
-        return getUrlStatus(url, 5);
+        try {
+            if (url.startsWith("ftp")) {
+                return getFTPStatus(url);
+            }
+            return getUrlStatus(url, 5);
+        } catch (Exception e) {
+            return buildExceptionStatus(e);
+        }
     }
 
-    private LinkStatus getUrlStatus(String url, int tryNumber) {
+    private LinkStatus getFTPStatus(String url) throws IOException {
+        LinkStatus linkStatus = new LinkStatus();
+        linkStatus.setFailing(false);
+        try {
+            new URL(url).openStream().close();
+            linkStatus.setStatusValue("OK");
+            linkStatus.setStatusInfo("new URL(url).openStream() success.");
+        } catch (FtpLoginException e) {
+            linkStatus.setStatusValue("Need username/password");
+            linkStatus.setStatusInfo("new URL(url).openStream() need username/password.");
+        }
+        return linkStatus;
+    }
+
+    private LinkStatus getUrlStatus(String url, int tryNumber) throws IOException {
         if (tryNumber < 1) {
             return buildTooManyRedirectStatus();
         }
@@ -72,8 +95,6 @@ public class UrlChecker {
                 return getUrlStatus(response.getHeaders().getFirst("Location"), tryNumber - 1);
             }
             return buildStatus(response, !statusCode.is2xxSuccessful());
-        } catch (IOException e) {
-            return buildIOExceptionStatus(e);
         }
     }
 
@@ -103,7 +124,7 @@ public class UrlChecker {
         return linkStatus;
     }
 
-    private LinkStatus buildIOExceptionStatus(IOException e) {
+    private LinkStatus buildExceptionStatus(Exception e) {
         LinkStatus linkStatus = new LinkStatus();
         linkStatus.setStatusValue("4XX");
         linkStatus.setStatusInfo(e.getMessage());

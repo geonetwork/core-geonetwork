@@ -75,7 +75,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
     @Test
@@ -91,7 +91,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$[*].name", hasItem("GUEST")))
             .andExpect(jsonPath("$[*].name", hasItem("all")))
             .andExpect(jsonPath("$[*].name", hasItem("intranet")))
-            .andExpect(content().contentType("application/json")).andReturn();
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING)).andReturn();
 
         System.out.println(result.getResponse().getContentAsString());
     }
@@ -107,7 +107,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name", is("sample")))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
 
@@ -125,7 +125,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(2)))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
     @Test
@@ -185,7 +185,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
     @Test
@@ -209,7 +209,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(put("/srv/api/groups/" + groupToUpdate.getId())
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -239,7 +239,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(put("/srv/api/groups/" + groupToUpdate.getId())
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404));
@@ -270,7 +270,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(put("/srv/api/groups")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(201));
@@ -305,7 +305,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(put("/srv/api/groups")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
