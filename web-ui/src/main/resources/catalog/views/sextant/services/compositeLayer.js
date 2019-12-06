@@ -292,11 +292,14 @@
           });
 
           function refresh() {
-            me.requestCount(featureType, map)
+            me.requestCount(featureType, map, layer)
               .then(function (count) {
                 if (count > heatmapMinCount) {
                   layer.setVisible(false);
-                  gnHeatmapService.requestHeatmapData(featureType, map)
+                  gnHeatmapService.requestHeatmapData(
+                    featureType,
+                    map,
+                    layer.get('indexObject').requestParams.qParams)
                     .then(function (cells) {
                       // add cells as features
                       heatmapSource.clear();
@@ -328,7 +331,7 @@
           refresh();
         },
 
-        getQueryObject: function(featureType, map) {
+        getQueryObject: function(featureType, map, layer) {
           var bufferedSize = map.getSize().map(function (value) {
             return value * BUFFER_RATIO;
           });
@@ -347,34 +350,44 @@
           topLeft[1] = Math.min(Math.max(topLeft[1], -90), 90);
           bottomRight[0] = topLeft[0] + viewWidth;
           bottomRight[1] = Math.min(Math.max(bottomRight[1], -90), 90);
+          var query = '*:*';
+          if (layer && layer.get('indexObject') && layer.get('indexObject').requestParams.qParams) {
+            query = layer.get('indexObject').buildQParam_({
+              params: layer.get('indexObject').requestParams.qParams,
+              any: null,
+              geometry: null
+            });
+          }
+            return {
+              query: {
+                bool: {
+                  must: [{
+                    query_string: {
+                      query: query
+                    }
 
-          return {
-            query: {
-              bool: {
-                must: [{
-                  match_all: {}
-                }, {
-                  match_phrase: {
-                    featureTypeId: {
-                      query: encodeURIComponent(featureType)
+                  }, {
+                    match_phrase: {
+                      featureTypeId: {
+                        query: encodeURIComponent(featureType)
+                      }
                     }
-                  }
-                }, {
-                  geo_bounding_box: {
-                    location: {
-                      top_left: topLeft,
-                      bottom_right: bottomRight
+                  }, {
+                    geo_bounding_box: {
+                      location: {
+                        top_left: topLeft,
+                        bottom_right: bottomRight
+                      }
                     }
-                  }
-                }]
+                  }]
+                }
               }
-            }
-          };
+            };
         },
 
-        requestCount: function (featureType, map) {
-          var reqParams = this.getQueryObject(featureType, map);
 
+        requestCount: function (featureType, map, layer) {
+          var reqParams = this.getQueryObject(featureType, map, layer);
           // trigger search on ES
           var url = indexObject.ES_URL.replace('_search', '_count');
           return $http.post(url, reqParams)
