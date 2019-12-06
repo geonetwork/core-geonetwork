@@ -250,7 +250,7 @@
                     isFirstBgLayer = true;
                     loadingLayer.set('bgLayer', true);
                   }
-                  var layerIndex = bgLayers.push(loadingLayer);
+                  var layerIndex = bgLayers.push(loadingLayer) - 1;
 
                   // Specific sextant api
                   // Settings are not from XSL so bing key is not yet known
@@ -262,7 +262,7 @@
                         olLayer.displayInLayerManager = false;
                         olLayer.background = true;
                         olLayer.set('group', layer_.group);
-                        bgLayers[idx - 1] = olLayer;
+                        bgLayers[idx] = olLayer;
 
                         if (loadingLayer.get('bgLayer')) {
                           map.getLayers().setAt(0, olLayer);
@@ -288,7 +288,7 @@
                     loadingLayer.set('bgLayer', true);
                   }
 
-                  var layerIndex = bgLayers.push(loadingLayer);
+                  var layerIndex = bgLayers.push(loadingLayer) - 1;
                   var p = self.createLayer(layer, map, 'do not add');
 
                   (function(idx, loadingLayer) {
@@ -296,7 +296,7 @@
                       if (!layer) {
                         return;
                       }
-                      bgLayers[idx - 1] = layer;
+                      bgLayers[idx] = layer;
 
                       layer.displayInLayerManager = false;
                       layer.background = true;
@@ -413,8 +413,8 @@
                   type: 'danger'});
               }
 
-              this.loadContext(r.data, map, additionalLayers);
-            }.bind(this), function(r) {
+              self.loadContext(r.data, map, additionalLayers);
+            }, function(r) {
               var msg = $translate.instant('mapLoadError', {
                 url: url
               });
