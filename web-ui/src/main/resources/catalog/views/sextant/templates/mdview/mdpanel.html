@@ -1,83 +1,92 @@
 <div class="panel panel-default metadata" sxt-fix-mdlinks="">
   <div class="panel-heading">
-    <div class="pull-right gn-links" style="margin-right: 34px;">
 
-      <!--admin button-->
-      <div class="btn-group md-actions" ng-if="::user.canEditRecord(md)">
-        <button type="button" class="btn btn-default dropdown-toggle"
-                data-toggle="dropdown"
-                title="{{::'toAdmin' | translate}}">
-          <i class="fa fa-gear"></i>
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-          <li>
-            <!-- Force CERSAT record to use UI in english. -->
-            <a ng-show="md.standardName === 'ISO 19115-3 - CERSAT'" ng-href="{{::gnUrl}}../eng/catalog.edit#/metadata/{{::md['geonet:info'].id}}" target="_blank">
-              <i class="fa fa-pencil"></i>
-              <span translate>edit</span>
-            </a>
-            <a ng-hide="md.standardName === 'ISO 19115-3 - CERSAT'" ng-href="{{::gnUrl}}catalog.edit#/metadata/{{::md['geonet:info'].id}}" target="_blank">
-              <i class="fa fa-pencil"></i>
-              <span translate>edit</span>
-            </a>
-          </li>
+    <div class="container">
 
-          <li data-ng-if="::(user.profile != 'Editor')"><a ng-click="mdService.deleteMd(md)">
-            <i class="fa fa-trash-o"></i><span
-            translate>delete</span></a>
-          </li>
-          <li data-ng-if="::(user.profile == 'Editor')" class="disabled"><a href="">
-            <i class="fa fa-trash-o"></i><span
-            translate>delete</span></a>
-          </li>
+      <div class="row gn-md-view-header">
 
-          <li><a ng-href="" data-ng-click="mdService.duplicate(md)">
-            <i class="fa fa-copy"></i><span
-            translate>duplicate</span></a>
-          </li>
-          <li><a ng-href="" data-ng-click="mdService.createChild(md)">
-            <i class="fa fa-sitemap"></i><span translate>createChild</span></a>
-          </li>
+        <div class="col-md-8 gn-title" title="{{md.title || md.defaultTitle}}">
+          <i class="fa" data-ng-class="md.icon.cls"
+             title="{{md.icon.title | translate}}"></i>
+          {{md.title || md.defaultTitle}}
+        </div>
 
-          <li data-ng-if="::(user.profile != 'Editor')">
-            <a ng-href=""
-               data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i
-              class="fa fa-key"></i><span translate>privileges</span></a></li>
-          <li data-ng-if="::(user.profile == 'Editor')" class="disabled"><a ng-href="">
-            <i class="fa fa-key"></i><span
-            translate>privileges</span></a></li>
+        <div class="col-md-4 gn-links pull-right text-right">
 
-          <li data-ng-if="::(md.isWorkflowEnabled() && !cantStatus)">
-            <a href=""
-               data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow')"><i
-              class="fa fa-bell"></i>&nbsp;<span data-translate="">updateStatus</span></a>
-          </li>
-          <li data-ng-if="::(md.isWorkflowEnabled() && cantStatus)" class="disabled">
-            <a href="" data-ng-click=""><i
-              class="fa fa-bell"></i>&nbsp;<span data-translate="">updateStatus</span></a>
-          </li>
+          <!--admin button-->
+          <div class="btn-group md-actions" ng-if="::user.canEditRecord(md)">
+            <button type="button" class="btn btn-default dropdown-toggle"
+                    data-toggle="dropdown"
+                    title="{{::'toAdmin' | translate}}">
+              <i class="fa fa-gear"></i>
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li>
+                <!-- Force CERSAT record to use UI in english. -->
+                <a ng-show="md.standardName === 'ISO 19115-3 - CERSAT'" ng-href="{{::gnUrl}}../eng/catalog.edit#/metadata/{{::md['geonet:info'].id}}" target="_blank">
+                  <i class="fa fa-pencil"></i>
+                  <span translate>edit</span>
+                </a>
+                <a ng-hide="md.standardName === 'ISO 19115-3 - CERSAT'" ng-href="{{::gnUrl}}catalog.edit#/metadata/{{::md['geonet:info'].id}}" target="_blank">
+                  <i class="fa fa-pencil"></i>
+                  <span translate>edit</span>
+                </a>
+              </li>
 
-          <li><a href="" data-ng-if="::!md.isWorkflowEnabled()"
-                 data-ng-click="mdService.startWorkflow(md, getCatScope())">
-            <i class="fa fa-bell"></i>&nbsp;<span
-            data-translate="">enableWorkflow</span></a></li>
-        </ul>
+              <li data-ng-if="::(user.profile != 'Editor')"><a ng-click="mdService.deleteMd(md)">
+                <i class="fa fa-trash-o"></i><span
+                translate>delete</span></a>
+              </li>
+              <li data-ng-if="::(user.profile == 'Editor')" class="disabled"><a href="">
+                <i class="fa fa-trash-o"></i><span
+                translate>delete</span></a>
+              </li>
+
+              <li><a ng-href="" data-ng-click="mdService.duplicate(md)">
+                <i class="fa fa-copy"></i><span
+                translate>duplicate</span></a>
+              </li>
+              <li><a ng-href="" data-ng-click="mdService.createChild(md)">
+                <i class="fa fa-sitemap"></i><span translate>createChild</span></a>
+              </li>
+
+              <li data-ng-if="::(user.profile != 'Editor')">
+                <a ng-href=""
+                   data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i
+                  class="fa fa-key"></i><span translate>privileges</span></a></li>
+              <li data-ng-if="::(user.profile == 'Editor')" class="disabled"><a ng-href="">
+                <i class="fa fa-key"></i><span
+                translate>privileges</span></a></li>
+
+              <li data-ng-if="::(md.isWorkflowEnabled() && !cantStatus)">
+                <a href=""
+                   data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow')"><i
+                  class="fa fa-bell"></i>&nbsp;<span data-translate="">updateStatus</span></a>
+              </li>
+              <li data-ng-if="::(md.isWorkflowEnabled() && cantStatus)" class="disabled">
+                <a href="" data-ng-click=""><i
+                  class="fa fa-bell"></i>&nbsp;<span data-translate="">updateStatus</span></a>
+              </li>
+
+              <li><a href="" data-ng-if="::!md.isWorkflowEnabled()"
+                     data-ng-click="mdService.startWorkflow(md, getCatScope())">
+                <i class="fa fa-bell"></i>&nbsp;<span
+                data-translate="">enableWorkflow</span></a></li>
+            </ul>
+          </div>
+
+          <div sxt-md-actions-menu="md"></div>
+
+          <button class="btn btn-default" ng-click="dismiss()">
+            <i class="fa fa-share fa-flip-horizontal"></i>&nbsp;
+            <span translate>sxtBack</span>
+          </button>&nbsp;
+
+        </div>
+
       </div>
-
-      <div sxt-md-actions-menu="md"></div>
-
-      <button class="btn btn-default" ng-click="dismiss()">
-        <i class="fa fa-share fa-flip-horizontal"></i>&nbsp;
-        <span translate>sxtBack</span>
-      </button>&nbsp;
-
     </div>
-    <span class="gn-title">
-      <i class="pull-left fa" data-ng-class="md.icon.cls"
-         title="{{md.icon.title | translate}}"></i>&nbsp;
-      {{md.title || md.defaultTitle}}
-    </span>
   </div>
   <div class="panel-body"></div>
 </div>
