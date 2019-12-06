@@ -132,7 +132,8 @@
             scope.dismiss = gnSearchSettings.dismissMdView;
           }
           unRegister = scope.$on('locationBackToSearchFromMdview', function() {
-            scope.dismiss();
+            unRegister();
+            element.remove();
           });
 
           // Sextant specific: modify all relative links in the formatter output
