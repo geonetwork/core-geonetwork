@@ -30,7 +30,8 @@
     <jsSource webappPath="/catalog/templates/"/>
     <cssSource webappPath="/catalog/views/"/>
     <cssSource webappPath="/catalog/style/"/>
-    <cssSource webappPath="/catalog/lib/bootstrap-table/dist"/>
+    <!-- the bs-table css is imported in a less file in Sextant so it should not be included in Wro4j build
+    <cssSource webappPath="/catalog/lib/bootstrap-table/dist"/> -->
   </require>
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
