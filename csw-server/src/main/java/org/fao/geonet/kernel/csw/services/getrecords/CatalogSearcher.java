@@ -550,9 +550,9 @@ public class CatalogSearcher implements MetadataRecordSelector {
             Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
         }
 
-        try {
-            // Rewrite the drilldown query to a query that can be used by the search logger
-            Query loggerQuery = _query.rewrite(sm.getIndexReader(_lang.presentationLanguage, _searchToken).indexReader);
+        try (IndexAndTaxonomy indexReader = sm.getIndexReader(_lang.presentationLanguage, _searchToken)) {
+            // Rewrite the drilldown query to a query that can be used by the search logger;
+            Query loggerQuery = _query.rewrite(indexReader.indexReader);
             LuceneSearcher.logSearch(context, config, loggerQuery, numHits, _sort, geomWkt, sm);
         } catch (Throwable x) {
             Log.warning(Geonet.SEARCH_ENGINE, "Error rewriting Lucene query: " + _query);
