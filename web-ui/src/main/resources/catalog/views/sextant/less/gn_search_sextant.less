@@ -1144,12 +1144,19 @@ to a common CSS class?
       object-fit: contain;
       max-width: 100%;
       max-height: 100%;
-      width: auto;
-      height: auto;
     }
+
     height: 250px;
-    .extent {
-      height: 235px;
+
+    // center thumbnail/extent vertically, ignoring <br> elements
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 0;
+
+    & > .extent {
+      max-height: 100%;
+      max-width: 100%;
     }
   }
   section.gn-md-side-associated {
