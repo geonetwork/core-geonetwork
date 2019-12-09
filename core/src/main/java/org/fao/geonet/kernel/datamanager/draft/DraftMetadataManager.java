@@ -80,7 +80,7 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
                 long countDraft =  metadataDraftRepository.count((Specification<MetadataDraft>) MetadataSpecs.hasMetadataUuid(findOne.getUuid()));
 
                 if (countDraft > 0) {
-                    throw new Exception("The metadata " + metadataId + " has a draft version. Delete it first to remove the published version.");
+                    throw new Exception("The metadata " + findOne.getUuid() + " has a draft version. Cancel the modification to be able to remove the approved version.");
                 }
 
             }
