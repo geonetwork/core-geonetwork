@@ -22,6 +22,7 @@
 
 package org.fao.geonet.kernel;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.exceptions.TermNotFoundException;
@@ -359,7 +360,7 @@ public class Thesaurus {
         String namespaceGml = "http://www.opengis.net/gml#";
         String namespace = keyword.getNameSpaceCode();
 
-        if (namespace.equals("#")) {
+        if (StringUtils.isBlank(namespace) || namespace.equals("#")) {
             namespace = this.defaultNamespace;
         }
 
