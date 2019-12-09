@@ -314,32 +314,28 @@
     </xsl:for-each>
 
 
-    <xsl:for-each select="gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent">
-      ,"temporalCoverage": "<xsl:value-of select="concat(
-                                                  gml:TimePeriod/gml:beginPosition|gml320:TimePeriod/gml320:beginPosition,
-                                                  '/',
-                                                  gml:TimePeriod/gml:endPosition|gml320:TimePeriod/gml320:endPosition
-      )"/>"
+    
+      ,"temporalCoverage": [<xsl:for-each 
+        select="gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent">"<xsl:value-of 
+          select="concat(gml:TimePeriod/gml:beginPosition|gml320:TimePeriod/gml320:beginPosition,'/',
+            gml:TimePeriod/gml:endPosition|gml320:TimePeriod/gml320:endPosition
+      )"/>"<xsl:if test="position() != last()">,</xsl:if></xsl:for-each> ]
+
       <!-- TODO: handle
       "temporalCoverage" : "2013-12-19/.."
       "temporalCoverage" : "2008"
       -->
-    </xsl:for-each>
-
-    <xsl:for-each select="gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints">
-      ,"license": <xsl:apply-templates mode="toJsonLDLocalized"
-                                      select="."/>
-    </xsl:for-each>
+    
+      <!-- array of licenses is allowed, not multiple licenses-->
+      ,"license":  [<xsl:for-each 
+        select="gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints">
+          <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
+          <xsl:if test="position() != last()">,</xsl:if></xsl:for-each> ]
 
     <!-- TODO: When a dataset derives from or aggregates several originals, use the isBasedOn property. -->
     <!-- TODO: hasPart -->
 	}
 	</xsl:template>
-
-
-
-
-
 
   <xsl:template name="toJsonLDLocalized"
                 mode="toJsonLDLocalized" match="*">
