@@ -257,11 +257,11 @@
               if (scope.isLayerOceanotron()) {
                 parts = scope.params.TIME.split('/');
                 scope.ncTime.value = {
-                  from: moment(parts[0]).format('DD-MM-YYYY'),
-                  to: moment(parts[1]).format('DD-MM-YYYY')
+                  from: moment.utc(parts[0]).format('DD-MM-YYYY'),
+                  to: moment.utc(parts[1]).format('DD-MM-YYYY')
                 };
               } else if (scope.isLayerNcwms()) {
-                scope.ncTime.value = moment(scope.params.TIME).format('DD-MM-YYYY');
+                scope.ncTime.value = moment.utc(scope.params.TIME).format('DD-MM-YYYY');
               }
             }
 
