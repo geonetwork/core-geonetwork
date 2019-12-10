@@ -231,20 +231,20 @@
 
               // generate bounds for elevation
               if(scope.isLayerOceanotron()) {
-                var parts = elevation.values[0].split('/');
+                var elevParts = elevation.values[0].split('/');
 
                 // range description
-                scope.elevationMin = parseFloat(parts[0]);
-                scope.elevationMax = parseFloat(parts[1]);
+                scope.elevationMin = parseFloat(elevParts[0]);
+                scope.elevationMax = parseFloat(elevParts[1]);
                 scope.elevRange =
                     scope.elevationMin.toFixed(1) + elevation.units + ' / ' +
                     scope.elevationMax.toFixed(1) + elevation.units;
 
                 // initial values
-                parts = scope.params.ELEVATION.split('/');
+                elevParts = scope.params.ELEVATION.split('/');
                 scope.elevation = {
-                  low: parseFloat(parts[0]),
-                  high: parseFloat(parts[1])
+                  low: parseFloat(elevParts[0]),
+                  high: parseFloat(elevParts[1])
                 };
               }
             }
@@ -255,13 +255,13 @@
 
               // initial values
               if (scope.isLayerOceanotron()) {
-                parts = scope.params.TIME.split('/');
+                var dateParts = scope.params.TIME.split('/');
                 scope.ncTime.value = {
-                  from: moment(parts[0]).format('DD-MM-YYYY'),
-                  to: moment(parts[1]).format('DD-MM-YYYY')
+                  from: moment.utc(dateParts[0]).format('DD-MM-YYYY'),
+                  to: moment.utc(dateParts[1]).format('DD-MM-YYYY')
                 };
               } else if (scope.isLayerNcwms()) {
-                scope.ncTime.value = moment(scope.params.TIME).format('DD-MM-YYYY');
+                scope.ncTime.value = moment.utc(scope.params.TIME).format('DD-MM-YYYY');
               }
             }
 

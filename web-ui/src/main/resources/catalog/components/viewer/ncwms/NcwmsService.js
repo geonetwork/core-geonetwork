@@ -130,7 +130,7 @@
         // dates are reformatted from iso8601 string to epoch int
         else {
           layer.get('time').values = layer.get('time').values.map(function(date) {
-            return moment(date).valueOf();
+            return moment.utc(date).valueOf();
           });
         }
       };
@@ -141,8 +141,8 @@
         var palettes = this.parseStyles(layer);
 
         var times = layer.get('time').values;
-        var to = moment(times[times.length - 1]).toISOString();
-        var from = moment(to).subtract(2, 'days').toISOString();
+        var to = moment.utc(times[times.length - 1]).toISOString();
+        var from = moment.utc(to).subtract(2, 'days').toISOString();
 
         var elevParts = layer.get('elevation').values[0].split('/');
 
@@ -448,7 +448,7 @@
       // returns an iso8601 formatted string
       this.getFullTimeValue = function(layer, inputDate) {
         var times = layer.get('time').values;
-        var inputMoment = moment(inputDate, 'DD-MM-YYYY');
+        var inputMoment = moment.utc(inputDate, 'DD-MM-YYYY');
         var diff;
         for (var i = 0; i < times.length; i++) {
           diff = inputMoment.diff(times[i], 'days', true)
@@ -456,7 +456,7 @@
           if ((i === 0 && diff < 0) ||
               (i === times.length - 1 && diff > 0) ||
               Math.abs(diff) < 1) {
-            return moment(times[i]).toISOString();
+            return moment.utc(times[i]).toISOString();
           }
         }
         console.warn('Full time value not found for input date ' + inputDate);
