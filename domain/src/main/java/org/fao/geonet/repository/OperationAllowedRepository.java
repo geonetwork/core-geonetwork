@@ -83,7 +83,6 @@ public interface OperationAllowedRepository extends GeonetRepository<OperationAl
      */
     @Nullable
     OperationAllowed findOneById_GroupIdAndId_MetadataIdAndId_OperationId(int groupId, int metadataId, int operationId);
-   
 
     /**
      * Delete all the {@link OperationAllowed} with the given id in the id component selected by the

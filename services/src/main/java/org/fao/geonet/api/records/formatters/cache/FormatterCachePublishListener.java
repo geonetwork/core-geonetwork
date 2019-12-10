@@ -56,7 +56,7 @@ public class FormatterCachePublishListener implements ApplicationListener<Metada
         final ConfigurableApplicationContext context = ApplicationContextHolder.get();
         final OperationAllowed one = context.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished));
         try {
-            formatterCache.setPublished(metadataId, one != null);
+            formatterCache.setPublished(metadataId, event.getMd().getUuid(), one != null);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

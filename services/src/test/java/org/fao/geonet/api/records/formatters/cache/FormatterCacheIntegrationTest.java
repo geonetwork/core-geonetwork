@@ -100,7 +100,7 @@ public class FormatterCacheIntegrationTest extends AbstractServiceIntegrationTes
         final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(metadataId);
         final OperationAllowed one = operationAllowedRepository.findOne(where(hasMdId).and(isPublished));
         final long changeDate = new Date().getTime();
-        final Key key = new Key(Integer.parseInt(metadataId), "eng", FormatType.html, "full_view", true, FormatterWidth._100);
+        final Key key = new Key(Integer.parseInt(metadataId), "", "eng", FormatType.html, "full_view", true, FormatterWidth._100);
         formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, one != null), true);
 
         if (one != null) {
@@ -133,7 +133,7 @@ public class FormatterCacheIntegrationTest extends AbstractServiceIntegrationTes
     @Test
     public void testUpdatesAfterMetadataDeleted() throws Exception {
         final long changeDate = new Date().getTime();
-        final Key key = new Key(Integer.parseInt(metadataId), "eng", FormatType.html, "full_view", true, FormatterWidth._100);
+        final Key key = new Key(Integer.parseInt(metadataId), "","eng", FormatType.html, "full_view", true, FormatterWidth._100);
         formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, true), true);
 
         metadataManager.deleteMetadata(createServiceContext(), metadataId);

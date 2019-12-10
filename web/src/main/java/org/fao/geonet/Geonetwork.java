@@ -25,7 +25,6 @@ package org.fao.geonet;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
-import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.server.JeevesEngine;
 import jeeves.server.JeevesProxyInfo;
@@ -34,14 +33,24 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.api.site.LogUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Setting;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
 import org.fao.geonet.events.server.ServerStartup;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.inspireatom.InspireAtomType;
 import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
-import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.SvnManager;
+import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.XmlSerializerSvn;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
@@ -55,14 +64,9 @@ import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.lib.DbLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.api.site.LogUtils;
-import org.fao.geonet.api.records.formatters.FormatterApi;
-import org.fao.geonet.api.records.formatters.FormatType;
-import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -82,15 +86,11 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockHttpSession;
-import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
@@ -219,16 +219,16 @@ public class Geonetwork implements ApplicationHandler {
         logger.info("  - SRU...");
 
         try {
-				  String[] configs = { Geonet.File.JZKITAPPLICATIONCONTEXT };
-          ApplicationContext app_context = new  ClassPathXmlApplicationContext( configs, _applicationContext );
+            String[] configs = {Geonet.File.JZKITAPPLICATIONCONTEXT};
+            ApplicationContext app_context = new ClassPathXmlApplicationContext(configs, _applicationContext);
 
-          // to have access to the GN context in spring-managed objects
-          ContextContainer cc = (ContextContainer)_applicationContext.getBean("ContextGateway");
-          cc.setSrvctx(context);
+            // to have access to the GN context in spring-managed objects
+            ContextContainer cc = (ContextContainer) _applicationContext.getBean("ContextGateway");
+            cc.setSrvctx(context);
 
 
         } catch (Exception e) {
-          logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + Util.getStackTrace(e));
+            logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + Util.getStackTrace(e));
         }
 
         //------------------------------------------------------------------------
@@ -406,7 +406,7 @@ public class Geonetwork implements ApplicationHandler {
             createDBHeartBeat(gnContext, dbHeartBeatInitialDelay, dbHeartBeatFixedDelay);
         }
 
-        fillCaches(context);
+        fillJsCache(context);
 
         AbstractEntityListenerManager.setSystemRunning(true);
 
@@ -415,19 +415,17 @@ public class Geonetwork implements ApplicationHandler {
         return gnContext;
     }
 
-    private void fillCaches(final ServiceContext context) {
-        final FormatterApi formatService = context.getBean(FormatterApi.class); // this will initialize the formatter
-
+    public static void fillJsCache(final ServiceContext context) {
         Thread fillCaches = new Thread(new Runnable() {
             @Override
             public void run() {
                 final ServletContext servletContext = context.getServlet().getServletContext();
                 context.setAsThreadLocal();
-                ApplicationContextHolder.set(_applicationContext);
+                ApplicationContextHolder.set(ApplicationContextHolder.get());
                 GeonetWro4jFilter filter = (GeonetWro4jFilter) servletContext.getAttribute(GeonetWro4jFilter.GEONET_WRO4J_FILTER_KEY);
 
                 @SuppressWarnings("unchecked")
-                List<String> wro4jUrls = _applicationContext.getBean("wro4jUrlsToInitialize", List.class);
+                List<String> wro4jUrls = ApplicationContextHolder.get().getBean("wro4jUrlsToInitialize", List.class);
 
                 for (String wro4jUrl : wro4jUrls) {
                     Log.info(Geonet.GEONETWORK, "Initializing the WRO4J group: " + wro4jUrl + " cache");
@@ -439,34 +437,10 @@ public class Geonetwork implements ApplicationHandler {
                         Log.info(Geonet.GEONETWORK, "Error while initializing the WRO4J group: " + wro4jUrl + " cache", t);
                     }
                 }
-
-
-                final Page<Metadata> metadatas = _applicationContext.getBean(MetadataRepository.class).findAll(new PageRequest(0, 1));
-                if (metadatas.getNumberOfElements() > 0) {
-                    Integer mdId = metadatas.getContent().get(0).getId();
-                    context.getUserSession().loginAs(new User().setName("admin").setProfile(Profile.Administrator).setUsername("admin"));
-                    @SuppressWarnings("unchecked")
-                    List<String> formattersToInitialize = _applicationContext.getBean("formattersToInitialize", List.class);
-
-                    for (String formatterName : formattersToInitialize) {
-                        Log.info(Geonet.GEONETWORK, "Initializing the Formatter with id: " + formatterName);
-                        final MockHttpSession servletSession = new MockHttpSession(servletContext);
-                        servletSession.setAttribute(Jeeves.Elem.SESSION,  context.getUserSession());
-                        final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
-                        servletRequest.setSession(servletSession);
-                        final MockHttpServletResponse response = new MockHttpServletResponse();
-                        try {
-                            formatService.exec("eng", FormatType.html.toString(), mdId.toString(), null, formatterName,
-                                Boolean.TRUE.toString(), false, FormatterWidth._100, new ServletWebRequest(servletRequest, response));
-                        } catch (Throwable t) {
-                            Log.info(Geonet.GEONETWORK, "Error while initializing the Formatter with id: " + formatterName, t);
-                        }
-                    }
-                }
             }
         });
         fillCaches.setDaemon(true);
-        fillCaches.setName("Fill Caches Thread");
+        fillCaches.setName("Fill JS cache thread");
         fillCaches.setPriority(Thread.MIN_PRIORITY);
         fillCaches.start();
     }

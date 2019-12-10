@@ -209,7 +209,7 @@ public class InspireValidationApi {
             if (!schema.equals("iso19139")) {
                 try {
                     ServiceContext context = ApiUtils.createServiceContext(request);
-                    Key key = new Key(metadata.getId(), "eng", FormatType.xml, "iso19139", true, FormatterWidth._100);
+                    Key key = new Key(metadata.getId(), metadata.getUuid(), "eng", FormatType.xml, "iso19139", true, FormatterWidth._100);
 
                     final FormatterApi.FormatMetadata formatMetadata =
                         new FormatterApi().new FormatMetadata(context, key, nativeRequest);
