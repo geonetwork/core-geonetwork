@@ -26,6 +26,7 @@ package org.fao.geonet.api.records.editing;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -101,6 +103,8 @@ public class InspireValidatorUtils {
 
     private Map<String, String[]> testsuites;
 
+    private Map<String, String> testsuitesConditions;
+
     public String getDefaultTestSuite() {
         return defaultTestSuite;
     }
@@ -115,6 +119,14 @@ public class InspireValidatorUtils {
 
     public Map getTestsuites() {
         return testsuites;
+    }
+
+    public void setTestsuitesConditions(Map<String, String> testsuitesConditions) {
+        this.testsuitesConditions = testsuitesConditions;
+    }
+
+    public Map getTestsuitesConditions() {
+        return testsuitesConditions;
     }
 
     public InspireValidatorUtils() {
@@ -477,6 +489,18 @@ public class InspireValidatorUtils {
     }
 
     /**
+     * Gets the report url in XML format.
+     *
+     * @param endPoint the end point
+     * @param testId the test id
+     * @return the report url
+     */
+    public static String getReportUrlXML(String endPoint, String testId) {
+
+        return endPoint + TestRuns_URL + "/" + testId + ".xml";
+    }
+
+    /**
      * Submit file.
      *
      * @param record the record
@@ -518,6 +542,40 @@ public class InspireValidatorUtils {
             // client.close();
         }
     }
+
+    public String retrieveReport(ServiceContext context, String endPoint) throws Exception {
+
+        HttpGet request = new HttpGet(endPoint);
+
+        // add request header
+        request.addHeader("User-Agent", USER_AGENT);
+        request.addHeader("Accept", ACCEPT);
+        ClientHttpResponse response = null;
+
+        try {
+            response = this.execute(context, request);
+
+            return IOUtils.toString(response.getBody(), StandardCharsets.UTF_8.name());
+        } catch (Exception e) {
+            Log.warning(Log.SERVICE, "Error calling INSPIRE service to retrieve the result report: " + endPoint, e);
+            throw e;
+        } finally {
+            request.completed();
+            request.releaseConnection();
+            response.close();
+        }
+    }
+
+    public void waitUntilReady(ServiceContext context, String endPoint, String testId) throws Exception {
+        while (true) {
+            if (isReady(context, endPoint, testId)) {
+               return;
+            }
+
+            Thread.sleep(5000);
+        }
+    }
+
 
     /**
      *  Executes the HttpUriRequest

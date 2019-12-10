@@ -110,6 +110,12 @@
           <i class="fa fa-check"></i>&nbsp;<span translate>validate</span>
         </a>
       </li>
+      <li  data-ng-show="!excludePattern.test('validate')"
+           data-ng-if="user.isEditorOrMore() && isInspireValidationEnabled">
+        <a href="" data-ng-click="mdService.validateMdInspire(searchResults.selectionBucket)">
+          <i class="fa fa-check"></i>&nbsp;<span translate>validateInspire</span>
+        </a>
+      </li>
       <li  data-ng-show="!excludePattern.test('delete')"
            data-ng-if="user.isEditorOrMore()">
         <a href="" data-ng-click="mdService.deleteMd(undefined, searchResults.selectionBucket)"
@@ -128,4 +134,6 @@
 
     </ul>
   </div>
+
+
 </div>

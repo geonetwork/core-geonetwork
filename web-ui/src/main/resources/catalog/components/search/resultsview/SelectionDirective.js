@@ -29,10 +29,10 @@
 
   module.directive('gnSelectionWidget', [
     '$translate', 'hotkeys',
-    'gnHttp', 'gnMetadataActions',
+    'gnHttp', 'gnMetadataActions', 'gnConfig',
     'gnSearchSettings', 'gnSearchManagerService',
     function($translate, hotkeys,
-             gnHttp, gnMetadataActions,
+             gnHttp, gnMetadataActions, gnConfig,
              gnSearchSettings, gnSearchManagerService) {
 
       return {
@@ -53,6 +53,10 @@
           scope.mdService = gnMetadataActions;
 
           scope.operationOnSelectionInProgress = false;
+
+          scope.isInspireValidationEnabled =
+            gnConfig[gnConfig.key.isInspireEnabled] &&
+            angular.isString(gnConfig['system.inspire.remotevalidation.url']);
 
           scope.$on('operationOnSelectionStart', function() {
             scope.operationOnSelectionInProgress = true;

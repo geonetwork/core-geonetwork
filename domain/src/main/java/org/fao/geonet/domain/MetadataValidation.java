@@ -24,6 +24,7 @@
 package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.MetadataValidationEntityListenerManager;
+import org.hibernate.annotations.Type;
 
 import javax.annotation.Nonnull;
 import javax.persistence.*;
@@ -45,6 +46,8 @@ public class MetadataValidation extends GeonetEntity {
     private int numFailures = 0;
     private ISODate validationDate = new ISODate();
     private Boolean required = Boolean.TRUE;
+    private String reportUrl;
+    private String reportContent;
 
     /**
      * Return the id object of this entity.
@@ -181,6 +184,29 @@ public class MetadataValidation extends GeonetEntity {
         return this;
     }
 
+    @Column
+    public String getReportUrl() {
+        return reportUrl;
+    }
+
+    public MetadataValidation setReportUrl(String reportUrl) {
+        this.reportUrl = reportUrl;
+        return this;
+    }
+
+    @Column
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Type(type = "org.hibernate.type.StringClobType")
+    public String getReportContent() {
+        return reportContent;
+    }
+
+    public MetadataValidation setReportContent(String reportContent) {
+        this.reportContent = reportContent;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "MetadataValidation{" + id +
@@ -189,6 +215,8 @@ public class MetadataValidation extends GeonetEntity {
             ", numFailures=" + numFailures +
             ", validationDate=" + validationDate +
             ", required=" + required +
+            ", reportUrl=" + reportUrl +
+            ", reportContent=" + reportContent +
             '}';
     }
 }
