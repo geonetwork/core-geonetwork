@@ -81,10 +81,16 @@ public interface PersistentStore {
      * @param metadataId the id of the metadata whose published state may have changed
      * @param published  mark all cached values for this metadata
      */
-    void setPublished(int metadataId, boolean published) throws IOException;
+    void setPublished(int metadataId, String metadataUuid, boolean published) throws IOException;
 
     /**
      * Remove all cached elements from the cache.
      */
     void clear() throws SQLException, IOException;
+
+    /**
+     * Return the size of the cache
+     * @return
+     */
+    long getSize() throws SQLException, IOException;
 }

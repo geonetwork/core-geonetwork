@@ -26,8 +26,12 @@ package org.fao.geonet.api.records.formatters;
 import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.formatters.cache.FormatterCache;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -35,7 +39,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import jeeves.services.ReadWriteController;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import springfox.documentation.annotations.ApiIgnore;
+
+import javax.servlet.http.HttpServletRequest;
+
+import java.util.Map;
+
+import static org.fao.geonet.api.records.formatters.cache.FormatterCache.initializeFormatters;
 
 @RequestMapping(value = {
     "/{portal}/api/formatters",
@@ -48,7 +60,31 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Controller("formatters")
 @ReadWriteController
 public class CacheApi {
+    @Autowired
+    FormatterCache formatterCache;
 
+    @ApiOperation(
+        value = "Get formatter cache info",
+        notes = "",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
+        nickname = "getFormatterCacheInfo")
+    @RequestMapping(
+        value = "/cache",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('Administrator')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Cache info returned."),
+        @ApiResponse(code = 403, message = "Operation not allowed. Only Administrator can access it.")
+    })
+    @ResponseBody
+    public Map<String, String> getFormatterCacheInfo() {
+        return formatterCache.getInfo();
+    }
 
     @ApiOperation(
         value = "Clear formatter cache",
@@ -71,7 +107,33 @@ public class CacheApi {
         @ApiResponse(code = 403, message = "Operation not allowed. Only Administrator can access it.")
     })
     public void clearFormatterCache() throws Exception {
-        FormatterCache formatterCache = ApplicationContextHolder.get().getBean(FormatterCache.class);
         formatterCache.clear();
     }
+
+
+    @ApiOperation(
+        value = "Rebuild landing page cache",
+        notes = "Build cache for public metadata records",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
+        nickname = "rebuildLandingPageCache")
+    @RequestMapping(
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.POST)
+    @PreAuthorize("hasRole('Administrator')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Formatter cache builder process started."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @ResponseBody
+    public ResponseEntity rebuildLandingPageCache(
+        @ApiIgnore
+            HttpServletRequest request
+    ) throws Exception {
+        formatterCache.fillLandingPageCache(ApiUtils.createServiceContext(request));
+        return new ResponseEntity(HttpStatus.CREATED);
+    }
+
 }

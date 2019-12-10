@@ -70,7 +70,7 @@ public class MemoryPersistentStore implements PersistentStore {
     }
 
     @Override
-    public void setPublished(int metadataId, boolean published) {
+    public void setPublished(int metadataId, String metadataUuid, boolean published) {
         for (Map.Entry<Key, StoreInfoAndData> dataEntry : Lists.newArrayList(dataMap.entrySet())) {
             final byte[] data = dataEntry.getValue().data;
             final long changeDate = dataEntry.getValue().getChangeDate();
@@ -81,5 +81,10 @@ public class MemoryPersistentStore implements PersistentStore {
     @Override
     public void clear() {
         this.dataMap.clear();
+    }
+
+    @Override
+    public long getSize() throws SQLException, IOException {
+        return -1;
     }
 }

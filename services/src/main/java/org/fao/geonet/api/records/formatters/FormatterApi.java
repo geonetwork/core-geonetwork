@@ -139,8 +139,6 @@ import springfox.documentation.annotations.ApiIgnore;
 @Controller("recordFormatter")
 @Lazy
 public class FormatterApi extends AbstractFormatService implements ApplicationListener {
-    private static final Set<String> ALLOWED_PARAMETERS = Sets.newHashSet("id", "uuid", "xsl", "skippopularity", "hide_withheld");
-
     @Autowired
     LanguageUtils languageUtils;
 
@@ -296,7 +294,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         Boolean hideWithheld = true;
 //        final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
 //            !context.getBean(AccessManager.class).canEdit(context, resolvedId);
-        Key key = new Key(metadata.getId(), language, formatType, formatterId, hideWithheld, width);
+        Key key = new Key(metadata.getId(), metadataUuid, language, formatType, formatterId, hideWithheld, width);
         final boolean skipPopularityBool = false;
 
         ISODate changeDate = metadata.getDataInfo().getChangeDate();
@@ -418,7 +416,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         FormatterCache formatterCache = ApplicationContextHolder.get().getBean(FormatterCache.class);
 
         String resolvedId = resolveId(id, uuid);
-        Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, true, FormatterWidth._100);
+        Key key = new Key(Integer.parseInt(resolvedId), "", lang, formatType, xslid, true, FormatterWidth._100);
         byte[] bytes = formatterCache.getPublished(key);
 
         if (bytes != null) {
@@ -462,7 +460,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
             !context.getBean(AccessManager.class).canEdit(context, resolvedId);
-        Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, hideWithheld, width);
+        Key key = new Key(Integer.parseInt(resolvedId), "", lang, formatType, xslid, hideWithheld, width);
         final boolean skipPopularityBool = new ParamValue(skipPopularity).toBool();
 
         ISODate changeDate = context.getBean(SearchManager.class).getDocChangeDate(resolvedId);
@@ -524,11 +522,12 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
     private boolean hasNonStandardParameters(NativeWebRequest request) {
         Iterator<String> iter = request.getParameterNames();
+
+        List<String> ALLOWED_PARAMETERS = ApplicationContextHolder.get().getBean("formatterAllowedParameters", List.class);
         while (iter.hasNext()) {
             if (!ALLOWED_PARAMETERS.contains(iter.next())) {
                 return true;
             }
-
         }
         return false;
     }
@@ -827,7 +826,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             Key withheldKey = null;
             FormatMetadata loadWithheld = null;
             if (!key.hideWithheld && isPublishedMd) {
-                withheldKey = new Key(key.mdId, key.lang, key.formatType, key.formatterId, true, key.width);
+                withheldKey = new Key(key.mdId, key.mdUuid, key.lang, key.formatType, key.formatterId, true, key.width);
                 loadWithheld = new FormatMetadata(serviceContext, withheldKey, request);
             }
             return new StoreInfoAndDataLoadResult(bytes, changeDate, isPublishedMd, withheldKey, loadWithheld);

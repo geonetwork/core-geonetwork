@@ -30,14 +30,40 @@ import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-
+import jeeves.constants.Jeeves;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.records.formatters.FormatType;
+import org.fao.geonet.api.records.formatters.FormatterApi;
+import org.fao.geonet.api.records.formatters.FormatterWidth;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
+import org.springframework.web.context.request.ServletWebRequest;
 
+import javax.annotation.Nullable;
+import javax.annotation.PreDestroy;
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
@@ -47,20 +73,20 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import javax.annotation.Nullable;
-import javax.annotation.PreDestroy;
-
 /**
  * Caches Formatter html files in memory (keeping the most recent or most accessed X formatters) and
  * on disk.
  * <p/>
- * The Formatter cache has two caches. <ul> <li> A fast access in-memory cache which is limited to
- * some X records. </li> <li> A persistent cache which keeps a cache of every formatter that has
- * been added to the cache. </li> </ul>
+ * The Formatter cache has two caches.
+ * <ul>
+ *     <li> A fast access in-memory cache which is limited to some X records.</li>
+ *     <li> A persistent cache which keeps a cache of every formatter that has
+ * been added to the cache. </li>
+ * </ul>
  * <p/>
  * When a value is added to the cache the value is added to the in-memory cache and to a queue for
  * writing to the disk. A separate thread is responsible for reading from the queue and writing all
- * the values to the persistent cache.  This allows the value to be written to the request in
+ * the values to the persistent cache. This allows the value to be written to the request in
  * parallel with writing to the cache.
  * <p/>
  * Note: The Persistent cache used can be configured.
@@ -77,12 +103,17 @@ public class FormatterCache {
     @Autowired
     private CacheConfig cacheConfig;
 
+    private final HashMap<String, String> cacheProperties = new HashMap<String, String>();
+
     public FormatterCache(PersistentStore persistentStore, int memoryCacheSize, int maxStoreRequests) {
         this(persistentStore, memoryCacheSize, maxStoreRequests, new ConfigurableCacheConfig());
     }
 
     public FormatterCache(PersistentStore persistentStore, int memoryCacheSize, int maxStoreRequests,
                           CacheConfig cacheConfig, ExecutorService executor) {
+        cacheProperties.put("MEMORY_MAX_SIZE", memoryCacheSize + "");
+        cacheProperties.put("QUEUE_MAX_REQUEST_NUMBER", maxStoreRequests + "");
+
         this.persistentStore = persistentStore;
         this.memoryCache = CacheBuilder.<Key, StoreInfoAndData>newBuilder().
             removalListener(new RemoveFromIndexListener()).
@@ -192,9 +223,12 @@ public class FormatterCache {
             this.mdIdIndex.put(key.mdId, Pair.read(key, (StoreInfoAndData) cached));
             if (writeToStoreInCurrentThread) {
                 createPersistentStoreRunnable(storeRequests, persistentStore).processStoreRequest(Pair.read(key, cached));
+                cacheProperties.put("FILESYSTEM_CACHE_SIZE", persistentStore.getSize() + "");
+
             } else {
                 if (!this.executor.isShutdown()) {
                     this.storeRequests.put(Pair.read(key, cached));
+                    cacheProperties.put("FILESYSTEM_CACHE_SIZE", persistentStore.getSize() + "");
                 }
             }
         } catch (InterruptedException e) {
@@ -245,13 +279,14 @@ public class FormatterCache {
      * Publish or unpublish all cached values related to the given metadata.
      *
      * @param metadataId the id of the metadata whose published state may have changed
+     * @param metadataUuid the uuid of the metadata whose published state may have changed
      * @param published  mark all cached values for this metadata
      */
-    void setPublished(int metadataId, boolean published) throws IOException {
+    void setPublished(int metadataId, String metadataUuid, boolean published) throws IOException {
         final Lock writeLock = lock.writeLock();
         try {
             writeLock.lock();
-            this.persistentStore.setPublished(metadataId, published);
+            this.persistentStore.setPublished(metadataId, metadataUuid, published);
         } finally {
             writeLock.unlock();
         }
@@ -270,6 +305,7 @@ public class FormatterCache {
                 this.memoryCache.invalidate(key);
                 this.persistentStore.remove(key);
             }
+            cacheProperties.put("FILESYSTEM_CACHE_SIZE", persistentStore.getSize() + "");
         } finally {
             writeLock.unlock();
         }
@@ -284,6 +320,7 @@ public class FormatterCache {
             writeLock.lock();
             this.memoryCache.invalidateAll();
             this.persistentStore.clear();
+            cacheProperties.put("FILESYSTEM_CACHE_SIZE", persistentStore.getSize() + "");
         } finally {
             writeLock.unlock();
         }
@@ -294,5 +331,103 @@ public class FormatterCache {
         public void onRemoval(RemovalNotification<Key, StoreInfoAndData> notification) {
             mdIdIndex.remove(notification.getKey().mdId, notification.getValue());
         }
+    }
+
+    public Map<String, String> getInfo() {
+        return cacheProperties;
+    }
+
+    /**
+     * If one record available in the catalogue, init all formatters defined
+     * in formattersToInitialize so they get loaded eg. XSLCache init
+     * @param context
+     */
+    public static void initializeFormatters(final ServiceContext context) {
+        final FormatterApi formatService = context.getBean(FormatterApi.class);
+
+        Thread fillCaches = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final ServletContext servletContext = context.getServlet().getServletContext();
+                context.setAsThreadLocal();
+                final Page<Metadata> metadatas = ApplicationContextHolder.get().getBean(MetadataRepository.class).findAll(new PageRequest(0, 1));
+                if (metadatas.getNumberOfElements() > 0) {
+                    Integer mdId = metadatas.getContent().get(0).getId();
+                    context.getUserSession().loginAs(new User().setName("admin").setProfile(Profile.Administrator).setUsername("admin"));
+                    @SuppressWarnings("unchecked")
+                    List<String> formattersToInitialize = ApplicationContextHolder.get().getBean("formattersToInitialize", List.class);
+
+                    for (String formatterName : formattersToInitialize) {
+                        Log.info(Geonet.GEONETWORK, "Initializing the Formatter with id: " + formatterName);
+                        final MockHttpSession servletSession = new MockHttpSession(servletContext);
+                        servletSession.setAttribute(Jeeves.Elem.SESSION,  context.getUserSession());
+                        final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
+                        servletRequest.setSession(servletSession);
+                        final MockHttpServletResponse response = new MockHttpServletResponse();
+                        try {
+                            formatService.exec("eng", FormatType.html.toString(), mdId.toString(), null, formatterName,
+                                Boolean.TRUE.toString(), false, FormatterWidth._100, new ServletWebRequest(servletRequest, response));
+                        } catch (Throwable t) {
+                            Log.info(Geonet.GEONETWORK, "Error while initializing the Formatter with id: " + formatterName, t);
+                        }
+                    }
+                }
+            }
+        });
+        fillCaches.setDaemon(true);
+        fillCaches.setName("Fill formatter cache thread");
+        fillCaches.setPriority(Thread.MIN_PRIORITY);
+        fillCaches.start();
+    }
+
+
+    /**
+     * Fill the cache of landing pages.
+     *
+     * @param context
+     */
+    public void fillLandingPageCache(final ServiceContext context) {
+        final FormatterApi formatService = ApplicationContextHolder.get().getBean(FormatterApi.class);
+        OperationAllowedRepository operationAllowedRepo = ApplicationContextHolder.get().getBean(OperationAllowedRepository.class);
+        DataManager dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
+        String formatterName = "xsl-view";
+
+        Thread fillCaches = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final ServletContext servletContext = context.getServlet().getServletContext();
+                context.setAsThreadLocal();
+
+                final List<Integer> allPublicRecordIds = operationAllowedRepo.findAllPublicRecordIds();
+
+                final MockHttpSession servletSession = new MockHttpSession(servletContext);
+                servletSession.setAttribute(Jeeves.Elem.SESSION,  context.getUserSession());
+                final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
+                servletRequest.setSession(servletSession);
+                final MockHttpServletResponse response = new MockHttpServletResponse();
+
+                allPublicRecordIds.stream().forEach(r -> {
+                    try {
+                        formatService.getRecordFormattedBy(
+                            MediaType.TEXT_HTML_VALUE,
+                            formatterName,
+                            dataManager.getMetadataUuid(r + ""),
+                            FormatterWidth._100,
+                            null,
+                            "eng",
+                            FormatType.html,
+                            true,
+                            new ServletWebRequest(servletRequest, response),
+                            servletRequest);
+                    } catch (Throwable t) {
+                        Log.info(Geonet.GEONETWORK, "Error while initializing the landing page with id: " + formatterName, t);
+                    }
+                });
+            }
+        });
+        fillCaches.setDaemon(true);
+        fillCaches.setName("Fill formatter cache thread");
+        fillCaches.setPriority(Thread.MIN_PRIORITY);
+        fillCaches.start();
     }
 }
