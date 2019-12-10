@@ -299,7 +299,7 @@
                   gnHeatmapService.requestHeatmapData(
                     featureType,
                     map,
-                    layer.get('indexObject').requestParams.qParams)
+                    me.getQueryParamsFromLayer(layer))
                     .then(function (cells) {
                       // add cells as features
                       heatmapSource.clear();
@@ -312,7 +312,7 @@
                 }
                 if (count <= tooltipMaxCount) {
                   group.set('tooltipsVisible', true);
-                  me.requestFeatures(featureType, map, count).then(
+                  me.requestFeatures(featureType, map, layer, count).then(
                     function (features) {
                       tooltipSource.clear();
                       tooltipSource.addFeatures(features);
@@ -331,7 +331,8 @@
           refresh();
         },
 
-        getQueryObject: function(featureType, map, layer) {
+        getQueryObject: function(featureType, map, layer, params) {
+
           var bufferedSize = map.getSize().map(function (value) {
             return value * BUFFER_RATIO;
           });
@@ -350,56 +351,56 @@
           topLeft[1] = Math.min(Math.max(topLeft[1], -90), 90);
           bottomRight[0] = topLeft[0] + viewWidth;
           bottomRight[1] = Math.min(Math.max(bottomRight[1], -90), 90);
-          var query = '*:*';
+          return {
+            query: {
+              bool: {
+                must: [{
+                  query_string: {
+                    query: params
+                  }
+
+                }, {
+                  match_phrase: {
+                    featureTypeId: {
+                      query: encodeURIComponent(featureType)
+                    }
+                  }
+                }, {
+                  geo_bounding_box: {
+                    location: {
+                      top_left: topLeft,
+                      bottom_right: bottomRight
+                    }
+                  }
+                }]
+              }
+            }
+          };
+        },
+        getQueryParamsFromLayer: function(layer) {
+          var params = '*:*';
           if (layer && layer.get('indexObject') && layer.get('indexObject').requestParams.qParams) {
-            query = layer.get('indexObject').buildQParam_({
+            params = layer.get('indexObject').buildQParam_({
               params: layer.get('indexObject').requestParams.qParams,
               any: null,
               geometry: null
             });
           }
-            return {
-              query: {
-                bool: {
-                  must: [{
-                    query_string: {
-                      query: query
-                    }
-
-                  }, {
-                    match_phrase: {
-                      featureTypeId: {
-                        query: encodeURIComponent(featureType)
-                      }
-                    }
-                  }, {
-                    geo_bounding_box: {
-                      location: {
-                        top_left: topLeft,
-                        bottom_right: bottomRight
-                      }
-                    }
-                  }]
-                }
-              }
-            };
+          return params;
         },
-
-
         requestCount: function (featureType, map, layer) {
-          var reqParams = this.getQueryObject(featureType, map, layer);
+          var reqParams = this.getQueryObject(featureType, map, layer, this.getQueryParamsFromLayer(layer));
           // trigger search on ES
           var url = indexObject.ES_URL.replace('_search', '_count');
           return $http.post(url, reqParams)
             .then(function (response) {
               return response.data.count;
             });
-        },
+          },
 
-        requestFeatures: function (featureType, map, size) {
-          var reqParams = this.getQueryObject(featureType, map);
+        requestFeatures: function (featureType, map, layer, size) {
+          var reqParams = this.getQueryObject(featureType, map, layer, this.getQueryParamsFromLayer(layer));
           reqParams.size = size;
-
           // trigger search on ES
           return $http.post(indexObject.ES_URL, reqParams)
             .then(function (response) {
