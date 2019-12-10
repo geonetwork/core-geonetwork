@@ -197,7 +197,7 @@ public class LinkStatus extends GeonetEntity implements Comparable<LinkStatus> {
      */
     @Column(nullable = true)
     public String getBatchKey() {
-        return statusInfo;
+        return batchKey;
     }
 
     public void setBatchKey(String batchKey) {
