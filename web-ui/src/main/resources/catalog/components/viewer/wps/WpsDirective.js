@@ -181,7 +181,7 @@
                 .getArray()
                 .filter(function(l) {
                   return (l.getVisible() && !l.background); // remove background layers
-                })
+                });
             };
             scope.applyMapLayersToInput = function () {
               if (!scope.applicationProfile || !scope.applicationProfile.inputs) {
@@ -199,8 +199,11 @@
                   scope.emodnetSortKeys = input.sortBy;
                   scope.emodnetSortInputKey = input.identifier;
                   scope.removeAllInputValuesByName(input.identifier);
+                  var count = 0;
                   availableLayers.forEach(function(layerName) {
+                    if (input.maxOccurs && count === input.maxOccurs) { return; }
                     scope.addInputValueByName(input.identifier, layerName);
+                    count += 1;
                   });
                 }
               });
@@ -226,8 +229,6 @@
 
             // call on layerChange
             scope.map.getLayers().on('onlayerchange', scope.applyMapLayersToInput)
-            // call on init
-            scope.applyMapLayersToInput()
             // END specific SEXTANT EMODNET
 
             // get values from wfs filters
@@ -279,12 +280,14 @@
                       var inputName = input.identifier.value;
                       var defaultValue;
                       var wfsFilterValue;
+                      var maxOccurs = input.maxOccurs;
                       // look for input info in app profile
                       if (scope.applicationProfile &&
                       scope.applicationProfile.inputs) {
                         scope.applicationProfile.inputs.forEach(
                         function(input) {
                           if (input.identifier == inputName) {
+                            input.maxOccurs = maxOccurs;
                             defaultValue = input.defaultValue;
                             // check if there is a wfs filter active
                             // & apply value
@@ -430,7 +433,7 @@
                       }
                     }
                     );
-
+                    scope.applyMapLayersToInput()
                     var defaultOutput;
                     var defaultMimeType;
 
