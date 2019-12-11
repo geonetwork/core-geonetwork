@@ -37,6 +37,7 @@ import sun.net.ftp.FtpLoginException;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
 
 public class UrlChecker {
 
@@ -73,7 +74,10 @@ public class UrlChecker {
         LinkStatus linkStatus = new LinkStatus();
         linkStatus.setFailing(false);
         try {
-            new URL(url).openStream().close();
+            URLConnection con = new URL(url).openConnection();
+            con.setConnectTimeout(10000);
+            con.setReadTimeout(10000);
+            con.getInputStream().close();
             linkStatus.setStatusValue("OK");
             linkStatus.setStatusInfo("new URL(url).openStream() success.");
         } catch (FtpLoginException e) {
@@ -106,7 +110,7 @@ public class UrlChecker {
             return response;
         }
         HttpGet get = new HttpGet(url);
-        return requestFactory.execute(get);
+        return requestFactory.execute(get, HTTP_CLIENT_CONFIGURATOR);
     }
 
     private boolean shouldTryGetInsteadOfHead(int statusCode) {
