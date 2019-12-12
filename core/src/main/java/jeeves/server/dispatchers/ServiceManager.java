@@ -613,17 +613,17 @@ public class ServiceManager {
             info("     -> writing xml for : " + req.getService());
 
             //--- this logging is usefull for xml services that are called by javascript code
-            if (isDebug()) debug("Service xml is :\n" + Xml.getString(response));
+            if (isDebug()) {
+                debug("Service xml is :\n" + Xml.getString(response));
+            }
 
             InputMethod in = req.getInputMethod();
             OutputMethod out = req.getOutputMethod();
 
             if (in == InputMethod.SOAP || out == OutputMethod.SOAP) {
-
                 // Did we set up a status code for the response?
                 if (context.getStatusCode() != null) {
-                    ((ServiceRequest) req).setStatusCode(context
-                        .getStatusCode());
+                    ((ServiceRequest) req).setStatusCode(context.getStatusCode());
                 }
 
                 req.beginStream("application/soap+xml; charset=UTF-8", cache);
@@ -632,25 +632,18 @@ public class ServiceManager {
                     response = SOAPUtil.embed(response);
                 }
                 req.write(response);
+            } else if (req.hasJSONOutput()) {
+                req.beginStream("application/json; charset=UTF-8", cache);
+                req.getOutputStream().write(Xml.getJSON(response).getBytes(Constants.ENCODING));
+                req.endStream();
+            } else if (response.getAttribute("redirect") != null) {
+                HttpServletResponse httpServletResponse = ((HttpServiceRequest)req).getHttpServletResponse();
+                httpServletResponse.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+                httpServletResponse.setHeader("Location", response.getAttribute("url").getValue());
+                httpServletResponse.setHeader("Content-type", response.getAttribute("mime-type").getValue());
             } else {
-
-                if (req.hasJSONOutput()) {
-                    req.beginStream("application/json; charset=UTF-8", cache);
-                    req.getOutputStream().write(Xml.getJSON(response).getBytes(Constants.ENCODING));
-                    req.endStream();
-                } else {
-                    if (response.getAttribute("redirect") != null) {
-                        HttpServiceRequest req2 = (HttpServiceRequest) req;
-                        req2.getHttpServletResponse().setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-                        req2.getHttpServletResponse().setHeader("Location", response.getAttribute("url").getValue());
-                        req2.getHttpServletResponse().setHeader("Content-type", response.getAttribute("mime-type").getValue());
-
-                    } else {
-                        req.beginStream("application/xml; charset=UTF-8", cache);
-                        req.write(response);
-
-                    }
-                }
+                req.beginStream("application/xml; charset=UTF-8", cache);
+                req.write(response);
             }
         }
         else if (outPage.isFile()) {
@@ -728,14 +721,10 @@ public class ServiceManager {
                         error(" -> (C) stylesheet : " + styleSheet);
                         error(" -> (C) message : " + e.getMessage());
                         error(" -> (C) exception : " + e.getClass().getSimpleName());
-
                         throw e;
                     }
-
                     info(" -> end transformation for : " + req.getService());
                 }
-
-
             }
             final BinaryFile binaryFile = new BinaryFile(response);
             String contentType = binaryFile.getContentType();
@@ -770,8 +759,7 @@ public class ServiceManager {
             req.beginStream(contentType, cl, contentDisposition, cache);
             BLOB.write(response, req.getOutputStream());
             req.endStream();
-        } else { //--- HTML/XML output
-            //--- build the xml data for the XSL translation
+        } else { //--- HTML/XML output, build the xml data for the XSL translation
 
             Path styleSheet = IO.toPath(outPage.getStyleSheet());
             Element guiElem;
