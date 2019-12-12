@@ -71,8 +71,10 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
@@ -824,14 +826,37 @@ public class ServiceManager {
                             //--- then we set the content-type and output the result
                             // If JSON output requested, run the XSLT transformation and the JSON
                             if (req.hasJSONOutput()) {
-                                Element xsltResponse = null;
-                                TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer
-                                    .class).time();
-                                try {
-                                    //--- first we do the transformation
+
+                                XmlTransformerProxy transformerProxyForJson = new XmlTransformerProxy() {
                                     JDOMResult resXml = new JDOMResult();
-                                    Xml.transform(rootElem, styleSheet, resXml);
-                                    xsltResponse = (Element) resXml.getDocument().getRootElement().detach();
+                                    byte[] toWrite;
+
+                                    @Override
+                                    public String getContentType() {
+                                        return "application/json; charset=UTF-8";
+                                    }
+
+                                    @Override
+                                    public Result getOutputForResult() {
+                                        return resXml;
+                                    }
+
+                                    @Override
+                                    public void closeOutputForResult() throws IOException {
+                                        Element xsltResponse = (Element) resXml.getDocument().getRootElement().detach();
+                                        toWrite = Xml.getJSON(xsltResponse).getBytes(Constants.ENCODING);
+                                    }
+
+                                    @Override
+                                    public byte[] getByteToWrite() {
+                                        return  toWrite;
+                                    }
+                                };
+
+                                TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class).time();
+                                try {
+                                    Xml.transform(rootElem, styleSheet, transformerProxyForJson.getOutputForResult());
+                                    transformerProxyForJson.closeOutputForResult();
                                     info("     -> end transformation for : " + req.getService());
                                 }
                                 catch (Exception e) {
@@ -843,18 +868,41 @@ public class ServiceManager {
                                 } finally {
                                     timerContext.stop();
                                 }
-                                req.beginStream("application/json; charset=UTF-8", cache);
-                                req.getOutputStream().write(Xml.getJSON(xsltResponse).getBytes(Constants.ENCODING));
+                                req.beginStream(transformerProxyForJson.getContentType(), cache);
+                                req.getOutputStream().write(transformerProxyForJson.getByteToWrite());
                                 req.endStream();
                             } else {
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                XmlTransformerProxy transformerProxyForXml = new XmlTransformerProxy() {
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                                    @Override
+                                    public String getContentType() {
+                                        return outPage.getContentType();
+                                    }
+
+                                    @Override
+                                    public Result getOutputForResult() {
+                                        return new StreamResult(baos);
+                                    }
+
+                                    @Override
+                                    public void closeOutputForResult() throws IOException {
+                                        baos.close();
+                                    }
+
+                                    @Override
+                                    public byte[] getByteToWrite() {
+                                        return baos.toByteArray();
+                                    }
+                                };
+
+
                                 TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer
                                     .class).time();
                                 try {
                                     //--- first we do the transformation
-                                    StreamResult resStream = new StreamResult(baos);
-                                    Xml.transform(rootElem, styleSheet, resStream);
-                                    baos.close();
+                                    Xml.transform(rootElem, styleSheet, transformerProxyForXml.getOutputForResult());
+                                    transformerProxyForXml.closeOutputForResult();
                                     info("     -> end transformation for : " + req.getService());
                                 } catch (Exception e) {
                                     error("   -> exception during transformation for : " + req.getService());
@@ -865,8 +913,8 @@ public class ServiceManager {
                                 } finally {
                                     timerContext.stop();
                                 }
-                                req.beginStream(outPage.getContentType(), cache);
-                                req.getOutputStream().write(baos.toByteArray());
+                                req.beginStream(transformerProxyForXml.getContentType(), cache);
+                                req.getOutputStream().write(transformerProxyForXml.getByteToWrite());
                                 req.endStream();
                             }
                         } catch (Exception e) {
@@ -892,9 +940,16 @@ public class ServiceManager {
     //---
     //---------------------------------------------------------------------------
 
-    /**
-     * Takes a service's response and builds the output
-     */
+    interface XmlTransformerProxy {
+
+        String getContentType();
+
+        Result getOutputForResult();
+
+        void closeOutputForResult() throws IOException;
+
+        byte[] getByteToWrite();
+    }
 
     private void dispatchError(ServiceRequest req, ServiceContext context,
                                Element response, ErrorPage outPage, boolean cache) throws Exception {
