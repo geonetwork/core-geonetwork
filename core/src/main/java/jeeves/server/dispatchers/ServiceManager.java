@@ -63,6 +63,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.SOAPUtil;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.transform.JDOMResult;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.persistence.EntityManager;
@@ -70,6 +71,7 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -827,7 +829,17 @@ public class ServiceManager {
                                     .class).time();
                                 try {
                                     //--- first we do the transformation
-                                    xsltResponse = Xml.transform(rootElem, styleSheet);
+                                    JDOMResult resXml = new JDOMResult();
+                                    Xml.transform(rootElem, styleSheet, resXml);
+                                    xsltResponse = (Element) resXml.getDocument().getRootElement().detach();
+                                    info("     -> end transformation for : " + req.getService());
+                                }
+                                catch (Exception e) {
+                                    error("   -> exception during transformation for : " + req.getService());
+                                    error("   ->  (C) stylesheet : " + styleSheet);
+                                    error("   ->  (C) message    : " + e.getMessage());
+                                    error("   ->  (C) exception  : " + e.getClass().getSimpleName());
+                                    throw e;
                                 } finally {
                                     timerContext.stop();
                                 }
@@ -840,7 +852,16 @@ public class ServiceManager {
                                     .class).time();
                                 try {
                                     //--- first we do the transformation
-                                    Xml.transform(rootElem, styleSheet, baos);
+                                    StreamResult resStream = new StreamResult(baos);
+                                    Xml.transform(rootElem, styleSheet, resStream);
+                                    baos.close();
+                                    info("     -> end transformation for : " + req.getService());
+                                } catch (Exception e) {
+                                    error("   -> exception during transformation for : " + req.getService());
+                                    error("   ->  (C) stylesheet : " + styleSheet);
+                                    error("   ->  (C) message    : " + e.getMessage());
+                                    error("   ->  (C) exception  : " + e.getClass().getSimpleName());
+                                    throw e;
                                 } finally {
                                     timerContext.stop();
                                 }
@@ -848,19 +869,10 @@ public class ServiceManager {
                                 req.getOutputStream().write(baos.toByteArray());
                                 req.endStream();
                             }
-                        } catch (EofException e) {
-                            // ignore this.
-                            // it happens because the stream closes by client.
                         } catch (Exception e) {
-                            error("   -> exception during transformation for : " + req.getService());
-                            error("   ->  (C) stylesheet : " + styleSheet);
-                            error("   ->  (C) message    : " + e.getMessage());
-                            error("   ->  (C) exception  : " + e.getClass().getSimpleName());
-
-                            throw e;
+                            error(String.format("error 666, (%s) when (%s).", e.getMessage(), req.getService()));
+                            // ignore this, it happens for example because the stream closes by client.
                         }
-
-                        info("     -> end transformation for : " + req.getService());
                     }
                 }
             }
