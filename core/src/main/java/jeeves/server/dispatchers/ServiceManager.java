@@ -821,114 +821,89 @@ public class ServiceManager {
                     if (!Files.exists(styleSheet))
                         error("     -> stylesheet not found on disk, aborting : " + styleSheet);
                     else {
-                        info("     -> transforming with stylesheet : " + styleSheet);
+                        XmlTransformerProxy xmlTransformerProxy;
+                        if (req.hasJSONOutput()) {
+                            xmlTransformerProxy = new XmlTransformerProxy() {
+                                JDOMResult resXml = new JDOMResult();
+                                byte[] toWrite;
+
+                                @Override
+                                public String getContentType() {
+                                    return "application/json; charset=UTF-8";
+                                }
+
+                                @Override
+                                public Result getOutputForResult() {
+                                    return resXml;
+                                }
+
+                                @Override
+                                public void closeOutputForResult() throws IOException {
+                                    Element xsltResponse = (Element) resXml.getDocument().getRootElement().detach();
+                                    toWrite = Xml.getJSON(xsltResponse).getBytes(Constants.ENCODING);
+                                }
+
+                                @Override
+                                public byte[] getByteToWrite() {
+                                    return  toWrite;
+                                }
+                            };
+
+                        } else {
+                            xmlTransformerProxy = new XmlTransformerProxy() {
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                                @Override
+                                public String getContentType() {
+                                    return outPage.getContentType();
+                                }
+
+                                @Override
+                                public Result getOutputForResult() {
+                                    return new StreamResult(baos);
+                                }
+
+                                @Override
+                                public void closeOutputForResult() throws IOException {
+                                    baos.close();
+                                }
+
+                                @Override
+                                public byte[] getByteToWrite() {
+                                    return baos.toByteArray();
+                                }
+                            };
+                        }
+
+                        TimerContext timerContext =
+                                context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class).time();
                         try {
-                            //--- then we set the content-type and output the result
-                            // If JSON output requested, run the XSLT transformation and the JSON
-                            if (req.hasJSONOutput()) {
-
-                                XmlTransformerProxy transformerProxyForJson = new XmlTransformerProxy() {
-                                    JDOMResult resXml = new JDOMResult();
-                                    byte[] toWrite;
-
-                                    @Override
-                                    public String getContentType() {
-                                        return "application/json; charset=UTF-8";
-                                    }
-
-                                    @Override
-                                    public Result getOutputForResult() {
-                                        return resXml;
-                                    }
-
-                                    @Override
-                                    public void closeOutputForResult() throws IOException {
-                                        Element xsltResponse = (Element) resXml.getDocument().getRootElement().detach();
-                                        toWrite = Xml.getJSON(xsltResponse).getBytes(Constants.ENCODING);
-                                    }
-
-                                    @Override
-                                    public byte[] getByteToWrite() {
-                                        return  toWrite;
-                                    }
-                                };
-
-                                TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class).time();
-                                try {
-                                    Xml.transform(rootElem, styleSheet, transformerProxyForJson.getOutputForResult());
-                                    transformerProxyForJson.closeOutputForResult();
-                                    info("     -> end transformation for : " + req.getService());
-                                }
-                                catch (Exception e) {
-                                    error("   -> exception during transformation for : " + req.getService());
-                                    error("   ->  (C) stylesheet : " + styleSheet);
-                                    error("   ->  (C) message    : " + e.getMessage());
-                                    error("   ->  (C) exception  : " + e.getClass().getSimpleName());
-                                    throw e;
-                                } finally {
-                                    timerContext.stop();
-                                }
-                                req.beginStream(transformerProxyForJson.getContentType(), cache);
-                                req.getOutputStream().write(transformerProxyForJson.getByteToWrite());
-                                req.endStream();
-                            } else {
-                                XmlTransformerProxy transformerProxyForXml = new XmlTransformerProxy() {
-                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-                                    @Override
-                                    public String getContentType() {
-                                        return outPage.getContentType();
-                                    }
-
-                                    @Override
-                                    public Result getOutputForResult() {
-                                        return new StreamResult(baos);
-                                    }
-
-                                    @Override
-                                    public void closeOutputForResult() throws IOException {
-                                        baos.close();
-                                    }
-
-                                    @Override
-                                    public byte[] getByteToWrite() {
-                                        return baos.toByteArray();
-                                    }
-                                };
-
-
-                                TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer
-                                    .class).time();
-                                try {
-                                    //--- first we do the transformation
-                                    Xml.transform(rootElem, styleSheet, transformerProxyForXml.getOutputForResult());
-                                    transformerProxyForXml.closeOutputForResult();
-                                    info("     -> end transformation for : " + req.getService());
-                                } catch (Exception e) {
-                                    error("   -> exception during transformation for : " + req.getService());
-                                    error("   ->  (C) stylesheet : " + styleSheet);
-                                    error("   ->  (C) message    : " + e.getMessage());
-                                    error("   ->  (C) exception  : " + e.getClass().getSimpleName());
-                                    throw e;
-                                } finally {
-                                    timerContext.stop();
-                                }
-                                req.beginStream(transformerProxyForXml.getContentType(), cache);
-                                req.getOutputStream().write(transformerProxyForXml.getByteToWrite());
-                                req.endStream();
-                            }
+                            info("     -> transforming with stylesheet : " + styleSheet);
+                            Xml.transform(rootElem, styleSheet, xmlTransformerProxy.getOutputForResult());
+                            xmlTransformerProxy.closeOutputForResult();
+                            info("     -> end transformation for : " + req.getService());
                         } catch (Exception e) {
-                            error(String.format("error 666, (%s) when (%s).", e.getMessage(), req.getService()));
+                            error("   -> exception during transformation for : " + req.getService());
+                            error("   ->  (C) stylesheet : " + styleSheet);
+                            error("   ->  (C) message    : " + e.getMessage());
+                            error("   ->  (C) exception  : " + e.getClass().getSimpleName());
+                            throw e;
+                        } finally {
+                            timerContext.stop();
+                        }
+                        
+                        try {
+                            req.beginStream(xmlTransformerProxy.getContentType(), cache);
+                            req.getOutputStream().write(xmlTransformerProxy.getByteToWrite());
+                            req.endStream();
+                        } catch (Exception e) {
+                            error(String.format("error outputing transformation for : %s (%s).", req.getService(), e.getMessage()));
                             // ignore this, it happens for example because the stream closes by client.
                         }
                     }
                 }
             }
         }
-
-        //------------------------------------------------------------------------
-        //--- end data stream
-
         info("   -> output ended for : " + req.getService());
 
         return null;
