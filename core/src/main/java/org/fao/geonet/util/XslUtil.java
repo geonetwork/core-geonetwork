@@ -564,7 +564,7 @@ public final class XslUtil {
             }
             /* Triggers when the language can't be matched to a code */
             if (iso2LangCode == null) {
-                Log.error(Geonet.GEONETWORK, "Cannot convert " + iso3LangCode + " to 2 char iso lang code", new Error());
+                Log.error(Geonet.GEONETWORK, "Cannot convert " + iso3LangCode + " to 2 char iso lang code");
                 return iso3LangCode.substring(0, 2);
             } else {
                 return iso2LangCode;
