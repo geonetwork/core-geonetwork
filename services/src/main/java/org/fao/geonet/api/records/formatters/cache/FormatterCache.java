@@ -51,6 +51,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.web.DefaultLanguage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -111,6 +112,7 @@ public class FormatterCache {
 
     private final HashMap<String, String> cacheProperties = new HashMap<String, String>();
     private String landingPageFormatter;
+    private String landingPageLanguage = Geonet.DEFAULT_LANGUAGE;
     private ServiceContext _context;
 
     public FormatterCache(PersistentStore persistentStore, int memoryCacheSize, int maxStoreRequests) {
@@ -342,6 +344,10 @@ public class FormatterCache {
         this._context = context;
     }
 
+    public void setLandingPageLanguage(String landingPageLanguage) {
+        this.landingPageLanguage = landingPageLanguage;
+    }
+
     private class RemoveFromIndexListener implements RemovalListener<Key, StoreInfoAndData> {
         @Override
         public void onRemoval(RemovalNotification<Key, StoreInfoAndData> notification) {
@@ -436,7 +442,7 @@ public class FormatterCache {
                             metadataUtils.getMetadataUuid(r + ""),
                             FormatterWidth._100,
                             null,
-                            "eng",
+                            landingPageLanguage,
                             FormatType.html,
                             true,
                             true,
@@ -487,7 +493,7 @@ public class FormatterCache {
                             metadataUtils.getMetadataUuid(metadataId + ""),
                             FormatterWidth._100,
                             null,
-                            "eng",
+                            landingPageLanguage,
                             FormatType.html,
                             true,
                             true,

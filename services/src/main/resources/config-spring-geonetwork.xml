@@ -148,7 +148,8 @@
     <constructor-arg index="0" ref="fsStore"/>
     <constructor-arg index="1" value="500"/>
     <constructor-arg index="2" value="5000"/>
-    <property name="landingPageFormatter" value="xsl-view"/>
+    <property name="landingPageFormatter" value="\${landingPage.formatter}"/>
+    <property name="landingPageLanguage" value="\${landingPage.language}"/>
     <!--<property name="landingPageFormatterParams">
       <map>
         <entry key="root" value="html"/>
