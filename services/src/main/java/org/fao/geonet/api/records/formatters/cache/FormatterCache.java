@@ -32,16 +32,22 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterApi;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Log;
@@ -104,6 +110,8 @@ public class FormatterCache {
     private CacheConfig cacheConfig;
 
     private final HashMap<String, String> cacheProperties = new HashMap<String, String>();
+    private String landingPageFormatter;
+    private ServiceContext _context;
 
     public FormatterCache(PersistentStore persistentStore, int memoryCacheSize, int maxStoreRequests) {
         this(persistentStore, memoryCacheSize, maxStoreRequests, new ConfigurableCacheConfig());
@@ -326,6 +334,14 @@ public class FormatterCache {
         }
     }
 
+    public void setLandingPageFormatter(String landingPageFormatter) {
+        this.landingPageFormatter = landingPageFormatter;
+    }
+
+    public void setContext(ServiceContext context) {
+        this._context = context;
+    }
+
     private class RemoveFromIndexListener implements RemovalListener<Key, StoreInfoAndData> {
         @Override
         public void onRemoval(RemovalNotification<Key, StoreInfoAndData> notification) {
@@ -381,17 +397,23 @@ public class FormatterCache {
     }
 
 
+    @Autowired
+    OperationAllowedRepository operationAllowedRepo;
+    @Autowired
+    DataManager dataManager;
+    @Autowired
+    IMetadataUtils metadataUtils;
+    @Autowired
+    MetadataRepository metadataRepository;
+    @Autowired
+    FormatterApi formatService;
+
     /**
      * Fill the cache of landing pages.
      *
      * @param context
      */
     public void fillLandingPageCache(final ServiceContext context) {
-        final FormatterApi formatService = ApplicationContextHolder.get().getBean(FormatterApi.class);
-        OperationAllowedRepository operationAllowedRepo = ApplicationContextHolder.get().getBean(OperationAllowedRepository.class);
-        DataManager dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
-        String formatterName = "xsl-view";
-
         Thread fillCaches = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -401,7 +423,7 @@ public class FormatterCache {
                 final List<Integer> allPublicRecordIds = operationAllowedRepo.findAllPublicRecordIds();
 
                 final MockHttpSession servletSession = new MockHttpSession(servletContext);
-                servletSession.setAttribute(Jeeves.Elem.SESSION,  context.getUserSession());
+                servletSession.setAttribute(Jeeves.Elem.SESSION, context.getUserSession());
                 final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
                 servletRequest.setSession(servletSession);
                 final MockHttpServletResponse response = new MockHttpServletResponse();
@@ -410,17 +432,21 @@ public class FormatterCache {
                     try {
                         formatService.getRecordFormattedBy(
                             MediaType.TEXT_HTML_VALUE,
-                            formatterName,
-                            dataManager.getMetadataUuid(r + ""),
+                            landingPageFormatter,
+                            metadataUtils.getMetadataUuid(r + ""),
                             FormatterWidth._100,
                             null,
                             "eng",
                             FormatType.html,
                             true,
+                            true,
+                            false,
                             new ServletWebRequest(servletRequest, response),
                             servletRequest);
                     } catch (Throwable t) {
-                        Log.info(Geonet.GEONETWORK, "Error while initializing the landing page with id: " + formatterName, t);
+                        Log.info(Geonet.GEONETWORK, String.format(
+                            "Error building the landing page with formatter '%s' for record '%s'.",
+                            landingPageFormatter, r), t);
                     }
                 });
             }
@@ -429,5 +455,52 @@ public class FormatterCache {
         fillCaches.setName("Fill formatter cache thread");
         fillCaches.setPriority(Thread.MIN_PRIORITY);
         fillCaches.start();
+    }
+
+    /**
+     * If a landing page formatter is defined, build the landing page
+     * by calling the formatter service. Landing page are only computed
+     * on public records (ie. no template, no private records).
+     * @param metadataId
+     */
+    public void buildLandingPage(int metadataId) {
+        if (_context == null) {
+            return;
+        }
+        if (StringUtils.isNotEmpty(landingPageFormatter)) {
+            final ServletContext servletContext = _context.getServlet().getServletContext();
+            _context.setAsThreadLocal();
+            final MockHttpSession servletSession = new MockHttpSession(servletContext);
+            servletSession.setAttribute(Jeeves.Elem.SESSION, _context.getUserSession());
+            final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
+            servletRequest.setSession(servletSession);
+            final MockHttpServletResponse response = new MockHttpServletResponse();
+
+            final OperationAllowed publicRecord = operationAllowedRepo.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(ReservedGroup.all.getId(), metadataId, ReservedOperation.view.getId());
+            if (publicRecord != null) {
+                final Metadata metadata = metadataRepository.findOne(metadataId);
+                if(metadata.getDataInfo().getType() == MetadataType.METADATA) {
+                    try {
+                        formatService.getRecordFormattedBy(
+                            MediaType.TEXT_HTML_VALUE,
+                            landingPageFormatter,
+                            metadataUtils.getMetadataUuid(metadataId + ""),
+                            FormatterWidth._100,
+                            null,
+                            "eng",
+                            FormatType.html,
+                            true,
+                            true,
+                            true,
+                            new ServletWebRequest(servletRequest, response),
+                            servletRequest);
+                    } catch (Throwable t) {
+                        Log.info(Geonet.GEONETWORK, String.format(
+                            "Error building the landing page with formatter '%s' for record '%s'.",
+                            landingPageFormatter, metadataId), t);
+                    }
+                }
+            }
+        }
     }
 }
