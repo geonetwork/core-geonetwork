@@ -314,24 +314,26 @@
     </xsl:for-each>
 
 
-    
+    <xsl:if test="count(gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent[normalize-space(.) != '']) > 0">
       ,"temporalCoverage": [<xsl:for-each 
         select="gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent">"<xsl:value-of 
           select="concat(gml:TimePeriod/gml:beginPosition|gml320:TimePeriod/gml320:beginPosition,'/',
             gml:TimePeriod/gml:endPosition|gml320:TimePeriod/gml320:endPosition
       )"/>"<xsl:if test="position() != last()">,</xsl:if></xsl:for-each> ]
+    </xsl:if>
 
       <!-- TODO: handle
       "temporalCoverage" : "2013-12-19/.."
       "temporalCoverage" : "2008"
       -->
     
-      <!-- array of licenses is allowed, not multiple licenses-->
+    <!-- array of licenses is allowed, not multiple licenses-->
+    <xsl:if test="count(gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints[normalize-space(.) != '']) > 0"> 
       ,"license":  [<xsl:for-each 
         select="gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints">
           <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
           <xsl:if test="position() != last()">,</xsl:if></xsl:for-each> ]
-
+    </xsl:if>
     <!-- TODO: When a dataset derives from or aggregates several originals, use the isBasedOn property. -->
     <!-- TODO: hasPart -->
 	}
