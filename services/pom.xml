@@ -31,7 +31,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>services</artifactId>
+  <artifactId>gn-services</artifactId>
   <name>GeoNetwork services</name>
 
   <dependencies>
@@ -49,34 +49,34 @@
 
     <dependency>
       <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>gn-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>harvesters</artifactId>
+      <artifactId>gn-harvesters</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>csw-server</artifactId>
+      <artifactId>gn-csw-server</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>domain</artifactId>
+      <artifactId>gn-domain</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>doi</artifactId>
+      <artifactId>gn-doi</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>events</artifactId>
+      <artifactId>gn-events</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -107,14 +107,14 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>domain</artifactId>
+      <artifactId>gn-domain</artifactId>
       <version>${project.version}</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>gn-core</artifactId>
       <version>${project.version}</version>
       <classifier>tests</classifier>
       <scope>test</scope>

@@ -32,7 +32,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>wfsfeature-harvester</artifactId>
+  <artifactId>gn-wfsfeature-harvester</artifactId>
   <name>WFS features harvester</name>
 
   <build>
@@ -87,25 +87,25 @@
   <dependencies>
     <dependency>
       <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>gn-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>es-core</artifactId>
+      <artifactId>gn-es-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>messaging</artifactId>
+      <artifactId>gn-messaging</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>services</artifactId>
+      <artifactId>gn-services</artifactId>
       <version>${project.version}</version>
     </dependency>
 

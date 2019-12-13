@@ -31,25 +31,25 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>health-monitor</artifactId>
+  <artifactId>gn-health-monitor</artifactId>
   <name>GeoNetwork health monitor</name>
 
   <dependencies>
 
     <dependency>
       <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>gn-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>csw-server</artifactId>
+      <artifactId>gn-csw-server</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>harvesters</artifactId>
+      <artifactId>gn-harvesters</artifactId>
       <version>${project.version}</version>
     </dependency>
 

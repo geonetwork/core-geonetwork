@@ -14,7 +14,7 @@
   <!-- =========================================================== -->
   <!-- Module Description -->
   <!-- =========================================================== -->
-  <artifactId>wro4j</artifactId>
+  <artifactId>gn-wro4j</artifactId>
   <packaging>jar</packaging>
   <name>Geonetwork Web Resources 4 Java</name>
   <description>
@@ -87,7 +87,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>gn-core</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

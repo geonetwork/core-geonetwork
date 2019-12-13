@@ -62,7 +62,7 @@ line=$(grep -n "schema-${schema}" web/pom.xml | cut -d: -f1)
 
 if [ ! $line ]
 then
-  line=$(grep -n 'schema-iso19139</artifactId>' web/pom.xml | cut -d: -f1)
+  line=$(grep -n 'gn-schema-iso19139</artifactId>' web/pom.xml | cut -d: -f1)
   insertLine=$(($line + 2))
 
   projectGroupId='${project.groupId}'

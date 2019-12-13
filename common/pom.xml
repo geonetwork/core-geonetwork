@@ -38,7 +38,7 @@
   <!-- =========================================================== -->
   <!-- Module Description -->
   <!-- =========================================================== -->
-  <artifactId>common</artifactId>
+  <artifactId>gn-common</artifactId>
   <packaging>jar</packaging>
   <name>common utils</name>
   <description>
@@ -147,7 +147,7 @@
       <artifactId>xom</artifactId>
     </dependency>
   </dependencies>
-  
+
   <build>
     <resources>
       <resource>

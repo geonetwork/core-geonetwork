@@ -34,7 +34,7 @@
   </parent>
 
   <groupId>org.geonetwork-opensource</groupId>
-  <artifactId>web-ui</artifactId>
+  <artifactId>gn-web-ui</artifactId>
   <packaging>jar</packaging>
   <name>GeoNetwork user interface module</name>
   <description/>

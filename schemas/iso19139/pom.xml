@@ -9,18 +9,18 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>schema-iso19139</artifactId>
+  <artifactId>gn-schema-iso19139</artifactId>
   <name>GeoNetwork schema plugin for ISO19139/119 standards</name>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>schema-core</artifactId>
+      <artifactId>gn-schema-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>schema-core</artifactId>
+      <artifactId>gn-schema-core</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
       <scope>test</scope>

@@ -34,7 +34,7 @@
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <artifactId>performance</artifactId>
+  <artifactId>gn-performance</artifactId>
   <packaging>pom</packaging>
   <name>Performance testing module</name>
   <description>

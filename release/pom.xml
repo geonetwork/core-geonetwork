@@ -10,7 +10,7 @@
     <version>3.9.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>release</artifactId>
+  <artifactId>gn-release</artifactId>
   <packaging>jar</packaging>
   <name>Release module</name>
   <description>Use to create distribution packages.</description>

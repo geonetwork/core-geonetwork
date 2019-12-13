@@ -33,13 +33,13 @@
 
   <name>GeoNetwork Slave</name>
   <packaging>jar</packaging>
-  <artifactId>slave</artifactId>
+  <artifactId>gn-slave</artifactId>
   <description>Converts the instance on a slave instance</description>
   <url>http://geonetwork-opensource.org</url>
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>harvesters</artifactId>
+      <artifactId>gn-harvesters</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
