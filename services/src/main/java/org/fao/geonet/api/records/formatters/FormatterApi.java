@@ -253,6 +253,15 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             required = false, defaultValue = "true")
         @RequestParam(required = false, defaultValue = "true")
             boolean approved,
+        @ApiParam(value = "Skip popularity",
+            required = false, defaultValue = "false")
+        @RequestParam(required = false, defaultValue = "false")
+            boolean skipPopularity,
+        @ApiIgnore
+        @ApiParam(value = "Force cache version to be refreshed",
+            required = false, defaultValue = "false")
+        @RequestParam(required = false, defaultValue = "false")
+            boolean refreshCache,
         @ApiIgnore final NativeWebRequest request,
         final HttpServletRequest servletRequest) throws Exception {
 
@@ -295,7 +304,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 //        final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
 //            !context.getBean(AccessManager.class).canEdit(context, resolvedId);
         Key key = new Key(metadata.getId(), metadataUuid, language, formatType, formatterId, hideWithheld, width);
-        final boolean skipPopularityBool = false;
 
         ISODate changeDate = metadata.getDataInfo().getChangeDate();
 
@@ -305,7 +313,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             long roundedChangeDate = changeDateAsTime / 1000 * 1000;
             if (request.checkNotModified(language, roundedChangeDate) &&
                 context.getBean(CacheConfig.class).allowCaching(key)) {
-                if (!skipPopularityBool) {
+                if (!skipPopularity) {
                     context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
                 }
                 return;
@@ -327,10 +335,14 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             // and completely swamp the cache.  So we go with #2.  The formatters are pretty fast so it is a fine solution
             bytes = formatMetadata.call().data;
         } else {
-            bytes = context.getBean(FormatterCache.class).get(key, validator, formatMetadata, false);
+            final FormatterCache cache = context.getBean(FormatterCache.class);
+            if (refreshCache) {
+                cache.remove(key);
+            }
+            bytes = cache.get(key, validator, formatMetadata, false);
         }
         if (bytes != null) {
-            if (!skipPopularityBool) {
+            if (!skipPopularity) {
                 context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
             }
             writeOutResponse(context, metadataUuid, locale.getISO3Language(), request.getNativeResponse(HttpServletResponse.class), formatType, bytes);

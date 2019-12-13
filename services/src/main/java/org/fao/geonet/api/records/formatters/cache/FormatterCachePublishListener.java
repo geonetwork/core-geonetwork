@@ -24,6 +24,7 @@
 package org.fao.geonet.api.records.formatters.cache;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
@@ -56,7 +57,11 @@ public class FormatterCachePublishListener implements ApplicationListener<Metada
         final ConfigurableApplicationContext context = ApplicationContextHolder.get();
         final OperationAllowed one = context.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished));
         try {
-            formatterCache.setPublished(metadataId, event.getMd().getUuid(), one != null);
+            boolean isPublic = one != null;
+            formatterCache.setPublished(metadataId, event.getMd().getUuid(), isPublic);
+            if (isPublic) {
+                formatterCache.buildLandingPage(metadataId);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
