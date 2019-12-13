@@ -23,21 +23,19 @@
 
 package org.fao.geonet.api.records.formatters.cache;
 
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.io.IOException;
-
-import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * This class is responsible for listening for metadata index events and updating the cache's
@@ -45,26 +43,40 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  *
  * @author Jesse on 3/6/2015.
  */
-public class FormatterCachePublishListener implements ApplicationListener<MetadataIndexCompleted> {
+
+@EnableAsync
+public class FormatterCachePublishListener implements AsynchAfterCommitListener {
     @Autowired
     private FormatterCache formatterCache;
+
+    @Autowired
+    OperationAllowedRepository operationAllowedRepository;
+
+    private static Logger LOGGER =  LoggerFactory.getLogger("geonetwork.index");
+
+    private static final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
 
     @Override
     public synchronized void onApplicationEvent(MetadataIndexCompleted event) {
         final int metadataId = event.getMd().getId();
-        final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
-        final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(metadataId);
-        final ConfigurableApplicationContext context = ApplicationContextHolder.get();
-        final OperationAllowed one = context.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished));
+        LOGGER.debug("Refreshing formatter cache for record '{}' [{}].", metadataId, Thread.currentThread());
+        final OperationAllowed one = operationAllowedRepository.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(ReservedGroup.all.getId(), metadataId, ReservedOperation.view.getId());
         try {
             boolean isPublic = one != null;
             formatterCache.setPublished(metadataId, event.getMd().getUuid(), isPublic);
-            if (isPublic) {
-                formatterCache.buildLandingPage(metadataId);
-            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
+
+    @Override
+    public void handleAsync(MetadataIndexCompleted event) {
+        final int metadataId = event.getMd().getId();
+        if (operationAllowedRepository.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(
+            ReservedGroup.all.getId(), metadataId, ReservedOperation.view.getId()) != null) {
+            LOGGER.debug("Refreshing landing page of public record '{}' [{}].", metadataId, Thread.currentThread());
+            formatterCache.buildLandingPage(metadataId);
+        }
+    }
+
 }
