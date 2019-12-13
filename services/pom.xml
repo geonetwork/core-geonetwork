@@ -192,15 +192,14 @@
       <artifactId>powermock-api-mockito</artifactId>
       <scope>test</scope>
     </dependency>
-    <!-- Apache commons csv -->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-csv</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>wro4j</artifactId>
-      <version>3.9.0-SNAPSHOT</version>
+      <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

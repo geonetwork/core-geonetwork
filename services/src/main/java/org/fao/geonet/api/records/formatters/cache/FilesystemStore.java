@@ -222,6 +222,7 @@ public class FilesystemStore implements PersistentStore {
                 Files.copy(privatePath, publicPath);
             }
 
+            // TODO: Only cache if is the landing page formatter
             if(StringUtils.isNotEmpty(landingPageFormatter)) {
                 final Path landingPageFile = getLandingPageCacheDir().resolve(key.mdUuid + ".html");
                 Files.createDirectories(landingPageFile.getParent());

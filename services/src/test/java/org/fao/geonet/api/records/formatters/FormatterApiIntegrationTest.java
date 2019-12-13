@@ -48,6 +48,7 @@ import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.MockXmlRequest;
 import org.fao.geonet.utils.Xml;
+import org.fao.geonet.web.DefaultLanguage;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;

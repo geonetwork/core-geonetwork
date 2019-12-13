@@ -35,6 +35,11 @@
     <constructor-arg index="0" value="eng"/>
   </bean>
 
+  <bean id="language" class="org.fao.geonet.web.DefaultLanguage">
+    <property name="language" value="eng"/>
+    <property name="forceDefault" value="false"/>
+  </bean>
+
   <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String">
     <value>FormatIntegrationTest.com</value>
   </util:set>
