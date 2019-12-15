@@ -69,7 +69,7 @@ import static org.fao.geonet.kernel.HarvestValidationEnum.NOVALIDATION;
  * @author Jesse on 11/6/2014.
  */
 class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.HARVESTER);
+    private Logger LOGGER = LoggerFactory.getLogger(Geonet.HARVESTER);
 
     private final LocalFilesystemParams params;
     private final DataManager dataMan;
@@ -107,6 +107,9 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         this.harvester = harvester;
         this.repo = context.getBean(IMetadataUtils.class);
         this.startTime = System.currentTimeMillis();
+
+        String harvesterName = params.getName().replaceAll("\\W+", "_");
+        LOGGER =  LoggerFactory.getLogger(harvesterName);
         LOGGER.debug("Start visiting files at {}.", this.startTime);
     }
 
@@ -223,10 +226,14 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         } else {
             // Check last modified date of the file with the record change date
             // to check if an update is required
-            if (params.checkFileLastModifiedForUpdate) {
+            final AbstractMetadata metadata = repo.findOne(id);
+            if (!metadata.getHarvestInfo().isHarvested()) {
+                LOGGER.error(String.format("  Db record (uuid:%s) is not harvested, no update as probably uuid collision.", uuid));
+                result.unchangedMetadata++;
+            }
+            else if (params.checkFileLastModifiedForUpdate) {
                 Date fileDate = new Date(Files.getLastModifiedTime(file).toMillis());
 
-                final AbstractMetadata metadata = repo.findOne(id);
                 ISODate modified = new ISODate();
                 if (metadata != null && metadata.getDataInfo() != null) {
                     modified = metadata.getDataInfo().getChangeDate();
