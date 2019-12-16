@@ -43,6 +43,7 @@ import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.IsoLanguageRepository;
+import org.fao.geonet.web.DefaultLanguage;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.context.ApplicationContext;
@@ -118,16 +119,20 @@ public class SchemaLocalizations {
     public static SchemaLocalizations create(String schema) throws IOException, JDOMException {
         Object obj = RequestContextHolder.getRequestAttributes();
 
-        ServletRequestAttributes attributes = (ServletRequestAttributes) obj;
-        HttpServletRequest request = attributes.getRequest();
-
         final ApplicationContext appContext = ApplicationContextHolder.get();
-        final String lang3 =  appContext.getBean(LanguageUtils.class).getIso3langCode(request.getLocales());
+        String lang3 = appContext.getBean(DefaultLanguage.class).getLanguage();
+        if (obj != null) {
+            ServletRequestAttributes attributes = (ServletRequestAttributes) obj;
+            HttpServletRequest request = attributes.getRequest();
+            lang3 = appContext.getBean(LanguageUtils.class).getIso3langCode(request.getLocales());
+        }
         final String lang2 = appContext.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(lang3);
+
+        String finalLang = lang3;
         CurrentLanguageHolder languageHolder = new CurrentLanguageHolder() {
             @Override
             public String getLang3() {
-                return lang3;
+                return finalLang;
             }
 
             @Override

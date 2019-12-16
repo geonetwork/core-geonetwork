@@ -26,12 +26,20 @@ package org.fao.geonet.api.records.formatters.cache;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 
+import jeeves.constants.Jeeves;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.api.records.formatters.FormatType;
+import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.web.context.request.ServletWebRequest;
 
 import java.io.IOException;
 import java.net.URI;
@@ -47,6 +55,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -57,7 +68,7 @@ import static org.fao.geonet.constants.Params.Access.PRIVATE;
 import static org.fao.geonet.constants.Params.Access.PUBLIC;
 
 /**
- * A {@link org.fao.geonet.api.records.formatters.cache.PersistentStore} that saves the files to
+ * A {@link PersistentStore} that saves the files to
  * disk.
  *
  * @author Jesse on 3/5/2015.
@@ -66,6 +77,7 @@ public class FilesystemStore implements PersistentStore {
     public static final String WITHHELD_MD_DIRNAME = "withheld_md";
     public static final String FULL_MD_NAME = "full_md";
     private static final String BASE_CACHE_DIR = "formatter-cache";
+    private static final String BASE_LANDING_PAGES_DIR = "landing-pages";
     private static final String INFO_TABLE = "info";
     private static final String KEY = "keyhash";
     private static final String CHANGE_DATE = "changedate";
@@ -91,6 +103,15 @@ public class FilesystemStore implements PersistentStore {
     private volatile long maxSizeB = 10000;
     private volatile long currentSize = 0;
     private volatile boolean initialized = false;
+
+
+    /**
+     * Define if the file system store also build a specific cache
+     * of landing page. Only one formatter can be defined as the landing
+     * page formatter.
+     */
+    private String landingPageFormatter;
+    private Map<String, String> landingPageFormatterParams;
 
     private synchronized void init() throws SQLException {
         if (!initialized) {
@@ -189,6 +210,8 @@ public class FilesystemStore implements PersistentStore {
 
         Path publicPath = getPublicPath(key);
         Files.deleteIfExists(publicPath);
+
+
         // only publish if withheld (hidden) elements are hidden.
         if (data.isPublished() && key.hideWithheld) {
             Files.createDirectories(publicPath.getParent());
@@ -197,6 +220,18 @@ public class FilesystemStore implements PersistentStore {
             } catch (UnsupportedOperationException | SecurityException e) {
                 // Link likely not supported on this FS use copy then.
                 Files.copy(privatePath, publicPath);
+            }
+
+            if(StringUtils.isNotEmpty(landingPageFormatter)) {
+                final Path landingPageFile = getLandingPageCacheDir().resolve(key.mdUuid + ".html");
+                Files.createDirectories(landingPageFile.getParent());
+                Files.deleteIfExists(landingPageFile);
+                try {
+                    Files.createLink(landingPageFile, privatePath);
+                } catch (UnsupportedOperationException | SecurityException e) {
+                    // Link likely not supported on this FS use copy then.
+                    Files.copy(privatePath, landingPageFile);
+                }
             }
         }
         try (PreparedStatement statement = this.metadataDb.prepareStatement(QUERY_PUT)) {
@@ -221,15 +256,15 @@ public class FilesystemStore implements PersistentStore {
             if (Files.exists(privatePath)) {
                 long fileSize = Files.size(privatePath);
                 if (currentSize - fileSize + data.data.length > this.maxSizeB) {
-                    resize();
+                    resize(key.mdUuid);
                 }
             } else {
-                resize();
+                resize(key.mdUuid);
             }
         }
     }
 
-    private void resize() throws SQLException, IOException {
+    private void resize(String mdUuid) throws SQLException, IOException {
         int targetSize = (int) (maxSizeB / 2);
         Log.warning(Geonet.FORMATTER, "Resizing Formatter cache.  Required to reduce size by " + targetSize);
         long startTime = System.currentTimeMillis();
@@ -239,7 +274,7 @@ public class FilesystemStore implements PersistentStore {
         ) {
             while (currentSize > targetSize && resultSet.next()) {
                 Path path = IO.toPath(new URI(resultSet.getString(PATH)));
-                doRemove(path, resultSet.getInt(KEY), false);
+                doRemove(path, resultSet.getInt(KEY), mdUuid,false);
             }
         } catch (URISyntaxException e) {
             throw new Error(e);
@@ -268,11 +303,11 @@ public class FilesystemStore implements PersistentStore {
         init();
         final Path path = getPrivatePath(key);
         final int keyHashCode = key.hashCode();
-        doRemove(path, keyHashCode, true);
+        doRemove(path, keyHashCode, key.mdUuid, true);
     }
 
     @Override
-    public void setPublished(int metadataId, final boolean published) throws IOException {
+    public void setPublished(int metadataId, String metadataUuid, final boolean published) throws IOException {
 
         final Path metadataDir = Lib.resource.getMetadataDir(getBaseCacheDir().resolve(PRIVATE), String.valueOf(metadataId));
         if (Files.exists(metadataDir)) {
@@ -297,6 +332,8 @@ public class FilesystemStore implements PersistentStore {
                         }
                     } else {
                         Files.deleteIfExists(publicPath);
+                        final Path landingPageFile = getLandingPageCacheDir().resolve(metadataUuid + ".html");
+                        Files.deleteIfExists(landingPageFile);
                     }
                     return super.visitFile(privatePath, attrs);
                 }
@@ -335,7 +372,12 @@ public class FilesystemStore implements PersistentStore {
         }
     }
 
-    private void doRemove(Path privatePath, int keyHashCode, boolean updateDbCurrentSize) throws IOException, SQLException {
+    @Override
+    public long getSize() throws SQLException, IOException {
+        return currentSize;
+    }
+
+    private void doRemove(Path privatePath, int keyHashCode, String mdUuid, boolean updateDbCurrentSize) throws IOException, SQLException {
         try {
             if (Files.exists(privatePath)) {
                 currentSize -= Files.size(privatePath);
@@ -345,6 +387,8 @@ public class FilesystemStore implements PersistentStore {
             try {
                 final Path publicPath = toPublicPath(privatePath);
                 Files.deleteIfExists(publicPath);
+                final Path landingPageFile = getLandingPageCacheDir().resolve(mdUuid + ".html");
+                Files.deleteIfExists(landingPageFile);
             } finally {
                 try (PreparedStatement statement = metadataDb.prepareStatement(QUERY_REMOVE)) {
                     statement.setInt(1, keyHashCode);
@@ -386,7 +430,9 @@ public class FilesystemStore implements PersistentStore {
     private Path getBaseCacheDir() {
         return geonetworkDataDir.getHtmlCacheDir().resolve(BASE_CACHE_DIR);
     }
-
+    private Path getLandingPageCacheDir() {
+        return geonetworkDataDir.getHtmlCacheDir().resolve(BASE_LANDING_PAGES_DIR);
+    }
     public void setMaxSizeKb(long maxSize) {
         this.maxSizeB = maxSize * 1024;
     }
@@ -401,5 +447,21 @@ public class FilesystemStore implements PersistentStore {
 
     public void setTesting(boolean testing) {
         this.testing = testing;
+    }
+
+    public void setLandingPageFormatter(String landingPageFormatter) {
+        this.landingPageFormatter = landingPageFormatter;
+    }
+
+    public String getLandingPageFormatter() {
+        return landingPageFormatter;
+    }
+
+    public void setLandingPageFormatterParams(Map landingPageFormatterParams) {
+        this.landingPageFormatterParams = landingPageFormatterParams;
+    }
+
+    public Map getLandingPageFormatterParams() {
+        return landingPageFormatterParams;
     }
 }

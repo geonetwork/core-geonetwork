@@ -86,19 +86,12 @@ public class Sitemap implements Service {
             format = FORMAT_XML;
         }
 
-        Integer allgroup = 1;
-
-        Specifications<OperationAllowed> spec = Specifications.where(
-            OperationAllowedSpecs.hasOperation(ReservedOperation.view));
-        spec = spec.and(OperationAllowedSpecs.hasGroupId(allgroup));
-
         OperationAllowedRepository operationAllowedRepository =
             context.getBean(OperationAllowedRepository.class);
         MetadataRepository metadataRepository =
             context.getBean(MetadataRepository.class);
 
-        final List<Integer> list = operationAllowedRepository.findAllIds(spec,
-            OperationAllowedId_.metadataId);
+        final List<Integer> list = operationAllowedRepository.findAllPublicRecordIds();
         Sort sortByChangeDateDesc = new Sort(Sort.Direction.DESC, Metadata_.dataInfo.getName() + "." + MetadataDataInfo_.changeDate.getName());
 
         long metadatataCount = metadataRepository.count((Specification<Metadata>)MetadataSpecs.hasMetadataIdIn(list));
@@ -123,17 +116,17 @@ public class Sitemap implements Service {
                 throw new SitemapDocumentNotFoundEx(doc);
             }
 
-        } else { 
-            // Request the sitemap (no specific document) 
-            if (metadatataCount <= _maxItemsPage) { 
-                // Request the full sitemap 
+        } else {
+            // Request the sitemap (no specific document)
+            if (metadatataCount <= _maxItemsPage) {
+                // Request the full sitemap
                 result = metadataRepository.findAllUuidsAndChangeDatesAndSchemaId(list);
 
                 Element formatEl = new Element("format");
                 formatEl.setText(format.toLowerCase());
                 result.addContent(formatEl);
 
-            } else { 
+            } else {
                 // Request the index
                 result = new Element("response");
 

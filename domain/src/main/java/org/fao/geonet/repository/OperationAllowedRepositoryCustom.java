@@ -75,6 +75,12 @@ public interface OperationAllowedRepositoryCustom {
         Integer> idAttribute);
 
     /**
+     * Find all public records (no template/subtemplate).
+     * @return
+     */
+    public List<Integer> findAllPublicRecordIds();
+
+    /**
      * Delete all OperationsAllowed entities with the give metadata and group ids.
      *
      * @param metadataId the metadata id

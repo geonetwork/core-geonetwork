@@ -76,8 +76,8 @@ public class FormatterCacheTest {
         final boolean hideWithheld = true;
         final long changeDate = new Date().getTime();
 
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
-        final Key key2 = new Key(2, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
+        final Key key = new Key(1, "", "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
+        final Key key2 = new Key(2, "", "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
 
         formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, false), true);
         formatterCache.get(key2, new ChangeDateValidator(changeDate), new TestLoader("result1", changeDate, false), true);
@@ -99,7 +99,7 @@ public class FormatterCacheTest {
 
         final boolean hideWithheld = true;
         final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
+        final Key key = new Key(1, "", "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
         assertEquals("result", getAsString(key, changeDate, new TestLoader("result", changeDate, false)));
         assertEquals("new result", getAsString(key, changeDate, new TestLoader("new result", changeDate, false)));
     }
@@ -111,7 +111,7 @@ public class FormatterCacheTest {
 
         final boolean hideWithheld = true;
         final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
+        final Key key = new Key(1, "", "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
         final TestLoader loader = new TestLoader("result", changeDate, false);
         String result = getAsString(key, changeDate, loader);
         assertEquals("result", result);
@@ -155,7 +155,7 @@ public class FormatterCacheTest {
 
         final boolean hideWithheld = true;
         final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
+        final Key key = new Key(1, "", "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
         formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, false), true);
 
         assertNull(formatterCache.getPublished(key));
@@ -173,8 +173,8 @@ public class FormatterCacheTest {
         this.formatterCache = new FormatterCache(persistentStore, 100, 5000);
 
         final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", false, FormatterWidth._100);
-        final Key key2 = new Key(1, "eng", FormatType.html, "full_view", true, FormatterWidth._100);
+        final Key key = new Key(1, "", "eng", FormatType.html, "full_view", false, FormatterWidth._100);
+        final Key key2 = new Key(1, "", "eng", FormatType.html, "full_view", true, FormatterWidth._100);
 
         formatterCache.get(key, new ChangeDateValidator(changeDate), new Callable<StoreInfoAndDataLoadResult>() {
             @Override
@@ -221,7 +221,7 @@ public class FormatterCacheTest {
             }
 
             @Override
-            public void setPublished(int metadataId, boolean published) {
+            public void setPublished(int metadataId, String metadataUuid, boolean published) {
                 throw new UnsupportedOperationException("not yet implemented");
             }
 
@@ -229,12 +229,17 @@ public class FormatterCacheTest {
             public void clear() {
                 // ignore
             }
+
+            @Override
+            public long getSize() throws SQLException, IOException {
+                return 0;
+            }
         }, 100, 5000);
 
 
         final boolean hideWithheld = true;
         final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
+        final Key key = new Key(1, "", "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
         formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, false), true);
         assertEquals(true, persistentStoreHit.get());
 
@@ -271,7 +276,7 @@ public class FormatterCacheTest {
 
         final boolean hideWithheld = true;
         final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
+        final Key key = new Key(1, "", "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
         formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, false), false);
         waitForStartPut.set(true);
         assertNull(persistentStore.get(key));

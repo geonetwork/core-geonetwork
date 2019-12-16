@@ -33,6 +33,7 @@ import org.fao.geonet.api.records.formatters.FormatterWidth;
  */
 public class Key {
     public final int mdId;
+    public final String mdUuid;
     public final String lang;
     public final FormatType formatType;
     public final String formatterId;
@@ -43,14 +44,16 @@ public class Key {
      * Constructor.
      *
      * @param mdId         the id of the metadata
+     * @param mdUuid         the uuid of the metadata
      * @param lang         the current ui language
      * @param formatType   the content type of the output
      * @param formatterId  the formatter used to create the output
      * @param hideWithheld if true then elements in the metadata with the attribute
      *                     gco:nilreason="withheld" are being hidden
      */
-    public Key(int mdId, String lang, FormatType formatType, String formatterId, boolean hideWithheld, FormatterWidth width) {
+    public Key(int mdId, String mdUuid, String lang, FormatType formatType, String formatterId, boolean hideWithheld, FormatterWidth width) {
         this.mdId = mdId;
+        this.mdUuid = mdUuid;
         this.lang = lang;
         this.formatType = formatType;
         this.formatterId = formatterId;
@@ -67,6 +70,7 @@ public class Key {
 
         if (hideWithheld != key.hideWithheld) return false;
         if (mdId != key.mdId) return false;
+        if (mdUuid != key.mdUuid) return false;
         if (formatType != key.formatType) return false;
         if (width != key.width) return false;
         if (!formatterId.equals(key.formatterId)) return false;
@@ -78,6 +82,7 @@ public class Key {
     @Override
     public int hashCode() {
         int result = mdId;
+        result = 31 * result + mdUuid.hashCode();
         result = 31 * result + lang.hashCode();
         result = 31 * result + formatType.ordinal();
         result = 31 * result + width.ordinal();
@@ -90,6 +95,7 @@ public class Key {
     public String toString() {
         return "Key{" +
             "mdId=" + mdId +
+            ", mdUuid=" + mdUuid +
             ", lang='" + lang + '\'' +
             ", width=" + width +
             ", formatType=" + formatType +

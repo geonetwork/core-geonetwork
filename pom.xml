@@ -1472,6 +1472,9 @@
 
     <withHeldCheck.frequency>0/30 * * * * ?</withHeldCheck.frequency>
 
+    <landingPage.formatter></landingPage.formatter>
+    <landingPage.language>${language.default}</landingPage.language>
+
     <!-- Jetty plugin port configuration -->
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
