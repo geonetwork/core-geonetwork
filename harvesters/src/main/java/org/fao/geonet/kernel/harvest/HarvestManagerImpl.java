@@ -589,7 +589,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         if (Log.isDebugEnabled(Geonet.HARVEST_MAN))
             Log.debug(Geonet.HARVEST_MAN, "Clearing harvesting with id : " + id);
 
-        AbstractHarvester<?> ah = hmHarvesters.get(id);
+        AbstractHarvester<?, ?> ah = hmHarvesters.get(id);
 
         if (ah == null) {
             return OperResult.NOT_FOUND;

@@ -102,7 +102,8 @@ public class RemoveAndProcess {
 
 
         // Remove the file and update the file upload/downloads tables
-        IResourceRemoveHandler removeHook = (IResourceRemoveHandler) context.getApplicationContext().getBean("resourceRemoveHandler");
+        IResourceRemoveHandler removeHook = context.getBean("resourceRemoveHandler",
+                                                            IResourceRemoveHandler.class);
         removeHook.onDelete(context, request, Integer.parseInt(id), filename, access);
 
         // Set parameter and process metadata to remove reference to the uploaded file

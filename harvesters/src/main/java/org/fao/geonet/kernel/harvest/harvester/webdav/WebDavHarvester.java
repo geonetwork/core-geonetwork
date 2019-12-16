@@ -22,88 +22,28 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Logger;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.SourceType;
-import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
-import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.resources.Resources;
-import org.jdom.Element;
 
-import java.io.File;
 import java.sql.SQLException;
-import java.util.UUID;
 
 //=============================================================================
 
-public class WebDavHarvester extends AbstractHarvester<HarvestResult> {
-    private WebDavParams params;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
-    protected void doInit(Element node, ServiceContext context) throws BadInputEx {
-        params = new WebDavParams(dataMan);
-        super.setParams(params);
-
-        params.create(node);
-    }
-
+public class WebDavHarvester extends AbstractHarvester<HarvestResult, WebDavParams> {
     //---------------------------------------------------------------------------
     //---
     //--- Add
     //---
     //---------------------------------------------------------------------------
-    protected String doAdd(Element node) throws BadInputEx, SQLException {
-        params = new WebDavParams(dataMan);
-        super.setParams(params);
 
-        //--- retrieve/initialize information
-        params.create(node);
-        //--- force the creation of a new uuid
-        params.setUuid(UUID.randomUUID().toString());
-        String id = harvesterSettingsManager.add("harvesting", "node", getType());
-        storeNode(params, "id:" + id);
-        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), SourceType.harvester);
-        context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
-        return id;
+    @Override
+    protected WebDavParams createParams() {
+        return new WebDavParams(dataMan);
     }
 
     //---------------------------------------------------------------------------
-    //---
-    //--- Update
-    //---
-    //---------------------------------------------------------------------------
-    protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
-        WebDavParams copy = params.copy();
-        //--- update variables
-        copy.update(node);
-        String path = "harvesting/id:" + id;
-        harvesterSettingsManager.removeChildren(path);
-        //--- update database
-        storeNode(copy, path);
-        //--- we update a copy first because if there is an exception CswParams
-        //--- could be half updated and so it could be in an inconsistent state
-        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), SourceType.harvester);
-        context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.getUuid());
-
-        params = copy;
-        super.setParams(params);
-
-    }
-
-    //---------------------------------------------------------------------------
-    protected void storeNodeExtra(AbstractParams p, String path, String siteId, String optionsId) throws SQLException {
-        WebDavParams params = (WebDavParams) p;
+    protected void storeNodeExtra(WebDavParams params, String path, String siteId, String optionsId) throws SQLException {
         harvesterSettingsManager.add("id:" + siteId, "url", params.url);
         harvesterSettingsManager.add("id:" + siteId, "icon", params.icon);
         harvesterSettingsManager.add("id:" + optionsId, "validate", params.getValidate());

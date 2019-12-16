@@ -93,8 +93,8 @@ public class CreateTest extends AbstractServiceIntegrationTest {
 
         final String id = importMetadata(context);
 
-        Path mdPublicDataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
-        Path mdPrivateDataDir = Lib.resource.getDir(context, Params.Access.PRIVATE, id);
+        Path mdPublicDataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, Integer.parseInt(id));
+        Path mdPrivateDataDir = Lib.resource.getDir(context, Params.Access.PRIVATE, Integer.parseInt(id));
         final Path smallImage = mdPublicDataDir.resolve("small.gif");
         final Path largeImage = mdPublicDataDir.resolve("large.gif");
         createImage(GIF, smallImage);
@@ -119,14 +119,14 @@ public class CreateTest extends AbstractServiceIntegrationTest {
         final String newId = element.getChildText(Geonet.Elem.ID);
         assertNotNull(_metadataRepo.findOne(newId));
 
-        Path newPublicMdDataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, newId);
+        Path newPublicMdDataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, Integer.parseInt(newId));
         assertTrue(Files.exists(newPublicMdDataDir.resolve(smallImage.getFileName())));
         assertTrue(Files.exists(newPublicMdDataDir.resolve(largeImage.getFileName())));
 
         final int expected = 2;
         assertFilesInDirectory(newPublicMdDataDir, expected);
 
-        Path newPrivateMdDataDir = Lib.resource.getDir(context, Params.Access.PRIVATE, newId);
+        Path newPrivateMdDataDir = Lib.resource.getDir(context, Params.Access.PRIVATE, Integer.parseInt(newId));
         assertTrue(Files.exists(newPrivateMdDataDir));
         assertFilesInDirectory(newPrivateMdDataDir, 1);
         assertTrue(Files.exists(newPrivateMdDataDir.resolve(privateImage.getFileName())));
@@ -148,6 +148,7 @@ public class CreateTest extends AbstractServiceIntegrationTest {
         Graphics2D g2d = image.createGraphics();
         g2d.drawRect(1, 1, 5, 5);
         g2d.dispose();
+        Files.createDirectories(outFile.getParent());
         try (OutputStream out = Files.newOutputStream(outFile)) {
             final boolean writerWasFound = ImageIO.write(image, format, out);
             assertTrue(writerWasFound);

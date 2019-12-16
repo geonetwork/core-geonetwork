@@ -26,6 +26,7 @@ package org.fao.geonet.api.records.formatters.groovy;
 import com.google.common.base.Optional;
 import com.google.common.collect.Multimap;
 
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.jdom.Element;
@@ -130,11 +131,25 @@ public interface Environment extends CurrentLanguageHolder {
     public Map<String, Collection<String>> getIndexInfo() throws Exception;
 
     /**
+     * Get the service context
+     * @return the context
+     */
+    public ServiceContext getContext();
+
+    /**
      * Get a Spring Bean from Spring Application Context.
      *
      * @param clazz the type of bean to look up.
      */
     public <T> T getBean(Class<T> clazz);
+
+    /**
+     * Get a Spring Bean from Spring Application Context.
+     *
+     * @param name the name.
+     * @param clazz the type of bean to look up.
+     */
+    public <T> T getBean(String name, Class<T> clazz);
 
     /**
      * Retrieves the background, width and mapproj parameters from settings and puts them into the

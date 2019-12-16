@@ -43,6 +43,11 @@ public class LocalFilesystemParams extends AbstractParams {
     public String recordType;
     public String beforeScript;
 
+    @Override
+    public String getIcon() {
+        return icon;
+    }
+
     public LocalFilesystemParams(DataManager dm) {
         super(dm);
     }

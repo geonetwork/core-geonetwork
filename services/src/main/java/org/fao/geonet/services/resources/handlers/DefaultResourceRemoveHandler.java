@@ -25,17 +25,15 @@ package org.fao.geonet.services.resources.handlers;
 
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataFileUpload;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -56,10 +54,7 @@ public class DefaultResourceRemoveHandler implements IResourceRemoveHandler {
             FilePathChecker.verify(fileName);
 
             // delete online resource
-            Path dir = Lib.resource.getDir(context, access, metadataId);
-            Path file = dir.resolve(fileName);
-
-            Files.deleteIfExists(file);
+            doDelete(context, metadataId, fileName);
 
             storeFileUploadDeleteRequest(context, metadataId, fileName);
 
@@ -95,10 +90,7 @@ public class DefaultResourceRemoveHandler implements IResourceRemoveHandler {
             FilePathChecker.verify(fileName);
 
             // delete online resource
-            Path dir = Lib.resource.getDir(context, access, metadataId);
-            Path file = dir.resolve(fileName);
-
-            Files.deleteIfExists(file);
+            doDelete(context, metadataId, fileName);
 
             storeFileUploadDeleteRequest(context, metadataId, fileName);
 
@@ -107,5 +99,12 @@ public class DefaultResourceRemoveHandler implements IResourceRemoveHandler {
             throw new ResourceHandlerException(ex);
         }
 
+    }
+
+    private void doDelete(final ServiceContext context, final int metadataId, final String fileName) throws Exception {
+        final Store store = context.getBean("resourceStore", Store.class);
+        final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+        final String uuid = metadataUtils.getMetadataUuid(Integer.toString(metadataId));
+        store.delResource(context, uuid, fileName);
     }
 }

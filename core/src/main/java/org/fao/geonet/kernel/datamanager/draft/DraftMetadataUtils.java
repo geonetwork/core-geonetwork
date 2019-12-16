@@ -25,8 +25,8 @@ package org.fao.geonet.kernel.datamanager.draft;
 
 import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.io.RuntimeIOException;
+import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
@@ -172,7 +172,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     }
 
     /**
-     * @param id
+     * @param idString
      * @param displayOrder
      * @throws Exception
      */
@@ -582,22 +582,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
     public void cloneFiles(AbstractMetadata original, AbstractMetadata dest) {
         try {
-            Consumer<Path> duplicate = new Consumer<Path>() {
-                @Override
-                public void accept(Path t) {
-                    try {
-                        Path des = Lib.resource.getDir(context, "public", dest.getId());
-                        FileUtils.copyFile(t.toFile(), des.resolve(t.getFileName()).toFile());
-                    } catch (IOException e) {
-                        Log.error(Geonet.RESOURCES, "Failed copy of resources: " + e.getMessage(), e);
-                    }
-                }
-            };
-
-            Path original_dir = Lib.resource.getDir(context, "public", original.getId());
-            if (Files.exists(original_dir)) {
-                Files.newDirectoryStream(original_dir).forEach(duplicate);
-            }
+            StoreUtils.copyDataDir(context, original.getUuid(), dest.getUuid(), true);
             cloneStoreFileUploadRequests(original, dest);
 
         } catch (Exception ex) {

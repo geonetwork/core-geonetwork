@@ -56,6 +56,11 @@ public class ArcSDEParams extends AbstractParams {
     /** The ArcSDE database type */
     public String databaseType;
 
+    @Override
+    public String getIcon() {
+        return icon;
+    }
+
     public ArcSDEParams(DataManager dm) {
         super(dm);
     }

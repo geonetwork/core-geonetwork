@@ -28,10 +28,13 @@ import com.google.common.io.Closer;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataFileUpload;
+import org.fao.geonet.domain.MetadataResourceVisibility;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.utils.IO;
@@ -53,70 +56,35 @@ import java.nio.file.Path;
  */
 public class DefaultResourceUploadHandler implements IResourceUploadHandler {
 
-    private static void moveFile(InputStream is, String filename,
-                                 Path targetDir, String overwrite) throws Exception {
-        Path f = targetDir.resolve(filename);
-
-        if (!Files.exists(targetDir)) {
-            Files.createDirectories(targetDir);
+    private static void moveFile(final ServiceContext context, final int metadataId, final String fileName, final InputStream is,
+            final String access, final String overwrite) throws Exception {
+        final Store store = context.getBean("resourceStore", Store.class);
+        final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+        final String uuid = metadataUtils.getMetadataUuid(Integer.toString(metadataId));
+        MetadataResourceVisibility visibility = MetadataResourceVisibility.parse(access);
+        if (overwrite.equals("no") && store.getResourceDescription(context, uuid, visibility, fileName, true) != null) {
+            throw new Exception("File upload unsuccessful because "
+                    + fileName + " already exists and overwrite was not permitted");
         }
-
-        // check if file already exists and do whatever overwrite wants
-        if (Files.exists(f)) {
-            if (overwrite.equals("no")) {
-                throw new Exception("File upload unsuccessful because "
-                    + f.toAbsolutePath().toString()
-                    + " already exists and overwrite was not permitted");
-            } else {
-                Files.deleteIfExists(f);
-            }
-        }
-
-
-        try (Closer closer = Closer.create()) {
-            closer.register(is);
-
-            Files.copy(is, f);
-        } catch (IOException e) {
-            throw new Exception("Unable to read uploaded file.", e);
-        }
+        store.putResource(context, uuid, fileName, is, null, visibility, true);
     }
 
-    private static void moveFile(ServiceContext context, Path sourceDir,
-                                 String filename, Path targetDir, String overwrite) throws Exception {
-        // move uploaded file to destination directory
-        // note: uploadDir and rootDir must be in the same volume
-        Files.createDirectories(targetDir);
 
-        // get ready to move uploaded file to destination directory
-        Path oldFile = sourceDir.resolve(filename);
-        Path newFile = targetDir.resolve(filename);
-
-        context.info("Source : " + oldFile.toAbsolutePath().normalize());
-        context.info("Destin : " + newFile.toAbsolutePath().normalize());
-
-        if (!Files.exists(oldFile)) {
-            throw new Exception("File upload unsuccessful " + oldFile
-                + " does not exist");
-        }
-
-        // check if file already exists and do whatever overwrite wants
-        if (Files.exists(newFile) && overwrite.equals("no")) {
-            throw new Exception("File upload unsuccessful because "
-                + newFile.getFileName()
-                + " already exists and overwrite was not permitted");
-        }
-
-        // move uploaded file to destination directory - have two goes
+    private static void moveFile(final ServiceContext context, final int metadataId, final String fileName, final Path uploadDir,
+            final String access, final String overwrite) throws Exception {
+        final Store store = context.getBean("resourceStore", Store.class);
+        final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+        final String uuid = metadataUtils.getMetadataUuid(Integer.toString(metadataId));
+        Path source = uploadDir.resolve(fileName);
         try {
-            IO.moveDirectoryOrFile(oldFile, newFile, false);
-        } catch (Exception e) {
-            context.warning("Cannot move uploaded file");
-            context.warning(" (C) Source : " + oldFile);
-            context.warning(" (C) Destin : " + newFile);
-            IO.deleteFile(oldFile, false, context);
-            throw new Exception(
-                "Unable to move uploaded file to destination directory");
+            MetadataResourceVisibility visibility = MetadataResourceVisibility.parse(access);
+            if (overwrite.equals("no") && store.getResourceDescription(context, uuid, visibility, fileName, true) != null) {
+                throw new Exception("File upload unsuccessful because "
+                        + fileName + " already exists and overwrite was not permitted");
+            }
+            store.putResource(context, uuid, source, visibility);
+        } finally {
+            Files.delete(source);
         }
     }
 
@@ -129,8 +97,7 @@ public class DefaultResourceUploadHandler implements IResourceUploadHandler {
             String access = Util.getParam(params, Params.ACCESS, "private");
             String overwrite = Util.getParam(params, Params.OVERWRITE, "no");
 
-            Path dir = Lib.resource.getDir(context, access, metadataId);
-            moveFile(context, uploadDir, fileName, dir, overwrite);
+            moveFile(context, metadataId, fileName, uploadDir, access, overwrite);
 
             storeFileUploadRequest(context, metadataId, fileName, fileSize);
 
@@ -162,14 +129,18 @@ public class DefaultResourceUploadHandler implements IResourceUploadHandler {
                          int metadataId, String fileName, double fileSize) throws ResourceHandlerException {
 
         try {
-            Path dir = Lib.resource.getDir(context, access, metadataId);
-            moveFile(is, fileName, dir, overwrite);
+            moveFile(context, metadataId, fileName, is, access, overwrite);
 
             storeFileUploadRequest(context, metadataId, fileName, fileSize);
 
         } catch (Exception ex) {
             Log.error(Geonet.RESOURCES, "DefaultResourceUploadHandler (onUpload): " + ex.getMessage(), ex);
             throw new ResourceHandlerException(ex);
+        } finally {
+            try {
+                is.close();
+            } catch (IOException ignored) {
+            }
         }
     }
 
