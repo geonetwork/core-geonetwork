@@ -1,0 +1,8 @@
+# Landing page redirect. 
+# If the landing page requested does not exist, 
+# redirect to the catalogue which will check 
+# if it really does not exist or needs to be generated.
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*).html$ /geonetwork/srv/api/records/$1 [L,R=301]
+
