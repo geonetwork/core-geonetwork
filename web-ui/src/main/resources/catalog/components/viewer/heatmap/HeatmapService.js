@@ -82,7 +82,10 @@
           query: {
             bool: {
               must: [{
-                match_all: {}
+                query_string: {
+                  query: params || '*:*'
+                }
+
               }, {
                 match_phrase: {
                   featureTypeId: {
