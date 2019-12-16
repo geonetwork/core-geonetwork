@@ -23,99 +23,22 @@
 
 package org.fao.geonet.kernel.harvest.harvester.wfsfeatures;
 
-import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Logger;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.SourceType;
-import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
-import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.resources.Resources;
-import org.jdom.Element;
-
-import java.io.File;
-import java.sql.SQLException;
-import java.util.UUID;
 
 //=============================================================================
 
-public class WfsFeaturesHarvester extends AbstractHarvester<HarvestResult> {
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
-
-    private WfsFeaturesParams params;
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Add
-    //---
-    //---------------------------------------------------------------------------
-
-    protected void doInit(Element node, ServiceContext context) throws BadInputEx {
-        params = new WfsFeaturesParams(dataMan);
-        super.setParams(params);
-
-        params.create(node);
-    }
-
+public class WfsFeaturesHarvester extends AbstractHarvester<HarvestResult, WfsFeaturesParams> {
     //---------------------------------------------------------------------------
     //---
     //--- Update
     //---
     //---------------------------------------------------------------------------
 
-    protected String doAdd(Element node) throws BadInputEx, SQLException {
-        params = new WfsFeaturesParams(dataMan);
-        super.setParams(params);
-
-        //--- retrieve/initialize information
-        params.create(node);
-
-        //--- force the creation of a new uuid
-        params.setUuid(UUID.randomUUID().toString());
-
-        String id = harvesterSettingsManager.add("harvesting", "node", getType());
-
-        storeNode(params, "id:" + id);
-        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), SourceType.harvester);
-        context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
-
-        return id;
-    }
-
-    //---------------------------------------------------------------------------
-
-    protected void doUpdate(String id, Element node)
-        throws BadInputEx, SQLException {
-        WfsFeaturesParams copy = params.copy();
-
-        //--- update variables
-        copy.update(node);
-
-        String path = "harvesting/id:" + id;
-
-        harvesterSettingsManager.removeChildren(path);
-
-        //--- update database
-        storeNode(copy, path);
-
-        //--- we update a copy first because if there is an exception Params
-        //--- could be half updated and so it could be in an inconsistent state
-
-        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), SourceType.harvester);
-        context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
-
-        params = copy;
-        super.setParams(params);
+    @Override
+    protected WfsFeaturesParams createParams() {
+        return new WfsFeaturesParams(dataMan);
     }
 
     //---------------------------------------------------------------------------
@@ -124,10 +47,8 @@ public class WfsFeaturesHarvester extends AbstractHarvester<HarvestResult> {
     //---
     //---------------------------------------------------------------------------
 
-    protected void storeNodeExtra(AbstractParams p, String path,
-                                  String siteId, String optionsId) throws SQLException {
-        WfsFeaturesParams params = (WfsFeaturesParams) p;
-
+    protected void storeNodeExtra(WfsFeaturesParams params, String path,
+                                  String siteId, String optionsId) {
         harvesterSettingsManager.add("id:" + siteId, "url", params.url);
         harvesterSettingsManager.add("id:" + siteId, "icon", params.icon);
         harvesterSettingsManager.add("id:" + optionsId, "lang", params.lang);
@@ -147,7 +68,6 @@ public class WfsFeaturesHarvester extends AbstractHarvester<HarvestResult> {
     //---------------------------------------------------------------------------
 
     public void doHarvest(Logger log) throws Exception {
-
         Harvester h = new Harvester(cancelMonitor, log, context, params);
         result = h.harvest(log);
     }

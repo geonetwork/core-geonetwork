@@ -82,7 +82,7 @@ public class Info implements Service {
     private DirectoryStream.Filter<Path> iconFilter = new DirectoryStream.Filter<Path>() {
         @Override
         public boolean accept(Path icon) throws IOException {
-            if (icon == null || !Files.isRegularFile(icon))
+            if (icon == null || (Files.exists(icon) && !Files.isRegularFile(icon)))
                 return false;
 
             if (icon.getFileName() != null) {
@@ -201,7 +201,7 @@ public class Info implements Service {
     //--------------------------------------------------------------------------
 
     private Element getIcons(ServiceContext context) {
-        Set<Path> icons = Resources.listFiles(context, "harvesting", iconFilter);
+        Set<Path> icons = context.getBean(Resources.class).listFiles(context, "harvesting", iconFilter);
         List<Path> list = new ArrayList<>(icons);
         Collections.sort(list);
         Element result = new Element("icons");

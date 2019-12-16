@@ -98,7 +98,7 @@ public class UploadAndProcess {
 
         String fname = file.getOriginalFilename();
         String fsize = Long.toString(file.getSize());
-        IResourceUploadHandler uploadHook = (IResourceUploadHandler) context.getApplicationContext().getBean("resourceUploadHandler");
+        IResourceUploadHandler uploadHook = context.getBean("resourceUploadHandler", IResourceUploadHandler.class);
         uploadHook.onUpload(file.getInputStream(), context, access, overwrite, Integer.parseInt(id), fname, Double.parseDouble(fsize));
 
 

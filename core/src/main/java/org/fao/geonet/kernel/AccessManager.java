@@ -94,7 +94,7 @@ public class AccessManager {
      * TODO javadoc.
      */
     public Set<Operation> getOperations(ServiceContext context, String mdId, String ip, Collection<Operation> operations) throws Exception {
-        OperationRepository _opRepository = context.getApplicationContext().getBean(OperationRepository.class);
+        OperationRepository _opRepository = context.getBean(OperationRepository.class);
 
         Set<Operation> results;
         // if user is an administrator OR is the owner of the record then allow all operations

@@ -29,31 +29,22 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.FilePathChecker;
 import org.jdom.Element;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Deprecated
 public class Delete implements Service {
-    private volatile Path logoDirectory;
-
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     public Element exec(Element params, ServiceContext context)
         throws Exception {
 
-        if (logoDirectory == null) {
-            synchronized (this) {
-                if (logoDirectory == null) {
-                    logoDirectory = Resources.locateHarvesterLogosDir(context);
-                }
-            }
-        }
+        final Resources resources = context.getBean(Resources.class);
+        final Path logoDirectory = resources.locateHarvesterLogosDir(context);
 
         String file = Util.getParam(params, Params.FNAME);
 
@@ -63,10 +54,8 @@ public class Delete implements Service {
             throw new Exception("Logo name is not defined.");
         }
 
-        Path logoFile = logoDirectory.resolve(file);
-
         Element response = new Element("response");
-        Files.delete(logoFile);
+        resources.deleteImageIfExists(file, logoDirectory);
         response.addContent(new Element("status")
             .setText("Logo removed."));
         return response;

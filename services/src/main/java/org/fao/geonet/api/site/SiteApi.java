@@ -32,6 +32,7 @@ import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -708,56 +709,66 @@ public class SiteApi {
             defaultValue = "false",
             required = false
         )
-            boolean asFavicon
+            boolean asFavicon,
+        HttpServletRequest request
 
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        Path logoDirectory = Resources.locateHarvesterLogosDirSMVC(appContext);
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final Resources resources = appContext.getBean(Resources.class);
+        final Path logoDirectory = resources.locateHarvesterLogosDirSMVC(appContext);
+        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
         checkFileName(file);
         FilePathChecker.verify(file);
 
         SettingManager settingMan = appContext.getBean(SettingManager.class);
-        GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
         String nodeUuid = settingMan.getSiteId();
 
+        Resources.ResourceHolder holder = resources.getImage(serviceContext, file, logoDirectory);
+        final Path resourcesDir =
+            resources.locateResourcesDir(request.getServletContext(), serviceContext.getApplicationContext());
+        if (holder == null || holder.getPath() == null) {
+            holder = resources.getImage(serviceContext, "images/harvesting/" + file, resourcesDir);
+        }
         try {
-            Path logoFilePath = logoDirectory.resolve(file);
-            Path nodeLogoDirectory = dataDirectory.getResourcesDir()
-                .resolve("images");
-            if (!Files.exists(logoFilePath)) {
-                logoFilePath = nodeLogoDirectory.resolve("harvesting").resolve(file);
-            }
-            try (InputStream inputStream = Files.newInputStream(logoFilePath)) {
+            try (InputStream inputStream = Files.newInputStream(holder.getPath())) {
                 BufferedImage source = ImageIO.read(inputStream);
 
                 if (asFavicon) {
-                    ApiUtils.createFavicon(
-                        source,
-                        dataDirectory.getResourcesDir().resolve("images").resolve("logos").resolve("favicon.png"));
+                    try (Resources.ResourceHolder favicon =
+                             resources.getWritableImage(serviceContext, "images/logos/favicon.png",
+                                                        resourcesDir)) {
+                        ApiUtils.createFavicon(source, favicon.getPath());
+                    }
                 } else {
-                    Path logo = nodeLogoDirectory.resolve("logos").resolve(nodeUuid + ".png");
-                    Path defaultLogo = nodeLogoDirectory.resolve("images").resolve("logo.png");
-
-                    if (!file.endsWith(".png")) {
-                        try (
-                            OutputStream logoOut = Files.newOutputStream(logo);
-                            OutputStream defLogoOut = Files.newOutputStream(defaultLogo);
-                        ) {
-                            ImageIO.write(source, "png", logoOut);
-                            ImageIO.write(source, "png", defLogoOut);
+                    try (Resources.ResourceHolder logo =
+                             resources.getWritableImage(serviceContext,
+                                                        "images/logos/" + nodeUuid + ".png",
+                                                        resourcesDir);
+                         Resources.ResourceHolder defaultLogo =
+                             resources.getWritableImage(serviceContext,
+                                                        "images/logo.png", resourcesDir)) {
+                        if (!file.endsWith(".png")) {
+                            try (
+                                OutputStream logoOut = Files.newOutputStream(logo.getPath());
+                                OutputStream defLogoOut = Files.newOutputStream(defaultLogo.getPath());
+                            ) {
+                                ImageIO.write(source, "png", logoOut);
+                                ImageIO.write(source, "png", defLogoOut);
+                            }
+                        } else {
+                            Files.copy(holder.getPath(), logo.getPath(), StandardCopyOption.REPLACE_EXISTING);
+                            Files.copy(holder.getPath(), defaultLogo.getPath(),
+                                       StandardCopyOption.REPLACE_EXISTING);
                         }
-                    } else {
-                        Files.deleteIfExists(logo);
-                        IO.copyDirectoryOrFile(logoFilePath, logo, false);
-                        Files.deleteIfExists(defaultLogo);
-                        IO.copyDirectoryOrFile(logoFilePath, defaultLogo, false);
                     }
                 }
             }
         } catch (Exception e) {
             throw new Exception(
                 "Unable to move uploaded thumbnail to destination directory. Error: " + e.getMessage());
+        } finally {
+            holder.close();
         }
     }
 

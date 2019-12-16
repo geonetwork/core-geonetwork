@@ -23,14 +23,13 @@
 
 package org.fao.geonet.services.feedback;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -115,7 +114,7 @@ public class AddLimitations implements Service {
 
         //--- now add the files chosen from the interface and record in 'downloaded'
         Element downloaded = new Element("downloaded");
-        Path dir = Lib.resource.getDir(context, access, id);
+        final Store store = context.getBean("resourceStore", Store.class);
 
         @SuppressWarnings("unchecked")
         List<Element> files = params.getChildren(Params.FNAME);
@@ -130,22 +129,20 @@ public class AddLimitations implements Service {
                 continue;    // Avoid unsecured file name
             }
 
-            Path file = dir.resolve(fname);
-
             Element fileInfo = new Element("file");
-
-            BinaryFile bFile = BinaryFile.encode(200, file, false);
-            Element details = bFile.getElement();
-            String remoteURL = details.getAttributeValue("remotepath");
-            if (remoteURL != null) {
-                fileInfo.setAttribute("size", "unknown");
-                fileInfo.setAttribute("datemodified", "unknown");
-                fileInfo.setAttribute("name", remoteURL);
-            } else {
-                fileInfo.setAttribute("size", Files.size(file) + "");
-                fileInfo.setAttribute("name", fname);
-                Date date = new Date(Files.getLastModifiedTime(file).toMillis());
-                fileInfo.setAttribute("datemodified", _dateFormat.format(date));
+            try (Store.ResourceHolder resource = store.getResource(context, info.getUuid(), fname)) {
+                BinaryFile bFile = BinaryFile.encode(200, resource.getPath(), false);
+                Element details = bFile.getElement();
+                String remoteURL = details.getAttributeValue("remotepath");
+                if (remoteURL != null) {
+                    fileInfo.setAttribute("size", "unknown");
+                    fileInfo.setAttribute("datemodified", "unknown");
+                    fileInfo.setAttribute("name", remoteURL);
+                } else {
+                    fileInfo.setAttribute("size", resource.getMetadata().getSize() + "");
+                    fileInfo.setAttribute("name", fname);
+                    fileInfo.setAttribute("datemodified", _dateFormat.format(resource.getMetadata().getLastModification()));
+                }
             }
             downloaded.addContent(fileInfo);
         }

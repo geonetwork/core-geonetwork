@@ -206,4 +206,9 @@ public class GeonetParams extends AbstractParams {
         }
         this.useChangeDateForUpdate = useChangeDateForUpdate;
     }
+
+    @Override
+    public String getIcon() {
+        return null;
+    }
 }

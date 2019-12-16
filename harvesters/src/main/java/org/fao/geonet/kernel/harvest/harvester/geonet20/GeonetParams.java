@@ -63,6 +63,11 @@ public class GeonetParams extends AbstractParams {
     //---
     //---------------------------------------------------------------------------
 
+    @Override
+    public String getIcon() {
+        return "gn20.gif";
+    }
+
     public GeonetParams(DataManager dm) {
         super(dm);
     }
