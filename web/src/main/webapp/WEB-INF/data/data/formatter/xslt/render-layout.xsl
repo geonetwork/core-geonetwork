@@ -63,7 +63,7 @@
 
       <xsl:choose>
         <!-- Avoid script injection. Only allows letters, digits and '-', '_' in API id-->
-        <xsl:when test="matches($css, '^[A-Za-z0-9-_]+$')">
+        <xsl:when test="$css != sextant and matches($css, '^[A-Za-z0-9-_]+$')">
           <link rel="stylesheet" type="text/css" href="{$nodeUrl}../static/api-{$css}.css"/>
         </xsl:when>
       </xsl:choose>
