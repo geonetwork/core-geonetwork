@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.records.formatters.cache;
 
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
@@ -52,7 +53,7 @@ public class FormatterCachePublishListener implements AsynchAfterCommitListener 
     @Autowired
     OperationAllowedRepository operationAllowedRepository;
 
-    private static Logger LOGGER =  LoggerFactory.getLogger("geonetwork.index");
+    private static Logger LOGGER =  LoggerFactory.getLogger("geonetwork.formatter");
 
     private static final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
 
@@ -72,8 +73,10 @@ public class FormatterCachePublishListener implements AsynchAfterCommitListener 
     @Override
     public void handleAsync(MetadataIndexCompleted event) {
         final int metadataId = event.getMd().getId();
-        if (operationAllowedRepository.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(
-            ReservedGroup.all.getId(), metadataId, ReservedOperation.view.getId()) != null) {
+        if (event.getMd().getDataInfo().getType() == MetadataType.METADATA
+            && operationAllowedRepository.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(
+                ReservedGroup.all.getId(), metadataId, ReservedOperation.view.getId()
+                ) != null) {
             LOGGER.debug("Refreshing landing page of public record '{}' [{}].", metadataId, Thread.currentThread());
             formatterCache.buildLandingPage(metadataId);
         }
