@@ -1472,7 +1472,8 @@
 
     <withHeldCheck.frequency>0/30 * * * * ?</withHeldCheck.frequency>
 
-    <landingPage.formatter></landingPage.formatter>
+    <landingPage.formatter>xsl-view</landingPage.formatter>
+<!--    <landingPage.formatter>xsl-view?view=sextant&amp;template=sextant-summary-view</landingPage.formatter>-->
     <landingPage.language>${language.default}</landingPage.language>
 
     <!-- Jetty plugin port configuration -->
