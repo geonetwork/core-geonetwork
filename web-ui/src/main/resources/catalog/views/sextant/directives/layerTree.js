@@ -414,7 +414,7 @@
             return scope.member.state && scope.member.state.folded;
           };
           scope.toggleChildrenNodes = function (event, e, forceVisible) {
-            if ($(event.currentTarget).hasClass('inactiveLayerNode')) {return}
+            if (event && $(event.currentTarget).hasClass('inactiveLayerNode')) {return;}
             var visible = forceVisible !== undefined ? forceVisible : !scope.hasCheckedChildren(e);
             e.nodes.forEach(function(n) {
               if (n instanceof ol.layer.Base) {
