@@ -11,18 +11,21 @@
     </div>
 
     <div class="row">
-      <div class="col-md-12 flex-row flex-end">
-        <button type="button" class="btn btn-primary" ng-click="refreshJobList()">
-          <i class="fa" ng-class="loading ? 'fa-spinner fa-spin' : 'fa-refresh'"
+        <div class="input col-md-12 flex-row flex-end">
+          <input type="text" class="index-wfs-search form-control" ng-model="wfsFilterValue" ng-model-options="{ debounce: 500 }"
+                 ng-change="filterWfsBsWithInput()" placeholder="{{'filter' | translate}}" aria-describedby="basic-addon1">
+          <div class="flex-spacer flex-grow"></div>
+          <button type="button" class="btn btn-primary" ng-click="refreshJobList()">
+            <i class="fa" ng-class="loading ? 'fa-spinner fa-spin' : 'fa-refresh'"
              ng-disabled="loading"/>&nbsp;
-          <span translate>refresh</span>
-        </button>
-        <div class="flex-spacer"></div>
-        <button type="button" class="btn btn-success" ng-click="openScheduleSettings()">
-          <i class="fa fa-plus"/>&nbsp;
-          <span translate>wfsIndexingNewSchedule</span>
-        </button>
-      </div>
+            <span translate>refresh</span>
+          </button>
+          <div class="flex-spacer"></div>
+          <button type="button" class="btn btn-success" ng-click="openScheduleSettings()">
+            <i class="fa fa-plus"/>&nbsp;
+            <span translate>wfsIndexingNewSchedule</span>
+          </button>
+        </div>
     </div>
 
     <br>
