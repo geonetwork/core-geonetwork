@@ -24,7 +24,8 @@
 package org.fao.geonet.api.records.formatters;
 
 import com.google.common.collect.Lists;
-
+import jeeves.config.springutil.JeevesDelegatingFilterProxy;
+import jeeves.server.context.ServiceContext;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.Level;
 import org.fao.geonet.AbstractCoreIntegrationTest;
@@ -48,7 +49,6 @@ import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.MockXmlRequest;
 import org.fao.geonet.utils.Xml;
-import org.fao.geonet.web.DefaultLanguage;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -63,6 +63,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import javax.annotation.Nonnull;
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -72,21 +74,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
-import javax.servlet.ServletContext;
-
-import jeeves.config.springutil.JeevesDelegatingFilterProxy;
-import jeeves.server.context.ServiceContext;
-
 import static org.fao.geonet.api.records.formatters.FormatterWidth._100;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 @ContextConfiguration(inheritLocations = true, locations = "classpath:formatter-test-context.xml")
 public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest {
