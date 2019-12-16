@@ -88,7 +88,7 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$", hasSize(2)));
     }
 
@@ -128,7 +128,7 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(put("/srv/api/userselections")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(201));
@@ -165,11 +165,11 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
         // Create
         MvcResult r = this.mockMvc.perform(put("/srv/api/userselections")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(201))
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andReturn();
 
         // Check in DB
@@ -209,7 +209,7 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$", hasSize(1)))
             .andExpect(jsonPath("$[*]", hasItem(metadataUuid)));
 

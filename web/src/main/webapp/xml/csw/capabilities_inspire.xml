@@ -198,17 +198,14 @@
         </inspire_common:TemporalExtent>
       </inspire_common:TemporalReference>
 
-      <inspire_common:Conformity>
-        <inspire_common:Specification
-          xsi:type="inspire_common:citationInspireInteroperabilityRegulation_eng">
-          <inspire_common:Title>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010
-            implementing Directive 2007/2/EC of the European Parliament and of the Council as
-            regards interoperability of spatial data sets and services
-          </inspire_common:Title>
-          <inspire_common:DateOfPublication>2010-12-08</inspire_common:DateOfPublication>
-          <inspire_common:URI>OJ:L:2010:323:0011:0102:EN:PDF</inspire_common:URI>
-          <inspire_common:ResourceLocator>
-            <inspire_common:URL>
+      <inspire_com:Conformity>
+        <inspire_com:Specification
+          xsi:type="inspire_com:citationInspireInteroperabilityRegulation_eng">
+          <inspire_com:Title>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</inspire_com:Title>
+          <inspire_com:DateOfPublication>2010-12-08</inspire_com:DateOfPublication>
+          <inspire_com:URI>OJ:L:2010:323:0011:0102:EN:PDF</inspire_com:URI>
+          <inspire_com:ResourceLocator>
+            <inspire_com:URL>
               http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2010:323:0011:0102:EN:PDF
             </inspire_common:URL>
             <inspire_common:MediaType>application/pdf</inspire_common:MediaType>

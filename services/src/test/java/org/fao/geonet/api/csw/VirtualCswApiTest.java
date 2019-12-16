@@ -144,7 +144,7 @@ public class VirtualCswApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(put("/srv/api/csw/virtuals")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(201));
@@ -173,7 +173,7 @@ public class VirtualCswApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(put("/srv/api/csw/virtuals")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
@@ -199,7 +199,7 @@ public class VirtualCswApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(put("/srv/api/csw/virtuals/" + service.getId())
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -226,7 +226,7 @@ public class VirtualCswApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(put("/srv/api/csw/virtuals/" + serviceToUpdate.getId())
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404));

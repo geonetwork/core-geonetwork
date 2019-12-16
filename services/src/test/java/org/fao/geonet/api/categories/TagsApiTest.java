@@ -147,7 +147,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(put("/srv/api/tags")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -175,7 +175,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(put("/srv/api/tags/" + category.getId())
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
     }

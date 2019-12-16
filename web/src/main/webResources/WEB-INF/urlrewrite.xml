@@ -37,6 +37,10 @@
 
   <!-- Rule to redirect URL to resources from RDF output -->
   <rule>
+    <from>^(.*)/metadata/(.*)$</from>
+    <to type="forward">$1/api/records/$2</to>
+  </rule>
+  <rule>
     <note>In the catalog, a resource is equivalent to one record.
       So redirect to metadata formatter.</note>
     <from>^(.*)/resources/resources/(.*)$</from>

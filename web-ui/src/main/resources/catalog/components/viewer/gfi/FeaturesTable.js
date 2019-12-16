@@ -81,6 +81,30 @@
       element.bootstrapTable('resetView');
     }
 
+    // See http://stackoverflow.com/a/13382873/29655
+    function getScrollbarWidth() {
+      var outer = document.createElement('div');
+      outer.style.visibility = 'hidden';
+      outer.style.width = '100px';
+      outer.style.msOverflowStyle = 'scrollbar';
+      document.body.appendChild(outer);
+      var widthNoScroll = outer.offsetWidth;
+      outer.style.overflow = 'scroll';
+      var inner = document.createElement('div');
+      inner.style.width = '100%';
+      outer.appendChild(inner);
+      var widthWithScroll = inner.offsetWidth;
+      outer.parentNode.removeChild(outer);
+      return widthNoScroll - widthWithScroll;
+    }
+
+    // Force the table to resetWidth on window resize
+    // this enables the header and the rows to be aligned
+    function resizeBsTable() {
+      element.bootstrapTable('resetWidth');
+      element.bootstrapTable('resetView');
+    }
+
     this.loader.getBsTableConfig().then(function(bstConfig) {
       window.removeEventListener('resize', resizeBsTable);
       window.addEventListener('resize', resizeBsTable);
