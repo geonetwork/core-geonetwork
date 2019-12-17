@@ -135,6 +135,24 @@
         });
       });
 
+      $scope.filterItemsinArray = function(stringValue, data) {
+        return data.filter(function(item) {
+          if (item) {
+            return item.toString().indexOf(stringValue.toLowerCase()) >= 0;
+          }
+          return false;
+        });
+      }
+      $scope.filterWfsBsWithInput = function() {
+        $scope.refreshBsTable(
+          $scope.jobsArray.filter(function (job) {
+          return $scope.filterItemsinArray(
+            $scope.wfsFilterValue, Object.values(job)).length > 0;
+        }));
+
+      }
+      $scope.wfsFilterValue = null;
+
       $scope.refreshJobList = function() {
         $scope.jobs = {};
         $scope.error = null;
@@ -218,104 +236,7 @@
             $scope.jobsArray = Object.keys($scope.jobs).sort().map(function (key) {
               return $scope.jobs[key];
             });
-
-            $scope.bsTableControl = {
-              options: {
-                data: $scope.jobsArray,
-                sidePagination: 'client',
-                pagination: true,
-                paginationLoop: true,
-                paginationHAlign: 'right',
-                paginationVAlign: 'bottom',
-                paginationDetailHAlign: 'left',
-                paginationPreText: 'previous',
-                paginationNextText: 'Next page',
-                style: 'min-height:100',
-                classes: 'table table-responsive full-width',
-                sortName: 'endDate',
-                sortOrder: 'desc',
-                columns: [{
-                  field: 'mdUuid',
-                  title: $translate.instant('wfsIndexingMetadata'),
-                  formatter: function(value, row) {
-                    return row.mdUuid ?
-                      '<div data-md-uuid="' + row.mdUuid + '">' +
-                      '  <a class="md-title" style="display: none" href="catalog.search#/metadata/' + row.mdUuid + '">' +
-                      '    <span>' + $translate.instant('recordWithNoTitle') + '</span>' +
-                      '  </a>' +
-                      '  <i class="fa fa-spinner fa-spin"/>' +
-                      '</div>' +
-                      '<code>' + row.mdUuid + '</code>' :
-                      // '<a href="catalog.search#/metadata/' + row.mdUuid + '">' + row.mdUuid + '</a>' :
-                      '<span class="text-muted">' + $translate.instant('noRecordFound') + '</span>';
-                  },
-                  sortable: true
-                }, {
-                  field: 'url',
-                  title: $translate.instant('wfsurl'),
-                  formatter: function(value, row) {
-                    var wfsUrl = row.url; // TODO: transform to getcapabilities
-                    var label = $translate.instant('wfsIndexingFeatureType');
-                    return '<a href="' + row.url + '">' + row.url + '</a> - <a href="' + wfsUrl + '">GetCapabilities</a><br>' +
-                      '<span>' + label + '</span>: <code>' + row.featureType + '<code>';
-                  },
-                  sortable: true
-                }, {
-                  field: 'featureCount',
-                  title: $translate.instant('featureCount'),
-                  sortable: true
-                }, {
-                  field: 'endDate',
-                  title: $translate.instant('wfsIndexingEndDate'),
-                  sortable: true,
-                  formatter: function(value, row) {
-                    return value ? moment(value).format('LLLL') : null;
-                  }
-                }, {
-                  field: 'status',
-                  title: $translate.instant('status'),
-                  formatter: function(value, row) {
-                    return '<span class="label label-' + $scope.getLabelClass(row.status) + '" ' +
-                      'title="' + (row.error || '') + '">' +
-                      row.status + '</span>';
-                  },
-                  sortable: true
-                }, {
-                  field: 'cronScheduleProducerId',
-                  title: $translate.instant('harvesterSchedule'),
-                  formatter: function(value, row) {
-                    var labelAdd = $translate.instant('wfsIndexingAddSchedule');
-                    var labelEdit = $translate.instant('wfsIndexingEditSchedule');
-                    var key = row.url + '#' + row.featureType;
-                    return row.cronScheduleProducerId ?
-                      '<button data-job-key="' + key + '"' +
-                      '        type="button" class="btn btn-sm btn-default btn-primary">' +
-                      '  <span class="fa fa-clock-o"></span>' +
-                      '  <span>' + labelEdit + '</span>' +
-                      '</button>' :
-                      '<button data-job-key="' + key + '"' +
-                      '        type="button" class="btn btn-sm btn-default btn-success">' +
-                      '  <span class="fa fa-clock-o"></span>' +
-                      '  <span>' + labelAdd + '</span>' +
-                      '</button>';
-                  },
-                  sortable: true
-                }, {
-                  field: 'manual-run',
-                  title: '',
-                  formatter: function(value, row) {
-                    var label = $translate.instant('wfsIndexingTrigger');
-                    var key = row.url + '#' + row.featureType;
-                    return '<button data-trigger-job-key="' + key + '"' +
-                      '        type="button" class="btn btn-sm btn-default btn-primary">' +
-                      '  <span class="fa fa-play-circle"></span>' +
-                      '  <span>' + label + '</span>' +
-                      '</button>';
-                  }
-                }],
-                locale: getBsTableLang()
-              }
-            };
+            $scope.refreshBsTable($scope.jobsArray);
           } catch(e) {
             $scope.error = e.message;
           }
@@ -326,6 +247,106 @@
         });
       };
       $scope.refreshJobList();
+
+      $scope.refreshBsTable = function(jobsArray) {
+        $scope.bsTableControl = {
+          options: {
+            data: jobsArray,
+            sidePagination: 'client',
+            pagination: true,
+            paginationLoop: true,
+            paginationHAlign: 'right',
+            paginationVAlign: 'bottom',
+            paginationDetailHAlign: 'left',
+            paginationPreText: 'previous',
+            paginationNextText: 'Next page',
+            style: 'min-height:100',
+            classes: 'table table-responsive full-width',
+            sortName: 'endDate',
+            sortOrder: 'desc',
+            columns: [{
+              field: 'mdUuid',
+              title: $translate.instant('wfsIndexingMetadata'),
+              formatter: function(value, row) {
+                return row.mdUuid ?
+                  '<div data-md-uuid="' + row.mdUuid + '">' +
+                  '  <a class="md-title" style="display: none" href="catalog.search#/metadata/' + row.mdUuid + '">' +
+                  '    <span>' + $translate.instant('recordWithNoTitle') + '</span>' +
+                  '  </a>' +
+                  '  <i class="fa fa-spinner fa-spin"/>' +
+                  '</div>' +
+                  '<code>' + row.mdUuid + '</code>' :
+                  // '<a href="catalog.search#/metadata/' + row.mdUuid + '">' + row.mdUuid + '</a>' :
+                  '<span class="text-muted">' + $translate.instant('noRecordFound') + '</span>';
+              },
+              sortable: true
+            }, {
+              field: 'url',
+              title: $translate.instant('wfsurl'),
+              formatter: function(value, row) {
+                var wfsUrl = row.url; // TODO: transform to getcapabilities
+                var label = $translate.instant('wfsIndexingFeatureType');
+                return '<a href="' + row.url + '">' + row.url + '</a> - <a href="' + wfsUrl + '">GetCapabilities</a><br>' +
+                  '<span>' + label + '</span>: <code>' + row.featureType + '<code>';
+              },
+              sortable: true
+            }, {
+              field: 'featureCount',
+              title: $translate.instant('featureCount'),
+              sortable: true
+            }, {
+              field: 'endDate',
+              title: $translate.instant('wfsIndexingEndDate'),
+              sortable: true,
+              formatter: function(value, row) {
+                return value ? moment(value).format('LLLL') : null;
+              }
+            }, {
+              field: 'status',
+              title: $translate.instant('status'),
+              formatter: function(value, row) {
+                return '<span class="label label-' + $scope.getLabelClass(row.status) + '" ' +
+                  'title="' + (row.error || '') + '">' +
+                  row.status + '</span>';
+              },
+              sortable: true
+            }, {
+              field: 'cronScheduleProducerId',
+              title: $translate.instant('harvesterSchedule'),
+              formatter: function(value, row) {
+                var labelAdd = $translate.instant('wfsIndexingAddSchedule');
+                var labelEdit = $translate.instant('wfsIndexingEditSchedule');
+                var key = row.url + '#' + row.featureType;
+                return row.cronScheduleProducerId ?
+                  '<button data-job-key="' + key + '"' +
+                  '        type="button" class="btn btn-sm btn-default btn-primary">' +
+                  '  <span class="fa fa-clock-o"></span>' +
+                  '  <span>' + labelEdit + '</span>' +
+                  '</button>' :
+                  '<button data-job-key="' + key + '"' +
+                  '        type="button" class="btn btn-sm btn-default btn-success">' +
+                  '  <span class="fa fa-clock-o"></span>' +
+                  '  <span>' + labelAdd + '</span>' +
+                  '</button>';
+              },
+              sortable: true
+            }, {
+              field: 'manual-run',
+              title: '',
+              formatter: function(value, row) {
+                var label = $translate.instant('wfsIndexingTrigger');
+                var key = row.url + '#' + row.featureType;
+                return '<button data-trigger-job-key="' + key + '"' +
+                  '        type="button" class="btn btn-sm btn-default btn-primary">' +
+                  '  <span class="fa fa-play-circle"></span>' +
+                  '  <span>' + label + '</span>' +
+                  '</button>';
+              }
+            }],
+            locale: getBsTableLang()
+          }
+        };
+      }
 
       $scope.getLabelClass = function(status) {
         switch (status.toLowerCase()) {
