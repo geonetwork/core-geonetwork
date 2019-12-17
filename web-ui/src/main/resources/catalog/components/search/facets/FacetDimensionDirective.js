@@ -44,7 +44,8 @@
           // in this facetType set.
           facetList: '=',
           params: '=',
-          tabField: '='
+          tabField: '=',
+          pageSize: '='
         },
         link: function(scope, element, attrs) {
           scope.facetQuery = scope.params['facet.q'];
@@ -79,6 +80,19 @@
             }
             return facet['@label'];
           };
+
+          scope.getPageSize = function(facet) {
+            var defaultPageSizeWhenNotDefined = 5000;
+            if (!scope.facetConfig || !scope.facetConfig.config) {
+              return defaultPageSizeWhenNotDefined;
+            }
+            for (var i = 0; i < scope.facetConfig.config.length; i++) {
+              if (scope.facetConfig.config[i].key === facet['@name']) {
+                return scope.facetConfig.config[i].pageSize;
+              }
+            }
+            return defaultPageSizeWhenNotDefined;
+          }
 
           scope.tabs = null;
           scope.activeTab = null;
@@ -210,7 +224,8 @@
           categoryKey: '=',
           path: '=',
           params: '=',
-          facetConfig: '='
+          facetConfig: '=',
+          pageSize: '='
         },
         compile: function(element) {
           // Use the compile function from the RecursionHelper,
@@ -220,10 +235,41 @@
                 var initialMaxItems = 5;
                 scope.initialMaxItems = initialMaxItems;
                 scope.maxItems = initialMaxItems;
-                scope.toggleAll = function() {
-                  scope.maxItems = (scope.maxItems == Infinity) ?
-                      initialMaxItems : Infinity;
-                };
+
+                if (scope.category) {
+                  scope.evalPageSize = function() {
+                    scope.morePageSize = Math.min (scope.category.length - scope.maxItems, scope.pageSize);
+                    scope.minusPageSize = Math.min (scope.maxItems - initialMaxItems, scope.pageSize);
+                  }
+
+                  scope.evalPageSize();
+
+                  scope.addItems = function() {
+                    scope.maxItems = scope.maxItems + scope.morePageSize;
+                    scope.evalPageSize();
+                  };
+
+                  scope.removeItems = function() {
+                    scope.maxItems = scope.maxItems - scope.minusPageSize;
+                    scope.evalPageSize();
+                  };
+
+
+                  scope.all = function() {
+                    scope.maxItems = scope.category.length;
+                    scope.evalPageSize();
+                  };
+
+
+                  scope.onlyInitial = function() {
+                    scope.maxItems = scope.initialMaxItems;
+                    scope.evalPageSize();
+                  };
+
+                } else {
+                  scope.morePageSize = 0;
+                  scope.minusPageSize = 0;
+                }
 
                 // Facet drill down is based on facet.q parameter.
                 // The facet.q parameter contains a list of comma separated

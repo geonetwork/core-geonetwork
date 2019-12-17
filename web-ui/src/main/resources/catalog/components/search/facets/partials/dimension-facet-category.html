@@ -25,12 +25,29 @@
          data-params="params"
          data-ng-class="isSelected ? '' : 'hidden'"></div>
   </li>
-  <li class="list-group-item"
-      data-ng-if="category.length - initialMaxItems > 0">
-    <button data-ng-click="toggleAll()"
+  <li class="list-group-item">
+
+    <button data-ng-click="addItems()"
+            data-ng-if="morePageSize > 0 && category.length - initialMaxItems > pageSize "
             class="btn btn-link">
-      {{category.length - initialMaxItems}}&nbsp;
-      {{(category.length >= maxItems) ? ('more' | translate) : ('less' | translate)}}
+      {{morePageSize}} {{'moreFacet' | translate}}
     </button>
+
+    <a data-ng-if="morePageSize > 0 && minusPageSize > 0 && category.length - initialMaxItems > pageSize">&nbsp;|&nbsp;</a>
+
+    <button data-ng-click="removeItems()"
+            data-ng-if="minusPageSize > 0 && category.length - initialMaxItems > pageSize"
+            class="btn btn-link">
+      {{minusPageSize}} {{'lessFacet' | translate }}
+    </button>
+
+    <a data-ng-if="(maxItems <  category.length || maxItems > initialMaxItems) && category.length - initialMaxItems > pageSize">&nbsp;(</a>
+    <button data-ng-click="all()" class="btn btn-link" data-ng-if="maxItems <  category.length">
+      {{category.length}}&nbsp;{{'possibleValue' | translate }}</button>
+    <a data-ng-if="maxItems <  category.length && maxItems > initialMaxItems">&nbsp;|&nbsp;</a>
+    <button data-ng-click="onlyInitial()" class="btn btn-link" data-ng-if="maxItems > initialMaxItems">
+      {{initialMaxItems}}&nbsp;{{'only' | translate }}</button>
+    <a data-ng-if="(maxItems <  category.length || maxItems > initialMaxItems) && category.length - initialMaxItems > pageSize">)</a>
+
   </li>
 </ul>
