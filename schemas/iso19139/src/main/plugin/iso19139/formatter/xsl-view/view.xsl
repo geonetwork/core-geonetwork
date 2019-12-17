@@ -142,7 +142,10 @@
         <xsl:when test="$byThesaurus">
           <xsl:for-each-group select="$tags/tag" group-by="@thesaurus">
             <xsl:sort select="@thesaurus"/>
-            <xsl:value-of select="current-grouping-key()"/><br/>
+            <xsl:if test="current-grouping-key() != ''">
+              <xsl:value-of select="current-grouping-key()"/><br/>
+            </xsl:if>
+
             <xsl:for-each select="current-group()">
               <xsl:sort select="."/>
               <a href="#/search?keyword={.}">
@@ -349,6 +352,20 @@
                 <xsl:value-of select="$landingPageUrl"/>
               </a>
               <br/>
+
+              <xsl:variable name="recordCitation">
+                <xsl:for-each select=".//gmd:onLine/*[gmd:protocol/* = 'WWW:LINK-1.0-http--publication-URL']/gmd:description">
+                  <xsl:call-template name="localised">
+                    <xsl:with-param name="langId" select="$langId"/>
+                  </xsl:call-template>
+                </xsl:for-each>
+              </xsl:variable>
+              <xsl:if test="normalize-space($recordCitation) != ''">
+                <br/>
+                <em><xsl:value-of select="$schemaStrings/sxt-record-citation"/></em>
+                <br/>
+                <xsl:value-of select="$recordCitation"/>
+              </xsl:if>
             </p>
           </div>
         </div>
