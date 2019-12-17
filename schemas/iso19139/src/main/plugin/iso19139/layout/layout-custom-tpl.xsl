@@ -74,7 +74,9 @@
           <row>
             <xsl:for-each select="col">
               <col>
-                
+                <xsl:if test="@use != ''">
+                  <xsl:copy-of select="@use|directiveAttributes"/>
+                </xsl:if>
                 <xsl:if test="@del != ''">
                   <xsl:attribute name="remove" select="'true'"/>
 

@@ -1735,7 +1735,14 @@
                       <xsl:otherwise>
                         <!-- Call schema render mode of the field without label and controls.-->
                         <saxon:call-template name="{concat('dispatch-', $schema)}">
-                          <xsl:with-param name="base" select="."/>
+                          <xsl:with-param name="base" select=".[name() != 'directiveAttributes']"/>
+                          <xsl:with-param name="config" as="node()?">
+                            <xsl:if test="@use">
+                              <field>
+                                <xsl:copy-of select="@use|directiveAttributes"/>
+                              </field>
+                            </xsl:if>
+                          </xsl:with-param>
                         </saxon:call-template>
                       </xsl:otherwise>
                     </xsl:choose>
