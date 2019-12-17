@@ -112,6 +112,7 @@ public class FormatterCache {
 
     private final HashMap<String, String> cacheProperties = new HashMap<String, String>();
     private String landingPageFormatter;
+    private Map<String, String> landingPageFormatterParameters = new HashMap<>();
     private String landingPageLanguage = Geonet.DEFAULT_LANGUAGE;
     private ServiceContext _context;
 
@@ -337,7 +338,22 @@ public class FormatterCache {
     }
 
     public void setLandingPageFormatter(String landingPageFormatter) {
-        this.landingPageFormatter = landingPageFormatter;
+        if (landingPageFormatter.contains("?")) {
+            final String[] strings = landingPageFormatter.split("\\?");
+            this.landingPageFormatter = strings[0];
+            if (strings.length > 1) {
+                for (String param : strings[1].split("&")) {
+                    if(param.contains("=")) {
+                        final String[] paramAndValue = param.split("=");
+                        this.landingPageFormatterParameters.put(paramAndValue[0], paramAndValue[1]);
+                    } else {
+                        this.landingPageFormatterParameters.put(param, "");
+                    }
+                }
+            }
+        } else {
+            this.landingPageFormatter = landingPageFormatter;
+        }
     }
 
     public void setContext(ServiceContext context) {
@@ -432,6 +448,7 @@ public class FormatterCache {
                 servletSession.setAttribute(Jeeves.Elem.SESSION, context.getUserSession());
                 final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
                 servletRequest.setSession(servletSession);
+                servletRequest.setParameters(landingPageFormatterParameters);
                 final MockHttpServletResponse response = new MockHttpServletResponse();
 
                 allPublicRecordIds.stream().forEach(r -> {
@@ -480,6 +497,7 @@ public class FormatterCache {
             servletSession.setAttribute(Jeeves.Elem.SESSION, _context.getUserSession());
             final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
             servletRequest.setSession(servletSession);
+            servletRequest.setParameters(landingPageFormatterParameters);
             final MockHttpServletResponse response = new MockHttpServletResponse();
 
             final OperationAllowed publicRecord = operationAllowedRepo.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(ReservedGroup.all.getId(), metadataId, ReservedOperation.view.getId());

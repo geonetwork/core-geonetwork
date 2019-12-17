@@ -339,7 +339,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             if (refreshCache) {
                 cache.remove(key);
             }
-            bytes = cache.get(key, validator, formatMetadata, false);
+            bytes = cache.get(key, validator, formatMetadata, refreshCache ? true : false);
         }
         if (bytes != null) {
             if (!skipPopularity) {
