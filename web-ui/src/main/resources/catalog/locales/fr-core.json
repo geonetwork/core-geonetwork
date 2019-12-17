@@ -480,5 +480,9 @@
     "warnPublishDraft": "Lors de la publication d'une fiche ayant un statut brouillon, le statut passera à approuvé. Voulez-vous continuer ?",
     "cancelWorkingCopy": "Annuler la copie de travail",
     "deleteWorkingCopyRecordConfirm": "Voulez-vous vraiment supprimer la copie de travail ?",
-    "workingCopy": "Brouillon"
+    "workingCopy": "Brouillon",
+    "moreFacet": "de plus",
+    "lessFacet": "de moins",
+    "possibleValue": "valeurs possibles",
+    "only": "seulement"
 }
