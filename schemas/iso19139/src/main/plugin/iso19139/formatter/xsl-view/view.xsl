@@ -307,7 +307,7 @@
                 <!--<xsl:if test="$name != ''">&#160;(</xsl:if>
                 <xsl:value-of select="gmd:organisationName/*"/>
                 <xsl:if test="$name">)</xsl:if>-->
-                <xsl:if test="position() != last()">&#160;-&#160;</xsl:if>
+                <xsl:if test="position() != last()">&#160;,&#160;</xsl:if>
               </xsl:for-each-group>
 
               <!-- Publication year: use last publication date -->
@@ -324,13 +324,13 @@
               </xsl:variable>
 
 
-              <xsl:if test="normalize-space($publicationDate) != ''">
-                (<xsl:value-of select="substring(normalize-space($publicationDate), 1, 4)"/>)
-              </xsl:if>
+              <xsl:choose>
+                <xsl:when test="normalize-space($publicationDate) != ''">
+                  (<xsl:value-of select="substring(normalize-space($publicationDate), 1, 4)"/>).
+                </xsl:when>
+                <xsl:otherwise>.</xsl:otherwise>
+              </xsl:choose>
 
-              <xsl:text>. </xsl:text>
-
-              <!-- Title -->
               <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:title">
                 <xsl:call-template name="localised">
                   <xsl:with-param name="langId" select="$langId"/>
