@@ -111,7 +111,6 @@ public class FilesystemStore implements PersistentStore {
      * page formatter.
      */
     private String landingPageFormatter;
-    private Map<String, String> landingPageFormatterParams;
 
     private synchronized void init() throws SQLException {
         if (!initialized) {
@@ -455,13 +454,5 @@ public class FilesystemStore implements PersistentStore {
 
     public String getLandingPageFormatter() {
         return landingPageFormatter;
-    }
-
-    public void setLandingPageFormatterParams(Map landingPageFormatterParams) {
-        this.landingPageFormatterParams = landingPageFormatterParams;
-    }
-
-    public Map getLandingPageFormatterParams() {
-        return landingPageFormatterParams;
     }
 }

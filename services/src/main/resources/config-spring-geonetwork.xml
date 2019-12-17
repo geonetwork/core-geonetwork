@@ -132,6 +132,7 @@
     <value>xsl</value>
     <value>root</value>
     <value>view</value>
+    <value>template</value>
     <value>approved</value>
     <value>skippopularity</value>
     <value>hide_withheld</value>
@@ -154,12 +155,7 @@
   <bean id="fsStore" class="org.fao.geonet.api.records.formatters.cache.FilesystemStore"
         lazy-init="true">
     <property name="maxSizeGb" value="500"/>
-    <property name="landingPageFormatter" value="xsl-view"/>
-    <property name="landingPageFormatterParams">
-      <map>
-        <entry key="root" value="html"/>
-      </map>
-    </property>
+    <property name="landingPageFormatter" value="\${landingPage.formatter}"/>
   </bean>
 
   <bean id="formatterCacheConfig"
