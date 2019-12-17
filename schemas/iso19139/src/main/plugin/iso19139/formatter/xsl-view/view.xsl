@@ -266,81 +266,94 @@
 
 
   <xsl:template mode="getMetadataCitation" match="gmd:MD_Metadata">
-    <!-- Citation -->
-    <blockquote>
-      <div class="row">
-        <div class="col-md-1">
-          <i class="fa fa-quote-left pull-right"><xsl:comment select="'icon'"/></i>
-        </div>
-        <div class="col-md-11">
-          <h2 title="{$schemaStrings/citationProposal-help}"><xsl:comment select="name()"/>
-            <xsl:value-of select="$schemaStrings/citationProposal"/>
-            <i class="fa fa-info-circle"><xsl:comment select="'icon'"/></i>
-          </h2>
-          <br/>
-          <p>
-            <!-- Custodians -->
-            <xsl:for-each-group select="gmd:identificationInfo/*/gmd:pointOfContact/
-                              *[gmd:role/*/@codeListValue = ('custodian', 'author')]"
-                          group-by="gmd:individualName/gco:CharacterString">
-              <xsl:variable name="name"
-                            select="normalize-space(current-grouping-key())"/>
+    <xsl:variable name="displayCitation"
+                  select="count(.//gmd:protocol[* = ('WWW:LINK-1.0-http--metadata-URL', 'WWW:LINK-1.0-http--publication-URL', 'DOI')]) > 0"/>
+    <xsl:variable name="doiUrl"
+                  select=".//gmd:onLine/*[gmd:protocol/* = ('WWW:LINK-1.0-http--metadata-URL', 'WWW:LINK-1.0-http--publication-URL', 'DOI')]/gmd:linkage/gmd:URL"/>
+    <xsl:variable name="landingPageUrl"
+                  select="if ($doiUrl != '') then $doiUrl else concat($nodeUrl, 'api/records/', $metadataUuid)"/>
 
-              <xsl:value-of select="$name"/>
-              <xsl:if test="$name != ''">&#160;(</xsl:if>
-              <xsl:value-of select="gmd:organisationName/*"/>
-              <xsl:if test="$name">)</xsl:if>
-              <xsl:if test="position() != last()">&#160;-&#160;</xsl:if>
-            </xsl:for-each-group>
+    <xsl:if test="$displayCitation">
+      <blockquote>
+        <div class="row">
+          <div class="col-md-1">
+            <i class="fa fa-quote-left pull-right"><xsl:comment select="'icon'"/></i>
+          </div>
+          <div class="col-md-11">
+            <h2 title="{$schemaStrings/citationProposal-help}"><xsl:comment select="name()"/>
+              <xsl:value-of select="$schemaStrings/citationProposal"/>
+              <i class="fa fa-info-circle"><xsl:comment select="'icon'"/></i>
+            </h2>
+            <br/>
+            <p>
+              <!-- Custodians -->
+              <xsl:for-each-group select="gmd:identificationInfo/*/gmd:pointOfContact/
+                                *[gmd:role/*/@codeListValue = ('custodian', 'author')]"
+                            group-by="gmd:individualName/gco:CharacterString">
+                <xsl:variable name="name"
+                              select="normalize-space(current-grouping-key())"/>
+                <xsl:variable name="orgName">
+                  <xsl:for-each select="current-group()/gmd:organisationName">
+                    <xsl:call-template name="localised">
+                      <xsl:with-param name="langId" select="$langId"/>
+                    </xsl:call-template>
+                  </xsl:for-each>
+                </xsl:variable>
 
-            <!-- Publication year: use last publication date -->
-            <xsl:variable  name="publicationDate">
-              <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[
-                                gmd:dateType/*/@codeListValue = 'publication']/
-                                  gmd:date/gco:*">
-                <xsl:sort select="." order="descending" />
+                <xsl:value-of select="if ($name != '') then $name else $orgName"/>
+                <!--<xsl:if test="$name != ''">&#160;(</xsl:if>
+                <xsl:value-of select="gmd:organisationName/*"/>
+                <xsl:if test="$name">)</xsl:if>-->
+                <xsl:if test="position() != last()">&#160;-&#160;</xsl:if>
+              </xsl:for-each-group>
 
-                <xsl:if test="position() = 1">
-                  <xsl:value-of select="." />
-                </xsl:if>
+              <!-- Publication year: use last publication date -->
+              <xsl:variable  name="publicationDate">
+                <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[
+                                  gmd:dateType/*/@codeListValue = 'publication']/
+                                    gmd:date/gco:*">
+                  <xsl:sort select="." order="descending" />
+
+                  <xsl:if test="position() = 1">
+                    <xsl:value-of select="." />
+                  </xsl:if>
+                </xsl:for-each>
+              </xsl:variable>
+
+
+              <xsl:if test="normalize-space($publicationDate) != ''">
+                (<xsl:value-of select="substring(normalize-space($publicationDate), 1, 4)"/>)
+              </xsl:if>
+
+              <xsl:text>. </xsl:text>
+
+              <!-- Title -->
+              <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:title">
+                <xsl:call-template name="localised">
+                  <xsl:with-param name="langId" select="$langId"/>
+                </xsl:call-template>
               </xsl:for-each>
-            </xsl:variable>
+              <xsl:text>. </xsl:text>
 
+              <!-- Publishers -->
+              <xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/
+                                *[gmd:role/*/@codeListValue = 'publisher']/gmd:organisationName">
+                <xsl:call-template name="localised">
+                  <xsl:with-param name="langId" select="$langId"/>
+                </xsl:call-template>
+                <xsl:if test="position() != last()">&#160;-&#160;</xsl:if>
+              </xsl:for-each>
 
-            <xsl:if test="normalize-space($publicationDate) != ''">
-              (<xsl:value-of select="substring(normalize-space($publicationDate), 1, 4)"/>)
-            </xsl:if>
-
-            <xsl:text>. </xsl:text>
-
-            <!-- Title -->
-            <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:title">
-              <xsl:call-template name="localised">
-                <xsl:with-param name="langId" select="$langId"/>
-              </xsl:call-template>
-            </xsl:for-each>
-            <xsl:text>. </xsl:text>
-
-            <!-- Publishers -->
-            <xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/
-                              *[gmd:role/*/@codeListValue = 'publisher']/gmd:organisationName">
-              <xsl:call-template name="localised">
-                <xsl:with-param name="langId" select="$langId"/>
-              </xsl:call-template>
-              <xsl:if test="position() != last()">&#160;-&#160;</xsl:if>
-            </xsl:for-each>
-
-            <br/>
-            <xsl:variable name="url"
-                          select="concat($nodeUrl, 'api/records/', $metadataUuid)"/>
-            <a href="{$url}">
-              <xsl:value-of select="$url"/>
-            </a>
-            <br/>
-          </p>
+              <br/>
+              <a href="{$landingPageUrl}">
+                <xsl:value-of select="$landingPageUrl"/>
+              </a>
+              <br/>
+            </p>
+          </div>
         </div>
-      </div>
-    </blockquote>
+      </blockquote>
+    </xsl:if>
   </xsl:template>
 
   <!-- Most of the elements are ... -->
