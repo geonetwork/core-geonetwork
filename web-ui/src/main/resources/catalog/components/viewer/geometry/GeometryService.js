@@ -207,7 +207,7 @@
               featureNS: options.gmlFeatureNS ||
                   'http://mapserver.gis.umn.edu/mapserver',
               featureType: options.gmlFeatureElement || 'features',
-              srsName: options.crs !== 'EPSG:4326' ? options.crs : undefined
+              srsName: options.crs
             });
 
             if (options.outputAsWFSFeaturesCollection) {
@@ -314,7 +314,7 @@
                 /http:\/\/www.opengis.net\/gml\/3.2/g,
                 'http://www.opengis.net/gml')
                 .replace(/urn:x-ogc:def:crs:EPSG:6.6:4326/g,
-                  'EPSG:4326'), {
+                  'urn:ogc:def:crs:EPSG:6.6:4326'), {
               dataProjection: options.crs,
               featureProjection: outputProjection
             })[0];
