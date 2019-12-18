@@ -132,15 +132,18 @@
 
             var me = this;
 
-
-
             this.refresh = function () {
               $http.get('../../jolokia/read/geonetwork:name=' + $scope.task + ',idx=*')
-                .then(function (result) {
-                  //console.log(result);
+                .then(function successCallback(result) {
                   me.tasks.length = 0;
 
-                  if (!result.data || !result.data.value) { return; }
+                  // Check if jolokia task available and if there's data available,
+                  // otherwise reschedule the check
+                  if ((result.data.status != 200) || 
+                    !result.data || !result.data.value) {
+                    me.timeout = setTimeout(me.refresh, 1000);
+                    return;
+                  }
 
                   var requireRefresh = false;
 
@@ -160,12 +163,15 @@
                     }
                   });
 
-
-                  // loop
                   if (requireRefresh) {
                     me.timeout = setTimeout(me.refresh, 1000);
                   } else {
                     clearTimeout(me.timeout);
+                    // Clean the tasks with a delay to remove the progress panel
+                    // after a few seconds when the task is finished
+                    setTimeout(function() {
+                      me.tasks.length = 0;
+                    }, 5000);
 
                   }
                 });
