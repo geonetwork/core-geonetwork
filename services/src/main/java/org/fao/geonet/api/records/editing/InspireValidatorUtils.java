@@ -46,8 +46,6 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
@@ -136,7 +134,6 @@ public class InspireValidatorUtils {
      * Check service status.
      *
      * @param endPoint the end point
-     * @param client the client (optional) (optional)
      * @return true, if successful
      * @throws IOException
      */
@@ -147,23 +144,16 @@ public class InspireValidatorUtils {
         // add request header
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
-        ClientHttpResponse response = null;
 
-        try {
-            response = this.execute(context, request);
+        try (ClientHttpResponse response = this.execute(context, request)) {
+            if (response.getStatusCode().value() == 200) {
+                return true;
+            } else {
+                Log.warning(Log.SERVICE, "INSPIRE service not available: " + endPoint + CheckStatus_URL);
+                return false;
+            }
         } catch (Exception e) {
             Log.warning(Log.SERVICE, "Error calling INSPIRE service: " + endPoint, e);
-            return false;
-        } finally {
-            request.completed();
-            request.releaseConnection();
-            response.close();
-        }
-
-        if (response.getStatusCode().value() == 200) {
-            return true;
-        } else {
-            Log.warning(Log.SERVICE, "INSPIRE service not available: " + endPoint + CheckStatus_URL);
             return false;
         }
     }
@@ -173,7 +163,6 @@ public class InspireValidatorUtils {
      *
      * @param endPoint the end point
      * @param xml the xml
-     * @param client the client (optional)
      * @return the string
      */
     private String uploadMetadataFile(ServiceContext context, String endPoint, InputStream xml) {
@@ -210,9 +199,7 @@ public class InspireValidatorUtils {
             Log.error(Log.SERVICE, "Error calling INSPIRE service: " + endPoint, e);
             return null;
         } finally {
-            request.completed();
-            request.releaseConnection();
-            response.close();
+            IOUtils.closeQuietly(response);
         }
     }
 
@@ -221,7 +208,6 @@ public class InspireValidatorUtils {
      *
      * @param endPoint the end point
      * @param testsuite
-     * @param client the client (optional)
      * @return the tests
      */
     private List<String> getTests(ServiceContext context, String endPoint, String testsuite) {
@@ -277,9 +263,7 @@ public class InspireValidatorUtils {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
             return null;
         } finally {
-            request.completed();
-            request.releaseConnection();
-            response.close();
+            IOUtils.closeQuietly(response);
         }
     }
 
@@ -289,7 +273,6 @@ public class InspireValidatorUtils {
      * @param endPoint the end point
      * @param fileId the file id
      * @param testList the test list
-     * @param client the client (optional)
      * @return the string
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
@@ -346,9 +329,7 @@ public class InspireValidatorUtils {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
             return null;
         } finally {
-            request.completed();
-            request.releaseConnection();
-            response.close();
+            IOUtils.closeQuietly(response);
         }
     }
 
@@ -357,7 +338,6 @@ public class InspireValidatorUtils {
      *
      * @param endPoint the end point
      * @param testId the test id
-     * @param client the client (optional)
      * @return true, if is ready
      * @throws Exception
      */
@@ -370,11 +350,8 @@ public class InspireValidatorUtils {
 
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
-        ClientHttpResponse response = null;
 
-        try {
-            response = this.execute(context, request);
-
+        try (ClientHttpResponse response = this.execute(context, request)) {
             if (response.getStatusCode().value() == 200) {
                 String body = CharStreams.toString(new InputStreamReader(response.getBody()));
 
@@ -398,10 +375,6 @@ public class InspireValidatorUtils {
         } catch (Exception e) {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
             throw e;
-        } finally {
-            request.completed();
-            request.releaseConnection();
-            response.close();
         }
 
         return false;
@@ -425,11 +398,8 @@ public class InspireValidatorUtils {
 
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
-        ClientHttpResponse response = null;
 
-        try {
-
-            response = this.execute(context, request);
+        try (ClientHttpResponse response = this.execute(context, request)) {
 
             if (response.getStatusCode().value() == 200) {
 
@@ -455,10 +425,6 @@ public class InspireValidatorUtils {
         } catch (Exception e) {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
             throw e;
-        } finally {
-            request.completed();
-            request.releaseConnection();
-            response.close();
         }
 
         return null;
@@ -550,19 +516,13 @@ public class InspireValidatorUtils {
         // add request header
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
-        ClientHttpResponse response = null;
 
-        try {
-            response = this.execute(context, request);
 
+        try (ClientHttpResponse response = this.execute(context, request)) {
             return IOUtils.toString(response.getBody(), StandardCharsets.UTF_8.name());
         } catch (Exception e) {
             Log.warning(Log.SERVICE, "Error calling INSPIRE service to retrieve the result report: " + endPoint, e);
             throw e;
-        } finally {
-            request.completed();
-            request.releaseConnection();
-            response.close();
         }
     }
 
