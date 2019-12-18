@@ -170,7 +170,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
                                             //    ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
                                             //    metadataValidation.getStatus().getCode()).publish(appContext);
 
-                                            dataManager.indexMetadata(new ArrayList<>(record.getId()));
+                                            dataManager.indexMetadata(new ArrayList<>(Arrays.asList(record.getId() + "")));
                                             inspireMetadata = true;
                                         }
                                     }
