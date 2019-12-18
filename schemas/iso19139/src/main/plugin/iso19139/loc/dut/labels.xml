@@ -2519,7 +2519,7 @@
     <description>Name of the Spatial Reference System. By default set to
       geographic (epsg:4326)
     </description>
-    <example>urn:x-ogc:def:crs:EPSG:6.6:4326</example>
+    <example>urn:ogc:def:crs:EPSG:6.6:4326</example>
   </element>
   <!-- ==================================================== -->
 
