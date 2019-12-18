@@ -67,6 +67,7 @@
           <array>
             <value>Conformance class: INSPIRE Profile based on EN ISO 19115 and EN ISO 19119</value>
             <value>Conformance class: XML encoding of ISO 19115/19119 metadata</value>
+            <value>Conformance class: Conformance class: Metadata for interoperability</value>
           </array>
         </entry>
         <entry key="TG version 2.0 - Data sets and series">
@@ -76,14 +77,14 @@
             <value>Conformance Class 2: INSPIRE data sets and data set series interoperability metadata.</value>
           </array>
         </entry>
-        <entry key="TG version 2.0 - Spatial data service">
+        <entry key="TG version 2.0 - Network services">
           <array>
             <value>Common Requirements for ISO/TC 19139:2007 based INSPIRE metadata records.</value>
-            <value>Conformance Class 1: INSPIRE data sets and data set series baseline metadata.</value>
-            <value>Conformance Class 2: INSPIRE data sets and data set series interoperability metadata.</value>
+            <!--<value>Conformance Class 1: INSPIRE data sets and data set series baseline metadata.</value>
+            <value>Conformance Class 2: INSPIRE data sets and data set series interoperability metadata.</value>-->
             <value>Conformance Class 3: INSPIRE Spatial Data Service baseline metadata.</value>
-            <!--<value>Conformance Class 4: INSPIRE Network Services metadata.</value>
-            <value>Conformance Class 5: INSPIRE Invocable Spatial Data Services metadata.</value>
+            <value>Conformance Class 4: INSPIRE Network Services metadata.</value>
+            <!--<value>Conformance Class 5: INSPIRE Invocable Spatial Data Services metadata.</value>
             <value>Conformance Class 6: INSPIRE Interoperable Spatial Data Services metadata.</value>
             <value>Conformance Class 7: INSPIRE Harmonised Spatial Data Services metadata.</value>-->
           </array>
@@ -93,7 +94,7 @@
     <property name="testsuitesConditions">
       <map>
         <entry key="TG version 2.0 - Data sets and series" value="gmd:hierarchyLevel[*/@codeListValue='dataset']" />
-        <entry key="TG version 2.0 - Spatial data service" value=".//srv:SV_ServiceIdentification" />
+        <entry key="TG version 2.0 - Network services" value=".//srv:SV_ServiceIdentification" />
       </map>
     </property>
     <property name="defaultTestSuite" value="TG version 1.3"/>
