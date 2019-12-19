@@ -43,6 +43,7 @@
   "mapSavedInCatalog": "<a href='#/metadata/{{uuid}}'>View map metadata record</a>.",
   "mapAbstract": "Map abstract",
   "loadAMap": "Load a map",
+  "noMaps": "No maps found",
   "topMaps": "Latest maps",
   "uploadContext": "From file",
   "resetContext": "Default map",
