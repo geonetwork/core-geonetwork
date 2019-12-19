@@ -239,12 +239,37 @@
     .gn-layer-outofrange > label {
       color: #999;
     }
-    .gn-searchlayer {
-      label {
-        font-size: 90%;
-        max-width: 68%;
+    .gn-searchlayer-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      .clearfix();
+      .gn-searchlayer {
+        h3 {
+          font-size: 16px;
+          margin: 10px 0;
+          color: #333;
+        }
+        label {
+          font-size: 90%;
+          max-width: 68%;
+        }
+        ul {
+          padding: 0 0 0 20px;
+          list-style: none;
+          li {
+            margin-bottom: 3px;
+            a {
+              cursor: pointer;
+              &:hover {
+                text-decoration: none;
+              }
+            }
+          }
+        }
       }
     }
+
     .list-group-item {
       transition: max-height @transition-params;
       &:hover {
