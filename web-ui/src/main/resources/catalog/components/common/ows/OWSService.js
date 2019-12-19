@@ -170,20 +170,8 @@
 
           try {
 
-            //check the version (some wfs responds in other version then requested)
-            if (data.indexOf('version="2.0.0"')>-1){
-              version = "2.0";
-            } else if (data.indexOf('version="1.1.0"')>-1) {
-              version = "1.1.0";
-            } else if (data.indexOf('version="1.0.0"')>-1) {
-              version = "1.0.0";
-            } else {
-              console.warn('no version detected');
-              defer.reject({msg: 'wfsGetCapabilitiesFailed',
-                owsExceptionReport: 'No WFS version detected on response'});
-            }
-
             var xml = $.parseXML(data);
+            var version = $(xml).find(":first-child").attr("version");
 
             //First cleanup not supported INSPIRE extensions:
             if (xml.getElementsByTagName('ExtendedCapabilities').length > 0) {
@@ -205,7 +193,7 @@
               xfsCap = unmarshaller110.unmarshalDocument(xml).value;
             } else if (version === '1.0.0') {
               xfsCap = unmarshaller100.unmarshalDocument(xml).value;
-            } else if (version === '2.0') {
+            } else if (version === '2.0.0') {
               xfsCap = unmarshaller20.unmarshalDocument(xml).value;
             } else {
               console.warn('WFS version '+version+' not supported.');

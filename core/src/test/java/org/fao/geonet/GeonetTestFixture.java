@@ -77,7 +77,7 @@ public class GeonetTestFixture {
     private FileSystemPool.CreatedFs currentFs;
 
 
-    public void tearDown() throws IOException {
+    public void tearDown() {
         IO.setFileSystemThreadLocal(null);
         if (currentFs != null) {
             FILE_SYSTEM_POOL.release(currentFs);

@@ -24,10 +24,22 @@
 package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
+
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
 import org.fao.geonet.Constants;
 import org.fao.geonet.ZipUtil;
+import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
@@ -35,18 +47,8 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
 
 /**
  * Export MEF file
@@ -68,16 +70,17 @@ class MEFExporter {
                                 boolean approved) throws Exception {
 
         //Search by ID, not by UUID
-        Integer id =
-            context.getBean(IMetadataUtils.class).findOneByUuid(uuid).getId();
-
+        final int id;
         //Here we just care if we need the approved version explicitly.
         //IMetadataUtils already filtered draft for non editors.
         if (approved) {
-            id = Integer.valueOf(context.getBean(IMetadataUtils.class).getMetadataId(uuid));
+            id = Integer.parseInt(context.getBean(IMetadataUtils.class).getMetadataId(uuid));
+        } else {
+            id = context.getBean(IMetadataUtils.class).findOneByUuid(uuid).getId();
         }
-
-        return doExport(context, id, format, skipUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation);
+        Pair<AbstractMetadata, String> recordAndMetadata = MEFLib.retrieveMetadata(context, id, resolveXlink,
+                removeXlinkAttribute, addSchemaLocation);
+        return export(context, approved, format, skipUUID, recordAndMetadata);
     }
 
     /**
@@ -95,12 +98,12 @@ class MEFExporter {
                                 boolean resolveXlink, boolean removeXlinkAttribute, boolean addSchemaLocation) throws Exception {
         Pair<AbstractMetadata, String> recordAndMetadata = MEFLib.retrieveMetadata(context, id, resolveXlink,
             removeXlinkAttribute, addSchemaLocation);
-        return export(context, id, format, skipUUID, recordAndMetadata);
+        return export(context, true/* TODO: not sure*/, format, skipUUID, recordAndMetadata);
     }
 
-    private static Path export(ServiceContext context, Integer id, Format format, boolean skipUUID,
+    private static Path export(ServiceContext context, boolean approved, Format format, boolean skipUUID,
                                Pair<AbstractMetadata, String> recordAndMetadata)
-        throws Exception, IOException, UnsupportedEncodingException, URISyntaxException {
+        throws Exception {
         AbstractMetadata record = recordAndMetadata.one();
         String xmlDocumentAsString = recordAndMetadata.two();
 
@@ -110,36 +113,36 @@ class MEFExporter {
         }
 
         Path file = Files.createTempFile("mef-", ".mef");
-        Path pubDir = Lib.resource.getDir(context, "public", record.getId());
-        Path priDir = Lib.resource.getDir(context, "private", record.getId());
+        final Store store = context.getBean("resourceStore", Store.class);
 
         try (FileSystem zipFs = ZipUtil.createZipFs(file)) {
             // --- save metadata
             byte[] binData = xmlDocumentAsString.getBytes(Constants.ENCODING);
             Files.write(zipFs.getPath(FILE_METADATA), binData);
 
+            final List<MetadataResource> publicResources = store.getResources(context, record.getUuid(), MetadataResourceVisibility.PUBLIC, null,
+                    approved);
+            final List<MetadataResource> privateResources = store.getResources(context, record.getUuid(), MetadataResourceVisibility.PRIVATE, null,
+                    approved);
+
             // --- save info file
-            binData = MEFLib.buildInfoFile(context, record, format, pubDir, priDir, skipUUID)
-                .getBytes(Constants.ENCODING);
+            binData = MEFLib.buildInfoFile(context, record, format, publicResources, privateResources,
+                skipUUID).getBytes(Constants.ENCODING);
             Files.write(zipFs.getPath(FILE_INFO), binData);
 
-            if (format == Format.PARTIAL || format == Format.FULL) {
-                if (Files.exists(pubDir) && !IO.isEmptyDir(pubDir)) {
-                    IO.copyDirectoryOrFile(pubDir, zipFs.getPath(pubDir.getFileName().toString()), false);
-                }
+
+            if (format == Format.PARTIAL || format == Format.FULL && !publicResources.isEmpty()) {
+                StoreUtils.extract(context, record.getUuid(), publicResources, zipFs.getPath("public"), approved);
             }
 
-            if (format == Format.FULL) {
+            if (format == Format.FULL && !privateResources.isEmpty()) {
                 try {
                     Lib.resource.checkPrivilege(context, "" + record.getId(), ReservedOperation.download);
-                    if (Files.exists(priDir) && !IO.isEmptyDir(priDir)) {
-                        IO.copyDirectoryOrFile(priDir, zipFs.getPath(priDir.getFileName().toString()), false);
-                    }
-
+                    StoreUtils.extract(context, record.getUuid(), privateResources, zipFs.getPath("private"), approved);
                 } catch (Exception e) {
                     // Current user could not download private data
                     Log.warning(Geonet.MEF,
-                        "Error encounteres while trying to import private resources of MEF file. MEF ID: " + id, e);
+                        "Error encountered while trying to import private resources of MEF file. MEF ID: " + record.getId(), e);
 
                 }
             }

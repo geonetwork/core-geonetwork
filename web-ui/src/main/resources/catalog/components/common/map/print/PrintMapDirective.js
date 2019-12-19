@@ -40,6 +40,57 @@
     $scope.enableLegends = true;
 
     /**
+     * Unmanaged layer with custom render method
+     * used to draw the grey rectangle for print extent
+     */
+    var overlayCanvas = document.createElement('canvas');
+    overlayCanvas.style.position = 'absolute';
+    overlayCanvas.style.width = '100%';
+    overlayCanvas.style.height = '100%';
+    var overlayLayer = new ol.layer.Layer({
+      render: function() {
+        // print rectangle might not be ready if config is loading
+        if (!printRectangle) {
+          return;
+        }
+
+        var size = $scope.map.getSize();
+        var height = size[1] * ol.has.DEVICE_PIXEL_RATIO;
+        var width = size[0] * ol.has.DEVICE_PIXEL_RATIO;
+        overlayCanvas.width = width;
+        overlayCanvas.height = height;
+        var ctx = overlayCanvas.getContext('2d');
+        
+
+        var minx, miny, maxx, maxy;
+        minx = printRectangle[0], miny = printRectangle[1],
+          maxx = printRectangle[2], maxy = printRectangle[3];
+
+        ctx.beginPath();
+        // Outside polygon, must be clockwise
+        ctx.moveTo(0, 0);
+        ctx.lineTo(width, 0);
+        ctx.lineTo(width, height);
+        ctx.lineTo(0, height);
+        ctx.lineTo(0, 0);
+        ctx.closePath();
+
+        // Inner polygon,must be counter-clockwise
+        ctx.moveTo(minx, miny);
+        ctx.lineTo(minx, maxy);
+        ctx.lineTo(maxx, maxy);
+        ctx.lineTo(maxx, miny);
+        ctx.lineTo(minx, miny);
+        ctx.closePath();
+
+        ctx.fillStyle = 'rgba(0, 5, 25, 0.75)';
+        ctx.fill();
+
+        return overlayCanvas;
+      }
+    });
+
+    /**
      * Return print configuration from Mapfishprint service
      * @return {*} promise
      */
@@ -73,9 +124,10 @@
     this.activate = function() {
       var initMapEvents = function() {
         deregister = [
-          $scope.map.on('precompose', handlePreCompose),
-          $scope.map.on('postcompose', handlePostCompose),
           $scope.map.getView().on('change:resolution', function(event) {
+            if ($scope.map.getView().getAnimating()) {
+              return;
+            }
             if ($scope.auto) {
               fitRectangleToView();
               $scope.$apply();
@@ -96,6 +148,8 @@
       } else {
         initMapEvents();
       }
+
+      overlayLayer.setMap($scope.map);
     };
 
     this.deactivate = function() {
@@ -106,58 +160,12 @@
           } else {
             // FIXME
             var src = deregister[i].src || deregister[i].target;
-            src.unByKey(deregister[i]);
+            ol.Observable.unByKey(deregister[i]);
           }
         }
       }
+      overlayLayer.setMap(null);
       refreshComp();
-    };
-
-
-    /**
-     * Compose the events
-     * @param {Object} evt map.precompose event
-     */
-    var handlePreCompose = function(evt) {
-      var ctx = evt.context;
-      ctx.save();
-    };
-
-    /**
-     * Compose the grey rectangle for print extent
-     * @param {Object} evt map.postcompose event
-     */
-    var handlePostCompose = function(evt) {
-      var ctx = evt.context;
-      var size = $scope.map.getSize();
-      var height = size[1] * ol.has.DEVICE_PIXEL_RATIO;
-      var width = size[0] * ol.has.DEVICE_PIXEL_RATIO;
-
-      var minx, miny, maxx, maxy;
-      minx = printRectangle[0], miny = printRectangle[1],
-      maxx = printRectangle[2], maxy = printRectangle[3];
-
-      ctx.beginPath();
-      // Outside polygon, must be clockwise
-      ctx.moveTo(0, 0);
-      ctx.lineTo(width, 0);
-      ctx.lineTo(width, height);
-      ctx.lineTo(0, height);
-      ctx.lineTo(0, 0);
-      ctx.closePath();
-
-      // Inner polygon,must be counter-clockwise
-      ctx.moveTo(minx, miny);
-      ctx.lineTo(minx, maxy);
-      ctx.lineTo(maxx, maxy);
-      ctx.lineTo(maxx, miny);
-      ctx.lineTo(minx, miny);
-      ctx.closePath();
-
-      ctx.fillStyle = 'rgba(0, 5, 25, 0.75)';
-      ctx.fill();
-
-      ctx.restore();
     };
 
     var updatePrintRectanglePixels = function(scale) {
@@ -172,20 +180,17 @@
     };
     $scope.refreshComp = refreshComp;
 
-    var fitRectangleToView = function() {
+    this.fitRectangleToView = function() {
       $scope.config.scale = gnPrint.getOptimalScale($scope.map,
-          $scope.config.scales,
-          $scope.config.layout);
+        $scope.config.scales,
+        $scope.config.layout);
 
       refreshComp();
     };
+    var fitRectangleToView = this.fitRectangleToView;
 
     $scope.downloadUrl = function(url) {
-      if (8 == 9) {
-        $window.open(url);
-      } else {
-        $window.location = url;
-      }
+      $window.location = url;
     };
 
     $scope.printing = false;
@@ -399,6 +404,14 @@
                 }
               }
             });
+
+            scope.$watch('config.layout', function(newV, oldV) {
+              if (!newV) {
+                return;
+              }
+              ctrl.fitRectangleToView.call(ctrl);
+            });
+
           }
         };
       }]);

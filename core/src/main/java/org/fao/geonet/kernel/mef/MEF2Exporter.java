@@ -29,9 +29,13 @@ import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.ZipUtil;
+import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataRelation;
+import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
@@ -44,7 +48,6 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRelationRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
@@ -71,7 +74,7 @@ class MEF2Exporter {
     public static Path doExport(ServiceContext context, Set<String> uuids,
                                 Format format, boolean skipUUID, Path stylePath, boolean resolveXlink,
                                 boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation) throws Exception {
-        return doExport(context, uuids, format, skipUUID, stylePath, resolveXlink, removeXlinkAttribute, skipError, addSchemaLocation, false);
+    	return doExport(context, uuids, format, skipUUID, stylePath, resolveXlink, removeXlinkAttribute, skipError, addSchemaLocation, false);
     }
 
     /**
@@ -125,7 +128,8 @@ class MEF2Exporter {
 
                 //Here we just care if we need the approved version explicitly.
                 //IMetadataUtils already filtered draft for non editors.
-                if (approved) {
+
+                if(approved) {
                     md = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
                 }
                 String id = String.valueOf(md.getId());
@@ -181,7 +185,6 @@ class MEF2Exporter {
 
                 createMetadataFolder(context, md, zipFs, skipUUID, stylePath,
                     format, resolveXlink, removeXlinkAttribute, addSchemaLocation);
-
             }
             Files.write(zipFs.getPath("/index.csv"), csvBuilder.toString().getBytes(Constants.CHARSET));
             Files.write(zipFs.getPath("/index.html"), Xml.getString(html).getBytes(Constants.CHARSET));
@@ -230,9 +233,6 @@ class MEF2Exporter {
         if (!"y".equals(isTemp) && !"n".equals(isTemp))
             throw new Exception("Cannot export sub template");
 
-        Path pubDir = Lib.resource.getDir(context, "public", id);
-        Path priDir = Lib.resource.getDir(context, "private", id);
-
         final Path metadataXmlDir = metadataRootDir.resolve(MD_DIR);
         Files.createDirectories(metadataXmlDir);
 
@@ -253,23 +253,28 @@ class MEF2Exporter {
             Files.write(featureMdDir.resolve(FILE_METADATA), ftrecordAndMetadata.two().getBytes(CHARSET));
         }
 
+        final Store store = context.getBean("resourceStore", Store.class);
+        final List<MetadataResource> publicResources = store.getResources(context, metadata.getUuid(),
+                MetadataResourceVisibility.PUBLIC, null, true);
+        final List<MetadataResource> privateResources = store.getResources(context, metadata.getUuid(),
+                MetadataResourceVisibility.PRIVATE, null, true);
 
         // --- save info file
-        byte[] binData = MEFLib.buildInfoFile(context, record, format, pubDir,
-            priDir, skipUUID).getBytes(Constants.ENCODING);
+        byte[] binData = MEFLib.buildInfoFile(context, record, format, publicResources,
+                privateResources, skipUUID).getBytes(Constants.ENCODING);
 
         Files.write(metadataRootDir.resolve(FILE_INFO), binData);
 
         // --- save thumbnails and maps
 
         if (format == Format.PARTIAL || format == Format.FULL) {
-            IO.copyDirectoryOrFile(pubDir, metadataRootDir, true);
+            StoreUtils.extract(context, metadata.getUuid(), publicResources, zipFs.getPath("public"), true);
         }
 
         if (format == Format.FULL) {
             try {
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
-                IO.copyDirectoryOrFile(priDir, metadataRootDir, true);
+                StoreUtils.extract(context, metadata.getUuid(), privateResources, zipFs.getPath("private"), true);
             } catch (Exception e) {
                 // Current user could not download private data
             }

@@ -781,8 +781,8 @@
         return ret;
       },
       getThumbnails: function() {
+        var images = {list: []};
         if (angular.isArray(this.image)) {
-          var images = {list: []};
           for (var i = 0; i < this.image.length; i++) {
             var s = this.image[i].split('|');
             var insertFn = 'push';
@@ -802,6 +802,9 @@
 
             images.list[insertFn]({url: s[1], label: s[2]});
           }
+        } else if (angular.isDefined(this.image)){
+          var s = this.image.split('|');
+          images.list.push({url: s[1], label: s[2]});
         }
         return images;
       },

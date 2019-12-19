@@ -385,6 +385,13 @@
         <groupId>com.github.lookfirst</groupId>
         <artifactId>sardine</artifactId>
         <version>5.1-GEONETWORK</version>
+        <exclusions>
+          <exclusion>
+            <!-- depends on an old version of httpcore, but the new one is backward compatible -->
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -548,11 +555,6 @@
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-core</artifactId>
         <version>${log4j2.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.httpcomponents</groupId>
-        <artifactId>httpcore</artifactId>
-        <version>${httpcomponents.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
@@ -760,7 +762,7 @@
       <dependency>
         <groupId>joda-time</groupId>
         <artifactId>joda-time</artifactId>
-        <version>2.2</version>
+        <version>2.10.3</version>
       </dependency>
       <dependency>
         <groupId>jaxen</groupId>
@@ -1263,7 +1265,7 @@
         <module>slave</module>
         <module>schemas-test</module>
         <module>web-ui</module>
-        <module>web-ui-docs</module>
+        <!--<module>web-ui-docs</module>-->
         <module>web</module>
       </modules>
     </profile>
@@ -1376,7 +1378,7 @@
     <geotools.version>16.0</geotools.version>
     <pg.version>9.4.1211</pg.version>
 
-    <spring.version>4.2.6.RELEASE</spring.version>
+    <spring.version>4.3.0.RELEASE</spring.version>
     <spring.security.version>3.2.0.RELEASE</spring.security.version>
     <metrics.version>2.1.1</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
@@ -1396,7 +1398,7 @@
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>3.18</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
-    <httpcomponents.version>4.4.1</httpcomponents.version>
+    <httpcomponents.version>4.5.9</httpcomponents.version>
     <gn.schemas.version>3.7</gn.schemas.version>
     <skipIT>true</skipIT> <!-- disable integration tests by default, use the "it" profile to run them which enables them -->
   </properties>

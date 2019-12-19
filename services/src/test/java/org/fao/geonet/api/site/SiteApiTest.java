@@ -45,7 +45,7 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
         this.mockMvc.perform(get("/srv/api/site")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$['system/site/name']", is("My GeoNetwork catalogue")));
     }
 
@@ -59,7 +59,7 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$['system/site/name']", is("My GeoNetwork catalogue")));
     }
 
@@ -73,7 +73,7 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json"))
             .session(this.mockHttpSession))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.catalogue['data.dataDir']", is(not(isEmptyOrNullString()))))
             .andExpect(jsonPath("$.main['java.version']", is(not(isEmptyOrNullString()))))
             .andExpect(jsonPath("$.database['db.url']", is(not(isEmptyOrNullString()))));
@@ -90,7 +90,7 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andReturn();
 
         Assert.assertTrue(result.getResponse().getContentAsString().equals("false"));
@@ -123,7 +123,7 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andReturn();
 
         Assert.assertTrue(result.getResponse().getContentAsString().equals("false"));
@@ -140,7 +140,7 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andReturn();
 
         Assert.assertTrue(result.getResponse().getContentAsString().equals("false"));
@@ -152,7 +152,7 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
         this.mockMvc.perform(get("/srv/api/site/info/build")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.stagingProfile", is(not(isEmptyOrNullString()))))
             .andExpect(jsonPath("$.buildDate", is(not(isEmptyOrNullString()))))
             .andExpect(jsonPath("$.version", is(not(isEmptyOrNullString()))))
@@ -165,7 +165,7 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
         this.mockMvc.perform(get("/srv/api/site/info/transforms")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$", hasSize(greaterThan(0))));
     }
 

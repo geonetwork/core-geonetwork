@@ -44,9 +44,8 @@
     'gn_mdview',
     'gn_mdactions',
     'ui.bootstrap.buttons',
-    'ui.bootstrap.tabs',
     'gn_es',
-    'ngeo'
+    'ui.bootstrap.tabs'
   ]);
 
 

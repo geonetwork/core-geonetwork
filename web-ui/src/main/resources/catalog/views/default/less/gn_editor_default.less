@@ -364,7 +364,6 @@
         padding-right: 0;
       }
     }
-
   }
   // sidebar in the editor
   .gn-editor-tools-container {
@@ -385,6 +384,26 @@
         }
       }
     }
+  }
+}
+// map for Editor and Batch Editor
+.gn-drawmap-panel {
+  .gn-editor-map {
+    padding: 15px;
+    position: relative;
+    margin-top: 30px;
+    [ol-map] {
+      .ol-attribution {
+        .gn-attribution();
+      }
+    }
+  }
+}
+// online resource panel
+.add-onlinesrc {
+  // attribution on the 'make thumbnail' map 
+  .ol-attribution {
+    .gn-attribution();
   }
 }
 

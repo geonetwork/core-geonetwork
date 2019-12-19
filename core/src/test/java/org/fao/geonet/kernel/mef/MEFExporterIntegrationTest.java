@@ -27,7 +27,6 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.ZipUtil;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.file.FileSystem;
@@ -39,7 +38,7 @@ import static org.junit.Assert.assertTrue;
 
 public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
 
-    @Ignore
+    @Test
     public void testDoExport() throws Exception {
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
@@ -57,6 +56,8 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
             assertTrue(Files.exists(zipFs.getPath("private/basins.zip")));
             assertTrue(Files.exists(zipFs.getPath("public/thumbnail.gif")));
             assertTrue(Files.exists(zipFs.getPath("public/thumbnail_s.gif")));
+        } finally {
+            Files.delete(path);
         }
         path = MEFExporter.doExport(context, "0e1943d6-64e8-4430-827c-b465c3e9e55c", MEFLib.Format.FULL, false, false, false, false, true);
 
@@ -65,12 +66,8 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
             assertTrue(Files.exists(zipFs.getPath("info.xml")));
             assertFalse(Files.exists(zipFs.getPath("private")));
             assertFalse(Files.exists(zipFs.getPath("public")));
+        } finally {
+            Files.delete(path);
         }
     }
-
-    @Test
-    public void testDummy() {
-
-    }
-
 }

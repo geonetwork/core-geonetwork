@@ -115,7 +115,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
     private EntityManager _entityManager;
 
     @Autowired private MetadataRepository metadataRepository;
-    
+
     private String uuid;
     private int id;
     private AbstractMetadata md;
@@ -172,7 +172,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .session(mockHttpSession)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.code").value(equalTo("resource_not_found")));
 
         mockMvc.perform(get("/srv/api/records/" + nonExistentUuid)
@@ -210,7 +210,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .session(mockHttpSession)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.code").value(equalTo("forbidden")))
             .andExpect(jsonPath("$.message").value(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
 
@@ -299,7 +299,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
                 equalTo(String.format("inline; filename=\"%s.%s\"", this.uuid, "json"))))
             .andExpect(content().string(containsString(this.uuid)))
@@ -394,7 +394,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .session(mockHttpSession)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.code").value(equalTo("forbidden")))
             .andExpect(jsonPath("$.message").value(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
 
@@ -417,7 +417,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .session(mockHttpSession)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.code").value(equalTo("resource_not_found")));
 
         mockMvc.perform(get("/srv/api/records/" + nonExistentUuid + "/formatters/xml")
@@ -529,7 +529,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .session(mockHttpSession)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.code").value(equalTo("resource_not_found")));
 
         mockMvc.perform(get("/srv/api/records/" + nonExistentUuid + "/related")
@@ -550,7 +550,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .session(mockHttpSession)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.code").value(equalTo("forbidden")))
             .andExpect(jsonPath("$.message").value(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
 
@@ -576,12 +576,12 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         final String DATASET_UUID = "842f9143-fd7d-452c-96b4-425ca1281642";
 
 
-////        TODOES
+//
 //        mockMvc.perform(get("/srv/api/records/" + MAIN_UUID + "/related")
 //            .session(mockHttpSession)
 //            .accept(MediaType.APPLICATION_JSON))
 //            .andExpect(status().isOk())
-//            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+//            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
 //
 //        mockMvc.perform(get("/srv/api/records/" + MAIN_UUID + "/related")
 //            .session(mockHttpSession)
@@ -595,7 +595,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 //            .session(mockHttpSession)
 //            .accept(MediaType.APPLICATION_JSON))
 //            .andExpect(status().isOk())
-//            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
 //            //.andExpect(jsonPath("$.children").isNotEmpty())
 //            .andExpect(jsonPath("$." + RelatedItemType.thumbnails, notNullValue()));
 //
@@ -617,7 +617,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 //                .session(mockHttpSession)
 //                .accept(MediaType.APPLICATION_JSON))
 //                .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
 //                .andExpect(jsonPath("$." + type).isNotEmpty())
 //                .andExpect(jsonPath("$").value(hasKey(type.toString())));
 //
@@ -641,7 +641,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 //            .accept(MediaType.APPLICATION_JSON))
 //            .andDo(print())
 //            .andExpect(status().isOk())
-//            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
 //            .andExpect(jsonPath("$." + RelatedItemType.children).isArray())
 //            .andExpect(jsonPath("$." + RelatedItemType.children, hasSize(1)));
 //

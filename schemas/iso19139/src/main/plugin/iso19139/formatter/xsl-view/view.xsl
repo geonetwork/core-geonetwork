@@ -387,24 +387,26 @@
 
     <xsl:variable name="role" select="*/gmd:role/gmd:CI_RoleCode/@codeListValue" />
 
-    <!-- Display name is <org name> - <individual name> (<position name> -->
+    <!-- Display name is <org name> - <individual name> (<position name>) -->
+    <!-- with separator/parentheses as required -->
     <xsl:variable name="displayName">
-      <xsl:choose>
-        <xsl:when
-          test="*/gmd:organisationName and */gmd:individualName">
-          <!-- Org name may be multilingual -->
-          <xsl:apply-templates mode="render-value"
-                               select="*/gmd:organisationName"/>
-          - <xsl:apply-templates mode="render-value"
-                  select="*/gmd:individualName"/>
-            <xsl:if test="*/gmd:positionName">
-              (<xsl:apply-templates mode="render-value" select="*/gmd:positionName"/>)
-            </xsl:if>
-        </xsl:when>
-        <xsl:otherwise>
-            <xsl:value-of select="*/gmd:organisationName|*/gmd:individualName"/>
-        </xsl:otherwise>
-      </xsl:choose>
+      <xsl:if test="*/gmd:organisationName">
+        <xsl:apply-templates mode="render-value" select="*/gmd:organisationName"/>
+      </xsl:if>
+      <xsl:if test="*/gmd:organisationName and */gmd:individualName|*/gmd:positionName"> - </xsl:if>
+      <xsl:if test="*/gmd:individualName">
+        <xsl:apply-templates mode="render-value" select="*/gmd:individualName"/>
+      </xsl:if>
+      <xsl:if test="*/gmd:positionName">
+        <xsl:choose>
+          <xsl:when test="*/gmd:individualName">
+            (<xsl:apply-templates mode="render-value" select="*/gmd:positionName"/>)
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates mode="render-value" select="*/gmd:positionName"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
     </xsl:variable>
 
     <div class="gn-contact">

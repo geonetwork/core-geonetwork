@@ -40,6 +40,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
@@ -57,6 +58,8 @@ import org.fao.geonet.domain.HarvestHistory_;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -67,7 +70,6 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
@@ -75,7 +77,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.HarvestHistoryRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -111,7 +112,7 @@ import jeeves.server.context.ServiceContext;
  * If not, we may not be able to even stop a frozen harvester.
  *
  */
-public abstract class AbstractHarvester<T extends HarvestResult> {
+public abstract class AbstractHarvester<T extends HarvestResult, P extends AbstractParams>  {
     public static final String HARVESTER_GROUP_NAME = "HARVESTER_GROUP_NAME";
     private static final String SCHEDULER_ID = "abstractHarvester";
     /**
@@ -124,7 +125,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     private static final Integer LONG_WAIT = 30;
 
-    protected final ReentrantLock lock = new ReentrantLock(false);
+    private final ReentrantLock lock = new ReentrantLock(false);
 
     /**
      * Should we cancel the harvester?
@@ -140,7 +141,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     protected IMetadataManager metadataManager;
     protected IMetadataUtils metadataUtils;
 
-    protected AbstractParams params;
+    protected P params;
     protected T result;
 
     protected Logger log = Log.createLogger(Geonet.HARVESTER);
@@ -155,16 +156,16 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     /**
      * Contains all the warnings and errors that didn't abort the execution, but were thrown during harvesting
      */
-    private List<HarvestError> errors = Collections.synchronizedList(new LinkedList<HarvestError>());
+    private List<HarvestError> errors = Collections.synchronizedList(new LinkedList<>());
     private volatile boolean running = false;
 
-    public static AbstractHarvester<?> create(String type, ServiceContext context) throws BadParameterEx, OperationAbortedEx {
+    public static AbstractHarvester<?, ?> create(String type, ServiceContext context) throws BadParameterEx, OperationAbortedEx {
         if (type == null) {
             throw new BadParameterEx("type", null);
         }
 
         try {
-            AbstractHarvester<?> ah = context.getApplicationContext().getBean(type, AbstractHarvester.class);
+            AbstractHarvester<?, ?> ah = context.getBean(type, AbstractHarvester.class);
             ah.setContext(context);
             return ah;
         } catch (Exception e) {
@@ -235,7 +236,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         error = null;
         this.context = context;
 
-        doInit(node, context);
+        doInit(node);
 
         initInfo(context);
 
@@ -295,9 +296,10 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
                 final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
                 final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
+                final Resources resources = context.getBean(Resources.class);
 
                 final Specifications<? extends AbstractMetadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
-                Set<String> sources = new HashSet<String>();
+                Set<String> sources = new HashSet<>();
                 for (Integer id : metadataRepository.findAllIdsBy(ownedByHarvester)) {
                     sources.add(metadataUtils.findOne(id).getSourceInfo().getSourceId());
                     metadataManager.deleteMetadata(context, "" + id);
@@ -308,12 +310,12 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                     Long ownedBySource =
                             metadataRepository.count(Specifications.where(MetadataSpecs.hasSource(sourceUuid)));
                     if (ownedBySource == 0 && !sourceUuid.equals(params.getUuid()) && sourceRepository.exists(sourceUuid)) {
-                        removeIcon(sourceUuid);
+                        removeIcon(resources, sourceUuid);
                         sourceRepository.delete(sourceUuid);
                     }
                 }
 
-                doDestroy();
+                doDestroy(resources);
             } else {
                 log.error("Harvester '" + this.getID() + "' looks deadlocked.");
             }
@@ -772,32 +774,75 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         return types[0];
     }
 
-    public AbstractParams getParams() {
+    public P getParams() {
         return params;
     }
 
-    protected abstract void doInit(Element entry, ServiceContext context) throws BadInputEx;
+    private void doInit(Element node) throws BadInputEx {
+        setParams(createParams());
+        params.create(node);
+    }
 
-    protected void doDestroy() {
-        removeIcon(getParams().getUuid());
+    private void doDestroy(final Resources resources) {
+        removeIcon(resources, getParams().getUuid());
 
         context.getBean(SourceRepository.class).delete(getParams().getUuid());
         // FIXME: Should also delete the categories we have created for servers
     }
 
-    private void removeIcon(String uuid) {
-        Path icon = Resources.locateLogosDir(context).resolve(uuid+ ".gif");
+    private void removeIcon(final Resources resources, String uuid) {
 
         try {
-            Files.deleteIfExists(icon);
+            resources.deleteImageIfExists(uuid + ".gif", resources.locateLogosDir(context));
         } catch (IOException e) {
-            Log.warning(Geonet.HARVESTER + "." + getType(), "Unable to delete icon: " + icon, e);
+            Log.warning(Geonet.HARVESTER + "." + getType(), "Unable to delete icon: " + uuid, e);
         }
     }
 
-    protected abstract String doAdd(Element node) throws BadInputEx, SQLException;
+    private final String doAdd(Element node) throws BadInputEx, SQLException {
+        params = createParams();
 
-    protected abstract void doUpdate(String id, Element node) throws BadInputEx, SQLException;
+        //--- retrieve/initialize information
+        params.create(node);
+
+        //--- force the creation of a new uuid
+        params.setUuid(UUID.randomUUID().toString());
+
+        String id = harvesterSettingsManager.add("harvesting", "node", getType());
+        storeNode(params, "id:" + id);
+
+        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), SourceType.harvester);
+        context.getBean(SourceRepository.class).save(source);
+        final String icon = params.getIcon();
+        if (icon != null) {
+            context.getBean(Resources.class)
+                    .copyLogo(context, "images" + File.separator + "harvesting" + File.separator + icon, params.getUuid());
+        }
+
+        return id;
+    }
+
+    private void doUpdate(String id, Element node) throws BadInputEx, SQLException {
+        @SuppressWarnings("unchecked")
+        P copy = (P) params.copy();
+        //--- update variables
+        copy.update(node);
+        String path = "harvesting/id:" + id;
+        harvesterSettingsManager.removeChildren(path);
+        //--- update database
+        storeNode(copy, path);
+        //--- we update a copy first because if there is an exception CswParams
+        //--- could be half updated and so it could be in an inconsistent state
+        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), SourceType.harvester);
+        context.getBean(SourceRepository.class).save(source);
+        final String icon = copy.getIcon();
+        if (icon != null) {
+            context.getBean(Resources.class)
+                    .copyLogo(context, "images" + File.separator + "harvesting" + File.separator + icon, copy.getUuid());
+        }
+
+        setParams(copy);
+    }
 
     protected void doAddInfo(Element node) {
         //--- if the harvesting is not started yet, we don't have any info
@@ -820,9 +865,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
 
     /**
-     * Invoked from doAdd and doUpdate in sub class implementations.
+     * Invoked from doAdd and doUpdate.
      */
-    protected void storeNode(AbstractParams params, String path) throws SQLException {
+    private void storeNode(P params, String path) throws SQLException {
         String siteId = harvesterSettingsManager.add(path, "site", "");
         String translations = harvesterSettingsManager.add(ID_PREFIX + siteId, AbstractParams.TRANSLATIONS, "");
         String optionsId = harvesterSettingsManager.add(path, "options", "");
@@ -837,11 +882,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
         harvesterSettingsManager.add(ID_PREFIX + siteId, "uuid", params.getUuid());
 
-        /** User who created or updated this node. */
+        /* User who created or updated this node. */
         harvesterSettingsManager.add(ID_PREFIX + siteId, "ownerId", params.getOwnerId());
-        /** User selected by user who created or updated this node. */
+        /* User selected by user who created or updated this node. */
         harvesterSettingsManager.add(ID_PREFIX + siteId, "ownerUser", params.getOwnerIdUser());
-        /** Group selected by user who created or updated this node. */
+        /* Group selected by user who created or updated this node. */
         harvesterSettingsManager.add(ID_PREFIX + siteId, "ownerGroup", params.getOwnerIdGroup());
 
         String useAccId = harvesterSettingsManager.add(ID_PREFIX + siteId, "useAccount", params.isUseAccount());
@@ -878,7 +923,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     /**
      * Override this method with an empty body to avoid privileges storage.
      */
-    protected void storePrivileges(AbstractParams params, String path) {
+    private void storePrivileges(P params, String path) {
         String privId = harvesterSettingsManager.add(path, "privileges", "");
 
         for (Privileges p : params.getPrivileges()) {
@@ -892,7 +937,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     /**
      * Override this method with an empty body to avoid categories storage.
      */
-    protected void storeCategories(AbstractParams params, String path) {
+    private void storeCategories(P params, String path) {
         String categId = harvesterSettingsManager.add(path, "categories", "");
 
         for (String id : params.getCategories()) {
@@ -903,7 +948,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     /**
      * Override this method to store harvesting node's specific settings.
      */
-    protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
+    protected void storeNodeExtra(P params, String path, String siteId, String optionsId) throws SQLException {
     }
 
     protected void setValue(Map<String, Object> values, String path, Element el, String name) {
@@ -922,7 +967,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         el.addContent(new Element(name).setText(Integer.toString(value)));
     }
 
-    public void setParams(AbstractParams params) {
+    public void setParams(P params) {
         this.params = params;
     }
 
@@ -982,16 +1027,13 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     public static String[] getNonDisabledHarvesterTypes(ServiceContext context) {
         String[] availableTypes = context.getApplicationContext().getBeanNamesForType(AbstractHarvester.class);
-        SettingManager localSettingManager = context.getApplicationContext().getBean(SettingManager.class);
+        SettingManager localSettingManager = context.getBean(SettingManager.class);
         String disabledTypesString = StringUtils.defaultIfBlank(localSettingManager.getValue(Settings.SYSTEM_HARVESTER_DISABLED_HARVESTER_TYPES), "");
         String[] disabledTypes = StringUtils.split(disabledTypesString.toLowerCase().replace(',', ' '), " ");
 
-        String[] result = Arrays.stream(availableTypes)
+        return Arrays.stream(availableTypes)
             .filter(type -> Arrays.stream(disabledTypes).noneMatch(type::equalsIgnoreCase))
             .collect(Collectors.toList()).toArray(new String[]{});
-
-        return result;
-
     }
 
     /**
@@ -1017,4 +1059,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         final Group group = context.getBean(GroupRepository.class).findOne(Integer.parseInt(ownerId));
         return group.getEmail();
     }
+
+    protected abstract P createParams();
 }

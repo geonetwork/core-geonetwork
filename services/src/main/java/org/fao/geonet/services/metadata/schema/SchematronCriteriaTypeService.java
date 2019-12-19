@@ -69,8 +69,8 @@ public class SchematronCriteriaTypeService implements Service {
 
     @Override
     public Element exec(Element params, ServiceContext context) throws Exception {
-        SchemaManager schemaManager = context.getApplicationContext().getBean(SchemaManager.class);
-        SchematronCriteriaGroupRepository criteriaGroupRepo = context.getApplicationContext().getBean(SchematronCriteriaGroupRepository.class);
+        SchemaManager schemaManager = context.getBean(SchemaManager.class);
+        SchematronCriteriaGroupRepository criteriaGroupRepo = context.getBean(SchematronCriteriaGroupRepository.class);
         final XmlCacheManager cacheManager = context.getBean(XmlCacheManager.class);
 
         Element schematrons = schematronService.exec(params, context);

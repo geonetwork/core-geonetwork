@@ -36,6 +36,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -43,12 +44,14 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
+import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
@@ -65,12 +68,12 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
@@ -103,6 +106,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -188,14 +192,14 @@ public class MetadataInsertDeleteApi {
             HttpServletRequest request) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
+        Store store = context.getBean("resourceStore", Store.class);
 
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
                 && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
             MetadataUtils.backupRecord(metadata, context);
         }
 
-        IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(dataDirectory, metadata.getId()));
-
+        store.delResources(context, metadataUuid, true);
         metadataManager.deleteMetadata(context, metadata.getId() + "");
 
         dataManager.forceIndexChanges();
@@ -220,7 +224,7 @@ public class MetadataInsertDeleteApi {
             @ApiParam(value = API_PARAM_BACKUP_FIRST, required = false) @RequestParam(required = false, defaultValue = "true") boolean withBackup,
             @ApiIgnore HttpSession session, HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-
+        Store store = context.getBean("resourceStore", Store.class);
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
 
@@ -238,8 +242,7 @@ public class MetadataInsertDeleteApi {
                     MetadataUtils.backupRecord(metadata, context);
                 }
 
-                IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class),
-                        String.valueOf(metadata.getId())));
+                store.delResources(context, metadata.getUuid());
 
                 metadataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
 
@@ -464,8 +467,7 @@ public class MetadataInsertDeleteApi {
         dataManager.activateWorkflowIfConfigured(context, newId, group);
 
         try {
-            copyDataDir(context, sourceMetadata.getId(), newId, Params.Access.PUBLIC);
-            copyDataDir(context, sourceMetadata.getId(), newId, Params.Access.PRIVATE);
+            StoreUtils.copyDataDir(context, sourceMetadata.getId(), Integer.parseInt(newId), true);
         } catch (IOException e) {
             Log.warning(Geonet.DATA_MANAGER,
                     String.format(
@@ -502,15 +504,6 @@ public class MetadataInsertDeleteApi {
         }
 
         return newId;
-    }
-
-    private void copyDataDir(ServiceContext context, int oldId, String newId, String access) throws IOException {
-        final Path sourceDir = Lib.resource.getDir(context, access, oldId);
-        final Path destDir = Lib.resource.getDir(context, access, newId);
-
-        if (Files.exists(sourceDir)) {
-            IO.copyDirectoryOrFile(sourceDir, destDir, false);
-        }
     }
 
     @ApiOperation(value = "Add a record from XML or MEF/ZIP file", notes = "Add record in the catalog by uploading files.", nickname = "insertFile")
@@ -665,13 +658,14 @@ public class MetadataInsertDeleteApi {
         Importer.importRecord(uuid, uuidProcessing, md, "iso19139", 0, settingManager.getSiteId(),
                 settingManager.getSiteName(), null, context, id, date, date, group, MetadataType.METADATA);
 
+        final Store store = context.getBean("resourceStore", Store.class);
+        final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+        final String metadataUuid = metadataUtils.getMetadataUuid(id.get(0));
+
         // Save the context if no context-url provided
         if (StringUtils.isEmpty(url)) {
-            Path dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id.get(0));
-            Files.createDirectories(dataDir);
-            Path outFile = dataDir.resolve(filename);
-            Files.deleteIfExists(outFile);
-            FileUtils.writeStringToFile(outFile.toFile(), Xml.getString(wmcDoc));
+            store.putResource(context, metadataUuid, filename, IOUtils.toInputStream(Xml.getString(wmcDoc)), null,
+                    MetadataResourceVisibility.PUBLIC, true);
 
             // Update the MD
             Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
@@ -688,12 +682,8 @@ public class MetadataInsertDeleteApi {
         }
 
         if (StringUtils.isNotEmpty(overview) && StringUtils.isNotEmpty(overviewFilename)) {
-            Path dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id.get(0));
-            Files.createDirectories(dataDir);
-            Path outFile = dataDir.resolve(overviewFilename);
-            Files.deleteIfExists(outFile);
-            byte[] data = Base64.decodeBase64(overview);
-            FileUtils.writeByteArrayToFile(outFile.toFile(), data);
+            store.putResource(context, metadataUuid, overviewFilename, new ByteArrayInputStream(Base64.decodeBase64(overview)), null,
+                    MetadataResourceVisibility.PUBLIC, true);
 
             // Update the MD
             Map<String, Object> onlineSrcParams = new HashMap<String, Object>();

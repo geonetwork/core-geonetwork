@@ -90,7 +90,7 @@ public class WfsFeaturesParams extends AbstractParams {
           if (qu.size() == 1) {
             query = Xml.getString(qu.get(0));
           } else {
-            // query string will be an escaped XML string as a result of 
+            // query string will be an escaped XML string as a result of
             // jdom Element.setText and XSLT processing, so fix it up
             query = StringEscapeUtils.unescapeXml(q.getText());
           }
@@ -148,6 +148,11 @@ public class WfsFeaturesParams extends AbstractParams {
         copy.templateId = templateId;
         copy.recordsCategory = recordsCategory;
         return copy;
+    }
+
+    @Override
+    public String getIcon() {
+        return icon;
     }
 }
 

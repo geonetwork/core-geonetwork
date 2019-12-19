@@ -193,7 +193,9 @@ public class ApiUtils {
 
     static public ServiceContext createServiceContext(HttpServletRequest request, String iso3langCode) {
         ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
-        return serviceManager.createServiceContext("Api", iso3langCode, request);
+        ServiceContext serviceContext = serviceManager.createServiceContext("Api", iso3langCode, request);
+        serviceContext.setAsThreadLocal();
+        return serviceContext;
     }
 
     public static long sizeOfDirectory(Path lDir) throws IOException {

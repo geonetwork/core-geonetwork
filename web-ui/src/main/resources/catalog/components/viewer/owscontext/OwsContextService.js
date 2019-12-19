@@ -154,9 +154,7 @@
         var loadPromise = map.get('sizePromise');
         if (loadPromise) {
           loadPromise.then(function() {
-            $timeout(function () {
-              map.getView().fit(extent, map.getSize(), { nearest: true });
-            }, 300);
+            map.getView().fit(extent, map.getSize(), { nearest: true });
           })
         }
         else {
@@ -249,7 +247,7 @@
                     loadingLayer.set('bgLayer', true);
                   }
 
-                  var layerIndex = bgLayers.push(loadingLayer);
+                  var layerIndex = bgLayers.push(loadingLayer) - 1;
                   var p = self.createLayer(layer, map, 'do not add');
 
                   (function(idx, loadingLayer) {
@@ -312,7 +310,7 @@
 
                   loadingLayer.displayInLayerManager = true;
 
-                  var layerIndex = map.getLayers().push(loadingLayer);
+                  var layerIndex = map.getLayers().push(loadingLayer) - 1;
                   var p = self.createLayer(layer, map, undefined, i, currentStyle);
                   loadingLayer.set('index', layerIndex);
 

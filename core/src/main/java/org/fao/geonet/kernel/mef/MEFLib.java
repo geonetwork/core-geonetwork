@@ -59,6 +59,7 @@ import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.OperationAllowed;
@@ -324,7 +325,8 @@ public class MEFLib {
      * Build an info file.
      */
     static String buildInfoFile(ServiceContext context, AbstractMetadata md,
-                                Format format, Path pubDir, Path priDir, boolean skipUUID)
+                                Format format, List<MetadataResource> pubResources,
+                                List<MetadataResource> priResources, boolean skipUUID)
         throws Exception {
         Element info = new Element("info");
         info.setAttribute("version", VERSION);
@@ -333,8 +335,8 @@ public class MEFLib {
         info.addContent(buildInfoCategories(md));
         info.addContent(buildInfoPrivileges(context, md));
 
-        info.addContent(buildInfoFiles("public", pubDir.toString()));
-        info.addContent(buildInfoFiles("private", priDir.toString()));
+        info.addContent(buildInfoFiles("public", pubResources));
+        info.addContent(buildInfoFiles("private", priResources));
 
         return Xml.getString(new Document(info));
     }
@@ -486,17 +488,16 @@ public class MEFLib {
     /**
      * Build file section of info file.
      */
-    static Element buildInfoFiles(String name, String dir) {
+    static Element buildInfoFiles(String name, List<MetadataResource> resources) {
         Element root = new Element(name);
 
-        File[] files = new File(dir).listFiles(filter);
 
-        if (files != null)
-            for (File file : files) {
-                String date = new ISODate(file.lastModified(), false).toString();
+        if (resources != null)
+            for (MetadataResource resource : resources) {
+                String date = new ISODate(resource.getLastModification().getTime(), false).toString();
 
                 Element el = new Element("file");
-                el.setAttribute("name", file.getName());
+                el.setAttribute("name", resource.getFilename());
                 el.setAttribute("changeDate", date);
 
                 root.addContent(el);

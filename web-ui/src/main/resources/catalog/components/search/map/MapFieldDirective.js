@@ -91,12 +91,12 @@
       ])
 
       .directive('gnDrawBboxBtn', [
-        'ngeoDecorateInteraction',
+        'olDecorateInteraction',
         '$parse',
         '$translate',
         'gnSearchSettings',
         'gnMap',
-        function(ngeoDecorateInteraction, $parse, $translate,
+        function(olDecorateInteraction, $parse, $translate,
                  gnSearchSettings) {
           return {
             restrict: 'A',
@@ -105,7 +105,7 @@
               var dragbox = new ol.interaction.DragBox({
                 style: gnSearchSettings.olStyles.drawBbox
               });
-              ngeoDecorateInteraction(dragbox, $scope.map);
+              olDecorateInteraction(dragbox, $scope.map);
               dragbox.active = false;
               $scope.map.addInteraction(dragbox);
               $scope.interaction = dragbox;

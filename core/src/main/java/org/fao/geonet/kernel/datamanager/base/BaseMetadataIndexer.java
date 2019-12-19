@@ -28,6 +28,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
@@ -60,7 +61,6 @@ import org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.InspireAtomFeedRepository;
 import org.fao.geonet.repository.MetadataStatusRepository;
@@ -70,11 +70,11 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ThreadUtils;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.annotation.Lazy;
@@ -100,6 +100,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
@@ -137,6 +138,11 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     private SettingManager settingManager;
     @Autowired
     private UserFeedbackRepository userFeedbackRepository;
+    @Autowired
+    @Qualifier("resourceStore")
+    private Store store;
+    @Autowired
+    private Resources resources;
 
     // FIXME remove when get rid of Jeeves
     private ServiceContext servContext;
@@ -172,22 +178,20 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     @Override
     public int batchDeleteMetadataAndUpdateIndex(Specification<? extends AbstractMetadata> specification)
         throws Exception {
-        final List<Integer> idsOfMetadataToDelete = metadataUtils.findAllIdsBy(specification);
+        final List<? extends AbstractMetadata> metadataToDelete = metadataUtils.findAll(specification);
 
-        for (Integer id : idsOfMetadataToDelete) {
+        for (AbstractMetadata md : metadataToDelete) {
             // --- remove metadata directory for each record
-            final Path metadataDataDir = geonetworkDataDirectory.getMetadataDataDir();
-            Path pb = Lib.resource.getMetadataDir(metadataDataDir, id + "");
-            IO.deleteFileOrDirectory(pb);
+            store.delResources(ServiceContext.get(), md.getUuid(), true);
         }
 
         // Remove records from the index
-        searchManager.delete(idsOfMetadataToDelete);
+        searchManager.delete(metadataToDelete.stream().map(record -> record.getId()).collect(Collectors.toList()));
 
         // Remove records from the database
         metadataManager.deleteAll(specification);
 
-        return idsOfMetadataToDelete.size();
+        return metadataToDelete.size();
     }
 
     @Override
@@ -459,23 +463,27 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
 
             // Group logo are in the harvester folder and contains extension in file name
-            final Path harvesterLogosDir = Resources.locateHarvesterLogosDir(serviceContext);
             boolean added = false;
             if (StringUtils.isNotEmpty(logoUUID)) {
-                final Path logoPath = harvesterLogosDir.resolve(logoUUID);
-                if (Files.exists(logoPath)) {
-                    added = true;
-                    fields.put(Geonet.IndexFieldNames.LOGO, "/images/harvesting/" + logoPath.getFileName());
+                final Path harvesterLogosDir = resources.locateHarvesterLogosDir(getServiceContext());
+                try (Resources.ResourceHolder logo = resources.getImage(getServiceContext(), logoUUID, harvesterLogosDir)) {
+                    if (logo != null) {
+                        added = true;
+                        fields.put(Geonet.IndexFieldNames.LOGO,
+                                   "/images/harvesting/" + logo.getPath().getFileName());
+                    }
                 }
             }
 
             // If not available, use the local catalog logo
             if (!added) {
                 logoUUID = source + ".png";
-                final Path logosDir = Resources.locateLogosDir(serviceContext);
-                final Path logoPath = logosDir.resolve(logoUUID);
-                if (Files.exists(logoPath)) {
-                    fields.put(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID);
+                final Path logosDir = resources.locateLogosDir(getServiceContext());
+                try (Resources.ResourceHolder image = resources.getImage(getServiceContext(), logoUUID, logosDir)) {
+                    if (image != null) {
+                        fields.put(Geonet.IndexFieldNames.LOGO,
+                                "/images/logos/" + logoUUID);
+                    }
                 }
             }
 

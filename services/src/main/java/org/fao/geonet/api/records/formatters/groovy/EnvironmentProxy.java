@@ -26,6 +26,7 @@ package org.fao.geonet.api.records.formatters.groovy;
 import com.google.common.base.Optional;
 import com.google.common.collect.Multimap;
 
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterParams;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
@@ -146,9 +147,17 @@ public class EnvironmentProxy implements Environment {
         return get().getIndexInfo();
     }
 
+    @Override public ServiceContext getContext() {
+        return get().getContext();
+    }
+
     @Override
     public <T> T getBean(Class<T> clazz) {
         return get().getBean(clazz);
+    }
+
+    @Override public <T> T getBean(final String name, final Class<T> clazz) {
+        return get().getBean(name, clazz);
     }
 
     @Override

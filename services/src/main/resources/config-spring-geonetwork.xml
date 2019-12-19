@@ -113,12 +113,6 @@
       </map>
     </property>
   </bean>
-  <bean id="filesystemStore"
-        class="org.fao.geonet.api.records.attachments.FilesystemStore"/>
-  <bean id="resourceStore"
-        class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">
-    <constructor-arg index="0" ref="filesystemStore"/>
-  </bean>
   <!--<bean id="resourcesApi"
         class="org.fao.geonet.api.metadata.resources.ResourcesApi"/>-->
 

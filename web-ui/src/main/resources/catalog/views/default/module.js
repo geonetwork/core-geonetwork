@@ -274,7 +274,9 @@
         addMdLayerToMap: function (link, md) {
           var config = {
             uuid: md ? md.uuid : null,
-            type: link.protocol.indexOf('WMTS') > -1 ? 'wmts' : 'wms',
+            type:
+              link.protocol.indexOf('WMTS') > -1 ? 'wmts' :
+              (link.protocol == 'ESRI:REST' ? 'esrirest' : 'wms'),
             url: $filter('gnLocalized')(link.url) || link.url
           };
 
