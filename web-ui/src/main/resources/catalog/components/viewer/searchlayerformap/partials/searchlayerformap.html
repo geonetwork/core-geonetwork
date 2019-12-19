@@ -34,42 +34,26 @@
          data-translate="">
         {{('noRecordFoundWithResourceRegistered' + mode) | translate}}
     </div>
-    <div data-ng-show="searchResults.records.length > 0">
-      <div class="pull-right"
-           data-gn-pagination="paginationInfo"
-           data-hits-values="searchObj.hitsperpageValues"></div>
-    </div>
-    <br/>
-    <br/>
 
-
-    <ul class="list-group">
-      <li class="list-group-item gn-searchlayer"
+    <ul class="gn-searchlayer-list">
+      <li class="gn-searchlayer"
           data-ng-repeat="m in searchResults.records"
           data-ng-init="md = getMetadata(m)">
-
-        <table>
-          <tr>
-            <th colspan="2">
-              {{md.title || md.defaultTitle}}
-              <a class="btn btn-cog"
-                 data-ng-href="#/metadata/{{md.getUuid()}}"
-                 title="{{'openRecord' | translate}}">
-                <i class="fa fa-fw fa-info-circle"/>
-              </a>
-            </th>
-          </tr>
-          <tr>
-            <td>
-              <div class="gn-md-thumbnail">
-                <img class="gn-img-thumbnail"
-                     alt="{{md.title || md.defaultTitle}}"
-                     data-ng-src="{{md.getThumbnails().list[0].url}}"
-                     data-ng-if="md.getThumbnails().list[0].url"/>
-              </div>
-            </td>
-            <td>
-              <ul>
+        <h3>
+          <a data-ng-href="#/metadata/{{md.getUuid()}}"
+            title="{{'openRecord' | translate}}">
+          {{md.title || md.defaultTitle}}
+          </a>
+        </h3>
+        <div class="clearfix">
+          <div class="gn-md-thumbnail pull-left">
+            <img class="gn-img-thumbnail"
+                  alt="{{md.title || md.defaultTitle}}"
+                  data-ng-src="{{md.getThumbnails().list[0].url}}"
+                  data-ng-if="md.getThumbnails().list[0].url"/>
+          </div>
+          <div class="pull-left">
+            <ul>
                 <li data-ng-repeat="link in md.relevantLinks">
                   <a data-ng-click="addToMap(link)">
                     {{link.desc || link.name}}&nbsp;
@@ -81,10 +65,14 @@
                   </a>
                 </li>
               </ul>
-            </td>
-          </tr>
-        </table>
+          </div>
+        </div>
       </li>
     </ul>
+    <div data-ng-show="searchResults.records.length > 0">
+      <div class="pull-right"
+            data-gn-pagination="paginationInfo"
+            data-hits-values="searchObj.hitsperpageValues"></div>
+    </div>
   </form>
 </div>
