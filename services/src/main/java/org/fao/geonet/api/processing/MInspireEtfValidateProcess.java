@@ -9,6 +9,7 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.utils.Log;
@@ -117,6 +118,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
         InspireValidatorUtils inspireValidatorUtils = appContext.getBean(InspireValidatorUtils.class);
         SchemaManager schemaManager = appContext.getBean(SchemaManager.class);
         DataManager dataManager = appContext.getBean(DataManager.class);
+        IMetadataSchemaUtils metadataSchemaUtils = appContext.getBean(IMetadataSchemaUtils.class);
 
         metadataToAnalyseCount = uuids.size();
         analyseMdDate = System.currentTimeMillis();
@@ -131,21 +133,32 @@ public class MInspireEtfValidateProcess implements SelfNaming {
             for (AbstractMetadata record : metadataRepository.findAllByUuid(uuid)) {
                 try {
                     if (!accessManager.canEdit(serviceContext, String.valueOf(record.getId()))) {
+                        metadataAnalysed++;
                         metadataNotAllowed++;
                     } else {
                         runInNewTransaction("minspireetfvalidate-process-metadata", new TransactionTask<Object>() {
                             @Override
                             public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                                // Evaluate test conditions for INSPIRE test suites, to apply to the metadata
-                                Map<String, String> testsuiteConditions = inspireValidatorUtils.getTestsuitesConditions();
+                                // Evaluate test conditions for INSPIRE test suites to apply to the metadata
+                                Map<String, String> testsuiteConditions =
+                                    inspireValidatorUtils.calculateTestsuitesToApply(record.getDataInfo().getSchemaId(), metadataSchemaUtils);
+
+                                boolean reindexMetadata = false;
 
                                 try {
                                     boolean inspireMetadata = false;
 
                                     for (Map.Entry<String, String> entry : testsuiteConditions.entrySet()) {
-                                        boolean applyCondition = Xml.selectBoolean(record.getXmlData(false),
-                                            entry.getValue(),
-                                            schemaManager.getSchema(record.getDataInfo().getSchemaId()).getNamespaces());
+                                        boolean applyCondition = false;
+                                        try {
+                                            applyCondition = Xml.selectBoolean(record.getXmlData(false),
+                                                entry.getValue(),
+                                                schemaManager.getSchema(record.getDataInfo().getSchemaId()).getNamespaces());
+                                        } catch (Exception ex) {
+                                            Log.error(API.LOG_MODULE_NAME, String.format("Error checking INSPIRE rule %s to apply to metadata: %s",
+                                                entry.getKey(), record.getUuid()), ex);
+                                        }
+
                                         if (applyCondition) {
                                             String testId = inspireValidatorUtils.submitFile(serviceContext, URL,
                                                 new ByteArrayInputStream(record.getData().getBytes()), entry.getKey(), record.getUuid());
@@ -156,12 +169,14 @@ public class MInspireEtfValidateProcess implements SelfNaming {
                                             String reportXmlUrl = inspireValidatorUtils.getReportUrlXML(URL, testId);
                                             String reportXml = inspireValidatorUtils.retrieveReport(serviceContext, reportXmlUrl);
 
-                                            boolean isValid = inspireValidatorUtils.isPassed(serviceContext, URL, testId)
-                                                .equalsIgnoreCase("PASSED");
+                                            String validationStatus = inspireValidatorUtils.isPassed(serviceContext, URL, testId);
+
+                                            MetadataValidationStatus metadataValidationStatus =
+                                                inspireValidatorUtils.calculateValidationStatus(validationStatus);
 
                                             MetadataValidation metadataValidation = new MetadataValidation()
                                                 .setId(new MetadataValidationId(record.getId(), "inspire"))
-                                                .setStatus((isValid?MetadataValidationStatus.VALID:MetadataValidationStatus.INVALID)).setRequired(false)
+                                                .setStatus(metadataValidationStatus).setRequired(false)
                                                 .setReportUrl(reportUrl).setReportContent(reportXml);
 
                                             metadataValidationRepository.save(metadataValidation);
@@ -170,7 +185,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
                                             //    ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
                                             //    metadataValidation.getStatus().getCode()).publish(appContext);
 
-                                            dataManager.indexMetadata(new ArrayList<>(Arrays.asList(record.getId() + "")));
+                                            reindexMetadata = true;
                                             inspireMetadata = true;
                                         }
                                     }
@@ -178,19 +193,38 @@ public class MInspireEtfValidateProcess implements SelfNaming {
 
                                     if (!inspireMetadata) {
                                         metadataNotInspire++;
+
+                                        MetadataValidation metadataValidation = new MetadataValidation()
+                                            .setId(new MetadataValidationId(record.getId(), "inspire"))
+                                            .setStatus(MetadataValidationStatus.DOES_NOT_APPLY).setRequired(false);
+
+                                        metadataValidationRepository.save(metadataValidation);
+
+                                        //new RecordValidationTriggeredEvent(record.getId(),
+                                        //    ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
+                                        //    metadataValidation.getStatus().getCode()).publish(appContext);
+
+                                        reindexMetadata = true;
                                     }
+
+                                    if (reindexMetadata) {
+                                        dataManager.indexMetadata(new ArrayList<>(Arrays.asList(record.getId() + "")));
+                                    }
+
                                 } catch (Exception ex) {
                                     metadataAnalysedInError++;
                                     Log.error(API.LOG_MODULE_NAME,
                                         String.format("Error validating metadata %s in INSPIRE validator: %s",
                                             record.getUuid(), ex.getMessage()), ex);
                                 }
+
+                                metadataAnalysed++;
+
                                 return null;
                             }
                         });
                     }
 
-                    metadataAnalysed++;
                 } catch (Exception ex) {
                     metadataAnalysedInError++;
                     Log.error(API.LOG_MODULE_NAME,
@@ -206,4 +240,6 @@ public class MInspireEtfValidateProcess implements SelfNaming {
     private final void runInNewTransaction(String name, TransactionTask<Object> transactionTask) {
         TransactionManager.runInTransaction(name, appContext, CREATE_NEW,  ALWAYS_COMMIT, false, transactionTask);
     }
+
+
 }

@@ -8,8 +8,12 @@ import org.fao.geonet.api.records.editing.InspireValidatorUtils;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.MetadataValidationId;
 import org.fao.geonet.domain.MetadataValidationStatus;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.springframework.transaction.TransactionStatus;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static jeeves.transaction.TransactionManager.CommitBehavior.ALWAYS_COMMIT;
 import static jeeves.transaction.TransactionManager.TransactionRequirement.CREATE_NEW;
@@ -51,15 +55,22 @@ public class InspireValidationRunnable implements Runnable {
                     String reportXmlUrl = inspireValidatorUtils.getReportUrlXML(endPoint, testId);
                     String reportXml = inspireValidatorUtils.retrieveReport(context, reportXmlUrl);
 
-                    boolean isValid = inspireValidatorUtils.isPassed(context, endPoint, testId)
-                        .equalsIgnoreCase("PASSED");
+                    String validationStatus = inspireValidatorUtils.isPassed(context, endPoint, testId);
+
+                    MetadataValidationStatus metadataValidationStatus =
+                        inspireValidatorUtils.calculateValidationStatus(validationStatus);
 
                     MetadataValidation metadataValidation = new MetadataValidation()
                         .setId(new MetadataValidationId(mdId, "inspire"))
-                        .setStatus((isValid? MetadataValidationStatus.VALID:MetadataValidationStatus.INVALID)).setRequired(false)
+                        .setStatus(metadataValidationStatus).setRequired(false)
                         .setReportUrl(reportUrl).setReportContent(reportXml);
 
                     metadataValidationRepository.save(metadataValidation);
+
+                    DataManager dataManager =
+                        ApplicationContextHolder.get().getBean(DataManager.class);
+
+                    dataManager.indexMetadata(new ArrayList<>(Arrays.asList(mdId + "")));
 
                     return null;
                 }

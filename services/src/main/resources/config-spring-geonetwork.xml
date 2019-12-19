@@ -91,10 +91,18 @@
         </entry>
       </map>
     </property>
+    <!--
+      key format:
+
+      SCHEMAID::TG_RULE_NAME
+
+      If a metadata schema doesn't match, the schema dependency hierarchy
+      is checked to verify if any parent schema matches any rules.
+    -->
     <property name="testsuitesConditions">
       <map>
-        <entry key="TG version 2.0 - Data sets and series" value="gmd:hierarchyLevel[*/@codeListValue='dataset']" />
-        <entry key="TG version 2.0 - Network services" value=".//srv:SV_ServiceIdentification" />
+        <entry key="iso19139::TG version 2.0 - Data sets and series" value="gmd:hierarchyLevel[*/@codeListValue = 'dataset' or */@codeListValue = 'series']" />
+        <entry key="iso19139::TG version 2.0 - Network services" value=".//srv:SV_ServiceIdentification" />
       </map>
     </property>
     <property name="defaultTestSuite" value="TG version 1.3"/>

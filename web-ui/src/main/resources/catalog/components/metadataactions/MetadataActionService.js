@@ -445,7 +445,7 @@
         $rootScope.$broadcast('operationOnSelectionStart');
         $rootScope.$broadcast('inspireMdValidationStart');
 
-        return gnHttp.callService('../api/records/validateInspire?' +
+        return gnHttp.callService('../api/records/validate/inspire?' +
           'bucket=' + bucket, null, {
           method: 'PUT'
         }).then(function(data) {

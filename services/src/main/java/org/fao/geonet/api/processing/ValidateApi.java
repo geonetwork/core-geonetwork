@@ -222,7 +222,7 @@ public class ValidateApi {
         nickname = "validateRecordsInspire",
         notes = "Update validation status for all records.")
     @RequestMapping(
-        value = "/validateInspire",
+        value = "/validate/inspire",
         method = RequestMethod.PUT,
         produces = {
             MediaType.APPLICATION_JSON_VALUE

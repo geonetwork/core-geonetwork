@@ -1,4 +1,4 @@
-<div class="valid-inspire-status{{metadata.validInspire}} md-type-{{metadata.isTemplate}}"
+<div class="valid-inspire-status{{metadata.validInspire}} md-type-{{metadata.isTemplate}}"  data-ng-if="metadata.validInspire != '3'"
   title="{{('isTemplate' + metadata.isTemplate) | translate}} ({{('validInspireStatus-' + metadata.validInspire) | translate}})"
   ng-switch="metadata.isTemplate">
   <a href="{{metadata.inspireReportUrl}}" target="_blank"  data-ng-if="metadata.validInspire != '-1'">

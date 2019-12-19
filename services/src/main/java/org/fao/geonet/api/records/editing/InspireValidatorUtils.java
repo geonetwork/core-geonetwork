@@ -27,14 +27,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -45,7 +45,10 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
+import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
@@ -96,6 +99,37 @@ public class InspireValidatorUtils {
      * The Constant TestRuns_URL.
      */
     private final static String TestRuns_URL = "/v2/TestRuns";
+
+    /**
+     * Test status PASSED.
+     */
+    public final static String TEST_STATUS_PASSED = "PASSED";
+
+    /**
+     * Test status FAILED.
+     */
+    public final static String TEST_STATUS_FAILED = "FAILED";
+
+    /**
+     * Test status PASSED_MANUAL.
+     */
+    public final static String TEST_STATUS_PASSED_MANUAL = "PASSED_MANUAL";
+
+     /**
+     * Test status UNDEFINED.
+     */
+     public final static String TEST_STATUS_UNDEFINED = "UNDEFINED";
+
+    /**
+     * Test status NOT_APPLICABLE.
+     */
+    public final static String TEST_STATUS_NOT_APPLICABLE = "NOT_APPLICABLE";
+
+    /**
+     * Test status INTERNAL_ERROR.
+     */
+    public final static String TEST_STATUS_INTERNAL_ERROR = "INTERNAL_ERROR";
+
 
     public String defaultTestSuite;
 
@@ -534,6 +568,91 @@ public class InspireValidatorUtils {
 
             Thread.sleep(5000);
         }
+    }
+
+    /**
+     * Calculates the metadata validation status in GeoNetwork
+     * based on the INSPIRE validator result.
+     *  - UNDEFINED, INTERNAL_ERROR --> MetadataValidationStatus.NEVER_CALCULATED
+     *  - PASSED, PASSED_MANUAL --> MetadataValidationStatus.VALID
+     *  - NOT_APPLICABLE --> MetadataValidationStatus.DOES_NOT_APPLY
+     *  - Other cases --> MetadataValidationStatus.INVALID
+     *
+     * @param validationStatus
+     * @return
+     */
+    public MetadataValidationStatus calculateValidationStatus(String validationStatus) {
+        boolean isUndefined = validationStatus.equalsIgnoreCase(TEST_STATUS_UNDEFINED);
+        boolean isNotApplicable = validationStatus.equalsIgnoreCase(TEST_STATUS_NOT_APPLICABLE);
+        boolean executed = !validationStatus.equalsIgnoreCase(TEST_STATUS_INTERNAL_ERROR);
+
+        MetadataValidationStatus metadataValidationStatus;
+
+        if (isNotApplicable) {
+            metadataValidationStatus = MetadataValidationStatus.DOES_NOT_APPLY;
+        } else if (!isUndefined && executed) {
+            boolean isValid = validationStatus.equalsIgnoreCase(TEST_STATUS_PASSED) ||
+                validationStatus.equalsIgnoreCase(TEST_STATUS_PASSED_MANUAL);
+
+            metadataValidationStatus =
+                (isValid?MetadataValidationStatus.VALID:MetadataValidationStatus.INVALID);
+        } else {
+            metadataValidationStatus = MetadataValidationStatus.NEVER_CALCULATED;
+        }
+
+        return metadataValidationStatus;
+    }
+
+    /**
+     * Calculate the test suites to apply:
+     *  - Checks if any rule for the schema, otherwise
+     *  - checks if any rule in the schema dependency hierarchy.
+     *
+     * @param schemaid
+     * @param metadataSchemaUtils
+     * @return
+     */
+    public Map<String, String> calculateTestsuitesToApply(String schemaid,
+                                                          IMetadataSchemaUtils metadataSchemaUtils) {
+        Map<String, String> testsuitesConditions = getTestsuitesConditions();
+
+        // Check for rules for the schema
+        Map<String, String> testsuitesConditionsForSchema = testsuitesConditions.entrySet().stream()
+            .filter(x-> x.getKey().split("::")[0].equalsIgnoreCase(schemaid))
+            .collect(Collectors.toMap(map -> map.getKey().split("::")[1], map -> map.getValue()));
+
+        // If no rules found, check the rules in the dependencies of the schema
+        if (testsuitesConditionsForSchema.isEmpty()) {
+            MetadataSchema metadataSchema = metadataSchemaUtils.getSchema(schemaid);
+
+            Set<String> schemasProcessed = new HashSet<>();
+
+            String schemaDependsOn = metadataSchema.getDependsOn();
+
+            boolean conditionsFound = false;
+
+            while (StringUtils.isNotEmpty(schemaDependsOn) &&
+                !schemasProcessed.contains(schemaDependsOn) &&
+                !conditionsFound) {
+
+                schemasProcessed.add(schemaDependsOn);
+
+                String schemaDependsOnFilter = schemaDependsOn;
+                testsuitesConditionsForSchema = testsuitesConditions.entrySet().stream()
+                    .filter(x-> x.getKey().split("::")[0].equalsIgnoreCase(schemaDependsOnFilter))
+                    .collect(Collectors.toMap(map -> map.getKey().split("::")[1], map -> map.getValue()));
+
+                conditionsFound = !testsuitesConditionsForSchema.isEmpty();
+
+                // If no conditions found, check the schema dependency (if defined)
+                if (!conditionsFound) {
+                    metadataSchema = metadataSchemaUtils.getSchema(schemaDependsOn);
+                    schemaDependsOn = metadataSchema.getDependsOn();
+                }
+            }
+        }
+
+        return testsuitesConditionsForSchema;
     }
 
 
