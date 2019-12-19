@@ -490,8 +490,7 @@ public class ServiceManager {
                         HttpServiceRequest req2 = (HttpServiceRequest) req;
 
                         req2.getHttpServletResponse().setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-                        req2.getHttpServletResponse().setHeader("Location", baseUrl + "/" + context.getApplicationContext().getBean
-                            (NodeInfo.class).getId() + "/" + req.getLanguage() + "/" + forward);
+                        req2.getHttpServletResponse().setHeader("Location", baseUrl + "/" + nodeInfo.getId() + "/" + req.getLanguage() + "/" + forward);
 
                         return;
                     } else {
@@ -911,7 +910,7 @@ public class ServiceManager {
         // Dispatch HTTP status code
         req.setStatusCode(outPage.getStatusCode());
 
-        addPrefixes(guiElem, context.getLanguage(), req.getService(), context.getBean(NodeInfo.class).getId());
+        addPrefixes(guiElem, context.getLanguage(), req.getService(), nodeInfo.getId());
 
         Element rootElem = new Element(Jeeves.Elem.ROOT)
             .addContent(guiElem)
