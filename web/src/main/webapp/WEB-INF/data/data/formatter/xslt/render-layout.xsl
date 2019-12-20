@@ -72,11 +72,15 @@
           <link rel="stylesheet" type="text/css" href="{$nodeUrl}../static/api-{$css}.css"/>
         </xsl:when>
       </xsl:choose>
-      <link rel="stylesheet" type="text/css"
-            href="{$nodeUrl}../catalog/views/sextant/landing-pages/default/styles.css"/>
-      <link rel="stylesheet" type="text/css"
-            href="{$nodeUrl}../catalog/views/sextant/landing-pages/{/root/info/record/sourceinfo/groupowner}/styles.css"/>
-      <div class="gn-landing-page-header">&#160;</div>
+
+      <xsl:if test="$portalLink != ''">
+        <link rel="stylesheet" type="text/css"
+              href="{$nodeUrl}../catalog/views/sextant/landing-pages/default/styles.css"/>
+        <link rel="stylesheet" type="text/css"
+              href="{$nodeUrl}../catalog/views/sextant/landing-pages/{/root/info/record/sourceinfo/groupowner}/styles.css"/>
+        <div class="gn-landing-page-header">&#160;</div>
+      </xsl:if>
+
       <xsl:variable name="type">
         <xsl:apply-templates mode="getMetadataHierarchyLevel" select="$metadata"/>
       </xsl:variable>
