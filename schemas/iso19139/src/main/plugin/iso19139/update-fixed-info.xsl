@@ -177,6 +177,8 @@
               <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode"
                                        codeListValue="{$defaultEncoding}"/>
             </gmd:characterEncoding>
+            <!-- Apply country if it exists.  -->
+            <xsl:apply-templates select="gmd:locale/gmd:PT_Locale[gmd:languageCode/*/@codeListValue = $mainLanguage]/gmd:country"/>
           </gmd:PT_Locale>
         </gmd:locale>
       </xsl:if>
