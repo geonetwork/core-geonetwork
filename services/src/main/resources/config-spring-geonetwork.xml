@@ -134,6 +134,7 @@
     <value>view</value>
     <value>template</value>
     <value>approved</value>
+    <value>portalLink</value>
     <value>skippopularity</value>
     <value>hide_withheld</value>
   </util:list>
