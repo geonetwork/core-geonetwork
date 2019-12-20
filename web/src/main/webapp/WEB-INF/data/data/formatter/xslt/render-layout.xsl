@@ -72,7 +72,11 @@
           <link rel="stylesheet" type="text/css" href="{$nodeUrl}../static/api-{$css}.css"/>
         </xsl:when>
       </xsl:choose>
-
+      <link rel="stylesheet" type="text/css"
+            href="{$nodeUrl}../catalog/views/sextant/landing-pages/default/styles.css"/>
+      <link rel="stylesheet" type="text/css"
+            href="{$nodeUrl}../catalog/views/sextant/landing-pages/{/root/info/record/sourceinfo/groupowner}/styles.css"/>
+      <div class="gn-landing-page-header">&#160;</div>
       <xsl:variable name="type">
         <xsl:apply-templates mode="getMetadataHierarchyLevel" select="$metadata"/>
       </xsl:variable>
@@ -164,6 +168,29 @@
           </div>
           <div class="gn-md-side gn-md-side-advanced col-md-3">
 
+            <xsl:if test="$portalLink != ''">
+              <section class="gn-md-side-access">
+                <div class="well text-center">
+                  <a class="btn btn-block btn-primary"
+                     href="{if ($portalLink != '')
+                            then replace($portalLink, '\$\{uuid\}', $metadataUuid)
+                            else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
+                    <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
+                    <xsl:value-of select="$schemaStrings/linkToPortal"/>
+                  </a>
+                  <!--<a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                     target="_blank" class="btn btn-default">
+                    <i class="fa fa-fw fa-linkedin">&#160;</i>&#160;
+                  </a>
+                  <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                     target="_blank" class="btn btn-default">
+                    <i class="fa fa-fw fa-envelope-o">&#160;</i>&#160;
+                  </a>-->
+                </div>
+              </section>
+              <br/>
+            </xsl:if>
+
             <section class="links"
                      ng-show="downloads.length > 0 || links.length > 0 ||layers.length > 0">
               <h3 translate="">accessData</h3>
@@ -209,7 +236,7 @@
                   <!-- href="{$nodeUrl}api/records/{$metadataUuid}" -->
                   <a data-ng-click="getSextantPermalink(md)"
                      class="btn btn-default">
-                    <i class="fa fa-fw fa-link"/>
+                    <i class="fa fa-fw fa-link">&#160;</i>
                   </a>
                   <a href="https://twitter.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                      target="_blank"
@@ -268,29 +295,7 @@
                   </ul>
                 </xsl:for-each>
               </section>
-
-              <section class="gn-md-side-access">
-                <div class="well text-center">
-                  <a class="btn btn-block btn-primary"
-                     href="{if ($portalLink != '')
-                            then replace($portalLink, '\$\{uuid\}', $metadataUuid)
-                            else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
-                    <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
-                    <xsl:value-of select="$schemaStrings/linkToPortal"/>
-                  </a>
-                  <a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                     target="_blank" class="btn btn-default">
-                    <i class="fa fa-fw fa-linkedin">&#160;</i>&#160;
-                  </a>
-                  <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                     target="_blank" class="btn btn-default">
-                    <i class="fa fa-fw fa-envelope-o">&#160;</i>&#160;
-                  </a>
-                </div>
-              </section>
-              <br/>
             </xsl:if>
-
 
             <!--<xsl:if test="$sideRelated != ''">
               <section class="gn-md-side-associated">

@@ -1,0 +1,85 @@
+body {
+  background: url(bg.jpg);
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  word-break: break-all;
+  font-family: 'open_sansregular';
+  font-size: 14px;
+  line-height: 1.428571429;
+  color: #333333;
+}
+
+.gn-nojs [role=main], .container {
+  padding: 0px !important;
+}
+
+div.gn-landing-page-header {
+  height: 100px;
+  line-height: 100px;
+  text-align: left;
+  padding-left: 20px;
+  vertical-align: middle;
+  background: url(edmodnet.gif) no-repeat;
+  background-position-x: calc(100% - 20px);
+  background-position-y: center;
+  background-color: #2772c5;
+}
+
+div.gn-landing-page-header::before {
+  color: #fff;
+  font-size: 3.5rem;
+  font-weight: normal;
+  content: "EMODnet";
+}
+
+div.gn-landing-page-header::after {
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: normal;
+  content: "European Marine Observation and Data Network";
+}
+
+.gn-md-side-access {
+  background-color: #ebecec;
+  padding: 25px;
+  margin-top: 20px;
+}
+
+.gn-md-side-access .well {
+  padding: 0px !important;
+  background-color: #ebecec;
+  border: none;
+
+}
+
+.gn-md-side-access .well::after {
+  content: "Link to the data services and to the full metadataset"
+}
+
+.gn-md-side-access .btn {
+  background-color: #b7b8b9;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  font-size: 16px;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: none;
+}
+
+section.links,
+.gn-md-side-access .btn i {
+  display: none;
+}
+
+.footer {
+  background-color: #008798;
+  padding: 20px 40px;
+  bottom: 0;
+  height: 60px;
+  position: absolute;
+  width: 100%;
+}
