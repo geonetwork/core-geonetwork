@@ -337,10 +337,11 @@
             return value * BUFFER_RATIO;
           });
           var extent = map.getView().calculateExtent(bufferedSize);
+          extent = ol.proj.transformExtent(extent, "EPSG:3857", "EPSG:4326");
 
           // viewbox filter
-          var topLeft = ol.proj.toLonLat(ol.extent.getTopLeft(extent));
-          var bottomRight = ol.proj.toLonLat(ol.extent.getBottomRight(extent));
+          var topLeft = ol.extent.getTopLeft(extent);
+          var bottomRight = ol.extent.getBottomRight(extent);
 
           // cap extent values to world map
           if (bottomRight[0] < topLeft[0]) {
