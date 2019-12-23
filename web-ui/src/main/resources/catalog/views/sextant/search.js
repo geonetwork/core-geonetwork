@@ -270,7 +270,7 @@
         pop.popover(opts);
         $timeout(function() { pop.popover('show'); });
         $timeout(function() {
-          pop.popover('destroy');
+          pop.popover('hide');
         }, 5000);
       };
 
