@@ -336,8 +336,11 @@
           var bufferedSize = map.getSize().map(function (value) {
             return value * BUFFER_RATIO;
           });
-          var extent = map.getView().calculateExtent(bufferedSize);
-          extent = ol.proj.transformExtent(extent, "EPSG:3857", "EPSG:4326");
+          var extent = ol.proj.transformExtent(
+            map.getView().calculateExtent(bufferedSize),
+            map.getView().getProjection().getCode(),
+            "EPSG:4326");
+          var zoom = map.getView().getZoom();
 
           // viewbox filter
           var topLeft = ol.extent.getTopLeft(extent);
