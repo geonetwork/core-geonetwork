@@ -141,6 +141,9 @@
           <i class="fa fa-refresh"/>
       </a>
     </h4>
+    <div data-ng-show="searchResults.records.length == 0">
+      <span data-translate="">noMaps</span>
+    </div>
     <div data-ng-show="searchResults.records.length > 0"
         data-gn-results-container=""
         data-search-results="searchResults"
