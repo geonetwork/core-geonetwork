@@ -138,6 +138,10 @@
       $scope.filterItemsinArray = function(stringValue, data) {
         return data.filter(function(item) {
           if (item) {
+            if (item instanceof Object) {
+              return $scope.filterItemsinArray(
+                $scope.wfsFilterValue, Object.values(item)).length > 0;
+            }
             return item.toString().indexOf(stringValue.toLowerCase()) >= 0;
           }
           return false;
