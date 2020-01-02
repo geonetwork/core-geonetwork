@@ -138,23 +138,34 @@
       $scope.filterItemsinArray = function(stringValue, data) {
         return data.filter(function(item) {
           if (item) {
-            if (item instanceof Object) {
-              return $scope.filterItemsinArray(
-                $scope.wfsFilterValue, Object.values(item)).length > 0;
-            }
-            return item.toString().indexOf(stringValue.toLowerCase()) >= 0;
+            return item
+              .toString()
+              .toLowerCase()
+              .indexOf(stringValue.toLowerCase()) >= 0;
           }
           return false;
         });
-      }
+      };
+      $scope.jobsArrayFiltered = function(job) {
+        var filteredJob = {};
+        // properties are based on the columns displayed in the table
+        filteredJob.title = job.md.title;
+        filteredJob.url = job.url;
+        filteredJob.featureCount = job.featureCount;
+        filteredJob.endDate = job.endDate;
+        filteredJob.status = job.status;
+        return filteredJob;
+      };
+
+
       $scope.filterWfsBsWithInput = function() {
         $scope.refreshBsTable(
           $scope.jobsArray.filter(function (job) {
           return $scope.filterItemsinArray(
-            $scope.wfsFilterValue, Object.values(job)).length > 0;
+            $scope.wfsFilterValue, Object.values($scope.jobsArrayFiltered(job))).length > 0;
         }));
+      };
 
-      }
       $scope.wfsFilterValue = null;
 
       $scope.refreshJobList = function() {
