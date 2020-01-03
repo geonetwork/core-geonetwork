@@ -450,14 +450,32 @@
         $scope.settingsError = null;
       });
 
+      $scope.getFieldsFromApplicationProfile = function (job, params) {
+        if (!job.md) {return params;}
+        // 4th element of link contains applicationProfil ie :
+        // ["surval_parametre_point", "Lieu de surveillance (point)", "http://www.ifremer.fr/services/wfs/surveillance_littorale",
+        // "OGC:WFS", "OGC:WFS", "3",
+        // "{ "tokenizedFields":{ "PROGRAMME":";", "PARAMETRE"…AMETRE" ], "heatmap": true, "compositeLayer": {}}"]
+        // we want the last element which is a stringified json
+        var applicationProfilInfos = job.md.link[4].split('|').slice(-1)[0];
+        if (applicationProfilInfos) {
+          var dumpedAP = JSON.parse(applicationProfilInfos);
+          params.treeFields = dumpedAP.treeFields;
+          params.tokenizedFields = dumpedAP.tokenizedFields;
+        }
+        return params;
+      };
+
       $scope.triggerIndexing = function(key) {
         var job = $scope.jobs[key];
-        $http.put($scope.wfsWorkersApiUrl + '/start', {
+        var params = {
           typeName: job.featureType,
           url: job.url,
           version: "1.1.0",
           metadataUuid: job.mdUuid
-        }).then(function() {
+        };
+        $http.put($scope.wfsWorkersApiUrl + '/start',
+          this.getFieldsFromApplicationProfile(job, params)).then(function() {
           gnAlertService.addAlert({
             msg: $translate.instant('wfsIndexingTriggerSuccess'),
             type: 'success'
