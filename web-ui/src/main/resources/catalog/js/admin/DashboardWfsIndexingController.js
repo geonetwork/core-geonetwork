@@ -149,7 +149,10 @@
       $scope.jobsArrayFiltered = function(job) {
         var filteredJob = {};
         // properties are based on the columns displayed in the table
-        filteredJob.title = job.md.title;
+        if (job.md && job.md.title) {
+          filteredJob.title = job.md.title;
+        }
+        filteredJob.featureType = job.featureType;
         filteredJob.url = job.url;
         filteredJob.featureCount = job.featureCount;
         filteredJob.endDate = job.endDate;
