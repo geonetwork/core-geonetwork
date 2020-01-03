@@ -127,6 +127,7 @@
   "nolayer": "No layer",
   "layers": "layers",
   "layerAdded": "Layer '{{layer}}' added to the map. Click <a href=\"#map?extent={{extent}}\">here to zoom to it</a>.",
+  "layerAddedNoExtent": "Layer '{{layer}}' added to the map.",
   "localLayerFile": "{{layer}} (local file)",
   "mostPopular": "Most popular",
   "mapImportFailure": "Failed to import layer",
