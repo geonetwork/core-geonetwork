@@ -1433,5 +1433,7 @@
     "removeAllLinksAndStatusConfirm": "Are you sure to remove all links and status history?",
     "moreLinks": "More links ...",
     "ui-defaultSearchString":"Default search",
-    "ui-defaultSearchString-help":"This configuration lets you define a default filter for the search. The syntax is the one used in the angular facet query array."
+    "ui-defaultSearchString-help":"This configuration lets you define a default filter for the search. The syntax is the one used in the angular facet query array.",
+    "ui-autoFitOnLayer":"Always zoom on data",
+    "ui-autoFitOnLayer-help":"If checked, the map will automatically zoom on data when adding a layer from a record. Otherwise, a message will be shown to let the user zoom on data manually."
 }
