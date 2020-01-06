@@ -65,6 +65,7 @@
       * (optional) translator: Define a DB translator to retrieve label from description
           tables (eg. categoriesdes) or codelist translator to retrieve label from schema
           codelists files.
+      * (optional) pageSize: "show more"/"show less" page size of the facet items in the UI
 
     eg. for category
 
