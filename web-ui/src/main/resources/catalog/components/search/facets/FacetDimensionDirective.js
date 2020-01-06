@@ -236,40 +236,32 @@
                 scope.initialMaxItems = initialMaxItems;
                 scope.maxItems = initialMaxItems;
 
-                if (scope.category) {
-                  scope.evalPageSize = function() {
-                    scope.morePageSize = Math.min (scope.category.length - scope.maxItems, scope.pageSize);
-                    scope.minusPageSize = Math.min (scope.maxItems - initialMaxItems, scope.pageSize);
+                scope.getMorePageSize = function() {
+                  if (!scope.category) {
+                    return 0;
                   }
+                  return Math.min(scope.category.length - scope.maxItems, scope.pageSize);
+                };
 
-                  scope.evalPageSize();
+                scope.getLessPageSize = function() {
+                  return Math.min(scope.maxItems - initialMaxItems, scope.pageSize);
+                };
 
-                  scope.addItems = function() {
-                    scope.maxItems = scope.maxItems + scope.morePageSize;
-                    scope.evalPageSize();
-                  };
+                scope.addItems = function() {
+                  scope.maxItems = scope.maxItems + scope.getMorePageSize();
+                };
 
-                  scope.removeItems = function() {
-                    scope.maxItems = scope.maxItems - scope.minusPageSize;
-                    scope.evalPageSize();
-                  };
+                scope.removeItems = function() {
+                  scope.maxItems = scope.maxItems - scope.getLessPageSize();
+                };
 
+                scope.showAllItems = function() {
+                  scope.maxItems = scope.category.length;
+                };
 
-                  scope.all = function() {
-                    scope.maxItems = scope.category.length;
-                    scope.evalPageSize();
-                  };
-
-
-                  scope.onlyInitial = function() {
-                    scope.maxItems = scope.initialMaxItems;
-                    scope.evalPageSize();
-                  };
-
-                } else {
-                  scope.morePageSize = 0;
-                  scope.minusPageSize = 0;
-                }
+                scope.showInitialItems = function() {
+                  scope.maxItems = scope.initialMaxItems;
+                };
 
                 // Facet drill down is based on facet.q parameter.
                 // The facet.q parameter contains a list of comma separated
