@@ -157,6 +157,8 @@
         filteredJob.featureCount = job.featureCount;
         filteredJob.endDate = job.endDate;
         filteredJob.status = job.status;
+        filteredJob.uuid = job.mdUuid;
+
         return filteredJob;
       };
 
