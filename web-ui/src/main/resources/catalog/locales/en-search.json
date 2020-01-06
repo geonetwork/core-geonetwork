@@ -502,5 +502,9 @@
   "userSearchUpdated": "User search saved",
   "userSearchUpdatedError": "Error saving user search",
   "seeDraft": "This record has a working copy version. Click here to see it.",
-  "seeNoDraft": "This record has an approved and published version. Click here to see it."
+  "seeNoDraft": "This record has an approved and published version. Click here to see it.",
+  "moreFacet": "{{count}} more",
+  "lessFacet": "{{count}} less",
+  "allFacet": "all ({{count}})",
+  "initialFacet": "initial ({{count}})"
 }
