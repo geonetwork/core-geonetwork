@@ -454,14 +454,19 @@
 
       $scope.getFieldsFromApplicationProfile = function (job, params) {
         if (!job.md) {return params;}
-        // 4th element of link contains applicationProfil ie :
-        // ["surval_parametre_point", "Lieu de surveillance (point)", "http://www.ifremer.fr/services/wfs/surveillance_littorale",
-        // "OGC:WFS", "OGC:WFS", "3",
-        // "{ "tokenizedFields":{ "PROGRAMME":";", "PARAMETRE"…AMETRE" ], "heatmap": true, "compositeLayer": {}}"]
-        // we want the last element which is a stringified json
-        var applicationProfilInfos = job.md.link[4].split('|').slice(-1)[0];
-        if (applicationProfilInfos) {
-          var dumpedAP = JSON.parse(applicationProfilInfos);
+
+        var applicationProfile = job.md.linksTree.map(function (d) {
+          return d.filter(function (e) {
+            return e.protocol === 'OGC:WFS';
+          });
+        }).filter(function (f) {
+          return f[0] ? f[0].name : undefined;
+        }).find(function (s) {
+          return s[0].name === job.featureType;
+        })[0].applicationProfile;
+
+        if (applicationProfile) {
+          var dumpedAP = JSON.parse(applicationProfile);
           params.treeFields = dumpedAP.treeFields;
           params.tokenizedFields = dumpedAP.tokenizedFields;
         }
