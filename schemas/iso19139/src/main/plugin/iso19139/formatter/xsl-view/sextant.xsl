@@ -54,6 +54,23 @@
 
 
     <table class="table gn-sextant-view-table">
+
+      <xsl:variable name="networkLink"
+                    select="$metadata//gmd:CI_OnlineResource[gmd:protocol/*/text() = 'NETWORK:LINK']"/>
+      <xsl:if test="count($networkLink) > 0">
+        <tr class="md-network-link-description">
+          <td>
+            <xsl:value-of select="$schemaStrings/sxt-view-networkLink"/>
+          </td>
+          <td>
+            <xsl:for-each select="$networkLink">
+              <xsl:value-of select="gmd:linkage/gmd:URL"/>
+              <br/>
+            </xsl:for-each>
+          </td>
+        </tr>
+      </xsl:if>
+
       <tr>
         <td>
           <xsl:value-of select="$schemaStrings/sxt-view-date"/>

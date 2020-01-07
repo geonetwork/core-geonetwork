@@ -199,9 +199,8 @@
                      ng-show="downloads.length > 0 || links.length > 0 ||layers.length > 0">
               <h3 translate="">accessData</h3>
               <sxt-links-btn>&#160;</sxt-links-btn>
-
-              <br/>
-              <xsl:apply-templates mode="getLicense" select="$metadata"/>
+              <!--<br/>
+              <xsl:apply-templates mode="getLicense" select="$metadata"/>-->
             </section>
 
             <br/>

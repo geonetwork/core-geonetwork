@@ -307,7 +307,7 @@
                 <!--<xsl:if test="$name != ''">&#160;(</xsl:if>
                 <xsl:value-of select="gmd:organisationName/*"/>
                 <xsl:if test="$name">)</xsl:if>-->
-                <xsl:if test="position() != last()">&#160;,&#160;</xsl:if>
+                <xsl:if test="position() != last()">,&#160;</xsl:if>
               </xsl:for-each-group>
 
               <!-- Publication year: use last publication date -->
@@ -364,7 +364,9 @@
                 <br/>
                 <em><xsl:value-of select="$schemaStrings/sxt-record-citation"/></em>
                 <br/>
-                <xsl:value-of select="$recordCitation"/>
+                <xsl:call-template name="addLineBreaksAndHyperlinks">
+                  <xsl:with-param name="txt" select="$recordCitation"/>
+                </xsl:call-template>
               </xsl:if>
             </p>
           </div>
