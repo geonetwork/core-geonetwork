@@ -390,12 +390,14 @@
 
       $scope.updateSchedule = function(job) {
         $scope.settingsLoading = true;
+        var wfsHarvesterParams = {
+          url: job.url,
+          typeName: job.featureType,
+          metadataUuid: job.mdUuid
+        };
+
         var payload = {
-          wfsHarvesterParam: {
-            url: job.url,
-            typeName: job.featureType,
-            metadataUuid: job.mdUuid
-          },
+          wfsHarvesterParam: wfsHarvesterParams,
           cronExpression: job.cronScheduleExpression
         };
 
