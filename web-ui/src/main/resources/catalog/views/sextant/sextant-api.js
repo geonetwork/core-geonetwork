@@ -35,6 +35,9 @@
         var uiSettings = JSON.parse(settings[1].configuration);
         console.log('settings', siteSettings, uiSettings);
 
+        // merge uiconfig.sextant in sxtSettings for backward compatibility
+        window.sxtSettings = uiSettings.sextant ? uiSettings.sextant : undefined;
+
         var theme = uiSettings.sextant && uiSettings.sextant.theme ? uiSettings.sextant.theme : 'default';
         console.log('CSS theme: ', theme);
         var stylesheetUrl = sxtGnUrl + '../static/api-' + theme + '.css';

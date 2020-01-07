@@ -96,5 +96,6 @@
   "profileGraph": "Profil",
   "nodeDesactivated": "Seule une couche par groupe combo peut-être activée",
   "groupVisible": "Groupe visible",
-  "searchOnlyTitle": "Rechercher uniquement dans le titre"
+  "searchOnlyTitle": "Rechercher uniquement dans le titre",
+  "ui-mod-sextant": "Configuration spécifique Sextant"
 }

@@ -48,6 +48,16 @@
                 gnGlobalSettings.getDefaultConfig() :
                 gnGlobalSettings.getMergeableDefaultConfig()),
               angular.fromJson(scope.config));
+
+              // SEXTANT SPECIFIC
+              // load sextant config separately
+              scope.sxtConfigSource = JSON.stringify(scope.jsonConfig.sextant, null, 2) || '{}';
+              scope.$watch('sxtConfigSource', function (n, o) {
+                if (n !== o) {
+                  scope.jsonConfig.sextant = JSON.parse(n);
+                }
+              });
+              // END SEXTANT SPECIFIC
           }
           scope.$watch('config', function (n, o) {
             if (angular.isDefined(n) && n !== o) {
