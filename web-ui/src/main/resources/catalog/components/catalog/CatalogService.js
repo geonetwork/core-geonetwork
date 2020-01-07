@@ -503,7 +503,15 @@
                 if (window.location.search.indexOf('with3d') !== -1) {
                   gnConfig['map.is3DModeAllowed'] = true;
                 }
-                defer.resolve(gnConfig);
+
+                // SPECIFIC SEXTANT: append ui.config to the promise for backwards compatibility
+                // TODO: get rid of this when the app is loaded with the configs already there
+                $http.get('../api/ui/srv', {cache: true})
+                  .then(function (response) {
+                    gnConfig['ui.config'] = JSON.parse(response.data.configuration);
+                    defer.resolve(gnConfig);
+                  })
+                // END SPECIFIC SEXTANT
               }, function() {
                 defer.reject();
               });
