@@ -173,7 +173,7 @@
       test="$isEditing and
             (
               not($isFlatMode) or
-              gn-fn-metadata:isFieldFlatModeException($viewConfig, $name)
+              gn-fn-metadata:isFieldFlatModeException($viewConfig, $name,  name(..))
             ) and
             $service != 'embedded' and
             count(following-sibling::node()[name() = $name]) = 0">
