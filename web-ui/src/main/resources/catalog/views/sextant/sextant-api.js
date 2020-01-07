@@ -62,9 +62,10 @@
 
         // include sextant API
         var templateInclude = document.createElement("div");
-        templateInclude.className = "gn";
+        templateInclude.className = "gn"; // TODO: allow forcing a layout (md, sm...)
         templateInclude.setAttribute("ng-include", "'../../catalog/views/sextant/templates/index.html'");
         templateInclude.setAttribute("ng-controller", "GnCatController");
+        templateInclude.setAttribute("sxt-size", "auto"); // TODO: allow modifying the sizing (auto or manual)
         appRoot.appendChild(templateInclude);
 
         // bootstrap app
