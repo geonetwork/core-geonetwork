@@ -28,7 +28,7 @@
   <xsl:param name="related" select="'onlines'"/>
 
   <!-- List of related items to display on the side panel. By default all except links. -->
-  <xsl:param name="sideRelated" select="'parent|children|services|datasets|hassources|sources|fcats|siblings|associated'"/>
+  <xsl:param name="sideRelated" select="'parent|children|services|datasets|hassources|sources|fcats|siblings|associated|brothersAndSisters'"/>
 
   <!-- Define a specific XSL template to be used for the content of the formatter.
   This is useful to create a custom view not based on config-editor.xml.

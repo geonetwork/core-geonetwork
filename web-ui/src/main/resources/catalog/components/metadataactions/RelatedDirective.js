@@ -175,7 +175,7 @@
                          } else {
                            scope.relations[idx] = value;
                          }
-                         
+
                          if (scope.relations.siblings && scope.relations.associated) {
                            for (var i = 0; i < scope.relations.associated.length; i++) {
                              if (scope.relations.siblings.filter(function (e) {
