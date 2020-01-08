@@ -103,28 +103,30 @@
 
         <script type="text/javascript">
           //show elements that require js
-          $(document).ready(function() {
-            $(".hidden-nojs").removeClass('hidden-nojs');
+          if ($) {
+            $(document).ready(function() {
+              $(".hidden-nojs").removeClass('hidden-nojs');
 
-            // attach click to tab
-            $('.nav-tabs-advanced a').click(function (e) {
-              e.preventDefault();
-              $(this).tab('show');
-            });
-            // hide empty tab
-            $('.nav-tabs-advanced a').each(function() {
+              // attach click to tab
+              $('.nav-tabs-advanced a').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+              });
+              // hide empty tab
+              $('.nav-tabs-advanced a').each(function() {
 
-              var tabLink = $(this).attr('href');
+                var tabLink = $(this).attr('href');
 
-              if (tabLink) {
-                if ($(tabLink).length === 0) {
-                  $(this).parent().hide();
+                if (tabLink) {
+                  if ($(tabLink).length === 0) {
+                    $(this).parent().hide();
+                  }
                 }
-              }
+              });
+              // show the first tab
+              $('.nav-tabs-advanced a:first').tab('show');
             });
-            // show the first tab
-            $('.nav-tabs-advanced a:first').tab('show');
-          });
+          }
         </script>
         <xsl:call-template name="css-load"/>
       </body>
