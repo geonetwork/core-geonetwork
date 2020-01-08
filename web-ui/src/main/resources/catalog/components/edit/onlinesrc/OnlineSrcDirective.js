@@ -570,29 +570,26 @@
                       } else {
                         scope.isMdMultilingual = false;
                       }
-                    } else {
-                      scope.isMdMultilingual = false;
                     }
-                  }
 
-                  function getType(linkType) {
-                    for (var i = 0; i < scope.config.types.length; i++) {
-                      var t = scope.config.types[i];
-                      if (t.label === linkType) {
-                        return t;
-                      }
-                    }
-                    return scope.config.types[0];
-                  };
-
-                  var typeConfig = linkToEdit ?
-                      getTypeConfig(linkToEdit) :
-                      getType(linkType);
-                  scope.config.multilingualFields = [];
-                  angular.forEach(typeConfig.fields, function(f, k) {
-                    if (f.isMultilingual !== false) {
-                      scope.config.multilingualFields.push(k);
-                    }
+                  // function getType(linkType) {
+                  //   for (var i = 0; i < scope.config.types.length; i++) {
+                  //     var t = scope.config.types[i];
+                  //     if (t.label === linkType) {
+                  //       return t;
+                  //     }
+                  //   }
+                  //   return scope.config.types[0];
+                  // };
+                  //
+                  // var typeConfig = linkToEdit ?
+                  //     getTypeConfig(linkToEdit) :
+                  //     getType(linkType);
+                  // scope.config.multilingualFields = [];
+                  // angular.forEach(typeConfig.fields, function(f, k) {
+                  //   if (f.isMultilingual !== false) {
+                  //     scope.config.multilingualFields.push(k);
+                  //   }
 
                     initThumbnailMaker();
                     resetForm();
@@ -672,7 +669,7 @@
                       scope.params.desc = '';
                       initMultilingualFields();
                     }
-                  });
+                  };
                   function loadConfigAndInit(withInit) {
                     gnSchemaManagerService.getEditorAssociationPanelConfig(
                       gnCurrentEdit.schema,
