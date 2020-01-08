@@ -418,8 +418,9 @@
         scope: {
           collection: '='
         },
-        template: "<ul class='list-group'><li data-ng-show='collection.length > 10' >" +
-            "<input class='form-control input-sm' data-ng-model-options='{debounce: 200}' data-ng-model='layerSearchText'/>" +
+        template: "<ul class='gn-layer-tree'><li data-ng-show='collection.length > 10' >" +
+            "<div class='input-group input-group-sm'><span class='input-group-addon'><i class='fa fa-filter'></i></span>" +
+            "<input class='form-control' data-ng-model-options='{debounce: 200}' data-ng-model='layerSearchText'/></div>" +
             "</li>" +
             '<gn-cap-tree-elt ng-repeat="member in collection | filter:layerSearchText | orderBy: \'Title\'" member="member">' +
             '</gn-cap-tree-elt></ul>'
@@ -462,7 +463,7 @@
             });
           };
 
-          var toggleNode = function(evt) {
+          scope.toggleNode = function(evt) {
             el.find('.fa').first().toggleClass('fa-folder-o')
                 .toggleClass('fa-folder-open-o');
             el.children('ul').toggle();
@@ -476,7 +477,7 @@
 
           scope.handle = function(evt) {
             if (scope.isParentNode) {
-              toggleNode();
+              scope.toggleNode();
             } else {
               select();
             }
@@ -485,7 +486,7 @@
 
           // Add all subchildren
           if (angular.isArray(scope.member.Layer)) {
-            element.append("<gn-cap-tree-col class='list-group' " +
+            element.append("<gn-cap-tree-col " +
                 "collection='member.Layer'></gn-cap-tree-col>");
             $compile(element.find('gn-cap-tree-col'))(scope);
           }

@@ -167,7 +167,9 @@
                 </xsl:otherwise>
               </xsl:choose>
 
-              <xsl:apply-templates mode="getMetadataCitation" select="$metadata"/>
+              <xsl:if test="$citation = 'true'">
+                <xsl:apply-templates mode="getMetadataCitation" select="$metadata"/>
+              </xsl:if>
             </div>
           </div>
           <div class="gn-md-side gn-md-side-advanced col-md-3">

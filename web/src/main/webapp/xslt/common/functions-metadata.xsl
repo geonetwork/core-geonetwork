@@ -452,11 +452,12 @@
           for[@name = $name and @addDirective]/
           directiveAttributes/@*"/>
   </xsl:function>
-  
+
   <!-- Return if a flat mode exception has been defined in the current view for a field. -->
   <xsl:function name="gn-fn-metadata:isFieldFlatModeException" as="xs:boolean">
     <xsl:param name="configuration" as="node()?"/>
     <xsl:param name="name" as="xs:string"/>
+    <xsl:param name="parent" as="xs:string?" />
 
     <xsl:choose>
       <xsl:when test="not($configuration)">
@@ -464,7 +465,9 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:variable name="exception"
-                      select="count($configuration/flatModeExceptions/for[@name = $name])"/>
+                      select="if (string($parent))
+                  then count($configuration/flatModeExceptions/for[@name = $name and (not(@excludeFrom) or (@excludeFrom and not(contains(@excludeFrom, $parent))))])
+                  else count($configuration/flatModeExceptions/for[@name = $name])"/>
 
         <xsl:value-of select="if ($exception > 0)
                       then true()
