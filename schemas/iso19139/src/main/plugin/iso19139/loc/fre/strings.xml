@@ -137,7 +137,7 @@
   <inspireServiceTaxonomy>INSPIRE Service Taxonomy</inspireServiceTaxonomy>
   <otherConstraints>Other constraints</otherConstraints>
   <operatesOn>Coupled resource</operatesOn>
-  <extent>Geographic bounding box</extent>
+  <extent>Étendue spatiale</extent>
   <freeTextKeywords>Other keywords</freeTextKeywords>
 
   <addCrs>Projection</addCrs>
