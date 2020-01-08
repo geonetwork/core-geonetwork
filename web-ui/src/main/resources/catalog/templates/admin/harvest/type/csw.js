@@ -63,10 +63,10 @@ var gnHarvestercsw = {
           // happen and then search criteria name which is the tag name
           // will be lost.
           //                if (value) {
-
-          body += '<' + tag + '>' + 
-            ((tag.indexOf('bbox-') === 0 && isNaN(value)) || value === null ? '' : value) + 
-            '</' + tag + '>';          //            }
+          body += '<' + tag + '>' +
+            ((tag.indexOf('bbox-') === 0 && isNaN(value)) || value === null ? '' : value) +
+            '</' + tag + '>';
+          //            }
         }
       }
     }
