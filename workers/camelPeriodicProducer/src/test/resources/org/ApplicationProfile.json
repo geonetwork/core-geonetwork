@@ -1,0 +1,77 @@
+{
+  "tokenizedFields": {
+    "PROGRAMMES": ";",
+    "PARAMETRES": ";",
+    "SUPPORTS_NIVEAUX_PRELEVEMENT": ";"
+  },
+  "fields": [
+    {
+      "name": "PROGRAMMES",
+      "label": {
+        "fr": "Programme de suivi",
+        "en": "Programme de suivi"
+      }
+    },
+    {
+      "name": "PARAMETRES",
+      "label": {
+        "fr": "Paramètre",
+        "en": "Paramètre"
+      }
+    },
+    {
+      "name": "range_Date",
+      "type": "rangeDate",
+      "minField": "RESULTAT_DATE_MIN",
+      "maxField": "RESULTAT_DATE_MAX",
+      "label": {
+        "fr": "Date",
+        "en": "Date"
+      },
+      "display": "graph"
+    },
+    {
+      "name": "ZONE_MARINE_QUADRIGE",
+      "label": {
+        "fr": "Zone marine Quadrige",
+        "en": "Zone marine Quadrige"
+      }
+    },
+    {
+      "name": "SOUS_REGION_MARINE_DCSMM",
+      "label": {
+        "fr": "Sous-région marine DCSMM",
+        "en": "Sous-région marine DCSMM"
+      }
+    },
+    {
+      "name": "MASSE_EAU_DCE",
+      "label": {
+        "fr": "Masse d’eau DCE",
+        "en": "Masse d’eau DCE"
+      }
+    },
+    {
+      "name": "SUPPORTS_NIVEAUX_PRELEVEMENT",
+      "label": {
+        "fr": "Support d’analyse et niveau de prélèvement",
+        "en": "Support d’analyse et niveau de prélèvement"
+      }
+    },
+    {
+      "name": "LIEU_LIBELLE",
+      "label": {
+        "fr": "Lieu",
+        "en": "Lieu"
+      }
+    },
+    {
+      "name": "GRAPHES",
+      "hidden": true,
+      "suffix": "&from=${filtre_range_Date.from}&to=${filtre_range_Date.to}&typeParam=${filtre_PARAMETRES}&support=${filtre_SUPPORTS_NIVEAUX_PRELEVEMENT}"
+    }
+  ],
+  "treeFields": [
+    "PARAMETRES"
+  ]
+}
