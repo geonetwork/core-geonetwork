@@ -51,21 +51,6 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
         configure(); // wait for geonetworkWorkingDir
     }
 
-    public void init() {
-        ApplicationContextHolder.set(applicationContext);
-        camelContext.getManagementStrategy().addEventNotifier(new EventNotifierSupport() {
-            @Override
-            public void notify(EventObject eventObject) throws Exception {
-                configure();
-            }
-
-            @Override
-            public boolean isEnabled(EventObject eventObject) {
-                return eventObject instanceof CamelContextStartedEvent;
-            }
-        });
-    }
-
     public void configure() {
         msgProducerRepository
             .findAll()
