@@ -202,7 +202,7 @@
           </span>
           <br/>
           <span class="visible-lg-*"
-                data-ng-if="mainType == 'MDSIBLING'">
+                data-ng-if="mainType == 'MDSIBLING' && r.associationType != ''">
             ({{::r.associationType | translate}}{{::(r.initiativeType != '' ? ' / ' + (r.initiativeType | translate) : '')}})
           </span>
 
