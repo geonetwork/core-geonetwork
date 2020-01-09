@@ -137,6 +137,11 @@ public class InspireValidatorUtils {
 
     private Map<String, String> testsuitesConditions;
 
+    private Integer maxNumberOfEtfChecks;
+
+    private Long intervalBetweenEtfChecks;
+
+
     public String getDefaultTestSuite() {
         return defaultTestSuite;
     }
@@ -159,6 +164,22 @@ public class InspireValidatorUtils {
 
     public Map getTestsuitesConditions() {
         return testsuitesConditions;
+    }
+
+    public Integer getMaxNumberOfEtfChecks() {
+        return maxNumberOfEtfChecks;
+    }
+
+    public void setMaxNumberOfEtfChecks(Integer maxNumberOfEtfChecks) {
+        this.maxNumberOfEtfChecks = maxNumberOfEtfChecks;
+    }
+
+    public Long getIntervalBetweenEtfChecks() {
+        return intervalBetweenEtfChecks;
+    }
+
+    public void setIntervalBetweenEtfChecks(Long intervalBetweenEtfChecks) {
+        this.intervalBetweenEtfChecks = intervalBetweenEtfChecks;
     }
 
     public InspireValidatorUtils() {
@@ -561,13 +582,17 @@ public class InspireValidatorUtils {
     }
 
     public void waitUntilReady(ServiceContext context, String endPoint, String testId) throws Exception {
-        while (true) {
+        int checkCounter = 1;
+
+        while (checkCounter++ <= maxNumberOfEtfChecks) {
             if (isReady(context, endPoint, testId)) {
                return;
             }
 
-            Thread.sleep(5000);
+            Thread.sleep(intervalBetweenEtfChecks);
         }
+
+        throw new Exception("ETF validation task hasn't finish after " + maxNumberOfEtfChecks + " checks.");
     }
 
     /**
