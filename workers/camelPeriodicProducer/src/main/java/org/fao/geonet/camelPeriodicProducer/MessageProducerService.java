@@ -6,10 +6,11 @@ import org.apache.camel.support.EventNotifierSupport;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.IndexedMetadataFetcher;
 import org.fao.geonet.domain.MessageProducerEntity;
-import org.fao.geonet.events.server.ServerStartup;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterExchangeState;
 import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.MessageProducerRepository;
 import org.slf4j.Logger;
@@ -19,13 +20,15 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
+
 import java.io.IOException;
+
 import java.util.EventObject;
 
 import static org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder.MESSAGE_HARVEST_WFS_FEATURES;
 
 @Component
-public class MessageProducerService implements ApplicationListener<ServerStartup> {
+public class MessageProducerService implements ApplicationListener<GeonetworkDataDirectory.GeonetworkDataDirectoryInitializedEvent> {
     private static Logger LOGGER = LoggerFactory.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
     private static final String DEFAULT_CONSUMER_URI = "activemq://queue:" + MESSAGE_HARVEST_WFS_FEATURES + "?concurrentConsumers=5";
 
@@ -47,7 +50,7 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
     private ConfigurableApplicationContext applicationContext;
 
     @Override
-    public void onApplicationEvent(ServerStartup serverStartup) {
+    public void onApplicationEvent(GeonetworkDataDirectory.GeonetworkDataDirectoryInitializedEvent serverStartup) {
         configure(); // wait for geonetworkWorkingDir
     }
 
