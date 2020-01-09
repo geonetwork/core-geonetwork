@@ -129,7 +129,7 @@
           '$scope', '$element', '$attrs',
           function ($scope, $element, $attrs) {
             this.tasks = [];
-
+            this.initialLoad = true;
             var me = this;
 
             this.refresh = function () {
@@ -164,15 +164,23 @@
                   });
 
                   if (requireRefresh) {
+                    me.initialLoad = false;
                     me.timeout = setTimeout(me.refresh, 1000);
                   } else {
                     clearTimeout(me.timeout);
-                    // Clean the tasks with a delay to remove the progress panel
-                    // after a few seconds when the task is finished
-                    setTimeout(function() {
-                      me.tasks.length = 0;
-                    }, 5000);
 
+                    if (me.initialLoad == true) {
+                      // If doesn't require refresh (Old task) and loading the directive
+                      // cleanup the tasks to avoid displaying old progress panel.
+                      me.initialLoad = false;
+                      me.tasks.length = 0;
+                    } else {
+                      // Clean the tasks with a delay to remove the progress panel
+                      // after a few seconds when the task is finished.
+                      setTimeout(function() {
+                        me.tasks.length = 0;
+                      }, 5000);
+                    }
                   }
                 });
             };
