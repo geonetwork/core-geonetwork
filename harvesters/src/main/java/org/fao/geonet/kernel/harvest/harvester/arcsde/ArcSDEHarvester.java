@@ -305,6 +305,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
                         BaseAligner aligner = new BaseAligner(cancelMonitor) {
                         };
+                        aligner.setParams(params);
                         //
                         // add / update the metadata from this harvesting result
                         //
