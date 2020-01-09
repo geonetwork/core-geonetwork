@@ -47,7 +47,6 @@
       function filterSources() {
         $scope.filteredSources = [];
         $scope.sources.forEach(function(s) {
-          console.log(s);
           if ($scope.filter.types[s.type] === true) {
             $scope.filteredSources.push(s);
           }
