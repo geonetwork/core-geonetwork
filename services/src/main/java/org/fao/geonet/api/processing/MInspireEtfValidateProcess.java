@@ -3,8 +3,13 @@ package org.fao.geonet.api.processing;
 import jeeves.server.context.ServiceContext;
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.records.editing.InspireValidatorUtils;
+import org.fao.geonet.api.records.formatters.FormatType;
+import org.fao.geonet.api.records.formatters.FormatterApi;
+import org.fao.geonet.api.records.formatters.FormatterWidth;
+import org.fao.geonet.api.records.formatters.cache.Key;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -12,6 +17,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.springframework.context.ApplicationContext;
@@ -23,6 +29,7 @@ import org.springframework.transaction.TransactionStatus;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static jeeves.transaction.TransactionManager.CommitBehavior.ALWAYS_COMMIT;
@@ -123,6 +130,8 @@ public class MInspireEtfValidateProcess implements SelfNaming {
         metadataToAnalyseCount = uuids.size();
         analyseMdDate = System.currentTimeMillis();
 
+        ServiceContext context = serviceContext;
+
         for (String uuid : uuids) {
             if (!metadataRepository.existsMetadataUuid(uuid)) {
                 metadataAnalysed++;
@@ -145,51 +154,55 @@ public class MInspireEtfValidateProcess implements SelfNaming {
 
                                 boolean reindexMetadata = false;
 
+                                String mdToValidate = retrieveMetadataToValidate(context, record);
+
                                 try {
                                     boolean inspireMetadata = false;
 
-                                    for (Map.Entry<String, String> entry : testsuiteConditions.entrySet()) {
-                                        boolean applyCondition = false;
-                                        try {
-                                            applyCondition = Xml.selectBoolean(record.getXmlData(false),
-                                                entry.getValue(),
-                                                schemaManager.getSchema(record.getDataInfo().getSchemaId()).getNamespaces());
-                                        } catch (Exception ex) {
-                                            Log.error(API.LOG_MODULE_NAME, String.format("Error checking INSPIRE rule %s to apply to metadata: %s",
-                                                entry.getKey(), record.getUuid()), ex);
-                                        }
+                                    if (StringUtils.isNotEmpty(mdToValidate)) {
+                                        for (Map.Entry<String, String> entry : testsuiteConditions.entrySet()) {
+                                            boolean applyCondition = false;
+                                            try {
+                                                // Checks the condition in the original record
+                                                applyCondition = Xml.selectBoolean(record.getXmlData(false),
+                                                    entry.getValue(),
+                                                    schemaManager.getSchema(record.getDataInfo().getSchemaId()).getNamespaces());
+                                            } catch (Exception ex) {
+                                                Log.error(API.LOG_MODULE_NAME, String.format("Error checking INSPIRE rule %s to apply to metadata: %s",
+                                                    entry.getKey(), record.getUuid()), ex);
+                                            }
 
-                                        if (applyCondition) {
-                                            String testId = inspireValidatorUtils.submitFile(serviceContext, URL,
-                                                new ByteArrayInputStream(record.getData().getBytes()), entry.getKey(), record.getUuid());
+                                            if (applyCondition) {
+                                                String testId = inspireValidatorUtils.submitFile(serviceContext, URL,
+                                                    new ByteArrayInputStream(mdToValidate.getBytes()), entry.getKey(), record.getUuid());
 
-                                            inspireValidatorUtils.waitUntilReady(serviceContext, URL, testId);
+                                                inspireValidatorUtils.waitUntilReady(serviceContext, URL, testId);
 
-                                            String reportUrl = inspireValidatorUtils.getReportUrl(URL, testId);
-                                            String reportXmlUrl = inspireValidatorUtils.getReportUrlXML(URL, testId);
-                                            String reportXml = inspireValidatorUtils.retrieveReport(serviceContext, reportXmlUrl);
+                                                String reportUrl = inspireValidatorUtils.getReportUrl(URL, testId);
+                                                String reportXmlUrl = inspireValidatorUtils.getReportUrlXML(URL, testId);
+                                                String reportXml = inspireValidatorUtils.retrieveReport(serviceContext, reportXmlUrl);
 
-                                            String validationStatus = inspireValidatorUtils.isPassed(serviceContext, URL, testId);
+                                                String validationStatus = inspireValidatorUtils.isPassed(serviceContext, URL, testId);
 
-                                            MetadataValidationStatus metadataValidationStatus =
-                                                inspireValidatorUtils.calculateValidationStatus(validationStatus);
+                                                MetadataValidationStatus metadataValidationStatus =
+                                                    inspireValidatorUtils.calculateValidationStatus(validationStatus);
 
-                                            MetadataValidation metadataValidation = new MetadataValidation()
-                                                .setId(new MetadataValidationId(record.getId(), "inspire"))
-                                                .setStatus(metadataValidationStatus).setRequired(false)
-                                                .setReportUrl(reportUrl).setReportContent(reportXml);
+                                                MetadataValidation metadataValidation = new MetadataValidation()
+                                                    .setId(new MetadataValidationId(record.getId(), "inspire"))
+                                                    .setStatus(metadataValidationStatus).setRequired(false)
+                                                    .setReportUrl(reportUrl).setReportContent(reportXml);
 
-                                            metadataValidationRepository.save(metadataValidation);
+                                                metadataValidationRepository.save(metadataValidation);
 
-                                            //new RecordValidationTriggeredEvent(record.getId(),
-                                            //    ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
-                                            //    metadataValidation.getStatus().getCode()).publish(appContext);
+                                                //new RecordValidationTriggeredEvent(record.getId(),
+                                                //    ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
+                                                //    metadataValidation.getStatus().getCode()).publish(appContext);
 
-                                            reindexMetadata = true;
-                                            inspireMetadata = true;
+                                                reindexMetadata = true;
+                                                inspireMetadata = true;
+                                            }
                                         }
                                     }
-
 
                                     if (!inspireMetadata) {
                                         metadataNotInspire++;
@@ -241,5 +254,38 @@ public class MInspireEtfValidateProcess implements SelfNaming {
         TransactionManager.runInTransaction(name, appContext, CREATE_NEW,  ALWAYS_COMMIT, false, transactionTask);
     }
 
+
+    /**
+     * Returns the metadata to validate in INSPIRE validator:
+     *  - For iso19139 schema returns the iso19139 xml.
+     *  - For other schemas uses the iso19139 formatter to convert it,
+     *    otherwise if not available an iso19139 formatter returns null.
+     *
+     * @param context
+     * @param record
+     * @return Metadata to validate or null if can't be converted to iso19139 format.
+     */
+    private String retrieveMetadataToValidate(ServiceContext context, AbstractMetadata record) {
+        String mdToValidate = null;
+
+        if (!record.getDataInfo().getSchemaId().equals(ISO19139SchemaPlugin.IDENTIFIER)) {
+            try {
+                Key key = new Key(record.getId(), "eng", FormatType.xml, "iso19139", true, FormatterWidth._100);
+
+                final FormatterApi.FormatMetadata formatMetadata =
+                    new FormatterApi().new FormatMetadata(context, key, null);
+                final byte[] data = formatMetadata.call().data;
+                mdToValidate = new String(data, StandardCharsets.UTF_8);
+            } catch (Exception ex) {
+                Log.error(API.LOG_MODULE_NAME,
+                    String.format("Error converting metadata %s to ISO19139 for INSPIRE validator: %s",
+                        record.getUuid(), ex.getMessage()), ex);
+            }
+        } else {
+            mdToValidate = record.getData();
+        }
+
+        return mdToValidate;
+    }
 
 }

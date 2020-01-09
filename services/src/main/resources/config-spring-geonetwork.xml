@@ -103,6 +103,8 @@
       <map>
         <entry key="iso19139::TG version 2.0 - Data sets and series" value="gmd:hierarchyLevel[*/@codeListValue = 'dataset' or */@codeListValue = 'series']" />
         <entry key="iso19139::TG version 2.0 - Network services" value=".//srv:SV_ServiceIdentification" />
+        <entry key="iso19115-3.2018::TG version 2.0 - Data sets and series" value="mdb:metadataScope[*/mdb:resourceScope/*/@codeListValue = 'dataset' or */mdb:resourceScope/*/@codeListValue = 'series']" />
+        <entry key="iso19115-3.2018::TG version 2.0 - Network services" value=".//srv:SV_ServiceIdentification" />
       </map>
     </property>
     <property name="defaultTestSuite" value="TG version 1.3"/>
