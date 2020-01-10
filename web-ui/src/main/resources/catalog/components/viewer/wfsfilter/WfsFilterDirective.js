@@ -211,7 +211,7 @@
                 gnGlobalSettings.getNonProxifiedUrl(scope.wfsUrl ? scope.url : scope.mdUrl),
                 // A WFS URL is in the metadata or we're guessing WFS has
                 // same URL as WMS
-                scope.wfsUrl ? 'WMS' : 'WFS').then(
+                scope.wfsUrl ? 'WFS' : 'WFS').then(
                 function(response) {
                   if (response.status == 200) {
                     appProfile = angular.fromJson(response.data['0']);
