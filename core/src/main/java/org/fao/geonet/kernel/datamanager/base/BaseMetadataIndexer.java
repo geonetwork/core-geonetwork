@@ -552,7 +552,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id$);
             if (validationInfo.isEmpty()) {
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, "-1", true, true));
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID_INSPIRE, "-1", true, true));
             } else {
                 String isValid = "1";
                 boolean hasInspireValidation = false;
