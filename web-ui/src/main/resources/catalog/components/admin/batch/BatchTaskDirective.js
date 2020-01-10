@@ -141,7 +141,7 @@
                   // otherwise reschedule the check
                   if ((result.data.status != 200) || 
                     !result.data || !result.data.value) {
-                    me.timeout = setTimeout(me.refresh, 1000);
+                    me.timeout = setTimeout(me.refresh, 10000);
                     return;
                   }
 
@@ -165,7 +165,7 @@
 
                   if (requireRefresh) {
                     me.initialLoad = false;
-                    me.timeout = setTimeout(me.refresh, 1000);
+                    me.timeout = setTimeout(me.refresh, 10000);
                   } else {
                     clearTimeout(me.timeout);
 
