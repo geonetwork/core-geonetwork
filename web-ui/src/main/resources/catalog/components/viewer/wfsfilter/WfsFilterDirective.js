@@ -796,15 +796,24 @@
            * Only available for administrators.
            */
           scope.indexWFSFeatures = function(version) {
-            appProfilePromise.then(function() {
-              wfsFilterService.indexWFSFeatures(
-                  scope.url,
-                  ftName,
-                  appProfile ? appProfile.tokenizedFields : null,
-                  appProfile ? appProfile.treeFields : null,
-                  uuid,
-                  version);
-            });
+            var applicationProfile = scope.md.linksTree.map(function (d) {
+              return d.filter(function (e) {
+                return e.protocol === 'OGC:WFS';
+              });
+            }).filter(function (f) {
+              return f[0] ? f[0].name : undefined;
+            }).find(function (s) {
+              return s[0].name === ftName;
+            })[0].applicationProfile;
+            applicationProfile = JSON.parse(applicationProfile);
+
+            wfsFilterService.indexWFSFeatures(
+                scope.url,
+                ftName,
+                applicationProfile ? applicationProfile.tokenizedFields : null,
+                applicationProfile ? applicationProfile.treeFields : null,
+                uuid,
+                version);
           };
 
           // Init the directive
