@@ -225,14 +225,19 @@
         </td>
         <td>
 
-          <xsl:apply-templates mode="render-field"
-                               select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:useLimitation"/>
+          <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:useLimitation">
+            <xsl:apply-templates mode="render-field" select="."/>
+          </xsl:for-each>
 
-          <xsl:apply-templates mode="render-field"
-                               select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/*[*/@codeListValue != 'otherRestrictions']"/>
+          <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/*[*/@codeListValue != 'otherRestrictions']">
+            <xsl:apply-templates mode="render-field"
+                                 select="."/>
+          </xsl:for-each>
 
-          <xsl:apply-templates mode="render-field"
-                               select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:otherConstraints"/>
+          <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:otherConstraints">
+            <xsl:apply-templates mode="render-field"
+                                 select="."/>
+          </xsl:for-each>
         </td>
       </tr>
       <tr>

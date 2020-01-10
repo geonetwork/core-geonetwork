@@ -284,9 +284,9 @@
 
   <xsl:template mode="getMetadataCitation" match="gmd:MD_Metadata">
     <xsl:variable name="displayCitation"
-                  select="count(.//gmd:protocol[* = ('WWW:LINK-1.0-http--metadata-URL', 'WWW:LINK-1.0-http--publication-URL', 'DOI')]) > 0"/>
+                  select="count(.//gmd:protocol[* = ('WWW:LINK-1.0-http--metadata-URL', 'DOI')]) > 0"/>
     <xsl:variable name="doiUrl"
-                  select=".//gmd:onLine/*[gmd:protocol/* = ('WWW:LINK-1.0-http--metadata-URL', 'WWW:LINK-1.0-http--publication-URL', 'DOI')]/gmd:linkage/gmd:URL"/>
+                  select=".//gmd:onLine/*[gmd:protocol/* = ('WWW:LINK-1.0-http--metadata-URL', 'DOI')]/gmd:linkage/gmd:URL"/>
     <xsl:variable name="landingPageUrl"
                   select="if ($doiUrl != '') then $doiUrl else concat($nodeUrl, 'api/records/', $metadataUuid)"/>
 
@@ -377,6 +377,7 @@
               <xsl:if test="normalize-space($recordCitation) != ''">
                 <br/>
                 <em><xsl:value-of select="$schemaStrings/sxt-record-citation"/></em>
+                <br/>
                 <br/>
                 <xsl:call-template name="addLineBreaksAndHyperlinks">
                   <xsl:with-param name="txt" select="$recordCitation"/>
