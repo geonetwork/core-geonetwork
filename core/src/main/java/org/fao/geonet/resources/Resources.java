@@ -283,7 +283,7 @@ public abstract class Resources {
         try {
             Path srcPath = locateResource(locateResourcesDir(context), servletContext, appDir, icon);
             String extension = Files.getFileExtension(srcPath.getFileName().toString());
-            try(ResourceHolder src = getImage(context, srcPath.getFileName().toString(), appDir);
+            try(ResourceHolder src = getImage(context, srcPath.getFileName().toString(), srcPath.getParent());
                 ResourceHolder des = getWritableImage(context, destName + "." + extension,
                                                       logosDir)) {
                 if (src != null) {
