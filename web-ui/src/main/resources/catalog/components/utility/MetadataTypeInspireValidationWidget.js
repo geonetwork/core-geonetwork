@@ -21,17 +21,22 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.domain;
+(function() {
+  goog.provide('gn_mdtypeinspirevalidationwidget');
 
-/**
- * The enumeration of validation status'
- *
- * @author Jesse
- */
-public enum MetadataValidationStatus {
-    INVALID, VALID, NEVER_CALCULATED, DOES_NOT_APPLY;
+  var module = angular.module('gn_mdtypeinspirevalidationwidget', []);
 
-    public String getCode() {
-        return String.valueOf(ordinal());
+  module.directive('gnMdTypeInspireValidationWidget', [
+    function() {
+      return {
+        restrict: 'E',
+        scope: {
+          metadata: '='
+        },
+        templateUrl: '../../catalog/components/utility/' +
+            'partials/typeinspirevalidationwidget.html'
+      };
     }
-}
+  ]);
+
+})();

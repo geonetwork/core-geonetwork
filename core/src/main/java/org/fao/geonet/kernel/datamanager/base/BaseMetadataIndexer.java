@@ -550,16 +550,29 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, "-1", true, true));
             } else {
                 String isValid = "1";
+                boolean hasInspireValidation = false;
                 for (MetadataValidation vi : validationInfo) {
                     String type = vi.getId().getValidationType();
                     MetadataValidationStatus status = vi.getStatus();
-                    if (status == MetadataValidationStatus.INVALID && vi.isRequired()) {
-                        isValid = "0";
+
+                    // TODO: Check if ignore INSPIRE validation?
+                    if (!type.equalsIgnoreCase("inspire")) {
+                        if (status == MetadataValidationStatus.INVALID && vi.isRequired()) {
+                            isValid = "0";
+                        }
+                    } else {
+                        hasInspireValidation = true;
+                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.INSPIRE_REPORT_URL, vi.getReportUrl(), true, true));
                     }
+
                     moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID + "_" + type, status.getCode(),
                         true, true));
                 }
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, isValid, true, true));
+
+                if (!hasInspireValidation) {
+                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID_INSPIRE, "-1", true, true));
+                }
             }
 
             //To inject extra fields from BaseMetadataIndexer inherited beans

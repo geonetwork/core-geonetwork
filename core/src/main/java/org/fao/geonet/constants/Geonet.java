@@ -675,11 +675,13 @@ public final class Geonet {
         public static final String STATUS = "_status";
         public static final String STATUS_CHANGE_DATE = "_statusChangeDate";
         public static final String VALID = "_valid";
+        public static final String VALID_INSPIRE = "_valid_inspire";
         public static final String ID = "_id";
         public static final String ANY = "any";
         public static final String LOCALE = "locale";
 		public static final String IS_PUBLISHED_TO_ALL = "_isPublishedToAll";
         public static final String FEEDBACKCOUNT = "feedbackCount";
         public static final String DRAFT = "_draft";
+        public static final String INSPIRE_REPORT_URL = "_inspireReportUrl";
     }
 }

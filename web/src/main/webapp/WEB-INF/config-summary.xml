@@ -101,6 +101,7 @@
     <facet name="title" indexKey="title" label="titles"/>
     <facet name="metadataType" indexKey="_isTemplate" label="metadataTypes"/>
     <facet name="isValid" indexKey="_valid" label="isValid"/>
+    <facet name="isValidInspire" indexKey="_valid_inspire" label="isValidInspire"/>
     <facet name="isHarvested" indexKey="_isHarvested" label="isHarvested"/>
     <facet name="mdStatus" indexKey="_status" label="mdStatus"/>
     <facet name="status" indexKey="cl_status" label="status"/>
@@ -171,6 +172,7 @@
       <item facet="sourceCatalog"
             translator="db:org.fao.geonet.repository.SourceRepository:findOneByUuid"/>
       <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>
+      <item facet="isValidInspire" max="3" sortBy="value" translator="apploc:validStatus-"/>
       <item facet="groupOwner" max="199" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
       <item facet="recordOwner" max="45" sortBy="value"/>

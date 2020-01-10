@@ -21,17 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.domain;
+(function() {
+    goog.provide('gn_batchtask');
 
-/**
- * The enumeration of validation status'
- *
- * @author Jesse
- */
-public enum MetadataValidationStatus {
-    INVALID, VALID, NEVER_CALCULATED, DOES_NOT_APPLY;
+    goog.require('gn_batchtask_directive');
 
-    public String getCode() {
-        return String.valueOf(ordinal());
-    }
-}
+    angular.module('gn_batchtask', ['gn_batchtask_directive']);
+})();

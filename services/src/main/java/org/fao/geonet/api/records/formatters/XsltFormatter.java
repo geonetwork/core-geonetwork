@@ -24,16 +24,13 @@
 package org.fao.geonet.api.records.formatters;
 
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.kernel.Schema;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -128,10 +125,13 @@ public class XsltFormatter implements FormatterImpl {
         // an xsl:param should be defined
         // eg. <xsl:param name="view"/>
         Map<String, Object> requestParameters = new HashMap<String, Object>();
-        Iterator<String> iterator = fparams.webRequest.getParameterMap().keySet().iterator();
-        while (iterator.hasNext()) {
-            String key = iterator.next();
-            requestParameters.put(key, fparams.webRequest.getParameterMap().get(key));
+
+        if (fparams.webRequest != null) {
+            Iterator<String> iterator = fparams.webRequest.getParameterMap().keySet().iterator();
+            while (iterator.hasNext()) {
+                String key = iterator.next();
+                requestParameters.put(key, fparams.webRequest.getParameterMap().get(key));
+            }
         }
         Element transformed = Xml.transform(root, fparams.viewFile, requestParameters);
         return "textResponse".equals(transformed.getName()) ?
