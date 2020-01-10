@@ -46,7 +46,7 @@
     <note>In the catalog, a resource is equivalent to one record.
       So redirect to metadata formatter.</note>
     <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/resources/(.*)$</from>
-    <to type="forward">$1/api/records/$2</to>
+    <to type="forward">$1/api/records/$3</to>
   </rule>
   <rule>
     <note>In the catalog, a dataset is equivalent to one record.
