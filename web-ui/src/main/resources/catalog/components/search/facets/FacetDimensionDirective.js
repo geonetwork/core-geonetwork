@@ -349,4 +349,46 @@
         }
       };
     }]);
+
+  module.directive('gnFacetDimensionRecap', [
+    'gnFacetConfigService',
+    function(gnFacetConfigService) {
+      return {
+        restrict: 'A',
+        templateUrl: function(elem, attrs) {
+          return attrs.template || '../../catalog/components/search/facets/' +
+            'partials/dimension-facet-recap.html';
+        },
+        scope: {
+          query: '=gnFacetDimensionRecap',
+          dimensions: '='
+        },
+        link: function(scope, element, attrs) {
+          scope.$watch('query', function() {
+            scope.items = scope.query.split('&').map(function (raw) {
+              var parts = decodeURIComponent(raw).split('/');
+              var dimensionKey = parts[0];
+              var categoryValue = parts[1];
+
+              var dimension, category;
+              scope.dimensions.forEach(function (d) {
+                if (d['@name'] === dimensionKey) {
+                  dimension = d;
+                }
+              });
+              dimension.category.forEach(function (c) {
+                if (c['@value'] === categoryValue) {
+                  category = c;
+                }
+              })
+
+              return {
+                dimension: dimension['@label'],
+                category: category['@label']
+              };
+            });
+          });
+        }
+      };
+    }]);
 })();

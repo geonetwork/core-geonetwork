@@ -1,5 +1,10 @@
 <div class="gn-facet-list">
 
+  <div gn-facet-dimension-recap="params['facet.q']"
+       data-dimensions="dimension"
+       ng-if="!isTabMode && dimension && hasFilter()">
+  </div>
+
   <!--Collapse all button for first panel-->
   <div class="btn-group width-100 flex-row flex-left" ng-hide="isTabMode">
     <button type="button" class="btn btn-default btn-sm gn-facet-toggle-btn"

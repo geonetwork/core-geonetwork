@@ -145,8 +145,6 @@
         return category.label;
       };
 
-
-
       /**
        * Check that current category is already used
        * in current filter.
@@ -196,7 +194,12 @@
           }
         }
         return false;
-      };
+      }
+
+      function hasFilter(scope) {
+        var currentFilter = scope.params['facet.q'];
+        return currentFilter !== undefined && currentFilter !== '';
+      }
 
       return {
         loadConfig: loadConfig,
@@ -204,7 +207,8 @@
         buildPath: buildPath,
         buildLabel: buildLabel,
         isInFilter: isInFilter,
-        isOnDrillDownPath: isOnDrillDownPath
+        isOnDrillDownPath: isOnDrillDownPath,
+        hasFilter: hasFilter
       };
     }
   ]);

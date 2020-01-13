@@ -722,3 +722,23 @@ button.active [role=tooltip] {
   background-color: white;
   padding-top: 15px;
 }
+
+.gn-dimension-facet-recap {
+  padding: @alert-padding*0.75 @alert-padding;
+  .dimension-category {
+    line-height: 1em;
+    &:not(:last-child) {
+      margin-bottom: 0.8em;
+    }
+  }
+}
+
+.gn-search-facet {
+  // in the facet filter panel, integrate the recap without border
+  .gn-dimension-facet-recap {
+    border-width: 0;
+    border-bottom-width: 1px;
+    border-radius: 0;
+    margin: -@panel-body-padding -@panel-body-padding @line-height-computed -@panel-body-padding;
+  }
+}
