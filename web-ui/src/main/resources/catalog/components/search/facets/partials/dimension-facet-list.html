@@ -1,7 +1,9 @@
 <div class="gn-facet-list">
 
-  <div gn-facet-dimension-recap="params['facet.q']"
+  <div gn-facet-dimension-recap
+       data-params="params"
        data-dimensions="dimension"
+       data-facet-config="facetConfig"
        ng-if="!isTabMode && dimension && hasFilter()">
   </div>
 

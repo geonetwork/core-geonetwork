@@ -725,10 +725,30 @@ button.active [role=tooltip] {
 
 .gn-dimension-facet-recap {
   padding: @alert-padding*0.75 @alert-padding;
+  a.alert-link {
+    font-weight: initial;
+    &:hover, &:focus {
+      text-decoration: underline;
+    }
+  }
   .dimension-category {
-    line-height: 1em;
+    position: relative;
+    line-height: 1.1em;
+    margin-left: 1em;
     &:not(:last-child) {
       margin-bottom: 0.8em;
+    }
+    .delete-icon {
+      position: absolute;
+      right: calc(~"100% + 3px");
+      top: 0;
+      line-height: 1.1em;
+      opacity: 0;
+    }
+    &:hover, &:focus {
+      .delete-icon {
+        opacity: 1;
+      }
     }
   }
 }

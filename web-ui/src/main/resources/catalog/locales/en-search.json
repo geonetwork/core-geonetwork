@@ -509,5 +509,6 @@
   "moreFacet": "{{count}} more",
   "lessFacet": "{{count}} less",
   "allFacet": "all ({{count}})",
-  "initialFacet": "initial ({{count}})"
+  "initialFacet": "initial ({{count}})",
+  "removeThisFacet": "Remove this filter"
 }

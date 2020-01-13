@@ -360,12 +360,15 @@
             'partials/dimension-facet-recap.html';
         },
         scope: {
-          query: '=gnFacetDimensionRecap',
-          dimensions: '='
+          params: '=',
+          dimensions: '=',
+          facetConfig: '=',
+          removeFilterCallback: '&'
         },
         link: function(scope, element, attrs) {
-          scope.$watch('query', function() {
-            scope.items = scope.query.split('&').map(function (raw) {
+          scope.$watch('params[\'facet.q\']', function() {
+            var query = scope.params['facet.q'] || '';
+            scope.items = query.split('&').map(function (raw) {
               var parts = decodeURIComponent(raw).split('/');
               var dimensionKey = parts[0];
               var categoryValue = parts[1];
@@ -383,11 +386,17 @@
               })
 
               return {
-                dimension: dimension['@label'],
-                category: category['@label']
+                dimensionLabel: dimension['@label'],
+                categoryLabel: category['@label'],
+                category: category
               };
             });
           });
+
+          scope.removeItem = function(item) {
+            scope.categoryKey = item.dimensionLabel;
+            gnFacetConfigService.filter(scope, item.category, false);
+          };
         }
       };
     }]);

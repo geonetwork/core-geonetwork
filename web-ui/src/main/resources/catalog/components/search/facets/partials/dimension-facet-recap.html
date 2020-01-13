@@ -1,7 +1,11 @@
 <div class="gn-dimension-facet-recap alert alert-success small">
-  <div ng-repeat="item in items" class="dimension-category flex-row flex-wrap">
-    <strong class="text-no-wrap text-uppercase" translate>{{item.dimension}}</strong>
+  <a href class="alert-link dimension-category flex-row flex-wrap"
+     title="{{'removeThisFacet' | translate}}"
+     ng-repeat="item in items"
+     ng-click="removeItem(item)">
+    <span class="fa fa-times text-danger delete-icon"></span>
+    <strong class="text-no-wrap text-uppercase" translate>{{item.dimensionLabel}}</strong>
     <div class="flex-spacer"></div>
-    <span class="text-no-wrap text-ellipsis" translate>{{item.category}}</span>
-  </div>
+    <span class="text-no-wrap text-ellipsis" translate>{{item.categoryLabel}}</span>
+  </a>
 </div>
