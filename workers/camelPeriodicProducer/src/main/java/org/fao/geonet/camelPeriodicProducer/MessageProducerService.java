@@ -50,18 +50,22 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
     public void onApplicationEvent(ServerStartup serverStartup) {
         configure(); // wait for geonetworkWorkingDir
     }
+    private static boolean isConfigured = false;
 
-    public void configure() {
-        msgProducerRepository
-            .findAll()
-            .stream()
-            .forEach(messageProducerEntity -> {
-                try {
-                    messageProducerFactory.registerAndStart(buildWfsHarvesterParameterMessageProducer(messageProducerEntity));
-                } catch (Exception e) {
-                    LOGGER.error("failed to initialise persisted quartz wfs harvester command messages producer, id: ({}).", messageProducerEntity.getId());
-                }
-            });
+    public synchronized void configure() {
+        if (!isConfigured) {
+            msgProducerRepository
+                .findAll()
+                .stream()
+                .forEach(messageProducerEntity -> {
+                    try {
+                        messageProducerFactory.registerAndStart(buildWfsHarvesterParameterMessageProducer(messageProducerEntity));
+                    } catch (Exception e) {
+                        LOGGER.error("failed to initialise persisted quartz wfs harvester command messages producer, id: ({}).", messageProducerEntity.getId());
+                    }
+                });
+            isConfigured = true;
+        }
     }
 
     public void changeMessageAndReschedule(MessageProducerEntity messageProducerEntity) throws Exception {
