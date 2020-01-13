@@ -722,3 +722,36 @@ button.active [role=tooltip] {
   background-color: white;
   padding-top: 15px;
 }
+
+.search-filter-tags {
+  padding: @alert-padding*0.75 @alert-padding;
+  a.alert-link, .remove-all-link > a {
+    font-weight: initial;
+    &:hover, &:focus {
+      text-decoration: underline;
+    }
+  }
+  .filter-group {
+    position: relative;
+    line-height: 1.1em;
+    margin-left: 1em;
+    &:not(:last-child) {
+      margin-bottom: 0.8em;
+    }
+    .delete-icon {
+      position: absolute;
+      right: calc(~"100% + 3px");
+      top: 0;
+      line-height: 1.1em;
+      opacity: 0;
+    }
+    &:hover, &:focus {
+      .delete-icon {
+        opacity: 1;
+      }
+    }
+  }
+  .remove-all-link {
+    margin-bottom: -@alert-padding*0.5;
+  }
+}
