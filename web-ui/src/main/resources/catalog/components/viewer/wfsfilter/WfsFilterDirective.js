@@ -260,7 +260,6 @@
                 indexObject.setFielsdOrder();
               }
             }
-            scope.hmActive = appProfile ? appProfile.heatmap : true;
 
             scope.resetFacets(true).then(scope.restoreInitialFilters);
           }
