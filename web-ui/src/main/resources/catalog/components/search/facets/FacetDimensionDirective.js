@@ -369,26 +369,40 @@
           scope.$watch('params[\'facet.q\']', function() {
             var query = scope.params['facet.q'] || '';
             scope.items = query.split('&').map(function (raw) {
-              var parts = decodeURIComponent(raw).split('/');
-              var dimensionKey = parts[0];
-              var categoryValue = parts[1];
+              var queryParts = raw.split('/');
+              var dimensionKey = queryParts[0];
 
-              var dimension, category;
+              var dimension;
               scope.dimensions.forEach(function (d) {
                 if (d['@name'] === dimensionKey) {
                   dimension = d;
                 }
               });
-              dimension.category.forEach(function (c) {
-                if (c['@value'] === categoryValue) {
-                  category = c;
-                }
-              })
+
+              var category, rootCategory;
+              function lookupCategory(categories, currentQueryPartIndex) {
+                categories.forEach(function (c) {
+                  if (c['@value'] === decodeURIComponent(queryParts[currentQueryPartIndex])) {
+                    if (!rootCategory) {
+                      rootCategory = c;
+                    }
+
+                    currentQueryPartIndex++;
+                    if (currentQueryPartIndex === queryParts.length) {
+                      category = c;
+                      return true;
+                    } else if(c.category) {
+                      lookupCategory(c.category, currentQueryPartIndex);
+                    }
+                  }
+                })
+              }
+              lookupCategory(dimension.category, 1);
 
               return {
                 dimensionLabel: dimension['@label'],
                 categoryLabel: category['@label'],
-                category: category
+                category: rootCategory
               };
             });
           });
