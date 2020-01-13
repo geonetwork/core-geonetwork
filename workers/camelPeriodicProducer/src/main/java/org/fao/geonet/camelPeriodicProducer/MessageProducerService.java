@@ -1,16 +1,12 @@
 package org.fao.geonet.camelPeriodicProducer;
 
 import org.apache.camel.CamelContext;
-import org.apache.camel.management.event.CamelContextStartedEvent;
-import org.apache.camel.support.EventNotifierSupport;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.IndexedMetadataFetcher;
 import org.fao.geonet.domain.MessageProducerEntity;
+import org.fao.geonet.events.server.ServerStartup;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterExchangeState;
 import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.MessageProducerRepository;
 import org.slf4j.Logger;
@@ -20,15 +16,10 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
-
-import java.io.IOException;
-
-import java.util.EventObject;
-
 import static org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder.MESSAGE_HARVEST_WFS_FEATURES;
 
 @Component
-public class MessageProducerService implements ApplicationListener<GeonetworkDataDirectory.GeonetworkDataDirectoryInitializedEvent> {
+public class MessageProducerService implements ApplicationListener<ServerStartup> {
     private static Logger LOGGER = LoggerFactory.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
     private static final String DEFAULT_CONSUMER_URI = "activemq://queue:" + MESSAGE_HARVEST_WFS_FEATURES + "?concurrentConsumers=5";
 
@@ -50,36 +41,26 @@ public class MessageProducerService implements ApplicationListener<GeonetworkDat
     private ConfigurableApplicationContext applicationContext;
 
     @Override
-    public void onApplicationEvent(GeonetworkDataDirectory.GeonetworkDataDirectoryInitializedEvent serverStartup) {
-        configure(); // wait for geonetworkWorkingDir
+    public void onApplicationEvent(ServerStartup serverStartup) {
+        configure();
     }
 
-    public void init() {
-        ApplicationContextHolder.set(applicationContext);
-        camelContext.getManagementStrategy().addEventNotifier(new EventNotifierSupport() {
-            @Override
-            public void notify(EventObject eventObject) throws Exception {
-                configure();
-            }
+    private static boolean isConfigured = false;
 
-            @Override
-            public boolean isEnabled(EventObject eventObject) {
-                return eventObject instanceof CamelContextStartedEvent;
-            }
-        });
-    }
-
-    public void configure() {
-        msgProducerRepository
-            .findAll()
-            .stream()
-            .forEach(messageProducerEntity -> {
-                try {
-                    messageProducerFactory.registerAndStart(buildWfsHarvesterParameterMessageProducer(messageProducerEntity));
-                } catch (Exception e) {
-                    LOGGER.error("failed to initialise persisted quartz wfs harvester command messages producer, id: ({}).", messageProducerEntity.getId());
-                }
-            });
+    public synchronized void configure() {
+        if (!isConfigured) {
+            msgProducerRepository
+                .findAll()
+                .stream()
+                .forEach(messageProducerEntity -> {
+                    try {
+                        messageProducerFactory.registerAndStart(buildWfsHarvesterParameterMessageProducer(messageProducerEntity));
+                    } catch (Exception e) {
+                        LOGGER.error("failed to initialise persisted quartz wfs harvester command messages producer, id: ({}).", messageProducerEntity.getId());
+                    }
+                });
+            isConfigured = true;
+        }
     }
 
     public void changeMessageAndReschedule(MessageProducerEntity messageProducerEntity) throws Exception {
@@ -99,7 +80,6 @@ public class MessageProducerService implements ApplicationListener<GeonetworkDat
         String metadataUuid = messageProducerEntity.getWfsHarvesterParam().getMetadataUuid();
         String typeName = messageProducerEntity.getWfsHarvesterParam().getTypeName();
 
-
         WFSHarvesterParameter wfsHarvesterParam = new WFSHarvesterParameter(
             messageProducerEntity.getWfsHarvesterParam().getUrl(),
             typeName,
@@ -115,10 +95,9 @@ public class MessageProducerService implements ApplicationListener<GeonetworkDat
         }
 
         return (MessageProducer<WFSHarvesterExchangeState>) new MessageProducer()
-                .setMessage(new WFSHarvesterExchangeState(wfsHarvesterParam))
-                .setCronExpession(messageProducerEntity.getCronExpression())
-                .setTarget(consumerUri)
-                .setId(messageProducerEntity.getId());
+            .setMessage(new WFSHarvesterExchangeState(wfsHarvesterParam))
+            .setCronExpession(messageProducerEntity.getCronExpression())
+            .setTarget(consumerUri)
+            .setId(messageProducerEntity.getId());
     }
-
 }
