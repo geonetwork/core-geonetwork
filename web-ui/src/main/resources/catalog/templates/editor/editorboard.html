@@ -72,10 +72,12 @@
           </form>
         </div>
 
-        <div class="row">
+        <div class="row" ng-if="isFilterTagsDisplayed">
           <div class="gn-results-heading col-md-offset-3">
-            <div data-search-filter-tags data-use-location-parameters="false"
-                data-ng-show="isFilterTagsDisplayed"></div>
+            <div data-search-filter-tags
+                 data-dimensions="searchResults.dimension"
+                 data-use-location-parameters="false"
+                 ng-if="searchResults.dimension"></div>
           </div>
         </div>
 
