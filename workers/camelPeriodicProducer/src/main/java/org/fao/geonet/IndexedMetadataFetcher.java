@@ -25,26 +25,33 @@ public class IndexedMetadataFetcher {
         this.searchManager = searchManager;
     }
 
-    public void getApplicationProfileFromLuceneIndex(String uuid, String typeName) throws IOException {
+    public void getApplicationProfileFromLuceneIndex(String uuid, String typeName) throws IOException, InterruptedException {
         TermQuery query = new TermQuery(new Term("_uuid", uuid));
 
         IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(null, -1);
-        GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 
-        IndexSearcher searcher = new IndexSearcher(reader);
-        TopDocs tdocs = searcher.search(query, 1);
+        try {
+            GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 
-        Optional<String> optAppProfile = reader.document(tdocs.scoreDocs[0].doc).getFields().stream()
-            .filter(xIndexableField -> xIndexableField.name().equalsIgnoreCase("link"))
-            .map(x -> x.stringValue().split("\\|"))
-            .filter(x -> x.length >= 6)
-            .filter(x -> x[0].equals(typeName))
-            .filter(x -> x[3].equals("OGC:WFS"))
-            .map(x -> x[6]) // will contain the applicationProfile if it is defined.
-            .findFirst();
 
-        if (optAppProfile.isPresent()) {
-            this.setIndex(optAppProfile.get());
+            IndexSearcher searcher = new IndexSearcher(reader);
+            TopDocs tdocs = searcher.search(query, 1);
+
+            Optional<String> optAppProfile = reader.document(tdocs.scoreDocs[0].doc).getFields().stream()
+                .filter(xIndexableField -> xIndexableField.name().equalsIgnoreCase("link"))
+                .map(x -> x.stringValue().split("\\|"))
+                .filter(x -> x.length >= 6)
+                .filter(x -> x[0].equals(typeName))
+                .filter(x -> x[3].equals("OGC:WFS"))
+                .map(x -> x[6]) // will contain the applicationProfile if it is defined.
+                .findFirst();
+
+            if (optAppProfile.isPresent()) {
+                this.setIndex(optAppProfile.get());
+            }
+        }
+        finally {
+            searchManager.releaseIndexReader(indexAndTaxonomy);
         }
     }
 
