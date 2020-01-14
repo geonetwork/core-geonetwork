@@ -416,6 +416,11 @@
             scope.categoryKey = item.dimensionLabel;
             gnFacetConfigService.filter(scope, item.category, false);
           };
+
+          scope.removeAll = function() {
+            scope.params['facet.q'] = undefined;
+            scope.$emit('resetSearch', scope.params, true);
+          }
         }
       };
     }]);

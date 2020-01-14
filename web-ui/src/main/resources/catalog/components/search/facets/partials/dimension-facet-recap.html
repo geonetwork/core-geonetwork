@@ -8,4 +8,9 @@
     <div class="flex-spacer"></div>
     <span class="text-no-wrap text-ellipsis" translate>{{item.categoryLabel}}</span>
   </a>
+  <div ng-if="items.length > 0" class="text-right remove-all-link">
+    <a href ng-click="removeAll()"
+       class="text-danger"
+       translate>removeAllFacets</a>
+  </div>
 </div>

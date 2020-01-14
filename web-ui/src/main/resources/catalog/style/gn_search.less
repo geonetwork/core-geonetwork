@@ -725,7 +725,7 @@ button.active [role=tooltip] {
 
 .gn-dimension-facet-recap {
   padding: @alert-padding*0.75 @alert-padding;
-  a.alert-link {
+  a.alert-link, .remove-all-link > a {
     font-weight: initial;
     &:hover, &:focus {
       text-decoration: underline;
@@ -750,6 +750,9 @@ button.active [role=tooltip] {
         opacity: 1;
       }
     }
+  }
+  .remove-all-link {
+    margin-bottom: -@alert-padding*0.5;
   }
 }
 
