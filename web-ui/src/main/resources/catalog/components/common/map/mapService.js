@@ -405,7 +405,7 @@
 
               var geometry;
               var geoms = [];
-              var format = new ol.format.WKT();
+              var format = new ol.format.GeoJSON();
               wkts.forEach(function(wkt) {
                 var geom = format.readGeometry(wkt, {
                   featureProjection: proj,

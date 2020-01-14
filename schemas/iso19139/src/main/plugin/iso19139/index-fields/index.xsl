@@ -695,7 +695,7 @@
                   </xsl:when>
                   <xsl:otherwise>
                     <geom>
-                      <xsl:text>{"type": "polygon",</xsl:text>
+                      <xsl:text>{"type": "Polygon",</xsl:text>
                       <xsl:text>"coordinates": [[</xsl:text>
                       <xsl:value-of select="concat('[', $w, ',', $s, ']')"/>
                       <xsl:text>,</xsl:text>
