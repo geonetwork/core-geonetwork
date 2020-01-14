@@ -53,6 +53,7 @@
       'isTemplate',
       'valid',
       'isHarvested',
+      'dateStamp',
       'documentStandard'
     ]};
     this.configs = {
@@ -91,6 +92,7 @@
             'isTemplate',
             'valid',
             'isHarvested',
+            'dateStamp',
             'documentStandard'
           ]
         }

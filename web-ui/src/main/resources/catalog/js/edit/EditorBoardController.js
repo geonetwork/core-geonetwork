@@ -189,10 +189,10 @@
         sortOrder: ''
       }, {
         sortBy: 'changeDate',
-        sortOrder: ''
+        sortOrder: 'desc'
       }, {
         sortBy: 'resourceTitle.keyword',
-        sortOrder: 'reverse'
+        sortOrder: ''
       }];
 
       gnSearchSettings.hitsperpageValues = [20, 50, 100];

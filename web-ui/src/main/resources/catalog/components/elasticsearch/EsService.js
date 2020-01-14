@@ -118,7 +118,7 @@
         var sort = {};
         params.sort = [];
         if(p.sortBy != 'relevance') {
-          sort[getFieldName(mappingFields, p.sortBy)] = 'asc';
+          sort[getFieldName(mappingFields, p.sortBy)] = p.sortOrder || 'asc';
           params.sort.push(sort);
         }
         params.sort.push('_score');

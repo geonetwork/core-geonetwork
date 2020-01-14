@@ -644,7 +644,7 @@
                 any: '*QUERY*',
                 _root: 'gmd:CI_ResponsibleParty',
                 sortBy: 'resourceTitle.keyword',
-                sortOrder: 'reverse',
+                sortOrder: '',
                 resultType: 'subtemplates'
               })
              );

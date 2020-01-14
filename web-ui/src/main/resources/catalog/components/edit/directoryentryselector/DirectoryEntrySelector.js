@@ -104,7 +104,7 @@
                       to: 20,
                       root: 'gmd:CI_ResponsibleParty',
                       sortBy: 'resourceTitle.keyword',
-                      sortOrder: 'reverse',
+                      sortOrder: '',
                       resultType: 'subtemplates',
                       valid: scope.$eval(scope.showValidOnly) ? 1 : undefined
                     }
@@ -350,7 +350,7 @@
                      to: 10,
                      _root: 'gmd:CI_ResponsibleParty',
                      sortBy: 'resourceTitle.keyword',
-                     sortOrder: 'reverse',
+                     sortOrder: '',
                      resultType: 'contact',
                      valid:
                      scope.$eval(tAttrs['showValidOnly']) ? 1 : undefined

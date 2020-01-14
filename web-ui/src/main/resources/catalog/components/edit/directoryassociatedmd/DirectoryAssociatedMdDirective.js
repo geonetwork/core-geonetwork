@@ -64,7 +64,7 @@
                 },
                 {
                   sortBy: 'changeDate',
-                  sortOrder: 'reverse'
+                  sortOrder: 'desc'
                 }
               ]
             };

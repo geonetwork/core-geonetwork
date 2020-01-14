@@ -102,25 +102,25 @@
           any: '',
           _root: '',
           sortBy: 'resourceTitle.keyword',
-          sortOrder: 'reverse',
+          sortOrder: '',
           resultType: 'subtemplates'
         },
         sortbyValues: [
           {
             sortBy: 'resourceTitle.keyword',
-            sortOrder: 'reverse'
-          },
-          {
-            sortBy: 'owner',
-            sortOrder: 'reverse'
-          },
-          {
-            sortBy: 'changeDate',
             sortOrder: ''
           },
           {
+            sortBy: 'owner',
+            sortOrder: ''
+          },
+          {
+            sortBy: 'changeDate',
+            sortOrder: 'desc'
+          },
+          {
             sortBy: 'valid',
-            sortOrder: 'reverse'
+            sortOrder: ''
           }
         ]
       };

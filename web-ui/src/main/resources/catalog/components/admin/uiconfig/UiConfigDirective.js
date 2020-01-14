@@ -59,7 +59,7 @@
             scope.config = JSON.stringify(n);
           }, true);
 
-          scope.sortOrderChoices = ['', 'reverse'];
+          scope.sortOrderChoices = ['asc', 'desc'];
 
 
           // ng-model can't bind to object key, so

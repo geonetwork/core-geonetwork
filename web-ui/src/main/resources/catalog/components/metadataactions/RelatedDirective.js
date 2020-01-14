@@ -146,7 +146,6 @@
             related[uuid][t] = values.length > 0 ? values : undefined;
           }
         }
-        console.log(related);
         promise.resolve({data: related});
       });
 
@@ -236,7 +235,7 @@
                          } else {
                            scope.relations[idx] = value;
                          }
-                         
+
                          if (scope.relations.siblings && scope.relations.associated) {
                            for (var i = 0; i < scope.relations.associated.length; i++) {
                              if (scope.relations.siblings.filter(function (e) {
@@ -250,8 +249,8 @@
                            scope.relations.associated = {};
                          }
                        });
-                    
-                       if (angular.isDefined(scope.container) 
+
+                       if (angular.isDefined(scope.container)
                            && scope.relations == null) {
                          $(scope.container).hide();
                        }

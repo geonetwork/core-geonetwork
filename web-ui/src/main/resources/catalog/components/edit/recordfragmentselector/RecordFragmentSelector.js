@@ -60,7 +60,7 @@
                      from: 1,
                      to: 50,
                      sortBy: 'resourceTitle.keyword',
-                     sortOrder: 'reverse'
+                     sortOrder: ''
                    }
                  };
 

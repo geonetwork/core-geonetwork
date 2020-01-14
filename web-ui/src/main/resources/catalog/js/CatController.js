@@ -234,16 +234,16 @@ goog.require('gn_alert');
             'sortOrder': ''
           }, {
             'sortBy': 'dateStamp',
-            'sortOrder': ''
+            'sortOrder': 'desc'
           }, {
             'sortBy': 'resourceTitle.keyword',
-            'sortOrder': 'reverse'
+            'sortOrder': ''
           }, {
             'sortBy': 'rating',
-            'sortOrder': ''
+            'sortOrder': 'desc'
           }, {
             'sortBy': 'popularity',
-            'sortOrder': ''
+            'sortOrder': 'desc'
           }],
           'sortBy': 'relevance',
           'resultViewTpls': [{
@@ -876,8 +876,9 @@ goog.require('gn_alert');
               });
             } else {
               return $http.post('../api/search/records/_search',
-                {"size": 0, "query": {"match_all": {}},
-                  "aggs": gnGlobalSettings.gnCfg.mods.search.facetConfig.home}).
+                {"size": 0,
+                    "query": {"query_string": {"query": "+isTemplate:n"}},
+                    "aggs": gnGlobalSettings.gnCfg.mods.home.facetConfig}).
               then(function(r) {
                 $scope.searchInfo = r.data;
               });
