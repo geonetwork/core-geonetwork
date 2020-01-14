@@ -114,7 +114,7 @@
                 </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               -->
-          <xsl:for-each select="$element//gmd:LocalisedCharacterString[. != '']">
+          <xsl:for-each select="$element//*:LocalisedCharacterString[. != '']">
             <xsl:variable name="elementLanguage"
                           select="replace(@locale, '#', '')"/>
             <xsl:variable name="elementLanguage3LetterCode"
@@ -126,7 +126,7 @@
               <xsl:when test="$asJson">
                 <xsl:value-of select="concat($doubleQuote, $field, $doubleQuote, ':',
                                              $doubleQuote, normalize-space(.), $doubleQuote,
-                                             if ($element//gco:CharacterString) then ',' else '')"/>
+                                             if ($element//*:CharacterString) then ',' else '')"/>
               </xsl:when>
               <xsl:otherwise>
                 <xsl:element name="{$field}">
@@ -137,7 +137,7 @@
           </xsl:for-each>
 
           <!-- The default language -->
-          <xsl:for-each select="$element//gco:CharacterString[. != '']">
+          <xsl:for-each select="$element//*:CharacterString[. != '']">
             <xsl:choose>
               <xsl:when test="$asJson">
                 <xsl:value-of select="concat($doubleQuote, $fieldName, $doubleQuote, ':',

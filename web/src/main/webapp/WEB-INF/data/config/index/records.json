@@ -6,12 +6,16 @@
           "trigram": {
             "type": "custom",
             "tokenizer": "standard",
-            "filter": ["shingle"]
+            "filter": [
+              "shingle"
+            ]
           },
           "reverse": {
             "type": "custom",
             "tokenizer": "standard",
-            "filter": ["reverse"]
+            "filter": [
+              "reverse"
+            ]
           },
           "synInspireAnnexes": {
             "tokenizer": "keyword",
@@ -32,19 +36,22 @@
           "keepInspireServiceTypes": {
             "tokenizer": "keyword",
             "filter": [
-              "lowercase", "keepInspireServiceTypes"
+              "lowercase",
+              "keepInspireServiceTypes"
             ]
           },
           "keepInspireAnnexes": {
             "tokenizer": "keyword",
             "filter": [
-              "lowercase", "keepInspireAnnexes"
+              "lowercase",
+              "keepInspireAnnexes"
             ]
           },
           "keepInspireThemes": {
             "tokenizer": "keyword",
             "filter": [
-              "lowercase", "keepInspireThemes"
+              "lowercase",
+              "keepInspireThemes"
             ]
           },
           "synCheckpoint": {
@@ -908,7 +915,7 @@
             "type": "synonym",
             "tokenizer": "keyword",
             "synonyms": [
-             "no charge => free",
+              "no charge => free",
               "distribution cost charge => cost charge",
               "collection cost charge => cost charge",
               "commercial cost charge => commercial cost",
@@ -945,8 +952,9 @@
             "type": "keyword"
           }
         }
-      },{
-        "codelist": {
+      },
+      {
+        "linkUrlProtocol": {
           "match": "linkUrlProtocol*",
           "mapping": {
             "type": "keyword"
@@ -956,6 +964,14 @@
       {
         "org": {
           "match": "*Org*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      },
+      {
+        "thesaurus": {
+          "match": "thesaurus_*",
           "mapping": {
             "type": "keyword"
           }
@@ -975,8 +991,12 @@
           "mapping": {
             "type": "nested",
             "properties": {
-              "org": {"type": "keyword"},
-              "role": {"type": "keyword"}
+              "org": {
+                "type": "keyword"
+              },
+              "role": {
+                "type": "keyword"
+              }
             }
           }
         }
@@ -1033,7 +1053,7 @@
         "synInspireAnnexesType": {
           "match": "inspireAnnex*",
           "mapping": {
-            "type":     "keyword",
+            "type": "keyword",
             "fielddata": true,
             "analyzer": "synInspireAnnexes",
             "search_analyzer": "keyword"
@@ -1044,7 +1064,7 @@
         "synInspireThemeType": {
           "match": "inspireTheme*",
           "mapping": {
-            "type":     "keyword",
+            "type": "keyword",
             "fielddata": true,
             "analyzer": "synInspireThemes",
             "search_analyzer": "keyword"
@@ -1055,7 +1075,7 @@
         "inspireServiceType": {
           "match": "inspireServiceType",
           "mapping": {
-            "type":     "keyword",
+            "type": "keyword",
             "fielddata": true,
             "analyzer": "keepInspireServiceTypes",
             "search_analyzer": "keyword"
@@ -1077,8 +1097,8 @@
         "type": "date"
       },
       "document": {
-        "type" : "text",
-        "index" : false,
+        "type": "text",
+        "index": false,
         "doc_values": false
       },
       "documentStandard": {
@@ -1152,12 +1172,16 @@
             "type": "keyword",
             "copy_to": "any"
           },
-          "link": {"type": "text"},
+          "link": {
+            "type": "text"
+          },
           "name": {
             "type": "text",
             "copy_to": "any"
           },
-          "description": {"type": "text"}
+          "description": {
+            "type": "text"
+          }
         }
       },
       "linkProtocol": {
@@ -1226,7 +1250,12 @@
       "recordLink": {
         "type": "join",
         "relations": {
-          "record": ["children", "dataset", "sibling", "feature"]
+          "record": [
+            "children",
+            "dataset",
+            "sibling",
+            "feature"
+          ]
         }
       },
       "resolutionDistance": {
@@ -1244,7 +1273,10 @@
       },
       "resourceAltTitle": {
         "type": "text",
-        "copy_to": ["any", "anytext"],
+        "copy_to": [
+          "any",
+          "anytext"
+        ],
         "fields": {
           "keyword": {
             "type": "keyword",
@@ -1267,7 +1299,10 @@
       },
       "resourceTitle": {
         "type": "text",
-        "copy_to": ["any", "anytext"],
+        "copy_to": [
+          "any",
+          "anytext"
+        ],
         "fields": {
           "keyword": {
             "type": "keyword",
@@ -1309,7 +1344,10 @@
       },
       "tag": {
         "type": "keyword",
-        "copy_to": ["any", "anytext"],
+        "copy_to": [
+          "any",
+          "anytext"
+        ],
         "fields": {
           "trigram": {
             "type": "text",
@@ -1329,11 +1367,14 @@
       },
       "topic": {
         "type": "keyword",
-        "copy_to": ["any", "anytext"]
+        "copy_to": [
+          "any",
+          "anytext"
+        ]
       },
       "validReport": {
-        "type" : "text",
-        "index" : false,
+        "type": "text",
+        "index": false,
         "doc_values": false
       },
       "useLimitation": {

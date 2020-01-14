@@ -480,7 +480,7 @@
       return !!$scope.searchObj.state.filters[key];
     }
 
-    this.loadMoreTerms = function(facet, moreItemsNumber = 20) {
+    this.loadMoreTerms = function(facet, moreItemsNumber) {
       var facetConfigs = {};
       for (var i = 0; i < facet.path.length; i++) {
         if ((i + 1) % 2 === 0) continue;
@@ -490,7 +490,7 @@
       return gnESClient.loadMoreTerms(
         $scope.searchObj.params.query,
         facet.path,
-        facet.items.length + moreItemsNumber,
+        facet.items.length + (moreItemsNumber || 20),
         facetConfigs
         );
     }
