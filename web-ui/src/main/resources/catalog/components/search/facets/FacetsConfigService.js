@@ -196,19 +196,13 @@
         return false;
       }
 
-      function hasFilter(scope) {
-        var currentFilter = scope.params['facet.q'];
-        return currentFilter !== undefined && currentFilter !== '';
-      }
-
       return {
         loadConfig: loadConfig,
         filter: filter,
         buildPath: buildPath,
         buildLabel: buildLabel,
         isInFilter: isInFilter,
-        isOnDrillDownPath: isOnDrillDownPath,
-        hasFilter: hasFilter
+        isOnDrillDownPath: isOnDrillDownPath
       };
     }
   ]);

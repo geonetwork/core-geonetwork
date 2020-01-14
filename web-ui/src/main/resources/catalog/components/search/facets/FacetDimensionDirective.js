@@ -45,7 +45,8 @@
           facetList: '=',
           params: '=',
           tabField: '=',
-          pageSize: '='
+          pageSize: '=',
+          showRecap: '='
         },
         link: function(scope, element, attrs) {
           scope.facetQuery = scope.params['facet.q'];
@@ -368,6 +369,10 @@
         link: function(scope, element, attrs) {
           scope.$watch('params[\'facet.q\']', function() {
             var query = scope.params['facet.q'] || '';
+            if (!query) {
+              scope.items = [];
+              return;
+            }
             scope.items = query.split('&').map(function (raw) {
               var queryParts = raw.split('/');
               var dimensionKey = queryParts[0];
