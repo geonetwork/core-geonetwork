@@ -43,6 +43,7 @@
   "mapSavedInCatalog": "<a href='#/metadata/{{uuid}}'>View map metadata record</a>.",
   "mapAbstract": "Map abstract",
   "loadAMap": "Load a map",
+  "noMaps": "No maps found",
   "topMaps": "Latest maps",
   "uploadContext": "From file",
   "resetContext": "Default map",
@@ -127,6 +128,7 @@
   "nolayer": "No layer",
   "layers": "layers",
   "layerAdded": "Layer '{{layer}}' added to the map. Click <a href=\"#map?extent={{extent}}\">here to zoom to it</a>.",
+  "layerAddedNoExtent": "Layer '{{layer}}' added to the map.",
   "localLayerFile": "{{layer}} (local file)",
   "mostPopular": "Most popular",
   "mapImportFailure": "Failed to import layer",
@@ -337,6 +339,7 @@
   "Legend":"Legend",
   "otherKeywords": "Other keywords",
   "isValid": "Validation status",
+  "isValidInspire": "Validation status (INSPIRE)",
   "Attribution":"Attribution",
   "layerDelete":"Remove layer",
   "layerMetadata":"Metadata",
@@ -503,5 +506,9 @@
   "userSearchUpdatedError": "Error saving user search",
   "seeDraft": "This record has a working copy version. Click here to see it.",
   "seeNoDraft": "This record has an approved and published version. Click here to see it.",
-  "loadMoreResults": "load more results..."
+  "loadMoreResults": "load more results...",
+  "moreFacet": "{{count}} more",
+  "lessFacet": "{{count}} less",
+  "allFacet": "all ({{count}})",
+  "initialFacet": "initial ({{count}})"
 }

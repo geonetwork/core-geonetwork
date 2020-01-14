@@ -671,6 +671,7 @@ public final class Geonet {
         public static final String STATUS_CHANGE_DATE = "mdStatusChangeDate";
         public static final String VALID = "_valid";
         public static final String ID = "id";
+        public static final String VALID_INSPIRE = "_valid_inspire";
         public static final String ANY = "any";
         public static final String LOCALE = "locale";
         public static final String IS_PUBLISHED_TO_ALL = "_isPublishedToAll";
@@ -682,5 +683,6 @@ public final class Geonet {
         public static final String RECORDOPERATESON = "recordOperateOn";
         public static final String FEATUREOFRECORD = "featureOfRecord";
         public static final String RECORDLINK = "record";
+        public static final String INSPIRE_REPORT_URL = "_inspireReportUrl";
     }
 }

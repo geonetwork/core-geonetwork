@@ -199,7 +199,7 @@ public class MetadataInsertDeleteApi {
             MetadataUtils.backupRecord(metadata, context);
         }
 
-        store.delResources(context, metadataUuid, true);
+        store.delResources(context, metadata.getUuid(), true);
         metadataManager.deleteMetadata(context, metadata.getId() + "");
 
         dataManager.forceIndexChanges();

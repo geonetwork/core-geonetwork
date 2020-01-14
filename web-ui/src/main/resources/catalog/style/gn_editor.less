@@ -643,7 +643,7 @@ table.gn-data-store {
 }
 
 .open > .dropdown-menu {
-  max-height: 25em;
+  max-height: 30em;
   overflow-y: auto;
 }
 
@@ -834,7 +834,7 @@ gn-directory-associated-md {
 }
 
 // md type widget (used only in editor for now)
-gn-md-type-widget {
+gn-md-type-widget, gn-md-type-inspire-validation-widget {
   display: inline-block;
   & > div {
     border-radius: 1000px;
@@ -850,19 +850,24 @@ gn-md-type-widget {
     background-color: @gray-light;
     overflow: hidden;
 
-    &.valid-status-1 {
+    &.valid-status-1, &.valid-inspire-status-1 {
       background-color: @gray-light;
     }
-    &.valid-status0 {
+    &.valid-status0, &.valid-inspire-status0 {
       background-color: @btn-danger-bg;
     }
-    &.valid-status1 {
+    &.valid-status1, &.valid-inspire-status1 {
       background-color: @btn-success-bg;
     }
     &.md-type-t {
       background-color: @btn-primary-bg;
     }
-
+    a {
+      color: #fff;
+      &:hover {
+        color: #fff;
+      }
+    }
     &::after {
       content: '';
       background-color: rgba(255, 255, 255, 0.25);
@@ -920,7 +925,7 @@ gn-draft-validation-widget {
 
 .gn-editor-board {
   .table.gn-results-editor td {
-    gn-md-type-widget {
+    gn-md-type-widget, gn-md-type-inspire-validation-widget {
       margin-top: 5px;
     }
   }

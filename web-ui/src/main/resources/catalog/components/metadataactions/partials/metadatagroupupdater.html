@@ -11,10 +11,15 @@
     <li role="presentation" class="dropdown-header"
         data-translate="">setMetadataGroup
     </li>
-    <li data-ng-repeat="g in groups | orderBy:sortByLabel"
+    <li data-ng-show="groups.length > 10">
+      <input class="form-control"
+             data-ng-model="groupSearch.$"
+             placeholder="{{'filter' | translate}}"/>
+    </li>
+    <li data-ng-repeat="g in groups | filter:groupSearch | orderBy:sortByLabel"
         role="menuitem">
       <a data-ng-click="assignGroup(g, $event)" href="">
-        <i class="fa" data-ng-class="g.id == groupOwner ? 'fa-check-square-o' : 'fa-square-o'"></i>
+        <i class="fa" data-ng-class="g.id == groupOwner ? 'fa-dot-circle-o' : 'fa-circle-o'"></i>
         &#160;
         <span data-translate="">{{g.label[lang]}}</span>
       </a>

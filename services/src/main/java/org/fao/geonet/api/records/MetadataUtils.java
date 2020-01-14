@@ -111,7 +111,7 @@ public class MetadataUtils {
         // Search for children of this record
         if (listOfTypes.size() == 0 ||
             listOfTypes.contains(RelatedItemType.children)) {
-            relatedRecords.addContent(search(uuid, "children", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "children", context, from, to, fast, null));
         }
 
         // Get parent record from this record
@@ -120,7 +120,17 @@ public class MetadataUtils {
             Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md);
             if (listOfUUIDs.size() > 0) {
                 String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                relatedRecords.addContent(search(joinedUUIDs, "parent", context, from, to, fast));
+                relatedRecords.addContent(search(joinedUUIDs, "parent", context, from, to, fast, null));
+            }
+        }
+
+        // Brothers and sisters are not returned by default
+        // It is only on demand and output as siblings.
+        if (schemaPlugin != null && listOfTypes.contains(RelatedItemType.brothersAndSisters)) {
+            Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md);
+            if (listOfUUIDs.size() > 0) {
+                String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
+                relatedRecords.addContent(search(joinedUUIDs, RelatedItemType.brothersAndSisters.value(), context, from, to, fast, uuid));
             }
         }
 
@@ -148,13 +158,13 @@ public class MetadataUtils {
         // Search for records where an aggregate point to this record
         if (listOfTypes.size() == 0 ||
             listOfTypes.contains(RelatedItemType.associated)) {
-            relatedRecords.addContent(search(uuid, "associated", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "associated", context, from, to, fast, null));
         }
 
         // Search for services
         if (listOfTypes.size() == 0 ||
             listOfTypes.contains(RelatedItemType.services)) {
-            relatedRecords.addContent(search(uuid, "services", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "services", context, from, to, fast, null));
         }
 
         // Related record from uuiref attributes in metadata record
@@ -170,7 +180,7 @@ public class MetadataUtils {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedDatasetUUIDs(md);
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
                     String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                    relatedRecords.addContent(search(joinedUUIDs, "datasets", context, from, to, fast));
+                    relatedRecords.addContent(search(joinedUUIDs, "datasets", context, from, to, fast, null));
                 }
             }
             // if source, return source datasets defined in the current record
@@ -179,7 +189,7 @@ public class MetadataUtils {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedSourceUUIDs(md);
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
                     String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                    relatedRecords.addContent(search(joinedUUIDs, "sources", context, from, to, fast));
+                    relatedRecords.addContent(search(joinedUUIDs, "sources", context, from, to, fast, null));
                 }
             }
             // if fcat
@@ -216,7 +226,7 @@ public class MetadataUtils {
         if (listOfTypes.size() == 0 ||
             listOfTypes.contains(RelatedItemType.hassources)) {
             // Return records where this record is a source dataset
-            relatedRecords.addContent(search(uuid, "hassources", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "hassources", context, from, to, fast, null));
         }
 
         // Relation table is preserved for backward compatibility but should not be used anymore.
@@ -225,7 +235,7 @@ public class MetadataUtils {
             // Related records could be feature catalogue defined in relation table
             relatedRecords.addContent(new Element("related").addContent(Get.getRelation(iId, "full", context)));
             // Or feature catalogue define in feature catalogue citation
-            relatedRecords.addContent(search(uuid, "hasfeaturecats", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "hasfeaturecats", context, from, to, fast, null));
         }
 
         // XSL transformation is used on the metadata record to extract
@@ -240,7 +250,7 @@ public class MetadataUtils {
     }
 
 
-    private static Element search(String uuid, String type, ServiceContext context, String from, String to, String fast) throws Exception {
+    private static Element search(String uuid, String type, ServiceContext context, String from, String to, String fast, String exclude) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
 
@@ -250,8 +260,13 @@ public class MetadataUtils {
         int fromValue = Integer.parseInt(from);
         int toValue = Integer.parseInt(to);
 
+        String excludeQuery = "";
+        if (exclude != null) {
+            excludeQuery = String.format(" -uuid:%s", exclude);
+        }
+
         final SearchResponse result = searchMan.query(
-            String.format("+%s:%s", relatedIndexFields.get(type), uuid), null, FIELDLIST_CORE, fromValue, (toValue -fromValue));
+            String.format("+%s:%s%s", relatedIndexFields.get(type), uuid, excludeQuery), null, FIELDLIST_CORE, fromValue, (toValue -fromValue));
 
         Element typeResponse = new Element(type);
         if (result.getHits().getTotalHits().value > 0) {
@@ -267,7 +282,6 @@ public class MetadataUtils {
                 response.addContent(record);
             });
             typeResponse.addContent(response);
-        } else {
         }
         return typeResponse;
     }

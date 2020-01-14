@@ -347,7 +347,8 @@ goog.require('gn_alert');
             'context': '',
             'extent': [0, 0, 0, 0],
             'layers': [{'type': 'osm'}]
-          }
+          },
+          'autoFitOnLayer': false
         },
         'geocoder': {
             'enabled': true,

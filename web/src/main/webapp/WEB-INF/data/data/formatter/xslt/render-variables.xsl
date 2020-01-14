@@ -16,6 +16,9 @@
   <!-- Enable tab view mode or not -->
   <xsl:param name="tabs" select="'true'"/>
 
+  <!-- Display citation or not -->
+  <xsl:param name="citation" select="'true'"/>
+
   <!-- List of related items to display on top. By default only online links. -->
   <xsl:param name="related" select="'onlines'"/>
 

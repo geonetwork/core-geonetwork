@@ -8,6 +8,7 @@
     </td>
     <td>
       <gn-md-type-widget metadata="md"></gn-md-type-widget>
+      <gn-md-type-inspire-validation-widget metadata="md" data-ng-if="isInspireEnabled"></gn-md-type-inspire-validation-widget>
     </td>
     <td>
       <div class="row">
@@ -31,12 +32,12 @@
                 <small class="text-muted gn-status"
                       data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
                       data-ng-if="md.mdStatus < 50 && isMdWorkflowEnable">{{('status-' + md.mdStatus) | translate}}</small>
-                
+
                 <small class="text-muted gn-status"
                       data-ng-class="text-warning"
                       data-ng-if="!md.mdStatus"
                       data-ng-translate="">{{'status-no-status' | translate}}</small>
-              </div> 
+              </div>
             </div>
           </div>
           <gn-draft-validation-widget data-ng-if="md.draft == 'e'" metadata="md"></gn-draft-validation-widget>

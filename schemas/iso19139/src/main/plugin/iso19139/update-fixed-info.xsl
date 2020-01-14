@@ -177,6 +177,8 @@
               <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode"
                                        codeListValue="{$defaultEncoding}"/>
             </gmd:characterEncoding>
+            <!-- Apply country if it exists.  -->
+            <xsl:apply-templates select="gmd:locale/gmd:PT_Locale[gmd:languageCode/*/@codeListValue = $mainLanguage]/gmd:country"/>
           </gmd:PT_Locale>
         </gmd:locale>
       </xsl:if>
@@ -465,6 +467,16 @@
   <xsl:template match="gmd:LanguageCode[@codeListValue]" priority="10">
     <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/">
       <xsl:apply-templates select="@*[name(.)!='codeList']"/>
+
+      <xsl:if test="normalize-space(./text()) != '' and string(@codeListValue)">
+        <xsl:value-of select="java:getIsoLanguageLabel(@codeListValue, $mainLanguage)" />
+        <!-- 
+             If wanting to get strings from codelists then add gmd:LanguageCode codelist in loc/{lang}/codelists.xml
+             and use getCodelistTranslation instead of getIsoLanguageLabel. This will allow for custom values such as "eng; USA"
+             i.e. 
+             <xsl:value-of select="java:getCodelistTranslation(name(), string(@codeListValue), string($mainLanguage))"/>
+        -->
+      </xsl:if>
     </gmd:LanguageCode>
   </xsl:template>
 

@@ -193,8 +193,15 @@
                       gnMap.feedLayerWithRelated(layer, config.group);
 
                       var extent = layer.get('cextent') || layer.get('extent');
+                      var autofit = gnViewerSettings.mapConfig.autoFitOnLayer;
+                      var message = extent && !autofit ? 'layerAdded' : 'layerAddedNoExtent';
+
+                      if (autofit) {
+                        scope.map.getView().fit(extent);
+                      }
+
                       gnAlertService.addAlert({
-                        msg: $translate.instant('layerAdded', {
+                        msg: $translate.instant(message, {
                           layer: layer.get('label'),
                           extent: extent ? extent.join(',') : ''
                         }),

@@ -58,5 +58,8 @@
         class="org.fao.geonet.kernel.harvest.harvester.wfsfeatures.WfsFeaturesHarvester"
         scope="prototype"/>
 
+  <!-- ArcSDE also requires a ArcSDEConnectionFactory beans -->
+  <bean id="arcSDEConnectionFactory"
+    class="org.fao.geonet.kernel.harvest.harvester.arcsde.ArcSDEConnectionFactory" />
 
 </beans>
