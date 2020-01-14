@@ -599,7 +599,7 @@
 
         <xsl:for-each select="gmd:spatialResolution/gmd:MD_Resolution">
           <xsl:for-each
-            select="gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer[. != '']">
+            select="gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer[. castable as xs:decimal]">
             <resolutionScaleDenominator>
               <xsl:value-of select="."/>
             </resolutionScaleDenominator>
@@ -990,47 +990,6 @@
     <xsl:apply-templates mode="index-extra-documents" select="."/>
   </xsl:template>
 
-  <xsl:template name="build-tree-values">
-    <xsl:param name="values"/>
-    <xsl:param name="fieldName" as="xs:string"/>
-    <xsl:param name="thesaurus" as="xs:string"/>
-    <xsl:param name="language" as="xs:string"/>
-    <xsl:param name="allTreeField" as="xs:boolean"/>
-
-    <xsl:variable name="paths">
-      <xsl:for-each select="$values">
-        <xsl:variable name="keywordsWithHierarchy"
-                      select="util:getKeywordHierarchy(normalize-space(.), $thesaurus, $language)"/>
-
-        <xsl:if test="count($keywordsWithHierarchy) > 0">
-
-          <xsl:for-each select="$keywordsWithHierarchy">
-            <xsl:variable name="path" select="tokenize(., '/')"/>
-            <xsl:for-each select="$path">
-              <xsl:variable name="position"
-                            select="position()"/>
-              <value><xsl:value-of select="string-join($path[position() &lt;= $position], '/')"/></value>
-            </xsl:for-each>
-          </xsl:for-each>
-        </xsl:if>
-      </xsl:for-each>
-    </xsl:variable>
-
-    <xsl:for-each-group select="$paths/*" group-by=".">
-      <xsl:sort select="."/>
-      <xsl:if test="$fieldName != ''">
-        <xsl:element name="{$fieldName}">
-          <xsl:value-of select="."/>
-        </xsl:element>
-      </xsl:if>
-
-      <xsl:if test="$allTreeField">
-        <xsl:element name="keywords_tree">
-          <xsl:value-of select="."/>
-        </xsl:element>
-      </xsl:if>
-    </xsl:for-each-group>
-  </xsl:template>
 
   <xsl:template mode="index-contact" match="*[gmd:CI_ResponsibleParty]">
     <xsl:param name="fieldSuffix" select="''" as="xs:string"/>
