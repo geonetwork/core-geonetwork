@@ -38,7 +38,9 @@
     'gnHttp',
     'gnAlertService',
     'gnLangs',
-    function($q, $scope, $location, $http, $translate, $element, gnMetadataManager, gnHttp, gnAlertService, gnLangs) {
+    'wfsFilterService',
+    function($q, $scope, $location, $http, $translate, $element, gnMetadataManager, gnHttp, gnAlertService, gnLangs,
+             wfsFilterService) {
       // this returns a valid xx_XX language code based on available locales in bootstrap-table
       // if none found, return 'en'
       // FIXME: use a global service
