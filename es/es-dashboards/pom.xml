@@ -93,7 +93,7 @@
         <kb.executable>kibana.bat</kb.executable>
         <kb.platform>windows-x86</kb.platform>
         <kb.installer.extension>zip</kb.installer.extension>
-        <kb.version.sha512>d9ed16170f9ef88a2dc4f0d300c52157674d1fe902cd1da3e9472d0830c0810b9417d9d3af6116dcdb328dea038998f9b4c695e0284d6094f43777b6598a7bf4</kb.version.sha512>
+        <kb.version.sha512>8da834f51a9876c5f98c474c77ff66924fdf0eb57412cee29e6b8ac05d93169c1a3b4a8c85600bfa48d772ae3cb77a517a87c38f461c3fd3211f47bba4b2a46e</kb.version.sha512>
       </properties>
     </profile>
   </profiles>
