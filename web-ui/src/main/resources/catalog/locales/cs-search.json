@@ -339,6 +339,7 @@
     "Legend": "Vysvětlivky",
     "otherKeywords": "Další klíčová slova",
     "isValid": "Stav ověření",
+    "isValidInspire": "Stav validace (INSPIRE)",
     "Attribution": "Přiřazení",
     "layerDelete": "Odstranit vrstvu",
     "layerMetadata": "Metadata",

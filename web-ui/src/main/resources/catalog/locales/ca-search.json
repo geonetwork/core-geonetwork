@@ -339,6 +339,7 @@
     "Legend": "Llegenda",
     "otherKeywords": "Other keywords",
     "isValid": "Estat de validació",
+    "isValidInspire": "Validation status (INSPIRE)",
     "Attribution": "Reconeixement",
     "layerDelete": "Eliminar capa",
     "layerMetadata": "Metadada",
