@@ -1384,6 +1384,13 @@
       }
     }
   });
+  module.filter('geojsonToWkt', function() {
+    return function(val) {
+      var wkt_format = new ol.format.WKT();
+      var geojson_format = new ol.format.GeoJSON();
+      return wkt_format.writeGeometry(geojson_format.readGeometry(val));
+    }
+  });
   module.filter('encodeURIComponent', function() {
     return window.encodeURIComponent;
   });
@@ -1429,8 +1436,8 @@
         element.bind('click', function() {
           var imgOrMd = scope.$eval(attr['gnImgModal']);
           var img = undefined;
-          if(imgOrMd.getThumbnails) {
-            var imgs = imgOrMd.getThumbnails();
+          if(imgOrMd.overview) {
+            var imgs = imgOrMd.overview;
             var url = $(element).attr('src');
             for (var i = 0; i < imgs.list.length; i++) {
               if (imgs.list[i].url === url) {
