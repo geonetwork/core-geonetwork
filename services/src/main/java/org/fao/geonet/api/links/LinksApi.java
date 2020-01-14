@@ -142,7 +142,7 @@ public class LinksApi {
     public Page<Link> getRecordLinks(
             @ApiParam(value = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421', groupId: 12}\", lastState being 'ok'/'ko'/'unknown'", required = false) @RequestParam(required = false) JSONObject filter,
             @ApiParam(value = "Optional, restrain display to links defined in published to all metadata or defined in published to given group, e.g. 5. Setting the param to 1 will restrain display to published to all.", required = false) @RequestParam(required = false) Integer groupIdFilter,
-            @ApiIgnore  @RequestParam(required = false) Pageable pageRequest) throws JSONException {
+            @ApiIgnore Pageable pageRequest) throws JSONException {
 
         if (filter == null && groupIdFilter != null) {
             return linkRepository.findAll(LinkSpecs.filter(null, null, null, groupIdFilter), pageRequest);
