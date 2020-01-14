@@ -339,6 +339,7 @@
     "Legend": "Selite",
     "otherKeywords": "Other keywords",
     "isValid": "Validoinnin tila",
+    "isValidInspire": "Validation status (INSPIRE)",
     "Attribution": "Nimeäminen",
     "layerDelete": "Poista taso",
     "layerMetadata": "Metatieto",

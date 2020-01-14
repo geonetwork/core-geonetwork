@@ -339,6 +339,7 @@
     "Legend": "범례",
     "otherKeywords": "기타 키워드",
     "isValid": "유효성검증 상태",
+    "isValidInspire": "Validation status (INSPIRE)",
     "Attribution": "속성",
     "layerDelete": "레이어 제거",
     "layerMetadata": "메타데이터",

@@ -339,6 +339,7 @@
     "Legend": "Skýringatexti",
     "otherKeywords": "Önnur lykilorð",
     "isValid": "Staða fullgildingar",
+    "isValidInspire": "Validation status (INSPIRE)",
     "Attribution": "Eignun",
     "layerDelete": "Fjarlægja lag",
     "layerMetadata": "Lýsigögn",
