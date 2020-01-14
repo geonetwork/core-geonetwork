@@ -89,7 +89,7 @@
           links: md.getLinksByType('LINK'),
           downloads: md.getLinksByType('DOWNLOAD'),
           layers: md.getLinksByType('OGC', 'kml', 'ESRI:REST'),
-          overviews: md.getThumbnails() ? md.getThumbnails().list : undefined
+          overviews: md.overview
         });
 
         gnMdViewObj.current.record = md;
@@ -158,16 +158,18 @@
               var foundMd = false;
 
               // Check if the md is in current search
-              if (angular.isArray(gnMdViewObj.records)
-                        && !getDraft) {
-                for (var i = 0; i < gnMdViewObj.records.length; i++) {
-                  var md = gnMdViewObj.records[i];
-                  if (md.uuid === uuid) {
-                    foundMd = true;
-                    that.feedMd(i, md, gnMdViewObj.records);
-                  }
-                }
-              }
+              // With ES, we always reload the document
+              // because includes are limited in the main search response.
+              // if (angular.isArray(gnMdViewObj.records)
+              //           && !getDraft) {
+              //   for (var i = 0; i < gnMdViewObj.records.length; i++) {
+              //     var md = gnMdViewObj.records[i];
+              //     if (md.uuid === uuid) {
+              //       foundMd = true;
+              //       that.feedMd(i, md, gnMdViewObj.records);
+              //     }
+              //   }
+              // }
 
               if (!foundMd){
                   // get a new search to pick the md

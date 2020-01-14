@@ -69,6 +69,7 @@
             'creat*',
             'topicCat',
             'inspire*',
+            'overview.*',
             'resource*',
             'image*',
             'tag*'

@@ -780,34 +780,6 @@
         this.linksCache[key] = ret;
         return ret;
       },
-      getThumbnails: function() {
-        var images = {list: []};
-        if (angular.isArray(this.image)) {
-          for (var i = 0; i < this.image.length; i++) {
-            var s = this.image[i].split('|');
-            var insertFn = 'push';
-            if (s[0] === 'thumbnail') {
-              images.small = s[1];
-              var insertFn = 'unshift';
-            } else if (s[0] === 'overview') {
-              images.big = s[1];
-            }
-
-            //Is it a draft?
-            if( s[1].indexOf("/api/records/") >= 0
-                &&  s[1].indexOf("/api/records/")<  s[1].indexOf("/attachments/")) {
-              s[1] += "?approved=" + (this.draft != 'y');
-            }
-
-
-            images.list[insertFn]({url: s[1], label: s[2]});
-          }
-        } else if (angular.isDefined(this.image)){
-          var s = this.image.split('|');
-          images.list.push({url: s[1], label: s[2]});
-        }
-        return images;
-      },
       /**
        * Return an object containing metadata contacts
        * as an array and resource contacts as array

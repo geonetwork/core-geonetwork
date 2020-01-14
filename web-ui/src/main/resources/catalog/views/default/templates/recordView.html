@@ -47,7 +47,7 @@
           </button>
         </div>
 
-        <div class="btn-group" role="group">
+       <!-- <div class="btn-group" role="group">
           <a class="btn btn-default"
              title="{{mdView.records[mdView.current.index - 1].defaultTitle}}"
              gn-metadata-open="mdView.records[mdView.current.index - 1]"
@@ -56,7 +56,7 @@
              data-ng-class="{'disabled': searchObj.params.from == (mdView.current.index + 1)}"
              data-ng-show="mdView.records.length > 1">
             <i class="fa fa-fw fa-angle-left"></i>
-<!--            <span data-ng-show="mdView.current.index === 0" data-translate="">previousPage</span>-->
+&lt;!&ndash;            <span data-ng-show="mdView.current.index === 0" data-translate="">previousPage</span>&ndash;&gt;
             <span data-translate="">previous</span>
           </a>
           <a class="btn btn-default"
@@ -68,11 +68,11 @@
                             searchObj.params.to > searchInfo.count &&
                             searchInfo.count > searchObj.params.from}"
              data-ng-show="mdView.records.length > 1">
-<!--            <span data-ng-show="mdView.current.index === mdView.records.length - 1" data-translate="">nextPage</span>-->
+&lt;!&ndash;            <span data-ng-show="mdView.current.index === mdView.records.length - 1" data-translate="">nextPage</span>&ndash;&gt;
             <span data-translate="">next</span>
             <i class="fa fa-fw fa-angle-right"></i>
           </a>
-        </div>
+        </div>-->
 
       <div class="btn-group pull-right gn-view-menu-button">
           <button type="button" class="btn btn-default dropdown-toggle"
@@ -524,7 +524,7 @@
               <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
                   alt="{{'extent' | translate}}"
                   aria-label="{{'extent' | translate}}"
-                  data-ng-src="{{gnUrl}}{{lang}}/region.getmap.png?mapsrs=EPSG:3857&width=250&background=settings&geomsrs=EPSG:4326&geom={{bbox}}"/>
+                  data-ng-src="{{gnUrl}}{{lang}}/region.getmap.png?mapsrs=EPSG:3857&width=250&background=settings&geomsrs=EPSG:4326&geom={{::bbox | geojsonToWkt}}"/>
             </p>
 
           </section>
