@@ -302,7 +302,7 @@
       return mapping[name] || name;
     }
 
-    this.getMoreTermsParams = function(query, facetPath, newSize) {
+    this.getMoreTermsParams = function(query, facetPath, newSize, facetConfig) {
       var params = {
         query: query || {bool: {must: []}},
         size: 0
@@ -312,12 +312,14 @@
         if ((i + 1) % 2 === 0) continue;
         var key = facetPath[i];
         aggregations.aggregations = {};
-        aggregations.aggregations[key] = {
-          terms: {
-            field: key,
-              size: newSize
-          }
-        };
+        aggregations.aggregations[key] = facetConfig[key];
+        if (aggregations.aggregations[key].terms) {
+          aggregations.aggregations[key].terms.size = newSize;
+        } else {
+          console.warn(
+            'Loading more results of a none terms directive is not supported',
+            aggregations.aggregations[key]);
+        }
         aggregations = aggregations.aggregations[key];
       }
       return params;

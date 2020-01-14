@@ -69,8 +69,8 @@
       );
     };
 
-    this.loadMoreTerms = function(query, facetPath, newSize) {
-      var params = gnESService.getMoreTermsParams(query, facetPath, newSize);
+    this.loadMoreTerms = function(query, facetPath, newSize, facetConfig) {
+      var params = gnESService.getMoreTermsParams(query, facetPath, newSize, facetConfig);
       return callApi('_search', params).then(
         function(response) {
           var model = gnESFacet.getUIModel(response, params);
