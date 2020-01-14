@@ -125,12 +125,12 @@
             <xsl:choose>
               <xsl:when test="$asJson">
                 <xsl:value-of select="concat($doubleQuote, $field, $doubleQuote, ':',
-                                             $doubleQuote, normalize-space(.), $doubleQuote,
+                                             $doubleQuote, ., $doubleQuote,
                                              if ($element//*:CharacterString) then ',' else '')"/>
               </xsl:when>
               <xsl:otherwise>
                 <xsl:element name="{$field}">
-                  <xsl:value-of select="normalize-space(.)"/>
+                  <xsl:value-of select="."/>
                 </xsl:element>
               </xsl:otherwise>
             </xsl:choose>
@@ -141,11 +141,11 @@
             <xsl:choose>
               <xsl:when test="$asJson">
                 <xsl:value-of select="concat($doubleQuote, $fieldName, $doubleQuote, ':',
-                                             $doubleQuote, normalize-space(.), $doubleQuote)"/>
+                                             $doubleQuote, ., $doubleQuote)"/>
               </xsl:when>
               <xsl:otherwise>
                 <xsl:element name="{$fieldName}">
-                  <xsl:value-of select="normalize-space(.)"/>
+                  <xsl:value-of select="."/>
                 </xsl:element>
               </xsl:otherwise>
             </xsl:choose>
@@ -157,11 +157,11 @@
             <xsl:choose>
               <xsl:when test="$asJson">
                 <xsl:value-of select="concat($doubleQuote, $fieldName, $doubleQuote, ':',
-                                             $doubleQuote, normalize-space(.), $doubleQuote)"/>
+                                             $doubleQuote, ., $doubleQuote)"/>
               </xsl:when>
               <xsl:otherwise>
                 <xsl:element name="{$fieldName}">
-                  <xsl:value-of select="normalize-space(.)"/>
+                  <xsl:value-of select="."/>
                 </xsl:element>
               </xsl:otherwise>
             </xsl:choose>

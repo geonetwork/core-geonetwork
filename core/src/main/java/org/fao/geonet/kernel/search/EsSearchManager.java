@@ -534,7 +534,7 @@ public class EsSearchManager implements ISearchManager {
                     if (isObject) {
                         try {
                             arrayNode.add(
-                                mapper.readTree(node.getTextNormalize()));
+                                mapper.readTree(node.getText()));
                         } catch (IOException e) {
                             LOGGER.error("Parsing invalid JSON node {} for property {}. Error is: {}",
                                 new Object[]{node.getTextNormalize(), propertyName, e.getMessage()});
@@ -543,7 +543,7 @@ public class EsSearchManager implements ISearchManager {
                         arrayNode.add(
                             booleanFields.contains(propertyName) ?
                                 parseBoolean(node.getTextNormalize()) :
-                                node.getTextNormalize());
+                                node.getText());
 
                     }
 
@@ -576,7 +576,7 @@ public class EsSearchManager implements ISearchManager {
                     doc.put(propertyName,
                         booleanFields.contains(propertyName) ?
                             parseBoolean(nodeElements.get(0).getTextNormalize()) :
-                            nodeElements.get(0).getTextNormalize());
+                            nodeElements.get(0).getText());
                 }
 
             }
