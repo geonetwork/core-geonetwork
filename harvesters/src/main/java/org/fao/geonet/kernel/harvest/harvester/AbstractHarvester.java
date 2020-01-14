@@ -28,6 +28,7 @@ import static org.quartz.JobKey.jobKey;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
@@ -61,10 +62,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.domain.User;
-import org.fao.geonet.exceptions.BadInputEx;
-import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.exceptions.JeevesException;
-import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
@@ -653,6 +651,20 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                         errors.add(new HarvestError(context,e));
                         error = e;
                         operResult = OperResult.ERROR;
+
+                    } catch (UnknownHostException e) {
+                        logger.error("The harvester " + this.getParams().getName() + "["
+                            + this.getType()
+                            + "] host is unknown.");
+
+                        // Using custom UnknownHostEx as UnknownHostException error message differs from IPv4 / IPv6,
+                        // in IPv4 only reports the host name in the message, the harvester uses this field
+                        // and error reported to the user is unclear
+                        error = new UnknownHostEx(e.getMessage());
+                        errors.add(new HarvestError(context, error));
+
+                        operResult = OperResult.ERROR;
+
                     } catch (Throwable t) {
                         operResult = OperResult.ERROR;
                         logger.warning("Raised exception while harvesting from : " + nodeName);
