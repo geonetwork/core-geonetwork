@@ -18,7 +18,11 @@
 .c_showlocation section h4 {
   font-weight: 500;
 }
+// https://gitlab.ifremer.fr/sextant/geonetwork/issues/105
 
+.c_showlocation ul:not(.pagination), .c_nodelist ul:not(.pagination) {
+  overflow: initial;
+}
 .c_showlocation section h3::before {
   content: None;
   font-weight: normal;
