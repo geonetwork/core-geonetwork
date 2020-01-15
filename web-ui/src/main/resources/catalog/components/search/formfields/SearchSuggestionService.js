@@ -101,15 +101,7 @@
            * @return {HttpPromise} promise
            */
           this.getAnySuggestions = function(val) {
-
-            return gnESClient.suggest('resourceTitle', val);
-            var url = this.getUrl(val, 'anylight',
-                ('STARTSWITHFIRST'));
-
-            return $http.get(url, {
-            }).then(function(res) {
-              return res.data[1];
-            });
+            return gnESClient.suggest(null, val);
           };
 
 

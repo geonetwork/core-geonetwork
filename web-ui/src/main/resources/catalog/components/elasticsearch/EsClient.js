@@ -51,9 +51,18 @@
       var params = gnESService.getSuggestParams(field, query);
       return callApi('_search', params).then(
         function(response) {
-          return response.data.hits.hits.map(function(md) {
-            return md._source[field];
+          var d = response.data.hits.hits.flatMap(function(md) {
+            if (field) {
+              return md._source[field];
+            } else {
+              var values = [];
+              for (p in md._source) {
+                values = values.concat(md._source[p]);
+              };
+              return values;
+            }
           });
+          return d;
         }
       );
     };
