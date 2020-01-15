@@ -266,7 +266,7 @@ public class MetadataUtils {
         }
 
         final SearchResponse result = searchMan.query(
-            String.format("+%s:%s%s", relatedIndexFields.get(type), uuid, excludeQuery), null, FIELDLIST_CORE, fromValue, (toValue -fromValue));
+            String.format("+%s:\"%s\"%s", relatedIndexFields.get(type), uuid, excludeQuery), null, FIELDLIST_CORE, fromValue, (toValue -fromValue));
 
         Element typeResponse = new Element(type);
         if (result.getHits().getTotalHits().value > 0) {

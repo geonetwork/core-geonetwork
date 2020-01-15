@@ -533,7 +533,7 @@ public class MetadataApi {
         @ApiParam(value = "Start offset for paging. Default 1. Only applies to related metadata records (ie. not for thumbnails).",
             required = false
         )
-        @RequestParam(defaultValue = "1")
+        @RequestParam(defaultValue = "0")
             int start,
         @ApiParam(value = "Number of rows returned. Default 100.")
         @RequestParam(defaultValue = "100")
