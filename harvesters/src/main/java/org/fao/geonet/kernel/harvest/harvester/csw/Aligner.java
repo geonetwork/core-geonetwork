@@ -486,7 +486,12 @@ public class Aligner extends BaseAligner<CswParams> {
 
 
             try {
-                params.getValidate().validate(context.getBean(DataManager.class), context, response);
+                Integer groupIdVal = null;
+                if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                    groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                }
+
+                params.getValidate().validate(dataMan, context, response, groupIdVal);
             } catch (Exception e) {
                 log.debug("Ignoring invalid metadata with uuid " + uuid);
                 result.doesNotValidate++;

@@ -31,7 +31,7 @@ import org.fao.geonet.domain.SchematronCriteria;
 import org.fao.geonet.domain.SchematronCriteriaGroup;
 import org.fao.geonet.domain.SchematronCriteriaType;
 import org.fao.geonet.domain.SchematronRequirement;
-import org.fao.geonet.kernel.SchematronValidator.ApplicableSchematron;
+import org.fao.geonet.kernel.ApplicableSchematron;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
