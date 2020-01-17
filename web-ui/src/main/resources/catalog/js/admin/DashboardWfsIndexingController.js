@@ -38,7 +38,9 @@
     'gnHttp',
     'gnAlertService',
     'gnLangs',
-    function($q, $scope, $location, $http, $translate, $element, gnMetadataManager, gnHttp, gnAlertService, gnLangs) {
+    'wfsFilterService',
+    function($q, $scope, $location, $http, $translate, $element, gnMetadataManager, gnHttp, gnAlertService, gnLangs,
+             wfsFilterService) {
       // this returns a valid xx_XX language code based on available locales in bootstrap-table
       // if none found, return 'en'
       // FIXME: use a global service
@@ -454,47 +456,44 @@
         $scope.settingsError = null;
       });
 
-      $scope.getFieldsFromApplicationProfile = function (job, params) {
-        if (!job.md) {return params;}
-
-        var applicationProfile = job.md.linksTree.map(function (d) {
-          return d.filter(function (e) {
-            return e.protocol === 'OGC:WFS';
-          });
-        }).filter(function (f) {
-          return f[0] ? f[0].name : undefined;
-        }).find(function (s) {
-          return s[0].name === job.featureType;
-        })[0].applicationProfile;
-
-        if (applicationProfile) {
-          var dumpedAP = JSON.parse(applicationProfile);
-          params.treeFields = dumpedAP.treeFields;
-          params.tokenizedFields = dumpedAP.tokenizedFields;
-        }
-        return params;
+      $scope.updateParamsFromApplicationProfile = function(job) {
+        return wfsFilterService.getApplicationProfile(job.mdUuid,
+          job.featureType,
+          job.url,
+          'WFS').then(
+          function(response) {
+            if (response.status == 200) {
+              var appProfile = angular.fromJson(response.data['0']);
+              var params = {
+                typeName: job.featureType,
+                url: job.url,
+                metadataUuid: job.mdUuid,
+                tokenizedFields: appProfile ? appProfile.tokenizedFields : null,
+                treeFields : appProfile ? appProfile.treeFields : null
+              };
+              return params
+            }
+          }).catch(function() {});
       };
 
       $scope.triggerIndexing = function(key) {
         var job = $scope.jobs[key];
-        var params = {
-          typeName: job.featureType,
-          url: job.url,
-          version: "1.1.0",
-          metadataUuid: job.mdUuid
-        };
-        $http.put($scope.wfsWorkersApiUrl + '/start',
-          this.getFieldsFromApplicationProfile(job, params)).then(function() {
-          gnAlertService.addAlert({
-            msg: $translate.instant('wfsIndexingTriggerSuccess'),
-            type: 'success'
+        $scope.updateParamsFromApplicationProfile(job).then(
+          function(params) {
+            $http.put($scope.wfsWorkersApiUrl + '/start',
+              params).then(function() {
+              params.version = "1.1.0";
+              gnAlertService.addAlert({
+                msg: $translate.instant('wfsIndexingTriggerSuccess'),
+                type: 'success'
+              });
+            }, function() {
+              gnAlertService.addAlert({
+                msg: $translate.instant('wfsIndexingTriggerError'),
+                type: 'error'
+              });
+            });
           });
-        }, function() {
-          gnAlertService.addAlert({
-            msg: $translate.instant('wfsIndexingTriggerError'),
-            type: 'error'
-          });
-        });
       };
     }]);
 

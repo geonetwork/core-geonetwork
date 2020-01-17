@@ -209,23 +209,24 @@
             // does not work here when current layer change
             // the previous featureTypeName is still used.
             // ftName = scope.featureTypeName ||             ftName = scope.featureTypeName ||
-;
+            ;
             ftName = scope.layer.getSource().getParams().LAYERS;
             scope.featureTypeName = ftName;
 
             appProfile = null;
             appProfilePromise = wfsFilterService.getApplicationProfile(uuid,
-                ftName,
-                gnGlobalSettings.getNonProxifiedUrl(scope.wfsUrl ? scope.url : scope.mdUrl),
-                // A WFS URL is in the metadata or we're guessing WFS has
-                // same URL as WMS
-                scope.wfsUrl ? 'WMS' : 'WFS').then(
-                function(response) {
-                  if (response.status == 200) {
-                    appProfile = angular.fromJson(response.data['0']);
-                    return appProfile;
-                  }
-                }).catch(function() {});
+              ftName,
+              gnGlobalSettings.getNonProxifiedUrl(scope.wfsUrl ? scope.url : scope.mdUrl),
+              // A WFS URL is in the metadata or we're guessing WFS has
+              // same URL as WMS
+              scope.wfsUrl ? 'WFS' : 'WFS').then(
+              function (response) {
+                if (response.status == 200) {
+                  appProfile = angular.fromJson(response.data['0']);
+                  return appProfile;
+                }
+              }).catch(function () {
+            });
 
             indexObject = wfsFilterService.registerEsObject(scope.url, ftName);
             scope.indexObject = indexObject;
