@@ -56,22 +56,7 @@
   };
 
   GnFeaturesTableController.prototype.initTable = function(element, scope, getBsTableLang) {
-
-    // this returns a valid xx_XX language code based on available locales in bootstrap-table
-    // if none found, return 'en'
-    function getBsTableLang() {
-      var iso2 = gnLangs.getIso2Lang(gnLangs.getCurrent());
-      var locales = Object.keys($.fn.bootstrapTable.locales);
-      var lang = 'en';
-      locales.forEach(function (locale) {
-        if (locale.startsWith(iso2)) {
-          lang = locale;
-          return true;
-        }
-      });
-      return lang;
-    }
-
+    
     // See http://stackoverflow.com/a/13382873/29655
     function getScrollbarWidth() {
       var outer = document.createElement('div');
