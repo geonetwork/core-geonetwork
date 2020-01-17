@@ -23,19 +23,24 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
-import java.util.Iterator;
-
+import com.google.common.base.Splitter;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import com.google.common.base.Splitter;
+import java.util.Iterator;
 
 //=============================================================================
 
 class Search {
+    public int from;
+    public int to;
     public String freeText;
 
     //---------------------------------------------------------------------------
@@ -70,6 +75,7 @@ class Search {
     public String sourceName;
     public String anyField;
     public String anyValue;
+
     //---------------------------------------------------------------------------
     //---
     //--- Constructor
@@ -77,6 +83,7 @@ class Search {
     //---------------------------------------------------------------------------
     public Search() {
     }
+
     public Search(Element search) throws BadParameterEx {
         freeText = Util.getParam(search, "freeText", "");
         title = Util.getParam(search, "title", "");
@@ -91,10 +98,13 @@ class Search {
 
         sourceUuid = Util.getParam(source, "uuid", "");
         sourceName = Util.getParam(source, "name", "");
+
     }
 
-    public static Search createEmptySearch() throws BadParameterEx {
-        return new Search(new Element("search"));
+    public static Search createEmptySearch(int from, int to) throws BadParameterEx {
+        Search s = new Search(new Element("search"));
+        s.setRange(from, to);
+        return s;
     }
 
     public Search copy() {
@@ -110,13 +120,16 @@ class Search {
         s.sourceName = sourceName;
         s.anyField = anyField;
         s.anyValue = anyValue;
+        s.from = from;
+        s.to = to;
 
         return s;
     }
 
     public Element createRequest() {
         Element req = new Element("request");
-
+        add(req, "from", Integer.toString(from));
+        add(req, "to", Integer.toString(to));
         add(req, "any", freeText);
         add(req, "title", title);
         add(req, "abstract", abstrac);
@@ -147,6 +160,10 @@ class Search {
         if (hardcopy)
             Lib.element.add(req, "paper", "on");
 
+        if (Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
+            Log.debug(Geonet.HARVEST_MAN, "Search request is " + Xml.getString(req));
+        }
+
         return req;
     }
 
@@ -154,8 +171,30 @@ class Search {
         if (value.length() != 0)
             req.addContent(new Element(name).setText(value));
     }
+
+    public void setRange(int from, int to) {
+        this.from = from;
+        this.to = to;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+            .append("from", from)
+            .append("to", to)
+            .append("freeText", freeText)
+            .append("title", title)
+            .append("abstrac", abstrac)
+            .append("keywords", keywords)
+            .append("digital", digital)
+            .append("hardcopy", hardcopy)
+            .append("sourceUuid", sourceUuid)
+            .append("sourceName", sourceName)
+            .append("anyField", anyField)
+            .append("anyValue", anyValue)
+            .toString();
+    }
 }
 
-//=============================================================================
 
 

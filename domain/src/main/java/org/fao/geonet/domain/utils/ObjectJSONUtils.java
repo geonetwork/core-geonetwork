@@ -44,7 +44,7 @@ public class ObjectJSONUtils {
         try {
             return ObjectJSONUtils.extractJSONObjectFromJSONString(jsonString).getString(field);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error("geonetwork.domain", "Error extracting field from JSON, error: " + e.getMessage(), e);
             return "";
         }
     }
@@ -78,7 +78,7 @@ public class ObjectJSONUtils {
             }
             return current.getString(field);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error("geonetwork.domain", "Error extracting field from JSON, error: " + e.getMessage(), e);
             return "";
         }
     }
@@ -102,7 +102,8 @@ public class ObjectJSONUtils {
             }
             return null;
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error("geonetwork.domain", "Error extracting array from JSON, error: " + e.getMessage(), e);
+
             return null;
         }
     }
@@ -150,7 +151,7 @@ public class ObjectJSONUtils {
             }
             return result;
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error("geonetwork.domain", "Error extracting list of field from JSON, error: " + e.getMessage(), e);
             return null;
         }
     }

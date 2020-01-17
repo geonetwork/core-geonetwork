@@ -1,18 +1,7 @@
-// GN Styles
-@import "../lib/style/font-awesome/less/font-awesome.less";
-@import "gn_bootstrap.less";
 @import "gn_infolist.less";
 @import "gn_badge_categories.less";
 
 @import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
-// import the css files as less files so they are included in the final output of wro4j
-@import (less) "../lib/bootstrap.ext/datepicker/datepicker.css";
-@import (less) "../lib/style/datetimepicker.css";
-@import (less) "../lib/angular.ext/colorpicker/angularjs-color-picker.min.css";
-
-@import (less) "inspire/iti.css";
-// Import this CSS to have INSPIRE themes translations
-//@import (less) "inspire/iti-i18n.css";
 
 @import "gn.less";
 @import "gn_viewer.less";
@@ -117,7 +106,9 @@
     left: 1em;
     top: 0;
   }
-
+  .facet-pagination .separator:first-child {
+    display: none;
+  }
 }
 .gn-facet-breadcrumb {
   margin-top: 8px;
@@ -187,7 +178,6 @@ span.gn-facet-label:first-letter {
 
 // fix sort-by combo case
 .gn-sort-by .btn.dropdown-toggle {
-  text-transform: lowercase;
   background-color: #fff;
   &:first-letter {
     text-transform: uppercase;
@@ -365,7 +355,7 @@ span.gn-facet-label:first-letter {
   }
 }
 
-[ngeo-map] {
+[ol-map] {
   width: 100%;
   height: 250px;
 }
@@ -402,7 +392,6 @@ span.gn-facet-label:first-letter {
     line-height: 3em;
     font-size: 90%;
     margin: 0;
-    //margin-left: 6em;
     .dropdown-menu {
       max-width: 500px;
       li a {
@@ -418,7 +407,7 @@ span.gn-facet-label:first-letter {
     font-size: 14px;
   }
   p {
-    font-size: .9em;
+    // font-size: .9em;
   }
   blockquote {
     padding: 6px 20px;
@@ -437,19 +426,22 @@ span.gn-facet-label:first-letter {
   .gn-md-thumbnail {
     float:left;
     width: 140px;
-    max-height: 140px;
     height: auto;
     margin-right: 15px;
-    border: 1px solid #ddd;
     border-radius: 4px;
     overflow: hidden;
     .gn-img-thumbnail {
+      border: 1px solid #ddd;
       margin: 0;
       min-height: 100%;
     }
   }
   .gn-md-no-thumbnail {
+    width: 140px;
+    height: 140px;
+    background-size: 140px 140px;
     background-image: url(../catalog/views/default/images/no-thumbnail.png);
+    height: 140px;
   }
 }
 
@@ -687,7 +679,7 @@ button.active [role=tooltip] {
   padding: 0;
   list-style: none;
   > li {
-    padding-left: 25px;
+    padding-left: 15px;
     &:hover {
       text-decoration: none;
       color: #262626;

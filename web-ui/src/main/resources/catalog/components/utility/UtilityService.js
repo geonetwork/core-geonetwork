@@ -464,6 +464,45 @@
       };
     }]);
 
+
+  module.service('gnHumanizeTimeService', ['gnGlobalSettings', function(gnGlobalSettings) {
+    return function(date, format, contextAllowToUseFromNow) {
+        function isDateGmlFormat(date) {
+          return date.match('[Zz]$') !== null;
+        }
+        var settingAllowToUseFromNow = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
+        var parsedDate = null;
+        if (isDateGmlFormat(date)) {
+          parsedDate = moment(date, 'YYYY-MM-DDtHH-mm-SSSZ');
+        } else {
+          parsedDate = moment(date);
+        }
+        if (parsedDate.isValid()) {
+          var fromNow = parsedDate.fromNow();
+          if (settingAllowToUseFromNow && contextAllowToUseFromNow) {
+            return {value: fromNow, title: format ? parsedDate.format(format) : parsedDate.toString()};
+          } else {
+            return {title: fromNow, value: format ? parsedDate.format(format) : parsedDate.toString()};
+          }
+        }
+      };
+    }]);
+
+  module.service('getBsTableLang', ['gnLangs', function(gnLangs) {
+    return function() {
+      var iso2 = gnLangs.getIso2Lang(gnLangs.getCurrent());
+      var locales = Object.keys($.fn.bootstrapTable.locales);
+      var lang = 'en';
+      locales.forEach(function (locale) {
+        if (locale.startsWith(iso2)) {
+          lang = locale;
+          return true;
+        }
+      });
+      return lang;
+    };
+  }]);
+
   module.service('gnTreeFromSlash', [function() {
     var findChild = function(node, name) {
       var n;
@@ -516,5 +555,36 @@
       });
       return tree;
     };
+  }]);
+
+  // taken from ngeo
+  module.factory('gnDebounce', ['$timeout', function($timeout) {
+    return (
+      /**
+       * @param {function(?)} func The function to debounce.
+       * @param {number} wait The wait time in ms.
+       * @param {boolean} invokeApply Whether the call to `func` is wrapped
+       *    into an `$apply` call.
+       * @return {function()} The wrapper function.
+       */
+      function(func, wait, invokeApply) {
+        /**
+         * @type {?angular.$q.Promise}
+         */
+        var timeout = null;
+        return (
+          function() {
+            var context = this;
+            var args = arguments;
+            var later = function() {
+              timeout = null;
+              func.apply(context, args);
+            };
+            if (timeout !== null) {
+              $timeout.cancel(timeout);
+            }
+            timeout = $timeout(later, wait, invokeApply);
+          });
+      });
   }]);
 })();

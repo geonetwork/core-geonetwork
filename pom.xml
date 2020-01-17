@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>3.7.0-SNAPSHOT</version>
+  <version>3.9.0-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -289,14 +289,30 @@
       </plugin>
       <!-- run integration tests after unit tests -->
       <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>get-cpu-count</id>
+            <goals>
+              <goal>cpu-count</goal>
+            </goals>
+            <configuration>
+              <cpuCount>system.numCores</cpuCount>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>-Dfile.encoding=UTF-8 -Xmx512M</argLine>
+          <argLine>-Dfile.encoding=UTF-8 -Xmx1G</argLine>
           <!--<rerunFailingTestsCount>5</rerunFailingTestsCount>-->
           <runOrder>alphabetical</runOrder>
+          <forkCount>${system.numCores}</forkCount>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
-          <forkCount>4</forkCount>
           <excludes>
             <exclude>**/*PerformanceTest.java</exclude>
           </excludes>
@@ -368,6 +384,13 @@
         <groupId>com.github.lookfirst</groupId>
         <artifactId>sardine</artifactId>
         <version>5.1-GEONETWORK</version>
+        <exclusions>
+          <exclusion>
+            <!-- depends on an old version of httpcore, but the new one is backward compatible -->
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -463,9 +486,9 @@
         <version>1.6</version>
       </dependency>
       <dependency>
-        <groupId>commons-dbcp</groupId>
-        <artifactId>commons-dbcp</artifactId>
-        <version>1.4</version>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-dbcp2</artifactId>
+        <version>2.6.0</version>
       </dependency>
       <dependency>
         <groupId>commons-pool</groupId>
@@ -551,11 +574,6 @@
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-core</artifactId>
         <version>${log4j2.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.httpcomponents</groupId>
-        <artifactId>httpcore</artifactId>
-        <version>${httpcomponents.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
@@ -793,7 +811,7 @@
       <dependency>
         <groupId>joda-time</groupId>
         <artifactId>joda-time</artifactId>
-        <version>1.5.2</version>
+        <version>2.10.3</version>
       </dependency>
       <dependency>
         <groupId>jaxen</groupId>
@@ -1233,6 +1251,12 @@
       <url>http://maven.seasar.org/maven2</url>
     </repository>
 
+    <repository>
+      <id>georchestra-mfprint</id>
+      <name>build-releases</name>
+      <url>https://packages.georchestra.org/artifactory/mapfish-print</url>
+    </repository>
+
   </repositories>
 
 
@@ -1295,10 +1319,10 @@
         </file>
       </activation>
       <modules>
-	<module>slave</module>
+        <module>slave</module>
         <module>schemas-test</module>
         <module>web-ui</module>
-        <module>web-ui-docs</module>
+        <!--<module>web-ui-docs</module>-->
         <module>web</module>
       </modules>
     </profile>
@@ -1357,8 +1381,8 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>7.1.1</es.version>
-    <es.version.sha512>d2bf8eb211e2b4540571158789908a0f5abfca9fb4005b80cfad65d5ce0d65f5b1d64e273da196097a57685226bbfa35fef96fe954737df8872d1620dd40bf4c</es.version.sha512>
+    <es.version>7.4.2</es.version>
+    <es.version.sha512>64cc3e77f4271a5477c8c979fa48728d96890cad68b0daac6566f4dda25b4d4a80784eaafeaa874a6b434c034fcacb8a5751fdb445919191bae4aa4958c793b7</es.version.sha512>
     <es.platform>linux-x86_64</es.platform>
     <es.installer.extension>tar.gz</es.installer.extension>
     <es.port></es.port>
@@ -1367,6 +1391,7 @@
     <es.index.features></es.index.features>
     <es.index.features.type></es.index.features.type>
     <es.index.records></es.index.records>
+    <es.index.records_public></es.index.records_public>
     <es.index.records.type></es.index.records.type>
     <es.index.searchlogs></es.index.searchlogs>
     <es.index.searchlogs.type></es.index.searchlogs.type>
@@ -1380,7 +1405,7 @@
     <es.username></es.username>
     <es.password></es.password>
 
-    <kb.version.sha512>5b4982951eeb57277239e6c5268a82073cde73d5a2f18171c9a4306cbb2449889002e65374db5eb082ea6c9a6279a166b104ec96481966240eb56b730a7c3220</kb.version.sha512>
+    <kb.version.sha512>41c18340c204c82d03d24eda8bd5915e6f762868f39ecea53f4571a2fb7348df383606f30f5d3d56a9cb5953422efcfc5a09e6a0590d4e2ce55990efe298b331</kb.version.sha512>
     <kb.platform>linux-x86_64</kb.platform>
     <kb.installer.extension>tar.gz</kb.installer.extension>
     <kb.port></kb.port>
@@ -1412,7 +1437,7 @@
 
     <lucene.version>4.9.0</lucene.version>
 
-    <spring.version>4.2.6.RELEASE</spring.version>
+    <spring.version>4.3.0.RELEASE</spring.version>
     <spring.security.version>3.2.0.RELEASE</spring.security.version>
     <metrics.version>2.1.1</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
@@ -1424,7 +1449,7 @@
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <print-lib.version>2.1.4</print-lib.version>
+    <print-lib.version>2.1.6</print-lib.version>
     <flying-saucer>9.0.7</flying-saucer>
     <camel.version>2.14.4</camel.version>
     <log4j.version>1.2.17</log4j.version>
@@ -1432,7 +1457,7 @@
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>3.18</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
-    <httpcomponents.version>4.4.1</httpcomponents.version>
+    <httpcomponents.version>4.5.9</httpcomponents.version>
     <gn.schemas.version>3.7</gn.schemas.version>
   </properties>
 </project>

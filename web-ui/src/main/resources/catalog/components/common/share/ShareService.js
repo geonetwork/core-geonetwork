@@ -31,7 +31,7 @@
     // TODO: Move config to DB using order in operations table
     columnOrder: ['view', 'dynamic', 'download', 'editing', 'notify'],
     icons: {
-      'view': 'fa-share-alt',
+      'view': 'fa-unlock',
       'dynamic': 'fa-globe',
       'download': 'fa-download',
       'notify': 'fa-envelope',
@@ -169,17 +169,24 @@
           return defer.promise;
         },
 
-        publish: function(metadataId, bucket, onOrOff, user) {
-          var privileges = [{
-            group: 1,
-            operations: {
-              view: onOrOff,
-              download: onOrOff,
-              dynamic: onOrOff
-            }
-          }];
-          return this.savePrivileges(
-              metadataId, bucket, privileges, user, false);
+        publish: function(metadataId, bucket, publish, user) {
+          var defer = $q.defer();
+          var url = '../api/records' + (
+              angular.isDefined(metadataId) ? '/' + metadataId : '') +
+            '/' + (publish?'publish':'unpublish');
+
+          if (angular.isDefined(bucket)) {
+            url += '?bucket=' + bucket;
+          }
+
+          $http.put(url)
+            .then(function(response) {
+              defer.resolve(response);
+            }, function(response) {
+              defer.reject(response);
+          });
+
+          return defer.promise;
         },
 
         /**

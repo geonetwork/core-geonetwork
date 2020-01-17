@@ -34,15 +34,40 @@
       $scope.sources = [];
       $scope.uiConfigurations = [];
       $scope.source = null;
+      $scope.filteredSources = null;
+      $scope.filter = {
+        types: {'portal': true, 'subportal': true, 'externalportal': true, 'harvester': true}
+      };
       $scope.selectSource = function(source) {
         source.uiConfig = source.uiConfig && source.uiConfig.toString();
+        source.groupOwner = source.groupOwner != null ? source.groupOwner + '' : null;
         $scope.source = source;
       };
 
+      function filterSources() {
+        $scope.filteredSources = [];
+        $scope.sources.forEach(function(s) {
+          if ($scope.filter.types[s.type] === true) {
+            $scope.filteredSources.push(s);
+          }
+        });
+      }
+
+      $scope.$watch('filter', function(n, o) {
+        if (n !== o) {
+          filterSources();
+        }
+      }, true);
+
       function loadSources() {
-        $http.get('../api/sources')
+        var url = '../api/sources';
+        if ($scope.user.profile === 'UserAdmin') {
+          url += '?group=' + $scope.user.groupsWithUserAdmin.join('&group=');
+        }
+        $http.get(url)
             .success(function(data) {
               $scope.sources = data;
+              filterSources();
               $scope.isNew = false;
             });
       }
@@ -70,7 +95,8 @@
           name: '',
           logo: '',
           uiConfig: '',
-          filter: ''
+          filter: '',
+          groupOwner: null
         };
         // TODO: init labels
       };

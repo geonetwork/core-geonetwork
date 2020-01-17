@@ -1,4 +1,4 @@
-<div>
+<div data-ng-if="md">
   <div class="btn-group md-actions"
        data-ng-if="user.isEditorOrMore()">
     <button type="button"
@@ -29,7 +29,7 @@
           <span data-translate="">transferOwnership</span>
         </a></li>
       <li role="menuitem"
-          data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore() && md.draft != 'y'"
+          data-ng-if="user.canEditRecord(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) && md.draft != 'y'"
           data-ng-class="
             (md.isPublished() || (allowPublishInvalidMd() === true) ||
             (!md.isPublished() && (allowPublishInvalidMd() === false) &&
@@ -55,20 +55,96 @@
       </li>
       <!-- TODO: Some installation only allows status update
       based on current status. -->
+
+      <!-- 
+        Workflow:
+
+        Editor
+        - if status is 'Draft' (mdStatus = 1) -> label = 'Submit for review'
+        - if status <> 'Draft' hide the menu
+        - data submitted by user - cancel approval
+
+        Reviewer
+        - 3 options in menu:
+          1. Approve metadata (id = 2)
+          2. Reject metadata (id = 5)
+          3. Retire metadata (id = 3)
+      -->
+      <li role="menuitem" class="divider" data-ng-show="isMdWorkflowEnable && (md.mdStatus == 1 || md.mdStatus == 4)"></li>
       <li role="menuitem"
-          data-ng-class="((allowPublishInvalidMd() === true) || 
-            ((allowPublishInvalidMd() === false) &&
-            (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'">
+          class="dropdown-header"
+          data-ng-show="isMdWorkflowEnable && (md.mdStatus == 1 || md.mdStatus == 4)">
+        <span data-translate="">workflow</span>
+      </li>
+      <!-- user = editor, status = 1, statusToSelect = 4 -->
+      <li role="menuitem"
+          data-ng-if="user.canEditRecord(md) && (user.isAdmin() ||
+          user.isEditorForGroup(md.groupOwner)) && md.mdStatus == 1 && isMdWorkflowEnable && md.isWorkflowEnabled()">
         <a data-ng-href=""
-           data-ng-if="user.canEditRecord(md) &&
-                                md.isWorkflowEnabled() &&
-                                mdView.current.record.draft != 'e'"
-           data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow')">
-          <i class="fa fa-fw fa-code-fork"></i>&nbsp;
-          <span data-translate="">updateStatus</span>
+           data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 4, 14)">
+          <i class="fa fa-fw fa-file-o"></i>&nbsp;
+          <span data-translate="">mdStatusTitle-14</span>
         </a>
       </li>
-      <li data-ng-if="user.canEditRecord(md) && !md.isWorkflowEnabled()">
+      <li role="menuitem"
+          data-ng-if="user.canEditRecord(md) && (user.isAdmin() ||
+          user.isEditorForGroup(md.groupOwner)) && md.mdStatus == 3 && isMdWorkflowEnable && md.isWorkflowEnabled()">
+        <a data-ng-href=""
+           data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 1, 31)">
+          <i class="fa fa-fw fa-file-o"></i>&nbsp;
+          <span data-translate="">mdStatusTitle-31</span>
+        </a>
+      </li>
+      <!-- user = editor, status = 4, statusToSelect = 1 -->
+      <li role="menuitem"
+          data-ng-if="user.canEditRecord(md) && !user.isReviewerForGroup(md.groupOwner) &&
+          user.isEditorForGroup(md.groupOwner) && md.mdStatus == 4  && isMdWorkflowEnable && md.isWorkflowEnabled()">
+        <a data-ng-href=""
+           data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 1, 41)">
+          <i class="fa fa-fw fa-undo"></i>&nbsp;
+          <span data-translate="">mdStatusTitle-41</span>
+        </a>
+      </li>
+      <!-- user = reviewer, status = 4, statusToSelect = 2 -->
+      <li role="menuitem"
+          data-ng-if="user.canEditRecord(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) &&
+          md.mdStatus == 4  && isMdWorkflowEnable && md.isWorkflowEnabled()">
+        <a data-ng-href=""
+            data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 2, 42)">
+          <i class="fa fa-fw fa-thumbs-o-up"></i>&nbsp;
+          <span data-translate="">mdStatusTitle-42</span>
+        </a>
+      </li>
+      <li role="menuitem"
+          data-ng-if="user.canEditRecord(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) &&
+          md.mdStatus == 1  && isMdWorkflowEnable && md.isWorkflowEnabled()">
+        <a data-ng-href=""
+            data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 2, 12)">
+          <i class="fa fa-fw fa-thumbs-o-up"></i>&nbsp;
+          <span data-translate="">mdStatusTitle-12</span>
+        </a>
+      </li>
+      <!-- user = reviewer, status = 4, statusToSelect = 5 -->
+      <li role="menuitem"
+          data-ng-if="user.canEditRecord(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) &&
+          md.mdStatus == 4  && isMdWorkflowEnable && md.isWorkflowEnabled()">
+        <a data-ng-href=""
+            data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 1, 411)">
+          <i class="fa fa-fw fa-thumbs-o-down"></i>&nbsp;
+          <span data-translate="">mdStatusTitle-411</span>
+        </a>
+      </li>
+      <!-- user = reviewer, status = 4, statusToSelect = 3 -->
+      <li role="menuitem"
+          data-ng-if="user.canEditRecord(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) &&
+          md.mdStatus == 4  && isMdWorkflowEnable && md.isWorkflowEnabled()">
+        <a data-ng-href=""
+            data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 3, 33)">
+          <i class="fa fa-fw fa-archive"></i>&nbsp;
+          <span data-translate="">mdStatusTitle-33</span>
+        </a>
+      </li>
+      <li data-ng-if="isMdWorkflowEnable && user.canEditRecord(md) && !md.isWorkflowEnabled()">
         <a role="menuitem"
            data-ng-href=""
            data-ng-click="mdService.startWorkflow(md, getCatScope())">
@@ -82,7 +158,7 @@
 
 
       <li data-ng-repeat="t in tasks"
-          data-ng-show="taskConfiguration[t.name].isVisible(md)"
+          data-ng-show="taskConfiguration[t.name] && taskConfiguration[t.name].isVisible && taskConfiguration[t.name].isVisible(md)"
           data-ng-class="::{'disabled': !taskConfiguration[t.name].isApplicable(md)}">
         <a data-ng-click="mdService.openUpdateStatusPanel(getScope(md), 'task', t)">
           <i class="fa fa-fw"></i>&nbsp;

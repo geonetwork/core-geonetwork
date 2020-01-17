@@ -45,9 +45,10 @@
     'gnSearchSettings',
     'gnUrlUtils',
     'gnUtilityService',
+    '$http',
     function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
-             gnUrlUtils, gnUtilityService) {
+             gnUrlUtils, gnUtilityService, $http) {
 
       // Keep where the metadataview come from to get back on close
       var initFromConfig = function() {
@@ -61,28 +62,45 @@
       this.feedMd = function(index, md, records) {
         gnMdViewObj.loadDetailsFinished = true;
         gnMdViewObj.records = records || gnMdViewObj.records;
-        if (angular.isUndefined(md)) {
-          md = gnMdViewObj.records[index];
+
+        if (records) {
+          for (var i = 0; i < records.length; i++) {
+            if (records[i] == md) {
+              gnMdViewObj.current.index  = i;
+              break;
+            }
+          }
+        } else {
+          gnMdViewObj.current.index = index;
         }
 
-        // Set the route
-        this.setLocationUuid(md.getUuid());
+        if (angular.isUndefined(md)) {
+          md = gnMdViewObj.records[gnMdViewObj.current.index];
+        }
+
+        // Set the route only if not same as before
+        formatter = gnSearchLocation.getFormatter();
+        gnMdViewObj.usingFormatter = formatter !== undefined;
+        this.setLocationUuid(md.getUuid(), formatter);
+
         gnUtilityService.scrollTo();
 
         angular.extend(md, {
           links: md.getLinksByType('LINK'),
           downloads: md.getLinksByType('DOWNLOAD'),
-          layers: md.getLinksByType('OGC', 'kml'),
+          layers: md.getLinksByType('OGC', 'kml', 'ESRI:REST'),
           contacts: md.getContacts(),
           overviews: md.getThumbnails() ? md.getThumbnails().list : undefined
         });
 
         gnMdViewObj.current.record = md;
-        gnMdViewObj.current.index = index;
 
         // TODO: do not add duplicates
         gnMdViewObj.previousRecords.push(md);
 
+        if (!gnMdViewObj.usingFormatter) {
+          $http.post('../api/records/' + md.getUuid() + '/popularity');
+        }
       };
 
       /**
@@ -90,14 +108,16 @@
        * Remove the search path and attributes from location too.
        * @param {string} uuid
        */
-      this.setLocationUuid = function(uuid) {
-        gnSearchLocation.setUuid(uuid);
+      this.setLocationUuid = function(uuid, formatter) {
+        gnSearchLocation.setUuid(uuid, formatter);
       };
 
       // The service needs to keep a reference to the metadata item scope
       var currentMdScope;
-      this.setCurrentMdScope = function(scope) {
+      this.setCurrentMdScope = function(scope, index, records) {
         currentMdScope = scope;
+        gnMdViewObj.records = records;
+        // gnMdViewObj.current.index = index;
       };
       this.getCurrentMdScope = function() {
         return currentMdScope;
@@ -219,7 +239,7 @@
                 selector, $this.getCurrentMdScope());
           }
         };
-        loadFormatter();
+        // loadFormatter();
         $rootScope.$on('$locationChangeSuccess', loadFormatter);
       };
 
@@ -251,12 +271,14 @@
     '$rootScope',
     '$http',
     '$compile',
+    '$translate',
     '$sce',
     'gnAlertService',
     'gnSearchSettings',
     '$q',
     'gnMetadataManager',
-    function($rootScope, $http, $compile, $sce, gnAlertService,
+    function($rootScope, $http, $compile, $translate,
+             $sce, gnAlertService,
              gnSearchSettings, $q, gnMetadataManager) {
 
 
@@ -316,7 +338,7 @@
           }, function() {
             $rootScope.$broadcast('mdLoadingEnd');
             gnAlertService.addAlert({
-              msg: 'Erreur de chargement de la métadonnée.',
+              msg: $translate.instant('metadataViewLoadError'),
               type: 'danger'
             });
           });

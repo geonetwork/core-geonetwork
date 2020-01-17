@@ -44,11 +44,11 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -59,7 +59,10 @@ import org.fao.geonet.kernel.harvest.harvester.HarvesterUtil;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -75,6 +78,8 @@ import org.jdom.JDOMException;
 
 import jeeves.server.context.ServiceContext;
 
+import javax.annotation.Nonnull;
+
 //=============================================================================
 
 class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestResult> {
@@ -83,6 +88,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
     private Logger log;
     private ServiceContext context;
     private DataManager dataMan;
+    private IMetadataManager metadataManager;
     private CategoryMapper localCateg;
     private GroupMapper localGroups;
     private UUIDMapper localUuids;
@@ -102,6 +108,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         dataMan = gc.getBean(DataManager.class);
+        metadataManager = gc.getBean(IMetadataManager.class);
     }
 
     //--------------------------------------------------------------------------
@@ -151,13 +158,13 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
                 error = true;
                 log.error("Unknown error trying to harvest");
                 log.error(e.getMessage());
-                e.printStackTrace();
+                log.error(e);
                 errors.add(new HarvestError(context, e));
             } catch (Throwable e) {
                 error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(e.getMessage());
-                e.printStackTrace();
+                log.error(e);
                 errors.add(new HarvestError(context, e));
             }
         }
@@ -170,13 +177,13 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
                 error = true;
                 log.error("Unknown error trying to harvest");
                 log.error(e.getMessage());
-                e.printStackTrace();
+                log.error(e);
                 errors.add(new HarvestError(context, e));
             } catch(Throwable e) {
                 error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(e.getMessage());
-                e.printStackTrace();
+                log.error(e);
                 errors.add(new HarvestError(context, e));
             }
         }
@@ -272,9 +279,9 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
                 if (log.isDebugEnabled())
                     log.debug("  - Removing old metadata with local id:" + id);
-                dataMan.deleteMetadataGroup(context, id);
+                metadataManager.deleteMetadataGroup(context, id);
 
-                dataMan.flush();
+                metadataManager.flush();
 
                 result.locallyRemoved++;
             }
@@ -291,6 +298,8 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
             result.totalMetadata++;
 
             String id = localUuids.getID(ri.id);
+
+            processParams.put("mdChangeDate", ri.changeDate);
 
             if (id == null) {
                 addMetadata(t, ri, processName, processParams);
@@ -333,6 +342,8 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
         if (StringUtils.isNotEmpty(params.xslfilter)) {
             md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
                 md, processName, processParams);
+
+            schema = dataMan.autodetectSchema(md);
         }
 
         //
@@ -358,15 +369,15 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
         } catch (NumberFormatException e) {
         }
 
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        dataMan.flush();
+        metadataManager.flush();
 
         dataMan.indexMetadata(id, Math.random() < 0.01, null);
         result.addedMetadata++;
@@ -478,11 +489,15 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
             // The schema of the metadata
             String schema = dataMan.autodetectSchema(md, null);
+            boolean updateSchema = false;
 
             // Apply the xsl filter choosed by UI
             if (StringUtils.isNotEmpty(params.xslfilter)) {
                 md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
                     md, processName, processParams);
+
+                schema = dataMan.autodetectSchema(md);
+                updateSchema = true;
             }
 
             //
@@ -492,7 +507,24 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
-            final AbstractMetadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate.toString(),
+
+
+            if (updateSchema) {
+                MetadataValidationRepository metadataValidationRepository =
+                    context.getBean(MetadataValidationRepository.class);
+
+                final String newSchema = schema;
+                metadataManager.update(Integer.parseInt(id), new Updater<AbstractMetadata>() {
+                    @Override
+                    public void apply(@Nonnull AbstractMetadata entity) {
+                        entity.getDataInfo().setSchemaId(newSchema);
+                    }
+                });
+
+                metadataValidationRepository.deleteAll(MetadataValidationSpecs.hasMetadataId(Integer.parseInt(id)));
+            }
+
+            final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate.toString(),
                 true);
 
             //--- the administrator could change privileges and categories using the
@@ -500,12 +532,12 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
             repository.deleteAllByMetadataId(Integer.parseInt(id));
-            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+            addPrivileges(id, params.getPrivileges(), localGroups, context);
 
             metadata.getCategories().clear();
-            addCategories(metadata, params.getCategories(), localCateg, context,log, null, true);
+            addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
-            dataMan.flush();
+            metadataManager.flush();
             dataMan.indexMetadata(id, Math.random() < 0.01, null);
             result.updatedMetadata++;
         }

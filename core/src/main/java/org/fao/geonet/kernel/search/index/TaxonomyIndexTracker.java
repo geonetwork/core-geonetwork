@@ -114,7 +114,8 @@ class TaxonomyIndexTracker {
                 Log.debug(Geonet.INDEX_ENGINE, "Taxonomy writer: " + taxonomyWriter.toString());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.INDEX_ENGINE, "Taxonomy writer: " + taxonomyWriter.toString() + " error: " +
+                e.getMessage(), e);
         }
         return docAfterFacetBuild;
     }

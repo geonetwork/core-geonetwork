@@ -50,7 +50,7 @@ import static com.google.common.io.Files.getFileExtension;
 @Controller("md.formatter.resource")
 public class Resource extends AbstractFormatService {
 
-    @RequestMapping(value = "/{lang}/md.formatter.resource")
+    @RequestMapping(value = "/{portal}/{lang}/md.formatter.resource")
     public void exec(
         @RequestParam(Params.ID) String xslid,
         @RequestParam(Params.FNAME) String fileName,

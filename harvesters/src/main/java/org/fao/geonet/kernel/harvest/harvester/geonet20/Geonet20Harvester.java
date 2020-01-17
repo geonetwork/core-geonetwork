@@ -23,133 +23,38 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
-import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.SourceType;
-import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
-import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import java.io.File;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.UUID;
 
 //=============================================================================
 
-public class Geonet20Harvester extends AbstractHarvester {
+public class Geonet20Harvester extends AbstractHarvester<HarvestResult, GeonetParams> {
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
-
-    private GeonetParams params;
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Add
-    //---
-    //---------------------------------------------------------------------------
     private GeonetResult result;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Update
-    //---
-    //---------------------------------------------------------------------------
     private String servletName;
 
-    //---------------------------------------------------------------------------
-
-    protected void doInit(Element node, ServiceContext context) throws BadInputEx {
-        params = new GeonetParams(dataMan);
-        super.setParams(params);
-        params.create(node);
+    @Override
+    protected GeonetParams createParams() {
+        return new GeonetParams(dataMan);
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- addHarvestInfo
-    //---
-    //---------------------------------------------------------------------------
-
-    protected String doAdd(Element node) throws BadInputEx, SQLException {
-        params = new GeonetParams(dataMan);
-        super.setParams(params);
-
-        //--- retrieve/initialize information
-        params.create(node);
-
-        //--- force the creation of a new uuid
-        params.setUuid(UUID.randomUUID().toString());
-
-        String id = harvesterSettingsManager.add("harvesting", "node", getType());
-
-        storeNode(params, "id:" + id);
-        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), SourceType.harvester);
-        context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + "gn20.gif", params.getUuid());
-
-        return id;
-    }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- AddInfo
-    //---
-    //---------------------------------------------------------------------------
-
-    protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
-        //--- update variables
-
-        GeonetParams copy = params.copy();
-
-        //--- update variables
-        copy.update(node);
-
-        String path = "harvesting/id:" + id;
-
-        harvesterSettingsManager.removeChildren(path);
-
-        //--- update database
-        storeNode(copy, path);
-
-        //--- we update a copy first because if there is an exception GeonetParams
-        //--- could be half updated and so it could be in an inconsistent state
-
-        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), SourceType.harvester);
-        context.getBean(SourceRepository.class).save(source);
-
-        params = copy;
-        super.setParams(params);
-
-    }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- GetResult
-    //---
-    //---------------------------------------------------------------------------
-
-    protected void storeNodeExtra(AbstractParams p, String path,
+    protected void storeNodeExtra(GeonetParams params, String path,
                                   String siteId, String optionsId) throws SQLException {
-        GeonetParams params = (GeonetParams) p;
-        super.setParams(params);
+        setParams(params);
 
         harvesterSettingsManager.add("id:" + siteId, "host", params.host);
 
@@ -168,12 +73,6 @@ public class Geonet20Harvester extends AbstractHarvester {
         }
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Harvest
-    //---
-    //---------------------------------------------------------------------------
-
     public void addHarvestInfo(Element info, String id, String uuid) {
         super.addHarvestInfo(info, id, uuid);
 
@@ -182,12 +81,6 @@ public class Geonet20Harvester extends AbstractHarvester {
 
         info.addContent(new Element("smallThumbnail").setText(small));
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
 
     protected void doAddInfo(Element node) {
         //--- if the harvesting is not started yet, we don't have any info
@@ -216,16 +109,18 @@ public class Geonet20Harvester extends AbstractHarvester {
     }
 
     public Element getResult() {
-        return new Element("result"); // HarvestHistory not supported for this
-        // old harvester
+        return new Element("result"); // HarvestHistory not supported for this old harvester
     }
 
     public void doHarvest(Logger log) throws Exception {
         CategoryMapper localCateg = new CategoryMapper(context);
 
-        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(params.host);
+        final URL url = new URL(params.host);
 
-        servletName = req.getAddress();
+        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class)
+            .createXmlRequest(url.getHost(), url.getPort());
+
+        servletName = url.getPath();
 
         Lib.net.setupProxy(context, req);
 
@@ -253,8 +148,7 @@ public class Geonet20Harvester extends AbstractHarvester {
 
         result = new GeonetResult();
 
-        Aligner aligner = new Aligner(cancelMonitor, log, req, params, dataMan, context,
-            localCateg);
+        Aligner aligner = new Aligner(cancelMonitor, log, req, params, dataMan, metadataManager, context, localCateg);
 
         for (Search s : params.getSearches()) {
             if (cancelMonitor.get()) {
@@ -285,7 +179,7 @@ public class Geonet20Harvester extends AbstractHarvester {
             req.setAddress("/" + params.getServletPath() + "/srv/en/" + Geonet.Service.XML_LOGOUT);
         }
 
-        dataMan.flush();
+        metadataManager.flush();
     }
 }
 

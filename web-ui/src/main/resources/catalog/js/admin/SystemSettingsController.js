@@ -161,6 +161,14 @@
 
 
               for (var i = 0; i < $scope.settings.length; i++) {
+
+                if ($scope.settings[i].name == 'metadata/workflow/enable') {
+                  $scope.workflowEnable =  ($scope.settings[i].value == 'true');
+
+                } else if ($scope.settings[i].name == 'metadata/workflow/draftWhenInGroup') {
+                  $scope.draftInAllGroups = ($scope.settings[i].value == '.*');
+                }
+
                 var tokens = $scope.settings[i].name.split('/');
                 // Extract level 1 and 2 sections
                 if (tokens) {
@@ -257,6 +265,12 @@
             "configuration": (isUpdate ? $scope.uiConfiguration.configuration : JSON.stringify(gnGlobalSettings.gnCfg))
           }, {responseType: 'text'}).then(function(r) {
             loadUiConfigurations();
+          }, function(r) {
+            $rootScope.$broadcast('StatusUpdated', {
+              title: $translate.instant('uiConfigUpdateError'),
+              error: r.data,
+              timeout: 0,
+              type: 'danger'});
           });
         }
       };
@@ -294,6 +308,8 @@
          * broadcast success status and reload catalog info.
          */
       $scope.saveSettings = function(formId) {
+        // Used to disable some UI form elements that should not be submitted.
+        $(".gn-no-setting" ).attr("disabled", true);
 
         $http.post('../api/site/settings',
             gnUtilityService.serialize(formId), {
@@ -301,6 +317,9 @@
                     'application/x-www-form-urlencoded'}
             })
             .success(function(data) {
+              $(".gn-no-setting" ).attr("disabled", false);
+
+
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate.instant('settingsUpdated'),
                 timeout: 2,
@@ -309,12 +328,14 @@
               $scope.loadCatalogInfo();
             })
             .error(function(data) {
-                  $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate.instant('settingsUpdateError'),
-                    error: data,
-                    timeout: 0,
-                    type: 'danger'});
-                });
+              $(".gn-no-setting" ).attr("disabled", false);
+
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('settingsUpdateError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
       };
       $scope.processName = null;
       $scope.processRecommended = function(processName) {
@@ -391,7 +412,7 @@
           $scope.filterMain(fieldsetParent);
         }
       };
-      
+
       // filter the main parent (for Settings)
       $scope.filterMain = function(element) {
 

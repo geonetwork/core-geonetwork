@@ -78,7 +78,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
         this.mockMvc.perform(get("/srv/api/sources")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$", hasSize(sourcesCount.intValue())));
     }
 
@@ -101,7 +101,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(put("/srv/api/sources/" + source.getUuid())
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("text/plain")))
             .andExpect(status().is(204));
@@ -129,7 +129,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(put("/srv/api/sources/" + sourceToUpdate.getUuid())
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("text/plain")))
             .andExpect(status().is(404));

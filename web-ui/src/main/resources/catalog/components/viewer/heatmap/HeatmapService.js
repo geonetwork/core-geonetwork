@@ -57,7 +57,10 @@
         var bufferedSize = map.getSize().map(function(value) {
           return value * BUFFER_RATIO;
         });
-        var extent = map.getView().calculateExtent(bufferedSize);
+        var extent = ol.proj.transformExtent(
+          map.getView().calculateExtent(bufferedSize),
+          map.getView().getProjection().getCode(),
+          "EPSG:4326");
         var zoom = map.getView().getZoom();
 
         // data precision is deduced from current zoom view
@@ -66,8 +69,8 @@
         if (zoom > 5) { geohashLength = 4; }
 
         // viewbox filter
-        var topLeft = ol.proj.toLonLat(ol.extent.getTopLeft(extent));
-        var bottomRight = ol.proj.toLonLat(ol.extent.getBottomRight(extent));
+        var topLeft = ol.extent.getTopLeft(extent);
+        var bottomRight = ol.extent.getBottomRight(extent);
 
         // cap extent values to world map
         if (bottomRight[0] < topLeft[0]) { bottomRight[0] += 360; }

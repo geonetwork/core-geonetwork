@@ -1,6 +1,6 @@
 <header class="gn-header"
         data-ng-show="gnCfg.mods.header.enabled && gnCfg.mods.header.isLogoInHeader">
-  <div class="container">
+  <div data-ng-class="fluidHeaderLayout ? 'container-fluid' : 'container'">
     <div class=row>
       <div class="col-md-12 text-{{gnCfg.mods.header.logoInHeaderPosition}}">
         <a data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
@@ -47,5 +47,6 @@
 
 
 <div class="navbar navbar-default gn-bottom-bar" role="navigation"
+     data-ng-show="gnCfg.mods.footer.enabled"
      data-ng-include="'../../catalog/views/default/templates/footer.html'">
 </div>

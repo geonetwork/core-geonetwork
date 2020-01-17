@@ -335,7 +335,7 @@ public class SettingManager {
             String key = entry.getKey();
             String value = entry.getValue();
             if (StringUtils.isNotEmpty(key)) {
-                setValue(key, value);
+                 setValue(key, value);
             }
         }
         return success;

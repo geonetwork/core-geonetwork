@@ -28,9 +28,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NoResultsFoundException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.HarvestHistory;
@@ -52,6 +54,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -127,10 +130,8 @@ public class HarvestersApi {
             value = "The target source UUID"
         )
         @RequestParam
-            String source,
-        HttpServletRequest request) throws Exception {
+            String source) throws Exception {
         final long elapsedTime = System.currentTimeMillis();
-        final ApplicationContext applicationContext = ApplicationContextHolder.get();
         final AbstractHarvester harvester = harvestManager.getHarvester(harvesterUuid);
         if (harvester == null) {
             throw new ResourceNotFoundException(String.format(
@@ -185,5 +186,49 @@ public class HarvestersApi {
         historyRepository.save(history);
 
         return new HttpEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
+
+    @ApiOperation(
+        value = "Check if a harvester name or host already exist",
+        notes = "",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
+        nickname = "checkHarvesterPropertyExist")
+    @RequestMapping(
+        value = "/properties/{property}",
+        method = RequestMethod.GET
+    )
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasRole('UserAdmin')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Property does not exist."),
+        @ApiResponse(code = 404, message = "A property with that value already exist."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
+    public ResponseEntity<HttpStatus> checkHarvesterPropertyExist(
+        @ApiParam(
+            value = "The harvester property to check"
+        )
+        @PathVariable
+            String property,
+        @ApiParam(
+            value = "The value to search"
+        )
+        @RequestParam
+            String exist,
+        HttpServletRequest request) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        final Element list = harvestManager.get(null, context, "site[1]/name[1]");
+        if (list.getChildren().stream()
+                .filter(h -> h instanceof Element)
+                    .map(h -> ((Element) h).getChild("site").getChild(property).getTextTrim())
+                    .anyMatch(name -> ((String) name).equalsIgnoreCase(exist))) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

@@ -32,6 +32,7 @@ import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,6 +54,7 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.doi.client.DoiManager;
 import org.fao.geonet.domain.Metadata;
@@ -131,6 +133,9 @@ public class SiteApi {
     @Autowired
     SourceRepository sourceRepository;
 
+    @Autowired
+    LanguageUtils languageUtils;
+
     public static void reloadServices(ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
@@ -144,7 +149,8 @@ public class SiteApi {
                 dataMan.disableOptimizer();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            context.error("Reload services. Error: " + e.getMessage());
+            context.error(e);
             throw new OperationAbortedEx("Parameters saved but cannot restart Lucene Index Optimizer: " + e.getMessage());
         }
 
@@ -167,7 +173,8 @@ public class SiteApi {
             // Update http.proxyHost, http.proxyPort and http.nonProxyHosts
             Lib.net.setupProxy(settingMan);
         } catch (Exception e) {
-            e.printStackTrace();
+            context.error("Reload services. Error: " + e.getMessage());
+            context.error(e);
             throw new OperationAbortedEx("Parameters saved but cannot set proxy information: " + e.getMessage());
         }
         DoiManager doiManager = gc.getBean(DoiManager.class);
@@ -175,7 +182,7 @@ public class SiteApi {
     }
 
     @ApiOperation(
-        value = "Get site description",
+        value = "Get site (or portal) description",
         notes = "",
         nickname = "getDescription")
     @RequestMapping(
@@ -187,6 +194,8 @@ public class SiteApi {
     })
     @ResponseBody
     public SettingsListResponse get(
+        @ApiIgnore
+        HttpServletRequest request
     ) throws Exception {
         SettingsListResponse response = new SettingsListResponse();
         response.setSettings(settingManager.getSettings(new String[]{
@@ -199,6 +208,7 @@ public class SiteApi {
         if (!NodeInfo.DEFAULT_NODE.equals(node.getId())) {
             Source source = sourceRepository.findOne(node.getId());
             if (source != null) {
+                String iso3langCode = languageUtils.getIso3langCode(request.getLocales());
                 final List<Setting> settings = response.getSettings();
                 settings.add(
                     new Setting().setName(Settings.NODE_DEFAULT)
@@ -208,7 +218,7 @@ public class SiteApi {
                         .setValue(source.getUuid()));
                 settings.add(
                     new Setting().setName(Settings.NODE_NAME)
-                        .setValue(source.getName()));
+                        .setValue(source != null ? source.getLabel(iso3langCode) : source.getName()));
             }
         }
         return response;
@@ -699,56 +709,66 @@ public class SiteApi {
             defaultValue = "false",
             required = false
         )
-            boolean asFavicon
+            boolean asFavicon,
+        HttpServletRequest request
 
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        Path logoDirectory = Resources.locateHarvesterLogosDirSMVC(appContext);
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final Resources resources = appContext.getBean(Resources.class);
+        final Path logoDirectory = resources.locateHarvesterLogosDirSMVC(appContext);
+        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
         checkFileName(file);
         FilePathChecker.verify(file);
 
         SettingManager settingMan = appContext.getBean(SettingManager.class);
-        GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
         String nodeUuid = settingMan.getSiteId();
 
+        Resources.ResourceHolder holder = resources.getImage(serviceContext, file, logoDirectory);
+        final Path resourcesDir =
+            resources.locateResourcesDir(request.getServletContext(), serviceContext.getApplicationContext());
+        if (holder == null || holder.getPath() == null) {
+            holder = resources.getImage(serviceContext, "images/harvesting/" + file, resourcesDir);
+        }
         try {
-            Path logoFilePath = logoDirectory.resolve(file);
-            Path nodeLogoDirectory = dataDirectory.getResourcesDir()
-                .resolve("images");
-            if (!Files.exists(logoFilePath)) {
-                logoFilePath = nodeLogoDirectory.resolve("harvesting").resolve(file);
-            }
-            try (InputStream inputStream = Files.newInputStream(logoFilePath)) {
+            try (InputStream inputStream = Files.newInputStream(holder.getPath())) {
                 BufferedImage source = ImageIO.read(inputStream);
 
                 if (asFavicon) {
-                    ApiUtils.createFavicon(
-                        source,
-                        dataDirectory.getResourcesDir().resolve("images").resolve("logos").resolve("favicon.png"));
+                    try (Resources.ResourceHolder favicon =
+                             resources.getWritableImage(serviceContext, "images/logos/favicon.png",
+                                                        resourcesDir)) {
+                        ApiUtils.createFavicon(source, favicon.getPath());
+                    }
                 } else {
-                    Path logo = nodeLogoDirectory.resolve("logos").resolve(nodeUuid + ".png");
-                    Path defaultLogo = nodeLogoDirectory.resolve("images").resolve("logo.png");
-
-                    if (!file.endsWith(".png")) {
-                        try (
-                            OutputStream logoOut = Files.newOutputStream(logo);
-                            OutputStream defLogoOut = Files.newOutputStream(defaultLogo);
-                        ) {
-                            ImageIO.write(source, "png", logoOut);
-                            ImageIO.write(source, "png", defLogoOut);
+                    try (Resources.ResourceHolder logo =
+                             resources.getWritableImage(serviceContext,
+                                                        "images/logos/" + nodeUuid + ".png",
+                                                        resourcesDir);
+                         Resources.ResourceHolder defaultLogo =
+                             resources.getWritableImage(serviceContext,
+                                                        "images/logo.png", resourcesDir)) {
+                        if (!file.endsWith(".png")) {
+                            try (
+                                OutputStream logoOut = Files.newOutputStream(logo.getPath());
+                                OutputStream defLogoOut = Files.newOutputStream(defaultLogo.getPath());
+                            ) {
+                                ImageIO.write(source, "png", logoOut);
+                                ImageIO.write(source, "png", defLogoOut);
+                            }
+                        } else {
+                            Files.copy(holder.getPath(), logo.getPath(), StandardCopyOption.REPLACE_EXISTING);
+                            Files.copy(holder.getPath(), defaultLogo.getPath(),
+                                       StandardCopyOption.REPLACE_EXISTING);
                         }
-                    } else {
-                        Files.deleteIfExists(logo);
-                        IO.copyDirectoryOrFile(logoFilePath, logo, false);
-                        Files.deleteIfExists(defaultLogo);
-                        IO.copyDirectoryOrFile(logoFilePath, defaultLogo, false);
                     }
                 }
             }
         } catch (Exception e) {
             throw new Exception(
                 "Unable to move uploaded thumbnail to destination directory. Error: " + e.getMessage());
+        } finally {
+            holder.close();
         }
     }
 

@@ -60,6 +60,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -258,9 +259,9 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         boolean isSchemaLocationDefinedInMd = schemaLoc != null && schemaLoc != "";
 
         if (noChoiceButToUseSchemaLocation || isSchemaLocationDefinedInMd) {
-            return Xml.validateInfo(md, eh);
+            return Xml.validateInfo(md, eh, schema);
         } else {
-            return Xml.validateInfo(metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.SCHEMA), md, eh);
+            return Xml.validateInfo(metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.SCHEMA), md, eh, schema);
         }
     }
 
@@ -287,7 +288,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      * one or more validation reports are added to the corresponding element
      * trying to find the element based on the xpath returned by the ErrorHandler.
      */
-    private synchronized Element getXSDXmlReport(String schema, Element md, boolean forEditing) {
+    private Element getXSDXmlReport(String schema, Element md, boolean forEditing) {
         // NOTE: this method assumes that enumerateTree has NOT been run on the metadata
         XmlErrorHandler errorHandler;
         if (forEditing) {
@@ -512,6 +513,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      * @param id          the metadata record internal identifier
      * @param validations the validation reports for each type of validation and schematron validation
      */
+    @Transactional
     private void saveValidationStatus(int id, List<MetadataValidation> validations) {
         try {
             validationRepository.deleteAllById_MetadataId(id);

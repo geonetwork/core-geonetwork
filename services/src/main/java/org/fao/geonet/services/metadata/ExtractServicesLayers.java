@@ -58,7 +58,7 @@ import java.util.List;
 @Controller
 public class ExtractServicesLayers {
 
-    @RequestMapping(value = "/{lang}/selection.layers")
+    @RequestMapping(value = "/{portal}/{lang}/selection.layers")
     @ResponseBody
     public JSONObject getLayersFromSelectedMetadatas(
         @PathVariable String lang,

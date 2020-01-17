@@ -23,6 +23,8 @@
 
 package org.fao.geonet.services.thumbnail;
 
+import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 
 import jeeves.server.ServiceConfig;
@@ -34,6 +36,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
@@ -90,23 +93,11 @@ public class Unset extends NotInReadOnlyModeService {
         if (result == null)
             throw new OperationAbortedEx("Metadata has no thumbnail", id);
 
-        String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + getFileName(result.getText());
-
-        //-----------------------------------------------------------------------
-        //--- remove thumbnail
-
+        final Store store = context.getBean("resourceStore", Store.class);
+        final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+        final String uuid = metadataUtils.getMetadataUuid(id);
         dataMan.unsetThumbnail(context, id, type.equals("small"), true);
-
-
-        File thumbnail = new File(file);
-        if (thumbnail.exists()) {
-            if (!thumbnail.delete()) {
-                context.error("Error while deleting thumbnail: " + file);
-            }
-        } else {
-            if (context.isDebugEnabled())
-                context.debug("Thumbnail does not exist: " + file);
-        }
+        store.delResource(context, uuid, MetadataResourceVisibility.PUBLIC, getFileName(result.getText()), true);
 
         //-----------------------------------------------------------------------
 

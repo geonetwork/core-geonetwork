@@ -52,9 +52,9 @@
   <views>
     <view name="default" upAndDownControlHidden="true">
       <sidePanel>
+        <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
                    data-types="onlines"/>
-        <directive data-gn-validation-report=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
       <tab id="default" default="true" mode="flat">
@@ -66,9 +66,9 @@
     </view>
     <view name="advanced">
       <sidePanel>
+        <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
                    data-types="onlines"/>
-        <directive data-gn-validation-report=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
       <tab id="advanced" default="true">
@@ -77,9 +77,9 @@
     </view>
     <view name="xml">
       <sidePanel>
+        <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
                    data-types="onlines"/>
-        <directive data-gn-validation-report=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
       <tab id="xml" default="true"/>

@@ -91,13 +91,13 @@ public class SetSequenceValueToMaxOfMetadataAndStats extends DatabaseMigrationTa
                 Log.debug(Geonet.DB, "  Sequence updated.");
             } catch (Exception e) {
                 Log.debug(Geonet.DB, "  Sequence not updated. Error is: " + e.getMessage());
-                e.printStackTrace();
+                Log.error(Geonet.DB, e);
                 // On Oracle : To restart the sequence at a different number, you must drop and re-create it.
             }
         } catch (Exception e) {
             Log.debug(Geonet.DB, "  Exception while updating sequence. " +
                 "Error is: " + e.getMessage());
-            e.printStackTrace();
+            Log.error(Geonet.DB, e);
         }
     }
 }

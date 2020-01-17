@@ -25,11 +25,9 @@ package jeeves.config.springutil;
 
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
-
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -77,8 +75,9 @@ public class JeevesDispatcherServlet extends DispatcherServlet {
         // URL path contains the node id as the first part of the URL
         // eg. /srv/eng/catalogue.search or /srv/api/...
         String path = request.getPathInfo();
-        if (path.length() > 1 && path.contains("/")) {
-            node.setId(request.getPathInfo().split("/")[1]);
+        if (path != null && path.length() > 1 && path.contains("/")) {
+            String id = request.getPathInfo().split("/")[1];
+            node.setId(NodeInfo.EXCLUDED_NODE_IDS.contains(id) ? NodeInfo.DEFAULT_NODE : id);
         } else {
             // eg. when accessing /
             node.setId(NodeInfo.DEFAULT_NODE);

@@ -85,17 +85,21 @@
   var unmarshaller100 = context100.createUnmarshaller();
   var unmarshaller110 = context110.createUnmarshaller();
   var unmarshaller20 = context20.createUnmarshaller();
+  var cachedGetCapabilitiesUrls = {};
+  // var timeout = -1;
+  var timeout = 60 * 1000;
 
   module.provider('gnOwsCapabilities', function() {
     this.$get = ['$http', '$q', '$translate',
       'gnUrlUtils', 'gnGlobalSettings',
       function($http, $q, $translate,
                gnUrlUtils, gnGlobalSettings) {
-
-        var displayFileContent = function(data, withGroupLayer) {
-          var parser = new ol.format.WMSCapabilities();
-          var result = parser.read(data);
-
+        var displayFileContent = function(data, withGroupLayer, getCapabilitiesUrl) {
+          if (!cachedGetCapabilitiesUrls.hasOwnProperty(getCapabilitiesUrl)) {
+            var parser = new ol.format.WMSCapabilities();
+            cachedGetCapabilitiesUrls[getCapabilitiesUrl] = parser.read(data);
+          }
+          var result = cachedGetCapabilitiesUrls[getCapabilitiesUrl];
           var layers = [];
           var url = result.Capability.Request.GetMap.
               DCPType[0].HTTP.Get.OnlineResource;
@@ -166,20 +170,8 @@
 
           try {
 
-            //check the version (some wfs responds in other version then requested)
-            if (data.indexOf('version="2.0.0"')>-1){
-              version = "2.0";
-            } else if (data.indexOf('version="1.1.0"')>-1) {
-              version = "1.1.0";
-            } else if (data.indexOf('version="1.0.0"')>-1) {
-              version = "1.0.0";
-            } else {
-              console.warn('no version detected');
-              defer.reject({msg: 'wfsGetCapabilitiesFailed',
-                owsExceptionReport: 'No WFS version detected on response'});
-            }
-
             var xml = $.parseXML(data);
+            var version = $(xml).find(":first-child").attr("version");
 
             //First cleanup not supported INSPIRE extensions:
             if (xml.getElementsByTagName('ExtendedCapabilities').length > 0) {
@@ -201,7 +193,7 @@
               xfsCap = unmarshaller110.unmarshalDocument(xml).value;
             } else if (version === '1.0.0') {
               xfsCap = unmarshaller100.unmarshalDocument(xml).value;
-            } else if (version === '2.0') {
+            } else if (version === '2.0.0') {
               xfsCap = unmarshaller20.unmarshalDocument(xml).value;
             } else {
               console.warn('WFS version '+version+' not supported.');
@@ -275,11 +267,11 @@
               if (true) {
                 $http.get(url, {
                   cache: true,
-                  timeout: 5000
+                  timeout: timeout
                 })
                     .success(function(data) {
                       try {
-                        defer.resolve(displayFileContent(data, withGroupLayer));
+                        defer.resolve(displayFileContent(data, withGroupLayer, url));
                       } catch (e) {
                         defer.reject(
                         $translate.instant('failedToParseCapabilities'));
@@ -311,7 +303,7 @@
 
                 $http.get(url, {
                   cache: true,
-                  timeout: 5000
+                  timeout: timeout
                 })
                     .success(function(data, status, headers, config) {
                       if (data) {
@@ -343,7 +335,7 @@
               if (gnUrlUtils.isValid(url)) {
                 $http.get(url, {
                   cache: true,
-                  timeout: 5000
+                  timeout: timeout
                 })
                     .success(function(data, status, headers, config) {
                       var xfsCap = parseWFSCapabilities(data);
@@ -443,7 +435,7 @@
             return extent;
           },
 
-          
+
           getLayerInfoFromCap: function(layerName, capObj, uuid) {
             var needles = [];
             var layers = capObj.layers || capObj.Layer;
@@ -463,7 +455,7 @@
                 if (capObj.Request) {
                   layers[i].capRequest = capObj.Request;
                 }
-                
+
                 //check layername
                 var lId = layers[i].Identifier;
                 var capName = layers[i].Name ||
@@ -476,22 +468,25 @@
                 }
 
                 //either names match or non namespaced names
+                // note: these matches are put at the beginning of the needles array
                 if (name == capName || nameNoNamespace == capNameNoNamespace) {
                   layers[i].nameToUse = capName;
                   if (capObj.version) {
                     layers[i].version = capObj.version;
                   }
-                  needles.push(layers[i]);
+                  needles.unshift(layers[i]);
                   break capabilityLayers;
                 }
 
                 //check dataset identifer match
+                // note: these matches are put at the end of the needles array
+                // because they are lower priority than the layername matches
+                // and the loop is not stopping after them
                 if (uuid != null) {
                   if (angular.isArray(layers[i].Identifier)) {
                     for (var c = 0; c < layers[i].Identifier.length; c++) {
                       if (layers[i].Identifier[c] == uuid) {
                         needles.push(layers[i]);
-                        break capabilityLayers;
                       }
                     }
                   }
@@ -501,22 +496,20 @@
                       if (mdu && mdu.OnlineResource &&
                         mdu.OnlineResource.indexOf(uuid) > 0) {
                         needles.push(layers[i]);
-                        break capabilityLayers;
                       }
                     }
                   }
                 }
               }
             }
-            
+
             //FIXME: remove duplicates
             if (needles.length >= layerList.length) {
               if (capObj.version) {
                 needles[0].version = capObj.version;
               }
               // Multiple layers from the same service
-              if (layerName.indexOf(',')) {
-                needles[0].Name = layerName;
+              if (layerName.indexOf(',') !== -1) {
                 // Parameters 'styles' and 'layers' should have the same number of values.
                 needles[0].Style = new Array(layerList.length).join(',');
               }

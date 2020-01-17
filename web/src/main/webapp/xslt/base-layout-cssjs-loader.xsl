@@ -43,16 +43,26 @@
             TODO : less compilation
             <link href="style/app.css" rel="stylesheet" media="screen" />
 -->
-    <xsl:if test="$withD3">
-      <link href="{/root/gui/url}/static/nv.d3.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
-            media="screen"/>
-    </xsl:if>
+    <link href="{/root/gui/url}/static/gn_fonts.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
+          media="screen"/>
 
     <link href="{/root/gui/url}/static/{$customFilename}.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
           media="screen"/>
 
     <link href="{/root/gui/url}/static/bootstrap-table.min.css?v={$buildNumber}" rel="stylesheet"
           media="screen"></link>
+
+    <link href="{/root/gui/url}/static/gn_pickers.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
+          media="screen"/>
+
+    <link href="{/root/gui/url}/static/gn_inspire.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
+          media="screen"/>
+
+    <xsl:if test="$withD3">
+      <link href="{/root/gui/url}/static/nv.d3.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
+            media="screen"/>
+    </xsl:if>
+
     <link href="{/root/gui/url}/static/ng-skos.css?v={$buildNumber}" rel="stylesheet" media="screen"></link>
     <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css?v={$buildNumber}&amp;{$minimizedParam}"
           rel="stylesheet" media="screen"/>
@@ -70,7 +80,7 @@
 
 
     <xsl:if test="$is3DModeAllowed">
-      <script>var CESIUM_BASE_URL = '<xsl:value-of select="$uiResourcesPath"/>lib/ol3cesium/Cesium/';
+      <script>var CESIUM_BASE_URL = '<xsl:value-of select="$uiResourcesPath"/>lib/olcesium/Cesium/';
       </script>
     </xsl:if>
 
@@ -120,11 +130,12 @@
 
         <xsl:choose>
           <xsl:when test="$is3DModeAllowed">
-            <script src="{$uiResourcesPath}lib/ol3cesium/Cesium/Cesium.js?v={$buildNumber}"></script>
-            <script src="{$uiResourcesPath}lib/ol3cesium/ngeool3cesium-debug.js?v={$buildNumber}"></script>
+            <script src="{$uiResourcesPath}lib/openlayers/ol.js?v={$buildNumber}"></script>
+            <script src="{$uiResourcesPath}lib/olcesium/Cesium/Cesium.js?v={$buildNumber}"></script>
+            <script src="{$uiResourcesPath}lib/olcesium/olcesium.js?v={$buildNumber}"></script>
           </xsl:when>
           <xsl:otherwise>
-            <script src="{$uiResourcesPath}lib/ngeo/ngeo-debug.js?v={$buildNumber}"></script>
+            <script src="{$uiResourcesPath}lib/openlayers/ol.js?v={$buildNumber}"></script>
           </xsl:otherwise>
         </xsl:choose>
 
@@ -167,6 +178,8 @@
         <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/angular/bootstrap-table-angular.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+
         <!--</xsl:if>-->
 
         <script src="{$uiResourcesPath}lib/underscore/underscore-min.js?v={$buildNumber}"></script>
@@ -174,6 +187,7 @@
         <script src="{$uiResourcesPath}lib/geohash.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/xml2json/xml2json.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/dom-to-image/dom-to-image.min.js?v={$buildNumber}"></script>
       </xsl:when>
       <xsl:otherwise>
       </xsl:otherwise>
@@ -192,7 +206,7 @@
 
         <xsl:choose>
           <xsl:when test="$is3DModeAllowed">
-            <script src="{$uiResourcesPath}lib/ol3cesium/Cesium/Cesium.js?v={$buildNumber}"></script>
+            <script src="{$uiResourcesPath}lib/olcesium/Cesium/Cesium.js?v={$buildNumber}"></script>
             <script src="{/root/gui/url}/static/lib3d.js?v={$buildNumber}"></script>
           </xsl:when>
           <xsl:otherwise>

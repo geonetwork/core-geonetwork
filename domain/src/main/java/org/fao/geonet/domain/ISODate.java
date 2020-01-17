@@ -48,6 +48,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
 
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -158,7 +159,7 @@ public class ISODate
             odt = odt1.toString();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error("geonetwork.domain", "Error parsing ISO DateTimes, error: " + e.getMessage(), e);
             return DEFAULT_DATE_TIME;
         }
 
@@ -192,7 +193,7 @@ public class ISODate
                 odt = odt + "|" + odt2.toString();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error("geonetwork.domain", "Error parsing ISO DateTimes, error: " + e.getMessage(), e);
             return odt + "|" + DEFAULT_DATE_TIME;
         }
 

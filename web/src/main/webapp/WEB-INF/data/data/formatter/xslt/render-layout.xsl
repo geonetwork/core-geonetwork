@@ -22,10 +22,14 @@
   <xsl:template mode="getMetadataAbstract" match="*"/>
   <xsl:template mode="getMetadataHierarchyLevel" match="*"/>
   <xsl:template mode="getOverviews" match="*"/>
+  <xsl:template mode="getExtent" match="*"/>
+  <xsl:template mode="getLicense" match="*"/>
+  <xsl:template mode="getTags" match="*"/>
   <xsl:template mode="getMetadataThumbnail" match="*"/>
   <xsl:template mode="getMetadataHeader" match="*"/>
+  <xsl:template mode="getMetadataCitation" match="*"/>
   <xsl:template mode="getJsonLD" match="*"/>
-  <!-- Those templates should be overriden in the schema plugin - end -->
+  <!-- Those templates should be overridden in the schema plugin - end -->
 
   <!-- Starting point -->
   <xsl:template match="/">
@@ -69,52 +73,63 @@
       </xsl:variable>
 
       <article id="{$metadataUuid}"
-               class="gn-md-view gn-metadata-display"
-               itemscope="itemscope"
-               itemtype="{gn-fn-core:get-schema-org-class($type)}">
-        <meta itemprop="identifier" content="{$metadataUuid}"></meta>
-        <meta itemprop="url" content="{$nodeUrl}api/records/{$metadataUuid}"></meta>
-        <span itemprop="includedInDataCatalog" 
-              itemscope="itemscope"
-              itemtype="http://schema.org/DataCatalog">
-                 <meta itemprop="url" content="{$nodeUrl}search"></meta>
-        </span>
+               class="gn-md-view gn-metadata-display">
 
         <div class="row">
           <div class="col-md-8">
 
             <header>
-              <h1 itemprop="name">
+              <h1>
                 <i class="fa gn-icon-{$type}"><xsl:comment select="'icon'"/></i>
                 <xsl:value-of select="$title"/>
               </h1>
 
               <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
 
-              <div gn-related="md"
-                   data-user="user"
-                   data-types="onlines"><xsl:comment select="'icon'"/></div>
+              <xsl:if test="$related != ''">
+                <div gn-related="md"
+                     data-user="user"
+                     data-types="{$related}"><xsl:comment select="'icon'"/></div>
+              </xsl:if>
             </header>
 
             <div>
-              <xsl:apply-templates mode="render-toc" select="$viewConfig"/>
-              <!-- Tab panes -->
-              <div>
-                <xsl:if test="$tabs = 'true'">
-                  <xsl:attribute name="class" select="'tab-content'"/>
-                </xsl:if>
-                <xsl:for-each select="$viewConfig/*">
-                  <xsl:sort select="@formatter-order"
-                            data-type="number"/>
-                  <xsl:apply-templates mode="render-view"
-                                       select="."/>
-                </xsl:for-each>
-              </div>
+              <xsl:choose>
+                <xsl:when test="$template != ''">
+                  <saxon:call-template name="{$template}"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:apply-templates mode="render-toc" select="$viewConfig"/>
+                  <!-- Tab panes -->
+                  <div>
+                    <xsl:if test="$tabs = 'true'">
+                      <xsl:attribute name="class" select="'tab-content'"/>
+                    </xsl:if>
+                    <xsl:for-each select="$viewConfig/*">
+                      <xsl:sort select="@formatter-order"
+                                data-type="number"/>
+                      <xsl:apply-templates mode="render-view"
+                                           select="."/>
+                    </xsl:for-each>
+                  </div>
+                </xsl:otherwise>
+              </xsl:choose>
             </div>
+
+            <xsl:if test="$citation = 'true'">
+              <xsl:apply-templates mode="getMetadataCitation" select="$metadata"/>
+            </xsl:if>
           </div>
           <div class="gn-md-side gn-md-side-advanced col-md-4">
             <xsl:apply-templates mode="getOverviews" select="$metadata"/>
+            <xsl:apply-templates mode="getExtent" select="$metadata"/>
 
+            <xsl:apply-templates mode="getTags" select="$metadata">
+              <xsl:with-param name="byThesaurus" select="true()"/>
+            </xsl:apply-templates>
+
+
+            <br/>
             <section class="gn-md-side-providedby">
               <h2>
                 <i class="fa fa-fw fa-cog"><xsl:comment select="'icon'"/></i>
@@ -160,7 +175,7 @@
 
             <!-- Display link to portal and other view only
             when in pure HTML mode. -->
-            <xsl:if test="$root != 'div'">
+            <xsl:if test="$viewMenu = 'true'">
               <section class="gn-md-side-viewmode">
                 <h2>
                   <i class="fa fa-fw fa-eye"><xsl:comment select="'icon'"/></i>
@@ -189,31 +204,32 @@
               </section>
 
               <section class="gn-md-side-access">
-                <div class="well text-center">
-                  <a itemprop="url"
-                     class="btn btn-block btn-primary"
-                     href="{if ($portalLink != '')
-                            then replace($portalLink, '\$\{uuid\}', $metadataUuid)
-                            else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
-                    <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
-                    <xsl:value-of select="$schemaStrings/linkToPortal"/>
-                  </a>
+                <a class="btn btn-block btn-primary"
+                   href="{if ($portalLink != '')
+                          then replace($portalLink, '\$\{uuid\}', $metadataUuid)
+                          else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
+                  <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
+                  <xsl:value-of select="$schemaStrings/linkToPortal"/>
+                </a>
+                <div class="hidden-xs hidden-sm">
                   <xsl:value-of select="$schemaStrings/linkToPortal-help"/>
                 </div>
               </section>
             </xsl:if>
 
-            <section class="gn-md-side-associated">
-              <h2>
-                <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
-                <span><xsl:value-of select="$schemaStrings/associatedResources"/></span>
-              </h2>
-              <div gn-related="md"
-                   data-user="user"
-                   data-types="parent|children|services|datasets|hassources|sources|fcats|siblings|associated">
-                Not available
-              </div>
-            </section>
+            <xsl:if test="$sideRelated != ''">
+              <section class="gn-md-side-associated">
+                <h2>
+                  <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
+                  <span><xsl:value-of select="$schemaStrings/associatedResources"/></span>
+                </h2>
+                <div gn-related="md"
+                     data-user="user"
+                     data-types="{$sideRelated}">
+                  Not available
+                </div>
+              </section>
+            </xsl:if>
           </div>
         </div>
 

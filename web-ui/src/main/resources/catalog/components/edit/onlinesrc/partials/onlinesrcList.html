@@ -16,7 +16,7 @@
                 class="btn btn-default btn-xs dropdown-toggle"
                 data-toggle="dropdown">
           <i class="fa fa-fw fa-plus"></i>
-          <span data-translate="">add</span>      
+          <span data-translate="">add</span>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
@@ -99,6 +99,7 @@
              class="onlinesrc-remove"
              data-ng-if="readonly !== true"
              data-ng-click="onlinesrcService.removeThumbnail(thumb)"
+             data-gn-confirm-click="{{'removeThumbnailConfirm' | translate:{url: thumb.lUrl} }}"
              title="{{'removeThumbnail' | translate}}"
              aria-label="{{'removeThumbnail' | translate}}">
             <i class="btn fa fa-times text-danger"></i>
@@ -185,6 +186,7 @@
                  title="{{'remove' | translate}} {{resource.title | gnLocalized: lang}}"
                  aria-label="{{'remove' | translate}} {{resource.title | gnLocalized: lang}}"
                  data-ng-if="readonly !== true"
+                 data-gn-confirm-click="{{'removeOnlinesrcConfirm' | translate:{url: resource.lUrl} }}"
                  data-gn-click-and-spin="onlinesrcService.removeOnlinesrc(resource)">
                 <i class="fa fa-times text-danger"></i>
               </a>
@@ -353,7 +355,7 @@
            data-ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
         <i class="icon-external-link"></i>&nbsp;
         <span data-translate="">featureCatalog</span>
-        <a href="" 
+        <a href=""
            class="btn btn-default btn-xs pull-right"
            data-ng-click="onlinesrcService.onOpenPopup('fcats')">
           <i class="fa fa-fw fa-plus"></i>
@@ -416,7 +418,7 @@
            data-ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
         <i class="icon-external-link"></i>&nbsp;
         <span data-translate="">siblings</span>&nbsp;
-        <a href="" 
+        <a href=""
            class="btn btn-default btn-xs pull-right"
            data-ng-click="onlinesrcService.onOpenPopup('sibling')">
           <i class="fa fa-fw fa-plus"></i>

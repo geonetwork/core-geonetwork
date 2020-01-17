@@ -345,8 +345,7 @@ public class SearchController {
                         break;
                     }
                 } catch (Exception x) {
-                    Log.error(Geonet.CSW_SEARCH, x.getMessage());
-                    x.printStackTrace();
+                    Log.error(Geonet.CSW_SEARCH, x.getMessage(), x);
                     throw new InvalidParameterValueEx("elementName has invalid XPath : " + elementName, x.getMessage());
                 }
             }
@@ -456,7 +455,7 @@ public class SearchController {
         results.setAttribute("elementSet", setName.toString());
 
         int nextRecord = counter + startPos;
-        if (nextRecord >= numMatches) {
+        if (nextRecord > numMatches) {
             //  "number of records returned to client nextRecord -
             // position of next record in the result set
             // (0 if no records remain)"

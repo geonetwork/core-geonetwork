@@ -98,7 +98,8 @@ public class List implements Service {
 
         final Path resourcesDir = context.getBean(GeonetworkDataDirectory.class)
             .getResourcesDir();
-        final Path logosDir = Resources.locateLogosDir(context);
+        Resources resources = context.getBean(Resources.class);
+        final Path logosDir = resources.locateLogosDir(context);
         final java.util.List<?> logoElements = Xml.selectNodes(elRes,
             "*//logo");
         for (Object logoObj : logoElements) {
@@ -106,12 +107,10 @@ public class List implements Service {
             final String logoRef = logoEl.getTextTrim();
             if (logoRef != null && !logoRef.isEmpty()
                 && !logoRef.startsWith("http://")) {
-                final Path imagePath = Resources.findImagePath(logoRef,
-                    logosDir);
-                if (imagePath != null) {
-                    String relativePath = resourcesDir.relativize(imagePath)
-                        .toString().replace('\\', '/');
-                    logoEl.setText(context.getBaseUrl() + '/' + relativePath);
+                try (Resources.ResourceHolder image = resources.getImage(context, logoRef, logosDir)) {
+                    if (image != null) {
+                        logoEl.setText(context.getBaseUrl() + '/' + image.getRelativePath());
+                    }
                 }
             }
         }

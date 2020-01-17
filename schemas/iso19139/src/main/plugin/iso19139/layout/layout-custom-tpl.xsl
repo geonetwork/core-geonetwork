@@ -74,7 +74,9 @@
           <row>
             <xsl:for-each select="col">
               <col>
-                
+                <xsl:if test="@use != ''">
+                  <xsl:copy-of select="@use|directiveAttributes"/>
+                </xsl:if>
                 <xsl:if test="@del != ''">
                   <xsl:attribute name="remove" select="'true'"/>
 
@@ -134,7 +136,7 @@
 
     <!-- Return only the new row in embed mode. -->
     <xsl:choose>
-      <xsl:when test="$isEmbeddedMode and not($isFirstOfItsKind)">
+      <xsl:when test="$tableConfig/@fieldset = 'false' or ($isEmbeddedMode and not($isFirstOfItsKind))">
         <xsl:call-template name="render-table">
           <xsl:with-param name="values" select="$values"/>
         </xsl:call-template>

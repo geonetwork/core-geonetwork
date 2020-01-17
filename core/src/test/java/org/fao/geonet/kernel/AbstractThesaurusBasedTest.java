@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel;
 
+import net.jcip.annotations.NotThreadSafe;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.utils.IO;
@@ -30,17 +31,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
-import org.openrdf.sesame.Sesame;
-import org.openrdf.sesame.config.ConfigurationException;
-import org.openrdf.sesame.config.RepositoryConfig;
-import org.openrdf.sesame.config.SailConfig;
-import org.openrdf.sesame.constants.RDFFormat;
-import org.openrdf.sesame.repository.local.LocalRepository;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@NotThreadSafe  // randomly failing without that
 public abstract class AbstractThesaurusBasedTest {
     protected static final String THESAURUS_KEYWORD_NS = "http://abstract.thesaurus.test#";
     protected static final IsoLanguagesMapper isoLangMapper = new IsoLanguagesMapper() {

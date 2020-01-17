@@ -25,7 +25,10 @@
 
 package jeeves.server;
 
+import java.util.Collection;
+
 import org.fao.geonet.utils.ProxyInfo;
+import org.fao.geonet.utils.Resolver;
 import org.fao.geonet.utils.ResolverWrapper;
 
 /**
@@ -52,7 +55,11 @@ public class JeevesProxyInfo {
         if (proxyInfo == null) {
             proxyInfo = new ProxyInfo();
             // NOTE: Add new classes that observe ProxyInfo here
-            proxyInfo.addObserver(ResolverWrapper.getInstance());
+            // Resolvers
+            Collection<Resolver> resolvers = ResolverWrapper.getResolvers();
+            for (Resolver resolver : resolvers) {
+                proxyInfo.addObserver(resolver);
+            }
         }
         return proxyInfo;
     }

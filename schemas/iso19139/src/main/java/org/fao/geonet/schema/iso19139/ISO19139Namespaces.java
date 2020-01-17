@@ -38,6 +38,8 @@ public class ISO19139Namespaces {
     public static final Namespace GMD =
         Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
     public static final Namespace GML =
+        Namespace.getNamespace("gml", "http://www.opengis.net/gml/3.2");
+    public static final Namespace GML320 =
         Namespace.getNamespace("gml", "http://www.opengis.net/gml");
     public static final Namespace XSI =
         Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");

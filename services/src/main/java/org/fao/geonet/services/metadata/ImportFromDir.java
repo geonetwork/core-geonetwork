@@ -47,6 +47,7 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
@@ -397,9 +398,9 @@ public class ImportFromDir extends NotInReadOnlyModeService {
                 try {
                     exceptions.putAll(future.get());
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Log.error(Geonet.GEONETWORK, "ImportMetadataReindexer error: " + e.getMessage(), e);
                 } catch (ExecutionException e) {
-                    e.printStackTrace();
+                    Log.error(Geonet.GEONETWORK, "ImportMetadataReindexer error: " + e.getMessage(), e);
                 }
             }
             executor.shutdown();

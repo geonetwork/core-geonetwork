@@ -57,7 +57,7 @@
               }
             }
           }
-        } 
+        }
       }
     }
   }
@@ -77,6 +77,12 @@
   .gn-search-facet {
     padding-top: 55px;
     padding-bottom: 15px;
+  }
+  // modal dialog (wider for for multilingual)
+  @media (min-width: @screen-sm-min) {
+    .modal-dialog {
+      width: 760px;
+    }
   }
   form.gn-editor {
     // tabs above editor
@@ -332,6 +338,9 @@
     .gn-field {
       label {
         font-size: 12px;
+        &:after {
+          font-size: 24px;
+        }
       }
       .gn-field {
         padding-top: 0;
@@ -353,59 +362,6 @@
       }
       .col-sm-1 {
         padding-right: 0;
-      }
-    }
-      
-  }
-  // map
-  .gn-drawmap-panel {
-    input[type="number"] {
-      margin: 0;
-      text-align: left;
-    }
-    .gn-editor-map {
-      padding: 15px;
-      position: relative;
-      margin-top: 30px;
-      [ngeo-map] {
-        border: 1px solid @input-border;
-        border-radius: @border-radius-base;
-      }
-    }
-    .coord {
-      position: absolute;
-      width: 200px;
-      z-index: 20;
-    }
-    .coord-north {
-      top: -0.25em;
-      left: 50%;
-      margin-left: -75px;
-    }
-    .coord-south {
-      bottom: -0.25em;
-      left: 50%;
-      margin-left: -75px;
-    }
-    .coord-east {
-      right: -15px;
-      top: 50%;
-      margin-top: -1.25em;
-    }
-    .coord-west {
-      left: -15px;
-      top: 50%;
-      margin-top: -1.25em;
-    }
-    @media (max-width: @screen-xs-max) {
-      .coord {
-        width: 150px;
-      }
-      .coord-east {
-        right: -30px;
-      }
-      .coord-west {
-        left: -30px;
       }
     }
   }
@@ -430,6 +386,26 @@
     }
   }
 }
+// map for Editor and Batch Editor
+.gn-drawmap-panel {
+  .gn-editor-map {
+    padding: 15px;
+    position: relative;
+    margin-top: 30px;
+    [ol-map] {
+      .ol-attribution {
+        .gn-attribution();
+      }
+    }
+  }
+}
+// online resource panel
+.add-onlinesrc {
+  // attribution on the 'make thumbnail' map
+  .ol-attribution {
+    .gn-attribution();
+  }
+}
 
 // alternative style for the editor form
 // Class to put label above fields
@@ -440,6 +416,16 @@ form.gn-editor.gn-label-above-input {
     width: 100%;
     text-align: left;
   }
+  // But do not for section in a well (eg. remove action)
+  // which are in one line label/control mode
+  .well {
+    .col-sm-2 {
+      width: 16.666%;
+    }
+    .col-sm-6 {
+      width: 50%;
+    }
+  }
   // Form field on a second row
   .col-sm-9 {
     width: 90%;
@@ -447,6 +433,10 @@ form.gn-editor.gn-label-above-input {
       padding-left: 0;
       padding-right: 0;
     }
+  }
+  // Date field
+  .col-sm-6 {
+    width: 65%;
   }
   // Cancel offset used in action
   .col-xs-offset-2 {
@@ -571,5 +561,20 @@ form.gn-editor.gn-indent-bluescale {
         }
       }
     }
+  }
+}
+
+// inspire
+// md type widget (used only in editor for now)
+.fa-inspire {
+  background: url('../catalog/views/default/images/inspire.png');
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  width: 16px;
+  height: 16px;
+  margin-top: 3px;
+  &:before {
+    content: "";
+
   }
 }

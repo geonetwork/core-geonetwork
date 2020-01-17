@@ -83,8 +83,6 @@ public class GeonetTestFixture {
 
     private volatile static FileSystemPool.CreatedFs templateFs;
     private volatile static SchemaManager templateSchemaManager;
-    private static LuceneConfig templateLuceneConfig;
-    private static SearchManager templateSearchManager;
     @Autowired
     protected DirectoryFactory _directoryFactory;
     @Autowired
@@ -93,7 +91,7 @@ public class GeonetTestFixture {
     private ConfigurableApplicationContext _applicationContext;
     private FileSystemPool.CreatedFs currentFs;
 
-    public void tearDown() throws IOException {
+    public void tearDown() {
         IO.setFileSystemThreadLocal(null);
         if (currentFs != null) {
             FILE_SYSTEM_POOL.release(currentFs);
@@ -158,7 +156,10 @@ public class GeonetTestFixture {
         final GeonetworkDataDirectory dataDir = configureDataDir(test, webappDir, currentFs.dataDir);
         configureNewSchemaManager(dataDir, webappDir);
 
-        assertCorrectDataDir();
+        // TODO: I don't know why but this corrupts other tests that will fail depending on the run order:
+        //  assertCorrectDataDir();
+        // for example, running GeonetworkDataDirectoryMultiNodeServiceConfigOnlySystemDataDirSetTest, then
+        // GeonetworkDataDirectoryMultiNodeSystemPropertyOnlySystemDataDirSetTest with that line enabled, the second fails.
 
         if (test.resetLuceneIndex()) {
             _directoryFactory.resetIndex();

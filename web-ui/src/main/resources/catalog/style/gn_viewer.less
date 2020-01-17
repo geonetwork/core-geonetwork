@@ -6,6 +6,10 @@
 @gn-popup-max-width: 1200px;
 
 
+[data-gn-layer-styles] {
+  word-break: break-all;
+}
+
 [gn-main-viewer],
 .gn-main-viewer {
   position: relative;
@@ -16,7 +20,9 @@
     clip: rect(1px, 1px, 1px, 1px);
     right: 0;
   }
-
+  button:focus {
+    outline: 0;
+  }
   button:focus [role=tooltip],
   button:hover [role=tooltip] {
     clip: auto;
@@ -31,7 +37,6 @@
     z-index: 9000;
   }
   .search-container {
-    button:focus [role=tooltip],
     button:hover [role=tooltip] {
       right: auto;
       margin-left: 1.5em;
@@ -41,12 +46,14 @@
   }
   @media screen and (max-height: 768px) {
     .control-tools {
-      button:focus [role=tooltip],
       button:hover [role=tooltip] {
         right: auto;
         margin-left: 1.5em;
         margin-top: -7px;
         padding-top: 9px;
+      }
+      .btn-3d:hover [role=tooltip] {
+        margin-left: -1.7em;
       }
     }
   }
@@ -65,12 +72,16 @@
     }
   }
 
+  .gn-map-layer {
+    word-break: break-all;
+  }
+
   .wrapper {
     width: 100%;
     height: 100%;
     min-height: 100%;
   }
-  [ngeo-map] {
+  [ol-map] {
     width: 100%;
     height:  calc(~"100vh - 102px");
     &.gn-gfi-loading:hover {
@@ -168,8 +179,25 @@
     top: auto;
     bottom: calc(~"50px + 1em");
     position: fixed;
+    .badge-2d, .badge-3d {
+      background-color: @brand-danger;
+      z-index: 9001;
+    }
+    .badge-left {
+      margin: -30px 0 0 -34px;
+    }
+    .badge-right {
+      display: none;
+    }
     @media screen and (max-height: 768px) {
       left: @viewport-padding;
+      .badge-right {
+        margin-top: -30px;
+        display: inline-block;
+      }
+      .badge-left {
+        display: none;
+      }
     }
   }
 
@@ -211,12 +239,37 @@
     .gn-layer-outofrange > label {
       color: #999;
     }
-    .gn-searchlayer {
-      label {
-        font-size: 90%;
-        max-width: 68%;
+    .gn-searchlayer-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      .clearfix();
+      .gn-searchlayer {
+        h3 {
+          font-size: 16px;
+          margin: 10px 0;
+          color: #333;
+        }
+        label {
+          font-size: 90%;
+          max-width: 68%;
+        }
+        ul {
+          padding: 0 0 0 20px;
+          list-style: none;
+          li {
+            margin-bottom: 3px;
+            a {
+              cursor: pointer;
+              &:hover {
+                text-decoration: none;
+              }
+            }
+          }
+        }
       }
     }
+
     .list-group-item {
       transition: max-height @transition-params;
       &:hover {
@@ -240,6 +293,9 @@
       .btn {
         flex: 1;
       }
+      .dropdown-menu > li > a {
+        padding: 8px 20px;
+      }
     }
     .flux, .context {
       margin: .2em;
@@ -250,7 +306,7 @@
       }
     }
     .gn-layer-actions {
-      [ngeo-popover-anchor] {
+      [gn-popover-anchor] {
         text-decoration: none;
       }
     }
@@ -285,6 +341,9 @@
         clear: both;
         margin-top: 1.3em;
       }
+    }
+    h4 {
+      margin: 1em 0 0.5em 0;
     }
     h5 {
       margin: .2em 0;
@@ -467,12 +526,32 @@
 
   [gn-localisation-input] {
     .dropdown-menu {
+      top: calc(~"100% - 2px");
+      width: auto;
+      max-width: 85vw;
       padding-bottom: 0;
       border-radius: 0;
       .list-group-item {
         border-radius: 0;
         border-left: 0;
         border-right: 0;
+        a {
+          display: block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 85vw;
+          min-width: auto;
+          @media (max-width: @screen-xs-max) {
+            em {
+              display: block;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 85vw;
+            }
+          }
+        }
       }
     }
   }
@@ -802,4 +881,22 @@ gn-geometry-tool .btn-group {
   line-height: 1em;
   color: white;
   pointer-events: none;
+}
+
+// attribution mixin
+.gn-attribution() {
+  bottom: 4px;
+  right: auto;
+  left: 4px;
+  height: auto;
+  padding: 5px;
+  border-radius: 0;
+  ul {
+    font-size: 1rem;
+    padding-left: 0;
+    padding-right: 10px;
+    li {
+      white-space: nowrap;
+    }
+  }
 }

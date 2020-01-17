@@ -63,6 +63,9 @@
         <importxslt>
           <xsl:value-of select="$con/importxslt/value"/>
         </importxslt>
+        <batchEdits>
+          <xsl:value-of select="$con/batchEdits/value"/>
+        </batchEdits>
       </content>
 
       <options>
@@ -84,6 +87,9 @@
 
       <xsl:apply-templates select="." mode="searches"/>
       <xsl:apply-templates select="$priv" mode="privileges"/>
+      <ifRecordExistAppendPrivileges>
+        <xsl:value-of select="$opt/ifRecordExistAppendPrivileges/value"/>
+      </ifRecordExistAppendPrivileges>
       <xsl:apply-templates select="$categ" mode="categories"/>
       <xsl:apply-templates select="." mode="other"/>
 

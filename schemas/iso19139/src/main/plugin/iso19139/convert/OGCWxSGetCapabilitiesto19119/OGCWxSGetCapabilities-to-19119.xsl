@@ -352,7 +352,7 @@ Mapping between :
                             </date>
                             <dateType>
                               <CI_DateTypeCode
-                                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                                 codeListValue="revision"/>
                             </dateType>
                           </CI_Date>

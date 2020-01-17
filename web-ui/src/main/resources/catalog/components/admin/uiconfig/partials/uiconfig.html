@@ -17,6 +17,7 @@
       {{('ui-' + m + '-help') | translate}} </p>
 
     <div class="col-sm-12 form-group"
+         data-ng-if="mCfg.enabled === undefined || mCfg.enabled === true"
          data-ng-repeat="(key, value) in mCfg"
          data-ng-switch="key">
 
@@ -367,6 +368,22 @@
         </div>
       </div>
 
+      <div data-ng-switch-when="savedSelection">
+        <h3>{{('ui-' + key) | translate}}</h3>
+        <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
+
+          <input type="checkbox"
+                 id="{{key + type}}-checkbox"
+                 data-ng-model="mCfg[key][type]"/>&nbsp;
+          <label class="control-label"
+                 for="{{key + type}}-checkbox">{{('ui-' + type) | translate}}</label>
+
+          <p class="help-block"
+             data-ng-show="(('ui-' + key + type + '-help') | translate) != ('ui-' + key + type + '-help')">
+            {{('ui-' + key + type + '-help') | translate}} </p>
+        </div>
+      </div>
+
 
 
 
@@ -608,6 +625,18 @@
                  class="form-control"
                  data-ng-model="mCfg[key].url"/>
         </div>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+      <div data-ng-switch-when="autoFitOnLayer">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="mCfg[key]"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
         <p class="help-block"
            data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
           {{('ui-' + key + '-help') | translate}} </p>
@@ -868,7 +897,29 @@
            data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
           {{('ui-' + key + '-help') | translate}} </p>
       </div>
+      <div data-ng-switch-when="fluidHeaderLayout">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="mCfg[key]"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
       <div data-ng-switch-when="fluidEditorLayout">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="mCfg[key]"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+      <div data-ng-switch-when="showGNName">
         <input type="checkbox"
                id="{{key}}-checkbox"
                data-ng-model="mCfg[key]"/>&nbsp;

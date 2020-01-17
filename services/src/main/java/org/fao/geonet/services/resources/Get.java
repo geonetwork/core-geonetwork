@@ -28,8 +28,11 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.MetadataResourceVisibility;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
@@ -59,11 +62,11 @@ public class Get extends NotInReadOnlyModeService {
         FilePathChecker.verify(filename);
 
         // delete the file
-        Path file = Lib.resource.getDir(context, access, id).resolve(filename);
-
         FilePathChecker.verify(filename);
-
-        Files.deleteIfExists(file);
+        final Store store = context.getBean("resourceStore", Store.class);
+        final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+        final String uuid = metadataUtils.getMetadataUuid(id);
+        store.delResource(context, uuid, MetadataResourceVisibility.parse(access), filename, true);
 
         return new Element(Jeeves.Elem.RESPONSE)
             .addContent(new Element(Geonet.Elem.ID).setText(id));

@@ -5,7 +5,7 @@ import org.fao.geonet.AbstractCoreIntegrationTest;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 
-public class AbstractIntegrationTestWithMockedSingletons extends AbstractCoreIntegrationTest {
+public abstract class AbstractIntegrationTestWithMockedSingletons extends AbstractCoreIntegrationTest {
 
     private static SpringLocalServiceInvoker mockInvoker;
 

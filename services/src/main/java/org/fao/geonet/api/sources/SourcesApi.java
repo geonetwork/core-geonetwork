@@ -30,14 +30,18 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.GeonetEntity;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.Source_;
+import org.fao.geonet.guiapi.search.XsltResponseWriter;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.Log;
+import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,8 +50,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -59,6 +65,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
@@ -92,8 +99,50 @@ public class SourcesApi {
         @ApiResponse(code = 200, message = "List of source catalogues.")
     })
     @ResponseBody
-    public List<Source> getSources() throws Exception {
-        return sourceRepository.findAll(SortUtils.createSort(Source_.name));
+    public List<Source> getSources(
+        @ApiParam(
+            value = "Group owner of the source (only applies to subportal)."
+        )
+        @RequestParam(
+            value = "group",
+            required = false)
+        Integer group
+    ) throws Exception {
+        if (group != null) {
+            return sourceRepository.findByGroupOwner(group);
+        } else {
+            return sourceRepository.findAll(SortUtils.createSort(Source_.name));
+        }
+    }
+
+    @ApiOperation(
+        value = "Get portal list",
+        notes = "List all subportal available.",
+        nickname = "getSubPortal")
+    @RequestMapping(
+        produces = MediaType.TEXT_HTML_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of portals.")
+    })
+    @ResponseBody
+    public void getSubPortal(
+        @ApiIgnore
+            HttpServletResponse response
+    ) throws Exception {
+        final List<Source> sources = sourceRepository.findAll(SortUtils.createSort(Source_.name));
+        Element sourcesList = new Element("sources");
+        sources.stream().map(GeonetEntity::asXml).forEach(sourcesList::addContent);
+        response.setContentType(MediaType.TEXT_HTML_VALUE);
+        response.getWriter().write(
+            new XsltResponseWriter()
+                .withJson("catalog/locales/en-core.json")
+                .withJson("catalog/locales/en-search.json")
+                .withXml(sourcesList)
+                .withParam("cssClass", "gn-portal")
+                .withXsl("xslt/ui-search/portal-list.xsl")
+                .asHtml());
     }
 
 
@@ -151,7 +200,8 @@ public class SourcesApi {
     private void copySourceLogo(Source source, HttpServletRequest request) {
         if (source.getLogo() != null) {
             ServiceContext context = ApiUtils.createServiceContext(request);
-            Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + source.getLogo(), source.getUuid());
+            context.getBean(Resources.class).copyLogo(context, "images" + File.separator + "harvesting" + File.separator + source.getLogo(),
+                                                      source.getUuid());
         }
     }
 
@@ -225,12 +275,13 @@ public class SourcesApi {
         if (existingSource != null) {
             if (existingSource.getLogo() != null) {
                 ServiceContext context = ApiUtils.createServiceContext(request);
-                Path icon = Resources.locateLogosDir(context)
-                    .resolve(existingSource.getUuid() + "." +
-                        FilenameUtils.getExtension(existingSource.getLogo()));
+                final Resources resources = context.getBean(Resources.class);
+                final Path logoDir = resources.locateLogosDir(context);
                 try {
-                    Files.deleteIfExists(icon);
-                } catch (IOException e) {
+                    resources.deleteImageIfExists(existingSource.getUuid() + "." +
+                                                          FilenameUtils.getExtension(existingSource.getLogo()),
+                                                  logoDir);
+                } catch (IOException ignored) {
                 }
             }
             sourceRepository.delete(existingSource);
@@ -252,6 +303,7 @@ public class SourcesApi {
             entity.setUuid(source.getUuid());
             entity.setType(source.getType());
             entity.setFilter(source.getFilter());
+            entity.setGroupOwner(source.getGroupOwner());
             entity.setUiConfig(source.getUiConfig());
             entity.setLogo(source.getLogo());
             Map<String, String> labelTranslations = source.getLabelTranslations();

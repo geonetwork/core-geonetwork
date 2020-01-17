@@ -44,8 +44,6 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.concurrent.ConcurrentMap;
 
-import static org.fao.geonet.resources.Resources.loadResource;
-
 /**
  * Servlet for serving up resources located in GeoNetwork data directory. For example, this solves a
  * largely historical issue because logos are hardcoded across the application to be in
@@ -56,7 +54,6 @@ import static org.fao.geonet.resources.Resources.loadResource;
  * User: jeichar Date: 1/17/12 Time: 4:03 PM
  */
 public class ResourceFilter implements Filter {
-    private static final int CONTEXT_PATH_PREFIX = "/".length();
     private static final int FIVE_DAYS = 60 * 60 * 24 * 5;
     private static final int SIX_HOURS = 60 * 60 * 6;
     private FilterConfig config;
@@ -69,8 +66,8 @@ public class ResourceFilter implements Filter {
         this.servletContext = config.getServletContext();
     }
 
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        new Instance(this.config, request, response, chain).execute();
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException {
+        new Instance(request, response).execute();
     }
 
     public synchronized void destroy() {
@@ -85,21 +82,24 @@ public class ResourceFilter implements Filter {
 
         private final Path resourcesDir;
         private final Path appPath;
-        private final ConfigurableApplicationContext applicationContext;
         private final String nodeId;
+        private final Resources resources;
         private Pair<byte[], Long> favicon;
 
-        public Instance(FilterConfig config, ServletRequest request, ServletResponse response, FilterChain chain) throws IOException {
-            this.applicationContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(servletContext);
-            this.appPath = this.applicationContext.getBean(GeonetworkDataDirectory.class).getWebappDir();
-            this.resourcesDir = Resources.locateResourcesDir(servletContext, applicationContext);
+        public Instance(ServletRequest request, ServletResponse response) throws IOException {
+            final ConfigurableApplicationContext applicationContext = JeevesDelegatingFilterProxy
+                    .getApplicationContextFromServletContext(servletContext);
+            this.appPath = applicationContext.getBean(GeonetworkDataDirectory.class).getWebappDir();
+            this.resources = applicationContext.getBean(Resources.class);
+            this.resourcesDir = resources.locateResourcesDir(servletContext, applicationContext);
             if (defaultImage == null) {
-                defaultImage = loadResource(resourcesDir, servletContext, appPath, "images/logos/GN3.png", new byte[0], -1);
+                defaultImage = resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/GN3.png", new byte[0], -1);
             }
             this.nodeId = applicationContext.getBean(NodeInfo.class).getId();
             if (!faviconMap.containsKey(nodeId)) {
                 final byte[] defaultImageBytes = defaultImage.one();
-                AddFavIcon(nodeId, loadResource(resourcesDir, servletContext, appPath, "images/logos/GN3.ico", defaultImageBytes, -1));
+                AddFavIcon(nodeId, resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/GN3.ico",
+                                                          defaultImageBytes, -1));
             }
 
             this.favicon = faviconMap.get(nodeId);
@@ -123,7 +123,7 @@ public class ResourceFilter implements Filter {
                     ext = "png";
                 }
                 HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-                FileTime lastModified = Resources.getLastModified(resourcesDir, servletContext, appPath, filename);
+                FileTime lastModified = resources.getLastModified(resourcesDir, servletContext, appPath, filename);
                 if (lastModified != null &&
                     new ServletWebRequest((HttpServletRequest) request, httpServletResponse).checkNotModified(lastModified.toMillis())) {
                     return;
@@ -133,19 +133,20 @@ public class ResourceFilter implements Filter {
                 httpServletResponse.setContentType("image/" + ext);
                 httpServletResponse.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
                 if (filename.equals("images/logos/GN3.ico")) {
-                    favicon = loadResource(resourcesDir, servletContext, appPath, "images/logos/GN3.ico", favicon.one(), favicon.two());
+                    favicon = resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/GN3.ico", favicon.one(),
+                                                     favicon.two());
                     AddFavIcon(nodeId, favicon);
 
                     httpServletResponse.setContentLength(favicon.one().length);
                     httpServletResponse.addHeader("Cache-Control", "max-age=" + FIVE_DAYS + ", public");
                     response.getOutputStream().write(favicon.one());
                 } else {
-                    Pair<byte[], Long> loadResource = loadResource(resourcesDir, servletContext, appPath, filename, defaultImage
-                        .one(), -1);
+                    Pair<byte[], Long> loadResource = resources.loadResource(resourcesDir, servletContext, appPath, filename,
+                                                                             defaultImage.one(), -1);
                     if (loadResource.two() == -1) {
 
                         synchronized (this) {
-                            defaultImage = loadResource(resourcesDir,
+                            defaultImage = resources.loadResource(resourcesDir,
                                 config.getServletContext(), appPath, "images/logos/GN3.ico",
                                 defaultImage.one(), defaultImage.two());
                         }

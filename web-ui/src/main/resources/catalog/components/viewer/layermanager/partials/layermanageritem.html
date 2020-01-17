@@ -4,11 +4,11 @@
       <input type="checkbox" id="layer-{{$index}}" ng-model="layer.visible" title="{{'layerVisible'|translate}}"/>
 
       <div class="gn-layer-actions">
-        <div ngeo-popover ngeo-popover-placement="bottom">
-          <a ngeo-popover-anchor role="button" tabindex="0"
+        <div gn-popover gn-popover-placement="bottom">
+          <a gn-popover-anchor role="button" tabindex="0"
              aria-label="{{'settings' | translate}}"
              class="fa fa-cog"></a>
-          <div ngeo-popover-content class="layermanager-item-menu">
+          <div gn-popover-content class="layermanager-item-menu">
             <ul role="menu">
 
               <!--Zoom to extent-->
@@ -78,7 +78,7 @@
               <li class="" data-gn-wfs-download="layer"
                            data-init-on-demand="true"
                            data-mode="select"
-                           ng-show="hasDownload" 
+                           ng-show="hasDownload"
                            has-download="hasDownload" data-map="map" role="menuitem">
               </li>
 
@@ -121,7 +121,7 @@
               data-ng-click="removeLayer(layer, map)"
              title="{{'layerDelete'|translate}}"></a>
         </span>
-        <label for="layer-{{$index}}">
+        <label class="gn-map-layer" for="layer-{{$index}}">
           <span data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''">
             {{layer.get('label')}}
             <small><em>

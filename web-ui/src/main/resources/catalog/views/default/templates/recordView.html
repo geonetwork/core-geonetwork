@@ -11,7 +11,7 @@
       data-ng-show="user.canEditRecord(mdView.current.record)">
       {{'seeDraft' | translate}}
     </a>
-    
+
     <!-- If approved exists, show a link -->
     <a data-ng-if="mdView.current.record.draft == 'y'"
       class="see-draft see-draft-approved"
@@ -21,7 +21,7 @@
       {{'seeNoDraft' | translate}}
     </a>
   </div>
-  
+
   <div class="container">
     <div class="alert alert-warning"
         data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
@@ -38,7 +38,7 @@
         data-ng-show="mdView.current.record">
 
       <div class="btn-toolbar" role="toolbar">
-        
+
         <div class="btn-group" role="group">
           <button class="btn btn-default"
                   data-ng-click="closeRecord(mdView.current.record)">
@@ -48,27 +48,33 @@
         </div>
 
         <div class="btn-group" role="group">
-          <button class="btn btn-default"
-                  data-ng-class="searchObj.params.from == (mdView.current.index + 1) ? 'disabled' : ''"
-                  data-ng-show="mdView.records.length > 1"
-                  data-ng-click="previousRecord()">
+          <a class="btn btn-default"
+             title="{{mdView.records[mdView.current.index - 1].defaultTitle}}"
+             gn-metadata-open="mdView.records[mdView.current.index - 1]"
+             gn-records="mdView.records"
+             gn-formatter="formatter.defaultUrl"
+             data-ng-class="{'disabled': searchObj.params.from == (mdView.current.index + 1)}"
+             data-ng-show="mdView.records.length > 1">
             <i class="fa fa-fw fa-angle-left"></i>
-            <span data-ng-show="mdView.current.index === 0" data-translate="">previousPage</span>
-            <span data-ng-hide="mdView.current.index === 0" data-translate="">previous</span>
-          </button>
-          <button class="btn btn-default"
-                  data-ng-class="mdView.current.index === mdView.records.length - 1 &&
-                                searchObj.params.to > searchInfo.count &&
-                                searchInfo.count > searchObj.params.from ? 'disabled' : ''"
-                  data-ng-show="mdView.records.length > 1"
-                  data-ng-click="nextRecord()">
-            <span data-ng-show="mdView.current.index === mdView.records.length - 1" data-translate="">nextPage</span>
-            <span data-ng-hide="mdView.current.index === mdView.records.length - 1" data-translate="">next</span>
+<!--            <span data-ng-show="mdView.current.index === 0" data-translate="">previousPage</span>-->
+            <span data-translate="">previous</span>
+          </a>
+          <a class="btn btn-default"
+             title="{{mdView.records[mdView.current.index + 1].defaultTitle}}"
+             gn-metadata-open="mdView.records[mdView.current.index + 1]"
+             gn-records="mdView.records"
+             gn-formatter="formatter.defaultUrl"
+             data-ng-class="{'disabled': mdView.current.index === mdView.records.length - 1 &&
+                            searchObj.params.to > searchInfo.count &&
+                            searchInfo.count > searchObj.params.from}"
+             data-ng-show="mdView.records.length > 1">
+<!--            <span data-ng-show="mdView.current.index === mdView.records.length - 1" data-translate="">nextPage</span>-->
+            <span data-translate="">next</span>
             <i class="fa fa-fw fa-angle-right"></i>
-          </button>
+          </a>
         </div>
 
-        <div class="btn-group pull-right gn-view-menu-button">
+      <div class="btn-group pull-right gn-view-menu-button">
           <button type="button" class="btn btn-default dropdown-toggle"
                   data-toggle="dropdown"
                   aria-label="{{'chooseAView' | translate}}"
@@ -78,16 +84,13 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" role="menu">
-            <!-- <li class="dropdown-header" data-translate="">chooseAView</li> -->
-            <li role="menuitem" data-ng-class="currentFormatter == undefined ? 'disabled' : ''">
-              <a href="" data-ng-click="format()">
-                <span data-translate="">defaultView</span>
-              </a>
-            </li>
             <li role="menuitem"
                 data-ng-repeat="f in formatter.list"
-                data-ng-class="f === currentFormatter ? 'disabled' : ''">
-              <a href="" data-ng-click="format(f)">
+                data-ng-class="currentFormatter === f.url ? 'disabled' : ''">
+              <a href=""
+                 gn-metadata-open="mdView.current.record"
+                 gn-records="mdView.records"
+                 gn-formatter="f && f.url">
                 {{f.label | translate}}
               </a>
             </li>
@@ -96,22 +99,22 @@
 
         <div class="gn-md-actions-btn pull-right"
             data-gn-md-actions-menu="mdView.current.record"/>
-        
+
         <div class="btn-group pull-right" role="group">
           <a class="btn btn-default"
-            data-ng-show="user.canEditRecord(mdView.current.record)"
+            data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
             data-gn-click-and-spin="deleteRecord(mdView.current.record)"
             data-gn-confirm-click="{{(mdView.current.record.draft != 'y') ? 'deleteRecordConfirm' : 'deleteWorkingCopyRecordConfirm' | translate:mdView.current.record}}"
-            title="{{(mdView.current.record.draft != 'y') ? 'delete' : 'canceWorkingCopy' | translate}}">
+            title="{{(mdView.current.record.draft != 'y') ? 'delete' : 'cancelWorkingCopy' | translate}}">
             <i class="fa fa-fw fa-times"></i>
-            <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft == 'y'">canceWorkingCopy</span>
+            <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft == 'y'">cancelWorkingCopy</span>
             <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft != 'y'">delete</span>
           </a>
         </div>
 
         <div class="btn-group pull-right" role="group">
           <a class="btn btn-default gn-md-edit-btn"
-            data-ng-show="user.canEditRecord(mdView.current.record)"
+            data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
             data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.getUuid()}}"
             title="{{'edit' | translate}}">
             <i class="fa fa-fw fa-pencil"></i>
@@ -120,22 +123,26 @@
         </div>
       </div>
 
-      <div data-ng-show="usingFormatter"
+      <div data-ng-show="gnMdViewObj.usingFormatter"
           id="gn-metadata-display"
           class="gn-metadata-display">
       </div>
 
 
-      <div data-ng-show="!usingFormatter" class="gn-metadata-display">
+      <div data-ng-show="!gnMdViewObj.usingFormatter" class="gn-metadata-display">
 
-        <div class="col-md-8 gn-record">
-          <h1>
-            <i class="fa gn-icon-{{mdView.current.record.type[0]}}"/>
-            {{mdView.current.record.title || mdView.current.record.defaultTitle}}
-          </h1>
+      <div class="col-md-8 gn-record">
+        <h1>
+          <i class="fa gn-icon-{{mdView.current.record.type[0]}}"/>
+          {{mdView.current.record.title || mdView.current.record.defaultTitle}}
+          <span class="text-muted badge"
+                data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
+                data-ng-if="user.isEditorOrMore() && md.mdStatus<50 && isMdWorkflowEnable">{{('mdStatus-' + md.mdStatus) | translate}}</span>
+        </h1>
 
-          <div class="lead1 gn-margin-bottom"
-              data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | linky | newlines"/>
+
+        <div class="lead1 gn-margin-bottom"
+            data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | linky | newlines"/>
 
           <!-- Display the first metadata status (apply to ISO19139 record) -->
           <div data-ng-if="mdView.current.record.status_text.length > 0"
@@ -143,7 +150,7 @@
               class="gn-status gn-status-mdview gn-status-{{mdView.current.record.status[0]}}">
             {{mdView.current.record.status_text[0]}}
           </div>
-          
+
           <div data-gn-related-observer>
             <div data-gn-related="mdView.current.record"
                 data-user="user"
@@ -154,7 +161,7 @@
 
             <div data-gn-related="mdView.current.record"
                 data-user="user"
-                data-types="parent|children|services|datasets"
+                data-types="parent|children|brothersAndSisters|services|datasets"
                 data-title="{{'associatedResources' | translate}}">
             </div>
           </div>
@@ -302,6 +309,10 @@
                 </ul>
               </td>
             </tr>
+            <tr data-ng-if="mdView.current.record.versionIdentifier">
+              <th data-translate="">versionIdentifier</th>
+              <td>{{mdView.current.record.versionIdentifier}}</td>
+            </tr>
             </tbody>
           </table>
 
@@ -310,11 +321,50 @@
 
           <h2 data-translate="">technicalInformation</h2>
 
+          <div data-ng-if="mdView.current.record.featureTypes"
+            data-ng-repeat="featureType in mdView.current.record.featureTypes">
 
-          <div data-ng-if="mdView.current.record.attributeTable"
-              data-gn-attribute-table-renderer="mdView.current.record.attributeTable">
+            <h3><span data-translate="">featureType</span>&nbsp;'{{featureType.typeName}}'</h3>
+
+            <table class="table table-striped" >
+              <tbody>
+              <tr data-ng-if="featureType.typeName">
+                <th data-translate="">featureTypeName</th>
+                <td>{{featureType.typeName}}</td>
+              </tr>
+              <tr data-ng-if="featureType.definition">
+                <th data-translate="">featureDefinition</th>
+                <td>{{featureType.definition}}</td>
+              </tr>
+              <tr data-ng-if="featureType.code">
+                <th data-translate="">featureCode</th>
+                <td>{{featureType.code}}</td>
+              </tr>
+              <tr data-ng-if="featureType.isAbstract">
+                <th data-translate="">featureIsAbstract</th>
+                <td>{{featureType.isAbstract}}</td>
+              </tr>
+              <tr data-ng-if="featureType.aliases">
+                <th data-translate="">featureAliases</th>
+                <td>{{featureType.aliases}}</td>
+              </tr>
+              <tr data-ng-if="featureType.attributeTable">
+                <th data-translate="">featureAttributeTable</th>
+                <td></td>
+              </tr>
+              <tr data-ng-if="featureType.attributeTable">
+                <td colspan="2" class="gn-noborder-top gn-nopadding-top gn-nopadding-bottom"/>
+              </tr>
+              <tr data-ng-if="featureType.attributeTable">
+                <td colspan="2" class="gn-noborder-top gn-table-attribute">
+                  <div data-ng-if="featureType.attributeTable"
+                       data-gn-attribute-table-renderer="featureType.attributeTable">
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
           </div>
-
 
           <table class="table table-striped">
             <tbody>
@@ -367,29 +417,23 @@
                 <p data-ng-bind-html="mdView.current.record.lineage | linky | newlines"/>
               </td>
             </tr>
-            <tr>
-              <th></th>
-              <td>
-                <div data-gn-related-observer>
-                  <div data-gn-related="mdView.current.record"
-                      data-user="user"
-                      data-types="sources"
-                      data-has-results="hasRelations.sources"
-                      data-title="{{'sourceDatasets' | translate}}">
-                  </div>
-
-
-                  <div data-gn-related="mdView.current.record"
-                      data-user="user"
-                      data-types="hassources"
-                      data-has-results="hasRelations.hassources"
-                      data-title="{{'isSourceOfDatasets' | translate}}">
-                  </div>
-                </div>
-              </td>
-            </tr>
             </tbody>
           </table>
+
+          <div data-gn-related-observer>
+            <div data-gn-related="mdView.current.record"
+                data-user="user"
+                data-types="sources"
+                data-has-results="hasRelations.sources"
+                data-title="{{'sourceDatasets' | translate}}">
+            </div>
+            <div data-gn-related="mdView.current.record"
+                data-user="user"
+                data-types="hassources"
+                data-has-results="hasRelations.hassources"
+                data-title="{{'isSourceOfDatasets' | translate}}">
+            </div>
+          </div>
 
           <h2 data-translate="">metadataInformation</h2>
 
@@ -401,7 +445,7 @@
 
           <table class="table table-striped">
             <tbody>
-            <tr data-ng-if="mdView.current.record.getAllContacts()">
+            <tr data-ng-if="mdView.current.record.getAllContacts().metadata && mdView.current.record.getAllContacts().metadata.length > 0">
               <th data-translate="">contact</th>
               <td>
                 <div data-gn-metadata-contacts="mdView.current.record.getAllContacts().metadata" data-gn-mode="org-role" />
@@ -447,18 +491,18 @@
 
           <div data-gn-userfeedback='mdView.current.record'
               data-gn-user={{user.username}}
-              data-ng-if="isUserFeedbackEnabled">
+              data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
           </div>
           <div class="gn-md-feedback-buttons clearfix">
             <div class="pull-left"
                     data-gn-userfeedbackfull='mdView.current.record'
                     data-gn-user={{user.username}}
-                    data-ng-if="isUserFeedbackEnabled">
+                    data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
             </div>
             <div class="pull-left"
                     data-gn-userfeedbacknew='mdView.current.record'
                     data-gn-user={{user.username}}
-                    data-ng-if="isUserFeedbackEnabled">
+                    data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
             </div>
 
           </div>
@@ -590,11 +634,6 @@
               target="_blank"
               class="btn btn-default"><i class="fa fa-fw fa-twitter"></i></a>
             <a
-              data-ng-href="https://plus.google.com/share?url={{socialMediaLink | encodeURIComponent}}"
-              title="{{'shareOnGooglePlus' | translate}}"
-              target="_blank"
-              class="btn btn-default"><i class="fa fa-fw fa-google-plus"></i></a>
-            <a
               data-ng-href="https://www.facebook.com/sharer.php?u={{socialMediaLink | encodeURIComponent}}"
               title="{{'shareOnFacebook' | translate}}"
               target="_blank"
@@ -623,7 +662,7 @@
             <div data-gn-metadata-rate="mdView.current.record"/>
           </section>
 
-          <div data-ng-show="isRecordHistoryEnabled && user.isEditorOrMore()"
+          <div data-ng-show="isRecordHistoryEnabled && user.isEditorOrMore() && mdView.current.record.draft != 'y'"
               data-gn-record-history="mdView.current.record"></div>
         </div>
 

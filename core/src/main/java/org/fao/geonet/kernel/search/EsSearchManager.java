@@ -42,11 +42,13 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.es.EsClient;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -80,11 +82,21 @@ public class EsSearchManager implements ISearchManager {
     @Value("${es.index.records:gn-records}")
     private String index = "records";
 
+    /**
+     * Index containing only public records.
+     */
+    @Value("${es.index.records_public:gn-records-public}")
+    private String publicIndex = "records";
+
     @Value("${es.index.records.type:records}")
     private String indexType = "records";
 
     public String getIndex() {
         return index;
+    }
+
+    public String getPublicIndex() {
+        return publicIndex;
     }
 
     public String getIndexType() {
@@ -201,7 +213,11 @@ public class EsSearchManager implements ISearchManager {
 
     private int commitInterval = 200;
     private Map<String, String> listOfDocumentsToIndex = new HashMap<>();
+    private Map<String, String> listOfPublicDocumentsToIndex = new HashMap<>();
 
+    @Autowired
+    SourceRepository sourceRepository;
+    
     @Override
     public void index(Path schemaDir, Element metadata, String id, List<Element> moreFields,
                       MetadataType metadataType, String root, boolean forceRefreshReaders) throws Exception {
@@ -223,13 +239,22 @@ public class EsSearchManager implements ISearchManager {
         // ES does not allow a _source field
         String catalog = doc.get("source").asText();
         doc.remove("source");
-        doc.put("sourceCatalogue", catalog);
+        if (StringUtils.isNotEmpty(catalog)) {
+            doc.put("sourceCatalogue", catalog);
+            final Source source = sourceRepository.findOne(catalog);
+            if (source != null) {
+                source.getLabelTranslations()
+                    .forEach((key, value) -> doc.put("sourceCatalogueName_lang" + key, value));
+            }
+        }
         doc.put("scope", settingManager.getSiteName());
         doc.put("harvesterUuid", settingManager.getSiteId());
         doc.put("harvesterId", settingManager.getNodeURL());
-        Map<String, String> docListToIndex = new HashMap<>();
-        docListToIndex.put(id, mapper.writeValueAsString(doc));
-        listOfDocumentsToIndex.put(id, mapper.writeValueAsString(doc));
+        String json = mapper.writeValueAsString(doc);
+        if (doc.get("isPublishedToAll").asBoolean()) {
+            listOfPublicDocumentsToIndex.put(id, json);
+        }
+        listOfDocumentsToIndex.put(id, json);
         if (listOfDocumentsToIndex.size() == commitInterval) {
             sendDocumentsToIndex();
         }
@@ -239,6 +264,10 @@ public class EsSearchManager implements ISearchManager {
         synchronized (this) {
             if (listOfDocumentsToIndex.size() > 0) {
                 client.bulkRequest(index, listOfDocumentsToIndex);
+                if (StringUtils.isNotEmpty(publicIndex)) {
+                    client.bulkRequest(publicIndex, listOfPublicDocumentsToIndex);
+                    listOfPublicDocumentsToIndex.clear();
+                }
                 listOfDocumentsToIndex.clear();
             }
         }
@@ -331,7 +360,7 @@ public class EsSearchManager implements ISearchManager {
                                             mapper.readTree(node.getTextNormalize()));
                                     } catch (IOException e) {
                                         // Invalid JSON object provided
-                                        e.printStackTrace();
+                                        Log.error(Geonet.INDEX_ENGINE, e.getMessage(), e);
                                     }
                                 } else {
                                     arrayNode.add(
@@ -351,7 +380,7 @@ public class EsSearchManager implements ISearchManager {
                                             ));
                                     } catch (IOException e) {
                                         // Invalid JSON object provided
-                                        e.printStackTrace();
+                                        Log.error(Geonet.INDEX_ENGINE, e.getMessage(), e);
                                     }
                                 } else {
                                     doc.put(
@@ -402,8 +431,8 @@ public class EsSearchManager implements ISearchManager {
                     String uuid = (String) iter.next();
                     for (AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
                         listOfIdsToIndex.add(metadata.getId() + "");
-                    } 
-                    
+                    }
+
                     if(!metadataRepository.existsMetadataUuid(uuid)) {
                         Log.warning(Geonet.INDEX_ENGINE, String.format(
                             "Selection contains uuid '%s' not found in database", uuid));
@@ -434,6 +463,10 @@ public class EsSearchManager implements ISearchManager {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
         client.deleteByQuery(index,
             "harvesterUuid:\\\"" + settingManager.getSiteId() + "\\\"");
+        if (StringUtils.isNotEmpty(publicIndex)) {
+            client.deleteByQuery(publicIndex,
+                "harvesterUuid:\\\"" + settingManager.getSiteId() + "\\\"");
+        }
     }
 
 //    public void iterateQuery(SolrQuery params, final Consumer<SolrDocument> callback) throws IOException, SolrServerException {

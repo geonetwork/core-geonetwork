@@ -14,6 +14,16 @@
       </div>
     </div>
 
+    <div class="form-group" data-ng-show="!isFeaturedSearch()">
+      <label class="col-sm-2 control-label"
+             data-translate="">userSearchGroups</label>
+
+      <div class="col-sm-9 input-group">
+        <div data-gn-multiselect="userSearchGroups.groups"
+             data-choices="userSearchGroups.choices"></div>
+      </div>
+    </div>
+
     <div class="panel panel-default"
          data-ng-show="canSetFeatureTypeInSearch()">
       <div class="panel-heading">
@@ -52,7 +62,6 @@
       </div>
     </div>
 
-
     <div class="form-group" data-ng-show="editMode">
       <label class="col-sm-2 control-label"
              for="searchUrl"
@@ -71,6 +80,8 @@
         </span>
       </div>
     </div>
+
+
   </form>
   <br/>
 

@@ -25,8 +25,8 @@ package org.fao.geonet.kernel.datamanager.draft;
 
 import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.io.RuntimeIOException;
+import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
@@ -37,6 +37,8 @@ import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataHarvestInfo;
+import org.fao.geonet.domain.MetadataRatingByIp;
+import org.fao.geonet.domain.MetadataRatingByIpId;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId;
@@ -170,7 +172,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     }
 
     /**
-     * @param id
+     * @param idString
      * @param displayOrder
      * @throws Exception
      */
@@ -198,6 +200,13 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
      */
     @Override
     public int rateMetadata(final int metadataId, final String ipAddress, final int rating) throws Exception {
+        // Save rating for this IP
+        MetadataRatingByIp ratingEntity = new MetadataRatingByIp();
+        ratingEntity.setRating(rating);
+        ratingEntity.setId(new MetadataRatingByIpId(metadataId, ipAddress));
+
+        ratingByIpRepository.save(ratingEntity);
+
         final int newRating = ratingByIpRepository.averageRating(metadataId);
 
         if (metadataDraftRepository.exists(metadataId)) {
@@ -541,11 +550,6 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             Set<Integer> metadataIds = new HashSet<Integer>();
             metadataIds.add(finalId);
 
-            if (context.getBean(IMetadataStatus.class)
-                .getCurrentStatus(Integer.valueOf(templateId)) == StatusValue.Status.UNKNOWN) {
-                metadataIds.add(Integer.valueOf(templateId));
-            }
-
             // --- use StatusActionsFactory and StatusActions class to
             // --- change status and carry out behaviours for status changes
             StatusActionsFactory saf = context.getBean(StatusActionsFactory.class);
@@ -578,22 +582,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
     public void cloneFiles(AbstractMetadata original, AbstractMetadata dest) {
         try {
-            Consumer<Path> duplicate = new Consumer<Path>() {
-                @Override
-                public void accept(Path t) {
-                    try {
-                        Path des = Lib.resource.getDir(context, "public", dest.getId());
-                        FileUtils.copyFile(t.toFile(), des.resolve(t.getFileName()).toFile());
-                    } catch (IOException e) {
-                        Log.error(Geonet.RESOURCES, "Failed copy of resources: " + e.getMessage(), e);
-                    }
-                }
-            };
-
-            Path original_dir = Lib.resource.getDir(context, "public", original.getId());
-            if (Files.exists(original_dir)) {
-                Files.newDirectoryStream(original_dir).forEach(duplicate);
-            }
+            StoreUtils.copyDataDir(context, original.getUuid(), dest.getUuid(), true);
             cloneStoreFileUploadRequests(original, dest);
 
         } catch (Exception ex) {

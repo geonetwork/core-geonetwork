@@ -1,15 +1,9 @@
- #===========================================================================
-# allowed DPIs
-#===========================================================================
 dpis:
   - 600
   - 254
   - 190
   - 127
 
-#===========================================================================
-# the allowed scales
-#===========================================================================
 scales:
   - 5000
   - 10000
@@ -32,9 +26,6 @@ formats:
   - pdf
   - png
 
-#===========================================================================
-# the list of allowed hosts
-#===========================================================================
 hosts:
   - !localMatch
     dummy: true
@@ -47,7 +38,6 @@ hosts:
 outputFilename:'map_${yyyy-MM-dd}.pdf'
 
 layouts:
-  #===========================================================================
   portrait:
     mainPage:
       rotation: true
@@ -209,7 +199,6 @@ layouts:
               classSpace: 5
               backgroundColor: white
               layerFontSize: 9
-  #===========================================================================
   landscape:
     mainPage:
       rotation: false
@@ -371,3 +360,15 @@ layouts:
               classSpace: 5
               backgroundColor: white
               layerFontSize: 9
+  overviewPrintTemplate:
+    mainPage:
+      rotation: false
+      pageSize: 612 612
+      backgroundPdf: '${configDir}/template-thumbnail.pdf'
+      items:
+        - !map
+          spacingAfter: 0
+          width: 612
+          height: 612
+          absoluteX: 0
+          absoluteY: 612

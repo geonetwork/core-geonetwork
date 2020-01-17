@@ -44,11 +44,8 @@
       pour mettre à jour l'étendue, les systèmes de projection
       ou les aperçus pour ce service et la couche nommée :
     </msg>
-    <msg id="a" xml:lang="dut">WMS service </msg>
-    <msg id="b" xml:lang="dut">wordt beschreven in de online resource sectie. Deze
-       functie uitvoeren om omvang, CRS of thumbnail bij te werken
-       voor deze WMS-service voor de laag met de naam:
-    </msg>
+    <msg id="a" xml:lang="dut">Er is een verwijzing gevonden naar de WMS service </msg>
+    <msg id="b" xml:lang="dut">. Gebruik deze functie om de dekking, de projectie of thumbnail af te leiden of bij te werken vanuit deze WMS-service voor de laag met de naam: </msg>
   </xsl:variable>
 
   <!-- Process parameters and variables-->

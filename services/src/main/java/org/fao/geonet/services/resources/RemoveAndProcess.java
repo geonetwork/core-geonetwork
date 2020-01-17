@@ -68,7 +68,7 @@ public class RemoveAndProcess {
     @Autowired
     private ServiceManager serviceManager;
 
-    @RequestMapping(value = {"/{lang}/resource.del.and.detach"}, produces = {
+    @RequestMapping(value = {"/{portal}/{lang}/resource.del.and.detach"}, produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
@@ -102,7 +102,8 @@ public class RemoveAndProcess {
 
 
         // Remove the file and update the file upload/downloads tables
-        IResourceRemoveHandler removeHook = (IResourceRemoveHandler) context.getApplicationContext().getBean("resourceRemoveHandler");
+        IResourceRemoveHandler removeHook = context.getBean("resourceRemoveHandler",
+                                                            IResourceRemoveHandler.class);
         removeHook.onDelete(context, request, Integer.parseInt(id), filename, access);
 
         // Set parameter and process metadata to remove reference to the uploaded file
@@ -118,7 +119,7 @@ public class RemoveAndProcess {
         try {
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
             processedMetadata = XslProcessUtils.process(context, id, process,
-                true, true, report, siteURL, allParams);
+                true, true, true, report, siteURL, allParams);
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
                     + report.getNumberOfRecordNotFound() + ", Not owner:" + report.getNumberOfRecordsNotEditable()

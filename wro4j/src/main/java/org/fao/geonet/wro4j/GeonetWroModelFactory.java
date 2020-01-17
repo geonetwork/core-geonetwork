@@ -174,7 +174,6 @@ public class GeonetWroModelFactory implements WroModelFactory {
                 }
             } catch (Exception e) {
                 errors.add(e);
-                e.printStackTrace();
                 Log.error(WRO4J_LOG, "Error while loading wro4j model", e);
             } finally {
                 if (streams != null) {
@@ -457,8 +456,9 @@ public class GeonetWroModelFactory implements WroModelFactory {
                 final String groupId = name.substring(0, name.lastIndexOf('.'));
 
                 if (cssGroups.contains(groupId)) {
-                    throw new IllegalArgumentException("There are at least two css file with the name: " + name + ".  Each css file " +
-                        "must have unique names. Check " + file.getPath() + ".");
+                    Log.warning(WRO4J_LOG, "There are at least two css file with the name: " + name + ". " +
+                        "Only the first one will be used, ignoring: " + file.getPath());
+                    continue;
                 }
 
                 cssGroups.add(groupId);

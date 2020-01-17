@@ -23,11 +23,8 @@
 
 package org.fao.geonet.kernel.harvest;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.fao.geonet.Logger;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
@@ -37,21 +34,31 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import jeeves.server.context.ServiceContext;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * This class helps {@link AbstractHarvester} instances to process all metadata collected on the
  * harvest.
- *
+ * <p>
  * Takes care of common properties like categories or privileges.
- *
+ * <p>
  * Not all harvesters use this. They should. But don't. //FIXME?
  *
  * @author heikki doeleman
  */
 public abstract class BaseAligner<P extends AbstractParams> extends AbstractAligner<P> {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(Geonet.HARVESTER);
 
     public final AtomicBoolean cancelMonitor;
 
@@ -59,40 +66,27 @@ public abstract class BaseAligner<P extends AbstractParams> extends AbstractAlig
         this.cancelMonitor = cancelMonitor;
     }
 
+    public void addCategories(AbstractMetadata metadata, Iterable<String> categories,
+                              CategoryMapper localCateg, ServiceContext context,
+                              String serverCategory, boolean saveMetadata) {
 
-    /**
-     * TODO Javadoc.
-     *
-     * @param categories
-     * @param localCateg
-     * @param log
-     * @param saveMetadata
-     * @throws Exception
-     */
-    public void addCategories(AbstractMetadata metadata, Iterable<String> categories, CategoryMapper localCateg, ServiceContext context,
-                              Logger log, String serverCategory, boolean saveMetadata) {
-
-        final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
+        MetadataCategoryRepository metadataCategoryRepository = context.getBean(MetadataCategoryRepository.class);
         Map<String, MetadataCategory> nameToCategoryMap = new HashMap<String, MetadataCategory>();
-        for (MetadataCategory metadataCategory : categoryRepository.findAll()) {
+        for (MetadataCategory metadataCategory : metadataCategoryRepository.findAll()) {
             nameToCategoryMap.put("" + metadataCategory.getId(), metadataCategory);
         }
         for (String catId : categories) {
             String name = localCateg.getName(catId);
 
             if (name == null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("    - Skipping removed category with id:" + catId);
-                }
+                LOGGER.debug("    - Skipping removed category with id:{}", catId);
             } else {
-                if (log.isDebugEnabled()) {
-                    log.debug("    - Setting category : " + name);
-                }
+                LOGGER.debug("    - Setting category : {}", name);
                 final MetadataCategory metadataCategory = nameToCategoryMap.get(catId);
                 if (metadataCategory != null) {
                     metadata.getCategories().add(metadataCategory);
                 } else {
-                    log.warning("Unable to map category: " + catId + " (" + name + ") to a category in Geonetwork");
+                    LOGGER.warn("Unable to map category: {} ({}) to a category in Geonetwork", catId, name);
                 }
             }
         }
@@ -100,14 +94,13 @@ public abstract class BaseAligner<P extends AbstractParams> extends AbstractAlig
         if (serverCategory != null) {
             String catId = localCateg.getID(serverCategory);
             if (catId == null) {
-                if (log.isDebugEnabled())
-                    log.debug("    - Skipping removed category :" + serverCategory);
+                LOGGER.debug("    - Skipping removed category :{}", serverCategory);
             } else {
                 final MetadataCategory metadataCategory = nameToCategoryMap.get(catId);
                 if (metadataCategory != null) {
                     metadata.getCategories().add(metadataCategory);
                 } else {
-                    log.warning("Unable to map category: " + catId + " to a category in Geonetwork");
+                    LOGGER.warn("Unable to map category: {} to a category in Geonetwork", catId);
                 }
             }
         }
@@ -116,83 +109,28 @@ public abstract class BaseAligner<P extends AbstractParams> extends AbstractAlig
         }
     }
 
-    /**
-     *
-     * @param id
-     * @param privilegesIterable
-     * @param localGroups
-     * @param dataMan
-     * @param context
-     * @param log
-     * @throws Exception
-     */
-    public void addPrivileges(String id, Iterable<Privileges> privilegesIterable, GroupMapper localGroups, DataManager dataMan, ServiceContext context, Logger log) throws Exception {
+    public void addPrivileges(String id, Iterable<Privileges> privilegesIterable, GroupMapper localGroups, ServiceContext context) throws Exception {
+        OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
+        DataManager dataManager = context.getBean(DataManager.class);
+        if (!params.isIfRecordExistAppendPrivileges()) {
+            operationAllowedRepository.deleteAllByMetadataId(Integer.parseInt(id));
+        }
         for (Privileges priv : privilegesIterable) {
             String name = localGroups.getName(priv.getGroupId());
 
             if (name == null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("    - Skipping removed group with id:" + priv.getGroupId());
-                }
+                LOGGER.debug("    - Skipping removed group with id:{}", priv.getGroupId());
             } else {
-                if (log.isDebugEnabled()) {
-                    log.debug("    - Setting privileges for group : " + name);
-                }
-
+                LOGGER.debug("    - Setting privileges for group : {}", name);
                 for (int opId : priv.getOperations()) {
-                    name = dataMan.getAccessManager().getPrivilegeName(opId);
-
+                    name = dataManager.getAccessManager().getPrivilegeName(opId);
                     //--- all existing operation
                     if (name != null) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("       --> Operation: " + name);
-                        }
-                        dataMan.setOperation(context, id, priv.getGroupId(), opId + "");
+                        LOGGER.debug("       --> Operation: {}", name);
+                        dataManager.setOperation(context, id, priv.getGroupId(), opId + "");
                     }
                 }
             }
         }
     }
-    
-    /**
-     * Returns the id of the group that owns the harvester. Null if there is no group defined.
-     * @param params
-     * @return
-     */
-    protected Integer getOwnerGroupId(AbstractParams params) {
-        Integer groupId = null;
-        if (!org.apache.commons.lang.StringUtils.isEmpty(params.getOwnerIdGroup()) 
-                && org.apache.commons.lang.StringUtils.isNumeric(params.getOwnerIdGroup())) {
-            groupId = Integer.parseInt(params.getOwnerIdGroup());
-        }
-        return groupId;
-    }
-
-    /**
-     * Returns the owner of records of the harvester,
-     * the owner of the harvester if no owner of the records is defined 
-     * or the admin user (id=1) as failback. 
-     * This third option should never happen, 
-     * but it is a failback just in case some weird harvester is created.
-     * No record should be userless.
-     * 
-     * @param params
-     * @return
-     */
-    protected Integer getOwnerId(AbstractParams params) {
-        Integer ownerId = null;
-        
-        if (!org.apache.commons.lang.StringUtils.isEmpty(params.getOwnerIdUser()) 
-                && org.apache.commons.lang.StringUtils.isNumeric(params.getOwnerIdUser())) {
-            ownerId = Integer.parseInt(params.getOwnerIdUser());
-        } else if (!org.apache.commons.lang.StringUtils.isEmpty(params.getOwnerId()) 
-                && org.apache.commons.lang.StringUtils.isNumeric(params.getOwnerId())) {
-            ownerId = Integer.parseInt(params.getOwnerId());
-        } else {
-            ownerId = 1;
-        }
-        
-        return ownerId;
-    }
-
 }

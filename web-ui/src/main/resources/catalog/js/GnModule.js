@@ -32,6 +32,7 @@
   goog.require('gn_cors_interceptor');
   goog.require('gn_formfields');
   goog.require('gn_indexingtask');
+  goog.require('gn_batchtask');
   goog.require('gn_language_switcher');
   goog.require('gn_locale');
   goog.require('gn_map');
@@ -41,6 +42,7 @@
   goog.require('gn_search_form_controller');
   goog.require('gn_search_manager');
   goog.require('gn_utility');
+  goog.require('gn_openlayers');
 
   /**
    * GnModule just manage angular injection with
@@ -66,7 +68,9 @@
     'gn_alert',
     'gn_admin_menu',
     'gn_cors_interceptor',
-    'gn_indexingtask'
+    'gn_openlayers',
+    'gn_indexingtask',
+    'gn_batchtask'
   ]);
 
 })();

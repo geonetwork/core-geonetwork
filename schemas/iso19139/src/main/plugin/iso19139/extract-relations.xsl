@@ -139,7 +139,7 @@
               <xsl:value-of select="gmd:function/*/@codeListValue"/>
             </function>
             <applicationProfile>
-              <xsl:value-of select="gmd:applicationProfile/gco:CharacterString"/>
+              <xsl:value-of select="gmd:applicationProfile/*/text()"/>
             </applicationProfile>
             <description>
               <xsl:apply-templates mode="get-iso19139-localized-string"

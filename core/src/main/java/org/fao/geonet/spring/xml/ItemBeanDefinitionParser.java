@@ -47,7 +47,7 @@ public class ItemBeanDefinitionParser extends AbstractSingleBeanDefinitionParser
 
         addOptionalPropertyValue(element, bean, "max");
         addOptionalPropertyValue(element, bean, "depth");
-
+        addOptionalPropertyValue(element, bean, "pageSize");
         addOptionalPropertyValue(element, bean, "translator");
     }
 

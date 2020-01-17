@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.7.0-SNAPSHOT</version>
+    <version>3.9.0-SNAPSHOT</version>
   </parent>
 
 
@@ -227,10 +227,6 @@
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpcore</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-net</groupId>
@@ -430,7 +426,7 @@
     <dependency>
       <groupId>edu.ucar</groupId>
       <artifactId>netcdf</artifactId>
-      <version>4.0.patch</version>
+      <version>4.3.23</version>
     </dependency>
 
     <!-- Monitoring libraries -->
@@ -957,6 +953,7 @@
         <es.index.features>gn-features</es.index.features>
         <es.index.features.type>features</es.index.features.type>
         <es.index.records>gn-records</es.index.records>
+        <es.index.records_public></es.index.records_public>
         <es.index.records.type>records</es.index.records.type>
         <es.index.searchlogs>gn-searchlogs</es.index.searchlogs>
         <es.index.searchlogs.type>searchlogs</es.index.searchlogs.type>

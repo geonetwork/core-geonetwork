@@ -67,7 +67,7 @@ public class List {
     // ---
     // --------------------------------------------------------------------------
 
-    @RequestMapping(value = "/{lang}/admin.logfile.list", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.logfile.list", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     ListLogFilesResponse exec() throws Exception {

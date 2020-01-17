@@ -1,0 +1,54 @@
+<div data-ng-controller="GnDashboardRecordLinksController">
+  <div>
+    <div class="row">
+      <div class="col-md-12">
+        <h1 data-translate="">recordLinksDashboard</h1>
+        <p class="text-muted" data-translate="">
+          recordLinksDashboardSubtitle
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pull-right btn-toolbar">
+    <button type="button" class="btn btn-primary"
+            title="{{'analyzeLinks-help' | translate}}"
+            data-ng-disabled="!user.isAdministrator()"
+            data-gn-click-and-spin="analyzeLinks()">
+      <i class="fa fa-fw fa-cogs"/>&nbsp;
+      <span data-translate="">analyzeLinks</span>
+    </button>
+
+    <button type="button" class="btn btn-danger"
+            data-ng-click="removeAll()"
+            data-gn-confirm-click="{{'removeAllLinksAndStatusConfirm' | translate}}">
+      <i class="fa fa-fw fa-times"/>&nbsp;
+      <span data-translate="">removeAllLinksAndStatus</span>
+    </button>
+  </div>
+
+  <br/>
+  <br/>
+
+  <div data-ng-if="error" class="row">
+    <div class="alert alert-danger" role="alert">
+      <i class="fa fa-exclamation-triangle fa-fw"/>
+      <span>{{error.description}}</span>
+    </div>
+  </div>
+
+  <form name="form">
+    <label>Group id:
+      <input type="text" formControlName="groupId" name="groupId" ng-model="groupId" ng-pattern="/^(\s*|\d+)$/" ng-change="triggerSearch()">
+      <span ng-show="!form.groupId.$valid">Integer input only</span>
+    </label>
+  </form>
+  <table id="bstable" bs-table-control="bsTableControl" ng-model="tc">
+  </table>
+
+  <br>
+
+  <gn-dashboard-record-links-processes-container/>
+
+
+</div>

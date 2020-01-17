@@ -1414,8 +1414,11 @@
     <xsl:variable name="fieldName"
                   select="concat('_', $ref, '_', replace($attributeName, ':', 'COLON'))"/>
 
-    <div class="form-group" id="gn-attr-{$fieldName}">
+    <div class="form-group gn-attr-{replace($attributeName, ':', '_')}" id="gn-attr-{$fieldName}">
       <label class="col-sm-4">
+        <xsl:if test="$attributeName = 'xlink:href'">
+          <i class="fa fa-link fa-fw"/>
+        </xsl:if>
         <xsl:value-of select="gn-fn-metadata:getLabel($schema, $attributeName, $labels)/label"/>
       </label>
       <div class="col-sm-7">
@@ -1500,7 +1503,7 @@
     <xsl:variable name="attributeLabel" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
     <xsl:variable name="fieldName"
                   select="concat(replace(@name, ':', 'COLON'), '_', $insertRef)"/>
-    <button type="button" class="btn btn-default btn-xs btn-attr"
+    <button type="button" class="btn btn-default btn-xs btn-attr btn-xs gn-attr-{replace(@name, ':', '_')}"
             id="gn-attr-add-button-{$fieldName}"
             data-gn-click-and-spin="add('{$ref}', '{@name}', '{$insertRef}', null, true)"
             title="{$attributeLabel/description}">
@@ -1548,12 +1551,13 @@
   <!-- Render associated resource action -->
   <xsl:template name="render-associated-resource-button">
     <xsl:param name="type"/>
+    <xsl:param name="options"/>
     <xsl:param name="label"/>
 
     <div class="row form-group gn-field gn-extra-field">
       <div class="col-xs-10 col-xs-offset-2">
         <a class="btn gn-associated-resource-btn"
-           data-ng-click="gnOnlinesrc.onOpenPopup('{$type}')">
+           data-ng-click="gnOnlinesrc.onOpenPopup('{$type}'{if ($options != '') then concat(', ''', $options, '''') else ''})">
           <i class="fa gn-icon-{$type}"></i>&#160;
           <span data-translate="">
             <xsl:choose>
@@ -1731,7 +1735,14 @@
                       <xsl:otherwise>
                         <!-- Call schema render mode of the field without label and controls.-->
                         <saxon:call-template name="{concat('dispatch-', $schema)}">
-                          <xsl:with-param name="base" select="."/>
+                          <xsl:with-param name="base" select=".[name() != 'directiveAttributes']"/>
+                          <xsl:with-param name="config" as="node()?">
+                            <xsl:if test="@use">
+                              <field>
+                                <xsl:copy-of select="@use|directiveAttributes"/>
+                              </field>
+                            </xsl:if>
+                          </xsl:with-param>
                         </saxon:call-template>
                       </xsl:otherwise>
                     </xsl:choose>

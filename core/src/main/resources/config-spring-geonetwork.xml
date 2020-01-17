@@ -57,6 +57,8 @@
 
   <bean id="translatorFactory" class="org.fao.geonet.kernel.search.TranslatorFactory"/>
 
+  <bean id="urlAnalyzer" class="org.fao.geonet.kernel.url.UrlAnalyzer" lazy-init="true"/>
+  <bean id="urlChecker" class="org.fao.geonet.kernel.url.UrlChecker" lazy-init="true"/>
   <bean id="SearchManager" class="org.fao.geonet.kernel.search.SearchManager" lazy-init="true"/>
   <bean id="SearchLogger" class="org.fao.geonet.kernel.search.log.SearcherLogger" lazy-init="true"/>
   <bean id="EsSearchManager" class="org.fao.geonet.kernel.search.EsSearchManager" lazy-init="true"/>
@@ -164,15 +166,54 @@
   </bean>
 
 
-    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer"/>
-    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataManager"/>
+    <!--<bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataManager"/>-->
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataValidator"/>
-    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils"/>
+    <!--<bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils"/>-->
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataOperations"/>
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataStatus"/>
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataSchemaUtils"/>
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataCategory"/>
 
-  <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false"/>
-     
+  <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
+    <property name="namingStrategy" ref="namingStrategy"/>
+  </bean>
+  <bean id="namingStrategy"
+        class="org.springframework.jmx.export.naming.KeyNamingStrategy">
+    <property name="mappings">
+      <props>
+        <prop key="jdbcDataSource">org.apache.commons.dbcp2:name=jdbcDataSource</prop>
+      </props>
+    </property>
+  </bean>
+
+
+  <bean id="filesystemStore"
+        class="org.fao.geonet.api.records.attachments.FilesystemStore"/>
+
+  <bean id="resourceStore"
+        class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">
+    <constructor-arg index="0" ref="filesystemStore"/>
+  </bean>
+
+  <bean id="resources" class="org.fao.geonet.resources.FileResources"/>
+
+  <!-- If you want data stored in S3, use that instead: -->
+  <!--  <bean id="s3credentials" class="org.fao.geonet.resources.S3Credentials">-->
+  <!--    <property name="region" value="eu-west-1"/>-->
+  <!--    <property name="bucket" value="geonetwork-test"/>-->
+  <!--    <property name="keyPrefix" value="geonetwork"/>-->
+  <!--    &lt;!&ndash; Only needed if you don't have a ~/.aws/credentials &ndash;&gt;-->
+  <!--    <property name="accessKey" value="MyAccessKey"/>-->
+  <!--    <property name="secretKey" value="MySecretKey"/>-->
+  <!--    &lt;!&ndash; Only needed when not using Amazon S3&ndash;&gt;-->
+  <!--    <property name="endpoint" value="sos-ch-dk-2.exo.io"/>-->
+  <!--  </bean>-->
+  <!--  <bean id="filesystemStore" class="org.fao.geonet.api.records.attachments.S3Store" />-->
+  <!--  <bean id="resourceStore"-->
+  <!--        class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">-->
+  <!--    <constructor-arg index="0" ref="filesystemStore"/>-->
+  <!--  </bean>-->
+  <!--  <bean id="resources" class="org.fao.geonet.resources.S3Resources"/>-->
+
 </beans>

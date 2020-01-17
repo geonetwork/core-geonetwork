@@ -47,6 +47,17 @@
     function($scope, $location, $rootScope, $translate, $q, $http,
         gnSearchSettings, gnMetadataActions, gnGlobalSettings) {
 
+      // Used for INSPIRE validation task to force display progress bar when executed
+      $scope.forceRefreshTask = false;
+
+      $scope.$on('inspireMdValidationStart', function() {
+        $scope.forceRefreshTask = true;
+      });
+
+      $scope.$on('inspireMdValidationStop', function() {
+        $scope.forceRefreshTask = false;
+      });
+
       $scope.isFilterTagsDisplayed =
           gnGlobalSettings.gnCfg.mods.editor.isFilterTagsDisplayed;
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);

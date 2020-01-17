@@ -62,7 +62,7 @@
           '$http',
           'gnMap',
           'gnMapsManager',
-          'ngeoDecorateInteraction',
+          'olDecorateInteraction',
           'gnGeometryService',
           function BoundingPolygonController(
               $scope,
@@ -70,7 +70,7 @@
               $http,
               gnMap,
               gnMapsManager,
-              ngeoDecorateInteraction,
+              olDecorateInteraction,
               gnGeometryService) {
             var ctrl = this;
 
@@ -108,9 +108,9 @@
             });
 
             // add our layer&interactions to the map
-            ngeoDecorateInteraction(ctrl.drawInteraction);
-            ngeoDecorateInteraction(ctrl.drawLineInteraction);
-            ngeoDecorateInteraction(ctrl.modifyInteraction);
+            olDecorateInteraction(ctrl.drawInteraction);
+            olDecorateInteraction(ctrl.drawLineInteraction);
+            olDecorateInteraction(ctrl.modifyInteraction);
             ctrl.drawInteraction.active = false;
             ctrl.drawLineInteraction.active = false;
             ctrl.modifyInteraction.active = false;
@@ -175,7 +175,7 @@
             ctrl.initValue = function() {
               if (ctrl.polygonXml) {
                 var srsName = ctrl.polygonXml.match(
-                    new RegExp('srsName=\"(EPSG:[0-9]*)\"'));
+                    new RegExp('srsName=\"([^"]*)\"'));
                 ctrl.dataProjection = srsName && srsName.length === 2 ?
                     srsName[1] : 'EPSG:4326';
 
@@ -235,8 +235,10 @@
 
               // print output (skip if readonly)
               if (!ctrl.readOnly) {
+                // GML 3.2.1 is used for ISO19139:2007
+                // TODO: ISO19115-3:2018
                 ctrl.outputPolygonXml =
-                    '<polygon xmlns="http://www.isotc211.org/2005/gmd">' +
+                    '<gmd:polygon xmlns:gmd="http://www.isotc211.org/2005/gmd">' +
                     gnGeometryService.printGeometryOutput(
                     ctrl.map,
                     feature,
@@ -244,8 +246,10 @@
                       crs: outputCrs,
                       format: 'gml'
                     }
-                    ) +
-                    '</polygon>';
+                    ).replace(
+                      /http:\/\/www.opengis.net\/gml"/g,
+                      'http://www.opengis.net/gml/3.2"') +
+                    '</gmd:polygon>';
               }
 
               // update text field (unless geometry was entered manually)

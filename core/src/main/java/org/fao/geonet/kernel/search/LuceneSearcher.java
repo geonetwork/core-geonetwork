@@ -344,8 +344,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                         detected = true;
                     }
                 } catch (Exception x) {
-                    LOGGER.error("Error auto-detecting language: {}", x.getMessage());
-                    x.printStackTrace();
+                    LOGGER.error("Error auto-detecting language: {}", x.getMessage(), x);
                 }
 
 
@@ -654,8 +653,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             try {
                 buildFacetSummary(elSummary, summaryConfig, facetConfiguration, facetCollector, taxonomyReader, langCode);
             } catch (Exception e) {
-                e.printStackTrace();
-                LOGGER.warn("BuildFacetSummary error. {}" ,e.getMessage());
+                LOGGER.warn("BuildFacetSummary error. {}" ,e.getMessage(), e);
             }
 
         } else {
@@ -1021,13 +1019,13 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             }
         } catch (Exception e) {
             // TODO why swallow
-            e.printStackTrace();
+            LOGGER.error(Geonet.SEARCH_ENGINE, "analyzeText error:" + e.getMessage(), e);
         } finally {
             if (ts != null) {
                 try {
                     ts.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error(Geonet.SEARCH_ENGINE, "analyzeText error closing TokenStream:" + e.getMessage(), e);
                 }
             }
         }
@@ -1499,13 +1497,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 _query = new LuceneQueryBuilder(_luceneConfig, _tokenizedFieldSet, SearchManager.getAnalyzer(_language.analyzerLanguage, true), _language.presentationLanguage).build(luceneQueryInput);
                 LOGGER.debug("Lucene query: {}", _query);
 
-
-                appendPortalFilter();
-
-
-                try {
+                _query = appendPortalFilter(_query, _luceneConfig);
+                
+                try (IndexAndTaxonomy indexReader = _sm.getIndexReader(_language.presentationLanguage, _versionToken)) {
                     // Rewrite the drilldown query to a query that can be used by the search logger
-                    _loggerQuery = _query.rewrite(_sm.getIndexReader(_language.presentationLanguage, _versionToken).indexReader);
+                    _loggerQuery = _query.rewrite(indexReader.indexReader);
                     //if(LOGGER.isDebugEnabled()) LOGGER.debug("Rewritten Lucene query: {}", _loggerQuery);
                     //System.out.println("** rewritten:\n"+ rw);
                 } catch (Throwable x) {
@@ -1537,11 +1533,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                         Constructor<Query> c = boostClass.getConstructor(clTypesArrayAll);
                         _query = c.newInstance(inParamsArrayAll);
                     } catch (Exception e) {
-                        LOGGER.warn(" Failed to create boosting query: {}. Check Lucene configuration", e.getMessage());
-                        e.printStackTrace();
+                        LOGGER.warn(" Failed to create boosting query: {}. Check Lucene configuration", e.getMessage(), e);
                     }
                 } catch (Exception e1) {
-                    LOGGER.warn(" Error on boosting query initialization: {}. Check Lucene configuration", e1.getMessage());
+                    LOGGER.warn(" Error on boosting query initialization: {}. Check Lucene configuration", e1.getMessage(), e1);
                 }
             }
 
@@ -1585,7 +1580,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
     }
 
-    private void appendPortalFilter() throws ParseException, QueryNodeException {
+    public static Query appendPortalFilter(Query q, LuceneConfig luceneConfig) throws ParseException, QueryNodeException {
         // If the requested portal define a filter
         // Add it to the request.
         NodeInfo node = ApplicationContextHolder.get().getBean(NodeInfo.class);
@@ -1598,20 +1593,21 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             else if (StringUtils.isNotEmpty(portal.getFilter())) {
                 Query portalFilterQuery = null;
                 // Parse Lucene query
-                portalFilterQuery = parseLuceneQuery(portal.getFilter(), _luceneConfig);
+                portalFilterQuery = parseLuceneQuery(portal.getFilter(), luceneConfig);
                 LOGGER.info("Portal filter is :\n" + portalFilterQuery);
 
                 BooleanQuery query = new BooleanQuery();
                 BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-                query.add(_query, occur);
+                query.add(q, occur);
 
                 if (portalFilterQuery != null) {
                     query.add(portalFilterQuery, occur);
                 }
-                _query = query;
-                LOGGER.debug("Lucene query (with portal filter): {}", _query);
+                q = query;
+                LOGGER.debug("Lucene query (with portal filter): {}", q);
             }
         }
+        return q;
     }
 
     /**

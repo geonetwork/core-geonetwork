@@ -51,10 +51,11 @@
     '$translate',
     '$q',
     '$http',
+    'gnConfig',
     function($rootScope, $timeout, $location, gnHttp,
              gnMetadataManager, gnAlertService, gnSearchSettings,
              gnUtilityService, gnShareService, gnPopup, gnMdFormatter,
-             $translate, $q, $http) {
+             $translate, $q, $http, gnConfig) {
 
       var windowName = 'geonetwork';
       var windowOption = '';
@@ -127,10 +128,10 @@
        */
       this.metadataRDF = function(uuid, approved) {
         var url = gnHttp.getService('mdGetRDF') + '?uuid=' + uuid;
-        
+
         url += angular.isDefined(approved) ?
             '&approved=' + approved : '';
-        
+
         location.replace(url);
       };
 
@@ -140,7 +141,7 @@
        * @param {string} uuid
        */
       this.metadataMEF = function(uuid, bucket, approved) {
-        
+
         var url = gnHttp.getService('mdGetMEF') + '?version=2';
         url += angular.isDefined(uuid) ?
             '&uuid=' + uuid : '&format=full';
@@ -208,30 +209,34 @@
         }, scope, 'PrivilegesUpdated');
       };
 
-      this.openUpdateStatusPanel = function(scope, statusType, t) {
+      this.openUpdateStatusPanel = function(scope, statusType, t, statusToBe, label) {
         scope.task = t;
+        scope.statusToSelect = statusToBe;
         gnUtilityService.openModal({
-          title: 'updateStatus',
+          title: 'mdStatusTitle-' + label,
           content: '<div data-gn-metadata-status-updater="md" ' +
-                        'data-status-type="' + statusType + '" task="t"></div>'
+                        'data-status-to-select="' + statusToBe +
+                        '" data-status-type="' + statusType + '" task="t"></div>'
         }, scope, 'metadataStatusUpdated');
       };
 
       this.startWorkflow = function(md, scope) {
         return $http.put('../api/records/' + md.getId() +
             '/status', {status: 1, changeMessage: 'Enable workflow'}).then(
-            function(data) {
+            function(response) {
               gnMetadataManager.updateMdObj(md);
               scope.$emit('metadataStatusUpdated', true);
               scope.$emit('StatusUpdated', {
                 msg: $translate.instant('metadataStatusUpdatedWithNoErrors'),
                 timeout: 2,
                 type: 'success'});
-            }, function(data) {
+            }, function(response) {
               scope.$emit('metadataStatusUpdated', false);
+
+
               scope.$emit('StatusUpdated', {
                 title: $translate.instant('metadataStatusUpdatedErrors'),
-                error: data,
+                error: response.data,
                 timeout: 0,
                 type: 'danger'});
             });
@@ -297,16 +302,18 @@
       this.publish = function(md, bucket, flag, scope) {
         if (md) {
           flag = md.isPublished() ? 'off' : 'on';
-        } 
+        }
 
-        //Warn about possible workflow changes on batch changes 
-        // or when record is not approved 
-        if((!md || md.mdStatus != 2) && flag === 'on') {
+        scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
+
+        //Warn about possible workflow changes on batch changes
+        // or when record is not approved
+        if((!md || md.mdStatus != 2) && flag === 'on' && scope.isMdWorkflowEnable) {
           if(!confirm($translate.instant('warnPublishDraft'))){
             return;
           }
         }
-        
+
         scope.$broadcast('operationOnSelectionStart');
         var onOrOff = flag === 'on';
 
@@ -427,6 +434,26 @@
             type: 'danger'
           });
         });
+      };
+
+      /**
+       * Validates the current selection of metadata records.
+       * @param {String} bucket
+       */
+      this.validateMdInspire = function(bucket) {
+
+        $rootScope.$broadcast('operationOnSelectionStart');
+        $rootScope.$broadcast('inspireMdValidationStart');
+
+        return gnHttp.callService('../api/records/validate/inspire?' +
+          'bucket=' + bucket, null, {
+          method: 'PUT'
+        }).then(function(data) {
+          $rootScope.$broadcast('inspireMdValidationStop');
+          $rootScope.$broadcast('operationOnSelectionStop');
+          $rootScope.$broadcast('search');
+        });
+
       };
 
       /**

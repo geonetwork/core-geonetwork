@@ -4,7 +4,9 @@
 	xmlns:gco="http://www.isotc211.org/2005/gco"
 	xmlns:gmd="http://www.isotc211.org/2005/gmd"
   xmlns:gmx="http://www.isotc211.org/2005/gmx"
-	xmlns:gml="http://www.opengis.net/gml" 
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:gml="http://www.opengis.net/gml/3.2"
+  xmlns:gml320="http://www.opengis.net/gml"
 	xmlns:srv="http://www.isotc211.org/2005/srv"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:util="java:org.fao.geonet.util.XslUtil"
@@ -101,11 +103,11 @@
   <xsl:param name="lang"
              select="''"/>
 
-
-  <!-- TODO: Convert language code eng > en_US ? -->
   <xsl:variable name="defaultLanguage"
                 select="//gmd:MD_Metadata/gmd:language/*/@codeListValue"/>
 
+  <!-- TODO: Convert language code eng > en_US ? -->
+ 
   <xsl:variable name="requestedLanguageExist"
                 select="$lang != ''
                         and count(//gmd:MD_Metadata/gmd:locale/*[gmd:languageCode/*/@codeListValue = $lang]/@id) > 0"/>
@@ -122,7 +124,6 @@
 
   <xsl:template name="getJsonLD"
                 mode="getJsonLD" match="gmd:MD_Metadata">
-
 	{
 		"@context": "http://schema.org/",
     <xsl:choose>
@@ -134,10 +135,10 @@
       </xsl:otherwise>
     </xsl:choose>
     <!-- TODO: Use the identifier property to attach any relevant Digital Object identifiers (DOIs). -->
-		"@id": "<xsl:value-of select="concat($baseUrl, 'dataset/', gmd:fileIdentifier/*/text())"/>",
-		"includedInDataCatalog":["<xsl:value-of select="concat($baseUrl, 'catalog/', $catalogueName)"/>"],
+		"@id": "<xsl:value-of select="concat($baseUrl, 'api/records/', gmd:fileIdentifier/*/text())"/>",
+		"includedInDataCatalog":[{"url":"<xsl:value-of select="concat($baseUrl, 'search#', $catalogueName)"/>","name":"<xsl:value-of select="$catalogueName"/>"}],
     <!-- TODO: is the dataset language or the metadata language ? -->
-    "inLanguage":"<xsl:value-of select="$requestedLanguage"/>",
+    "inLanguage":"<xsl:value-of select="if ($requestedLanguage  != '') then $requestedLanguage else $defaultLanguage"/>",
     <!-- TODO: availableLanguage -->
     "name": <xsl:apply-templates mode="toJsonLDLocalized"
                                  select="gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>,
@@ -154,10 +155,12 @@
     <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:dateType/*/@codeListValue='revision']/*/gmd:date/*/text()">
 		"dateModified": "<xsl:value-of select="."/>",
     </xsl:for-each>
+    
+		"thumbnailUrl": [
     <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*/gmd:fileName/*[. != '']">
-		"thumbnailUrl": "<xsl:value-of select="."/>",
+    "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
     </xsl:for-each>
-
+    ],
 		"description": <xsl:apply-templates mode="toJsonLDLocalized"
                                         select="gmd:identificationInfo/*/gmd:abstract"/>,
 
@@ -185,6 +188,22 @@
     TODO: Dispatch in author, contributor, copyrightHolder, editor, funder,
     producer, provider, sponsor
     TODO: sourceOrganization
+      <xsl:variable name="role" select="*/gmd:role/gmd:CI_RoleCode/@codeListValue" />
+      <xsl:choose>
+        <xsl:when test="$role='resourceProvider'">provider</xsl:when>
+        <xsl:when test="$role='custodian'">provider</xsl:when>
+        <xsl:when test="$role='owner'">copyrightHolder</xsl:when>
+        <xsl:when test="$role='user'">user</xsl:when>
+        <xsl:when test="$role='distributor'">publisher</xsl:when>
+        <xsl:when test="$role='originator'">sourceOrganization</xsl:when>
+        <xsl:when test="$role='pointOfContact'">provider</xsl:when>
+        <xsl:when test="$role='principalInvestigator'">producer</xsl:when>
+        <xsl:when test="$role='processor'">provider</xsl:when>
+        <xsl:when test="$role='publisher'">publisher</xsl:when>
+        <xsl:when test="$role='author'">author</xsl:when>
+        <xsl:otherwise>provider</xsl:otherwise>
+      </xsl:choose>
+
     -->
     "publisher": [
       <xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/*">
@@ -246,10 +265,13 @@
     <xsl:for-each select="gmd:distributionInfo">
     ,"distribution": [
       <xsl:for-each select=".//gmd:onLine/*[gmd:linkage/gmd:URL != '']">
+        <xsl:variable name="p" select="normalize-space(gmd:protocol/*/text())"/>
         {
         "@type":"DataDownload",
         "contentUrl":"<xsl:value-of select="gmd:linkage/gmd:URL/text()"/>",
-        "encodingFormat":"<xsl:value-of select="gmd:protocol/gco:CharacterString/text()"/>"
+        "encodingFormat":"<xsl:value-of select="if ($p != '') then $p else gmd:protocol/*/@xlink:href"/>",
+        "name":"<xsl:value-of select="gmd:name/*/text()"/>",
+        "description":"<xsl:value-of select="gmd:description/*/text()"/>"
         }
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
@@ -292,31 +314,30 @@
     </xsl:for-each>
 
 
-    <xsl:for-each select="gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent">
-      ,"temporalCoverage": "<xsl:value-of select="concat(
-                                                  gml:TimePeriod/gml:beginPosition, '/',
-                                                  gml:TimePeriod/gml:endPosition
-      )"/>"
+    <xsl:if test="count(gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent[normalize-space(.) != '']) > 0">
+      ,"temporalCoverage": [<xsl:for-each 
+        select="gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent">"<xsl:value-of 
+          select="concat(gml:TimePeriod/gml:beginPosition|gml320:TimePeriod/gml320:beginPosition,'/',
+            gml:TimePeriod/gml:endPosition|gml320:TimePeriod/gml320:endPosition
+      )"/>"<xsl:if test="position() != last()">,</xsl:if></xsl:for-each> ]
+    </xsl:if>
+
       <!-- TODO: handle
       "temporalCoverage" : "2013-12-19/.."
       "temporalCoverage" : "2008"
       -->
-    </xsl:for-each>
-
-    <xsl:for-each select="gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation">
-      ,"license": <xsl:apply-templates mode="toJsonLDLocalized"
-                                      select="."/>
-    </xsl:for-each>
-
+    
+    <!-- array of licenses is allowed, not multiple licenses-->
+    <xsl:if test="count(gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints[normalize-space(.) != '']) > 0"> 
+      ,"license":  [<xsl:for-each 
+        select="gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints">
+          <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
+          <xsl:if test="position() != last()">,</xsl:if></xsl:for-each> ]
+    </xsl:if>
     <!-- TODO: When a dataset derives from or aggregates several originals, use the isBasedOn property. -->
     <!-- TODO: hasPart -->
 	}
 	</xsl:template>
-
-
-
-
-
 
   <xsl:template name="toJsonLDLocalized"
                 mode="toJsonLDLocalized" match="*">

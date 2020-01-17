@@ -207,8 +207,7 @@ public final class Xml {
 
             result = (Element) jdoc.getRootElement().detach();
         } catch (Exception e) {
-            Log.error(Log.ENGINE, "Error loading URL " + url.getPath() + " .Threw exception " + e);
-            e.printStackTrace();
+            Log.error(Log.ENGINE, "Error loading URL " + url.getPath() + " .Threw exception " + e.getMessage(), e);
         }
         return result;
     }
@@ -438,8 +437,7 @@ public final class Xml {
             // Add the following to get timing info on xslt transformations
             //transFact.setAttribute(FeatureKeys.TIMING,true);
         } catch (IllegalArgumentException e) {
-            System.out.println("WARNING: transformerfactory doesnt like saxon attributes!");
-            //e.printStackTrace();
+            Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
         } finally {
             Transformer t = transFact.newTransformer(xslt);
             if (xmlParam != null) {
@@ -486,8 +484,7 @@ public final class Xml {
                 // Add the following to get timing info on xslt transformations
                 //transFact.setAttribute(FeatureKeys.TIMING,true);
             } catch (IllegalArgumentException e) {
-                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
-                //e.printStackTrace();
+                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
             } finally {
                 transFact.setURIResolver(new JeevesURIResolver());
                 Transformer t = transFact.newTransformer(srcSheet);
@@ -553,8 +550,7 @@ public final class Xml {
                 factory.setAttribute(FeatureKeys.LINE_NUMBERING, true);
                 factory.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
             } catch (IllegalArgumentException e) {
-                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
-                //e.printStackTrace();
+                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
             } finally {
                 Transformer transformer = factory.newTransformer(xslt);
 
@@ -869,7 +865,7 @@ public final class Xml {
         }
         XmlErrorHandler eh = new XmlErrorHandler();
         Schema schema = factory().newSchema();
-        Element xsdErrors = validateRealGuts(schema, xml, eh);
+        Element xsdErrors = validateRealGuts(schema, xml, eh, null);
         if (xsdErrors != null) {
             throw new XSDValidationErrorEx("XSD Validation error(s):\n" + getString(xsdErrors), xsdErrors);
         }
@@ -883,7 +879,7 @@ public final class Xml {
     public static void validate(Path schemaPath, Element xml) throws Exception {
         XmlErrorHandler eh = new XmlErrorHandler();
         Schema schema = getSchemaFromPath(schemaPath);
-        Element xsdErrors = validateRealGuts(schema, xml, eh);
+        Element xsdErrors = validateRealGuts(schema, xml, eh, null);
         if (xsdErrors != null) {
             throw new XSDValidationErrorEx("XSD Validation error(s):\n" + getString(xsdErrors), xsdErrors);
         }
@@ -893,9 +889,9 @@ public final class Xml {
     /**
      * Validates an xml document with respect to schemaLocation hints using supplied error handler.
      */
-    public static Element validateInfo(Element xml, XmlErrorHandler eh) throws Exception {
+    public static Element validateInfo(Element xml, XmlErrorHandler eh, String schemaName) throws Exception {
         Schema schema = factory().newSchema();
-        return validateRealGuts(schema, xml, eh);
+        return validateRealGuts(schema, xml, eh, schemaName);
     }
 
 
@@ -904,9 +900,9 @@ public final class Xml {
      * Validates an xml document with respect to an xml schema described by .xsd file path using
      * supplied error handler.
      */
-    public static Element validateInfo(Path schemaPath, Element xml, XmlErrorHandler eh) throws Exception {
+    public static Element validateInfo(Path schemaPath, Element xml, XmlErrorHandler eh, String schemaName) throws Exception {
         Schema schema = getSchemaFromPath(schemaPath);
-        return validateRealGuts(schema, xml, eh);
+        return validateRealGuts(schema, xml, eh, schemaName);
     }
 
     //---------------------------------------------------------------------------
@@ -927,8 +923,8 @@ public final class Xml {
     /**
      * Called by all validation methods to do the real guts of the validation job.
      */
-    private static Element validateRealGuts(Schema schema, Element xml, XmlErrorHandler eh) throws JDOMException {
-        Resolver resolver = ResolverWrapper.getInstance();
+    private static Element validateRealGuts(Schema schema, Element xml, XmlErrorHandler eh, String schemaName) throws JDOMException {
+        Resolver resolver = ResolverWrapper.getInstance(schemaName);
 
         ValidatorHandler vh = schema.newValidatorHandler();
         vh.setResourceResolver(resolver.getXmlResolver());
@@ -1134,8 +1130,7 @@ public final class Xml {
                         s.setSystemId(f.toUri().toASCIIString());
                     }
                 } catch (URISyntaxException e) {
-                    Log.warning(Log.XML_RESOLVER, "URI syntax problem: " + e.getMessage());
-                    e.printStackTrace();
+                    Log.warning(Log.XML_RESOLVER, "URI syntax problem: " + e.getMessage(), e);
                 }
             }
 

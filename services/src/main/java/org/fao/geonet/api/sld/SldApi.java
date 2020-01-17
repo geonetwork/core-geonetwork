@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.TextFile;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.TextFileRepository;
@@ -25,12 +26,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.internet.ParseException;
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +34,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +49,8 @@ import java.util.List;
     tags = "tools",
     description = "Utility operations")
 public class SldApi {
+
+    public static final String LOGGER = Geonet.GEONETWORK + ".api.sld";
 
     @ApiOperation(value = "Test form", hidden = true)
     @RequestMapping(value = "/sldform",
@@ -183,12 +182,16 @@ public class SldApi {
         @ApiParam(value = "The filters in JSON",
             required = true)
         @RequestParam("filters") String filters,
-        HttpServletRequest request) throws ServiceException, TransformerException, JSONException, ParseException, IOException, JDOMException {
+        HttpServletRequest request) throws ServiceException, TransformerException, JSONException, ParseException, IOException, JDOMException, URISyntaxException {
 
         try {
-            HashMap<String, String> hash = SLDUtil.parseSLD(new URL(serverURL), layers);
+            HashMap<String, String> hash = SLDUtil.parseSLD(new URI(serverURL), layers);
 
             Element root = Xml.loadString(hash.get("content"), false);
+
+            if(root.getName().equals("ServiceExceptionReport")) {
+                throw new ServiceException("The WMS GetStyle request failed.");
+            }
             Filter customFilter = SLDUtil.generateCustomFilter(new JSONObject(filters));
             SLDUtil.insertFilter(root, customFilter);
 

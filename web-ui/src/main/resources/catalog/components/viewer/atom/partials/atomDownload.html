@@ -30,7 +30,7 @@
   <div class="btn-group" data-ng-if="isAtomAvailable && isLayerInAtom && atomLinks">
       <br/><b>{{'atomDatasetsInFeed' | translate}}</b><br/>
       <div class="gn-atom">
-          <div data-ng-repeat="link in atomLinks">
+          <div data-ng-repeat="link in atomLinks track by $index">
               <a href="{{link.url}}" target="_blank">{{link.title||link.url}}</a> ({{link.length}}mb, {{link.type}}, {{link.crs}})<br/>
           </div>
       </div>

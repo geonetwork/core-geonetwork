@@ -92,7 +92,8 @@ public class Upload implements Service {
             fsize = "0";
 
 
-        IResourceUploadHandler uploadHook = (IResourceUploadHandler) context.getApplicationContext().getBean("resourceUploadHandler");
+        IResourceUploadHandler uploadHook = context.getBean("resourceUploadHandler",
+                                                            IResourceUploadHandler.class);
         uploadHook.onUpload(context, params, Integer.parseInt(id), fname, Double.parseDouble(fsize));
 
         context.info("UPLOADED:" + fname + "," + id + "," + mdUuid + ","

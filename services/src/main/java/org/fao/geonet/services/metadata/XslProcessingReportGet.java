@@ -89,7 +89,7 @@ public class XslProcessingReportGet {
     public void init(String appPath, ServiceConfig config) throws Exception {
     }
 
-    @RequestMapping(value = "/{lang}/md.processing.batch.report", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/md.processing.batch.report", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody

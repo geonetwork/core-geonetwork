@@ -1,4 +1,5 @@
-<form data-ng-keypress="updatingHarvester()">
+<form name="harvesterForm"
+      data-ng-keypress="updatingHarvester()">
   <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
   <div class="row">
@@ -54,7 +55,35 @@
                  data-ng-model="harvesterSelected.searches[0][c].value"/>
         </div>
       </div>
+      <div class="form-group"
+           data-ng-show="cswBboxFilter">
+        <label class="control-label col-lg-4" data-translate="">bbox</label>
+        <div class="col-lg-8">
+          <div class=""
+               data-gn-draw-bbox=""
+               data-extent="extent"
+               data-hleft=""
+               data-hright=""
+               data-hbottom=""
+               data-htop=""
+               data-lang="$parent.$parent.lang">
+          </div>
+        </div>
+      </div>
     </fieldset>
+
+
+    <hr/>
+    <div id="gn-harvest-settings-csw-xpath-filter-title-row">
+      <label id="gn-harvest-settings-csw-xpath-filter-title-label" class="control-label col-lg-4" data-translate="">xpathFilter</label>
+      <div class="col-lg-8">
+        <input id="gn-harvest-settings-csw-xpath-filter-title-input"
+               type="text"
+               class="form-control"
+               data-ng-model="harvesterSelected.site.xpathFilter"/>
+      </div>
+      <p class="help-block" data-translate="">xpathFilter-help</p>
+    </div>
 
   </fieldset>
 
@@ -87,6 +116,18 @@
       <div id="gn-harvest-settings-csw-advanced-validate-list" data-gn-harvester-validation="harvesterSelected.content.validate"/>
       <p class="help-block" data-translate="">harvesterValidateHelp</p>
     </div>
+
+    <div id="gn-harvest-settings-csw-advanced-batchEdits-row">
+      <label id="gn-harvest-settings-csw-advanced-batchEdits-label" class="control-label">
+        <span data-translate="">harvesterBatchEdits</span>
+      </label>
+      <div id="gn-harvest-settings-csw-advanced-validate-list"
+           style="height: 300px"
+           ui-ace="{useWrapMode:true, showGutter:true, mode:'json'}"
+           data-ng-model="harvesterSelected.content.batchEdits"/>
+      <p class="help-block" data-translate="">harvesterBatchEditsHelp</p>
+    </div>
+
     <div id="gn-harvest-settings-csw-advanced-xsl-row">
       <label id="gn-harvest-settings-csw-advanced-xsl-label" class="control-label" data-translate="">applyXSLToRecord</label>
       <div id="gn-harvest-settings-csw-advanced-xsl-list" data-gn-import-xsl="harvesterSelected.site.xslfilter"/>

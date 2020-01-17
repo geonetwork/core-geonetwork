@@ -23,32 +23,31 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.google.common.collect.Sets;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
-import com.google.common.collect.Sets;
-
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Removes a metadata from the system.
@@ -67,9 +66,10 @@ public class BatchDelete extends BackupFileService {
 
     public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dataMan = gc.getBean(DataManager.class);
+        IMetadataManager metadataManager = gc.getBean(IMetadataManager.class);
         AccessManager accessMan = gc.getBean(AccessManager.class);
         UserSession session = context.getUserSession();
+        Store store = context.getBean("resourceStore", Store.class);
 
         Set<String> metadata = new HashSet<>();
         Set<String> notFound = new HashSet<>();
@@ -98,29 +98,28 @@ public class BatchDelete extends BackupFileService {
             if (!metadataRepository.existsMetadataUuid(uuid)) {
                 notFound.add(uuid);
             }
-            
+
             for(AbstractMetadata info : metadataRepository.findAllByUuid(uuid)) {
             	if (!accessMan.isOwner(context, String.valueOf(info.getId()))) {
 	                notOwner.add(uuid);
 	            } else {
 	                String idString = String.valueOf(info.getId());
-	
+
 	                //--- backup metadata in 'removed' folder
 	                if (backupFile &&
 	                    info.getDataInfo().getType() != MetadataType.SUB_TEMPLATE &&
 	                    info.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
 	                    backupFile(context, idString, info.getUuid(), MEFLib.doExport(context, info.getUuid(), "full", false, true, false, false, true));
 	                }
-	
+
 	                //--- remove the metadata directory
-	                Path pb = Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), idString);
-	                IO.deleteFileOrDirectory(pb);
-	
+                    store.delResources(context, uuid);
+
 	                //--- delete metadata and return status
-	                dataMan.deleteMetadata(context, idString);
-	                if (context.isDebugEnabled())
-	                    context.debug("  Metadata with id " + idString + " deleted.");
-	                metadata.add(uuid);
+                  metadataManager.deleteMetadata(context, idString);
+                  if (context.isDebugEnabled())
+                      context.debug("  Metadata with id " + idString + " deleted.");
+                  metadata.add(uuid);
 	            }
             }
         }
