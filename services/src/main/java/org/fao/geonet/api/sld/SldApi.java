@@ -20,6 +20,8 @@ import org.jdom.output.XMLOutputter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.opengis.filter.Filter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,6 +56,9 @@ import java.util.List;
 public class SldApi {
 
     public static final String LOGGER = Geonet.GEONETWORK + ".api.sld";
+
+    // SPECIFIC SEXTANT: actually create a logger
+    private static final Logger SLF4J_LOGGER = LoggerFactory.getLogger(LOGGER);
 
     @ApiOperation(value = "Test form", hidden = true)
     @RequestMapping(value = "/sldform",
@@ -240,6 +245,7 @@ public class SldApi {
             writer.write(file.getContent());
             writer.flush();
         } catch (Exception e) {
+            SLF4J_LOGGER.error(String.format("Error fetching SLD '%s'",id), e);
             throw new ResourceNotFoundException(String.format(
                 "SLD '%s' not found. ",
                 id));
