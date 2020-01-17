@@ -1,0 +1,409 @@
+================================================================================
+===
+=== GeoNetwork 3.10.0: List of changes
+===
+================================================================================
+- CSW / Test interface does not load samples (#4378)
+- Fix metadata creation when template is not downloadable by current user (#4377)
+- Update doc submodule.
+- add an import conversion that extracts md_metadata from esri geosticker metadata
+- Date picker directive - use utc format to process the date. Fixes #4260
+- Import / Validation / Execute all schematron rules that apply #1875 (#3564)
+- DB / Disabled workflow by default.
+- Map / 3D mode disabled by default (to avoid dependencies loading issue).
+- Map / Fix GetFeatureInfo
+- Update 19115-3 submodule.
+- Editor / Subtemplate / Do not display side panel
+- ISO19115-FDIS / Remove conversion from arccatalogue
+- Allow CRS:84 to be specified as projection for use in writing bounding polygon's
+- Use projection axis order when writing gml for bounding polygon's and change default WGS (EPAG:4326) code to be urn:ogc:def:EPSG:6.6:4326 instead of EPSG:4326 as lat/lon ordering of coordinates is normally expected to be followed for this code
+- Added dcterms:title to source thesaurus title for rdf:Description element fixes #4294
+- Add process in Dublin Core schema that can be used in OAI-PMH harvester to convert from DC to ISO19139 if the remote server only provides DC format
+- Improve CSW harvester error message when the host is not valid
+- test
+- RequestParamMethodArgumentResolver cannot deserialize page request, and should not take the place of the handler required to do it
+- Fix an error when GN is deployed as ROOT context ("/") (#4358)
+- OWS Service / do not break on id/metadata match when looking up layer
+- Update from transifex.
+- Update submodule.
+- Harvester / GeoNetwork / Fix saving the harvester.
+- Update SourcesController.js
+- Admin / Sources / Add filter by type of sources.
+- URL Rewrite / Be more strict on what webapp and portal name can be. (#4355)
+- Logo / Fix copy op when starting the app, creating a portal or an harvester.
+- Record view / Disable current view in view switcher menu.
+- Admin / Record link / Remove unused CSS classes and fix layout when long URL in report
+- Updates from transifex.
+- ETF Remote validation results persistency (#4308)
+- API / Delete record was failing when using an internal ID
+- Record view / Spatial representation type can contain multiple values
+- Fixes arcsde harvesting master (#4271)
+- Associated record / Add possibility to display brothers/sisters ie. records having same parents.
+- Associated record / Add possibility to display brothers/sisters ie. records having same parents.
+- Harvesting / CSW / Properly init map coordinate when moving from one config to another.
+- Harvesting / CSW / Fix saving of all types of parameters
+- Adjust the width of the buttons according to the number of buttons in the button group
+- Add text for when there is no map
+- Improvements to the mappanels: - layer trees - ows map context reorder elements - switched open/close icon
+- Reorganize the elements on the `Map` panel on the map
+- Improve positioning of layers grid
+- Small UI/a11y improvements to the related records in the Metadata view
+- Allow to exclude elements from flatModeExceptions
+- Viewer / add setting to allow autofit on layer added from record
+- If the gmd:LanguageCode contains text() then it should match the codelist value. Optionally it can also come from a codelist (sample provided)
+- Don't lose gmd:country in mainlanguage gmd:locale if it exists.
+- Editor / Group owner / Radio icon and filter if more than 10.
+- ISO19139 / Citation / Parameter to turn it off (#4315)
+- Editor / Table column / Add support for directive. (#4314)
+- reactivate harvester logger (my mistake) and does not override non harvestd metadata
+- Merge pull request #4337 from julsbreakdown/fix-heatmap-extent
+- Merge pull request #4316 from cmangeat/search_facets_that_paginate
+- Facet / simplify pagination code & html template
+- Facet / rework pagination buttons & translations
+- Facet config / add documentation for pageSize
+- fix(heatmap) use transform extent to get topleft & bottomright
+- Handle display of all possible combinations of organisation name, individual name and position name in iso19139 full view
+- Small change to readme
+- Thumbnails / A record may have only one.
+- Merge branch 'sylar11-master'
+- Merge branch 'master' of https://github.com/sylar11/core-geonetwork into sylar11-master
+- french translations
+- allow definition of 'page' size for search facet
+- improve delete draft first message from #4240
+- Record view / Unused CSS class
+- Merge pull request #4248 from pvalsecc/s3_master
+- redo fix to add only single license (and fill it with array of otherconstraints)
+- Set context as thread local when it is created in ApiUtils
+- url checker, set timeout when ftp check, also when hhtp get (oups) (#4301)
+- Inspire CSW is not valid XML #4222 (#4291)
+- avoid to set too long batchkey (#4298)
+- Merge pull request #4297 from julsbreakdown/wps-execute-output
+- fix(wps) use processDescription for dropdown output options
+- Merge pull request #4289 from julsbreakdown/fix-translation-facet-config
+- URL rewrite / Main landing page for /metadata
+- Lucene / index reader are usually closed (#4016)
+- Merge pull request #4286 from jahow/add-2d-3d-badge
+- Keep cube icon for 2D/3D switcher & restore focus tooltip
+- Fixed the tooltip on focus, relocated the margin-top
+- Extra badge indicating the 2D/3D view setting
+- MEF Export / Remove duplicates on each record
+- Record view / Associated resources / Avoid duplicates
+- Doc / Update path
+- Url checker improvments (#4284)
+- Merge pull request #4265 from geonetwork/olupgradeimprovements
+- Merge pull request #4280 from MichelGabriel/olupgradeimprovements-fix-featureinfo-table
+- move .gn-attribution mixin in core
+- Fix: handle forEachFeatureAtPixel api changes
+- Fix for sticking the featureidentify table to the bottom
+- check if translation is ready using oneway binding
+- Merge pull request #4278 from MichelGabriel/olupgradeimprovements-print-fix
+- Fix for the print size on retina screens
+- DB / JPA / Avoid trouble with jpa model gen (setter needs to be camel case) #4274
+- Increase the max width of the popover
+- Fix for the width of the localisation dropdown (for all screensizes)
+- Fix the the attribution overlap on smaller (landscape) screens.
+- always take the first style as default style is a workaround for esri services which is solved in this version of openlayers
+- version check more explicit (else won't work on esri)
+- Dev doc / Move content to the main documentation (#4244)
+- Map / Fix for toLowerCase bug for featureinfo on unknown format (#4253)
+- Openlayers upgrade (#4236)
+- Harvesting / CSW / Avoid to save NaN in bbox filter.
+- Allow to configure all S3 credentials with env vars
+- Fix logo delete
+- Fix setting site logos
+- Add S3 implementation of the Resources class
+- Split the Resources class for file specific stuff
+- The Feature info table should not fall behind the bottombar
+- Map panel height should take into account the height of the bottombar
+- Starting icon refactoring
+- Add a Store implementation for Amazon's S3
+- Record view / Add contact website.
+- Search results / PDF / Add constraints.
+- Elements targeted by operation filters can be removed on processing. (#4232)
+- API / XSL Process / Preview should not save in db. Datestamp does not apply as it is handled by DataManager.
+- Exception / Replace javassist.NotFoundException by org.fao.geonet.api.exception.ResourceNotFoundException.
+- ES / Update to 7.4.2.
+- PDF / dup variable and missing space (#4233) and improve error message
+- Map / Fix missing legend (#4113)
+- ISO19139 / optimizes remove-dataset, operateson element contains link to dataset-record in xlink:href (if no @uuidref) (#4198)
+- Map / Improve style support (#4209)
+- Admin / Group / Return API exception if SQL error. Add UI checks on max field length.
+- Registry / Add spatial scope date
+- Same size for the required field asterisk
+- Doc / Build standards doc based on schema plugins. (#4221)
+- ATOM improvement. (#4216)
+- Add ui-defaultSearchString back in
+- as suggested in https://github.com/geonetwork/doc/pull/91, move documentation of fields to config-editor.xsd
+- Update 19115-3 submodule.
+- ISO19139 / Don't create PT_FreeText on main language if the CharacterString or Anchor is null (#4203)
+- Fix for #4166 and #4167: Improvements to the logo and menubar (#4178)
+- Documentation / Add link when a page exist in the doc (#4211)
+- Harvester / Add batch edit parameter. (#4172)
+- Related resource / Add possibility to hide a parent element in case no relation found.
+- Admin / User / List not loaded in non debug mode
+- Merge pull request #1 from sylar11/sylar11-patch-1
+- remove the last comma
+- Fix check on permissions
+- Bug fix - wrong gco:nilReason It was only checking the PT_FreeText and not CharacterString which was causing gco:nilReason when gco:CharacterString was not empty.
+- ISO19139 / Support for applicationProfile as anchor
+- UI Config / Facet / Order facet according to configuration
+- Update attachment records on import
+- Suggestion / Reset text not matching any suggestion entries in the list.
+- improve dutch translations for suggest
+- Facet / Add record owner name to easily search by username.
+- Directory / Fix error when opening editor.
+- SQL / Add migration steps for 3.8.x. (#4163)
+- ISO19139 / 2007 schema contains duplicated (unused) files for codelist.
+- Update en-core.json
+- Merge pull request #4154 from geonetwork/archaeogeek-en-admin
+- Merge pull request #4153 from geonetwork/archaeogeek-en-editor
+- Update en-search.json
+- Removed non-English typo for "Unknow" as it will come from transifex
+- Fixed some typos (unknow and cance) removed duplicate entries (metadata/pdfReport/headerRight-help) in en-admin.json
+- Update migrate-default.sql
+- Update version to 3.8.3-SNAPSHOT
+- Update version to 3.8.2-0
+- Update doc submodule.
+- SQL / DOI password is internal.
+- API / Processing / XSL / Add parameter to update or not datestamp (#4159)
+- Updates from transifex.
+- Editor / Thumbnail creation fails due to PDF box update and conflict with mapfish print (#4075)
+- SQL / DOI password is internal. (#4162)
+- API / Processing / XSL / Add parameter to update or not datestamp (#4159)
+- Update doc submodule.
+- Updates from transifex.
+- Editor / Thumbnail creation fails due to PDF box update and conflict with mapfish print (#4075)
+- Update en-editor.json
+- Update en-admin.json
+- Update en-editor.json
+- i18n / Add ESRI Tiled service (#4151)
+- Map / Feature info / Bad link
+- Editor / Keyword / i18n / Add missing key
+- Map viewer / Save map as metadata / Options to choose group and (#4146)
+- Inspire validator proxy geonet (#4135)
+- Prevent mutating the index record when clicking on view WMS
+- ISO19139 / Update some FR strings (#4149)
+- i18n / Add ESRI Tiled service (#4151)
+- Map / Feature info / Bad link
+- Editor / Keyword / i18n / Add missing key
+- Map viewer / Save map as metadata / Options to choose group and (#4146)
+- Inspire validator proxy geonet (#4135)
+- Update ISO19115-3 submodule.
+- Prevent mutating the index record when clicking on view WMS
+- ISO19139 / Update some FR strings (#4149)
+- Update ISO19115-3 submodule.
+- Update ISO19115-3 submodule.
+- Update ISO19115-3 submodule.
+- Editor / Flat mode / When adding free text keyword, insert keyword in existing one or create a new block if not. Fix insertion point ref. Add title. Propose first from thesaurus, then free text.
+- Editor / Online resources / Add a maximum height to the thumbnail image. Try to minimize the amount of scrollbars. (#4143)
+- Portal id / Exclude webapp root folder. (#4140)
+- Fix the localisation style for Chrome 78 (#4139)
+- Editor / Add confirmation before removal. (#4138)
+- position Source dataset in detail view out of table (#4137)
+- Fix for breaking dropdowns in Chrome and missing icons (#4136)
+- Editor / Online resource / Removal is broken (#4134)
+- i18n / Missing key (#4132)
+- API / Translation should never be null (#4131)
+- Gazetteer checkbox in user interface settings is not respected #4106. (#4133)
+- i18n / Missing key (#4130)
+- Admin / Alpha order for group list in group managment and multiselect. (#4129)
+- CSS / Fix timeline missing dependency (#4128)
+- i18n / Invalid key (#4127)
+- Sharing / Change public state logo to unlock to be consistent with other UI. Improve french translations. (#4126)
+- Warn user if harvester is already taken on harvester creation only (#4125)
+- Record view / Google plus is not available anymore (#4124)
+- New metadata / Force to set groupOwner when user is not an administrator / Vertical mode
+- New metadata / Force to set groupOwner when user is not an administrator
+- Keyword encoding / Add multilingual anchor support.
+- Set threads based on number of cores.
+- Portal / Add link to group (#4098)
+- Harvester / CSW / Bbox filter. (#4076)
+- Harvester / Add option to append privileges in case of override
+- Make the modal dialog a bit wider (still fits the screen) so all languages will fit in the window
+- Hide the button and dropdown when VCS (Version Control System) in not enabled.
+- Record link / Disable analyze button (only allowed for admin user)
+- Portal list / Fix link to main catalogue
+- Logo picker / Order by file name & allow filtering when more than 10 logos
+- Editor / Online resources / Add a maximum height to the thumbnail image. Try to minimize the amount of scrollbars. (#4143)
+- Portal id / Exclude webapp root folder. (#4140)
+- Fix the localisation style for Chrome 78 (#4139)
+- Editor / Add confirmation before removal. (#4138)
+- position Source dataset in detail view out of table (#4137)
+- Fix for breaking dropdowns in Chrome and missing icons (#4136)
+- Editor / Online resource / Removal is broken (#4134)
+- i18n / Missing key (#4132)
+- API / Translation should never be null (#4131)
+- Gazetteer checkbox in user interface settings is not respected #4106. (#4133)
+- i18n / Missing key (#4130)
+- Admin / Alpha order for group list in group managment and multiselect. (#4129)
+- CSS / Fix timeline missing dependency (#4128)
+- i18n / Invalid key (#4127)
+- Sharing / Change public state logo to unlock to be consistent with other UI. Improve french translations. (#4126)
+- Warn user if harvester is already taken on harvester creation only (#4125)
+- Record view / Google plus is not available anymore (#4124)
+- New metadata / Force to set groupOwner when user is not an administrator / Vertical mode
+- New metadata / Force to set groupOwner when user is not an administrator
+- Keyword encoding / Add multilingual anchor support.
+- Set threads based on number of cores.
+- Editor / Flat mode / When adding free text keyword, insert keyword in existing one or create a new block if not. (#4100)
+- Portal / Add link to group (#4098)
+- Harvester / CSW / Bbox filter. (#4076)
+- Harvester / Add option to append privileges in case of override
+- Make the modal dialog a bit wider (still fits the screen) so all languages will fit in the window
+- Hide the button and dropdown when VCS (Version Control System) in not enabled.
+- Record link / Disable analyze button (only allowed for admin user)
+- Portal list / Fix link to main catalogue
+- Logo picker / Order by file name & allow filtering when more than 10 logos
+- Property file / Ensure the one in WEB-INF is loaded (and not one from a JAR)
+- Admin / Source / Display full logo
+- Property file / Ensure the one in WEB-INF is loaded (and not one from a JAR)
+- Admin / Source / Display full logo
+- (gn) fix total hit count property in index table loader
+- fix(featuretable) initialize with correct layer
+- Merge pull request #4112 from jahow/fix-es-table-loader-count
+- Merge pull request #4110 from julsbreakdown/fix-getfeature-table-init
+- (gn) fix total hit count property in index table loader
+- fix(featuretable) initialize with correct layer
+- Editor / Flat mode / When adding free text keyword, insert keyword in existing one or create a new block if not. Fix insertion point ref. Add title. Propose first from thesaurus, then free text.
+- Update legacy services mapping
+- Update legacy services mapping
+- Dashboard / Record links / Fix link url
+- Dashboard / Record links / Fix link url
+- Warn user if harvester or userid is already taken (#4038)
+- Warn user if harvester or userid is already taken (#4038)
+- Subtemplates - support Anchor for title in gmd:DQ_DomainConsistency
+- Subtemplates - support Anchor for title in gmd:DQ_DomainConsistency
+- Editor / Flat mode / When adding free text keyword, insert keyword in existing one or create a new block if not.
+- URL Checker / Mutualise with XSL call eg. schematron and consider http 404 on HEAD as 405 - fix test
+- URL Checker / Mutualise with XSL call eg. schematron and consider http 404 on HEAD as 405 - fix test
+- Update NeedHelpDirective.js
+- URL Checker / Mutualise with XSL call eg. schematron and consider http 404 on HEAD as 405
+- Admin console / Move WFS feature harvester to the harvester section (instead of status & information).
+- ES / Index health check / Fix due to incompatibility between JEST 6.3.1 and ES 7.x
+- Replace the hardcoded 'eng' with the language from the scope (#4094)
+- Update NeedHelpDirective.js
+- URL Checker / Mutualise with XSL call eg. schematron and consider http 404 on HEAD as 405
+- Admin console / Move WFS feature harvester to the harvester section (instead of status & information).
+- ES / Index health check / Fix due to incompatibility between JEST 6.3.1 and ES 7.x
+- SQL /  Migration / Set source types
+- SQL / Migration / Set source types
+- Replace the hardcoded 'eng' with the language from the scope (#4094)
+- Harvester / GeoNetwork / Profiles / Source transform for harvested metadata format (#4080)
+- Harvester / GeoNetwork / Profiles / Source transform for harvested metadata format (#4081)
+- Harvester / CSW / Add XPath filter (#4066)
+- API / Related / Errors in case a feature catalogue is linked but not found
+- Portal / Add message when a portal is empty. (#4067)
+- Admin / Dashboard / Do not propose WFS indexing if ES is not setup
+- Admin / Logo / Improve styling (#4073)
+- Portal list / Force content type to text/html
+- Harvester / CSW / Add XPath filter (#4066)
+- API / Related / Errors in case a feature catalogue is linked but not found
+- Portal / Add message when a portal is empty. (#4067)
+- Admin / Dashboard / Do not propose WFS indexing if ES is not setup
+- Admin / Logo / Improve styling (#4073)
+- Portal list / Force content type to text/html
+- Update version to 3.8.2-SNAPSHOT
+- Update version to 3.8.1-0
+- Update 19115-3 submodule.
+- Fix: Remove padding in Admin page
+- Update 19115-3 submodule.
+- Fix: Remove padding in Admin page
+- Update doc submodule.
+- fix #4040 if count=numrecords, nextrecord should not be 0
+- Update from transifex.
+- Spliting the large GN stylesheet into smaller ones
+- ISO19139 / Formatter / Indeterminate position label not correct
+- ES / By default do not insert in a public index
+- API / Xsl process reports are only returned as JSON (#3996).
+- Portal list (#4042)
+- Add UI configuration for footer (enabled/disabled)
+- Add more compact interface in the UI config when main field is disabled
+- Update doc submodule.
+- fix #4040 if count=numrecords, nextrecord should not be 0
+- Update from transifex.
+- Spliting the large GN stylesheet into smaller ones
+- ISO19139 / Formatter / Indeterminate position label not correct
+- ES / By default do not insert in a public index
+- API / Xsl process reports are only returned as JSON (#3996).
+- Portal list (#4042)
+- Add UI configuration for footer (enabled/disabled)
+- ES / Public index name typo
+- Add more compact interface in the UI config when main field is disabled
+- Map / Zooming to layer extent after adding new layer to map has no effect  #3807
+- Harvester / GeoNetwork 2.x / Fix (#4047)
+- Added or changed menu icons in the admin sidebar
+- OGC / GetCapabilities / Time out set to 1 min. (#4046)
+- Map / Zooming to layer extent after adding new layer to map has no effect  #3807
+- Harvester / GeoNetwork 2.x / Fix (#4047)
+- Added or changed menu icons in the admin sidebar
+- OGC / GetCapabilities / Time out set to 1 min. (#4046)
+- User search / Fix test.
+- User search / Fix test.
+- API / Documentation / Redirect to default index.html
+- Portal / Set name depending on language in header and CSW capabilities (#4029)
+- User searches / Relate user searches with groups (#4033)
+- ES / Add source name field (#4032)
+- Fix Inspire atom submodule endpoints
+- i18n / Add Portuguesa (pt_BT from transifex).
+- Formatter improvements (#3991)
+- ES / Add option to populate an index with only public records. (#3985)
+- ISO19139 / Multilingual record / Fix online source name editing
+- shoot down hook no added every get
+- Added extra classes to related resources
+- Update README.md
+- Update README.md
+- User searches / Relate user searches with groups (#4033)
+- Portal / Set name depending on language in header and CSW capabilities (#4029)
+- API / Documentation / Redirect to default index.html
+- ES / Add source name field (#4032)
+- Fix Inspire atom submodule endpoints
+- i18n / Add Portuguesa (pt_BT from transifex).
+- Formatter improvements (#3991)
+- ES / Add option to populate an index with only public records. (#3985)
+- ISO19139 / Multilingual record / Fix online source name editing
+- shoot down hook no added every get
+- Added extra classes to related resources
+- Update README.md
+- Update README.md
+- Update linked-data-checker.xsl
+- Update linked-data-checker.xsl
+- Update keywords-comma-exploder.xsl
+- Update keywords-comma-exploder.xsl
+- Update README.md
+- Test / More robust in case the default are not the one expected. Comment test error on less compilation.
+- Test / More robust in case the default are not the one expected. Comment test error on less compilation.
+- Update submodule.
+- Editor / Validation panel on top (#4014)
+- ISO19139 / Support main language encoded using CharacterString or LanguageCode #4012
+- Fix for overlapping buttons on contribute dashboard on medium sized screens (#4003)
+- ISO19139 / Add migration to ISO19115-3.2018
+- Editor / Validation panel on top (#4014)
+- ISO19139 / Support main language encoded using CharacterString or LanguageCode #4012
+- Build / Travis / Point to 3.8.x branch
+- Fix for overlapping buttons on contribute dashboard on medium sized screens (#4003)
+- ISO19139 / Add migration to ISO19115-3.2018
+- Home page / Add link to open record when clicking the thumbnail (and not only the title)
+- ISO19110 / Display code before name
+- Fix tests
+- Fix tests
+- Test / Fix XmlValidationTest
+- Home page / Add link to open record when clicking the thumbnail (and not only the title)
+- ISO19110 / Display code before name
+- Update submodule.
+- Editor / Associated resources / Set default value to action (#3981)
+- Editor / Documentation / How to customize associated panel list of link types ? (#3989)
+- Map / Cache getcapabilities parsing. (#3988)
+- WFS harvester / SLD / Send GetStyle request with direct httpClient (#3986)
+- Map / Print / Translate layout (#3987)
+- Editor / Table mode / Add option to not to have a fieldset around the (#3978)
+- Editor / Associated resources / Set default value to action (#3981)
+- Editor / Documentation / How to customize associated panel list of link types ? (#3989)
+- Map / Cache getcapabilities parsing. (#3988)
+- WFS harvester / SLD / Send GetStyle request with direct httpClient (#3986)
+- Map / Print / Translate layout (#3987)
+- Editor / Table mode / Add option to not to have a fieldset around the (#3978)
+- ISO19110 / Index responsible party and add version identifier (#3982)
+- ISO19110 / Index responsible party and add version identifier (#3982)
+- Master is now 3.9.x.
+- Update version to 3.8.1-SNAPSHOT
+- Update version to 3.8.0-0

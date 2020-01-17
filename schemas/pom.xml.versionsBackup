@@ -21,26 +21,41 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
+
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.10.0-0</version>
+    <version>3.9.0-SNAPSHOT</version>
   </parent>
+
+  <version>3.7</version>
+
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>docs</artifactId>
-  <name>Documentation module</name>
+  <artifactId>schemas</artifactId>
+  <name>GeoNetwork schema plugins</name>
   <packaging>pom</packaging>
-  <licenses>
-    <license>
-      <name>General Public License (GPL)</name>
-      <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
-    </license>
-  </licenses>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-all</artifactId>
+    </dependency>
+  </dependencies>
+
   <modules>
-    <!--<module>schema-doc</module>-->
-    <module>manuals</module>
+    <module>schema-core</module>
+    <module>csw-record</module>
+    <module>dublin-core</module>
+    <module>iso19110</module>
+    <module>iso19139</module>
+    <module>iso19115-3.2018</module>
   </modules>
+  <properties>
+    <rootProjectDir>../..</rootProjectDir>
+    <gn.project.version>3.9.0-SNAPSHOT</gn.project.version>
+  </properties>
+
 </project>
