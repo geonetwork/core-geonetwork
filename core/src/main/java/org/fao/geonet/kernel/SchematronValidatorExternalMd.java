@@ -65,10 +65,6 @@ public class SchematronValidatorExternalMd extends AbstractSchematronValidator {
             schemaTronXmlOut.addContent(errorReport);
         }
 
-        if (schemaTronXmlOut.getChildren().isEmpty()) {
-            schemaTronXmlOut = null;
-        }
-
         return schemaTronXmlOut;
     }
 
