@@ -119,6 +119,12 @@
 
   <xsl:variable name="isJsEnabled" select="not(ends-with($service, '-nojs'))"/>
 
+  <!-- TODO: Can be improved.
+  If there is no config in the database then this is always false.
+  If CatController default config was set it to true, 3D JS dependencies will not be loaded.
+  CatController default config is false and if user wants to enable 3D
+  he/she has to create a config from the admin.
+   -->
   <xsl:variable name="is3DModeAllowed"
                 select="if ($service = 'catalog.search' and
                             (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.map.is3DModeAllowed') = 'true' or /root/request/with3d))
