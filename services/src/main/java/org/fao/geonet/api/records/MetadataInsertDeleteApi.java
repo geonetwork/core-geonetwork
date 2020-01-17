@@ -480,11 +480,11 @@ public class MetadataInsertDeleteApi {
 
         try {
             StoreUtils.copyDataDir(context, sourceMetadata.getId(), Integer.parseInt(newId), true);
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.warning(Geonet.DATA_MANAGER,
                     String.format(
                             "Error while copying metadata resources. Error is %s. "
-                                    + "Metadata is created but without resources from the source record with id '%d':",
+                                    + "Metadata is created but without resources from the source record with id '%s':",
                             e.getMessage(), newId));
         }
         if (hasCategoryOfSource) {
