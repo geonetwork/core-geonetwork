@@ -6,6 +6,11 @@
   <div class="row gn-row-results">
     <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
       <div class="col-md-3 gn-search-facet">
+        <div data-search-filter-tags
+             data-dimensions="searchResults.dimension"
+             data-use-location-parameters="true"
+             ng-if="isFilterTagsDisplayedInSearch && searchResults.dimension">
+        </div>
 
         <div data-ng-show="searchResults.records.length > 0"
             data-gn-saved-selections-panel="user"></div>
@@ -31,15 +36,6 @@
       </div>
 
       <div class="col-md-9 container-fluid">
-      <div class="row" data-ng-show="isFilterTagsDisplayedInSearch">
-        <div class="col-xs-12">
-          <div data-search-filter-tags
-               data-dimensions="searchResults.dimension"
-               data-use-location-parameters="true"
-               ng-if="searchResults.dimension">
-          </div>
-        </div>
-      </div>
       <div class="row gn-row-tools">
         <div class="col-xs-12 col-md-9"
             data-gn-facet-dimension-list="searchResults.dimension"

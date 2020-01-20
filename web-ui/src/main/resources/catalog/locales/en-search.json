@@ -517,5 +517,6 @@
   "changeDateFrom": "Resources changed after",
   "changeDateTo": "Resources changed before",
   "dateFrom": "Records updated before",
-  "dateTo": "Records updated after"
+  "dateTo": "Records updated after",
+  "activeFilters": "Active filters"
 }
