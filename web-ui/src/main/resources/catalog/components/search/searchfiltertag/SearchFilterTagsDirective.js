@@ -6,6 +6,7 @@
   var EXCLUDED_PARAMS = [
     'bboxes',
     'bucket',
+    'editable',
     'fast',
     'from',
     'ownRecords',
@@ -99,15 +100,26 @@
               });
             }
 
-            function removeFacet(facetKey) {
-              var facetQuery = getSearchParams()['facet.q'];
+            function removeFacet(facetKey, facetQuery) {
               if (!facetQuery) {
                 return;
               }
               var facets = facetQuery.split('&').filter(function (facet) {
                 return facet.split('/')[0] !== facetKey;
               });
-              setSearchParameter('facet.q', facets.join('&'));
+              return facets.join('&');
+            }
+
+            function removeAllFilters() {
+              var params = getSearchParams();
+              scope.currentFilters.forEach(function (filter) {
+                if (filter.isFacet) {
+                  params['facet.q'] = removeFacet(filter.facetKey, params['facet.q']);
+                } else {
+                  delete params[filter.key];
+                }
+              });
+              scope.$emit('resetSearch', params, false);
             }
 
             scope.$watch(function() {
@@ -154,14 +166,15 @@
 
             scope.removeFilter = function(filter) {
               if (filter.isFacet) {
-                removeFacet(filter.facetKey);
+                var facetQuery = removeFacet(filter.facetKey, getSearchParams()['facet.q']);
+                setSearchParameter('facet.q', facetQuery);
               } else {
                 setSearchParameter(filter.key, null);
               }
             };
 
             scope.removeAll = function() {
-              scope.$emit('resetSearch', null, false);
+              removeAllFilters();
             }
           }
         };
