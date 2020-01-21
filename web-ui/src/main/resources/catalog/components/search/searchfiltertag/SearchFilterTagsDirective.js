@@ -35,6 +35,9 @@
           link: function(scope, element, attrs, ngSearchFormCtrl) {
             scope.currentFilters = [];
 
+            // key is the raw facet path, value is a valid filter object
+            scope.facetFilterCache = {};
+
             function getSearchParams() {
               if (scope.useLocationParameters) {
                 return $location.search();
@@ -59,6 +62,10 @@
 
             function createNewFiltersFromFacets(facetParam) {
               return facetParam.split('&').map(function (raw) {
+                if (scope.facetFilterCache[raw]) {
+                  return scope.facetFilterCache[raw];
+                }
+
                 var queryParts = raw.split('/');
                 var dimensionKey = queryParts[0];
 
@@ -68,10 +75,6 @@
                     dimension = d;
                   }
                 });
-
-                if (!dimension) {
-                  return
-                }
 
                 var categoryLabel, rootPath = decodeURIComponent(queryParts[1]);
                 function lookupCategory(categories, currentQueryPartIndex) {
@@ -91,12 +94,14 @@
                   lookupCategory(dimension.category, 1);
                 }
 
-                return {
+                var filter = {
                   key: dimension['@label'],
                   value: categoryLabel || rootPath,
                   isFacet: true,
                   facetKey: dimension['@name']
                 };
+                scope.facetFilterCache[raw] = filter;
+                return filter;
               });
             }
 
