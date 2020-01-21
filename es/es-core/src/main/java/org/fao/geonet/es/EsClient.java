@@ -190,9 +190,11 @@ public class EsClient implements InitializingBean {
         }
         try {
             BulkResult result = client.execute(bulk.build());
+            Log.warning(LOGGER_MODULE, "EsClient bulkRequest: " + result.getErrorMessage());
+            Log.warning(LOGGER_MODULE, "EsClient bulkRequest: " + result.getJsonString());
             if (!result.isSucceeded()) {
-                Log.warning(LOGGER_MODULE, "EsClient bulkRequest: " + result.getErrorMessage());
-                Log.warning(LOGGER_MODULE, "EsClient bulkRequest: " + result.getJsonString());
+//                Log.warning(LOGGER_MODULE, "EsClient bulkRequest: " + result.getErrorMessage());
+//                Log.warning(LOGGER_MODULE, "EsClient bulkRequest: " + result.getJsonString());
                 return false;
             }
         } catch (IOException e) {
