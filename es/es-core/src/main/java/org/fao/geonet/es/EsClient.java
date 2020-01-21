@@ -190,11 +190,9 @@ public class EsClient implements InitializingBean {
         }
         try {
             BulkResult result = client.execute(bulk.build());
-            Log.warning(LOGGER_MODULE, "EsClient bulkRequest: " + result.getErrorMessage());
-            Log.warning(LOGGER_MODULE, "EsClient bulkRequest: " + result.getJsonString());
             if (!result.isSucceeded()) {
-//                Log.warning(LOGGER_MODULE, "EsClient bulkRequest: " + result.getErrorMessage());
-//                Log.warning(LOGGER_MODULE, "EsClient bulkRequest: " + result.getJsonString());
+                Log.warning(LOGGER_MODULE, "EsClient bulkRequest: " + result.getErrorMessage());
+                Log.warning(LOGGER_MODULE, "EsClient bulkRequest: " + result.getJsonString());
                 return false;
             }
         } catch (IOException e) {
@@ -211,7 +209,9 @@ public class EsClient implements InitializingBean {
     }
 
     public BulkResult bulkRequestSync(Bulk.Builder bulk) throws IOException {
-        return client.execute(bulk.build());
+        BulkResult result = client.execute(bulk.build());
+        Log.warning(LOGGER_MODULE, "EsClient bulkRequest: " + result.getJsonString());
+        return result;
     }
 
     public String deleteByQuery(String index, String query) throws Exception {
