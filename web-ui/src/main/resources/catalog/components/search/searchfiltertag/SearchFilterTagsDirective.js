@@ -151,7 +151,7 @@
                 if (filterKey === 'geometry') {
                   scope.currentFilters.push({
                     key: 'geometry',
-                    value: 'boundingBox'
+                    value: 'geometryFilter'
                   });
                   continue;
                 }
