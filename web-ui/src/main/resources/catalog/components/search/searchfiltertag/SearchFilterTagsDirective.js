@@ -156,6 +156,17 @@
                   continue;
                 }
 
+                // special logic for categories: add cat- prefix to each category for translations
+                if (filterKey === '_cat') {
+                  scope.currentFilters.push({
+                    key: filterKey,
+                    value: value.split(' or ').map(function(val) {
+                      return 'cat-' + val;
+                    }).join(' or ')
+                  });
+                  continue;
+                }
+
                 // general case
                 scope.currentFilters.push({
                   key: filterKey,
