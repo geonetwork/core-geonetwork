@@ -209,9 +209,7 @@ public class EsClient implements InitializingBean {
     }
 
     public BulkResult bulkRequestSync(Bulk.Builder bulk) throws IOException {
-        BulkResult result = client.execute(bulk.build());
-        Log.warning(LOGGER_MODULE, "EsClient bulkRequest: " + result.getJsonString());
-        return result;
+        return client.execute(bulk.build());
     }
 
     public String deleteByQuery(String index, String query) throws Exception {

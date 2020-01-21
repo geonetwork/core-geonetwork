@@ -260,7 +260,7 @@ public class EsWFSFeatureIndexer {
             nbOfFeatures = 0;
 
             final Phaser phaser = new Phaser();
-            BulkResutHandler brh = new SyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report);
+            BulkResutHandler brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report);
 
             long begin = System.currentTimeMillis();
             FeatureIterator<SimpleFeature> features = wfs.getFeatureSource(typeName).getFeatures(query).features();
@@ -512,6 +512,7 @@ public class EsWFSFeatureIndexer {
 
         @Override
         public void completed(BulkResult bulkResult) {
+            LOGGER.debug(bulkResult.getJsonString());
             LOGGER.debug("  {} - from {}, {}/{} features, indexed in {} ms.", new Object[]{
                 typeName, firstFeatureIndex, bulkSize, featureCommitInterval, System.currentTimeMillis() - begin});
             phaser.arriveAndDeregister();
@@ -561,6 +562,7 @@ public class EsWFSFeatureIndexer {
 
         public void launchBulk(EsClient client) {
             prepareLaunch();
+            LOGGER.debug(this.bulk.toString());
             client.bulkRequestAsync(this.bulk, this);
         }
     }
