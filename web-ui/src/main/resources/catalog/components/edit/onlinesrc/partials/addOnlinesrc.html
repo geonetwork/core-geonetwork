@@ -136,7 +136,7 @@
                            data-ng-blur="loadCurrentLink()"
                            id="gn-addonlinesrc-url-list-single-input"
                            data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.url.tooltip}}"
-                           placeholder="http://">
+                           placeholder="{{params.linkType.fields.url.placeholder || 'https://...'}}">
                     <span class="input-group-btn" data-ng-show="OGCProtocol != null">
                     <!-- Refresh Grid Button -->
                     <button id="gn-addonlinesrc-url-list-single-button"
