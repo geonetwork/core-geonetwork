@@ -1,0 +1,56 @@
+================================================================================
+===
+=== GeoNetwork 3.8.3: List of changes
+===
+================================================================================
+- Update iso19115-3.2018 to latest revision in 3.8.x branch
+- Uniform view for related records in the Metadata view - Backport of #4345 to 3.8.x branch (#4384)
+- Use projection axis order when writing gml for bounding polygon's and change default WGS (EPAG:4326) code to be urn:ogc:def:EPSG:6.6:4326 instead of EPSG:4326 as lat/lon ordering of coordinates is normally expected to be followed for this code
+- Allow CRS:84 to be specified as projection for use in writing bounding polygon's
+- Added dcterms:title to source thesaurus title for rdf:Description element fixes #4294
+- [BP] Fix an error when GN is deployed as ROOT context ("/")
+- Fixes arcsde harvesting master (#4271)
+- Handle display of all possible combinations of organisation name, individual name and position name in iso19139 full view
+- [BP] Set context as thread local when it is created in ApiUtils (#4158)
+- Record view / Add contact website.
+- Search results / PDF / Add constraints.
+- Elements targeted by operation filters can be removed on processing. (#4232)
+- API / XSL Process / Preview should not save in db. Datestamp does not apply as it is handled by DataManager.
+- Exception / Replace javassist.NotFoundException by org.fao.geonet.api.exception.ResourceNotFoundException.
+- ES / Update to 7.4.2.
+- PDF / dup variable and missing space (#4233) and improve error message
+- Map / Fix missing legend (#4113)
+- ISO19139 / optimizes remove-dataset, operateson element contains link to dataset-record in xlink:href (if no @uuidref) (#4198)
+- Map / Improve style support (#4209)
+- Admin / Group / Return API exception if SQL error. Add UI checks on max field length.
+- Registry / Add spatial scope date
+- Same size for the required field asterisk
+- Doc / Build standards doc based on schema plugins. (#4221)
+- ATOM improvement. (#4216)
+- Add ui-defaultSearchString back in
+- as suggested in https://github.com/geonetwork/doc/pull/91, move documentation of fields to config-editor.xsd
+- Update ISO19115-3 submodule.
+- Fix for #4166 and #4167: Improvements to the logo and menubar (#4178)
+- Documentation / Add link when a page exist in the doc (#4211)
+- Harvester / Add batch edit parameter. (#4172)
+- Related resource / Add possibility to hide a parent element in case no relation found.
+- Admin / User / List not loaded in non debug mode
+- Fix check on permissions
+- Bug fix - wrong gco:nilReason It was only checking the PT_FreeText and not CharacterString which was causing gco:nilReason when gco:CharacterString was not empty.
+- ISO19139 / Support for applicationProfile as anchor
+- UI Config / Facet / Order facet according to configuration
+- Update attachment records on import
+- Suggestion / Reset text not matching any suggestion entries in the list.
+- improve dutch translations for suggest
+- Facet / Add record owner name to easily search by username.
+- Directory / Fix error when opening editor.
+- ISO19139 / 2007 schema contains duplicated (unused) files for codelist.
+- Update en-editor.json
+- Update en-admin.json
+- Update en-editor.json
+- Update en-core.json
+- Update en-search.json
+- Removed non-English typo for "Unknow" as it will come from transifex
+- Fixed some typos (unknow and cance) removed duplicate entries (metadata/pdfReport/headerRight-help) in en-admin.json
+- ES / Public index name typo
+- Update migrate-default.sql
