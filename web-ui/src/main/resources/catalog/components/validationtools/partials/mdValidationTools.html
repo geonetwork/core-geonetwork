@@ -30,6 +30,10 @@
       <li class="dropdown-header">
         <span class="visible-lg"
               data-translate="">validate-inspire</span></li>
+      <li class="dropdown-header">
+        <span data-translate="">lastInspireValidationStatus</span>
+        <gn-md-type-inspire-validation-widget metadata="md"></gn-md-type-inspire-validation-widget>
+      </li>
       <li role="presentation" data-ng-show="!isDownloadingRecord"
           data-ng-repeat="(key,value) in testsuites">
         <a
@@ -55,11 +59,11 @@
       </a>
       </li>
       <li role="presentation" data-ng-show="isDownloadedRecord">
-        <a
-          role="menuitem" tabindex="-1" target="_blank" href="{{reportURL}}"
-          title="{{'validate-inspire-help' | translate}}">
+        <a role="menuitem"
+           tabindex="-1" target="_blank" href="{{reportURL}}"
+           title="{{'validate-inspire-help' | translate}}">
           <i
-            class="fa gn-icon-maps"/>&nbsp;
+            class="fa fa-fw fa-file fa-inspire"/>&nbsp;
           <span class="visible-lg"
                 data-translate="">reportLink</span> - {{reportStatus}}
       </a>
