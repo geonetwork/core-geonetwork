@@ -37,6 +37,10 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
@@ -71,6 +75,7 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Parser;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.output.DOMOutputter;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
@@ -86,6 +91,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -100,6 +106,7 @@ import java.util.regex.Pattern;
 
 import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.parseGml;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_ORGANIZATION;
+import static org.fao.geonet.utils.Xml.getXmlFromJSON;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All params are objects because
@@ -319,6 +326,23 @@ public final class XslUtil {
         return "";
     }
 
+
+    public static Node downloadJsonAsXML(String url) {
+        HttpGet httpGet = new HttpGet(url);
+        HttpClient client = new DefaultHttpClient();
+        try {
+            final HttpResponse httpResponse = client.execute(httpGet);
+            final String jsonResponse = IOUtils.toString(
+                httpResponse.getEntity().getContent(),
+                String.valueOf(StandardCharsets.UTF_8)).trim();
+            Element element = getXmlFromJSON(jsonResponse);
+            DOMOutputter outputter = new DOMOutputter();
+            return outputter.output(new Document(element));
+        } catch (IOException | JDOMException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * Check if bean is defined in the context
