@@ -46,6 +46,10 @@
       };
       $scope.searchObj.params = angular.extend({},
         $scope.searchObj.defaultParams);
+      $scope.updateParams = function() {
+        $scope.searchObj.params.any =
+          '*' + $scope.searchObj.any + '*';
+      };
     }]);
 
   /**

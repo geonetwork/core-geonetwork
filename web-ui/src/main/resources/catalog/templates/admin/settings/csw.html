@@ -25,34 +25,42 @@
               <p class="help-block">{{'system/csw/enable-help' | translate}}</p>
             </div>
 
-            <div data-ng-show="cswSettings['system/csw/enable']"
+            <div data-ng-search-form=""
+                 data-ng-show="cswSettings['system/csw/enable']"
                  data-ng-controller="GnCSWSearchServiceRecordController">
               <label for="serviceList">{{'system/csw/capabilityRecordId' | translate}}</label>
 
              <div class="input-group dropdown"
-                   id="serviceList"
-                   data-ng-search-form="">
+                   id="serviceList">
                 <input class="form-control"
                         data-ng-model="cswSettings['system/csw/capabilityRecordId']"
                         name="system.csw.capabilityRecordId"/>
-                <span class="input-group-addon">
-                  <i class="fa fa-search"/>
-                </span>
-                <input class="form-control"
-                       data-ng-change="updateParams();triggerSearch();" type="text"
-                       data-toggle="dropdown"
-                       data-ng-model="searchObj.any"
-                       data-ng-model-options="{debounce: 200}"
-                       placeholder="{{'search' | translate}}"/>
-                <ul class="dropdown-menu" role="menu">
-                  <li data-ng-repeat="md in searchResults.records">
-                    <a href=""
-                       data-ng-click="cswSettings['system/csw/capabilityRecordId'] = md.getId()">
-                      {{md.title || md.defaultTitle}}
-                    </a>
-                  </li>
-                </ul>
-              </div>
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-default dropdown-toggle"
+                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                          data-ng-click="updateParams();triggerSearch();" type="text">
+                    <i class="fa fa-search"/>
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-right">
+                    <li>
+                      <input class="form-control"
+                             onClick="window.event.stopPropagation()"
+                             data-ng-change="updateParams();triggerSearch();" type="text"
+                             data-toggle="dropdown"
+                             data-ng-model="searchObj.any"
+                             data-ng-model-options="{debounce: 200}"
+                             placeholder="{{'search' | translate}}"/>
+                    </li>
+                    <li data-ng-repeat="md in searchResults.records">
+                      <a href=""
+                         data-ng-click="cswSettings['system/csw/capabilityRecordId'] = md.getId()">
+                        {{md.title || md.defaultTitle}}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+             </div>
 
               <p class="help-block">{{'system/csw/capabilityRecordId-help' | translate}}</p>
             </div>

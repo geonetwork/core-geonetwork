@@ -61,6 +61,7 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Comment;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -129,6 +130,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         String recordIdToUseForCapability = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_ID);
 
         Element capabilities = null;
+        String message = null;
         if (StringUtils.isNotEmpty(recordIdToUseForCapability) && !"-1".equals(recordIdToUseForCapability)) {
             Metadata record = metadataRepository.findOne(recordIdToUseForCapability);
             if (record != null) {
@@ -139,19 +141,22 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                         capabilities = Xml.transform(record.getXmlData(false), conversion);
                         isFromRecord = true;
                     } else {
-                        Log.warning(Geonet.CSW, String.format(
+                        message = String.format(
                             "Record with UUID %s is not public and can't be used to build CSW GetCapabilities document. " +
-                                "Choose another record or publish this one.", record.getUuid()));
+                                "Choose another record or publish this one.", record.getUuid());
+                        Log.warning(Geonet.CSW, message);
                     }
                 } catch (Exception e) {
-                    Log.warning(Geonet.CSW, String.format(
-                        "Error during retrieval of record with UUID %s. Error is: %s.", record.getUuid(), e.getMessage()));
+                    message = String.format(
+                        "Error during retrieval of record with UUID %s. Error is: %s.", record.getUuid(), e.getMessage());
+                    Log.warning(Geonet.CSW, message);
                 }
             } else {
                 // TODO: Add the message to the GetCapabilities doc ?
-                Log.warning(Geonet.CSW, String.format(
+                message = String.format(
                     "Record with id %s is not available in the catalogue. Check the CSW configuration and choose an existing record.",
-                       recordIdToUseForCapability));
+                    recordIdToUseForCapability);
+                Log.warning(Geonet.CSW, message);
             }
         }
 
@@ -173,6 +178,9 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
         try {
             String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
+            if (StringUtils.isNotEmpty(message)) {
+                capabilities.addContent(new Comment("WARNING: " + message));
+            }
             if (!isFromRecord) {
                 setKeywords(capabilities, context, cswServiceSpecificContraint);
             }
