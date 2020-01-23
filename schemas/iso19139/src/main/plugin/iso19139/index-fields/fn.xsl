@@ -30,7 +30,7 @@
     <xsl:param name="values"/>
     <xsl:param name="fieldName" as="xs:string"/>
     <xsl:param name="thesaurus" as="xs:string"/>
-    <xsl:param name="language" as="xs:string"/>
+    <xsl:param name="language" as="xs:string?" select="'eng'"/>
     <xsl:param name="allTreeField" as="xs:boolean"/>
 
     <xsl:variable name="paths">
