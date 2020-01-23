@@ -68,8 +68,11 @@
                 gnMdView.setLocationUuid(scope.md.uuid, formatter);
               });
             }
-
-            gnMdViewObj.records = scope.records;
+            if (scope.records && scope.records.length) {
+              gnMdViewObj.records = scope.records;
+            } else {
+              gnMdViewObj.records = [];
+            }
           });
         }
       };

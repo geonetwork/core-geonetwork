@@ -60,20 +60,14 @@
       initFromConfig();
 
       this.feedMd = function(index, md, records) {
-        gnMdViewObj.records = records || gnMdViewObj.records;
-        if (records) {
-          for (var i = 0; i < records.length; i++) {
-            if (records[i] == md) {
-              gnMdViewObj.current.index  = i;
+        // Set the index for previous/next record
+        if (gnMdViewObj.records) {
+          for (var i = 0; i < gnMdViewObj.records.length; i++) {
+            if (gnMdViewObj.records[i].id == md.id) {
+              gnMdViewObj.current.index = i;
               break;
             }
           }
-        } else {
-          gnMdViewObj.current.index = index;
-        }
-
-        if (angular.isUndefined(md)) {
-          md = gnMdViewObj.records[gnMdViewObj.current.index];
         }
 
         // Set the route only if not same as before
@@ -114,7 +108,7 @@
       var currentMdScope;
       this.setCurrentMdScope = function(scope, index, records) {
         currentMdScope = scope;
-        gnMdViewObj.records = records;
+        // gnMdViewObj.records = records;
         // gnMdViewObj.current.index = index;
       };
       this.getCurrentMdScope = function() {
@@ -184,7 +178,7 @@
                         {"terms": {"draft": ["n", "y", "e"]}}
                         ]
                     }
-                  }}).then(function(r) {
+                  }}, {cache: true}).then(function(r) {
                     if (r.data.hits.total.value > 0) {
                       //If trying to show a draft that is not a draft, correct url:
                       if(r.data.hits.total.value == 1 &&
