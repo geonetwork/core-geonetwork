@@ -125,6 +125,7 @@
         if ($scope.mdView.current.record == null) {
           return;
         }
+
         var showApproved = $scope.mdView.current.record.draft != 'y';
         var gn_metadata_display = $('#gn-metadata-display');
 
@@ -170,17 +171,17 @@
 
       // Reset current formatter to open the next record
       // in default mode.
-      function loadFormatter() {
-        var f = gnSearchLocation.getFormatterPath();
-        $scope.currentFormatter = '';
-        if (f != undefined) {
-          $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, '$1');
-          $scope.loadFormatter(f);
+      function loadFormatter(n, o) {
+        if (n === true) {
+          var f = gnSearchLocation.getFormatterPath();
+          $scope.currentFormatter = '';
+          if (f != undefined) {
+            $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, '$1');
+            $scope.loadFormatter(f);
+          }
         }
       }
-      // $scope.$watch('mdView.current.record', loadFormatter);
-      $rootScope.$on('$locationChangeSuccess', loadFormatter)
-      loadFormatter();
+      $scope.$watch('mdView.recordsLoaded', loadFormatter);
 
       // Know from what path we come from
       $scope.gnMdViewObj = gnMdViewObj;

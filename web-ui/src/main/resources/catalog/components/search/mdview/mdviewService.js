@@ -60,9 +60,7 @@
       initFromConfig();
 
       this.feedMd = function(index, md, records) {
-        gnMdViewObj.loadDetailsFinished = true;
         gnMdViewObj.records = records || gnMdViewObj.records;
-
         if (records) {
           for (var i = 0; i < records.length; i++) {
             if (records[i] == md) {
@@ -81,7 +79,6 @@
         // Set the route only if not same as before
         formatter = gnSearchLocation.getFormatter();
         gnMdViewObj.usingFormatter = formatter !== undefined;
-        this.setLocationUuid(md.uuid, formatter);
 
         gnUtilityService.scrollTo();
 
@@ -100,6 +97,8 @@
         if (!gnMdViewObj.usingFormatter) {
           $http.post('../api/records/' + md.uuid + '/popularity');
         }
+        this.setLocationUuid(md.uuid, formatter);
+        gnMdViewObj.recordsLoaded = true;
       };
 
       /**
@@ -147,6 +146,7 @@
         var that = this;
         var loadMdView = function(event, newUrl, oldUrl) {
           gnMdViewObj.loadDetailsFinished = false;
+          gnMdViewObj.recordsLoaded = false;
           var uuid = gnSearchLocation.getUuid();
           if (uuid) {
             if (!gnMdViewObj.current.record ||
@@ -174,7 +174,7 @@
               if (!foundMd){
                   // get a new search to pick the md
                   gnMdViewObj.current.record = null;
-                $http.post('../api/search/records/_search', {"query": {
+                  $http.post('../api/search/records/_search', {"query": {
                     "bool" : {
                       "must": [
                         {"multi_match": {
@@ -209,13 +209,13 @@
                       var metadata = [];
                       metadata.push(new Metadata(r.data.hits.hits[i]));
                       data = {metadata: metadata};
-
                       //Keep the search results (gnMdViewObj.records)
                       // that.feedMd(0, undefined, data.metadata);
                       //and the trace of where in the search result we are
                       // TODOES: Review
                       that.feedMd(gnMdViewObj.current.index,
                           data.metadata[0], gnMdViewObj.records);
+                      gnMdViewObj.loadDetailsFinished = true;
                     } else {
                       gnMdViewObj.loadDetailsFinished = true;
                     }
@@ -238,18 +238,6 @@
         $rootScope.$on('$locationChangeSuccess', loadMdView);
       };
 
-      this.initFormatter = function(selector) {
-        var $this = this;
-        var loadFormatter = function() {
-          var uuid = gnSearchLocation.uuid;
-          if (uuid) {
-            gnMdFormatter.load(uuid,
-                selector, $this.getCurrentMdScope());
-          }
-        };
-        // loadFormatter();
-        $rootScope.$on('$locationChangeSuccess', loadFormatter);
-      };
 
       /**
        * Open a metadata just from info in the layer. If the metadata comes
