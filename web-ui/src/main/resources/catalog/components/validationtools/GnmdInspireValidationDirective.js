@@ -28,10 +28,12 @@
 
   module.directive(
       'gnMdValidationTools', ['gnConfig', '$http', '$interval',
-      'gnAlertService', '$translate', 'gnPopup',
-      'gnCurrentEdit', 'gnConfigService',
+      'gnAlertService', '$translate', 'gnPopup', '$timeout',
+      'gnCurrentEdit', 'gnConfigService', 'gnSearchManagerService', 'Metadata',
         function(gnConfig, $http, $interval, gnAlertService,
-                 $translate, gnPopup, gnCurrentEdit, gnConfigService) {
+                 $translate, gnPopup, $timeout,
+                 gnCurrentEdit, gnConfigService,
+                 gnSearchManagerService, Metadata) {
           return {
             restrict: 'AEC',
             replace: true,
@@ -51,6 +53,7 @@
                 }
                 scope.isEnabled = true;
                 scope.inspMdUuid = newValue;
+                scope.md = gnCurrentEdit.metadata;
                 $http({
                   method: 'GET',
                   url: '../api/records/' + scope.inspMdUuid +
@@ -120,6 +123,17 @@
                 }
               };
 
+              function reloadRecord() {
+                gnSearchManagerService.gnSearch({
+                  _id: gnCurrentEdit.id,
+                  _content_type: 'json',
+                  _isTemplate: 'y or n or s',
+                  _draft: 'y or n or e',
+                  fast: 'index'
+                }).then(function(data) {
+                  scope.md = new Metadata(data.metadata[0]);
+                });
+              }
               scope.checkInBackgroud = function(token) {
                 scope.stop = undefined;
                 scope.stop = $interval(function() {
@@ -136,7 +150,9 @@
                       scope.reportStatus = response.data.status;
                       scope.reportURL = response.data.report;
                       scope.showDisclaimer(scope.reportURL, scope.reportStatus);
-
+                      $timeout(function() {
+                        reloadRecord();
+                      }, 5000);
                     } else if (response.status == 201) {
                       // continue
                     }
