@@ -527,6 +527,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     } else {
                         hasInspireValidation = true;
                         fields.put(Geonet.IndexFieldNames.INSPIRE_REPORT_URL, vi.getReportUrl());
+                        fields.put(Geonet.IndexFieldNames.INSPIRE_VALIDATION_DATE, vi.getValidationDate().getDateAndTime());
                     }
                     fields.put(Geonet.IndexFieldNames.VALID + "_" + type, status.getCode());
                 }

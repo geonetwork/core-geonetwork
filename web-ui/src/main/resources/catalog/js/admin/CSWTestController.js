@@ -65,7 +65,9 @@
 
       $scope.$watch('currentTestId', function() {
         if ($scope.currentTestId !== null) {
-          $http.get('../../xml/csw/test/' + $scope.currentTestId + '.xml')
+          $http.get('../../xml/csw/test/' + $scope.currentTestId + '.xml', {headers: {
+              Accept: 'application/xml'
+            }})
               .success(function(data) {
                 $scope.currentTest = data;
                 $scope.runCSWRequest();

@@ -304,7 +304,7 @@
         <xsl:value-of select="generate-id(.)"/>
       </xsl:attribute>
       <xsl:attribute name="srsName">
-        <xsl:text>urn:x-ogc:def:crs:EPSG:6.6:4326</xsl:text>
+        <xsl:text>urn:ogc:def:crs:EPSG:6.6:4326</xsl:text>
       </xsl:attribute>
       <xsl:copy-of select="@*"/>
       <xsl:apply-templates select="*"/>

@@ -684,5 +684,6 @@ public final class Geonet {
         public static final String FEATUREOFRECORD = "featureOfRecord";
         public static final String RECORDLINK = "record";
         public static final String INSPIRE_REPORT_URL = "_inspireReportUrl";
+        public static final String INSPIRE_VALIDATION_DATE = "_inspireValidationDate";
     }
 }

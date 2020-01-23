@@ -722,8 +722,8 @@ public class Thesaurus {
             Element title = Xml.selectElement(thesaurusEl,
                 "skos:ConceptScheme/dc:title|skos:ConceptScheme/dcterms:title|" +
                     "skos:Collection/dc:title|skos:Collection/dcterms:title|" +
-                    "rdf:Description/dc:title", theNSs);
-            
+                    "rdf:Description/dc:title|rdf:Description/dcterms:title", theNSs);
+
             if (title != null) {
                 this.title = title.getValue();
                 this.defaultNamespace = title.getParentElement().getAttributeValue("about", rdfNamespace);

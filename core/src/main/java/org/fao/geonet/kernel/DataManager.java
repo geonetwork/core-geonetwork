@@ -1,6 +1,5 @@
 //==============================================================================
 //===
-
 //=== DataManager
 //===
 //=============================================================================
@@ -105,15 +104,15 @@ public class DataManager {
     private AccessManager accessManager;
 
     @Deprecated
-    public static void validateMetadata(String schema, Element xml, ServiceContext context) throws Exception {
+    public static void validateExternalMetadata(String schema, Element xml, ServiceContext context, Integer groupOwner) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        gc.getBean(IMetadataValidator.class).validateMetadata(schema, xml, context, " ");
+        gc.getBean(IMetadataValidator.class).validateExternalMetadata(schema, xml, context, " ", groupOwner);
     }
 
     @Deprecated
-    public static void validateMetadata(String schema, Element xml, ServiceContext context, String fileName) throws Exception {
+    public static void validateExternalMetadata(String schema, Element xml, ServiceContext context, String fileName, Integer groupOwner) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        gc.getBean(IMetadataValidator.class).validateMetadata(schema, xml, context, fileName);
+        gc.getBean(IMetadataValidator.class).validateExternalMetadata(schema, xml, context, fileName, groupOwner);
     }
 
     @Deprecated
@@ -199,8 +198,8 @@ public class DataManager {
     }
 
     @Deprecated
-    public Element doSchemaTronForEditor(String schema, Element md, String lang) throws Exception {
-        return metadataValidator.doSchemaTronForEditor(schema, md, lang);
+    public Element doSchemaTronForEditor(String schema, Element md, String lang, Integer groupOwner) throws Exception {
+        return metadataValidator.doSchemaTronForEditor(schema, md, lang, groupOwner);
     }
 
     @Deprecated

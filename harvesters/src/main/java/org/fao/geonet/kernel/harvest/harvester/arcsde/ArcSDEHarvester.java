@@ -255,7 +255,12 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
                     } else {
 
                         try {
-                            params.getValidate().validate(dataMan, context, metadataElement);
+                            Integer groupIdVal = null;
+                            if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                                groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                            }
+
+                            params.getValidate().validate(dataMan, context, metadataElement, groupIdVal);
                         } catch (Exception e) {
                             log.error("Ignoring invalid metadata with uuid " + uuid);
                             result.doesNotValidate++;

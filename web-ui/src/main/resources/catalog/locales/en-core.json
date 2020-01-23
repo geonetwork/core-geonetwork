@@ -70,6 +70,7 @@
     "validStatus-1": "Valid",
     "validStatus-0": "Invalid",
     "validStatus--1": "Never validated",
+    "lastInspireValidationStatus": "Last INSPIRE validation status",
     "validInspireStatus--1": "INSPIRE never validated",
     "validInspireStatus-1": "INSPIRE valid",
     "validInspireStatus-0": "INSPIRE invalid",

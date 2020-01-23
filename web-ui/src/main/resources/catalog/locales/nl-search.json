@@ -339,6 +339,7 @@
     "Legend": "Legenda",
     "otherKeywords": "Overige trefwoorden",
     "isValid": "Validatie status",
+    "isValidInspire": "Validation status (INSPIRE)",
     "Attribution": "Naamsvermelding",
     "layerDelete": "Verwijder kaartlaag",
     "layerMetadata": "Metadata",

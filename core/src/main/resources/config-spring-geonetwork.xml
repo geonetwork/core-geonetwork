@@ -89,7 +89,8 @@
         scope="singleton"/>
   <bean id="schematronValidator" class="org.fao.geonet.kernel.SchematronValidator" lazy-init="false"
         scope="singleton"/>
-
+  <bean id="schematronValidatorExternalMd" class="org.fao.geonet.kernel.SchematronValidatorExternalMd" lazy-init="false"
+        scope="singleton"/>
 
   <bean name="indexStatus"
         class="org.fao.geonet.index.Status"

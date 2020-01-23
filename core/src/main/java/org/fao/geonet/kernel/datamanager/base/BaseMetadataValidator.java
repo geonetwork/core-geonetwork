@@ -39,6 +39,7 @@ import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.SchematronValidator;
+import org.fao.geonet.kernel.SchematronValidatorExternalMd;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
@@ -81,6 +82,10 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
     private SchematronValidator schematronValidator;
 
     @Autowired
+    // To validate external metadata that is not yet available in the catalogue: import/harvesters
+    private SchematronValidatorExternalMd schematronValidatorExternalMd;
+
+    @Autowired
     private MetadataValidationRepository validationRepository;
 
     @Autowired
@@ -101,9 +106,11 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
     /**
      * Validates metadata against XSD and schematron files related to metadata schema throwing XSDValidationErrorEx if xsd errors or
      * SchematronValidationErrorEx if schematron rules fails.
+     *
+     * Used for metadata that is not yet in the catalogue like import/harvesting.
      */
     @Override
-    public void validateMetadata(String schema, Element xml, ServiceContext context, String fileName) throws Exception {
+    public void validateExternalMetadata(String schema, Element xml, ServiceContext context, String fileName, Integer groupOwner) throws Exception {
         setNamespacePrefix(xml);
 
         XmlErrorHandler eh = new XmlErrorHandler();
@@ -120,7 +127,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         // --- then we say what they are!
         // --- Note we have to use uuid here instead of id because we don't have an id...
 
-        Element schemaTronReport = doSchemaTronForEditor(schema, xml, context.getLanguage());
+        Element schemaTronReport = doSchemaTronForEditor(schema, xml, context.getLanguage(), groupOwner);
         xml.detach();
         if (schemaTronReport != null && schemaTronReport.getContent().size() > 0) {
 
@@ -262,13 +269,13 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      * Creates XML schematron report.
      */
     @Override
-    public Element doSchemaTronForEditor(String schema, Element md, String lang) throws Exception {
+    public Element doSchemaTronForEditor(String schema, Element md, String lang, Integer groupOwner) throws Exception {
         // enumerate the metadata xml so that we can report any problems found
         // by the schematron_xml script to the geonetwork editor
         metadataManager.getEditLib().enumerateTree(md);
 
         // get an xml version of the schematron errors and return for error display
-        Element schemaTronXmlReport = getSchemaTronXmlReport(schema, md, lang, null);
+        Element schemaTronXmlReport = getSchemaTronXmlReport(schema, md, lang, null, groupOwner);
 
         // remove editing info added by enumerateTree
         metadataManager.getEditLib().removeEditingInfo(md);
@@ -314,70 +321,46 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
     /**
      * Creates XML schematron report for each set of rules defined in schema directory.
      */
-    private Element getSchemaTronXmlReport(String schema, Element md, String lang, Map<String, Integer[]> valTypeAndStatus)
-        throws Exception {
+    private Element getSchemaTronXmlReport(String schema, Element md, String lang, Map<String, Integer[]> valTypeAndStatus, Integer groupOwner)
+            throws Exception {
         // NOTE: this method assumes that you've run enumerateTree on the metadata
 
-        MetadataSchema metadataSchema = metadataSchemaUtils.getSchema(schema);
-        String[] rules = metadataSchema.getSchematronRules();
-
+        List<MetadataValidation> validations = new ArrayList<>();
         // Schematron report is composed of one or more report(s) for each set of rules.
-        Element schemaTronXmlOut = new Element("schematronerrors", Edit.NAMESPACE);
-        if (rules != null) {
-            for (String rule : rules) {
-                // -- create a report for current rules.
-                // Identified by a rule attribute set to shematron file name
-                LOGGER.debug(" - rule: {}", rule);
-                String ruleId = rule.substring(0, rule.indexOf(".xsl"));
-                Element report = new Element("report", Edit.NAMESPACE);
-                report.setAttribute("rule", ruleId, Edit.NAMESPACE);
+        Element schemaTronXmlOut = schematronValidatorExternalMd.applyCustomSchematronRules(schema, md, lang, validations, groupOwner);
 
-                java.nio.file.Path schemaTronXmlXslt = metadataSchema.getSchemaDir().resolve("schematron").resolve(rule);
-                try {
-                    Map<String, Object> params = new HashMap<String, Object>();
-                    params.put("lang", lang);
-                    params.put("rule", rule);
-                    params.put("thesaurusDir", thesaurusManager.getThesauriDirectory());
-                    Element xmlReport = Xml.transform(md, schemaTronXmlXslt, params);
-                    if (xmlReport != null) {
-                        report.addContent(xmlReport);
-                        // add results to persitent validation information
-                        int firedRules = 0;
-                        Iterator<?> firedRulesElems = xmlReport.getDescendants(new ElementFilter("fired-rule", Namespaces.SVRL));
-                        while (firedRulesElems.hasNext()) {
-                            firedRulesElems.next();
-                            firedRules++;
-                        }
-                        int invalidRules = 0;
-                        Iterator<?> faileAssertElements = xmlReport.getDescendants(new ElementFilter("failed-assert", Namespaces.SVRL));
-                        while (faileAssertElements.hasNext()) {
-                            faileAssertElements.next();
-                            invalidRules++;
-                        }
-                        Integer[] results = {invalidRules != 0 ? 0 : 1, firedRules, invalidRules};
-                        if (valTypeAndStatus != null) {
-                            valTypeAndStatus.put(ruleId, results);
-                        }
-                    }
-                } catch (Exception e) {
-                    LOGGER.error("schematron xslt {} failed", schemaTronXmlXslt);
+        for(Element report : (List<Element>) schemaTronXmlOut.getChildren()) {
+            Element xmlReport = report.getChild("schematron-output", Namespaces.SVRL);
 
-                    // If an error occurs that prevents to verify schematron rules, add to show in report
-                    Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
-                    errorReport.addContent("Schematron error occurred, rules could not be verified: " + e.getMessage());
-                    report.addContent(errorReport);
-                    LOGGER.error("schematron xslt failed, exception", e);
+            if (xmlReport != null) {
+                String ruleId = xmlReport.getAttributeValue("rule", Edit.NAMESPACE);
+
+                // add results to persitent validation information
+                int firedRules = 0;
+                Iterator<?> firedRulesElems = xmlReport.getDescendants(new ElementFilter("fired-rule", Namespaces.SVRL));
+                while (firedRulesElems.hasNext()) {
+                    firedRulesElems.next();
+                    firedRules++;
                 }
-
-                // -- append report to main XML report.
-                schemaTronXmlOut.addContent(report);
+                int invalidRules = 0;
+                Iterator<?> faileAssertElements = xmlReport.getDescendants(new ElementFilter("failed-assert", Namespaces.SVRL));
+                while (faileAssertElements.hasNext()) {
+                    faileAssertElements.next();
+                    invalidRules++;
+                }
+                Integer[] results = { invalidRules != 0 ? 0 : 1, firedRules, invalidRules };
+                if (valTypeAndStatus != null) {
+                    valTypeAndStatus.put(ruleId, results);
+                }
             }
+
         }
+
         return schemaTronXmlOut;
     }
 
     /**
-     * Used by harvesters that need to validate metadata.
+     * Used by services that need to validate metadata already existing in the catalogue.
      *
      * @param metadata metadata
      * @param lang     Language from context
@@ -435,7 +418,9 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
     }
 
     /**
-     * Used by the validate embedded service. The validation report is stored in the session.
+     * Used by the validate embedded service to validate metadata already existing in the catalogue.
+     * The validation report is stored in the session.
+     *
      */
     @Override
     public Pair<Element, String> doValidate(UserSession session, String schema, String metadataId, Element md, String lang,
