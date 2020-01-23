@@ -432,6 +432,9 @@
         if(sxtSettings.processes)  {
           viewerSettings.processes = sxtSettings.processes;
         }
+        if(sxtSettings.profilTool) {
+          viewerSettings.profilTool = sxtSettings.profilTool;
+        }
         if(sxtSettings.graticule)  {
           viewerSettings.mapConfig.graticuleOgcService = sxtSettings.graticule;
         }
