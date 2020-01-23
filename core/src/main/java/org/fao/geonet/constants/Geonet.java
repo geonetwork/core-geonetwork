@@ -683,5 +683,6 @@ public final class Geonet {
         public static final String FEEDBACKCOUNT = "feedbackCount";
         public static final String DRAFT = "_draft";
         public static final String INSPIRE_REPORT_URL = "_inspireReportUrl";
+        public static final String INSPIRE_VALIDATION_DATE = "_inspireValidationDate";
     }
 }
