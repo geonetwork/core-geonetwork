@@ -47,18 +47,14 @@ public class Get {
 
         CswConfigurationResponse response = new CswConfigurationResponse();
 
-        String cswContactIdValue = sm.getValue(Settings.SYSTEM_CSW_CONTACT_ID);
-        if (cswContactIdValue == null) {
-            cswContactIdValue = "-1";
+        String capabilityRecordId = sm.getValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_ID);
+        if (capabilityRecordId == null) {
+            capabilityRecordId = "-1";
         }
-
-        final CswCapabilitiesInfoFieldRepository infoFieldRepository = applicationContext.getBean(CswCapabilitiesInfoFieldRepository.class);
-        java.util.List<CswCapabilitiesInfoField> capabilitiesInfoFields = infoFieldRepository.findAll(); //AsXml();
 
         response.setCswEnabled(sm.getValueAsBool(Settings.SYSTEM_CSW_ENABLE));
         response.setCswMetadataPublic(sm.getValueAsBool(Settings.SYSTEM_CSW_METADATA_PUBLIC));
-        response.setCswContactId(Integer.parseInt(cswContactIdValue));
-        response.setCapabilitiesInfoFields(capabilitiesInfoFields);
+        response.setCapabilityRecordId(Integer.parseInt(capabilityRecordId));
 
         return response;
     }

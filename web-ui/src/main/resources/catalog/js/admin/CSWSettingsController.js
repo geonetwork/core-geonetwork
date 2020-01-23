@@ -29,6 +29,25 @@
       []);
 
 
+  module.controller('GnCSWSearchServiceRecordController', [
+    '$scope', 'gnGlobalSettings',
+    function($scope, gnGlobalSettings) {
+      $scope.searchObj = {
+        internal: true,
+        any: '',
+        defaultParams: {
+          any: '',
+          from: 1,
+          to: 50,
+          type: 'service',
+          sortBy: 'title',
+          sortOrder: 'reverse'
+        }
+      };
+      $scope.searchObj.params = angular.extend({},
+        $scope.searchObj.defaultParams);
+    }]);
+
   /**
    * GnCSWSettingsController provides management interface
    * for CSW settings.
@@ -37,7 +56,7 @@
   module.controller('GnCSWSettingsController', [
     '$scope', '$http', '$rootScope', '$translate', 'gnUtilityService',
     function($scope, $http, $rootScope, $translate, gnUtilityService) {
-      var cswSettings = ['system/csw/contactId'];
+      var cswSettings = ['system/csw/capabilityRecordId'];
       var cswBooleanSettings = [
         'system/csw/enable',
         'system/csw/enabledWhenIndexing',
@@ -74,6 +93,7 @@
        */
       $scope.cswFields = {};
 
+
       /**
          * Load catalog settings and extract CSW settings
          */
@@ -95,14 +115,8 @@
             });
       }
 
-      function loadUsers() {
-        $http.get('../api/users').
-            success(function(data) {
-              $scope.users = data;
-              loadSettings();
-            }).error(function(data) {
-              // TODO
-            });
+      function loadServiceRecords() {
+
       }
 
 
@@ -233,7 +247,8 @@
         return result;
       };
 
-      loadUsers();  // Which then load settings
+      loadServiceRecords();
+      loadSettings();
       loadCSWConfig();
       loadCSWElementSetName();
 

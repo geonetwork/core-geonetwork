@@ -41,7 +41,7 @@ public class CswConfigurationResponse implements Serializable {
     private static final long serialVersionUID = -4426385060234828544L;
     private boolean cswEnabled;
     private boolean cswMetadataPublic;
-    private int cswContactId;
+    private int capabilityRecordId;
     @XmlElement(name = "record")
     private List<CswCapabilitiesInfoField> capabilitiesInfoFields;
 
@@ -61,12 +61,12 @@ public class CswConfigurationResponse implements Serializable {
         this.cswMetadataPublic = cswMetadataPublic;
     }
 
-    public int getCswContactId() {
-        return cswContactId;
+    public int getCapabilityRecordId() {
+        return capabilityRecordId;
     }
 
-    public void setCswContactId(int cswContactId) {
-        this.cswContactId = cswContactId;
+    public void setCapabilityRecordId(int capabilityRecordId) {
+        this.capabilityRecordId = capabilityRecordId;
     }
 
     public List<CswCapabilitiesInfoField> getCapabilitiesInfoFields() {
