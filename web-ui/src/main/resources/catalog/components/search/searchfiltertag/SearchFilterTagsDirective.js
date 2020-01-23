@@ -76,27 +76,28 @@
                   }
                 });
 
-                var categoryLabel, rootPath = decodeURIComponent(queryParts[1]);
-                function lookupCategory(categories, currentQueryPartIndex) {
-                  categories.forEach(function (c) {
+                var categoryLabel;
+                function lookupCategory(subtree, currentQueryPartIndex) {
+                  if (!subtree.category) {
+                    return false;
+                  }
+                  subtree.category.forEach(function (c) {
                     if (c['@value'] === decodeURIComponent(queryParts[currentQueryPartIndex])) {
                       currentQueryPartIndex++;
                       if (currentQueryPartIndex === queryParts.length) {
                         categoryLabel = c['@label'];
                         return true;
-                      } else if(c.category) {
-                        lookupCategory(c.category, currentQueryPartIndex);
                       }
+                      lookupCategory(c, currentQueryPartIndex);
                     }
                   })
                 }
-                if (dimension.category) {
-                  lookupCategory(dimension.category, 1);
-                }
+
+                lookupCategory(dimension, 1);
 
                 var filter = {
                   key: dimension['@label'],
-                  value: categoryLabel || rootPath,
+                  value: categoryLabel || decodeURIComponent(queryParts[1]),
                   isFacet: true,
                   facetKey: dimension['@name']
                 };
@@ -109,10 +110,12 @@
               if (!facetQuery) {
                 return;
               }
-              var facets = facetQuery.split('&').filter(function (facet) {
-                return facet.split('/')[0] !== facetKey;
-              });
-              return facets.join('&');
+              return facetQuery
+                .split('&')
+                .filter(function (facet) {
+                  return facet.split('/')[0] !== facetKey;
+                })
+                .join('&');
             }
 
             function removeAllFilters() {
@@ -165,9 +168,12 @@
                 if (filterKey === '_cat') {
                   scope.currentFilters.push({
                     key: filterKey,
-                    value: value.split(' or ').map(function(val) {
-                      return 'cat-' + val;
-                    }).join(' or ')
+                    value: value
+                      .split(' or ')
+                      .map(function(val) {
+                        return 'cat-' + val;
+                      })
+                      .join(' or ')
                   });
                   continue;
                 }
