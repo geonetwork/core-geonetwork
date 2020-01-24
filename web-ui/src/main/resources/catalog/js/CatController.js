@@ -168,6 +168,20 @@ goog.require('gn_alert');
             }],
             defaultUrl: ''
           },
+          'downloadFormatter': [{
+            'label': 'exportMEF',
+            'url': '/formatters/zip?withRelated=false',
+            'class': 'fa-file-zip-o'
+          }, {
+            'label': 'exportPDF',
+            'url' : '/formatters/xsl-view?output=pdf&language=${lang}',
+            'class': 'fa-file-pdf-o'
+          }, {
+            'label': 'exportXML',
+            // 'url' : '/formatters/xml?attachment=false',
+            'url' : '/formatters/xml',
+            'class': 'fa-file-code-o'
+          }],
           'grid': {
             'related': ['parent', 'children', 'services', 'datasets']
           },
