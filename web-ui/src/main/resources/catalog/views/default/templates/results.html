@@ -6,16 +6,17 @@
   <div class="row gn-row-results">
     <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
       <div class="col-md-3 gn-search-facet">
-        <div data-search-filter-tags
-             data-dimensions="searchResults.dimension"
-             data-use-location-parameters="true"
-             ng-if="isFilterTagsDisplayedInSearch && searchResults.dimension">
-        </div>
 
         <div data-ng-show="searchResults.records.length > 0"
             data-gn-saved-selections-panel="user"></div>
 
         <div data-gn-user-searches-panel="user"></div>
+
+        <div data-search-filter-tags
+             data-dimensions="searchResults.dimension"
+             data-use-location-parameters="true"
+             ng-if="isFilterTagsDisplayedInSearch && searchResults.dimension">
+        </div>
 
         <!-- Hierachical facet mode -->
         <div class="panel panel-default"
