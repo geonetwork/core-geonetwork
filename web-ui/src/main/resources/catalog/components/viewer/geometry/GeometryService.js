@@ -152,7 +152,7 @@
        * @param {ol.Map} map open layers map
        * @param {ol.Feature} feature feature to output
        * @param {object} options options
-       * @param {string} options.crs default is EPSG:4326
+       * @param {string} options.crs default
        * @param {string} options.format default is GML
        * @param {bool} options.outputAsWFSFeaturesCollection default is false
        * @param {bool} options.outputAsFeatures default is false
@@ -163,15 +163,10 @@
        */
       this.printGeometryOutput = function(map, feature, options) {
         var options = angular.extend({
-          crs: 'EPSG:4326',
           format: 'gml'
         }, options);
 
-        // clone & transform geom
-        var outputGeom = feature.getGeometry().clone().transform(
-            map.getView().getProjection(),
-            options.crs || 'EPSG:4326'
-            );
+        var outputGeom = feature.getGeometry();
         var outputFeature = new ol.Feature({
           geometry: outputGeom
         });
@@ -207,7 +202,7 @@
               featureNS: options.gmlFeatureNS ||
                   'http://mapserver.gis.umn.edu/mapserver',
               featureType: options.gmlFeatureElement || 'features',
-              srsName: options.crs !== 'EPSG:4326' ? options.crs : undefined
+              srsName: options.crs || undefined
             });
 
             if (options.outputAsWFSFeaturesCollection) {
@@ -265,7 +260,7 @@
        * @param {ol.Map} map open layers map
        * @param {string} input as text
        * @param {object} options options
-       * @param {string} options.crs default is EPSG:4326
+       * @param {string} options.crs
        * @param {string} options.format default is GML
        * @param {string} options.gmlFeatureElement feature element name
        * @param {string} options.gmlFeatureNS feature element ns
@@ -273,7 +268,6 @@
        */
       this.parseGeometryInput = function(map, input, options) {
         var options = angular.extend({
-          crs: 'EPSG:4326',
           format: 'gml'
         }, options);
 

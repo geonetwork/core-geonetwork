@@ -322,13 +322,14 @@
         });
         var drawing = false;
 
-        if (!scope.wpsLink || !scope.wpsLink.uri || !scope.wpsLink.id) {
+        if (!scope.wpsLink || !scope.wpsLink.url || !scope.wpsLink.name) {
           element.hide();
           console.warn('No wps process for profil tool found in sxtSettings');
         }
-        var processUri = scope.wpsLink.uri || undefined;
-        var processId = scope.wpsLink.id || undefined;
+        var processUri = scope.wpsLink.url || undefined;
+        var processId = scope.wpsLink.name || undefined;
         var mapProjection = scope.map.getView().getProjection().getCode();
+        var inputs = scope.wpsLink.applicationProfile.inputs;
 
         // this is the temp layer for keeping the profil on the map
         // during the WPS process time
@@ -337,7 +338,7 @@
             font: 'bold 11px "Open Sans", "Arial Unicode MS", "sans-serif"',
             placement: 'line'
           })
-        })
+        });
         var layer = new ol.layer.Vector({
           source: new ol.source.Vector({
             useSpatialIndex: true,
@@ -370,15 +371,12 @@
             crs: mapProjection,
             outputAsWFSFeaturesCollection: "true"
           });
-          var inputs = [{
+          inputs.push({
               "name": "vlayer",
               "value": geometryOutput
-            }, {
-              name: "rlayers",
-              value: scope.wpsLink.raster || "etopo1" // default value
-            }
-          ];
-          var processResponse = function(response) {
+          });
+
+          processResponse = function(response) {
             if (response.TYPE_NAME === 'OWS_1_1_0.ExceptionReport') {
               scope.executeState = 'finished';
               scope.running = false;
@@ -400,11 +398,9 @@
 
                   if (response.status.processSucceeded) {
                     var wmsOutput = gnWpsService.responseHasWmsService(response);
-                    layer.getSource().removeFeature(event.feature);
                     if (wmsOutput !== null) {
                       gnWpsService.extractWmsLayerFromResponse(
                         response, wmsOutput, scope.map, scope.wpsLink.layer);
-
                     }
                   }
                 }
@@ -445,6 +441,7 @@
           gnWpsService.execute(processUri, processId, inputs, output).then(
             function(response) {
               processResponse(response);
+              layer.getSource().removeFeature(event.feature);
             },
             function(response) {
               scope.executeState = 'failed';

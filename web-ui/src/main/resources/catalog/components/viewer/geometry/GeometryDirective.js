@@ -129,7 +129,7 @@
                   ctrl.map,
                   feature,
                   {
-                    crs: ctrl.outputCrs,
+                    crs: ctrl.outputCrs || $scope.ctrl.map.getView().getProjection().getCode(),
                     format: ctrl.outputFormat,
                     outputAsWFSFeaturesCollection:
                     ctrl.outputAsFeatures
