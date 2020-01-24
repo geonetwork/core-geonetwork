@@ -308,13 +308,13 @@ class MEF2Exporter {
         // --- save thumbnails and maps
 
         if (format == Format.PARTIAL || format == Format.FULL) {
-            StoreUtils.extract(context, metadata.getUuid(), publicResources, zipFs.getPath("public"), true);
+            StoreUtils.extract(context, metadata.getUuid(), publicResources, metadataRootDir.resolve("public"), true);
         }
 
         if (format == Format.FULL) {
             try {
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
-                StoreUtils.extract(context, metadata.getUuid(), privateResources, zipFs.getPath("private"), true);
+                StoreUtils.extract(context, metadata.getUuid(), privateResources, metadataRootDir.resolve("private"), true);
             } catch (Exception e) {
                 // Current user could not download private data
             }
