@@ -44,14 +44,53 @@
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:srv139="http://www.isotc211.org/2005/srv"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
                 exclude-result-prefixes="#all">
 
   <xsl:param name="outputLanguage" select="''"/>
 
 
+
+  <xsl:variable name="mainLanguage"
+                select="//mdb:defaultLocale/*/lan:language/*/@codeListValue"/>
+
+  <xsl:variable name="otherLanguages"
+                select="//mdb:otherLocale/*/lan:language"/>
+
+  <xsl:variable name="language"
+                select="if ($outputLanguage != '' and ($outputLanguage = $mainLanguage or count($otherLanguages[*/@codeListValue = $outputLanguage]) > 0))
+                                then concat('#', $otherLanguages[*/@codeListValue = $outputLanguage]/../@id)
+                                else ''"/>
+
+  <!--
+  <cit:title xsi:type="lan:PT_FreeText_PropertyType">
+    <gco:CharacterString>INSPIRE - Service de découverte pour la Wallonie</gco:CharacterString>
+    <lan:PT_FreeText>
+       <lan:textGroup>
+          <lan:LocalisedCharacterString locale="#FR">INSPIRE - Service de découverte pour la Wallonie</lan:LocalisedCharacterString>
+       </lan:textGroup>
+       <lan:textGroup>
+          <lan:LocalisedCharacterString locale="#EN">INSPIRE - Discovery service</lan:LocalisedCharacterString>
+       </lan:textGroup>
+    </lan:PT_FreeText>
+  -->
+  <xsl:template mode="localised" match="*">
+    <xsl:variable name="translation"
+                  select="*/lan:textGroup/*[@locale = $language]"/>
+    <xsl:choose>
+      <xsl:when test="$translation != ''">
+        <xsl:value-of select="$translation"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="gco:CharacterString|gco139:CharacterString"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:template match="/">
-    <xsl:variable name="isInspire" select="false"/>
+    <xsl:variable name="inspireThemes"
+                  select="//mri:descriptiveKeywords/*[mri:thesaurusName/*/cit:title/*/text() = 'GEMET - INSPIRE themes, version 1.0']/mri:keyword"/>
+    <xsl:variable name="isInspire"
+                  select="count($inspireThemes) > 0"/>
 
     <csw:Capabilities xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
                       xmlns:gml="http://www.opengis.net/gml"
@@ -61,49 +100,81 @@
                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                       xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0"
                       xmlns:inspire_com="http://inspire.ec.europa.eu/schemas/common/1.0"
-                      version="2.0.2"
-                      xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd http://inspire.ec.europa.eu/schemas/inspire_ds/1.0 http://inspire.ec.europa.eu/schemas/inspire_ds/1.0/inspire_ds.xsd">
+                      version="2.0.2">
       <xsl:attribute name="xsi:schemaLocation"
                      select="if ($isInspire)
                              then 'http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd http://inspire.ec.europa.eu/schemas/inspire_ds/1.0 http://inspire.ec.europa.eu/schemas/inspire_ds/1.0/inspire_ds.xsd'
                              else 'http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd'"/>
 
       <ows:ServiceIdentification>
-        <ows:Title><xsl:value-of select="//mdb:identificationInfo/*/mri:citation/*/cit:title/*/text()|
-                                         //gmd:identificationInfo/*/gmd:citation/*/gmd:title/*/text()"/></ows:Title>
+        <ows:Title><xsl:apply-templates mode="localised"
+                                        select="//mdb:identificationInfo/*/mri:citation/*/cit:title|
+                                              //gmd:identificationInfo/*/gmd:citation/*/gmd:title"/></ows:Title>
         <ows:Abstract><xsl:value-of select="//mdb:identificationInfo/*/mri:abstract/*/text()|
                                          //gmd:identificationInfo/*/gmd:abstract/*/text()"/></ows:Abstract>
         <ows:Keywords>
-          <!-- Keywords are automatically added by GeoNetwork
-          according to catalogue content. -->
+          <xsl:for-each select="(//mdb:identificationInfo/*/mri:descriptiveKeywords/*/mri:keyword|
+                                 //gmd:identificationInfo/*/gmd:descriptiveKeywords/*/gmd:keyword)">
+            <ows:Keyword><xsl:value-of select="gco:CharacterString|gco139:CharacterString"/></ows:Keyword>
+          </xsl:for-each>
         </ows:Keywords>
         <ows:ServiceType>CSW</ows:ServiceType>
         <ows:ServiceTypeVersion>2.0.2</ows:ServiceTypeVersion>
-        <ows:Fees>$FEES</ows:Fees>
-        <ows:AccessConstraints>$ACCESS_CONSTRAINTS</ows:AccessConstraints>
+        <ows:Fees><xsl:value-of select="string-join(
+                                          //mdb:distributionInfo/*/mrd:distributor/*/mrd:distributionOrderProcess/*/mrd:orderingInstructions/*/text()|
+                                          //gmd:distributionInfo/*/gmd:distributor/*/gmd:distributionOrderProcess/*/gmd:orderingInstructions/*/text(), '')"/></ows:Fees>
+        <ows:AccessConstraints><xsl:value-of select="string-join(
+                                          //mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints]/mco:otherConstraints/*/text()|
+                                         //gmd:identificationInfo/*/gmd:resourceConstraints/*[gmd:accessConstraints]/gmd:otherConstraints/*/text(), '')"/></ows:AccessConstraints>
       </ows:ServiceIdentification>
-      <xsl:for-each select="//mdb:identificationInfo/*/mri:pointOfContact[1]">
+      <xsl:for-each select="//mdb:identificationInfo/*/mri:pointOfContact[1]/*">
         <ows:ServiceProvider>
-          <ows:ProviderName>$PROVIDER_NAME</ows:ProviderName>
-          <ows:ProviderSite xlink:href="$PROTOCOL://$HOST$PORT$SERVLET"/>
+          <ows:ProviderName><xsl:value-of select="cit:party/cit:CI_Organisation/cit:name/*/text()"/></ows:ProviderName>
+          <ows:ProviderSite xlink:href="{cit:party/*/cit:contactInfo/*/cit:onlineResource/*/cit:linkage/*/text()}"/>
           <ows:ServiceContact>
-            <ows:IndividualName>$IND_NAME</ows:IndividualName>
-            <ows:PositionName>$POS_NAME</ows:PositionName>
+            <xsl:for-each select="cit:party/*/cit:individual/*/cit:name/*/text()">
+              <ows:IndividualName><xsl:value-of select="."/></ows:IndividualName>
+            </xsl:for-each>
+            <xsl:for-each select="cit:party/*/cit:individual/*/cit:positionName/*/text()">
+              <ows:PositionName><xsl:value-of select="."/></ows:PositionName>
+            </xsl:for-each>
             <ows:ContactInfo>
-              <ows:Phone>
-                <ows:Voice>$VOICE</ows:Voice>
-                <ows:Facsimile>$FACSCIMILE</ows:Facsimile>
-              </ows:Phone>
+              <xsl:if test="cit:party/*/cit:contactInfo/*/cit:phone">
+                <ows:Phone>
+                  <xsl:for-each select="cit:party/*/cit:contactInfo/*/cit:phone/*[cit:numberType/*/@codeListValue = 'voice']/cit:number/*/text()">
+                    <ows:Voice><xsl:value-of select="."/></ows:Voice>
+                  </xsl:for-each>
+                  <xsl:for-each select="cit:party/*/cit:contactInfo/*/cit:phone/*[cit:numberType/*/@codeListValue = 'facsimilie']/cit:number/*/text()">
+                    <ows:Voice><xsl:value-of select="."/></ows:Voice>
+                  </xsl:for-each>
+                </ows:Phone>
+              </xsl:if>
               <ows:Address>
-                <ows:DeliveryPoint>$DEL_POINT</ows:DeliveryPoint>
-                <ows:City>$CITY</ows:City>
-                <ows:AdministrativeArea>$ADMIN_AREA</ows:AdministrativeArea>
-                <ows:PostalCode>$POSTAL_CODE</ows:PostalCode>
-                <ows:Country>$COUNTRY</ows:Country>
-                <ows:ElectronicMailAddress>$EMAIL</ows:ElectronicMailAddress>
+                <xsl:for-each select="cit:party/*/cit:contactInfo/*/cit:address/*/cit:deliveryPoint/*/text()">
+                  <ows:DeliveryPoint><xsl:value-of select="."/></ows:DeliveryPoint>
+                </xsl:for-each>
+                <xsl:for-each select="cit:party/*/cit:contactInfo/*/cit:address/*/cit:city/*/text()">
+                  <ows:City><xsl:value-of select="."/></ows:City>
+                </xsl:for-each>
+                <xsl:for-each select="cit:party/*/cit:contactInfo/*/cit:address/*/cit:administrativeArea/*/text()">
+                  <ows:AdministrativeArea><xsl:value-of select="."/></ows:AdministrativeArea>
+                </xsl:for-each>
+                <xsl:for-each select="cit:party/*/cit:contactInfo/*/cit:address/*/cit:postalCode/*/text()">
+                  <ows:PostalCode><xsl:value-of select="."/></ows:PostalCode>
+                </xsl:for-each>
+                <xsl:for-each select="cit:party/*/cit:contactInfo/*/cit:address/*/cit:country/*/text()">
+                  <ows:Country><xsl:value-of select="."/></ows:Country>
+                </xsl:for-each>
+                <xsl:for-each select="cit:party/*/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress/*/text()">
+                  <ows:ElectronicMailAddress><xsl:value-of select="."/></ows:ElectronicMailAddress>
+                </xsl:for-each>
               </ows:Address>
-              <ows:HoursOfService>$HOUROFSERVICE</ows:HoursOfService>
-              <ows:ContactInstructions>$CONTACT_INSTRUCTION</ows:ContactInstructions>
+              <xsl:for-each select="cit:party/*/cit:contactInfo/*/cit:hoursOfService/*/text()">
+                <ows:HoursOfService><xsl:value-of select="."/></ows:HoursOfService>
+              </xsl:for-each>
+              <xsl:for-each select="cit:party/*/cit:contactInfo/*/cit:contactInstructions/*/text()">
+                <ows:ContactInstructions><xsl:value-of select="."/></ows:ContactInstructions>
+              </xsl:for-each>
             </ows:ContactInfo>
             <ows:Role>pointOfContact</ows:Role>
           </ows:ServiceContact>
@@ -162,7 +233,6 @@
               <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
             </ows:HTTP>
           </ows:DCP>
-          <!-- FIXME : Gets it from enum or conf -->
           <ows:Parameter name="resultType">
             <ows:Value>hits</ows:Value>
             <ows:Value>results</ows:Value>
@@ -240,76 +310,83 @@
           <ows:Value>SOAP</ows:Value>
         </ows:Constraint>
 
-        <inspire_ds:ExtendedCapabilities>
-          <inspire_com:ResourceLocator>
-            <inspire_com:URL>$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</inspire_com:URL>
-            <inspire_com:MediaType>application/xml</inspire_com:MediaType>
-          </inspire_com:ResourceLocator>
+        <xsl:if test="$isInspire">
 
-          <inspire_com:ResourceLocator>
-            <inspire_com:URL>$PROTOCOL://$HOST$PORT$SERVLET</inspire_com:URL>
-            <inspire_com:MediaType>text/html</inspire_com:MediaType>
-          </inspire_com:ResourceLocator>
+          <inspire_ds:ExtendedCapabilities>
+            <inspire_com:ResourceLocator>
+              <inspire_com:URL>$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</inspire_com:URL>
+              <inspire_com:MediaType>application/xml</inspire_com:MediaType>
+            </inspire_com:ResourceLocator>
 
-          <inspire_com:ResourceType>service</inspire_com:ResourceType>
+            <inspire_com:ResourceLocator>
+              <inspire_com:URL>$PROTOCOL://$HOST$PORT$SERVLET</inspire_com:URL>
+              <inspire_com:MediaType>text/html</inspire_com:MediaType>
+            </inspire_com:ResourceLocator>
 
-          <inspire_com:TemporalReference>
-            <inspire_com:TemporalExtent>
-              <inspire_com:IntervalOfDates>
-                <inspire_com:StartingDate>2010-07-01T00:00:00</inspire_com:StartingDate>
-                <inspire_com:EndDate>2011-07-01T00:00:00</inspire_com:EndDate>
-              </inspire_com:IntervalOfDates>
-            </inspire_com:TemporalExtent>
-          </inspire_com:TemporalReference>
+            <inspire_com:ResourceType>service</inspire_com:ResourceType>
 
-          <inspire_com:Conformity>
-            <inspire_com:Specification
-              xsi:type="inspire_com:citationInspireInteroperabilityRegulation_eng">
-              <inspire_com:Title>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</inspire_com:Title>
-              <inspire_com:DateOfPublication>2010-12-08</inspire_com:DateOfPublication>
-              <inspire_com:URI>OJ:L:2010:323:0011:0102:EN:PDF</inspire_com:URI>
-              <inspire_com:ResourceLocator>
-                <inspire_com:URL>
-                  http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2010:323:0011:0102:EN:PDF
-                </inspire_com:URL>
-                <inspire_com:MediaType>application/pdf</inspire_com:MediaType>
-              </inspire_com:ResourceLocator>
-            </inspire_com:Specification>
+            <inspire_com:TemporalReference>
+              <inspire_com:TemporalExtent>
+                <inspire_com:IntervalOfDates>
+                  <inspire_com:StartingDate>2010-07-01T00:00:00</inspire_com:StartingDate>
+                  <inspire_com:EndDate>2011-07-01T00:00:00</inspire_com:EndDate>
+                </inspire_com:IntervalOfDates>
+              </inspire_com:TemporalExtent>
+            </inspire_com:TemporalReference>
 
-            <inspire_com:Degree>notEvaluated</inspire_com:Degree>
-          </inspire_com:Conformity>
+            <inspire_com:Conformity>
+              <inspire_com:Specification
+                xsi:type="inspire_com:citationInspireInteroperabilityRegulation_eng">
+                <inspire_com:Title>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</inspire_com:Title>
+                <inspire_com:DateOfPublication>2010-12-08</inspire_com:DateOfPublication>
+                <inspire_com:URI>OJ:L:2010:323:0011:0102:EN:PDF</inspire_com:URI>
+                <inspire_com:ResourceLocator>
+                  <inspire_com:URL>
+                    http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2010:323:0011:0102:EN:PDF
+                  </inspire_com:URL>
+                  <inspire_com:MediaType>application/pdf</inspire_com:MediaType>
+                </inspire_com:ResourceLocator>
+              </inspire_com:Specification>
+
+              <inspire_com:Degree>notEvaluated</inspire_com:Degree>
+            </inspire_com:Conformity>
 
 
-          <inspire_com:MetadataPointOfContact>
-            <inspire_com:OrganisationName>$ORG_NAME</inspire_com:OrganisationName>
-            <inspire_com:EmailAddress>$EMAIL</inspire_com:EmailAddress>
-          </inspire_com:MetadataPointOfContact>
+            <xsl:for-each select="//mdb:contact[1]/*">
+              <inspire_com:MetadataPointOfContact>
+                <inspire_com:OrganisationName><xsl:value-of select="cit:party/cit:CI_Organisation/cit:name/*/text()"/></inspire_com:OrganisationName>
+                <inspire_com:EmailAddress><xsl:value-of select="cit:party/cit:CI_Organisation/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress/*/text()"/></inspire_com:EmailAddress>
+              </inspire_com:MetadataPointOfContact>
+            </xsl:for-each>
 
-          <inspire_com:MetadataDate>2010-07-15</inspire_com:MetadataDate>
-          <inspire_com:SpatialDataServiceType>discovery</inspire_com:SpatialDataServiceType>
+            <inspire_com:MetadataDate><xsl:value-of select="substring-before(//mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date/*/text(), 'T')"/></inspire_com:MetadataDate>
+            <inspire_com:SpatialDataServiceType>discovery</inspire_com:SpatialDataServiceType>
 
-          <inspire_com:MandatoryKeyword xsi:type="inspire_com:classificationOfSpatialDataService">
-            <inspire_com:KeywordValue>infoCatalogueService</inspire_com:KeywordValue>
-          </inspire_com:MandatoryKeyword>
+            <inspire_com:MandatoryKeyword xsi:type="inspire_com:classificationOfSpatialDataService">
+              <inspire_com:KeywordValue>infoCatalogueService</inspire_com:KeywordValue>
+            </inspire_com:MandatoryKeyword>
 
-          <inspire_com:Keyword xsi:type="inspire_com:inspireTheme_eng">
-            <inspire_com:OriginatingControlledVocabulary>
-              <inspire_com:Title>GEMET - INSPIRE themes</inspire_com:Title>
-              <inspire_com:DateOfPublication>2008-06-01</inspire_com:DateOfPublication>
-            </inspire_com:OriginatingControlledVocabulary>
+            <inspire_com:Keyword xsi:type="inspire_com:inspireTheme_eng">
+              <inspire_com:OriginatingControlledVocabulary>
+                <inspire_com:Title>GEMET - INSPIRE themes</inspire_com:Title>
+                <inspire_com:DateOfPublication>2008-06-01</inspire_com:DateOfPublication>
+              </inspire_com:OriginatingControlledVocabulary>
 
-            <inspire_com:KeywordValue>Orthoimagery</inspire_com:KeywordValue>
-          </inspire_com:Keyword>
+              <xsl:for-each select="$inspireThemes">
+                <inspire_com:KeywordValue><xsl:value-of select="*/text()"/></inspire_com:KeywordValue>
+              </xsl:for-each>
+            </inspire_com:Keyword>
 
-          <inspire_com:SupportedLanguages>
-            <!--
-            List of supported languages
-            -->
-          </inspire_com:SupportedLanguages>
-          <inspire_com:ResponseLanguage>
-            <inspire_com:Language>$INSPIRE_LOCALE</inspire_com:Language>
-          </inspire_com:ResponseLanguage>
-        </inspire_ds:ExtendedCapabilities>
+            <inspire_com:SupportedLanguages>
+              <xsl:for-each select="//mdb:otherLocale/*">
+                <inspire_com:Language><xsl:value-of select="lan:language/*/codeListValue"/></inspire_com:Language>
+              </xsl:for-each>
+            </inspire_com:SupportedLanguages>
+            <inspire_com:ResponseLanguage>
+              <inspire_com:Language><xsl:value-of select="$mainLanguage"/></inspire_com:Language>
+            </inspire_com:ResponseLanguage>
+          </inspire_ds:ExtendedCapabilities>
+        </xsl:if>
       </ows:OperationsMetadata>
 
       <ogc:Filter_Capabilities>

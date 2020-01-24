@@ -125,7 +125,6 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         checkAcceptVersions(request);
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        boolean inspireEnabled = gc.getBean(SettingManager.class).getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE, false);
         boolean isFromRecord = false;
         String recordIdToUseForCapability = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_ID);
 
@@ -137,8 +136,11 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                 try {
                     if (accessManager.isVisibleToAll(String.valueOf(record.getId()))) {
                         String conversionFilename = "record-TO-csw-capabilities.xsl";
+                        String requestLanguage = request.getAttributeValue("language");
+                        Map<String, Object> parameters = new HashMap<>();
+                        parameters.put("outputLanguage", requestLanguage == null ? "" : requestLanguage);
                         Path conversion = context.getAppPath().resolve(Geonet.Path.CSW).resolve(conversionFilename);
-                        capabilities = Xml.transform(record.getXmlData(false), conversion);
+                        capabilities = Xml.transform(record.getXmlData(false), conversion, parameters);
                         isFromRecord = true;
                     } else {
                         message = String.format(
