@@ -63,6 +63,10 @@
                       xmlns:inspire_com="http://inspire.ec.europa.eu/schemas/common/1.0"
                       version="2.0.2"
                       xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd http://inspire.ec.europa.eu/schemas/inspire_ds/1.0 http://inspire.ec.europa.eu/schemas/inspire_ds/1.0/inspire_ds.xsd">
+      <xsl:attribute name="xsi:schemaLocation"
+                     select="if ($isInspire)
+                             then 'http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd http://inspire.ec.europa.eu/schemas/inspire_ds/1.0 http://inspire.ec.europa.eu/schemas/inspire_ds/1.0/inspire_ds.xsd'
+                             else 'http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd'"/>
 
       <ows:ServiceIdentification>
         <ows:Title><xsl:value-of select="//mdb:identificationInfo/*/mri:citation/*/cit:title/*/text()|
@@ -78,31 +82,33 @@
         <ows:Fees>$FEES</ows:Fees>
         <ows:AccessConstraints>$ACCESS_CONSTRAINTS</ows:AccessConstraints>
       </ows:ServiceIdentification>
-      <ows:ServiceProvider>
-        <ows:ProviderName>$PROVIDER_NAME</ows:ProviderName>
-        <ows:ProviderSite xlink:href="$PROTOCOL://$HOST$PORT$SERVLET"/>
-        <ows:ServiceContact>
-          <ows:IndividualName>$IND_NAME</ows:IndividualName>
-          <ows:PositionName>$POS_NAME</ows:PositionName>
-          <ows:ContactInfo>
-            <ows:Phone>
-              <ows:Voice>$VOICE</ows:Voice>
-              <ows:Facsimile>$FACSCIMILE</ows:Facsimile>
-            </ows:Phone>
-            <ows:Address>
-              <ows:DeliveryPoint>$DEL_POINT</ows:DeliveryPoint>
-              <ows:City>$CITY</ows:City>
-              <ows:AdministrativeArea>$ADMIN_AREA</ows:AdministrativeArea>
-              <ows:PostalCode>$POSTAL_CODE</ows:PostalCode>
-              <ows:Country>$COUNTRY</ows:Country>
-              <ows:ElectronicMailAddress>$EMAIL</ows:ElectronicMailAddress>
-            </ows:Address>
-            <ows:HoursOfService>$HOUROFSERVICE</ows:HoursOfService>
-            <ows:ContactInstructions>$CONTACT_INSTRUCTION</ows:ContactInstructions>
-          </ows:ContactInfo>
-          <ows:Role>pointOfContact</ows:Role>
-        </ows:ServiceContact>
-      </ows:ServiceProvider>
+      <xsl:for-each select="//mdb:identificationInfo/*/mri:pointOfContact[1]">
+        <ows:ServiceProvider>
+          <ows:ProviderName>$PROVIDER_NAME</ows:ProviderName>
+          <ows:ProviderSite xlink:href="$PROTOCOL://$HOST$PORT$SERVLET"/>
+          <ows:ServiceContact>
+            <ows:IndividualName>$IND_NAME</ows:IndividualName>
+            <ows:PositionName>$POS_NAME</ows:PositionName>
+            <ows:ContactInfo>
+              <ows:Phone>
+                <ows:Voice>$VOICE</ows:Voice>
+                <ows:Facsimile>$FACSCIMILE</ows:Facsimile>
+              </ows:Phone>
+              <ows:Address>
+                <ows:DeliveryPoint>$DEL_POINT</ows:DeliveryPoint>
+                <ows:City>$CITY</ows:City>
+                <ows:AdministrativeArea>$ADMIN_AREA</ows:AdministrativeArea>
+                <ows:PostalCode>$POSTAL_CODE</ows:PostalCode>
+                <ows:Country>$COUNTRY</ows:Country>
+                <ows:ElectronicMailAddress>$EMAIL</ows:ElectronicMailAddress>
+              </ows:Address>
+              <ows:HoursOfService>$HOUROFSERVICE</ows:HoursOfService>
+              <ows:ContactInstructions>$CONTACT_INSTRUCTION</ows:ContactInstructions>
+            </ows:ContactInfo>
+            <ows:Role>pointOfContact</ows:Role>
+          </ows:ServiceContact>
+        </ows:ServiceProvider>
+      </xsl:for-each>
       <ows:OperationsMetadata>
         <ows:Operation name="GetCapabilities">
           <ows:DCP>

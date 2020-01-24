@@ -164,12 +164,14 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             Path file = context.getAppPath().resolve("xml").resolve("csw").resolve("capabilities.xml");
             try {
                 capabilities = Xml.loadFile(file);
+                if (StringUtils.isNotEmpty(message)) {
+                    capabilities.addContent(new Comment("WARNING: " + message));
+                }
             } catch (JDOMException e) {
                 Log.warning(Geonet.CSW, String.format("XML encoding error in file /xml/csw/capabilities.xml. Error is %s.", e.getMessage()));
             } catch (NoSuchFileException e) {
                 Log.warning(Geonet.CSW, "File /xml/csw/capabilities.xml not found. Check catalogue config file.");
             }
-
         }
 
         if (capabilities == null) {
@@ -178,61 +180,59 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
         try {
             String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
-            if (StringUtils.isNotEmpty(message)) {
-                capabilities.addContent(new Comment("WARNING: " + message));
-            }
+
             if (!isFromRecord) {
                 setKeywords(capabilities, context, cswServiceSpecificContraint);
             }
             setOperationsParameters(capabilities);
 
             String currentLanguage = "";
+//
+//            // INSPIRE: Use language parameter if available, otherwise use default (using context.getLanguage())
+//            if (inspireEnabled) {
+//                String isoLangParamValue = request.getAttributeValue("language");
+//                final LanguageRepository languageRepository = context.getBean(LanguageRepository.class);
+//                List<Language> languageList = languageRepository.findAllByInspireFlag(true);
+//
+//                List<String> langCodes = Lists.transform(languageList, new Function<Language, String>() {
+//                    @Nullable
+//                    @Override
+//                    public String apply(@Nonnull Language input) {
+//                        return input.getId();
+//                    }
+//                });
+//
+//                if (isoLangParamValue != null) {
+//                    // Retrieve GN language id from Iso language id
+//                    if (langCodes.contains(isoLangParamValue)) {
+//                        currentLanguage = isoLangParamValue;
+//                    }
+//                }
+//
+//                String defaultLanguageId = context.getLanguage();
+//                try {
+//                    Language defaultLanguage = languageRepository.findOneByDefaultLanguage();
+//
+//                    if (StringUtils.isEmpty(currentLanguage)) {
+//                        currentLanguage = defaultLanguage.getId();
+//                        defaultLanguageId = defaultLanguage.getId();
+//                    }
+//                } catch (EmptyResultDataAccessException e) {
+//                    Log.error(Geonet.CSW, "No default language set in database languages table. " +
+//                        "You MUST set one default language (using isDefault column). " +
+//                        "Using session language as default. Error is: " + e.getMessage());
+//                    currentLanguage = context.getLanguage();
+//                }
+//
+//                setInspireLanguages(capabilities, langCodes, currentLanguage, defaultLanguageId);
+//            } else {
+//                currentLanguage = context.getLanguage();
+//            }
 
-            // INSPIRE: Use language parameter if available, otherwise use default (using context.getLanguage())
-            if (inspireEnabled) {
-                String isoLangParamValue = request.getAttributeValue("language");
-                final LanguageRepository languageRepository = context.getBean(LanguageRepository.class);
-                List<Language> languageList = languageRepository.findAllByInspireFlag(true);
+//            final CswCapabilitiesInfoFieldRepository infoRepository = context.getBean(CswCapabilitiesInfoFieldRepository.class);
+//            CswCapabilitiesInfo cswCapabilitiesInfo = infoRepository.findCswCapabilitiesInfo(currentLanguage);
 
-                List<String> langCodes = Lists.transform(languageList, new Function<Language, String>() {
-                    @Nullable
-                    @Override
-                    public String apply(@Nonnull Language input) {
-                        return input.getId();
-                    }
-                });
-
-                if (isoLangParamValue != null) {
-                    // Retrieve GN language id from Iso language id
-                    if (langCodes.contains(isoLangParamValue)) {
-                        currentLanguage = isoLangParamValue;
-                    }
-                }
-
-                String defaultLanguageId = context.getLanguage();
-                try {
-                    Language defaultLanguage = languageRepository.findOneByDefaultLanguage();
-
-                    if (StringUtils.isEmpty(currentLanguage)) {
-                        currentLanguage = defaultLanguage.getId();
-                        defaultLanguageId = defaultLanguage.getId();
-                    }
-                } catch (EmptyResultDataAccessException e) {
-                    Log.error(Geonet.CSW, "No default language set in database languages table. " +
-                        "You MUST set one default language (using isDefault column). " +
-                        "Using session language as default. Error is: " + e.getMessage());
-                    currentLanguage = context.getLanguage();
-                }
-
-                setInspireLanguages(capabilities, langCodes, currentLanguage, defaultLanguageId);
-            } else {
-                currentLanguage = context.getLanguage();
-            }
-
-            final CswCapabilitiesInfoFieldRepository infoRepository = context.getBean(CswCapabilitiesInfoFieldRepository.class);
-            CswCapabilitiesInfo cswCapabilitiesInfo = infoRepository.findCswCapabilitiesInfo(currentLanguage);
-
-            substitute(context, capabilities, cswCapabilitiesInfo, currentLanguage);
+            substitute(context, capabilities, currentLanguage);
 
             handleSections(request, capabilities);
 
@@ -376,7 +376,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
     }
 
-    private void substitute(ServiceContext context, Element capab, CswCapabilitiesInfo cswCapabilitiesInfo, String langId) throws Exception {
+    private void substitute(ServiceContext context, Element capab, String langId) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
 
