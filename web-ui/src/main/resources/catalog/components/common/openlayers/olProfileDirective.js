@@ -132,10 +132,18 @@
                 profile.clearHighlight();
               }
             });
-
-          goog.events.listen(window, goog.events.EventType.RESIZE,
+          var updateSize = function () {
             gnDebounce(refreshData, 50, true),
-            false, this);
+              false, this;
+          }
+
+          var globalResizeTimer = null;
+          $(window).resize(function() {
+            if(globalResizeTimer != null) window.clearTimeout(globalResizeTimer);
+            globalResizeTimer = window.setTimeout(function() {
+              updateSize();
+            }, 200);
+          });
 
           function refreshData() {
             if (profile !== undefined) {
@@ -148,5 +156,5 @@
         }
     };
   }];
-  module.directive('olProfile', profileDirective)
+  module.directive('olProfile', profileDirective);
 })()

@@ -444,6 +444,7 @@
               layer.getSource().removeFeature(event.feature);
             },
             function(response) {
+              layer.getSource().removeFeature(event.feature);
               scope.executeState = 'failed';
               scope.executeResponse = response;
               scope.running = false;
