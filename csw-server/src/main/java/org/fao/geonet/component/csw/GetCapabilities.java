@@ -23,9 +23,7 @@
 
 package org.fao.geonet.component.csw;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
@@ -35,13 +33,8 @@ import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.csw.common.exceptions.VersionNegotiationFailedEx;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Address;
-import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
@@ -53,12 +46,8 @@ import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.CswCapabilitiesInfo;
-import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
-import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Comment;
@@ -66,10 +55,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
-import java.io.StringWriter;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -78,14 +65,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.servlet.ServletContext;
-import javax.xml.transform.stream.StreamResult;
-
-import jeeves.server.context.ServiceContext;
-import jeeves.server.overrides.ConfigurationOverrides;
 
 import static org.fao.geonet.kernel.setting.SettingManager.isPortRequired;
 
