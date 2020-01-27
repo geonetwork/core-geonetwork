@@ -188,51 +188,10 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             }
             setOperationsParameters(capabilities);
 
-            String currentLanguage = "";
-//
-//            // INSPIRE: Use language parameter if available, otherwise use default (using context.getLanguage())
-//            if (inspireEnabled) {
-//                String isoLangParamValue = request.getAttributeValue("language");
-//                final LanguageRepository languageRepository = context.getBean(LanguageRepository.class);
-//                List<Language> languageList = languageRepository.findAllByInspireFlag(true);
-//
-//                List<String> langCodes = Lists.transform(languageList, new Function<Language, String>() {
-//                    @Nullable
-//                    @Override
-//                    public String apply(@Nonnull Language input) {
-//                        return input.getId();
-//                    }
-//                });
-//
-//                if (isoLangParamValue != null) {
-//                    // Retrieve GN language id from Iso language id
-//                    if (langCodes.contains(isoLangParamValue)) {
-//                        currentLanguage = isoLangParamValue;
-//                    }
-//                }
-//
-//                String defaultLanguageId = context.getLanguage();
-//                try {
-//                    Language defaultLanguage = languageRepository.findOneByDefaultLanguage();
-//
-//                    if (StringUtils.isEmpty(currentLanguage)) {
-//                        currentLanguage = defaultLanguage.getId();
-//                        defaultLanguageId = defaultLanguage.getId();
-//                    }
-//                } catch (EmptyResultDataAccessException e) {
-//                    Log.error(Geonet.CSW, "No default language set in database languages table. " +
-//                        "You MUST set one default language (using isDefault column). " +
-//                        "Using session language as default. Error is: " + e.getMessage());
-//                    currentLanguage = context.getLanguage();
-//                }
-//
-//                setInspireLanguages(capabilities, langCodes, currentLanguage, defaultLanguageId);
-//            } else {
-//                currentLanguage = context.getLanguage();
-//            }
-
-//            final CswCapabilitiesInfoFieldRepository infoRepository = context.getBean(CswCapabilitiesInfoFieldRepository.class);
-//            CswCapabilitiesInfo cswCapabilitiesInfo = infoRepository.findCswCapabilitiesInfo(currentLanguage);
+            String currentLanguage = request.getAttributeValue("language");
+            if (currentLanguage == null) {
+                currentLanguage = context.getLanguage();
+            }
 
             substitute(context, capabilities, currentLanguage);
 
@@ -401,20 +360,6 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
         vars.put("$SERVLET", context.getBaseUrl());
 
-        vars.put("$IND_NAME", "");
-        vars.put("$ORG_NAME", "");
-        vars.put("$POS_NAME", "");
-        vars.put("$VOICE", "");
-        vars.put("$FACSCIMILE", "");
-        vars.put("$DEL_POINT", "");
-        vars.put("$CITY", "");
-        vars.put("$ADMIN_AREA", "");
-        vars.put("$POSTAL_CODE", "");
-        vars.put("$COUNTRY", "");
-        vars.put("$EMAIL", "");
-        vars.put("$HOUROFSERVICE", "");
-        vars.put("$CONTACT_INSTRUCTION", "");
-
         boolean isTitleDefined = false;
         String sourceUuid = NodeInfo.DEFAULT_NODE.equals(nodeinfo.getId()) ? sm.getSiteId() : nodeinfo.getId();
         final Source source = sourceRepository.findOne(sourceUuid);
@@ -424,9 +369,6 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         } else {
             vars.put("$TITLE", sm.getSiteName());
         }
-        vars.put("$ABSTRACT", "");
-        vars.put("$FEES", "");
-        vars.put("$ACCESS_CONSTRAINTS", "");
         vars.put("$LOCALE", langId);
 
         Lib.element.substitute(capab, vars);
