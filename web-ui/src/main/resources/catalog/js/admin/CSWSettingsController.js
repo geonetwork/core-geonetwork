@@ -131,7 +131,7 @@
         }
       }
       $scope.$watchCollection('cswSettings', function(n, o){
-        if (n!= o) {
+        if (n != o) {
           loadServiceRecords();
         }
       });

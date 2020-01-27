@@ -50,6 +50,7 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.hibernate.jpamodelgen.util.StringUtil;
 import org.jdom.Comment;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -105,7 +106,14 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         boolean isFromRecord = false;
+
         String recordIdToUseForCapability = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_ID);
+        if (!NodeInfo.DEFAULT_NODE.equals(context.getNodeId())) {
+            final Source source = sourceRepository.findOne(nodeinfo.getId());
+            if(source.getServiceRecord() != null) {
+                recordIdToUseForCapability = source.getServiceRecord().toString();
+            }
+        }
 
         Element capabilities = null;
         String message = null;
