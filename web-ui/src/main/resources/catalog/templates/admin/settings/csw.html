@@ -35,6 +35,9 @@
                 <input class="form-control"
                         data-ng-model="cswSettings['system/csw/capabilityRecordId']"
                         name="system.csw.capabilityRecordId"/>
+                <span class="input-group-addon">
+                  {{cswServiceRecord.title || cswServiceRecord.defaultTitle}}
+                </span>
                 <div class="input-group-btn">
                   <button type="button" class="btn btn-default dropdown-toggle"
                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"

@@ -135,7 +135,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             if (record != null) {
                 try {
                     if (accessManager.isVisibleToAll(String.valueOf(record.getId()))) {
-                        String conversionFilename = "record-TO-csw-capabilities.xsl";
+                        String conversionFilename = "record-to-csw-capabilities.xsl";
                         String requestLanguage = request.getAttributeValue("language");
                         Map<String, Object> parameters = new HashMap<>();
                         parameters.put("outputLanguage", requestLanguage == null ? "" : requestLanguage);

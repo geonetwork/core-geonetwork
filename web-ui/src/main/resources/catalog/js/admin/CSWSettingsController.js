@@ -71,6 +71,7 @@
        * CSW properties
        */
       $scope.cswSettings = {};
+      $scope.cswServiceRecord = null;
 
       /**
        * CSW element set name (an array of xpath).
@@ -114,14 +115,26 @@
                   $scope.cswSettings[setting['@name']] = setting['#text'];
                 }
               }
+              loadServiceRecords();
             }).error(function(data) {
               // TODO
             });
       }
 
       function loadServiceRecords() {
-
+        var id = $scope.cswSettings['system/csw/capabilityRecordId'];
+        if (angular.isDefined(id) && id != -1){
+          $http.get('qi?_content_type=json&fast=index&_id=' + id,
+            {cache: true}).then(function(r) {
+            $scope.cswServiceRecord = r.data.metadata;
+          });
+        }
       }
+      $scope.$watchCollection('cswSettings', function(n, o){
+        if (n!= o) {
+          loadServiceRecords();
+        }
+      });
 
 
       function loadCSWConfig() {
@@ -251,7 +264,6 @@
         return result;
       };
 
-      loadServiceRecords();
       loadSettings();
       loadCSWConfig();
       loadCSWElementSetName();
