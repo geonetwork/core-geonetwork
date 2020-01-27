@@ -215,7 +215,7 @@ public class SldApi {
             TextFile sld = new TextFile();
             sld.setContent(sldDoc);
             sld.setMimeType("application/xml");
-            fileRepository.save(sld);
+            fileRepository.saveAndFlush(sld);
 
             String pathPrefix = request.getContextPath() + request.getServletPath();
             String url = settingManager.getNodeURL() + "api/tools/ogc/sld/" + sld.getId() + ".xml";

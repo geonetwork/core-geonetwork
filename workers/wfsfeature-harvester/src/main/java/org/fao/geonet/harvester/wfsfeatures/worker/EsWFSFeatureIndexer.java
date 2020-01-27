@@ -503,7 +503,7 @@ public class EsWFSFeatureIndexer {
             this.url = url;
             this.firstFeatureIndex = firstFeatureIndex;
             this.report = report;
-            this.bulk = new Bulk.Builder().defaultIndex(index);
+            this.bulk = new Bulk.Builder().defaultType("_doc").defaultIndex(index);
             this.bulkSize = 0;
             LOGGER.debug("  {} - from {}, {} features to index, preparing bulk.", typeName, firstFeatureIndex, featureCommitInterval);
         }
