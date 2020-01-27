@@ -147,8 +147,6 @@ public class EsWFSFeatureIndexer {
 
     private ObjectMapper jacksonMapper = new ObjectMapper();
 
-    private int nbOfFeatures;
-
     /**
      * Create exchange states for this feature type.
      *
@@ -257,7 +255,7 @@ public class EsWFSFeatureIndexer {
         query.setCoordinateSystemReproject(wgs84);
 
         try {
-            nbOfFeatures = 0;
+            int nbOfFeatures = 0;
 
             final Phaser phaser = new Phaser();
             BulkResutHandler brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report);
@@ -342,7 +340,7 @@ public class EsWFSFeatureIndexer {
                     }
 
                     nbOfFeatures ++;
-                    brh.addAction(rootNode, feature);
+                    brh.addAction(rootNode, feature, nbOfFeatures);
 
                 } catch (Exception ex) {
                     LOGGER.warn("Error while creating document for {} feature {}. Exception is: {}", new Object[] {
@@ -533,11 +531,11 @@ public class EsWFSFeatureIndexer {
             return bulkSize;
         }
 
-        public void addAction(ObjectNode rootNode, SimpleFeature feature) throws JsonProcessingException {
+        public void addAction(ObjectNode rootNode, SimpleFeature feature, int currentlyIndexing) throws JsonProcessingException {
             // generate a unique feature id when geotools gives us a placeholder one
             String featureId = feature.getID();
             if (featureId.toLowerCase().indexOf("placeholder") > -1) {
-                featureId = "fid-" + nbOfFeatures;
+                featureId = "fid-" + currentlyIndexing;
             }
 
             String id = String.format("%s#%s#%s", url, typeName, featureId);
