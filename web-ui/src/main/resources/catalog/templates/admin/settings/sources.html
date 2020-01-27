@@ -9,16 +9,32 @@
                    data-ng-show="sources.length > 1"
                    data-ng-model="sourcesSearch.$" autofocus=""
                    placeholder="{{'filter' | translate}}"/>
+
+            <div class="row">
+              <div class="col-md-3"
+                   data-ng-repeat="(k, v) in filter.types">
+                <label title="{{::('source-' + k) | translate}}">
+                  <input type="checkbox" autocomplete="off" data-ng-model="filter.types[k]"/>
+                  <i class="fa fa-fw"
+                     title="{{::('source-' + k) | translate}}"
+                     data-ng-class="{'fa-home': k === 'portal',
+                                     'fa-folder': k === 'subportal',
+                                     'fa-cloud': k === 'externalportal',
+                                     'fa-cloud-download': k === 'harvester'}"></i>
+                </label>
+              </div>
+            </div>
+
             <a class="list-group-item"
                data-ng-class="s.uuid === source.uuid ? 'active' : ''"
                title="{{::('source-' + s.type) | translate}}"
                data-ng-click="selectSource(s)"
-               data-ng-repeat="s in sources | filter:sourcesSearch | orderBy:'name'">
+               data-ng-repeat="s in filteredSources | filter:sourcesSearch | orderBy:'name'">
               <i class="fa fa-fw"
                  data-ng-class="{'fa-home': s.type === 'portal',
-                 'fa-folder': s.type === 'subportal',
-                 'fa-cloud': s.type === 'externalportal',
-                 'fa-cloud-download': s.type === 'harvester'}"></i>
+                                 'fa-folder': s.type === 'subportal',
+                                 'fa-cloud': s.type === 'externalportal',
+                                 'fa-cloud-download': s.type === 'harvester'}"></i>
               {{::s.name}}
               <img class="gn-source-logo"
                    data-ng-src="{{'../../images/' + (s.type === 'subportal' ? 'harvesting/' +  s.logo : 'logos/' +  s.uuid + '.png')}}"/>

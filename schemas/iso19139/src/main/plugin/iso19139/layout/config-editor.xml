@@ -3141,7 +3141,7 @@
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
-        
+
         <directive data-gn-suggestion-list=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
@@ -3178,6 +3178,11 @@
       </tab>
 
       <!-- Elements that should not use the "flat" mode -->
+      <!-- Use excludeFrom attribute to don't apply flat mode exception if the element parent is in that list. For example:
+            <for name="gmd:contact" excludeFrom="gmd:MD_MaintenanceInformation"/>
+
+            Applies flat mode exceptions for all gmd:contact, except for the ones in gmd:MD_MaintenanceInformation.
+      -->
       <flatModeExceptions>
         <for name="gmd:descriptiveKeywords"/>
         <for name="gmd:keyword"/>

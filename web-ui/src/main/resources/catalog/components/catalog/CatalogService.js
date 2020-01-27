@@ -554,7 +554,7 @@
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
         'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails',
-        'creationDate', 'publicationDate', 'revisionDate'];
+        'creationDate', 'publicationDate', 'revisionDate', 'spatialRepresentationType_text'];
       var listOfJsonFields = ['keywordGroup', 'crsDetails'];
       // See below; probably not necessary
       var record = this;
@@ -727,8 +727,8 @@
         return ret;
       },
       getThumbnails: function() {
+        var images = {list: []};
         if (angular.isArray(this.image)) {
-          var images = {list: []};
           for (var i = 0; i < this.image.length; i++) {
             var s = this.image[i].split('|');
             var insertFn = 'push';
@@ -748,6 +748,9 @@
 
             images.list[insertFn]({url: s[1], label: s[2]});
           }
+        } else if (angular.isDefined(this.image)){
+          var s = this.image.split('|');
+          images.list.push({url: s[1], label: s[2]});
         }
         return images;
       },

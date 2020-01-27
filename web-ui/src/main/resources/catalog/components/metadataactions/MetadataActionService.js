@@ -128,10 +128,10 @@
        */
       this.metadataRDF = function(uuid, approved) {
         var url = gnHttp.getService('mdGetRDF') + '?uuid=' + uuid;
-        
+
         url += angular.isDefined(approved) ?
             '&approved=' + approved : '';
-        
+
         location.replace(url);
       };
 
@@ -141,7 +141,7 @@
        * @param {string} uuid
        */
       this.metadataMEF = function(uuid, bucket, approved) {
-        
+
         var url = gnHttp.getService('mdGetMEF') + '?version=2';
         url += angular.isDefined(uuid) ?
             '&uuid=' + uuid : '&format=full';
@@ -306,14 +306,14 @@
 
         scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
 
-        //Warn about possible workflow changes on batch changes 
-        // or when record is not approved 
+        //Warn about possible workflow changes on batch changes
+        // or when record is not approved
         if((!md || md.mdStatus != 2) && flag === 'on' && scope.isMdWorkflowEnable) {
           if(!confirm($translate.instant('warnPublishDraft'))){
             return;
           }
         }
-        
+
         scope.$broadcast('operationOnSelectionStart');
         var onOrOff = flag === 'on';
 
@@ -434,6 +434,26 @@
             type: 'danger'
           });
         });
+      };
+
+      /**
+       * Validates the current selection of metadata records.
+       * @param {String} bucket
+       */
+      this.validateMdInspire = function(bucket) {
+
+        $rootScope.$broadcast('operationOnSelectionStart');
+        $rootScope.$broadcast('inspireMdValidationStart');
+
+        return gnHttp.callService('../api/records/validate/inspire?' +
+          'bucket=' + bucket, null, {
+          method: 'PUT'
+        }).then(function(data) {
+          $rootScope.$broadcast('inspireMdValidationStop');
+          $rootScope.$broadcast('operationOnSelectionStop');
+          $rootScope.$broadcast('search');
+        });
+
       };
 
       /**

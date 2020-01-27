@@ -25,12 +25,10 @@ package org.fao.geonet.kernel.mef;
 
 import static org.fao.geonet.domain.Localized.translationXmlToLangMap;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
@@ -46,6 +43,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.MetadataResourceDatabaseMigration;
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -56,6 +54,7 @@ import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataRelation;
 import org.fao.geonet.domain.MetadataRelationId;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.Pair;
@@ -67,8 +66,8 @@ import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRelationRepository;
@@ -76,13 +75,11 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.FilePathChecker;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.StringUtils;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
@@ -390,8 +387,13 @@ public class Importer {
                 }
 
                 if (validate) {
+                    Integer groupIdVal = null;
+                    if (org.apache.commons.lang.StringUtils.isNotEmpty(groupId)) {
+                        groupIdVal = Integer.parseInt(groupId);
+                    }
+
                     // Validate xsd and schematron
-                    DataManager.validateMetadata(schema, metadata, context);
+                    DataManager.validateExternalMetadata(schema, metadata, context, groupIdVal);
                 }
 
 
@@ -473,35 +475,26 @@ public class Importer {
                 });
 
 
-                Path pubDir = Lib.resource.getDir(context, "public", metadataIdMap
-                    .get(index));
-                Path priDir = Lib.resource.getDir(context, "private", metadataIdMap
-                    .get(index));
-
-                Files.createDirectories(pubDir);
-                Files.createDirectories(priDir);
-
-
                 dm.indexMetadata(metadataIdMap.get(index), true, null);
             }
 
             // --------------------------------------------------------------------
 
             public void handlePublicFile(String file, String changeDate,
-                                         InputStream is, int index) throws IOException {
+                                         InputStream is, int index) throws Exception {
                 if (Log.isDebugEnabled(Geonet.MEF)) {
                     Log.debug(Geonet.MEF, "Adding public file with name=" + file);
                 }
-                saveFile(context, metadataIdMap.get(index), "public", file, changeDate, is);
+                saveFile(context, metadataIdMap.get(index), MetadataResourceVisibility.PUBLIC, file, changeDate, is);
             }
 
             // --------------------------------------------------------------------
 
             public void handlePrivateFile(String file, String changeDate,
-                                          InputStream is, int index) throws IOException {
+                                          InputStream is, int index) throws Exception {
                 if (Log.isDebugEnabled(Geonet.MEF))
                     Log.debug(Geonet.MEF, "Adding private file with name=" + file);
-                saveFile(context, metadataIdMap.get(index), "private", file, changeDate,
+                saveFile(context, metadataIdMap.get(index), MetadataResourceVisibility.PRIVATE, file, changeDate,
                     is);
             }
 
@@ -609,14 +602,13 @@ public class Importer {
     // --------------------------------------------------------------------------
 
     private static void saveFile(ServiceContext context, String id,
-                                 String access, String file, String changeDate, InputStream is)
-        throws IOException {
-        Path dir = Lib.resource.getDir(context, access, id);
-
-        Path outFile = dir.resolve(file);
-        Files.copy(is, outFile);
-
-        IO.touch(outFile, FileTime.from(new ISODate(changeDate).toDate().getTime(), TimeUnit.MILLISECONDS));
+                                 MetadataResourceVisibility access, String file, String changeDate, InputStream is)
+        throws Exception {
+        final Store store = context.getBean("resourceStore", Store.class);
+        final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+        final String metadataUuid = metadataUtils.getMetadataUuid(id);
+        assert metadataUuid != null;
+        store.putResource(context, metadataUuid, file, is, new ISODate(changeDate).toDate(), access, true);
     }
 
     /**

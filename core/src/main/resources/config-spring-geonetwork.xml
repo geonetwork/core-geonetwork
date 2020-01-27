@@ -77,7 +77,8 @@
         scope="singleton"/>
   <bean id="schematronValidator" class="org.fao.geonet.kernel.SchematronValidator" lazy-init="false"
         scope="singleton"/>
-
+  <bean id="schematronValidatorExternalMd" class="org.fao.geonet.kernel.SchematronValidatorExternalMd" lazy-init="false"
+        scope="singleton"/>
 
   <!-- List of records to index in a moment ...-->
   <bean id="indexingList"
@@ -186,5 +187,33 @@
     </property>
   </bean>
 
+
+  <bean id="filesystemStore"
+        class="org.fao.geonet.api.records.attachments.FilesystemStore"/>
+
+  <bean id="resourceStore"
+        class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">
+    <constructor-arg index="0" ref="filesystemStore"/>
+  </bean>
+
+  <bean id="resources" class="org.fao.geonet.resources.FileResources"/>
+
+  <!-- If you want data stored in S3, use that instead: -->
+  <!--  <bean id="s3credentials" class="org.fao.geonet.resources.S3Credentials">-->
+  <!--    <property name="region" value="eu-west-1"/>-->
+  <!--    <property name="bucket" value="geonetwork-test"/>-->
+  <!--    <property name="keyPrefix" value="geonetwork"/>-->
+  <!--    &lt;!&ndash; Only needed if you don't have a ~/.aws/credentials &ndash;&gt;-->
+  <!--    <property name="accessKey" value="MyAccessKey"/>-->
+  <!--    <property name="secretKey" value="MySecretKey"/>-->
+  <!--    &lt;!&ndash; Only needed when not using Amazon S3&ndash;&gt;-->
+  <!--    <property name="endpoint" value="sos-ch-dk-2.exo.io"/>-->
+  <!--  </bean>-->
+  <!--  <bean id="filesystemStore" class="org.fao.geonet.api.records.attachments.S3Store" />-->
+  <!--  <bean id="resourceStore"-->
+  <!--        class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">-->
+  <!--    <constructor-arg index="0" ref="filesystemStore"/>-->
+  <!--  </bean>-->
+  <!--  <bean id="resources" class="org.fao.geonet.resources.S3Resources"/>-->
 
 </beans>

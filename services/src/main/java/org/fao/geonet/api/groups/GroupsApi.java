@@ -206,50 +206,55 @@ public class GroupsApi {
                 Object[]{groupId}, locale));
         }
         try {
-            final Path logosDir = Resources.locateLogosDir(serviceContext);
-            final Path harvesterLogosDir = Resources.locateHarvesterLogosDir(serviceContext);
+            final Resources resources = context.getBean(Resources.class);
             final String logoUUID = group.getLogo();
-            Path imagePath = null;
-            FileTime lastModifiedTime = null;
             if (StringUtils.isNotBlank(logoUUID) && !logoUUID.startsWith("http://") && !logoUUID.startsWith("https//")) {
-                imagePath = Resources.findImagePath(logoUUID,
-                    logosDir);
-                if (imagePath == null) {
-                    imagePath = Resources.findImagePath(logoUUID, harvesterLogosDir);
-                }
-                if (imagePath != null) {
-                    lastModifiedTime = Files.getLastModifiedTime(imagePath);
-                    if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
-                        // webRequest.checkNotModified sets the right HTTP headers
+                try (Resources.ResourceHolder image = getImage(resources, serviceContext, group)){
+                    if (image != null) {
+                        FileTime lastModifiedTime = image.getLastModifiedTime();
                         response.setDateHeader("Expires", System.currentTimeMillis() + SIX_HOURS * 1000L);
-
+                        if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
+                            // webRequest.checkNotModified sets the right HTTP headers
+                            return;
+                        }
+                        response.setContentType(AttachmentsApi.getFileContentType(image.getPath()));
+                        response.setContentLength((int) Files.size(image.getPath()));
+                        response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
+                        FileUtils.copyFile(image.getPath().toFile(), response.getOutputStream());
                         return;
                     }
-                    response.setContentType(AttachmentsApi.getFileContentType(imagePath));
-                    response.setContentLength((int) Files.size(imagePath));
-                    response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
-                    response.setDateHeader("Expires", System.currentTimeMillis() + SIX_HOURS * 1000L);
-                    FileUtils.copyFile(imagePath.toFile(), response.getOutputStream());
                 }
             }
 
-            if (imagePath == null) {
-                // no logo image found. Return a transparent 1x1 png
-                lastModifiedTime = FileTime.fromMillis(0);
-                if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
-                    return;
-                }
-                response.setContentType("image/png");
-                response.setContentLength(TRANSPARENT_1_X_1_PNG.length);
-                response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
-                response.getOutputStream().write(TRANSPARENT_1_X_1_PNG);
+            // no logo image found. Return a transparent 1x1 png
+            FileTime lastModifiedTime = FileTime.fromMillis(0);
+            if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
+                return;
             }
+            response.setContentType("image/png");
+            response.setContentLength(TRANSPARENT_1_X_1_PNG.length);
+            response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
+            response.getOutputStream().write(TRANSPARENT_1_X_1_PNG);
 
         } catch (IOException e) {
             Log.error(LOGGER, String.format("There was an error accessing the logo of the group with id '%d'",
                 groupId));
             throw new RuntimeException(e);
         }
+    }
+
+    private static Resources.ResourceHolder getImage(Resources resources, ServiceContext serviceContext, Group group) throws IOException {
+        final Path logosDir = resources.locateLogosDir(serviceContext);
+        final Path harvesterLogosDir = resources.locateHarvesterLogosDir(serviceContext);
+        final String logoUUID = group.getLogo();
+        Resources.ResourceHolder image = null;
+        if (StringUtils.isNotBlank(logoUUID) && !logoUUID.startsWith("http://") && !logoUUID.startsWith("https//")) {
+            image = resources.getImage(serviceContext, logoUUID, logosDir);
+            if (image == null) {
+                image = resources.getImage(serviceContext, logoUUID, harvesterLogosDir);
+            }
+        }
+        return image;
     }
 
     @ApiOperation(

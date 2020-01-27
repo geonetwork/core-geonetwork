@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.9.0-SNAPSHOT</version>
+    <version>3.11.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -512,6 +512,11 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-s3</artifactId>
+      <version>1.11.618</version>
     </dependency>
   </dependencies>
 

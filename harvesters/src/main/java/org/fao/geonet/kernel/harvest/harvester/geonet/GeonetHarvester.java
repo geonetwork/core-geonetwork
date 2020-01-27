@@ -23,80 +23,25 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
-import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Logger;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.SourceType;
-import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
-import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.repository.SourceRepository;
 import org.jdom.Element;
 
 import java.sql.SQLException;
-import java.util.UUID;
 
-public class GeonetHarvester extends AbstractHarvester<HarvestResult> {
+public class GeonetHarvester extends AbstractHarvester<HarvestResult, GeonetParams> {
     public static final String TYPE = "geonetwork";
 
-    private GeonetParams params;
-
-    protected void doInit(Element node, ServiceContext context) throws BadInputEx {
-        params = new GeonetParams(dataMan);
-        super.setParams(params);
-        params.create(node);
+    @Override
+    protected GeonetParams createParams() {
+        return new GeonetParams(dataMan);
     }
 
-    protected String doAdd(Element node) throws BadInputEx, SQLException {
-        params = new GeonetParams(dataMan);
-        super.setParams(params);
 
-        //--- retrieve/initialize information
-        params.create(node);
-
-        //--- force the creation of a new uuid
-        params.setUuid(UUID.randomUUID().toString());
-
-        String id = harvesterSettingsManager.add("harvesting", "node", getType());
-
-        storeNode(params, "id:" + id);
-        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), SourceType.harvester);
-        context.getBean(SourceRepository.class).save(source);
-
-        return id;
-    }
-
-    protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
-        GeonetParams copy = params.copy();
-        super.setParams(params);
-
-        //--- update variables
-        copy.update(node);
-
-        String path = "harvesting/id:" + id;
-
-        harvesterSettingsManager.removeChildren(path);
-
-        //--- update database
-        storeNode(copy, path);
-
-        //--- we update a copy first because if there is an exception GeonetParams
-        //--- could be half updated and so it could be in an inconsistent state
-
-        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), SourceType.harvester);
-        context.getBean(SourceRepository.class).save(source);
-
-        params = copy;
-        super.setParams(params);
-
-    }
-
-    protected void storeNodeExtra(AbstractParams p, String path,
+    protected void storeNodeExtra(GeonetParams params, String path,
                                   String siteId, String optionsId) throws SQLException {
-        GeonetParams params = (GeonetParams) p;
-        super.setParams(params);
+        setParams(params);
 
         harvesterSettingsManager.add("id:" + siteId, "host", params.host);
         harvesterSettingsManager.add("id:" + siteId, "node", params.getNode());

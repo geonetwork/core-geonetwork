@@ -23,13 +23,12 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Constants;
@@ -64,7 +63,6 @@ import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.InspireAtomFeedRepository;
 import org.fao.geonet.repository.MetadataStatusRepository;
@@ -74,11 +72,11 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ThreadUtils;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.annotation.Lazy;
@@ -88,8 +86,6 @@ import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -105,6 +101,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
 
@@ -141,6 +138,11 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     private SettingManager settingManager;
     @Autowired
     private UserFeedbackRepository userFeedbackRepository;
+    @Autowired
+    @Qualifier("resourceStore")
+    private Store store;
+    @Autowired
+    private Resources resources;
 
     // FIXME remove when get rid of Jeeves
     private ServiceContext servContext;
@@ -176,28 +178,20 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     @Override
     public int batchDeleteMetadataAndUpdateIndex(Specification<? extends AbstractMetadata> specification)
         throws Exception {
-        final List<Integer> idsOfMetadataToDelete = metadataUtils.findAllIdsBy(specification);
+        final List<? extends AbstractMetadata> metadataToDelete = metadataUtils.findAll(specification);
 
-        for (Integer id : idsOfMetadataToDelete) {
+        for (AbstractMetadata md : metadataToDelete) {
             // --- remove metadata directory for each record
-            final Path metadataDataDir = geonetworkDataDirectory.getMetadataDataDir();
-            Path pb = Lib.resource.getMetadataDir(metadataDataDir, id + "");
-            IO.deleteFileOrDirectory(pb);
+            store.delResources(ServiceContext.get(), md.getUuid(), true);
         }
 
         // Remove records from the index
-        searchManager.delete(Lists.transform(idsOfMetadataToDelete, new Function<Integer, String>() {
-            @Nullable
-            @Override
-            public String apply(@Nonnull Integer input) {
-                return input.toString();
-            }
-        }));
+        searchManager.delete(metadataToDelete.stream().map(input -> Integer.toString(input.getId())).collect(Collectors.toList()));
 
         // Remove records from the database
         metadataManager.deleteAll(specification);
 
-        return idsOfMetadataToDelete.size();
+        return metadataToDelete.size();
     }
 
     @Override
@@ -476,25 +470,27 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
 
             // Group logo are in the harvester folder and contains extension in file name
-            final Path harvesterLogosDir = Resources.locateHarvesterLogosDir(getServiceContext());
             boolean added = false;
             if (StringUtils.isNotEmpty(logoUUID)) {
-                final Path logoPath = harvesterLogosDir.resolve(logoUUID);
-                if (Files.exists(logoPath)) {
-                    added = true;
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO,
-                        "/images/harvesting/" + logoPath.getFileName(), true, false));
+                final Path harvesterLogosDir = resources.locateHarvesterLogosDir(getServiceContext());
+                try (Resources.ResourceHolder logo = resources.getImage(getServiceContext(), logoUUID, harvesterLogosDir)) {
+                    if (logo != null) {
+                        added = true;
+                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO,
+                                                               "/images/harvesting/" + logo.getPath().getFileName(),
+                                                               true, false));
+                    }
                 }
             }
 
             // If not available, use the local catalog logo
             if (!added) {
                 logoUUID = source + ".png";
-                final Path logosDir = Resources.locateLogosDir(getServiceContext());
-                final Path logoPath = logosDir.resolve(logoUUID);
-                if (Files.exists(logoPath)) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID,
-                        true, false));
+                final Path logosDir = resources.locateLogosDir(getServiceContext());
+                try (Resources.ResourceHolder image = resources.getImage(getServiceContext(), logoUUID, logosDir)) {
+                    if (image != null) {
+                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID, true, false));
+                    }
                 }
             }
 
@@ -554,16 +550,30 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, "-1", true, true));
             } else {
                 String isValid = "1";
+                boolean hasInspireValidation = false;
                 for (MetadataValidation vi : validationInfo) {
                     String type = vi.getId().getValidationType();
                     MetadataValidationStatus status = vi.getStatus();
-                    if (status == MetadataValidationStatus.INVALID && vi.isRequired()) {
-                        isValid = "0";
+
+                    // TODO: Check if ignore INSPIRE validation?
+                    if (!type.equalsIgnoreCase("inspire")) {
+                        if (status == MetadataValidationStatus.INVALID && vi.isRequired()) {
+                            isValid = "0";
+                        }
+                    } else {
+                        hasInspireValidation = true;
+                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.INSPIRE_VALIDATION_DATE, vi.getValidationDate().getDateAndTime(), true, true));
+                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.INSPIRE_REPORT_URL, vi.getReportUrl(), true, true));
                     }
+
                     moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID + "_" + type, status.getCode(),
                         true, true));
                 }
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, isValid, true, true));
+
+                if (!hasInspireValidation) {
+                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID_INSPIRE, "-1", true, true));
+                }
             }
 
             //To inject extra fields from BaseMetadataIndexer inherited beans

@@ -25,12 +25,16 @@ package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
@@ -55,11 +59,8 @@ import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFVisitor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -68,11 +69,9 @@ import org.jdom.JDOMException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -82,7 +81,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Aligner extends BaseAligner<GeonetParams> {
@@ -426,18 +424,18 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
                 //--------------------------------------------------------------------
 
-                public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws IOException {
+                public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws Exception {
+                    handleFile(file, changeDate, is, index, MetadataResourceVisibility.PUBLIC);
+                }
+
+                private void handleFile(String file, String changeDate, InputStream is, int index, MetadataResourceVisibility visibility) throws Exception {
                     if (id[index] == null) return;
-
                     if (log.isDebugEnabled())
-                        log.debug("    - Adding remote public file with name:" + file);
-                    Path pubDir = Lib.resource.getDir(context, "public", id[index]);
-
-                    Path outFile = pubDir.resolve(file);
-                    try (OutputStream os = Files.newOutputStream(outFile)) {
-                        BinaryFile.copy(is, os);
-                        IO.touch(outFile, FileTime.from(new ISODate(changeDate).getTimeInSeconds(), TimeUnit.SECONDS));
-                    }
+                        log.debug("    - Adding remote " + visibility + " file with name: " + file);
+                    final Store store = context.getBean("resourceStore", Store.class);
+                    final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+                    final String metadataUuid = metadataUtils.getMetadataUuid(id[index]);
+                    store.putResource(context, metadataUuid, file, is, new ISODate(changeDate).toDate(), visibility, true);
                 }
 
                 public void handleFeatureCat(Element md, int index)
@@ -446,16 +444,9 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 }
 
                 public void handlePrivateFile(String file, String changeDate,
-                                              InputStream is, int index) throws IOException {
+                                              InputStream is, int index) throws Exception {
                     if (params.mefFormatFull) {
-                        if (log.isDebugEnabled())
-                            log.debug("    - Adding remote private file with name:" + file + " available for download for user used for harvester.");
-                        Path dir = Lib.resource.getDir(context, "private", id[index]);
-                        Path outFile = dir.resolve(file);
-                        try (OutputStream os = Files.newOutputStream(outFile)) {
-                            BinaryFile.copy(is, os);
-                            IO.touch(outFile, FileTime.from(new ISODate(changeDate).getTimeInSeconds(), TimeUnit.SECONDS));
-                        }
+                        handleFile(file, changeDate, is, index, MetadataResourceVisibility.PRIVATE);
                     }
                 }
             });
@@ -490,7 +481,12 @@ public class Aligner extends BaseAligner<GeonetParams> {
         if (log.isDebugEnabled()) log.debug("  - Adding metadata with remote uuid:" + ri.uuid);
 
         try {
-            params.getValidate().validate(dataMan, context, md);
+            Integer groupIdVal = null;
+            if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+            }
+
+            params.getValidate().validate(dataMan, context, md, groupIdVal);
         } catch (Exception e) {
             log.info("Ignoring invalid metadata uuid: " + uuid);
             result.doesNotValidate++;
@@ -541,12 +537,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
             metadata.getDataInfo().setPopularity(Integer.valueOf(popularity));
         }
 
-
-        Path pubDir = Lib.resource.getDir(context, "public", id);
-        Path priDir = Lib.resource.getDir(context, "private", id);
-
-        Files.createDirectories(pubDir);
-        Files.createDirectories(priDir);
 
         if (params.createRemoteCategory) {
             Element categs = info.getChild("categories");
@@ -726,8 +716,8 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
                         //-----------------------------------------------------------------
 
-                        public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws IOException {
-                            handleFile(id, file, "public", changeDate, is, publicFiles[index]);
+                        public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws Exception {
+                            handleFile(id, file, MetadataResourceVisibility.PUBLIC, changeDate, is, publicFiles[index]);
                         }
 
                         public void handleFeatureCat(Element md, int index)
@@ -737,8 +727,8 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
                         public void handlePrivateFile(String file,
                                                       String changeDate, InputStream is, int index)
-                            throws IOException {
-                            handleFile(id, file, "private", changeDate, is, privateFiles[index]);
+                            throws Exception {
+                            handleFile(id, file, MetadataResourceVisibility.PRIVATE, changeDate, is, privateFiles[index]);
                         }
 
                     });
@@ -765,14 +755,18 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
 
         try {
-            params.getValidate().validate(dataMan, context, md);
+            Integer groupIdVal = null;
+            if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+            }
+
+            params.getValidate().validate(dataMan, context, md, groupIdVal);
         } catch (Exception e) {
             log.info("Ignoring invalid metadata uuid: " + ri.uuid);
             result.doesNotValidate++;
             return;
         }
 
-        final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
         AbstractMetadata metadata;
         if (!force && !ri.isMoreRecentThan(date)) {
@@ -849,38 +843,29 @@ public class Aligner extends BaseAligner<GeonetParams> {
         dataMan.indexMetadata(id, Math.random() < 0.01, null);
     }
 
-    private void handleFile(String id, String file, String dir, String changeDate,
-                            InputStream is, Element files) throws IOException {
+    private void handleFile(String id, String file, MetadataResourceVisibility visibility, String changeDate,
+                            InputStream is, Element files) throws Exception {
         if (files == null) {
             if (log.isDebugEnabled())
                 log.debug("  - No file found in info.xml. Cannot update file:" + file);
         } else {
-            removeOldFile(id, files, dir);
-            saveFile(id, file, dir, changeDate, is);
+            final Store store = context.getBean("resourceStore", Store.class);
+            final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+            final String metadataUuid = metadataUtils.getMetadataUuid(id);
+            removeOldFile(store, metadataUuid, files, visibility);
+            saveFile(store, metadataUuid, file, visibility, changeDate, is);
         }
     }
 
-    private void removeOldFile(String id, Element infoFiles, String dir) {
-        Path resourcesDir = Lib.resource.getDir(context, dir, id);
-
-        try (DirectoryStream<Path> paths = Files.newDirectoryStream(resourcesDir)) {
-            for (Path file : paths) {
-                if (file != null &&
-                    file.getFileName() != null &&
-                    infoFiles != null &&
-                    !existsFile(file.getFileName().toString(), infoFiles)) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("  - Removing old " + dir + " file with name=" + file.getFileName());
-                    }
-                    try {
-                        Files.delete(file);
-                    } catch (IOException e) {
-                        log.warning("Unable to delete file: " + file);
-                    }
+    private void removeOldFile(Store store, String metadataUuid, Element infoFiles, MetadataResourceVisibility visibility) throws Exception {
+        final List<MetadataResource> resources = store.getResources(context, metadataUuid, visibility, null);
+        for (MetadataResource resource: resources) {
+            if (infoFiles != null && !existsFile(resource.getId(), infoFiles)) {
+                if (log.isDebugEnabled()) {
+                    log.debug("  - Removing old " + metadataUuid + " file with name=" + resource.getFilename());
                 }
+                store.delResource(context, metadataUuid, visibility, resource.getFilename(), true);
             }
-        } catch (IOException e) {
-            log.error("  - Cannot scan directory for " + dir + " files : " + resourcesDir.toAbsolutePath().normalize());
         }
     }
 
@@ -899,33 +884,28 @@ public class Aligner extends BaseAligner<GeonetParams> {
         return false;
     }
 
-    private void saveFile(String id, String file, String dir,
-                          String changeDate, InputStream is) throws IOException {
-        Path resourcesDir = Lib.resource.getDir(context, dir, id);
-        Path locFile = resourcesDir.resolve(file);
-
+    private void saveFile(final Store store, String metadataUuid, String file,
+                          MetadataResourceVisibility visibility, String changeDate, InputStream is) throws Exception {
         ISODate remIsoDate = new ISODate(changeDate);
         boolean saveFile;
 
-        if (!Files.exists(locFile)) {
+        final MetadataResource description = store.getResourceDescription(context, metadataUuid, visibility, file, true);
+        if (description == null) {
             saveFile = true;
         } else {
-            ISODate locIsoDate = new ISODate(Files.getLastModifiedTime(locFile).toMillis(), false);
+            ISODate locIsoDate = new ISODate(description.getLastModification().getTime(), false);
             saveFile = (remIsoDate.timeDifferenceInSeconds(locIsoDate) > 0);
         }
 
         if (saveFile) {
             if (log.isDebugEnabled()) {
-                log.debug("  - Adding remote " + dir + "  file with name:" + file);
+                log.debug("  - Adding remote " + metadataUuid + "  file with name:" + file);
             }
 
-            try (OutputStream os = Files.newOutputStream(locFile)) {
-                BinaryFile.copy(is, os);
-                IO.touch(locFile, FileTime.from(remIsoDate.getTimeInSeconds(), TimeUnit.SECONDS));
-            }
+            store.putResource(context, metadataUuid, file, is, remIsoDate.toDate(), visibility, true);
         } else {
             if (log.isDebugEnabled()) {
-                log.debug("  - Nothing to do in dir " + dir + " for file with name:" + file);
+                log.debug("  - Nothing to do in dir " + metadataUuid + " for file with name:" + file);
             }
         }
     }

@@ -26,8 +26,11 @@
 package org.fao.geonet.api.records.attachments;
 
 
+import com.google.common.net.UrlEscapers;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
+
+import java.util.Date;
 
 /**
  * Metadata resource stored in the file system.
@@ -35,24 +38,32 @@ import org.fao.geonet.domain.MetadataResourceVisibility;
  * Created by francois on 31/12/15.
  */
 public class FilesystemStoreResource implements MetadataResource {
-    private final String filename;
     private final String url;
     private final MetadataResourceVisibility metadataResourceVisibility;
-    private double size = -1;
+    private final long size;
+    private final Date lastModification;
+    private final String metadataUuid;
+    private final String filename;
 
-    public FilesystemStoreResource(String id,
+    public FilesystemStoreResource(String metadataUuid,
+                                   String filename,
                                    String baseUrl,
                                    MetadataResourceVisibility metadataResourceVisibility,
-                                   double size) {
-        this.filename = id;
-        this.url = baseUrl + id;
+                                   long size,
+                                   Date lastModification) {
+        this.metadataUuid = metadataUuid;
+        this.filename = filename;
+        this.url = baseUrl + getId();
         this.metadataResourceVisibility = metadataResourceVisibility;
-        this.size = Double.isNaN(size) ? -1 : size;
+        this.size = size;
+        this.lastModification = lastModification;
     }
 
     @Override
     public String getId() {
-        return filename;
+        return UrlEscapers.urlFragmentEscaper().escape(metadataUuid) +
+                "/attachments/" +
+                UrlEscapers.urlFragmentEscaper().escape(filename);
     }
 
     @Override
@@ -61,23 +72,34 @@ public class FilesystemStoreResource implements MetadataResource {
     }
 
     @Override
-    public String getType() {
-        return metadataResourceVisibility.toString();
+    public MetadataResourceVisibility getVisibility() {
+        return metadataResourceVisibility;
     }
 
     @Override
-    public double getSize() {
+    public long getSize() {
         return size;
+    }
+
+    @Override
+    public Date getLastModification() {
+        return lastModification;
+    }
+
+    @Override public String getFilename() {
+        return filename;
     }
 
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer(this.getClass().getSimpleName());
         sb.append("\n");
-        sb.append("Id: ").append(filename).append("\n");
+        sb.append("Metadata: ").append(metadataUuid).append("\n");
+        sb.append("Filename: ").append(filename).append("\n");
         sb.append("URL: ").append(url).append("\n");
         sb.append("Type: ").append(metadataResourceVisibility).append("\n");
         sb.append("Size: ").append(size).append("\n");
+        sb.append("Last modification: ").append(lastModification).append("\n");
         return sb.toString();
     }
 }

@@ -32,6 +32,7 @@
   goog.require('gn_cors_interceptor');
   goog.require('gn_formfields');
   goog.require('gn_indexingtask');
+  goog.require('gn_batchtask');
   goog.require('gn_language_switcher');
   goog.require('gn_locale');
   goog.require('gn_map');
@@ -68,7 +69,8 @@
     'gn_admin_menu',
     'gn_cors_interceptor',
     'gn_openlayers',
-    'gn_indexingtask'
+    'gn_indexingtask',
+    'gn_batchtask'
   ]);
 
 })();

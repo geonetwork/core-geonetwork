@@ -409,9 +409,9 @@ public class Geonetwork implements ApplicationHandler {
         fillCaches(context);
 
         AbstractEntityListenerManager.setSystemRunning(true);
-        
+
         this._applicationContext.publishEvent(new ServerStartup(this._applicationContext));
-        
+
         return gnContext;
     }
 
@@ -478,7 +478,7 @@ public class Geonetwork implements ApplicationHandler {
         if (count == 0) {
             try {
                 // import data from init files
-                List<Pair<String, String>> importData = context.getApplicationContext().getBean("initial-data", List.class);
+                List<Pair<String, String>> importData = context.getBean("initial-data", List.class);
                 final DbLib dbLib = new DbLib();
                 for (Pair<String, String> pair : importData) {
                     final ServletContext servletContext = context.getServlet().getServletContext();
@@ -560,13 +560,11 @@ public class Geonetwork implements ApplicationHandler {
      */
     private void createSiteLogo(String nodeUuid, ServiceContext context, Path appPath) {
         try {
-            Path logosDir = Resources.locateLogosDir(context);
+            final Resources resources = context.getBean(Resources.class);
+            Path logosDir = resources.locateLogosDir(context);
             Path logo = logosDir.resolve(nodeUuid + ".png");
             if (!Files.exists(logo)) {
-                final ServletContext servletContext = context.getServlet().getServletContext();
-                byte[] logoData = Resources.loadImage(servletContext, appPath,
-                    "images/harvesting/GN3.png", new byte[0]).one();
-                Files.write(logo, logoData);
+                resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + "GN3.png", nodeUuid);
             }
         } catch (Throwable e) {
             logger.error("      Error when setting the logo: " + e.getMessage());

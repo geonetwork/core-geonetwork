@@ -32,10 +32,13 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
@@ -51,13 +54,13 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
@@ -70,12 +73,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @ReadWriteController
 @Deprecated
 public class Set {
-    private static final ImageObserver IMAGE_OBSERVER = new ImageObserver() {
-        @Override
-        public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
-            return false;
-        }
-    };
+    private static final ImageObserver IMAGE_OBSERVER = (img, infoflags, x, y, width, height) -> false;
 
     private static final String IMAGE_TYPE = "png";
     private static final String SMALL_SUFFIX = "_s";
@@ -117,21 +115,13 @@ public class Set {
             throw new ConcurrentUpdateEx(id);
 
         //-----------------------------------------------------------------------
-        //--- create destination directory
-
-        Path metadataPublicDatadir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
-
-        Files.createDirectories(metadataPublicDatadir);
-
-        //-----------------------------------------------------------------------
         //--- create the small thumbnail, removing the old one
 
         if (createSmall) {
             Path smallFile = getFileName(file.getOriginalFilename(), true);
-            Path outFile = metadataPublicDatadir.resolve(smallFile);
 
             removeOldThumbnail(context, id, "small", false);
-            createThumbnail(file, outFile, smallScalingFactor, smallScalingDir);
+            createThumbnail(context, file, id, smallScalingFactor, smallScalingDir, smallFile);
             dataMan.setThumbnail(context, id, true, smallFile.toString(), false);
         }
 
@@ -142,14 +132,16 @@ public class Set {
 
         if (scaling) {
             Path newFile = getFileName(file.getOriginalFilename(), type.equals("small"));
-            Path outFile = metadataPublicDatadir.resolve(newFile);
 
-            createThumbnail(file, outFile, scalingFactor, scalingDir);
+            createThumbnail(context, file, id, scalingFactor, scalingDir, newFile);
 
             dataMan.setThumbnail(context, id, type.equals("small"), newFile.toString(), false);
         } else {
             //--- move uploaded file to destination directory
-            Files.copy(file.getInputStream(), metadataPublicDatadir.resolve(file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
+            final Store store = context.getBean("resourceStore", Store.class);
+            final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+            final String metadataUuid = metadataUtils.getMetadataUuid(id);
+            store.putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC);
 
             dataMan.setThumbnail(context, id, type.equals("small"), file.getOriginalFilename(), false);
         }
@@ -159,19 +151,6 @@ public class Set {
         return new Response(id, dataMan.getNewVersion(id));
     }
 
-    /**
-     * TODO javadoc.
-     */
-    private Path createDataDir(String id, ServiceContext context) {
-        Path dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
-        try {
-            Files.createDirectories(dataDir);
-        } catch (IOException e) {
-            context.error("Failed to make dir: " + dataDir);
-        }
-        return dataDir;
-    }
-
     // FIXME : not elegant
     public Element execOnHarvest(
         Element params,
@@ -179,7 +158,6 @@ public class Set {
         DataManager dataMan) throws Exception {
 
         String id = Util.getParam(params, Params.ID);
-        Path dataDir = createDataDir(id, context);
 
         //-----------------------------------------------------------------------
         //--- create the small thumbnail, removing the old one
@@ -194,20 +172,19 @@ public class Set {
         if (createSmall) {
             Path smallFile = getFileName(file, true);
             final Path inFile = context.getUploadDir().resolve(file);
-            Path outFile = dataDir.resolve(smallFile);
             MultipartFile multipartFile = new FileWrappingMultipartFile(inFile, file);
 
             String smallScalingDir = Util.getParam(params, Params.SMALL_SCALING_DIR, "");
             int smallScalingFactor = Util.getParam(params, Params.SMALL_SCALING_FACTOR, 0);
             // FIXME should be done before removeOldThumbnail(context, dbms, id, "small");
-            createThumbnail(multipartFile, outFile, smallScalingFactor, smallScalingDir);
+            createThumbnail(context, multipartFile, id, smallScalingFactor, smallScalingDir, smallFile);
             dataMan.setThumbnail(context, id, true, smallFile.toString(), false);
         }
 
         //-----------------------------------------------------------------------
         //--- create the requested thumbnail, removing the old one
         removeOldThumbnail(context, id, type, false);
-        saveThumbnail(scaling, file, type, dataDir, scalingDir, scalingFactor, dataMan, id, context);
+        saveThumbnail(scaling, file, type, scalingDir, scalingFactor, dataMan, id, context);
 
         //-----------------------------------------------------------------------
         dataMan.indexMetadata(id, true, null);
@@ -223,15 +200,14 @@ public class Set {
     //---
     //--------------------------------------------------------------------------
 
-    private void saveThumbnail(boolean scaling, String file, String type, Path dataDir, String scalingDir,
-                               int scalingFactor, DataManager dataMan, String id, ServiceContext context) throws Exception {
+    private void saveThumbnail(boolean scaling, String file, String type, String scalingDir, int scalingFactor,
+                               DataManager dataMan, String id, ServiceContext context) throws Exception {
         if (scaling) {
             Path newFile = getFileName(file, type.equals("small"));
             Path inFile = context.getUploadDir().resolve(file);
-            Path outFile = dataDir.resolve(newFile);
 
             MultipartFile multipartFile = new FileWrappingMultipartFile(inFile, file);
-            createThumbnail(multipartFile, outFile, scalingFactor, scalingDir);
+            createThumbnail(context, multipartFile, id, scalingFactor, scalingDir, newFile);
 
             try {
                 Files.delete(inFile);
@@ -243,13 +219,13 @@ public class Set {
         } else {
             //--- move uploaded file to destination directory
             Path inFile = context.getUploadDir().resolve(file);
-            Path outFile = dataDir.resolve(file);
-
             try {
-                Files.move(inFile, outFile);
-            } catch (Exception e) {
+                final Store store = context.getBean("resourceStore", Store.class);
+                final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+                final String metadataUuid = metadataUtils.getMetadataUuid(id);
+                store.putResource(context, metadataUuid, inFile, MetadataResourceVisibility.PUBLIC);
+            } finally {
                 IO.deleteFileOrDirectory(inFile);
-                throw new Exception("Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
             }
 
             dataMan.setThumbnail(context, id, type.equals("small"), file, false);
@@ -280,15 +256,16 @@ public class Set {
 
         //--- remove file
 
-        String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + getFileName(result.getText());
-        if (!new File(file).delete())
-            context.error("Error while deleting thumbnail : " + file);
+        final Store store = context.getBean("resourceStore", Store.class);
+        final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+        final String metadataUuid = metadataUtils.getMetadataUuid(id);
+        store.delResource(context, metadataUuid, getFileName(result.getText()));
     }
 
     //--------------------------------------------------------------------------
 
-    private void createThumbnail(MultipartFile inFile, Path outFile, int scalingFactor,
-                                 String scalingDir) throws IOException {
+    private void createThumbnail(ServiceContext context, MultipartFile inFile, String metadataId, int scalingFactor,
+                                 String scalingDir, Path filename) throws Exception {
         BufferedImage origImg = getImage(inFile);
 
         int imgWidth = origImg.getWidth();
@@ -313,9 +290,13 @@ public class Set {
         g.drawImage(thumb, 0, 0, null);
         g.dispose();
 
-        try (OutputStream out = Files.newOutputStream(outFile)) {
-            ImageIO.write(bimg, IMAGE_TYPE, out);
-        }
+        final Store store = context.getBean("resourceStore", Store.class);
+        final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+        final String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ImageIO.write(bimg, IMAGE_TYPE, os);
+        store.putResource(context, metadataUuid, filename.toString(), new ByteArrayInputStream(os.toByteArray()), null,
+                MetadataResourceVisibility.PUBLIC, true);
     }
 
     //--------------------------------------------------------------------------

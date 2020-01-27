@@ -654,7 +654,7 @@ public class ServiceManager {
         //--- FILE output
 
         else {
-            final NodeInfo nodeInfo = context.getApplicationContext().getBean(NodeInfo.class);
+            final NodeInfo nodeInfo = context.getBean(NodeInfo.class);
             if (outPage.isFile()) {
                 // PDF Output
                 if (outPage.getContentType().equals("application/pdf") && !outPage.getStyleSheet().equals("")) {
@@ -896,7 +896,7 @@ public class ServiceManager {
         // Dispatch HTTP status code
         req.setStatusCode(outPage.getStatusCode());
 
-        addPrefixes(guiElem, context.getLanguage(), req.getService(), context.getApplicationContext().getBean(NodeInfo.class).getId());
+        addPrefixes(guiElem, context.getLanguage(), req.getService(), context.getBean(NodeInfo.class).getId());
 
         Element rootElem = new Element(Jeeves.Elem.ROOT)
             .addContent(guiElem)

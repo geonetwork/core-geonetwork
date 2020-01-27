@@ -86,7 +86,7 @@
           <ul class="dropdown-menu" role="menu">
             <li role="menuitem"
                 data-ng-repeat="f in formatter.list"
-                data-ng-class="f === currentFormatter ? 'disabled' : ''">
+                data-ng-class="currentFormatter === f.url ? 'disabled' : ''">
               <a href=""
                  gn-metadata-open="mdView.current.record"
                  gn-records="mdView.records"
@@ -161,7 +161,7 @@
 
             <div data-gn-related="mdView.current.record"
                 data-user="user"
-                data-types="parent|children|services|datasets"
+                data-types="parent|children|brothersAndSisters|services|datasets"
                 data-title="{{'associatedResources' | translate}}">
             </div>
           </div>
@@ -366,7 +366,7 @@
             </table>
           </div>
 
-          <table class="table table-striped t">
+          <table class="table table-striped">
             <tbody>
             <tr data-ng-if="mdView.current.record.updateFrequency">
               <th data-translate="">updateFrequency</th>
