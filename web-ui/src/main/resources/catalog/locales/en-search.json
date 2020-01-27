@@ -516,8 +516,8 @@
   "creationDateTo": "Resources created before",
   "changeDateFrom": "Resources changed after",
   "changeDateTo": "Resources changed before",
-  "dateFrom": "Records updated before",
-  "dateTo": "Records updated after",
+  "dateFrom": "Records updated after",
+  "dateTo": "Records updated before",
   "activeFilters": "Active filters",
   "geometryFilter": "Bounding Box"
 }
