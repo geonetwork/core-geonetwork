@@ -72,17 +72,14 @@
           </form>
         </div>
 
-        <div class="row">
-          <div class="gn-results-heading col-md-offset-3">
-            <div data-search-filter-tags data-use-location-parameters="false"
-                data-ng-show="isFilterTagsDisplayed"></div>
-          </div>
-        </div>
-
-
 
         <div class="row">
           <div class="col-sm-3 col-md-3 gn-search-facet">
+
+            <div data-search-filter-tags
+                 data-dimensions="searchResults.dimension"
+                 data-use-location-parameters="false"
+                 ng-if="isFilterTagsDisplayed && searchResults.dimension"></div>
 
             <!-- Hierachical facet mode -->
             <div data-ng-show="searchResults.records.length > 0"
