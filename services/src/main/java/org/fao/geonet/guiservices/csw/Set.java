@@ -73,10 +73,11 @@ public class Set implements Service {
         settingManager.setValue(Settings.SYSTEM_CSW_METADATA_PUBLIC, cswMetadataPublicValue.equals("on"));
 
         // Save contact
-        String contactIdValue = Util.getParam(params, "csw.contactId", "-1");
-        settingManager.setValue(Settings.SYSTEM_CSW_CONTACT_ID, contactIdValue);
+        String capabilityRecordId = Util.getParam(params, "csw.capabilityRecordId", "-1");
+        settingManager.setValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID, capabilityRecordId);
     }
 
+    @Deprecated
     private void saveCswCapabilitiesInfo(Element params, ServiceContext serviceContext)
         throws Exception {
 
