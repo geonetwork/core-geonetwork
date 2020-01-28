@@ -49,7 +49,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
     public void getAnnotations() throws Exception {
         AnnotationEntity annotation = annotationRepository.save(new AnnotationEntity().setUuid(randomUUID().toString()));
 
-        mockMvc.perform(get("/srv/api/annotations")
+        mockMvc.perform(get("/api/annotations")
                             .session(httpSession)
                             .accept(MediaType.parseMediaType("application/json")))
                 .andExpect(status().isOk())
@@ -60,7 +60,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
         annotationRepository.deleteAll();
 
-        mockMvc.perform(get("/srv/api/annotations")
+        mockMvc.perform(get("/api/annotations")
                             .session(httpSession)
                             .accept(MediaType.parseMediaType("application/json")))
                 .andExpect(status().isOk())
@@ -78,7 +78,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                                 .put("coord", "10 20"))
                     .setUuid(randomUUID().toString()));
 
-        mockMvc.perform(get("/srv/api/annotations/" + annotation.getUuid())
+        mockMvc.perform(get("/api/annotations/" + annotation.getUuid())
                             .session(httpSession)
                             .accept(MediaType.parseMediaType("application/json")))
                 .andExpect(status().isOk())
@@ -93,7 +93,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
     public void getExistingAnnotationWithNoGeom() throws Exception {
         AnnotationEntity annotation = annotationRepository.save(new AnnotationEntity().setUuid(randomUUID().toString()));
 
-        mockMvc.perform(get("/srv/api/annotations/" + annotation.getUuid())
+        mockMvc.perform(get("/api/annotations/" + annotation.getUuid())
                             .session(httpSession)
                             .accept(MediaType.parseMediaType("application/json")))
                 .andExpect(status().isOk())
@@ -104,7 +104,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getNonExistingAnnotation() throws Exception {
-        mockMvc.perform(get("/srv/api/annotations/666")
+        mockMvc.perform(get("/api/annotations/666")
                             .session(httpSession)
                             .accept(MediaType.parseMediaType("application/json")))
                 .andExpect(status().isNotFound());
@@ -113,7 +113,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void createAnnotation() throws Exception {
 
-        mockMvc.perform(put("/srv/api/annotations")
+        mockMvc.perform(put("/api/annotations")
                             .content("{ \"geometry\": { \"type\": \"Feature\", \"coord\": \"30 40\" } }")
                             .contentType(MediaType.APPLICATION_JSON)
                             .session(httpSession)
@@ -154,7 +154,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                         .setUuid(randomUUID().toString()));
 
 
-        mockMvc.perform(put("/srv/api/annotations/" + annotation.getUuid())
+        mockMvc.perform(put("/api/annotations/" + annotation.getUuid())
                             .content("{ \"geometry\": { \"type\": \"Polygon\", \"coord\": \"30 40\" } }")
                             .contentType(MediaType.APPLICATION_JSON)
                             .session(httpSession)
@@ -187,7 +187,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void updateNonExistingAnnotation() throws Exception {
-        mockMvc.perform(put("/srv/api/annotations/666")
+        mockMvc.perform(put("/api/annotations/666")
                             .content("{ \"geometry\": { \"type\": \"Polygon\", \"coord\": \"30 40\" } }")
                             .contentType(MediaType.APPLICATION_JSON)
                             .session(httpSession)
@@ -205,7 +205,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                                         .put("coord", "10 20"))
                         .setUuid(randomUUID().toString()));
 
-        mockMvc.perform(put("/srv/api/annotations")
+        mockMvc.perform(put("/api/annotations")
                 .content("{ \"uuid\": \""+ existing.getUuid() + "\", \"geometry\": { \"type\": \"Feature\", \"coord\": \"30 40\" } }")
                 .contentType(MediaType.APPLICATION_JSON)
                 .session(httpSession)

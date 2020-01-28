@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static java.util.UUID.randomUUID;
 
 @RestController
-@RequestMapping("/srv/api/annotations")
+@RequestMapping("/api/annotations")
 public class AnnotationsApi {
 
     @Autowired
