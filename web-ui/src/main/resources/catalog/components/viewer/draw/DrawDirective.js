@@ -69,7 +69,8 @@
             'partials/draw.html',
         scope: {
           map: '=',
-          vector: '='
+          vector: '=',
+          saveCallback: '&'
         },
         link: function(scope, element, attrs) {
           var map = scope.map;
@@ -399,29 +400,37 @@
           todo: allow a user to select an export format (kml/gml/json)
           */
           scope.save = function($event) {
-            var exportElement = document.getElementById('export-geom');
-            if ('download' in exportElement) {
-              var vectorSource = scope.vector.getSource();
-              var features = [];
+            var vectorSource = scope.vector.getSource();
+            var features = [];
 
-              vectorSource.forEachFeature(function(feature) {
-                var clone = feature.clone();
-                clone.setId(feature.getId());
-                // geoJson commonly uses wgs84
-                // (view usually has spherical mercator)
-                clone.getGeometry().transform(
-                    map.getView().getProjection(), 'EPSG:4326');
+            vectorSource.forEachFeature(function(feature) {
+              var clone = feature.clone();
+              clone.setId(feature.getId());
+              // geoJson commonly uses wgs84
+              // (view usually has spherical mercator)
+              clone.getGeometry().transform(
+                  map.getView().getProjection(), 'EPSG:4326');
 
-                // Save the feature style
-                clone.set('_style', getStyleObjFromFeature(feature));
-                features.push(clone);
+              // Save the feature style
+              clone.set('_style', getStyleObjFromFeature(feature));
+              clone.set('name', feature.get('name'));
+              features.push(clone);
+            });
+
+            var string = new ol.format.GeoJSON().writeFeatures(features);
+
+            if (scope.saveCallback) {
+              scope.saveCallback({
+                json: string
               });
-
-              var string = new ol.format.GeoJSON().writeFeatures(features);
-              //requires /lib/base64.js
-              var base64 = base64EncArr(strToUTF8Arr(string));
-              exportElement.href =
+            } else {
+              var exportElement = document.getElementById('export-geom');
+              if ('download' in exportElement) {
+                //requires /lib/base64.js
+                var base64 = base64EncArr(strToUTF8Arr(string));
+                exportElement.href =
                   'data:application/vnd.geo+json;base64,' + base64;
+              }
             }
           };
 
