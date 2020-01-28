@@ -1,0 +1,17 @@
+<div>
+  <h3>Annotations Editor</h3>
+  <div ng-if="loadingAnnotation">
+    loading
+  </div>
+  <div ng-if="!loadingAnnotation && !currentAnnotation">
+    No annotation found<br>
+    <button class="btn btn-default"
+            role="button"
+            ng-click="initAnnotation()">
+      create
+    </button>
+  </div>
+  <div ng-if="currentAnnotation">
+    [ annotations editor ]
+  </div>
+</div>

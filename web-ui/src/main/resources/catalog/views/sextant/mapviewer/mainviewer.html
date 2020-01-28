@@ -109,6 +109,12 @@
               <span translate>filter</span>
             </button>
           </div>
+          <div class="btn-group sxt-layer-tabs sxt-ncwms-tabs" ng-show="layerTabs.annotations.active">
+            <button class="btn btn-default btn-xs" ng-click="layerTabSelect('annotations')" ng-class="{'active': layerTabs.annotations.active}">
+              <span class="tools-bar-close-btn pull-right">&times</span>
+              <span translate>annotations</span>
+            </button>
+          </div>
           <button class="btn btn-default btn-xs" sxt-layer-tools-toggle>
             <i class="fa" ng-class="{ 'fa-plus': !active.maximized, 'fa-minus': active.maximized }"></i>
           </button>
@@ -187,6 +193,16 @@
               <div class="wps-container"
                 advanced="{ updateOnImageLoad: false, autoScrollOnFocus: false }">
                 <div class="sxt-wfsfilter-panel"></div>
+              </div>
+            </tab>
+
+            <tab active="layerTabs.annotations.active">
+              <tab-heading>
+                <i class="fa fa-pencil"></i>
+                <span translate>annotations</span>
+              </tab-heading>
+              <div>
+                <sxt-annotations-editor map="map"></sxt-annotations-editor>
               </div>
             </tab>
 

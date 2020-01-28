@@ -199,6 +199,9 @@
         },
         wfsfilter: {
           active: false
+        },
+        annotations: {
+          active: false
         }
       };
 
