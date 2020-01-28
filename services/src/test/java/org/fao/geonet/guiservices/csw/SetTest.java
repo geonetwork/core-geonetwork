@@ -24,7 +24,6 @@
 package org.fao.geonet.guiservices.csw;
 
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.CswCapabilitiesInfo;
 import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
@@ -53,7 +52,7 @@ public class SetTest extends AbstractServiceIntegrationTest {
         loginAsAdmin(context);
 
         assertEquals("true", _settingsRepository.findOne(Settings.SYSTEM_CSW_ENABLE).getValue());
-        assertEquals("-1", _settingsRepository.findOne(Settings.SYSTEM_CSW_CAPABILITY_RECORD_ID).getValue());
+        assertEquals("-1", _settingsRepository.findOne(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID).getValue());
 
         final Element params = createParams(read("csw.enable", "off"),
             read("csw.capabilityRecordId", "2"));
@@ -63,6 +62,6 @@ public class SetTest extends AbstractServiceIntegrationTest {
         assertEquals("ok", results.getText());
 
         assertEquals("false", _settingsRepository.findOne(Settings.SYSTEM_CSW_ENABLE).getValue());
-        assertEquals("2", _settingsRepository.findOne(Settings.SYSTEM_CSW_CAPABILITY_RECORD_ID).getValue());
+        assertEquals("2", _settingsRepository.findOne(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID).getValue());
     }
 }

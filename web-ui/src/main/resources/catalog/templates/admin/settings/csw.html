@@ -28,13 +28,13 @@
             <div data-ng-search-form=""
                  data-ng-show="cswSettings['system/csw/enable']"
                  data-ng-controller="GnCSWSearchServiceRecordController">
-              <label for="serviceList">{{'system/csw/capabilityRecordId' | translate}}</label>
+              <label for="serviceList">{{'system/csw/capabilityRecordUuid' | translate}}</label>
 
              <div class="input-group dropdown"
                    id="serviceList">
                 <input class="form-control"
-                        data-ng-model="cswSettings['system/csw/capabilityRecordId']"
-                        name="system.csw.capabilityRecordId"/>
+                        data-ng-model="cswSettings['system/csw/capabilityRecordUuid']"
+                        name="system.csw.capabilityRecordUuid"/>
                 <span class="input-group-addon">
                   {{cswServiceRecord.title || cswServiceRecord.defaultTitle}}
                 </span>
@@ -57,7 +57,7 @@
                     </li>
                     <li data-ng-repeat="md in searchResults.records">
                       <a href=""
-                         data-ng-click="cswSettings['system/csw/capabilityRecordId'] = md.getId()">
+                         data-ng-click="cswSettings['system/csw/capabilityRecordUuid'] = md.getUuid()">
                         {{md.title || md.defaultTitle}}
                       </a>
                     </li>
@@ -65,7 +65,7 @@
                 </div>
              </div>
 
-              <p class="help-block">{{'system/csw/capabilityRecordId-help' | translate}}</p>
+              <p class="help-block">{{'system/csw/capabilityRecordUuid-help' | translate}}</p>
             </div>
             <div data-ng-show="cswSettings['system/csw/enable']">
               <label>

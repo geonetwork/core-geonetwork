@@ -50,7 +50,6 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.hibernate.jpamodelgen.util.StringUtil;
 import org.jdom.Comment;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -107,18 +106,18 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         boolean isFromRecord = false;
 
-        String recordIdToUseForCapability = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_ID);
+        String recordUuidToUseForCapability = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID);
         if (!NodeInfo.DEFAULT_NODE.equals(context.getNodeId())) {
             final Source source = sourceRepository.findOne(nodeinfo.getId());
             if(source.getServiceRecord() != null) {
-                recordIdToUseForCapability = source.getServiceRecord().toString();
+                recordUuidToUseForCapability = source.getServiceRecord().toString();
             }
         }
 
         Element capabilities = null;
         String message = null;
-        if (StringUtils.isNotEmpty(recordIdToUseForCapability) && !"-1".equals(recordIdToUseForCapability)) {
-            Metadata record = metadataRepository.findOne(recordIdToUseForCapability);
+        if (StringUtils.isNotEmpty(recordUuidToUseForCapability) && !"-1".equals(recordUuidToUseForCapability)) {
+            Metadata record = metadataRepository.findOneByUuid(recordUuidToUseForCapability);
             if (record != null) {
                 try {
                     if (accessManager.isVisibleToAll(String.valueOf(record.getId()))) {
@@ -144,7 +143,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                 // TODO: Add the message to the GetCapabilities doc ?
                 message = String.format(
                     "Record with id %s is not available in the catalogue. Check the CSW configuration and choose an existing record.",
-                    recordIdToUseForCapability);
+                    recordUuidToUseForCapability);
                 Log.warning(Geonet.CSW, message);
             }
         }

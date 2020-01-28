@@ -60,7 +60,7 @@
   module.controller('GnCSWSettingsController', [
     '$scope', '$http', '$rootScope', '$translate', 'gnUtilityService',
     function($scope, $http, $rootScope, $translate, gnUtilityService) {
-      var cswSettings = ['system/csw/capabilityRecordId'];
+      var cswSettings = ['system/csw/capabilityRecordUuid'];
       var cswBooleanSettings = [
         'system/csw/enable',
         'system/csw/enabledWhenIndexing',
@@ -122,9 +122,9 @@
       }
 
       function loadServiceRecords() {
-        var id = $scope.cswSettings['system/csw/capabilityRecordId'];
+        var id = $scope.cswSettings['system/csw/capabilityRecordUuid'];
         if (angular.isDefined(id) && id != -1){
-          $http.get('qi?_content_type=json&fast=index&_id=' + id,
+          $http.get('qi?_content_type=json&fast=index&_uuid=' + id,
             {cache: true}).then(function(r) {
             $scope.cswServiceRecord = r.data.metadata;
           });

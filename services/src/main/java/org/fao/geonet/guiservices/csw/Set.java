@@ -74,7 +74,7 @@ public class Set implements Service {
 
         // Save contact
         String capabilityRecordId = Util.getParam(params, "csw.capabilityRecordId", "-1");
-        settingManager.setValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_ID, capabilityRecordId);
+        settingManager.setValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID, capabilityRecordId);
     }
 
     @Deprecated

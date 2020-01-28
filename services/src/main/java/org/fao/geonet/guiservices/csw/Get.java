@@ -23,11 +23,9 @@
 package org.fao.geonet.guiservices.csw;
 
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.domain.CswCapabilitiesInfoField;
 import org.fao.geonet.domain.responses.CswConfigurationResponse;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -47,14 +45,14 @@ public class Get {
 
         CswConfigurationResponse response = new CswConfigurationResponse();
 
-        String capabilityRecordId = sm.getValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_ID);
-        if (capabilityRecordId == null) {
-            capabilityRecordId = "-1";
+        String capabilityRecordUuid = sm.getValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID);
+        if (capabilityRecordUuid == null) {
+            capabilityRecordUuid = "-1";
         }
 
         response.setCswEnabled(sm.getValueAsBool(Settings.SYSTEM_CSW_ENABLE));
         response.setCswMetadataPublic(sm.getValueAsBool(Settings.SYSTEM_CSW_METADATA_PUBLIC));
-        response.setCapabilityRecordId(Integer.parseInt(capabilityRecordId));
+        response.setCapabilityRecordUuid(Integer.parseInt(capabilityRecordUuid));
 
         return response;
     }

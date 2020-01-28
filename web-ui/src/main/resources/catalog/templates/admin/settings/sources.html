@@ -173,7 +173,7 @@
 
             <div data-ng-search-form=""
                  data-ng-controller="GnCSWSearchServiceRecordController">
-              <label for="serviceList">{{'system/csw/capabilityRecordId' | translate}}</label>
+              <label for="serviceList">{{'system/csw/capabilityRecordUuid' | translate}}</label>
 
               <div class="input-group dropdown"
                    id="serviceList">
@@ -202,7 +202,7 @@
                     </li>
                     <li data-ng-repeat="md in searchResults.records">
                       <a href=""
-                         data-ng-click="source.serviceRecord = md.getId()">
+                         data-ng-click="source.serviceRecord = md.getUuid()">
                         {{md.title || md.defaultTitle}}
                       </a>
                     </li>
@@ -210,7 +210,7 @@
                 </div>
               </div>
 
-              <p class="help-block">{{'system/csw/capabilityRecordId-help' | translate}}</p>
+              <p class="help-block">{{'system/csw/capabilityRecordUuid-help' | translate}}</p>
             </div>
 
 

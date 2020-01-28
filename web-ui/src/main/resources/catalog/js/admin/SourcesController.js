@@ -127,7 +127,7 @@
       function loadServiceRecords() {
         var id = $scope.source.serviceRecord;
         if (angular.isDefined(id) && id != -1){
-          $http.get('qi?_content_type=json&fast=index&_id=' + id,
+          $http.get('qi?_content_type=json&fast=index&_uuid=' + id,
             {cache: true}).then(function(r) {
             $scope.cswServiceRecord = r.data.metadata;
           });
