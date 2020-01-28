@@ -211,7 +211,7 @@
 
       // upload directive options
       $scope.logoUploadOptions = {
-        autoUpload: false,
+        autoUpload: true,
         url: "../api/logos?_csrf=" + $scope.csrf,
         dataType: "text",
         maxNumberOfFiles: 1,
