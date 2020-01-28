@@ -1,5 +1,4 @@
 <div>
-  <h3>Annotations Editor</h3>
   <div ng-if="loadingAnnotation">
     loading
   </div>
@@ -11,7 +10,11 @@
       create
     </button>
   </div>
-  <div ng-if="currentAnnotation">
-    [ annotations editor ]
+  <div ng-show="currentAnnotation">
+    <div class="gn-draw-styleform"
+         gn-draw="" map="map"
+         vector="annotationsLayer"
+         save-callback="saveAnnotation(json)">
+    </div>
   </div>
 </div>

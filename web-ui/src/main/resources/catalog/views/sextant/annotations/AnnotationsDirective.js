@@ -20,6 +20,11 @@
           var UUID = 'unique-uuid' + Math.floor(Math.random() * 10000);
 
           /**
+           * @type {ol.layer.Vector}
+           */
+          scope.annotationsLayer;
+
+          /**
            * @type {boolean}
            */
           scope.loadingAnnotation = true;
@@ -33,6 +38,7 @@
             .then(function(annotation) {
               scope.loadingAnnotation = false;
               scope.currentAnnotation = annotation;
+              scope.annotationsLayer.active = true;
             })
 
           scope.initAnnotation = function() {
@@ -43,8 +49,18 @@
               .then(function(annotation) {
                 scope.loadingAnnotation = false;
                 scope.currentAnnotation = annotation;
+                scope.annotationsLayer.active = true;
               })
           }
+
+          scope.saveAnnotation = function(json) {
+            console.log(json);
+          }
+
+          scope.$on('$destroy', function() {
+            scope.map.removeLayer(scope.annotationsLayer);
+            scope.annotationsLayer.active = false;
+          });
         }
       };
     }]);

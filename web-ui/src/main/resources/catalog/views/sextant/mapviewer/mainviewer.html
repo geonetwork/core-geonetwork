@@ -202,7 +202,9 @@
                 <span translate>annotations</span>
               </tab-heading>
               <div>
-                <sxt-annotations-editor map="map"></sxt-annotations-editor>
+                <sxt-annotations-editor map="map"
+                                        ng-if="layerTabs.annotations.active">
+                </sxt-annotations-editor>
               </div>
             </tab>
 
