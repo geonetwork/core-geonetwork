@@ -304,6 +304,7 @@ public class SourcesApi {
             entity.setType(source.getType());
             entity.setFilter(source.getFilter());
             entity.setGroupOwner(source.getGroupOwner());
+            entity.setServiceRecord(source.getServiceRecord());
             entity.setUiConfig(source.getUiConfig());
             entity.setLogo(source.getLogo());
             Map<String, String> labelTranslations = source.getLabelTranslations();
