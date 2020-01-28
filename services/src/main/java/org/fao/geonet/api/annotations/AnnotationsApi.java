@@ -42,7 +42,9 @@ public class AnnotationsApi {
     @PreAuthorize("hasRole('Administrator')")
     @PutMapping
     public ResponseEntity<?> create(@RequestBody AnnotationEntity annotationEntity) {
-        annotationEntity.setUuid(randomUUID().toString());
+        if (annotationEntity.getUuid() == null) {
+            annotationEntity.setUuid(randomUUID().toString());
+        }
         AnnotationEntity created = annotationRepository.save(annotationEntity);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
