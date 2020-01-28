@@ -374,7 +374,11 @@
             </tr>
             <tr data-ng-if="mdView.current.record.spatialRepresentationType_text">
               <th data-translate="">spatialRepresentationType</th>
-              <td>{{mdView.current.record.spatialRepresentationType_text}}</td>
+              <td>
+                <ul data-ng-repeat="t in mdView.current.record.spatialRepresentationType_text">
+                  <li>{{t}}</li>
+                </ul>
+              </td>
             </tr>
             <tr data-ng-if="mdView.current.record.denominator">
               <th data-translate="">scale</th>
