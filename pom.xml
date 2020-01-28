@@ -1241,7 +1241,7 @@
     <repository>
       <id>maven2</id>
       <name>Repository maven2</name>
-      <url>http://repo.maven.apache.org/maven2</url>
+      <url>https://repo.maven.apache.org/maven2</url>
     </repository>
 
     <!-- seasar repo, has jsonic - used by langdetect -->
