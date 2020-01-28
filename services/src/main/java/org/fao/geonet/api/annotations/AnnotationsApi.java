@@ -42,10 +42,21 @@ public class AnnotationsApi {
     @PreAuthorize("hasRole('Administrator')")
     @PutMapping
     public ResponseEntity<?> create(@RequestBody AnnotationEntity annotationEntity) {
-        if (annotationEntity.getUuid() == null) {
-            annotationEntity.setUuid(randomUUID().toString());
-        }
+        annotationEntity.setUuid(randomUUID().toString());
         AnnotationEntity created = annotationRepository.save(annotationEntity);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasRole('Administrator')")
+    @PutMapping(path ={"/{uuid}"})
+    public ResponseEntity<?> update(@PathVariable("uuid") String uuid, @RequestBody AnnotationEntity annotationEntity) {
+        if (annotationRepository.exists(uuid)) {
+            AnnotationEntity annotationEntityToUpdate = annotationRepository.findByUUID(uuid);
+            annotationEntity.setUuid(uuid);
+            annotationEntity.setId(annotationEntityToUpdate.getId());
+            return new ResponseEntity<>(annotationRepository.save(annotationEntity), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
