@@ -29,7 +29,7 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav" id="topbar-left">
             <li>
-              <a href="{/root/gui/nodeUrl}{$lang}/catalog.search#/home">
+              <a href="{/root/gui/nodeUrl}">
                 <img class="gn-logo"
                      alt="{$i18n/siteLogo}"
                      src="{/root/gui/url}/images/logos/{$env//system/site/siteId}.png"></img>
