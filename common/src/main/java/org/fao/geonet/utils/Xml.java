@@ -23,14 +23,22 @@
 
 package org.fao.geonet.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.sf.json.JSON;
 import net.sf.json.xml.XMLSerializer;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.Controller;
 import net.sf.saxon.FeatureKeys;
+import org.apache.commons.io.IOUtils;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.xml.resolver.tools.CatalogResolver;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.utils.nio.NioPathAwareEntityResolver;
@@ -52,6 +60,9 @@ import org.jdom.output.XMLOutputter;
 import org.jdom.transform.JDOMResult;
 import org.jdom.transform.JDOMSource;
 import org.jdom.xpath.XPath;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
 import org.mozilla.universalchardet.UniversalDetector;
 import org.xml.sax.SAXException;
 
@@ -89,6 +100,7 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -609,7 +621,46 @@ public final class Xml {
         return Xml.getJSON(Xml.getString(xml));
     }
 
-    //---------------------------------------------------------------------------
+    public static String stripNonValidXMLCharacters(String in) {
+        StringBuffer out = new StringBuffer();
+        char current;
+
+        if (in == null || ("".equals(in))) return "";
+        for (int i = 0; i < in.length(); i++) {
+            current = in.charAt(i);
+            if ((current == 0x9) ||
+                (current == 0xA) ||
+                (current == 0xD) ||
+                ((current >= 0x20) && (current <= 0xD7FF)) ||
+                ((current >= 0xE000) && (current <= 0xFFFD)) ||
+                ((current >= 0x10000) && (current <= 0x10FFFF)))
+                out.append(current);
+        }
+        return out.toString();
+    }
+
+    public static Element getXmlFromJSON(String jsonAsString) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode json = objectMapper.readTree(jsonAsString);
+            String recordAsXml = XML.toString(
+                new JSONObject(
+                    objectMapper.writeValueAsString(json)), "root");
+            recordAsXml = Xml.stripNonValidXMLCharacters(recordAsXml);
+            return Xml.loadString(recordAsXml, false);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (JDOMException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * Converts an xml string to JSON

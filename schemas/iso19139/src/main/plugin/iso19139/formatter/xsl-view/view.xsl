@@ -603,7 +603,7 @@
       <dd>
         <xsl:apply-templates mode="render-value" select="*"/>
         <xsl:apply-templates mode="render-value" select="@*"/>
-        <a class="btn btn-default" href="{$nodeUrl}api/records/{$metadataId}/formatters/xml">
+        <a class="btn btn-default" href="{$nodeUrl}api/records/{$metadataUuid}/formatters/xml">
           <i class="fa fa-file-code-o"><xsl:comment select="'file'"/></i>
           <span><xsl:value-of select="$schemaStrings/metadataInXML"/></span>
         </a>

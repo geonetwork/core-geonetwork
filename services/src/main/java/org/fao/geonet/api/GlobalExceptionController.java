@@ -35,6 +35,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
@@ -84,7 +85,8 @@ public class GlobalExceptionController {
     @ResponseBody
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler({
-        SecurityException.class
+        SecurityException.class,
+        AccessDeniedException.class
     })
     public Object securityHandler(final Exception exception) {
         return new ApiError("forbidden", exception.getClass().getSimpleName(), exception.getMessage());

@@ -29,6 +29,29 @@
       []);
 
 
+  module.controller('GnCSWSearchServiceRecordController', [
+    '$scope', 'gnGlobalSettings',
+    function($scope, gnGlobalSettings) {
+      $scope.searchObj = {
+        internal: true,
+        any: '',
+        defaultParams: {
+          any: '',
+          from: 1,
+          to: 50,
+          type: 'service',
+          sortBy: 'title',
+          sortOrder: 'reverse'
+        }
+      };
+      $scope.searchObj.params = angular.extend({},
+        $scope.searchObj.defaultParams);
+      $scope.updateParams = function() {
+        $scope.searchObj.params.any =
+          '*' + $scope.searchObj.any + '*';
+      };
+    }]);
+
   /**
    * GnCSWSettingsController provides management interface
    * for CSW settings.
@@ -37,7 +60,7 @@
   module.controller('GnCSWSettingsController', [
     '$scope', '$http', '$rootScope', '$translate', 'gnUtilityService',
     function($scope, $http, $rootScope, $translate, gnUtilityService) {
-      var cswSettings = ['system/csw/contactId'];
+      var cswSettings = ['system/csw/capabilityRecordUuid'];
       var cswBooleanSettings = [
         'system/csw/enable',
         'system/csw/enabledWhenIndexing',
@@ -48,6 +71,7 @@
        * CSW properties
        */
       $scope.cswSettings = {};
+      $scope.cswServiceRecord = null;
 
       /**
        * CSW element set name (an array of xpath).
@@ -74,6 +98,7 @@
        */
       $scope.cswFields = {};
 
+
       /**
          * Load catalog settings and extract CSW settings
          */
@@ -90,20 +115,26 @@
                   $scope.cswSettings[setting['@name']] = setting['#text'];
                 }
               }
+              loadServiceRecords();
             }).error(function(data) {
               // TODO
             });
       }
 
-      function loadUsers() {
-        $http.get('../api/users').
-            success(function(data) {
-              $scope.users = data;
-              loadSettings();
-            }).error(function(data) {
-              // TODO
-            });
+      function loadServiceRecords() {
+        var id = $scope.cswSettings['system/csw/capabilityRecordUuid'];
+        if (angular.isDefined(id) && id != -1){
+          $http.get('qi?_content_type=json&fast=index&_uuid=' + id,
+            {cache: true}).then(function(r) {
+            $scope.cswServiceRecord = r.data.metadata;
+          });
+        }
       }
+      $scope.$watchCollection('cswSettings', function(n, o){
+        if (n != o) {
+          loadServiceRecords();
+        }
+      });
 
 
       function loadCSWConfig() {
@@ -233,7 +264,7 @@
         return result;
       };
 
-      loadUsers();  // Which then load settings
+      loadSettings();
       loadCSWConfig();
       loadCSWElementSetName();
 

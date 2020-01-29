@@ -55,6 +55,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataDraftRepository;
@@ -433,13 +434,15 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         if (md == null) {
             throw new EntityNotFoundException("We couldn't find the metadata to edit");
         }
+        boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
 
         // Do we have a metadata draft already?
         if (metadataDraftRepository.findOneByUuid(md.getUuid()) != null) {
             id = Integer.toString(metadataDraftRepository.findOneByUuid(md.getUuid()).getId());
 
             Log.trace(Geonet.DATA_MANAGER, "Editing draft with id " + id);
-        } else if ((context.getBean(IMetadataManager.class) instanceof DraftMetadataManager)
+        } else if (isMdWorkflowEnable
+            && (context.getBean(IMetadataManager.class) instanceof DraftMetadataManager)
             && metadataStatus.getCurrentStatus(Integer.valueOf(id)).equals(StatusValue.Status.APPROVED)) {
             id = createDraft(context, id, md);
 
