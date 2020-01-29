@@ -197,6 +197,33 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void longGeometry() throws Exception {
+        StringBuffer buffer = new StringBuffer();
+        for (int i =0; i< 8000; i++) {
+            buffer.append("1");
+        }
+        String longGeom = buffer.toString();
+        mockMvc.perform(put("/api/annotations")
+                .content("{ \"geometry\": { \"type\": \"Feature\", \"coord\": \"" + longGeom +"\" } }")
+                .contentType(MediaType.APPLICATION_JSON)
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(jsonPath("$.uuid").value(new BaseMatcher() {
+                    @Override
+                    public void describeTo(Description description) {
+                        description.appendText("error persisting entity");
+                    }
+
+                    @Override
+                    public boolean matches(Object o) {
+                        String uuid = (String)o;
+                        AnnotationEntity created = annotationRepository.findByUUID(uuid);
+                        return created.getGeometry().get("coord").textValue().equals(longGeom);
+                    }
+                }));
+    }
+
+    @Test
     @Ignore
     public void uuidIgnoredWhenCreate() throws Exception {
         AnnotationEntity existing = annotationRepository.save(
