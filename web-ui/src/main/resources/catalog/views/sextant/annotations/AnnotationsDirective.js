@@ -12,14 +12,19 @@
       return {
         restrict: 'E',
         scope: {
-          map: '=map'
+          map: '=map',
+          layer: '='
         },
         templateUrl: '../../catalog/views/sextant/annotations/partials/annotationsEditor.html',
         link: function(scope, element, attrs) {
-          var geojson = new ol.format.GeoJSON();
+          scope.annotationsUuid = scope.layer.get('annotationsUuid');
 
-          // TEMP: use a predefined UUID
-          scope.TEST_UUID = 'e0110291-d57c-40c0-97f4-60afeaf0e2c4';
+          if (!scope.annotationsUuid) {
+            console.error('Missing annotations UUID on layer');
+            return;
+          }
+
+          var geojson = new ol.format.GeoJSON();
 
           /**
            * @type {ol.layer.Vector}
@@ -104,7 +109,7 @@
           }
 
           // initial loading of annotation entity
-          sxtAnnotationsService.getAnnotation(scope.TEST_UUID)
+          sxtAnnotationsService.getAnnotation(scope.annotationsUuid)
             .then(setCurrentAnnotation)
 
           /**

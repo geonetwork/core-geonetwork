@@ -599,6 +599,7 @@
                   QI: formatQIList
                 }]
             },
+            annotationsId: layer.get('annotationsUuid'),
             // end sextant specific
 
             server: [{
@@ -734,6 +735,7 @@
             olL.set('owc_groupPosition', layer.groupPosition);
             olL.set('metadata_url', layer.metadataUrl);
             olL.set('qi_list', layer.qiList);
+            olL.set('annotationsUuid', layer.annotationsId);
             // end sextant specific
 
             olL.setOpacity(layer.opacity);
@@ -772,6 +774,7 @@
                   olL.set('owc_groupPosition', layer.groupPosition);
                   olL.set('metadata_url', layer.metadataUrl);
                   olL.set('qi_list', layer.qiList);
+                  olL.set('annotationsUuid', layer.annotationsId);
                   // end sextant specific
 
                   olL.set('tree_index', index);

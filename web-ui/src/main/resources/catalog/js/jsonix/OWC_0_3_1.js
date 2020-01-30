@@ -398,6 +398,9 @@ var OWC_0_3_1_Module_Factory = function() {
       }, {
         n: 'groupPosition',
         t: 'a'
+      }, {
+        n: 'annotationsId',
+        t: 'a'
       }
       // end sextant specific
       ]
