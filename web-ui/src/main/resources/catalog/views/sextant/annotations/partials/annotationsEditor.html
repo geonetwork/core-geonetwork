@@ -8,11 +8,19 @@
       initAnnotations
     </a>
   </div>
-  <div ng-show="currentAnnotation">
+  <div ng-show="currentAnnotation" ng-class="{'updating-annotation': updatingAnnotation}">
     <div class="gn-draw-styleform"
          gn-draw="" map="map"
          vector="annotationsLayer"
          save-callback="updateAnnotationGeometry(json)">
+    </div>
+    <div class="btn-group flux">
+      <a class="btn btn-default loading-annotation" ng-if="updatingAnnotation" disabled>
+        <i class="fa fa-fw fa-spinner fa-spin"></i> <span translate>save</span>
+      </a>
+    </div>
+    <div class="alert alert-danger update-error" ng-if="error">
+      {{error}}
     </div>
   </div>
 </div>

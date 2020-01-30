@@ -37,9 +37,19 @@
           scope.loadingAnnotation = true;
 
           /**
+           * @type {boolean}
+           */
+          scope.updatingAnnotation = false;
+
+          /**
            * @type {Annotation}
            */
           scope.currentAnnotation = null;
+
+          /**
+           * @type {string}
+           */
+          scope.error = null;
 
 
           /**
@@ -86,11 +96,13 @@
           // set current annotation entity to be modified
           function setCurrentAnnotation(annotation) {
             scope.loadingAnnotation = false;
-            scope.currentAnnotation = annotation;
-            if (!annotation) {
+
+            if (!annotation || annotation.error) {
+              scope.currentAnnotation = null;
               return;
             }
 
+            scope.currentAnnotation = annotation;
             scope.annotationsLayer.active = true;
             if (annotation.geometry) {
               var features = geojson.readFeatures(annotation.geometry, {
@@ -129,9 +141,16 @@
            * @param {string} json
            */
           scope.updateAnnotationGeometry = function(json) {
+            scope.updatingAnnotation = true;
+            scope.error = null;
             sxtAnnotationsService.updateAnnotation({
               uuid: scope.currentAnnotation.uuid,
               geometry: JSON.parse(json)
+            }).then(function (response) {
+              scope.updatingAnnotation = false;
+              if (response.error) {
+                scope.error = response.error;
+              }
             });
           }
 

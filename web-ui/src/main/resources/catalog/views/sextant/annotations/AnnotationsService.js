@@ -6,8 +6,8 @@
   /**
    * Service for interacting with the Sextant Annotations API
    */
-  module.service('sxtAnnotationsService', ['$http', '$q',
-    function($http, $q) {
+  module.service('sxtAnnotationsService', ['$http',
+    function($http) {
       /**
        * Returns a given annotation object by UUID, or null if not existent
        * @param {string} uuid
@@ -19,8 +19,10 @@
         })
           .then(function (response) {
             return response.data;
-          }, function () {
-            return null;
+          },  function (error) {
+            return {
+              error: error.data.message || error.statusText
+            };
           });
       }
 
@@ -38,8 +40,10 @@
         })
           .then(function (response) {
             return response.data;
-          }, function () {
-            return null;
+          }, function (error) {
+            return {
+              error: error.data.message || error.statusText
+            };
           });
       }
 
@@ -57,8 +61,10 @@
         })
           .then(function (response) {
             return response.data;
-          }, function () {
-            return null;
+          }, function (error) {
+            return {
+              error: error.data.message || error.statusText
+            };
           });
       }
     }]
