@@ -325,7 +325,7 @@
           <!-- TODO can be multilingual desc and name -->
           <overview type="object">{
             "url": "<xsl:value-of select="."/>"
-            <xsl:if test="count(../../gmd:fileDescription) > 0">,</xsl:if>
+            <xsl:if test="normalize-space(../../gmd:fileDescription) != ''">,</xsl:if>
             <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
           }</overview>
         </xsl:for-each>
@@ -630,7 +630,7 @@
             gmd:geographicIdentifier/gmd:MD_Identifier/
             gmd:code/gco:CharacterString[normalize-space(.) != '']">
             <geoTag>
-              <xsl:value-of select="."/>
+              <xsl:value-of select="gn-fn-index:json-escape(.)"/>
             </geoTag>
           </xsl:for-each>
 
@@ -768,13 +768,20 @@
 
       <xsl:for-each select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem">
         <xsl:for-each select="gmd:referenceSystemIdentifier/gmd:RS_Identifier">
-          <xsl:variable name="crs" select="gmd:code/gco:CharacterString"/>
+          <xsl:variable name="crs" select="gmd:code/*"/>
 
           <xsl:if test="$crs != ''">
             <coordinateSystem>
               <xsl:value-of select="$crs"/>
             </coordinateSystem>
           </xsl:if>
+
+          <crsDetails type="object">{
+            "code": "<xsl:value-of select="gn-fn-index:json-escape((gmd:code/*/text())[1])"/>",
+            "codeSpace": "<xsl:value-of select="gn-fn-index:json-escape(gmd:codeSpace/*/text())"/>",
+            "name": "<xsl:value-of select="gn-fn-index:json-escape(gmd:code/*/@xlink:title)"/>",
+            "url": "<xsl:value-of select="gn-fn-index:json-escape(gmd:code/*/@xlink:href)"/>"
+            }</crsDetails>
         </xsl:for-each>
       </xsl:for-each>
 

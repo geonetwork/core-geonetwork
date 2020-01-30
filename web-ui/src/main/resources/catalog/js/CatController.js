@@ -368,28 +368,76 @@ goog.require('gn_alert');
               '../../catalog/templates/editor/new-metadata-horizontal.html',
           'editorIndentType': '',
           'facetConfig': {
-            'tag': {
-              'terms': {
-                'field': 'tag',
-                'size': 15
-              }
-            },
             'resourceType': {
               'terms': {
                 'field': 'resourceType',
+                'size': 20
+              }
+            },
+            'mdStatus': {
+              'terms': {
+                'field': 'codelist_status_text',
+                'size': 15
+              }
+            },
+            'sourceCatalog': {
+              'terms': {
+                'field': 'sourceCatalog',
+                'size': 15
+              }
+            },
+            'isValid': {
+              'terms': {
+                'field': 'isTemplate',
                 'size': 10
               }
             },
-            'isTemplate': {
+            'isValidInspire': {
               'terms': {
-                'field': 'isTemplate',
+                'field': 'isValidInspire',
+                'size': 10
+              }
+            },
+            'groupOwner': {
+              'terms': {
+                'field': 'groupOwner',
+                'size': 10
+              }
+            },
+            'recordOwner': {
+              'terms': {
+                'field': 'recordOwner',
+                'size': 10
+              }
+            },
+            'publishedForGroup': {
+              'terms': {
+                'field': 'groupPublished',
+                'size': 10
+              }
+            },
+            'standard': {
+              'terms': {
+                'field': 'documentStandard',
                 'size': 10
               }
             },
             'isHarvested': {
               'terms': {
                 'field': 'isHarvested',
-                'size': 10
+                'size': 2
+              }
+            },
+            'metadataType': {
+              'terms': {
+                'field': 'isTemplate',
+                'size': 5
+              }
+            },
+            'isPublishedToAll': {
+              'terms': {
+                'field': 'isPublishedToAll',
+                'size': 2
               }
             }
           }

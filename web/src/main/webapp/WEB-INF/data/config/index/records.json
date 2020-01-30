@@ -1150,6 +1150,9 @@
       "isValid": {
         "type": "boolean"
       },
+      "isValidInspire": {
+        "type": "keyword"
+      },
       "isSchemaValid": {
         "type": "boolean"
       },
@@ -1389,7 +1392,13 @@
       "groupPublished": {
         "type": "keyword"
       },
+      "isPublishedToAll": {
+        "type": "keyword"
+      },
       "groupOwner": {
+        "type": "keyword"
+      },
+      "recordOwner": {
         "type": "keyword"
       },
       "hasxlinks": {
