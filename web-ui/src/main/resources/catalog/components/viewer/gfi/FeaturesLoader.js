@@ -148,7 +148,7 @@
       }
     }).then(function(response) {
       // Sextant specific
-      if (this.ncwmsService.isLayerAdvancedWms(layer)) {
+      if (this.ncwmsService.isLayerNcwms(layer) || this.ncwmsService.isLayerOceanotron(layer)) {
         var doc = ol.xml.parse(response.data);
         var props = {};
         ['longitude', 'latitude', 'time', 'value'].forEach(function(v) {
