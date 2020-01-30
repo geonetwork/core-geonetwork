@@ -174,10 +174,9 @@
             // parse initial input coordinates to display shape
             ctrl.initValue = function() {
               if (ctrl.polygonXml) {
-                var srsName = ctrl.polygonXml.match(
-                    new RegExp('srsName=\"([^"]*)\"'));
-                ctrl.dataProjection = srsName && srsName.length === 2 ?
-                    srsName[1] : 'EPSG:4326';
+                ctrl.dataProjection = gnGeometryService.getGmlProjection(
+                    ctrl.polygonXml
+                );
 
                 if (!isProjAvailable(ctrl.dataProjection)) {
                   ctrl.projections.push({

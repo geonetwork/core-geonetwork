@@ -29,6 +29,7 @@
 
   goog.require('gn_mdview_directive');
   goog.require('gn_mdview_service');
+  goog.require('gn_spatial_viewer')
   goog.require('gn_related_observer_directive');
   goog.require('gn_userfeedback');
   goog.require('gn_thesaurus');
@@ -37,6 +38,7 @@
   var module = angular.module('gn_mdview', [
     'gn_mdview_service',
     'gn_mdview_directive',
+    'gn_spatial_viewer',
     'gn_related_observer_directive',
     'gn_userfeedback',
     'gn_thesaurus',

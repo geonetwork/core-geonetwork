@@ -460,6 +460,64 @@
     <br/>
   </xsl:template>
 
+  <!-- Use spatial viewer for extents including bounding polygons -->
+  <!-- May require aggregation of a number of geographicElements -->
+  <xsl:template mode="render-field"
+                match="gmd:EX_Extent[gmd:geographicElement/*/gmd:polygon]"
+                priority="100">
+    <div class="entry name">
+    <h2>
+      <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
+      <xsl:apply-templates mode="render-value"
+                           select="@*"/>
+    </h2>
+    <div class="target"><xsl:comment select="name()"/>
+
+    <xsl:apply-templates mode="render-field" select="gmd:description"/>
+
+    <!-- Display all included bounding polygons/boxes on the one map -->
+    <gn-spatial-viewer>
+    <xsl:for-each select="gmd:geographicElement">
+      <xsl:choose>
+        <xsl:when test="gmd:EX_BoundingPolygon">
+          <xsl:variable name="geometry" select="*/(gmd:polygon/gml:MultiSurface|gmd:polygon/gml:LineString|
+                                          gmd:polygon/gml320:MultiSurface|gmd:polygon/gml320:LineString)"/>
+            <gn-polygon polygon-xml="{saxon:serialize($geometry, 'default-serialize-mode')}"/>
+        </xsl:when>
+        <xsl:when test="gmd:EX_GeographicBoundingBox">
+            <gn-b-box eastBL="{*/gmd:eastBoundLongitude/*/text()}"
+                     westBL="{*/gmd:westBoundLongitude/*/text()}"
+                     northBL="{*/gmd:northBoundLatitude/*/text()}"
+                     southBL="{*/gmd:southBoundLatitude/*/text()}"/>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:for-each>
+    </gn-spatial-viewer>
+
+    <!-- Display any included geographic descriptions separately after spatial viewer -->
+
+    <xsl:apply-templates mode="render-field" select="gmd:geographicElement[gmd:EX_GeographicDescription]"/>
+
+    <xsl:apply-templates mode="render-field" select="gmd:temporalElement"/>
+    <xsl:apply-templates mode="render-field" select="gmd:verticalElement"/>
+
+    </div>
+    </div>
+  </xsl:template>
+
+  <!-- Display bounding polygons not included above -->
+  <xsl:template mode="render-field"
+                match="gmd:EX_BoundingPolygon" priority="100">
+    <xsl:variable name="geometry" select="gmd:polygon/gml:MultiSurface|gmd:polygon/gml:LineString|
+                                          gmd:polygon/gml320:MultiSurface|gmd:polygon/gml320:LineString"/>
+
+    <gn-spatial-viewer>
+      <gn-polygon polygon-xml="{saxon:serialize($geometry, 'default-serialize-mode')}"/>
+    </gn-spatial-viewer>
+    <br/>
+    <br/>
+  </xsl:template>
+
 
   <!-- A contact is displayed with its role as header -->
   <xsl:template mode="render-field"

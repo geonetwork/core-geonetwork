@@ -336,6 +336,27 @@
 
         return outputValue;
       };
+
+      /**
+       * @ngdoc method
+       * @methodOf gn_geometry.service:gnGeometryService
+       * @name gnGeometryService#getGmlProjection
+       *
+       * @description
+       * Returns the detected projection of a gml text input.
+       * EPSG:4326 is assumed if no srs is specified
+       *
+       * @param {string} input as text
+       * @return {string} projection
+       */
+      this.getGmlProjection = function(gml) {
+          var srsName = gml.match(
+              new RegExp('srsName=\"([^"]*)\"'));
+          var dataProjection = srsName && srsName.length === 2 ?
+              srsName[1] : 'EPSG:4326';
+          return dataProjection;
+      }
+
     }
   ]);
 })();
