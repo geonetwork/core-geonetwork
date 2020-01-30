@@ -6,7 +6,7 @@
     No annotation found<br>
     <button class="btn btn-default"
             role="button"
-            ng-click="initAnnotation()">
+            ng-click="initAnnotation(TEST_UUID)">
       create
     </button>
   </div>
@@ -14,7 +14,7 @@
     <div class="gn-draw-styleform"
          gn-draw="" map="map"
          vector="annotationsLayer"
-         save-callback="saveAnnotation(json)">
+         save-callback="updateAnnotationGeometry(json)">
     </div>
   </div>
 </div>

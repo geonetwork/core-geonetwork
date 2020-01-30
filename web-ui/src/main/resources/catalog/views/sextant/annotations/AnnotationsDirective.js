@@ -16,8 +16,10 @@
         },
         templateUrl: '../../catalog/views/sextant/annotations/partials/annotationsEditor.html',
         link: function(scope, element, attrs) {
-          // TEMP: target a new UUID everytime
-          var UUID = 'unique-uuid' + Math.floor(Math.random() * 10000);
+          var geojson = new ol.format.GeoJSON();
+
+          // TEMP: use a predefined UUID
+          scope.TEST_UUID = 'e0110291-d57c-40c0-97f4-60afeaf0e2c4';
 
           /**
            * @type {ol.layer.Vector}
@@ -34,27 +36,98 @@
            */
           scope.currentAnnotation = null;
 
-          sxtAnnotationsService.getAnnotation(UUID)
-            .then(function(annotation) {
-              scope.loadingAnnotation = false;
-              scope.currentAnnotation = annotation;
-              scope.annotationsLayer.active = true;
-            })
 
-          scope.initAnnotation = function() {
-            scope.loadingAnnotation = true;
-            sxtAnnotationsService.createAnnotation({
-              uuid: UUID
-            })
-              .then(function(annotation) {
-                scope.loadingAnnotation = false;
-                scope.currentAnnotation = annotation;
-                scope.annotationsLayer.active = true;
+          /**
+           * Copy-pasted from DrawDirective.js
+           */
+          function createStyleFromConfig(feature, styleCfg) {
+            var styleObjCfg = {
+              fill: new ol.style.Fill({
+                color: styleCfg.fill.color
+              }),
+              stroke: new ol.style.Stroke({
+                color: styleCfg.stroke.color,
+                width: styleCfg.stroke.width
               })
+            };
+
+            // It is a Text feature
+            if (feature.get('name')) {
+              styleObjCfg.text = new ol.style.Text({
+                font: styleCfg.text.font,
+                text: feature.get('name'),
+                fill: new ol.style.Fill({
+                  color: styleCfg.text.fill.color
+                }),
+                stroke: (styleCfg.text.stroke &&
+                  (styleCfg.text.stroke.width > 0)) ?
+                  new ol.style.Stroke({
+                    color: styleCfg.text.stroke.color,
+                    width: styleCfg.text.stroke.width
+                  }) : undefined
+              });
+            }
+            else if (feature.getGeometry().getType() == 'Point') {
+              styleObjCfg.image = new ol.style.Circle({
+                radius: styleCfg.image.radius,
+                fill: new ol.style.Fill({
+                  color: styleCfg.image.fill.color
+                })
+              });
+            }
+            return new ol.style.Style(styleObjCfg);
           }
 
-          scope.saveAnnotation = function(json) {
-            console.log(json);
+          // set current annotation entity to be modified
+          function setCurrentAnnotation(annotation) {
+            scope.loadingAnnotation = false;
+            scope.currentAnnotation = annotation;
+            if (!annotation) {
+              return;
+            }
+
+            scope.annotationsLayer.active = true;
+            if (annotation.geometry) {
+              var features = geojson.readFeatures(annotation.geometry, {
+                dataProjection: 'EPSG:4326',
+                featureProjection: scope.map.getView().getProjection().getCode()
+              });
+
+              // the draw vector layer expects a ol.Style object on the `_style` key
+              angular.forEach(features, function(feature) {
+                feature.set('_style', createStyleFromConfig(feature, feature.get('_style')));
+              });
+
+              var source = scope.annotationsLayer.getSource();
+              source.addFeatures(features);
+            }
+          }
+
+          // initial loading of annotation entity
+          sxtAnnotationsService.getAnnotation(scope.TEST_UUID)
+            .then(setCurrentAnnotation)
+
+          /**
+           * Create an empty annotation entity with the given UUID
+           * @param {string} uuid
+           */
+          scope.initAnnotation = function(uuid) {
+            scope.loadingAnnotation = true;
+            sxtAnnotationsService.createAnnotation({
+              uuid: uuid
+            })
+              .then(setCurrentAnnotation)
+          }
+
+          /**
+           * Updates the current annotation geometry
+           * @param {string} json
+           */
+          scope.updateAnnotationGeometry = function(json) {
+            sxtAnnotationsService.updateAnnotation({
+              uuid: scope.currentAnnotation.uuid,
+              geometry: JSON.parse(json)
+            });
           }
 
           scope.$on('$destroy', function() {

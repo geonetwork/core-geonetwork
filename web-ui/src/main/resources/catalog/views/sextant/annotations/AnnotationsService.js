@@ -36,8 +36,8 @@
             'Content-Type': 'application/json'
           }
         })
-          .then(function (annotation) {
-            return annotation;
+          .then(function (response) {
+            return response.data;
           }, function () {
             return null;
           });
@@ -55,8 +55,8 @@
             'Content-Type': 'application/json'
           }
         })
-          .then(function (annotation) {
-            return annotation;
+          .then(function (response) {
+            return response.data;
           }, function () {
             return null;
           });
