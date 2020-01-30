@@ -2020,6 +2020,13 @@
               return;
             }
 
+            // SEXTANT SPECIFIC: ANNOTATIONS
+            var annotationLinks = md.getLinksByType('ANNOTATIONS');
+            if (annotationLinks.length) {
+              layer.set('annotationsUuid', annotationLinks[0].url);
+            }
+            // END SEXTANT SPECIFIC
+
             // We can bind layer and download/process
             if (md.getLinksByType(linkGroup, '#OGC:WMTS',
                 '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map').length == 1) {
