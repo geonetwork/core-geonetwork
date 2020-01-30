@@ -82,6 +82,7 @@
         source: {
           includes: [
             'id',
+            'uuid',
             'creat*',
             'group*',
             'resource*',
