@@ -40,6 +40,7 @@ public class AnnotationEntity implements Serializable {
         return this;
     }
 
+    @Column(unique = true)
     public String getUuid() {
         return uuid;
     }

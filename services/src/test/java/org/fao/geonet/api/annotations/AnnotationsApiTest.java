@@ -7,7 +7,6 @@ import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -224,8 +223,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
-    @Ignore
-    public void uuidIgnoredWhenCreate() throws Exception {
+    public void createErrorWhenUuidAlreadyUsed() throws Exception {
         AnnotationEntity existing = annotationRepository.save(
                 new AnnotationEntity()
                         .setGeometry(
@@ -239,10 +237,11 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .session(httpSession)
                 .accept(MediaType.parseMediaType("application/json")))
-                .andExpect(status().isCreated());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value(equalTo("duplicate_uuid")));
 
         List<AnnotationEntity> annotationEntities = annotationRepository.findAll();
-        assertEquals("10 20", annotationEntities.stream().filter(x -> x.getUuid().equals(existing.getUuid())).findFirst().get().getGeometry().get("coord").asText());
-        assertEquals("30 40", annotationEntities.stream().filter(x -> !x.getUuid().equals(existing.getUuid())).findFirst().get().getGeometry().get("coord").asText());
+        assertEquals(1, annotationEntities.size());
+        assertEquals("10 20", annotationEntities.get(0).getGeometry().get("coord").asText());
     }
 }

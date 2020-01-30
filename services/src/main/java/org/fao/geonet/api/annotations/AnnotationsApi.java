@@ -45,6 +45,12 @@ public class AnnotationsApi {
         if (annotationEntity.getUuid() == null) {
             annotationEntity.setUuid(randomUUID().toString());
         }
+        if (annotationRepository.exists(annotationEntity.getUuid())) {
+            return ResponseEntity.badRequest().body(
+                    new ErrorResponse(
+                            "duplicate_uuid",
+                             String.format("annotation with uuid: $s already exists.", annotationEntity.getUuid())));
+        }
         AnnotationEntity created = annotationRepository.save(annotationEntity);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
@@ -60,5 +66,29 @@ public class AnnotationsApi {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    class ErrorResponse {
+        ErrorResponse(String error, String message) {
+            this.error = error;
+            this.message = message;
+        }
+        public String getError() {
+            return error;
+        }
+
+        public void setError(String error) {
+            this.error = error;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+        private String error;
+        private String message;
     }
 }
