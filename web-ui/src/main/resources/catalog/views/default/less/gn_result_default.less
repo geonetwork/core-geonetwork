@@ -82,7 +82,11 @@
   .gn-md-side {
     .gn-img-thumbnail,
     .gn-img-extent {
-      width: 100%;
+      max-width: 100%;
+    }
+    .gn-img-thumbnail {
+      border: 1px solid #ccc;
+      padding: 4px;
     }
     section {
       margin-bottom: 20px;
@@ -116,7 +120,7 @@
           content: '';
           display: table-cell;
           position: relative;
-          top: 0.5em;
+          top: 0.6em;
           width: 15px;
         }
         &:before { right: 5px; }
@@ -156,6 +160,14 @@
         margin-bottom: 5px;
         dl {
           margin-left: 10px;
+        }
+        .entry {
+          h2 {
+            margin-left: 5px;
+          }
+          dl {
+            margin-left: 20px;
+          }
         }
       }
     }

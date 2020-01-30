@@ -208,7 +208,7 @@
 
       <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*">
         <img data-gn-img-modal="md"
-             class="gn-img-thumbnail center-block"
+             class="gn-img-thumbnail"
              alt="{$schemaStrings/overview}"
              src="{gmd:fileName/*}"/>
 
@@ -530,16 +530,16 @@
                 <div>
                 <i class="fa fa-fw fa-map-marker"><xsl:comment select="'address'"/></i>
                   <xsl:for-each select="gmd:deliveryPoint[normalize-space(.) != '']">
-                      <xsl:apply-templates mode="render-value" select="."/>&#183;
+                      <xsl:apply-templates mode="render-value" select="."/>,
                   </xsl:for-each>
                   <xsl:for-each select="gmd:city[normalize-space(.) != '']">
-                      <xsl:apply-templates mode="render-value" select="."/>&#183;
+                      <xsl:apply-templates mode="render-value" select="."/>,
                   </xsl:for-each>
                   <xsl:for-each select="gmd:administrativeArea[normalize-space(.) != '']">
-                      <xsl:apply-templates mode="render-value" select="."/>&#183;
+                      <xsl:apply-templates mode="render-value" select="."/>,
                   </xsl:for-each>
                   <xsl:for-each select="gmd:postalCode[normalize-space(.) != '']">
-                      <xsl:apply-templates mode="render-value" select="."/>&#183;
+                      <xsl:apply-templates mode="render-value" select="."/>,
                   </xsl:for-each>
                   <xsl:for-each select="gmd:country[normalize-space(.) != '']">
                       <xsl:apply-templates mode="render-value" select="."/>
