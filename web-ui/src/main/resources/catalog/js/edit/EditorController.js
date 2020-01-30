@@ -175,10 +175,16 @@
                   ]
                 }
               }}).then(function(r) {
-              $scope.metadataFound = r.data.hits.total !== 0;
+              $scope.metadataFound = r.data.hits.total.value !== 0;
               $scope.metadataNotFoundId = $routeParams.id;
 
               if (!$scope.metadataFound) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate.instant('metadataNotFound') || 'metadataNotFound',
+                  error: $routeParams.id,
+                  timeout: 0,
+                  type: 'danger'
+                });
                 return;
               }
 
@@ -357,7 +363,7 @@
             });
           }
         });
-        
+
       };
 
       /**

@@ -470,7 +470,11 @@ public class BaseMetadataManager implements IMetadataManager {
         }
         final Metadata newMetadata = new Metadata();
         newMetadata.setUuid(uuid);
-        newMetadata.getDataInfo().setChangeDate(new ISODate()).setCreateDate(new ISODate()).setSchemaId(schema)
+        newMetadata.getDataInfo()
+            .setChangeDate(new ISODate())
+            .setCreateDate(new ISODate())
+            .setSchemaId(schema)
+            .setRoot(templateMetadata.getDataInfo().getRoot())
             .setType(MetadataType.lookup(isTemplate));
         newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner)).setOwner(owner).setSourceId(source);
 
@@ -631,13 +635,8 @@ public class BaseMetadataManager implements IMetadataManager {
             groupId = String.valueOf(groupIdI);
         }
         metadataOperations.copyDefaultPrivForGroup(context, stringId, groupId, fullRightsForGroup);
+        metadataIndexer.indexMetadata(stringId, forceRefreshReaders);
 
-        if (newMetadata.getDataInfo().getType().equals(MetadataType.SUB_TEMPLATE)) {
-            // TODOES
-            System.out.println("Subtemplate are not indexed with ES");
-        } else if (index) {
-            metadataIndexer.indexMetadata(stringId, forceRefreshReaders);
-        }
 
         if (notifyChange) {
             // Notifies the metadata change to metatada notifier service

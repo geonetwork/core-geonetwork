@@ -433,7 +433,7 @@
 
             <button type="button" class="btn btn-default"
                 ng-click="startPermissionsEdit(activeEntry)"
-                ng-disabled="activeEntry.edit !== 'true'"
+                ng-disabled="activeEntry.edit !== true"
                 title="{{'directoryEntryPermissions' | translate}}">
               <i class="fa fa-key"/>&nbsp;
               <span translate class="hidden-xs hidden-sm hidden-md">
@@ -491,7 +491,7 @@
 
             <button type="button" class="btn btn-default hidden-xs"
                 gn-click-and-spin="saveAndClose()"
-                ng-disabled="activeEntry.edit !== 'true'"
+                ng-disabled="activeEntry.edit !== true"
                 title="{{'closeEditor' | translate}}">
               <i class="fa fa-save"/>&nbsp;
               <span translate>
@@ -501,7 +501,7 @@
         </div>
         <div class="panel-body">
           <fieldset ng-if="activeEntry"
-                    ng-disabled="activeEntry.edit !== 'true'">
+                    ng-disabled="activeEntry.edit !== true">
             <div id="gn-editor-container-{{activeEntry.id}}"></div>
           </fieldset>
         </div>

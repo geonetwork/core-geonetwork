@@ -98,12 +98,11 @@
         selectionBucket: 'd101',
         any: '',
         params: {
-          _isTemplate: 's',
-          any: '',
-          _root: '',
           sortBy: 'resourceTitle.keyword',
-          sortOrder: '',
-          resultType: 'subtemplates'
+          isTemplate: ['s'],
+          resultType: $scope.facetsSummaryType,
+          from: 1,
+          to: 20
         },
         sortbyValues: [
           {
@@ -183,63 +182,83 @@
       var refreshEntriesInfo = function() {
         // fetch templates list & return simplified objects to be used
         // in the template dropdown
-        gnSearchManagerService.search('qi?_content_type=json&' +
-            'template=t&fast=index&resultType=subtemplates&buildSummary=false')
-            .then(function(data) {
-              $scope.templates = data.metadata.map(function(md) {
-                return {
-                  root: $.isArray(md.root) ? md.root[0] : md.root,
-                  id: md.id,
-                  uuid: md.uuid,
-                  edit: md.edit,          // TODOES: edit & selected do not exist anymore with ES;
-                  selected: md.selected,  // make sure they are replaced with the correct ones
-                  isTemplate: md.isTemplate,
-                  title: md.resourceTitle
-                };
-              });
+        $http.post('../api/search/records/_search', {
+          "_source": {"includes": ["uuid", "root", "resourceTitle", "isTemplate"]},
+          "query": {
+            "bool" : {
+              "must": [
+                {"terms": {"isTemplate": ["t"]}}
+              ]
+            }
+          }}, {cache: true}).then(function(r) {
+          if (r.data.hits.total.value > 0) {
+            $scope.templates = r.data.hits.hits.map(function(md) {
+              return {
+                root: md._source.root,
+                id: md.id,
+                uuid: md._source.uuid,
+                edit: md._source.edit,          // TODOES: edit & selected do not exist anymore with ES;
+                selected: md._source.selected,  // make sure they are replaced with the correct ones
+                isTemplate: md._source.isTemplate,
+                resourceTitle: md._source.resourceTitle
+              };
             });
+          }
+        });
 
         // fetch all entries + templates
         var entryType = 's or t';
-        gnSearchManagerService.search('qi?_content_type=json&' +
-            'template=' + entryType +
-            '&fast=index&summaryOnly=true&resultType=subtemplates').
-            then(function(data) {
-              $scope.$broadcast('setPagination', $scope.paginationInfo);
-              $scope.mdList = data;
-              $scope.hasEntries = data.count != '0';
-
-              // get types info & sort them
-              $scope.mdTypes = data.facet.subTemplateTypes.map(
+        $http.post('../api/search/records/_search', {
+          "size": 0,
+          "aggs": {
+            "type": {
+              "terms": {
+                "field": "root",
+                "size": 100
+              }
+            }
+          },
+          "query": {
+            "bool" : {
+              "must": [
+                {"terms": {"isTemplate": ["t", "s"]}}
+              ]
+            }
+          }}, {cache: true}).then(function(r) {
+          $scope.hasEntries = r.data.hits.total.value > 0;
+          if ($scope.hasEntries) {
+            $scope.mdTypes = r.data.aggregations.type.buckets.map(
               function(type) {
                 return {
-                  name: type['@name'],
-                  count: type['@count']
+                  name: type.key,
+                  count: type.doc_count
                 };
               }
-              );
-              $scope.mdTypes.sort(function(a, b) {
-                var nameA = a.name;
-                var nameB = b.name;
-                return nameA < nameB ? -1 : (nameA > nameB ? 1 : 0);
-              });
-              var typeNames = $scope.mdTypes.map(function(t) {
-                return t.name;
-              });
+            );
 
-              // Select the default one or the first one
-              if ($scope.activeType &&
-              $.inArray(defaultType, typeNames) !== -1) {
-                $scope.selectType($scope.activeType);
-              } else if (defaultType &&
-              $.inArray(defaultType, typeNames) !== -1) {
-                $scope.selectType(defaultType);
-              } else if ($scope.mdTypes[0]) {
-                $scope.selectType($scope.mdTypes[0].name);
-              } else {
-                // No templates available ?
-              }
+            $scope.mdTypes.sort(function(a, b) {
+              var nameA = a.name;
+              var nameB = b.name;
+              return nameA < nameB ? -1 : (nameA > nameB ? 1 : 0);
             });
+            var typeNames = $scope.mdTypes.map(function(t) {
+              return t.name;
+            });
+
+            // Select the default one or the first one
+            if ($scope.activeType &&
+              $.inArray(defaultType, typeNames) !== -1) {
+              $scope.selectType($scope.activeType);
+            } else if (defaultType &&
+              $.inArray(defaultType, typeNames) !== -1) {
+              $scope.selectType(defaultType);
+            } else if ($scope.mdTypes[0]) {
+              $scope.selectType($scope.mdTypes[0].name);
+            } else {
+              // No templates available ?
+            }
+          }
+        });
       };
 
       /**
@@ -247,8 +266,11 @@
        */
       $scope.getEntries = function(type) {
         if (type) {
-          $scope.searchObj.params._root = type;
-          $scope.defaultSearchObj.params._root = type;
+          $scope.searchObj.params.root = type;
+          $scope.defaultSearchObj.params.root = type;
+        } else {
+          delete $scope.searchObj.params.root;
+          delete $scope.defaultSearchObj.params.root;
         }
         $scope.$broadcast('clearResults');
         $scope.$broadcast('search');
@@ -448,7 +470,7 @@
         }
 
         // a copy of the template is created & opened
-        gnMetadataManager.copy(e.id, $scope.ownerGroup,
+        gnMetadataManager.copy(e.uuid, $scope.ownerGroup,
             fullPrivileges,
             'SUB_TEMPLATE')
             .then(function(response) {
@@ -558,12 +580,12 @@
 
       // switch to templates (b === true) or entries (b === false)
       $scope.showTemplates = function(b) {
-        $scope.searchObj.params._isTemplate = b === true ? 't' : 's';   // temp
+        $scope.searchObj.params.isTemplate = b === true ? 't' : 's';   // temp
         $scope.$broadcast('clearResults');
         $scope.$broadcast('search');
       };
       $scope.templatesShown = function() {
-        return $scope.searchObj.params._isTemplate === 't';
+        return $scope.searchObj.params.isTemplate === 't';
       };
 
       // Append * for like search
