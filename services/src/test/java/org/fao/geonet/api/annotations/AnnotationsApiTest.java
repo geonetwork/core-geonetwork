@@ -3,16 +3,20 @@ package org.fao.geonet.api.annotations;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fao.geonet.domain.AnnotationEntity;
 import org.fao.geonet.repository.AnnotationRepository;
+import org.fao.geonet.repository.AnnotationRepositoryImpl;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.AdditionalAnswers;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -25,14 +29,16 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.never;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@PrepareForTest({AnnotationRepository.class, AnnotationRepositoryImpl.class})
 public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
-
     private static Date TODAY = new GregorianCalendar(2020, 6, 6 , 13, 0, 0).getTime();
     private static Date ONE_DAY = new GregorianCalendar(2025, 6, 6 , 17, 0, 0).getTime();
     private static String TIMESTAMP = "1580468510430"; // 2020-01-31T12:01:50.430+0100
@@ -42,7 +48,6 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
     @Autowired
     private AnnotationRepository annotationRepository;
-
 
     private MockHttpSession httpSession;
     private MockMvc mockMvc;
@@ -89,6 +94,8 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getExistingAnnotation() throws Exception {
+        AnnotationRepository annotationRepositorySpy = PowerMockito.mock(AnnotationRepository.class, AdditionalAnswers.delegatesTo(annotationRepository));
+        wac.getBean(AnnotationsApi.class).annotationRepository = annotationRepositorySpy;
         AnnotationEntity annotation = annotationRepository.save(
                 new AnnotationEntity()
                     .setGeometry(
@@ -98,6 +105,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                     .setUuid(randomUUID().toString()))
                     .setLastWrite(TODAY)
                     .setLastRead(ONE_DAY);
+
 
         mockMvc.perform(get("/api/annotations/" + annotation.getUuid())
                             .session(httpSession)
@@ -113,10 +121,34 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
         AnnotationEntity created = annotationRepository.findByUUID(annotation.getUuid());
         assertEquals(TODAY, created.getLastRead());
+
+        Mockito.verify(annotationRepositorySpy).save(isA(AnnotationEntity.class));
+    }
+
+    @Test
+    public void getExistingAnnotationReadDateLetUnchanged() throws Exception {
+        AnnotationRepository annotationRepositorySpy = PowerMockito.mock(AnnotationRepository.class, AdditionalAnswers.delegatesTo(annotationRepository));
+        wac.getBean(AnnotationsApi.class).annotationRepository = annotationRepositorySpy;
+        AnnotationEntity annotation = annotationRepository.save(
+                new AnnotationEntity().setUuid(randomUUID().toString())).setLastRead(TODAY);
+
+
+        mockMvc.perform(get("/api/annotations/" + annotation.getUuid())
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isOk());
+
+        AnnotationEntity created = annotationRepository.findByUUID(annotation.getUuid());
+        assertEquals(TODAY, created.getLastRead());
+
+        Mockito.verify(annotationRepositorySpy, never()).save(isA(AnnotationEntity.class));
     }
 
     @Test
     public void getExistingAnnotationWithNoGeom() throws Exception {
+        AnnotationRepository annotationRepositorySpy = PowerMockito.mock(AnnotationRepository.class, AdditionalAnswers.delegatesTo(annotationRepository));
+        wac.getBean(AnnotationsApi.class).annotationRepository = annotationRepositorySpy;
+
         AnnotationEntity annotation = annotationRepository.save(new AnnotationEntity().setUuid(randomUUID().toString()));
 
         mockMvc.perform(get("/api/annotations/" + annotation.getUuid())
@@ -126,6 +158,11 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                 .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
                 .andExpect(jsonPath("$.uuid").value(equalTo(annotation.getUuid())))
                 .andExpect(jsonPath("$.geometry").value(nullValue()));
+
+        AnnotationEntity created = annotationRepository.findByUUID(annotation.getUuid());
+        assertEquals(TODAY, created.getLastRead());
+
+        Mockito.verify(annotationRepositorySpy).save(isA(AnnotationEntity.class));
     }
 
     @Test

@@ -24,7 +24,7 @@ import static java.util.UUID.randomUUID;
 public class AnnotationsApi {
 
     @Autowired
-    private AnnotationRepository annotationRepository;
+    protected AnnotationRepository annotationRepository;
 
     protected IDateFactory dateFactory = new DateFactory();
 
@@ -39,7 +39,11 @@ public class AnnotationsApi {
     public ResponseEntity<?> getOne(@PathVariable("uuid") String uuid) {
         if (annotationRepository.exists(uuid)) {
             AnnotationEntity annotationEntity = annotationRepository.findByUUID(uuid);
-            annotationEntity.setLastRead(dateFactory.getTodayNoon());
+            Date todayNoon = dateFactory.getTodayNoon();
+            if (annotationEntity.getLastRead() == null || todayNoon.compareTo(annotationEntity.getLastRead()) != 0) {
+                annotationEntity.setLastRead(todayNoon);
+                annotationEntity = annotationRepository.save(annotationEntity);
+            }
             return new ResponseEntity<>(annotationEntity, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
