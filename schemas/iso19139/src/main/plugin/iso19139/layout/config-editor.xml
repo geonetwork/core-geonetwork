@@ -2183,6 +2183,8 @@
                  name="sdn-abstract"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:alternateTitle"
                  name="sdn-short-name"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier/*/gmd:code"
+                 name="sdn-resourceIdentifier"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:language"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:credit"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date"
