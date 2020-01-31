@@ -292,9 +292,10 @@
 
     <xsl:if test="$displayCitation">
       <blockquote>
-        <div class="row">
+        <div class="row" style="margin: 0px;">
           <div class="col-md-1">
-            <i class="fa fa-quote-left pull-right"><xsl:comment select="'icon'"/></i>
+            <i class="fa fa-quote-left pull-right"
+               style="font-size: 75px;"><xsl:comment select="'icon'"/></i>
           </div>
           <div class="col-md-11">
             <h2 title="{$schemaStrings/citationProposal-help}"><xsl:comment select="name()"/>
