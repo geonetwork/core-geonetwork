@@ -90,7 +90,6 @@
             templateUrl: '../../catalog/components/edit/' +
                 'directoryentryselector/partials/' +
                 'directoryentryselector.html',
-
             compile: function compile(tElement, tAttrs, transclude) {
               return {
                 pre: function preLink(scope) {
@@ -105,10 +104,13 @@
                       root: 'gmd:CI_ResponsibleParty',
                       sortBy: 'resourceTitle.keyword',
                       sortOrder: '',
-                      resultType: 'subtemplates',
-                      valid: scope.$eval(scope.showValidOnly) ? 1 : undefined
+                      resultType: 'subtemplates'
                     }
                   };
+
+                  if (scope.$eval(scope.showValidOnly)) {
+                    scope.searchObj.valid = 1;
+                  }
 
                   scope.modelOptions = angular.copy(
                  gnGlobalSettings.modelOptions);
@@ -153,10 +155,8 @@
                         angular.fromJson(scope.filter));
                   }
 
-                  // Append * for like search
                   scope.updateParams = function() {
-                    scope.searchObj.params.any =
-                   '*' + scope.searchObj.any + '*';
+                    scope.searchObj.params.any = scope.searchObj.any;
                   };
 
                   scope.snippet = null;
@@ -348,14 +348,14 @@
                      any: '',
                      from: 1,
                      to: 10,
-                     _root: 'gmd:CI_ResponsibleParty',
+                     root: 'gmd:CI_ResponsibleParty',
                      sortBy: 'resourceTitle.keyword',
-                     sortOrder: '',
-                     resultType: 'contact',
-                     valid:
-                     scope.$eval(tAttrs['showValidOnly']) ? 1 : undefined
+                     sortOrder: ''
                    }
                  };
+                 if(scope.$eval(tAttrs['showValidOnly'])) {
+                   scope.searchObj.valid = 1;
+                 }
                  scope.searchObj.params = angular.extend({},
                  scope.searchObj.params,
                  scope.searchObj.defaultParams);

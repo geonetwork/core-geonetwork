@@ -374,7 +374,7 @@ goog.require('gn_alert');
                 'size': 20
               }
             },
-            'mdStatus': {
+            'codelist_status_text': {
               'terms': {
                 'field': 'codelist_status_text',
                 'size': 15
@@ -388,7 +388,7 @@ goog.require('gn_alert');
             },
             'isValid': {
               'terms': {
-                'field': 'isTemplate',
+                'field': 'isValid',
                 'size': 10
               }
             },
@@ -410,13 +410,13 @@ goog.require('gn_alert');
                 'size': 10
               }
             },
-            'publishedForGroup': {
+            'groupPublished': {
               'terms': {
                 'field': 'groupPublished',
                 'size': 10
               }
             },
-            'standard': {
+            'documentStandard': {
               'terms': {
                 'field': 'documentStandard',
                 'size': 10
@@ -428,7 +428,7 @@ goog.require('gn_alert');
                 'size': 2
               }
             },
-            'metadataType': {
+            'isTemplate': {
               'terms': {
                 'field': 'isTemplate',
                 'size': 5
