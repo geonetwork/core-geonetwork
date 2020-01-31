@@ -102,7 +102,7 @@
                     <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ')"/>
                     <xsl:value-of select="format-date(xs:date(tokenize(gml:beginPosition, 'T')[1]), '[D01]-[M01]-[Y0001]')"/>
                     <!--                    <xsl:apply-templates mode="render-value" select="gml:beginPosition"/>-->
-                    <xsl:value-of select="' > '"/>
+                    <i class="fa fa-fw fa-arrow-right">&#160;</i>
                   </xsl:if>
 
                   <xsl:variable name="indeterminatePositionLabel">
@@ -225,7 +225,7 @@
         </td>
         <td>
 
-          <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:useLimitation">
+          <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:useLimitation[normalize-space(.) != '']">
             <xsl:apply-templates mode="render-field" select="."/>
           </xsl:for-each>
 
