@@ -324,26 +324,23 @@
                 <xsl:if test="position() != last()">,&#160;</xsl:if>
               </xsl:for-each-group>
 
-              <!-- Publication year: use last publication date -->
-              <xsl:variable  name="publicationDate">
-                <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[
-                                  gmd:dateType/*/@codeListValue = 'publication']/
-                                    gmd:date/gco:*">
-                  <xsl:sort select="." order="descending" />
-
-                  <xsl:if test="position() = 1">
-                    <xsl:value-of select="." />
-                  </xsl:if>
-                </xsl:for-each>
+              <!-- Publication year: use last publication or revision date -->
+              <xsl:variable name="publicationDate">
+                <xsl:perform-sort select="gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[
+                                      gmd:dateType/*/@codeListValue  = ('publication', 'revision')]/
+                                      gmd:date/gco:*[. != '']">
+                  <xsl:sort select="." order="descending"/>
+                </xsl:perform-sort>
               </xsl:variable>
-
-
               <xsl:choose>
-                <xsl:when test="normalize-space($publicationDate) != ''">
-                  (<xsl:value-of select="substring(normalize-space($publicationDate), 1, 4)"/>).
+                <xsl:when test="$publicationDate/*[1]">
+                  <xsl:for-each select="$publicationDate/*[1]">
+                    (<xsl:value-of select="substring($publicationDate, 1, 4)"/>).
+                  </xsl:for-each>
                 </xsl:when>
-                <xsl:otherwise>.</xsl:otherwise>
+                <xsl:otherwise>.&#160;</xsl:otherwise>
               </xsl:choose>
+
 
               <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:title">
                 <xsl:call-template name="localised">
