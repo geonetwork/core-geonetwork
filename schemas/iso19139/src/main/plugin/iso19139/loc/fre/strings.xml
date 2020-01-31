@@ -477,6 +477,7 @@
   <sdn-quality>Quality</sdn-quality>
   <sdn-verticalExtent>Vertical extent</sdn-verticalExtent>
   <sdn-metadata>Metadata</sdn-metadata>
+  <sdn-resourceIdentifier>Identifiant de la ressource</sdn-resourceIdentifier>
 
   <copernicus-marine>Copernicus Marine</copernicus-marine>
   <copernicus-marine-short>Copernicus Marine Short</copernicus-marine-short>

@@ -424,6 +424,9 @@
   <sdn-quality>Quality</sdn-quality>
   <sdn-verticalExtent>Vertical extent</sdn-verticalExtent>
   <sdn-metadata>Metadata</sdn-metadata>
+  <sdn-resourceIdentifier>Resource identifier</sdn-resourceIdentifier>
+
+
   <!-- String for INSPIRE SDS tab -->
   <inspire_sds_cc1>Conformance class 1: invocable</inspire_sds_cc1>
   <inspire_sds_cc2>Conformance class 2: interoperable</inspire_sds_cc2>
@@ -550,4 +553,5 @@
   <cm-add-format-n4cm>NetCDF 4 Classic model</cm-add-format-n4cm>
   <cm-add-format-n4>NetCDF 4</cm-add-format-n4>
   <cm-add-format-n3>NetCDF 3</cm-add-format-n3>
-  </strings>
+
+</strings>
