@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import static java.util.UUID.randomUUID;
 
 @RestController
@@ -22,6 +25,8 @@ public class AnnotationsApi {
 
     @Autowired
     private AnnotationRepository annotationRepository;
+
+    protected IDateFactory dateFactory = new DateFactory();
 
     @PreAuthorize("hasRole('Administrator')")
     @GetMapping
@@ -33,7 +38,9 @@ public class AnnotationsApi {
     @GetMapping(path ={"/{uuid}"})
     public ResponseEntity<?> getOne(@PathVariable("uuid") String uuid) {
         if (annotationRepository.exists(uuid)) {
-           return new ResponseEntity<>(annotationRepository.findByUUID(uuid), HttpStatus.OK);
+            AnnotationEntity annotationEntity = annotationRepository.findByUUID(uuid);
+            annotationEntity.setLastRead(dateFactory.getTodayNoon());
+            return new ResponseEntity<>(annotationEntity, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -51,6 +58,7 @@ public class AnnotationsApi {
                             "duplicate_uuid",
                              String.format("annotation with uuid: $s already exists.", annotationEntity.getUuid())));
         }
+        annotationEntity.setLastWrite(dateFactory.getTodayNoon());
         AnnotationEntity created = annotationRepository.save(annotationEntity);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
@@ -60,9 +68,9 @@ public class AnnotationsApi {
     public ResponseEntity<?> update(@PathVariable("uuid") String uuid, @RequestBody AnnotationEntity annotationEntity) {
         if (annotationRepository.exists(uuid)) {
             AnnotationEntity annotationEntityToUpdate = annotationRepository.findByUUID(uuid);
-            annotationEntity.setUuid(uuid);
-            annotationEntity.setId(annotationEntityToUpdate.getId());
-            return new ResponseEntity<>(annotationRepository.save(annotationEntity), HttpStatus.OK);
+            annotationEntityToUpdate.setGeometry(annotationEntity.getGeometry());
+            annotationEntityToUpdate.setLastWrite(dateFactory.getTodayNoon());
+            return new ResponseEntity<>(annotationRepository.save(annotationEntityToUpdate), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -90,5 +98,21 @@ public class AnnotationsApi {
         }
         private String error;
         private String message;
+    }
+
+    interface IDateFactory {
+        Date getTodayNoon();
+    }
+
+    class DateFactory implements IDateFactory {
+
+        @Override
+        public Date getTodayNoon() {
+            Date todayNoon = Calendar.getInstance().getTime();
+            todayNoon.setHours(12);
+            todayNoon.setMinutes(0);
+            todayNoon.setSeconds(0);
+            return todayNoon;
+        }
     }
 }

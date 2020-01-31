@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "AnnotationEntity")
@@ -26,6 +27,8 @@ public class AnnotationEntity implements Serializable {
     private int id;
     private String uuid;
     private ObjectNode geometry;
+    private Date lastRead;
+    private Date lastWrite;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
@@ -61,4 +64,23 @@ public class AnnotationEntity implements Serializable {
         return this;
     }
 
+    @JsonIgnore
+    public Date getLastRead() {
+        return lastRead;
+    }
+
+    public AnnotationEntity setLastRead(Date lastRead) {
+        this.lastRead = lastRead;
+        return this;
+    }
+
+    @JsonIgnore
+    public Date getLastWrite() {
+        return lastWrite;
+    }
+
+    public AnnotationEntity setLastWrite(Date lastWrite) {
+        this.lastWrite = lastWrite;
+        return this;
+    }
 }
