@@ -26,6 +26,13 @@
               "keepInspireAnnexes"
             ]
           },
+          "synInspireThemeUris": {
+            "tokenizer": "keyword",
+            "filter": [
+              "lowercase",
+              "synInspireThemeUris"
+            ]
+          },
           "synInspireThemes": {
             "tokenizer": "keyword",
             "filter": [
@@ -52,12 +59,6 @@
             "filter": [
               "lowercase",
               "keepInspireThemes"
-            ]
-          },
-          "synCheckpoint": {
-            "tokenizer": "keyword",
-            "filter": [
-              "synCheckpoint"
             ]
           }
         },
@@ -911,32 +912,44 @@
               "http://rdfdata.eionet.europa.eu/inspirethemes/themes/9 => protected sites"
             ]
           },
-          "synCheckpoint": {
+          "synInspireThemeUris": {
             "type": "synonym",
             "tokenizer": "keyword",
             "synonyms": [
-              "no charge => free",
-              "distribution cost charge => cost charge",
-              "collection cost charge => cost charge",
-              "commercial cost charge => commercial cost",
-              "cost charge depends on intented use and category of users => cost charge",
-              "cost charge depends on intended use and category of users => cost charge",
-              "restricted => restricted",
-              "accessible under moratorium => partially restricted",
-              "unrestricted => unrestricted",
-              "&lt;15mn (on-line download) => high response",
-              "less than 3 hours => medium response",
-              "less than 24 hours => medium response",
-              "less than 1 week => medium response",
-              "more than 1 week => low response",
-              "not documented => unknown",
-              "unknown => unknown",
-              "order form/envoice => manual",
-              "order form/invoice => manual",
-              "on-line downloading services => partial inspire function",
-              "on-line discovery+viewing + downloading services => full inspire function",
-              "on-line discovery + viewing + downloading services => full inspire function",
-              "on-line discovery + viewing + downloading + advanced services (high resolution viewing,3d viewing services, processing/mapping services...) => full inspire function"
+              "coordinate reference systems => http://rdfdata.eionet.europa.eu/inspirethemes/themes/1",
+              "geographical grid systems => http://rdfdata.eionet.europa.eu/inspirethemes/themes/2",
+              "geographical names => http://rdfdata.eionet.europa.eu/inspirethemes/themes/3",
+              "administrative units => http://rdfdata.eionet.europa.eu/inspirethemes/themes/4",
+              "addresses => http://rdfdata.eionet.europa.eu/inspirethemes/themes/5",
+              "cadastral parcels => http://rdfdata.eionet.europa.eu/inspirethemes/themes/6",
+              "transport networks => http://rdfdata.eionet.europa.eu/inspirethemes/themes/7",
+              "hydrography => http://rdfdata.eionet.europa.eu/inspirethemes/themes/8",
+              "protected sites => http://rdfdata.eionet.europa.eu/inspirethemes/themes/9",
+              "elevation => http://rdfdata.eionet.europa.eu/inspirethemes/themes/10",
+              "land cover => http://rdfdata.eionet.europa.eu/inspirethemes/themes/11",
+              "orthoimagery => http://rdfdata.eionet.europa.eu/inspirethemes/themes/12",
+              "geology => http://rdfdata.eionet.europa.eu/inspirethemes/themes/13",
+              "statistical units => http://rdfdata.eionet.europa.eu/inspirethemes/themes/14",
+              "buildings => http://rdfdata.eionet.europa.eu/inspirethemes/themes/15",
+              "soil => http://rdfdata.eionet.europa.eu/inspirethemes/themes/16",
+              "land use => http://rdfdata.eionet.europa.eu/inspirethemes/themes/17",
+              "human health and safety => http://rdfdata.eionet.europa.eu/inspirethemes/themes/18",
+              "utility and governmental services => http://rdfdata.eionet.europa.eu/inspirethemes/themes/19",
+              "environmental monitoring facilities => http://rdfdata.eionet.europa.eu/inspirethemes/themes/20",
+              "production and industrial facilities => http://rdfdata.eionet.europa.eu/inspirethemes/themes/21",
+              "agricultural and aquaculture facilities => http://rdfdata.eionet.europa.eu/inspirethemes/themes/22",
+              "population distribution — demography => http://rdfdata.eionet.europa.eu/inspirethemes/themes/23",
+              "area management/restriction/regulation zones and reporting units => http://rdfdata.eionet.europa.eu/inspirethemes/themes/24",
+              "natural risk zones => http://rdfdata.eionet.europa.eu/inspirethemes/themes/25",
+              "atmospheric conditions => http://rdfdata.eionet.europa.eu/inspirethemes/themes/26",
+              "meteorological geographical features => http://rdfdata.eionet.europa.eu/inspirethemes/themes/27",
+              "oceanographic geographical features => http://rdfdata.eionet.europa.eu/inspirethemes/themes/28",
+              "sea regions => http://rdfdata.eionet.europa.eu/inspirethemes/themes/29",
+              "bio-geographical regions => http://rdfdata.eionet.europa.eu/inspirethemes/themes/30",
+              "habitats and biotopes => http://rdfdata.eionet.europa.eu/inspirethemes/themes/31",
+              "species distribution => http://rdfdata.eionet.europa.eu/inspirethemes/themes/32",
+              "energy resources => http://rdfdata.eionet.europa.eu/inspirethemes/themes/33",
+              "mineral resources => http://rdfdata.eionet.europa.eu/inspirethemes/themes/34"
             ]
           }
         }

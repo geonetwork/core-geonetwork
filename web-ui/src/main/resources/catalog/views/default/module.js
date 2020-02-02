@@ -225,8 +225,6 @@
             + "&WIDTH=100&HEIGHT=100";
 
           return getMapRequest;
-
-          console.log(md);
         } else {
           return '../../catalog/views/default/images/no-thumbnail.png';
         }

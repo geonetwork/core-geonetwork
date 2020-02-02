@@ -370,6 +370,7 @@
                                 gmx:Anchor[. != '']">
             <xsl:variable name="inspireTheme" as="xs:string"
                           select="index:analyzeField('synInspireThemes', text())"/>
+
             <inspireTheme_syn>
               <xsl:value-of select="text()"/>
             </inspireTheme_syn>
@@ -401,6 +402,11 @@
                 <xsl:value-of
                   select="index:analyzeField('synInspireAnnexes', $inspireTheme)"/>
               </inspireAnnex>
+              <xsl:variable name="inspireThemeUri" as="xs:string"
+                            select="index:analyzeField('synInspireThemeUris', $inspireTheme)"/>
+              <inspireThemeUri>
+                <xsl:value-of select="$inspireThemeUri"/>
+              </inspireThemeUri>
             </xsl:if>
           </xsl:for-each>
         </xsl:for-each>

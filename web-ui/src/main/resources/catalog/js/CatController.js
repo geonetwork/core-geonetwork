@@ -115,8 +115,13 @@ goog.require('gn_alert');
                 'field': 'topic',
                 'size': 20
               }
+            },
+            'inspireThemeUri': {
+              'terms': {
+                'field': 'inspireThemeUri',
+                'size': 34
+              }
             }
-            // TODOES: Add INSPIRE
           },
           'fluidLayout': true
         },
@@ -929,6 +934,7 @@ goog.require('gn_alert');
                     "aggs": gnGlobalSettings.gnCfg.mods.home.facetConfig}).
               then(function(r) {
                 $scope.searchInfo = r.data;
+                $scope.browse = $scope.searchInfo.aggregations.inspireThemeUri ? 'inspire' : 'topics';
               });
             }
           });
