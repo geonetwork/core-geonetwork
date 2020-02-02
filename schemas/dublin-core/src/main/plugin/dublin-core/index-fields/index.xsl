@@ -178,7 +178,7 @@
             <xsl:variable name="e" select="substring-before($et, ',')"/>
             <xsl:variable name="wt" select="substring-after($coverage,'West ')"/>
             <xsl:variable name="w"
-                          select="if (contains($wt, '. ')) then substring-before($wt, '. ') else $w"/>
+                          select="if (contains($wt, '. ')) then substring-before($wt, '. ') else $wt"/>
             <xsl:variable name="p" select="substring-after($coverage,'(')"/>
             <xsl:variable name="place" select="substring-before($p,')')"/>
 
