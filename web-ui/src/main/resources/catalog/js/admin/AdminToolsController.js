@@ -44,6 +44,7 @@
         filters: gnSearchSettings.filters,
         params: {
           sortBy: 'changeDate',
+          sortOrder: 'desc',
           _isTemplate: 'y or n',
           from: 1,
           to: 20

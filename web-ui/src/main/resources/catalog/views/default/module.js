@@ -69,6 +69,7 @@
         params: {
           isTemplate: 'n',
           sortBy: 'changeDate',
+          sortOrder: 'desc',
           from: 1,
           to: 12
         }
@@ -90,6 +91,7 @@
         params: {
           isTemplate: 'n',
           sortBy: 'changeDate',
+          sortOrder: 'desc',
           from: 1,
           to: 30
         }

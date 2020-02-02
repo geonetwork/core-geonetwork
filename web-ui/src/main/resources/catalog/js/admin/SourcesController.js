@@ -40,7 +40,7 @@
           to: 50,
           type: 'service',
           sortBy: 'title',
-          sortOrder: 'reverse'
+          sortOrder: 'asc'
         }
       };
       $scope.searchObj.params = angular.extend({},

@@ -262,7 +262,8 @@
         params: {
           _indexingError: 1,
           _isTemplate: 'y or n',
-          sortBy: 'changeDate'
+          sortBy: 'changeDate',
+          sortOrder: 'desc'
         }
       };
     }]);

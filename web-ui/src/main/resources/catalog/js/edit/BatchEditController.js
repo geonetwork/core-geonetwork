@@ -45,6 +45,7 @@
         filters: gnSearchSettings.filters,
         params: {
           sortBy: 'changeDate',
+          sortOrder: 'desc',
           _isTemplate: 'y or n',
           editable: 'true',
           resultType: $scope.facetsSummaryType,

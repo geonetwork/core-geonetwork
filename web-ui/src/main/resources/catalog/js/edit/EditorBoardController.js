@@ -70,6 +70,7 @@
         configId: 'editor',
         params: {
           sortBy: 'changeDate',
+          sortOrder: 'desc',
           isTemplate: ['y', 'n'],
           resultType: $scope.facetsSummaryType,
           from: 1,
@@ -77,6 +78,7 @@
         },
         defaultParams: {
           sortBy: 'changeDate',
+          sortOrder: 'desc',
           isTemplate: ['y', 'n'],
           resultType: $scope.facetsSummaryType,
           from: 1,
