@@ -1098,7 +1098,8 @@
     ],
     "properties": {
       "any": {
-        "type": "text"
+        "type": "text",
+        "analyzer": "${es.index.analyzer.default}"
       },
       "anytext": {
         "type": "search_as_you_type"
@@ -1315,6 +1316,7 @@
       },
       "resourceTitle": {
         "type": "text",
+        "analyzer": "${es.index.analyzer.default}",
         "copy_to": [
           "any",
           "anytext"

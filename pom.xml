@@ -1339,6 +1339,10 @@
     <es.index.searchlogs>gn-searchlogs</es.index.searchlogs>
     <es.index.searchlogs.type>searchlogs</es.index.searchlogs.type>
 
+    <!-- Define the default analyzer for full text search. -->
+    <es.index.analyzer.default>standard</es.index.analyzer.default>
+<!--    <es.default.analyzer>french_light</es.default.analyzer>-->
+
     <!-- to load spring configurations related to es and camel,
     you should use maven "es" profile (defined in web).
     Devs may note that normally (not in this case), many spring profiles can

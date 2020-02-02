@@ -48,6 +48,23 @@ curl -X DELETE http://localhost:9200/$IDX_PREFIX-searchlogs
 ```
  Check that elasticsearch is running by visiting http://localhost:9200 in a browser
 
+### Multilingual configuration (beta)
+
+
+* Stop Elasticsearch
+* Define which analyzer to use https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-analyzers.html depending on the language(s) used in your catalogue
+* Build the application with the default analyzer to use (or configure it in `data/index/records.json`)
+```
+mvn clean install -Des.default.analyzer=french_heavy
+```
+* Install ICU plugin (if needed)
+```
+elasticsearch-plugin install analysis-icu
+
+```
+* Start Elasticsearch
+* Drop and rebuild your index
+
 
 ### Production use
 

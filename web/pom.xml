@@ -739,6 +739,26 @@
               </resources>
             </configuration>
           </execution>
+          <execution>
+            <id>copy-index-schema-to-source</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <escapeString>\</escapeString>
+              <includeEmptyDirs>false</includeEmptyDirs>
+              <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/index</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}/src/main/webResources/WEB-INF/data/config/index</directory>
+                  <filtering>true</filtering>
+                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/index</targetPath>
+                </resource>
+              </resources>
+              <overwrite>true</overwrite>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
