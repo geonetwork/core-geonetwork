@@ -73,6 +73,7 @@ public class AnnotationsApi {
         if (annotationRepository.exists(uuid)) {
             AnnotationEntity annotationEntityToUpdate = annotationRepository.findByUUID(uuid);
             annotationEntityToUpdate.setGeometry(annotationEntity.getGeometry());
+            annotationEntityToUpdate.setMetadataUuid(annotationEntity.getMetadataUuid());
             annotationEntityToUpdate.setLastWrite(dateFactory.getTodayNoon());
             return new ResponseEntity<>(annotationRepository.save(annotationEntityToUpdate), HttpStatus.OK);
         } else {

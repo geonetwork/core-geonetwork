@@ -29,6 +29,7 @@ public class AnnotationEntity implements Serializable {
     private ObjectNode geometry;
     private Date lastRead;
     private Date lastWrite;
+    private String metadataUuid;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
@@ -81,6 +82,15 @@ public class AnnotationEntity implements Serializable {
 
     public AnnotationEntity setLastWrite(Date lastWrite) {
         this.lastWrite = lastWrite;
+        return this;
+    }
+
+    public String getMetadataUuid() {
+        return metadataUuid;
+    }
+
+    public AnnotationEntity setMetadataUuid(String metadataUuid) {
+        this.metadataUuid = metadataUuid;
         return this;
     }
 }

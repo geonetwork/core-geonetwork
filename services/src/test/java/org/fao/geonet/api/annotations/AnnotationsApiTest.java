@@ -41,6 +41,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
     private static Date TODAY = new GregorianCalendar(2020, 6, 6 , 13, 0, 0).getTime();
     private static Date ONE_DAY = new GregorianCalendar(2025, 6, 6 , 17, 0, 0).getTime();
     private static String TIMESTAMP = "1580468510430"; // 2020-01-31T12:01:50.430+0100
+    private static String METADATA_UUID = "metadata-uuid";
 
     @Autowired
     private WebApplicationContext wac;
@@ -68,7 +69,8 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
         AnnotationEntity annotation = annotationRepository.save(new AnnotationEntity()
             .setUuid(randomUUID().toString())
             .setLastRead(TODAY)
-            .setLastWrite(TODAY));
+            .setLastWrite(TODAY)
+            .setMetadataUuid(METADATA_UUID));
 
         mockMvc.perform(get("/api/annotations")
                             .session(httpSession)
@@ -79,7 +81,8 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                 .andExpect(jsonPath("$[0].uuid").value(equalTo(annotation.getUuid())))
                 .andExpect(jsonPath("$[0].id)").doesNotExist())
                 .andExpect(jsonPath("$[0].lastWrite)").doesNotExist())
-                .andExpect(jsonPath("$[0].lastRead)").doesNotExist());
+                .andExpect(jsonPath("$[0].lastRead)").doesNotExist())
+                .andExpect(jsonPath("$[0].metadataUuid").value(equalTo(METADATA_UUID)));
 
         annotationRepository.deleteAll();
 
@@ -103,7 +106,8 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                                 .put("coord", "10 20"))
                     .setUuid(randomUUID().toString()))
                     .setLastWrite(TODAY)
-                    .setLastRead(ONE_DAY);
+                    .setLastRead(ONE_DAY)
+                    .setMetadataUuid(METADATA_UUID);
 
 
         mockMvc.perform(get("/api/annotations/" + annotation.getUuid())
@@ -116,7 +120,8 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                 .andExpect(jsonPath("$.geometry.type").value(equalTo("Feature")))
                 .andExpect(jsonPath("$.geometry.coord").value(equalTo("10 20")))
                 .andExpect(jsonPath("$.lastWrite)").doesNotExist())
-                .andExpect(jsonPath("$.lastRead)").doesNotExist());
+                .andExpect(jsonPath("$.lastRead)").doesNotExist())
+                .andExpect(jsonPath("$.metadataUuid").value(equalTo(METADATA_UUID)));
 
         AnnotationEntity created = annotationRepository.findByUUID(annotation.getUuid());
         assertEquals(TODAY, created.getLastRead());
@@ -144,7 +149,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
-    public void getExistingAnnotationWithNoGeom() throws Exception {
+    public void getExistingAnnotationWithNoGeomNorMetadataUuid() throws Exception {
         AnnotationRepository annotationRepositorySpy = PowerMockito.mock(AnnotationRepository.class, AdditionalAnswers.delegatesTo(annotationRepository));
         wac.getBean(AnnotationsApi.class).annotationRepository = annotationRepositorySpy;
 
@@ -156,7 +161,8 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
                 .andExpect(jsonPath("$.uuid").value(equalTo(annotation.getUuid())))
-                .andExpect(jsonPath("$.geometry").value(nullValue()));
+                .andExpect(jsonPath("$.geometry").value(nullValue()))
+                .andExpect(jsonPath("$.metadataUuid").value(nullValue()));
 
         AnnotationEntity created = annotationRepository.findByUUID(annotation.getUuid());
         assertEquals(TODAY, created.getLastRead());
@@ -176,7 +182,9 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
     public void createAnnotation() throws Exception {
 
         mockMvc.perform(put("/api/annotations")
-                            .content("{ \"geometry\": { \"type\": \"Feature\", \"coord\": \"30 40\" }, \"lastRead\": \"" + TIMESTAMP + "\" }")
+                            .content("{ \"geometry\": { \"type\": \"Feature\", \"coord\": \"30 40\" },"
+                                    + " \"lastRead\": \"" + TIMESTAMP + "\","
+                                    + " \"metadataUuid\": \""+ METADATA_UUID + "\"}")
                             .contentType(MediaType.APPLICATION_JSON)
                             .session(httpSession)
                             .accept(MediaType.parseMediaType("application/json")))
@@ -191,13 +199,16 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                                 created.getGeometry().get("type").textValue().equals("Feature") &&
                                 created.getUuid().length() > 0 &&
                                 created.getLastWrite().compareTo(TODAY) == 0 &&
-                                created.getLastRead() == null;
+                                created.getLastRead() == null &&
+                                created.getMetadataUuid().equals(METADATA_UUID);
                     }
                 }))
                 .andExpect(jsonPath("$.geometry.type").value(equalTo("Feature")))
                 .andExpect(jsonPath("$.geometry.coord").value(equalTo("30 40")))
                 .andExpect(jsonPath("$.lastWrite)").doesNotExist())
-                .andExpect(jsonPath("$.lastRead)").doesNotExist());
+                .andExpect(jsonPath("$.lastRead)").doesNotExist())
+                .andExpect(jsonPath("$.metadataUuid").value(equalTo(METADATA_UUID)));
+
     }
 
     @Test
@@ -209,11 +220,15 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                                         .put("type", "Feature")
                                         .put("coord", "10 20"))
                         .setUuid(randomUUID().toString()))
+                        .setMetadataUuid(randomUUID().toString())
                         .setLastRead(ONE_DAY);
 
 
         mockMvc.perform(put("/api/annotations/" + annotation.getUuid())
-                            .content("{ \"geometry\": { \"type\": \"Polygon\", \"coord\": \"30 40\" }, \"lastRead\": \"" + TIMESTAMP + "\", \"uuid\": \"666\" }")
+                            .content("{ \"geometry\": { \"type\": \"Polygon\", \"coord\": \"30 40\" },"
+                                    + " \"lastRead\": \"" + TIMESTAMP + "\","
+                                    + " \"uuid\": \"666\","
+                                    + " \"metadataUuid\": \""+ METADATA_UUID + "\"}")
                             .contentType(MediaType.APPLICATION_JSON)
                             .session(httpSession)
                             .accept(MediaType.parseMediaType("application/json")))
@@ -228,14 +243,16 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                                 created.getGeometry().get("type").textValue().equals("Polygon") &&
                                 created.getUuid().length() > 0 &&
                                 created.getLastRead().compareTo(ONE_DAY) == 0 &&
-                                created.getLastWrite().compareTo(TODAY) == 0;
+                                created.getLastWrite().compareTo(TODAY) == 0 &&
+                                created.getMetadataUuid().equals(METADATA_UUID);
                     }
                 }))
                 .andExpect(jsonPath("$.uuid").value(equalTo(annotation.getUuid())))
                 .andExpect(jsonPath("$.geometry.type").value(equalTo("Polygon")))
                 .andExpect(jsonPath("$.geometry.coord").value(equalTo("30 40")))
                 .andExpect(jsonPath("$.lastWrite)").doesNotExist())
-                .andExpect(jsonPath("$.lastRead)").doesNotExist());
+                .andExpect(jsonPath("$.lastRead)").doesNotExist())
+                .andExpect(jsonPath("$.metadataUuid").value(equalTo(METADATA_UUID)));
     }
 
     @Test
