@@ -339,7 +339,7 @@
     "Legend": "Légende",
     "otherKeywords": "Autres mots clés",
     "isValid": "État de validation",
-    "isValidInspire": "Validation status (INSPIRE)",
+    "isValidInspire": "Validation INSPIRE",
     "Attribution": "Attribution",
     "layerDelete": "Supprimer",
     "layerMetadata": "Métadonnée",
@@ -509,5 +509,15 @@
     "moreFacet": "{{count}} plus",
     "lessFacet": "{{count}} moins",
     "allFacet": "Tous ({{count}})",
-    "initialFacet": "Initial ({{count}})"
+    "initialFacet": "Initial ({{count}})",
+    "removeThisFilter": "Enlever ce filtre",
+    "removeAllFilters": "Enlever tous les filtres",
+    "creationDateFrom": "Ressources créées après",
+    "creationDateTo": "Ressources créées avant",
+    "changeDateFrom": "Ressources modifiées après",
+    "changeDateTo": "Ressources modifiées avant",
+    "dateFrom": "Fiches mises à jour après",
+    "dateTo": "Fiches mises à jour avant",
+    "activeFilters": "Filtres",
+    "geometryFilter": "Emprise"
 }

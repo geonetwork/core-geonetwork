@@ -69,6 +69,7 @@
     "validStatus-1": "Platné",
     "validStatus-0": "Neplatný",
     "validStatus--1": "Nikdy neověřený",
+    "lastInspireValidationStatus": "Poslední stav ověření INSPIRE",
     "validInspireStatus--1": "INSPIRE nikdy neověřeno",
     "validInspireStatus-1": "INSPIRE ověřeno",
     "validInspireStatus-0": "INSPIRE je neplatný",
