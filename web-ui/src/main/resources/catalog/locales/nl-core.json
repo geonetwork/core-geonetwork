@@ -69,6 +69,7 @@
     "validStatus-1": "Valide",
     "validStatus-0": "Invalide",
     "validStatus--1": "Niet eerder gevalideerd",
+    "lastInspireValidationStatus": "Last INSPIRE validation status",
     "validInspireStatus--1": "INSPIRE never validated",
     "validInspireStatus-1": "INSPIRE valid",
     "validInspireStatus-0": "INSPIRE invalid",

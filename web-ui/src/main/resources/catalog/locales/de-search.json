@@ -509,5 +509,15 @@
     "moreFacet": "{{count}} more",
     "lessFacet": "{{count}} less",
     "allFacet": "all ({{count}})",
-    "initialFacet": "initial ({{count}})"
+    "initialFacet": "initial ({{count}})",
+    "removeThisFilter": "Remove this filter",
+    "removeAllFilters": "Remove all filters",
+    "creationDateFrom": "Resources created after",
+    "creationDateTo": "Resources created before",
+    "changeDateFrom": "Resources changed after",
+    "changeDateTo": "Resources changed before",
+    "dateFrom": "Records updated after",
+    "dateTo": "Records updated before",
+    "activeFilters": "Active filters",
+    "geometryFilter": "Bounding Box"
 }

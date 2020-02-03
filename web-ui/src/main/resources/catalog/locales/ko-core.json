@@ -69,6 +69,7 @@
     "validStatus-1": "유효한",
     "validStatus-0": "잘못된",
     "validStatus--1": "검증되지 않은",
+    "lastInspireValidationStatus": "Last INSPIRE validation status",
     "validInspireStatus--1": "INSPIRE never validated",
     "validInspireStatus-1": "INSPIRE valid",
     "validInspireStatus-0": "INSPIRE invalid",

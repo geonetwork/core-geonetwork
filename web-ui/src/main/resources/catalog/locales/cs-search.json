@@ -509,5 +509,15 @@
     "moreFacet": "{{count}} více",
     "lessFacet": "{{count}} méně",
     "allFacet": "všech ({{count}})",
-    "initialFacet": "počáteční ({{count}})"
+    "initialFacet": "počáteční ({{count}})",
+    "removeThisFilter": "Odstranit tento filtr",
+    "removeAllFilters": "Odstranit všechny filtry",
+    "creationDateFrom": "Zdroje vytvořeny po",
+    "creationDateTo": "Zdroje vytvořeny před",
+    "changeDateFrom": "Zdroje změněny po",
+    "changeDateTo": "Zdroje změněny před",
+    "dateFrom": "Záznamy aktualizovány po",
+    "dateTo": "Záznamy aktualizovány před",
+    "activeFilters": "Aktivní filtry",
+    "geometryFilter": "Ohraničovací rámeček"
 }
