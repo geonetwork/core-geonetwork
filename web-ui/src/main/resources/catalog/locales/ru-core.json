@@ -69,6 +69,7 @@
     "validStatus-1": "Действителен",
     "validStatus-0": "Недействителен",
     "validStatus--1": "Никогда не действителен",
+    "lastInspireValidationStatus": "Last INSPIRE validation status",
     "validInspireStatus--1": "INSPIRE never validated",
     "validInspireStatus-1": "INSPIRE valid",
     "validInspireStatus-0": "INSPIRE invalid",
