@@ -6,7 +6,6 @@ import org.fao.geonet.repository.AnnotationRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.AdditionalAnswers;
 import org.mockito.Mockito;
@@ -19,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.annotation.PostConstruct;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -49,12 +50,10 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
     @Autowired
     private AnnotationRepository annotationRepository;
 
-    private MockHttpSession httpSession;
     private MockMvc mockMvc;
 
-    @Before
+    @PostConstruct
     public void prepareMockMvcAndSession() {
-        httpSession = this.loginAsAdmin();
         mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         wac.getBean(AnnotationsApi.class).dateFactory = new AnnotationsApi.IDateFactory() {
             @Override
@@ -66,6 +65,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getAnnotations() throws Exception {
+        MockHttpSession httpSession = this.loginAsAdmin();
         AnnotationEntity annotation = annotationRepository.save(new AnnotationEntity()
             .setUuid(randomUUID().toString())
             .setLastRead(TODAY)
@@ -96,6 +96,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getExistingAnnotation() throws Exception {
+        MockHttpSession httpSession = this.loginAsAdmin();
         AnnotationRepository annotationRepositorySpy = PowerMockito.mock(AnnotationRepository.class, AdditionalAnswers.delegatesTo(annotationRepository));
         wac.getBean(AnnotationsApi.class).annotationRepository = annotationRepositorySpy;
         AnnotationEntity annotation = annotationRepository.save(
@@ -108,7 +109,6 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                     .setLastWrite(TODAY)
                     .setLastRead(ONE_DAY)
                     .setMetadataUuid(METADATA_UUID);
-
 
         mockMvc.perform(get("/api/annotations/" + annotation.getUuid())
                             .session(httpSession)
@@ -125,17 +125,16 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
         AnnotationEntity created = annotationRepository.findByUUID(annotation.getUuid());
         assertEquals(TODAY, created.getLastRead());
-
         Mockito.verify(annotationRepositorySpy).save(isA(AnnotationEntity.class));
     }
 
     @Test
     public void getExistingAnnotationReadDateLetUnchanged() throws Exception {
+        MockHttpSession httpSession = this.loginAsAdmin();
         AnnotationRepository annotationRepositorySpy = PowerMockito.mock(AnnotationRepository.class, AdditionalAnswers.delegatesTo(annotationRepository));
         wac.getBean(AnnotationsApi.class).annotationRepository = annotationRepositorySpy;
         AnnotationEntity annotation = annotationRepository.save(
                 new AnnotationEntity().setUuid(randomUUID().toString())).setLastRead(TODAY);
-
 
         mockMvc.perform(get("/api/annotations/" + annotation.getUuid())
                 .session(httpSession)
@@ -144,15 +143,14 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
         AnnotationEntity created = annotationRepository.findByUUID(annotation.getUuid());
         assertEquals(TODAY, created.getLastRead());
-
         Mockito.verify(annotationRepositorySpy, never()).save(isA(AnnotationEntity.class));
     }
 
     @Test
     public void getExistingAnnotationWithNoGeomNorMetadataUuid() throws Exception {
+        MockHttpSession httpSession = this.loginAsAdmin();
         AnnotationRepository annotationRepositorySpy = PowerMockito.mock(AnnotationRepository.class, AdditionalAnswers.delegatesTo(annotationRepository));
         wac.getBean(AnnotationsApi.class).annotationRepository = annotationRepositorySpy;
-
         AnnotationEntity annotation = annotationRepository.save(new AnnotationEntity().setUuid(randomUUID().toString()));
 
         mockMvc.perform(get("/api/annotations/" + annotation.getUuid())
@@ -166,12 +164,13 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
         AnnotationEntity created = annotationRepository.findByUUID(annotation.getUuid());
         assertEquals(TODAY, created.getLastRead());
-
         Mockito.verify(annotationRepositorySpy).save(isA(AnnotationEntity.class));
     }
 
     @Test
     public void getNonExistingAnnotation() throws Exception {
+        MockHttpSession httpSession = this.loginAsAdmin();
+
         mockMvc.perform(get("/api/annotations/666")
                             .session(httpSession)
                             .accept(MediaType.parseMediaType("application/json")))
@@ -180,6 +179,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void createAnnotation() throws Exception {
+        MockHttpSession httpSession = this.loginAsAdmin();
 
         mockMvc.perform(put("/api/annotations")
                             .content("{ \"geometry\": { \"type\": \"Feature\", \"coord\": \"30 40\" },"
@@ -208,11 +208,11 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                 .andExpect(jsonPath("$.lastWrite)").doesNotExist())
                 .andExpect(jsonPath("$.lastRead)").doesNotExist())
                 .andExpect(jsonPath("$.metadataUuid").value(equalTo(METADATA_UUID)));
-
     }
 
     @Test
     public void updateAnnotation() throws Exception {
+        MockHttpSession httpSession = this.loginAsAdmin();
         AnnotationEntity annotation = annotationRepository.save(
                 new AnnotationEntity()
                         .setGeometry(
@@ -222,7 +222,6 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                         .setUuid(randomUUID().toString()))
                         .setMetadataUuid(randomUUID().toString())
                         .setLastRead(ONE_DAY);
-
 
         mockMvc.perform(put("/api/annotations/" + annotation.getUuid())
                             .content("{ \"geometry\": { \"type\": \"Polygon\", \"coord\": \"30 40\" },"
@@ -257,6 +256,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void updateNonExistingAnnotation() throws Exception {
+        MockHttpSession httpSession = this.loginAsAdmin();
         mockMvc.perform(put("/api/annotations/666")
                             .content("{ \"geometry\": { \"type\": \"Polygon\", \"coord\": \"30 40\" } }")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -267,18 +267,14 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void longGeometry() throws Exception {
-        StringBuffer buffer = new StringBuffer();
-        for (int i =0; i< 8000; i++) {
-            buffer.append("1");
-        }
-        String longGeom = buffer.toString();
+        MockHttpSession httpSession = this.loginAsAdmin();
+        String longGeom = String.join("", Collections.nCopies(8000, "1"));
         mockMvc.perform(put("/api/annotations")
                             .content("{ \"geometry\": { \"type\": \"Feature\", \"coord\": \"" + longGeom +"\" } }")
                             .contentType(MediaType.APPLICATION_JSON)
                             .session(httpSession)
                             .accept(MediaType.parseMediaType("application/json")))
                 .andExpect(jsonPath("$.uuid").value(new UUIDMatcher() {
-
                     @Override
                     public boolean matches(AnnotationEntity created) {
                         return created.getGeometry().get("coord").textValue().equals(longGeom);
@@ -288,6 +284,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void createErrorWhenUuidAlreadyUsed() throws Exception {
+        MockHttpSession httpSession = this.loginAsAdmin();
         AnnotationEntity existing = annotationRepository.save(
                 new AnnotationEntity()
                         .setGeometry(
@@ -311,7 +308,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void createAnnotationSettingUUID() throws Exception {
-
+        MockHttpSession httpSession = this.loginAsAdmin();
         mockMvc.perform(put("/api/annotations")
                             .content("{ \"geometry\": { \"type\": \"Feature\", \"coord\": \"30 40\" }, \"uuid\": \"666\" }")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -326,7 +323,6 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
     }
 
     abstract class UUIDMatcher extends BaseMatcher {
-
         @Override
         public boolean matches(Object o) {
             String uuid = (String)o;
