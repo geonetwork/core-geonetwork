@@ -138,6 +138,7 @@
   <otherConstraints>Other constraints</otherConstraints>
   <operatesOn>Coupled resource</operatesOn>
   <extent>Étendue spatiale</extent>
+  <spatialExtent>Étendue spatiale</spatialExtent>
   <freeTextKeywords>Other keywords</freeTextKeywords>
 
   <addCrs>Projection</addCrs>
