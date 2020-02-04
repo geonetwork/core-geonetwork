@@ -804,8 +804,12 @@
             }).find(function (s) {
               return s[0].name === ftName;
             })[0].applicationProfile;
-            applicationProfile = JSON.parse(applicationProfile);
 
+            try {
+              applicationProfile = JSON.parse(response);
+            } catch(e) {
+              applicationProfile = null; // no ApplicationProfile for current md
+            };
             wfsFilterService.indexWFSFeatures(
                 scope.url,
                 ftName,
