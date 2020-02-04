@@ -265,7 +265,8 @@
                   <p data-ng-repeat="c in mdView.current.record.codelist_classification_text">{{c}}</p>
                 </td>
               </tr>
-              <tr data-ng-if="mdView.current.record.MD_LegalConstraintsUseLimitation || mdView.current.record.MD_LegalConstraintsUseLimitation">
+              <tr data-ng-if="mdView.current.record.MD_LegalConstraintsUseLimitation
+                              || mdView.current.record.MD_LegalConstraintsOtherConstraints">
                 <th data-translate="">legalConstraints</th>
                 <td>
                   <p data-ng-repeat="c in mdView.current.record.MD_LegalConstraintsOtherConstraints track by $index">
