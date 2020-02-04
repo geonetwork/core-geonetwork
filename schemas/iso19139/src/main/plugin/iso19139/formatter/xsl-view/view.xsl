@@ -187,13 +187,20 @@
       <h2>
         <i class="fa fa-fw fa-map-marker"><xsl:comment select="'image'"/></i>
         <span><xsl:comment select="name()"/>
-          <xsl:value-of select="$schemaStrings/extent"/>
+          <xsl:value-of select="$schemaStrings/spatialExtent"/>
         </span>
       </h2>
 
-      <xsl:apply-templates mode="render-field"
-                           select=".//gmd:EX_GeographicBoundingBox">
-      </xsl:apply-templates>
+      <xsl:choose>
+        <xsl:when test=".//gmd:EX_BoundingPolygon">
+          <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates mode="render-field"
+                               select=".//gmd:EX_GeographicBoundingBox">
+          </xsl:apply-templates>
+        </xsl:otherwise>
+      </xsl:choose>
     </section>
   </xsl:template>
 
@@ -460,6 +467,34 @@
     <br/>
   </xsl:template>
 
+
+  <!-- Display spatial extents containing bounding polygons on a map -->
+
+  <xsl:template mode="render-field"
+                match="gmd:EX_Extent[gmd:geographicElement/*/gmd:polygon]"
+                priority="100">
+    <div class="entry name">
+      <h2>
+        <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
+        <xsl:apply-templates mode="render-value"
+                             select="@*"/>
+      </h2>
+      <div class="target"><xsl:comment select="name()"/>
+
+        <xsl:apply-templates mode="render-field" select="gmd:description"/>
+
+        <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
+
+        <!-- Display any included geographic descriptions separately after displayed map -->
+
+        <xsl:apply-templates mode="render-field" select="gmd:geographicElement[gmd:EX_GeographicDescription]"/>
+
+        <xsl:apply-templates mode="render-field" select="gmd:temporalElement"/>
+        <xsl:apply-templates mode="render-field" select="gmd:verticalElement"/>
+
+      </div>
+    </div>
+  </xsl:template>
 
   <!-- A contact is displayed with its role as header -->
   <xsl:template mode="render-field"
