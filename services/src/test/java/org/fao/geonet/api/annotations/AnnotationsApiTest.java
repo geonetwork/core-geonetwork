@@ -1,11 +1,19 @@
 package org.fao.geonet.api.annotations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jeeves.constants.Jeeves;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.AnnotationEntity;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.repository.AnnotationRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.jdom.Element;
 import org.junit.Test;
 import org.mockito.AdditionalAnswers;
 import org.mockito.Mockito;
@@ -49,6 +57,12 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
 
     @Autowired
     private AnnotationRepository annotationRepository;
+
+    @Autowired
+    private IMetadataManager metadataManager;
+
+    @Autowired
+    private IMetadataSchemaUtils metadataSchemaUtils;
 
     private MockMvc mockMvc;
 
@@ -109,6 +123,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                     .setLastWrite(TODAY)
                     .setLastRead(ONE_DAY)
                     .setMetadataUuid(METADATA_UUID);
+        createMetadata(METADATA_UUID, ((UserSession)httpSession.getAttribute(Jeeves.Elem.SESSION)).getUserIdAsInt());
 
         mockMvc.perform(get("/api/annotations/" + annotation.getUuid())
                             .session(httpSession)
@@ -180,6 +195,7 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void createAnnotation() throws Exception {
         MockHttpSession httpSession = this.loginAsAdmin();
+        createMetadata(METADATA_UUID, ((UserSession)httpSession.getAttribute(Jeeves.Elem.SESSION)).getUserIdAsInt());
 
         mockMvc.perform(put("/api/annotations")
                             .content("{ \"geometry\": { \"type\": \"Feature\", \"coord\": \"30 40\" },"
@@ -222,6 +238,8 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                         .setUuid(randomUUID().toString()))
                         .setMetadataUuid(randomUUID().toString())
                         .setLastRead(ONE_DAY);
+        createMetadata(annotation.getMetadataUuid(), ((UserSession)httpSession.getAttribute(Jeeves.Elem.SESSION)).getUserIdAsInt());
+        createMetadata(METADATA_UUID, ((UserSession)httpSession.getAttribute(Jeeves.Elem.SESSION)).getUserIdAsInt());
 
         mockMvc.perform(put("/api/annotations/" + annotation.getUuid())
                             .content("{ \"geometry\": { \"type\": \"Polygon\", \"coord\": \"30 40\" },"
@@ -322,6 +340,68 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                 }));
     }
 
+    @Test
+    public void notNeedToBeLoggedToWorkWithAssociationNotLinkedWithAMetadata() throws Exception {
+        MockHttpSession httpSession = new MockHttpSession();
+
+        mockMvc.perform(put("/api/annotations")
+                            .content("{  \"uuid\": \"666\" }")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .session(httpSession)
+                            .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(put("/api/annotations/666")
+                            .content("{ \"geometry\": { \"type\": \"Polygon\", \"coord\": \"30 40\" } }")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .session(httpSession)
+                            .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().is2xxSuccessful());
+
+        mockMvc.perform(get("/api/annotations/666")
+                            .session(httpSession)
+                            .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void notToBeLoggedForbidToWorkWithAssociationLinkedWithAMetadata() throws Exception {
+
+        MockHttpSession httpSession = new MockHttpSession();
+
+        mockMvc.perform(put("/api/annotations")
+                            .content("{  \"uuid\": \"666\", \"metadataUuid\": \""+ METADATA_UUID + "\"}")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .session(httpSession)
+                            .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isForbidden());
+
+        AnnotationEntity annotation = annotationRepository.save(
+                new AnnotationEntity().setUuid(randomUUID().toString()).setMetadataUuid(METADATA_UUID)).setLastRead(TODAY);
+
+        mockMvc.perform(put("/api/annotations/"+ annotation.getUuid())
+                            .content("{ \"geometry\": { \"type\": \"Polygon\", \"coord\": \"30 40\" } }")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .session(httpSession)
+                            .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isForbidden());
+
+        mockMvc.perform(get("/api/annotations/"+ annotation.getUuid())
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isForbidden());
+
+        AnnotationEntity annotationWithNoMetadataUuidSet = annotationRepository.save(
+                new AnnotationEntity().setUuid(randomUUID().toString())).setLastRead(TODAY);
+
+        mockMvc.perform(put("/api/annotations/"+ annotationWithNoMetadataUuidSet.getUuid())
+                .content("{ \"metadataUuid\": \""+ METADATA_UUID + "\" }")
+                .contentType(MediaType.APPLICATION_JSON)
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isForbidden());
+    }
+
     abstract class UUIDMatcher extends BaseMatcher {
         @Override
         public boolean matches(Object o) {
@@ -341,4 +421,26 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
         public abstract boolean matches(AnnotationEntity created);
     }
 
+    private void createMetadata(String uuid, int owner) throws Exception {
+        ServiceContext context = createServiceContext();
+        Element sampleMetadataXml = getSampleMetadataXml();
+        String schema = metadataSchemaUtils.autodetectSchema(sampleMetadataXml);
+
+        metadataManager.insertMetadata(
+                context,
+                schema,
+                new Element(sampleMetadataXml.getName(),
+                sampleMetadataXml.getNamespace()),
+                uuid,
+                owner,
+                "" + ReservedGroup.all.getId(),
+                "sourceid",
+                "n",
+                "doctype",
+                null,
+                new ISODate().getDateAndTime(),
+                new ISODate().getDateAndTime(),
+                false,
+                false);
+    }
 }

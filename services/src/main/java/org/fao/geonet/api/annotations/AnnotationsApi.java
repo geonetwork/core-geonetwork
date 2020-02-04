@@ -1,6 +1,9 @@
 package org.fao.geonet.api.annotations;
 
 
+import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.domain.AnnotationEntity;
 import org.fao.geonet.repository.AnnotationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -34,11 +38,17 @@ public class AnnotationsApi {
         return new ResponseEntity<>(annotationRepository.findAll(), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('Administrator')")
     @GetMapping(path ={"/{uuid}"})
-    public ResponseEntity<?> getOne(@PathVariable("uuid") String uuid) {
+    public ResponseEntity<?> getOne(@PathVariable("uuid") String uuid, HttpServletRequest request) {
         if (annotationRepository.exists(uuid)) {
             AnnotationEntity annotationEntity = annotationRepository.findByUUID(uuid);
+            if (annotationEntity.getMetadataUuid() != null) {
+                try {
+                    ApiUtils.canViewRecord(annotationEntity.getMetadataUuid(), request);
+                } catch (Exception e) {
+                    throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+                }
+            }
             Date todayNoon = dateFactory.getTodayNoon();
             if (annotationEntity.getLastRead() == null || todayNoon.compareTo(annotationEntity.getLastRead()) != 0) {
                 annotationEntity.setLastRead(todayNoon);
@@ -50,9 +60,15 @@ public class AnnotationsApi {
         }
     }
 
-    @PreAuthorize("hasRole('Administrator')")
     @PutMapping
-    public ResponseEntity<?> create(@RequestBody AnnotationEntity annotationEntity) {
+    public ResponseEntity<?> create(@RequestBody AnnotationEntity annotationEntity, HttpServletRequest request) {
+        if (annotationEntity.getMetadataUuid() != null) {
+            try {
+                ApiUtils.canEditRecord(annotationEntity.getMetadataUuid(), request);
+            } catch (Exception e) {
+                throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+            }
+        }
         if (annotationEntity.getUuid() == null) {
             annotationEntity.setUuid(randomUUID().toString());
         }
@@ -67,11 +83,25 @@ public class AnnotationsApi {
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('Administrator')")
     @PutMapping(path ={"/{uuid}"})
-    public ResponseEntity<?> update(@PathVariable("uuid") String uuid, @RequestBody AnnotationEntity annotationEntity) {
+    public ResponseEntity<?> update(@PathVariable("uuid") String uuid, @RequestBody AnnotationEntity annotationEntity, HttpServletRequest request) {
         if (annotationRepository.exists(uuid)) {
             AnnotationEntity annotationEntityToUpdate = annotationRepository.findByUUID(uuid);
+            if (annotationEntityToUpdate.getMetadataUuid() != null) {
+                try {
+                    ApiUtils.canEditRecord(annotationEntityToUpdate.getMetadataUuid(), request);
+                } catch (Exception e) {
+                    throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+                }
+            }
+
+            if (annotationEntity.getMetadataUuid() != null) {
+                try {
+                    ApiUtils.canEditRecord(annotationEntity.getMetadataUuid(), request);
+                } catch (Exception e) {
+                    throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+                }
+            }
             annotationEntityToUpdate.setGeometry(annotationEntity.getGeometry());
             annotationEntityToUpdate.setMetadataUuid(annotationEntity.getMetadataUuid());
             annotationEntityToUpdate.setLastWrite(dateFactory.getTodayNoon());
