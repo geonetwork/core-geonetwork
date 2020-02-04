@@ -451,7 +451,10 @@
       $scope.getMapLayersCount = function(layers) {
         return layers.filter(
           function (layer) {return layer.contentType!=='OGC:OWS-C'}).length
-      }
+      };
+      $scope.hasExternalViewer = function() {
+        return !!gnSearchSettings.viewerUrl;
+      };
 
       angular.extend($scope.searchObj, {
         advancedMode: false,
