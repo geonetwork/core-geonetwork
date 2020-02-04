@@ -139,6 +139,8 @@
   <otherConstraints>Other constraints</otherConstraints>
   <operatesOn>Coupled resource</operatesOn>
   <extent>Geographic bounding box</extent>
+  <spatialExtent>Spatial extent</spatialExtent>
+
   <freeTextKeywords>Other keywords</freeTextKeywords>
   <resource_url>URL</resource_url>
   <resource_protocol>Protocol</resource_protocol>
