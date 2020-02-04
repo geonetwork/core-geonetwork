@@ -112,6 +112,17 @@
 	<div data-ng-app="gn_search_sextant" data-ng-controller="GnCatController" class="gn sxt-max-md nodc-fullContent" data-sxt-size="auto" data-ng-include="'../../catalog/views/sextant/templates/index.html'">
 	</div>
 
+      <script type="text/javascript">
+        var sxtSettings = {
+          langDetector: {
+            fromHtmlTag: true,
+            regexp: '^\/([a-z]+)\/',
+            lang: 'fre'
+          },
+          useEmodnetDownloadForm: true,
+          theme: 'emodnet-bathymetry'
+        };
+      </script>
 
 
 		</div>
