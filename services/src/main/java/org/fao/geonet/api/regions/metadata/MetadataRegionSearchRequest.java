@@ -215,13 +215,13 @@ public class MetadataRegionSearchRequest extends Request {
         if ("polygon".equals(extentObj.getName())) {
             geometry = parsePolygon(extentObj);
         } else if ("EX_BoundingPolygon".equals(extentObj.getName())) {
-            Element polygon = extentObj.getChild("polygon", Namespaces.GMD);
+            Element polygon = Xml.selectElement(extentObj, "*[local-name()='polygon']");
             geometry = parsePolygon(polygon);
         } else if ("EX_GeographicBoundingBox".equals(extentObj.getName())) {
-            double minx = Double.parseDouble(extentObj.getChild("westBoundLongitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
-            double maxx = Double.parseDouble(extentObj.getChild("eastBoundLongitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
-            double miny = Double.parseDouble(extentObj.getChild("southBoundLatitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
-            double maxy = Double.parseDouble(extentObj.getChild("northBoundLatitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
+            double minx = Double.parseDouble(Xml.selectString(extentObj, "*[local-name()='westBoundLongitude']/*"));
+            double maxx = Double.parseDouble(Xml.selectString(extentObj, "*[local-name()='eastBoundLongitude']/*"));
+            double miny = Double.parseDouble(Xml.selectString(extentObj, "*[local-name()='southBoundLatitude']/*"));
+            double maxy = Double.parseDouble(Xml.selectString(extentObj, "*[local-name()='northBoundLatitude']/*"));
             Polygon[] polygons = {(Polygon)factory.toGeometry(new Envelope(minx, maxx, miny, maxy))};
             geometry = factory.createMultiPolygon(polygons);
         }
