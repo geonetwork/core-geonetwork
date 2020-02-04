@@ -201,7 +201,7 @@
     };
 
     if (options.formatter !== undefined) {
-      Object.assign(formatter, options.formatter);
+      goog.object.extend(formatter, options.formatter);
     }
 
     /**
@@ -579,8 +579,7 @@
 
     profile.showPois = function(pois) {
       pois = pois !== undefined ? pois : [];
-      console.assert(pois.length === 0 || poiExtractor !== undefined,
-        'Pois length is 0');
+      goog.asserts.assert(pois.length === 0 || poiExtractor !== undefined);
 
       var pe = poiExtractor;
       var g = svg.select('g');

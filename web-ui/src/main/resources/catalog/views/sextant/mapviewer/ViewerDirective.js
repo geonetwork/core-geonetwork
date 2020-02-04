@@ -2,6 +2,7 @@
   goog.provide('sxt_viewer_directive');
 
 
+
   var module = angular.module('sxt_viewer_directive', []);
 
   /**
@@ -376,11 +377,16 @@
               "value": geometryOutput
           });
 
+          var output = {
+            asReference: false,
+            identifier: "output_json",
+            lineage: false,
+            mimeType: "application/json",
+            status: false,
+            storeExecuteResponse: false
+          };
+
           processResponse = function(response) {
-            if (response.TYPE_NAME === 'OWS_1_1_0.ExceptionReport') {
-              scope.executeState = 'finished';
-              scope.running = false;
-            }
             if (response.TYPE_NAME === 'WPS_1_0_0.ExecuteResponse') {
               if (response.status !== undefined) {
                 if (response.status.processAccepted !== undefined ||
@@ -431,17 +437,10 @@
             }
           };
 
-          var output ={
-            asReference: false,
-            identifier: "output_json",
-            lineage: false,
-            mimeType: "application/json",
-            status: false,
-            storeExecuteResponse: false}
           gnWpsService.execute(processUri, processId, inputs, output).then(
             function(response) {
-              processResponse(response);
               layer.getSource().removeFeature(event.feature);
+              processResponse(response);
             },
             function(response) {
               layer.getSource().removeFeature(event.feature);
@@ -450,6 +449,7 @@
               scope.running = false;
             }
           );
+
         });
       }
     };

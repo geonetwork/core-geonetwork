@@ -132,10 +132,9 @@
                 profile.clearHighlight();
               }
             });
-          var updateSize = function () {
-            gnDebounce(refreshData, 50, true),
-              false, this;
-          }
+
+          goog.events.listen(window, goog.events.EventType.RESIZE,
+          false, this);
 
           var globalResizeTimer = null;
           $(window).resize(function() {

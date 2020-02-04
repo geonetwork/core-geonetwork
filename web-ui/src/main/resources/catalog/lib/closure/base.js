@@ -2721,8 +2721,117 @@ goog.tagUnsealableClass = function(ctr) {
 };
 
 
+
+/**
+ * The names of the fields that are defined on Object.prototype.
+ * @type {Array<string>}
+ * @private
+ */
+goog.object.PROTOTYPE_FIELDS_ = [
+  'constructor', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable',
+  'toLocaleString', 'toString', 'valueOf'
+];
+
 /**
  * Name for unsealable tag property.
  * @const @private {string}
  */
 goog.UNSEALABLE_CONSTRUCTOR_PROPERTY_ = 'goog_defineClass_legacy_unsealable';
+
+goog.object.extend = function(target, var_args) {
+  let key;
+  let source;
+  for (let i = 1; i < arguments.length; i++) {
+    source = arguments[i];
+    for (key in source) {
+      target[key] = source[key];
+    }
+
+    // For IE the for-in-loop does not contain any properties that are not
+    // enumerable on the prototype object (for example isPrototypeOf from
+    // Object.prototype) and it will also not include 'replace' on objects that
+    // extend String and change 'replace' (not that it is common for anyone to
+    // extend anything except Object).
+
+    for (let j = 0; j < goog.object.PROTOTYPE_FIELDS_.length; j++) {
+      key = goog.object.PROTOTYPE_FIELDS_[j];
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+};
+
+/**
+ * Clones a value. The input may be an Object, Array, or basic type. Objects and
+ * arrays will be cloned recursively.
+ *
+ * WARNINGS:
+ * <code>goog.cloneObject</code> does not detect reference loops. Objects that
+ * refer to themselves will cause infinite recursion.
+ *
+ * <code>goog.cloneObject</code> is unaware of unique identifiers, and copies
+ * UIDs created by <code>getUid</code> into cloned results.
+ *
+ * @param {*} obj The value to clone.
+ * @return {*} A clone of the input value.
+ * @deprecated goog.cloneObject is unsafe. Prefer the goog.object methods.
+ */
+goog.cloneObject = function(obj) {
+  var type = goog.typeOf(obj);
+  if (type == 'object' || type == 'array') {
+    if (typeof obj.clone === 'function') {
+      return obj.clone();
+    }
+    var clone = type == 'array' ? [] : {};
+    for (var key in obj) {
+      clone[key] = goog.cloneObject(obj[key]);
+    }
+    return clone;
+  }
+
+  return obj;
+};
+
+goog.provide('goog.net.EventType');
+
+
+/**
+ * Event names for network events
+ * @enum {string}
+ */
+goog.net.EventType = {
+  COMPLETE: 'complete',
+  SUCCESS: 'success',
+  ERROR: 'error',
+  ABORT: 'abort',
+  READY: 'ready',
+  READY_STATE_CHANGE: 'readystatechange',
+  TIMEOUT: 'timeout',
+  INCREMENTAL_DATA: 'incrementaldata',
+  PROGRESS: 'progress',
+  // DOWNLOAD_PROGRESS and UPLOAD_PROGRESS are special events dispatched by
+  // goog.net.XhrIo to allow binding listeners specific to each type of
+  // progress.
+  DOWNLOAD_PROGRESS: 'downloadprogress',
+  UPLOAD_PROGRESS: 'uploadprogress',
+};
+
+/**
+ * Checks if the condition evaluates to true if goog.asserts.ENABLE_ASSERTS is
+ * true.
+ * @template T
+ * @param {T} condition The condition to check.
+ * @param {string=} opt_message Error message in case of failure.
+ * @param {...*} var_args The items to substitute into the failure message.
+ * @return {T} The value of the condition.
+ * @throws {goog.asserts.AssertionError} When the condition evaluates to false.
+ * @closurePrimitive {asserts.truthy}
+ */
+goog.asserts.assert = function(condition, opt_message, var_args) {
+  if (goog.asserts.ENABLE_ASSERTS && !condition) {
+    goog.asserts.doAssertFailure_(
+      '', null, opt_message, Array.prototype.slice.call(arguments, 2));
+  }
+  return condition;
+};
