@@ -118,14 +118,11 @@
 
           if (!link.url || !link.protocol) { return false; }
 
-          var parts = link.url.toLowerCase().split('.');
-          var extension = parts[parts.length - 1];
-          if (link.protocol !== 'WWW:DOWNLOAD-1.0-link--download' ||
-              (extension !== 'nc' && extension !== 'zip')) {
-            return false;
-          }
-
-          return true;
+          return link.protocol === 'WWW:DOWNLOAD-1.0-link--download' &&
+            !link.url.startsWith('http://doi.org') &&
+            !link.url.startsWith('https://doi.org') &&
+            !link.url.startsWith('http://dx.doi.org') &&
+            !link.url.startsWith('https://dx.doi.org');
         }
       };
     }

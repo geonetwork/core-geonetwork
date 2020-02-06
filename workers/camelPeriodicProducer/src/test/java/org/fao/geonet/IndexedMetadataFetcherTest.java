@@ -1,6 +1,8 @@
 package org.fao.geonet;
 
+import com.google.common.collect.Maps;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -17,7 +19,7 @@ public class IndexedMetadataFetcherTest {
     private SearchManager searchManager = Mockito.mock(SearchManager.class);
 
     @Test
-    public void parsingTreeField() throws IOException {
+    public void parsingTreeField() throws IOException, JSONException {
         String toParse = IOUtils.toString(this.getClass().getResourceAsStream("ApplicationProfile.json"));
         IndexedMetadataFetcher toTest = new IndexedMetadataFetcher(searchManager);
         toTest.setIndex(toParse);
@@ -29,7 +31,7 @@ public class IndexedMetadataFetcherTest {
     }
 
     @Test
-    public void parsingTokenizedField() throws IOException {
+    public void parsingTokenizedField() throws IOException, JSONException {
         String toParse = IOUtils.toString(this.getClass().getResourceAsStream("ApplicationProfile.json"));
         IndexedMetadataFetcher toTest = new IndexedMetadataFetcher(searchManager);
         toTest.setIndex(toParse);

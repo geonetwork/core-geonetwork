@@ -18,7 +18,11 @@
 .c_showlocation section h4 {
   font-weight: 500;
 }
+// https://gitlab.ifremer.fr/sextant/geonetwork/issues/105
 
+.c_showlocation ul:not(.pagination), .c_nodelist ul:not(.pagination) {
+  overflow: initial;
+}
 .c_showlocation section h3::before {
   content: None;
   font-weight: normal;
@@ -72,4 +76,9 @@ div.hfull.sxt-search-main-container.ng-scope.sxt-scroll
 
 .gn .popover.right > .arrow, .g .popover.right > .arrow {
  left: -16px !important;
+}
+
+// make md panel fit all available space
+.sxt-search-main-container .col-md-8 {
+  max-width: 100%;
 }

@@ -103,16 +103,20 @@
         var link = div.children('.md-title');
         var title = link.children('span');
         var spinner = div.children('.fa-spinner');
+        var alert = div.children('.alert');
         var md = $scope.mdCache[mdUuid];
 
         if (!md) {
           return;
         }
         spinner.remove();
-        if (md.title) {
+        if (md.error) {
+          alert.text($translate.instant(md.error));
+          alert.css({ display: 'block' });
+        } else if (md.title) {
           title.text(md.title);
+          link.css({ display: 'block' });
         }
-        link.css({ display: 'block' });
       }
 
       // bind to table events to handle dynamic content
@@ -245,9 +249,10 @@
                   job.md = {
                     error: 'wfsIndexingMetadataNotFound'
                   };
-                  return;
+                } else {
+                  job.md = md;
                 }
-                $scope.mdCache[job.mdUuid] = job.md = md;
+                $scope.mdCache[job.mdUuid] = job.md;
 
                 $element.find('div[data-md-uuid=' + job.mdUuid + ']').each(function() {
                   updateMdTitle(this);
@@ -295,6 +300,7 @@
                   '  <a class="md-title" style="display: none" href="catalog.search#/metadata/' + row.mdUuid + '">' +
                   '    <span>' + $translate.instant('recordWithNoTitle') + '</span>' +
                   '  </a>' +
+                  '  <div class="alert alert-danger small" style="display: none" role="alert"></div>' +
                   '  <i class="fa fa-spinner fa-spin"/>' +
                   '</div>' +
                   '<code>' + row.mdUuid + '</code>' :
@@ -481,9 +487,9 @@
         $scope.updateParamsFromApplicationProfile(job).then(
           function(params) {
             $http.put($scope.wfsWorkersApiUrl + '/start',
-              params).then(function() {
+            params).then(function() {
               params.version = "1.1.0";
-              gnAlertService.addAlert({
+                gnAlertService.addAlert({
                 msg: $translate.instant('wfsIndexingTriggerSuccess'),
                 type: 'success'
               });
@@ -491,9 +497,9 @@
               gnAlertService.addAlert({
                 msg: $translate.instant('wfsIndexingTriggerError'),
                 type: 'error'
-              });
             });
           });
+        });
       };
     }]);
 

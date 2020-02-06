@@ -1,9 +1,6 @@
 package org.fao.geonet.camelPeriodicProducer;
 
 import org.apache.camel.CamelContext;
-import org.apache.camel.management.event.CamelContextStartedEvent;
-import org.apache.camel.support.EventNotifierSupport;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.IndexedMetadataFetcher;
 import org.fao.geonet.domain.MessageProducerEntity;
 import org.fao.geonet.events.server.ServerStartup;
@@ -18,9 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.EventObject;
 
 import static org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder.MESSAGE_HARVEST_WFS_FEATURES;
 
@@ -50,6 +44,7 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
     public void onApplicationEvent(ServerStartup serverStartup) {
         configure(); // wait for geonetworkWorkingDir
     }
+
     private static boolean isConfigured = false;
 
     public synchronized void configure() {
@@ -85,7 +80,6 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
         String metadataUuid = messageProducerEntity.getWfsHarvesterParam().getMetadataUuid();
         String typeName = messageProducerEntity.getWfsHarvesterParam().getTypeName();
 
-
         WFSHarvesterParameter wfsHarvesterParam = new WFSHarvesterParameter(
             messageProducerEntity.getWfsHarvesterParam().getUrl(),
             typeName,
@@ -101,10 +95,9 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
         }
 
         return (MessageProducer<WFSHarvesterExchangeState>) new MessageProducer()
-                .setMessage(new WFSHarvesterExchangeState(wfsHarvesterParam))
-                .setCronExpession(messageProducerEntity.getCronExpression())
-                .setTarget(consumerUri)
-                .setId(messageProducerEntity.getId());
+            .setMessage(new WFSHarvesterExchangeState(wfsHarvesterParam))
+            .setCronExpession(messageProducerEntity.getCronExpression())
+            .setTarget(consumerUri)
+            .setId(messageProducerEntity.getId());
     }
-
 }

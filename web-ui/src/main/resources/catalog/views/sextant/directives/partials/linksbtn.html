@@ -2,7 +2,7 @@
 
   <!--Downloads to panier button-->
   <div class="btn-group pull-right" ng-if="isPanier && downloads.length > 1" sxt-popover-dropdown placement="bottom" container="{{container}}" className="sxt-popover-grid">
-    <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'download' | translate}}" data-ng-disabled="md['geonet:info'].download == 'false'">
+    <button type="button" class="btn btn-default dropdown-toggle btn-sm" title="{{'download' | translate}}" data-ng-disabled="md['geonet:info'].download == 'false'">
       <span class="fa fa-download"></span>
       <span class="caret"></span>
     </button>
@@ -30,7 +30,7 @@
 
   <!--Layers to map button-->
   <div class="btn-group pull-right" ng-if="isMap && layers.length > 1 " sxt-popover-dropdown placement="bottom" container="{{container}}" className="sxt-popover-grid">
-    <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'view' | translate}}" data-ng-disabled="md['geonet:info'].dynamic == 'false'">
+    <button type="button" class="btn btn-default dropdown-toggle btn-sm" title="{{'view' | translate}}" data-ng-disabled="md['geonet:info'].dynamic == 'false'">
       <span class="fa fa-globe"></span>
       <span class="caret"></span>
     </button>
@@ -41,8 +41,8 @@
         <span class="fa fa-globe" ng-if="layer.contentType=='OGC:OWS-C'"></span>
         {{layer.desc || layer.name}} </a>
       </li>
-      <li class="divider"></li>
-      <li ng-if="getMapLayersCount(layers) > 1">
+      <li class="divider" ng-if="!hasExternalViewer()"></li>
+      <li ng-if="!hasExternalViewer() && getMapLayersCount(layers) > 1">
         <a href="" data-ng-click="resultviewFns.addAllMdLayersToMap(layers, md, $event)">
           <i class="fa fa-plus"></i>
                   <span data-translate=""
@@ -58,7 +58,7 @@
   </button>
 
   <div class="btn-group pull-right" ng-if="links.length > 0" sxt-popover-dropdown placement="bottom" container="{{container}}" className="sxt-popover-grid">
-    <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'links' | translate}}">
+    <button type="button" class="btn btn-default dropdown-toggle btn-sm" title="{{'links' | translate}}">
       <span class="fa fa-link"></span>
       <span class="caret"></span>
     </button>

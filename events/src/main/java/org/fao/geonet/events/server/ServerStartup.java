@@ -41,7 +41,7 @@ public class ServerStartup extends ApplicationEvent {
 	public ServerStartup(ConfigurableApplicationContext event) {
 		super(event);
 	}
-	
+
 	public ConfigurableApplicationContext getContext() {
 		return (ConfigurableApplicationContext) super.getSource();
 	}
