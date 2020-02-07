@@ -6,7 +6,7 @@
            placeholder="{{'anyPlaceHolder' | translate}}"
            class="form-control"
            id="anySearchField" autocomplete="off"
-           ng-model="searchObj.params.any"
+           ng-model="searchInput.model"
            ng-blur="showTitleSearchToggle(false)"
            ng-focus="showTitleSearchToggle(true)"
            typeahead="address for address in getAnySuggestions($viewValue)"
