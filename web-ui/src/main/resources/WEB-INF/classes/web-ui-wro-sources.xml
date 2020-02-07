@@ -181,6 +181,7 @@
     Sextant integrations
   -->
   <declarative name="lib_nobs" pathOnDisk="web-ui/src/main/resources">
+    <jsSource webappPath="/catalog/lib/closure/base.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
     <jsSource webappPath="/catalog/views/sextant/jquerynoconflict.js"/>
     <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
@@ -250,6 +251,7 @@
     <jsSource webappPath="/catalog/lib/dom-to-image/dom-to-image.min.js" minimize="false"/>
   </declarative>
   <declarative name="lib_nojquery" pathOnDisk="web-ui/src/main/resources">
+    <jsSource webappPath="/catalog/lib/closure/base.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
     <!-- <jsSource webappPath="/catalog/views/sextant/jquerynoconflict.js"/>
     <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/> -->

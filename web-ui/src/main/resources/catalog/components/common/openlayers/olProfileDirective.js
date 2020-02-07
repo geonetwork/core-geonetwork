@@ -137,14 +137,6 @@
             gnDebounce(refreshData, 50, true),
             false, this);
 
-          var globalResizeTimer = null;
-          $(window).resize(function() {
-            if(globalResizeTimer != null) window.clearTimeout(globalResizeTimer);
-            globalResizeTimer = window.setTimeout(function() {
-              updateSize();
-            }, 200);
-          });
-
           function refreshData() {
             if (profile !== undefined) {
               selection.datum(elevationData).call(profile);
