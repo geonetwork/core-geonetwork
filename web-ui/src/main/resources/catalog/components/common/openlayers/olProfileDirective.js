@@ -134,7 +134,8 @@
             });
 
           goog.events.listen(window, goog.events.EventType.RESIZE,
-          false, this);
+            gnDebounce(refreshData, 50, true),
+            false, this);
 
           var globalResizeTimer = null;
           $(window).resize(function() {

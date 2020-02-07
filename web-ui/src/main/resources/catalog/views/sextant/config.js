@@ -432,8 +432,8 @@
         if(sxtSettings.processes)  {
           viewerSettings.processes = sxtSettings.processes;
         }
-        if(sxtSettings.profilTool) {
-          viewerSettings.profilTool = sxtSettings.profilTool;
+        if(sxtSettings.profileTool) {
+          viewerSettings.profileTool = sxtSettings.profileTool;
         }
         if(sxtSettings.graticule)  {
           viewerSettings.mapConfig.graticuleOgcService = sxtSettings.graticule;
@@ -451,9 +451,9 @@
         if(sxtSettings.facetOrdering)  {
           searchSettings.facetOrdering = sxtSettings.facetOrdering;
         }
-        if(sxtSettings.sortBy)  {
+        if(sxtSettings.sortBy) {
           searchSettings.sortbyValues = sxtSettings.sortBy.map(
-            function(criteria) {
+            function (criteria) {
               var name = criteria;
               var direction = '';
               if (name.substring(0, 1) == '+') {
@@ -471,11 +471,11 @@
         }
         if(sxtSettings.metadataFormatter)  {
           searchSettings.metadataFormatter = sxtSettings.metadataFormatter;
-	}
-	if(sxtSettings.metadataType)  {
-          searchSettings.filters.type = sxtSettings.metadataType;
         }
-      }
+        if(sxtSettings.metadataType)  {
+              searchSettings.filters.type = sxtSettings.metadataType;
+            }
+          }
 
       searchSettings.sortbyDefault = searchSettings.sortbyValues[0];
 

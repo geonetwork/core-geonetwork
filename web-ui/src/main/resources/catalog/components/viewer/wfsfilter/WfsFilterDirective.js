@@ -227,7 +227,6 @@
                 }
               }).catch(function () {
             });
-
             indexObject = wfsFilterService.registerEsObject(scope.url, ftName);
             scope.indexObject = indexObject;
             scope.layer.set('indexObject', indexObject);

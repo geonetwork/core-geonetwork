@@ -231,7 +231,7 @@
               scope.processes = gnViewerSettings.processes;
               scope.selectedProcess = scope.processes && scope.processes[0];
 
-              scope.profilTool = gnViewerSettings.profilTool;
+              scope.profileTool = gnViewerSettings.profileTool;
 
               // selects a process
               scope.selectProcess = function (p) {
@@ -308,12 +308,12 @@
    * @description enables the draw a line and get the profil base on configuration
    * in applicationProfil
    */
-  module.directive('sxtProfilTool', ['gnGeometryService','gnWpsService', 'gnProfileService',
+  module.directive('sxtProfileTool', ['gnGeometryService','gnWpsService', 'gnProfileService',
     function (gnGeometryService, gnWpsService, gnProfileService) {
       return {
         restrict: 'A',
         scope: {
-          map: '=sxtProfilTool',
+          map: '=sxtProfileTool',
           wpsLink: '='
 
         },
@@ -325,7 +325,7 @@
 
         if (!scope.wpsLink || !scope.wpsLink.url || !scope.wpsLink.name) {
           element.hide();
-          console.warn('No wps process for profil tool found in sxtSettings');
+          console.warn('No wps process for profile tool found in sxtSettings');
         }
         var processUri = scope.wpsLink.url || undefined;
         var processId = scope.wpsLink.name || undefined;
@@ -387,32 +387,20 @@
           };
 
           processResponse = function(response) {
+            var errorMessage = "Something went wrong in WPS execute process"
             if (response.TYPE_NAME === 'WPS_1_0_0.ExecuteResponse') {
               if (response.status !== undefined) {
-                if (response.status.processAccepted !== undefined ||
-                  response.status.processPaused !== undefined ||
-                  response.status.processStarted !== undefined) {
-                  scope.executeState = 'pending';
-                  scope.statusPromise = $timeout(function() {
-                    updateStatus(response.statusLocation);
-                  }, 1000, true);
-                }
-                if (response.status.processSucceeded != undefined ||
-                  response.status.processFailed != undefined) {
-                  scope.executeState = 'finished';
-                  scope.running = false;
-
-                  if (response.status.processSucceeded) {
-                    var wmsOutput = gnWpsService.responseHasWmsService(response);
-                    if (wmsOutput !== null) {
-                      gnWpsService.extractWmsLayerFromResponse(
-                        response, wmsOutput, scope.map, scope.wpsLink.layer);
-                    }
+                if (response.status.processSucceeded !== undefined ||
+                  response.status.processFailed !== undefined) {
+                  if (!response.status.processSucceeded) {
+                    console.error(errorMessage);
                   }
                 }
               }
             }
-            scope.executeResponse = response;
+            else {
+              console.error(errorMessage);
+            }
 
             // save raw graph data on view controller & hide it in wps form
             if (response.processOutputs) {
@@ -433,7 +421,6 @@
                 console.error('Error parsing WPS graph data:',
                   response.processOutputs);
               }
-              scope.executeResponse = null;
             }
           };
 
@@ -444,12 +431,8 @@
             },
             function(response) {
               layer.getSource().removeFeature(event.feature);
-              scope.executeState = 'failed';
-              scope.executeResponse = response;
-              scope.running = false;
             }
           );
-
         });
       }
     };
