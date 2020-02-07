@@ -24,15 +24,6 @@
 (function() {
   goog.provide('gn_wps_service');
 
-
-
-
-
-
-
-
-
-
   goog.require('GML_3_1_1');
   goog.require('OWS_1_1_0');
   goog.require('SMIL_2_0');

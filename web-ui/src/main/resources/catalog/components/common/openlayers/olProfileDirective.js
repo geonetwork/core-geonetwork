@@ -76,7 +76,7 @@
 
           scope.$watchCollection(optionsAttr, function(newVal) {
 
-            var options = goog.object.clone(newVal);
+            var options = goog.cloneObject(newVal);
 
             if (options !== undefined) {
 
@@ -137,6 +137,14 @@
             gnDebounce(refreshData, 50, true),
             false, this);
 
+          var globalResizeTimer = null;
+          $(window).resize(function() {
+            if(globalResizeTimer != null) window.clearTimeout(globalResizeTimer);
+            globalResizeTimer = window.setTimeout(function() {
+              updateSize();
+            }, 200);
+          });
+
           function refreshData() {
             if (profile !== undefined) {
               selection.datum(elevationData).call(profile);
@@ -148,5 +156,5 @@
         }
     };
   }];
-  module.directive('olProfile', profileDirective)
+  module.directive('olProfile', profileDirective);
 })()

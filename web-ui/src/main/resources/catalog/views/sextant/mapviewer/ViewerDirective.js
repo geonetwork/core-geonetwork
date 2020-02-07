@@ -2,6 +2,7 @@
   goog.provide('sxt_viewer_directive');
 
 
+
   var module = angular.module('sxt_viewer_directive', []);
 
   /**
@@ -230,6 +231,8 @@
               scope.processes = gnViewerSettings.processes;
               scope.selectedProcess = scope.processes && scope.processes[0];
 
+              scope.profileTool = gnViewerSettings.profileTool;
+
               // selects a process
               scope.selectProcess = function (p) {
                 // show panel & hide others
@@ -294,9 +297,145 @@
         scope.map.addControl(control);
         scope.setProjection = function() {
           control.setProjection(ol.proj.get(scope.projection));
-        }
+        };
       }
-    }
+    };
+  }]);
+  /**
+   * @ngdoc directive
+   * @name gn_viewer.directive.sxtProfilTool:
+   *
+   * @description enables the draw a line and get the profil base on configuration
+   * in applicationProfil
+   */
+  module.directive('sxtProfileTool', ['gnGeometryService','gnWpsService', 'gnProfileService',
+    function (gnGeometryService, gnWpsService, gnProfileService) {
+      return {
+        restrict: 'A',
+        scope: {
+          map: '=sxtProfileTool',
+          wpsLink: '='
+
+        },
+      link: function(scope, element, attrs) {
+        var drawInteraction = new ol.interaction.Draw({
+          type: 'LineString'
+        });
+        var drawing = false;
+
+        if (!scope.wpsLink || !scope.wpsLink.url || !scope.wpsLink.name) {
+          element.hide();
+          console.warn('No wps process for profile tool found in sxtSettings');
+        }
+        var processUri = scope.wpsLink.url || undefined;
+        var processId = scope.wpsLink.name || undefined;
+        var mapProjection = scope.map.getView().getProjection().getCode();
+        var inputs = scope.wpsLink.applicationProfile.inputs;
+
+        // this is the temp layer for keeping the profil on the map
+        // during the WPS process time
+        var style = new ol.style.Style({
+          text: new ol.style.Text({
+            font: 'bold 11px "Open Sans", "Arial Unicode MS", "sans-serif"',
+            placement: 'line'
+          })
+        });
+        var layer = new ol.layer.Vector({
+          source: new ol.source.Vector({
+            useSpatialIndex: true,
+            features: new ol.Collection()
+          }),
+          style: function(f) {
+            style.getText().setText('Calcul en cours...');
+            return style;
+          }
+        });
+
+        element.on('click', function() {
+          element.toggleClass('active');
+          if (!drawing) {
+            drawing = true;
+            scope.map.addInteraction(drawInteraction);
+            scope.map.addLayer(layer);
+          } else {
+            drawing = false;
+            scope.map.removeInteraction(drawInteraction);
+            scope.map.removeLayer(layer);
+
+          }
+        });
+        // clear existing features on draw end & save feature
+        drawInteraction.on('drawend', function(event) {
+          layer.getSource().addFeature(event.feature);
+          var geometryOutput = gnGeometryService.printGeometryOutput(scope.map, event.feature, {
+            format: 'gml',
+            crs: mapProjection,
+            outputAsWFSFeaturesCollection: "true"
+          });
+          inputs.push({
+              "name": "vlayer",
+              "value": geometryOutput
+          });
+
+          var output = {
+            asReference: false,
+            identifier: "output_json",
+            lineage: false,
+            mimeType: "application/json",
+            status: false,
+            storeExecuteResponse: false
+          };
+
+          processResponse = function(response) {
+            var errorMessage = "Something went wrong in WPS execute process"
+            if (response.TYPE_NAME === 'WPS_1_0_0.ExecuteResponse') {
+              if (response.status !== undefined) {
+                if (response.status.processSucceeded !== undefined ||
+                  response.status.processFailed !== undefined) {
+                  if (!response.status.processSucceeded) {
+                    console.error(errorMessage);
+                  }
+                }
+              }
+            }
+            else {
+              console.error(errorMessage);
+            }
+
+            // save raw graph data on view controller & hide it in wps form
+            if (response.processOutputs) {
+              output.asReference = false;
+              try {
+                var jsonData = JSON.parse(response.processOutputs.output[0].data.complexData.content);
+                gnProfileService.displayProfileGraph(
+                  jsonData.profile,
+                  {
+                    valuesProperty: 'values',
+                    xProperty: 'lon',
+                    yProperty: 'lat',
+                    distanceProperty: 'dist',
+                    crs: 'EPSG:4326'
+                  }
+                );
+              } catch (e) {
+                console.error('Error parsing WPS graph data:',
+                  response.processOutputs);
+              }
+            }
+          };
+
+          gnWpsService.execute(processUri, processId, inputs, output).then(
+            function(response) {
+              layer.getSource().removeFeature(event.feature);
+              processResponse(response);
+            },
+            function(response) {
+              layer.getSource().removeFeature(event.feature);
+            }
+          );
+        });
+      }
+    };
   }]);
 
   module.directive('sxtFullScreen', [ function() {

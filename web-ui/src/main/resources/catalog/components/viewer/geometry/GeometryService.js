@@ -169,9 +169,11 @@
 
         // clone & transform geom
         var outputGeom = feature.getGeometry().clone().transform(
-            map.getView().getProjection(),
-            options.crs || 'EPSG:4326'
-            );
+          map.getView().getProjection(),
+          options.crs || 'EPSG:4326'
+        );
+
+        var outputGeom = feature.getGeometry();
         var outputFeature = new ol.Feature({
           geometry: outputGeom
         });
