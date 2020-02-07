@@ -76,7 +76,7 @@
 
           scope.$watchCollection(optionsAttr, function(newVal) {
 
-            var options = goog.object.clone(newVal);
+            var options = goog.cloneObject(newVal);
 
             if (options !== undefined) {
 
@@ -148,5 +148,5 @@
         }
     };
   }];
-  module.directive('olProfile', profileDirective)
+  module.directive('olProfile', profileDirective);
 })()

@@ -3690,3 +3690,67 @@ goog.asserts.assert = function(condition, opt_message, var_args) {
   }
   return condition;
 };
+
+/**
+ * A listenable interface. A listenable is an object with the ability
+ * to dispatch/broadcast events to "event listeners" registered via
+ * listen/listenOnce.
+ *
+ * The interface allows for an event propagation mechanism similar
+ * to one offered by native browser event targets, such as
+ * capture/bubble mechanism, stopping propagation, and preventing
+ * default actions. Capture/bubble mechanism depends on the ancestor
+ * tree constructed via `#getParentEventTarget`; this tree
+ * must be directed acyclic graph. The meaning of default action(s)
+ * in preventDefault is specific to a particular use case.
+ *
+ * Implementations that do not support capture/bubble or can not have
+ * a parent listenable can simply not implement any ability to set the
+ * parent listenable (and have `#getParentEventTarget` return
+ * null).
+ *
+ * Implementation of this class can be used with or independently from
+ * goog.events.
+ *
+ * Implementation must call `#addImplementation(implClass)`.
+ *
+ * @interface
+ * @see goog.events
+ * @see http://www.w3.org/TR/DOM-Level-2-Events/events.html
+ */
+goog.events.Listenable = function() {};
+
+
+/**
+ * An expando property to indicate that an object implements
+ * goog.events.Listenable.
+ *
+ * See addImplementation/isImplementedBy.
+ *
+ * @type {string}
+ * @const
+ */
+goog.events.Listenable.IMPLEMENTED_BY_PROP =
+  'closure_listenable_' + ((Math.random() * 1e6) | 0);
+
+
+/**
+ * Marks a given class (constructor) as an implementation of
+ * Listenable, so that we can query that fact at runtime. The class
+ * must have already implemented the interface.
+ * @param {function(new:goog.events.Listenable,...)} cls The class constructor.
+ *     The corresponding class must have already implemented the interface.
+ */
+goog.events.Listenable.addImplementation = function(cls) {
+  cls.prototype[goog.events.Listenable.IMPLEMENTED_BY_PROP] = true;
+};
+
+
+/**
+ * @param {Object} obj The object to check.
+ * @return {boolean} Whether a given instance implements Listenable. The
+ *     class/superclass of the instance must call addImplementation.
+ */
+goog.events.Listenable.isImplementedBy = function(obj) {
+  return !!(obj && obj[goog.events.Listenable.IMPLEMENTED_BY_PROP]);
+};
