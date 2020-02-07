@@ -403,17 +403,6 @@
         key: 'mdActions'
       }];
 
-      viewerSettings.profileTool = {
-        url: "http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/wps/raster_profile",
-        name: "script:computemultirasterprofile",
-        applicationProfile: {
-          "inputs": [{
-            name: "rlayers",
-            value: "etopo1" // default value
-          }]
-        }
-      };
-
       if(typeof sxtSettings != 'undefined') {
         angular.extend(searchSettings, sxtSettings);
         angular.extend(gnPanierSettings, sxtSettings.panier);
