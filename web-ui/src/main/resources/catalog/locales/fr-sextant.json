@@ -93,5 +93,6 @@
   "emodnetOrgType-Other": "Autre",
   "profileGraph": "Profil",
   "nodeDesactivated": "Seule une couche par groupe combo peut-être activée",
-  "groupVisible": "Groupe visible"
+  "groupVisible": "Groupe visible",
+  "searchOnlyTitle": "Rechercher uniquement dans le titre"
 }

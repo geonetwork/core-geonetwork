@@ -1,0 +1,18 @@
+<ul class="dropdown-menu" ng-show="isOpen()"
+    ng-style="{top: position.top+'px', left: position.left+'px'}" style="display: block;"
+    role="listbox" aria-hidden="{{!isOpen()}}">
+  <!-- we need to look up three levels to find the search form scope -->
+  <li class="search-only-title">
+    <a href ng-click="$parent.toggleTitleSearchOnly(); $event.stopPropagation()">
+      <i class="fa fa-fw fa-square-o"
+         data-ng-class="$parent.isTitleSearchEnabled() ? 'fa-check-square-o' : 'fa-square-o'"></i>
+      <span translate>searchOnlyTitle</span>
+    </a>
+  </li>
+  <li ng-repeat="match in matches track by $index" ng-class="{active: isActive($index) }"
+      ng-mouseenter="selectActive($index)" ng-click="selectMatch($index)" role="option"
+      id="{{match.id}}">
+    <div typeahead-match index="$index" match="match" query="query"
+         template-url="templateUrl"></div>
+  </li>
+</ul>

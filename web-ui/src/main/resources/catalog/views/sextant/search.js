@@ -565,6 +565,17 @@
 
       $scope.facetConfig = searchSettings.facetConfig;
 
+      $scope.titleSearchOnly = false;
+      $scope.titleSearchToggleVisible = false;
+      $scope.toggleTitleSearchOnly = function() {
+        $scope.titleSearchOnly = !$scope.titleSearchOnly;
+      }
+      $scope.isTitleSearchEnabled = function() {
+        return $scope.titleSearchOnly;
+      }
+      $scope.showTitleSearchToggle = function(visible) {
+        $scope.titleSearchToggleVisible = visible;
+      }
     }]);
 
   module.directive('sxtFixMdlinks', [ 'sxtService',
