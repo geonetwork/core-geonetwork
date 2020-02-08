@@ -712,8 +712,15 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
             if (error != null) {
                 result = JeevesException.toElement(error);
             }
+            Element priorLogfile_ = result.getChild("logfile");
+            if( priorLogfile_ != null ){
+                // removing prior logfile
+                logger.warning("Detected duplicate logfile: "+priorLogfile_.getText());
+                result.getChildren().remove( priorLogfile_ );
+            }
             Element logfile_ = new Element("logfile");
             logfile_.setText(logfile);
+
             result.addContent(logfile_);
 
             result.addContent(toElement(errors));
