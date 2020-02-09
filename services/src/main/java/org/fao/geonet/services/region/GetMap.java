@@ -354,13 +354,15 @@ public class GetMap {
             }
             ShapeWriter shapeWriter = new ShapeWriter();
             AffineTransform worldToScreenTransform = worldToScreenTransform(bboxOfImage, imageDimensions);
-            Shape shape = worldToScreenTransform.createTransformedShape(shapeWriter.toShape(geom));
-            graphics.setColor(Color.yellow);
-            graphics.draw(shape);
+            for (int i=0; i<geom.getNumGeometries(); i++) {
+                // draw each included geometry separately to ensure they are filled correctly
+                Shape shape = worldToScreenTransform.createTransformedShape(shapeWriter.toShape(geom.getGeometryN(i)));
+                graphics.setColor(Color.yellow);
+                graphics.draw(shape);
 
-            graphics.setColor(new Color(255, 255, 0, 100));
-            graphics.fill(shape);
-
+                graphics.setColor(new Color(255, 255, 0, 100));
+                graphics.fill(shape);
+            }
         } finally {
             graphics.dispose();
         }
