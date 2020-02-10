@@ -3,6 +3,7 @@
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
@@ -77,7 +78,7 @@
         <link rel="stylesheet" type="text/css"
               href="{$nodeUrl}../catalog/views/sextant/landing-pages/default/styles.css"/>
         <link rel="stylesheet" type="text/css"
-              href="{$nodeUrl}../catalog/views/sextant/landing-pages/{/root/info/record/sourceinfo/groupowner}/styles.css"/>
+              href="{$nodeUrl}../catalog/views/sextant/landing-pages/{$groupOwner}/styles.css"/>
         <div class="gn-landing-page-header">&#160;</div>
       </xsl:if>
 
@@ -173,14 +174,31 @@
             </div>
           </div>
           <div class="gn-md-side gn-md-side-advanced col-md-3">
-
             <xsl:if test="$portalLink != ''">
+              <xsl:variable name="defaultUrl"
+                            select="concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)"/>
+              <xsl:variable name="portalUrl">
+                <xsl:choose>
+                  <xsl:when test="$portalLink = 'default'">
+                    <xsl:value-of select="$defaultUrl"/>
+                  </xsl:when>
+                  <xsl:when test="$portalLink = 'group'">
+                    <xsl:variable name="groupInfo"
+                                  select="util:getGroupDetails($groupOwner)"/>
+                    <xsl:value-of select="if ($groupInfo/record/website/text() != '')
+                                          then $groupInfo/record/website/text()
+                                          else $defaultUrl"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:value-of select="$portalLink"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:variable>
+
               <section class="gn-md-side-access">
                 <div class="well text-center">
                   <a class="btn btn-block btn-primary"
-                     href="{if ($portalLink != '')
-                            then replace($portalLink, '\$\{uuid\}', $metadataUuid)
-                            else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
+                     href="{replace($portalUrl, '\$\{uuid\}', $metadataUuid)}">
                     <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
                     <xsl:value-of select="$schemaStrings/linkToPortal"/>
                   </a>
