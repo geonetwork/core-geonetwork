@@ -41,6 +41,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.domain.LinkStatus;
 import org.fao.geonet.domain.Source;
@@ -57,6 +58,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.url.UrlChecker;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UiSettingsRepository;
@@ -71,6 +73,7 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Parser;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.output.DOMOutputter;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
@@ -627,6 +630,20 @@ public final class XslUtil {
         }
 
         return contactDetails;
+    }
+
+
+    public static Node getGroupDetails(String groupIdentifier) {
+        int id = Integer.parseInt(groupIdentifier);
+        Group group = ApplicationContextHolder.get().getBean(GroupRepository.class).findOne(id);
+        if (group != null) {
+            DOMOutputter outputter = new DOMOutputter();
+            try {
+                return outputter.output(new Document(group.asXml()));
+            } catch (JDOMException e) {
+            }
+        }
+        return null;
     }
 
     public static String reprojectCoords(Object minx, Object miny, Object maxx,

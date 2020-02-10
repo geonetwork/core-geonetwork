@@ -2,6 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
@@ -116,6 +117,41 @@
             <xsl:apply-templates mode="getMetadataCitation" select="$metadata"/>
           </div>
           <div class="gn-md-side gn-md-side-advanced col-md-4">
+            <xsl:if test="$portalLink != ''">
+              <xsl:variable name="defaultUrl"
+                            select="concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)"/>
+              <xsl:variable name="portalUrl">
+                <xsl:choose>
+                  <xsl:when test="$portalLink = 'default'">
+                    <xsl:value-of select="$defaultUrl"/>
+                  </xsl:when>
+                  <xsl:when test="$portalLink = 'group'">
+                    <xsl:variable name="groupInfo"
+                                  select="util:getGroupDetails($groupOwner)"/>
+                    <xsl:value-of select="if ($groupInfo/record/website/text() != '')
+                                          then $groupInfo/record/website/text()
+                                          else $defaultUrl"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:value-of select="$portalLink"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:variable>
+
+              <section class="gn-md-side-access">
+                <div class="well text-center">
+                  <a class="btn btn-block btn-primary"
+                     href="{replace($portalUrl, '\$\{uuid\}', $metadataUuid)}">
+                    <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
+                    <xsl:value-of select="$schemaStrings/linkToPortal"/>
+                  </a>
+                  <div class="hidden-xs hidden-sm">
+                    <xsl:value-of select="$schemaStrings/linkToPortal-help"/>
+                  </div>
+                </div>
+              </section>
+            </xsl:if>
+
             <xsl:apply-templates mode="getOverviews" select="$metadata"/>
 
             <section class="gn-md-side-providedby">
@@ -189,19 +225,6 @@
                     </li>
                   </ul>
                 </xsl:for-each>
-              </section>
-
-              <section class="gn-md-side-access">
-                <a class="btn btn-block btn-primary"
-                   href="{if ($portalLink != '')
-                          then replace($portalLink, '\$\{uuid\}', $metadataUuid)
-                          else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
-                  <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
-                  <xsl:value-of select="$schemaStrings/linkToPortal"/>
-                </a>
-                <div class="hidden-xs hidden-sm">
-                  <xsl:value-of select="$schemaStrings/linkToPortal-help"/>
-                </div>
               </section>
             </xsl:if>
 

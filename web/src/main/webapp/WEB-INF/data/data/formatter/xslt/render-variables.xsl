@@ -34,9 +34,10 @@
   -->
   <xsl:param name="template" select="''"/>
 
-  <!-- Define the full portal link. By default, it will link
-  to the catalog.search main page of the catalog. To configure a custom
-  use {{uuid}} to be replaced by the record UUID.
+  <!-- Define the full portal link. Values can be:
+  * default (will link to the main application)
+  * group (will link to the record groupowner website URL if any, default if not)
+  * custom url using {{uuid}} to be replaced by the record UUID.
   eg. http://another.portal.org/${uuid}
   -->
   <xsl:param name="portalLink" select="''"/>
@@ -57,6 +58,8 @@
                 select="/root/info/record/id"/>
   <xsl:variable name="metadataUuid"
                 select="/root/info/record/uuid"/>
+  <xsl:variable name="groupOwner"
+                select="/root/info/record/sourceinfo/groupowner"/>
 
   <xsl:variable name="schemaCodelists">
     <null/>
