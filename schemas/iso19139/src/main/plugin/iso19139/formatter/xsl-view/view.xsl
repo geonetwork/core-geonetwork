@@ -935,19 +935,34 @@
      </span>
   </xsl:template>
 
-
   <xsl:template mode="render-value"
                 match="*[gmx:Anchor]">
+    <xsl:apply-templates mode="render-value"
+                         select="gmx:Anchor"/>
+  </xsl:template>
+
+  <xsl:template mode="render-value"
+                match="gmx:Anchor">
+    <xsl:variable name="link"
+                  select="@xlink:href"/>
     <xsl:variable name="txt">
-      <xsl:apply-templates mode="localised" select=".">
+      <xsl:apply-templates mode="localised" select="..">
         <xsl:with-param name="langId" select="$langId"/>
       </xsl:apply-templates>
     </xsl:variable>
 
-    <a href="{gmx:Anchor/@xlink:href}">
-      <xsl:value-of select="$txt"/>
-    </a>
+    <xsl:choose>
+      <xsl:when test="$link != ''">
+        <a href="{$link}">
+          <xsl:value-of select="$txt"/>
+        </a>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$txt"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
+
 
 
   <xsl:template mode="render-value"
