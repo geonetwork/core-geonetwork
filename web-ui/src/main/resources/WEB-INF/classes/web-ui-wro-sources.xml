@@ -33,6 +33,7 @@
     <cssSource webappPath="/catalog/lib/bootstrap-table/dist"/>
   </require>
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
+    <jsSource webappPath="/catalog/lib/closure/base.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment+langs.min.js" minimize="false"/>
@@ -97,6 +98,7 @@
   </declarative>
   <!-- Same as previous + olcesium -->
   <declarative name="lib3d" pathOnDisk="web-ui/src/main/resources">
+    <jsSource webappPath="/catalog/lib/closure/base.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment+langs.min.js" minimize="false"/>
