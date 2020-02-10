@@ -223,7 +223,7 @@
         <td>
           <xsl:value-of select="$schemaStrings/sxt-view-constraints"/>
         </td>
-        <td>
+        <td class="gn-record-view_tablecell_aerate">
 
           <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:useLimitation[normalize-space(.) != '']">
             <xsl:apply-templates mode="render-field" select="."/>
