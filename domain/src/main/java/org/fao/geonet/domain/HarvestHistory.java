@@ -33,8 +33,19 @@ import org.jdom.JDOMException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.persistence.*;
-
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.File;
 import java.io.IOException;
 import java.util.IdentityHashMap;
@@ -289,7 +300,7 @@ public class HarvestHistory extends GeonetEntity {
      * </ul>
      *
      * </p>
-     * 
+     *
      * @param infoAsXml Harvest info xml definition
      * @return Harvest info xml definition, with any content checks applied
      */
