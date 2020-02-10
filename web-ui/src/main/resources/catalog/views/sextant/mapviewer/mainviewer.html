@@ -301,7 +301,8 @@
       ng-if="graticuleOgcService" graticule-ogc-service="graticuleOgcService">
     </button>
 
-    <button class="btn btn-default btn-profiletool" type="submit" sxt-profile-tool="map" wps-link="profileTool">
+    <button ng-if="profileTool" class="btn btn-default btn-profiletool" type="submit" sxt-profile-tool="map"
+            wps-link="profileTool">
       <span class="fa fa-area-chart"></span>
       <span role="tooltip" translate>profileToolTooltip</span>
     </button>

@@ -1,8 +1,27 @@
 (function() {
   goog.provide('sxt_viewer_directive');
 
+  goog.require('GML_3_1_1');
+  goog.require('OWS_1_1_0');
+  goog.require('SMIL_2_0');
+  goog.require('SMIL_2_0_Language');
+  goog.require('WPS_1_0_0');
+  goog.require('XLink_1_0');
 
-
+  // WPS Client
+  // Jsonix wrapper to read or write WPS response or request
+  var context = new Jsonix.Context(
+    [XLink_1_0, OWS_1_1_0, WPS_1_0_0, GML_3_1_1, SMIL_2_0, SMIL_2_0_Language],
+    {
+      namespacePrefixes: {
+        'http://www.w3.org/1999/xlink': 'xlink',
+        'http://www.opengis.net/ows/1.1': 'ows',
+        'http://www.opengis.net/wps/1.0.0': 'wps',
+        'http://www.opengis.net/gml': 'gml'
+      }
+    }
+  );
+  var unmarshaller = context.createUnmarshaller();
   var module = angular.module('sxt_viewer_directive', []);
 
   /**
@@ -308,8 +327,13 @@
    * @description enables the draw a line and get the profil base on configuration
    * in applicationProfil
    */
-  module.directive('sxtProfileTool', ['gnGeometryService','gnWpsService', 'gnProfileService',
-    function (gnGeometryService, gnWpsService, gnProfileService) {
+  module.directive('sxtProfileTool', [
+    'gnGeometryService',
+    'gnWpsService',
+    'gnProfileService',
+    '$http',
+    '$q',
+    function (gnGeometryService, gnWpsService, gnProfileService, $http, $q) {
       return {
         restrict: 'A',
         scope: {
@@ -318,20 +342,37 @@
 
         },
       link: function(scope, element, attrs) {
+
         var drawInteraction = new ol.interaction.Draw({
           type: 'LineString'
         });
         var drawing = false;
-
+        element.hide();
         if (!scope.wpsLink || !scope.wpsLink.url || !scope.wpsLink.name) {
-          element.hide();
           console.warn('No wps process for profile tool found in sxtSettings');
         }
         var processUri = scope.wpsLink.url || undefined;
         var processId = scope.wpsLink.name || undefined;
         var mapProjection = scope.map.getView().getProjection().getCode();
         var inputs = scope.wpsLink.applicationProfile.inputs;
+        var description;
+        var output = {
+          asReference: false,
+          identifier: "output_json",
+          lineage: false,
+          mimeType: "application/json",
+          status: false,
+          storeExecuteResponse: false
+        };
 
+        // call describeProcess
+        gnWpsService.describeProcess(processUri, processId).then(
+          function (data) {
+            // generate the XML message from the description
+            description = data.processDescription[0];
+            element.show();
+            return description;
+          });
         // this is the temp layer for keeping the profil on the map
         // during the WPS process time
         var style = new ol.style.Style({
@@ -376,16 +417,7 @@
               "name": "vlayer",
               "value": geometryOutput
           });
-
-          var output = {
-            asReference: false,
-            identifier: "output_json",
-            lineage: false,
-            mimeType: "application/json",
-            status: false,
-            storeExecuteResponse: false
-          };
-
+          var message = gnWpsService.printExecuteMessage(description, inputs, output);
           processResponse = function(response) {
             var errorMessage = "Something went wrong in WPS execute process"
             if (response.TYPE_NAME === 'WPS_1_0_0.ExecuteResponse') {
@@ -423,16 +455,19 @@
               }
             }
           };
-
-          gnWpsService.execute(processUri, processId, inputs, output).then(
-            function(response) {
-              layer.getSource().removeFeature(event.feature);
-              processResponse(response);
-            },
-            function(response) {
-              layer.getSource().removeFeature(event.feature);
-            }
-          );
+          var defer = $q.defer();
+          $http.post(processUri, message, {
+            headers: {'Content-Type': 'application/xml'}
+          }).then(function(data) {
+            var response =
+              unmarshaller.unmarshalString(data.data).value;
+            defer.resolve(response);
+            layer.getSource().removeFeature(event.feature);
+            processResponse(response);
+          }, function(data) {
+            defer.reject(data);
+            layer.getSource().removeFeature(event.feature);
+          });
         });
       }
     };
