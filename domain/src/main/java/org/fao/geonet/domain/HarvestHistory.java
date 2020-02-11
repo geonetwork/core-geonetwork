@@ -33,10 +33,24 @@ import org.jdom.JDOMException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.persistence.*;
-
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.io.File;
 import java.io.IOException;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * An entity representing a harvesting task that may have been completed or possibly ending in
@@ -271,7 +285,52 @@ public class HarvestHistory extends GeonetEntity {
         if (info == null) {
             return null;
         }
-        return Xml.loadString(info, false);
+        Element infoAsXml = Xml.loadString(info, false);
+        infoAsXml = checkInfoXml(infoAsXml);
+        return infoAsXml;
+    }
+
+    /**
+     * Check infoAsXml definition content.
+     * <p>
+     * Content checks:
+     * <ul>
+     * <li>Check if multiple logfile definitions are present</li>
+     * <li>Check if logfile path file exists</li>
+     * </ul>
+     *
+     * </p>
+     *
+     * @param infoAsXml Harvest info xml definition
+     * @return Harvest info xml definition, with any content checks applied
+     */
+    private Element checkInfoXml(Element infoAsXml) {
+        List<Element> logfileElements = infoAsXml.getChildren("logfile");
+        // check logfiles present to ensure path exists
+        if (logfileElements.size() > 0) {
+            if (logfileElements.size() != 1) {
+                Log.warning(Constants.DOMAIN_LOG_MODULE, "Harvest history unexpectedly lists multiple logfiles: " + logfileElements.size());
+            }
+            boolean isLogFileFound = false;
+            for (Iterator iter = logfileElements.iterator(); iter.hasNext();) {
+                Element logfile = (Element) iter.next();
+                String path = logfile.getText();
+                File file = new File(path);
+                if (file.exists() && file.canRead()) {
+                    if (isLogFileFound) {
+                        // we already have one logfile
+                        Log.warning(Constants.DOMAIN_LOG_MODULE, "Ignoring add unexpected logfile: `" + path + "`");
+                        iter.remove();
+                    } else {
+                        isLogFileFound = true;
+                    }
+                } else {
+                    Log.warning(Constants.DOMAIN_LOG_MODULE, "Harvest history logfile `" + path + "` ignored, no longer available");
+                    iter.remove();
+                }
+            }
+        }
+        return infoAsXml;
     }
 
     /**
