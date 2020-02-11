@@ -260,7 +260,7 @@
                 md.standardName === 'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY') {
               url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&header=false&css=sextant&tabs=false&view=emodnetHydrography';
             } else if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - SDN') {
-              url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&header=false&tabs=false&css=sextant&view=sdn' + uuid;
+              url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&header=false&tabs=false&css=sextant&view=sdn';
             } else {
               url = '../api/records/' + uuid + '/formatters/xsl-view?view=sextant&root=div&template=sextant-summary-view&header=false&related=';
             }
