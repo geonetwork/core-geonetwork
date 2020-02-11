@@ -338,6 +338,8 @@ public class MEFLib {
         info.addContent(buildInfoFiles("public", pubResources));
         if (priResources != null) {
             info.addContent(buildInfoFiles("private", priResources));
+        } else {
+            info.addContent(new Element("private"));
         }
 
         return Xml.getString(new Document(info));
