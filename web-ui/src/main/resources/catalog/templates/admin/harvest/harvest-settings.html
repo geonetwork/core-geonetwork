@@ -240,7 +240,7 @@
                 </ul>
                 <!-- in some scenario logfile returns an array of files, take first -->
                 <a data-ng-show="h.info[0].logfile"
-                   href="admin.harvester.log?file={{ encodeURI((h.info[0].logfile | asArray)[0]) }}" target="_blank"
+                   ng-href="admin.harvester.log?file={{ (h.info[0].logfile | asArray)[0] | encodeURIComponent }}" target="_blank"
                    data-translate="">logFile</a>
                 </p>
               </div>
