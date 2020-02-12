@@ -296,14 +296,6 @@ class MEF2Exporter {
         final Store store = context.getBean("resourceStore", Store.class);
         final List<MetadataResource> publicResources = store.getResources(context, metadata.getUuid(),
                 MetadataResourceVisibility.PUBLIC, null, true);
-        final List<MetadataResource> privateResources = store.getResources(context, metadata.getUuid(),
-                MetadataResourceVisibility.PRIVATE, null, true);
-
-        // --- save info file
-        byte[] binData = MEFLib.buildInfoFile(context, record, format, publicResources,
-                privateResources, skipUUID).getBytes(Constants.ENCODING);
-
-        Files.write(metadataRootDir.resolve(FILE_INFO), binData);
 
         // --- save thumbnails and maps
 
@@ -311,14 +303,23 @@ class MEF2Exporter {
             StoreUtils.extract(context, metadata.getUuid(), publicResources, metadataRootDir.resolve("public"), true);
         }
 
+        List<MetadataResource> privateResources = null;
         if (format == Format.FULL) {
             try {
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
+                privateResources = store.getResources(context, metadata.getUuid(),
+                    MetadataResourceVisibility.PRIVATE, null, true);
                 StoreUtils.extract(context, metadata.getUuid(), privateResources, metadataRootDir.resolve("private"), true);
             } catch (Exception e) {
                 // Current user could not download private data
             }
         }
+
+        // --- save info file
+        byte[] binData = MEFLib.buildInfoFile(context, record, format, publicResources,
+            privateResources, skipUUID).getBytes(Constants.ENCODING);
+
+        Files.write(metadataRootDir.resolve(FILE_INFO), binData);
     }
 
     /**
