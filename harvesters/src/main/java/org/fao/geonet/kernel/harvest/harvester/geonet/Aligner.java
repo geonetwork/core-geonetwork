@@ -432,12 +432,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
                     if (log.isDebugEnabled())
                         log.debug("    - Adding remote public file with name:" + file);
                     Path pubDir = Lib.resource.getDir(context, "public", id[index]);
-
-                    Path outFile = pubDir.resolve(file);
-                    try (OutputStream os = Files.newOutputStream(outFile)) {
-                        BinaryFile.copy(is, os);
-                        IO.touch(outFile, FileTime.from(new ISODate(changeDate).getTimeInSeconds(), TimeUnit.SECONDS));
-                    }
+                    copyFileToFolder(file, changeDate, is, pubDir);
                 }
 
                 public void handleFeatureCat(Element md, int index)
@@ -451,11 +446,18 @@ public class Aligner extends BaseAligner<GeonetParams> {
                         if (log.isDebugEnabled())
                             log.debug("    - Adding remote private file with name:" + file + " available for download for user used for harvester.");
                         Path dir = Lib.resource.getDir(context, "private", id[index]);
-                        Path outFile = dir.resolve(file);
-                        try (OutputStream os = Files.newOutputStream(outFile)) {
-                            BinaryFile.copy(is, os);
-                            IO.touch(outFile, FileTime.from(new ISODate(changeDate).getTimeInSeconds(), TimeUnit.SECONDS));
-                        }
+                        copyFileToFolder(file, changeDate, is, dir);
+                    }
+                }
+
+                private void copyFileToFolder(String file, String changeDate, InputStream is, Path dir) throws IOException {
+                    if (Files.notExists(dir)) {
+                        dir = Files.createDirectories(dir);
+                    }
+                    Path outFile = dir.resolve(file);
+                    try (OutputStream os = Files.newOutputStream(outFile)) {
+                        BinaryFile.copy(is, os);
+                        IO.touch(outFile, FileTime.from(new ISODate(changeDate).getTimeInSeconds(), TimeUnit.SECONDS));
                     }
                 }
             });
@@ -542,11 +544,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
 
 
-        Path pubDir = Lib.resource.getDir(context, "public", id);
-        Path priDir = Lib.resource.getDir(context, "private", id);
-
-        Files.createDirectories(pubDir);
-        Files.createDirectories(priDir);
 
         if (params.createRemoteCategory) {
             Element categs = info.getChild("categories");
@@ -862,6 +859,9 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
     private void removeOldFile(String id, Element infoFiles, String dir) {
         Path resourcesDir = Lib.resource.getDir(context, dir, id);
+        if (Files.notExists(resourcesDir)) {
+            return;
+        }
 
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(resourcesDir)) {
             for (Path file : paths) {
@@ -902,6 +902,9 @@ public class Aligner extends BaseAligner<GeonetParams> {
     private void saveFile(String id, String file, String dir,
                           String changeDate, InputStream is) throws IOException {
         Path resourcesDir = Lib.resource.getDir(context, dir, id);
+        if (Files.notExists(resourcesDir)) {
+            resourcesDir = Files.createDirectories(resourcesDir);
+        }
         Path locFile = resourcesDir.resolve(file);
 
         ISODate remIsoDate = new ISODate(changeDate);
