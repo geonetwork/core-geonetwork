@@ -24,6 +24,7 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
                 version="2.0"
@@ -110,32 +111,27 @@
   </xsl:template>
 
 
-  <!-- Template used to return a gco:CharacterString element
-        in default metadata language or in a specific locale
-        if exist.
-        FIXME : gmd:PT_FreeText should not be in the match clause as gco:CharacterString
-        is mandatory and PT_FreeText optional. Added for testing GM03 import.
+  <!-- Template used to return a translation if one found, 
+       or the text in default metadata language 
+       or the first non empty text element.
     -->
-  <xsl:template name="localised" mode="localised" match="*[gco:CharacterString or gmd:PT_FreeText]">
+  <xsl:template name="localised" mode="localised" match="*[gco:CharacterString or gmx:Anchor or gmd:PT_FreeText]">
     <xsl:param name="langId"/>
 
-    <xsl:choose>
-      <xsl:when
-        test="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] and
-        gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] != ''">
-        <xsl:value-of
-          select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId]"/>
-      </xsl:when>
-      <xsl:when test="not(gco:CharacterString)">
-        <!-- If no CharacterString, try to use the first textGroup available -->
-        <xsl:value-of
-          select="gmd:PT_FreeText/gmd:textGroup[position()=1]/gmd:LocalisedCharacterString"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="gco:CharacterString"/>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:variable name="translation"
+                  select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId]"/>
 
+    <xsl:variable name="mainValue"
+                  select="(gco:CharacterString|gmx:Anchor)[1]"/>
+
+    <xsl:variable name="firstNonEmptyValue"
+                  select="((gco:CharacterString|gmx:Anchor|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString)[. != ''])[1]"/>
+
+    <xsl:value-of select="if($translation != '')
+                          then $translation
+                          else (if($mainValue != '')
+                                then $mainValue
+                                else $firstNonEmptyValue)"/>
   </xsl:template>
 
 
