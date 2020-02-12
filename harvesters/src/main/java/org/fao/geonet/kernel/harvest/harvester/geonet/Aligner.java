@@ -101,7 +101,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
     private String processName;
     private String preferredSchema;
     private Map<String, Object> processParams = new HashMap<String, Object>();
-    private MetadataRepository metadataRepository;
     private HashMap<String, HashMap<String, String>> hmRemoteGroups = new HashMap<String, HashMap<String, String>>();
 
     public Aligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, XmlRequest req,
@@ -114,7 +113,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         dataMan = gc.getBean(DataManager.class);
-        metadataRepository = gc.getBean(MetadataRepository.class);
         result = new HarvestResult();
 
         //--- save remote categories and groups into hashmaps for a fast access
@@ -233,10 +231,10 @@ public class Aligner extends BaseAligner<GeonetParams> {
                         result.datasetUuidExist++;
                         switch(params.getOverrideUuid()){
                         case OVERRIDE:
-                            updateMetadata(ri, 
-                                    Integer.toString(metadataRepository.findOneByUuid(ri.uuid).getId()), 
-                                    localRating.equals(RatingsSetting.BASIC), 
-                                    params.useChangeDateForUpdate(), 
+                            updateMetadata(ri,
+                                    Integer.toString(metadataRepository.findOneByUuid(ri.uuid).getId()),
+                                    localRating.equals(RatingsSetting.BASIC),
+                                    params.useChangeDateForUpdate(),
                                     localUuids.getChangeDate(ri.uuid), true);
                             log.info("Overriding record with uuid " + ri.uuid);
                             result.updatedMetadata++;
@@ -254,12 +252,11 @@ public class Aligner extends BaseAligner<GeonetParams> {
                     } else {
                         //record exists and belongs to this harvester
                         log.debug("Updating record with uuid " + ri.uuid);
-                        updateMetadata(ri, id, 
-                                localRating.equals(RatingsSetting.BASIC), 
-                                params.useChangeDateForUpdate(), 
+                        updateMetadata(ri, id,
+                                localRating.equals(RatingsSetting.BASIC),
+                                params.useChangeDateForUpdate(),
                                 localUuids.getChangeDate(ri.uuid), false);
                     }
-                        
                 }
             } catch (Throwable t) {
                 log.error("Couldn't insert or update metadata with uuid " + ri.uuid);
@@ -439,12 +436,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
                     if (log.isDebugEnabled())
                         log.debug("    - Adding remote public file with name:" + file);
                     Path pubDir = Lib.resource.getDir(context, "public", id[index]);
-
-                    Path outFile = pubDir.resolve(file);
-                    try (OutputStream os = Files.newOutputStream(outFile)) {
-                        BinaryFile.copy(is, os);
-                        IO.touch(outFile, FileTime.from(new ISODate(changeDate).getTimeInSeconds(), TimeUnit.SECONDS));
-                    }
+                    copyFileToFolder(file, changeDate, is, pubDir);
                 }
 
                 public void handleFeatureCat(Element md, int index)
@@ -458,11 +450,18 @@ public class Aligner extends BaseAligner<GeonetParams> {
                         if (log.isDebugEnabled())
                             log.debug("    - Adding remote private file with name:" + file + " available for download for user used for harvester.");
                         Path dir = Lib.resource.getDir(context, "private", id[index]);
-                        Path outFile = dir.resolve(file);
-                        try (OutputStream os = Files.newOutputStream(outFile)) {
-                            BinaryFile.copy(is, os);
-                            IO.touch(outFile, FileTime.from(new ISODate(changeDate).getTimeInSeconds(), TimeUnit.SECONDS));
-                        }
+                        copyFileToFolder(file, changeDate, is, dir);
+                    }
+                }
+
+                private void copyFileToFolder(String file, String changeDate, InputStream is, Path dir) throws IOException {
+                    if (Files.notExists(dir)) {
+                        dir = Files.createDirectories(dir);
+                    }
+                    Path outFile = dir.resolve(file);
+                    try (OutputStream os = Files.newOutputStream(outFile)) {
+                        BinaryFile.copy(is, os);
+                        IO.touch(outFile, FileTime.from(new ISODate(changeDate).getTimeInSeconds(), TimeUnit.SECONDS));
                     }
                 }
             });
@@ -555,11 +554,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
 
 
-        Path pubDir = Lib.resource.getDir(context, "public", id);
-        Path priDir = Lib.resource.getDir(context, "private", id);
-
-        Files.createDirectories(pubDir);
-        Files.createDirectories(priDir);
 
         if (params.createRemoteCategory) {
             Element categs = info.getChild("categories");
@@ -771,7 +765,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
     }
 
-    private void updateMetadata(RecordInfo ri, String id, Element md, 
+    private void updateMetadata(RecordInfo ri, String id, Element md,
             Element info, boolean localRating, boolean force) throws Exception {
         String date = localUuids.getChangeDate(ri.uuid);
 
@@ -813,12 +807,12 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 updateDateStamp);
             metadata = metadataRepository.findOne(id);
             result.updatedMetadata++;
-        
+
             if(force) {
                 //change ownership of metadata to new harvester
                 metadata.getHarvestInfo().setUuid(params.getUuid());
                 metadata.getSourceInfo().setSourceId(params.getUuid());
-    
+
                 metadataManager.save(metadata);
             }
         }
@@ -875,6 +869,9 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
     private void removeOldFile(String id, Element infoFiles, String dir) {
         Path resourcesDir = Lib.resource.getDir(context, dir, id);
+        if (Files.notExists(resourcesDir)) {
+            return;
+        }
 
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(resourcesDir)) {
             for (Path file : paths) {
@@ -915,6 +912,9 @@ public class Aligner extends BaseAligner<GeonetParams> {
     private void saveFile(String id, String file, String dir,
                                    String changeDate, InputStream is) throws IOException {
         Path resourcesDir = Lib.resource.getDir(context, dir, id);
+        if (Files.notExists(resourcesDir)) {
+            resourcesDir = Files.createDirectories(resourcesDir);
+        }
         Path locFile = resourcesDir.resolve(file);
 
         ISODate remIsoDate = new ISODate(changeDate);
