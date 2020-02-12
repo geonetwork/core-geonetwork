@@ -31,7 +31,9 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasM
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -85,9 +87,10 @@ import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
-import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -130,7 +133,7 @@ public class MetadataSharingApi {
 
     @Autowired
     LanguageUtils languageUtils;
-    
+
     @Autowired
     DataManager dataManager;
 
@@ -169,7 +172,14 @@ public class MetadataSharingApi {
 
     @Autowired
     UserGroupRepository userGroupRepository;
-    
+
+    /**
+     * What does publish mean?
+     */
+    @Autowired
+    @Qualifier("publicationConfig")
+    private Map publicationConfig;
+
     @ApiOperation(
         value = "Set privileges for ALL group to publish the metadata for all users.",
         nickname = "publish")
@@ -328,7 +338,7 @@ public class MetadataSharingApi {
     )
         throws Exception {
 
-        SharingParameter sharing = buildSharingForAllGroup(true);
+        SharingParameter sharing = buildSharingForPublicationConfig(true);
         return shareSelection(uuids, bucket, sharing, session, request);
     }
 
@@ -362,7 +372,7 @@ public class MetadataSharingApi {
     )
         throws Exception {
 
-        SharingParameter sharing = buildSharingForAllGroup(false);
+        SharingParameter sharing = buildSharingForPublicationConfig(false);
         return shareSelection(uuids, bucket, sharing, session, request);
     }
 
@@ -543,8 +553,8 @@ public class MetadataSharingApi {
 
                 //--- get all operations that this group can do on given metadata
                 Specifications<OperationAllowed> hasGroupIdAndMetadataId =
-                    where(OperationAllowedSpecs.hasGroupId(g.getId()))
-                        .and(OperationAllowedSpecs.hasMetadataId(metadata.getId()));
+                    where(hasGroupId(g.getId()))
+                        .and(hasMetadataId(metadata.getId()));
                 List<OperationAllowed> operationAllowedForGroup =
                     operationAllowedRepository.findAll(hasGroupIdAndMetadataId);
 
@@ -730,8 +740,8 @@ public class MetadataSharingApi {
             required = true
         )
             Integer userIdentifier,
-       @ApiParam(value = "Use approved version or not", example = "true") 
-        @RequestParam(required = false, defaultValue = "false") 
+       @ApiParam(value = "Use approved version or not", example = "true")
+        @RequestParam(required = false, defaultValue = "false")
         Boolean approved,
         @ApiIgnore
         @ApiParam(hidden = true)
@@ -806,8 +816,8 @@ public class MetadataSharingApi {
             required = true
         )
             Integer userIdentifier,
-        @ApiParam(value = "Use approved version or not", example = "true") 
-        @RequestParam(required = false, defaultValue = "true") 
+        @ApiParam(value = "Use approved version or not", example = "true")
+        @RequestParam(required = false, defaultValue = "true")
         	Boolean approved,
         @ApiIgnore
         @ApiParam(hidden = true)
@@ -848,7 +858,7 @@ public class MetadataSharingApi {
                                  AccessManager accessMan,
                                  MetadataRepository metadataRepository,
                                  ServiceContext serviceContext,
-                                 List<String> listOfUpdatedRecords, String uuid, 
+                                 List<String> listOfUpdatedRecords, String uuid,
                                  HttpSession session, Boolean approved) throws Exception {
         AbstractMetadata metadata = metadataUtils.findOneByUuid(uuid);
         if (metadata == null) {
@@ -891,7 +901,7 @@ public class MetadataSharingApi {
                         priv.getOperationId());
                 }
             }
-            
+
             Long metadataId = Long.parseLong(ApiUtils.getInternalId(uuid, approved));
             ApplicationContext context = ApplicationContextHolder.get();
             if(!Objects.equals(groupIdentifier, sourceGrp)) {
@@ -906,7 +916,7 @@ public class MetadataSharingApi {
               User newOwner = userRepository.findOne(userIdentifier);
               User oldOwner = userRepository.findOne(sourceUsr);
               new RecordOwnerChangeEvent(metadataId, ApiUtils.getUserSession(session).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldOwner, RecordOwnerChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(newOwner, RecordOwnerChangeEvent.FIELD)).publish(context);
-            }            
+            }
             // -- set the new owner into the metadata record
             dataManager.updateMetadataOwner(metadata.getId(),
                 String.valueOf(userIdentifier),
@@ -989,7 +999,7 @@ public class MetadataSharingApi {
 
 
     /**
-     * Shares a metadata with the {@link ReservedGroup#all} group to publish/unpublish it.
+     * Shares a metadata based on the publicationConfig to publish/unpublish it.
      *
      * @param metadataUuid  Metadata uuid.
      * @param publish       Flag to publish/unpublish the metadata.
@@ -1022,7 +1032,7 @@ public class MetadataSharingApi {
             operationMap.put(o.getName(), o.getId());
         }
 
-        SharingParameter sharing = buildSharingForAllGroup(publish);
+        SharingParameter sharing = buildSharingForPublicationConfig(publish);
 
         List<GroupOperations> privileges = sharing.getPrivileges();
         setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
@@ -1114,26 +1124,36 @@ public class MetadataSharingApi {
      * @param publish   Flag to add/remove sharing privileges.
      * @return
      */
-    private SharingParameter buildSharingForAllGroup(boolean publish) {
+    private SharingParameter buildSharingForPublicationConfig(boolean publish) {
         SharingParameter sharing = new SharingParameter();
         sharing.setClear(false);
 
         List<GroupOperations> privilegesList = new ArrayList<>();
-        GroupOperations privAllGroup = new GroupOperations();
-        privAllGroup.setGroup(ReservedGroup.all.getId());
 
-        Map<String, Boolean> operations = new HashMap<>();
-        operations.put(ReservedOperation.view.name(), publish);
-        operations.put(ReservedOperation.download.name(), publish);
-        operations.put(ReservedOperation.dynamic.name(), publish);
+        final Iterator iterator = publicationConfig.entrySet().iterator();
+        while(iterator.hasNext()) {
+            Map.Entry<String, Object[]> e = (Map.Entry<String, Object[]>) iterator.next();
+            GroupOperations privAllGroup = new GroupOperations();
+            privAllGroup.setGroup(Integer.parseInt(e.getKey()));
 
+            Map<String, Boolean> operations = new HashMap<>();
+            for (Object operation : e.getValue()) {
+                operations.put((String)operation, publish);
+            }
 
-        privAllGroup.setOperations(operations);
-        privilegesList.add(privAllGroup);
+            privAllGroup.setOperations(operations);
+            privilegesList.add(privAllGroup);
+        };
 
         sharing.setPrivileges(privilegesList);
-
         return sharing;
     }
 
+    public void setPublicationConfig(Map publicationConfig) {
+        this.publicationConfig = publicationConfig;
+    }
+
+    public Map getPublicationConfig() {
+        return publicationConfig;
+    }
 }
