@@ -1415,16 +1415,6 @@
           <xsl:if test="$isXLinked">xlinked</xsl:if>
           <xsl:if test="geonet:element/@min='1' and $edit">mandatory</xsl:if>
         </xsl:attribute>
-        <xsl:if test="$allowMarkup = 'true'">
-          <xsl:if test="/root/gui/env/wiki/markup != 'none'">
-            <xsl:attribute name="markupTip">
-              <xsl:variable name="tip" select="concat('&lt;div class=&quot;help&quot;>&lt;span class=&quot;title&quot;>&lt;div>', /root/gui/strings/markup/title,'&lt;/div>&lt;/span>',/root/gui/strings/markup/tip,'&lt;/div>')"></xsl:variable>
-              <xsl:variable name="name" select="string(/root/gui/strings/markup/name/*[name() = /root/gui/env/wiki/markup])"></xsl:variable>
-              <xsl:variable name="link" select="string(/root/gui/strings/markup/link/*[name() = /root/gui/env/wiki/markup])"></xsl:variable>
-              <xsl:value-of select="java:markupToolTip($tip, $name, $link)"/>
-            </xsl:attribute>
-          </xsl:if>
-        </xsl:if>
         <label
           for="_{if (gco:CharacterString) then gco:CharacterString/geonet:element/@ref else if (gmd:file) then '' else ''}">
           <xsl:choose>

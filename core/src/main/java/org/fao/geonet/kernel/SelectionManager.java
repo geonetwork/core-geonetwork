@@ -99,11 +99,8 @@ public class SelectionManager {
             }
             String absOrigin = element.getChildText(Edit.Info.Elem.ABSTRACT);
             if(absOrigin != null) {
-                MarkupParser markupParser = MarkupParserCache.lookup("org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage");
-                String absWiki = XslUtil.parseMarkupToText(absOrigin, markupParser);
-
                 Element absElt = element.getChild("abstract");
-                absElt.setText(absWiki);
+                absElt.setText(absOrigin);
             }
 
             Element info = element.getChild(Edit.RootChild.INFO,

@@ -169,15 +169,7 @@
               <xsl:call-template name="localised" />
             </xsl:variable>
 
-            <xsl:choose>
-              <xsl:when test="($markupType != 'none' or $wysiwygEnabled = true()) and $allowMarkup = true()">
-                <div class="gn-wiki"><xsl:copy-of select="java:parseWikiText(., string($text), string($markupType))"/></div>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="$text"></xsl:value-of>
-              </xsl:otherwise>
-            </xsl:choose>
-
+            <xsl:value-of select="$text"></xsl:value-of>
           </p></div>
       </div>
     </xsl:if>

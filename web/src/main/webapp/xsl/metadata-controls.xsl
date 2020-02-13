@@ -120,14 +120,6 @@
           <xsl:copy-of select="$validationLink"></xsl:copy-of>
         </div>
       </xsl:if>
-
-
-      <xsl:variable name="allowMarkup">
-        <xsl:apply-templates mode="permitMarkup" select="."/>
-      </xsl:variable>
-      <xsl:if test="$allowMarkup = 'true'">
-        <span id="markup|{$id}" class="content" style="cursor:help;" onclick="javascript:showMarkupToolTip(this.id, '{/root/gui/strings/markup/tip}', '{/root/gui/strings/markup/name/*[name() = /root/gui/env/wiki/markup]}', '{/root/gui/strings/markup/link/*[name() = /root/gui/env/wiki/markup]}')">[M]</span>
-      </xsl:if>
     </span>
   </xsl:template>
 

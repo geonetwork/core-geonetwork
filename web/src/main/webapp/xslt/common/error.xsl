@@ -24,6 +24,7 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:java="java:org.fao.geonet.util.XslUtil"
+                exclude-result-prefixes="#all"
                 version="2.0">
 
   <xsl:output indent="yes" method="text" encoding="UTF-8" media-type="application/json"/>
