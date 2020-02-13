@@ -392,6 +392,13 @@ class Harvester implements IHarvester<HarvestResult> {
                 break;
             }
 
+            // Some misbehaving CSW return nextRecord = 1 when start is over numberOfRecordsMatched
+            // Break the loop if nextRecord is smaller than start.
+            if (nextRecord != null && nextRecord < start) {
+                log.warning(String.format("Forcing harvest end since nextRecord < start (nextRecord = %d, start = %d)", nextRecord, start));
+                break;
+            }
+
             // Start position of next record.
             // Note that some servers may return less records than requested (it's ok for CSW protocol)
             start += returnedCount;
