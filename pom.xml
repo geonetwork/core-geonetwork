@@ -1472,8 +1472,9 @@
 
     <withHeldCheck.frequency>0/30 * * * * ?</withHeldCheck.frequency>
 
-    <landingPage.formatter>xsl-view?view=sextant&amp;template=sextant-summary-view&amp;portalLink=https%3A%2F%2Fsextant.ifremer.fr%2FDonnees%2FCatalogue%23%2Fmetadata%2F</landingPage.formatter>
+    <landingPage.formatter>xsl-view?view=sextant&amp;template=sextant-summary-view&amp;portalLink=group</landingPage.formatter>
     <landingPage.language>${language.default}</landingPage.language>
+
 
     <!-- Jetty plugin port configuration -->
     <jetty.port>8080</jetty.port>
