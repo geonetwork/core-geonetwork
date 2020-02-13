@@ -13,7 +13,7 @@
 
   console.log('Loading Sextant...');
 
-  // First, load the catalog
+  // 1. load the portal list
   $.ajax(sxtGnUrl + 'api/sources', { dataType: 'json' })
     .then(function (sources) {
       for (var i = 0; i < sources.length; i++) {
@@ -23,6 +23,7 @@
       }
       return sources[0];
     })
+    // 2. load site settings and ui settings
     .then(function (portalSetting) {
       var uiConfigName = portalSetting.uiConfig || 'srv';
       console.log('UI config: ', uiConfigName);
@@ -31,15 +32,10 @@
         $.ajax(sxtGnUrl + 'api/site/settings', {dataType: 'json'}),
         $.ajax(sxtGnUrl + 'api/ui/' + uiConfigName, {dataType: 'json'})
       ]).then(function (settings) {
-        var siteSettings = settings[0];
         var uiSettings = JSON.parse(settings[1].configuration);
-        console.log('settings', siteSettings, uiSettings);
-
         // merge uiconfig.sextant in sxtSettings for backward compatibility
         window.sxtSettings = uiSettings.sextant ? uiSettings.sextant : undefined;
-
         var theme = uiSettings.sextant && uiSettings.sextant.theme ? uiSettings.sextant.theme : 'default';
-        console.log('CSS theme: ', theme);
         var stylesheetUrl = sxtGnUrl + '../static/api-' + theme + '.css';
 
         // add theme-specific stylesheet & preload link

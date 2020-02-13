@@ -96,5 +96,5 @@
   "nodeDesactivated": "Only one layer per combo group can be visible",
   "groupVisible": "Visible Group",
   "searchOnlyTitle": "Search only in title",
-  "ui-mod-sextant": "Sextant-specific configuration"
+  "ui-settings-sextant": "Sextant-specific configuration"
 }

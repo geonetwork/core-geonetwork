@@ -953,17 +953,22 @@
           {{('ui-' + key + '-help') | translate}} </p>
       </div>
     </div>
-
-    <!-- SPECIFIC SEXTANT -->
-    <div ng-if="m === 'sextant'">
-      <div style="height: 300px"
-           ui-ace="{useWrapMode:true, showGutter:true, mode:'json'}"
-           data-ng-model="sxtConfigSource">
-      </div>
-    </div>
-    <!-- END SPECIFIC SEXTANT -->
-
   </fieldset>
+
+  <br/>
+
+  <!-- SPECIFIC SEXTANT -->
+  <div>
+    <legend>
+      <label class="control-label" span>ui-settings-sextant</label>
+    </legend>
+    <div style="height: 300px"
+         ui-ace="{useWrapMode:true, showGutter:true, mode:'json'}"
+         data-ng-model="sxtConfigSource">
+    </div>
+  </div>
+  <!-- END SPECIFIC SEXTANT -->
+
   <br/>
   <span data-translate="">ui-advancedConfig</span>
 
