@@ -295,7 +295,14 @@ goog.require('gn_alert');
           'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/page'
         }
+      },
+
+      // SEXTANT SPECIFIC
+      // this key holds the equivalent of the legacy sxtSettings object
+      'sextant': {
+
       }
+      // END SEXTANT SPECIFIC
     };
 
     return {
