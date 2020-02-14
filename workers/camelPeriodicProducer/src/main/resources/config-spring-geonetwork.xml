@@ -23,9 +23,11 @@
   -->
 
 <beans profile="es"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://www.springframework.org/schema/beans"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
   <bean class="org.fao.geonet.camelPeriodicProducer.MessageProducerFactory"/>
   <bean class="org.apache.camel.component.quartz2.QuartzComponent"/>
