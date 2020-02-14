@@ -558,6 +558,16 @@
                  string="{string(.)}" store="true" index="true"/>
         </xsl:for-each>
 
+        <xsl:for-each select="gmd:otherConstraints/gmx:Anchor[not(string(@xlink:href))]">
+          <Field name="{$fieldPrefix}OtherConstraints"
+                 string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+
+        <xsl:for-each select="gmd:otherConstraints/gmx:Anchor[string(@xlink:href)]">
+          <Field name="{$fieldPrefix}UseLimitation"
+                 string="{concat('link|',string(@xlink:href), '|', string(.))}" store="true" index="true"/>
+        </xsl:for-each>
+
         <xsl:for-each select="gmd:useLimitation/gco:CharacterString">
             <Field name="{$fieldPrefix}UseLimitation"
                    string="{string(.)}" store="true" index="true"/>
