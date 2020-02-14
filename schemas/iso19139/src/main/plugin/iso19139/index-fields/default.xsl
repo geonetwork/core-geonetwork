@@ -564,7 +564,7 @@
         </xsl:for-each>
 
         <xsl:for-each select="gmd:otherConstraints/gmx:Anchor[string(@xlink:href)]">
-          <Field name="{$fieldPrefix}UseLimitation"
+          <Field name="{$fieldPrefix}OtherConstraints"
                  string="{concat('link|',string(@xlink:href), '|', string(.))}" store="true" index="true"/>
         </xsl:for-each>
 
