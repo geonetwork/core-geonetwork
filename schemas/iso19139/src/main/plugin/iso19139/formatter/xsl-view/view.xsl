@@ -1074,10 +1074,11 @@
     </span>
   </xsl:template>
 
-  <xsl:template mode="render-value"
+  <!-- Added codelist for gmd:LanguageCode in dut, eng, fre and ger code based on isoLanguagesDes database tabel -->
+  <!--xsl:template mode="render-value"
                 match="gmd:language/gmd:LanguageCode/@codeListValue">
-      <xsl:value-of select="xslUtils:twoCharLangCode(.)"/>
-  </xsl:template>
+    <xsl:value-of select="concat('{{''',.,''' | translate}}')"/>
+  </xsl:template-->
 
   <xsl:template mode="render-value"
                 match="gmd:language/gco:CharacterString">

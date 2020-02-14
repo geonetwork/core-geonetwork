@@ -289,7 +289,8 @@ public class SchemaLocalizations {
     public String codelistTranslation(String codelist, String context, String type) throws Exception {
 
         String codelistName = extractCodeListName(codelist);
-        if (LANG_CODELIST_NS.equals(codelist) || "#LanguageCode".equals(codelist) || "LanguageCode".equals(codelistName)) {
+        // Added codelist for gmd:LanguageCode in dut, eng, fre and ger code based on isoLanguagesDes database tabel
+        if (/*LANG_CODELIST_NS.equals(codelist) || */"#LanguageCode".equals(codelist)/* || "LanguageCode".equals(codelistName)*/) {
             return translateLanguageCode(context);
         }
 
