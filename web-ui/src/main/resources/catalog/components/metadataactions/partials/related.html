@@ -5,12 +5,13 @@
   <div class=""
        data-ng-repeat="(type, items) in relations track by $index"
        data-ng-if="type && type !== 'thumbnails'">
-    <div class="row list-group-item gn-related-item gn-related-{{type}}"
+    <div class="row gn-related-item gn-related-{{type}}"
          data-ng-repeat="r in items track by $index"
          data-ng-init="mainType = config.getType(r, type);">
       <div class="col-xs-1 col-sm-1">
         <!-- OWS have their name overlaid over the globe icon -->
-        <strong data-ng-if="(mainType === 'WMS') || (mainType === 'WMSSERVICE') || (mainType === 'WMTS') ||
+        <strong  data-ng-class="{'hidden': $index != 0}"
+                 data-ng-if="(mainType === 'WMS') || (mainType === 'WMSSERVICE') || (mainType === 'WMTS') ||
                             (mainType === 'WMTSSERVICE') || (mainType === 'WFS') || (mainType === 'WCS')">
           <span class="fa-stack fa-1x">
             <i class="fa fa-globe fa-stack-2x" style="opacity: 0.55;"></i>
@@ -19,7 +20,8 @@
             </span>
           </span>
         </strong>
-        <strong data-ng-if="(mainType !== 'WMS') && (mainType !== 'WMSSERVICE') && (mainType !== 'WMTS') &&
+        <strong  data-ng-class="{'hidden': $index != 0}"
+                 data-ng-if="(mainType !== 'WMS') && (mainType !== 'WMSSERVICE') && (mainType !== 'WMTS') &&
                             (mainType !== 'WMTSSERVICE') && (mainType !== 'WFS') && (mainType !== 'WCS')">
           <i class="fa fa-question-circle"
              data-ng-class="config.getClassIcon(mainType)"/>&nbsp;
@@ -28,7 +30,9 @@
       </div>
       <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-8 col-sm-8'">
         <!-- Always display title if available -->
-        <h3 data-ng-if="::(r.title | gnLocalized: lang).length">{{::(r.title | gnLocalized: lang)}}</h3>
+        <a data-ng-if="::(r.title | gnLocalized: lang).length" href="#/metadata/{{r.id}}">
+          {{::(r.title | gnLocalized: lang)}}
+        </a>
         <!-- Display description if available -->
         <p data-ng-if="(mainType === 'WMS' || mainType === 'WMSSERVICE' ||
                        mainType === 'WMTS' || mainType === 'WMTSSERVICE' ||
@@ -162,11 +166,6 @@
           <div data-ng-switch-default>
             <p class="text-muted"
                data-ng-if="mainType.indexOf('MD') == 0 && r.id">
-              <span class="gn-related-title">
-                <a href="#/metadata/{{r.id}}">
-                  {{(r.title | gnLocalized: lang) }}
-                </a> <!--({{(config.getLabel(mainType, type)) | translate}})-->
-              </span>
               <span class="gn-related-description">
                 {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a href="#/metadata/{{r.id}}">{{'more' |
                 translate}}...</a>
