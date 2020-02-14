@@ -23,9 +23,12 @@
 
 package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
+import static org.fao.geonet.kernel.HarvestValidationEnum.NOVALIDATION;
+
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -191,7 +194,12 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         }
 
         try {
-            params.getValidate().validate(dataMan, context, xml);
+            Integer groupIdVal = null;
+            if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+            }
+
+            params.getValidate().validate(dataMan, context, xml, groupIdVal);
         } catch (Exception e) {
             LOGGER.debug("Cannot validate XML from file {}, ignoring. Error was: {}", filePath, e.getMessage());
             result.doesNotValidate++;
@@ -265,6 +273,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                             "metadata id= {}, using current date for modified date", id);
                     changeDate = new ISODate().toString();
                 }
+                
                 updateMedata(xml, id, changeDate);
             }
         }

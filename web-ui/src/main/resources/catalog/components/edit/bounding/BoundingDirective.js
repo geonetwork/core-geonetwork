@@ -175,7 +175,7 @@
             ctrl.initValue = function() {
               if (ctrl.polygonXml) {
                 var srsName = ctrl.polygonXml.match(
-                    new RegExp('srsName=\"(EPSG:[0-9]*)\"'));
+                    new RegExp('srsName=\"([^"]*)\"'));
                 ctrl.dataProjection = srsName && srsName.length === 2 ?
                     srsName[1] : 'EPSG:4326';
 

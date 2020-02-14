@@ -37,4 +37,9 @@ import java.util.List;
 public interface SchematronCriteriaEvaluator {
     public abstract boolean accepts(ApplicationContext applicationContext, String value, int metadataId, Element metadata,
                                     List<Namespace> metadataNamespaces);
+
+    // Used for metadata that is not in the catalogue, should be provided the groupOwner for the metadata
+    // to evaluate the SchemaCriteriaType.GROUP
+    public abstract boolean accepts(ApplicationContext applicationContext, String value, Element metadata,
+                                    List<Namespace> metadataNamespaces,  Integer groupOwnerId);
 }

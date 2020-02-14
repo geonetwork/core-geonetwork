@@ -194,9 +194,23 @@
 
   <xsl:template mode="getExtent" match="gmd:MD_Metadata">
     <section class="gn-md-side-overview">
-      <xsl:apply-templates mode="render-field"
-                           select=".//gmd:EX_GeographicBoundingBox">
-      </xsl:apply-templates>
+      <!--<h2>
+        <i class="fa fa-fw fa-map-marker"><xsl:comment select="'image'"/></i>
+        <span><xsl:comment select="name()"/>
+          <xsl:value-of select="$schemaStrings/spatialExtent"/>
+        </span>
+      </h2>-->
+
+      <xsl:choose>
+        <xsl:when test=".//gmd:EX_BoundingPolygon">
+          <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates mode="render-field"
+                               select=".//gmd:EX_GeographicBoundingBox">
+          </xsl:apply-templates>
+        </xsl:otherwise>
+      </xsl:choose>
     </section>
   </xsl:template>
 
@@ -214,7 +228,7 @@
                     select="if ($view = 'sextant') then gmd:identificationInfo/*/gmd:graphicOverview[1]/* else gmd:identificationInfo/*/gmd:graphicOverview/*"/>
       <xsl:for-each select="$overviews">
         <img data-gn-img-modal="md"
-             class="gn-img-thumbnail center-block"
+             class="gn-img-thumbnail"
              alt="{$schemaStrings/overview}"
              src="{gmd:fileName/*}"/>
 
@@ -333,6 +347,7 @@
                   <xsl:sort select="." order="descending"/>
                 </xsl:perform-sort>
               </xsl:variable>
+
               <xsl:choose>
                 <xsl:when test="$publicationDate/*[1]">
                   <xsl:for-each select="$publicationDate/*[1]">
@@ -521,6 +536,34 @@
   </xsl:template>
 
 
+  <!-- Display spatial extents containing bounding polygons on a map -->
+
+  <xsl:template mode="render-field"
+                match="gmd:EX_Extent[gmd:geographicElement/*/gmd:polygon]"
+                priority="100">
+    <div class="entry name">
+      <h2>
+        <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
+        <xsl:apply-templates mode="render-value"
+                             select="@*"/>
+      </h2>
+      <div class="target"><xsl:comment select="name()"/>
+
+        <xsl:apply-templates mode="render-field" select="gmd:description"/>
+
+        <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
+
+        <!-- Display any included geographic descriptions separately after displayed map -->
+
+        <xsl:apply-templates mode="render-field" select="gmd:geographicElement[gmd:EX_GeographicDescription]"/>
+
+        <xsl:apply-templates mode="render-field" select="gmd:temporalElement"/>
+        <xsl:apply-templates mode="render-field" select="gmd:verticalElement"/>
+
+      </div>
+    </div>
+  </xsl:template>
+
   <!-- A contact is displayed with its role as header -->
   <xsl:template mode="render-field"
                 match="*[gmd:CI_ResponsibleParty]"
@@ -587,77 +630,81 @@
       </xsl:when>
       <xsl:otherwise>
         <div class="gn-contact">
-          <div class="gn-role">
-            <i class="fa fa-envelope"><xsl:comment select="'email'"/></i>
+          <strong>
+            <xsl:comment select="'email'"/>
             <xsl:apply-templates mode="render-value"
                                  select="*/gmd:role/*/@codeListValue"/>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <address>
-                <xsl:copy-of select="$label"/>
+          </strong>
+          <address>
+              <xsl:choose>
+                <xsl:when test="$email">
+                  <i class="fa fa-fw fa-envelope"></i>
+                  <a href="mailto:{normalize-space($email)}">
+                    <xsl:copy-of select="$displayName"/><xsl:comment select="'email'"/>
+                  </a>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:copy-of select="$displayName"/><xsl:comment select="'name'"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            <br/>
+            <xsl:for-each select="*/gmd:contactInfo/*">
+              <xsl:for-each select="gmd:address/*">
+                <div>
+                <i class="fa fa-fw fa-map-marker"><xsl:comment select="'address'"/></i>
+                  <xsl:for-each select="gmd:deliveryPoint[normalize-space(.) != '']">
+                      <xsl:apply-templates mode="render-value" select="."/>,
+                  </xsl:for-each>
+                  <xsl:for-each select="gmd:city[normalize-space(.) != '']">
+                      <xsl:apply-templates mode="render-value" select="."/>,
+                  </xsl:for-each>
+                  <xsl:for-each select="gmd:administrativeArea[normalize-space(.) != '']">
+                      <xsl:apply-templates mode="render-value" select="."/>,
+                  </xsl:for-each>
+                  <xsl:for-each select="gmd:postalCode[normalize-space(.) != '']">
+                      <xsl:apply-templates mode="render-value" select="."/>,
+                  </xsl:for-each>
+                  <xsl:for-each select="gmd:country[normalize-space(.) != '']">
+                      <xsl:apply-templates mode="render-value" select="."/>
+                  </xsl:for-each>
+                </div>
+              </xsl:for-each>
+            </xsl:for-each>
+            <xsl:for-each select="*/gmd:contactInfo/*">
+              <xsl:for-each select="gmd:phone/*/gmd:voice[normalize-space(.) != '']">
+                  <xsl:variable name="phoneNumber">
+                    <xsl:apply-templates mode="render-value" select="."/>
+                  </xsl:variable>
+                  <i class="fa fa-fw fa-phone"><xsl:comment select="'phone'"/></i>
+                  <a href="tel:{translate($phoneNumber,' ','')}">
+                    <xsl:value-of select="$phoneNumber"/>
+                  </a>
+                  <br/>
+              </xsl:for-each>
+              <xsl:for-each select="gmd:phone/*/gmd:facsimile[normalize-space(.) != '']">
+                <xsl:variable name="phoneNumber">
+                  <xsl:apply-templates mode="render-value" select="."/>
+                </xsl:variable>
+                <i class="fa fa-fw fa-fax"><xsl:comment select="'fax'"/></i>
+                <a href="tel:{translate($phoneNumber,' ','')}">
+                  <xsl:value-of select="normalize-space($phoneNumber)"/>
+                </a>
                 <br/>
-                <xsl:for-each select="*/gmd:contactInfo/*">
-                  <xsl:for-each select="gmd:address/*">
-                    <div><xsl:comment select="'address'"/>
-                      <xsl:for-each select="gmd:deliveryPoint[normalize-space(.) != '']">
-                        <xsl:apply-templates mode="render-value" select="."/>
-                      </xsl:for-each>
-                      <xsl:for-each select="gmd:city[normalize-space(.) != '']">
-                        <xsl:apply-templates mode="render-value" select="."/>
-                      </xsl:for-each>
-                      <xsl:for-each select="gmd:administrativeArea[normalize-space(.) != '']">
-                        <xsl:apply-templates mode="render-value" select="."/>
-                      </xsl:for-each>
-                      <xsl:for-each select="gmd:postalCode[normalize-space(.) != '']">
-                        <xsl:apply-templates mode="render-value" select="."/>
-                      </xsl:for-each>
-                      <xsl:for-each select="gmd:country[normalize-space(.) != '']">
-                        <xsl:apply-templates mode="render-value" select="."/>
-                      </xsl:for-each>
-                    </div>
-                    <br/>
-                  </xsl:for-each>
-                </xsl:for-each>
-              </address>
-            </div>
-            <div class="col-md-6">
-              <address>
-                <xsl:for-each select="*/gmd:contactInfo/*">
-                  <xsl:for-each select="gmd:phone/*/gmd:voice[normalize-space(.) != '']">
-                    <xsl:variable name="phoneNumber">
-                      <xsl:apply-templates mode="render-value" select="."/>
-                    </xsl:variable>
-                    <i class="fa fa-phone"><xsl:comment select="'phone'"/></i>
-                    <a href="{translate($phoneNumber,' ','')}">
-                      <xsl:value-of select="$phoneNumber"/>
-                    </a>
-                  </xsl:for-each>
-                  <xsl:for-each select="gmd:phone/*/gmd:facsimile[normalize-space(.) != '']">
-                    <xsl:variable name="phoneNumber">
-                      <xsl:apply-templates mode="render-value" select="."/>
-                    </xsl:variable>
-                    <i class="fa fa-fax"><xsl:comment select="'fax'"/></i>
-                    <a href="{translate($phoneNumber,' ','')}">
-                      <xsl:value-of select="normalize-space($phoneNumber)"/>
-                    </a>
-                  </xsl:for-each>
-                  <xsl:for-each select="gmd:onlineResource/*/gmd:linkage/gmd:URL[normalize-space(.) != '']">
-                    <xsl:variable name="web">
-                      <xsl:apply-templates mode="render-value" select="."/></xsl:variable>
-                    <i class="fa fa-link"><xsl:comment select="'link'"/></i>
-                    <a href="{normalize-space($web)}">
-                      <xsl:value-of select="normalize-space($web)"/>
-                    </a>
-                  </xsl:for-each>
-                  <xsl:for-each select="gmd:hoursOfService[normalize-space(.) != '']">
-                    <xsl:apply-templates mode="render-field"
-                                         select="."/>
-                  </xsl:for-each>
-                </xsl:for-each>
-              </address>
-            </div>
-          </div>
+              </xsl:for-each>
+              <xsl:for-each select="gmd:onlineResource/*/gmd:linkage/gmd:URL[normalize-space(.) != '']">
+                <xsl:variable name="web">
+                  <xsl:apply-templates mode="render-value" select="."/></xsl:variable>
+                <i class="fa fa-fw fa-link"><xsl:comment select="'link'"/></i>
+                <a href="{normalize-space($web)}">
+                  <xsl:value-of select="normalize-space($web)"/>
+                </a>
+              </xsl:for-each>
+              <xsl:for-each select="gmd:hoursOfService[normalize-space(.) != '']">
+                  <xsl:apply-templates mode="render-field"
+                                        select="."/>
+              </xsl:for-each>
+            </xsl:for-each>
+          </address>
         </div>
       </xsl:otherwise>
     </xsl:choose>
@@ -675,7 +722,7 @@
         <xsl:apply-templates mode="render-value" select="*"/>
         <xsl:apply-templates mode="render-value" select="@*"/>
         <!--
-        <a class="btn btn-default" href="{$nodeUrl}api/records/{$metadataId}/formatters/xml">
+        <a class="btn btn-default" href="{$nodeUrl}api/records/{$metadataUuid}/formatters/xml">
           <i class="fa fa-file-code-o"><xsl:comment select="'file'"/></i>
           <span><xsl:value-of select="$schemaStrings/metadataInXML"/></span>
         </a>-->
@@ -972,7 +1019,6 @@
      </span>
   </xsl:template>
 
-
   <xsl:template mode="render-value"
                 match="*[gmx:Anchor]">
     <xsl:apply-templates mode="render-value"
@@ -1000,6 +1046,7 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
 
 
   <xsl:template mode="render-value"

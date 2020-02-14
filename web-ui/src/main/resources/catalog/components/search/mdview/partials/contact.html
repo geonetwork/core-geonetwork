@@ -97,30 +97,26 @@
   <!-- Group by organisation/role -->
   <div class="gn-contact flex-row" data-ng-if="mode == 'org-role'"
        data-ng-repeat="(org, contactByOrgRole) in mdContactsByOrgRole">
-
-    <div class="flex-noshrink">
-      <i class="fa fa-envelope"></i>
-    </div>
-    <div class="flex-spacer"></div>
     <address>
-      <div>
-        <strong data-ng-if="::orgWebsite[org]">
-          <a data-ng-href="{{::orgWebsite[org]}}">{{org}}</a><br/>
-        </strong>
-        <strong data-ng-if="::!orgWebsite[org]">
-          {{org}}
-        </strong>
-      </div>
+      <strong data-ng-if="::orgWebsite[org]">
+        <i class="fa fa-fw fa-link"></i>
+        <a data-ng-href="{{::orgWebsite[org]}}">{{org}}</a><br/>
+      </strong>
+      <strong data-ng-if="::!orgWebsite[org]">
+        {{org}}
+      </strong>
 
       <div ng-repeat="(key, contactGroupByAddress) in contactByOrgRole | groupBy:'address'">
-        <span class="text-muted" data-ng-if="key != ''">
+        <span data-ng-if="key != ''">
+          <i class="fa fa-fw fa-map-marker"></i>
           {{key}}<br/>
         </span>
         <ul>
           <li ng-repeat="(roles, contactGroupByRole) in contactGroupByAddress | groupBy:'roles'">
-            {{roles }} :
+            {{roles }}:<br/>
             <span data-ng-repeat="c in contactGroupByRole track by $index">
               <span data-ng-if="c.email != ''">
+                <i class="fa fa-fw fa-envelope"></i>
                 <a href="mailto:{{c.email}}">
                   <span data-ng-hide="c.name">{{c.email}}</span>
                   <span data-ng-show="c.name">{{c.name}}</span>
@@ -131,9 +127,10 @@
                 <span data-ng-show="c.position">({{c.position}})</span>
               </span>
               <br>
+              <i class="fa fa-fw fa-phone" data-ng-if="c.phone != ''"></i>
               <a href="tel:{{c.phone}}"
-                data-ng-if="c.phone != ''">
-                {{c.phone}}
+                 data-ng-if="c.phone != ''">
+               {{c.phone}}
               </a>
               <span data-ng-if="!$last">,</span>
             </span>

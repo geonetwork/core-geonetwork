@@ -32,26 +32,14 @@ import java.sql.SQLException;
 
 public class GeonetHarvester extends AbstractHarvester<HarvestResult, GeonetParams> {
     public static final String TYPE = "geonetwork";
-    private GeonetParams params;
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Update
-    //---
-    //---------------------------------------------------------------------------
 
     @Override
     protected GeonetParams createParams() {
         return new GeonetParams(dataMan);
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- addHarvestInfo
-    //---
-    //---------------------------------------------------------------------------
 
-    protected void storeNodeExtra(GeonetParams p, String path,
+    protected void storeNodeExtra(GeonetParams params, String path,
                                   String siteId, String optionsId) throws SQLException {
         setParams(params);
 

@@ -59,7 +59,10 @@ import org.fao.geonet.kernel.harvest.harvester.HarvesterUtil;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -74,6 +77,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import jeeves.server.context.ServiceContext;
+
+import javax.annotation.Nonnull;
 
 //=============================================================================
 
@@ -294,6 +299,8 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
             String id = localUuids.getID(ri.id);
 
+            processParams.put("mdChangeDate", ri.changeDate);
+
             if (id == null) {
                 addMetadata(t, ri, processName, processParams);
             } else {
@@ -335,6 +342,8 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
         if (StringUtils.isNotEmpty(params.xslfilter)) {
             md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
                 md, processName, processParams);
+
+            schema = dataMan.autodetectSchema(md);
         }
 
         //
@@ -406,7 +415,12 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
             } else {
 
                 try {
-                    params.getValidate().validate(dataMan, context, md);
+                    Integer groupIdVal = null;
+                    if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                        groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                    }
+
+                    params.getValidate().validate(dataMan, context, md, groupIdVal);
                     return (Element) md.detach();
                 } catch (Exception e) {
                     log.info("Skipping metadata that does not validate. Remote id : " + ri.id);
@@ -475,11 +489,15 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
             // The schema of the metadata
             String schema = dataMan.autodetectSchema(md, null);
+            boolean updateSchema = false;
 
             // Apply the xsl filter choosed by UI
             if (StringUtils.isNotEmpty(params.xslfilter)) {
                 md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
                     md, processName, processParams);
+
+                schema = dataMan.autodetectSchema(md);
+                updateSchema = true;
             }
 
             //
@@ -489,6 +507,23 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
+
+
+            if (updateSchema) {
+                MetadataValidationRepository metadataValidationRepository =
+                    context.getBean(MetadataValidationRepository.class);
+
+                final String newSchema = schema;
+                metadataManager.update(Integer.parseInt(id), new Updater<AbstractMetadata>() {
+                    @Override
+                    public void apply(@Nonnull AbstractMetadata entity) {
+                        entity.getDataInfo().setSchemaId(newSchema);
+                    }
+                });
+
+                metadataValidationRepository.deleteAll(MetadataValidationSpecs.hasMetadataId(Integer.parseInt(id)));
+            }
+
             final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate.toString(),
                 true);
 

@@ -67,6 +67,7 @@ public class Source extends Localized {
     private String logo;
     private String filter;
     private String uiConfig;
+    private String serviceRecord;
     private ISODate creationDate = new ISODate();
     private Integer groupOwner;
 
@@ -268,5 +269,14 @@ public class Source extends Localized {
     public Source setGroupOwner(Integer groupOwner) {
         this.groupOwner = groupOwner;
         return this;
+    }
+
+    @Column(name = "serviceRecord")
+    public String getServiceRecord() {
+        return serviceRecord;
+    }
+
+    public void setServiceRecord(String serviceRecord) {
+        this.serviceRecord = serviceRecord;
     }
 }

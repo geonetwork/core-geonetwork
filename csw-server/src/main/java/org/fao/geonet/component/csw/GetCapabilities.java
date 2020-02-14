@@ -23,9 +23,7 @@
 
 package org.fao.geonet.component.csw;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
@@ -35,32 +33,31 @@ import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.csw.common.exceptions.VersionNegotiationFailedEx;
-import org.fao.geonet.domain.Address;
-import org.fao.geonet.domain.Language;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.CswCapabilitiesInfo;
-import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
-import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Comment;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -68,13 +65,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.servlet.ServletContext;
-
-import jeeves.server.context.ServiceContext;
-import jeeves.server.overrides.ConfigurationOverrides;
 
 import static org.fao.geonet.kernel.setting.SettingManager.isPortRequired;
 
@@ -96,6 +86,13 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
     private NodeInfo nodeinfo;
     @Autowired
     private SourceRepository sourceRepository;
+    @Autowired
+    private MetadataRepository metadataRepository;
+    @Autowired
+    private IMetadataUtils metadataUtils;
+    @Autowired
+    private AccessManager accessManager;
+
 
     public String getName() {
         return NAME;
@@ -107,87 +104,82 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         checkAcceptVersions(request);
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        boolean inspireEnabled = gc.getBean(SettingManager.class).getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE, false);
+        boolean isFromRecord = false;
 
+        String recordUuidToUseForCapability = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID);
+        if (!NodeInfo.DEFAULT_NODE.equals(context.getNodeId())) {
+            final Source source = sourceRepository.findOne(nodeinfo.getId());
+            if(source.getServiceRecord() != null) {
+                recordUuidToUseForCapability = source.getServiceRecord().toString();
+            }
+        }
 
-        //--- return capabilities
+        Element capabilities = null;
+        String message = null;
+        if (StringUtils.isNotEmpty(recordUuidToUseForCapability) && !"-1".equals(recordUuidToUseForCapability)) {
+            Metadata record = metadataRepository.findOneByUuid(recordUuidToUseForCapability);
+            if (record != null) {
+                try {
+                    if (accessManager.isVisibleToAll(String.valueOf(record.getId()))) {
+                        String conversionFilename = "record-to-csw-capabilities.xsl";
+                        String requestLanguage = request.getAttributeValue("language");
+                        Map<String, Object> parameters = new HashMap<>();
+                        parameters.put("outputLanguage", requestLanguage == null ? "" : requestLanguage);
+                        Path conversion = context.getAppPath().resolve(Geonet.Path.CSW).resolve(conversionFilename);
+                        capabilities = Xml.transform(record.getXmlData(false), conversion, parameters);
+                        isFromRecord = true;
+                    } else {
+                        message = String.format(
+                            "Record with UUID %s is not public and can't be used to build CSW GetCapabilities document. " +
+                                "Choose another record or publish this one.", record.getUuid());
+                        Log.warning(Geonet.CSW, message);
+                    }
+                } catch (Exception e) {
+                    message = String.format(
+                        "Error during retrieval of record with UUID %s. Error is: %s.", record.getUuid(), e.getMessage());
+                    Log.warning(Geonet.CSW, message);
+                }
+            } else {
+                // TODO: Add the message to the GetCapabilities doc ?
+                message = String.format(
+                    "Record with id %s is not available in the catalogue. Check the CSW configuration and choose an existing record.",
+                    recordUuidToUseForCapability);
+                Log.warning(Geonet.CSW, message);
+            }
+        }
 
-        Path file;
+        if (capabilities == null) {
+            Path file = context.getAppPath().resolve("xml").resolve("csw").resolve("capabilities.xml");
+            try {
+                capabilities = Xml.loadFile(file);
+                if (StringUtils.isNotEmpty(message)) {
+                    capabilities.addContent(new Comment("WARNING: " + message));
+                }
+            } catch (JDOMException e) {
+                Log.warning(Geonet.CSW, String.format("XML encoding error in file /xml/csw/capabilities.xml. Error is %s.", e.getMessage()));
+            } catch (NoSuchFileException e) {
+                Log.warning(Geonet.CSW, "File /xml/csw/capabilities.xml not found. Check catalogue config file.");
+            }
+        }
 
-        if (inspireEnabled) {
-            file = context.getAppPath().resolve("xml").resolve("csw").resolve("capabilities_inspire.xml");
-        } else {
-            file = context.getAppPath().resolve("xml").resolve("csw").resolve("capabilities.xml");
+        if (capabilities == null) {
+            throw new NoApplicableCodeEx("Failed to load capabilities from configuration files or from record. Check the CSW configuration.");
         }
 
         try {
-            Element capabilities = Xml.loadFile(file);
-            ServletContext servletContext = null;
-            if (context.getServlet() != null) {
-                servletContext = context.getServlet().getServletContext();
-            }
-            ConfigurationOverrides.DEFAULT.updateWithOverrides(file.toString(), servletContext, context.getAppPath(), capabilities);
-
             String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
-            setKeywords(capabilities, context, cswServiceSpecificContraint);
+
+            if (!isFromRecord) {
+                setKeywords(capabilities, context, cswServiceSpecificContraint);
+            }
             setOperationsParameters(capabilities);
 
-            String currentLanguage = "";
-
-            // INSPIRE: Use language parameter if available, otherwise use default (using context.getLanguage())
-            if (inspireEnabled) {
-                String isoLangParamValue = request.getAttributeValue("language");
-
-
-                final LanguageRepository languageRepository = context.getBean(LanguageRepository.class);
-                List<Language> languageList = languageRepository.findAllByInspireFlag(true);
-
-                List<String> langCodes = Lists.transform(languageList, new Function<Language, String>() {
-                    @Nullable
-                    @Override
-                    public String apply(@Nonnull Language input) {
-                        return input.getId();
-                    }
-                });
-
-                if (isoLangParamValue != null) {
-                    // Retrieve GN language id from Iso language id
-                    if (langCodes.contains(isoLangParamValue)) {
-                        currentLanguage = isoLangParamValue;
-                    }
-                }
-
-                String defaultLanguageId = context.getLanguage();
-                try {
-                    Language defaultLanguage = languageRepository.findOneByDefaultLanguage();
-
-                    if (StringUtils.isEmpty(currentLanguage)) {
-                        currentLanguage = defaultLanguage.getId();
-                        defaultLanguageId = defaultLanguage.getId();
-                    }
-                } catch (EmptyResultDataAccessException e) {
-                    Log.error(Geonet.CSW, "No default language set in database languages table. " +
-                        "You MUST set one default language (using isDefault column). " +
-                        "Using session language as default. Error is: " + e.getMessage());
-                    currentLanguage = context.getLanguage();
-                }
-
-                setInspireLanguages(capabilities, langCodes, currentLanguage, defaultLanguageId);
-            } else {
+            String currentLanguage = request.getAttributeValue("language");
+            if (currentLanguage == null) {
                 currentLanguage = context.getLanguage();
             }
 
-            final CswCapabilitiesInfoFieldRepository infoRepository = context.getBean(CswCapabilitiesInfoFieldRepository.class);
-            CswCapabilitiesInfo cswCapabilitiesInfo = infoRepository.findCswCapabilitiesInfo(currentLanguage);
-
-            // Retrieve contact data from users table
-            String contactId = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_CSW_CONTACT_ID);
-            if ((contactId == null) || (contactId.equals(""))) {
-                contactId = "-1";
-            }
-            User user = context.getBean(UserRepository.class).findOne(contactId);
-
-            substitute(context, capabilities, cswCapabilitiesInfo, user, currentLanguage);
+            substitute(context, capabilities, currentLanguage);
 
             handleSections(request, capabilities);
 
@@ -331,7 +323,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
     }
 
-    private void substitute(ServiceContext context, Element capab, CswCapabilitiesInfo cswCapabilitiesInfo, User contact, String langId) throws Exception {
+    private void substitute(ServiceContext context, Element capab, String langId) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
 
@@ -354,52 +346,15 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
         vars.put("$SERVLET", context.getBaseUrl());
 
-        // Set CSW contact information
-        if (contact != null) {
-            vars.put("$IND_NAME", contact.getName() + " " + contact.getSurname());
-            vars.put("$ORG_NAME", contact.getOrganisation());
-            vars.put("$POS_NAME", contact.getProfile().name());
-            vars.put("$VOICE", "");
-            vars.put("$FACSCIMILE", "");
-            final Address address = contact.getPrimaryAddress();
-            vars.put("$DEL_POINT", address.getAddress());
-            vars.put("$CITY", address.getCity());
-            vars.put("$ADMIN_AREA", address.getState());
-            vars.put("$POSTAL_CODE", address.getZip());
-            vars.put("$COUNTRY", address.getCountry());
-            vars.put("$EMAIL", contact.getEmail());
-            vars.put("$HOUROFSERVICE", "");
-            vars.put("$CONTACT_INSTRUCTION", "");
-        } else {
-            vars.put("$IND_NAME", "");
-            vars.put("$ORG_NAME", "");
-            vars.put("$POS_NAME", "");
-            vars.put("$VOICE", "");
-            vars.put("$FACSCIMILE", "");
-            vars.put("$DEL_POINT", "");
-            vars.put("$CITY", "");
-            vars.put("$ADMIN_AREA", "");
-            vars.put("$POSTAL_CODE", "");
-            vars.put("$COUNTRY", "");
-            vars.put("$EMAIL", "");
-            vars.put("$HOUROFSERVICE", "");
-            vars.put("$CONTACT_INSTRUCTION", "");
-        }
         boolean isTitleDefined = false;
-        if (!NodeInfo.DEFAULT_NODE.equals(nodeinfo.getId())) {
-            final Source source = sourceRepository.findOne(nodeinfo.getId());
-            if (source != null) {
-                vars.put("$TITLE", source.getLabelTranslations().get(langId));
-                isTitleDefined = true;
-            }
+        String sourceUuid = NodeInfo.DEFAULT_NODE.equals(nodeinfo.getId()) ? sm.getSiteId() : nodeinfo.getId();
+        final Source source = sourceRepository.findOne(sourceUuid);
+        if (source != null) {
+            vars.put("$TITLE", source.getLabelTranslations().get(langId));
+            isTitleDefined = true;
+        } else {
+            vars.put("$TITLE", sm.getSiteName());
         }
-        if (!isTitleDefined) {
-            vars.put("$TITLE", cswCapabilitiesInfo.getTitle());
-        }
-        vars.put("$ABSTRACT", cswCapabilitiesInfo.getAbstract());
-        vars.put("$FEES", cswCapabilitiesInfo.getFees());
-        vars.put("$ACCESS_CONSTRAINTS", cswCapabilitiesInfo.getAccessConstraints());
-
         vars.put("$LOCALE", langId);
 
         Lib.element.substitute(capab, vars);

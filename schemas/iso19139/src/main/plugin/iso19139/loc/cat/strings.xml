@@ -137,6 +137,7 @@
   <otherConstraints>Other constraints</otherConstraints>
   <operatesOn>Coupled resource</operatesOn>
   <extent>Geographic bounding box</extent>
+  <spatialExtent>Extensió espacial</spatialExtent>
   <freeTextKeywords>Other keywords</freeTextKeywords>
 
   <addCrs>Projection</addCrs>

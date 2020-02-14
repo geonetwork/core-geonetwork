@@ -2705,7 +2705,6 @@ goog.defineClass.applyProperties_ = function(target, source) {
   }
 };
 
-
 /**
  * Sealing classes breaks the older idiom of assigning properties on the
  * prototype rather than in the constructor. As such, goog.defineClass

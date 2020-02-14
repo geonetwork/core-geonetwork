@@ -453,37 +453,40 @@
         restrict: 'A',
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
-          $http.get('../api/isolanguages', {}, {
-            cache: true
-          }).success(function(data) {
-            // Compute default name and add a
-            // tokens element which is used for filter
-            angular.forEach(data, function(lang) {
-              var defaultName = lang.label['eng'];
-              lang.name = lang.label[scope.lang] || defaultName;
-              lang.tokens = [lang.name, lang.code, defaultName];
-            });
-            var source = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-              queryTokenizer: Bloodhound.tokenizers.whitespace,
-              local: data,
-              limit: 30
-            });
-            source.initialize();
-            $(element).typeahead({
-              minLength: 0,
-              highlight: true
-            }, {
-              name: 'isoLanguages',
-              displayKey: 'code',
-              source: source.ttAdapter(),
-              templates: {
-                suggestion: function(datum) {
-                  return '<p>' + datum.name + ' (' + datum.code + ')</p>';
+          element.on('focus', function() {
+            $http.get('../api/isolanguages', {}, {
+              cache: true
+            }).success(function(data) {
+              // Compute default name and add a
+              // tokens element which is used for filter
+              angular.forEach(data, function(lang) {
+                var defaultName = lang.label['eng'];
+                lang.name = lang.label[scope.lang] || defaultName;
+                lang.tokens = [lang.name, lang.code, defaultName];
+              });
+              var source = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: data,
+                limit: 30
+              });
+              source.initialize();
+              $(element).typeahead({
+                minLength: 0,
+                highlight: true
+              }, {
+                name: 'isoLanguages',
+                displayKey: 'code',
+                source: source.ttAdapter(),
+                templates: {
+                  suggestion: function(datum) {
+                    return '<p>' + datum.name + ' (' + datum.code + ')</p>';
+                  }
                 }
-              }
+              });
             });
-          });
+            element.unbind("focus")
+          })
         }
       };
     }]);

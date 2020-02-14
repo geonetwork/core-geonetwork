@@ -107,6 +107,10 @@
       <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
       <constructor-arg value="loc-slo-"/>
     </bean>
+    <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+      <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+      <constructor-arg value="custom-data-db-"/>
+    </bean>
   </util:list>
 
 </beans>

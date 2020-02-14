@@ -170,6 +170,20 @@ goog.require('gn_alert');
             }],
             defaultUrl: ''
           },
+          'downloadFormatter': [{
+            'label': 'exportMEF',
+            'url': '/formatters/zip?withRelated=false',
+            'class': 'fa-file-zip-o'
+          }, {
+            'label': 'exportPDF',
+            'url' : '/formatters/xsl-view?output=pdf&language=${lang}',
+            'class': 'fa-file-pdf-o'
+          }, {
+            'label': 'exportXML',
+            // 'url' : '/formatters/xml?attachment=false',
+            'url' : '/formatters/xml',
+            'class': 'fa-file-code-o'
+          }],
           'grid': {
             'related': ['parent', 'children', 'services', 'datasets']
           },
@@ -209,7 +223,7 @@ goog.require('gn_alert');
           },
           'projection': 'EPSG:3857',
           'projectionList': [{
-            'code': 'EPSG:4326',
+            'code': 'urn:ogc:def:crs:EPSG:6.6:4326',
             'label': 'WGS84 (EPSG:4326)'
           }],
           'switcherProjectionList': [{

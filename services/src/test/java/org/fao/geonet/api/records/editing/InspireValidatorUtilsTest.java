@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -83,6 +84,39 @@ public class InspireValidatorUtilsTest extends AbstractServiceIntegrationTest {
             assertEquals("The official ETF endpoint is not available. Can't run further tests.", URL, URL);
         }
 
+    }
+
+    @Test
+    public void testCalculateValidationStatus() {
+        MetadataValidationStatus metadataValidationStatus =
+            inspireValidatorUtils.calculateValidationStatus(inspireValidatorUtils.TEST_STATUS_INTERNAL_ERROR);
+
+        assertEquals(MetadataValidationStatus.NEVER_CALCULATED, metadataValidationStatus);
+
+        metadataValidationStatus =
+            inspireValidatorUtils.calculateValidationStatus(inspireValidatorUtils.TEST_STATUS_UNDEFINED);
+
+        assertEquals(MetadataValidationStatus.NEVER_CALCULATED, metadataValidationStatus);
+
+        metadataValidationStatus =
+            inspireValidatorUtils.calculateValidationStatus(inspireValidatorUtils.TEST_STATUS_NOT_APPLICABLE);
+
+        assertEquals(MetadataValidationStatus.DOES_NOT_APPLY, metadataValidationStatus);
+
+        metadataValidationStatus =
+            inspireValidatorUtils.calculateValidationStatus(inspireValidatorUtils.TEST_STATUS_PASSED);
+
+        assertEquals(MetadataValidationStatus.VALID, metadataValidationStatus);
+
+        metadataValidationStatus =
+            inspireValidatorUtils.calculateValidationStatus(inspireValidatorUtils.TEST_STATUS_PASSED_MANUAL);
+
+        assertEquals(MetadataValidationStatus.VALID, metadataValidationStatus);
+
+        metadataValidationStatus =
+            inspireValidatorUtils.calculateValidationStatus(inspireValidatorUtils.TEST_STATUS_FAILED);
+
+        assertEquals(MetadataValidationStatus.INVALID, metadataValidationStatus);
     }
 
 

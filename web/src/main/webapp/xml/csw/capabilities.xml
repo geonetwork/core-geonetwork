@@ -8,37 +8,37 @@
 
   <ows:ServiceIdentification>
     <ows:Title>$TITLE</ows:Title>
-    <ows:Abstract>$ABSTRACT</ows:Abstract>
+    <ows:Abstract></ows:Abstract>
     <ows:Keywords>
       <!-- Keywords are automatically added by GeoNetwork
       according to catalogue content. -->
     </ows:Keywords>
     <ows:ServiceType>CSW</ows:ServiceType>
     <ows:ServiceTypeVersion>2.0.2</ows:ServiceTypeVersion>
-    <ows:Fees>$FEES</ows:Fees>
-    <ows:AccessConstraints>$ACCESS_CONSTRAINTS</ows:AccessConstraints>
+    <ows:Fees></ows:Fees>
+    <ows:AccessConstraints></ows:AccessConstraints>
   </ows:ServiceIdentification>
   <ows:ServiceProvider>
-    <ows:ProviderName>$PROVIDER_NAME</ows:ProviderName>
+    <ows:ProviderName></ows:ProviderName>
     <ows:ProviderSite xlink:href="$PROTOCOL://$HOST$PORT$SERVLET"/>
     <ows:ServiceContact>
-      <ows:IndividualName>$IND_NAME</ows:IndividualName>
-      <ows:PositionName>$POS_NAME</ows:PositionName>
+      <ows:IndividualName></ows:IndividualName>
+      <ows:PositionName></ows:PositionName>
       <ows:ContactInfo>
         <ows:Phone>
-          <ows:Voice>$VOICE</ows:Voice>
-          <ows:Facsimile>$FACSCIMILE</ows:Facsimile>
+          <ows:Voice></ows:Voice>
+          <ows:Facsimile></ows:Facsimile>
         </ows:Phone>
         <ows:Address>
-          <ows:DeliveryPoint>$DEL_POINT</ows:DeliveryPoint>
-          <ows:City>$CITY</ows:City>
-          <ows:AdministrativeArea>$ADMIN_AREA</ows:AdministrativeArea>
-          <ows:PostalCode>$POSTAL_CODE</ows:PostalCode>
-          <ows:Country>$COUNTRY</ows:Country>
-          <ows:ElectronicMailAddress>$EMAIL</ows:ElectronicMailAddress>
+          <ows:DeliveryPoint></ows:DeliveryPoint>
+          <ows:City></ows:City>
+          <ows:AdministrativeArea></ows:AdministrativeArea>
+          <ows:PostalCode></ows:PostalCode>
+          <ows:Country></ows:Country>
+          <ows:ElectronicMailAddress></ows:ElectronicMailAddress>
         </ows:Address>
-        <ows:HoursOfService>$HOUROFSERVICE</ows:HoursOfService>
-        <ows:ContactInstructions>$CONTACT_INSTRUCTION</ows:ContactInstructions>
+        <ows:HoursOfService></ows:HoursOfService>
+        <ows:ContactInstructions></ows:ContactInstructions>
       </ows:ContactInfo>
       <ows:Role>pointOfContact</ows:Role>
     </ows:ServiceContact>

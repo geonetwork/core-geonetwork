@@ -395,8 +395,13 @@ public class Importer {
                 }
 
                 if (validate) {
+                    Integer groupIdVal = null;
+                    if (org.apache.commons.lang.StringUtils.isNotEmpty(groupId)) {
+                        groupIdVal = Integer.parseInt(groupId);
+                    }
+
                     // Validate xsd and schematron
-                    DataManager.validateMetadata(schema, metadata, context);
+                    DataManager.validateExternalMetadata(schema, metadata, context, groupIdVal);
                 }
 
 
