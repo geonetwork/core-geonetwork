@@ -7,8 +7,8 @@
    * Directive for editing shared annotations, optionally linked to
    * a XML metadata record.
    */
-  module.directive('sxtAnnotationsEditor', ['sxtAnnotationsService',
-    function(sxtAnnotationsService) {
+  module.directive('sxtAnnotationsEditor', ['sxtAnnotationsService', '$rootScope',
+    function(sxtAnnotationsService, $rootScope) {
       return {
         restrict: 'E',
         scope: {
@@ -18,6 +18,9 @@
         templateUrl: '../../catalog/views/sextant/annotations/partials/annotationsEditor.html',
         link: function(scope, element, attrs) {
           scope.annotationsUuid = scope.layer.get('annotationsUuid');
+          scope.metadataObj = scope.layer.get('md');
+          scope.metadataUuid = scope.metadataObj ? scope.metadataObj.getUuid() : null;
+          var user = $rootScope.user;
 
           if (!scope.annotationsUuid) {
             console.error('Missing annotations UUID on layer');
@@ -51,6 +54,12 @@
            */
           scope.error = null;
 
+          /**
+           * Read-only if the annotations has an associated metadata record, but the user
+           * do not have edit rights on it
+           * @type {boolean}
+           */
+          scope.readOnly = scope.metadataObj && !(user.canEditRecord && user.canEditRecord(scope.metadataObj));
 
           /**
            * Copy-pasted from DrawDirective.js
@@ -98,6 +107,9 @@
             scope.loadingAnnotation = false;
 
             if (!annotation || annotation.error) {
+              if (annotation.error && annotation.status !== 404) {
+                scope.error = annotation.error;
+              }
               scope.currentAnnotation = null;
               return;
             }
@@ -131,7 +143,8 @@
           scope.initAnnotation = function(uuid) {
             scope.loadingAnnotation = true;
             sxtAnnotationsService.createAnnotation({
-              uuid: uuid
+              uuid: uuid,
+              metadataUuid: scope.metadataUuid || undefined
             })
               .then(setCurrentAnnotation)
           }
@@ -145,7 +158,8 @@
             scope.error = null;
             sxtAnnotationsService.updateAnnotation({
               uuid: scope.currentAnnotation.uuid,
-              geometry: JSON.parse(json)
+              geometry: JSON.parse(json),
+              metadataUuid: scope.metadataUuid || undefined
             }).then(function (response) {
               scope.updatingAnnotation = false;
               if (response.error) {

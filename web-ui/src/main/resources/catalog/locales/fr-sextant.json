@@ -96,5 +96,8 @@
   "groupVisible": "Groupe visible",
   "annotations": "Annotations",
   "noAnnotationsFound": "Aucune annotation trouvée.",
-  "initAnnotations": "Commencer l'annotation"
+  "initAnnotations": "Commencer l'annotation",
+  "annotationsReadOnly": "Ces annotations sont en lecture seule.",
+  "annotationsErrorLoading": "Une erreur est survenue au chargement des annotations",
+  "annotationsErrorSaving": "Une erreur est survenue à la sauvegarde des annotations"
 }

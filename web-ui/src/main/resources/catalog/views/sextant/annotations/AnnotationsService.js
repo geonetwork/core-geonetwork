@@ -21,7 +21,8 @@
             return response.data;
           },  function (error) {
             return {
-              error: error.data.message || error.statusText
+              error: error.data.message || error.statusText,
+              status: error.status
             };
           });
       }
@@ -42,7 +43,8 @@
             return response.data;
           }, function (error) {
             return {
-              error: error.data.message || error.statusText
+              error: error.data.message || error.statusText,
+              status: error.status
             };
           });
       }

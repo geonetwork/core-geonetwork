@@ -95,5 +95,8 @@
   "groupVisible": "Visible Group",
   "annotations": "Annotations",
   "noAnnotationsFound": "No annotations found.",
-  "initAnnotations": "Start annotating"
+  "initAnnotations": "Start annotating",
+  "annotationsReadOnly": "The annotations are in read-only mode.",
+  "annotationsErrorLoading": "An error occurred while loading the annotations",
+  "annotationsErrorSaving": "An error occurred while saving the annotations"
 }
