@@ -48,11 +48,15 @@
               element.append(el);
               layer.set('wfsfilter-el', el);
             }
-          },
+          };
 
           this.setNCWMS = function(layer) {
             $scope.loadTool('ncwms', layer);
           };
+
+          this.setAnnotations = function(layer) {
+            $scope.loadTool('annotations', layer);
+          }
 
           this.comboGroups = {};
           this.switchGroupCombo = function(groupcombo, layer) {
@@ -551,6 +555,11 @@
           scope.showWFSFilter = function() {
             controller.setWFSFilter(scope.member, wfsLink);
           };
+
+          scope.showAnnotations = function() {
+            controller.setAnnotations(scope.member);
+          };
+
           scope.isOutOfRange = function () {
             if (scope.isParentNode() ||
               !scope.member instanceof ol.layer.Base) {
