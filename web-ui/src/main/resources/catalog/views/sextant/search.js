@@ -453,7 +453,10 @@
       $scope.getMapLayersCount = function(layers) {
         return layers.filter(
           function (layer) {return layer.contentType!=='OGC:OWS-C'}).length
-      }
+      };
+      $scope.hasExternalViewer = function() {
+        return !!gnSearchSettings.viewerUrl;
+      };
 
       angular.extend($scope.searchObj, {
         advancedMode: false,
@@ -564,6 +567,35 @@
 
       $scope.facetConfig = searchSettings.facetConfig;
 
+      $scope.titleSearchOnly = false;
+      $scope.titleSearchToggleVisible = false;
+      $scope.toggleTitleSearchOnly = function() {
+        $scope.titleSearchOnly = !$scope.titleSearchOnly;
+        if ($scope.titleSearchOnly) {
+          $scope.searchObj.params.title = $scope.searchObj.params.any;
+          delete $scope.searchObj.params.any;
+        } else {
+          $scope.searchObj.params.any = $scope.searchObj.params.title;
+          delete $scope.searchObj.params.title;
+        }
+      }
+      $scope.isTitleSearchEnabled = function() {
+        return $scope.titleSearchOnly;
+      }
+      $scope.showTitleSearchToggle = function(visible) {
+        $scope.titleSearchToggleVisible = visible;
+      }
+      $scope.searchInput = {};
+      Object.defineProperty($scope.searchInput, 'model', {
+        set: function(newValue) {
+          var key = $scope.titleSearchOnly ? 'title' : 'any';
+          return $scope.searchObj.params[key] = newValue;
+        },
+        get: function() {
+          var key = $scope.titleSearchOnly ? 'title' : 'any';
+          return $scope.searchObj.params[key];
+        }
+      });
     }]);
 
   module.directive('sxtFixMdlinks', [ 'sxtService',

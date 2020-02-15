@@ -12,6 +12,10 @@
       '#WWW:OPENDAP', '#MYO:MOTU-SUB',
       '#WWW:FTP', '#OGC:WFS', '#OGC:WCS'];
 
+    var orderedDownloadTypesWithoutWxS = orderedDownloadTypes.filter(function (protocol) {
+      return protocol !== '#OGC:WFS' && protocol !== '#OGC:WCS';
+    });
+
     var layerTypes =  ['#OGC:WMTS', '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map',
       '#OGC:OWS-C'];
 
@@ -76,43 +80,21 @@
           [i+1].concat(orderedDownloadTypes));
 
         if(downloads.length > 0) {
-          // If only one layer, we get only one download (we bind them later)
-          // We take the first one cause based on types priority
-          // https://github.com/camptocamp/sextant-geonetwork/wiki/Catalogue#les-protocoles
-          if(layers.length == 1) {
+          // If only one layer, hide any WFS or WCS links unless there are several
+          // https://gitlab.ifremer.fr/sextant/geonetwork/-/wikis/Catalogue#les-protocoles
+          if(layers.length === 1) {
+            var multipleWxS = md.getLinksByType('#OGC:WFS', '#OGC:WCS').length > 1;
 
-            var d = this.getTopPriorityDownload(downloads);
-            if(d) {
-              scope.downloads.push(d);
-              layers[0].extra = {
-                downloads: [d]
-              };
+            if (!multipleWxS) {
+              downloads = md.getLinksByType.apply(md,
+                [i+1].concat(orderedDownloadTypesWithoutWxS));
             }
           }
-          else {
-            scope.downloads = scope.downloads.concat(downloads);
-          }
+
+          scope.downloads = scope.downloads.concat(downloads);
         }
         scope.layers = scope.layers.concat(layers);
       }.bind(this));
-    };
-
-
-    this.getTopPriorityDownload = function(downloads) {
-      var download;
-      loopType:
-        for (var i = 0; i < orderedDownloadTypes.length; i ++) {
-          var t = orderedDownloadTypes[i];
-          loopLink:
-            for (var j = 0; j < downloads.length; j ++) {
-              var l = downloads[j];
-              if (l.protocol == t.substr(1, t.length - 1)) {
-                download = l;
-                break loopType;
-              }
-            }
-        }
-      return download;
     };
 
   }]);

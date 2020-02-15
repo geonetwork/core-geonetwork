@@ -243,8 +243,9 @@ class SxtSummaryFactory {
 
 
 
-    def dateElts = metadata.'gmd:identificationInfo'.'*'.'gmd:citation'."**".findAll{it.name() == 'gmd:CI_Date' &&
-      it.'gmd:dateType'.'gmd:CI_DateTypeCode'['@codeListValue'] == 'publication'}
+    def dateElts = metadata.'gmd:identificationInfo'.'*'.'gmd:citation'."**".findAll{it.name() == 'gmd:CI_Date' && (
+      it.'gmd:dateType'.'gmd:CI_DateTypeCode'['@codeListValue'] == 'publication' ||
+        it.'gmd:dateType'.'gmd:CI_DateTypeCode'['@codeListValue'] == 'revision')}
 
     if(dateElts.size() <= 0) {
       dateElts = metadata.'gmd:identificationInfo'.'*'.'gmd:citation'."**".findAll{it.name() == 'gmd:CI_Date' &&
@@ -252,10 +253,10 @@ class SxtSummaryFactory {
     }
 
     def year = '';
-    if(dateElts.size() > 0) {
-      def sDate = dateElts[0].'gmd:date'.'gco:Date'.text();
+    dateElts.forEach{it ->
+      def sDate = it.'gmd:date'.'gco:Date'.text();
       if(sDate == null || sDate == "") {
-        sDate = dateElts[0].'gmd:date'.'gco:DateTime'.text();
+        sDate = it.'gmd:date'.'gco:DateTime'.text();
       }
       if(sDate != null && sDate != "") {
         def pattern = "yyyy-MM-dd"
@@ -267,7 +268,10 @@ class SxtSummaryFactory {
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         Date date = format.parse(sDate);
         SimpleDateFormat df = new SimpleDateFormat("yyyy");
-        year = df.format(date);
+        def currentYear = df.format(date);
+        if (year == '' || currentYear > year) {
+          year = currentYear;
+        }
       }
     }
 
