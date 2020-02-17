@@ -30,6 +30,7 @@ import com.google.common.base.Optional;
 
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -60,6 +61,7 @@ import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
 //=============================================================================
@@ -146,7 +148,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService {
                     Element filterExpr = new Element("Filter", Csw.NAMESPACE_OGC);
 
                     Pair<Element, Element> results = _searchController.search(context, 0, 1, ResultType.HITS, "csw",
-                        ElementSetName.BRIEF, filterExpr, Csw.FILTER_VERSION_1_1, null, null, null, 0, cswServiceSpecificContraint, null);
+                            ElementSetName.BRIEF, filterExpr, Csw.FILTER_VERSION_1_1, null, null, null, 0, cswServiceSpecificContraint, null);
 
 
                     if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
@@ -165,11 +167,11 @@ public class GetRecordById extends AbstractOperation implements CatalogService {
                 final SettingInfo settingInfo = gc.getBean(SearchManager.class).getSettingInfo();
                 final String displayLanguage = LuceneSearcher.determineLanguage(context, request, settingInfo).presentationLanguage;
                 Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null,
-                    displayLanguage);
+                        displayLanguage);
 
                 if (md != null) {
                     final Map<String, GetRecordByIdMetadataTransformer> transformers = context.getApplicationContext()
-                        .getBeansOfType(GetRecordByIdMetadataTransformer.class);
+                            .getBeansOfType(GetRecordByIdMetadataTransformer.class);
                     for (GetRecordByIdMetadataTransformer transformer : transformers.values()) {
                         final Optional<Element> transformedMd = transformer.apply(context, md, outSchema);
                         if (transformedMd.isPresent()) {
@@ -184,6 +186,9 @@ public class GetRecordById extends AbstractOperation implements CatalogService {
                     }
                 }
             }
+        } catch (AccessDeniedException | OperationNotAllowedEx e) {
+            context.error("Access denied when getRecordById, (record exists): " + e);
+            throw new NoApplicableCodeEx(e.toString());
         } catch (Exception e) {
             context.error("Raised : " + e);
             context.error(" (C) Stacktrace is\n" + Util.getStackTrace(e));
