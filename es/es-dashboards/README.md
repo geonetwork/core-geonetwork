@@ -2,7 +2,7 @@
 
 ### Manual installation
 
-Download Kibana from https://www.elastic.co/fr/downloads/kibana. For Geonetwork 3.8.x download at least version 7.2.1
+Download Kibana from https://www.elastic.co/fr/downloads/kibana. For Geonetwork 3.10.x download at least version 7.4.2
 
 Set Kibana base path and index name in config/kibana.yml:
 
