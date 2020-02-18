@@ -2,8 +2,8 @@
 
 ### Manual installation
 
-Download Elasticsearch (at least 7.2.1 for Geonetwork 3.8.x) from https://www.elastic.co/fr/downloads/elasticsearch
-and copy it to the ES module. eg. es/elasticsearch-7.2.1
+Download Elasticsearch (at least 7.4.2 for Geonetwork 3.10.x) from https://www.elastic.co/fr/downloads/elasticsearch
+and copy it to the ES module. eg. es/elasticsearch-7.4.2
  
 Start ES using:
 
