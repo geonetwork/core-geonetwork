@@ -1332,6 +1332,19 @@
         <module>jmeter</module>
       </modules>
     </profile>
+    <profile>
+      <id>macOS</id>
+      <activation>
+        <os>
+          <family>mac</family>
+          <arch>x86_64</arch>
+        </os>
+      </activation>
+      <properties>
+          <es.version.sha512>1e6a707190c274f76f0ebe05400c39a2b923cc1a261ab2e97b3ffe825ad6a73282a31d98284336e4b4f633cc400af47ac8dfad814d636abd497589c8853ec951</es.version.sha512>
+          <es.platform>darwin-x86_64</es.platform>
+      </properties>
+    </profile>
   </profiles>
 
   <distributionManagement>
