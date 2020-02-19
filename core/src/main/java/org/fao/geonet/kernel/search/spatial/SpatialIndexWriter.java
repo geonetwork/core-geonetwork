@@ -135,6 +135,10 @@ public class SpatialIndexWriter implements FeatureListener {
      */
     static MultiPolygon extractGeometriesFrom(Path schemaDir,
                                               Element metadata, Parser[] parsers, Map<String, String> errorMessage) throws Exception {
+        return getSpatialExtent(schemaDir, metadata, parsers, new SpatialIndexingErrorHandler(errorMessage));
+    }
+
+    public static MultiPolygon getSpatialExtent(Path schemaDir, Element metadata, Parser[] parsers, ErrorHandler errorHandler) throws Exception {
         org.geotools.util.logging.Logging.getLogger("org.geotools.xml")
             .setLevel(Level.SEVERE);
         Path sSheet = schemaDir.resolve("extract-gml.xsl").toAbsolutePath();
@@ -168,8 +172,7 @@ public class SpatialIndexWriter implements FeatureListener {
                     allPolygons.add((Polygon) jts.getGeometryN(i));
                 }
             } catch (Exception e) {
-                errorMessage.put("PARSE", gml + ". Error is:" + e.getMessage());
-                Log.error(Geonet.INDEX_ENGINE, "Failed to convert gml to jts object: " + gml + "\n\t" + e.getMessage(), e);
+                errorHandler.handleParseException(e, gml);
                 // continue
             }
         }
@@ -184,11 +187,30 @@ public class SpatialIndexWriter implements FeatureListener {
 
 
             } catch (Exception e) {
-                errorMessage.put("BUILD", allPolygons + ". Error is:" + e.getMessage());
-                Log.error(Geonet.INDEX_ENGINE, "Failed to create a MultiPolygon from: " + allPolygons, e);
+                errorHandler.handleBuildException(e, allPolygons);
                 // continue
                 return null;
             }
+        }
+    }
+
+    static private class SpatialIndexingErrorHandler implements ErrorHandler {
+        private final Map<String, String> errorMessage;
+
+        public SpatialIndexingErrorHandler(Map<String, String> errorMessage) {
+            this.errorMessage = errorMessage;
+        }
+
+        @Override
+        public void handleParseException(Exception e, String gml) {
+            errorMessage.put("PARSE", gml + ". Error is:" + e.getMessage());
+            Log.error(Geonet.INDEX_ENGINE, "Failed to convert gml to jts object: " + gml + "\n\t" + e.getMessage(), e);
+        }
+
+        @Override
+        public void handleBuildException(Exception e, List<Polygon> allPolygons) {
+            errorMessage.put("BUILD", allPolygons + ". Error is:" + e.getMessage());
+            Log.error(Geonet.INDEX_ENGINE, "Failed to create a MultiPolygon from: " + allPolygons, e);
         }
     }
 
