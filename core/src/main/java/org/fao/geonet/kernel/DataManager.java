@@ -407,7 +407,7 @@ public class DataManager {
     @Deprecated
     public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors,
             boolean keepXlinkAttributes) throws Exception {
-        return metadataManager.getMetadata(srvContext, id, forEditing, withEditorValidationErrors, keepXlinkAttributes);
+        return metadataManager.getMetadata(srvContext, id, forEditing, !forEditing, withEditorValidationErrors, keepXlinkAttributes);
     }
 
     @Deprecated

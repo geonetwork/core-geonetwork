@@ -21,7 +21,7 @@ import jeeves.server.context.ServiceContext;
 
 /**
  * Utility interface to handle record insertions, removals and updates
- * 
+ *
  * @author delawen
  *
  */
@@ -29,7 +29,7 @@ public interface IMetadataManager {
 
     /**
      * This is a hopefully soon to be deprecated initialization function to replace the @Autowired annotation
-     * 
+     *
      * @param context
      * @param force
      * @throws Exception
@@ -38,7 +38,7 @@ public interface IMetadataManager {
 
     /**
      * Removes the record with the id metadataId
-     * 
+     *
      * @param context
      * @param metadataId
      * @throws Exception
@@ -47,9 +47,9 @@ public interface IMetadataManager {
 
     /**
      * Removes a record without notifying.
-     * 
+     *
      * FIXME explain better why this and not {@link #deleteMetadata(ServiceContext, String)}
-     * 
+     *
      * @param context
      * @param metadataId
      * @throws Exception
@@ -127,10 +127,15 @@ public interface IMetadataManager {
      * Retrieves a metadata (in xml) given its id; adds editing information if requested and validation errors if requested.
      *
      * @param forEditing Add extra element to build metadocument {@link EditLib#expandElements(String, Element)}
+     * @param applyOperationsFilters Filter elements based on operation filters
+     *                               eg. Remove WMS if not dynamic. For example, when processing
+     *                               a record, the complete records need to be processed and saved (not a filtered version), set it to false.
+     *                               If editing, set it to false.
      * @param keepXlinkAttributes When XLinks are resolved in non edit mode, do not remove XLink attributes.
      */
-    Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors,
-            boolean keepXlinkAttributes) throws Exception;
+    Element getMetadata(ServiceContext srvContext, String id,
+                        boolean forEditing, boolean applyOperationsFilters,
+                        boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception;
 
     /**
      * Update of owner info.
@@ -186,7 +191,7 @@ public interface IMetadataManager {
 
     /**
      * Returns a helpful EditLib for other utility classes
-     * 
+     *
      * @return
      */
     EditLib getEditLib();
@@ -194,7 +199,7 @@ public interface IMetadataManager {
     /**
      * Saves an IMetadata into the database. Useful to avoid using the MetadataRepository classes directly, who may not know how to handle
      * IMetadata types
-     * 
+     *
      * @param info
      */
     public AbstractMetadata save(AbstractMetadata info);
@@ -214,14 +219,14 @@ public interface IMetadataManager {
 
     /**
      * Delete all records that matches the specification
-     * 
+     *
      * @param specification
      */
     public void deleteAll(Specification<? extends AbstractMetadata> specification);
 
     /**
      * Remove the record with the identifier id
-     * 
+     *
      * @param id
      */
     public void delete(Integer id);
