@@ -179,6 +179,7 @@ public class EsClient implements InitializingBean {
         }
         boolean success = true;
         Bulk.Builder bulk = new Bulk.Builder()
+            .defaultType("_doc")
             .defaultIndex(index);
 
         Iterator iterator = docs.entrySet().iterator();
