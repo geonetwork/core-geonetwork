@@ -170,7 +170,6 @@ public class LoggingApi {
 
             // set headers for the response
             response.setContentType("application/zip");
-            response.setContentLength((int) file.length());
             String headerKey = "Content-Disposition";
             String headerValue = String.format(
                 "attachment; filename=\"catalog-log-%s-%s.zip\"",
