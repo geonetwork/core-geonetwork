@@ -290,6 +290,9 @@ public class Aligner extends BaseAligner<CswParams> {
 
         AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
+        if (!uuid.equals(ri.uuid)) {
+            md = metadataUtils.setUUID(schema, uuid, md);
+        }
         ownerId = getOwner();
         metadata.getDataInfo().
             setSchemaId(schema).
