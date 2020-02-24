@@ -228,7 +228,7 @@
             <xsl:apply-templates mode="getOverviews" select="$metadata"/>
             <xsl:apply-templates mode="getExtent" select="$metadata"/>
 
-            <xsl:if test="$view != 'sdn'">
+            <xsl:if test="$view != 'sdn' and $view != 'emodnetHydrography'">
               <!-- https://gitlab.ifremer.fr/sextant/geonetwork/issues/112 -->
               <xsl:apply-templates mode="getTags" select="$metadata">
                 <xsl:with-param name="byThesaurus" select="true()"/>
