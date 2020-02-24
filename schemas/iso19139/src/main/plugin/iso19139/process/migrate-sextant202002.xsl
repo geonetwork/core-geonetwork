@@ -107,7 +107,63 @@
         <gmd:identifier>
           <gmd:MD_Identifier>
             <gmd:code>
-              <gmx:Anchor xlink:href="https://sextant-val.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.reference-geographical-area.NVS.C19">geonetwork.thesaurus.external.reference-geographical-area.NVS.C19</gmx:Anchor>
+              <gmx:Anchor xlink:href="https://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.reference-geographical-area.NVS.C19">geonetwork.thesaurus.external.reference-geographical-area.NVS.C19</gmx:Anchor>
+            </gmd:code>
+          </gmd:MD_Identifier>
+        </gmd:identifier>
+      </gmd:CI_Citation>
+    </gmd:thesaurusName>
+  </xsl:template>
+
+
+  <xsl:template match="gmd:thesaurusName[*/gmd:title/*/text() = 'external.parameter.NVS.P02']">
+    <gmd:thesaurusName>
+      <gmd:CI_Citation>
+        <gmd:title>
+          <gco:CharacterString>Parameter Discovery Vocabulary (P02)</gco:CharacterString>
+        </gmd:title>
+        <gmd:date>
+          <gmd:CI_Date>
+            <gmd:date>
+              <gco:Date>2019-07-26</gco:Date>
+            </gmd:date>
+            <gmd:dateType>
+              <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+            </gmd:dateType>
+          </gmd:CI_Date>
+        </gmd:date>
+        <gmd:identifier>
+          <gmd:MD_Identifier>
+            <gmd:code>
+              <gmx:Anchor xlink:href="https://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.parameter.NVS.P02">geonetwork.thesaurus.external.parameter.NVS.P02</gmx:Anchor>
+            </gmd:code>
+          </gmd:MD_Identifier>
+        </gmd:identifier>
+      </gmd:CI_Citation>
+    </gmd:thesaurusName>
+  </xsl:template>
+
+
+  <xsl:template match="gmd:thesaurusName[*/gmd:title/*/text() = 'external.parameter.NVS.P35']">
+    <gmd:thesaurusName>
+      <gmd:CI_Citation>
+        <gmd:title>
+          <gco:CharacterString>EMODnet Chemistry aggregated parameter names</gco:CharacterString>
+        </gmd:title>
+        <gmd:date>
+          <gmd:CI_Date>
+            <gmd:date>
+              <gco:Date>2018-03-29</gco:Date>
+            </gmd:date>
+            <gmd:dateType>
+              <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+            </gmd:dateType>
+          </gmd:CI_Date>
+        </gmd:date>
+        <gmd:identifier>
+          <gmd:MD_Identifier>
+            <gmd:code>
+              <gmx:Anchor xlink:href="https://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.parameter.NVS.P35">geonetwork.thesaurus.external.parameter.NVS.P35</gmx:Anchor>
             </gmd:code>
           </gmd:MD_Identifier>
         </gmd:identifier>

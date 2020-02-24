@@ -41,3 +41,24 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metada
 DELETE FROM cswservercapabilitiesinfo;
 DELETE FROM Settings WHERE name = 'system/csw/contactId';
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/capabilityRecordUuid', '-1', 0, 1220, 'y');
+
+
+-- https://gitlab.ifremer.fr/sextant/geonetwork/issues/96
+UPDATE metadata SET data = replace(data,
+  'https://sextant.ifremer.fr/geonetwork/srv/eng//resources.get',
+  'https://sextant.ifremer.fr/geonetwork/srv/eng/resources.get')
+  WHERE data LIKE '%https://sextant.ifremer.fr/geonetwork/srv/eng//resources.get%';
+
+
+UPDATE metadata SET data = replace(data,
+  'https://sextant.ifremer.fr/geonetwork/srv/fre//resources.get',
+  'https://sextant.ifremer.fr/geonetwork/srv/fre/resources.get')
+  WHERE data LIKE '%https://sextant.ifremer.fr/geonetwork/srv/fre//resources.get%';
+
+UPDATE metadata SET data = replace(data, 'GEMET - Concepts, version 2.4', 'GEMET') WHERE  data LIKE '%GEMET - Concepts, version 2.4%';
+UPDATE metadata SET data = replace(data, 'GEMET - Concepts, version 3.0', 'GEMET') WHERE  data LIKE '%GEMET - Concepts, version 3.0%';
+UPDATE metadata SET data = replace(data, 'GEMET - Concepts, version 3.1', 'GEMET') WHERE  data LIKE '%GEMET - Concepts, version 3.1%';
+UPDATE metadata SET data = replace(data, 'GEMET - Themes, version 2.4, 2010-01-13', 'GEMET themes') WHERE  data LIKE '%GEMET - Themes, version 2.4, 2010-01-13%';
+
+UPDATE metadata SET data = replace(data, 'GEMET inspire themes - version 1.0', 'GEMET - INSPIRE themes, version 1.0') WHERE  data LIKE '%GEMET inspire themes - version 1.0%';
+UPDATE metadata SET data = regexp_replace(data,'GEMET - INSPIRE themes, version[[:space:]]*1.0','GEMET - INSPIRE themes, version 1.0','g') WHERE data LIKE '%GEMET - INSPIRE themes, versio%';
