@@ -364,6 +364,9 @@ public class Aligner extends BaseAligner<CswParams> {
         //
         AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
+        if (!uuid.equals(ri.uuid)) {
+            md = metadataUtils.setUUID(schema, uuid, md);
+        }
         Integer ownerId = getOwner();
         metadata.getDataInfo().
             setSchemaId(schema).
@@ -439,7 +442,7 @@ public class Aligner extends BaseAligner<CswParams> {
             metadata.getHarvestInfo().setUuid(params.getUuid());
             metadata.getSourceInfo().setSourceId(params.getUuid());
 
-            metadataManager.save((Metadata) metadata);
+            metadataManager.save(metadata);
         }
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
