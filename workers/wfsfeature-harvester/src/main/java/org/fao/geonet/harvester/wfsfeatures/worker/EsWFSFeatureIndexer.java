@@ -510,7 +510,6 @@ public class EsWFSFeatureIndexer {
 
         @Override
         public void completed(BulkResult bulkResult) {
-            LOGGER.debug(bulkResult.getJsonString());
             LOGGER.debug("  {} - from {}, {}/{} features, indexed in {} ms.", new Object[]{
                 typeName, firstFeatureIndex, bulkSize, featureCommitInterval, System.currentTimeMillis() - begin});
             phaser.arriveAndDeregister();
@@ -560,7 +559,6 @@ public class EsWFSFeatureIndexer {
 
         public void launchBulk(EsClient client) {
             prepareLaunch();
-            LOGGER.debug(this.bulk.toString());
             client.bulkRequestAsync(this.bulk, this);
         }
     }
