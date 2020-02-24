@@ -88,6 +88,33 @@
   </xsl:template>
 
 
+  <xsl:template match="gmd:thesaurusName[*/gmd:title/*/text() = 'external.reference-geographical-area.NVS.C19']">
+    <gmd:thesaurusName>
+      <gmd:CI_Citation>
+        <gmd:title>
+          <gco:CharacterString>SeaVoX salt and fresh water body gazetteer</gco:CharacterString>
+        </gmd:title>
+        <gmd:date>
+          <gmd:CI_Date>
+            <gmd:date>
+              <gco:Date>2019-07-04</gco:Date>
+            </gmd:date>
+            <gmd:dateType>
+              <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+            </gmd:dateType>
+          </gmd:CI_Date>
+        </gmd:date>
+        <gmd:identifier>
+          <gmd:MD_Identifier>
+            <gmd:code>
+              <gmx:Anchor xlink:href="https://sextant-val.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.reference-geographical-area.NVS.C19">geonetwork.thesaurus.external.reference-geographical-area.NVS.C19</gmx:Anchor>
+            </gmd:code>
+          </gmd:MD_Identifier>
+        </gmd:identifier>
+      </gmd:CI_Citation>
+    </gmd:thesaurusName>
+  </xsl:template>
+
   <!--
   * INSPIRE <gco:CharacterString>Habitats et biotopes</gco:CharacterString>
   -->
