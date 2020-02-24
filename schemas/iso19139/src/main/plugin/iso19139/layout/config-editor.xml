@@ -2160,6 +2160,9 @@
         <thesaurus key="external.parameter.NVS.P35"
                    fieldset="false"
                    transformations="to-iso19139-keyword-with-anchor"/>
+        <thesaurus key="external.parameter.NVS.P36"
+                   fieldset="false"
+                   transformations="to-iso19139-keyword-with-anchor"/>
         <thesaurus key="external.parameter.NVS.P02"
                    fieldset="false"
                    transformations="to-iso19139-keyword-with-anchor"/>
@@ -2227,6 +2230,12 @@
                           'NVS.P35') or
                           */gmd:thesaurusName/*/gmd:title/*/text() = 'EMODNET chemistry lot aggregated parameter names']"
                     name="oceanChemistryVariables"/>
+            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                        contains(
+                          gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                          'NVS.P36') or
+                          */gmd:thesaurusName/*/gmd:title/*/text() = 'EMODnet Chemistry chemical groups']"
+                    name="oceanChemistryGroupVariables"/>
           </section>
         </section>
       </tab>
