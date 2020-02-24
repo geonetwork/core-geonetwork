@@ -7,12 +7,32 @@
 
   module.service('sxtService', [ function() {
 
-    var orderedDownloadTypes = ['#FILE', '#DB', '#COPYFILE',
-      '#WWW:DOWNLOAD-1.0-link--download', '#WWW:DOWNLOAD-1.0-http--download',
-      '#WWW:OPENDAP', '#MYO:MOTU-SUB',
-      '#WWW:FTP', '#OGC:WFS', '#OGC:WCS'];
+    var panierEnabled = typeof sxtSettings != 'undefined' && !angular.isUndefined(sxtSettings.tabOverflow.panier);
 
-    var orderedDownloadTypesWithoutWxS = orderedDownloadTypes.filter(function (protocol) {
+    var directDownloadTypes = [
+      '#WWW:DOWNLOAD-1.0-link--download',
+      '#WWW:DOWNLOAD-1.0-http--download',
+      '#WWW:OPENDAP',
+      '#MYO:MOTU-SUB',
+      '#WWW:FTP'
+    ];
+
+    var allDownloadTypes = [
+      '#FILE',
+      '#DB',
+      '#COPYFILE',
+      '#WWW:DOWNLOAD-1.0-link--download',
+      '#WWW:DOWNLOAD-1.0-http--download',
+      '#WWW:OPENDAP',
+      '#MYO:MOTU-SUB',
+      '#WWW:FTP',
+      '#OGC:WFS',
+      '#OGC:WCS'
+    ];
+
+    var downloadTypes = panierEnabled ? allDownloadTypes : directDownloadTypes;
+
+    var downloadTypesWithoutWxS = downloadTypes.filter(function (protocol) {
       return protocol !== '#OGC:WFS' && protocol !== '#OGC:WCS';
     });
 
@@ -77,7 +97,7 @@
           [i+1].concat(layerTypes));
 
         var downloads = md.getLinksByType.apply(md,
-          [i+1].concat(orderedDownloadTypes));
+          [i+1].concat(downloadTypes));
 
         if(downloads.length > 0) {
           // If only one layer, hide any WFS or WCS links unless there are several
@@ -88,7 +108,7 @@
 
             if (!multipleWxS) {
               downloads = md.getLinksByType.apply(md,
-                [i+1].concat(orderedDownloadTypesWithoutWxS));
+                [i+1].concat(downloadTypesWithoutWxS));
             }
           }
 
