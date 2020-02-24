@@ -228,9 +228,12 @@
             <xsl:apply-templates mode="getOverviews" select="$metadata"/>
             <xsl:apply-templates mode="getExtent" select="$metadata"/>
 
-            <xsl:apply-templates mode="getTags" select="$metadata">
-              <xsl:with-param name="byThesaurus" select="true()"/>
-            </xsl:apply-templates>
+            <xsl:if test="$view != 'sdn'">
+              <!-- https://gitlab.ifremer.fr/sextant/geonetwork/issues/112 -->
+              <xsl:apply-templates mode="getTags" select="$metadata">
+                <xsl:with-param name="byThesaurus" select="true()"/>
+              </xsl:apply-templates>
+            </xsl:if>
 
 
             <br/>
