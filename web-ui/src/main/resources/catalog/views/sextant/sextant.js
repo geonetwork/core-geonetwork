@@ -81,9 +81,10 @@
 
         if(downloads.length > 0) {
           // If only one layer, hide any WFS or WCS links unless there are several
+          // note: this does not apply if there is only one download link (otherwise we might end up with 0 links)
           // https://gitlab.ifremer.fr/sextant/geonetwork/-/wikis/Catalogue#les-protocoles
-          if(layers.length === 1) {
-            var multipleWxS = md.getLinksByType('#OGC:WFS', '#OGC:WCS').length > 1;
+          if(layers.length === 1 && downloads.length > 1) {
+            var multipleWxS = md.getLinksByType(i+1, '#OGC:WFS', '#OGC:WCS').length > 1;
 
             if (!multipleWxS) {
               downloads = md.getLinksByType.apply(md,
