@@ -406,6 +406,7 @@
   </change-spatial-type-alert>
   <oceanDiscoveryParameters>Ocean discovery parameters</oceanDiscoveryParameters>
   <oceanChemistryVariables>Ocean chemistry variables</oceanChemistryVariables>
+  <oceanChemistryGroupVariables>Chemistry chemical groups</oceanChemistryGroupVariables>
   <seaAreas>Sea areas</seaAreas>
   <sdnSpatialRepresentationType>Spatial representation type</sdnSpatialRepresentationType>
   <sdn>Default</sdn>
