@@ -112,6 +112,7 @@
                   ng-repeat="field in getInputsByName(input.identifier.value)"
                   allow-reset allow-modify output="field.value"
                   output-format="{{ input.outputFormat }}"
+                  output-crs="{{ map.getView().getProjection().getCode() }}"
                   geometry-type="{{ input.geometryType }}"
                   output-as-features="true" map="map"/>
               </div>
