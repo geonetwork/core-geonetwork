@@ -464,7 +464,7 @@ public class BaseMetadataManager implements IMetadataManager {
         final Metadata newMetadata = new Metadata();
         newMetadata.setUuid(uuid);
         newMetadata.getDataInfo().setChangeDate(new ISODate()).setCreateDate(new ISODate()).setSchemaId(schema)
-            .setType(MetadataType.lookup(isTemplate));
+            .setType(MetadataType.lookup(isTemplate)).setRoot(xml.getQualifiedName());
         newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner)).setOwner(owner).setSourceId(source);
 
         // If there is a default category for the group, use it:
