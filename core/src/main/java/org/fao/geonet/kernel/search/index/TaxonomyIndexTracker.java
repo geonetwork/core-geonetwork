@@ -71,8 +71,13 @@ class TaxonomyIndexTracker {
 
             this.taxonomyReader = null;
             try {
-                acquire(); // just check the validity of the index
+                // note, after calling, this.taxonomyReader will have a refCount of 2
+                // one for this class holding a ref to it, and one for calling aquire()
+                TaxonomyReader reader = acquire(); // just check the validity of the index
+                quietDecRef(reader);// we are throwing away our reference to it
+                //reader will have a refcount of 1
             } finally {
+                // this will remove a ref to the reader (will be 0 and will close)
                 IOUtils.closeQuietly(this.taxonomyReader);
                 this.taxonomyReader = null;
             }
@@ -89,6 +94,9 @@ class TaxonomyIndexTracker {
         }
     }
 
+    //We are returning the taxonomyReader to the outside world -- its up to the caller to handle the refCount.
+    //This method will increment the ref count on the returned taxonomy reader.
+    // The caller should decrement the ref count when its finished with it.
     TaxonomyReader acquire() throws IOException {
         if (taxonomyReader == null) {
             this.taxonomyReader = new DirectoryTaxonomyReader(taxonomyWriter);
@@ -97,11 +105,12 @@ class TaxonomyIndexTracker {
         for (Iterator<TaxonomyReader> iterator = expiredReaders.iterator(); iterator.hasNext(); ) {
             TaxonomyReader reader = iterator.next();
             if (reader.getRefCount() < 1) {
-                IOUtils.closeQuietly(reader);
+                IOUtils.closeQuietly(reader); // NOTE: refCount of 0 means the reader would have already been closed
                 iterator.remove();
             }
         }
-
+        // caller is responsible for a ref to the reader
+        taxonomyReader.incRef();
         return taxonomyReader;
     }
 
@@ -123,7 +132,7 @@ class TaxonomyIndexTracker {
     void close(List<Throwable> errors) throws IOException {
         try {
             if (taxonomyReader != null) {
-                taxonomyReader.close();
+                taxonomyReader.close(); // this will decrement a reference
                 taxonomyReader = null;
             }
         } catch (Throwable e) {
@@ -191,14 +200,31 @@ class TaxonomyIndexTracker {
         return taxonomyWriter;
     }
 
+    // decrement a ref to the TaxonomyReader
+    // Eat exceptions if they occur
+    // NOTE: this will close the Reader if refCount goes to 0
+    private void quietDecRef(TaxonomyReader tr) {
+        try {
+            tr.decRef(); // NOTE: this will close the Reader if refCount goes to 0
+        } catch (Exception e) {
+            //This is likely to happen if modules are not handling ref counts correctly.
+            Log.error(Geonet.LUCENE, "Error removing ref to TaxonomyReader", e);
+        }
+    }
+
     public void maybeRefresh() throws IOException {
-        // do nothing for now
         if (taxonomyReader != null) {
+            // this returns null if the index didn't change (i.e. we continue using same taxonomyReader
+            //  and don't have to modify the refCount because we still reference it).
             TaxonomyReader newReader = TaxonomyReader.openIfChanged(taxonomyReader);
             if (newReader != null) {
-                if (taxonomyReader.getRefCount() == 0) {
-                    IOUtils.closeQuietly(taxonomyReader);
-                } else {
+                //we got a new reader - it automatically has a refCount of one (we use that as our usage of it).
+                //We are going to "get rid" of our ref to the old reader, so we can decrement the refCount by one
+                // for our (no longer needed) ref.
+                quietDecRef(taxonomyReader);
+                // if ref count>0, then someone else has a reference to it, so we don't close it yet
+                // CF. acquire and close
+                if (taxonomyReader.getRefCount() != 0) {
                     expiredReaders.add(taxonomyReader);
                 }
                 taxonomyReader = newReader;
