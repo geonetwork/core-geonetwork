@@ -42,7 +42,7 @@
       DMSEast, 'g');
   var regexpDMSDegree = new RegExp(DMSDegree, 'g');
   var regexpCoordinate = new RegExp(
-      '(\-?[\\d\\.\']+)[\\s,]+(\-?[\\d\\.\']+)');
+      '^\\s*(\-?[\\d\\.\']+)[\\s,]+(\-?[\\d\\.\']+)');
 
 
   /**
