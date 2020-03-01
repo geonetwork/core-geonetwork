@@ -118,9 +118,10 @@ header div.gn-abstract {
     cursor: pointer;;
   }
 
-  h1 {
-    font-size: 18px;
-  }
+  // CSSGN
+  //h1 {
+  //  font-size: 18px;
+  //}
 
   .property {
     @media (min-width: @screen-sm-min) {
@@ -170,11 +171,12 @@ header div.gn-abstract {
   }
 
   h3 {
-    color: darken(@btn-primary-bg, 10%);
-    position: relative;
-    border-bottom: 2px dotted lightgrey;
-    font-size: 15px;
-    margin: .6em 0 .3em;
+    // CSSGN
+    //color: darken(@btn-primary-bg, 10%);
+    //position: relative;
+    //border-bottom: 2px dotted lightgrey;
+    //font-size: 15px;
+    //margin: .6em 0 .3em;
     button {
       position: absolute;
       right: -.5em;
@@ -259,8 +261,9 @@ header div.gn-abstract {
   @media (min-width: @grid-float-breakpoint) {
     @large-offset: 250px;
     h3 {
-      border: none;
-      padding-left: .65em;
+      // CSSGN
+      //border: none;
+      //padding-left: .65em;
       i {
         transform: rotate(0deg);
       }
@@ -479,82 +482,82 @@ ul.container-list {
   left: -100%;
   margin-left: 10px;
 }
-
-.gn-metadata-display {
-  h1 {
-    font-size: 20px;
-    margin: 30px 0;
-  }
-  h2 {
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
-  h3 {
-    font-size: 16px;
-  }
-  h4 {
-    font-size: 15px;
-  }
-  .table-striped {
-    .btn-sm {
-      margin-right: .5em;
-      margin-bottom: .5em;
-    }
-    td {
-      padding-left: 40px;
-      ul {
-        padding-left: 0;
-      }
-      &.gn-table-attribute {
-        padding-left: 8px;
-        table {
-          th {
-            border-top: 0;
-            border-bottom: 2px solid @table-border-color;
-          }
-          td {
-            padding-left: 8px;
-            table {
-              th {
-                background-color: @table-bg-accent;
-              }
-            }
-          }
-        }
-
-      }
-    }
-  }
-
-  .gn-contact img {
-    max-width: 100%;
-    max-height: 150px;
-  }
-
-  /* Override CMS styles in metadata view
-
-  eg. #content h1 {
-      border-bottom: solid 2px #afd687;
-      font: 2.8em Verdana, Geneva, sans-serif;
-      letter-spacing: 0.05em;
-      color: #008798;
-      text-shadow: -1px -1px 1px #cccccc;
-      }
-
-  A better approach would be to reset all styles from the parent
-  and then let GN styles apply.
-  */
-  h1 {
-    border-bottom: none !important;
-    font: 20px "Helvetica Neue", sans-serif !important;
-    color: #1b75bc !important;
-    text-shadow: none !important;
-  }
-  h4 {
-    border-bottom: none;
-  }
-
-}
+// CSSGN
+//.gn-metadata-display {
+//  h1 {
+//    font-size: 20px;
+//    margin: 30px 0;
+//  }
+//  h2 {
+//    font-size: 18px;
+//    margin-bottom: 20px;
+//  }
+//  h3 {
+//    font-size: 16px;
+//  }
+//  h4 {
+//    font-size: 15px;
+//  }
+//  .table-striped {
+//    .btn-sm {
+//      margin-right: .5em;
+//      margin-bottom: .5em;
+//    }
+//    td {
+//      padding-left: 40px;
+//      ul {
+//        padding-left: 0;
+//      }
+//      &.gn-table-attribute {
+//        padding-left: 8px;
+//        table {
+//          th {
+//            border-top: 0;
+//            border-bottom: 2px solid @table-border-color;
+//          }
+//          td {
+//            padding-left: 8px;
+//            table {
+//              th {
+//                background-color: @table-bg-accent;
+//              }
+//            }
+//          }
+//        }
+//
+//      }
+//    }
+//  }
+//
+//  .gn-contact img {
+//    max-width: 100%;
+//    max-height: 150px;
+//  }
+//
+//  /* Override CMS styles in metadata view
+//
+//  eg. #content h1 {
+//      border-bottom: solid 2px #afd687;
+//      font: 2.8em Verdana, Geneva, sans-serif;
+//      letter-spacing: 0.05em;
+//      color: #008798;
+//      text-shadow: -1px -1px 1px #cccccc;
+//      }
+//
+//  A better approach would be to reset all styles from the parent
+//  and then let GN styles apply.
+//  */
+//  h1 {
+//    border-bottom: none !important;
+//    font: 20px "Helvetica Neue", sans-serif !important;
+//    color: #1b75bc !important;
+//    text-shadow: none !important;
+//  }
+//  h4 {
+//    border-bottom: none;
+//  }
+//
+//}
 /* Fix keyword layout */
 .gn-metadata-view dd > ul {
   padding-top: 0px !important;

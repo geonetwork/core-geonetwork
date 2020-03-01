@@ -1,34 +1,16 @@
-@import "../../../style/gn_search.less";
-// variables for manipulating the theme
-@import "gn_variables_default.less"; // must be last
+//@import "gn_variables_default.less"; // must be last
 
-// styling for a single result: metadata view
-
-.btn-toolbar {
-  .btn-group {
-    margin-left: 0;
-    margin-right: 5px;
-  }
-  .btn-group.pull-right, .pull-right .btn-group {
-    margin-left: 5px;
-    margin-right: 0;
-  }
-}
-
-// draft
-.see-draft-alert {
-  padding: 15px 50px;
-  a {
-    color: @gray-dark;
-    &:hover {
-      color: @gray-darker;
-    }
-  }
-}
 
 .gn-md-view {
   padding: 15px 20px;
-  background-color: @gn-md-view-background-color;
+
+  h1 {
+    font-size: 32px;
+  }
+  .view-header {
+    border-bottom: 2px solid #e5e5e5;
+  }
+  //background-color: @gn-md-view-background-color;
   // highlight the active view
   .gn-view-menu-button {
     .dropdown-menu {
@@ -95,11 +77,23 @@
       font-size: 16px;
     }
   }
+  .gn-tab-content {
+    > dl:first-of-type {
+      margin-top: 10px;
+    }
+    dl {
+      padding-bottom: 5px;
+      dt {
+        display: table;
+        white-space: nowrap;
+      }
+    }
+  }
   .entry {
     margin-left: 8px;
     border-left: 2px solid #ddd;
     padding-left: 8px;
-    h2 {
+    h1, h2 {
       margin-left: -16px;
       margin-top: 10px;
       margin-bottom: 0px;
@@ -107,11 +101,8 @@
       padding: 5px 0;
     }
     dl {
-      padding-bottom: 5px;
       dt {
         margin-left: -5px;
-        display: table;
-        white-space: nowrap;
         &:before {
           border-top: 2px solid #ddd;
           content: '';
@@ -120,7 +111,9 @@
           top: 0.6em;
           width: 15px;
         }
-        &:before { right: 5px; }
+        &:before {
+          right: 5px;
+        }
       }
       dd {
         margin-left: 10px;
@@ -137,7 +130,7 @@
       margin: 0;
       padding: 0;
       border: 0;
-      h2 {
+      h2, h3, h4, h5, h6  {
         margin-left: -5px;
         display: table;
         white-space: nowrap;

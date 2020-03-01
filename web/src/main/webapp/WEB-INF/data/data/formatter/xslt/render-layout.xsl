@@ -405,14 +405,19 @@
           </xsl:if>
           <xsl:value-of select="$title"/>
         </h1>
-        <xsl:choose>
-          <xsl:when test="normalize-space($content) = ''">
-            No information
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:copy-of select="$content"/><xsl:comment select="'icon'"/>
-          </xsl:otherwise>
-        </xsl:choose>
+
+        <xsl:if test="normalize-space($content) != ''">
+          <xsl:choose>
+            <xsl:when test="$tabs = 'true'">
+              <xsl:copy-of select="$content"/>&#160;
+            </xsl:when>
+            <xsl:otherwise>
+              <div class="entry name">
+                <xsl:copy-of select="$content"/>&#160;
+              </div>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:if>
       </div>
     </xsl:if>
   </xsl:template>
@@ -436,9 +441,9 @@
                     select="gn-fn-render:get-schema-strings($schemaStrings, @id)"/>
 
       <div id="gn-tab-{@id}" class="tab-pane">
-        <h3 class="view-header">
+        <h1 class="view-header">
           <xsl:value-of select="$title"/>
-        </h3>
+        </h1>
         <div id="gn-view-{generate-id()}" class="gn-tab-content">
           <xsl:copy-of select="$content"/>
         </div>
@@ -468,10 +473,10 @@
                       select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
 
         <xsl:element name="h{1 + count(ancestor-or-self::*[name(.) = 'section'])}">
-          <xsl:attribute name="class" select="'view-header'"/>
           <xsl:value-of select="$title"/>
         </xsl:element>
       </xsl:if>
+
       <xsl:apply-templates mode="render-view"
                            select="section|field|xsl"/>&#160;
     </div>
@@ -486,7 +491,6 @@
                       select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
 
         <xsl:element name="h{3 + count(ancestor-or-self::*[name(.) = 'section'])}">
-          <xsl:attribute name="class" select="'view-header'"/>
           <xsl:value-of select="$title"/>
         </xsl:element>
       </xsl:if>
@@ -546,50 +550,53 @@
     <xsl:for-each select="$elements/*">
       <xsl:variable name="element" select="."/>
 
-      <xsl:if test="$fieldName">
-        <xsl:variable name="title"
-                      select="gn-fn-render:get-schema-strings($schemaStrings, $fieldName)"/>
+      <div class="entry name">
+        <xsl:if test="$fieldName">
+          <xsl:variable name="title"
+                        select="gn-fn-render:get-schema-strings($schemaStrings, $fieldName)"/>
 
-        <xsl:element name="h{$depth}">
-          <xsl:attribute name="class" select="'view-header'"/>
-          <xsl:value-of select="replace($title, '\*', '')"/>
-        </xsl:element>
-      </xsl:if>
+          <xsl:element name="h{$depth}">
+            <xsl:value-of select="replace($title, '\*', '')"/>
+          </xsl:element>
+        </xsl:if>
 
-      <!-- Loop on each fields -->
-      <xsl:for-each select="$fields">
-        <xsl:variable name="nodes">
-          <saxon:call-template name="{concat('evaluate-', $schema)}">
-            <xsl:with-param name="base" select="$element"/>
-            <xsl:with-param name="in"
-                            select="concat('/./',
-                           replace(@xpath, '/gco:CharacterString', ''))"/>
-          </saxon:call-template>
-        </xsl:variable>
+        <!-- Loop on each fields -->
+        <div class="target">
+          <xsl:for-each select="$fields">
+            <xsl:variable name="nodes">
+              <saxon:call-template name="{concat('evaluate-', $schema)}">
+                <xsl:with-param name="base" select="$element"/>
+                <xsl:with-param name="in"
+                                select="concat('/./',
+                               replace(@xpath, '/gco:CharacterString', ''))"/>
+              </saxon:call-template>
+            </xsl:variable>
 
-        <xsl:variable name="fieldName">
-          <xsl:if test="@label">
-            <xsl:value-of select="gn-fn-render:get-schema-strings($schemaStrings, @label)"/>
-          </xsl:if>
-        </xsl:variable>
+            <xsl:variable name="fieldName">
+              <xsl:if test="@label">
+                <xsl:value-of select="gn-fn-render:get-schema-strings($schemaStrings, @label)"/>
+              </xsl:if>
+            </xsl:variable>
 
-        <xsl:for-each select="$nodes">
-          <xsl:apply-templates mode="render-field">
-            <xsl:with-param name="fieldName" select="replace($fieldName, '\*', '')"/>
-            <!-- In EMODNet contact, an extra hyperlink is added
-            to the contact using a uuid attribute.
-            <gmd:CI_ResponsibleParty uuid="http://seadatanet.maris2.nl/v_edmo/print.asp?n_code=2467">
-              <gmd:organisationName>
-            There is no super generic way to achieve that, as we're
-            here in the default standard template looping over template fields.
+            <xsl:for-each select="$nodes">
+              <xsl:apply-templates mode="render-field">
+                <xsl:with-param name="fieldName" select="replace($fieldName, '\*', '')"/>
+                <!-- In EMODNet contact, an extra hyperlink is added
+                to the contact using a uuid attribute.
+                <gmd:CI_ResponsibleParty uuid="http://seadatanet.maris2.nl/v_edmo/print.asp?n_code=2467">
+                  <gmd:organisationName>
+                There is no super generic way to achieve that, as we're
+                here in the default standard template looping over template fields.
 
-            For now, adding an extra parameter to set the field content with an hyperlink when we are in an organisation name.
-            -->
-            <xsl:with-param name="link"
-                            select="if (name(*[1]) = 'gmd:organisationName') then $element/*/@uuid else ''"/>
-          </xsl:apply-templates>
-        </xsl:for-each>
-      </xsl:for-each>
+                For now, adding an extra parameter to set the field content with an hyperlink when we are in an organisation name.
+                -->
+                <xsl:with-param name="link"
+                                select="if (name(*[1]) = 'gmd:organisationName') then $element/*/@uuid else ''"/>
+              </xsl:apply-templates>
+            </xsl:for-each>
+          </xsl:for-each>
+        </div>
+      </div>
     </xsl:for-each>
   </xsl:template>
 
