@@ -27,7 +27,9 @@ import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.search.Sort;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -563,7 +565,12 @@ public class SearchController {
                                                Element result, String outputSchema, ElementSetName elementSetName,
                                                ResultType resultType, String id, String displayLanguage) throws InvalidParameterValueEx {
         Path schemaDir  = schemaManager.getSchemaCSWPresentDir(schema);
-        Path styleSheet = schemaDir.resolve(outputSchema + "-"+ context.getService() + "-postprocessing.xsl");
+        final NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
+
+
+        Path styleSheet = schemaDir.resolve(outputSchema + "-"
+            + (context.getService().equals("csw") ? nodeInfo.getId() : context.getService())
+            + "-postprocessing.xsl");
 
         if (Files.exists(styleSheet)) {
             Map<String, Object> params = new HashMap<String, Object>();
