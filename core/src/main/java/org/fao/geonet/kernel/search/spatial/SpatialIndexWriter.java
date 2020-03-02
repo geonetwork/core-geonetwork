@@ -30,7 +30,6 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.index.SpatialIndex;
 import com.vividsolutions.jts.index.strtree.STRtree;
-
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
@@ -63,6 +62,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Path;
@@ -74,8 +74,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.logging.Level;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * This class is responsible for extracting geographic information from metadata and writing that
@@ -505,7 +503,7 @@ public class SpatialIndexWriter implements FeatureListener {
         } else if (geometry instanceof MultiPolygon) {
             return (MultiPolygon) geometry;
         }
-        String message = geometry.getClass() + " cannot be converted to a polygon. Check Metadata";
+        String message = geometry.getClass() + " cannot be converted to a polygon. Check metadata";
         Log.error(Geonet.INDEX_ENGINE, message);
         throw new IllegalArgumentException(message);
     }

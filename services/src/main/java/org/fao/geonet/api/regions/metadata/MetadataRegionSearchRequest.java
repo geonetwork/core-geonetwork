@@ -45,7 +45,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
-import org.fao.geonet.services.region.MetadataRegion;
+import org.fao.geonet.api.regions.MetadataRegion;
 import org.fao.geonet.utils.Xml;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
@@ -63,6 +63,9 @@ import jeeves.server.context.ServiceContext;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 
+/**
+ * TODO: A polygon may be exclusion and in such case should be substracted from the overall extent?
+ */
 public class MetadataRegionSearchRequest extends Request {
 
     public static final String PREFIX = "metadata:";
@@ -342,6 +345,7 @@ public class MetadataRegionSearchRequest extends Request {
         }
     }
 
+    @Deprecated
     public static class FileId extends Id {
 
         private static final String PREFIX = "@fileId";
@@ -386,6 +390,7 @@ public class MetadataRegionSearchRequest extends Request {
 
     }
 
+    @Deprecated
     public static class Uuid extends Id {
 
         private static final String PREFIX = "@uuid";

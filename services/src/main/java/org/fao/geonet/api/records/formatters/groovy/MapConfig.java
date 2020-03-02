@@ -23,12 +23,12 @@
 
 package org.fao.geonet.api.records.formatters.groovy;
 
-import org.fao.geonet.services.region.GetMap;
+import org.fao.geonet.api.records.extent.MetadataExtentApi;
 
 /**
- * Encapsulates the map parameters used when making {@link org.fao.geonet.services.region.GetMap}
+ * Encapsulates the map parameters used when making {@link org.fao.geonet.services.region.MetadataExtentApi}
  * requests.
- *
+ * <p>
  * The parameters are read from the setting (background, width and mapproj) and are to be used when
  * displaying geometries and extents.
  *
@@ -47,10 +47,10 @@ public class MapConfig {
 
     /**
      * The value to pass as the <em>background</em> parameter when making a request to {@link
-     * org.fao.geonet.services.region.GetMap} when rendering extents and geometries.
+     * org.fao.geonet.services.region.MetadataExtentApi} when rendering extents and geometries.
      */
     public String getBackground() {
-        return background.toLowerCase().startsWith("http://") ? GetMap.SETTING_BACKGROUND : background;
+        return background.toLowerCase().startsWith("http://") ? MetadataExtentApi.SETTING_BACKGROUND : background;
     }
 
     public void setBackground(String background) {
