@@ -1,7 +1,7 @@
 package org.fao.geonet.util;
 
 import org.geotools.gml3.GMLConfiguration;
-import org.geotools.xml.Parser;
+import org.geotools.xsd.Parser;
 
 public final class GMLParsers {
   public static Parser[] create() {

@@ -28,7 +28,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;

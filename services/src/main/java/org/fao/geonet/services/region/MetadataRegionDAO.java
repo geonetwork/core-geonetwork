@@ -30,11 +30,11 @@ import org.fao.geonet.api.regions.metadata.MetadataRegionSearchRequest;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.util.GMLParsers;
-import org.geotools.xml.Parser;
+import org.geotools.xsd.Parser;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
 
 import jeeves.server.context.ServiceContext;
 
