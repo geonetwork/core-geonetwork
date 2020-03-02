@@ -71,7 +71,7 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
 
         final Metadata record = _metadataRepo.findOne(id);
         CollectResults collectResults =
-            DirectoryUtils.collectEntries(record, xpath, null);
+            DirectoryUtils.collectEntries(context, record, xpath, null);
 
         assertEquals("3 contacts extracted",
             3, collectResults.getEntries().size());
@@ -94,7 +94,7 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
         final Metadata record = _metadataRepo.findOne(id);
         final String uuidXpath = ".//gmd:electronicMailAddress/gco:CharacterString/text()";
         CollectResults collectResults =
-            DirectoryUtils.collectEntries(record, xpath, uuidXpath);
+            DirectoryUtils.collectEntries(context, record, xpath, uuidXpath);
 
         assertEquals("2 unique contacts extracted",
             2, collectResults.getEntries().size());
@@ -118,7 +118,7 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
 
         final Metadata record = _metadataRepo.findOne(id);
         CollectResults collectResults =
-            DirectoryUtils.collectEntries(record, xpath, null);
+            DirectoryUtils.collectEntries(context, record, xpath, null);
 
         assertEquals("1 graphic overview extracted",
             1, collectResults.getEntries().size());
@@ -173,7 +173,7 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
 
 
         CollectResults collectResults =
-            DirectoryUtils.synchronizeEntries(record,
+            DirectoryUtils.synchronizeEntries(context, record,
                 xpath, uuidXpath, propertiesToCopy,
                 false, null);
 
@@ -228,7 +228,7 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
 
 
         CollectResults collectResults =
-            DirectoryUtils.synchronizeEntries(record,
+            DirectoryUtils.synchronizeEntries(context, record,
                 xpath, uuidXpath, propertiesToCopy,
                 true, null);
 

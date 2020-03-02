@@ -4,6 +4,7 @@
       <div class="panel-heading" data-translate="">needAnAccount</div>
       <div class="panel-body">
         <form class="form-horizontal" id="userinfo">
+         <input type="hidden" name="_csrf" value="{{csrf}}"/>
           <div class="form-group">
             <label class="control-label col-lg-4" data-translate="">email</label>
             <div class="col-lg-8">
@@ -95,7 +96,7 @@
             </div>
           </div>
         </form>
-        <button data-ng-click="register('#userinfo')" class="btn btn-primary btn-block"
+        <button data-gn-click-and-spin="register('#userinfo')" class="btn btn-primary btn-block"
                 data-translate="">register
         </button>
       </div>

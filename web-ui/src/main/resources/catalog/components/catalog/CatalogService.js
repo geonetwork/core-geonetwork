@@ -110,10 +110,10 @@
                 (isTemplate === 'SUB_TEMPLATE' ? 'SUB_TEMPLATE' : 'TEMPLATE') :
                 'METADATA',
             sourceUuid: id,
-            isChildOfSource: isChild,
+            isChildOfSource: isChild ? 'true' : 'false',
             group: groupId,
-            isVisibleByAllGroupMembers: withFullPrivileges,
-            targetUuid: metadataUuid
+            isVisibleByAllGroupMembers: withFullPrivileges ? 'true' : 'false',
+            targetUuid: metadataUuid || ''
           });
           return $http.put('../api/records/duplicate?' + url, {
             headers: {
@@ -169,7 +169,7 @@
             if (tab) {
               path += '/tab/' + tab;
             }
-            $location.path(path);
+            $location.path(path).search('justcreated');
           });
         },
 
@@ -468,8 +468,9 @@
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
-        'mdLanguage', 'datasetLang', 'type', 'link'];
-      var listOfJsonFields = ['keywordGroup'];
+        'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails',
+        'creationDate', 'publicationDate', 'revisionDate'];
+      var listOfJsonFields = ['keywordGroup', 'crsDetails'];    // See below; probably not necessary
       var record = this;
       this.linksCache = [];
       $.each(listOfArrayFields, function(idx) {
@@ -479,7 +480,7 @@
           record[field] = [record[field]];
         }
       });
-      $.each(listOfJsonFields, function(idx) {
+      $.each(listOfJsonFields, function(idx) {    // Note: this step does not seem to be necessary; TODO: remove or refactor
         var field = listOfJsonFields[idx];
         if (angular.isDefined(record[field])) {
           try {

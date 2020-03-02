@@ -1,0 +1,165 @@
+================================================================================
+===
+=== GeoNetwork 3.2.2: List of changes
+===
+================================================================================
+- Add metadata type information in metadata relations service
+- Improved WMTS support for restful (#2152)
+- NullPointerException with formatters cache during startup #2150
+- Merge pull request #2148 from josegar74/fix/duplicated-postgres-driver
+- Duplicated postgres driver in war causes startup issues #2146
+- Harvesters doesn't work using a proxy with credentials #2142
+- Multilingual metadata full view is displayed always in the first UI language that is accessed #1711
+- At least one char
+- There are locations that only have 1 character (like a Village of the Lofoten called "Å"), and also in Austria there is at least one village thats name only has 2 characters (like "Au").
+- Use gnClickAndSpin directive for user registration action as mail notifications can be take a while to be send
+- User registration feedback mail is send to the catalogue administrator instead of the registered user #2127
+- Fixing typo, extra comma
+- Moving the "forcing a csrf token on angular" to the general catalog instead of only the login.
+- Add support for TMS background layer on config-viewer.xml
+- Disable CSRF token for xml.search. Close #2111
+- Fix Finish labels.xml in iso19139 schema
+- GeoNetwork harvester - Keyword filter is not saved #2110
+- Harvesting mail notifications doesn't replace template values in the mail send #2109
+- Fix gnWfsDownload if layer is not defined
+- Fix wms getCapabilities parsing
+- Disable CSRF token for CSW POST requests - Make the excluded urls configurable #2071
+- Revert "Index status of records with disabled workflow."
+- Revert "Don't search in the retired metadata"
+- Don't search in the retired metadata
+- Index status of records with disabled workflow.
+- Merge pull request #1996 from josegar74/1740-mapresources-mapviewer-improvements-2
+- Reduce margin size in map viewer tabs
+- Non administrators can remove/create thesaurus #2028
+- Updates in related directive to use ng-switch and revert changes related to atom breaking wfs
+- Refactor WFS get Capabilities
+- change related from if-if to switch add atom support show spinner while checking capabilities
+- corrected facet label rendering in search view
+- Merge remote-tracking branch 'origin/3.0.x' into 3.2.x
+- Merge pull request #1955 from oscarfonts/fix#1954
+- Merge pull request #2017 from jahow/3.2.x
+- restored original crs field on metadata
+- reworked how metadata CRS are indexed & displayed in MD view
+- Merge pull request #2016 from fgravin/layertreeLoading
+- Send to ufo xslt the uuid from the metadata for schemas that have enabled the flag readwriteUuid. (#2013)
+- owsContext: load continous background layer from context
+- WMTS: reject promise if no results from getCapabilities
+- layermanager: continuous loading of layers in manager before all were added to the manager only when all getCapabilites had answered
+- ui : optimise some treatments on vector layer, filter for only vectors
+- ncwms: fix error if no styles
+- Don't use proxy for URL with the same origin (#1943)
+- Add git revision to manifest file
+- Additional fix to node-mgr when running from deployed version
+- Additional fix to node-mgr for css file
+- Fix node-mgr tool due to changes in #1892
+- Fix settings  appearing twice in settings #1658
+- User Address is not saved #1948
+- XSS Cross Site Scripting - Reflected - Fixes for Jeeves error response services - #2002
+- Fix GER iso19139 label: remove dup entry
+- CSW GetRecords returns an exception if no matches are found instead of empty response #1998
+- Fixes in upload import and upload files directives to use csrf token
+- Remove unused code, use notifications in gnRelatedResources and apply js formatting
+- - Improve load of WMS/WFS services in map viewer - Add WFS downloads (from https://github.com/geonetwork/core-geonetwork/pull/1714)
+- Map viewer - add layer to map alerts are displayed twice #1994
+- #1899: make ISO19139/ATOM transformation a bit more lenient about CRS
+- Make sure there is a csrf token for login
+- Adding csrf to doc api
+- Adding CSRF support
+- Fix gnRelatedGrid  if no relations
+- Add service that get all related from a set of metadatas - add a nRelated button in grid (#1984)
+- Improvements for handling INSPIRE conformant srv:serviceType
+- #1982: WxS harvester: use importXsl if defined
+- domain - isolate the performance test in its own maven profile
+- domain - fixing JPA annotations
+- Fix label parameter in metadata editor template for gml elements having no child
+- #1977: restore default DB connection params
+- Revert invalid commit f06ee87a5759112acb3a4885b769565c30233edc and improve variable naming in createOlWFSFromCap method
+- Add iso19139 german labels
+- #1972: fix gmd:pass in INSPIRE view
+- Merge branch '32x_1712_fix_db_oracle' into 3.2.x
+- Merge branch '32x_1899_predefined_atom_feeds' into 3.2.x
+- #1712 #1720 Fixes for Oracle DB
+- Use POST to save CSW Settings instead of GET
+- Use POST to save CSW ElementSetName instead of GET and fix property name in javascript
+- Avoid file protocol in XLink Processor
+- API - Migrate reports
+- Encode pipe in url for related resources to avoid issues in Tomcat 8 with invalid character in url
+- CSV export / Avoid XSL error on thesaurus column name
+- Merge pull request #1947 from jahow/misc-ui-improvements
+- Additional file path checks improvements
+- editor: fix file upload default visibility
+- ArcSDE harvester improvements #1895 (#1945)
+- Solr Url not configurable #1946.
+- Fix map printing with maps having wms overlays
+- fixed typeahead suggestions in advanced search form
+- links button now displays name when desc is not available
+- search results and context load now always save extent for later use
+- fixed search map zoom when context is loaded without the map being displayed
+- fixed layers sync logic between search and view maps
+- fixed viewer map zoom when context is loaded from search or home
+- factorize default footer template
+- Checking nulls
+- Fix test.
+- Associated resources / No link from feature catalog to dataset #1938.
+- Metadata editor - Feature catalogue description citation is lost #1930
+- Merge pull request #1891 from juanluisrp/1889-dont-align-if-remote-error
+- Merge pull request #1935 from juanluisrp/improvements-in-csw-harvest-form2
+- Improve CSW getCapabilities request in harvesters
+- Check in self-registration is enabled in Register API
+- Group logo contains duplicated extensions & wrong path #1931.
+- Updates from transifex.
+- Harvester / OGC WxS / Total was also counting number of layers which doubled the total number ot dataset records.
+- Harvester history / Improve styling.
+- JMS / Improve configuration to avoid conflict when running multiple catalogues #1933.
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- Transfert ownership error #1929.
+- Set harvesters log level to INFO, to avoid empty harvester executions logs
+- Merge pull request #1927 from GeoCat/FIX-9766
+- Removed reuse of xsl variable
+- Merge pull request #1928 from GeoCat/FIX-9767
+- Merge branch 'FIX-9767' of https://github.com/GeoCat/core-geonetwork into FIX-9767
+- StringUtils to check empty string
+- Merge branch '3.0.x' into FIX-9767
+- Removed for pull request
+- INSPIRE view errors if multiple gmd:transferOptions or gmd:dataQualityInfo sections - #1925
+- FIX-9767 - Support for xsl filtering in OAI-PMH Harvester + link-from-description.xsl
+- FIX 9766 - Now index BBOX in Dublin Core accept the formats:
+- Merge pull request #1919 from GeoCat/FIX-9765
+- FIXED the search page description
+- It fixes the metadata detail page to display the dublin Core description, when there are two dc:description elements. (redmine issue 9765)
+- Update of development documentation to use mvn process-resources
+- Update minor versions of camel, groovy-all, commons-fileupload, jackson and batik libraries (#1910)
+- Import / MEF / XSL transformation not found #1908
+- Cleanup old WmcServlet def.
+- JSLint.
+- Updates from transifex.
+- Merge pull request #1906 from juanluisrp/validate-spinner-on-error
+- Build / Define db configuration with build options. (#1892)
+- Merge pull request #1855 from fxprunayre/improvement/csw-next-record
+- Merge pull request #1894 from fxprunayre/improvement/httpproxy-upgrade
+- Harvester / WAF / Do not update if remote record is not more recent #1905.
+- Hide the loading spinner in validate button (#4840)
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- Fix autocompletion for country in editor.
+- Update french XSD validation erreur label
+- Harvester / CSW / More tips on how to query.
+- #1899: INSPIRE Pre-defined ATOM feeds
+- HTTP requests / connection not released #1890.
+- Proxy / Move to Smiley's HTTP Proxy Servlet (benefits: easier config, support all HTTP methods, could be used to bridge ES/SOLR). Drop unused WMC servlet.
+- CSW / GetRecords / Element names should be normalized to avoid invalid XPath when leading/trailing space are in the POST XML request.
+- Show a log warning if the align couldn't be done due to errors (#1889)
+- Do not align a node returning an error (#1889)
+- Duplicate postgresql jar in v3.2.1 leads to NoSuchMethodError #1887.
+- Remove usage of ServiceContext.get causing NPE sometimes #1888.
+- HTTP requests / connection not released #1890.
+- Error page / Add missing space.
+- Adding more checks if it has to stop when retrieven remote data
+- Update version to 3.2.2-SNAPSHOT
+- Forcefully interrupt job if after an interrupt request, a minute has passed.
+- CSW / Adding some checks on startPosition and nextRecord
+- remove debugging messages
+- add similar option for wmts layers
+- initial commit imrpoved related display
+- Update version to 3.3.0-SNAPSHOT
+- Merge remote-tracking branch 'origin/develop' into develop
+- Improve Dutch translations (#1696)

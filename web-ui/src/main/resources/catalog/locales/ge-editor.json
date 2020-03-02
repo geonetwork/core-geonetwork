@@ -36,7 +36,7 @@
     "chooseEntry": "Verzeichnis durchsuchen",
     "clickToAddResource": "Click to select this resource",
     "beforeUnloadEditor": "Eventuell wurden Änderungen seit der letzten Speicherung nicht mehr abgespeichert {{timeAgo}}.",
-    "batchEditing": "Batch editing",
+    "batchEditing": "Batch-Bearbeitung",
     "fieldIsRemoved": "This field will be removed",
     "editRecords": "Edit selection",
     "removeField": "Remove this field",
@@ -68,7 +68,7 @@
     "noChangesToApply": "Define changes first in order to update selected records.",
     "selectRecordsToEdit": "Select one or more records to edit.",
     "advancedBatchEditMode": "Advanced mode (XPath)",
-    "cancel": "abbrechen",
+    "cancel": "Abbrechen",
     "cancelChangesFromNow": "Alle Änderungen seit Beginn der Bearbeitung werden gelöscht {{timeAgo}}",
     "cancelling": "Abbrechen...",
     "chooseZeroOrMoreLayer": "Wählen Sie optional einen oder mehrere Layer, die hinzugefügt werden sollen:",
@@ -89,7 +89,7 @@
     "chooseOnlinesrc": "Wähle oder hinterlege hier eine Quelle",
     "chooseRegion": "Wähle eine Region",
     "clickToDrawABox": "Klicke einmal und zeichne ein Rechteck. Mit erneutem Klicken beenden Sie die Zeichnung.",
-    "closeEditor": "Speichern und schliessen",
+    "closeEditor": "Speichern und schließen",
     "continent": "Kontinent",
     "copyPaste": "Kopieren / Einfügen",
     "country": "Land",
@@ -103,6 +103,7 @@
     "createMetadataUniformResourceName": "Metadaten URN",
     "createNewMetadata": "Neue Metadaten erfassen",
     "createSmall": "Erstelle kleine Ausgabe",
+    "cantAddLinkToDataset": "Can't add link to target dataset. You probably can't edit that record. Updating the service only.",
     "current": "aktuell",
     "datasetFound": "Datensaz wurde der Kartenvorscheu beigefügt",
     "datasetNotFound": "Dataset not found - 404",
@@ -321,5 +322,6 @@
     "parentConcept": "Parent concept",
     "moreSpecificConcept": "More specific concepts",
     "associatedConcept": "Associated concepts",
-    "xsd": "Schema validation"
+    "xsd": "Schema validation",
+    "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}/tab/xml\">XML editor</a>."
 }

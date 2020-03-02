@@ -629,8 +629,8 @@ public class ServiceManager {
 
                     if (!SOAPUtil.isEnvelope(response)) {
                         response = SOAPUtil.embed(response);
-                        req.write(response);
                     }
+                    req.write(response);
                 } else {
 
                     if (req.hasJSONOutput()) {

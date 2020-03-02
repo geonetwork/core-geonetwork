@@ -40,10 +40,10 @@
   module.controller('GnLoginController',
       ['$scope', '$http', '$rootScope', '$translate',
        '$location', '$window', '$timeout',
-       'gnUtilityService', 'gnConfig',
+       'gnUtilityService', 'gnConfig', 'gnGlobalSettings', 
        function($scope, $http, $rootScope, $translate,
            $location, $window, $timeout,
-               gnUtilityService, gnConfig) {
+               gnUtilityService, gnConfig, gnGlobalSettings) {
           $scope.formAction = '../../signin#' +
          $location.path();
           $scope.registrationStatus = null;
@@ -56,6 +56,7 @@
           $scope.redirectUrl = gnUtilityService.getUrlParameter('redirect');
           $scope.signinFailure = gnUtilityService.getUrlParameter('failure');
           $scope.gnConfig = gnConfig;
+          $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
 
           function initForm() {
            if ($window.location.pathname.indexOf('new.password') !== -1) {
@@ -100,7 +101,7 @@
          };
          $scope.register = function() {
            $scope.userInfo.emailAddresses[0] = $scope.userInfo.username;
-           $http.put('../api/0.1/user/actions/register', $scope.userInfo)
+           return $http.put('../api/0.1/user/actions/register', $scope.userInfo)
            .success(function(data) {
              $rootScope.$broadcast('StatusUpdated', {
                title: data

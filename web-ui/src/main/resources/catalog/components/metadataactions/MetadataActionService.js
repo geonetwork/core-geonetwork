@@ -24,12 +24,16 @@
 (function() {
   goog.provide('gn_mdactions_service');
 
+
+
+
   goog.require('gn_category');
+  goog.require('gn_popup');
   goog.require('gn_share');
 
 
   var module = angular.module('gn_mdactions_service', [
-    'gn_share', 'gn_category'
+    'gn_share', 'gn_category', 'gn_popup'
   ]);
 
   module.service('gnMetadataActions', [
@@ -205,7 +209,8 @@
         openModal({
           title: $translate.instant('privileges') + ' - ' +
               (md.title || md.defaultTitle),
-          content: '<div gn-share="' + md.getId() + '"></div>'
+          content: '<div gn-share="' + md.getId() + '"></div>',
+          className: 'gn-privileges-popup'
         }, scope, 'PrivilegesUpdated');
       };
 
@@ -241,7 +246,8 @@
           title: 'privileges',
           content: '<div gn-share="" ' +
               'gn-share-batch="true" ' +
-              'selection-bucket="' + bucket + '"></div>'
+              'selection-bucket="' + bucket + '"></div>',
+          className: 'gn-privileges-popup'
         }, scope, 'PrivilegesUpdated');
       };
       this.openBatchEditing = function(scope) {

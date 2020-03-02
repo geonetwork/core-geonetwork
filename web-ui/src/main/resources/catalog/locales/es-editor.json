@@ -103,6 +103,7 @@
     "createMetadataUniformResourceName": "Nombre del Recurso Uniformado del Metadato",
     "createNewMetadata": "Añadir una nueva entrada",
     "createSmall": "Crear miniatura",
+    "cantAddLinkToDataset": "Can't add link to target dataset. You probably can't edit that record. Updating the service only.",
     "current": "actual",
     "datasetFound": "Conjunto de datos encontrado y añadido al mapa de previsualización",
     "datasetNotFound": "Conjunto de datos no encontrado - 404",
@@ -321,5 +322,6 @@
     "parentConcept": "Concepto padre",
     "moreSpecificConcept": "Conceptos más específicos",
     "associatedConcept": "Conceptos asociados",
-    "xsd": "Validación del esquema"
+    "xsd": "Validación del esquema",
+    "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}/tab/xml\">XML editor</a>."
 }

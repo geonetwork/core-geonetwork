@@ -82,14 +82,18 @@
                 gnUtilityService.parseBoolean($scope.harvesterSelected);
               }
               $scope.isLoadingOneHarvester = false;
-              if ($scope.harvesterSelected.searches[0].from) {
-                $scope.harvesterSelected.searches[0].from =
-                   new Date($scope.harvesterSelected.searches[0].from);
-              }
 
-              if ($scope.harvesterSelected.searches[0].until) {
-                $scope.harvesterSelected.searches[0].until =
-                   new Date($scope.harvesterSelected.searches[0].until);
+              if ($scope.harvesterSelected.searches) {
+                if ($scope.harvesterSelected.searches[0].from) {
+                  $scope.harvesterSelected.searches[0].from =
+                     new Date($scope.harvesterSelected.searches[0].from);
+                }
+
+                if ($scope.harvesterSelected.searches[0].until) {
+                  $scope.harvesterSelected.searches[0].until =
+                  new Date($scope.harvesterSelected.searches[0].until);
+
+                }
               }
             }).error(function(data) {
               // TODO
@@ -388,6 +392,16 @@
       //    });
 
 
+      // TODO: Check if can be moved to arcsde.js
+      $scope.$watch('harvesterSelected.site.connectionType', function(newValue) {
+        if ($scope.harvesterSelected['@type'] === 'arcsde') {
+          if (newValue === 'ARCSDE') {
+                $scope.harvesterSelected.site.databaseType = '';
+          }
+        }
+      });
+
+
       loadHarvesterTypes();
 
 
@@ -472,7 +486,12 @@
 
         if ($scope.harvesterSelected &&
             $scope.harvesterSelected.site &&
-            $scope.harvesterSelected.site.capabilitiesUrl) {
+            $scope.harvesterSelected.site.capabilitiesUrl &&
+            (
+            $scope.harvesterSelected.site.capabilitiesUrl.indexOf('http://') != -1 ||
+            $scope.harvesterSelected.site.capabilitiesUrl.indexOf('https://') != -1
+            )
+        ) {
 
 
           var url = $scope.harvesterSelected.site.capabilitiesUrl;
@@ -545,9 +564,19 @@
         }
       };
 
-      $scope.$watch('harvesterSelected.site.capabilitiesUrl', function() {
-        $scope.cswGetCapabilities();
+      // Don't launch the getCapabilities request until 750 ms after the last value change.
+      // Instantiate these variables outside the watch
+      var capabilitiesUrlDelay;
+      $scope.$watch('harvesterSelected.site.capabilitiesUrl', function(val) {
+        if (capabilitiesUrlDelay) {
+          $timeout.cancel(capabilitiesUrlDelay);
+        }
+
+        capabilitiesUrlDelay = $timeout(function() {
+          $scope.cswGetCapabilities();
+        }, 750); // delay 750 ms
       });
+
 
 
 

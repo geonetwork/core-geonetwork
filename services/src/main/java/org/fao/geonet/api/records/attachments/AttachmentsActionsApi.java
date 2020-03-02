@@ -29,6 +29,7 @@ import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.DataManager;
@@ -44,6 +45,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import java.nio.file.Path;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 import jeeves.server.context.ServiceContext;
 
@@ -110,10 +112,11 @@ public class AttachmentsActionsApi {
         @RequestParam()
             String jsonConfig,
         @ApiParam(value = "The rotation angle of the map")
-        @RequestParam(required = false, defaultValue = "0") int rotationAngle
+        @RequestParam(required = false, defaultValue = "0") int rotationAngle,
+        HttpServletRequest request
     )
         throws Exception {
-        ServiceContext context = ServiceContext.get();
+        ServiceContext context = ApiUtils.createServiceContext(request);
         DataManager dataMan = appContext.getBean(DataManager.class);
 
         String metadataId = dataMan.getMetadataId(metadataUuid);
@@ -125,6 +128,6 @@ public class AttachmentsActionsApi {
             jsonConfig,
             rotationAngle);
 
-        return store.putResource(metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC);
+        return store.putResource(context, metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC);
     }
 }

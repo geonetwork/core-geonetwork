@@ -370,5 +370,7 @@
     "mdinvalid": "Metadata is niet valide",
     "mdinvalidcantpublish": "Invalide metadata kan niet gepubliceerd worden",
     "mdnovalidation": "Metadata beschikt niet over validatie informatie",
-    "setall": "Zet alle privileges"
+    "setall": "Zet alle privileges",
+    "print_legend": "Legend",
+    "print_legend_field": "Include legends"
 }

@@ -52,6 +52,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -81,9 +82,6 @@ class Harvester implements IHarvester<HarvestResult> {
 
     //---------------------------------------------------------------------------
     private ServiceContext context;
-
-    //---------------------------------------------------------------------------
-    private SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
 
     //---------------------------------------------------------------------------
     /**
@@ -241,10 +239,8 @@ class Harvester implements IHarvester<HarvestResult> {
             }
 
             String modified = record.getChildText("pubDate");
-            // modified is using in the form Mon, 04 Feb 2013 10:19:00 +1000
-            // it must be converted to ISODate,
-            // TODO: does it come in any other form??? Check geoportal stuff?
-            Date modDate = sdf.parse(modified);
+            // convert the pubDate to a known format (ISOdate)
+            Date modDate = parseDate(modified);
             modified = new ISODate(modDate.getTime(), false).toString();
             if (modified != null && modified.length() == 0) modified = null;
 
@@ -264,6 +260,48 @@ class Harvester implements IHarvester<HarvestResult> {
         // we get here if we couldn't get the UUID or date modified
         return null;
 
+    }
+
+    /**
+     * Parse the date provided in the pubDate field.
+     *
+     * The field may be formatted according to different languages: e.g.
+     * <ul>
+     * <li>"Mon, 04 Feb 2013 10:19:00 +1000"</li>
+     * <li>"Fr, 24 Mrz 2017 10:58:59 +0100"</li>
+     * </ul>
+     *
+     * This method also provides a workaround for
+     *    https://bugs.openjdk.java.net/browse/JDK-8136539
+     *
+     * @param pubDate the date to parse
+     * @return
+     */
+    protected Date parseDate(String pubDate) throws ParseException {
+
+        // try some well known locales.
+        // TODO: this should be improved
+        Locale wellKnownLocales[] = {Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN, Locale.ITALIAN};
+
+        for (Locale locale : wellKnownLocales) {
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", locale);
+            try {
+                return sdf.parse(pubDate);
+            } catch (ParseException e) {
+                // workaround for https://bugs.openjdk.java.net/browse/JDK-8136539
+                if(locale == Locale.GERMAN && pubDate.toLowerCase(Locale.GERMAN).contains("mrz")) {
+                    try {
+                        log.info("Applying MRZ workaround to '"+pubDate+"'");
+                        return sdf.parse(pubDate.toLowerCase(Locale.GERMAN).replace("mrz", "mär"));
+                    } catch (ParseException ex) {
+                    }
+                }
+
+                log.debug("Date '"+pubDate+"' is not parsable according to " + locale);
+            }
+        }
+
+        throw new ParseException("Can't parse date '"+pubDate+"'", 0);
     }
 
     public List<HarvestError> getErrors() {

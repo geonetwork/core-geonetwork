@@ -10,10 +10,10 @@
     <li role="presentation" class="dropdown-header"
         data-translate="">setMetadataGroup
     </li>
-    <li data-ng-repeat="g in groups | orderBy:sortByLabel"
-        data-ng-class="g.id == groupOwner ? '' : 'disabled'">
-      <a data-ng-click="assignGroup(g, $event)"
-         href="">
+    <li data-ng-repeat="g in groups | orderBy:sortByLabel">
+      <a data-ng-click="assignGroup(g, $event)" href="">
+        <i class="fa" data-ng-class="g.id == groupOwner ? 'fa-check-square-o' : 'fa-square-o'"></i>
+        &#160;
         <span data-translate="">{{g.label[lang]}}</span>
       </a>
     </li>

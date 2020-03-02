@@ -214,7 +214,7 @@
              gnSearchSettings, $q, gnMetadataManager) {
 
 
-      this.getFormatterUrl = function(fUrl, scope, uuid) {
+      this.getFormatterUrl = function(fUrl, scope, uuid, opt_url) {
         var url;
         var promiseMd;
         if (scope && scope.md) {
@@ -242,13 +242,13 @@
         });
       };
 
-      this.load = function(uuid, selector, scope) {
+      this.load = function(uuid, selector, scope, opt_url) {
         $rootScope.$broadcast('mdLoadingStart');
         var newscope = scope ? scope.$new() :
             angular.element($(selector)).scope().$new();
 
-        this.getFormatterUrl(gnSearchSettings.formatter.defaultUrl,
-            newscope, uuid).then(function(url) {
+        this.getFormatterUrl(opt_url || gnSearchSettings.formatter.defaultUrl,
+            newscope, uuid, opt_url).then(function(url) {
           $http.get(url, {
             headers: {
               Accept: 'text/html'

@@ -50,7 +50,8 @@
         blur: 0
       }
     },
-    current: null
+    current: null,
+    shibbolethEnabled: false
   });
 
   module.constant('gnLangs', {
@@ -91,11 +92,11 @@
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
     'gnGlobalSettings', '$location', 'gnUtilityService', 'gnSessionService',
-    'gnLangs', 'gnAdminMenu',
+    'gnLangs', 'gnAdminMenu', '$cookies',
     function($scope, $http, $q, $rootScope, $translate,
             gnSearchManagerService, gnConfigService, gnConfig,
             gnGlobalSettings, $location, gnUtilityService, gnSessionService,
-            gnLangs, gnAdminMenu) {
+            gnLangs, gnAdminMenu, $cookies) {
       $scope.version = '0.0.1';
       //Display or not the admin menu
       if ($location.absUrl().indexOf('/admin.console') != -1) {
@@ -131,6 +132,7 @@
       $scope.logoPath = '../../images/harvesting/';
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
+      $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
 
       $scope.pages = {
         home: 'home',
@@ -140,6 +142,24 @@
       $scope.layout = {
         hideTopToolBar: false
       };
+
+      /**
+       * CSRF support
+       */
+
+      //Comment the following lines if you want to remove csrf support
+      $http.defaults.xsrfHeaderName = 'X-XSRF-TOKEN';
+      $http.defaults.xsrfCookieName = 'XSRF-TOKEN';
+      $scope.$watch(function() { 
+          return $cookies.get($http.defaults.xsrfCookieName); 
+        }, function(value) {
+        $rootScope.csrf = value;
+      });
+      //If no csrf, ask for one:
+      if(!$rootScope.csrf) {
+        $http.post('info?type=me');
+      }
+      //Comment the upper lines if you want to remove csrf support
 
       /**
        * Number of selected metadata records.
@@ -289,6 +309,7 @@
               });
         });
       };
+      $scope.userAdminMenu = gnAdminMenu.UserAdmin;
       $scope.adminMenu = gnAdminMenu.Administrator;
       $scope.$on('loadCatalogInfo', function(event, status) {
         $scope.loadCatalogInfo();

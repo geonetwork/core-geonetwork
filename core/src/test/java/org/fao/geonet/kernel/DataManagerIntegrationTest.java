@@ -199,7 +199,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         final Metadata metadata = new Metadata();
         metadata.setDataAndFixCR(sampleMetadataXml)
             .setUuid(UUID.randomUUID().toString());
-        metadata.getCategories().add(category);
+        metadata.getMetadataCategories().add(category);
         metadata.getDataInfo().setSchemaId("iso19139");
         metadata.getSourceInfo().setSourceId(source.getUuid()).setOwner(1);
 
@@ -208,8 +208,8 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
             principal.getId(), templateMd.getUuid(), MetadataType.METADATA.codeString, true);
 
         Metadata newMetadata = _metadataRepository.findOne(newMetadataId);
-        assertEquals(1, newMetadata.getCategories().size());
-        assertEquals(category, newMetadata.getCategories().iterator().next());
+        assertEquals(1, newMetadata.getMetadataCategories().size());
+        assertEquals(category, newMetadata.getMetadataCategories().iterator().next());
         assertEqualsText(metadata.getUuid(), newMetadata.getXmlData(false), "gmd:parentIdentifier/gco:CharacterString");
 
     }

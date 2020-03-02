@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.command.AbortExecutionException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
@@ -34,16 +35,12 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
-import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.HarvestError;
-import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.kernel.harvest.harvester.IHarvester;
-import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -63,11 +60,7 @@ import org.jdom.JDOMException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
@@ -165,6 +158,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         Set<RecordInfo> records = new HashSet<RecordInfo>();
 
+        boolean error = false;
         for (Search s : params.getSearches()) {
 
             if (cancelMonitor.get()) {
@@ -174,11 +168,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             try {
                 records.addAll(search(req, s));
             } catch (Exception e) {
+                error = true;
                 log.error("Unknown error trying to harvest");
                 log.error(e.getMessage());
                 e.printStackTrace();
                 errors.add(new HarvestError(context, e, log));
             } catch (Throwable e) {
+                error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(e.getMessage());
                 e.printStackTrace();
@@ -191,11 +187,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 log.debug("Doing an empty search");
                 records.addAll(search(req, Search.createEmptySearch()));
             } catch (Exception e) {
+                error = true;
                 log.error("Unknown error trying to harvest");
                 log.error(e.getMessage());
                 e.printStackTrace();
                 errors.add(new HarvestError(context, e, log));
             } catch(Throwable e) {
+                error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(e.getMessage());
                 e.printStackTrace();
@@ -206,10 +204,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         log.info("Total records processed in all searches :" + records.size());
 
         //--- align local node
-
-        if (records.size() != 0)
+        if (!error) {
             align(t, records);
-
+        } else {
+            log.warning("Due to previous errors the align process has not been called");
+        }
         return result;
     }
 
@@ -279,6 +278,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         localGroups = new GroupMapper(context);
         localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
 
+        Pair<String, Map<String, Object>> filter =
+            HarvesterUtil.parseXSLFilter(params.xslfilter, log);
+        String processName = filter.one();
+        Map<String, Object> processParams = filter.two();
+
         dataMan.flush();
 
         //-----------------------------------------------------------------------
@@ -316,9 +320,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             String id = localUuids.getID(ri.id);
 
             if (id == null) {
-                addMetadata(t, ri);
+                addMetadata(t, ri, processName, processParams);
             } else {
-                updateMetadata(t, ri, id);
+                updateMetadata(t, ri, id, processName, processParams);
             }
         }
 
@@ -339,7 +343,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         return false;
     }
 
-    private void addMetadata(XmlRequest t, RecordInfo ri) throws Exception {
+    private void addMetadata(XmlRequest t, RecordInfo ri, String processName, Map<String, Object> processParams) throws Exception {
         Element md = retrieveMetadata(t, ri);
 
         if (md == null)
@@ -350,6 +354,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         String schema = dataMan.autodetectSchema(md);
 
         if (log.isDebugEnabled()) log.debug("  - Adding metadata with remote id : " + ri.id);
+
+
+        // Apply the xsl filter choosed by UI
+        if (StringUtils.isNotEmpty(params.xslfilter)) {
+            md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
+                md, processName, processParams, log);
+        }
 
         //
         // insert metadata
@@ -465,7 +476,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         }
     }
 
-    private void updateMetadata(XmlRequest t, RecordInfo ri, String id) throws Exception {
+    private void updateMetadata(XmlRequest t, RecordInfo ri, String id, String processName, Map<String, Object> processParams) throws Exception {
         String date = localUuids.getChangeDate(ri.id);
 
         if (!ri.isMoreRecentThan(date)) {
@@ -480,6 +491,15 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
             if (md == null)
                 return;
+
+            // The schema of the metadata
+            String schema = dataMan.autodetectSchema(md, null);
+
+            // Apply the xsl filter choosed by UI
+            if (StringUtils.isNotEmpty(params.xslfilter)) {
+                md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
+                    md, processName, processParams, log);
+            }
 
             //
             // update metadata
@@ -498,7 +518,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
             addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-            metadata.getCategories().clear();
+            metadata.getMetadataCategories().clear();
             addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 
             dataMan.flush();

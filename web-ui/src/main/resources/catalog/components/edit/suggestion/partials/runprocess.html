@@ -1,6 +1,7 @@
 <div>
   <div class="alert alert-info">{{currentSuggestion.name}}</div>
   <form class="form-horizontal" role="form">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
     <div class="form-group" data-ng-repeat="(key,param) in processParams">
       <label
         data-ng-if="param.type == 'string' || param.type == 'expression' || param.type == 'codelist'"

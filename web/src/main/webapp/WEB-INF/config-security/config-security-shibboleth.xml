@@ -40,11 +40,11 @@
   <!-- the shibboleth authentication filter -->
   <bean id="shibbolethPreAuthFilter"
         class="org.fao.geonet.kernel.security.shibboleth.ShibbolethPreAuthFilter">
-    <!--<property name="requestCache" ref="requestCache" /> -->
   </bean>
 
   <bean id="shibbolethUserUtils"
         class="org.fao.geonet.kernel.security.shibboleth.ShibbolethUserUtils">
+    <!-- Uncomment to combine with LDAP -->
     <!-- <property name="userDetailsManager" ref="ldapUserDetailsService" /> -->
     <!-- <property name="udetailsmapper" ref="ldapUserContextMapper"/> -->
   </bean>
@@ -62,34 +62,13 @@
     <property name="updateGroup" value="${shibbolethConfiguration.updateGroup}"/>
     <property name="updateProfile" value="${shibbolethConfiguration.updateProfile}"/>
   </bean>
-
-  <!-- The filter chain for the shib.user.login service -->
-  <alias name="shibFilterChainImplementation" alias="shibFilterChainPlaceholder"/>
-
-  <bean id="shibFilterChainImplementation"
-        class="org.springframework.security.web.DefaultSecurityFilterChain">
-    <constructor-arg>
-      <bean class="org.springframework.security.web.util.AntPathRequestMatcher">
-        <constructor-arg value="/srv/???/shib.user.login"/>
-      </bean>
-    </constructor-arg>
-    <constructor-arg>
-      <ref bean="filterChainFilters"/>
-    </constructor-arg>
-  </bean>
-
+  
   <bean id="filterChainFilters" class="java.util.ArrayList">
     <constructor-arg>
       <list>
         <ref bean="securityContextPersistenceFilter"/>
         <ref bean="logoutFilter"/>
-        <!-- A filter that check if an external service already authenticated user
-             (default implementation does nothing but can be overridden) -->
-        <ref bean="multiNodeAuthenticationFilter"/>
-        <ref bean="preAuthenticationFilter"/>
         <ref bean="shibbolethPreAuthFilter"/>
-        <ref bean="basicAuthenticationFilter"/>
-        <ref bean="formLoginFilter"/>
         <ref bean="requestCacheFilter"/>
         <ref bean="anonymousFilter"/>
         <ref bean="sessionMgmtFilter"/>

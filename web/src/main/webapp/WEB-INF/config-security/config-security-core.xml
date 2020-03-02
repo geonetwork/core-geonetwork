@@ -41,7 +41,6 @@
         <sec:filter-chain pattern="/srv/swagger-resources/**" filters=""/>
         <sec:filter-chain pattern="/srv/v2/**" filters=""/>
         <sec:filter-chain pattern="/doc/**" filters=""/>
-        <sec:filter-chain pattern="/proxy**" filters=""/>
         <!-- wroAPI is protected for admin only
         This is causing issue on node-change-warning page.
         <sec:filter-chain pattern="/static/wroAPI" filters=""/>-->
@@ -54,7 +53,6 @@
         <sec:filter-chain pattern="/*.css" filters=""/>
         <sec:filter-chain pattern="/images/**" filters=""/>
         <sec:filter-chain pattern="/map/**" filters=""/>
-        <sec:filter-chain pattern="/wmc/**" filters=""/>
         <sec:filter-chain pattern="/htmlcache/**" filters=""/>
         <sec:filter-chain pattern="/pdf/**" filters=""/>
         <sec:filter-chain pattern="/loc/**" filters=""/>
@@ -91,6 +89,9 @@
     <constructor-arg>
       <list>
         <ref bean="securityContextPersistenceFilter"/>
+        <!-- To disable csrf security (not recommended) comment the following line -->
+        <ref bean="csrfFilter" />
+        <!-- To disable csrf security (not recommended) comment the upper line -->
         <ref bean="logoutFilter"/>
         <!-- A filter that check if an external service already authenticated user
                      (default implementation does nothing but can be overridden) -->
@@ -340,4 +341,30 @@
   </bean>
 
 
+  <bean id="csrfFilter" class="org.springframework.security.web.csrf.CsrfFilter">
+    <constructor-arg>
+      <ref bean="csrfTokenRepository"/>
+    </constructor-arg>
+
+    <property name="requireCsrfProtectionMatcher" ref="geonetworkCsrfSecurityRequestMatcher" />
+  </bean>
+
+  <bean class="org.fao.geonet.security.web.csrf.CookieCsrfTokenRepository"
+        id="csrfTokenRepository">
+    <property name="cookieHttpOnly" value="false"/>
+  </bean>
+
+  <!-- RequestMatcher to exclude CSRF token from CSW requests -->
+  <bean id="geonetworkCsrfSecurityRequestMatcher"
+        class="org.fao.geonet.security.web.csrf.GeonetworkCsrfSecurityRequestMatcher">
+    <constructor-arg>
+      <set>
+        <!-- CSW requests -->
+        <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw-publication!?.*</value>
+        <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw-.*</value>
+        <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw!?.*</value>
+        <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.search!?</value>
+      </set>
+    </constructor-arg>
+  </bean>
 </beans>

@@ -43,8 +43,10 @@
     'gnSearchManagerService',
     'Metadata',
     'gnViewerSettings',
+    'gnGlobalSettings',
     function(gnOwsCapabilities, gnMap, $translate, $timeout,
-             gnSearchManagerService, Metadata, gnViewerSettings) {
+             gnSearchManagerService, Metadata, gnViewerSettings,
+             gnGlobalSettings) {
       return {
         restrict: 'A',
         replace: true,
@@ -63,12 +65,22 @@
          * @return {*}
          */
           this.addLayer = function(getCapLayer) {
+            getCapLayer.version = $scope.capability.version;
+            
+            //check if proxy is needed
+            var url = $scope.url.split('/');
+            getCapLayer.useProxy = false;
+            url = url[0] + '/' + url[1] + '/' + url[2] + '/';
+            if ($.inArray(url, gnGlobalSettings.requireProxy) >= 0) {
+              getCapLayer.useProxy = true;
+            }
+
             if ($scope.format == 'wms') {
               var layer = gnMap.addWmsToMapFromCap($scope.map, getCapLayer);
               gnMap.feedLayerMd(layer);
               return layer;
             } else if ($scope.format == 'wfs') {
-              var layer = gnMap.addWfsToMapFromCap($scope.map, getCapLayer);
+              var layer = gnMap.addWfsToMapFromCap($scope.map, getCapLayer, $scope.url);
               gnMap.feedLayerMd(layer);
               return layer;
             } else if ($scope.format == 'wmts') {
@@ -84,6 +96,12 @@
           scope.serviceDesc = null;
           scope.servicesList = gnViewerSettings.servicesUrl[scope.format];
           scope.catServicesList = [];
+
+          //Update require proxy
+          //this is done because gnGlobalSettings is not configured at this point
+          scope.$watch('gnGlobalSettings.requireProxy', function(settings){
+            scope.requireProxy = gnGlobalSettings.requireProxy;
+          });
 
           function addLinks(md, type) {
             angular.forEach(md.getLinksByType(type), function(link) {
@@ -127,20 +145,22 @@
           var type = scope.format.toUpperCase();
           var event = 'requestCapLoad' + type;
           scope.$on(event, function(e, url) {
-            var button = $('[data-gn-import-button=' + type + ']');
-            if (button) {
-              var panel = button.parents('.panel-tools'),
-                  toolId = panel && panel.attr('id');
-              if (toolId) {
-                $timeout(function() {
-                  var menu = $('*[rel=#' + toolId + ']');
-                  if (!menu.hasClass('active')) {
-                    menu.click();
+            var addLayersPanel = $('[id=addLayers]');
+            if (addLayersPanel) {
+              $timeout(function() {
+                addLayersPanel.removeClass('force-hide');
+
+                var layerTypeTab = $('[heading=' + type + ']');
+                if (layerTypeTab && !layerTypeTab.hasClass('active')) {
+                  var layerTypeAction = layerTypeTab.find('a');
+
+                  if (layerTypeAction) {
+                    layerTypeAction.click();
                   }
-                });
-              }
+                }
+              });
             }
-            scope.url = url;
+            scope.setUrl(url);
           });
 
           scope.setUrl = function(srv) {
@@ -176,7 +196,8 @@
   module.directive('gnKmlImport', [
     'ngeoDecorateLayer',
     'gnAlertService',
-    function(ngeoDecorateLayer, gnAlertService) {
+    '$translate',
+    function(ngeoDecorateLayer, gnAlertService, $translate) {
       return {
         restrict: 'A',
         replace: true,
@@ -186,8 +207,8 @@
           map: '=gnKmlImportMap'
         },
         controllerAs: 'kmlCtrl',
-        controller: ['$scope', '$http', '$translate',
-          function($scope, $http, $translate) {
+        controller: ['$scope', '$http',
+          function($scope, $http) {
 
             /**
            * Create new vector Kml file from url and add it to

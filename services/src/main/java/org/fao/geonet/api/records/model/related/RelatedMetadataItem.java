@@ -40,7 +40,8 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "relatedMetadataItem", propOrder = {
-    "description"
+    "description",
+    "mdType"
 })
 @XmlSeeAlso({
     RelatedSiblingMetadataItem.class
@@ -49,6 +50,9 @@ public class RelatedMetadataItem
     extends RelatedItem {
     @XmlElement(required = true)
     protected RelatedMetadataItem.Description description;
+
+    @XmlElement(required = true)
+    protected String[] mdType;
 
     /**
      * Gets the value of the description property.
@@ -68,6 +72,23 @@ public class RelatedMetadataItem
         this.description = value;
     }
 
+    /**
+     * Gets the value of the mdType property.
+     *
+     * @return possible object is {@link String }
+     */
+    public String[] getMdType() {
+        return mdType;
+    }
+
+    /**
+     * Sets the value of the mdType property.
+     *
+     * @param value allowed object is {@link String }
+     */
+    public void setMdType(String[] value) {
+        this.mdType = value;
+    }
 
     /**
      * <p>Java class for anonymous complex type.

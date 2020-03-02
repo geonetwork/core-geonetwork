@@ -44,12 +44,12 @@ public class DirectoryUtils {
     /**
      * Save entries and metadata
      */
-    public static void saveEntries(CollectResults collectResults,
+    public static void saveEntries(ServiceContext context,
+                                   CollectResults collectResults,
                                    String sourceIdentifier,
                                    Integer owner,
                                    Integer groupOwner,
                                    boolean saveRecord) {
-        ServiceContext context = ServiceContext.get();
         DataManager dataManager = context.getBean(DataManager.class);
         MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         Table<String, String, Element> entries = collectResults.getEntries();
@@ -122,10 +122,11 @@ public class DirectoryUtils {
      * Extract all entries matching a specific XPath. If an entry is found multiple times in the
      * record, and the identifier match, only one is reported (the last one).
      */
-    public static CollectResults collectEntries(Metadata record,
+    public static CollectResults collectEntries(ServiceContext context,
+                                                Metadata record,
                                                 String xpath,
                                                 String identifierXpath) throws Exception {
-        return collectEntries(record, xpath, identifierXpath, null, false, false, null);
+        return collectEntries(context, record, xpath, identifierXpath, null, false, false, null);
     }
 
     /**
@@ -133,18 +134,20 @@ public class DirectoryUtils {
      * subtemplate list, the record one is updated. To preserve properties from the record, use the
      * propertiesToCopy
      */
-    public static CollectResults synchronizeEntries(Metadata record,
+    public static CollectResults synchronizeEntries(ServiceContext context,
+                                                    Metadata record,
                                                     String xpath,
                                                     String identifierXpath,
                                                     List<String> propertiesToCopy,
                                                     boolean substituteAsXLink,
                                                     String directoryFilterQuery) throws Exception {
-        return collectEntries(record, xpath, identifierXpath,
+        return collectEntries(context, record, xpath, identifierXpath,
             propertiesToCopy, substituteAsXLink, true, directoryFilterQuery);
     }
 
 
-    private static CollectResults collectEntries(Metadata record,
+    private static CollectResults collectEntries(ServiceContext context,
+                                                 Metadata record,
                                                  String xpath,
                                                  String identifierXpath,
                                                  List<String> propertiesToCopy,
@@ -153,7 +156,7 @@ public class DirectoryUtils {
                                                  String directoryFilterQuery) throws Exception {
         CollectResults collectResults = new CollectResults(record);
         Map<String, List<Namespace>> namespaceList = new HashMap<String, List<Namespace>>();
-        ServiceContext context = ServiceContext.get();
+
         MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
         if (Log.isDebugEnabled(LOGGER)) {
@@ -280,7 +283,7 @@ public class DirectoryUtils {
                             }
                         }
                         parameters.put(searchIndexField, identifier);
-                        String id = search(parameters);
+                        String id = search(context, parameters);
                         if (id != null) {
                             Metadata subTemplate = metadataRepository.findOne(id);
                             if (subTemplate != null) {
@@ -398,9 +401,9 @@ public class DirectoryUtils {
      *
      * @return The record identifier
      */
-    private static String search(Map<String, String> searchParameters) {
+    private static String search(ServiceContext context, Map<String, String> searchParameters) {
         ServiceConfig _config = new ServiceConfig();
-        ServiceContext context = ServiceContext.get();
+
         SearchManager searchMan = context.getBean(SearchManager.class);
 
         try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {

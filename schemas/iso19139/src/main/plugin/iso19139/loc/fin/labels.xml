@@ -697,7 +697,7 @@
     </description>
     <condition>Pakollinen</condition>
   </element>
-	<element> name="gmd:code" id="547.0" context="gmd:MD_CodeValue">
+	<element name="gmd:code" id="547.0" context="gmd:MD_CodeValue">
     <label>Koodiarvon koodi</label>
     <description>Koodiarvon koodi</description>
     <help>Value code (i.e. numeric)</help>
@@ -2860,10 +2860,10 @@
     <label>Palvelutyyppi</label>
     <description>Paikkatietopalvelun tyypin nimi.</description>
     <helper>
-<option value="discovery">Hakupalvelu (INSPIRE)</option> 
-<option value="view">Katselupalvelu (INSPIRE)</option> 
-<option value="download">Latauspalvelu (INSPIRE)</option> 
-<option value="transformation">Muunnospalvelu (INSPIRE)</option> 
+<option value="discovery">Hakupalvelu (INSPIRE)</option>
+<option value="view">Katselupalvelu (INSPIRE)</option>
+<option value="download">Latauspalvelu (INSPIRE)</option>
+<option value="transformation">Muunnospalvelu (INSPIRE)</option>
 <option value="other">Muu palvelu (INSPIRE)</option>
       <option value="OGC:WMS">OGC Web Map Service (OGC:WMS)</option>
       <option value="OGC:WFS">OGC Web Feature Service (OGC:WFS)</option>

@@ -103,6 +103,7 @@
     "createMetadataUniformResourceName": "URN de la fiche",
     "createNewMetadata": "Créer une fiche",
     "createSmall": "Créer une miniature",
+    "cantAddLinkToDataset": "Échec de l'ajout d'un lien vers le jeu de données. Vous n'avez probablement pas les droits d'édition. Seul le service est mis à jour.",
     "current": "actuel",
     "datasetFound": "Jeu de données trouvé et ajouté à la carte",
     "datasetNotFound": "Jeu de données non trouvé - 404",
@@ -321,5 +322,6 @@
     "parentConcept": "Concept parent",
     "moreSpecificConcept": "Concepts plus spécifiques",
     "associatedConcept": "Concepts associés",
-    "xsd": "Validation du standard (XSD)"
+    "xsd": "Validation du standard (XSD)",
+    "linkToXmlTab": "Certaines erreurs peuvent être corrigées <a href=\"#/metadata/{{metadataId}}/tab/xml\">dans le vue XML</a>."
 }

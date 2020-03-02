@@ -53,6 +53,7 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.ProxyInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -400,10 +401,9 @@ public class SiteApi {
         @ApiResponse(code = 200, message = "Site information.")
     })
     @ResponseBody
-    public SiteInformation getInformation(
+    public SiteInformation getInformation(HttpServletRequest request
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        ServiceContext context = ServiceContext.get();
+        ServiceContext context = ApiUtils.createServiceContext(request);
         return new SiteInformation(context, (GeonetContext) context
             .getHandlerContext(Geonet.CONTEXT_NAME));
     }
@@ -539,6 +539,7 @@ public class SiteApi {
         Path logoDirectory = Resources.locateHarvesterLogosDirSMVC(appContext);
 
         checkFileName(file);
+        FilePathChecker.verify(file);
 
         SettingManager settingMan = appContext.getBean(SettingManager.class);
         GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);

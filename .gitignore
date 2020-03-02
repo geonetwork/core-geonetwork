@@ -15,6 +15,7 @@ web/src/main/webapp/scripts/lib/*
 web/src/main/webapp/images/logos/*
 web/src/main/webapp/images/statTmp
 web/src/main/webapp/WEB-INF/data/wro4j*.db
+web/src/main/webResources/WEB-INF/classes/git.properties
 web/logs/
 web/jcs_caching/
 web/*.db

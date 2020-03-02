@@ -1267,7 +1267,7 @@
     </metadata>
   </inspireSection>
   <inspireAddConformity>Ajouter une section conformité INSPIRE</inspireAddConformity>
-  <xsdError>Erreur</xsdError>
+  <xsdError>Erreur de validation XSD</xsdError>
   <yourRegistration js="true">Création du compte ...</yourRegistration>
   <zip>Code postal</zip>
 

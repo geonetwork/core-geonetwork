@@ -77,7 +77,6 @@
     "legalConstraints": "Restricciones legales",
     "scale": "Escala",
     "resolution": "Resolución",
-    "resolutions": "Resoluciones",
     "credit": "Créditos",
     "classification": "Clasificación",
     "resourceStatus": "Estado",
@@ -314,11 +313,11 @@
     "privilegesBatchAlert": "Los privilegios se actualizarán para todos los registros editables de la selección. ¡El formulario no contempla los privilegios asignados a los registros actualmente! Se reemplazarán todos los privilegios por los nuevos.",
     "permalink": "Enlace Permanente",
     "permalinkTo": "Permalink to {{title}}",
-    "shareOnGooglePlus": "Share on Google+",
-    "shareOnTwitter": "Share on Twitter",
-    "shareOnFacebook": "Share on Facebook",
-    "shareOnLinkedIn": "Share on LinkedIn",
-    "shareByEmail": "Share by email",
+    "shareOnGooglePlus": "Compartir en Google+",
+    "shareOnTwitter": "Compartir en Twitter",
+    "shareOnFacebook": "Compartir en Facebook",
+    "shareOnLinkedIn": "Compartir en LinkedIn",
+    "shareByEmail": "Compartir por correo electrónico",
     "zoomto": "Acercar A",
     "recordNotFound": "La entrada con el identificador <strong>{{uuid}}</strong> no se encontró o no se compartió con tu usuario",
     "intersectWith": "Intersecciona con",
@@ -371,5 +370,7 @@
     "mdinvalid": "Los metadatos no son válidos",
     "mdinvalidcantpublish": "Los metadatos no válidos no pueden ser publicados",
     "mdnovalidation": "Los metadatos no tienen información de validación",
-    "setall": "Ajustar todos los privilegios"
+    "setall": "Ajustar todos los privilegios",
+    "print_legend": "Leyenda",
+    "print_legend_field": "Incluir leyendas"
 }

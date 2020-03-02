@@ -218,7 +218,7 @@
           });
           return enc;
         },
-        'WMS': function(layer, config) {
+        'WMS': function(layer, config, proj) {
           var enc = self.encoders.
               layers['Layer'].call(this, layer);
           var params = layer.getSource().getParams();
@@ -226,7 +226,7 @@
           var styles = (params.STYLES !== undefined) ?
               params.STYLES.split(',') :
               new Array(layers.length).join(',').split(',');
-          var url = layer instanceof ol.source.ImageWMS ?
+          var url = layer.getSource() instanceof ol.source.ImageWMS ?
               layer.getSource().getUrl() :
               layer.getSource().getUrls()[0];
           angular.extend(enc, {
@@ -239,7 +239,7 @@
             customParams: {
               'EXCEPTIONS': 'XML',
               'TRANSPARENT': 'true',
-              'CRS': 'EPSG:3857',
+              'CRS': proj.getCode(),
               'TIME': params.TIME
             },
             singleTile: config.singleTile || false
@@ -261,6 +261,31 @@
             tileSize: [
               layer.getSource().tileGrid.getTileSize(),
               layer.getSource().tileGrid.getTileSize()]
+          });
+          return enc;
+        },
+        'XYZ': function(layer, config) {
+          var enc = self.encoders.
+              layers['Layer'].call(this, layer);
+          var url = layer.getSource().getUrls()[0];
+          //Remove the XYZ and extension parts of the URL
+          if(url.indexOf("{z}") > 0) {
+            url = url.substring(0, url.indexOf("{z}"));
+            //Remove last "/"
+            url = url.substring(0, url.lastIndexOf("/"));
+          }
+          angular.extend(enc, {
+            type: 'XYZ',
+            extension: 'png',
+            baseURL: url,
+            // Hack to return an extent for the base
+            // layer in case of undefined
+            maxExtent: layer.getExtent() ||
+                [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+            resolutions: layer.getSource().getTileGrid().getResolutions(),
+            tileSize: [
+              layer.getSource().getTileGrid().getTileSize(),
+              layer.getSource().getTileGrid().getTileSize()]
           });
           return enc;
         },
@@ -300,7 +325,7 @@
           });
           return enc;
         },
-        'WMTS': function(layer, config) {
+        'WMTS': function(layer, config, proj) {
           // sextant specific
           var enc = self.encoders.layers['Layer'].
               call(this, layer);
@@ -308,8 +333,9 @@
           var tileGrid = source.getTileGrid();
           var matrixSet = source.getMatrixSet();
           var matrixIds = new Array(tileGrid.getResolutions().length);
+          var layerUrl = layer.get('url');
           for (var z = 0; z < tileGrid.getResolutions().length; ++z) {
-            var mSize = (ol.extent.getWidth(ol.proj.get('EPSG:3857').
+            var mSize = (ol.extent.getWidth(proj.
                 getExtent()) /tileGrid.getTileSize()) /
                 tileGrid.getResolutions()[z];
                 matrixIds[z] = {
@@ -321,12 +347,24 @@
                 };
           }
 
+          // workaround for Mapfish v2.1.2 with REST and matrixIds
+          if (matrixIds.length > 0) {
+            if (/{style}/ig.test(decodeURI(layerUrl))) {
+              layerUrl = encodeURI(decodeURI(layerUrl).replace(/{style}/ig, source.getStyle()));
+            }
+            if (/layer/ig.test(decodeURI(layerUrl))) {
+              layerUrl = encodeURI(decodeURI(layerUrl).replace(/{layer}/ig, source.getLayer()));
+            }
+          }
+
           angular.extend(enc, {
             type: 'WMTS',
-            baseURL: layer.get('url'),
+            baseURL: layerUrl,
             layer: source.getLayer(),
             version: source.getVersion(),
-            requestEncoding: 'KVP',
+            requestEncoding: source.getRequestEncoding() || 'KVP',
+            // Dimensions is not a mandatory parameter but it is required by Mapfish v2.1.2 if requestEncoding is REST
+            dimensions: [],
             format: source.getFormat(),
             style: source.getStyle(),
             matrixSet: matrixSet,

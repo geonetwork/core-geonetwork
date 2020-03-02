@@ -47,15 +47,23 @@ public class ArcSDEParams extends AbstractParams {
     public String database;
 
     public String icon;
+    /** The type of the connection */
+    public ArcSDEConnectionType connectionType;
+
+    /** The ArcSDE version */
+    public String version;
+
+    /** The ArcSDE database type */
+    public String databaseType;
 
     public ArcSDEParams(DataManager dm) {
         super(dm);
     }
 
     /**
-     * --------------------------------------------------------------------------- //--- //---
-     * Create : called when a new entry must be added. Reads values from the //---          provided
-     * entry, providing default values //--- //---------------------------------------------------------------------------
+
+     * Create : called when a new entry must be added. Reads values from the provided
+     * entry, providing default values.
      */
     public void create(Element node) throws BadInputEx {
         super.create(node);
@@ -66,14 +74,17 @@ public class ArcSDEParams extends AbstractParams {
         setPassword(Util.getParam(site, "password", ""));
         database = Util.getParam(site, "database", "");
         icon = Util.getParam(site, "icon", "arcsde.gif");
+        connectionType = ArcSDEConnectionType.valueOf(Util.getParam(site,
+            "connectionType", ArcSDEConnectionType.ARCSDE.name()));
+        version =  Util.getParam(site, "version", "9");
+        databaseType = Util.getParam(site, "databaseType", "");
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Update : called when an entry has changed and variables must be updated
-    //---
-    //---------------------------------------------------------------------------
-
+    /**
+     * Update : called when an entry has changed and variables must be updated.
+     * @param node
+     * @throws BadInputEx
+     */
     public void update(Element node) throws BadInputEx {
         super.update(node);
         Element site = node.getChild("site");
@@ -83,6 +94,10 @@ public class ArcSDEParams extends AbstractParams {
         setPassword(Util.getParam(site, "password", ""));
         database = Util.getParam(site, "database", "");
         icon = Util.getParam(site, "icon", "arcsde.gif");
+        connectionType = ArcSDEConnectionType.valueOf(Util.getParam(site,
+            "connectionType", ArcSDEConnectionType.ARCSDE.name()));
+        version =  Util.getParam(site, "version", "9");
+        databaseType = Util.getParam(site, "databaseType", "");
     }
 
     //---------------------------------------------------------------------------
@@ -91,6 +106,10 @@ public class ArcSDEParams extends AbstractParams {
     //---
     //---------------------------------------------------------------------------
 
+    /**
+     * Copy the values of the fields to a new instance.
+     * @return a new instance with the same field values that the caller one.
+     */
     public ArcSDEParams copy() {
         ArcSDEParams copy = new ArcSDEParams(dm);
         copyTo(copy);
@@ -100,6 +119,9 @@ public class ArcSDEParams extends AbstractParams {
         copy.setUsername(getUsername());
         copy.setPassword(getPassword());
         copy.database = database;
+        copy.connectionType = connectionType;
+        copy.version = version;
+        copy.databaseType = databaseType;
         return copy;
     }
 }

@@ -103,6 +103,7 @@
     "createMetadataUniformResourceName": "Nom Uniforme del Recurs (URN) de la metadada",
     "createNewMetadata": "Afegeix una nova entrada",
     "createSmall": "Crea petit",
+    "cantAddLinkToDataset": "Can't add link to target dataset. You probably can't edit that record. Updating the service only.",
     "current": "actual",
     "datasetFound": "S'ha trobat el conjunt de dades i s'ha afegit al mapa de vista prèvia",
     "datasetNotFound": "Conjunt de dades no trobat - 404",
@@ -321,5 +322,6 @@
     "parentConcept": "Concepte pare",
     "moreSpecificConcept": "Conceptes més específics",
     "associatedConcept": "Conceptes associats",
-    "xsd": "Validació de l'esquema"
+    "xsd": "Validació de l'esquema",
+    "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}/tab/xml\">XML editor</a>."
 }

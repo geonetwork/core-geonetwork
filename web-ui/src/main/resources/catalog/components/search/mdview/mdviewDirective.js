@@ -66,9 +66,14 @@
 
           var unRegister;
 
+          element.find('.panel-body').append(scope.fragment);
           scope.dismiss = function() {
             unRegister();
-            gnMdView.removeLocationUuid();
+            // Do not close parent mdview
+            if ($('[gn-metadata-display] ~ [gn-metadata-display]')
+                .length == 0) {
+              gnMdView.removeLocationUuid();
+            }
             element.remove();
             //TODO: is the scope destroyed ?
           };

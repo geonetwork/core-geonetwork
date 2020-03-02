@@ -83,4 +83,11 @@ public class SeRow {
         return null;
     }
 
+    public String getString(int i) {
+        return null;
+    }
+
+    public SeXmlDoc getXml(int paramInt) {
+        return null;
+    }
 }

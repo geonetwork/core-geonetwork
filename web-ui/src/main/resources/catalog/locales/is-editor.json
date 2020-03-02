@@ -103,6 +103,7 @@
     "createMetadataUniformResourceName": "Lýsigögn samræmt nafn tilfanga",
     "createNewMetadata": "Bæta við nýrri færslu",
     "createSmall": "Búa til lítið",
+    "cantAddLinkToDataset": "Can't add link to target dataset. You probably can't edit that record. Updating the service only.",
     "current": "núverandi",
     "datasetFound": "Gagnasett fundið og búið að bæta því við sýnishorn korts",
     "datasetNotFound": "Gagnasett fannst ekki - 404",
@@ -321,5 +322,6 @@
     "parentConcept": "Foreldra hugtak",
     "moreSpecificConcept": "Enn sérhæfðari hugtök",
     "associatedConcept": "Tengd hugtök",
-    "xsd": "Skema fullgilding"
+    "xsd": "Skema fullgilding",
+    "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}/tab/xml\">XML editor</a>."
 }

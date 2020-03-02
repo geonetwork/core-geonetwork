@@ -70,7 +70,7 @@
     <level value="DEBUG"/>
   </logger>
   <logger name="geonetwork.harvester" additivity="false">
-    <level value="WARN"/>
+    <level value="INFO"/>
     <appender-ref ref="consoleAppender"/>
     <appender-ref ref="fileAppender"/>
   </logger>

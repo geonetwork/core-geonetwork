@@ -1,6 +1,5 @@
 <div class="wrapper" data-ng-controller="gnViewerController">
 
-  <div data-gn-alert-manager=""></div>
   <div id="map"
        ngeo-map="map"
        class="map"
@@ -116,6 +115,12 @@
         <tab heading="{{'LayerWMTS' | translate}}"
              active="addLayerTabs.wmts">
           <div gn-wms-import="wmts" gn-wms-import-map="map"></div>
+        </tab>
+        <tab heading="{{'LayerWFS' | translate}}"
+             active="addLayerTabs.wfs">
+          <div gn-wms-import="wfs"
+               gn-wms-import-map="map"
+               services-list-from-catalog="true"></div>
         </tab>
         <tab heading="{{'LayerKML' | translate}}"
              active="addLayerTabs.kml">

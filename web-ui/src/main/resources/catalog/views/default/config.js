@@ -96,6 +96,10 @@
 
           };
 
+          // Display related links in grid ?
+          searchSettings.gridRelated = ['parent', 'children',
+            'services', 'datasets'];
+
           // Object to store the current Map context
           viewerSettings.storage = 'sessionStorage';
 
@@ -200,6 +204,21 @@
             //layers:['OGC', 'kml'],
             layers:['OGC'],
             maps: ['ows']
+          };
+
+          // Map protocols used to load layers/services in the map viewer
+          searchSettings.mapProtocols = {
+            layers: [
+              'OGC:WMS',
+              'OGC:WMS-1.1.1-http-get-map',
+              'OGC:WMS-1.3.0-http-get-map',
+              'OGC:WFS'
+              ],
+            services: [
+              'OGC:WMS-1.3.0-http-get-capabilities',
+              'OGC:WMS-1.1.1-http-get-capabilities',
+              'OGC:WFS-1.0.0-http-get-capabilities'
+              ]
           };
 
           // Set the default template to use

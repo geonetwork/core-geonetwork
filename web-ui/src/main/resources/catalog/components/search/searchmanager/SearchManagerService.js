@@ -219,6 +219,8 @@
           } else {
             defer.reject('No records to index');
           }
+        }, function(reason) {
+          defer.reject("error: " + reason);
         });
         return defer.promise;
       };

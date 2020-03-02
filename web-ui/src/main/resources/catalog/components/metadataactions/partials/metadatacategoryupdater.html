@@ -11,9 +11,10 @@
         data-translate="">setMetadataCategories
     </li>
     <li data-ng-repeat="c in categories | orderBy:sortByLabel"
-        data-ng-hide="enableallowedcategories && allowedcategories.indexOf(c.id) == -1"
-        data-ng-class="ids.indexOf(c.id) === -1 ? 'disabled' : ''">
+        data-ng-hide="enableallowedcategories && allowedcategories.indexOf(c.id) == -1">
       <a data-ng-click="assign(c, $event)" href="">
+        <i class="fa" data-ng-class="ids.indexOf(c.id) !== -1 ? 'fa-check-square-o' : 'fa-square-o'"></i>
+        &#160;
         <span class="fa gn-icon-{{c.name}}"></span>
         {{c.label[lang] | translate}}
       </a>

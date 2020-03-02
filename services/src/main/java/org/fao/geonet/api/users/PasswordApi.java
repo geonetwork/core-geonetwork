@@ -25,6 +25,7 @@ package org.fao.geonet.api.users;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.security.ldap.LDAPConstants;
@@ -54,6 +55,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -94,12 +96,12 @@ public class PasswordApi {
             required = true)
         @RequestBody
             PasswordUpdateParameter passwordAndChangeKey,
-        ServletRequest request)
+        HttpServletRequest request)
         throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
-        ServiceContext context = ServiceContext.get();
+        ServiceContext context = ApiUtils.createServiceContext(request);
 
         final UserRepository userRepository = context.getBean(UserRepository.class);
         User user = userRepository.findOneByUsername(username);
@@ -179,12 +181,13 @@ public class PasswordApi {
             required = true)
         @PathVariable
             String username,
-        ServletRequest request)
+        HttpServletRequest request)
         throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         String language = locale.getISO3Language();
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         final User user = appContext.getBean(UserRepository.class).findOneByUsername(username);
         if (user == null) {
@@ -217,7 +220,7 @@ public class PasswordApi {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         String todaysDate = sdf.format(cal.getTime());
-        String changeKey = PasswordUtil.encode(ServiceContext.get(),
+        String changeKey = PasswordUtil.encode(serviceContext,
             scrambledPassword + todaysDate);
 
         String subject = String.format(

@@ -26,6 +26,7 @@
           <h2 data-translate="">mostPopular</h2>
           <form class="form-horizontal" role="form"
                 data-ng-search-form="" runSearch="true">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
             <table class="table table-striped">
               <tr data-ng-repeat="md in searchResults.records">
                 <td>{{md.title || md.defaultTitle}}</td>
@@ -44,6 +45,7 @@
           <h2 data-translate="">bestRated</h2>
           <form class="form-horizontal" role="form"
                 data-ng-search-form="" runSearch="true">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
             <table class="table table-striped">
               <tr data-ng-repeat="md in searchResults.records">
                 <td>{{md.title || md.defaultTitle}}</td>
@@ -66,7 +68,7 @@
 
         <svg id="gn-stat-md-by-facet" class="gn-chart"/>
 
-        <div class="help-block" data-ng-translate="">facetIndicatorHelp</div>
+        <div class="help-block" data-translate="">facetIndicatorHelp</div>
 
         <h2 data-translate="">recordsByCategory</h2>
         <svg id="gn-stat-md-by-category" class="gn-chart"/>

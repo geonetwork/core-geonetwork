@@ -112,7 +112,9 @@
                     if (layer == scope.heatmapLayer) {
                       return feature;
                     }
-                  });
+                  }, undefined, function(layer) {
+                  return layer instanceof ol.layer.Vector;
+                });
               if (feature) {
                 var mapTop = scope.map.getTarget().getBoundingClientRect().top;
                 info.css({
@@ -142,6 +144,11 @@
            * all different feature types.
            */
           function init() {
+
+            var source = scope.layer.getSource();
+            if(!source || !(source instanceof ol.source.ImageWMS || source instanceof ol.source.TileWMS)) {
+              return;
+            }
 
             angular.extend(scope, {
               fields: [],
@@ -265,10 +272,10 @@
           scope.dropFeatures = function() {
             var id = scope.url + '#' + ftName;
             return gnSolrService.deleteDocs('featureTypeId:"' +
-              id + '" id:"' + id + '"').then(function() {
+                id + '" id:"' + id + '"').then(function() {
               scope.initSolrRequest();
-            }, function () {
-                console.warn('Failed to remove features for type ' + id);
+            }, function() {
+              console.warn('Failed to remove features for type ' + id);
             });
           };
           /**

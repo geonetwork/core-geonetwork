@@ -88,7 +88,7 @@
 
       <!-- One column per thesaurus -->
       <xsl:for-each select="gmd:identificationInfo/*/gmd:descriptiveKeywords/*[gmd:thesaurusName]">
-        <xsl:variable name="thesaurusId" select="gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text()"/>
+        <xsl:variable name="thesaurusId" select="normalize-space(gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text())"/>
         <xsl:variable name="thesaurusKey" select="if ($thesaurusId != '') then $thesaurusId else position()"/>
 
         <xsl:for-each select="gmd:keyword[not(@gco:nilReason)]">

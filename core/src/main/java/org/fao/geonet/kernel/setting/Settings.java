@@ -45,7 +45,7 @@ public class Settings {
     public static final String SYSTEM_PROXY_USERNAME = "system/proxy/username";
     public static final String SYSTEM_PROXY_PASSWORD = "system/proxy/password";
     public static final String SYSTEM_PROXY_IGNOREHOSTLIST = "system/proxy/ignorehostlist";
-    public static final String SYSTEM_LUCENE_IGNORECHARS = "system/requestedLanguage/ignorechars";
+    public static final GNSetting SYSTEM_LUCENE_IGNORECHARS = new GNSetting("system/requestedLanguage/ignorechars", true);
     public static final String SYSTEM_REQUESTED_LANGUAGE_SORTED = "system/requestedLanguage/sorted";
     public static final String SYSTEM_REQUESTED_LANGUAGE_ONLY = "system/requestedLanguage/only";
     public static final String SYSTEM_AUTODETECT_ENABLE = "system/autodetect/enable";
@@ -71,7 +71,7 @@ public class Settings {
     public static final String SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS =
         "system/feedback/mailServer/ignoreSslCertificateErrors";
     public static final String SYSTEM_ENABLE_ALL_THESAURUS = "system/metadata/allThesaurus";
-    public static final String SYSTEM_SITE_SVNUUID = "system/site/svnUuid";
+    public static final GNSetting SYSTEM_SITE_SVNUUID = new GNSetting("system/site/svnUuid", true);
     public static final String SYSTEM_INTRANET_NETWORK = "system/intranet/network";
     public static final String SYSTEM_INTRANET_NETMASK = "system/intranet/netmask";
     public static final String SYSTEM_Z3950_ENABLE = "system/z3950/enable";
@@ -112,4 +112,36 @@ public class Settings {
     public static final String REGION_GETMAP_SUMMARY_WIDTH = "region/getmap/summaryWidth";
     public static final String METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP = "metadata/workflow/draftWhenInGroup";
     public static final String VIRTUAL_SETTINGS_SUFFIX_ISDEFINED = "IsDefined";
+
+    public static class GNSetting {
+        private String name;
+        private boolean nullable;
+
+        GNSetting(String name, boolean nullable)
+        {
+            this.name = name;
+            this.nullable = nullable;
+        }
+
+        public String getName()
+        {
+            return name;
+        }
+
+        public void setName(String name)
+        {
+            this.name = name;
+        }
+
+        public boolean isNullable()
+        {
+            return nullable;
+        }
+
+        public void setNullable(boolean nullable)
+        {
+            this.nullable = nullable;
+        }
+
+    }
 }

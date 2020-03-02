@@ -59,9 +59,10 @@ class MEFExporter {
      * @return the path of the generated MEF file.
      */
     public static Path doExport(ServiceContext context, String uuid,
-                                Format format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+                                Format format, boolean skipUUID, boolean resolveXlink,
+                                boolean removeXlinkAttribute, boolean addSchemaLocation) throws Exception {
         Pair<Metadata, String> recordAndMetadata =
-            MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
+            MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute, addSchemaLocation);
         Metadata record = recordAndMetadata.one();
         String xmlDocumentAsString = recordAndMetadata.two();
 

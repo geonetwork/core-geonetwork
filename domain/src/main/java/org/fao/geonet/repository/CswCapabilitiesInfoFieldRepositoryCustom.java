@@ -23,6 +23,8 @@
 
 package org.fao.geonet.repository;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -46,5 +48,6 @@ public interface CswCapabilitiesInfoFieldRepositoryCustom {
      *
      * @param info the info object to persist.
      */
+    @Transactional
     void save(@Nonnull CswCapabilitiesInfo info);
 }

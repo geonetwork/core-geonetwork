@@ -174,7 +174,8 @@
           scope.pFilterFn = function(v) {
             if (scope.pFilter === '') return true;
             var v = $translate.instant('group-' + v.group);
-            return v.indexOf(scope.pFilter) >= 0;
+            return v.toLowerCase().indexOf(
+                scope.pFilter.toLocaleLowerCase()) >= 0;
           };
 
           scope.sorter = {

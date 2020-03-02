@@ -82,18 +82,7 @@ public class SendNotification {
         String htmlMessage = settings
             .getValue(Settings.SYSTEM_HARVESTING_MAIL_TEMPLATE);
 
-        Element lastHarvest = (Element) element.getChildren().get(0);
-
-        @SuppressWarnings("unchecked")
-        List<Element> tmp = lastHarvest.getChildren();
-        Element info = null;
-
-        for (Element e : tmp) {
-            if (e.getName().equalsIgnoreCase("info")) {
-                info = e;
-                break;
-            }
-        }
+        Element info = element.getChild("info");
 
         // We should always get a info report BTW
         if (info != null) {
@@ -127,7 +116,10 @@ public class SendNotification {
 
             } else {
 
-                if (result.getChildren("errors").size() > 0) {
+                Element harvesterErrors = result.getChild("errors");
+
+                if ((harvesterErrors != null) &&
+                    (harvesterErrors.getChildren().size() > 0)) {
                     // Success with warnings, Level 2, let's check it:
                     if (!settings.getValueAsBool(Settings.SYSTEM_HARVESTING_MAIL_LEVEL2)) {
                         return;

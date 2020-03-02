@@ -55,6 +55,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
@@ -85,9 +86,10 @@ public class MetadataWorkflowApi {
     )
     @PreAuthorize("hasRole('Editor')")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Status updated."),
+        @ApiResponse(code = 204, message = "Status updated."),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void status(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,

@@ -27,6 +27,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.Assert;
 import org.fao.geonet.csw.common.Csw;
+import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.kernel.search.AbstractLanguageSearchOrderIntegrationTest;
 import org.fao.geonet.utils.Xml;
@@ -148,5 +149,58 @@ public class CswGetRecords_Test extends AbstractCoreIntegrationTest {
 //            System.out.println(nodes.get(i).getText());
 //        }
         Assert.assertEquals(2, nodes.size());
+
+
+
+        // Check that exception returned if startPos greater than matching records
+
+        request = new Element("GetRecords", Csw.NAMESPACE_CSW)
+            .setAttribute("service", "CSW")
+            .setAttribute("version", "2.0.2")
+            .setAttribute("resultType", "results")
+            .setAttribute("startPosition", "4")
+            .setAttribute("maxRecords", "1")
+            .setAttribute("outputSchema", "csw:Record")
+            .addContent(new Element("Query", Csw.NAMESPACE_CSW)
+                .addContent(new Element("ElementSetName", Csw.NAMESPACE_CSW).setText("summary"))
+            );
+        try {
+            result = _getRecords.execute(request, serviceContext);
+        } catch (InvalidParameterValueEx ex) {
+            Assert.assertTrue(true);
+        }
+
+
+        // Check that next record is 2 for first record
+        request = new Element("GetRecords", Csw.NAMESPACE_CSW)
+            .setAttribute("service", "CSW")
+            .setAttribute("version", "2.0.2")
+            .setAttribute("resultType", "results")
+            .setAttribute("startPosition", "1")
+            .setAttribute("maxRecords", "1")
+            .setAttribute("outputSchema", "csw:Record")
+            .addContent(new Element("Query", Csw.NAMESPACE_CSW)
+                .addContent(new Element("ElementSetName", Csw.NAMESPACE_CSW).setText("summary"))
+            );
+        result = _getRecords.execute(request, serviceContext);
+        String nextRecord = result.getChild("SearchResults", Csw.NAMESPACE_CSW).getAttributeValue("nextRecord");
+        Assert.assertEquals("2", nextRecord);
+
+
+
+        // Check that next record is 0 at then of the list
+        request = new Element("GetRecords", Csw.NAMESPACE_CSW)
+            .setAttribute("service", "CSW")
+            .setAttribute("version", "2.0.2")
+            .setAttribute("resultType", "results")
+            .setAttribute("startPosition", "3")
+            .setAttribute("maxRecords", "1")
+            .setAttribute("outputSchema", "csw:Record")
+            .addContent(new Element("Query", Csw.NAMESPACE_CSW)
+                .addContent(new Element("ElementSetName", Csw.NAMESPACE_CSW).setText("summary"))
+            );
+        result = _getRecords.execute(request, serviceContext);
+        nextRecord = result.getChild("SearchResults", Csw.NAMESPACE_CSW).getAttributeValue("nextRecord");
+        Assert.assertEquals("0", nextRecord);
     }
 }

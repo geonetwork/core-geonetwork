@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
@@ -100,8 +101,11 @@ public class Insert extends NotInReadOnlyModeService {
         Element xml = Xml.loadString(data, false);
 
         // Apply a stylesheet transformation if requested
-        if (!style.equals("_none_"))
+        if (!style.equals("_none_")) {
+            FilePathChecker.verify(style);
+
             xml = Xml.transform(xml, stylePath.resolve(style));
+        }
 
         String schema = Util.getParam(params, Params.SCHEMA, null);
         if (schema == null) {

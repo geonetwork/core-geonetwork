@@ -155,6 +155,14 @@ public class SettingManager {
      * @param path eg. system/site/name
      */
     public String getValue(String path) {
+        return getValue(path, false);
+    }
+
+    public String getValue(Settings.GNSetting setting) {
+        return getValue(setting.getName(), setting.isNullable());
+    }
+
+    public String getValue(String path, boolean nullable) {
         if (Log.isDebugEnabled(Geonet.SETTINGS)) {
             Log.debug(Geonet.SETTINGS, "Requested setting with name: " + path);
         }
@@ -170,7 +178,7 @@ public class SettingManager {
             return null;
         }
         String value = se.getValue();
-        if (value == null) {
+        if (value == null && ! nullable) {
             Log.warning(Geonet.SETTINGS, "  Requested setting with name: " + path + " but null value found. Check the settings table.");
         }
         return value;
@@ -290,6 +298,14 @@ public class SettingManager {
 
         repo.save(setting);
         return true;
+    }
+
+    public boolean setValue(Settings.GNSetting setting, String value) {
+        return setValue(setting.getName(), value);
+    }
+
+    public boolean setValue(Settings.GNSetting setting, boolean value) {
+        return setValue(setting.getName(), value);
     }
 
     /**

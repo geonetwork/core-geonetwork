@@ -103,6 +103,7 @@
     "createMetadataUniformResourceName": "Metatiedon URN-tunnus",
     "createNewMetadata": "Lisää uusi dokumentti",
     "createSmall": "Luo pieni",
+    "cantAddLinkToDataset": "Can't add link to target dataset. You probably can't edit that record. Updating the service only.",
     "current": "tämä",
     "datasetFound": "Aineisto lisättiin karttanäkymään",
     "datasetNotFound": "Aineistoa ei löytynyt - 404",
@@ -321,5 +322,6 @@
     "parentConcept": "Yläkäsite",
     "moreSpecificConcept": "Lisää alakäsitteitä",
     "associatedConcept": "Lähikäsitteet",
-    "xsd": "Skeeman validointi"
+    "xsd": "Skeeman validointi",
+    "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}/tab/xml\">XML editor</a>."
 }

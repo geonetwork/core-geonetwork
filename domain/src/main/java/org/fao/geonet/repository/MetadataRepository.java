@@ -27,6 +27,7 @@ import org.fao.geonet.domain.Metadata;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -64,6 +65,7 @@ public interface MetadataRepository extends GeonetRepository<Metadata, Integer>,
      * @param mdId the id of the metadata
      */
     @Modifying
+    @Transactional
     @Query("UPDATE " + Metadata.TABLENAME + " m SET m.dataInfo.popularity = m.dataInfo.popularity + 1 WHERE m.id = ?1")
     void incrementPopularity(int mdId);
 }

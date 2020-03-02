@@ -57,6 +57,7 @@ import java.util.Set;
  *
  * @author Jose García
  */
+@Deprecated
 public class ReportInternalMetadata implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

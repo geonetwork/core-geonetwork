@@ -103,6 +103,7 @@
     "createMetadataUniformResourceName": "Metadata Uniform Resource Name",
     "createNewMetadata": "Přidat nový záznam",
     "createSmall": "Vytvořit malý",
+    "cantAddLinkToDataset": "Can't add link to target dataset. You probably can't edit that record. Updating the service only.",
     "current": "stávající",
     "datasetFound": "Datová sada nalezena a přidána do náhledu mapy",
     "datasetNotFound": "Datová sada nenalezena - 404",
@@ -321,5 +322,6 @@
     "parentConcept": "Parent concept",
     "moreSpecificConcept": "More specific concepts",
     "associatedConcept": "Associated concepts",
-    "xsd": "Schema validation"
+    "xsd": "Schema validation",
+    "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}/tab/xml\">XML editor</a>."
 }

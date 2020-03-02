@@ -24,6 +24,7 @@
 package org.fao.geonet.api.status;
 
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,8 @@ import java.util.List;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jeeves.server.context.ServiceContext;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RequestMapping(value = {
     "/api/status",
@@ -60,8 +63,8 @@ public class StatusApi {
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public List<StatusValue> getStatus() throws Exception {
-        ServiceContext context = ServiceContext.get();
+    public List<StatusValue> getStatus(HttpServletRequest request) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
         return context.getBean(StatusValueRepository.class).findAll();
     }
 }

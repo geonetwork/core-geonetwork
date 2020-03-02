@@ -20,7 +20,7 @@
   <serviceNotAllowed>The service {1} does not exist or you don't have privileges to access it.
   </serviceNotAllowed>
   <linkToHome>
-    <span>Return to the<a href="../..">search page</a>.
+    <span>Return to the <a href="../..">search page</a>.
     </span>
   </linkToHome>
 </i18n>

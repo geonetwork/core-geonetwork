@@ -18,7 +18,7 @@
       </a></li>
       <li data-ng-if="md.isOwned() && user.isUserAdminOrMore()">
         <a data-ng-href=""
-           data-ng-click="mdService.openTransferOwnership(md, getCatScope())">
+           data-ng-click="mdService.openTransferOwnership(md, null, getCatScope())">
           <i class="fa fa-user"></i>&nbsp;
           <span data-translate="">transferOwnership</span>
         </a></li>

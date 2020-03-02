@@ -210,7 +210,19 @@
         </xsl:if>
         gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
         gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
+        gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
         gnViewerSettings.bingKey = '<xsl:value-of select="$bingKey"/>';
+        }]);
+      </script>
+    </xsl:if>
+
+    <xsl:if test="$angularApp = 'gn_login'">
+      <script type="text/javascript">
+        var module = angular.module('gn_login');
+        module.config(['gnGlobalSettings',
+        function(gnGlobalSettings) {
+        gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
+        gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
         }]);
       </script>
     </xsl:if>

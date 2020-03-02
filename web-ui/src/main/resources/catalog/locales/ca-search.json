@@ -77,7 +77,6 @@
     "legalConstraints": "Restriccions legals",
     "scale": "Escala",
     "resolution": "Resolució",
-    "resolutions": "Resolucions",
     "credit": "Crèdits",
     "classification": "Classificació",
     "resourceStatus": "Estat",
@@ -120,9 +119,7 @@
     "exportCSV": "Exportar (CSV)",
     "exportPDF": "Exporta (PDF)",
     "exportMEF": "Exportar (ZIP)",
-    "welcomeTitle": "Portal de Dades de {{orgName}}",
     "welcomeText": "Aquí pots trobar dades, serveis, mapes i més.",
-    "getstarted": "Començar",
     "searchOver": "Cerca sobre <strong>{{records}}</strong> conjunts de dades, serveis i mapes,...",
     "browseBy": "Navegació per",
     "browseTopics": "Explorar temes",
@@ -373,5 +370,7 @@
     "mdinvalid": "La metadada no és vàlida",
     "mdinvalidcantpublish": "Les metadades invàlides no es poden publicar",
     "mdnovalidation": "La metadada no té informació de validació",
-    "setall": "Aplicar tots els privilegis"
+    "setall": "Aplicar tots els privilegis",
+    "print_legend": "Legend",
+    "print_legend_field": "Include legends"
 }
