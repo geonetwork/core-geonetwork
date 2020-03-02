@@ -1,5 +1,5 @@
-<ul class="dropdown-menu" ng-show="isOpen()"
-    ng-style="{top: position.top+'px', left: position.left+'px'}" style="display: block;"
+<ul class="dropdown-menu type-ahead-dropdown" ng-init=" $parent.setDropDownSelectors()" ng-show="isOpen() || $parent.isInputActive()"
+    ng-style="{top: position.top+'px', left: position.left+'px'}"
     role="listbox" aria-hidden="{{!isOpen()}}">
   <!-- we need to look up three levels to find the search form scope -->
   <li class="search-only-title">
