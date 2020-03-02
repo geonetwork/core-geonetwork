@@ -286,6 +286,7 @@ public class MetadataInsertDeleteApi {
             @ApiParam(value = "URL of a file to download and insert.", required = false) @RequestParam(required = false) String[] url,
             @ApiParam(value = "Server folder where to look for files.", required = false) @RequestParam(required = false) String serverFolder,
             @ApiParam(value = "(Server folder import only) Recursive search in folder.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean recursiveSearch,
+            @ApiParam(value = "(XML file only) Publish record.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean publishToAll,
             @ApiParam(value = "(MEF file only) Assign to current catalog.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean assignToCatalog,
             @ApiParam(value = API_PARAM_RECORD_UUID_PROCESSING, required = false, defaultValue = "NOTHING") @RequestParam(required = false, defaultValue = "NOTHING") final MEFLib.UuidAction uuidProcessing,
             @ApiParam(value = API_PARAM_RECORD_GROUP, required = false) @RequestParam(required = false) final String group,
@@ -310,7 +311,7 @@ public class MetadataInsertDeleteApi {
                         String.format("XML fragment is invalid. Error is %s", ex.getMessage()));
             }
             Pair<Integer, String> pair = loadRecord(metadataType, element, uuidProcessing, group, category,
-                    rejectIfInvalid, false, transformWith, schema, extra, request);
+                    rejectIfInvalid, publishToAll, transformWith, schema, extra, request);
             report.addMetadataInfos(pair.one(), String.format("Metadata imported from XML with UUID '%s'", pair.two()));
 
             triggerImportEvent(request, pair.two());
@@ -327,7 +328,7 @@ public class MetadataInsertDeleteApi {
                 }
                 if (xmlContent != null) {
                     Pair<Integer, String> pair = loadRecord(metadataType, xmlContent, uuidProcessing, group, category,
-                            rejectIfInvalid, false, transformWith, schema, extra, request);
+                            rejectIfInvalid, publishToAll, transformWith, schema, extra, request);
                     report.addMetadataInfos(pair.one(),
                             String.format("Metadata imported from URL with UUID '%s'", pair.two()));
 
@@ -388,7 +389,7 @@ public class MetadataInsertDeleteApi {
                 } else {
                     try {
                         Pair<Integer, String> pair = loadRecord(metadataType, Xml.loadFile(f), uuidProcessing, group,
-                                category, rejectIfInvalid, false, transformWith, schema, extra, request);
+                                category, rejectIfInvalid, publishToAll, transformWith, schema, extra, request);
                         report.addMetadataInfos(pair.one(),
                                 String.format("Metadata imported from server folder with UUID '%s'", pair.two()));
 
