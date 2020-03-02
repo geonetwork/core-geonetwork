@@ -606,7 +606,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
             metadataManager.flush();
             dataMan.indexMetadata(id, Math.random() < 0.01);
             result.updatedMetadata++;
-            metadataIndexer.indexMetadata(id, true, null);
+            metadataIndexer.indexMetadata(id, true);
             result.updatedMetadata++;
         }
     }
