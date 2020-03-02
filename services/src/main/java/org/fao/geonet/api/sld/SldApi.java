@@ -3,6 +3,8 @@ package org.fao.geonet.api.sld;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -25,6 +27,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.internet.ParseException;
@@ -210,7 +213,18 @@ public class SldApi {
             TextFile sld = new TextFile();
             sld.setContent(sldDoc);
             sld.setMimeType("application/xml");
-            fileRepository.saveAndFlush(sld);
+
+            TransactionManager.runInTransaction("sldApi",  ApplicationContextHolder.get(),
+                    TransactionManager.TransactionRequirement.CREATE_NEW,
+                    TransactionManager.CommitBehavior.ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS,
+                    false, new TransactionTask<Void>() {
+                        @Override
+                        public Void doInTransaction(TransactionStatus transaction) throws Throwable {
+                            fileRepository.save(sld);
+                            return null;
+                        }
+                    }
+            );
 
             String pathPrefix = request.getContextPath() + request.getServletPath();
             String url = settingManager.getNodeURL() + "api/tools/ogc/sld/" + sld.getId() + ".xml";
