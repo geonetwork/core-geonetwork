@@ -75,14 +75,10 @@
       <xsl:choose>
         <xsl:when test="$pStart = $pEnd">
           <sitemap xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-            <xsl:variable name="formatParam">
-              <xsl:if test="string($format)"><xsl:value-of select="$format"/>/
-              </xsl:if>
-            </xsl:variable>
+            <xsl:variable name="formatParam"
+                          select="if (string($format)) then concat('format=', $format, '&amp;') else ''"/>
             <loc>
-              <xsl:value-of select="util:getSiteUrl()"/><xsl:value-of select="/root/gui/url"/>/sitemap/<xsl:value-of
-                select="$formatParam"/><xsl:value-of select="$pStart"/>/<xsl:value-of
-                select="/root/gui/language"/>
+              <xsl:value-of select="concat($nodeUrl, 'api/sitemap?', $formatParam, 'doc=', $pStart)"/>
             </loc>
             <lastmod>
               <xsl:value-of select="$changeDate"/>
@@ -120,7 +116,7 @@
         <url>
           <loc>
             <xsl:choose>
-              <xsl:when test="$format='xml'">               	
+              <xsl:when test="$format='xml'">
                 <xsl:value-of select="concat($nodeUrl, 'api/records/', $uuid, '/formatters/xml')"/>
               </xsl:when>
 
