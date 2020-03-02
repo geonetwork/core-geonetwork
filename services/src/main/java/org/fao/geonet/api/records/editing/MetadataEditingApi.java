@@ -261,23 +261,28 @@ public class MetadataEditingApi {
             boolean ufo = true;
             boolean index = true;
             dataMan.updateMetadata(context, id, md, withValidationErrors, ufo, index, context.getLanguage(), changeDate,
-                    updateDateStamp);
+                updateDateStamp);
 
-            XMLOutputter outp = new XMLOutputter();
-            String xmlBefore = outp.outputString(beforeMetadata);
-            String xmlAfter = outp.outputString(md);
-            new RecordUpdatedEvent(Long.parseLong(id), session.getUserIdAsInt(), xmlBefore, xmlAfter)
+            if (terminate) {
+                XMLOutputter outp = new XMLOutputter();
+                String xmlBefore = outp.outputString(beforeMetadata);
+                String xmlAfter = outp.outputString(md);
+                new RecordUpdatedEvent(Long.parseLong(id), session.getUserIdAsInt(), xmlBefore, xmlAfter)
                     .publish(applicationContext);
+            }
         } else {
             Log.trace(Geonet.DATA_MANAGER, " > Updating contents");
             ajaxEditUtils.updateContent(params, false, true);
 
             Element afterMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
-            XMLOutputter outp = new XMLOutputter();
-            String xmlBefore = outp.outputString(beforeMetadata);
-            String xmlAfter = outp.outputString(afterMetadata);
-            new RecordUpdatedEvent(Long.parseLong(id), session.getUserIdAsInt(), xmlBefore, xmlAfter)
+
+            if (terminate) {
+                XMLOutputter outp = new XMLOutputter();
+                String xmlBefore = outp.outputString(beforeMetadata);
+                String xmlAfter = outp.outputString(afterMetadata);
+                new RecordUpdatedEvent(Long.parseLong(id), session.getUserIdAsInt(), xmlBefore, xmlAfter)
                     .publish(applicationContext);
+            }
         }
 
         // -----------------------------------------------------------------------
