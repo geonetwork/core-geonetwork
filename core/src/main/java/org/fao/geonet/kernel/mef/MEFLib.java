@@ -146,7 +146,7 @@ public class MEFLib {
                                     boolean approved)
         throws Exception {
         return MEF2Exporter.doExport(context, uuids, Format.parse(format),
-            skipUUID, stylePath, resolveXlink, removeXlinkAttribute, 
+            skipUUID, stylePath, resolveXlink, removeXlinkAttribute,
             skipError, addSchemaLocation, approved);
     }
 
@@ -336,7 +336,11 @@ public class MEFLib {
         info.addContent(buildInfoPrivileges(context, md));
 
         info.addContent(buildInfoFiles("public", pubResources));
-        info.addContent(buildInfoFiles("private", priResources));
+        if (priResources != null) {
+            info.addContent(buildInfoFiles("private", priResources));
+        } else {
+            info.addContent(new Element("private"));
+        }
 
         return Xml.getString(new Document(info));
     }

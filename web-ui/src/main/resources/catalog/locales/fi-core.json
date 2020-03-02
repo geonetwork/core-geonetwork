@@ -69,6 +69,7 @@
     "validStatus-1": "Läpäissyt validoinnin",
     "validStatus-0": "Ei läpäissyt validointia",
     "validStatus--1": "Ei validoitu",
+    "lastInspireValidationStatus": "Last INSPIRE validation status",
     "validInspireStatus--1": "INSPIRE never validated",
     "validInspireStatus-1": "INSPIRE valid",
     "validInspireStatus-0": "INSPIRE invalid",

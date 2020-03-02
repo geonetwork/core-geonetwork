@@ -133,6 +133,7 @@ Zložte identifikátor zdroja pomocou adresy URL katalógu a identifikátora
   <otherconstraints>Ďalšie obmedzenia</otherconstraints>
   <operateson>Združený zdroj</operateson>
   <extent>Geografické ohraničenie </extent>
+  <spatialExtent>Priestorový rozsah</spatialExtent>
   <freetextkeywords>Ďalšie kľúčové slová </freetextkeywords>
   <resource_url>URL</resource_url>
   <resource_protocol>Protokol</resource_protocol>

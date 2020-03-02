@@ -449,7 +449,7 @@
             </inspire_com:SupportedLanguages>
             <inspire_com:ResponseLanguage>
               <inspire_com:Language>
-                <xsl:value-of select="$outputLanguage"/>
+                <xsl:value-of select="if ($language != '') then $outputLanguage else $mainLanguage"/>
               </inspire_com:Language>
             </inspire_com:ResponseLanguage>
           </inspire_ds:ExtendedCapabilities>

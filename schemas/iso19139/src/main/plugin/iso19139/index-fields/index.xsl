@@ -100,7 +100,6 @@
                   select="gmd:locale/gmd:PT_Locale/
                         gmd:languageCode/gmd:LanguageCode/
                           @codeListValue[normalize-space(.) != '']"/>
-
     <xsl:variable name="allLanguages">
       <lang id="default" value="{$mainLanguage}"/>
       <xsl:for-each select="$otherLanguages">
@@ -623,10 +622,12 @@
 
         <xsl:for-each select="gmd:resourceConstraints/*">
           <xsl:variable name="fieldPrefix" select="local-name()"/>
-
-          <xsl:copy-of select="gn-fn-index:add-multilingual-field(concat($fieldPrefix, 'OtherConstraints'), gmd:otherConstraints, $allLanguages)"/>
-          <xsl:copy-of select="gn-fn-index:add-multilingual-field(concat($fieldPrefix, 'UseLimitation'), gmd:useLimitation, $allLanguages)"/>
-          <!-- TODOES: Add Anchor -->
+          <xsl:for-each select="gmd:otherConstraints">
+            <xsl:copy-of select="gn-fn-index:add-multilingual-field(concat($fieldPrefix, 'OtherConstraints'), ., $allLanguages)"/>
+          </xsl:for-each>
+          <xsl:for-each select="gmd:useLimitation">
+            <xsl:copy-of select="gn-fn-index:add-multilingual-field(concat($fieldPrefix, 'UseLimitation'), ., $allLanguages)"/>
+          </xsl:for-each>
         </xsl:for-each>
 
 

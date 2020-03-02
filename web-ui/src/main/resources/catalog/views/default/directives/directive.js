@@ -86,8 +86,9 @@
     }
   ]);
 
-  module.directive('gnMdActionsMenu', ['gnMetadataActions', '$http', 'gnConfig', 'gnConfigService',
-    function(gnMetadataActions, $http, gnConfig, gnConfigService) {
+  module.directive('gnMdActionsMenu', ['gnMetadataActions',
+    '$http', 'gnConfig', 'gnConfigService', 'gnGlobalSettings',
+    function(gnMetadataActions, $http, gnConfig, gnConfigService, gnGlobalSettings) {
       return {
         restrict: 'A',
         replace: true,
@@ -96,6 +97,7 @@
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
+          scope.formatterList = gnGlobalSettings.gnCfg.mods.search.downloadFormatter;
 
           scope.tasks = [];
           scope.hasVisibletasks = false;
