@@ -373,10 +373,9 @@
           scope.tracker = function(member) {
             // the node is a group header: return path
             if (member.path) { return member.path; }
-
-            // the node is an ol layer: use url & name
-            return member.get('name') + '@' + member.get('url');
-          }
+            // the node is an ol layer: use url & name & ol_uid
+            return member.get('name') + '@' + member.get('url') + '-' + member.ol_uid;
+          };
         }
       };
     }]);
