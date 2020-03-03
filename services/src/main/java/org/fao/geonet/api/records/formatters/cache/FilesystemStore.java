@@ -26,20 +26,13 @@ package org.fao.geonet.api.records.formatters.cache;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 
-import jeeves.constants.Jeeves;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.api.records.formatters.FormatType;
-import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockHttpSession;
-import org.springframework.web.context.request.ServletWebRequest;
 
 import java.io.IOException;
 import java.net.URI;
@@ -55,9 +48,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -255,15 +245,15 @@ public class FilesystemStore implements PersistentStore {
             if (Files.exists(privatePath)) {
                 long fileSize = Files.size(privatePath);
                 if (currentSize - fileSize + data.data.length > this.maxSizeB) {
-                    resize(key.mdUuid);
+                    resize();
                 }
             } else {
-                resize(key.mdUuid);
+                resize();
             }
         }
     }
 
-    private void resize(String mdUuid) throws SQLException, IOException {
+    private void resize() throws SQLException, IOException {
         int targetSize = (int) (maxSizeB / 2);
         Log.warning(Geonet.FORMATTER, "Resizing Formatter cache.  Required to reduce size by " + targetSize);
         long startTime = System.currentTimeMillis();
@@ -273,7 +263,7 @@ public class FilesystemStore implements PersistentStore {
         ) {
             while (currentSize > targetSize && resultSet.next()) {
                 Path path = IO.toPath(new URI(resultSet.getString(PATH)));
-                doRemove(path, resultSet.getInt(KEY), mdUuid,false);
+                doRemove(path, resultSet.getInt(KEY), null,false);
             }
         } catch (URISyntaxException e) {
             throw new Error(e);
