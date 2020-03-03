@@ -275,8 +275,6 @@
   <include>config/config-service-csw.xml</include>
   <include>config/config-service-csw-virtual.xml</include>
 
-  <include>config/config-service-sitemap.xml</include>
-
   <include>config/config-service-crs.xml</include>
 
   <include>config/config-service-subtemplate.xml</include>

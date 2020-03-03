@@ -85,7 +85,7 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
     private static final String URL_ATTACHED_RESOURCES = "api/records/%s/attachments/";
 
     private static final Pattern pattern = Pattern.compile(
-            "(.*)\\/([a-zA-Z0-9_\\-]+)\\/([a-z]{2,3})\\/{1,2}resources.get\\?.*fname=([\\p{L}\\w\\s\\.\\-]+)(&.*|$)");
+            "(.*)\\/([a-zA-Z0-9_\\-]+)\\/([a-z]{2,3})\\/{1,2}resources.get\\?.*fname=([\\p{L}\\w\\s_=\\(\\)\\.\\-%:]+)(&.*|$)");
 
     public static boolean updateMetadataResourcesLink(@Nonnull Element xml,
                                                       @Nullable String uuid,

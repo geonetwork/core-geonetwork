@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.api.records.attachments.Store;
@@ -480,7 +481,12 @@ public class Aligner extends BaseAligner<GeonetParams> {
         if (log.isDebugEnabled()) log.debug("  - Adding metadata with remote uuid:" + ri.uuid);
 
         try {
-            params.getValidate().validate(dataMan, context, md);
+            Integer groupIdVal = null;
+            if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+            }
+
+            params.getValidate().validate(dataMan, context, md, groupIdVal);
         } catch (Exception e) {
             log.info("Ignoring invalid metadata uuid: " + uuid);
             result.doesNotValidate++;
@@ -749,7 +755,12 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
 
         try {
-            params.getValidate().validate(dataMan, context, md);
+            Integer groupIdVal = null;
+            if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+            }
+
+            params.getValidate().validate(dataMan, context, md, groupIdVal);
         } catch (Exception e) {
             log.info("Ignoring invalid metadata uuid: " + ri.uuid);
             result.doesNotValidate++;

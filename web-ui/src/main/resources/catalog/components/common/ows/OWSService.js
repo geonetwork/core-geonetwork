@@ -468,22 +468,25 @@
                 }
 
                 //either names match or non namespaced names
+                // note: these matches are put at the beginning of the needles array
                 if (name == capName || nameNoNamespace == capNameNoNamespace) {
                   layers[i].nameToUse = capName;
                   if (capObj.version) {
                     layers[i].version = capObj.version;
                   }
-                  needles.push(layers[i]);
+                  needles.unshift(layers[i]);
                   break capabilityLayers;
                 }
 
                 //check dataset identifer match
+                // note: these matches are put at the end of the needles array
+                // because they are lower priority than the layername matches
+                // and the loop is not stopping after them
                 if (uuid != null) {
                   if (angular.isArray(layers[i].Identifier)) {
                     for (var c = 0; c < layers[i].Identifier.length; c++) {
                       if (layers[i].Identifier[c] == uuid) {
                         needles.push(layers[i]);
-                        break capabilityLayers;
                       }
                     }
                   }
@@ -493,7 +496,6 @@
                       if (mdu && mdu.OnlineResource &&
                         mdu.OnlineResource.indexOf(uuid) > 0) {
                         needles.push(layers[i]);
-                        break capabilityLayers;
                       }
                     }
                   }

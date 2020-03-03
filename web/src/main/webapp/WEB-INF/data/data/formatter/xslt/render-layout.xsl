@@ -23,6 +23,9 @@
   <xsl:template mode="getMetadataAbstract" match="*"/>
   <xsl:template mode="getMetadataHierarchyLevel" match="*"/>
   <xsl:template mode="getOverviews" match="*"/>
+  <xsl:template mode="getExtent" match="*"/>
+  <xsl:template mode="getLicense" match="*"/>
+  <xsl:template mode="getTags" match="*"/>
   <xsl:template mode="getMetadataThumbnail" match="*"/>
   <xsl:template mode="getMetadataHeader" match="*"/>
   <xsl:template mode="getMetadataCitation" match="*"/>
@@ -114,7 +117,9 @@
               </xsl:choose>
             </div>
 
-            <xsl:apply-templates mode="getMetadataCitation" select="$metadata"/>
+            <xsl:if test="$citation = 'true'">
+              <xsl:apply-templates mode="getMetadataCitation" select="$metadata"/>
+            </xsl:if>
           </div>
           <div class="gn-md-side gn-md-side-advanced col-md-4">
             <xsl:if test="$portalLink != ''">
@@ -153,7 +158,14 @@
             </xsl:if>
 
             <xsl:apply-templates mode="getOverviews" select="$metadata"/>
+            <xsl:apply-templates mode="getExtent" select="$metadata"/>
 
+            <xsl:apply-templates mode="getTags" select="$metadata">
+              <xsl:with-param name="byThesaurus" select="true()"/>
+            </xsl:apply-templates>
+
+
+            <br/>
             <section class="gn-md-side-providedby">
               <h2>
                 <i class="fa fa-fw fa-cog"><xsl:comment select="'icon'"/></i>

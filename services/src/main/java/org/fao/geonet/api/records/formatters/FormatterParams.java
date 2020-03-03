@@ -52,6 +52,7 @@ public class FormatterParams {
     public FormatterWidth width;
 
     public String param(String paramName, String defaultVal) {
+        if (webRequest == null) return defaultVal;
         String[] values = webRequest.getParameterMap().get(paramName);
         if (values == null) {
             return defaultVal;

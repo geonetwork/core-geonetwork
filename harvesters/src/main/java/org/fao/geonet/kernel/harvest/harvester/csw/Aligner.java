@@ -364,6 +364,9 @@ public class Aligner extends BaseAligner<CswParams> {
         //
         AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
+        if (!uuid.equals(ri.uuid)) {
+            md = metadataUtils.setUUID(schema, uuid, md);
+        }
         Integer ownerId = getOwner();
         metadata.getDataInfo().
             setSchemaId(schema).
@@ -439,7 +442,7 @@ public class Aligner extends BaseAligner<CswParams> {
             metadata.getHarvestInfo().setUuid(params.getUuid());
             metadata.getSourceInfo().setSourceId(params.getUuid());
 
-            metadataManager.save((Metadata) metadata);
+            metadataManager.save(metadata);
         }
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
@@ -486,7 +489,12 @@ public class Aligner extends BaseAligner<CswParams> {
 
 
             try {
-                params.getValidate().validate(context.getBean(DataManager.class), context, response);
+                Integer groupIdVal = null;
+                if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                    groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                }
+
+                params.getValidate().validate(dataMan, context, response, groupIdVal);
             } catch (Exception e) {
                 log.debug("Ignoring invalid metadata with uuid " + uuid);
                 result.doesNotValidate++;

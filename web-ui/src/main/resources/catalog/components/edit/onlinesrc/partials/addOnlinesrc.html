@@ -136,7 +136,7 @@
                            data-ng-blur="loadCurrentLink()"
                            id="gn-addonlinesrc-url-list-single-input"
                            data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.url.tooltip}}"
-                           placeholder="http://">
+                           placeholder="{{params.linkType.fields.url.placeholder || 'https://...'}}">
                     <span class="input-group-btn" data-ng-show="OGCProtocol != null">
                     <!-- Refresh Grid Button -->
                     <button id="gn-addonlinesrc-url-list-single-button"
@@ -167,12 +167,15 @@
               </div>
 
               <!-- Layers grid directive -->
-              <div data-gn-layers-grid
-                   id="gn-addonlinesrc-layers-row"
-                   data-ng-show="OGCProtocol != null"
-                   data-gn-selection-mode="isEditing ? 'single' : 'multiple'"
-                   data-layers="layers"
-                   data-selection="params.selectedLayers">
+              <div class="form-group">
+                <div data-gn-layers-grid
+                     id="gn-addonlinesrc-layers-row"
+                     class="col-sm-9 col-md-offset-2"
+                     data-ng-show="OGCProtocol != null"
+                     data-gn-selection-mode="isEditing ? 'single' : 'multiple'"
+                     data-layers="layers"
+                     data-selection="params.selectedLayers">
+                </div>
               </div>
 
             </div>

@@ -133,6 +133,7 @@
   <otherConstraints>Other constraints</otherConstraints>
   <operatesOn>Coupled resource</operatesOn>
   <extent>Geographic bounding box</extent>
+  <spatialExtent>Пространственная протяженность</spatialExtent>
   <freeTextKeywords>Other keywords</freeTextKeywords>
 
   <addCrs>Projection</addCrs>

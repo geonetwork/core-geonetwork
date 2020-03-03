@@ -69,7 +69,6 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import com.google.common.base.Joiner;
@@ -121,7 +120,7 @@ public class MetadataUtils {
         // Search for children of this record
         if (listOfTypes.size() == 0 ||
             listOfTypes.contains(RelatedItemType.children)) {
-            relatedRecords.addContent(search(uuid, "children", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "children", context, from, to, fast, null));
         }
 
         // Get parent record from this record
@@ -130,7 +129,17 @@ public class MetadataUtils {
             Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md);
             if (listOfUUIDs.size() > 0) {
                 String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                relatedRecords.addContent(search(joinedUUIDs, "parent", context, from, to, fast));
+                relatedRecords.addContent(search(joinedUUIDs, "parent", context, from, to, fast, null));
+            }
+        }
+
+        // Brothers and sisters are not returned by default
+        // It is only on demand and output as siblings.
+        if (schemaPlugin != null && listOfTypes.contains(RelatedItemType.brothersAndSisters)) {
+            Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md);
+            if (listOfUUIDs.size() > 0) {
+                String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
+                relatedRecords.addContent(search(joinedUUIDs, RelatedItemType.brothersAndSisters.value(), context, from, to, fast, uuid));
             }
         }
 
@@ -158,13 +167,13 @@ public class MetadataUtils {
         // Search for records where an aggregate point to this record
         if (listOfTypes.size() == 0 ||
             listOfTypes.contains(RelatedItemType.associated)) {
-            relatedRecords.addContent(search(uuid, "associated", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "associated", context, from, to, fast, null));
         }
 
         // Search for services
         if (listOfTypes.size() == 0 ||
             listOfTypes.contains(RelatedItemType.services)) {
-            relatedRecords.addContent(search(uuid, "services", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "services", context, from, to, fast, null));
         }
 
         // Related record from uuiref attributes in metadata record
@@ -180,7 +189,7 @@ public class MetadataUtils {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedDatasetUUIDs(md);
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
                     String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                    relatedRecords.addContent(search(joinedUUIDs, "datasets", context, from, to, fast));
+                    relatedRecords.addContent(search(joinedUUIDs, "datasets", context, from, to, fast, null));
                 }
             }
             // if source, return source datasets defined in the current record
@@ -189,7 +198,7 @@ public class MetadataUtils {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedSourceUUIDs(md);
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
                     String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                    relatedRecords.addContent(search(joinedUUIDs, "sources", context, from, to, fast));
+                    relatedRecords.addContent(search(joinedUUIDs, "sources", context, from, to, fast, null));
                 }
             }
             // if fcat
@@ -226,7 +235,7 @@ public class MetadataUtils {
         if (listOfTypes.size() == 0 ||
             listOfTypes.contains(RelatedItemType.hassources)) {
             // Return records where this record is a source dataset
-            relatedRecords.addContent(search(uuid, "hassources", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "hassources", context, from, to, fast, null));
         }
 
         // Relation table is preserved for backward compatibility but should not be used anymore.
@@ -235,7 +244,7 @@ public class MetadataUtils {
             // Related records could be feature catalogue defined in relation table
             relatedRecords.addContent(new Element("related").addContent(Get.getRelation(iId, "full", context)));
             // Or feature catalogue define in feature catalogue citation
-            relatedRecords.addContent(search(uuid, "hasfeaturecats", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "hasfeaturecats", context, from, to, fast, null));
         }
 
         // XSL transformation is used on the metadata record to extract
@@ -250,7 +259,7 @@ public class MetadataUtils {
     }
 
 
-    private static Element search(String uuid, String type, ServiceContext context, String from, String to, String fast) throws Exception {
+    private static Element search(String uuid, String type, ServiceContext context, String from, String to, String fast, String exclude) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SearchManager searchMan = gc.getBean(SearchManager.class);
 
@@ -263,7 +272,9 @@ public class MetadataUtils {
             Element parameters = new Element(Jeeves.Elem.REQUEST);
             if ("children".equals(type))
                 parameters.addContent(new Element("parentUuid").setText(uuid));
-            else if ("services".equals(type))
+            else if ("brothersAndSisters".equals(type)) {
+                parameters.addContent(new Element("parentUuid").setText(uuid));
+            } else if ("services".equals(type))
                 parameters.addContent(new Element("operatesOn").setText(uuid));
             else if ("hasfeaturecats".equals(type))
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
@@ -278,6 +289,10 @@ public class MetadataUtils {
                 "parent".equals(type))
                 parameters.addContent(new Element("uuid").setText(uuid));
 
+            if (exclude != null) {
+                parameters.addContent(new Element("without__uuid").setText(exclude));
+            }
+
             parameters.addContent(new Element("fast").addContent("index"));
             parameters.addContent(new Element("sortBy").addContent("title"));
             parameters.addContent(new Element("sortOrder").addContent("reverse"));
@@ -288,7 +303,7 @@ public class MetadataUtils {
             ServiceConfig config = new ServiceConfig();
             searcher.search(context, parameters, config);
 
-            Element response = new Element(type);
+            Element response = new Element(type.equals("brothersAndSisters") ? "siblings" : type);
             Element relatedElement = searcher.present(context, parameters, config);
             response.addContent(relatedElement);
             return response;

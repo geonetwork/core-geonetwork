@@ -124,7 +124,7 @@ public class MetadataWorkflowApi {
 
     @Autowired
     AccessManager accessManager;
-    
+
     @Autowired
     SettingManager settingManager;
 
@@ -334,6 +334,20 @@ public class MetadataWorkflowApi {
                     String.format("Can't find metadata status for record '%d', user '%s' at date '%s'", metadataUuid,
                             userId, changeDate));
         }
+    }
+
+    @ApiOperation(value = "Delete all record status", notes = "", nickname = "deleteAllRecordStatus")
+    @RequestMapping(value = "/{metadataUuid}/status", method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('Administrator')")
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "Status removed."),
+        @ApiResponse(code = 404, message = "Status not found."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN) })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAllRecordStatus(
+        @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+        HttpServletRequest request) throws Exception {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        metadataStatusRepository.deleteAllById_MetadataId(metadata.getId());
     }
 
     @ApiOperation(value = "Search status", notes = "", nickname = "searchStatusByType")

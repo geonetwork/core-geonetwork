@@ -37,6 +37,7 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
@@ -256,6 +257,7 @@ public class XslProcessUtils {
                 xslParameter.put("nodeUrl", settingsMan.getNodeURL());
                 xslParameter.put("catalogUrl", settingsMan.getSiteURL(context));
                 xslParameter.put("nodeId", context.getNodeId());
+                xslParameter.put("thesauriDir", context.getApplicationContext().getBean(GeonetworkDataDirectory.class).getThesauriDir().toAbsolutePath().toString());
 
                 for (Map.Entry<String, String[]> parameter : params.entrySet()) {
                     String value = parameter.getValue()[0].trim();

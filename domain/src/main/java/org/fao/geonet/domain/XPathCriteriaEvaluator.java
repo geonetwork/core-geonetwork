@@ -163,6 +163,12 @@ public class XPathCriteriaEvaluator implements SchematronCriteriaEvaluator {
 
     }
 
+    @Override
+    public boolean accepts(ApplicationContext applicationContext, String value, Element metadata, List<Namespace> metadataNamespaces, Integer groupOwnerId) {
+        return  accepts(applicationContext, value, -1, metadata, metadataNamespaces);
+
+    }
+
     private boolean doAccept(String rawValue, Element metadata, List<Namespace> metadataNamespaces) {
         try {
             String value = rawValue;

@@ -91,6 +91,32 @@
 
   </xsl:function>
 
+  <!-- Use region API to display metadata extent -->
+  <xsl:function name="gn-fn-render:extent">
+    <xsl:param name="uuid" as="xs:string"/>
+
+    <!-- TODO get system config -->
+    <xsl:if test="$uuid">
+      <xsl:variable name="background"
+                    select="util:getSettingValue('region/getmap/background')"/>
+      <xsl:variable name="width"
+                    select="util:getSettingValue('region/getmap/width')"/>
+      <xsl:variable name="mapproj"
+                    select="util:getSettingValue('region/getmap/mapproj')"/>
+
+      <img class="gn-img-extent"
+           alt="{$schemaStrings/thumbnail}"
+           src="{$nodeUrl}eng/region.getmap.png?id=metadata:@uuid{$uuid}&amp;mapsrs={if ($mapproj != '')
+                                         then $mapproj
+                                         else 'EPSG:3857'}&amp;width={
+                                         if ($width != '')
+                                         then $width
+                                         else '600'
+                                         }&amp;background=settings"/>
+    </xsl:if>
+
+  </xsl:function>
+
   <!-- Template to get metadata title using its uuid.
          Title is loaded from current language index if available.
          If not, default title is returned.

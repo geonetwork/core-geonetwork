@@ -117,6 +117,7 @@
 
           gnConfigService.load().then(function(c) {
             scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
+            scope.isInspireEnabled = gnConfig['system.inspire.enable'];
           });
 
           scope.$watchCollection('searchResults.records', function(rec) {

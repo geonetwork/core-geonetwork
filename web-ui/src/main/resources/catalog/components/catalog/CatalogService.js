@@ -554,7 +554,7 @@
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
         'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails',
-        'creationDate', 'publicationDate', 'revisionDate'];
+        'creationDate', 'publicationDate', 'revisionDate', 'spatialRepresentationType_text'];
       var listOfJsonFields = ['keywordGroup', 'crsDetails'];
       // See below; probably not necessary
       var record = this;

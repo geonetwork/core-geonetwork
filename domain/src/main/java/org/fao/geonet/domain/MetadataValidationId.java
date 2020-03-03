@@ -23,12 +23,11 @@
 
 package org.fao.geonet.domain;
 
-import java.io.Serializable;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * Id object for the {@link MetadataValidation} entity.
@@ -82,7 +81,7 @@ public class MetadataValidationId implements Serializable {
      * @return a string representing the type of validation of this validation entity (example:
      * iso19139)
      */
-    @Column(name = "valType", length = 40)
+    @Column(name = "valType", length = 128)
     public String getValidationType() {
         return _validationType;
     }

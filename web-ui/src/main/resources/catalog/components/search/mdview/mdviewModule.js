@@ -171,12 +171,10 @@
       // Reset current formatter to open the next record
       // in default mode.
       function loadFormatter() {
-        $scope.currentFormatter = null;
         var f = gnSearchLocation.getFormatterPath();
+        $scope.currentFormatter = '';
         if (f != undefined) {
-          $scope.currentFormatter = {
-            url: f
-          };
+          $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, '$1');
           $scope.loadFormatter(f);
         }
       }

@@ -51,7 +51,7 @@
                   select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
 
     <xsl:variable name="flatModeException"
-                  select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name)"/>
+                  select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name,  name(..))"/>
 
     <xsl:if test="$isEditing and (not($isFlatMode) or $flatModeException)">
 

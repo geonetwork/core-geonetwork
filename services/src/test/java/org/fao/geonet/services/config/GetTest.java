@@ -47,8 +47,8 @@ public class GetTest extends AbstractServiceIntegrationTest {
         final Element result = getService.exec(createParams(), context);
 
         assertEqualsText("false", result, Settings.SYSTEM_CSW_METADATA_PUBLIC);
-        assertEqualsText("", result, Settings.SYSTEM_CSW_CONTACT_ID);
-        assertEquals(Settings.SYSTEM_CSW_CONTACT_ID, Xml.selectElement(result, Settings.SYSTEM_CSW_CONTACT_ID).getAttributeValue("name"));
+        assertEqualsText("-1", result, Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID);
+        assertEquals(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID, Xml.selectElement(result, Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID).getAttributeValue("name"));
         assertEquals("system/csw", Xml.selectElement(result, "system/csw").getAttributeValue("name"));
         assertEqualsText("true", result, Settings.SYSTEM_CSW_ENABLE);
     }
