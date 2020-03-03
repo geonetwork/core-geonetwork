@@ -270,7 +270,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
 
         if (!record.getDataInfo().getSchemaId().equals(ISO19139SchemaPlugin.IDENTIFIER)) {
             try {
-                Key key = new Key(record.getId(), "eng", FormatType.xml, "iso19139", true, FormatterWidth._100);
+                Key key = new Key(record.getId(), record.getUuid(),"eng", FormatType.xml, "iso19139", true, FormatterWidth._100);
 
                 final FormatterApi.FormatMetadata formatMetadata =
                     new FormatterApi().new FormatMetadata(context, key, null);
