@@ -170,9 +170,7 @@ public class SitemapApi {
             OperationAllowedSpecs.hasOperation(ReservedOperation.view));
         spec = spec.and(OperationAllowedSpecs.hasGroupId(allgroup));
 
-        final List<Integer> list = operationAllowedRepository.findAllIds(
-            spec,
-            OperationAllowedId_.metadataId);
+        final List<Integer> list = operationAllowedRepository.findAllPublicRecordIds();
 
         Sort sortByChangeDateDesc = new Sort(
             Sort.Direction.DESC,
