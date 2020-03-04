@@ -212,12 +212,10 @@ public class FormatterCache {
         if (cached == null) {
             try {
                 writeLock.lock();
-                System.out.println("Write lock");
                 StoreInfoAndDataLoadResult loaded = loader.call();
                 cached = loaded;
                 push(key, loaded, writeToStoreInCurrentThread);
             } finally {
-                System.out.println("Write unlock");
                 writeLock.unlock();
             }
         }
