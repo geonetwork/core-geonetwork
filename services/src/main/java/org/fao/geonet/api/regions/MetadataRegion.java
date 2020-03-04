@@ -27,6 +27,7 @@ import com.vividsolutions.jts.geom.Geometry;
 
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.api.regions.metadata.MetadataRegionSearchRequest.Id;
+import org.fao.geonet.api.records.extent.MapRenderer;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
@@ -53,6 +54,7 @@ public class MetadataRegion extends Region {
         Integer desiredCode = CRS.lookupEpsgCode(projection, false);
         boolean differentCrsCode = sourceCode == null || desiredCode == null || desiredCode.intValue() != sourceCode.intValue();
         if (differentCrsCode && !CRS.equalsIgnoreMetadata(coordinateReferenceSystem, projection)) {
+            geometry = MapRenderer.computeGeomInDomainOfValidity(geometry, projection);
             MathTransform transform = CRS.findMathTransform(coordinateReferenceSystem, projection, true);
             return JTS.transform(geometry, transform);
         }
