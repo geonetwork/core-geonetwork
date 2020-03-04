@@ -40,12 +40,12 @@
     'gnMap',
     '$translate',
     '$timeout',
-    'gnSearchManagerService',
+    'gnESClient',
     'Metadata',
     'gnViewerSettings',
     'gnGlobalSettings',
     function(gnOwsCapabilities, gnMap, $translate, $timeout,
-             gnSearchManagerService, Metadata, gnViewerSettings,
+             gnESClient, Metadata, gnViewerSettings,
              gnGlobalSettings) {
       return {
         restrict: 'A',
@@ -126,14 +126,18 @@
           // Get the list of services registered in the catalog
           if (attrs.servicesListFromCatalog) {
             // FIXME: Only load the first 100 services
-            gnSearchManagerService.gnSearch({
-              fast: 'index',
-              _content_type: 'json',
-              from: 1,
-              to: 100,
-              serviceType: 'OGC:WMS or OGC:WFS or OGC:WMTS'
+            gnESClient.search(
+              {
+                'from': 0,
+                'size':100,
+                'sort': [{'resourceTitle.keyword': 'asc'}],
+                'query':{
+                  'query_string': {
+                    'query': '+isTemplate:n +serviceType:("OGC:WMS" OR "OGC:WFS" OR "OGC:WMTS")'
+                  }
+                }
             }).then(function(data) {
-              angular.forEach(data.metadata, function(record) {
+              angular.forEach(data.hits.hits, function(record) {
                 var md = new Metadata(record);
                 if (scope.format === 'all') {
                   addLinks(md, 'wms');
@@ -413,7 +417,7 @@
           collection: '='
         },
         template: "<ul class='gn-layer-tree'><li data-ng-show='collection.length > 10' >" +
-            "<div class='input-group input-group-sm'><span class='input-group-addon'><i class='fa fa-filter'></i></span>" + 
+            "<div class='input-group input-group-sm'><span class='input-group-addon'><i class='fa fa-filter'></i></span>" +
             "<input class='form-control' data-ng-model-options='{debounce: 200}' data-ng-model='layerSearchText'/></div>" +
             "</li>" +
             '<gn-cap-tree-elt ng-repeat="member in collection | filter:layerSearchText | orderBy: \'Title\'" member="member">' +

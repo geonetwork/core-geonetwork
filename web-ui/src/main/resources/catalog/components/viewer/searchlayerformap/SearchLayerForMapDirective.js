@@ -65,9 +65,9 @@
               }
             };
             if ($scope.mode === 'map') {
-              $scope.searchObj.params.type = 'interactiveMap';
+              $scope.searchObj.params.type = 'map/interactive';
             } else {
-              $scope.searchObj.params.protocol = 'OGC:WMS*';
+              $scope.searchObj.params.linkProtocol = 'OGC:WMS*';
             }
             $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
@@ -80,6 +80,9 @@
           scope.filterTopic = function(topic) {
             delete scope.searchObj.params.topicCat;
             scope.searchObj.params.topicCat = topic;
+          };
+          scope.loadMap = function(map, md) {
+            gnRelatedResources.getAction('MAP')(map, md);
           };
           scope.addToMap = function(link) {
             gnRelatedResources.getAction('WMS')(link);
@@ -98,6 +101,7 @@
           scope.getMetadata = function(md) {
             var m = new Metadata(md);
             m.relevantLinks = m.getLinksByType('WMS');
+            m.relevantMapLinks = m.getLinksByType('OGC:OWS-C');
             return m;
           };
         }

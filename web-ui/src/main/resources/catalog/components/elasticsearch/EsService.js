@@ -161,11 +161,21 @@
       }, {});
 
       for (var prop in termss) {
-        var terms = {};
-        terms[prop] = termss[prop];
-        queryHook.push({
-          terms: terms
-        });
+        var value = termss[prop], isWildcard = value[0].indexOf('*') !== -1;
+        var queryType = isWildcard ? 'wildcard' : 'terms';
+        var clause = {};
+        var field = {};
+        if (isWildcard) {
+          if (value.length > 1) {
+            console.warn("Wildcard query not supported on array of values.",
+              value);
+          }
+          field[prop] = value[0];
+        } else {
+          field[prop] = value;
+        }
+        clause[queryType] = field;
+        queryHook.push(clause);
       }
 
       if(query_string) {

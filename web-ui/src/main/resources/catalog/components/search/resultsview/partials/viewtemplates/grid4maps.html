@@ -2,7 +2,7 @@
   <li class="list-group-item gn-grid gn-map-item flex-col flex-align-stretch"
       data-ng-repeat="md in searchResults.records"
       data-gn-fix-mdlinks=""
-      title="{{(md.abstract || md.defaultAbstract) | striptags}}"
+      title="{{(md.resourceAbstract) | striptags}}"
       ng-click="loadMap(maps[0], md)">
 
 
@@ -11,7 +11,7 @@
     </div>
 
     <div class="gn-img-thumbnail-caption">
-      {{md.title || md.defaultTitle}}
+      {{md.resourceTitle}}
     </div>
 
     <a class=""
