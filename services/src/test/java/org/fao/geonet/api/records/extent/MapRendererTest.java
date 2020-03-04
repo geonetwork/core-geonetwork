@@ -10,8 +10,8 @@ import static org.junit.Assert.*;
 
 public class MapRendererTest {
 
-    private final transient WKTWriter wktWriter = new WKTWriter();
-    private final transient WKTReader wktReader = new WKTReader();
+    private final WKTWriter wktWriter = new WKTWriter();
+    private final WKTReader wktReader = new WKTReader();
 
     @Test
     public void domainContainsBoundingBox() throws Exception {
