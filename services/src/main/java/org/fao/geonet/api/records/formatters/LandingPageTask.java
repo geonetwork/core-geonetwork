@@ -21,15 +21,18 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.search.index;
+package org.fao.geonet.api.records.formatters;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
-
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.records.formatters.cache.FormatterCache;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.search.index.IndexingList;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Log;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -37,64 +40,83 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
- * A task which runs every X sec in order to reindex a set of metadata records which have been
- * modified and that indexing could be done a bit later (eg. when popularity is updated, immediate
- * indexing is not required).
+ * A task which runs every X sec in order to create or update landing pages
  * <p/>
  * See configuration in config-spring-geonetwork.xml for interval.
  * <p/>
- * Created by francois on 7/29/14.
  */
-public class IndexingTask extends QuartzJobBean {
+public class LandingPageTask extends QuartzJobBean {
 
     @Autowired
     protected ConfigurableApplicationContext applicationContext;
     @Autowired
-    protected DataManager _dataManager;
-    @Autowired
     protected ServiceManager serviceManager;
+    @Autowired
+    FormatterCache formatterCache;
 
-    private void indexRecords() {
+    private String landingPageFormatter;
+    private Map<String, String> landingPageFormatterParameters = new HashMap<>();
+    private String landingPageLanguage = Geonet.DEFAULT_LANGUAGE;
+
+    public String getLandingPageFormatter() {
+        return landingPageFormatter;
+    }
+
+    public void setLandingPageFormatter(String landingPageFormatter) {
+        if (landingPageFormatter.contains("?")) {
+            final String[] strings = landingPageFormatter.split("\\?");
+            this.landingPageFormatter = strings[0];
+            if (strings.length > 1) {
+                for (String param : strings[1].split("&")) {
+                    if(param.contains("=")) {
+                        final String[] paramAndValue = param.split("=");
+                        this.landingPageFormatterParameters.put(paramAndValue[0], paramAndValue[1]);
+                    } else {
+                        this.landingPageFormatterParameters.put(param, "");
+                    }
+                }
+            }
+        } else {
+            this.landingPageFormatter = landingPageFormatter;
+        }
+    }
+
+    public void setLandingPageLanguage(String landingPageLanguage) {
+        this.landingPageLanguage = landingPageLanguage;
+    }
+
+    private void buildLandingPages(ServiceContext serviceContext) {
         ApplicationContextHolder.set(applicationContext);
-        IndexingList list = applicationContext.getBean("indexingList", IndexingList.class);
+        IndexingList list = applicationContext.getBean("landingPageList", IndexingList.class);
         Set<Integer> metadataIdentifiers = list.getIdentifiers();
         if (metadataIdentifiers.size() > 0) {
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.debug(Geonet.INDEX_ENGINE, "Indexing task / List of records to index: "
+                Log.debug(Geonet.INDEX_ENGINE, "Landing page task / List of records to update: "
                     + metadataIdentifiers.toString() + ".");
             }
 
             for (Integer metadataIdentifier : metadataIdentifiers) {
-                try {
-                    _dataManager.indexMetadata(String.valueOf(metadataIdentifier), false, null);
-                } catch (Exception e) {
-                    Log.error(Geonet.INDEX_ENGINE, "Indexing task / An error happens indexing the metadata "
-                        + metadataIdentifier + ". Error: " + e.getMessage(), e);
-                }
-            }
-            try {
-                this.applicationContext.getBean(SearchManager.class).forceIndexChanges();
-            } catch (IOException e) {
-                Log.error(Geonet.INDEX_ENGINE, "Error forcing index changes", e);
+                formatterCache.buildLandingPage(metadataIdentifier);
             }
         }
     }
 
     @Override
     protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
-        ServiceContext serviceContext = serviceManager.createServiceContext("indexing", applicationContext);
-        serviceContext.setLanguage("eng");
+        ServiceContext serviceContext = serviceManager.createServiceContext("landingPage", applicationContext);
+        serviceContext.setLanguage(landingPageLanguage);
         serviceContext.setAsThreadLocal();
 
         if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-            Log.debug(Geonet.INDEX_ENGINE, "Indexing task / Start at: "
-                + new Date() + ". Checking if any records need to be indexed ...");
+            Log.debug(Geonet.INDEX_ENGINE, "Landing page task / Start at: "
+                + new Date() + ". Checking if any records need to be updated ...");
         }
-        indexRecords();
+        buildLandingPages(serviceContext);
     }
 }

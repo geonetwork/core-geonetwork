@@ -23,11 +23,13 @@
 
 package org.fao.geonet.api.records.formatters.cache;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
+import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.slf4j.Logger;
@@ -77,8 +79,13 @@ public class FormatterCachePublishListener implements AsynchAfterCommitListener 
             && operationAllowedRepository.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(
                 ReservedGroup.all.getId(), metadataId, ReservedOperation.view.getId()
                 ) != null) {
-            LOGGER.debug("Refreshing landing page of public record '{}' [{}].", metadataId, Thread.currentThread());
-            formatterCache.buildLandingPage(metadataId);
+
+            IndexingList list = ApplicationContextHolder.get()
+                                    .getBean("landingPageList", IndexingList.class);
+
+            LOGGER.debug("Register landing page refresh of public record '{}' [{}].", metadataId, Thread.currentThread());
+            list.add(metadataId);
+//            formatterCache.buildLandingPage(metadataId);
         }
     }
 

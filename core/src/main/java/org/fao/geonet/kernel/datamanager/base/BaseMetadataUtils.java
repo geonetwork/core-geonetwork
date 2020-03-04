@@ -498,7 +498,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
             metadataRepository.incrementPopularity(iId);
 
             // And register the metadata to be indexed in the near future
-            final IndexingList list = srvContext.getBean(IndexingList.class);
+            final IndexingList list = srvContext.getBean("indexingList", IndexingList.class);
             list.add(iId);
         } else {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {

@@ -84,15 +84,12 @@
   <bean id="indexingList"
         class="org.fao.geonet.kernel.search.index.IndexingList"/>
 
-
-  <!-- Task indexing indexingList content -->
   <bean name="indexingTaskJob"
         class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
     <property name="jobClass"
               value="org.fao.geonet.kernel.search.index.IndexingTask"/>
   </bean>
 
-  <!-- Scheduling of the indexing task -->
   <bean id="indexingTaskTrigger"
         class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
     <property name="jobDetail" ref="indexingTaskJob"/>
@@ -127,6 +124,7 @@
     <property name="triggers">
       <list>
         <ref bean="indexingTaskTrigger"/>
+        <ref bean="landingPageTaskTrigger"/>
         <ref bean="watchListNotificationTaskTrigger"/>
         <ref bean="backupMetadataCronTrigger" />
       </list>

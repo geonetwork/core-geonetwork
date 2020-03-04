@@ -238,6 +238,30 @@
     <property name="useCodeAsDefaultMessage" value="true" />
   </bean>
 
+
+  <bean id="landingPageList"
+        class="org.fao.geonet.kernel.search.index.IndexingList"/>
+
+  <bean id="landingPageTask"
+        class="org.fao.geonet.api.records.formatters.LandingPageTask">
+    <property name="landingPageFormatter" value="\${landingPage.formatter}"/>
+    <property name="landingPageLanguage" value="\${landingPage.language}"/>
+  </bean>
+
+  <bean name="landingPageTaskJob"
+        class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+    <property name="beanName" value="landingPageTask"/>
+    <property name="jobClass"
+              value="org.fao.geonet.api.records.formatters.LandingPageTask"/>
+  </bean>
+
+  <bean id="landingPageTaskTrigger"
+        class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <property name="jobDetail" ref="landingPageTaskJob"/>
+    <property name="cronExpression" value="0/30 * * * * ?"/>
+    <property name="startDelay" value="60000"/>
+  </bean>
+
   <bean id="SpringLocalServiceInvoker" class="org.fao.geonet.kernel.SpringLocalServiceInvoker"
         init-method="init">
   </bean>

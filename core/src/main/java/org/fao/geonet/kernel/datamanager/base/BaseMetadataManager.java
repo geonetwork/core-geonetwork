@@ -807,7 +807,7 @@ public class BaseMetadataManager implements IMetadataManager {
             MetaSearcher searcher = searcherForReferencingMetadata(context, metadata);
             Map<Integer, AbstractMetadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 500);
             for (Integer id : result.keySet()) {
-                IndexingList list = context.getBean(IndexingList.class);
+                IndexingList list = context.getBean("indexingList", IndexingList.class);
                 list.add(id);
             }
         }
