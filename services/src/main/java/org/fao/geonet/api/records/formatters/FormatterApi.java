@@ -86,6 +86,7 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.GeonetworkDataDirectory.GeonetworkDataDirectoryInitializedEvent;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -210,43 +211,44 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      */
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
-        if (event instanceof GeonetworkDataDirectory.GeonetworkDataDirectoryInitializedEvent) {
-            GeonetworkDataDirectory.GeonetworkDataDirectoryInitializedEvent dataDirEvent =
-                (GeonetworkDataDirectory.GeonetworkDataDirectoryInitializedEvent) event;
-            final String webappPath = "WEB-INF/data/data/" + SCHEMA_PLUGIN_FORMATTER_DIR;
-            final GeonetworkDataDirectory geonetworkDataDirectory = dataDirEvent.getSource();
-            final Path fromDir = geonetworkDataDirectory.getWebappDir().resolve(webappPath);
-            final Path toDir = geonetworkDataDirectory.getFormatterDir();
-            try {
-                copyNewerFilesToDataDir(fromDir, toDir);
-                final Set<String> schemas = schemaManager.getSchemas();
-                for (String schema : schemas) {
-                    final String webappSchemaPath = "WEB-INF/data/config/schema_plugins/" + schema + "/" + SCHEMA_PLUGIN_FORMATTER_DIR;
-                    final Path webappSchemaDir = geonetworkDataDirectory.getWebappDir().resolve(webappSchemaPath);
-                    final Path dataDirSchemaFormatterDir = schemaManager.getSchemaDir(schema).resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
-                    copyNewerFilesToDataDir(webappSchemaDir, dataDirSchemaFormatterDir);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+        if (!(event instanceof GeonetworkDataDirectoryInitializedEvent)) {
+            return;
+        }
+        GeonetworkDataDirectoryInitializedEvent dataDirEvent = (GeonetworkDataDirectoryInitializedEvent) event;
+        final String webappPath = "WEB-INF/data/data/" + SCHEMA_PLUGIN_FORMATTER_DIR;
+        final GeonetworkDataDirectory geonetworkDataDirectory = dataDirEvent.getSource();
+        final Path fromDir = geonetworkDataDirectory.getWebappDir().resolve(webappPath);
+        final Path toDir = geonetworkDataDirectory.getFormatterDir();
+        try {
+            copyNewerFilesToDataDir(fromDir, toDir);
+            final Set<String> schemas = schemaManager.getSchemas();
+            for (String schema : schemas) {
+                final String webappSchemaPath = "WEB-INF/data/config/schema_plugins/" + schema + "/" + SCHEMA_PLUGIN_FORMATTER_DIR;
+                final Path webappSchemaDir = geonetworkDataDirectory.getWebappDir().resolve(webappSchemaPath);
+                final Path dataDirSchemaFormatterDir = schemaManager.getSchemaDir(schema).resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
+                copyNewerFilesToDataDir(webappSchemaDir, dataDirSchemaFormatterDir);
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public void copyNewerFilesToDataDir(final Path fromDir, final Path toDir) throws IOException {
+    private void copyNewerFilesToDataDir(final Path fromDir, final Path toDir) throws IOException {
         if (Files.exists(fromDir)) {
-            Files.walkFileTree(fromDir, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    final Path path = IO.relativeFile(fromDir, file, toDir);
-                    if (!file.getFileName().toString().toLowerCase().endsWith(".iml") &&
-                        (!Files.exists(path) || Files.getLastModifiedTime(path).compareTo(Files.getLastModifiedTime(file)) < 0)) {
-                        Files.deleteIfExists(path);
-                        IO.copyDirectoryOrFile(file, path, false);
-                    }
-                    return super.visitFile(file, attrs);
-                }
-            });
+            return;
         }
+        Files.walkFileTree(fromDir, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            final Path path = IO.relativeFile(fromDir, file, toDir);
+            if (!file.getFileName().toString().toLowerCase().endsWith(".iml") &&
+                (!Files.exists(path) || Files.getLastModifiedTime(path).compareTo(Files.getLastModifiedTime(file)) < 0)) {
+                Files.deleteIfExists(path);
+                IO.copyDirectoryOrFile(file, path, false);
+            }
+            return super.visitFile(file, attrs);
+            }
+        });
     }
 
     @RequestMapping(value = {
