@@ -21,10 +21,11 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.services.region;
+package org.fao.geonet.api.regions;
 
 import org.fao.geonet.api.regions.ListRegionsResponse;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.fao.geonet.services.region.List;
 import org.fao.geonet.utils.Xml;
 import org.json.JSONArray;
 import org.json.JSONException;
