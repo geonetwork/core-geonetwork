@@ -325,7 +325,7 @@
           <overview type="object">{
             "url": "<xsl:value-of select="."/>"
             <xsl:if test="normalize-space(../../gmd:fileDescription) != ''">,</xsl:if>
-            <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
+            "text": <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
           }</overview>
         </xsl:for-each>
 

@@ -31,9 +31,10 @@
 
   module.service('gnESClient', [
     '$http',
+    'Metadata',
     'gnESFacet',
     'gnESService',
-    function($http, gnESFacet, gnESService) {
+    function($http, Metadata, gnESFacet, gnESService) {
 
     this.getUrl = function(service) {
       return ES_API_URL + service;
@@ -53,11 +54,11 @@
         function(response) {
           var d = response.data.hits.hits.flatMap(function(md) {
             if (field) {
-              return md._source[field];
+              return new Metadata(md)[field];
             } else {
               var values = [];
-              for (p in md._source) {
-                values = values.concat(md._source[p]);
+              for (p in new Metadata(md)) {
+                values = values.concat(md[p]);
               };
               return values;
             }

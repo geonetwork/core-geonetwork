@@ -269,11 +269,11 @@
                               || mdView.current.record.MD_LegalConstraintsOtherConstraints">
                 <th data-translate="">legalConstraints</th>
                 <td>
-                  <p data-ng-repeat="c in mdView.current.record.MD_LegalConstraintsOtherConstraints track by $index">
-                    <span data-gn-lynky="{{c}}" />
+                  <p data-gn-text-field="mdView.current.record"
+                     data-gn-text-field-key="MD_LegalConstraintsOtherConstraints">
                   </p>
-                  <p data-ng-repeat="c in mdView.current.record.MD_LegalConstraintsUseLimitation track by $index">
-                    <span data-gn-lynky="{{c}}" />
+                  <p data-gn-text-field="mdView.current.record"
+                     data-gn-text-field-key="MD_LegalConstraintsUseLimitation">
                   </p>
                 </td>
               </tr>
@@ -281,8 +281,8 @@
               <tr data-ng-if="mdView.current.record.MD_SecurityConstraintsUseLimitation">
                 <th data-translate="">securityConstraints</th>
                 <td>
-                  <p data-ng-repeat="c in mdView.current.record.MD_SecurityConstraintsUseLimitation track by $index">
-                    <span data-gn-lynky="{{c}}" />
+                  <p data-gn-text-field="mdView.current.record"
+                     data-gn-text-field-key="MD_SecurityConstraintsUseLimitation">
                   </p>
                 </td>
               </tr>
@@ -290,8 +290,8 @@
               <tr data-ng-if="mdView.current.record.MD_ConstraintsUseLimitation">
                 <th data-translate="">resourceConstraints</th>
                 <td>
-                  <p data-ng-repeat="c in mdView.current.record.MD_ConstraintsUseLimitation track by $index">
-                    <span data-gn-lynky="{{c}}" />
+                  <p data-gn-text-field="mdView.current.record"
+                     data-gn-text-field-key="MD_ConstraintsUseLimitation">
                   </p>
                 </td>
               </tr>

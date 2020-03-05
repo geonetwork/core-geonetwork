@@ -101,7 +101,7 @@
            * @return {HttpPromise} promise
            */
           this.getAnySuggestions = function(val) {
-            return gnESClient.suggest(null, val);
+            return gnESClient.suggest('resourceTitle', val);
           };
 
 

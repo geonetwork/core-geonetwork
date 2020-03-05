@@ -144,7 +144,7 @@ goog.require('gn_alert');
                 ]
               }
             },
-            '_source': ['resourceTitle']
+            '_source': ['resourceTitleObject']
             // Fuzzy autocomplete
             // {
             //   query: {

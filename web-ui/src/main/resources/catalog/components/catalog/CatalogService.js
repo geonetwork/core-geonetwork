@@ -573,18 +573,26 @@
 
 
 
+      // Multilingual mode: one field per language
       // Populate translation for all multilingual fields.
-      // Multilingual fields are composed of one field without _lang suffix
-      // and one field for each translation.
-      // Set the default field value to the UI language if exist.
+      // // Multilingual fields are composed of one field without _lang suffix
+      // // and one field for each translation.
+      // // Set the default field value to the UI language if exist.
       var listOfTranslatedField = {};
       var record = this;
+      // $.each(this, function(key, value) {
+      //   var fieldName = key.split(langSuffix)[0];
+      //   if (key.indexOf(langSuffix) !== -1 &&
+      //     angular.isUndefined(listOfTranslatedField[fieldName])) {
+      //     record[fieldName] = record.translate(fieldName);
+      //     listOfTranslatedField[fieldName] = true;
+      //   }
+      // });
+      // Multilingual mode: object
       $.each(this, function(key, value) {
-        var fieldName = key.split(langSuffix)[0];
-        if (key.indexOf(langSuffix) !== -1 &&
-          angular.isUndefined(listOfTranslatedField[fieldName])) {
-          record[fieldName] = record.translate(fieldName);
-          listOfTranslatedField[fieldName] = true;
+        var fieldName = key;
+        if (key.endsWith('Object')) {
+          record[fieldName.slice(0, -6)] = record.translate(fieldName);
         }
       });
 
@@ -660,28 +668,16 @@
       // this.linksTree = links;
     };
 
-    // function formatLink(sLink) {
-    //   var linkInfos = sLink.split('|');
-    //   return {
-    //     name: linkInfos[0],
-    //     title: linkInfos[0],
-    //     url: linkInfos[2],
-    //     desc: linkInfos[1],
-    //     protocol: linkInfos[3],
-    //     contentType: linkInfos[4],
-    //     group: linkInfos[5] ? parseInt(linkInfos[5]) : undefined,
-    //     applicationProfile: linkInfos[6]
-    //   };
-    // }
 
     Metadata.prototype = {
       translate: function(fieldName) {
-        var translation = this[fieldName + '_lang' + gnLangs.current];
+        // var translation = this[fieldName + '_lang' + gnLangs.current];
+        var translation = this[fieldName]['lang' + gnLangs.current];
 
         if (translation) {
           return translation;
-        } else if (this[fieldName]) {
-          return this[fieldName];
+        } else if (this[fieldName].default) {
+          return this[fieldName].default;
         } else {
           console.warn(fieldName + ' is not defined in this record.');
         }
