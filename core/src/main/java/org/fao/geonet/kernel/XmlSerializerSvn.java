@@ -57,7 +57,7 @@ public class XmlSerializerSvn extends XmlSerializer {
      */
     public Element select(ServiceContext context, String id) throws Exception {
         Element rec = internalSelect(id, false, false);
-        if (resolveXLinks()) Processor.detachXLink(rec, context);
+        if (resolveXLinks()) Processor.detachXLink(rec);
         return rec;
     }
 

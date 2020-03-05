@@ -398,7 +398,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                         moreFields.add(
                             SearchManager.makeField(Geonet.IndexFieldNames.XLINK, xlink.getValue(), true, true));
                     }
-                    Processor.detachXLink(md, getServiceContext());
+                    Processor.detachXLink(md);
                 } else {
                     moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
                 }

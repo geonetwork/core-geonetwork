@@ -724,7 +724,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         boolean doXLinks = xmlSerializer.resolveXLinks();
 
         Element metadata = xmlSerializer.removeHiddenElements(false, md, true);
-        if (doXLinks) Processor.processXLink(metadata, context);
+        if (doXLinks) Processor.processXLink(metadata);
 
         boolean withholdWithheldElements = hide_withheld != null && hide_withheld;
         if (XmlSerializer.getThreadLocal(false) != null || withholdWithheldElements) {
