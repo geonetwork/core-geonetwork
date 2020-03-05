@@ -141,11 +141,11 @@
   </bean>
 
   <util:set id="regionGetMapExpandFactors" set-class="java.util.TreeSet">
-    <bean class="org.fao.geonet.services.region.ExpandFactor"
+    <bean class="org.fao.geonet.api.records.extent.ExpandFactor"
           p:proportion=".0005" p:factor="2"/>
-    <bean class="org.fao.geonet.services.region.ExpandFactor"
+    <bean class="org.fao.geonet.api.records.extent.ExpandFactor"
           p:proportion=".01" p:factor=".5"/>
-    <bean class="org.fao.geonet.services.region.ExpandFactor"
+    <bean class="org.fao.geonet.api.records.extent.ExpandFactor"
           p:proportion=".015" p:factor=".2"/>
   </util:set>
 

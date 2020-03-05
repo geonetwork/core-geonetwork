@@ -115,13 +115,12 @@
   </rule>
 
 
-
   <rule>
     <note>
       Retrieves robots.txt filemap pointing to sitemaps for better indexing.
     </note>
     <from>^/robots.txt$</from>
-    <to type="forward" last="true">/srv/eng/robots.txt</to>
+    <to type="forward" last="true">/srv/api/robots.txt</to>
   </rule>
 
   <rule>
@@ -225,44 +224,6 @@
     <from>^/opensearch/(.*)/download?(.*)$</from>
     <to type="forward">/srv/$1/atom.download</to>
   </rule>
-
-  <!-- Sitemap URLs -->
-  <rule>
-    <note>
-      sitemap with format and page number
-    </note>
-    <from>^/sitemap/(.*)/([0-9]+)/(.*)$</from>
-    <to type="forward">/srv/$3/portal.sitemap?doc=$2&amp;format=$1</to>
-  </rule>
-  <rule>
-    <note>
-      sitemap with page number
-    </note>
-    <from>^/sitemap/([0-9]+)/(.*)$</from>
-    <to type="forward">/srv/$2/portal.sitemap?doc=$1</to>
-  </rule>
-  <rule>
-    <note>
-      sitemap with format
-    </note>
-    <from>^/sitemap/(.*)/(.*)$</from>
-    <to type="forward">/srv/$2/portal.sitemap?format=$1</to>
-  </rule>
-  <rule>
-    <note>
-      sitemap
-    </note>
-    <from>^/sitemap/(.*)$</from>
-    <to type="forward">/srv/$1/portal.sitemap</to>
-  </rule>
-  <rule>
-    <note>
-      sitemap
-    </note>
-    <from>^/sitemap$</from>
-    <to type="forward">/srv/eng/portal.sitemap</to>
-  </rule>
-  <!-- Sitemap URLs -->
 
 
   <!-- hide jsession id from google bot -->

@@ -631,6 +631,10 @@
         </xsl:for-each>
 
 
+        <xsl:if test="*/gmd:EX_Extent/*/gmd:EX_BoundingPolygon">
+          <hasBoundingPolygon>true</hasBoundingPolygon>
+        </xsl:if>
+
         <xsl:for-each select="*/gmd:EX_Extent">
 
           <xsl:for-each select="gmd:geographicElement/gmd:EX_GeographicDescription/

@@ -1158,6 +1158,9 @@
       "hasInspireTheme": {
         "type": "boolean"
       },
+      "hasBoundingPolygon": {
+        "type": "boolean"
+      },
       "hasOverview": {
         "type": "boolean"
       },

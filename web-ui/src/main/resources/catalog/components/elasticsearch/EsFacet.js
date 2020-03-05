@@ -50,6 +50,7 @@
       'rating',
       'tag*',
       'geom',
+      'hasBoundingPolygon',
       'isTemplate',
       'valid',
       'isHarvested',

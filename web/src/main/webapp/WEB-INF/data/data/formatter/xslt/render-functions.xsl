@@ -71,22 +71,9 @@
 
     <!-- TODO get system config -->
     <xsl:if test="$geometry">
-      <xsl:variable name="background"
-                    select="util:getSettingValue('region/getmap/background')"/>
-      <xsl:variable name="width"
-                    select="util:getSettingValue('region/getmap/width')"/>
-      <xsl:variable name="mapproj"
-                    select="util:getSettingValue('region/getmap/mapproj')"/>
-
       <img class="gn-img-extent"
            alt="{$schemaStrings/thumbnail}"
-           src="{$nodeUrl}eng/region.getmap.png?mapsrs={if ($mapproj != '')
-                                         then $mapproj
-                                         else 'EPSG:3857'}&amp;width={
-                                         if ($width != '')
-                                         then $width
-                                         else '600'
-                                         }&amp;background=settings&amp;geomsrs=EPSG:4326&amp;geom={$geometry}"/>
+           src="{$nodeUrl}api/regions/geom.png?geomsrs=EPSG:4326&amp;geom={$geometry}"/>
     </xsl:if>
 
   </xsl:function>
@@ -94,25 +81,10 @@
   <!-- Use region API to display metadata extent -->
   <xsl:function name="gn-fn-render:extent">
     <xsl:param name="uuid" as="xs:string"/>
-
-    <!-- TODO get system config -->
     <xsl:if test="$uuid">
-      <xsl:variable name="background"
-                    select="util:getSettingValue('region/getmap/background')"/>
-      <xsl:variable name="width"
-                    select="util:getSettingValue('region/getmap/width')"/>
-      <xsl:variable name="mapproj"
-                    select="util:getSettingValue('region/getmap/mapproj')"/>
-
       <img class="gn-img-extent"
            alt="{$schemaStrings/thumbnail}"
-           src="{$nodeUrl}eng/region.getmap.png?id=metadata:@uuid{$uuid}&amp;mapsrs={if ($mapproj != '')
-                                         then $mapproj
-                                         else 'EPSG:3857'}&amp;width={
-                                         if ($width != '')
-                                         then $width
-                                         else '600'
-                                         }&amp;background=settings"/>
+           src="{$nodeUrl}api/records/{$uuid}/extents.png"/>
     </xsl:if>
 
   </xsl:function>

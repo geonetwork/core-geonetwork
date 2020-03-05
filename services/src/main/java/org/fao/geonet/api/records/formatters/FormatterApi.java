@@ -71,7 +71,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
-import org.fao.geonet.services.region.MapRenderer;
+import org.fao.geonet.api.records.extent.MapRenderer;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.IO;
