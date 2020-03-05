@@ -98,7 +98,7 @@ public class XsltFormatter implements FormatterImpl {
         root.addContent(new Element("info")
             .addContent(info));
 
-        root.addContent(fparams.format.getPluginLocResources(fparams.context, fparams.formatDir, lang));
+        root.addContent(fparams.format.getPluginLocResources(fparams.formatDir, lang));
         if (fparams.config.loadStrings()) {
             root.addContent(fparams.format.getStrings(fparams.context.getAppPath(), lang));
         }
