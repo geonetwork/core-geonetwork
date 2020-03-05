@@ -100,30 +100,4 @@ public class MetadataRegionDAOTest extends AbstractServiceIntegrationTest {
         this.metadataId = importMetadataXML(this.context, uuid, xmlStream, MetadataType.METADATA, ReservedGroup.guest.getId(), uuid);
     }
 
-    @Test
-    public void testGetGeomGmlId() throws Exception {
-        final Element metadata = dataManager.getMetadata(this.context, "" + this.metadataId, true, false, false);
-
-        final Element extentEl = Xml.selectElement(metadata, "*//gml:MultiSurface", NAMESPACES);
-        final String geomRefId = extentEl.getAttributeValue("id", Geonet.Namespaces.GML);
-        Geometry geom = regionDAO.getGeom(this.context, "metadata:@id" + this.metadataId + ":@gml" + geomRefId, false, "EPSG:4326");
-        assertNotNull(geom);
-
-        geom = regionDAO.getGeom(this.context, "metadata:@id" + this.metadataId + ":@gml920934802934809238", false, "EPSG:4326");
-        assertNull(geom);
-    }
-
-    @Test
-    public void testWrongMetadataId() throws Exception {
-        final Element metadata = dataManager.getMetadata(this.context, "" + this.metadataId, true, false, false);
-
-        final Element extentEl = Xml.selectElement(metadata, "*//gmd:EX_BoundingPolygon/geonet:element", NAMESPACES);
-        final String geomRefId = extentEl.getAttributeValue("ref");
-
-        Geometry geom = regionDAO.getGeom(this.context, "metadata:@id32342389:" + geomRefId, false, "EPSG:4326");
-        assertNull(geom);
-
-        geom = regionDAO.getGeom(this.context, "metadata:@id323423898023432", false, "EPSG:4326");
-        assertNull(geom);
-    }
 }
