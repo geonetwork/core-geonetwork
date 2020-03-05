@@ -755,7 +755,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      * loc/lang/ directory as children of the returned element.
      */
     public synchronized Element getPluginLocResources(ServiceContext context, Path formatDir, String lang) throws Exception {
-        final Element pluginLocResources = getPluginLocResources(context, formatDir);
+        final Element pluginLocResources = getPluginLocResources(formatDir);
         Element translations = pluginLocResources.getChild(lang);
         if (translations == null) {
             if (pluginLocResources.getChildren().isEmpty()) {
@@ -767,7 +767,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         return translations;
     }
 
-    public synchronized Element getPluginLocResources(final ServiceContext context, Path formatDir) throws Exception {
+    public synchronized Element getPluginLocResources(Path formatDir) throws Exception {
         final String formatDirPath = formatDir.toString();
         Element allLangResources = this.pluginLocs.get(formatDirPath);
         if (isDevMode() || allLangResources == null) {
