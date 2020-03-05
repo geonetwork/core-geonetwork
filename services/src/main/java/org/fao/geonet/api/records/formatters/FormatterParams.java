@@ -77,7 +77,7 @@ public class FormatterParams {
     }
 
     public boolean isDevMode() {
-        return this.format.isDevMode(this.context);
+        return this.format.isDevMode();
     }
 
     public FormatterParams copy() {

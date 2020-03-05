@@ -115,7 +115,7 @@ public class FunctionsTest {
 
         fparams.format = new FormatterApi() {
             @Override
-            protected boolean isDevMode(ServiceContext context) {
+            protected boolean isDevMode() {
                 return false;
             }
         };
