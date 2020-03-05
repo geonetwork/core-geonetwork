@@ -754,7 +754,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      * Get the localization files from current format plugin.  It will load all xml file in the
      * loc/lang/ directory as children of the returned element.
      */
-    public synchronized Element getPluginLocResources(ServiceContext context, Path formatDir, String lang) throws Exception {
+    public synchronized Element getPluginLocResources(Path formatDir, String lang) throws Exception {
         final Element pluginLocResources = getPluginLocResources(formatDir);
         Element translations = pluginLocResources.getChild(lang);
         if (translations == null) {
