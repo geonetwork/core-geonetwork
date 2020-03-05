@@ -1,5 +1,6 @@
 package org.fao.geonet.kernel;
 
+import jeeves.xlink.Processor;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 
 import static org.mockito.Mockito.mock;
@@ -13,6 +14,7 @@ public abstract class AbstractIntegrationTestWithMockedSingletons extends Abstra
         if (mockInvoker == null) {
             mockInvoker = mock(SpringLocalServiceInvoker.class);
             _applicationContext.getBeanFactory().registerSingleton(SpringLocalServiceInvoker.class.getCanonicalName(), mockInvoker);
+            Processor.setLocalServiceInvoker(mockInvoker);
         }
         reset(mockInvoker);
         return mockInvoker;

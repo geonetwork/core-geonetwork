@@ -101,6 +101,7 @@ public final class Processor {
     private static final String ACTION_DETACH = "detach";
 
     private static CopyOnWriteArraySet<URIMapper> uriMapper = new CopyOnWriteArraySet<URIMapper>();
+    private static SpringLocalServiceInvoker localServiceInvoker;
 
     /**
      * Default constructor. Builds a Processor.
@@ -184,8 +185,7 @@ public final class Processor {
         try {
             // TODO-API: Support local protocol on /api/registries/
             if (uri.startsWith(XLink.LOCAL_PROTOCOL)) {
-                SpringLocalServiceInvoker springLocalServiceInvoker = srvContext.getBean(SpringLocalServiceInvoker.class);
-                remoteFragment = (Element)springLocalServiceInvoker.invoke(uri);
+                remoteFragment = (Element)localServiceInvoker.invoke(uri);
             } else {
                 // Avoid references to filesystem
                 if (uri.toLowerCase().startsWith("file://")) {
@@ -485,6 +485,10 @@ public final class Processor {
             element.removeAttribute(XLink.ROLE, XLink.NAMESPACE_XLINK);
             element.removeAttribute(XLink.TITLE, XLink.NAMESPACE_XLINK);
         }
+    }
+
+    public static void setLocalServiceInvoker(SpringLocalServiceInvoker springLocalServiceInvoker) {
+        localServiceInvoker = springLocalServiceInvoker;
     }
 
     //--------------------------------------------------------------------------
