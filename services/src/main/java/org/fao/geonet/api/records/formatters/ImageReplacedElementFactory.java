@@ -25,15 +25,13 @@ package org.fao.geonet.api.records.formatters;
 
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
-
 import com.itextpdf.text.Image;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.api.records.extent.MapRenderer;
+import org.fao.geonet.api.records.extent.MetadataExtentApi;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.services.region.GetMap;
-import org.fao.geonet.services.region.MapRenderer;
 import org.fao.geonet.utils.Log;
 import org.xhtmlrenderer.extend.FSImage;
 import org.xhtmlrenderer.extend.ReplacedElement;
@@ -46,6 +44,7 @@ import org.xhtmlrenderer.pdf.ITextImageElement;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -55,8 +54,6 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import javax.imageio.ImageIO;
 
 public class ImageReplacedElementFactory implements ReplacedElementFactory {
     private static Set<String> imgFormatExts = null;
@@ -101,19 +98,21 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
 
         String nodeName = element.getNodeName();
         String src = element.getAttribute("src");
-        if ("img".equals(nodeName) && src.startsWith(baseURL + "region.getmap.png") && mapRenderer != null) {
+        if ("img".equals(nodeName)
+            && (src.startsWith(baseURL + "region.getmap.png") || src.endsWith("/extents.png") || src.endsWith("/geom.png"))
+            && mapRenderer != null) {
             BufferedImage image = null;
             try {
                 Map<String, String> parameters = getParams(src);
 
                 String id = parameters.get(Params.ID);
-                String srs = parameters.get(GetMap.MAP_SRS_PARAM) != null ? parameters.get(GetMap.MAP_SRS_PARAM) : "EPSG:4326";
-                Integer width = parameters.get(GetMap.WIDTH_PARAM) != null ? Integer.parseInt(parameters.get(GetMap.WIDTH_PARAM)) : null;
-                Integer height = parameters.get(GetMap.HEIGHT_PARAM) != null ? Integer.parseInt(parameters.get(GetMap.HEIGHT_PARAM)) : null;
-                String background = parameters.get(GetMap.BACKGROUND_PARAM);
-                String geomParam = parameters.get(GetMap.GEOM_PARAM);
-                String geomType = parameters.get(GetMap.GEOM_TYPE_PARAM) != null ? parameters.get(GetMap.GEOM_TYPE_PARAM) : "WKT";
-                String geomSrs = parameters.get(GetMap.GEOM_SRS_PARAM) != null ? parameters.get(GetMap.GEOM_SRS_PARAM) : "EPSG:4326";
+                String srs = parameters.get(MetadataExtentApi.MAP_SRS_PARAM) != null ? parameters.get(MetadataExtentApi.MAP_SRS_PARAM) : "EPSG:4326";
+                Integer width = parameters.get(MetadataExtentApi.WIDTH_PARAM) != null ? Integer.parseInt(parameters.get(MetadataExtentApi.WIDTH_PARAM)) : null;
+                Integer height = parameters.get(MetadataExtentApi.HEIGHT_PARAM) != null ? Integer.parseInt(parameters.get(MetadataExtentApi.HEIGHT_PARAM)) : null;
+                String background = parameters.get(MetadataExtentApi.BACKGROUND_PARAM);
+                String geomParam = parameters.get(MetadataExtentApi.GEOM_PARAM);
+                String geomType = parameters.get(MetadataExtentApi.GEOM_TYPE_PARAM) != null ? parameters.get(MetadataExtentApi.GEOM_TYPE_PARAM) : "WKT";
+                String geomSrs = parameters.get(MetadataExtentApi.GEOM_SRS_PARAM) != null ? parameters.get(MetadataExtentApi.GEOM_SRS_PARAM) : "EPSG:4326";
 
                 image = mapRenderer.render(
                     id, srs, width, height, background, geomParam, geomType, geomSrs);
@@ -122,7 +121,8 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
             }
             float factor = layoutContext.getDotsPerPixel();
             return loadImage(layoutContext, box, userAgentCallback, cssWidth, cssHeight, new BufferedImageLoader(image), factor);
-        } else if ("img".equals(nodeName) && src.contains("region.getmap.png")) {
+        } else if ("img".equals(nodeName)
+            && (src.startsWith(baseURL + "region.getmap.png") || src.endsWith("/extents.png") || src.endsWith("/geom.png"))) {
             StringBuilder builder = new StringBuilder(baseURL);
             try {
                 if (StringUtils.startsWith(src, "http")) {
@@ -162,7 +162,7 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
         String query = url.getQuery();
         String[] keyValuePairs = query.split("&");
         Map<String, String> parameters = new HashMap<>();
-        for (String keyValuePair: keyValuePairs) {
+        for (String keyValuePair : keyValuePairs) {
             String[] pair = keyValuePair.split("=");
             String key = pair[0];
             String value = pair.length > 1 ? pair[1] : null;

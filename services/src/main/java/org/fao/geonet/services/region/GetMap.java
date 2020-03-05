@@ -27,6 +27,7 @@ import com.google.common.base.Optional;
 import com.vividsolutions.jts.geom.Envelope;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import org.fao.geonet.api.records.extent.MapRenderer;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.region.RegionsDAO;
@@ -75,6 +76,7 @@ import java.util.concurrent.TimeUnit;
  * following parameters: minx, maxx, miny, maxy, width, height and optionally srs
  */
 @Controller
+@Deprecated
 public class GetMap {
     public static final String MAP_SRS_PARAM = "mapsrs";
     public static final String GEOM_SRS_PARAM = "geomsrs";
