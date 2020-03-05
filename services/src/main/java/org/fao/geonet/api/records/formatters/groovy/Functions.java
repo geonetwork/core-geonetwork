@@ -190,7 +190,7 @@ public class Functions extends SchemaLocalizations {
     }
 
     private Element getFormatterTranslations(Path dir) throws Exception {
-        return fparams.format.getPluginLocResources(fparams.context, dir);
+        return fparams.format.getPluginLocResources(dir);
     }
 
     public String getXPathFrom(GPathResult path) {
