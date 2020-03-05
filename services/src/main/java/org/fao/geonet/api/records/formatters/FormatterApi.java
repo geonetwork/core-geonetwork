@@ -770,7 +770,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     public synchronized Element getPluginLocResources(final ServiceContext context, Path formatDir) throws Exception {
         final String formatDirPath = formatDir.toString();
         Element allLangResources = this.pluginLocs.get(formatDirPath);
-        if (isDevMode(context) || allLangResources == null) {
+        if (isDevMode() || allLangResources == null) {
             allLangResources = new Element("loc");
             Path baseLoc = formatDir.resolve("loc");
             if (Files.exists(baseLoc)) {
@@ -842,7 +842,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         return locDir;
     }
 
-    protected boolean isDevMode(ServiceContext context) {
+    protected boolean isDevMode() {
         return systemInfo.isDevMode();
     }
 
