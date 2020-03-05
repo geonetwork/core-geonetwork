@@ -253,16 +253,14 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
     @RequestMapping(value = {
         "/{portal}/api/records/{metadataUuid}/formatters/{formatterId}",
-        "/{portal}/api/" + API.VERSION_0_1 +
-            "/records/{metadataUuid}/formatters/{formatterId}"
+        "/{portal}/api/" + API.VERSION_0_1 + "/records/{metadataUuid}/formatters/{formatterId}"
     },
         method = RequestMethod.GET,
         produces = {
             MediaType.TEXT_HTML_VALUE,
             MediaType.APPLICATION_XHTML_XML_VALUE,
-            "application/pdf",
+            MediaType.APPLICATION_PDF_VALUE,
             MediaType.ALL_VALUE
-            // TODO: PDF
         })
     @ApiOperation(
         value = "Get a formatted metadata record",
@@ -337,7 +335,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
 
-        if(approved) {
+        if (approved) {
             metadata = metadataRepository.findOneByUuid(metadataUuid);
         }
 
