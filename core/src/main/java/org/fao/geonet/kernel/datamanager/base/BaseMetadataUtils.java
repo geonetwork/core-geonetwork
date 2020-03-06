@@ -70,6 +70,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Page;
@@ -104,13 +105,17 @@ public class BaseMetadataUtils implements IMetadataUtils {
     protected SettingManager settingManager;
 
     @Autowired
-    private IndexingList indexingList;
+    @Qualifier("indexingList")
+    private  IndexingList indexingList;
 
     @Autowired
     private GeonetworkDataDirectory dataDirectory;
 
     @Autowired(required = false)
     protected XmlSerializer xmlSerializer;
+
+    @Autowired
+    private NodeInfo nodeInfo;
 
     private Path stylePath;
 
@@ -527,20 +532,18 @@ public class BaseMetadataUtils implements IMetadataUtils {
         });
     }
 
-    /**
-     * @throws Exception hmm
-     */
+
+
     @Override
-    public void increasePopularity(ServiceContext srvContext, String id) throws Exception {
+    public void increasePopularity(String id) {
         // READONLYMODE
-        if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
+        if (!nodeInfo.isReadOnly()) {
             // Update the popularity in database
             int iId = Integer.parseInt(id);
             metadataRepository.incrementPopularity(iId);
 
             // And register the metadata to be indexed in the near future
-            final IndexingList list = srvContext.getBean(IndexingList.class);
-            list.add(iId);
+            indexingList.add(iId);
         } else {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER,

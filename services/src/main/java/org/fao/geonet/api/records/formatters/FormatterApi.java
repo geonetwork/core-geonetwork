@@ -361,7 +361,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             if (request.checkNotModified(language, roundedChangeDate) &&
                 cacheConfig.allowCaching(key)) {
                 if (!skipPopularityBool) {
-                    metadataUtils.increasePopularity(context, String.valueOf(metadata.getId()));
+                    metadataUtils.increasePopularity(String.valueOf(metadata.getId()));
                 }
                 return;
             }
@@ -386,7 +386,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         }
         if (bytes != null) {
             if (!skipPopularityBool) {
-                metadataUtils.increasePopularity(context, String.valueOf(metadata.getId()));
+                metadataUtils.increasePopularity(String.valueOf(metadata.getId()));
             }
             writeOutResponse(context, metadataUuid,
                 LanguageUtils.locale2gnCode(locale.getISO3Language()),
@@ -526,7 +526,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             long roundedChangeDate = changeDateAsTime / 1000 * 1000;
             if (request.checkNotModified(roundedChangeDate) && cacheConfig.allowCaching(key)) {
                 if (!skipPopularityBool) {
-                    metadataUtils.increasePopularity(context, resolvedId);
+                    metadataUtils.increasePopularity(resolvedId);
                 }
                 return;
             }
@@ -552,7 +552,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         }
         if (bytes != null) {
             if (!skipPopularityBool) {
-                metadataUtils.increasePopularity(context, resolvedId);
+                metadataUtils.increasePopularity(resolvedId);
             }
 
             writeOutResponse(context, resolvedId, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
@@ -636,7 +636,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
     @VisibleForTesting
     Pair<FormatterImpl, FormatterParams> loadMetadataAndCreateFormatterAndParams(ServiceContext context, Key key, final NativeWebRequest request) throws Exception {
-        final Pair<Element, AbstractMetadata> elementMetadataPair = getMetadata(context, key.mdId, key.hideWithheld);
+        final Pair<Element, AbstractMetadata> elementMetadataPair = getMetadata(key.mdId, key.hideWithheld);
         Element metadata = elementMetadataPair.one();
         AbstractMetadata metadataInfo = elementMetadataPair.two();
 
@@ -717,9 +717,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         return isInSchemaPlugin;
     }
 
-    public Pair<Element, AbstractMetadata> getMetadata(ServiceContext context, int id,
-                                               Boolean hide_withheld) throws Exception {
-
+    public Pair<Element, AbstractMetadata> getMetadata(int id, Boolean hide_withheld) throws Exception {
         AbstractMetadata md = loadMetadata(metadataUtils, id);
         boolean doXLinks = xmlSerializer.resolveXLinks();
 
