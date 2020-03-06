@@ -45,6 +45,7 @@ import org.apache.jcs.access.exception.InvalidArgumentException;
 import org.fao.geonet.es.EsClient;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.geotools.data.Query;
+import org.geotools.data.store.ReprojectingFeatureCollection;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geojson.geom.GeometryJSON;
@@ -245,13 +246,8 @@ public class EsWFSFeatureIndexer {
         }
 
         Query query = new Query();
-        CoordinateReferenceSystem wgs84;
-        if (wfs.getInfo().getVersion().equals("1.0.0")) {
-            wgs84 = CRS.getAuthorityFactory(true).createCoordinateReferenceSystem("EPSG:4326");
-        } else {
-            wgs84 = CRS.getAuthorityFactory(true).createCoordinateReferenceSystem("urn:x-ogc:def:crs:EPSG::4326");
-        }
-        query.setCoordinateSystemReproject(wgs84);
+
+        query.setCoordinateSystem(wfs.getWfsClient().getDefaultCRS(wfs.getRemoteTypeName(wfs.getFeatureSource(typeName).getEntry().getName())));
 
         try {
             nbOfFeatures = 0;
@@ -260,7 +256,10 @@ public class EsWFSFeatureIndexer {
             BulkResutHandler brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report);
 
             long begin = System.currentTimeMillis();
-            FeatureIterator<SimpleFeature> features = wfs.getFeatureSource(typeName).getFeatures(query).features();
+
+            ReprojectingFeatureCollection rfc = new ReprojectingFeatureCollection(wfs.getFeatureSource(typeName).getFeatures(query), CRS.decode("urn:ogc:def:crs:OGC:1.3:CRS84"));
+
+            FeatureIterator<SimpleFeature> features = rfc.features();
             while (features.hasNext()) {
 
                 try {
