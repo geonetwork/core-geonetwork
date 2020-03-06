@@ -233,11 +233,10 @@ public interface IMetadataUtils {
     /**
      * Increases the popularity of the record defined by the id
      *
-     * @param srvContext
      * @param id
      * @throws Exception
      */
-    void increasePopularity(ServiceContext srvContext, String id) throws Exception;
+    void increasePopularity(String id) throws Exception;
 
     /**
      * Rates a metadata.

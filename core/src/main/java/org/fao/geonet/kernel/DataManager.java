@@ -343,7 +343,7 @@ public class DataManager {
 
     @Deprecated
     public void increasePopularity(ServiceContext srvContext, String id) throws Exception {
-        metadataUtils.increasePopularity(srvContext, id);
+        metadataUtils.increasePopularity(id);
     }
 
     @Deprecated
