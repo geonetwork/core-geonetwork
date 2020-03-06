@@ -82,6 +82,12 @@ public class GroovyFormatter implements FormatterImpl {
     private GroovyClassLoader baseClassLoader;
     private Map<String, GroovyClassLoader> schemaClassLoaders = Maps.newHashMap();
 
+    @Autowired
+    private SchemaManager schemaManager;
+
+    @Autowired
+    private GeonetworkDataDirectory geonetworkDataDirectory;
+
     @VisibleForTesting
     Transformer findTransformer(final FormatterParams fparams) throws ExecutionException {
         return transformers.get(fparams.formatDir, new Callable<Transformer>() {
@@ -98,7 +104,7 @@ public class GroovyFormatter implements FormatterImpl {
 
         EnvironmentProxy.setCurrentEnvironment(fparams);
         try {
-            final List<Namespace> namespaces = fparams.context.getBean(SchemaManager.class).getSchema(fparams.schema).getNamespaces();
+            final List<Namespace> namespaces = schemaManager.getSchema(fparams.schema).getNamespaces();
             return transformer.apply(fparams.metadata, namespaces);
         } finally {
             EnvironmentProxy.clearContext();
@@ -109,8 +115,8 @@ public class GroovyFormatter implements FormatterImpl {
         Transformer transformer = this.transformers.getIfPresent(fparams.formatDir);
 
         if (fparams.isDevMode() || transformer == null) {
-            final Path baseShared = fparams.context.getBean(GeonetworkDataDirectory.class).getFormatterDir().resolve(GROOVY_SCRIPT_ROOT);
-            final Path schemaFormatterDir = getSchemaPluginFormatterDir(fparams, fparams.schema);
+            final Path baseShared = geonetworkDataDirectory.getFormatterDir().resolve(GROOVY_SCRIPT_ROOT);
+            final Path schemaFormatterDir = getSchemaPluginFormatterDir(fparams.schema);
             final Path schemaShared = schemaFormatterDir.resolve(GROOVY_SCRIPT_ROOT);
             GroovyClassLoader cl = getParentClassLoader(fparams, fparams.schema, baseShared, schemaShared);
 
@@ -139,8 +145,8 @@ public class GroovyFormatter implements FormatterImpl {
         return transformer;
     }
 
-    private Path getSchemaPluginFormatterDir(FormatterParams fparams, String schema) {
-        return fparams.context.getBean(SchemaManager.class).getSchemaDir(schema).resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
+    private Path getSchemaPluginFormatterDir(String schema) {
+        return schemaManager.getSchemaDir(schema).resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
     }
 
     private GroovyClassLoader getParentClassLoader(FormatterParams fparams, String schema, Path baseShared, Path schemaShared) throws IOException,
@@ -148,10 +154,10 @@ public class GroovyFormatter implements FormatterImpl {
         GroovyClassLoader cl = this.schemaClassLoaders.get(schema);
         if (fparams.isDevMode() || cl == null) {
             final GroovyClassLoader parent;
-            ConfigFile newConfig = new ConfigFile(getSchemaPluginFormatterDir(fparams, schema), false, null);
+            ConfigFile newConfig = new ConfigFile(getSchemaPluginFormatterDir(schema), false, null);
             final String dependOnSchema = newConfig.dependOn();
             if (dependOnSchema != null) {
-                Path dependent = getSchemaPluginFormatterDir(fparams, dependOnSchema).resolve(GROOVY_SCRIPT_ROOT);
+                Path dependent = getSchemaPluginFormatterDir(dependOnSchema).resolve(GROOVY_SCRIPT_ROOT);
                 parent = getParentClassLoader(fparams, dependOnSchema, baseShared, dependent);
             } else {
                 if (fparams.isDevMode() || this.baseClassLoader == null) {

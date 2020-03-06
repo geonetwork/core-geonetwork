@@ -24,10 +24,12 @@
 package org.fao.geonet.api.records.formatters;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -55,6 +57,9 @@ import static org.fao.geonet.api.records.formatters.SchemaLocalizations.loadSche
  */
 @Component
 public class XsltFormatter implements FormatterImpl {
+
+    @Autowired
+    private GeonetworkDataDirectory geonetworkDataDirectory;
 
     public String format(FormatterParams fparams) throws Exception {
 
@@ -100,7 +105,7 @@ public class XsltFormatter implements FormatterImpl {
 
         root.addContent(fparams.format.getPluginLocResources(fparams.formatDir, lang));
         if (fparams.config.loadStrings()) {
-            root.addContent(fparams.format.getStrings(fparams.context.getAppPath(), lang));
+            root.addContent(fparams.format.getStrings(geonetworkDataDirectory.getWebappDir(), lang));
         }
 
         Element schemas = new Element("schemas");
