@@ -24,18 +24,42 @@
 (function() {
   goog.provide('cookie_warning_directive');
 
-  var module = angular.module('cookie_warning_directive', []);
+  var module = angular.module('cookie_warning_directive', ['ngCookies']);
 
   module
       .directive(
-          'cookiewarning',
-          function() {
+          'cookiewarning', ['$window', '$cookies', 'gnGlobalSettings', function($window, $cookies, gnGlobalSettings) {
             return {
               restrict: 'AE',
               replace: true,
+              scope: {},
               templateUrl:
-              '../../catalog/components/cookieWarning/partials/cookieWarning.html'
+              '../../catalog/components/cookieWarning/partials/cookieWarning.html',
+              link: function(scope, element, attrs, ctrl) {
+                scope.cookieWarningMoreInfoLink = gnGlobalSettings.gnCfg.mods.header.cookieWarningMoreInfoLink;
+
+                scope.showCookieWarning = function() {
+                  return $window.localStorage.getItem('cookiesAccepted') !== 'true';
+                };
+
+                scope.acceptCookies = function() {
+                  $window.localStorage.setItem('cookiesAccepted', 'true');
+                };
+
+                scope.goAway = function() {
+                  $window.localStorage.removeItem('cookiesAccepted');
+
+                  angular.forEach($cookies.getAll(), function(value, key) {
+                    if (key.indexOf('NAV-') > -1) {
+                      $window.sessionStorage.setItem(key, value);
+                      $cookies.remove(key);
+                    }
+                  });
+
+                  $window.history.back();
+                }
+              }
             };
-          });
+          }]);
 
 })();
