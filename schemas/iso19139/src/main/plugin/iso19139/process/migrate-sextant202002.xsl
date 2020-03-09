@@ -55,7 +55,7 @@
   * INSPIRE Theme thesaurus name
   <gco:CharacterString>external.theme.httpinspireeceuropaeutheme-theme</gco:CharacterString>
   -->
-  <xsl:template match="gmd:thesaurusName[*/gmd:title/*/text() = 'external.theme.httpinspireeceuropaeutheme-theme']">
+  <xsl:template match="gmd:thesaurusName[*/gmd:title/*/text() = 'external.theme.httpinspireeceuropaeutheme-theme' or */gmd:title/*/text() = 'external.theme.inspire-theme']">
     <gmd:thesaurusName>
       <gmd:CI_Citation>
         <gmd:title>
