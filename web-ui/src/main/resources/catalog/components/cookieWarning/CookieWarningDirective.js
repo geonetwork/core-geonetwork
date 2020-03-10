@@ -28,7 +28,8 @@
 
   module
       .directive(
-          'cookiewarning', ['$window', '$cookies', 'gnGlobalSettings', function($window, $cookies, gnGlobalSettings) {
+          'cookiewarning', ['$window', '$cookies', 'gnGlobalSettings',
+            function($window, $cookies, gnGlobalSettings) {
             return {
               restrict: 'AE',
               replace: true,
@@ -37,6 +38,7 @@
               '../../catalog/components/cookieWarning/partials/cookieWarning.html',
               link: function(scope, element, attrs, ctrl) {
                 scope.cookieWarningMoreInfoLink = gnGlobalSettings.gnCfg.mods.header.cookieWarningMoreInfoLink;
+                scope.cookieWarningRejectLink = gnGlobalSettings.gnCfg.mods.header.cookieWarningRejectLink;
 
                 scope.showCookieWarning = function() {
                   return $window.localStorage.getItem('cookiesAccepted') !== 'true';
@@ -56,7 +58,11 @@
                     }
                   });
 
-                  $window.history.back();
+                  if (scope.cookieWarningRejectLink && scope.cookieWarningRejectLink.trim().length !== 0) {
+                    $window.location.href = scope.cookieWarningRejectLink;
+                  } else {
+                    $window.history.back();
+                  }
                 }
               }
             };
