@@ -42,7 +42,7 @@
   <inspire>INSPIRE</inspire>
   <inspire_sds>SDS</inspire_sds>
 
-  <keywordFrom>Palavras chave </keywordFrom>
+  <keywordFrom>Palavras chave - </keywordFrom>
   <resource>Recurso</resource>
   <xml>XML</xml>
   <metadata>Metadados</metadata>
@@ -74,7 +74,7 @@
   <onElementOf>Um dos seguintes elementos </onElementOf>
   <isExpected> é esperado.</isExpected>
   <isNotComplete> não está completo.</isNotComplete>
-  <elementLocated> O elemento principal é  </elementLocated>
+  <elementLocated> O elemento pai é  </elementLocated>
   <missingElement>Elemento que falta em </missingElement>
   <invalidValue>Valor inválido ou em falta.</invalidValue>
   <notValidFor>  não é um valor válido para  </notValidFor>
@@ -85,7 +85,7 @@
   <enum3>Os valores potenciais são: </enum3>
 
   <!-- INSPIRE view labels and help -->
-  <url>Recurso Online </url>
+  <url>Recurso Online</url>
   <identifier>Identificador do recurso</identifier>
   <rsIdentifier>Projeção</rsIdentifier>
   <referenceDate>Informações temporais</referenceDate>
@@ -120,10 +120,12 @@
   <useConstraints>Restrições de uso</useConstraints>
   <useLimitation>Limitação de uso</useLimitation>
   <add-resource-id>Calcular o identificador do recurso</add-resource-id>
-  <add-resource-idHelp>Compor o identificador do recurso utilizando a URL do catálogo e os metadados identificador (eg. http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).
+  <add-resource-idHelp>Compor o identificador do recurso utilizando a URL do catálogo e os metadados
+     identificador (eg. http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).
   </add-resource-idHelp>
   <add-extent-from-geokeywords>Calcular a extensão a partir da palavra-chave</add-extent-from-geokeywords>
-  <add-extent-from-geokeywordsHelp>Analisar cada palavra-chave do tipo lugar e adicionar extensão de correspondência. </add-extent-from-geokeywordsHelp>
+  <add-extent-from-geokeywordsHelp>Analisar cada palavra-chave do tipo lugar e adicionar extensão de correspondência.
+  </add-extent-from-geokeywordsHelp>
   <classificationSection>Classificação de dados e serviços</classificationSection>
   <temporalSection>Referência temporal</temporalSection>
   <restrictionsSection>Restrições de acesso e utilização</restrictionsSection>
@@ -172,12 +174,17 @@
   <inspire_sds_cc2>Classe de conformidade 2: interoperável</inspire_sds_cc2>
   <inspire_sds_cc3>Classe de conformidade 3: harmonizada</inspire_sds_cc3>
 
-  <sds-categoria>Category</sds-category>
+  <sds-category>Category</sds-category>
   <inspire_add_pass>Adicionar elemento de passe</inspire_add_pass>
   <sds-add-dataquality>Adicionar elemento de Qualidade de Dados</sds-add-dataquality>
-  <sds-add-dataqualityHelp>TG4: Para cada serviço de dados espaciais, deve haver um e apenas um conjunto de informação de qualidade (elemento dataQualityInfo) scoped para "serviço".</sds-add-dataqualityHelp>
+  <sds-add-dataqualityHelp>TG4: Para cada serviço de dados espaciais, deve haver um e apenas um conjunto
+     de informação de qualidade (elemento dataQualityInfo) scoped para "serviço".
+  </sds-add-dataqualityHelp>
   <sds-add-tech-spec>Adicionar uma especificação técnica</sds-add-tech-spec>
-  <sds-add-tech-specHelp>TG8: O elemento de metadados de especificação deve ao menos referir-se a ou conter uma especificação técnica à qual o serviço de dados espaciais invocável está em total conformidade,fornecendo todos os elementos técnicos necessários, para realmente invocar o serviço e habilitar o seu uso.</sds-add-tech-specHelp>
+  <sds-add-tech-specHelp>TG8: O elemento de metadados de especificação deve ao menos referir-se a ou 
+    conter uma especificação técnica à qual o serviço de dados espaciais invocável está em total conformidade, 
+    fornecendo todos os elementos técnicos necessários, para realmente invocar o serviço e habilitar o seu uso.
+  </sds-add-tech-specHelp>
   <sds-tech-spec>Especificações técnicas</sds-tech-spec>
   <conformity_desc>Título da especificação técnica</conformity_desc>
   <conformity_linkage>Tech spec URL</conformity_linkage>
@@ -202,7 +209,9 @@
   <sds-add-endpoint>Adicionar ponto final</sds-add-endpoint>
 
   <sds-addNoConstraints>Sem Limitação</sds-addNoConstraints>
-  <sds-addNoConstraintsHelp>Adicione um elemento que documente que não há limitação para isso serviço. </sds-addNoConstraintsHelp>
+  <sds-addNoConstraintsHelp>Adicione um elemento que documente que não há limitação para isso
+    serviço.
+  </sds-addNoConstraintsHelp>
   <sds-addUnknownConstraints>Limitação Desconhecida</sds-addUnknownConstraints>
   <sds-addConstraints>Restrições personalizáveis</sds-addConstraints>
 
