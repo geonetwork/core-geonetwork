@@ -97,6 +97,9 @@ goog.require('gn_alert');
           'logoInHeaderPosition': 'left',
           'fluidHeaderLayout': true,
           'showGNName': true,
+        },
+        'cookieWarning': {
+          'enabled': true,
           'cookieWarningMoreInfoLink': '',
           'cookieWarningRejectLink': ''
         },

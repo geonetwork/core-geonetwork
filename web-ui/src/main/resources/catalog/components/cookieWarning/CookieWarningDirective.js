@@ -37,11 +37,13 @@
               templateUrl:
               '../../catalog/components/cookieWarning/partials/cookieWarning.html',
               link: function(scope, element, attrs, ctrl) {
-                scope.cookieWarningMoreInfoLink = gnGlobalSettings.gnCfg.mods.header.cookieWarningMoreInfoLink;
-                scope.cookieWarningRejectLink = gnGlobalSettings.gnCfg.mods.header.cookieWarningRejectLink;
+                scope.cookieWarningEnabledInSettings = gnGlobalSettings.gnCfg.mods.cookieWarning.enabled;
+                scope.cookieWarningMoreInfoLink = gnGlobalSettings.gnCfg.mods.cookieWarning.cookieWarningMoreInfoLink;
+                scope.cookieWarningRejectLink = gnGlobalSettings.gnCfg.mods.cookieWarning.cookieWarningRejectLink;
 
                 scope.showCookieWarning = function() {
-                  return $window.localStorage.getItem('cookiesAccepted') !== 'true';
+                  return scope.cookieWarningEnabledInSettings
+                    && $window.localStorage.getItem('cookiesAccepted') !== 'true';
                 };
 
                 scope.acceptCookies = function() {
