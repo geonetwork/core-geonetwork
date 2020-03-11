@@ -89,6 +89,7 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
         mergeUser(userToKeep, tempUser);
         duplicatedUserList.remove(greatestProfileUser);
         userRepository.delete(duplicatedUserList);
+        userRepository.flush();
         userToKeep.setUsername(userToKeep.getUsername().toLowerCase());
         userRepository.save(userToKeep);
     }
