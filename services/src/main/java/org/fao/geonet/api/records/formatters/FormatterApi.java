@@ -283,14 +283,10 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             language = LanguageUtils.locale2gnCode(iso3lang);
         }
 
-        final ServiceContext context = createServiceContext(
-            language,
-            formatType,
-            request.getNativeRequest(HttpServletRequest.class));
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
 
         if(approved) {
-        	metadata = context.getBean(MetadataRepository.class).findOneByUuid(metadataUuid);
+        	metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOneByUuid(metadataUuid);
         }
 
 
@@ -303,6 +299,12 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         ISODate changeDate = metadata.getDataInfo().getChangeDate();
 
         Validator validator;
+
+        final ServiceContext context = createServiceContext(
+            language,
+            formatType,
+            request.getNativeRequest(HttpServletRequest.class));
+
         if (changeDate != null) {
             final long changeDateAsTime = changeDate.toDate().getTime();
             long roundedChangeDate = changeDateAsTime / 1000 * 1000;
