@@ -28,6 +28,9 @@ sed -i 's/<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="\/VocabV2
 wget --output-document=NVS.A05.rdf http://vocab.nerc.ac.uk/collection/A05/current/
 sed -i 's/<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="\/VocabV2\/skosrdf2html\.xsl" type="text\/xsl" media="screen"?>//g' NVS.A05.rdf
 
+wget --output-document=NVS.L04.rdf http://vocab.nerc.ac.uk/collection/L04/current/
+sed -i 's/<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="\/VocabV2\/skosrdf2html\.xsl" type="text\/xsl" media="screen"?>//g' NVS.L04.rdf
+
 wget --output-document=NVS.P36.rdf http://vocab.nerc.ac.uk/collection/P36/current/
 sed -i 's/<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="\/VocabV2\/skosrdf2html\.xsl" type="text\/xsl" media="screen"?>//g' NVS.P36.rdf
 cd ../../../..
