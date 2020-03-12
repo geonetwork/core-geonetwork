@@ -205,7 +205,7 @@ goog.require('gn_alert');
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/map',
           'externalViewer': {
             'enabled': false,
-            'enabledViewAction': true,
+            'enabledViewAction': false,
             'baseUrl': 'http://www.example.com/viewer',
             'urlTemplate': 'http://www.example.com/viewer?url=${service.url}&type=${service.type}&layer=${service.title}&lang=${iso2lang}&title=${md.defaultTitle}',
             'openNewWindow': false,
