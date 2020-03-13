@@ -365,16 +365,16 @@
         template:
           '<ul class="sxt-layertree-node">' +
             '<sxt-layertree-elt ' +
-              'ng-repeat="member in collection track by tracker(member)" ' +
+              'ng-repeat="member in collection track by tracker(member, $index)" ' +
               'member="member" map="map"></sxt-layertree-elt>' +
           '</ul>',
         link: function(scope) {
           // this function computes a unique id for the node
-          scope.tracker = function(member) {
+          scope.tracker = function(member, index) {
             // the node is a group header: return path
-            if (member.path) { return member.path; }
+            if (member.path) {return member.path + index; }
             // the node is an ol layer: use url & name & ol_uid
-            return member.get('name') + '@' + member.get('url') + '-' + member.ol_uid;
+            return member.get('name') + '@' + member.get('url') + '-' + (member.ol_uid || index);
           };
         }
       };
