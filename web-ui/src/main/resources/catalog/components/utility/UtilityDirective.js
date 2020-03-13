@@ -63,41 +63,44 @@
         restrict: 'A',
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
-          $http.get('../api/regions?categoryId=' +
+          element.on('focus', function() {
+            $http.get('../api/regions?categoryId=' +
               'http%3A%2F%2Fwww.naturalearthdata.com%2Fne_admin%23Country',
               {}, {
                 cache: true
               }).success(function(response) {
-            var data = response.region;
+              var data = response.region;
 
-            // Compute default name and add a
-            // tokens element which is used for filter
-            angular.forEach(data, function(country) {
-              country.tokens = [];
-              angular.forEach(country.label, function(label) {
-                country.tokens.push(label);
+              // Compute default name and add a
+              // tokens element which is used for filter
+              angular.forEach(data, function(country) {
+                country.tokens = [];
+                angular.forEach(country.label, function(label) {
+                  country.tokens.push(label);
+                });
+                country.name = country.label[scope.lang];
               });
-              country.name = country.label[scope.lang];
+              var source = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: data,
+                limit: 30
+              });
+              source.initialize();
+              $(element).typeahead({
+                minLength: 0,
+                highlight: true
+              }, {
+                name: 'countries',
+                displayKey: 'name',
+                source: source.ttAdapter()
+              }).on('typeahead:selected', function(event, datum) {
+                if (angular.isFunction(scope.onRegionSelect)) {
+                  scope.onRegionSelect(datum);
+                }
+              });
             });
-            var source = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-              queryTokenizer: Bloodhound.tokenizers.whitespace,
-              local: data,
-              limit: 30
-            });
-            source.initialize();
-            $(element).typeahead({
-              minLength: 0,
-              highlight: true
-            }, {
-              name: 'countries',
-              displayKey: 'name',
-              source: source.ttAdapter()
-            }).on('typeahead:selected', function(event, datum) {
-              if (angular.isFunction(scope.onRegionSelect)) {
-                scope.onRegionSelect(datum);
-              }
-            });
+            element.unbind("focus")
           });
         }
       };
