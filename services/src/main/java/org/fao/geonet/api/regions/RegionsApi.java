@@ -115,24 +115,6 @@ public class RegionsApi {
         Collection<RegionsDAO> daos =
             applicationContext.getBeansOfType(RegionsDAO.class).values();
 
-        long lastModified = -1;
-        for (RegionsDAO dao : daos) {
-            if (dao.includeInListing()) {
-                if (lastModified < Long.MAX_VALUE) {
-                    Request request = createRequest(label, categoryId, maxRecords, context, dao);
-
-                    Optional<Long> currentLastModified = request.getLastModified();
-                    if (currentLastModified.isPresent() && lastModified < currentLastModified.get()) {
-                        lastModified = currentLastModified.get();
-                    }
-                }
-            }
-        }
-
-        if (lastModified < Long.MAX_VALUE && webRequest.checkNotModified(lastModified)) {
-            return null;
-        }
-
         Collection<Region> regions = Lists.newArrayList();
         for (RegionsDAO dao : daos) {
             if (dao.includeInListing()) {
