@@ -58,6 +58,7 @@
         });
 
         switch (parts[0]) {
+          case 'application/vnd.geo+json':
           case 'application/json':
             return 'geojson';
 
