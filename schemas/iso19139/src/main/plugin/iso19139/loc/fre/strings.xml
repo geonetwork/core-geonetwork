@@ -460,6 +460,7 @@
   <oceanDiscoveryParameters>Ocean discovery parameters</oceanDiscoveryParameters>
   <oceanChemistryVariables>Ocean chemistry variables</oceanChemistryVariables>
   <oceanChemistryGroupVariables>Chemistry chemical groups</oceanChemistryGroupVariables>
+  <matrixCategories>Matrix categories</matrixCategories>
   <seaAreas>Sea areas</seaAreas>
   <sdn>Default</sdn>
   <sdn-abstract>Overview</sdn-abstract>
