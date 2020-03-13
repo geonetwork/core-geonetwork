@@ -137,10 +137,10 @@
     map.addOverlay(this.overlay);
 
     map.on('singleclick', function(e) {
+      if (!this.canApply()) {
+        return;
+      }
       this.$scope.$apply(function() {
-        if (!this.canApply()) {
-          return;
-        }
         var layers = map.getLayers().getArray().filter(function(layer) {
           return (layer.getSource() instanceof ol.source.ImageWMS ||
               layer.getSource() instanceof ol.source.TileWMS ||
@@ -165,6 +165,9 @@
 
   geonetwork.GnGfiController.prototype.canApply = function() {
     var map = this.map;
+    if (map.get('disable-gfi')) {
+      return;
+    }
     for (var i = 0; i < map.getInteractions().getArray().length; i++) {
       var interaction = map.getInteractions().getArray()[i];
       if ((interaction instanceof ol.interaction.Draw ||

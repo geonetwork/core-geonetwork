@@ -153,6 +153,12 @@
                   ctrl.zoomInteraction.setActive(true);
                 }, 251);
               }
+
+              // prevent interference from GFI
+              ctrl.map.set('disable-gfi', true);
+              setTimeout(function() {
+                ctrl.map.set('disable-gfi', false);
+              }, 1000);
             });
 
             // update output on modify end
