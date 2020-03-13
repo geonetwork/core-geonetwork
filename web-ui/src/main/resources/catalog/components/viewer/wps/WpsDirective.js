@@ -308,6 +308,14 @@
                           default:
                             input.geometryType = null;
                         }
+
+                        // try in ows:Metadata if not found
+                        if (!input.geometryType && input.metadata && input.metadata.length) {
+                          var type = input.metadata[0].href;
+                          if (type === 'point') {
+                            input.geometryType = 'Point';
+                          }
+                        }
                       }
 
                       // add missing input fields (add 1 by default)
