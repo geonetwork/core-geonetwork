@@ -569,7 +569,19 @@
 
       $scope.titleSearchOnly = false;
       $scope.titleSearchToggleVisible = false;
+
+      $scope.setDropDownSelectors = function(){
+        $scope.dropDownCheckboxElement = $('.dropdown-menu.type-ahead-dropdown');
+        $scope.inputSearchElement = $('.input-group.gn-search-input input');
+      };
+
+      $scope.isInputActive = function () {
+        return  $scope.inputSearchElement.is(':focus') ||
+          $scope.dropDownCheckboxElement.is(':active');
+      };
+
       $scope.toggleTitleSearchOnly = function() {
+        $scope.inputSearchElement.focus();
         $scope.titleSearchOnly = !$scope.titleSearchOnly;
         if ($scope.titleSearchOnly) {
           $scope.searchObj.params.title = $scope.searchObj.params.any;
