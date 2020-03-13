@@ -33,7 +33,7 @@
 
   <xsl:param name="css" select="''"/>
   <!-- To load js files -->
-  <xsl:param name="loadJS" select="'false'"/>
+  <xsl:param name="loadJS" select="'true'"/>
 
   <!-- TODO: schema is not part of the XML -->
   <xsl:variable name="schema"
