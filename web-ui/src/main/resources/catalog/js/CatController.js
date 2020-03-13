@@ -96,7 +96,12 @@ goog.require('gn_alert');
           'isLogoInHeader': false,
           'logoInHeaderPosition': 'left',
           'fluidHeaderLayout': true,
-          'showGNName': true
+          'showGNName': true,
+        },
+        'cookieWarning': {
+          'enabled': true,
+          'cookieWarningMoreInfoLink': '',
+          'cookieWarningRejectLink': ''
         },
         'home': {
           'enabled': true,
