@@ -164,7 +164,7 @@
     <xsl:variable name="thesaurusTitle"
                   select="if ($overrideLabel != '')
                           then $overrideLabel
-                          else (gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString))[1]"/>
+                          else (gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString|gmx:Anchor))[1]"/>
 
 
 
