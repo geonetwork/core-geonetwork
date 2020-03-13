@@ -3138,6 +3138,10 @@
     <label>URL title</label>
     <description></description>
   </element>
+  <element name="xlink:type">
+    <label>Type</label>
+    <description></description>
+  </element>
   <element name="xlink:href">
     <label>URL</label>
     <description>Supplies the data that allows an XLink application to find a remote resource (or
