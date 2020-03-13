@@ -32,6 +32,8 @@
   <xsl:param name="portalLink" select="''"/>
 
   <xsl:param name="css" select="''"/>
+  <!-- To load js files -->
+  <xsl:param name="loadJS" select="'false'"/>
 
   <!-- TODO: schema is not part of the XML -->
   <xsl:variable name="schema"
