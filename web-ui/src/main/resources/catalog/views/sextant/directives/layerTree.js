@@ -53,11 +53,15 @@
               element.append(el);
               layer.set('wfsfilter-el', el);
             }
-          },
+          };
 
           this.setNCWMS = function(layer) {
             $scope.loadTool('ncwms', layer);
           };
+
+          this.setAnnotations = function(layer) {
+            $scope.loadTool('annotations', layer);
+          }
 
           this.comboGroups = {};
           this.switchGroupCombo = function(groupcombo, layer) {
@@ -366,18 +370,17 @@
         template:
           '<ul class="sxt-layertree-node">' +
             '<sxt-layertree-elt ' +
-              'ng-repeat="member in collection track by tracker(member)" ' +
+              'ng-repeat="member in collection track by tracker(member, $index)" ' +
               'member="member" map="map"></sxt-layertree-elt>' +
           '</ul>',
         link: function(scope) {
           // this function computes a unique id for the node
-          scope.tracker = function(member) {
+          scope.tracker = function(member, index) {
             // the node is a group header: return path
-            if (member.path) { return member.path; }
-
-            // the node is an ol layer: use url & name
-            return member.get('name') + '@' + member.get('url');
-          }
+            if (member.path) {return member.path + index; }
+            // the node is an ol layer: use url & name & ol_uid
+            return member.get('name') + '@' + member.get('url') + '-' + (member.ol_uid || index);
+          };
         }
       };
     }]);
@@ -587,6 +590,11 @@
           scope.showWFSFilter = function() {
             controller.setWFSFilter(scope.member, wfsLink);
           };
+
+          scope.showAnnotations = function() {
+            controller.setAnnotations(scope.member);
+          };
+
           scope.isOutOfRange = function () {
             if (scope.isParentNode() ||
               !scope.member instanceof ol.layer.Base) {

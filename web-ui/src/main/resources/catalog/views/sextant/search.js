@@ -16,6 +16,7 @@
   goog.require('sxt_linksbtn');
   goog.require('gn_sxt_utils');
   goog.require('gn_gridrelated_directive');
+  goog.require('sxt_annotations');
 
   var module = angular.module('gn_search_sextant', [
     'gn_search',
@@ -31,7 +32,8 @@
     'sxt_mdactionmenu',
     'sxt_linksbtn',
     'gn_sxt_utils',
-    'gn_gridrelated_directive'
+    'gn_gridrelated_directive',
+    'sxt_annotations'
   ]);
 
   $(document.body).append($('<div class="g"></div>'));
@@ -567,7 +569,19 @@
 
       $scope.titleSearchOnly = false;
       $scope.titleSearchToggleVisible = false;
+
+      $scope.setDropDownSelectors = function(){
+        $scope.dropDownCheckboxElement = $('.dropdown-menu.type-ahead-dropdown');
+        $scope.inputSearchElement = $('.input-group.gn-search-input input');
+      };
+
+      $scope.isInputActive = function () {
+        return  $scope.inputSearchElement.is(':focus') ||
+          $scope.dropDownCheckboxElement.is(':active');
+      };
+
       $scope.toggleTitleSearchOnly = function() {
+        $scope.inputSearchElement.focus();
         $scope.titleSearchOnly = !$scope.titleSearchOnly;
         if ($scope.titleSearchOnly) {
           $scope.searchObj.params.title = $scope.searchObj.params.any;

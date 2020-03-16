@@ -1,0 +1,43 @@
+<div>
+  <!-- loading state -->
+  <div ng-if="loadingAnnotation">
+    <i class="fa fa-spinner fa-spin" /> <span translate>pleaseWait</span>
+  </div>
+
+  <!-- annotations could not be fetched (404): allow creating it -->
+  <div ng-if="!loadingAnnotation && !currentAnnotation && !error">
+    <p translate>noAnnotationsFound</p>
+    <a href ng-click="initAnnotation(annotationsUuid)" translate>
+      initAnnotations
+    </a>
+  </div>
+
+  <!-- annotations could not be fetched (not 404) -->
+  <div class="alert alert-danger annotation-message" ng-if="!loadingAnnotation && !currentAnnotation && error">
+    <strong translate>annotationsErrorLoading</strong>:<br>
+    {{error}}
+  </div>
+
+  <!-- annotations exist but is read only -->
+  <div class="alert alert-info annotation-message" ng-if="readOnly && currentAnnotation">
+    annotationsReadOnly
+  </div>
+
+  <!-- annotations exist and can be modified -->
+  <div ng-show="!readOnly && currentAnnotation" ng-class="{'updating-annotation': updatingAnnotation}">
+    <div class="gn-draw-styleform"
+         gn-draw="" map="map"
+         vector="annotationsLayer"
+         save-callback="updateAnnotationGeometry(json)">
+    </div>
+    <div class="btn-group flux">
+      <a class="btn btn-default loading-annotation" ng-if="updatingAnnotation" disabled>
+        <i class="fa fa-fw fa-spinner fa-spin"></i> <span translate>save</span>
+      </a>
+    </div>
+    <div class="alert alert-danger annotation-message" ng-if="error">
+      <strong translate>annotationsErrorSaving</strong>:<br>
+      {{error}}
+    </div>
+  </div>
+</div>

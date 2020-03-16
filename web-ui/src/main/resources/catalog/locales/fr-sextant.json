@@ -96,6 +96,12 @@
   "profileGraph": "Profil",
   "nodeDesactivated": "Seule une couche par groupe combo peut-être activée",
   "groupVisible": "Groupe visible",
+  "annotations": "Annotations",
+  "noAnnotationsFound": "Aucune annotation trouvée.",
+  "initAnnotations": "Commencer l'annotation",
+  "annotationsReadOnly": "Ces annotations sont en lecture seule.",
+  "annotationsErrorLoading": "Une erreur est survenue au chargement des annotations",
+  "annotationsErrorSaving": "Une erreur est survenue à la sauvegarde des annotations",
   "searchOnlyTitle": "Rechercher uniquement dans le titre",
   "ui-settings-sextant": "Configuration spécifique Sextant"
 }

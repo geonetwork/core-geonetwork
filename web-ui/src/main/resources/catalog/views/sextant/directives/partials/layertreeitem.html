@@ -101,6 +101,14 @@
             <span translate="">filter</span>
           </a></li>
 
+          <!--Annotations-->
+          <li class="list-group-item"
+              data-ng-if="member.get('annotationsUuid')">
+            <a href="" data-ng-click="showAnnotations(); hidePopover()">
+              <span translate>annotations</span>
+            </a>
+          </li>
+
           <!--Remove layer-->
           <li class="list-group-item"><a href="" data-ng-click="remove(); hidePopover()">
             <!--<i class="fa fa-trash-o"></i>&nbsp;--><span translate="">remove</span>

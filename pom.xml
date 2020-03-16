@@ -348,7 +348,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>-Dfile.encoding=UTF-8 -Xmx1G</argLine>
+          <argLine>-Dfile.encoding=UTF-8 -Xmx2G</argLine>
           <!--<rerunFailingTestsCount>5</rerunFailingTestsCount>-->
           <runOrder>alphabetical</runOrder>
           <forkCount>${system.numCores}</forkCount>
@@ -1335,7 +1335,7 @@
     <repository>
       <id>maven2</id>
       <name>Repository maven2</name>
-      <url>https://repo.maven.apache.org/maven2</url>
+      <url>http://repo.maven.apache.org/maven2</url>
     </repository>
 
     <!-- seasar repo, has jsonic - used by langdetect -->

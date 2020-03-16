@@ -2165,6 +2165,9 @@
         <thesaurus key="external.parameter.NVS.L04"
                    fieldset="false"
                    transformations="to-iso19139-keyword-with-anchor"/>
+        <thesaurus key="external.parameter.NVS.P36"
+                   fieldset="false"
+                   transformations="to-iso19139-keyword-with-anchor"/>
         <thesaurus key="external.parameter.NVS.P02"
                    fieldset="false"
                    transformations="to-iso19139-keyword-with-anchor"/>

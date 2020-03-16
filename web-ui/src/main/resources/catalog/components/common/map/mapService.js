@@ -2104,6 +2104,15 @@
               return;
             }
 
+            // SEXTANT SPECIFIC: ANNOTATIONS
+            var annotationLinks = md.getLinksByType('ANNOTATIONS');
+            if (annotationLinks.length) {
+              // example url: http://localhost:8080/geonetwork/srv/api/annotations/BIOMED_NATURE_FONDS_CORSE_P_ANNOTATIONS
+              var uuid = annotationLinks[0].url.match(/[^\/]*$/)[0]
+              layer.set('annotationsUuid', uuid);
+            }
+            // END SEXTANT SPECIFIC
+
             // We can bind layer and download/process
             if (md.getLinksByType(linkGroup, '#OGC:WMTS',
                 '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map').length == 1) {

@@ -95,6 +95,12 @@
   "emodnetOrgType-Other": "Other",
   "nodeDesactivated": "Only one layer per combo group can be visible",
   "groupVisible": "Visible Group",
+  "annotations": "Annotations",
+  "noAnnotationsFound": "No annotations found.",
+  "initAnnotations": "Start annotating",
+  "annotationsReadOnly": "The annotations are in read-only mode.",
+  "annotationsErrorLoading": "An error occurred while loading the annotations",
+  "annotationsErrorSaving": "An error occurred while saving the annotations",
   "searchOnlyTitle": "Search only in title",
   "ui-settings-sextant": "Sextant-specific configuration"
 }

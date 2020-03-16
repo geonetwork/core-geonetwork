@@ -354,7 +354,7 @@
         </footer>
       </article>
 
-      <xsl:if test="$css = 'sextant'">
+      <xsl:if test="$css = 'sextant' and $loadJS = 'true'">
         <!-- Avoid self closing tag. -->
         <script src="{$nodeUrl}../static/lib.js">;</script>
         <script src="{$nodeUrl}../static/gn_search_sextant.js">;</script>

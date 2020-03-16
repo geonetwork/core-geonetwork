@@ -1720,3 +1720,16 @@ ul.invalid {
   text-align: left;
   vertical-align: middle;
 }
+
+// deal with search input and search only in title checkbox
+.type-ahead-dropdown {
+  display: block;
+}
+
+.type-ahead-dropdown:focus{
+  display: block;
+}
+
+.input-group.gn-search-input input:focus + .type-ahead-dropdown {
+  display: block;
+}

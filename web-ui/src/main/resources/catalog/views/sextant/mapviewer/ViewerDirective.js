@@ -163,7 +163,7 @@
               });
               scope.map.addOverlay(overlay);
 
-              var separatedTools = ['ncwms', 'wps', 'wfsfilter'];
+              var separatedTools = ['ncwms', 'wps', 'wfsfilter', 'annotations'];
 
               scope.active = {
                 tool: false,
