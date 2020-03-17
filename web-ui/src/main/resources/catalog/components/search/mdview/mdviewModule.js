@@ -122,10 +122,8 @@
       };
 
       $scope.loadFormatter = function(url) {
-        if ($scope.mdView.current.record == null) {
-          return;
-        }
-        var showApproved = $scope.mdView.current.record.draft != 'y';
+        var showApproved = $scope.mdView.current.record == null ? 
+          true : $scope.mdView.current.record.draft != 'y';
         var gn_metadata_display = $('#gn-metadata-display');
 
         $http.get(url, {
