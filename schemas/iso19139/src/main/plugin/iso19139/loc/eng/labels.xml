@@ -2043,6 +2043,7 @@
       <option value="OGC:WMTS">View (WMTS)</option>
       <option value="OGC:WPS">OGC-WPS Web Processing Service</option>
       <option value="OGC:OWS-C">View (OWS Context)</option>
+      <option value="ANNOTATIONS">Annotations</option>
     </helper>
   </element>
   <element name="gmd:protocol" id="398.0" alias="protocol"

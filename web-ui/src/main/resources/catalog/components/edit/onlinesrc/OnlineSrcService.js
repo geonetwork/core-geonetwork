@@ -77,7 +77,10 @@
         ['ESRI', 'fa-globe'],
         ['WWW:LINK', 'fa-link'],
         ['DB:', 'fa-columns'],
-        ['WWW:DOWNLOAD', 'fa-download']
+        ['WWW:DOWNLOAD', 'fa-download'],
+
+        // SEXTANT SPECIFIC
+        ['ANNOTATIONS', 'fa-pencil-square']
       ];
       var defaultIcon = 'fa-link';
       /**
