@@ -132,6 +132,7 @@
                   allow-reset allow-modify output="field.value"
                   output-format="{{ input.outputFormat }}"
                   geometry-type="{{ input.geometryType }}"
+                  output-crs="{{ map.getView().getProjection().getCode() }}"
                   output-as-features="true" map="map"/>
               </div>
 
