@@ -597,15 +597,23 @@
       $scope.showTitleSearchToggle = function(visible) {
         $scope.titleSearchToggleVisible = visible;
       }
+
+      function addWildcardOnWords(searchString) {
+        return searchString.replace(/([a-zA-Z]+)/g, '$1*');
+      }
+      function removeWildcardOnWords(searchString) {
+        return searchString.replace(/([a-zA-Z]+)\*/g, '$1');
+      }
+
       $scope.searchInput = {};
       Object.defineProperty($scope.searchInput, 'model', {
         set: function(newValue) {
           var key = $scope.titleSearchOnly ? 'title' : 'any';
-          return $scope.searchObj.params[key] = newValue;
+          $scope.searchObj.params[key] = addWildcardOnWords(newValue);
         },
         get: function() {
           var key = $scope.titleSearchOnly ? 'title' : 'any';
-          return $scope.searchObj.params[key];
+          return removeWildcardOnWords($scope.searchObj.params[key]);
         }
       });
     }]);
