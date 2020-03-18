@@ -60,7 +60,7 @@
             );
           }
 
-          var field = document.gnEditor[scope.ref] || $('#' + scope.ref).get(O);
+          var field = document.gnEditor[scope.ref] || $('#' + scope.ref).get(0);
           $(field).removeClass('hidden');
 
           var populateField = function(field, value) {
@@ -115,7 +115,7 @@
         link: function(scope, element, attrs) {
           // Retrieve the target field by name (general case)
           // or by id (template mode field).
-          var field = document.gnEditor[scope.ref] || $('#' + scope.ref).get(O),
+          var field = document.gnEditor[scope.ref] || $('#' + scope.ref).get(0),
               relatedAttributeField = document.gnEditor[scope.relatedAttr],
               relatedElementField = document.gnEditor[scope.relatedElement],
               initialValue = field.value;
