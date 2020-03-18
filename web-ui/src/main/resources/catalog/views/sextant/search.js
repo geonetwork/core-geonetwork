@@ -567,21 +567,24 @@
 
       $scope.facetConfig = searchSettings.facetConfig;
 
-      $scope.titleSearchOnly = false;
+      $scope.titleSearchOnly = $scope.searchObj.params.hasOwnProperty('title');
       $scope.titleSearchToggleVisible = false;
 
+      var dropDownCheckboxElement;
+      var inputSearchElement;
+
       $scope.setDropDownSelectors = function(){
-        $scope.dropDownCheckboxElement = $('.dropdown-menu.type-ahead-dropdown');
-        $scope.inputSearchElement = $('.input-group.gn-search-input input');
+        dropDownCheckboxElement = $('.dropdown-menu.type-ahead-dropdown');
+        inputSearchElement = $('.input-group.gn-search-input input');
       };
 
       $scope.isInputActive = function () {
-        return  $scope.inputSearchElement.is(':focus') ||
-          $scope.dropDownCheckboxElement.is(':active');
+        return inputSearchElement.is(':focus') ||
+          dropDownCheckboxElement.is(':active');
       };
 
       $scope.toggleTitleSearchOnly = function() {
-        $scope.inputSearchElement.focus();
+        inputSearchElement.focus();
         $scope.titleSearchOnly = !$scope.titleSearchOnly;
         if ($scope.titleSearchOnly) {
           $scope.searchObj.params.title = $scope.searchObj.params.any;
@@ -599,10 +602,10 @@
       }
 
       function addWildcardOnWords(searchString) {
-        return searchString.replace(/([a-zA-Z]+)/g, '$1*');
+        return searchString && searchString.replace(/([a-zA-Z]+)/g, '$1*');
       }
       function removeWildcardOnWords(searchString) {
-        return searchString.replace(/([a-zA-Z]+)\*/g, '$1');
+        return searchString && searchString.replace(/([a-zA-Z]+)\*/g, '$1');
       }
 
       $scope.searchInput = {};
