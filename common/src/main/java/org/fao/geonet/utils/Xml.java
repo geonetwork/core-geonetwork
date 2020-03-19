@@ -399,6 +399,9 @@ public final class Xml {
         out.flush();
     }
 
+    public static void transform(Element xml, Path styleSheetPath, Result result) throws Exception {
+        transform(xml, styleSheetPath, result, null);
+    }
 
     public static void transformXml(Element xml, Path styleSheetPath, OutputStream out) throws Exception {
         StreamResult resStream = new StreamResult(out);
@@ -505,11 +508,11 @@ public final class Xml {
                         t.setParameter(param.getKey(), param.getValue());
                     }
 
-                if (params.containsKey("geonet-force-xml")) {
-                    ((Controller) t).setOutputProperty("indent", "yes");
-                    ((Controller) t).setOutputProperty("method", "xml");
-                    ((Controller) t).setOutputProperty("{http://saxon.sf.net/}indent-spaces", "3");
-                }
+                    if (params.containsKey("geonet-force-xml")) {
+                        ((Controller) t).setOutputProperty("indent", "yes");
+                        ((Controller) t).setOutputProperty("method", "xml");
+                        ((Controller) t).setOutputProperty("{http://saxon.sf.net/}indent-spaces", "3");
+                    }
 
                 }
                 t.transform(srcXml, result);
