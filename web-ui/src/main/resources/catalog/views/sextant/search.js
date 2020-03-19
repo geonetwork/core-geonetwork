@@ -602,10 +602,10 @@
       }
 
       function addWildcardOnWords(searchString) {
-        return searchString && searchString.replace(/([a-zA-Z]+)/g, '$1*');
+        return searchString && searchString.replace(/([a-zA-Z0-9\-_]+)/g, '$1*');
       }
       function removeWildcardOnWords(searchString) {
-        return searchString && searchString.replace(/([a-zA-Z]+)\*/g, '$1');
+        return searchString && searchString.replace(/([a-zA-Z0-9\-_]+)\*/g, '$1');
       }
 
       $scope.searchInput = {};
