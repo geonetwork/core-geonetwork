@@ -971,7 +971,9 @@ gn-md-type-widget, gn-md-type-inspire-validation-widget {
     .gn-user-name {
       max-width: 200px;
       display: inline-block;
-      .text-overflow();
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .gn-user-role {
       text-transform: uppercase;
