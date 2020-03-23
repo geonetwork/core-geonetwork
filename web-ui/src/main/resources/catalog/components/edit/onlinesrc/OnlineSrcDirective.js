@@ -351,6 +351,9 @@
                 //}
                 //}
 
+                // SEXTANT SPECIFIC
+                var annotationsApiUrl = new URL(window.location.origin + window.location.pathname + '../../../api/annotations');
+
                 var schemaConfig = {
                   'dublin-core': {
                     display: 'radio',
@@ -403,7 +406,30 @@
                         },
                         'name': {param: 'thumbnail_desc'}
                       }
-                    }],
+                    },
+                    // SEXTANT SPECIFIC
+                    {
+                      label: 'addAnnotations',
+                      sources: {
+                        filestore: false,
+                        thumbnailMaker: false
+                      },
+                      icon: 'fa fa-pencil-square',
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {
+                          value: annotationsApiUrl + '/{{UUID}}',
+                          isMultilingual: false
+                        },
+                        'protocol': {
+                          value: 'ANNOTATIONS',
+                          isMultilingual: false,
+                          hidden: true
+                        }
+                      }
+                    }
+                    // END SEXTANT SPECIFIC
+                    ],
                     multilingualFields: ['name', 'desc']
                   },
                   'iso19115-3': {
@@ -891,7 +917,31 @@
                         'function': {value: 'information', hidden: true,
                           isMultilingual: false}
                       }
-                    }]
+                    },
+                    // SEXTANT SPECIFIC
+                    {
+                      group: 'onlineMore',
+                      label: 'addAnnotations',
+                      sources: {
+                        filestore: false,
+                        thumbnailMaker: false
+                      },
+                      icon: 'fa fa-pencil-square',
+                      process: 'onlinesrc-add',
+                      fields: {
+                        'url': {
+                          value: annotationsApiUrl + '/{{UUID}}',
+                          isMultilingual: false
+                        },
+                        'protocol': {
+                          value: 'ANNOTATIONS',
+                          isMultilingual: false,
+                          hidden: true
+                        }
+                      }
+                    }
+                    // END SEXTANT SPECIFIC
+                    ]
                   },
                   'iso19115-3.2018': {
                     display: 'select',
