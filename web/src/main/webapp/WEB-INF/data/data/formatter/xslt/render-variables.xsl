@@ -59,6 +59,8 @@
   <xsl:param name="css" select="''"/>
   <!-- Define if the formatter output also the record as JSON-LD. -->
   <xsl:param name="withJsonLd" select="'true'"/>
+  <!-- To load js files -->
+  <xsl:param name="loadJS" select="'true'"/>
 
 
   <!-- TODO: schema is not part of the XML -->
