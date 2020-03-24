@@ -23,15 +23,13 @@
   -->
 
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
        default-lazy-init="true"
        xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-">
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
   <context:annotation-config/>
 
   <context:property-placeholder location="${app.properties}"
@@ -51,6 +49,14 @@
 
   <!-- Import the versioning configuration (subversion etc...) -->
   <import resource="config-versioning.xml"/>
+
+  <bean id="nodeInfo"
+        class="org.fao.geonet.NodeInfo"
+        scope="request">
+    <aop:scoped-proxy/>
+    <property name="id" value="srv"/>
+    <property name="defaultNode" value="true"/>
+  </bean>
 
   <bean name="statusActionFactory"
         class="org.fao.geonet.kernel.metadata.StatusActionsFactory">

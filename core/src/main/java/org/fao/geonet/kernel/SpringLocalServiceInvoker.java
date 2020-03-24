@@ -49,19 +49,14 @@ public class SpringLocalServiceInvoker {
     @Autowired
     public RequestMappingHandlerAdapter requestMappingHandlerAdapter;
 
-    @Autowired
-    public NodeInfo nodeInfo;
-
     private HandlerMethodArgumentResolverComposite argumentResolvers;
     private HandlerMethodReturnValueHandlerComposite returnValueHandlers;
     private DefaultDataBinderFactory webDataBinderFactory;
-    private String nodeId;
 
     public void init() {
         argumentResolvers = new HandlerMethodArgumentResolverComposite().addResolvers(requestMappingHandlerAdapter.getArgumentResolvers());
         returnValueHandlers = new HandlerMethodReturnValueHandlerComposite().addHandlers(requestMappingHandlerAdapter.getReturnValueHandlers());
         webDataBinderFactory = new DefaultDataBinderFactory(requestMappingHandlerAdapter.getWebBindingInitializer());
-        nodeId = nodeInfo.getId();
     }
 
     public Object invoke(String uri) throws Exception {
@@ -98,8 +93,8 @@ public class SpringLocalServiceInvoker {
             if (lastComponent.length() > 0 && StringUtils.startsWith(fwdUrl, lastComponent)) {
 							return invoke(request.getRequestURI()+StringUtils.substringAfter(fwdUrl,lastComponent));
 						} else {
-							return invoke(fwdUrl);	
-           	} 
+							return invoke(fwdUrl);
+           	}
           }
         }
         return o;
@@ -108,8 +103,8 @@ public class SpringLocalServiceInvoker {
     /**
      * prepareMockRequestFromUri will search for spring services that match
      * the request and execute them. Typically used for the local:// xlink
-     * speed up. Accepts urls prefixed with local://<nodename> eg. 
-     * local://srv/api/records/.. 
+     * speed up. Accepts urls prefixed with local://<nodename> eg.
+     * local://srv/api/records/..
      * but also urls prefixed with the nodename only eg. '/srv/api/records/..'
      */
     private MockHttpServletRequest prepareMockRequestFromUri(String uri) {
