@@ -37,17 +37,19 @@
   goog.require('gn_relatedresources_service');
   goog.require('gn_wms');
   goog.require('gn_wmts');
+  goog.require('gn_external_viewer');
 
   var module = angular.module('gn_related_directive', [
     'gn_relatedresources_service', 'gn_related_observer_directive', 'gn_wms',
-    'gn_wmts', 'gn_atom'
+    'gn_wmts', 'gn_atom', 'gn_external_viewer'
   ]);
 
   /**
    * Shows a list of related records given an uuid with the actions defined in
    * config.js
    */
-  module.service('gnRelatedService', ['$http', '$q', function($http, $q) {
+  module.service('gnRelatedService', ['$http', '$q',
+    function($http, $q) {
     this.get = function(uuidOrId, types) {
       var canceller = $q.defer();
       var request = $http({
@@ -101,8 +103,10 @@
         'gnGlobalSettings',
         'gnSearchSettings',
         'gnRelatedResources',
+        'gnExternalViewer',
         function(gnRelatedService, gnGlobalSettings,
-                 gnSearchSettings, gnRelatedResources) {
+                 gnSearchSettings, gnRelatedResources,
+                 gnExternalViewer) {
           return {
             restrict: 'A',
             templateUrl: function(elem, attrs) {
@@ -171,7 +175,7 @@
                          } else {
                            scope.relations[idx] = value;
                          }
-                         
+
                          if (scope.relations.siblings && scope.relations.associated) {
                            for (var i = 0; i < scope.relations.associated.length; i++) {
                              if (scope.relations.siblings.filter(function (e) {
@@ -185,8 +189,8 @@
                            scope.relations.associated = {};
                          }
                        });
-                    
-                       if (angular.isDefined(scope.container) 
+
+                       if (angular.isDefined(scope.container)
                            && scope.relations == null) {
                          $(scope.container).hide();
                        }
@@ -213,8 +217,12 @@
                 }
                 return angular.isFunction(fn);
               };
+              scope.externalViewerAction = function(mainType, link, md) {
+                gnExternalViewer.viewService(md, link);
+              };
 
               scope.isLayerProtocol = gnRelatedResources.isLayerProtocol;
+              scope.externalViewerActionEnabled = gnExternalViewer.isEnabledViewAction();
 
               scope.config = gnRelatedResources;
 
