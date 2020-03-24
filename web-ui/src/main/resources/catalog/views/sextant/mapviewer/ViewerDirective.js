@@ -413,6 +413,10 @@
             crs: mapProjection,
             outputAsWFSFeaturesCollection: "true"
           });
+          // remove previous vlayer input
+          inputs = inputs.filter(function (e) {
+            return e.name !== "vlayer";
+          });
           inputs.push({
               "name": "vlayer",
               "value": geometryOutput
