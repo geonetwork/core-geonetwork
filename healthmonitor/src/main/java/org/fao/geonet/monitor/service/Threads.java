@@ -49,8 +49,8 @@ import java.util.List;
  * @author Jesse on 2/4/2015.
  */
 @RequestMapping(value = {
-    "/api/site/threads",
-    "/api/" + API.VERSION_0_1 + "/site/threads"
+    "/{portal}/api/site/threads",
+    "/{portal}/api/" + API.VERSION_0_1 + "/site/threads"
 })
 @Controller("/thread")
 public class Threads {
