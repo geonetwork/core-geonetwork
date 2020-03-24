@@ -35,7 +35,8 @@
                        mainType.indexOf('LINK') === 0 ||
                        mainType.indexOf('DEFAULT') === 0 ||
                        r.protocol === 'OGC:WFS') &&
-                       r.locDescription.length > 0">
+                       r.locDescription.length > 0  &&
+                      mainType !== 'LINK'">
           {{::r.locDescription | striptags | characters:150}}
         </p>
         <div data-ng-switch on="mainType">
@@ -189,8 +190,14 @@
                 data-ng-if="mainType == 'MDSIBLING' && r.associationType != ''">
             ({{::r.associationType | translate}}{{::(r.initiativeType != '' ? ' / ' + (r.initiativeType | translate) : '')}})
           </span>
-
         </button>
+
+        <button type="button"
+                class="btn btn-default btn-sm btn-block text-wrap"
+                data-ng-if="externalViewerActionEnabled
+                          && (mainType === 'WMS' || mainType === 'WMSSERVICE')"
+                data-ng-click="externalViewerAction(mainType, r, md)"
+                data-translate="">viewInExternalViewer</button>
       </div>
 
     </div>

@@ -43,8 +43,10 @@
   module.service('gnExternalViewer', [
     '$window',
     'gnGlobalSettings',
+    'gnLangs',
+    '$filter',
     '$location',
-    function($window, gnGlobalSettings, $location) {
+    function($window, gnGlobalSettings, gnLangs, $filter, $location) {
       /**
        * Url pattern for metadata page
        * @type {string}
@@ -65,13 +67,16 @@
          *
          * @description
          * Simple check against UI settings to see if an external viewer is
-         * enabled. IF no base URL is defined, the feature will be disabled.
+         * enabled. If no base URL is defined, the feature will be disabled.
          *
          * @return {boolean} true if enabled
          */
         isEnabled: function() {
           return !!settings.enabled && !!settings.baseUrl &&
             !!settings.urlTemplate;
+        },
+        isEnabledViewAction: function() {
+          return !!settings.enabledViewAction && !!settings.urlTemplate;
         },
 
         /**
@@ -101,7 +106,7 @@
          * @param {Object} service expected properties: url, name, type, title
          */
         viewService: function(md, service) {
-          if (!this.isEnabled()) { return; }
+          if (!(this.isEnabled() || this.isEnabledViewAction())) { return; }
 
           md.url = md.uuid ? baseMdUrl + md.uuid : '';
 
@@ -125,13 +130,16 @@
 
           var getValues = function(object, key) {
             return this._toView.map(function (entry) {
-              return entry[object][key] || '';
+              var value = entry[object][key];
+              return encodeURIComponent($filter('gnLocalized')(value) || value || '');
             }).join(settings.valuesSeparator || ',') || ''
           }.bind(this);
-
           var url = settings.urlTemplate
+            .replace('${iso2lang}', gnLangs.getIso2Lang())
+            .replace('${iso3lang}', gnLangs.getIso3Lang())
             .replace('${md.id}', getValues('md', 'id'))
             .replace('${md.uuid}', getValues('md', 'uuid'))
+            .replace('${md.defaultTitle}', getValues('md', 'defaultTitle'))
             .replace('${md.url}', getValues('md', 'url'))
             .replace('${service.url}', getValues('service', 'url'))
             .replace('${service.type}', getValues('service', 'type'))
