@@ -534,6 +534,12 @@ goog.require('gn_alert');
       gnConfig.env.node = $scope.nodeId;
       gnConfig.env.baseURL = detectBaseURL(gnGlobalSettings.gnCfg.baseURLDetector);
 
+      $scope.signoutUrl = gnGlobalSettings.gnCfg.mods.signout.appUrl
+        + '?redirectUrl='
+        + window.location.href.slice(
+            0,
+            window.location.href.indexOf(gnConfig.env.node) + gnConfig.env.node.length);
+
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
