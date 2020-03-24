@@ -23,7 +23,6 @@
 
 package org.fao.geonet.entitylistener;
 
-import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ import org.springframework.context.ApplicationContext;
 
 /**
  * Obtains the current node id from the application context and sets it on the user object.
- *
+ * <p>
  * User: Jesse Date: 11/26/13 Time: 12:17 PM
  */
 public class UserNodeIdSetter implements GeonetworkEntityListener<User> {
