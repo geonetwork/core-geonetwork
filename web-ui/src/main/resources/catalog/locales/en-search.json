@@ -89,6 +89,7 @@
   "addToMap": "Add to map",
   "addToMaponlinesrc": "Add to map",
   "addServiceLayersToMaponlinesrc": "Add service layer to map",
+  "viewLayerInExternalViewer": "View layer in external viewer",
   "mapLinkonlinesrc": "Load map",
   "openRecord": "View record",
   "openRecordhasfeaturecat": "Associated record",
