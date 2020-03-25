@@ -37,6 +37,12 @@
    *
    * It also set direction attribute for RTL language.
    *
+   *  When using nav pills, you can control focusing of the underlying <input>
+   *  by adding a data-focus-to-input='true|false' attribute on the <input>.
+   *  Default is true (old behaviour).
+   *  For UX, type-ahead fields (i.e. keyword picker) should be be annotated with data-focus-to-input='false'
+   *  because they pop-up the selection when focused.
+   *
    */
   module.directive('gnMultilingualField', ['$timeout', '$translate',
     function($timeout, $translate) {
@@ -111,6 +117,14 @@
             );
             return langCode;
           }
+          //looks for the 'data-focus-to-input' attribute on the <input>
+          //default is true
+          // otherwise, its the value of 'data-focus-to-input' (should be true|false)
+          function shouldFocus(element) {
+            if ($(element).attr('data-focus-to-input') === undefined)
+              return true; // default
+            return ($(element).attr('data-focus-to-input') === 'true')
+          }
 
           //since scope.languages is a dictionary, we give it an explicit order
           // Order is based on the occurrence of the "<input>" inside element.
@@ -175,7 +189,9 @@
               if ($(this).attr('lang') === scope.currentLanguage ||
                   ($(this).attr('lang') === mainLanguage &&
                   scope.currentLanguage === '')) {
-                $(this).removeClass('hidden').focus();
+                  var el = $(this).removeClass('hidden');
+                  if (shouldFocus(el))
+                    el.focus();
               } else {
                 $(this).addClass('hidden');
               }
@@ -196,7 +212,7 @@
                 setLabel('oneLanguage');
                 $(this).prev('span').removeClass('hidden');
                 var el = $(this).removeClass('hidden');
-                if (focus) {
+                if (focus && shouldFocus(el)) {
                   el.focus();
                 }
               } else {
@@ -208,7 +224,7 @@
                 } else {
                   scope.currentLanguage = mainLanguage;
                   var el = $(this).removeClass('hidden');
-                  if (focus) {
+                  if (focus && shouldFocus(el)) {
                     el.focus();
                   }
                 }
