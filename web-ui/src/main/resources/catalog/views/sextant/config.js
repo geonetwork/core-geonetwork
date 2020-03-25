@@ -220,13 +220,13 @@
               case 'checkpoint-tdp':
               case 'checkpoint-dps':
               case 'medsea':
-                url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&css=checkpoint&view=' +
+                url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&loadJS=false&css=checkpoint&view=' +
                   searchSettings.metadataFormatter;
                 break;
               case 'emodnet-hydrography':
               case 'emodnet-bathymetry':
               case 'emodnet-bathymetry-portal':
-                url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&css=sextant&view=emodnetHydrography';
+                url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&css=sextant&loadJS=false&view=emodnetHydrography';
                 break;
               case 'seadatanet':
                 url = '../api/records/' + uuid + '/formatters/sdn-emodnet';
@@ -235,7 +235,7 @@
                 url = '../api/records/' + uuid + '/formatters/emodnet';
                 break;
               case 'sextant':
-                url = '../api/records/' + uuid + '/formatters/xsl-view?view=sextant&root=div&template=sextant-summary-view&header=false&related=';
+                url = '../api/records/' + uuid + '/formatters/xsl-view?view=sextant&root=div&loadJS=false&template=sextant-summary-view&header=false&related=';
                 break;
               default:
                 url = '../api/records/' + uuid + '/formatters/' + searchSettings.metadataFormatter;
@@ -256,16 +256,16 @@
               view = 'checkpoint-dps'
             }
             url = view ?
-              '../api/records/' + uuid + '/formatters/xsl-view?root=div&tabs=false&css=checkpoint&view=' + view :
+              '../api/records/' + uuid + '/formatters/xsl-view?root=div&loadJS=false&tabs=false&css=checkpoint&view=' + view :
               '../api/records/' + uuid + '/formatters/xsl-view';
           } else {
             if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY' ||
                 md.standardName === 'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY') {
-              url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&header=false&css=sextant&tabs=false&view=emodnetHydrography';
+              url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&header=false&css=sextant&loadJS=false&tabs=false&view=emodnetHydrography';
             } else if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - SDN') {
-              url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&header=false&tabs=false&css=sextant&view=sdn';
+              url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&header=false&loadJS=false&tabs=false&css=sextant&view=sdn';
             } else {
-              url = '../api/records/' + uuid + '/formatters/xsl-view?view=sextant&root=div&template=sextant-summary-view&header=false&related=';
+              url = '../api/records/' + uuid + '/formatters/xsl-view?view=sextant&root=div&loadJS=false&template=sextant-summary-view&header=false&related=';
             }
           }
           return url;
