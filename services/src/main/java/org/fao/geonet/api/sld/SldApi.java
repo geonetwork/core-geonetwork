@@ -216,11 +216,11 @@ public class SldApi {
 
             TransactionManager.runInTransaction("sldApi",  ApplicationContextHolder.get(),
                     TransactionManager.TransactionRequirement.CREATE_NEW,
-                    TransactionManager.CommitBehavior.ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS,
+                    TransactionManager.CommitBehavior.ALWAYS_COMMIT,
                     false, new TransactionTask<Void>() {
                         @Override
                         public Void doInTransaction(TransactionStatus transaction) throws Throwable {
-                            fileRepository.save(sld);
+                            fileRepository.saveAndFlush(sld);
                             return null;
                         }
                     }
