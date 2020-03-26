@@ -218,6 +218,7 @@ header div.gn-abstract {
 
   dl {
     margin-bottom: 0;
+    display: flex;
   }
   .gn-record-view_tablecell_aerate dl {
     padding-bottom: 10px;
@@ -225,6 +226,12 @@ header div.gn-abstract {
 
   dt {
     font-weight: bold;
+    white-space: normal !important;
+    flex: 50%
+  }
+
+  dd {
+    flex: 50%;
   }
 
   /* .dl-horizontal .dl-horizontal dt { */
