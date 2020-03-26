@@ -201,10 +201,7 @@
       <inspire_common:Conformity>
         <inspire_common:Specification
           xsi:type="inspire_common:citationInspireInteroperabilityRegulation_eng">
-          <inspire_common:Title>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010
-            implementing Directive 2007/2/EC of the European Parliament and of the Council as
-            regards interoperability of spatial data sets and services
-          </inspire_common:Title>
+          <inspire_common:Title>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</inspire_common:Title>
           <inspire_common:DateOfPublication>2010-12-08</inspire_common:DateOfPublication>
           <inspire_common:URI>OJ:L:2010:323:0011:0102:EN:PDF</inspire_common:URI>
           <inspire_common:ResourceLocator>
