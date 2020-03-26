@@ -223,7 +223,7 @@
               case 'emodnet-hydrography':
               case 'emodnet-bathymetry':
               case 'emodnet-bathymetry-portal':
-                url = 'md.format.xml?root=div&xsl=xsl-view&css=sextant&view=emodnetHydrography&uuid=' + uuid;
+                url = 'md.format.xml?root=div&xsl=xsl-view&loadJS=false&css=sextant&view=emodnetHydrography&uuid=' + uuid;
                 break;
               case 'seadatanet':
                 url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + uuid;
@@ -241,7 +241,7 @@
           } else if(md.getSchema() == 'dublin-core') {
             url = 'md.format.xml?xsl=sxt_view&uuid=' + uuid;
           } else if(md.getSchema() == 'iso19115-3.2018') {
-            url = 'md.format.xml?root=div&header=false&xsl=xsl-view&view=earthObservation&uuid=' + uuid;
+            url = 'md.format.xml?root=div&header=false&xsl=xsl-view&loadJS=false&view=earthObservation&uuid=' + uuid;
           } else if(md.getSchema() == 'iso19115-3') {
             var view;
             if(md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Upstream Data') {
@@ -254,15 +254,15 @@
               view = 'checkpoint-dps'
             }
             url = view ?
-              'md.format.xml?root=div&tabs=false&css=checkpoint&xsl=xsl-view&view=' + view +
+              'md.format.xml?root=div&tabs=false&css=checkpoint&xsl=xsl-view&loadJS=false&view=' + view +
               '&uuid=' + uuid :
               'md.format.xml?xsl=sxt_view&uuid=' + uuid;
           } else {
             if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY' ||
                 md.standardName === 'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY') {
-              url = 'md.format.xml?root=div&header=false&xsl=xsl-view&css=sextant&tabs=false&view=emodnetHydrography&uuid=' + uuid;
+              url = 'md.format.xml?root=div&header=false&xsl=xsl-view&loadJS=false&css=sextant&tabs=false&view=emodnetHydrography&uuid=' + uuid;
             } else if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - SDN') {
-              url = 'md.format.xml?root=div&header=false&xsl=xsl-view&tabs=false&css=sextant&view=sdn&uuid=' + uuid;
+              url = 'md.format.xml?root=div&header=false&xsl=xsl-view&loadJS=false&tabs=false&css=sextant&view=sdn&uuid=' + uuid;
             } else {
               url = 'md.format.xml?xsl=sxt_view&uuid=' + uuid;
             }
