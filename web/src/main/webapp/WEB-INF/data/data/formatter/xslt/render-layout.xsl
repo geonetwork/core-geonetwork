@@ -125,25 +125,14 @@
               </xsl:if>
 
 
-              <xsl:choose>
-                <xsl:when test="$view = 'earthObservation' ">
-                  <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
-                </xsl:when>
-                <xsl:when test="$view = 'emodnetHydrography' or
-                                $view = 'sdn'">
-                </xsl:when>
-                <xsl:otherwise>
-                  <div>
-                    <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
-                  </div>
-
-                  <xsl:if test="$related != ''">
-                    <div gn-related="md"
-                         data-user="user"
-                         data-types="{$related}">&#160;</div>
-                  </xsl:if>
-                </xsl:otherwise>
-              </xsl:choose>
+              <div>
+                <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
+              </div>
+              <xsl:if test="$related != ''">
+                <div gn-related="md"
+                     data-user="user"
+                     data-types="{$related}">&#160;</div>
+              </xsl:if>
 
             </header>
             <div>
@@ -469,19 +458,25 @@
 
   <xsl:template mode="render-view"
                 match="section[not(@xpath)]">
-    <div id="gn-section-{generate-id()}" class="gn-tab-content">
-      <xsl:if test="@name">
-        <xsl:variable name="title"
-                      select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
 
-        <xsl:element name="h{1 + count(ancestor-or-self::*[name(.) = 'section'])}">
-          <xsl:value-of select="$title"/>
-        </xsl:element>
-      </xsl:if>
-
+    <xsl:variable name="content">
       <xsl:apply-templates mode="render-view"
                            select="section|field|xsl"/>&#160;
-    </div>
+    </xsl:variable>
+
+    <xsl:if test="count($content/*) > 0">
+      <div id="gn-section-{generate-id()}" class="gn-tab-content">
+        <xsl:if test="@name">
+          <xsl:variable name="title"
+                        select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
+
+          <xsl:element name="h{1 + count(ancestor-or-self::*[name(.) = 'section'])}">
+            <xsl:value-of select="$title"/>
+          </xsl:element>
+        </xsl:if>
+        <xsl:copy-of select="$content"/>
+      </div>
+    </xsl:if>
   </xsl:template>
 
 
