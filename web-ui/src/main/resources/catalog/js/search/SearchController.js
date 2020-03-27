@@ -68,7 +68,7 @@
 
       $scope.isUserFeedbackEnabled = false;
 
-      statusSystemRating = gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
+      var statusSystemRating = gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
       if (statusSystemRating == 'advanced') {
         $scope.isUserFeedbackEnabled = true;
       }
