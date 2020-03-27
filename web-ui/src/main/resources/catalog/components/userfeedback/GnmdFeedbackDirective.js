@@ -46,7 +46,11 @@
 
                 scope.showLabel = attrs.showLabel;
 
-                scope.isFeedbackEnabled = gnConfig[gnConfig.key.isFeedbackEnabled];
+                var statusSystemRating = gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
+                if (statusSystemRating == 'advanced') {
+                  $scope.isUserFeedbackEnabled = true;
+                }
+
                 scope.recaptchaEnabled =
                   gnConfig['system.userSelfRegistration.recaptcha.enable'];
                 scope.recaptchaKey =
