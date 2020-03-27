@@ -611,7 +611,7 @@
     "ogcwxs-serviceCategory": "Categoria per i metadati di servizi",
     "ogcwxs-topicCategory": "Categoria ISO",
     "oneRunOnly": "Esecuzione unica",
-    "oneRunOnlyHelp": "This harvester will run once only.",
+    "oneRunOnlyHelp": "Questo harvester verrà eseguito una sola volta.",
     "optimizeIndex": "Ottimizza indice",
     "optimizeIndexHelp": "Ottimizza l'indice di lucene. Questo viene solitamente eseguito automaticamente, ma può essere forzato se si verificano risultati di ricerca strani.",
     "os.arch": "Architettura di sistema",

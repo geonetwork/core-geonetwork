@@ -30,10 +30,6 @@
 
   <import resource="classpath*:/config-spring-geonetwork.xml"/>
 
-  <bean id="nodeInfo" class="org.fao.geonet.NodeInfo">
-    <property name="id" value="srv" />
-    <property name="defaultNode" value="true" />
-  </bean>
 
   <!-- Uncomment the database configuration you need to use -->
   <!--<import resource="${db.config.file}"/>-->

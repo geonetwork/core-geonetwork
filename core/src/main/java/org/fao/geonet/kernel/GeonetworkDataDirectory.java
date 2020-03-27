@@ -110,14 +110,11 @@ public class GeonetworkDataDirectory {
         }
         this.webappDir = webappDir;
         final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        if (applicationContext == null) {
-            this.nodeId = "srv";
-            this.isDefaultNode = true;
-        } else {
-            final NodeInfo nodeInfo = applicationContext.getBean(NodeInfo.class);
-            this.isDefaultNode = nodeInfo.isDefaultNode();
-            this.nodeId = nodeInfo.getId();
-        }
+
+        // Only one node since multinode mode is deprecated
+        this.nodeId = NodeInfo.DEFAULT_NODE;
+        this.isDefaultNode = true;
+
         setDataDirectory(jeevesServlet, webappName, handlerConfig);
 
         // might be null during tests
@@ -669,6 +666,7 @@ public class GeonetworkDataDirectory {
         this.uploadDir = uploadDir;
     }
 
+    @Deprecated
     public String getNodeId() {
         return nodeId;
     }

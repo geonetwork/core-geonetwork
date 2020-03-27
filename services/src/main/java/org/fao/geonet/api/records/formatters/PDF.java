@@ -24,7 +24,7 @@
 package org.fao.geonet.api.records.formatters;
 
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.services.region.MapRenderer;
+import org.fao.geonet.api.records.extent.MapRenderer;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.BinaryFile;
 import org.jdom.Element;

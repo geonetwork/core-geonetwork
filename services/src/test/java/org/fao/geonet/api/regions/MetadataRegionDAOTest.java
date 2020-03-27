@@ -21,7 +21,7 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.services.region;
+package org.fao.geonet.api.regions;
 
 import com.google.common.collect.Lists;
 
@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.Constants;
+import org.fao.geonet.api.regions.MetadataRegionDAO;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;

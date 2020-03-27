@@ -35,6 +35,7 @@ import com.vividsolutions.jts.util.Assert;
 
 import groovy.util.slurpersupport.GPathResult;
 
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.records.formatters.groovy.CurrentLanguageHolder;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -119,13 +120,16 @@ public class SchemaLocalizations {
     public static SchemaLocalizations create(String schema) throws IOException, JDOMException {
         Object obj = RequestContextHolder.getRequestAttributes();
 
+        ServletRequestAttributes attributes = (ServletRequestAttributes) obj;
+        HttpServletRequest request = attributes.getRequest();
+
+
         final ApplicationContext appContext = ApplicationContextHolder.get();
-        String lang3 = appContext.getBean(DefaultLanguage.class).getLanguage();
-        if (obj != null) {
-            ServletRequestAttributes attributes = (ServletRequestAttributes) obj;
-            HttpServletRequest request = attributes.getRequest();
-            lang3 = appContext.getBean(LanguageUtils.class).getIso3langCode(request.getLocales());
-        }
+        final ServiceContext serviceContext = ServiceContext.get();
+
+        final String lang3 = serviceContext != null ?
+            serviceContext.getLanguage() :
+            appContext.getBean(LanguageUtils.class).getIso3langCode(request.getLocales());
         final String lang2 = appContext.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(lang3);
 
         String finalLang = lang3;
