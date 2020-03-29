@@ -227,11 +227,22 @@ header div.gn-abstract {
   dt {
     font-weight: bold;
     white-space: normal !important;
-    flex: 50%
+    flex-grow: 1;
   }
 
+  // has a fixed predetermined width to give a consistent column appearance
   dd {
-    flex: 50%;
+    width: 40vw;
+    flex-shrink: 0;
+    @media (min-width: @screen-sm-min) {
+      width: @container-sm * 0.4;
+    }
+    @media (min-width: @screen-md-min) {
+      width: @container-md * 0.33;
+    }
+    @media (min-width: @screen-lg-min) {
+      width: @container-lg * 0.33;
+    }
   }
 
   /* In sextant view turn off 2 columns layout */
