@@ -40,6 +40,8 @@
    *    records/cde2f47f-4a3f-4da1-8918-9923e7d372f1/attachments/report2019.docx">
    *        Report 2019</gmx:Anchor>
    *  </gmd:supplementalInformation>
+   *
+   *  The directive doesn't support multilingual fields.
    */
   module.directive('gnFieldUploadDiv', ['$http', 'gnFileStoreService',
     'gnCurrentEdit', 'gnSchemaManagerService', '$rootScope', '$translate',
