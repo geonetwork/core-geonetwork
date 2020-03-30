@@ -1377,6 +1377,7 @@
     "source-portal": "Main catalogue",
     "sourceUuid": "Identifier",
     "sourceUuid-help": "Unique identifier of the portal used in the URL. MUST be composed of letters, numbers, '-' and '_' only.",
+    "sourceUrlInfo": "This portal is accessible from <a href='../../{{uuid}}'>here</a> and the CSW endpoint from  <a href='../../{{uuid}}/{{lang}}/csw?SERVICE=CSW&REQUEST=GetCapabilities'>here</a>",
     "sourceName": "Name",
     "sourceName-help": "Portal short name. MUST be composed of letters, numbers, '-' and '_' only. Once created, use the translations to define labels to be displayed in the toolbar.",
     "sourceFilter": "Search filter",
