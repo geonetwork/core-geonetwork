@@ -1184,6 +1184,7 @@
     "ui-resultViewTpls": "List of templates for search results",
     "ui-resultTemplate": "Default template used for search results",
     "ui-formatter": "List of formatter for record view",
+    "ui-downloadFormatter": "List of formatter for record export",
     "ui-linkTypes": "List of link types",
     "ui-mod-map": "Map application",
     "ui-map": "Default map context to use",
