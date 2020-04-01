@@ -216,4 +216,21 @@
   <!--  </bean>-->
   <!--  <bean id="resources" class="org.fao.geonet.resources.S3Resources"/>-->
 
+  <!-- If you want data stored in jcloud (s3, azure blob..), use that instead: -->
+  <!--  <bean id="jcloudcredentials" class="org.fao.geonet.resources.JCloudCredentials">-->
+  <!--    <property name="provider" value="azureblob"/>-->
+  <!--    <property name="containerName" value="geonetwork-test"/>-->
+  <!--    <property name="baseFolder" value="geonetwork"/>-->
+  <!--    <property name="storageAccountName" value="MyAccessKey"/>-->
+  <!--    <property name="storageAccountKey" value="MySecretKey"/>-->
+  <!--  </bean>-->
+  <!--  <bean id="filesystemStore"-->
+  <!--        class="org.fao.geonet.api.records.attachments.JCloudStore" />-->
+
+  <!--  <bean id="resourceStore"-->
+  <!--        class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">-->
+  <!--    <constructor-arg index="0" ref="filesystemStore"/>-->
+  <!--  </bean>-->
+
+  <!--  <bean id="resources" class="org.fao.geonet.resources.JCloudResources"/>-->
 </beans>
