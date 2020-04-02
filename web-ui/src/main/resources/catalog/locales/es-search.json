@@ -89,6 +89,7 @@
     "addToMap": "Añadir al mapa",
     "addToMaponlinesrc": "Añadir al mapa",
     "addServiceLayersToMaponlinesrc": "Añadir capa de servicio al mapa",
+    "viewLayerInExternalViewer": "View layer in external viewer",
     "mapLinkonlinesrc": "Cargar mapa",
     "openRecord": "Ver registro",
     "openRecordhasfeaturecat": "Registro asociado",
