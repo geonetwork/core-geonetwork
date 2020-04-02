@@ -89,6 +89,7 @@
     "addToMap": "지도에 추가",
     "addToMaponlinesrc": "지도에 추가",
     "addServiceLayersToMaponlinesrc": "서비스 레이어 지도에 추가",
+    "viewLayerInExternalViewer": "View layer in external viewer",
     "mapLinkonlinesrc": "지도 불러오기",
     "openRecord": "레코드 보기",
     "openRecordhasfeaturecat": "관련 레코드",
