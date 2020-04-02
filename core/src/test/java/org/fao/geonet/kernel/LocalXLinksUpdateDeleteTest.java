@@ -7,7 +7,6 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SourceRepository;
@@ -15,21 +14,21 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.UUID;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.fao.geonet.domain.MetadataType.SUB_TEMPLATE;
 import static org.fao.geonet.domain.MetadataType.TEMPLATE;
 import static org.fao.geonet.kernel.UpdateDatestamp.NO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -69,8 +68,8 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         AbstractMetadata contactMetadata = insertContact(contactElement);
         AbstractMetadata vicinityMapMetadata = insertVicinityMap(contactMetadata);
 
-        Object document = searchForMetadataTagged("babar");
         // TODOES
+//        Object document = searchForMetadataTagged("babar");
 //        assertFalse(context.getBean(IndexingList.class).getIdentifiers().contains(vicinityMapMetadata.getId()));
 
         Xml.selectElement(contactElement, "gmd:individualName/gco:CharacterString", Arrays.asList(GMD, GCO)).setText("momo");
