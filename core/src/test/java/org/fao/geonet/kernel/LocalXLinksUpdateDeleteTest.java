@@ -1,14 +1,13 @@
 package org.fao.geonet.kernel;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.search.index.IndexingTask;
+import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SourceRepository;
@@ -16,9 +15,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -26,25 +23,21 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.UUID;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.fao.geonet.domain.MetadataType.SUB_TEMPLATE;
 import static org.fao.geonet.domain.MetadataType.TEMPLATE;
 import static org.fao.geonet.kernel.UpdateDatestamp.NO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
-
 
 
 @Ignore
 public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMockedSingletons {
 
     private static final int TEST_OWNER = 42;
-
-    @Autowired
-    private DataManager dataManager;
 
     @Autowired
     private IMetadataManager metadataManager;
@@ -69,22 +62,8 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
     }
 
-    class MyQuartzJob extends IndexingTask {
-
-        public MyQuartzJob() {
-            this._dataManager = dataManager;
-            this.serviceManager = context.getBean(ServiceManager.class);
-            this.applicationContext = context.getApplicationContext();
-        }
-
-        public void execute() throws JobExecutionException {
-            super.executeInternal(null);
-        }
-    }
-
     @Test
-    @Ignore(value = "Doesn't run along the others in core")
-    public void updateHasToTriggerIndexation() throws Exception {
+    public void updateHasToRegisterReferrersForIndexation() throws Exception {
         URL contactResource = AbstractCoreIntegrationTest.class.getResource("kernel/babarContact.xml");
         Element contactElement = Xml.loadStream(contactResource.openStream());
         AbstractMetadata contactMetadata = insertContact(contactElement);
@@ -92,24 +71,21 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
 
         Object document = searchForMetadataTagged("babar");
         // TODOES
-//        assertEquals(vicinityMapMetadata.getUuid(), document.getField("_uuid").stringValue());
+//        assertFalse(context.getBean(IndexingList.class).getIdentifiers().contains(vicinityMapMetadata.getId()));
 
         Xml.selectElement(contactElement, "gmd:individualName/gco:CharacterString", Arrays.asList(GMD, GCO)).setText("momo");
         metadataManager.updateMetadata(context,
-                Integer.toString(contactMetadata.getId()),
-                contactElement,
-                false,
-                false,
-                true,
-                null,
-                null,
-                false);
+            Integer.toString(contactMetadata.getId()),
+            contactElement,
+            false,
+            false,
+            true,
+            null,
+            null,
+            false);
 
-        new MyQuartzJob().execute();
-        searchManager.forceIndexChanges();
-
-        document = searchForMetadataTagged("momo");
 //     TODOES   assertEquals(vicinityMapMetadata.getUuid(), document.getField("_uuid").stringValue());
+//        assertTrue(context.getBean(IndexingList.class).getIdentifiers().contains(vicinityMapMetadata.getId()));
     }
 
     @Test
@@ -131,7 +107,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
 
         try {
             metadataManager.deleteMetadata(context,
-                    Integer.toString(contactMetadata.getId()));
+                Integer.toString(contactMetadata.getId()));
         } catch (Exception e) {
 
         }
@@ -152,30 +128,29 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         loginAsAdmin(context);
 
         Metadata metadata = new Metadata();
-        metadata
-                .setDataAndFixCR(element)
-                .setUuid(UUID.randomUUID().toString());
+        metadata.setDataAndFixCR(element)
+            .setUuid(UUID.randomUUID().toString());
         metadata.getDataInfo()
-                .setRoot(element.getQualifiedName())
-                .setSchemaId(schemaManager.autodetectSchema(element))
-                .setType(type)
-                .setPopularity(1000);
+            .setRoot(element.getQualifiedName())
+            .setSchemaId(schemaManager.autodetectSchema(element))
+            .setType(type)
+            .setPopularity(1000);
         metadata.getSourceInfo()
-                .setOwner(TEST_OWNER)
-                .setSourceId(sourceRepository.findAll().get(0).getUuid());
+            .setOwner(TEST_OWNER)
+            .setSourceId(sourceRepository.findAll().get(0).getUuid());
         metadata.getHarvestInfo()
-                .setHarvested(false);
+            .setHarvested(false);
 
         AbstractMetadata dbInsertedMetadata = metadataManager.insertMetadata(
-                context,
-                metadata,
-                element,
-                false,
-                true,
-                false,
-                NO,
-                false,
-                false);
+            context,
+            metadata,
+            element,
+            false,
+            true,
+            false,
+            NO,
+            false,
+            false);
 
         return dbInsertedMetadata;
     }
@@ -194,23 +169,11 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         return insertContact(contactElement);
     }
 
-    private AbstractMetadata insertContact( Element contactElement) throws Exception {
+    private AbstractMetadata insertContact(Element contactElement) throws Exception {
         AbstractMetadata contactMetadata = insertTemplateResourceInDb(contactElement, SUB_TEMPLATE);
 
         SpringLocalServiceInvoker mockInvoker = resetAndGetMockInvoker();
         when(mockInvoker.invoke(any(String.class))).thenReturn(contactElement);
         return contactMetadata;
-    }
-
-    private Object searchForMetadataTagged(String contactName) throws IOException {
-        // TODOES
-        return null;
-//        IndexAndTaxonomy indexReader = searchManager.getIndexReader(null, -1);
-//        IndexSearcher searcher = new IndexSearcher(indexReader.indexReader);
-//        BooleanQuery query = new BooleanQuery();
-//        query.add(new TermQuery(new Term(Geonet.IndexFieldNames.ANY, contactName)), BooleanClause.Occur.MUST);
-//        query.add(new TermQuery(new Term(Geonet.IndexFieldNames.IS_TEMPLATE, "s")), BooleanClause.Occur.MUST_NOT);
-//        TopDocs docs = searcher.search(query, 1);
-//        return indexReader.indexReader.document(docs.scoreDocs[0].doc);
     }
 }

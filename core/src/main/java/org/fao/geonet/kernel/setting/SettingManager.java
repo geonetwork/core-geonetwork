@@ -75,9 +75,6 @@ public class SettingManager {
     private ServletPathFinder pathFinder;
 
     @Autowired
-    NodeInfo node;
-
-    @Autowired
     SettingRepository repo;
 
     @Autowired
@@ -391,7 +388,14 @@ public class SettingManager {
     public
     @Nonnull
     String getNodeURL() {
-        String locServ = getBaseURL() + node.getId() + "/";
+        String nodeId = NodeInfo.DEFAULT_NODE;
+        try {
+            NodeInfo node = ApplicationContextHolder.get().getBean(NodeInfo.class);
+            if (node != null) {
+                nodeId = node.getId();
+            }
+        } catch (Exception e) {}
+        String locServ = getBaseURL() + nodeId + "/";
         return locServ;
     }
     /**

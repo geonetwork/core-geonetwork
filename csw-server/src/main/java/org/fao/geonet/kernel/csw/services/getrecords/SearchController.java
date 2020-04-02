@@ -25,14 +25,15 @@ package org.fao.geonet.kernel.csw.services.getrecords;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -60,7 +61,6 @@ import org.jdom.Comment;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.json.JSONArray;
 import org.opengis.filter.Filter;
 import org.opengis.filter.capability.FilterCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +71,12 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -169,10 +174,16 @@ public class SearchController {
             // Because for this application profile it is not possible that a query includes more than one
             // typename, any value(s) of the typeNames attribute of the elementSetName element are ignored.
             res = org.fao.geonet.csw.common.util.Xml.applyElementSetName(context, scm, schema, res, outSchema, setName, resultType, id, displayLanguage);
-            //
-            // apply elementnames
-            //
+
             res = applyElementNames(context, elemNames, typeName, scm, schema, res, resultType, info, strategy);
+
+            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                Log.debug(Geonet.CSW_SEARCH, "SearchController:retrieveMetadata: before applying postprocessing on metadata Element for id " + id);
+
+            res = applyPostProcessing(context, scm, schema, res, outSchema, setName, resultType, id, displayLanguage);
+
+            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                Log.debug(Geonet.CSW_SEARCH, "SearchController:retrieveMetadata: All processing is complete on metadata Element for id " + id);
 
             if (res != null) {
                 if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
@@ -661,5 +672,60 @@ public class SearchController {
 
     private String  convertCswFilterToEsQuery(Element xml, String filterVersion) {
         return CswFilter2Es.translate(parseFilter(xml, filterVersion), fieldMapper);
+    }
+
+    /**
+     * Applies postprocessing stylesheet if available.
+     *
+     * Postprocessing files should be in the present/csw folder of the schema and have this naming:
+     *
+     * For default CSW service
+     *
+     * 1) gmd-csw-postprocessing.xsl : Postprocessing xsl applied for CSW service when requesting iso (gmd) output
+     * 2) csw-csw-postprocessing.xsl : Postprocessing xsl applied for CSW service when requesting ogc (csw) output
+     *
+     * For a custom CSW service named csw-inspire
+     *
+     * 1) gmd-csw-inspire-postprocessing.xsl : Postprocessing xsl applied for custom CSW csw-inspire service when requesting iso output
+     * 2) csw-csw-inspire-postprocessing.xsl : Postprocessing xsl applied for custom CSW csw-inspire service when requesting ogc (csw) output
+     *
+     * @param context Service context
+     * @param schemaManager schemamanager
+     * @param schema schema
+     * @param result result
+     * @param outputSchema requested OutputSchema
+     * @param elementSetName requested ElementSetName
+     * @param resultType requested ResultTYpe
+     * @param id metadata id
+     * @param displayLanguage language to use in response
+     * @return metadata
+     * @throws InvalidParameterValueEx hmm
+     */
+    private static Element applyPostProcessing(ServiceContext context, SchemaManager schemaManager, String schema,
+                                               Element result, String outputSchema, ElementSetName elementSetName,
+                                               ResultType resultType, String id, String displayLanguage) throws InvalidParameterValueEx {
+        Path schemaDir  = schemaManager.getSchemaCSWPresentDir(schema);
+        final NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
+
+
+        Path styleSheet = schemaDir.resolve(outputSchema + "-"
+            + (context.getService().equals("csw") ? nodeInfo.getId() : context.getService())
+            + "-postprocessing.xsl");
+
+        if (Files.exists(styleSheet)) {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("lang", displayLanguage);
+            params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
+
+            try {
+                result = Xml.transform(result, styleSheet, params);
+            } catch (Exception e) {
+                context.error("Error while transforming metadata with id : " + id + " using " + styleSheet);
+                context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
+                return null;
+            }
+        }
+
+        return result;
     }
 }

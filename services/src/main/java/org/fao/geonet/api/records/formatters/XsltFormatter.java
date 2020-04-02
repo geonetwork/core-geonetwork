@@ -154,7 +154,7 @@ public class XsltFormatter implements FormatterImpl {
         List<Element> elementList = new ArrayList<>(3);
         for (SchemaLocalization schemaLocalization : localization) {
             String currentSchema = schemaLocalization.schema.trim();
-            if ("all".equalsIgnoreCase(schema) || schemasToLoadList.contains(currentSchema.toLowerCase())) {
+            if ("all".equalsIgnoreCase(schema) || schemasToLoadList.stream().anyMatch(currentSchema::equalsIgnoreCase)) {
                 Element schemaEl = new Element(currentSchema);
 
                 Element labels = schemaLocalization.getLabels(language);
