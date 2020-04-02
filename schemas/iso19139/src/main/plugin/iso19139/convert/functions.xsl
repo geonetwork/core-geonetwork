@@ -144,19 +144,43 @@
   </xsl:template>
 
   <!-- ================================================================== -->
+  <!-- iso3code from the supplied gmdlanguage
+       It will prefer LanguageCode if it exists over CharacterString -->
+  <xsl:template name="langId_from_gmdlanguage19139">
+    <xsl:param name="gmdlanguage" required="yes"/>
+    <xsl:variable name="tmp">
+      <xsl:choose>
+        <xsl:when test="normalize-space($gmdlanguage/gmd:LanguageCode/@codeListValue) != ''">
+          <xsl:value-of select="$gmdlanguage/gmd:LanguageCode/@codeListValue"/>
+        </xsl:when>
+        <xsl:when test="contains($gmdlanguage/gco:CharacterString,';')">
+               <xsl:value-of  select="normalize-space(substring-before($gmdlanguage/gco:CharacterString,';'))"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$gmdlanguage/gco:CharacterString"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:value-of select="normalize-space(string($tmp))"></xsl:value-of>
+  </xsl:template>
+
+  <!-- ================================================================== -->
   <!-- iso3code of default index language -->
   <xsl:variable name="defaultLang">eng</xsl:variable>
 
   <xsl:template name="langId19139">
+    <xsl:param name="md" select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']"/>
+    <xsl:param name="defaultLanguage" select="$defaultLang"/>
     <xsl:variable name="tmp">
       <xsl:choose>
-        <xsl:when test="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:language/gco:CharacterString|
-                                /*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:language/gmd:LanguageCode/@codeListValue">
-          <xsl:value-of select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:language/gco:CharacterString|
-                                /*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:language/gmd:LanguageCode/@codeListValue"/>
+        <xsl:when test="$md/gmd:language/gmd:LanguageCode/@codeListValue|
+                                $md/gmd:language/gco:CharacterString">
+          <xsl:call-template name="langId_from_gmdlanguage19139">
+            <xsl:with-param name="gmdlanguage" select="$md/gmd:language"/>
+          </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:value-of select="$defaultLang"/>
+          <xsl:value-of select="$defaultLanguage"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
