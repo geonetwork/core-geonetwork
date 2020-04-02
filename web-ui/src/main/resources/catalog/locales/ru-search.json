@@ -89,6 +89,7 @@
     "addToMap": "Добавить на карту",
     "addToMaponlinesrc": "Добавить на карту",
     "addServiceLayersToMaponlinesrc": "Добавить сервисный слой на карту",
+    "viewLayerInExternalViewer": "View layer in external viewer",
     "mapLinkonlinesrc": "Загрузить карту",
     "openRecord": "Просмотреть запись",
     "openRecordhasfeaturecat": "Связанная запись",
