@@ -112,6 +112,7 @@ public class Settings {
     public static final String SYSTEM_HARVESTING_MAIL_TEMPLATE_WARNING = "system/harvesting/mail/templateWarning";
     public static final String SYSTEM_HARVESTING_MAIL_TEMPLATE_ERROR = "system/harvesting/mail/templateError";
     public static final String SYSTEM_HARVESTING_MAIL_TEMPLATE = "system/harvesting/mail/template";
+    public static final String SYSTEM_HARVESTING_TIMEZONE = "system/harvesting/timeZone";
     public static final String SYSTEM_METADATACREATE_GENERATE_UUID = "system/metadatacreate/generateUuid";
     public static final String SYSTEM_THREADEDINDEXING_MAXTHREADS = "system/threadedindexing/maxthreads";
     public static final String SYSTEM_RESOURCE_PREFIX = "metadata/resourceIdentifierPrefix";

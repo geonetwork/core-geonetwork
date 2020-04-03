@@ -98,6 +98,7 @@
         <script src="{$uiResourcesPath}lib/jquery-2.2.4.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/moment+langs.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/moment-timezone-with-data-10-year-range.min.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/angular/angular.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-resource.js?v={$buildNumber}"></script>
