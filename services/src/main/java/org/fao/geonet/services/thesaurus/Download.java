@@ -72,11 +72,11 @@ public class Download implements Service {
 
         Thesaurus directory = manager.getThesaurusByName(name);
         if (directory == null)
-            throw new IllegalArgumentException("Thesaurus not found --> " + name);
+            throw new IllegalArgumentException("Thesaurus not found: " + name);
 
         Path directoryFile = directory.getFile();
         if (!Files.exists(directoryFile))
-            throw new IllegalArgumentException("Thesaurus file not found --> " + name);
+            throw new IllegalArgumentException("Thesaurus file not found: " + name);
 
         return BinaryFile.encode(200, directoryFile).getElement();
     }

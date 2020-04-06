@@ -31,7 +31,7 @@
                 Create a new user account.
                 ]]></documentation>
       <class name=".services.register.SelfRegister"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
     <service name="password.reminder" deprecated="true">
@@ -42,12 +42,12 @@
                 * username
                 ]]></documentation>
       <class name=".services.password.SendLink"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
     <service name="password.change" deprecated="true">
       <class name=".services.password.Change"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
     <!-- Moved to SMVC
@@ -55,13 +55,13 @@
          <documentation>The service can be used to create or update
              a user.</documentation>
          <class name=".services.user.Update" />
-         <error sheet="../xslt/error/error-json.xsl"/>
+         <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
      </service>
 
      <service name="admin.user.remove">
          <documentation>Remove a user.</documentation>
          <class name=".services.user.Remove" />
-         <error sheet="../xslt/error/error-json.xsl"/>
+         <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
      </service>-->
     <service name="admin.user">
       <documentation>Get the user information.</documentation>
@@ -99,13 +99,13 @@
         or update a group.
       </documentation>
       <class name=".services.group.Update"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
     <service name="admin.group.remove">
       <documentation>The service can be used to remove a group.</documentation>
       <class name=".services.group.Remove"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
   </services>
 </geonet>
