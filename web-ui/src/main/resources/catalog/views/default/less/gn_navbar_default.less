@@ -5,12 +5,29 @@
 .navbar {
   margin-bottom: 0;
 }
+[ng-app^="gn_search_"] body, [ng-app="gn_login"] body {
+  &.gn-header-fixed {
+    .gn-top-bar {
+      position: fixed;
+      right: 0;
+      left: 0;
+      top: 0;
+      z-index: 1030;
+    }
+    &.gn-logo-in-header {
+      .gn-top-bar {
+        top: @gn-header-height;
+      }
+    }
+  }
+}
 
 .navbar-default {
   background-color: @gn-menubar-background;
   border-color: @gn-menubar-border-color;
   border-width: 0 0 1px 0;
   z-index: 100;
+  border-radius: 0;
   .navbar-nav > li > a, .navbar-nav > .open > a, .navbar-nav > .active > a {
     height: @gn-menubar-height;
     color: @gn-menubar-color;
