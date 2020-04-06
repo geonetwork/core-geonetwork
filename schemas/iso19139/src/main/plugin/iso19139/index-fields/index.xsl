@@ -590,10 +590,23 @@
 
 
         <xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
+          <xsl:variable name="value"
+                        select="."/>
           <topic>
             <xsl:value-of select="."/>
           </topic>
-          <!-- TODO: Get translation ? -->
+          <xsl:for-each select="$allLanguages/lang">
+            <xsl:variable name="translation"
+                          select="util:getCodelistTranslation('gmd:MD_TopicCategoryCode', string($value), string(@value))"/>
+            <xsl:if test="@id = 'default'">
+              <xsl:element name="topic_text">
+                <xsl:value-of select="$translation"/>
+              </xsl:element>
+            </xsl:if>
+            <xsl:element name="topic_text_lang{@value}">
+              <xsl:value-of select="$translation"/>
+            </xsl:element>
+          </xsl:for-each>
         </xsl:for-each>
 
 
