@@ -31,7 +31,7 @@
         ]]>
       </documentation>
       <class name=".services.thesaurus.GetList"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json"/>
     </service>
 
     <service name="thesaurus.add.from.register">
@@ -39,7 +39,7 @@
         TODO
         ]]></documentation>
       <class name=".services.thesaurus.AddRegister"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
     <service name="thesaurus.clear">
@@ -47,7 +47,7 @@
         TODO
         ]]></documentation>
       <class name=".services.thesaurus.Clear"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
 
@@ -67,7 +67,7 @@
         ```
         ]]></documentation>
       <class name=".services.thesaurus.Add"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
     <service name="thesaurus.enable">
@@ -80,7 +80,7 @@
         * activated: y or n
         ]]></documentation>
       <class name=".services.thesaurus.Activate"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
 
@@ -96,7 +96,7 @@
       <output sheet="../xslt/services/thesaurus/to-jskos.xsl">
         <call name="thesaurus" class=".services.thesaurus.GetList"/>
       </output>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
     <service name="thesaurus.concept" type="xml">
@@ -113,7 +113,7 @@
       <output sheet="../xslt/services/thesaurus/to-jskos.xsl">
         <call name="thesaurus" class=".services.thesaurus.GetList"/>
       </output>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json"/>
     </service>
 
     <service name="thesaurus.keyword" type="xml">
@@ -129,7 +129,7 @@
       <output sheet="../xslt/services/thesaurus/convert.xsl">
         <call name="thesaurus" class=".services.thesaurus.GetList"/>
       </output>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
 
@@ -143,7 +143,7 @@
         * thesaurus: Thesaurus identifier (eg. external.theme.gemet)
         ]]></documentation>
       <class name=".services.thesaurus.GetNarrowerBroader"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
     <service name="thesaurus.keyword.add">
@@ -164,7 +164,7 @@
         ```
         ]]></documentation>
       <class name=".services.thesaurus.AddElement"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
     <service name="thesaurus.keyword.update">
@@ -172,7 +172,7 @@
         Update a keyword.
         ]]></documentation>
       <class name=".services.thesaurus.UpdateElement"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
     <service name="thesaurus.keyword.remove">
@@ -181,7 +181,7 @@
         ]]>
       </documentation>
       <class name=".services.thesaurus.DeleteElement"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
   </services>

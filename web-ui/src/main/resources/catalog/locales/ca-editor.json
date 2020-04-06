@@ -396,7 +396,7 @@
     "inputGeometryIsInvalid": "An error was found in the input geometry:",
     "inputGeometryHint": "Paste a geometry here in the selected format and projection system.",
     "inputGeometryReadOnlyHint": "This geometry is read-only.",
-    "selectKeyword": "Add keywords",
+    "selectKeyword": "Afegiu paraules clau",
     "saveLinkToSibling": "Save link to other resource",
     "addTheFollowingLinkInDataset": "Add the following link to the dataset (as an online source in the distribution section):",
     "confirmCloseInvalidTitle": "Confirm editor close",
