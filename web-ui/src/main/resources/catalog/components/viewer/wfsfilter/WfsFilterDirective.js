@@ -850,7 +850,7 @@
             })[0].applicationProfile;
 
             try {
-              applicationProfile = JSON.parse(response);
+              applicationProfile = JSON.parse(applicationProfile);
             } catch(e) {
               applicationProfile = null; // no ApplicationProfile for current md
             };
