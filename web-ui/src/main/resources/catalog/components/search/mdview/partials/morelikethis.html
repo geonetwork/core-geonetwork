@@ -9,12 +9,12 @@
        class="list-group-item flex-row flex-align-center"
        data-ng-hide="md.uuid === record._source.uuid">
       <span>
-      {{record._source.resourceTitle}}
+      {{record._source.resourceTitleObject.default}}
       </span>
       <div class="flex-spacer"></div>
-      <img data-ng-if="record._source.overview[0]"
+      <img data-ng-if="record._source.overview"
            style="max-width: 95px;"
-           data-ng-src="{{record._source.overview[0].url}}">
+           data-ng-src="{{record._source.overview.url || record._source.overview[0].url}}">
     </a>
   </div>
 </div>

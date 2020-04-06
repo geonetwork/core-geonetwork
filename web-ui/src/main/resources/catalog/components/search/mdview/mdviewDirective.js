@@ -105,8 +105,8 @@
                 "bool": {
                   "must": [
                     {"more_like_this" : {
-                      "fields" : ["resourceTitle", "resourceAbstract", "tag.raw"],
-                      "like" : scope.md.resourceTitle,
+                      "fields" : ["resourceTitleObject.default", "resourceAbstractObject.default", "tag.raw"],
+                      "like" : scope.md.resourceTitleObject.default,
                       "min_term_freq" : 1,
                       "max_query_terms" : 12
                     }},
