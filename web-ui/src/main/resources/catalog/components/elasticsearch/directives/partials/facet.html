@@ -2,23 +2,22 @@
   <a href
      class="gn-facet-collapse-toggle"
      ng-click="ctrl.toggleCollapse()">
-        <span ng-if="::ctrl.item.aggs[0].items.length || ctrl.item.items"
-              class="fa"
-              ng-class="ctrl.item.collapsed ? 'fa-plus-circle' : 'fa-minus-circle'">
-        </span>
+    <span ng-if="::ctrl.item.aggs[0].items.length || ctrl.item.items"
+          class="fa"
+          ng-class="ctrl.item.collapsed ? 'fa-plus-circle' : 'fa-minus-circle'">
+    </span>
   </a>
   <a href
      class="flex-row flex-align-center flex-shrink"
      ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'gn-facet-checked' + (ctrl.item.inverted ? '-inverted' : '') : ''"
      title="{{::ctrl.item.value | capitalize}}"
      ng-click="ctrl.filter(ctrl.facet, ctrl.item)">
-        <span class="fa fa-fw"
-              ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'fa-check-square' : 'fa-square-o'">
-        </span>
+    <span class="fa fa-fw"
+          ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'fa-check-square' : 'fa-square-o'">
+    </span>
     <span class="gn-facet-label flex-shrink text-ellipsis">
-          {{::ctrl.item.value | capitalize}}
-        </span>
-    &nbsp;
+      {{::ctrl.item.value | facetTranslator: ctrl.facet.key | capitalize}}
+    </span>
     <span class="gn-facet-count flex-no-shrink">({{::ctrl.item.count}})</span>
   </a>
   <div class="flex-spacer"></div>
@@ -31,7 +30,7 @@
 <div class="gn-facet-children"
      ng-show="!ctrl.item.collapsed">
 
-<!--  Nested term facets (intermediate level in the tree)-->
+  <!--  Nested term facets (intermediate level in the tree)-->
   <div ng-if="::nestedFacet.items.length"
        ng-repeat="nestedFacet in ::ctrl.item.aggs track by nestedFacet.key">
     <div es-facet="::nestedFacet"
@@ -42,7 +41,7 @@
     </div>
   </div>
 
-<!--  Hierachical facets-->
+  <!--  Hierachical facets-->
   <div es-facet="::ctrl.facet"
        es-facet-item="::item"
        class="gn-facet-container"

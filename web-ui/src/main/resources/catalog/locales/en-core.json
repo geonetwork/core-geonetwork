@@ -332,6 +332,8 @@
     "reset" : "Reset",
     "stop": "Stop",
     "isHarvested": "Harvested",
+    "isHarvested-1": "Harvested",
+    "isHarvested-0": "Local",
     "y": "Yes",
     "n": "No",
     "yes": "Yes",

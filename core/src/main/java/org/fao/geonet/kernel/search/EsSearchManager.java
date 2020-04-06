@@ -392,11 +392,6 @@ public class EsSearchManager implements ISearchManager {
         doc.remove("source");
         if (StringUtils.isNotEmpty(catalog)) {
             doc.put("sourceCatalogue", catalog);
-            final Source source = sourceRepository.findOne(catalog);
-            if (source != null) {
-                source.getLabelTranslations()
-                    .forEach((key, value) -> doc.put("sourceCatalogueName_lang" + key, value));
-            }
         }
 //        doc.put("indexingDate", new Date());
 

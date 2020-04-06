@@ -246,7 +246,7 @@ goog.require('gn_alert');
             'sortBy': 'dateStamp',
             'sortOrder': 'desc'
           }, {
-            'sortBy': 'resourceTitle.keyword',
+            'sortBy': 'resourceTitleObject.default.keyword',
             'sortOrder': ''
           }, {
             'sortBy': 'rating',
@@ -405,9 +405,9 @@ goog.require('gn_alert');
                 'size': 15
               }
             },
-            'sourceCatalog': {
+            'sourceCatalogue': {
               'terms': {
-                'field': 'sourceCatalog',
+                'field': 'sourceCatalogue',
                 'size': 15
               }
             },

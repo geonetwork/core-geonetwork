@@ -93,6 +93,25 @@
     '$scope'
   ]
 
+  // Define the translation group key matching the facet key
+  var facetKeyToTranslationGroupMap = new Map([
+    ['isTemplate', 'recordType'],
+    ['groupOwner', 'group'],
+    ['sourceCatalogue', 'source']
+  ]);
+
+  module.filter('facetTranslator', ['$translate', function($translate) {
+
+    return function(input, facetKey) {
+      if (!input || angular.isObject(input)) {
+        return input;
+      }
+      var translationId = (facetKeyToTranslationGroupMap.get(facetKey) || facetKey) + '-' + input,
+        translation = $translate.instant(translationId);
+      return translation !== translationId ? translation : input;
+    };
+  }]);
+
   module.directive('esFacets', [
    'gnLangs',
     function (gnLangs) {
