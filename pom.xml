@@ -1324,8 +1324,8 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>7.6.0</es.version>
-    <es.version.sha512>378322ed2b6782f98e2e22c80e82b1f483bdeb3c28f3f52c897cbd0e8e78848460865c9adedf21e59922aa03ecb28ac44c1fb3dcab4f1904ba58497bc40e1278</es.version.sha512>
+    <es.version>7.6.2</es.version>
+    <es.version.sha512>1387a7aa35d842356d8c2eccc8debffd3c260c46c47afd16ec47b0c89670b7a2f79941b7d4ddab06f1bf3b3311f3b510ef43dc8437eebacad3f63d7a9501ea28</es.version.sha512>
     <es.platform>linux-x86_64</es.platform>
     <es.installer.extension>tar.gz</es.installer.extension>
     <es.protocol>http</es.protocol>
@@ -1352,7 +1352,7 @@
     <es.username></es.username>
     <es.password></es.password>
 
-    <kb.version.sha512>296416b9697ae66b20aae37ada855d7212fc5151055a35cc81e7c3cfef589758f10f600b382e9f4b419fcd327ff605d8da23a25e867f6a1e4d3bd133e0317b72</kb.version.sha512>
+    <kb.version.sha512>5a7187f7fd1af3d4009053b904948fca08e171ea5eea36f8120019721d84b1649bdaf1bc606577ebad179bd4d24b014a1733c8221f67b1b7da2c756c68819311</kb.version.sha512>
     <kb.platform>linux-x86_64</kb.platform>
     <kb.installer.extension>tar.gz</kb.installer.extension>
     <kb.port>5601</kb.port>
