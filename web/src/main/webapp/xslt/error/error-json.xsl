@@ -22,7 +22,9 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                version="2.0">
 
   <xsl:output method="text"/>
 
@@ -33,7 +35,7 @@
     "class": "<xsl:value-of select="root/error/class"/>",
     "service": "<xsl:value-of select="root/error/request/service"/>",
     "message": "<xsl:value-of
-    select="normalize-space(replace(replace(translate(root/error/message, '&quot;', ''), '&lt;script&gt;', '', 'i'), '&lt;/script&gt;', '', 'i'))"/>"
+    select="java:encodeForHTML(root/error/message)"/>"
     }
   </xsl:template>
 
