@@ -51,7 +51,7 @@
         internal: true,
         params: {
           isTemplate: ['y', 'n', 's', 't'],
-          sortBy: 'resourceTitle.keyword'
+          sortBy: 'resourceTitleObject.default.keyword'
         }};
 
       $scope.harvesterTypes = {};
