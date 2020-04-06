@@ -62,7 +62,15 @@ public class S3Resources extends Resources {
     }
 
     private String getKey(final Path path) {
-        return s3.getKeyPrefix() + (path.isAbsolute() ? path.toString().substring(1) : path.toString());
+        String pathString;
+        // For windows it may be "\" in which case we need to change it to folderDelimiter which is normally "/"
+        if (path.getFileSystem().getSeparator().equals("/")) {
+            pathString = path.toString();
+        } else {
+            pathString=path.toString().replace(path.getFileSystem().getSeparator(), "/");
+        }
+        // remove leading / from path since the basefolder already ends with "/". Absolute paths will have 2 "/"
+        return s3.getKeyPrefix() + (path.isAbsolute() ? pathString.substring(2) : pathString.substring(1));
     }
 
     private Path getKeyPath(String key) {
