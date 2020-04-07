@@ -554,7 +554,7 @@
           <address>
               <xsl:choose>
                 <xsl:when test="$email">
-                  <i class="fa fa-fw fa-envelope"></i>
+                  <i class="fa fa-fw fa-envelope">&#160;</i>
                   <a href="mailto:{normalize-space($email)}">
                     <xsl:copy-of select="$displayName"/><xsl:comment select="'email'"/>
                   </a>
