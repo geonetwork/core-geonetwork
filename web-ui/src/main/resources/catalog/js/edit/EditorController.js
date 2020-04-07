@@ -352,7 +352,7 @@
             });
           }
         });
-        
+
       };
 
       /**
@@ -577,16 +577,6 @@
                   type: 'danger'});
               });
         }
-      };
-
-      function parseXmlError(error) {
-        if (error.toString().indexOf('<?xml') === 0) {
-          var x = jQuery.parseXML(error),
-              d = x.getElementsByTagName('description'),
-              m = d[0].textContent;
-          return m;
-        }
-        return null;
       };
 
       $scope.close = function(submit, approve) {
