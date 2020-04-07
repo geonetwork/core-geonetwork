@@ -617,15 +617,13 @@
             }, function(error) {
               // When closing editor and if error occurs,
               // the response is in XML. Try to get the message
-              message = parseXmlError(error);
 
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $scope.saveError = true;
 
               $rootScope.$broadcast('StatusUpdated', {
-                title: message ?
-                message : $translate.instant('saveMetadataError'),
-                error: message ? undefined : error,
+                title: error ? error.message : $translate.instant('saveMetadataError'),
+                error: error,
                 timeout: 0,
                 type: 'danger'});
             });
