@@ -37,6 +37,7 @@ import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataResourceVisibilityConverter;
 import org.fao.geonet.events.history.AttachmentAddedEvent;
 import org.fao.geonet.events.history.AttachmentDeletedEvent;
+import org.fao.geonet.util.ImageUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -57,13 +58,18 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -235,6 +241,9 @@ public class AttachmentsApi {
         return resource;
     }
 
+    public static final Integer MIN_IMAGE_SIZE = 1;
+    public static final Integer MAX_IMAGE_SIZE = 2048;
+
     @ApiOperation(value = "Get a metadata resource", nickname = "getResource")
     // @PreAuthorize("permitAll")
     @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.GET)
@@ -247,6 +256,7 @@ public class AttachmentsApi {
             @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
             @ApiParam(value = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
             @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "true") Boolean approved,
+            @ApiParam(value = "Size (only applies to images). From 1px to 2048px.", example = "200") @RequestParam(required = false) Integer size,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         try (Store.ResourceHolder file = store.getResource(context, metadataUuid, resourceId, approved)) {
@@ -256,11 +266,30 @@ public class AttachmentsApi {
             MultiValueMap<String, String> headers = new HttpHeaders();
             headers.add("Content-Disposition", "inline; filename=\"" + file.getMetadata().getFilename() + "\"");
             headers.add("Cache-Control", "no-cache");
-            headers.add("Content-Type", getFileContentType(file.getPath()));
+            String contentType = getFileContentType(file.getPath());
+            headers.add("Content-Type", contentType);
 
-            return new HttpEntity<>(Files.readAllBytes(file.getPath()), headers);
+            if (contentType.startsWith("image/") && size != null) {
+                if (size >= MIN_IMAGE_SIZE && size <= MAX_IMAGE_SIZE) {
+                    BufferedImage image = ImageIO.read(file.getPath().toFile());
+                    BufferedImage resized = ImageUtil.resize(image, size);
+                    ByteArrayOutputStream output = new ByteArrayOutputStream();
+                    ImageIO.write(resized, "png", output);
+                    output.flush();
+                    byte[] imagesB = output.toByteArray();
+                    output.close();
+                    return new HttpEntity<>(imagesB, headers);
+                } else {
+                    throw new IllegalArgumentException(String.format(
+                        "Image can only be resized from %d to %d. You requested %d.",
+                        MIN_IMAGE_SIZE, MAX_IMAGE_SIZE, size));
+                }
+            } else {
+                return new HttpEntity<>(Files.readAllBytes(file.getPath()), headers);
+            }
         }
     }
+
 
     @ApiOperation(value = "Update the metadata resource visibility", nickname = "patchMetadataResourceVisibility")
     @PreAuthorize("hasRole('Editor')")
