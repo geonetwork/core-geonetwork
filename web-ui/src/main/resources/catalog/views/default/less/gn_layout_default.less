@@ -12,11 +12,11 @@
 html, body {
   height:100%;
 }
-
 // header
 .gn-header {
   background-color: @gn-header-background;
 }
+
 // background image and color
 [ng-app^="gn_search_"] body, [ng-app="gn_login"] body {
   background-color: @gn-background-color;
@@ -24,15 +24,29 @@ html, body {
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  &.gn-header-fixed {
+    padding-top: @gn-menubar-height;
+    &.gn-logo-in-header {
+      padding-top: calc(~"@{gn-header-height} + @{gn-menubar-height}");
+      .gn-header {
+        position: fixed;
+        right: 0;
+        left: 0;
+        top: 0;
+        z-index: 1030;
+        height: @gn-header-height;
+      }
+    }
+  }
 }
 // check if the variable is a not an empty string, if not, then set the background image
 //
 // if the background image is an empty string it will be substitued with the name of the css file,
 // see: https://stackoverflow.com/questions/20727262/css-file-considered-as-being-an-image-resource
-[ng-app^="gn_search_"] body when not (@gn-background-image = "") {
+[ng-app^="gn_search_"] body when (isstring(@gn-background-image)) {
   background-image: url(@gn-background-image);
 }
-[ng-app^="gn_login"] body when not (@gn-background-image = "") {
+[ng-app^="gn_login"] body when (isstring(@gn-background-image)) {
   background-image: url(@gn-background-image);
 }
 

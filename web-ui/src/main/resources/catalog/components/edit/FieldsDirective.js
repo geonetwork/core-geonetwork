@@ -722,6 +722,7 @@
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
+          var btns = element.find('a').has('.fa-times.text-danger');
 
           element.on('mouseover', function(e) {
             e.stopPropagation();
@@ -729,13 +730,11 @@
             // on touchscreen delete action will not be visible
 
             element.addClass('field-bg');
-            element.find('a').has('.fa-times.text-danger')
-                .css('visibility', 'visible');
+            btns.css('visibility', 'visible');
           });
           element.on('mouseout', function() {
             element.removeClass('field-bg');
-            element.find('a').has('.fa-times.text-danger')
-                .css('visibility', 'hidden');
+            btns.css('visibility', 'hidden');
           });
         }
       };

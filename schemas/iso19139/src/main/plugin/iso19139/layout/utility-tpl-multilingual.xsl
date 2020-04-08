@@ -39,8 +39,17 @@
         <xsl:value-of select="xslutil:getLanguage()" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$metadata/gmd:language/gco:CharacterString|
-       $metadata/gmd:language/gmd:LanguageCode/@codeListValue"/>
+          <xsl:choose>
+            <xsl:when test="$metadata/gmd:language/gmd:LanguageCode/@codeListValue">
+              <xsl:value-of select="$metadata/gmd:language/gmd:LanguageCode/@codeListValue"/>
+            </xsl:when>
+            <xsl:when test="contains($metadata/gmd:language/gco:CharacterString,';')">
+                 <xsl:value-of  select="normalize-space(substring-before($metadata/gmd:language/gco:CharacterString,';'))"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:value-of select="$metadata/gmd:language/gco:CharacterString"/>
+            </xsl:otherwise>
+          </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
    </xsl:template>

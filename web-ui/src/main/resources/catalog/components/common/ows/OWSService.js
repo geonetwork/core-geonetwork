@@ -99,7 +99,7 @@
             var parser = new ol.format.WMSCapabilities();
             cachedGetCapabilitiesUrls[getCapabilitiesUrl] = parser.read(data);
           }
-          var result = cachedGetCapabilitiesUrls[getCapabilitiesUrl];
+          var result = angular.copy(cachedGetCapabilitiesUrls[getCapabilitiesUrl], {});
           var layers = [];
           var url = result.Capability.Request.GetMap.
               DCPType[0].HTTP.Get.OnlineResource;
@@ -519,7 +519,9 @@
               if (layerName.indexOf(',') !== -1) {
                 // Parameters 'styles' and 'layers' should have the same number of values.
                 // SEXTANT SPECIFIC: disable this as we don't need style switching
-                //needles[0].Style = new Array(layerList.length).join(',');
+                // needles[0].Name = layerName;
+                // needles[0].Title = needles.map(function(l) {return l.Title}).join(', ');
+                // needles[0].Style = new Array(layerList.length).join(',');
               }
               return needles[0];
             }

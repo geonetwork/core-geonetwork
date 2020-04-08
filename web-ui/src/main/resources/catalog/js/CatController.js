@@ -96,7 +96,8 @@ goog.require('gn_alert');
           'isLogoInHeader': false,
           'logoInHeaderPosition': 'left',
           'fluidHeaderLayout': true,
-          'showGNName': true
+          'showGNName': true,
+          'isHeaderFixed': false
         },
         'cookieWarning': {
           'enabled': true,
@@ -505,6 +506,8 @@ goog.require('gn_alert');
       $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
       $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
       $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
+      $scope.isHeaderFixed = gnGlobalSettings.gnCfg.mods.header.isHeaderFixed;
+      $scope.isLogoInHeader = gnGlobalSettings.gnCfg.mods.header.isLogoInHeader;
 
       var url = gnGlobalSettings.gnUrl || location.href;
       try {

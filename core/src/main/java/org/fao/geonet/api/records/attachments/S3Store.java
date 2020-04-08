@@ -41,11 +41,10 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.resources.S3Credentials;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -67,11 +66,15 @@ public class S3Store extends AbstractStore {
         if (filter == null) {
             filter = FilesystemStore.DEFAULT_FILTER;
         }
+        PathMatcher matcher =
+                FileSystems.getDefault().getPathMatcher("glob:" + filter);
+
         final ListObjectsV2Result objects = s3.getClient().listObjectsV2(s3.getBucket(), resourceTypeDir);
         for (S3ObjectSummary object: objects.getObjectSummaries()) {
             final String key = object.getKey();
             final String filename = getFilename(key);
-            if (FilenameUtils.wildcardMatch(filename, filter)) {
+            Path keyPath = new File(filename).toPath().getFileName();
+            if (matcher.matches(keyPath)) {
                 MetadataResource resource = createResourceDescription(settingManager, metadataUuid, visibility, filename, object.getSize(),
                                                                       object.getLastModified());
                 resourceList.add(resource);
