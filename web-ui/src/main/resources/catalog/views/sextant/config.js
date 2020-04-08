@@ -220,7 +220,7 @@
               case 'checkpoint-tdp':
               case 'checkpoint-dps':
               case 'medsea':
-                url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&loadJS=false&css=checkpoint&related=&view=' +
+                url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&loadJS=false&css=checkpoint&related=&header=false&view=' +
                   searchSettings.metadataFormatter;
                 break;
               case 'emodnet-hydrography':
@@ -256,7 +256,7 @@
               view = 'checkpoint-dps'
             }
             url = view ?
-              '../api/records/' + uuid + '/formatters/xsl-view?root=div&loadJS=false&tabs=false&css=checkpoint&related=&view=' + view :
+              '../api/records/' + uuid + '/formatters/xsl-view?root=div&loadJS=false&tabs=false&css=checkpoint&related=&header=false&view=' + view :
               '../api/records/' + uuid + '/formatters/xsl-view';
           } else {
             if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY' ||

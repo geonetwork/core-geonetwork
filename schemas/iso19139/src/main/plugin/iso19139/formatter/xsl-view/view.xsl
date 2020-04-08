@@ -274,18 +274,20 @@
   </xsl:template>
 
   <xsl:template mode="getMetadataHeader" match="gmd:MD_Metadata">
-    <div class="gn-abstract">
-      <xsl:for-each select="gmd:identificationInfo/*/gmd:abstract">
-        <xsl:variable name="txt">
-          <xsl:call-template name="localised">
-            <xsl:with-param name="langId" select="$langId"/>
+    <xsl:if test="normalize-space(gmd:identificationInfo/*/gmd:abstract) != ''">
+      <div class="gn-abstract">
+        <xsl:for-each select="gmd:identificationInfo/*/gmd:abstract">
+          <xsl:variable name="txt">
+            <xsl:call-template name="localised">
+              <xsl:with-param name="langId" select="$langId"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:call-template name="addLineBreaksAndHyperlinks">
+            <xsl:with-param name="txt" select="$txt"/>
           </xsl:call-template>
-        </xsl:variable>
-        <xsl:call-template name="addLineBreaksAndHyperlinks">
-          <xsl:with-param name="txt" select="$txt"/>
-        </xsl:call-template>
-      </xsl:for-each>
-    </div>
+        </xsl:for-each>
+      </div>
+    </xsl:if>
 
     <xsl:if test="$withJsonLd = 'true'">
       <script type="application/ld+json">
