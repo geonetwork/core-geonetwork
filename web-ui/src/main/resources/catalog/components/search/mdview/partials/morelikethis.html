@@ -11,10 +11,10 @@
       <span>
       {{record._source.resourceTitleObject.default}}
       </span>
-      <div class="flex-spacer"></div>
+      <div class="flex-spacer flex-grow"></div>
       <img data-ng-if="record._source.overview"
            style="max-width: 95px;"
-           data-ng-src="{{record._source.overview.url || record._source.overview[0].url}}">
+           data-ng-src="{{record._source.overview.url || record._source.overview[0].url}}?size=95">
     </a>
   </div>
 </div>
