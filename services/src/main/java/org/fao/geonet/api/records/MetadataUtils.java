@@ -277,13 +277,29 @@ public class MetadataUtils {
                 final Map<String, Object> source = e.getSourceAsMap();
                 record.addContent(new Element("id").setText((String)source.get(Geonet.IndexFieldNames.ID)));
                 record.addContent(new Element("uuid").setText((String)source.get(Geonet.IndexFieldNames.UUID)));
-                record.addContent(new Element("title").setText((String)source.get(Geonet.IndexFieldNames.RESOURCETITLE)));
-                record.addContent(new Element("abstract").setText((String)source.get(Geonet.IndexFieldNames.RESOURCEABSTRACT)));
+
+                setFieldFromIndexDocument(record, source, Geonet.IndexFieldNames.RESOURCETITLE, "title");
+                setFieldFromIndexDocument(record, source, Geonet.IndexFieldNames.RESOURCEABSTRACT, "abstract");
                 response.addContent(record);
             });
             typeResponse.addContent(response);
         }
         return typeResponse;
+    }
+
+    private static void setFieldFromIndexDocument(Element record, Map<String, Object> source, String fieldName, String elementName) {
+        // TODOES : multilingual records
+        Object titleNode = source.get(fieldName + "Object");
+        if (titleNode instanceof Map) {
+            record.addContent(new Element(elementName).setText((String)((Map) titleNode).get("default")));
+        } else if (titleNode instanceof String) {
+            record.addContent(new Element(elementName).setText((String) titleNode));
+        } else {
+            titleNode = source.get(fieldName);
+            if (titleNode != null) {
+                record.addContent(new Element(elementName).setText((String) titleNode));
+            }
+        }
     }
 
     /**
