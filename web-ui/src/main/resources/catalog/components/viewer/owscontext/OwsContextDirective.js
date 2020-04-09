@@ -43,7 +43,7 @@
         },
         hitsperpageValues: 2,
         params: {
-          sortBy: 'resourceTitle.keyword',
+          sortBy: 'resourceTitleObject.default.keyword',
           from: 1,
           to: 2
         }

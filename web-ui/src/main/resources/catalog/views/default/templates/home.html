@@ -2,6 +2,7 @@
   <div class="row gn-row-main">
     <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
       <div class="col-sm-4 col-sm-offset-6"
+           data-ng-show="healthCheck"
            data-ng-hide="healthCheck && healthCheck.IndexHealthCheck">
         <div class="alert alert-warning text-center">
           <h3 data-translate="">indexNotAvailable</h3>
@@ -110,6 +111,7 @@
               <span class="badge pull-left">{{facet.doc_count}}</span>
             </div>
           </span>
+          <!-- TODOES Sort alpha -->
           <span data-ng-repeat="(key, facet) in searchInfo.aggregations.inspireThemeUri.buckets"
                 data-ng-show="browse === 'inspire'"
                 data-ng-init="code = facet.key.slice(facet.key.lastIndexOf('/')+1)"

@@ -130,7 +130,7 @@
               {
                 'from': 0,
                 'size':100,
-                'sort': [{'resourceTitle.keyword': 'asc'}],
+                'sort': [{'resourceTitleObject.default.keyword': 'asc'}],
                 'query':{
                   'query_string': {
                     'query': '+isTemplate:n +serviceType:("OGC:WMS" OR "OGC:WFS" OR "OGC:WMTS")'

@@ -69,7 +69,7 @@
         filters: gnSearchSettings.filters,
         configId: 'editor',
         params: {
-          sortBy: 'changeDate',
+          sortBy: 'dateStamp',
           sortOrder: 'desc',
           isTemplate: ['y', 'n'],
           resultType: $scope.facetsSummaryType,
@@ -77,7 +77,7 @@
           to: 20
         },
         defaultParams: {
-          sortBy: 'changeDate',
+          sortBy: 'dateStamp',
           sortOrder: 'desc',
           isTemplate: ['y', 'n'],
           resultType: $scope.facetsSummaryType,
@@ -186,16 +186,7 @@
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType = 'manager';
       $scope.facetConfig = gnGlobalSettings.gnCfg.mods.editor.facetConfig;
 
-      gnSearchSettings.sortbyValues = [{
-        sortBy: 'relevance',
-        sortOrder: ''
-      }, {
-        sortBy: 'changeDate',
-        sortOrder: 'desc'
-      }, {
-        sortBy: 'resourceTitle.keyword',
-        sortOrder: ''
-      }];
+      gnSearchSettings.sortbyValues = gnSearchSettings.sortbyValues;
 
       gnSearchSettings.hitsperpageValues = [20, 50, 100];
 

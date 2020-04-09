@@ -102,7 +102,7 @@
                       from: 1,
                       to: 20,
                       root: 'gmd:CI_ResponsibleParty',
-                      sortBy: 'resourceTitle.keyword',
+                      sortBy: 'resourceTitleObject.default.keyword',
                       sortOrder: '',
                       resultType: 'subtemplates'
                     }
@@ -349,7 +349,7 @@
                      from: 1,
                      to: 10,
                      root: 'gmd:CI_ResponsibleParty',
-                     sortBy: 'resourceTitle.keyword',
+                     sortBy: 'resourceTitleObject.default.keyword',
                      sortOrder: ''
                    }
                  };

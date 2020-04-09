@@ -98,7 +98,7 @@
         selectionBucket: 'd101',
         any: '',
         params: {
-          sortBy: 'resourceTitle.keyword',
+          sortBy: 'resourceTitleObject.default.keyword',
           isTemplate: ['s'],
           resultType: $scope.facetsSummaryType,
           from: 1,
@@ -106,7 +106,7 @@
         },
         sortbyValues: [
           {
-            sortBy: 'resourceTitle.keyword',
+            sortBy: 'resourceTitleObject.default.keyword',
             sortOrder: ''
           },
           {

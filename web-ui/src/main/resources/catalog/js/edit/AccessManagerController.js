@@ -123,7 +123,7 @@
 
 
         var query = '{' +
-            '  "sort" : [{"resourceTitle.keyword": "asc"}],' +
+            '  "sort" : [{"resourceTitleObject.default.keyword": "asc"}],' +
             '  "query": {' +
             '    "bool": {' +
             '      "must": [' +

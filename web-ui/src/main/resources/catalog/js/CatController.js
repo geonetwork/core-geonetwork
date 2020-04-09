@@ -112,13 +112,13 @@ goog.require('gn_alert');
           'facetConfig': {
             'resourceType': {
               'terms': {
-                'field': 'resourceType',
+                'field': 'codelist_hierarchyLevel_text',
                 'size': 10
               }
             },
             'topic': {
               'terms': {
-                'field': 'topic',
+                'field': 'topic_text',
                 'size': 20
               }
             },
@@ -126,6 +126,7 @@ goog.require('gn_alert');
               'terms': {
                 'field': 'inspireThemeUri',
                 'size': 34
+                // "order" : { "_key" : "asc" }
               }
             }
           },
@@ -167,26 +168,9 @@ goog.require('gn_alert');
           // TODOES
           'facetTabField': '',
           'facetConfig': {
-            'thesaurus_geonetworkthesaurusexternalthemegemet_tree': {
-              'terms': {
-                'field': 'thesaurus_geonetworkthesaurusexternalthemegemet_tree',
-                'size': 100,
-                "order" : { "_key" : "asc" }
-                //"include": "[^/]+/?[^/]+"
-                // Limit to 2 levels
-              }
-            },
-            'thesaurus_geonetworkthesaurusexternalplaceregions_tree': {
-              'terms': {
-                'field': 'thesaurus_geonetworkthesaurusexternalplaceregions_tree',
-                'size': 100,
-                "order" : { "_key" : "asc" }
-                //"include": "EEA.*"
-              }
-            },
             'resourceType': {
               'terms': {
-                'field': 'resourceType'
+                'field': 'codelist_hierarchyLevel_text'
               },
               'aggs': {
                 'format': {
@@ -214,21 +198,64 @@ goog.require('gn_alert');
                 }
               }
             },
+            'thesaurus_geonetworkthesaurusexternalthemegemet_tree': {
+              'terms': {
+                'field': 'thesaurus_geonetworkthesaurusexternalthemegemet_tree',
+                'size': 100,
+                "order" : { "_key" : "asc" },
+                "include": "[^/]+/?[^/]+"
+                // Limit to 2 levels
+              }
+            },
+            'tag': {
+              'terms': {
+                'field': 'tag',
+                'size': 10
+              }
+            },
+            'thesaurus_geonetworkthesaurusexternalplaceregions_tree': {
+              'terms': {
+                'field': 'thesaurus_geonetworkthesaurusexternalplaceregions_tree',
+                'size': 100,
+                "order" : { "_key" : "asc" }
+                //"include": "EEA.*"
+              }
+            },
             'codelist_spatialRepresentationType': {
               'terms': {
                 'field': 'codelist_spatialRepresentationType',
                 'size': 10
               }
             },
+            'resolutionScaleDenominator': {
+              'terms': {
+                'field': 'resolutionScaleDenominator',
+                'size': 10,
+                'order': {'_key': "asc"}
+              }
+            },
+            'codelist_maintenanceAndUpdateFrequency_text': {
+              'terms': {
+                'field': 'codelist_maintenanceAndUpdateFrequency_text',
+                'size': 10
+              }
+            },
+            'codelist_status_text': {
+              'terms': {
+                'field': 'codelist_status_text',
+                'size': 10
+              }
+            },
             'creationYearForResource': {
               'terms': {
                 'field': 'creationYearForResource',
-                'size': 5
+                'size': 10,
+                'order': {'_key': "desc"}
               }
             },
             'tag': {
               'terms': {
-                'field': 'tag',
+                'field': 'OrgForResource',
                 'size': 15
               }
             },
@@ -245,6 +272,9 @@ goog.require('gn_alert');
             'sortOrder': ''
           }, {
             'sortBy': 'dateStamp',
+            'sortOrder': 'desc'
+          }, {
+            'sortBy': 'createDate',
             'sortOrder': 'desc'
           }, {
             'sortBy': 'resourceTitleObject.default.keyword',
@@ -309,7 +339,7 @@ goog.require('gn_alert');
             'displayFeaturedSearchesPanel': false
           },
           'savedSelection': {
-            'enabled': true
+            'enabled': false
           }
         },
         'map': {

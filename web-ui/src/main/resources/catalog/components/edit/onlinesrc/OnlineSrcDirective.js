@@ -335,7 +335,7 @@
                 scope.searchObj = {
                   internal: true,
                   params: {
-                    sortBy: 'resourceTitle.keyword'
+                    sortBy: 'resourceTitleObject.default.keyword'
                   }
                 };
 
@@ -1442,7 +1442,7 @@
                       isTemplate: 'n',
                       from: 1,
                       to: 50,
-                      sortBy: 'resourceTitle.keyword',
+                      sortBy: 'resourceTitleObject.default.keyword',
                       sortOrder: ''
                     }
                   };

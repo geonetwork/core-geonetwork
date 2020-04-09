@@ -6,7 +6,7 @@
     "resolutionScaleDenominator": "Échelle",
     "serviceType": "Types de service",
     "creationYearForResource": "Années",
-    "resourceTitle.keyword": "titre",
+    "resourceTitleObject.default.keyword": "titre",
     "dateStamp": "date de mise à jour",
     "topic": "Thèmes",
     "thesaurus_geonetworkthesaurusexternalthemegemet_tree": "Mots clés GEMET",

@@ -1366,6 +1366,13 @@
       "scope": {
         "type": "keyword"
       },
+      "topic_text": {
+        "type": "keyword",
+        "copy_to": [
+          "any",
+          "anytext"
+        ]
+      },
       "topic": {
         "type": "keyword",
         "copy_to": [
