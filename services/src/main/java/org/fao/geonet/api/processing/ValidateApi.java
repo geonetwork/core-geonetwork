@@ -208,7 +208,7 @@ public class ValidateApi {
 
             // index records
             BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, report.getMetadata());
-            r.process();
+            r.process(true);
         } catch (Exception e) {
             throw e;
         } finally {
