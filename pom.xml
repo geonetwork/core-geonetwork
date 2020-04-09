@@ -1193,18 +1193,11 @@
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
-      <id>geotools</id>
-      <name>Geotools repository</name>
-      <url>http://download.osgeo.org/webdav/geotools/</url>
+      <id>osgeo</id>
+      <name>OSGeo repository</name>
+      <url>https://repo.osgeo.org/repository/release/</url>
     </repository>
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>boundless</id>
-      <name>Boundless repository</name>
-      <url>http://repo.boundlessgeo.com/main/</url>
-    </repository>
+
     <repository>
       <snapshots>
         <enabled>false</enabled>
@@ -1213,7 +1206,6 @@
       <name>Developer k-int repository</name>
       <url>http://maven.k-int.com/content/repositories/releases/</url>
     </repository>
-
 
     <repository>
       <snapshots>
@@ -1225,23 +1217,6 @@
       <id>core-maven-repo</id>
       <name>GeoNetwork remote repository</name>
       <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
-    </repository>
-
-    <repository>
-      <id>mvnrepository.com</id>
-      <name>Repository that has juniversalchardet</name>
-      <url>http://mvnrepository.com/artifact</url>
-    </repository>
-    <repository>
-      <id>maven.geo-solutions.it</id>
-      <name>geo-solutions</name>
-      <url>http://maven.geo-solutions.it</url>
-    </repository>
-
-    <repository>
-      <id>maven2</id>
-      <name>Repository maven2</name>
-      <url>https://repo.maven.apache.org/maven2</url>
     </repository>
 
     <!-- seasar repo, has jsonic - used by langdetect -->
