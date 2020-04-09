@@ -1219,12 +1219,6 @@
       <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
     </repository>
 
-    <repository>
-      <id>mvnrepository.com</id>
-      <name>Repository that has juniversalchardet</name>
-      <url>http://mvnrepository.com/artifact</url>
-    </repository>
-
     <!-- seasar repo, has jsonic - used by langdetect -->
     <repository>
       <id>maven.seasar.org</id>
