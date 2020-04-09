@@ -1225,12 +1225,6 @@
       <url>http://mvnrepository.com/artifact</url>
     </repository>
 
-    <repository>
-      <id>maven2</id>
-      <name>Repository maven2</name>
-      <url>https://repo.maven.apache.org/maven2</url>
-    </repository>
-
     <!-- seasar repo, has jsonic - used by langdetect -->
     <repository>
       <id>maven.seasar.org</id>
