@@ -135,7 +135,10 @@ public class EsSearchManager implements ISearchManager {
             .add(Geonet.IndexFieldNames.ID)
             .add(Geonet.IndexFieldNames.UUID)
             .add(Geonet.IndexFieldNames.RESOURCETITLE)
-            .add(Geonet.IndexFieldNames.RESOURCEABSTRACT).build();
+            .add(Geonet.IndexFieldNames.RESOURCETITLE + "Object")
+            .add(Geonet.IndexFieldNames.RESOURCEABSTRACT)
+            .add(Geonet.IndexFieldNames.RESOURCEABSTRACT + "Object")
+            .build();
     }
 
     @Value("${es.index.records:gn-records}")
