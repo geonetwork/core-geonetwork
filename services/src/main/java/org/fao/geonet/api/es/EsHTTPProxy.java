@@ -120,7 +120,7 @@ public class EsHTTPProxy {
 
     @Autowired
     SourceRepository sourceRepository;
-    
+
     public EsHTTPProxy() {
     }
 
@@ -169,11 +169,18 @@ public class EsHTTPProxy {
             } else {
                 final JsonNode queryNode = node.get("query");
                 if (queryNode != null) {
-                    addFilterToQuery(context, objectMapper, node);
+                        addFilterToQuery(context, objectMapper, node);
                     if (selectionBucket != null) {
                         // Multisearch are not supposed to work with a bucket.
                         // Only one request is store in session
                         session.setProperty(Geonet.Session.SEARCH_REQUEST + selectionBucket, node);
+                    }
+                }
+                final JsonNode sourceNode = node.get("_source");
+                if (sourceNode !=  null) {
+                    final JsonNode sourceIncludes = sourceNode.get("includes");
+                    if (sourceIncludes != null && sourceIncludes.isArray()) {
+                        ((ArrayNode) sourceIncludes).add("op*");
                     }
                 }
             }
@@ -281,7 +288,7 @@ public class EsHTTPProxy {
         } else {
             // op0 (ie. view operation) contains one of the ids of your groups
             Set<Integer> groups = accessManager.getUserGroups(userSession, context.getIpAddress(), false);
-            final String ids = groups.stream().map(Object::toString)
+            final String ids = groups.stream().map(Object::toString).map(e -> e.replace("-", "\\\\-"))
                 .collect(Collectors.joining(" OR "));
             String operationFilter = String.format("op%d:(%s)", ReservedOperation.view.getId(), ids);
 
@@ -289,7 +296,7 @@ public class EsHTTPProxy {
             String ownerFilter = "";
             if (userSession.getUserIdAsInt() > 0) {
                 // OR you are owner
-                ownerFilter = String.format("owner:%d");
+                ownerFilter = String.format("owner:%d", userSession.getUserIdAsInt());
                 // OR member of groupOwner
                 // TODOES
             }
@@ -443,14 +450,21 @@ public class EsHTTPProxy {
         return sub != null ? sub.asText() : null;
     }
 
+    private static Integer getSourceInteger(ObjectNode node, String name) {
+        final JsonNode sub = node.get("_source").get(name);
+        return sub != null ? sub.asInt() : null;
+    }
+
     private static void addSelectionInfo(ObjectNode doc, Set<String> selections) {
         final String uuid = getSourceString(doc, Geonet.IndexFieldNames.UUID);
         doc.put(Edit.Info.Elem.SELECTED, selections.contains(uuid));
     }
 
     private static void addUserInfo(ObjectNode doc, ServiceContext context) throws Exception {
-        final Integer owner = getInteger(doc, Geonet.IndexFieldNames.OWNER);
-        final Integer groupOwner = getInteger(doc, Geonet.IndexFieldNames.GROUP_OWNER);
+        final Integer owner = getSourceInteger(doc, Geonet.IndexFieldNames.OWNER);
+        final Integer groupOwner = getSourceInteger(doc, Geonet.IndexFieldNames.GROUP_OWNER);
+
+        ObjectMapper objectMapper = new ObjectMapper();
 
         final MetadataSourceInfo sourceInfo = new MetadataSourceInfo();
         sourceInfo.setOwner(owner);
@@ -474,18 +488,21 @@ public class EsHTTPProxy {
                 accessManager.getUserGroups(context.getUserSession(), context.getIpAddress(), true);
             operations = Sets.newHashSet();
             for (ReservedOperation operation : ReservedOperation.values()) {
-                ArrayNode opFields = (ArrayNode) doc.get(Geonet.IndexFieldNames.OP_PREFIX + operation.getId());
-                if (opFields != null) {
-                    for (JsonNode field : opFields) {
-                        final int groupId = field.asInt();
-                        if (operation == ReservedOperation.editing && editingGroups.contains(groupId)) {
-                            canEdit = true;
-                            break;
-                        }
+                final JsonNode operationNodes = doc.get("_source").get(Geonet.IndexFieldNames.OP_PREFIX + operation.getId());
+                if (operationNodes != null) {
+                    ArrayNode opFields = operationNodes.isArray() ? (ArrayNode) operationNodes : objectMapper.createArrayNode().add(operationNodes);
+                    if (opFields != null) {
+                        for (JsonNode field : opFields) {
+                            final int groupId = field.asInt();
+                            if (operation == ReservedOperation.editing && editingGroups.contains(groupId)) {
+                                canEdit = true;
+                                break;
+                            }
 
-                        if (groups.contains(groupId)) {
-                            operations.add(operation);
-                            break;
+                            if (groups.contains(groupId)) {
+                                operations.add(operation);
+                                break;
+                            }
                         }
                     }
                 }
@@ -511,12 +528,16 @@ public class EsHTTPProxy {
     }
 
     private static boolean hasOperation(ObjectNode doc, ReservedGroup group, ReservedOperation operation) {
+        ObjectMapper objectMapper = new ObjectMapper();
         int groupId = group.getId();
-        ArrayNode opFields = (ArrayNode) doc.get(Geonet.IndexFieldNames.OP_PREFIX + operation.getId());
-        if (opFields != null) {
-            for (JsonNode field : opFields) {
-                if (groupId == field.asInt()) {
-                    return true;
+        final JsonNode operationNodes = doc.get("_source").get(Geonet.IndexFieldNames.OP_PREFIX + operation.getId());
+        if (operationNodes != null) {
+            ArrayNode opFields = operationNodes.isArray() ? (ArrayNode) operationNodes : objectMapper.createArrayNode().add(operationNodes);
+            if (opFields != null) {
+                for (JsonNode field : opFields) {
+                    if (groupId == field.asInt()) {
+                        return true;
+                    }
                 }
             }
         }

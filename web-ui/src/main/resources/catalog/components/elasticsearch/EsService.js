@@ -27,9 +27,9 @@
   var module = angular.module('gn_es_service', []);
 
   module.service('gnESService', [
-    'gnESFacet', 'gnEsLuceneQueryParser', 'gnGlobalSettings',
+    'gnESFacet', 'gnEsLuceneQueryParser', 'gnGlobalSettings', '$rootScope',
     function(
-      gnESFacet, gnEsLuceneQueryParser, gnGlobalSettings) {
+      gnESFacet, gnEsLuceneQueryParser, gnGlobalSettings, $rootScope) {
 
 
     this.facetsToLuceneQuery = function(facetsState) {
@@ -95,7 +95,8 @@
       var query_string;
       var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',
         'sortBy', 'sortOrder', 'resultType', 'facet.q', 'any', 'geometry', 'query_string',
-        'creationDateFrom', 'creationDateTo', 'dateFrom', 'dateTo', 'geom', 'relation'];
+        'creationDateFrom', 'creationDateTo', 'dateFrom', 'dateTo', 'geom', 'relation',
+        'editable'];
       var mappingFields = {
         title: 'resourceTitle',
         abstract: 'resourceAbstract',
@@ -153,6 +154,18 @@
             }
           }
         });
+      }
+      if (p.editable == 'true') {
+        if ($rootScope.user.isEditorOrMore() && !$rootScope.user.isAdmin()) {
+          // Append user group query
+          if ($rootScope.user.groupsWithEditor.length > 0) {
+            queryHook.push({
+              terms: {
+                "op2" : $rootScope.user.groupsWithEditor
+              }
+            });
+          }
+        }
       }
 
       var termss = Object.keys(p).reduce(function(output, current) {

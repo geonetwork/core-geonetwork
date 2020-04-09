@@ -44,9 +44,9 @@
         selectionBucket: 'be101',
         filters: gnSearchSettings.filters,
         params: {
-          sortBy: 'changeDate',
+          sortBy: 'dateStamp',
           sortOrder: 'desc',
-          _isTemplate: 'y or n',
+          isTemplate: ['y', 'n'],
           editable: 'true',
           resultType: $scope.facetsSummaryType,
           from: 1,

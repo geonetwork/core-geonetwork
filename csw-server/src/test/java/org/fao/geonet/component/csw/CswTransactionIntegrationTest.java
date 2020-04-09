@@ -23,7 +23,9 @@
 
 package org.fao.geonet.component.csw;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -382,7 +384,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         metadata.setDataAndFixCR(Xml.loadStream(CswTransactionIntegrationTest.class.getResourceAsStream("metadata-photographic.xml")));
         metadata = _metadataRepository.save(metadata);
         final Path schemaDir = _schemaManager.getSchemaDir("iso19139");
-        Map<String, Object> extras = new HashMap<>(3);
+        Multimap<String, Object> extras = ArrayListMultimap.create();
         extras.put("_uuid", PHOTOGRAPHIC_UUID);
         extras.put("_isTemplate", "n");
         extras.put("_owner", "" + ownerId);

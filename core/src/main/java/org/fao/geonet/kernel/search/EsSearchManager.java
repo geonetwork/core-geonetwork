@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Multimap;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
@@ -221,8 +222,8 @@ public class EsSearchManager implements ISearchManager {
         }
     }
 
-    private void addMoreFields(Element doc, Map<String, Object> fields) {
-        fields.entrySet().forEach(e -> {
+    private void addMoreFields(Element doc, Multimap<String, Object> fields) {
+        fields.entries().forEach(e -> {
             doc.addContent(new Element(e.getKey())
                 .setText(String.valueOf(e.getValue())));
         });
@@ -328,7 +329,7 @@ public class EsSearchManager implements ISearchManager {
         UpdateRequest updateRequest = new UpdateRequest(defaultIndex, id).doc(fields);
         return client.getClient().update(updateRequest, RequestOptions.DEFAULT);
     }
-    public BulkResponse updateFields(String id, Map<String, Object> fields, Set<String> fieldsToRemove) throws Exception {
+    public BulkResponse updateFields(String id, Multimap<String, Object> fields, Set<String> fieldsToRemove) throws Exception {
         fields.put("indexingDate", new Date());
         BulkRequest bulkrequest = new BulkRequest();
         StringBuffer script = new StringBuffer();
@@ -379,7 +380,7 @@ public class EsSearchManager implements ISearchManager {
 
     @Override
     public void index(Path schemaDir, Element metadata, String id,
-                      Map<String, Object> dbFields,
+                      Multimap<String, Object> dbFields,
                       MetadataType metadataType, String root,
                       boolean forceRefreshReaders) throws Exception {
 

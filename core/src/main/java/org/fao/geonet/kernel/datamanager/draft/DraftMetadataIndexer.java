@@ -23,6 +23,8 @@
 
 package org.fao.geonet.kernel.datamanager.draft;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -56,8 +58,8 @@ public class DraftMetadataIndexer extends BaseMetadataIndexer implements IMetada
      *
      * @param fullMd
      */
-    protected Map<String, Object> addExtraFields(AbstractMetadata fullMd) {
-        Map<String, Object> extraFields = new HashMap<>();
+    protected Multimap<String, Object> addExtraFields(AbstractMetadata fullMd) {
+        Multimap<String, Object> extraFields = ArrayListMultimap.create();
 
         extraFields.putAll(super.addExtraFields(fullMd));
 

@@ -23,20 +23,18 @@
 
 package org.fao.geonet.kernel.search;
 
+import com.google.common.collect.Multimap;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
 import org.jdom.Element;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 
 /**
  * Base interface for the search (Lucene or Solr).
@@ -52,7 +50,7 @@ public interface ISearchManager {
      * @param forceRefreshReaders if true then block all searches until they can obtain a up-to-date
      *                            reader
      */
-    void index(Path schemaDir, Element metadata, String id, Map<String, Object> moreFields,
+    void index(Path schemaDir, Element metadata, String id, Multimap<String, Object> moreFields,
                MetadataType metadataType, String root, boolean forceRefreshReaders)
         throws Exception;
 

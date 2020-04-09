@@ -89,6 +89,7 @@
             'resource*',
             'draft',
             'owner*',
+            'recordOwner',
             'status*',
             'tag*',
             'isTemplate',
@@ -120,6 +121,9 @@
 
     function createFacetModel(reqAggs, respAggs, isNested, path) {
       var listModel = [];
+      if (respAggs == undefined) {
+        return;
+      }
       for (var fieldId in reqAggs) {
         var respAgg = respAggs[fieldId];
         var reqAgg = reqAggs[fieldId];

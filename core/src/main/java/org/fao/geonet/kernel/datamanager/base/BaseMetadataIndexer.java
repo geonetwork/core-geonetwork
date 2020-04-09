@@ -23,6 +23,9 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.ArrayListMultimap;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
@@ -383,7 +386,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         AbstractMetadata fullMd;
 
         try {
-            Map<String, Object> fields = new HashMap<String, Object>();
+            Multimap<String, Object> fields = ArrayListMultimap.create();
             int id$ = Integer.parseInt(metadataId);
 
             // get metadata, extracting and indexing any xlinks
@@ -584,15 +587,15 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     public void indexMetadataPrivileges(String uuid, int id) throws Exception {
         Set<String> operationFields = new HashSet<>();
         Arrays.asList(ReservedOperation.values()).forEach(o ->
-            operationFields.add("_op" + o.getId())
+            operationFields.add("op" + o.getId())
         );
 
         searchManager.updateFields(uuid, buildFieldsForPrivileges(id), operationFields);
     }
 
-    private Map<String, Object> buildFieldsForPrivileges(int recordId) {
+    private Multimap<String, Object> buildFieldsForPrivileges(int recordId) {
         List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(recordId);
-        Map<String, Object> privilegesFields = new HashMap<>();
+        Multimap<String, Object> privilegesFields = ArrayListMultimap.create();
         boolean isPublishedToAll = false;
 
         for (OperationAllowed operationAllowed : operationsAllowed) {
@@ -628,10 +631,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
      *
      * @param fullMd
      */
-    protected Map<String, Object> addExtraFields(AbstractMetadata fullMd) {
+    protected Multimap<String, Object> addExtraFields(AbstractMetadata fullMd) {
         // If we are not using draft utils, mark all as "no draft"
         // needed to be compatible with UI searches that check draft existence
-        Map<String, Object> extraFields = new HashMap<>(1);
+        Multimap<String, Object> extraFields = ArrayListMultimap.create();
         if (!DraftMetadataIndexer.class.isInstance(this)) {
             extraFields.put(Geonet.IndexFieldNames.DRAFT, "n");
         }

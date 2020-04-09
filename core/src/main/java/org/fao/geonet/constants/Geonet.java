@@ -661,10 +661,10 @@ public final class Geonet {
         public static final String DISPLAY_ORDER = "_displayOrder";
         public static final String EXTRA = "_extra";
         public static final String USERINFO = "_userinfo";
-        public static final String GROUP_OWNER = "_groupOwner";
+        public static final String GROUP_OWNER = "groupOwner";
         public static final String GROUP_WEBSITE = "_groupWebsite";
         public static final String LOGO = "_logo";
-        public static final String OP_PREFIX = "_op";
+        public static final String OP_PREFIX = "op";
         public static final String GROUP_PUBLISHED = "_groupPublished";
         public static final String CAT = "_cat";
         public static final String STATUS = "mdStatus";
