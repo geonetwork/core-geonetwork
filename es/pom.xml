@@ -25,6 +25,7 @@
           <plugin>
             <groupId>com.googlecode.maven-download-plugin</groupId>
             <artifactId>download-maven-plugin</artifactId>
+            <inherited>false</inherited>
             <executions>
               <execution>
                 <id>download-elastic-search</id>
@@ -57,6 +58,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
+            <inherited>false</inherited>
             <configuration>
               <executable>elasticsearch-${es.version}/bin/${es.executable}</executable>
             </configuration>

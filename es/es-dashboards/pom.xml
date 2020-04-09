@@ -43,9 +43,10 @@
           <plugin>
             <groupId>com.googlecode.maven-download-plugin</groupId>
             <artifactId>download-maven-plugin</artifactId>
+            <inherited>false</inherited>
             <executions>
               <execution>
-                <id>download-elastic-search</id>
+                <id>download-kibana</id>
                 <goals>
                   <goal>wget</goal>
                 </goals>
@@ -75,6 +76,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
+            <inherited>false</inherited>
             <configuration>
               <executable>kibana-${es.version}-${kb.platform}/bin/${kb.executable}</executable>
             </configuration>
