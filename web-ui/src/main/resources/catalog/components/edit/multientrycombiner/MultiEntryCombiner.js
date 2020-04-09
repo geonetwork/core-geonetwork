@@ -164,7 +164,7 @@
                  val=_.map(val,function(v){
                     if (v===undefined)
                       return '';
-                    return v;
+                    return v.trim();//remove leading/trailing spaces
                  });
                  //put in any fixedValue
                  for (var idx =0; idx<nExpectedNumber; idx++) {
@@ -181,10 +181,12 @@
             scope.currentLang = scope.config["defaultLang"];
             scope.root_id = scope.config.root_id;
             scope.element = element;
+            //we need to do this because GN trims a trailing "; ", which causes problems
+            scope.combinerSimple = scope.config.combiner.trim(); //"; " -> ";"
 
             //values that the user has actually selected
             scope.individualValues=_.mapObject(scope.config.values,function(val,key){
-                return val.split(scope.config.combiner);
+                return val.split(scope.combinerSimple); // split on simple one, then we will "fix up" trailing spaces
                 });
             fix_values();
 
@@ -223,7 +225,7 @@
                 _.each(_.keys(scope.config.values),function(lang){
                     //values for this lang
                      var vs = scope.individualValues[lang];
-                     var v = vs.join(scope.config.combiner)
+                     var v = vs.join(scope.config.combiner); // use full value
                      scope.config.values[lang] = v;
                 });
              },true);
