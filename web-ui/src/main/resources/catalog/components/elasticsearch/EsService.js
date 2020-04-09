@@ -36,6 +36,13 @@
       return gnEsLuceneQueryParser.facetsToLuceneQuery(facetsState);
     }
 
+    // https://lucene.apache.org/core/3_4_0/queryparsersyntax.html#Escaping%20Special%20Characters
+    function escapeSpecialCharacters(luceneQueryString) {
+      return luceneQueryString.replace(
+        /(\+|-|&&|\|\||!|\{|\}|\[|\]\^|\~|\*|\?|:|\\{1}|\"|\(|\))/g,
+        '\\$1');
+    };
+
     this.generateEsRequest = function(p, searchState, searchConfigId) {
       var params = {};
       var luceneQueryString = gnEsLuceneQueryParser.facetsToLuceneQuery(searchState.filters);
@@ -105,7 +112,7 @@
       if(p.any || luceneQueryString) {
         var queryStringParams = [];
         if (p.any) {
-          queryStringParams.push(p.any);
+          queryStringParams.push(escapeSpecialCharacters(p.any));
         }
         if (luceneQueryString) {
           queryStringParams.push(luceneQueryString);
