@@ -253,7 +253,7 @@ goog.require('gn_alert');
                 'order': {'_key': "desc"}
               }
             },
-            'tag': {
+            'OrgForResource': {
               'terms': {
                 'field': 'OrgForResource',
                 'size': 15

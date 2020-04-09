@@ -210,6 +210,7 @@
 
                   <button data-ng-repeat="cat in mdView.current.record.topic track by $index"
                       data-ng-click="search({'topic': cat})"
+                      data-ng-if="cat != ''"
                       class="btn btn-sm btn-default"
                       title="{{'clickToFilterOn' | translate}} {{cat | translate}}">
                     <span class="fa gn-icon-{{cat}} topic-color"></span>&nbsp;

@@ -223,9 +223,7 @@
           paging.from = (paging.currentPage - 1) * paging.hitsPerPage + 1;
         }
       },function(data){
-        //error handler
-        console.warn('An error occured');
-        console.log(esParams);
+        console.warn('An error occurred while searching with params', esParams);
       }).then(function() {
         $scope.searching--;
       });
