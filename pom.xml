@@ -1191,6 +1191,15 @@
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
+      <id>osgeo</id>
+      <name>OSGeo repository</name>
+      <url>https://repo.osgeo.org/repository/release/</url>
+    </repository>
+    <!--
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
       <id>geotools</id>
       <name>Geotools repository</name>
       <url>http://download.osgeo.org/webdav/geotools/</url>
@@ -1241,19 +1250,23 @@
       <name>Repository maven2</name>
       <url>http://repo.maven.apache.org/maven2</url>
     </repository>
+    -->
 
     <!-- seasar repo, has jsonic - used by langdetect -->
+    <!--
     <repository>
       <id>maven.seasar.org</id>
       <name>The Seasar Foundation Maven2 Repository</name>
       <url>http://maven.seasar.org/maven2</url>
     </repository>
 
+
     <repository>
       <id>georchestra-mfprint</id>
       <name>build-releases</name>
       <url>https://packages.georchestra.org/artifactory/mapfish-print</url>
     </repository>
+    -->
 
   </repositories>
 
