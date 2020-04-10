@@ -6,7 +6,6 @@
 "csw-GetRecordsNoFilter":["csw-GetRecords | no filter",""],
 "csw-GetRecordsNoFilterResults":[    "csw-GetRecords | no filter | results",""],
 "csw-GetRecordsNoFilterValidate":[    "csw-GetRecords | no filter | validate",""],
-"csw-GetRecordsNoFilterResultsWithSummary":[    "csw-GetRecords | no filter | results_with_summary (CSW GeoNetwork extension)",""],
 "csw-GetRecordsNoFilterIsoRecord":[    "csw-GetRecords | no filter | outputSchema: http://www.isotc211.org/2005/gmd",""],
 "csw-GetRecordsNoFilterCswIsoRecord":[    "csw-GetRecords | no filter | outputSchema: http://www.opengis.net/cat/csw/2.0.2",""],
 "csw-GetRecordsNoFilterGFC":[    "csw-GetRecords | no filter | outputSchema: http://www.isotc211.org/2005/gfc",""],
