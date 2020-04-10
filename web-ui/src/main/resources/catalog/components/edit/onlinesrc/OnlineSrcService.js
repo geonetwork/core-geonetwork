@@ -265,6 +265,21 @@
               }
             }
           }
+
+          // SEXTANT SPECIFIC
+          // loop again to find annotations
+          // if there are annotations, mark the corresponding WMS service as having them
+          angular.forEach(data.onlines, function(src) {
+            var name = $filter('gnLocalized')(src.title)
+            var hasAnnotations = src.protocol === 'OGC:WMS' && data.onlines.some(function (otherSrc) {
+              return otherSrc.protocol === 'ANNOTATIONS' && otherSrc.lUrl.endsWith(name)
+            });
+            if (hasAnnotations) {
+              src.hasAnnotations = true;
+            }
+          });
+          // END SEXTANT SPECIFIC
+
           return {
             relations: data,
             siblingTypes: siblingTypes

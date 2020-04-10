@@ -238,6 +238,22 @@
                      type="text">
             </div>
           </div>
+
+          <!-- SEXTANT SPECIFIC: enable annotations -->
+          <div class="form-group"
+               data-ng-show="params.protocol === 'OGC:WMS'">
+
+            <label for="gn-addonlinesrc-annotations-input"
+                   class="col-sm-2 control-label"
+                   data-translate="">annotations</label>
+            <div class="col-sm-10">
+              <input data-ng-model="params.annotationsEnabled"
+                     id="gn-addonlinesrc-annotations-input"
+                     name="annotationsEnabled"
+                     type="checkbox"
+                     ng-disabled="params.annotationsLocked">
+            </div>
+          </div>
         </div>
       </form>
     </div>
