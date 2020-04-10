@@ -79,9 +79,6 @@ import java.util.Map;
 import java.util.Set;
 
 
-/**
- * TODO javadoc.
- */
 public class SearchController {
 
     public final static String DEFAULT_ELEMENTNAMES_STRATEGY = "relaxed";
@@ -425,10 +422,6 @@ public class SearchController {
                     }
                     matchingMetadata = result;
                 }
-
-                if (resultType == ResultType.RESULTS_WITH_SUMMARY) {
-                    matchingMetadata.addContent((Content) info.clone());
-                }
                 result = matchingMetadata;
             } else {
                 if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
@@ -461,7 +454,7 @@ public class SearchController {
      * @return result
      * @throws CatalogException hmm
      */
-        public Pair<Element, Element> search(ServiceContext context, int startPos, int maxRecords,
+        public Element search(ServiceContext context, int startPos, int maxRecords,
                                          ResultType resultType, String outSchema, ElementSetName setName,
                                          Element filterExpr, String filterVersion, List<SortBuilder<FieldSortBuilder>> sort,
                                          Set<String> elemNames, String typeName, int maxHitsFromSummary,
@@ -513,7 +506,7 @@ public class SearchController {
                 resultMD = applyElementNames(context, elemNames, typeName, schemaManager, schema, resultMD, resultType, null, strategy);
 
                 if (resultMD != null) {
-                    if ((resultType == ResultType.RESULTS || resultType == ResultType.RESULTS_WITH_SUMMARY)) {
+                    if (resultType == ResultType.RESULTS) {
                         results.addContent(resultMD);
                     }
 
@@ -533,7 +526,7 @@ public class SearchController {
                 results.setAttribute("nextRecord", "0");
             }
 
-            return Pair.read(null, results);
+            return results;
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -571,7 +564,7 @@ public class SearchController {
         } else {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("lang", displayLanguage);
-            params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
+            params.put("displayInfo", "false");
 
             try {
                 result = Xml.transform(result, styleSheet, params);
@@ -582,71 +575,6 @@ public class SearchController {
             }
             return result;
         }
-    }
-
-    /**
-     * Retrieve actual metadata matching the results. Adds elements to results parameter as a side
-     * effect.
-     *
-     * @param context                 Service context
-     * @param results                 retrieved results
-     * @param summaryAndSearchResults results from search
-     * @param maxRecords              equested max records to return
-     * @param elementSetName          requested ElementSetName
-     * @param outputSchema            requested OutputSchema
-     * @param elementNames            requested ElementNames
-     * @param typeName                requested typeName
-     * @param resultType              requested ResultType
-     * @param strategy                ElementNames strategy
-     * @return number of results from search that could be retrieved
-     * @throws CatalogException hmm
-     */
-    private int retrieveMetadataMatchingResults(ServiceContext context,
-                                                Element results,
-                                                Pair<Element, List<ResultItem>> summaryAndSearchResults,
-                                                int maxRecords, ElementSetName elementSetName,
-                                                String outputSchema, Set<String> elementNames,
-                                                String typeName, ResultType resultType, String strategy, String displayLanguage)
-        throws CatalogException {
-
-        List<ResultItem> resultsList = summaryAndSearchResults.two();
-        int counter = 0;
-        for (int i = 0; (i < maxRecords) && (i < resultsList.size()); i++) {
-            ResultItem resultItem = resultsList.get(i);
-            String id = resultItem.getID();
-            Element md = null;
-
-            try {
-                md = retrieveMetadata(context, id, elementSetName, outputSchema, elementNames, typeName, resultType, strategy, displayLanguage);
-                // metadata cannot be retrieved
-                if (md == null) {
-                    results.addContent(new Comment(String.format("Metadata with id '%s' returned null.", id)));
-                    context.warning("SearchController : Metadata not found or invalid schema : " + id);
-                }
-                // metadata can be retrieved
-                else {
-                    // metadata must be included in response
-                    if ((resultType == ResultType.RESULTS || resultType == ResultType.RESULTS_WITH_SUMMARY)) {
-                        results.addContent(md);
-                    }
-                }
-            } catch (InvalidParameterValueEx e) {
-                results.addContent(new Comment(e.getMessage()));
-            }
-            counter++;
-        }
-        return counter;
-    }
-
-    private String addFilter(String query, String filter) {
-        if (StringUtils.isEmpty(filter)) {
-            return query;
-        }
-
-        if (StringUtils.isNotEmpty(query)) {
-            query += " AND ";
-        }
-        return query + filter;
     }
 
 
@@ -715,7 +643,7 @@ public class SearchController {
         if (Files.exists(styleSheet)) {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("lang", displayLanguage);
-            params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
+            params.put("displayInfo", "false");
 
             try {
                 result = Xml.transform(result, styleSheet, params);

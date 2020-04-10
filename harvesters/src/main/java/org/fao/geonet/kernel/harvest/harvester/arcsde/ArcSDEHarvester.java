@@ -408,44 +408,14 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
     private void loadMetadataThumbnail(String thumbnail, String metadataId, String uuid) {
         log.info("  - Creating thumbnail for metadata uuid: " + uuid);
 
-        org.fao.geonet.services.thumbnail.Set s = new org.fao.geonet.services.thumbnail.Set();
-
         try {
             String filename = uuid + ".png";
             Path dir = context.getUploadDir();
 
             byte[] thumbnailImg =  Base64.decodeBase64(thumbnail);
-
-            try (OutputStream fo = Files.newOutputStream(dir.resolve(filename));
-                 InputStream in = new ByteArrayInputStream(thumbnailImg);) {
-                BinaryFile.copy(in, fo);
-            }
-
-
-            if (log.isDebugEnabled()) log.debug("  - File: " + filename);
-
-            Element par = new Element("request");
-            par.addContent(new Element("id").setText(metadataId));
-            par.addContent(new Element("version").setText("10"));
-            par.addContent(new Element("type").setText("large"));
-
-            Element fname = new Element("fname").setText(filename);
-            fname.setAttribute("content-type", "image/png");
-            fname.setAttribute("type", "file");
-            fname.setAttribute("size", "");
-
-            par.addContent(fname);
-            par.addContent(new Element("add").setText("Add"));
-            par.addContent(new Element("createSmall").setText("on"));
-            par.addContent(new Element("smallScalingFactor").setText("180"));
-            par.addContent(new Element("smallScalingDir").setText("width"));
-
-            // Call the services
-            s.execOnHarvest(par, context, dataMan);
-
-            metadataManager.flush();
-
-            result.thumbnails++;
+            // TODO use FileStore API
+//            metadataManager.flush();
+//            result.thumbnails++;
 
         } catch (Exception e) {
             log.warning("  - Failed to set thumbnail for metadata: " + e.getMessage());

@@ -35,10 +35,10 @@
 
   <xsl:param name="displayInfo"/>
   <xsl:param name="lang"/>
+  <xsl:variable name="metadata"
+                select="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']"/>
 
-  <xsl:include href="../metadata-utils.xsl"/>
-
-  <!-- ============================================================================= -->
+  <xsl:include href="../../layout/utility-tpl-multilingual.xsl"/>
 
   <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
 
@@ -112,12 +112,8 @@
     </csw:BriefRecord>
   </xsl:template>
 
-  <!-- ============================================================================= -->
-
   <xsl:template match="*">
     <xsl:apply-templates select="*"/>
   </xsl:template>
-
-  <!-- ============================================================================= -->
 
 </xsl:stylesheet>

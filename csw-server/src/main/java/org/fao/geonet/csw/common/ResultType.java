@@ -59,8 +59,6 @@ public enum ResultType {
 
     HITS("hits"),
     RESULTS("results"),
-    // this is a GeoNetwork-specific value, not in the CSW specs
-    RESULTS_WITH_SUMMARY("results_with_summary"),
     VALIDATE("validate");
 
     private String type;

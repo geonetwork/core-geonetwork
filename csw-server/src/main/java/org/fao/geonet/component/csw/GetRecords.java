@@ -159,7 +159,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
         Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
 
-        // one of "hits", "results", "validate" or the GN-specific (invalid) "results_with_summary".
+        // one of "hits", "results", "validate".
         ResultType resultType = ResultType.parse(request.getAttributeValue("resultType"));
 
         // either Record or IsoRecord
@@ -254,15 +254,10 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
             response.addContent(status);
 
-            Pair<Element, Element> search = _searchController.search(context, startPos, maxRecords, resultType, outSchema,
+            Element search = _searchController.search(context, startPos, maxRecords, resultType, outSchema,
                 setName, filterExpr, filterVersion, sort, elemNames, typeName, maxHitsInSummary, elementnameStrategy);
 
-            // Only add GeoNetwork summary on results_with_summary option
-            if (resultType == ResultType.RESULTS_WITH_SUMMARY) {
-                response.addContent(search.one());
-            }
-
-            response.addContent(search.two());
+            response.addContent(search);
         }
         return response;
     }

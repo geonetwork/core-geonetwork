@@ -36,9 +36,10 @@
   <xsl:param name="displayInfo"/>
   <xsl:param name="lang"/>
 
-  <xsl:include href="../metadata-utils.xsl"/>
+  <xsl:variable name="metadata"
+                select="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']"/>
 
-  <!-- ============================================================================= -->
+  <xsl:include href="../../layout/utility-tpl-multilingual.xsl"/>
 
   <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
 
@@ -57,8 +58,6 @@
           <xsl:value-of select="gco:CharacterString"/>
         </dc:identifier>
       </xsl:for-each>
-
-      <!-- DataIdentification -->
 
       <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification|
         gmd:identificationInfo/*[contains(@gco:isoType, 'MD_DataIdentification')]|
@@ -95,8 +94,6 @@
           </dc:subject><!-- TODO : translate ? -->
         </xsl:for-each>
 
-        <!-- Distribution -->
-
         <xsl:for-each select="../../gmd:distributionInfo/gmd:MD_Distribution">
           <xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name">
             <dc:format>
@@ -106,8 +103,6 @@
             </dc:format>
           </xsl:for-each>
         </xsl:for-each>
-
-        <!-- Parent Identifier -->
 
         <xsl:for-each select="../../gmd:parentIdentifier/gco:CharacterString">
           <dc:relation>
@@ -147,12 +142,7 @@
     </csw:SummaryRecord>
   </xsl:template>
 
-  <!-- ============================================================================= -->
-
   <xsl:template match="*">
     <xsl:apply-templates select="*"/>
   </xsl:template>
-
-  <!-- ============================================================================= -->
-
 </xsl:stylesheet>

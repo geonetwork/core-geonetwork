@@ -40,8 +40,6 @@
   <xsl:variable name="language" select="xslUtils:getLanguage()"/>
   <xsl:variable name="iso2letterLanguageCode" select="xslUtils:twoCharLangCode($language)"/>
 
-  <!-- ============================================================================================ -->
-
   <xsl:template match="gmd:MD_Metadata">
     <rdf:RDF xmlns:dct="http://purl.org/dc/terms/"
              xmlns:skos="http://www.w3.org/2004/02/skos/core#"

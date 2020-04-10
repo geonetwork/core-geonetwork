@@ -37,9 +37,10 @@
   <xsl:param name="displayInfo"/>
   <xsl:param name="lang"/>
 
-  <xsl:include href="../metadata-utils.xsl"/>
+  <xsl:variable name="metadata"
+                select="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']"/>
 
-  <!-- ============================================================================= -->
+  <xsl:include href="../../layout/utility-tpl-multilingual.xsl"/>
 
   <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
 
@@ -70,8 +71,6 @@
         </dc:date>
       </xsl:for-each>
 
-      <!-- DataIdentification - - - - - - - - - - - - - - - - - - - - - -->
-
       <xsl:for-each select="$identification/gmd:citation/gmd:CI_Citation">
         <xsl:for-each select="gmd:title">
           <dc:title>
@@ -81,8 +80,6 @@
           </dc:title>
         </xsl:for-each>
 
-        <!-- Type - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
         <xsl:for-each select="../../../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue">
           <dc:type>
             <xsl:apply-templates mode="localised" select=".">
@@ -90,8 +87,6 @@
             </xsl:apply-templates>
           </dc:type>
         </xsl:for-each>
-
-        <!-- subject -->
 
         <xsl:for-each
           select="../../gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[not(@gco:nilReason)]">
@@ -106,9 +101,6 @@
             <xsl:value-of select="."/>
           </dc:subject><!-- TODO : translate ? -->
         </xsl:for-each>
-
-
-        <!-- Distribution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <xsl:for-each select="../../../../gmd:distributionInfo/gmd:MD_Distribution">
           <xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name">
@@ -157,8 +149,6 @@
       </xsl:for-each>
 
 
-      <!-- abstract -->
-
       <xsl:for-each select="$identification/gmd:abstract">
         <dct:abstract>
           <xsl:apply-templates mode="localised" select=".">
@@ -171,8 +161,6 @@
           </xsl:apply-templates>
         </dc:description>
       </xsl:for-each>
-
-      <!-- rights -->
 
       <xsl:for-each select="$identification/gmd:resourceConstraints/gmd:MD_LegalConstraints|
         gmd:resourceConstraints/*[@gco:isoType='gmd:MD_LegalConstraints']">
@@ -191,15 +179,11 @@
         </xsl:for-each>
       </xsl:for-each>
 
-      <!-- language -->
-
       <xsl:for-each select="$identification/gmd:language">
         <dc:language>
           <xsl:value-of select="gco:CharacterString|gmd:LanguageCode/@codeListValue"/>
         </dc:language>
       </xsl:for-each>
-
-      <!-- Lineage -->
 
       <xsl:for-each
         select="gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement">
@@ -210,16 +194,11 @@
         </dc:source>
       </xsl:for-each>
 
-      <!-- Parent Identifier -->
-
       <xsl:for-each select="gmd:parentIdentifier/gco:CharacterString">
         <dc:relation>
           <xsl:value-of select="."/>
         </dc:relation>
       </xsl:for-each>
-
-
-      <!-- Distribution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
       <xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
         <xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name">
@@ -230,8 +209,6 @@
           </dc:format>
         </xsl:for-each>
       </xsl:for-each>
-
-      <!-- bounding box -->
 
       <xsl:for-each
         select="$identification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
@@ -394,12 +371,8 @@
     </csw:Record>
   </xsl:template>
 
-  <!-- ============================================================================= -->
-
   <xsl:template match="*">
     <xsl:apply-templates select="*"/>
   </xsl:template>
-
-  <!-- ============================================================================= -->
 
 </xsl:stylesheet>

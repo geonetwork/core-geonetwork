@@ -31,13 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 import java.util.Set;
 
-//==============================================================================
 public class FieldMapper implements IFieldMapper {
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
     @Autowired
     private CatalogConfiguration _catalogConfig;
 
@@ -46,8 +40,6 @@ public class FieldMapper implements IFieldMapper {
 
         return (fieldInfo != null)?fieldInfo.getLuceneField():"";
     }
-
-    //---------------------------------------------------------------------------
 
     public String mapXPath(String field, String schema) {
         String xpath = null;
@@ -71,13 +63,9 @@ public class FieldMapper implements IFieldMapper {
         return (fieldInfo != null)?fieldInfo.getLuceneSortField():"";
     }
 
-    //---------------------------------------------------------------------------
-
     public Iterable<CatalogConfigurationGetRecordsField> getMappedFields() {
         return _catalogConfig.getFieldMapping().values();
     }
-
-    //---------------------------------------------------------------------------
 
     public boolean match(Element elem, Set<String> elemNames) {
         String name = elem.getQualifiedName();
@@ -91,17 +79,9 @@ public class FieldMapper implements IFieldMapper {
         return false;
     }
 
-    //---------------------------------------------------------------------------
-
     public Set<String> getPropertiesByType(String type) {
         return _catalogConfig.getTypeMapping(type);
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //---------------------------------------------------------------------------
 
     private String getAbsolute(String field) {
         if (field.startsWith("./"))
@@ -115,6 +95,3 @@ public class FieldMapper implements IFieldMapper {
     }
 
 }
-
-//==============================================================================
-

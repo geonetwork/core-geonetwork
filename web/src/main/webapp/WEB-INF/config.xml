@@ -161,7 +161,6 @@
   <include>config/config-service-rss.xml</include>
   <include>config/config-service-dcat-rdf.xml</include>
   <include>config/config-service-thesaurus.xml</include>
-  <include>config/config-service-region.xml</include>
   <include>config/config-service-admin.xml</include>
   <include>config/config-service-admin-harvesting.xml</include>
   <include>config/config-service-admin-schematron.xml</include>

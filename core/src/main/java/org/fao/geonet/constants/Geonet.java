@@ -497,10 +497,6 @@ public final class Geonet {
             public static final String RESULTS = "results";
             public static final String HITS = "hits";
             public static final String VALIDATE = "validate";
-            /**
-             * Contains CSW results response with a GeoNetwork summary of the current search.
-             */
-            public static final String RESULTS_WITH_SUMMARY = "results_with_summary";
             public static final String SUGGESTIONS = "suggestions";
         }
 
