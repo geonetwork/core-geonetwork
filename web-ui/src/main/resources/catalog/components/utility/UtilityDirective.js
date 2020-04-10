@@ -648,7 +648,7 @@
               gnUrlUtils.toKeyValue({
                 isTemplate: 's',
                 any: '*QUERY*',
-                _root: 'gmd:CI_ResponsibleParty',
+                root: 'gmd:CI_ResponsibleParty',
                 sortBy: 'resourceTitleObject.default.keyword',
                 sortOrder: '',
                 resultType: 'subtemplates'
