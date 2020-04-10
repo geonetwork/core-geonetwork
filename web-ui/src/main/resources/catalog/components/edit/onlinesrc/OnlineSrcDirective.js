@@ -661,6 +661,13 @@
                         function: linkToEdit.function,
                         selectedLayers: []
                       };
+
+                      // SEXTANT SPECIFIC
+                      if (linkToEdit.hasAnnotations) {
+                        scope.params.annotationsEnabled = true;
+                        scope.params.annotationsLocked = true;
+                      }
+                      // END SEXTANT SPECIFIC
                     } else {
                       scope.editingKey = null;
                       scope.params.linkType = typeConfig;
@@ -805,6 +812,14 @@
                     processParams.selectedLayers = scope.params.selectedLayers;
                   }
                   processParams.process = scope.params.linkType.process;
+
+                  // SEXTANT SPECIFIC
+                  if (scope.params.protocol === 'OGC:WMS' && scope.params.annotationsEnabled) {
+                    var annotationsApiUrl = new URL(window.location.origin + window.location.pathname + '../../../api/annotations/');
+                    processParams.annotationsUrl = annotationsApiUrl + scope.gnCurrentEdit.uuid + '#' + scope.params.name;
+                  }
+                  // END SEXTANT SPECIFIC
+
                   return scope.onlinesrcService.add(
                       processParams, scope.popupid).then(function() {
                     resetForm();

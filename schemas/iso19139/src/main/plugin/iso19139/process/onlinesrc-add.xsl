@@ -57,6 +57,9 @@ Insert is made in first transferOptions found.
   of URL+Protocol+Name -->
   <xsl:param name="updateKey"/>
 
+  <!-- SPECIFIC SEXTANT -->
+  <xsl:param name="annotationsUrl"/>
+  <!-- END SPECIFIC SEXTANT -->
 
   <xsl:variable name="mainLang">
     <xsl:value-of
@@ -381,6 +384,25 @@ Insert is made in first transferOptions found.
                 </xsl:if>
               </gmd:CI_OnlineResource>
             </gmd:onLine>
+
+            <!-- SPECIFIC SEXTANT -->
+            <!-- add annotations block -->
+            <xsl:if test="$annotationsUrl != ''">
+              <gmd:onLine>
+                <gmd:CI_OnlineResource>
+                  <gmd:linkage>
+                    <gmd:URL>
+                      <xsl:value-of select="$annotationsUrl"/>
+                    </gmd:URL>
+                  </gmd:linkage>
+                  <gmd:protocol>
+                    <gco:CharacterString>ANNOTATIONS</gco:CharacterString>
+                  </gmd:protocol>
+                </gmd:CI_OnlineResource>
+              </gmd:onLine>
+            </xsl:if>
+            <!-- END SPECIFIC SEXTANT -->
+
           </xsl:for-each>
         </xsl:when>
         <xsl:otherwise>

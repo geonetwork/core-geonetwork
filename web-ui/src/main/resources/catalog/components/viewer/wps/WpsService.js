@@ -217,6 +217,15 @@
           }
           if (input.complexData && data) {
             var mimeType = input.complexData._default.format.mimeType;
+
+            // SEXTANT SPECIFIC: use GML by default if supported
+            input.complexData.supported.format.map(function (formatObj) {
+              if (formatObj.mimeType.indexOf('gml') > -1) {
+                mimeType = formatObj.mimeType;
+              }
+            });
+            // END SEXTANT SPECIFIC
+
             request.value.dataInputs.input.push({
               identifier: {
                 value: input.identifier.value

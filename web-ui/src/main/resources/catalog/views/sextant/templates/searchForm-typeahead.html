@@ -1,10 +1,10 @@
 <ul class="dropdown-menu type-ahead-dropdown" ng-init=" $parent.setDropDownSelectors()" ng-show="isOpen() || $parent.isInputActive()"
     ng-style="{top: position.top+'px', left: position.left+'px'}"
     role="listbox" aria-hidden="{{!isOpen()}}">
-  <!-- we need to look up three levels to find the search form scope -->
+  <!-- we need to look up parent level to find the search form scope -->
   <li class="search-only-title">
     <a href ng-click="$parent.toggleTitleSearchOnly(); $event.stopPropagation()">
-      <i class="fa fa-fw fa-square-o"
+      <i class="fa fa-fw"
          data-ng-class="$parent.isTitleSearchEnabled() ? 'fa-check-square-o' : 'fa-square-o'"></i>
       <span translate>searchOnlyTitle</span>
     </a>

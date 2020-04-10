@@ -215,7 +215,18 @@ public class SldApi {
             TextFile sld = new TextFile();
             sld.setContent(sldDoc);
             sld.setMimeType("application/xml");
-            fileRepository.saveAndFlush(sld);
+
+            TransactionManager.runInTransaction("sldApi",  ApplicationContextHolder.get(),
+                    TransactionManager.TransactionRequirement.CREATE_NEW,
+                    TransactionManager.CommitBehavior.ALWAYS_COMMIT,
+                    false, new TransactionTask<Void>() {
+                        @Override
+                        public Void doInTransaction(TransactionStatus transaction) throws Throwable {
+                            fileRepository.saveAndFlush(sld);
+                            return null;
+                        }
+                    }
+            );
 
             String pathPrefix = request.getContextPath() + request.getServletPath();
             String url = settingManager.getNodeURL() + "api/tools/ogc/sld/" + sld.getId() + ".xml";

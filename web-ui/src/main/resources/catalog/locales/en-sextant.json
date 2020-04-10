@@ -102,5 +102,6 @@
   "annotationsErrorLoading": "An error occurred while loading the annotations",
   "annotationsErrorSaving": "An error occurred while saving the annotations",
   "searchOnlyTitle": "Search only in title",
-  "ui-settings-sextant": "Sextant-specific configuration"
+  "ui-settings-sextant": "Sextant-specific configuration",
+  "addAnnotations": "Associate annotations"
 }

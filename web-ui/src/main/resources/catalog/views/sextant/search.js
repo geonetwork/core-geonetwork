@@ -567,21 +567,24 @@
 
       $scope.facetConfig = searchSettings.facetConfig;
 
-      $scope.titleSearchOnly = false;
+      $scope.titleSearchOnly = $scope.searchObj.params.hasOwnProperty('title');
       $scope.titleSearchToggleVisible = false;
 
+      var dropDownCheckboxElement;
+      var inputSearchElement;
+
       $scope.setDropDownSelectors = function(){
-        $scope.dropDownCheckboxElement = $('.dropdown-menu.type-ahead-dropdown');
-        $scope.inputSearchElement = $('.input-group.gn-search-input input');
+        dropDownCheckboxElement = $('.dropdown-menu.type-ahead-dropdown');
+        inputSearchElement = $('.input-group.gn-search-input input');
       };
 
       $scope.isInputActive = function () {
-        return  $scope.inputSearchElement.is(':focus') ||
-          $scope.dropDownCheckboxElement.is(':active');
+        return inputSearchElement.is(':focus') ||
+          dropDownCheckboxElement.is(':active');
       };
 
       $scope.toggleTitleSearchOnly = function() {
-        $scope.inputSearchElement.focus();
+        inputSearchElement.focus();
         $scope.titleSearchOnly = !$scope.titleSearchOnly;
         if ($scope.titleSearchOnly) {
           $scope.searchObj.params.title = $scope.searchObj.params.any;
@@ -597,15 +600,28 @@
       $scope.showTitleSearchToggle = function(visible) {
         $scope.titleSearchToggleVisible = visible;
       }
+
+      function addWildcardOnWords(searchString) {
+        return searchString && searchString.split(/\s+/).map(function(part) {
+          // do not add wildcards on uui
+          return part.match(/[a-f0-9]{8}(?:-[a-f0-9]{4}){4}[a-f0-9]{8}/) ? part : part + '*';
+        }).join(' ')
+      }
+      function removeWildcardOnWords(searchString) {
+        return searchString && searchString.split(/\s+/).map(function(part) {
+          return part.replace(/\*$/, '');
+        }).join(' ')
+      }
+
       $scope.searchInput = {};
       Object.defineProperty($scope.searchInput, 'model', {
         set: function(newValue) {
           var key = $scope.titleSearchOnly ? 'title' : 'any';
-          return $scope.searchObj.params[key] = newValue;
+          $scope.searchObj.params[key] = addWildcardOnWords(newValue);
         },
         get: function() {
           var key = $scope.titleSearchOnly ? 'title' : 'any';
-          return $scope.searchObj.params[key];
+          return removeWildcardOnWords($scope.searchObj.params[key]);
         }
       });
     }]);
