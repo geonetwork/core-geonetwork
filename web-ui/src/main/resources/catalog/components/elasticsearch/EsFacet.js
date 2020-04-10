@@ -99,6 +99,26 @@
             'documentStandard'
           ]
         }
+      },
+      directory: {
+        facets: gnGlobalSettings.gnCfg.mods.editor.facetConfig,
+          source: {
+          includes: [
+            'id',
+            'uuid',
+            'creat*',
+            'group*',
+            'resource*',
+            'owner*',
+            'recordOwner',
+            'status*',
+            'isTemplate',
+            'valid',
+            'isHarvested',
+            'changeDate',
+            'documentStandard'
+          ]
+        }
       }
     };
 

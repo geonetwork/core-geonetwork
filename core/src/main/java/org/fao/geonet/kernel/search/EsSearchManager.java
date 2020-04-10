@@ -329,6 +329,7 @@ public class EsSearchManager implements ISearchManager {
         UpdateRequest updateRequest = new UpdateRequest(defaultIndex, id).doc(fields);
         return client.getClient().update(updateRequest, RequestOptions.DEFAULT);
     }
+
     public BulkResponse updateFields(String id, Multimap<String, Object> fields, Set<String> fieldsToRemove) throws Exception {
         fields.put("indexingDate", new Date());
         BulkRequest bulkrequest = new BulkRequest();
@@ -342,7 +343,10 @@ public class EsSearchManager implements ISearchManager {
                 script.toString(),
                 Collections.emptyMap()));
         bulkrequest.add(deleteFieldRequest);
-        UpdateRequest addFieldRequest = new UpdateRequest(defaultIndex, id).doc(fields);
+        Map<String, Object> fieldMap = new HashMap<>();
+        fields.asMap().forEach((e, v) -> fieldMap.put(e, v.toArray()));
+        UpdateRequest addFieldRequest = new UpdateRequest(defaultIndex, id)
+            .doc(fieldMap);
         bulkrequest.add(addFieldRequest);
         return client.getClient().bulk(bulkrequest, RequestOptions.DEFAULT);
     }

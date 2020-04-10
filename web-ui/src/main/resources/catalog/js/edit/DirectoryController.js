@@ -96,6 +96,7 @@
       $scope.ownerGroup = null;
       $scope.defaultSearchObj = {
         selectionBucket: 'd101',
+        configId: 'directory',
         any: '',
         params: {
           sortBy: 'resourceTitleObject.default.keyword',
@@ -110,11 +111,11 @@
             sortOrder: ''
           },
           {
-            sortBy: 'owner',
+            sortBy: 'recordOwner',
             sortOrder: ''
           },
           {
-            sortBy: 'changeDate',
+            sortBy: 'dateStamp',
             sortOrder: 'desc'
           },
           {
@@ -183,7 +184,8 @@
         // fetch templates list & return simplified objects to be used
         // in the template dropdown
         $http.post('../api/search/records/_search', {
-          "_source": {"includes": ["uuid", "root", "resourceTitle", "isTemplate"]},
+          "_source": {"includes": [
+              "uuid", "root", "resourceTitle", "isTemplate"]},
           "query": {
             "bool" : {
               "must": [
@@ -197,8 +199,8 @@
                 root: md._source.root,
                 id: md.id,
                 uuid: md._source.uuid,
-                edit: md._source.edit,          // TODOES: edit & selected do not exist anymore with ES;
-                selected: md._source.selected,  // make sure they are replaced with the correct ones
+                edit: md._source.edit,
+                selected: md._source.selected,
                 isTemplate: md._source.isTemplate,
                 resourceTitle: md._source.resourceTitle
               };

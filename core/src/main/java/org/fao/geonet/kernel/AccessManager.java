@@ -252,7 +252,7 @@ public class AccessManager {
     public boolean canReview(final ServiceContext context, final String id) throws Exception {
         return isOwner(context, id) || hasReviewPermission(context, id);
     }
-    
+
     /**
      * Returns true if, and only if, at least one of these conditions is satisfied: <ul> <li>the
      * user is owner (@see #isOwner)</li> <li>the user has reviewing rights over owning group of the metadata</li> </ul>
@@ -262,7 +262,7 @@ public class AccessManager {
     public boolean canChangeStatus(final ServiceContext context, final String id) throws Exception {
         return hasOnwershipReviewPermission(context, id) || hasReviewPermission(context, id);
     }
-    
+
     /**
      * Return true if the current user is: <ul> <li>administrator</li> <li>the metadata owner (the
      * user who created the record)</li> <li>reviewer in the group the metadata was created</li>
@@ -305,17 +305,21 @@ public class AccessManager {
 
         //--- check if the user is an administrator
         final Profile profile = us.getProfile();
-        if (profile == Profile.Administrator)
+        if (profile == Profile.Administrator) {
             return true;
+        }
 
         //--- check if the user is the metadata owner
         //
-        if (us.getUserIdAsInt() == sourceInfo.getOwner())
+        if (sourceInfo.getOwner() != null
+            && us.getUserIdAsInt() == sourceInfo.getOwner()) {
             return true;
+        }
 
         //--- check if the user is a reviewer or useradmin
-        if (profile != Profile.Reviewer && profile != Profile.UserAdmin)
+        if (profile != Profile.Reviewer && profile != Profile.UserAdmin) {
             return false;
+        }
 
         //--- if there is no group owner then the reviewer cannot review and the useradmin cannot administer
         final Integer groupOwner = sourceInfo.getGroupOwner();
@@ -433,7 +437,7 @@ public class AccessManager {
         return hasEditingPermissionWithProfile(context, id, Profile.Editor);
 
     }
-    
+
     /**
      * Check if current user can review the metadata according to the groups where the metadata is
      * editable.
@@ -492,12 +496,12 @@ public class AccessManager {
         OperationAllowedRepository opAllowedRepository = context.getBean(OperationAllowedRepository.class);
         UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
         IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
-        
+
         Specifications spec = where(UserGroupSpecs.hasProfile(Profile.Reviewer)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
 
         List<Integer> opAlloweds = new ArrayList<Integer>();
         opAlloweds.add(metadataUtils.findOne(id).getSourceInfo().getGroupOwner());
-        
+
         spec = spec.and(UserGroupSpecs.hasGroupIds(opAlloweds));
 
         return (!userGroupRepository.findAll(spec).isEmpty());

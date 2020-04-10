@@ -473,7 +473,6 @@ public class EsHTTPProxy {
         }
         final AccessManager accessManager = context.getBean(AccessManager.class);
         final boolean isOwner = accessManager.isOwner(context, sourceInfo);
-
         final HashSet<ReservedOperation> operations;
         boolean canEdit = false;
         if (isOwner) {
@@ -494,14 +493,14 @@ public class EsHTTPProxy {
                     if (opFields != null) {
                         for (JsonNode field : opFields) {
                             final int groupId = field.asInt();
-                            if (operation == ReservedOperation.editing && editingGroups.contains(groupId)) {
+                            if (operation == ReservedOperation.editing
+                                && canEdit == false
+                                && editingGroups.contains(groupId)) {
                                 canEdit = true;
-                                break;
                             }
 
                             if (groups.contains(groupId)) {
                                 operations.add(operation);
-                                break;
                             }
                         }
                     }
