@@ -251,6 +251,11 @@ header div.gn-abstract {
 
   .gn-field-template div.target {
     margin-bottom: 2em;
+    dl:not(:first-child) {
+      dt:before {
+        border: none;
+      }
+    }
   }
 
   .img-thumbnail {
