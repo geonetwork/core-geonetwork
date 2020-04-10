@@ -181,7 +181,8 @@
       }, {});
 
       for (var prop in termss) {
-        var value = termss[prop], isWildcard = value[0].indexOf('*') !== -1;
+        var value = termss[prop],
+            isWildcard = value[0].indexOf && value[0].indexOf('*') !== -1 || false;
         var queryType = isWildcard ? 'wildcard' : 'terms';
         var clause = {};
         var field = {};
