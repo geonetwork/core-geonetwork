@@ -70,7 +70,7 @@
         scope: {
           map: '=',
           vector: '=',
-          saveCallback: '&'
+          saveCallback: '&?'
         },
         link: function(scope, element, attrs) {
           var map = scope.map;
