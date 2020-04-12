@@ -181,12 +181,26 @@
           };
 
           // The vector that will contains all drawn features
-          var vector = new ol.layer.Vector({
-            source: source,
-            temporary: true,
-            style: drawVectorStyleFn
-          });
-          scope.vector = vector;
+          // SEXTANT SPECIFIC
+          // var vector = new ol.layer.Vector({
+          //   source: source,
+          //   temporary: true,
+          //   style: drawVectorStyleFn
+          // });
+          // scope.vector = vector;
+          if (!scope.vector) {
+            scope.vector = new ol.layer.Vector({
+              source: source,
+              temporary: true,
+              style: drawVectorStyleFn
+            });
+          } else {
+            scope.vector.setSource(source);
+            scope.vector.set('temporary', true);
+            scope.vector.setStyle(drawVectorStyleFn);
+          }
+          var vector = scope.vector;
+          // END SEXTANT SPECIFIC
 
           /**
            * Create a `ol.style.Style` object from style config mapped with

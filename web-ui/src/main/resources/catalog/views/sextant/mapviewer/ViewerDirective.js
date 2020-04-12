@@ -42,7 +42,7 @@
               scope.measureObj = {};
 
               /** Define vector layer used for drawing */
-              scope.drawVector;
+              scope.drawVector = new ol.layer.Vector();
 
               /** print definition */
               scope.activeTools = {};
