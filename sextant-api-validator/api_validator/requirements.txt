@@ -1,0 +1,5 @@
+requests
+BeautifulSoup4
+pytest
+pyyaml
+html5print

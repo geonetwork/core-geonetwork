@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  python:
+   build: .
+   command: pytest /app/api_validator/tests
+   volumes:
+     - ./:/app/
+
