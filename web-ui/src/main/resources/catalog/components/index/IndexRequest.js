@@ -714,7 +714,7 @@
 
       var minF = aggs[v.minField];
       var maxF = aggs[v.maxField];
-      var allD = minF.buckets.concat(maxF.buckets).unique();
+      var allD = minF.buckets.concat(maxF.buckets).unique(function(b1, b2) { return b1.key === b2.key })
 
       allD.forEach(function(b) {
         var rangeSpec = {
