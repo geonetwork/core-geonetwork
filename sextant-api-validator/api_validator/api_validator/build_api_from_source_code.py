@@ -45,7 +45,7 @@ class Validator:
             )
         )
         print(
-            "Replacing sextant urls prefix '{}' with '{}' for base urls".format(
+            "Replacing sextant urls prefix '{}' with '{}' for sextant urls".format(
                 self.sextant_url_lookup, self.sextant_url_replace_by
             )
         )

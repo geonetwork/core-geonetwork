@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 from api_validator.build_api_from_source_code import Validator
 import argparse
+import os
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -35,12 +36,14 @@ if __name__ == "__main__":
         help="string that will replace the prefix",
     )
     args = parser.parse_args()
-    import ipdb
+    if not os.path.exists(args.output) or not os.path.exists(args.input):
+        print("{} does not exists. Exiting....".format(args.output))
+    else:
+        v = Validator(args.input, args.output, args.psl, args.psr, args.psxl, args.psxr)
+        result = v.batch()
 
-    ipdb.set_trace()
-    v = Validator(args.input, args.output, args.psl, args.psr, args.psxl, args.psxr)
-    result = v.batch()
-
-    print(
-        "Finished with {} errors, output is located at {}".format(result, args.output)
-    )
+        print(
+            "Finished with {} error(s), output files are located at {}".format(
+                result, args.output
+            )
+        )
