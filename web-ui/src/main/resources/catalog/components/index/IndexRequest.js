@@ -30,11 +30,11 @@
     search: 'search'
   };
 
-  Array.prototype.unique = function() {
+  Array.prototype.unique = function(compareCallback) {
     var a = this.concat();
     for (var i = 0; i < a.length; ++i) {
       for (var j = i + 1; j < a.length; ++j) {
-        if (a[i] === a[j])
+        if (compareCallback ? compareCallback(a[i], a[j]) : a[i] === a[j])
           a.splice(j--, 1);
       }
     }
@@ -735,7 +735,7 @@
 
       var minF = aggs[v.minField];
       var maxF = aggs[v.maxField];
-      var allD = minF.buckets.concat(maxF.buckets).unique();
+      var allD = minF.buckets.concat(maxF.buckets).unique(function(b1, b2) { return b1.key === b2.key })
 
       allD.forEach(function(b) {
         var rangeSpec = {
