@@ -36,8 +36,19 @@ class Validator:
             "w",
         )
         f.write(html)
+        return True
 
-    def workflow(self):
+    def batch(self):
+        print(
+            "Replacing all urls prefix '{}' with '{}' for base urls".format(
+                self.base_site_url_lookup, self.base_site_url_replace_by
+            )
+        )
+        print(
+            "Replacing sextant urls prefix '{}' with '{}' for base urls".format(
+                self.sextant_url_lookup, self.sextant_url_replace_by
+            )
+        )
         ignored = 0
         for site_name in self.inputs:
             print("Working on {}".format(site_name))
@@ -50,21 +61,33 @@ class Validator:
         return ignored
 
     def replace_urls(self, html):
-        soup = BeautifulSoup(html, features="lxml")
+        soup = BeautifulSoup(html, features="html5lib")
         for a in soup.findAll("a"):
+            if a["href"].startswith("//"):
+                continue
             if a["href"].startswith(self.base_site_url_lookup):
                 a["href"] = a["href"].replace(
                     self.base_site_url_lookup, self.base_site_url_replace_by, 1
                 )
         for img in soup.findAll("img"):
+            if img["src"].startswith("//"):
+                continue
             if img["src"].startswith(self.base_site_url_lookup):
                 img["src"] = img["src"].replace(
                     self.base_site_url_lookup, self.base_site_url_replace_by, 1
                 )
+        for link in soup.findAll("link"):
+            if link["href"].startswith("//"):
+                continue
+            if link["href"].startswith(self.base_site_url_lookup):
+                link["href"] = link["href"].replace(
+                    self.base_site_url_lookup, self.base_site_url_replace_by, 1
+                )
 
         for script in soup.findAll("script"):
-
             if script.has_attr("src"):
+                if script["src"].startswith("//"):
+                    continue
                 if script["src"].find(self.sextant_url_lookup) != -1:
                     script["src"] = script["src"].replace(
                         self.sextant_url_lookup, self.sextant_url_replace_by, 1

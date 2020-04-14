@@ -1,35 +1,46 @@
 #! /usr/bin/env python3
-import sys, getopt
-from api_validator import Validator
-
-def main(argv):
-  print(argv)
-  try:
-    opts, args = getopt.getopt(argv, "hi:o:", ["idir=", "odir=", "psextant=", "psite="])
-  except getopt.GetoptError:
-    print("./run.py -i <input_yaml> -o <output_dir> psextant <psextant>, psite <psite>")
-    sys.exit(2)
-  for opt, arg in opts:
-    if opt == "-h":
-      print("test.py -i <input_yaml> -o <output_dir>")
-      sys.exit()
-    elif opt in ("-i", "--iyaml"):
-      input_yaml = arg
-    elif opt in ("-o", "--odir"):
-      output_dir = arg
-    elif opt in ("-psextantl"):
-      psextantl = arg
-    elif opt in ("-psextantr"):
-      psextantr = arg
-    elif opt in ("-psitel"):
-      psitel = arg
-    elif opt in ("-psiter"):
-      psiter = arg
-  v = Validator(input_yaml, output_dir, psitel, psiter, psextantl, psextantr)
-  result = v.workflow()
-  print(result)
-
+from api_validator.build_api_from_source_code import Validator
+import argparse
 
 if __name__ == "__main__":
-  main(sys.argv[1:])
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-i", "--input", help="input yaml file containing list of sites"
+    )
+    parser.add_argument(
+        "-o", "--output", help="output dir containing the output html files"
+    )
+    parser.add_argument(
+        "--psxl",
+        "--prefix_sextant_lookup",
+        help="prefix that will be looked for and replace for sextant files",
+    )
+    parser.add_argument(
+        "--psxr", "--prefix_sextant_replace", help="string that will replace the prefix"
+    )
+    parser.add_argument(
+        "--psl",
+        "--prefix_basesite_lookup",
+        help="output dir containing the output html files",
+    )
+    parser.add_argument(
+        "--psr",
+        "--prefix_basesite_replaces",
+        help="prefix that will be looked for and replace for base site files",
+    )
+    parser.add_argument(
+        "-v",
+        dest="verbose",
+        action="store_true",
+        help="string that will replace the prefix",
+    )
+    args = parser.parse_args()
+    import ipdb
 
+    ipdb.set_trace()
+    v = Validator(args.input, args.output, args.psl, args.psr, args.psxl, args.psxr)
+    result = v.batch()
+
+    print(
+        "Finished with {} errors, output is located at {}".format(result, args.output)
+    )
