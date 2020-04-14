@@ -2,7 +2,7 @@ Metadata-Version: 2.1
 Name: sextant
 Version: 0.0.1
 Summary: Site Api validation for sextant
-Home-page: https://github.com/julsbreakdown/ndjson4addok
+Home-page: https://gitlab.ifremer.fr/sextant/geonetwork
 Author: Camptocamp
 Author-email: julien.waddle@camptocamp.com
 License: UNKNOWN
