@@ -1,8 +1,27 @@
-from api_validator.build_api_from_source_code import Validator
-input_yaml = '../data/sites.yaml'
-output_dir = '/tmp/'
-output_dir = '/tmp/'
-prefix_sextant_url = "https://sextant.ifremer.fr"
-prefix_base_url = "/"
-v = Validator(input_yaml, output_dir, prefix_base_url, "http://ceybien.com/", prefix_sextant_url, "http://geo:8080")
-v.workflow()
+Api Validator
+======================
+
+Build
+-----
+
+.. code::
+
+  sudo pip3 install -e api_validator
+
+
+Run
+---
+
+.. code::
+
+  ./run.py -i data/sites.yaml -o 'dest_dir/' --psxl http://localhost:8080 --psxr http://sextantapi:8080 --psl "/" --psr https://www.seadatanet.org/
+
+..
+
+
+Test
+-----
+
+.. code::
+
+  make build && make test
