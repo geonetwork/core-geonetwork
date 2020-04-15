@@ -1204,9 +1204,12 @@
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
       <id>geotools</id>
       <name>Geotools repository</name>
-      <url>http://download.osgeo.org/webdav/geotools/</url>
+      <url>http://repo.osgeo.org/repository/release/</url>
     </repository>
     <repository>
       <snapshots>
@@ -1443,7 +1446,7 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>22.3</geotools.version>
+    <geotools.version>23.0</geotools.version>
     <pg.version>42.2.5</pg.version>
 
     <lucene.version>4.9.0</lucene.version>
