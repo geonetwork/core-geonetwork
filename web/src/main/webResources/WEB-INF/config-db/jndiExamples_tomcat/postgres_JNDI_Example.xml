@@ -21,12 +21,14 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
+
+<!-- See the README.md file for instructions to configure/use this file -->
 <Context>
-<Environment name="gnDatabaseDialect" value="POSTGRESQL" type="java.lang.String" override="false"/>
-<Resource name="jdbc/geonetwork" auth="Container"
-          factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-          type="javax.sql.DataSource" driverClassName="org.postgresql.Driver"
-          url="jdbc:postgresql://localhost:5432/postgres"
-          username="postgres" password="postgres" maxActive="20" maxIdle="10" defaultAutoCommit="false"
-maxWait="-1"/>
+  <Environment name="gnDatabaseDialect" value="POSTGRESQL" type="java.lang.String" override="false"/>
+  <Resource name="jdbc/geonetwork" auth="Container"
+            factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+            type="javax.sql.DataSource" driverClassName="org.postgresql.Driver"
+            url="jdbc:postgresql://localhost:5432/postgres"
+            username="postgres" password="postgres"
+            maxActive="20" maxIdle="10" defaultAutoCommit="false" maxWait="-1"/>
 </Context>
