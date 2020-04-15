@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Metadata Records not found</notfound>
+  <notowner>Metadata Records that did not have privileges updated because you are not the owner
+  </notowner>
+  <updated>Metadata Records that had their privileges updated</updated>
+  <resultstitle>Privilege Update Results</resultstitle>
+</strings>

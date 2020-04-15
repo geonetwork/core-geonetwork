@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <groups>Then choose a group this user belongs to</groups>
+  <notfound>Metadata Records not found</notfound>
+  <notowner>Metadata Records not transferred because you are not the owner</notowner>
+  <updated>Metadata Records transferred to new owner</updated>
+  <resultstitle>New Owner Transfer Results</resultstitle>
+  <users>Select the user who will be the new owner</users>
+</strings>

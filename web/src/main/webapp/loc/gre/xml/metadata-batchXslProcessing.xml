@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <notfound>Metadata Records not found</notfound>
+  <notowner>Metadata Records that could not be processed because you are not the owner</notowner>
+  <updated>Metadata Records processed</updated>
+  <notProcessFound>Metadata process not found for metadata schema</notProcessFound>
+</strings>

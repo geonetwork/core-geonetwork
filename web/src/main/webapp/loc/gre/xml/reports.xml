@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <updatedRecords>
+    <username>Owner (User name)</username>
+    <surname>Owner (Last name)</surname>
+    <name>Owner (First name)</name>
+    <email>Owner (Email)</email>
+    <groupName>Owner Group</groupName>
+    <groupOwnerMail>OwnerGroup (Admin Email)</groupOwnerMail>
+    <changedate>Last Updated Date</changedate>
+    <recordName>Record Name</recordName>
+    <uuid>Metadata uuid</uuid>
+  </updatedRecords>
+
+  <internalRecords>
+    <username>Owner (User name)</username>
+    <surname>Owner (Last name)</surname>
+    <name>Owner (First name)</name>
+    <email>Owner (Email)</email>
+    <profile>Owner (User Role)</profile>
+    <groupName>Owner Group (Name)</groupName>
+    <groupOwnerMail>Owner Group (Admin Email)</groupOwnerMail>
+    <createdate>Creation Date</createdate>
+    <recordName>Record Name</recordName>
+    <uuid>Metadata uuid</uuid>
+  </internalRecords>
+
+  <users>
+    <username>User name</username>
+    <surname>Last name</surname>
+    <name>First name</name>
+    <email>Email</email>
+    <userGroups>Groups/User Roles</userGroups>
+    <lastlogindate>Last Login Date</lastlogindate>
+  </users>
+
+  <dataDownloads>
+    <username>Uploader (User name)</username>
+    <surname>Uploader (Last name)</surname>
+    <name>Uploader (First name)</name>
+    <email>Uploader (Email)</email>
+    <profile>Uploader (User Role)</profile>
+    <userGroups>Group</userGroups>
+    <uploadname>Product Name</uploadname>
+    <filename>File Name</filename>
+    <downloaddate>Download Date</downloaddate>
+    <recordName>Record Name</recordName>
+    <uuid>Metadata uuid</uuid>
+    <requestername>Requester Name</requestername>
+    <requestermail>Requester Mail</requestermail>
+    <requesterorg>Requester Organization</requesterorg>
+    <requestercomments>Requester Comments</requestercomments>
+    <expiry_datetime>Expiry Date</expiry_datetime>
+  </dataDownloads>
+
+  <dataUploads>
+    <username>Uploader (Username)</username>
+    <surname>Uploader (Last name)</surname>
+    <name>Uploader (First name)</name>
+    <email>Uploader (Email)</email>
+    <profile>Uploader (Role)</profile>
+    <userGroups>Group</userGroups>
+    <uploaddesc>Product Name</uploaddesc>
+    <filename>File Name</filename>
+    <uploaddate>Upload Date</uploaddate>
+    <recordname>Record Name</recordname>
+    <uuid>Metadata uuid</uuid>
+    <expiry_datetime>Expiry Date</expiry_datetime>
+  </dataUploads>
+</strings>
