@@ -86,7 +86,7 @@ class Validator:
 
         for script in soup.findAll("script"):
             if script.has_attr("src"):
-                if script["src"].startswith("//"):
+                if script["src"].startswith("//") and self.sextant_url_lookup != "//":
                     continue
                 if script["src"].find(self.sextant_url_lookup) != -1:
                     script["src"] = script["src"].replace(
