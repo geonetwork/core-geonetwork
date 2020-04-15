@@ -52,7 +52,6 @@
         <entry key="Data Source" value-ref="jdbcDataSource"/>
         <entry key="Loose bbox" value="true"/>
         <entry key="Estimated extends" value="true"/>
-        <entry key="schema" value="public" />
         <entry key="encode functions" value="true"/>
         <entry key="validate connections" value="true"/>
         <entry key="fetch size" value="1000"/>
