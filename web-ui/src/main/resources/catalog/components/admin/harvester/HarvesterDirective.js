@@ -115,7 +115,7 @@
                            '0 0/5 14 * * ?',
                            '0 15 10 ? * MON-FRI',
                            '0 15 10 15 * ?'];
-          scope.timeZone = gnConfig['system.harvesting.timeZone'];
+          scope.timeZone = gnConfig['system.host.timeZone'];
           if (scope.timeZone) {
             scope.timeZoneOffset = '(GMT' + moment.tz(scope.timeZone).format('Z / z') + ')'
           }

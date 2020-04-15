@@ -576,11 +576,14 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/version', '3.11.0', 0, 150, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/subVersion', 'SNAPSHOT', 0, 160, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/svnUuid', '', 0, 170, 'y');
+
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/host', 'localhost', 0, 210, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/protocol', 'http', 0, 220, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/port', '8080', 1, 230, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/securePort', '8443', 1, 240, 'n');
-INSERT INTO settings (name, value, datatype, position, internal) VALUES ('system/server/log','log4j.xml',0,250,'y');
+INSERT INTO settings (name, value, datatype, position, internal) VALUES ('system/server/log','log4j.xml', 0, 250, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/timeZone', '', 0, 260, 'n');
+
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/intranet/network', '127.0.0.1', 0, 310, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/intranet/netmask', '255.0.0.0', 0, 320, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/use', 'false', 2, 510, 'y');
@@ -638,9 +641,6 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atomProtocol', 'INSPIRE-ATOM', 0, 7250, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvester/enableEditing', 'false', 2, 9010, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvester/disabledHarvesterTypes', '', 0, 9011, 'n');
-
-
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES  ('system/harvesting/timeZone', '', 0, 9015, 'n');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/recipient', NULL, 0, 9020, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/template', '', 0, 9021, 'y');

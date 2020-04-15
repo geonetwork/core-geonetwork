@@ -355,7 +355,7 @@ public abstract class AbstractParams implements Cloneable {
      */
     public Trigger getTrigger() {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_HARVESTING_TIMEZONE, true);
+        String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE, true);
         TimeZone tz = TimeZone.getDefault();
         if (StringUtils.isNotBlank(timeZoneSetting)) {
             try {

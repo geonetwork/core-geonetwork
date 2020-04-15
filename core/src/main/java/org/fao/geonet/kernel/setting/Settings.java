@@ -52,6 +52,7 @@ public class Settings {
     public static final String SYSTEM_XLINKRESOLVER_ENABLE = "system/xlinkResolver/enable";
     public static final String SYSTEM_XLINK_ALLOW_REFERENCED_DELETION = "system/xlinkResolver/referencedDeletionAllowed";
     public static final String SYSTEM_SERVER_LOG = "system/server/log";
+    public static final String SYSTEM_SERVER_TIMEZONE = "system/server/timeZone";
     public static final String SYSTEM_INSPIRE_ENABLE = "system/inspire/enable";
     public static final String SYSTEM_INSPIRE_ATOM = "system/inspire/atom";
     public static final String SYSTEM_INSPIRE_ATOM_SCHEDULE = "system/inspire/atomSchedule";
@@ -112,7 +113,6 @@ public class Settings {
     public static final String SYSTEM_HARVESTING_MAIL_TEMPLATE_WARNING = "system/harvesting/mail/templateWarning";
     public static final String SYSTEM_HARVESTING_MAIL_TEMPLATE_ERROR = "system/harvesting/mail/templateError";
     public static final String SYSTEM_HARVESTING_MAIL_TEMPLATE = "system/harvesting/mail/template";
-    public static final String SYSTEM_HARVESTING_TIMEZONE = "system/harvesting/timeZone";
     public static final String SYSTEM_METADATACREATE_GENERATE_UUID = "system/metadatacreate/generateUuid";
     public static final String SYSTEM_THREADEDINDEXING_MAXTHREADS = "system/threadedindexing/maxthreads";
     public static final String SYSTEM_RESOURCE_PREFIX = "metadata/resourceIdentifierPrefix";
