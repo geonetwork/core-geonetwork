@@ -27,6 +27,7 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasM
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -63,6 +64,7 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -183,6 +185,23 @@ public class AccessManager {
         return hs;
     }
 
+    /**
+     *  Retrieves the user's groups ids
+     * @param session
+     * @param profile
+     * @return
+     * @throws SQLException
+     */
+    public static List<Integer> getGroups(UserSession session, Profile profile) throws SQLException {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
+
+        Specifications<UserGroup> spec = Specifications.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
+        spec = spec.and(UserGroupSpecs.hasProfile(profile));
+
+        return userGroupRepository.findGroupIds(spec);
+    }
+
     public Set<Integer> getReviewerGroups(UserSession usrSess) throws Exception {
         Set<Integer> hs = new HashSet<Integer>();
         UserGroupRepository _userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
@@ -252,7 +271,7 @@ public class AccessManager {
     public boolean canReview(final ServiceContext context, final String id) throws Exception {
         return isOwner(context, id) || hasReviewPermission(context, id);
     }
-    
+
     /**
      * Returns true if, and only if, at least one of these conditions is satisfied: <ul> <li>the
      * user is owner (@see #isOwner)</li> <li>the user has reviewing rights over owning group of the metadata</li> </ul>
@@ -262,7 +281,7 @@ public class AccessManager {
     public boolean canChangeStatus(final ServiceContext context, final String id) throws Exception {
         return hasOnwershipReviewPermission(context, id) || hasReviewPermission(context, id);
     }
-    
+
     /**
      * Return true if the current user is: <ul> <li>administrator</li> <li>the metadata owner (the
      * user who created the record)</li> <li>reviewer in the group the metadata was created</li>
@@ -433,7 +452,7 @@ public class AccessManager {
         return hasEditingPermissionWithProfile(context, id, Profile.Editor);
 
     }
-    
+
     /**
      * Check if current user can review the metadata according to the groups where the metadata is
      * editable.
@@ -492,12 +511,12 @@ public class AccessManager {
         OperationAllowedRepository opAllowedRepository = context.getBean(OperationAllowedRepository.class);
         UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
         IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
-        
+
         Specifications spec = where(UserGroupSpecs.hasProfile(Profile.Reviewer)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
 
         List<Integer> opAlloweds = new ArrayList<Integer>();
         opAlloweds.add(metadataUtils.findOne(id).getSourceInfo().getGroupOwner());
-        
+
         spec = spec.and(UserGroupSpecs.hasGroupIds(opAlloweds));
 
         return (!userGroupRepository.findAll(spec).isEmpty());

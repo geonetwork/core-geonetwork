@@ -34,7 +34,8 @@
     '$scope', '$routeParams', '$http', '$rootScope', '$translate', 'gnLangs', '$compile', 'gnHumanizeTimeService', '$window', 'getBsTableLang',
     function($scope, $routeParams, $http, $rootScope, $translate, gnLangs, $compile, gnHumanizeTimeService, $window, getBsTableLang) {
 
-      $scope.groupId = '';
+      $scope.groupLinkFilter = null;
+      $scope.groupOwnerIdFilter = null;
 
       $scope.triggerSearch = function () {
         $('#bstable').bootstrapTable('refresh')
@@ -49,6 +50,9 @@
       };
 
       $window.lastState = {ok: 'OK', ko: 'KO', unknown: '?'};
+
+      $scope.$watch('groupIdFilter', $scope.triggerSearch);
+      $scope.$watch('groupOwnerIdFilter', $scope.triggerSearch);
 
       $scope.bsTableControl = {
             options: {
@@ -82,7 +86,8 @@
 
                 queryParams: function(params) {
                   return {
-                    groupIdFilter: $scope.groupId,
+                    groupIdFilter: $scope.groupIdFilter == 'undefined'  ? '' : $scope.groupIdFilter,
+                    groupOwnerIdFilter: $scope.groupOwnerIdFilter == 'undefined'  ? '' : $scope.groupOwnerIdFilter,
                     filter: params.filter,
                     page: params.pageNumber - 1,
                     size: params.pageSize,
