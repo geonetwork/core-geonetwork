@@ -22,13 +22,10 @@ help: ## This help.
 # DOCKER TASKS
 # Build the container
 build: ## Build the container
-	docker-compose build	
+	docker build . -t sextant-api-validator
 
 run: ## Starts the composition
-	docker-compose down && docker-compose up
+	docker run --volume ./:/app/ sextant-api-validator
 
 test:
-	docker-compose up -V  && docker-compose down
-
-clean:
-	docker-compose rm
+	docker run sextant-api-validator pytest /app/api_validator/tests

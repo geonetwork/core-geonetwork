@@ -1,4 +1,4 @@
-from api_validator.build_api_from_source_code import Validator
+from api_validator.build_api_from_source_code import ApiPageBuilder
 import os
 import pytest
 import shutil
@@ -25,7 +25,7 @@ def set_up():
 
 
 def test_read_yaml():
-    v = Validator(
+    v = ApiPageBuilder(
         input_yaml,
         output_dir,
         prefix_base_url,
@@ -37,7 +37,7 @@ def test_read_yaml():
 
 
 def test_access_site():
-    v = Validator(
+    v = ApiPageBuilder(
         input_yaml,
         output_dir,
         prefix_base_url,
@@ -51,7 +51,7 @@ def test_access_site():
 
 
 def test_sextant_replaced():
-    v = Validator(
+    v = ApiPageBuilder(
         input_yaml,
         output_dir,
         prefix_base_url,
@@ -71,7 +71,7 @@ def test_sextant_replaced():
 
 
 def test_find_script_src():
-    v = Validator(
+    v = ApiPageBuilder(
         input_yaml,
         output_dir,
         prefix_base_url,

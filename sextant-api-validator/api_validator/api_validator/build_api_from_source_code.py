@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import yaml
 
 
-class Validator:
+class ApiPageBuilder:
     def __init__(
         self,
         input_file,
