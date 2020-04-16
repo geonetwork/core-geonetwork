@@ -507,11 +507,13 @@
       return {
         restrict: 'A',
         scope: {
+             fauxMultilingual: '@fauxMultilingual' // we are doing our own multi-lingual support
         },
         link: function(scope, element, attrs) {
           scope.thesaurusKey = attrs.thesaurusKey || '';
           scope.orderById = attrs.orderById || 'false';
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
+          scope.fauxMultilingual = scope.fauxMultilingual==="true"; //default false
 
 
 
@@ -639,14 +641,16 @@
             }).bind('typeahead:selected',
               $.proxy(function(obj, keyword) {
                 var inputs = $(obj.currentTarget).parent().parent().find('input.tt-input');
-                if (isMultilingualMode && inputs.size() > 0) {
+                if ((isMultilingualMode||scope.fauxMultilingual) && inputs.size() > 0) {
                   for (var i = 0; i < inputs.size(); i ++) {
                     var input = inputs.get(i);
                     var lang = input.getAttribute('lang');
                     var value = keyword.props.values[gnCurrentEdit.allLanguages.code2iso['#' + lang]];
                     if (value) {
                       $(input).typeahead('val', value);
-                    }
+                      // this makes sure that angular knows the value has changed
+                      $(input).triggerHandler('input');
+                     }
                     // If no value for the language, value is not set.
                   }
                 } else {
