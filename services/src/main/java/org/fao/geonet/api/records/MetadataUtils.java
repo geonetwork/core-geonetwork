@@ -38,6 +38,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
@@ -139,7 +140,7 @@ public class MetadataUtils {
             Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md);
             if (listOfUUIDs.size() > 0) {
                 String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                relatedRecords.addContent(search(joinedUUIDs, RelatedItemType.brothersAndSisters.value(), context, from, to, fast, uuid));
+                relatedRecords.addContent(search(joinedUUIDs, RelatedItemType.brothersAndSisters.value(), context, from, to, fast, uuid, null));
             }
         }
 
@@ -186,10 +187,60 @@ public class MetadataUtils {
             // Get datasets related to service search
             if (listOfTypes.size() == 0 ||
                 listOfTypes.contains(RelatedItemType.datasets)) {
-                Set<String> listOfUUIDs = schemaPlugin.getAssociatedDatasetUUIDs(md);
+                /*Set<String> listOfUUIDs = schemaPlugin.getAssociatedDatasetUUIDs(md);
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
                     String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
                     relatedRecords.addContent(search(joinedUUIDs, "datasets", context, from, to, fast, null));
+                }*/
+
+                Set<String> listOfUUIDs = new HashSet<>();
+                Set<String> listOfRemoteDatasets = new HashSet<>();
+
+                Element result = search(uuid, "uuid", context, from, to, fast, null, "operatesOn");
+                Element response = ((Element) (result.getChildren().get(0)));
+                Element mdResult = ((Element) (response.getChildren().get(0)));
+                List<Element> datasets = mdResult.getChildren("operatesOn");
+
+                for(Element dataset : datasets) {
+                    if (StringUtils.isNotEmpty(dataset.getValue())) {
+                        String[] datasetInfo = dataset.getValue().split("\\|");
+                        String datasetUuid = datasetInfo[0];
+                        String refType = (datasetInfo.length > 1)?datasetInfo[1]:"L";
+
+                        if (!refType.equals("R")) {
+                            listOfUUIDs.add(datasetUuid);
+                        } else {
+                            listOfRemoteDatasets.add(dataset.getValue());
+                        }
+                    }
+                }
+
+                if (!listOfUUIDs.isEmpty()) {
+                    String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
+                    relatedRecords.addContent(search(joinedUUIDs, "datasets", context, from, to, fast, null));
+                }
+
+                if (!listOfRemoteDatasets.isEmpty()) {
+
+                    if (relatedRecords.getChild("datasets") == null) {
+                        relatedRecords.addContent(new Element("datasets").addContent(new Element("response")));
+                    }
+
+                    for(String remoteDataset : listOfRemoteDatasets) {
+                        String[] remoteDatasetInfo = remoteDataset.split("\\|");
+
+                        if(remoteDatasetInfo.length > 4) {
+                            Element metadata = new Element("metadata");
+                            metadata.addContent(new Element("uuid").setText(remoteDatasetInfo[0]));
+                            metadata.addContent(new Element("title").setText(remoteDatasetInfo[2]));
+                            metadata.addContent(new Element("abstract").setText(remoteDatasetInfo[3]));
+                            metadata.addContent(new Element("url").setText(remoteDatasetInfo[4]));
+
+                            relatedRecords.getChild("datasets").getChild("response").addContent(metadata);
+                        } else {
+                            Log.warning(Geonet.SEARCH_ENGINE, "Remote dataset incomplete for uuid : " + uuid + " " + remoteDataset);
+                        }
+                    }
                 }
             }
             // if source, return source datasets defined in the current record
@@ -258,8 +309,13 @@ public class MetadataUtils {
         return relatedRecords;
     }
 
+    private static Element search(String uuid, String type, ServiceContext context, String from, String to,
+                                  String fast, String exclude) throws Exception {
+        return search(uuid, type, context, from, to, fast, exclude, null);
+    }
 
-    private static Element search(String uuid, String type, ServiceContext context, String from, String to, String fast, String exclude) throws Exception {
+    private static Element search(String uuid, String type, ServiceContext context, String from, String to,
+                                  String fast, String exclude, String extraDumpFields) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SearchManager searchMan = gc.getBean(SearchManager.class);
 
@@ -275,7 +331,7 @@ public class MetadataUtils {
             else if ("brothersAndSisters".equals(type)) {
                 parameters.addContent(new Element("parentUuid").setText(uuid));
             } else if ("services".equals(type))
-                parameters.addContent(new Element("operatesOn").setText(uuid));
+                parameters.addContent(new Element("operatesOn").setText(uuid + " or " + uuid + "|*"));
             else if ("hasfeaturecats".equals(type))
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
             else if ("hassources".equals(type))
@@ -286,11 +342,15 @@ public class MetadataUtils {
             }
             else if ("datasets".equals(type) || "fcats".equals(type) ||
                 "sources".equals(type) || "siblings".equals(type) ||
-                "parent".equals(type))
+                "parent".equals(type) || "uuid".equals(type))
                 parameters.addContent(new Element("uuid").setText(uuid));
 
             if (exclude != null) {
                 parameters.addContent(new Element("without__uuid").setText(exclude));
+            }
+
+            if (StringUtils.isNotEmpty(extraDumpFields)) {
+                parameters.addContent(new Element("extraDumpFields").addContent(extraDumpFields));
             }
 
             parameters.addContent(new Element("fast").addContent("index"));

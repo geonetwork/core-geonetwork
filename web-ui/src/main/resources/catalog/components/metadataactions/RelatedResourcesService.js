@@ -53,15 +53,18 @@
         'gnOwsContextService',
         'gnWfsService',
         'gnAlertService',
+        'gnConfigService',
         '$filter',
         'gnExternalViewer',
         function(gnMap, gnOwsCapabilities, gnSearchSettings, gnViewerSettings,
             olDecorateLayer, gnSearchLocation, gnOwsContextService,
-            gnWfsService, gnAlertService, $filter, gnExternalViewer) {
+            gnWfsService, gnAlertService, gnConfigService, $filter, gnExternalViewer) {
 
           this.configure = function(options) {
             angular.extend(this.map, options);
           };
+
+          this.gnConfigService = gnConfigService;
 
           /**
            * Check if the link contains a valid layer protocol
@@ -159,20 +162,26 @@
             gnSearchLocation.setMap();
           };
 
-          var openMd = function(r, md) {
-            return window.location.hash = '#/metadata/' + r.id;
+          var openMd = function(r, md, siteUrl) {
+            var url = $filter('gnLocalized')(r.url) || r.url;
+
+            if (url.indexOf(siteUrl) == 0) {
+              return window.location.hash = '#/metadata/' + r.id;
+            } else {
+              return openLink(r);
+            }
           };
 
           var openLink = function(record, link) {
             var url = $filter('gnLocalized')(record.url) || record.url;
-            if (url && 
-                angular.isString(url) && 
+            if (url &&
+                angular.isString(url) &&
                 url.match("^(http|ftp|sftp|\\\\|//)")) {
               return window.open(url, '_blank');
             } else if (url && url.indexOf('www.') == 0) {
               return window.open('http://' + url, '_blank');
-            } else if (record.title && 
-                       angular.isString(record.title) && 
+            } else if (record.title &&
+                       angular.isString(record.title) &&
                        record.title.match("^(http|ftp|sftp|\\\\|//)")) {
               return window.location.assign(record.title);
             } else {
@@ -337,8 +346,10 @@
           };
 
           this.doAction = function(type, parameters, md) {
+            var siteUrlPrefix = this.gnConfigService.getServiceURL();
+
             var f = this.getAction(type);
-            f(parameters, md);
+            f(parameters, md, siteUrlPrefix);
           };
 
           this.getType = function(resource, type) {
