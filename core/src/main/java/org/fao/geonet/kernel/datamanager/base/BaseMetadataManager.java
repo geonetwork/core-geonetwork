@@ -454,13 +454,17 @@ public class BaseMetadataManager implements IMetadataManager {
 
         String schema = templateMetadata.getDataInfo().getSchemaId();
         String data = templateMetadata.getData();
+        data = updateMetadataUuidReferences(data, templateMetadata.getUuid(), uuid);
+
         Element xml = Xml.loadString(data, false);
+
         boolean isMetadata = templateMetadata.getDataInfo().getType() == MetadataType.METADATA;
         setMetadataTitle(schema, xml, context.getLanguage(), !isMetadata);
         if (isMetadata) {
             xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO,
                 context);
         }
+
         final Metadata newMetadata = new Metadata();
         newMetadata.setUuid(uuid);
         newMetadata.getDataInfo().setChangeDate(new ISODate()).setCreateDate(new ISODate()).setSchemaId(schema)
@@ -486,6 +490,16 @@ public class BaseMetadataManager implements IMetadataManager {
             fullRightsForGroup, true).getId();
 
         return String.valueOf(finalId);
+    }
+
+    /**
+     * Replace oldUuid references by newUuid.
+     * This will update metadata identifier, but also other usages
+     * which may be in graphicOverview URLs, resources identifier,
+     * metadata point of truth URL, ...
+     */
+    private String updateMetadataUuidReferences(String data, String oldUuid, String newUuid) {
+        return data.replace(oldUuid, newUuid);
     }
 
     /**
