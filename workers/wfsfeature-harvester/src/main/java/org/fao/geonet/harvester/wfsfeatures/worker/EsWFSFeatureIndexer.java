@@ -44,7 +44,7 @@ import org.apache.camel.Exchange;
 import org.apache.jcs.access.exception.InvalidArgumentException;
 import org.fao.geonet.es.EsClient;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
-import org.geotools.data.Query;
+import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.store.ReprojectingFeatureCollection;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.feature.FeatureIterator;
@@ -245,10 +245,6 @@ public class EsWFSFeatureIndexer {
             throw new RuntimeException("couldn't initialize es report, don't even try to go further querying wfs.");
         }
 
-        Query query = new Query();
-
-        query.setCoordinateSystem(wfs.getWfsClient().getDefaultCRS(wfs.getRemoteTypeName(wfs.getFeatureSource(typeName).getEntry().getName())));
-
         try {
             nbOfFeatures = 0;
 
@@ -257,102 +253,108 @@ public class EsWFSFeatureIndexer {
 
             long begin = System.currentTimeMillis();
 
-            ReprojectingFeatureCollection rfc = new ReprojectingFeatureCollection(wfs.getFeatureSource(typeName).getFeatures(query), CRS.decode("urn:ogc:def:crs:OGC:1.3:CRS84"));
+            SimpleFeatureCollection fc = wfs.getFeatureSource(typeName).getFeatures();
+            ReprojectingFeatureCollection rfc = new ReprojectingFeatureCollection(fc, CRS.decode("urn:ogc:def:crs:OGC:1.3:CRS84"));
 
             FeatureIterator<SimpleFeature> features = rfc.features();
-            while (features.hasNext()) {
 
-                try {
-                    SimpleFeature feature = features.next();
-                    ObjectNode rootNode = protoNode.deepCopy();
-                    titleResolver.setTitle(rootNode, feature);
+            try {
+                while (features.hasNext()) {
 
-                    for (String attributeName : featureAttributes.keySet()) {
-                        Object attributeValue = feature.getAttribute(attributeName);
-                        if (attributeValue == null) {
+                    try {
+                        SimpleFeature feature = features.next();
+                        ObjectNode rootNode = protoNode.deepCopy();
+                        titleResolver.setTitle(rootNode, feature);
 
-                        } else if (tokenizedFields != null && tokenizedFields.get(attributeName) != null) {
-                            String rawValue = (String) attributeValue;
-                            String value = rawValue.startsWith(CDATA_START) ?
-                                rawValue.replaceFirst(CDATA_START_REGEX, "").substring(0, rawValue.length() - CDATA_END.length() - CDATA_START.length()) :
-                                rawValue;
+                        for (String attributeName : featureAttributes.keySet()) {
+                            Object attributeValue = feature.getAttribute(attributeName);
+                            if (attributeValue == null) {
 
-                            String separator = tokenizedFields.get(attributeName);
-                            String[] tokens = value.split(separator);
-                            ArrayNode arrayNode = jacksonMapper.createArrayNode();
-                            for (String token : tokens) {
-                                arrayNode.add(token.trim());
-                            }
-                            rootNode.putPOJO(getDocumentFieldName(attributeName), arrayNode);
-                        } else if (getDocumentFieldName(attributeName).equals("geom")) {
-                            Geometry geom = (Geometry) feature.getDefaultGeometry();
+                            } else if (tokenizedFields != null && tokenizedFields.get(attributeName) != null) {
+                                String rawValue = (String) attributeValue;
+                                String value = rawValue.startsWith(CDATA_START) ?
+                                    rawValue.replaceFirst(CDATA_START_REGEX, "").substring(0, rawValue.length() - CDATA_END.length() - CDATA_START.length()) :
+                                    rawValue;
 
-                            if (applyPrecisionModel) {
-                                PrecisionModel precisionModel = new PrecisionModel(Math.pow(10, numberOfDecimals - 1));
-                                geom = GeometryPrecisionReducer.reduce(geom, precisionModel);
-                                // numberOfDecimals is equal to
-                                // precisionModel.getMaximumSignificantDigits()
-                            }
+                                String separator = tokenizedFields.get(attributeName);
+                                String[] tokens = value.split(separator);
+                                ArrayNode arrayNode = jacksonMapper.createArrayNode();
+                                for (String token : tokens) {
+                                    arrayNode.add(token.trim());
+                                }
+                                rootNode.putPOJO(getDocumentFieldName(attributeName), arrayNode);
+                            } else if (getDocumentFieldName(attributeName).equals("geom")) {
+                                Geometry geom = (Geometry) feature.getDefaultGeometry();
 
-                            // An issue here is that GeometryJSON conversion may over simplify
-                            // the geometry by truncating coordinates based on numberOfDecimals
-                            // which on default constructor is set to 4. This may lead to
-                            // invalid geometry and Elasticsearch will fail parsing the GeoJSON
-                            // with the following type of error:
-                            // Caused by: org.locationtech.spatial4j.exception.InvalidShapeException:
-                            // Provided shape has duplicate
-                            // consecutive coordinates at: (-3.9997, 48.7463, NaN)
-                            //
-                            // To avoid this, it may be relevant to apply the reduction model
-                            // preserving topology.
-                            String gjson = new GeometryJSON(numberOfDecimals).toString(geom);
+                                if (applyPrecisionModel) {
+                                    PrecisionModel precisionModel = new PrecisionModel(Math.pow(10, numberOfDecimals - 1));
+                                    geom = GeometryPrecisionReducer.reduce(geom, precisionModel);
+                                    // numberOfDecimals is equal to
+                                    // precisionModel.getMaximumSignificantDigits()
+                                }
 
-                            JsonNode jsonNode = jacksonMapper.readTree(gjson.getBytes(StandardCharsets.UTF_8));
-                            rootNode.put(getDocumentFieldName(attributeName), jsonNode);
+                                // An issue here is that GeometryJSON conversion may over simplify
+                                // the geometry by truncating coordinates based on numberOfDecimals
+                                // which on default constructor is set to 4. This may lead to
+                                // invalid geometry and Elasticsearch will fail parsing the GeoJSON
+                                // with the following type of error:
+                                // Caused by: org.locationtech.spatial4j.exception.InvalidShapeException:
+                                // Provided shape has duplicate
+                                // consecutive coordinates at: (-3.9997, 48.7463, NaN)
+                                //
+                                // To avoid this, it may be relevant to apply the reduction model
+                                // preserving topology.
+                                String gjson = new GeometryJSON(numberOfDecimals).toString(geom);
 
-                            boolean isPoint = geom instanceof Point;
-                            if (isPoint) {
-                                Coordinate point = geom.getCoordinate();
-                                rootNode.put("location", String.format("%s,%s", point.y , point.x));
+                                JsonNode jsonNode = jacksonMapper.readTree(gjson.getBytes(StandardCharsets.UTF_8));
+                                rootNode.put(getDocumentFieldName(attributeName), jsonNode);
+
+                                boolean isPoint = geom instanceof Point;
+                                if (isPoint) {
+                                    Coordinate point = geom.getCoordinate();
+                                    rootNode.put("location", String.format("%s,%s", point.y , point.x));
+                                } else {
+                                    report.setPointOnlyForGeomsFalse();
+                                }
+
+                                // Populate bbox coordinates to be able to compute
+                                // global bbox of search results
+                                final BoundingBox bbox = feature.getBounds();
+                                rootNode.put("bbox_xmin", bbox.getMinX());
+                                rootNode.put("bbox_ymin", bbox.getMinY());
+                                rootNode.put("bbox_xmax", bbox.getMaxX());
+                                rootNode.put("bbox_ymax", bbox.getMaxY());
+
                             } else {
-                                report.setPointOnlyForGeomsFalse();
+                                String value = attributeValue.toString();
+                                rootNode.put(getDocumentFieldName(attributeName),
+                                    value.startsWith(CDATA_START) ?
+                                        value.replaceFirst(CDATA_START_REGEX, "").substring(0, value.length() - CDATA_END.length() - CDATA_START.length()) :
+                                        value
+
+                                );
                             }
-
-                            // Populate bbox coordinates to be able to compute
-                            // global bbox of search results
-                            final BoundingBox bbox = feature.getBounds();
-                            rootNode.put("bbox_xmin", bbox.getMinX());
-                            rootNode.put("bbox_ymin", bbox.getMinY());
-                            rootNode.put("bbox_xmax", bbox.getMaxX());
-                            rootNode.put("bbox_ymax", bbox.getMaxY());
-
-                        } else {
-                            String value = attributeValue.toString();
-                            rootNode.put(getDocumentFieldName(attributeName),
-                                value.startsWith(CDATA_START) ?
-                                    value.replaceFirst(CDATA_START_REGEX, "").substring(0, value.length() - CDATA_END.length() - CDATA_START.length()) :
-                                    value
-
-                            );
                         }
+
+                        nbOfFeatures ++;
+                        brh.addAction(rootNode, feature);
+
+                    } catch (Exception ex) {
+                        LOGGER.warn("Error while creating document for {} feature {}. Exception is: {}", new Object[] {
+                            typeName, nbOfFeatures, ex.getMessage()});
+                        report.put("error_ss", String.format(
+                            "Error while creating document for %s feature %d. Exception is: %s",
+                            typeName, nbOfFeatures, ex.getMessage()
+                        ));
                     }
 
-                    nbOfFeatures ++;
-                    brh.addAction(rootNode, feature);
-
-                } catch (Exception ex) {
-                    LOGGER.warn("Error while creating document for {} feature {}. Exception is: {}", new Object[] {
-                        typeName, nbOfFeatures, ex.getMessage()});
-                    report.put("error_ss", String.format(
-                        "Error while creating document for %s feature %d. Exception is: %s",
-                        typeName, nbOfFeatures, ex.getMessage()
-                    ));
+                    if (brh.getBulkSize() >= featureCommitInterval) {
+                        brh.launchBulk(client);
+                        brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report);
+                    }
                 }
-
-                if (brh.getBulkSize() >= featureCommitInterval) {
-                    brh.launchBulk(client);
-                    brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report);
-                }
+            } finally {
+                features.close();
             }
 
             if (brh.getBulkSize() > 0) {
