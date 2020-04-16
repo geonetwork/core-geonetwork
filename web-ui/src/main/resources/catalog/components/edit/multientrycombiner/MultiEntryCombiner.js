@@ -32,11 +32,11 @@
  *  In the metadata schema, this is just a string.
  *
  *  However, it is to be formated like;
- *    "Government of Canada; Canadian Environmental Assessment Agency; david's place"
+ *    "Government of Canada; Organization of Public Services and Procurement Canada; Defence and Marine Procurement"
  *
  *   The first bit "Government of Canada" is HARD CODED
  *   The second bit "Canadian Environmental Assessment Agency" is a Thesaurus Keyword Picker
- *   The third bit "david's place" is a free text field
+ *   The third bit "Defence and Marine Procurement" is a free text field
  *
  *   This makes it easier for a user to enter the information correctly.
  *
@@ -81,8 +81,8 @@
      *   "values":
      *       {
      *
-     *         "eng":"Government of Canada; Canadian Environmental Assessment Agency; david's place" ,
-     *         "fra":"Gouvernement du Canada; Agence canadienne d'évaluation environnementale; chez david"
+     *         "eng":"Government of Canada; Organization of Public Services and Procurement Canada; Defence and Marine Procurement" ,
+     *         "fra":"Gouvernement du Canada; Organisation de Services publics et Approvisionnement Canada; Approvisionnement maritime et de défense"
      *       },
      *
      *   "config":
