@@ -59,7 +59,7 @@
  *
  * 2. thesaurus
  *      This represents a Thesaurus KeyWord Picker.
- *           + thesurus is the name of the thesaurus
+ *           + thesaurus is the name of the thesaurus
  *
  * 3. freeText
  *      This represents a field the user can type into.
@@ -99,12 +99,12 @@
      *         }
      *       },
      *       {
-     *         "type": "thesurus",
+     *         "type": "thesaurus",
      *         "heading": {
      *           "eng": "Government of Canada Organization",
      *           "fra": "Organisation du Gouvernement du Canada"
      *         },
-     *         "thesurus": "external.theme.EC_Government_Titles"
+     *         "thesaurus": "external.theme.EC_Government_Titles"
      *       },
      *       {
      *         "type": "freeText",
@@ -142,8 +142,8 @@
 
   module
     .directive('gnMultientryCombiner',
-    ['gnCurrentEdit',
-      function(gnCurrentEdit) {
+    ['gnCurrentEdit','gnGlobalSettings', 'gnLangs',
+      function(gnCurrentEdit,gnGlobalSettings, gnLangs) {
         return {
           restrict: 'A',
           replace: true,
@@ -179,6 +179,12 @@
 
             scope.config = JSON.parse(scope.configuration);
             scope.currentLang = scope.config["defaultLang"];
+            //get the current UI lang
+            // will be "eng" or "fra"
+            scope.currentUILang = gnCurrentEdit.allLanguages.iso2code[gnLangs.detectLang(
+                          gnGlobalSettings.gnCfg.langDetector,
+                          gnGlobalSettings
+                        )].substring(1);
             scope.root_id = scope.config.root_id;
             scope.element = element;
             //we need to do this because GN trims a trailing "; ", which causes problems

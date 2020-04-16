@@ -7,16 +7,13 @@
 <div>
   <div class="form-group" ng-repeat="c in config.config" ng-if="c.type !== 'fixedValue'">
     <div>
-      <label for="field_{{$index}}" class=" ">{{c.heading[currentLang]}}</label>
+      <label for="field_{{$index}}" class=" ">{{c.heading[currentUILang]}}</label>
     </div>
 
-    <div ng-if="c.type == 'fixedValue'">
-    </div>
-
-    <div ng-if="c.type == 'thesurus'"  >
+    <div ng-if="c.type == 'thesaurus'"  >
       <input class="form-control hidden"
              data-gn-keyword-picker=""
-             data-thesaurus-key="{{c.thesurus}}"
+             data-thesaurus-key="{{c.thesaurus}}"
              data-faux-multilingual="true"
              data-focus-to-input="false"
              lang="{{lang}}"
