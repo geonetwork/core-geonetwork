@@ -25,7 +25,7 @@ build: ## Build the container
 	docker build . -t sextant-api-validator
 
 run: ## Starts the composition
-	docker run --volume ./:/app/ sextant-api-validator
+	docker run -ti --volume api_validator:/app/ bash
 
 test:
 	docker run sextant-api-validator pytest /app/api_validator/tests

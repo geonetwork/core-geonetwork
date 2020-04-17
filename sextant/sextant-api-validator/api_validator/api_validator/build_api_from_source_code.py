@@ -1,22 +1,17 @@
 import requests
 from bs4 import BeautifulSoup
 import yaml
+from urllib.parse import urlparse
 
 
 class ApiPageBuilder:
     def __init__(
-        self,
-        input_file,
-        output_dir,
-        base_site_url_lookup,
-        base_site_url_replace_by,
-        sextant_url_lookup,
-        sextant_url_replace_by,
+        self, input_file, output_dir, sextant_url_lookup, sextant_url_replace_by,
     ):
         self.inputs = self.read_yaml(input_file)
         self.output_dir = output_dir
-        self.base_site_url_lookup = base_site_url_lookup
-        self.base_site_url_replace_by = base_site_url_replace_by
+        self.base_site_url_lookup = ["/", "./"]
+        self.base_site_url_replace_by = None
         self.sextant_url_lookup = sextant_url_lookup
         self.sextant_url_replace_by = sextant_url_replace_by
 
@@ -40,18 +35,18 @@ class ApiPageBuilder:
 
     def batch(self):
         print(
-            "Replacing all urls prefix '{}' with '{}' for base urls".format(
-                self.base_site_url_lookup, self.base_site_url_replace_by
-            )
-        )
-        print(
-            "Replacing sextant urls prefix '{}' with '{}' for sextant urls".format(
+            "Will replace sextant urls prefix '{}' with '{}' for sextant urls".format(
                 self.sextant_url_lookup, self.sextant_url_replace_by
             )
         )
         ignored = 0
         for site_name in self.inputs:
             print("Working on {}".format(site_name))
+            self.base_site_url_replace_by = urlparse(self.inputs[site_name]).netloc + '/'
+            print(
+              "Replacing relative urls prefix with '{}'".format(self.base_site_url_replace_by
+              )
+            )
             html = self.get_html(site_name)
             if not html:
                 print("{} not accessible, and has been ignored")
@@ -65,24 +60,23 @@ class ApiPageBuilder:
         for a in soup.findAll("a"):
             if a["href"].startswith("//"):
                 continue
-            if a["href"].startswith(self.base_site_url_lookup):
-                a["href"] = a["href"].replace(
-                    self.base_site_url_lookup, self.base_site_url_replace_by, 1
-                )
+            if a["href"].startswith(tuple(self.base_site_url_lookup)):
+                for i in self.base_site_url_lookup:
+                    a["href"] = a["href"].replace(i, self.base_site_url_replace_by, 1)
         for img in soup.findAll("img"):
             if img["src"].startswith("//"):
                 continue
-            if img["src"].startswith(self.base_site_url_lookup):
-                img["src"] = img["src"].replace(
-                    self.base_site_url_lookup, self.base_site_url_replace_by, 1
-                )
+            if img["src"].startswith(tuple(self.base_site_url_lookup)):
+                for i in self.base_site_url_lookup:
+                    img["src"] = img["src"].replace(i, self.base_site_url_replace_by, 1)
         for link in soup.findAll("link"):
             if link["href"].startswith("//"):
                 continue
-            if link["href"].startswith(self.base_site_url_lookup):
-                link["href"] = link["href"].replace(
-                    self.base_site_url_lookup, self.base_site_url_replace_by, 1
-                )
+            if link["href"].startswith(tuple(self.base_site_url_lookup)):
+                for i in self.base_site_url_lookup:
+                    link["href"] = link["href"].replace(
+                        i, self.base_site_url_replace_by, 1
+                    )
 
         for script in soup.findAll("script"):
             if script.has_attr("src"):
@@ -93,9 +87,10 @@ class ApiPageBuilder:
                         self.sextant_url_lookup, self.sextant_url_replace_by, 1
                     )
                 else:
-                    script["src"] = script["src"].replace(
-                        self.base_site_url_lookup, self.base_site_url_replace_by, 1
-                    )
+                    for i in self.base_site_url_lookup:
+                        script["src"] = script["src"].replace(
+                            i, self.base_site_url_replace_by, 1
+                        )
         result = str(soup)
         return result
 
