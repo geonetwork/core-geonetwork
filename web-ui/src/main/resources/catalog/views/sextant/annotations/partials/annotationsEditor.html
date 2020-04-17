@@ -24,15 +24,18 @@
   </div>
 
   <!-- annotations exist and can be modified -->
-  <div ng-show="!readOnly && currentAnnotation" ng-class="{'updating-annotation': updatingAnnotation}">
+  <div ng-show="!readOnly && currentAnnotation"
+       ng-class="{'updating-annotation': updatingAnnotation, 'annotations-untouched': !annotationsChanged}">
     <div class="gn-draw-styleform"
          gn-draw="" map="map"
          vector="annotationsLayer"
          save-callback="updateAnnotationGeometry(json)">
     </div>
     <div class="btn-group flux">
-      <a class="btn btn-default loading-annotation" ng-if="updatingAnnotation" disabled>
-        <i class="fa fa-fw fa-spinner fa-spin"></i> <span translate>save</span>
+      <a class="btn btn-default loading-annotation" ng-if="updatingAnnotation || !annotationsChanged" disabled>
+        <i class="fa fa-fw fa-spinner fa-spin" ng-if="updatingAnnotation"></i>
+        <i class="fa fa-fw fa-save" ng-if="!annotationsChanged"></i>
+        <span translate>save</span>
       </a>
     </div>
     <div class="alert alert-danger annotation-message" ng-if="error">

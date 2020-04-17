@@ -20,6 +20,7 @@
           scope.annotationsUuid = scope.layer.get('annotationsUuid');
           scope.metadataObj = scope.layer.get('md');
           scope.metadataUuid = scope.metadataObj ? scope.metadataObj.getUuid() : null;
+
           var user = $rootScope.user;
 
           if (!scope.annotationsUuid) {
@@ -62,6 +63,12 @@
           scope.readOnly = scope.metadataObj && !(user.canEditRecord && user.canEditRecord(scope.metadataObj));
 
           /**
+           * True if something has changed and should be saved
+           * @type {boolean}
+           */
+          scope.annotationsChanged = false;
+
+          /**
            * Copy-pasted from DrawDirective.js
            */
           function createStyleFromConfig(feature, styleCfg) {
@@ -102,6 +109,8 @@
             return new ol.style.Style(styleObjCfg);
           }
 
+          var listenerKey;
+
           // set current annotation entity to be modified
           function setCurrentAnnotation(annotation) {
             scope.loadingAnnotation = false;
@@ -130,6 +139,10 @@
               var source = scope.annotationsLayer.getSource();
               source.addFeatures(features);
             }
+
+            listenerKey = scope.annotationsLayer.getSource().on(['changefeature', 'addfeature', 'removefeature'], function() {
+              scope.annotationsChanged = true;
+            })
           }
 
           // initial loading of annotation entity
@@ -162,6 +175,7 @@
               metadataUuid: scope.metadataUuid || undefined
             }).then(function (response) {
               scope.updatingAnnotation = false;
+              scope.annotationsChanged = false;
               if (response.error) {
                 scope.error = response.error;
               }
@@ -170,6 +184,7 @@
 
           scope.$on('$destroy', function() {
             scope.map.removeLayer(scope.annotationsLayer);
+            scope.annotationsLayer.getSource().unByKey(listenerKey);
             scope.annotationsLayer.active = false;
           });
         }
