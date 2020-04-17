@@ -100,6 +100,7 @@
   "annotationsReadOnly": "Ces annotations sont en lecture seule.",
   "annotationsErrorLoading": "Une erreur est survenue au chargement des annotations",
   "annotationsErrorSaving": "Une erreur est survenue à la sauvegarde des annotations",
+  "annotationsSaveSuccess": "Les annotations ont été sauvegardées.",
   "searchOnlyTitle": "Rechercher uniquement dans le titre",
   "addAnnotations": "Associer des annotations"
 }

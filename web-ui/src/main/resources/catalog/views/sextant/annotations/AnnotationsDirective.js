@@ -7,8 +7,8 @@
    * Directive for editing shared annotations, optionally linked to
    * a XML metadata record.
    */
-  module.directive('sxtAnnotationsEditor', ['sxtAnnotationsService', '$rootScope',
-    function(sxtAnnotationsService, $rootScope) {
+  module.directive('sxtAnnotationsEditor', ['sxtAnnotationsService', '$rootScope', '$timeout',
+    function(sxtAnnotationsService, $rootScope, $timeout) {
       return {
         restrict: 'E',
         scope: {
@@ -67,6 +67,12 @@
            * @type {boolean}
            */
           scope.annotationsChanged = false;
+
+          /**
+           * Show a success notification
+           * @type {boolean}
+           */
+          scope.saveSuccess = false;
 
           /**
            * Copy-pasted from DrawDirective.js
@@ -178,6 +184,9 @@
               scope.annotationsChanged = false;
               if (response.error) {
                 scope.error = response.error;
+              } else {
+                scope.saveSuccess = true;
+                $timeout(function() { scope.saveSuccess = false; }, 2000);
               }
             });
           }

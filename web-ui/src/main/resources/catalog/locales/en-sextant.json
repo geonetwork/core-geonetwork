@@ -99,6 +99,7 @@
   "annotationsReadOnly": "The annotations are in read-only mode.",
   "annotationsErrorLoading": "An error occurred while loading the annotations",
   "annotationsErrorSaving": "An error occurred while saving the annotations",
+  "annotationsSaveSuccess": "Annotations successfully saved.",
   "searchOnlyTitle": "Search only in title",
   "addAnnotations": "Associate annotations"
 }
