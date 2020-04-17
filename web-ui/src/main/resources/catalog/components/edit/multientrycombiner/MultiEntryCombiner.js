@@ -169,8 +169,12 @@
                  //put in any fixedValue
                  for (var idx =0; idx<nExpectedNumber; idx++) {
                     var meta = scope.config.config[idx];
-                    if (meta.type === 'fixedValue') {
+                    if (meta.type === 'fixedValue') {  // fixed values are always the same
                         val[idx] = meta.values[key];
+                    } else {  // default values -- put in if its not set (only do this at start)
+                        if ( (val[idx] === '') && (meta.defaultValues) && (meta.defaultValues[key]) ) {
+                            val[idx] = meta.defaultValues[key];
+                        }
                     }
                  }
                  return val;
@@ -230,7 +234,10 @@
                 //build the master values...
                 _.each(_.keys(scope.config.values),function(lang){
                     //values for this lang
-                     var vs = scope.individualValues[lang];
+                    //filter out blank values -- or you'll get stuff like "org; ;" or "; abc;"
+                    var vs = scope.individualValues[lang].slice();
+                    while (vs[vs.length-1] =='')  // remove trailing ones only
+                        vs.pop();
                      var v = vs.join(scope.config.combiner); // use full value
                      scope.config.values[lang] = v;
                 });
