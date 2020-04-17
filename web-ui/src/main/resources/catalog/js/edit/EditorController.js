@@ -217,7 +217,7 @@
                     md.standardName.match(/ISO 19139, MyOcean profile short/i)) {
                     return 'copernicus-marine-short';
                   } else if (md.standardName &&
-                    md.standardName.match(/ISO 19115-3 - CERSAT/i)) {
+                    md.standardName.match(/ISO 19115-3:2018 - Remote Sensing/i)) {
                     return 'eo-tab-description';
                   } else if (md.standardName &&
                     md.standardName.match(/ISO 19139, MyOcean profile/i)) {
