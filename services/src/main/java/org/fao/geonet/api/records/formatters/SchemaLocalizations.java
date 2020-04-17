@@ -121,8 +121,7 @@ public class SchemaLocalizations {
         Object obj = RequestContextHolder.getRequestAttributes();
 
         ServletRequestAttributes attributes = (ServletRequestAttributes) obj;
-        HttpServletRequest request = attributes.getRequest();
-
+        HttpServletRequest request = attributes != null ? attributes.getRequest() : null;
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final ServiceContext serviceContext = ServiceContext.get();
