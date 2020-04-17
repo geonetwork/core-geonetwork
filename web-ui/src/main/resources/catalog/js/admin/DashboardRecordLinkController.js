@@ -34,6 +34,7 @@
     '$scope', '$routeParams', '$http', '$rootScope', '$translate', 'gnLangs', '$compile', 'gnHumanizeTimeService', '$window', 'getBsTableLang',
     function($scope, $routeParams, $http, $rootScope, $translate, gnLangs, $compile, gnHumanizeTimeService, $window, getBsTableLang) {
 
+      $scope.filter = {};
       $scope.groupLinkFilter = null;
       $scope.groupOwnerIdFilter = null;
 
@@ -43,6 +44,17 @@
 
       $scope.analyzeLinks = function() {
         $http.post('../api/records/links?analyze=true');
+      };
+
+      $scope.downloadAsCsv = function() {
+        var maxPageSize = 20000;
+        window.location.replace('../api/records/links/csv?'
+          + 'groupIdFilter='
+            + ($scope.groupIdFilter == 'undefined'  ? '' : $scope.groupIdFilter)
+          + '&groupOwnerIdFilter='
+            + ($scope.groupOwnerIdFilter == 'undefined'  ? '' : $scope.groupOwnerIdFilter)
+          + '&filter=' + $scope.filter.filter
+          + '&page=0&size=' + maxPageSize + '&sort=lastState%2Cdesc');
       };
 
       $scope.removeAll = function() {
@@ -85,7 +97,7 @@
                 },
 
                 queryParams: function(params) {
-                  return {
+                  $scope.filter = {
                     groupIdFilter: $scope.groupIdFilter == 'undefined'  ? '' : $scope.groupIdFilter,
                     groupOwnerIdFilter: $scope.groupOwnerIdFilter == 'undefined'  ? '' : $scope.groupOwnerIdFilter,
                     filter: params.filter,
@@ -93,6 +105,7 @@
                     size: params.pageSize,
                     sort: params.sortName + ',' + params.sortOrder
                   };
+                  return $scope.filter;
                 },
 
                 columns: [{

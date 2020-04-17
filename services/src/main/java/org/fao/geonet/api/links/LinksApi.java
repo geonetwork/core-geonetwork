@@ -32,7 +32,6 @@ import io.swagger.annotations.ApiParam;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -56,8 +55,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -101,31 +98,22 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
     description = "Record link operations")
 public class LinksApi {
     private static final int NUMBER_OF_SUBSEQUENT_PROCESS_MBEAN_TO_KEEP = 5;
-
-    @Autowired
-    LinkRepository linkRepository;
-
-    @Autowired
-    IMetadataUtils metadataUtils;
-
-    @Autowired
-    MetadataRepository metadataRepository;
-
-    @Autowired
-    DataManager dataManager;
-
-    @Autowired
-    UrlAnalyzer urlAnalyser;
-
-    @Autowired
-    MBeanExporter mBeanExporter;
-
-    @Autowired
-    AccessManager accessManager;
-
     @Autowired
     protected ApplicationContext appContext;
-
+    @Autowired
+    LinkRepository linkRepository;
+    @Autowired
+    IMetadataUtils metadataUtils;
+    @Autowired
+    MetadataRepository metadataRepository;
+    @Autowired
+    DataManager dataManager;
+    @Autowired
+    UrlAnalyzer urlAnalyser;
+    @Autowired
+    MBeanExporter mBeanExporter;
+    @Autowired
+    AccessManager accessManager;
     private ArrayDeque<SelfNaming> mAnalyseProcesses = new ArrayDeque<>(NUMBER_OF_SUBSEQUENT_PROCESS_MBEAN_TO_KEEP);
 
     @PostConstruct
@@ -182,7 +170,7 @@ public class LinksApi {
         UserSession userSession) throws SQLException, JSONException {
         Integer[] editingGroups = null;
         if (userSession.getProfile() != Profile.Administrator) {
-            final List<Integer> editingGroupList = accessManager.getGroups(userSession, Profile.Editor);
+            final List<Integer> editingGroupList = AccessManager.getGroups(userSession, Profile.Editor);
             if (editingGroupList.size() > 0) {
                 editingGroups = editingGroupList.toArray(new Integer[editingGroupList.size()]);
             }
@@ -220,6 +208,46 @@ public class LinksApi {
     }
 
 
+    @ApiOperation(
+        value = "Get record links as CSV",
+        notes = "",
+        nickname = "getRecordLinksAsCSV")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
+            value = "Results page you want to retrieve (0..N)"),
+        @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
+            value = "Number of records per page."),
+        @ApiImplicitParam(name = "sort", allowMultiple = false, dataType = "string", paramType = "query",
+            value = "Sorting criteria in the format: property(,asc|desc). " +
+                "Default sort order is ascending. ")
+    })
+    @RequestMapping(
+        path = "/csv",
+        method = RequestMethod.GET,
+        produces = MediaType.TEXT_PLAIN_VALUE
+    )
+    @PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    public void getRecordLinksAsCsv(
+        @ApiParam(value = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421', groupId: 12}\", lastState being 'ok'/'ko'/'unknown'", required = false) @RequestParam(required = false) JSONObject filter,
+        @ApiParam(value = "Optional, filter links to records published in that group.", required = false)
+        @RequestParam(required = false) Integer[] groupIdFilter,
+        @ApiParam(value = "Optional, filter links to records created in that group.", required = false)
+        @RequestParam(required = false) Integer[] groupOwnerIdFilter,
+        @ApiIgnore
+            Pageable pageRequest,
+        @ApiParam(hidden = true)
+        @ApiIgnore
+            HttpSession session,
+        @ApiParam(hidden = true)
+        @ApiIgnore
+            HttpServletResponse response) throws Exception {
+        final UserSession userSession = ApiUtils.getUserSession(session);
+
+        final Page<Link> links = getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession);
+        response.setHeader("Content-disposition", "attachment; filename=links.csv");
+        LinkAnalysisReport.create(links, response.getWriter());
+    }
 
     @ApiOperation(
         value = "Analyze records links",
