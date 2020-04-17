@@ -20,16 +20,6 @@ if __name__ == "__main__":
         "--psxr", "--prefix_sextant_replace", help="string that will replace the prefix"
     )
     parser.add_argument(
-        "--psl",
-        "--prefix_basesite_lookup",
-        help="output dir containing the output html files",
-    )
-    parser.add_argument(
-        "--psr",
-        "--prefix_basesite_replaces",
-        help="prefix that will be looked for and replace for base site files",
-    )
-    parser.add_argument(
         "-v",
         dest="verbose",
         action="store_true",
@@ -39,7 +29,7 @@ if __name__ == "__main__":
     if not os.path.exists(args.output) or not os.path.exists(args.input):
         print("{} does not exists. Exiting....".format(args.output))
     else:
-        v = ApiPageBuilder(args.input, args.output, args.psl, args.psr, args.psxl, args.psxr)
+        v = ApiPageBuilder(args.input, args.output, args.psxl, args.psxr)
         result = v.batch()
 
         print(

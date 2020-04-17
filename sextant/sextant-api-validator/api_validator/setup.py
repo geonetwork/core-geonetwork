@@ -10,7 +10,7 @@ with open(os.path.join(here, "requirements.txt")) as f:
     requires = f.read().splitlines()
 
 setuptools.setup(
-    name="sextant",  # Replace with your own username
+    name="sextant-api-validator",  # Replace with your own username
     version="0.0.1",
     author="Camptocamp",
     author_email="julien.waddle@camptocamp.com",
