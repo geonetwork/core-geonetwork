@@ -63,3 +63,8 @@ UPDATE metadata SET data = replace(data, 'GEMET - Themes, version 2.4, 2010-01-1
 
 UPDATE metadata SET data = replace(data, 'GEMET inspire themes - version 1.0', 'GEMET - INSPIRE themes, version 1.0') WHERE  data LIKE '%GEMET inspire themes - version 1.0%';
 UPDATE metadata SET data = regexp_replace(data,'GEMET - INSPIRE themes, version[[:space:]]*1.0','GEMET - INSPIRE themes, version 1.0','g') WHERE data LIKE '%GEMET - INSPIRE themes, versio%';
+
+
+
+UPDATE metadata SET data = replace(data, '<gco:CharacterString>ISO 19115-3</gco:CharacterString>', '<gco:CharacterString>ISO 19115-3:2018 - Remote Sensing</gco:CharacterString>') WHERE schemaid = 'iso19115-3.2018';
+UPDATE metadata SET data = replace(data, '<gco:CharacterString>ISO 19115-3 - CERSAT</gco:CharacterString>', '<gco:CharacterString>ISO 19115-3:2018 - Remote Sensing</gco:CharacterString>') WHERE schemaid = 'iso19115-3.2018';
