@@ -59,6 +59,7 @@ import org.fao.geonet.index.es.EsServerStatusChecker;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -108,8 +109,6 @@ import java.util.Optional;
 
 import static org.apache.commons.fileupload.util.Streams.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
-
-
 
 /**
  *
@@ -169,6 +168,9 @@ public class SiteApi {
         }
         DoiManager doiManager = gc.getBean(DoiManager.class);
         doiManager.loadConfig();
+
+        HarvestManager harvestManager = context.getBean(HarvestManager.class);
+        harvestManager.rescheduleActiveHarvesters();
     }
 
     @ApiOperation(
