@@ -8,15 +8,15 @@ http://geonetwork-opensource.org/manuals/trunk/eng/users/index.html
 
 ## Build the application
 
-See https://geonetwork-opensource.org/manuals/3.8.x/en/maintainer-guide/installing/installing-from-source-code.html
+See [Installing from source code](https://geonetwork-opensource.org/manuals/trunk/en/maintainer-guide/installing/installing-from-source-code.html).
 
 ## Build the documentation
 
-See https://geonetwork-opensource.org/manuals/3.8.x/en/contributing/writing-documentation.html#building-the-docs
+See [Writing documentation](https://geonetwork-opensource.org/manuals/trunk/en/contributing/writing-documentation.html).
 
 ## Making a release
 
-See https://geonetwork-opensource.org/manuals/3.8.x/en/contributing/doing-a-release.html
+See [Doing a release](https://geonetwork-opensource.org/manuals/trunk/en/contributing/doing-a-release.html).
 
 # Eclipse setup
 
@@ -195,5 +195,5 @@ To checkout a branch from upstream::
 
 ### Pull request
 
-See https://geonetwork-opensource.org/manuals/3.8.x/en/contributing/making-a-pull-request.html
+See [Making a pull request](https://geonetwork-opensource.org/manuals/trunk/en/contributing/making-a-pull-request.html)
 
