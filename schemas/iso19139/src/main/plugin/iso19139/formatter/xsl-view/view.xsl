@@ -183,7 +183,7 @@
   </xsl:template>
 
   <xsl:template mode="getExtent" match="gmd:MD_Metadata">
-    <section class="gn-md-side-overview">
+    <section class="gn-md-side-extent">
       <h2>
         <i class="fa fa-fw fa-map-marker"><xsl:comment select="'image'"/></i>
         <span><xsl:comment select="name()"/>
@@ -554,7 +554,7 @@
           <address>
               <xsl:choose>
                 <xsl:when test="$email">
-                  <i class="fa fa-fw fa-envelope"></i>
+                  <i class="fa fa-fw fa-envelope">&#160;</i>
                   <a href="mailto:{normalize-space($email)}">
                     <xsl:copy-of select="$displayName"/><xsl:comment select="'email'"/>
                   </a>

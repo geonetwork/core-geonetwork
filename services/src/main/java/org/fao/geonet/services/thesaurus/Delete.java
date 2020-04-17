@@ -81,7 +81,7 @@ public class Delete extends NotInReadOnlyModeService {
                 repo.delete(thesaurusId);
             }
         } else {
-            throw new IllegalArgumentException("Thesaurus not found --> " + name);
+            throw new IllegalArgumentException("Thesaurus not found: " + name);
         }
 
         return new Element(Jeeves.Elem.RESPONSE)

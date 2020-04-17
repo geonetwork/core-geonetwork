@@ -511,7 +511,7 @@
           </div>
           <div data-gn-md-feedback="mdView.current.record"></div>
 
-          <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geoBox.length > 0">
+          <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geoBox || mdView.current.record.boundingPolygon">
             <h2>
               <i class="fa fa-fw fa-map-marker"></i>
               <span data-translate="">extent</span>
@@ -522,11 +522,11 @@
             </ul>
             </p>
             <!-- TODO: use map config -->
-            <p data-ng-repeat="bbox in mdView.current.record.geoBox">
+            <p data-ng-if="mdView.current.record.geoBox || mdView.current.record.boundingPolygon">
               <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
                   alt="{{'extent' | translate}}"
                   aria-label="{{'extent' | translate}}"
-                  data-ng-src="{{gnUrl}}{{lang}}/region.getmap.png?mapsrs=EPSG:3857&width=250&background=settings&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon($index)}}"/>
+                  data-ng-src="../api/records/{{mdView.current.record.getUuid()}}/extents.png"/>
             </p>
 
           </section>

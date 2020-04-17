@@ -31,6 +31,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Util;
+import org.fao.geonet.api.regions.GeomFormat;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionNotFoundEx;
@@ -45,7 +46,7 @@ import java.util.Collection;
 /**
  * Returns a specific region and coordinates given its id
  */
-
+@Deprecated
 public class GetGeom implements Service {
     private static final String SIMPLIFIED_PARAM = "simplified";
 

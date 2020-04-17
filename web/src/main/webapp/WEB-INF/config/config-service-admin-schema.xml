@@ -66,7 +66,7 @@
 
               ]]></documentation>
       <class name=".services.schema.Add"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
     <service name="admin.schema.remove">
@@ -76,7 +76,7 @@
               ]]>
       </documentation>
       <class name=".services.schema.Delete"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
     <service name="admin.schema.update">
@@ -86,7 +86,7 @@
               ]]>
       </documentation>
       <class name=".services.schema.Update"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
+      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
   </services>
 </geonet>

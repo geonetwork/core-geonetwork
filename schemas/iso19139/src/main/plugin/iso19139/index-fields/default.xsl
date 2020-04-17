@@ -315,6 +315,12 @@
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+      <xsl:if test="*/gmd:EX_Extent/*/gmd:EX_BoundingPolygon">
+        <Field name="boundingPolygon" string="y" store="true" index="false"/>
+      </xsl:if>
+
+      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
       <xsl:for-each select="//gmd:MD_Keywords">
         <!-- Index all keywords as text or anchor -->
         <xsl:variable name="listOfKeywords"

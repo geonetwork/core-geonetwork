@@ -96,7 +96,13 @@ goog.require('gn_alert');
           'isLogoInHeader': false,
           'logoInHeaderPosition': 'left',
           'fluidHeaderLayout': true,
-          'showGNName': true
+          'showGNName': true,
+          'isHeaderFixed': false
+        },
+        'cookieWarning': {
+          'enabled': true,
+          'cookieWarningMoreInfoLink': '',
+          'cookieWarningRejectLink': ''
         },
         'home': {
           'enabled': true,
@@ -205,8 +211,9 @@ goog.require('gn_alert');
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/map',
           'externalViewer': {
             'enabled': false,
+            'enabledViewAction': false,
             'baseUrl': 'http://www.example.com/viewer',
-            'urlTemplate': 'http://www.example.com/viewer?url=${service.url}&type=${service.type}&layer=${service.name}',
+            'urlTemplate': 'http://www.example.com/viewer?url=${service.url}&type=${service.type}&layer=${service.title}&lang=${iso2lang}&title=${md.defaultTitle}',
             'openNewWindow': false,
             'valuesSeparator': ','
           },
@@ -478,6 +485,8 @@ goog.require('gn_alert');
       $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
       $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
       $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
+      $scope.isHeaderFixed = gnGlobalSettings.gnCfg.mods.header.isHeaderFixed;
+      $scope.isLogoInHeader = gnGlobalSettings.gnCfg.mods.header.isLogoInHeader;
 
       // If gnLangs current already set by config, do not use URL
       $scope.langs = gnGlobalSettings.gnCfg.mods.header.languages;
@@ -528,6 +537,12 @@ goog.require('gn_alert');
       gnConfig.env = gnConfig.env ||  {};
       gnConfig.env.node = $scope.nodeId;
       gnConfig.env.baseURL = detectBaseURL(gnGlobalSettings.gnCfg.baseURLDetector);
+
+      $scope.signoutUrl = gnGlobalSettings.gnCfg.mods.signout.appUrl
+        + '?redirectUrl='
+        + window.location.href.slice(
+            0,
+            window.location.href.indexOf(gnConfig.env.node) + gnConfig.env.node.length);
 
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',

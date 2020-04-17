@@ -69,7 +69,6 @@ public abstract class AbstractGeonetworkDataDirectoryTest extends AbstractCoreIn
         final Path webappDir = getWebappDir(getClass());
         dataDirectory.init("geonetwork", webappDir, handlerConfig, null);
 
-        assertEquals(getGeonetworkNodeId(), dataDirectory.getNodeId());
         final Path expectedDataDir = getDataDir();
         assertEquals(expectedDataDir, dataDirectory.getSystemDataDir());
         assertEquals(webappDir.toAbsolutePath().normalize(), dataDirectory.getWebappDir().toAbsolutePath().normalize());

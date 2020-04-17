@@ -1,4 +1,27 @@
-package org.fao.geonet.services.region;
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
+package org.fao.geonet.api.records.extent;
 
 import org.locationtech.jts.awt.ShapeWriter;
 import org.locationtech.jts.geom.Envelope;
@@ -6,6 +29,7 @@ import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
+import org.fao.geonet.api.regions.GeomFormat;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionNotFoundEx;
 import org.fao.geonet.kernel.region.RegionsDAO;
@@ -62,7 +86,7 @@ public class MapRenderer {
      * Check if a geometry is in the domain of validity of a projection and if not return the
      * intersection of the geometry with the coordinate system domain of validity.
      */
-    private static Geometry computeGeomInDomainOfValidity(Geometry geom, CoordinateReferenceSystem mapCRS) {
+    public static Geometry computeGeomInDomainOfValidity(Geometry geom, CoordinateReferenceSystem mapCRS) {
         final GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(null);
         final Extent domainOfValidity = mapCRS.getDomainOfValidity();
         Geometry adjustedGeom = geom;
@@ -84,9 +108,8 @@ public class MapRenderer {
                         if (env.contains(geom.getEnvelopeInternal())) {
                             return geom;
                         } else {
-                            adjustedGeom = geometryFactory.toGeometry(
-                                env.intersection(geom.getEnvelopeInternal())
-                            );
+                            Geometry extentPolygon = JTS.toGeometry(env);
+                            adjustedGeom = geom.intersection(extentPolygon);
                         }
                     }
                 }
@@ -147,7 +170,7 @@ public class MapRenderer {
             // * request param is 'settings' and db setting is a named bg layer
             // * request param is a named bg layer
             // * request param is a full url
-            if (background.equalsIgnoreCase(GetMap.SETTING_BACKGROUND)) {
+            if (background.equalsIgnoreCase(MetadataExtentApi.SETTING_BACKGROUND)) {
                 String bgSetting = settingManager.getValue(Settings.REGION_GETMAP_BACKGROUND);
                 if (bgSetting.startsWith("http://") || bgSetting.startsWith("https://")) {
                     background = settingManager.getValue(Settings.REGION_GETMAP_BACKGROUND);

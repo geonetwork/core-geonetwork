@@ -37,6 +37,12 @@
    *
    * It also set direction attribute for RTL language.
    *
+   *  When using nav pills, you can control focusing of the underlying <input>
+   *  by adding a data-focus-to-input='true|false' attribute on the <input>.
+   *  Default is true (old behaviour).
+   *  For UX, type-ahead fields (i.e. keyword picker) should be be annotated with data-focus-to-input='false'
+   *  because they pop-up the selection when focused.
+   *
    */
   module.directive('gnMultilingualField', ['$timeout', '$translate',
     function($timeout, $translate) {
@@ -111,6 +117,38 @@
             );
             return langCode;
           }
+          //looks for the 'data-focus-to-input' attribute on the <input>
+          //default is true
+          // otherwise, its the value of 'data-focus-to-input' (should be true|false)
+          function shouldFocus(element) {
+            if ($(element).attr('data-focus-to-input') === undefined)
+              return true; // default
+            return ($(element).attr('data-focus-to-input') === 'true')
+          }
+
+          //since scope.languages is a dictionary, we give it an explicit order
+          // Order is based on the occurrence of the "<input>" inside element.
+          // This is more aesthetically pleasing (the nav pills are in the same order as the inputs in the UI)
+          function computeLanguageOrdered(languages,element) {
+            //find the order of items (i.e textarea) underneath
+            var result = [];
+            $(element).find(formFieldsSelector).each(function() {
+              var key = _.invert(languages)["#"+this.lang];
+              if (!_.findWhere(result,{key: key})) // in lookups (i.e. country) there could be multiples of the same things
+                result.push({"key":key,"value":"#"+this.lang});
+            });
+
+            //there might be missing ones in the result list - add them now
+            for (var key in languages) {
+                //do we have this key already?
+                if (!_.findWhere(result,{key: key})) {
+                     result.push( {"key":key,"value":languages[key]});
+                }
+            }
+            return result;
+          };
+
+          scope.languagesOrdered = computeLanguageOrdered(scope.languages,element);
 
           $timeout(function() {
             scope.expanded = scope.expanded === 'true';
@@ -151,7 +189,9 @@
               if ($(this).attr('lang') === scope.currentLanguage ||
                   ($(this).attr('lang') === mainLanguage &&
                   scope.currentLanguage === '')) {
-                $(this).removeClass('hidden').focus();
+                  var el = $(this).removeClass('hidden');
+                  if (shouldFocus(el))
+                    el.focus();
               } else {
                 $(this).addClass('hidden');
               }
@@ -172,7 +212,7 @@
                 setLabel('oneLanguage');
                 $(this).prev('span').removeClass('hidden');
                 var el = $(this).removeClass('hidden');
-                if (focus) {
+                if (focus && shouldFocus(el)) {
                   el.focus();
                 }
               } else {
@@ -184,7 +224,7 @@
                 } else {
                   scope.currentLanguage = mainLanguage;
                   var el = $(this).removeClass('hidden');
-                  if (focus) {
+                  if (focus && shouldFocus(el)) {
                     el.focus();
                   }
                 }

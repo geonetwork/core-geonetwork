@@ -77,9 +77,11 @@
 
   <!-- The default language is also added as gmd:locale
   for multilingual metadata records. -->
-  <xsl:variable name="mainLanguage"
-                select="/root/*/gmd:language/gco:CharacterString/text()|
-                        /root/*/gmd:language/gmd:LanguageCode/@codeListValue"/>
+ <xsl:variable name="mainLanguage">
+      <xsl:call-template name="langId_from_gmdlanguage19139">
+          <xsl:with-param name="gmdlanguage" select="/root/*/gmd:language"/>
+      </xsl:call-template>
+  </xsl:variable>
 
   <xsl:variable name="isMultilingual"
                 select="count(/root/*/gmd:locale[*/gmd:languageCode/*/@codeListValue != $mainLanguage]) > 0"/>
@@ -423,20 +425,27 @@
 
               <!-- Populate PT_FreeText for default language if not existing and it is not null. -->
               <xsl:apply-templates select="gco:CharacterString|gmx:Anchor"/>
-              <xsl:if test="normalize-space(gco:CharacterString|gmx:Anchor) != ''">
-                <gmd:PT_FreeText>
-                  <gmd:textGroup>
-                    <gmd:LocalisedCharacterString locale="#{$mainLanguageId}">
-                      <xsl:value-of select="gco:CharacterString|gmx:Anchor"/>
-                    </gmd:LocalisedCharacterString>
-                  </gmd:textGroup>
-                  <xsl:call-template name="populate-free-text"/>
-                </gmd:PT_FreeText>
-              </xsl:if>
+                <!-- only put this in if there's stuff to put in, otherwise we get a <gmd:PT_FreeText/> in output -->
+                <xsl:if test="(normalize-space(gco:CharacterString|gmx:Anchor) != '') or gmd:PT_FreeText">
+                  <gmd:PT_FreeText>
+                    <xsl:if test="normalize-space(gco:CharacterString|gmx:Anchor) != ''"> <!-- default lang-->
+                      <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#{$mainLanguageId}">
+                          <xsl:value-of select="gco:CharacterString|gmx:Anchor"/>
+                        </gmd:LocalisedCharacterString>
+                      </gmd:textGroup>
+                    </xsl:if>
+                    <xsl:call-template name="populate-free-text"/> <!-- other langs -->
+                  </gmd:PT_FreeText>
+                </xsl:if>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
+
+      <!-- Apply other elements that we are not handling in this template -->
+      <xsl:apply-templates select="node()[not(self::gco:CharacterString|self::gmx:Anchor|self::gmd:PT_FreeText)]"/>
+
     </xsl:copy>
   </xsl:template>
 

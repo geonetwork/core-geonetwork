@@ -140,7 +140,7 @@ header div.gn-abstract {
     margin: 2em 0 0 90px;
     border: 1px solid #ccc;
   }
-  .gn-md-side-overview > .extent {
+  .gn-md-side-extent > .extent {
     margin: 0 0 0 0;
     .coord {
       display: none;
@@ -249,6 +249,15 @@ header div.gn-abstract {
     margin-left: 1em;
   }
 
+  .gn-field-template div.target {
+    margin-bottom: 2em;
+    dl:not(:first-child) {
+      dt:before {
+        border: none;
+      }
+    }
+  }
+
   .img-thumbnail {
     margin-bottom: 1em;
   }
@@ -346,6 +355,9 @@ header div.gn-abstract {
   }
   p {
     word-wrap: break-word;
+  }
+  .btn {
+    white-space: normal;
   }
 }
 

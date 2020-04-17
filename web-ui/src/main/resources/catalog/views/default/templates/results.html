@@ -10,7 +10,8 @@
         <div data-ng-show="searchResults.records.length > 0"
             data-gn-saved-selections-panel="user"></div>
 
-        <div data-gn-user-searches-panel="user"></div>
+        <div data-gn-user-searches-panel="user"
+             data-ng-if="isUserSearchesEnabled && user.isConnected()"></div>
 
         <div data-search-filter-tags
              data-dimensions="searchResults.dimension"
@@ -103,8 +104,8 @@
       </div>
     </div>
     <br>
-  
-  
+
+
     </div>
   </div>
 

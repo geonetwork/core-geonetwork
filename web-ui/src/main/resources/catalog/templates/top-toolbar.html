@@ -161,7 +161,7 @@
             alt="{{'avatar' | translate}}"
             data-ng-src="//gravatar.com/avatar/{{user.email | md5}}?s=18"/>
           <div class="gn-user-info hidden-sm hidden-md">
-            {{user.name}} {{user.surname}}<br>
+            <span class="gn-user-name">{{user.name}} {{user.surname}}</span><br>
             <span class="gn-user-role">{{user.profile | lowercase | translate}}</span>
           </div>
           <span class="alert alert-danger ng-hide"
@@ -189,7 +189,7 @@
           </li>
           <li role="separator" class="divider hidden-xs"></li>
           <li role="menuitem">
-            <a href="{{gnCfg.mods.signout.appUrl}}"
+            <a href="{{signoutUrl}}"
                title="{{'signout' | translate}}">
               <i class="fa fa-sign-out"></i>&nbsp;
               {{'signout' | translate}}
@@ -223,7 +223,7 @@
                          name="username"
                          autofocus=""
                          aria-label="{{'username' | translate}}"
-                         placeholder="{{'username' | translate}}" 
+                         placeholder="{{'username' | translate}}"
                          data-ng-model="signinUsername"
                          required=""/>
                 </div>

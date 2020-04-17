@@ -90,11 +90,6 @@ public class JeevesContextLoaderListener implements ServletContextListener {
             jeevesAppContext.getBeansOfType(JpaRepository.class, false, true);
 
             servletContext.setAttribute(User.NODE_APPLICATION_CONTEXT_KEY, jeevesAppContext);
-
-            NodeInfo nodeInfo = jeevesAppContext.getBean(NodeInfo.class);
-            nodeInfo.setId(nodeId);
-
-            servletContext.setAttribute(User.NODE_APPLICATION_CONTEXT_KEY, jeevesAppContext);
         } catch (Throwable e) {
             Log.error(Log.JEEVES, "JeevesContextLoaderListener: " + e.getMessage(), e);
             JeevesEngine.handleStartupError(e);

@@ -176,6 +176,7 @@
       <field name="tempExtentBegin" tagName="tempExtentBegin"/>
       <field name="tempExtentEnd" tagName="tempExtentEnd"/>
       <field name="geoBox" tagName="geoBox"/>
+      <field name="boundingPolygon" tagName="boundingPolygon"/>
       <field name="extentDesc" tagName="geoDesc"/>
       <field name="geoDescCode" tagName="geoDescCode"/>
       <field name="_indexingError" tagName="idxError"/>

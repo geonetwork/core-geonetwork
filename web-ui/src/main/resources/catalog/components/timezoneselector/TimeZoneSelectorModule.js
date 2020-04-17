@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -21,23 +21,11 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package jeeves.config.springutil;
+(function() {
+  goog.provide('gn_timezone_selector');
 
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.NodeInfo;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
-import javax.servlet.http.HttpServletRequest;
+  goog.require('gn_timezone_selector_directive');
 
-/**
- * A details source that adds the referer to the Authentication details User: Jesse Date: 12/4/13
- * Time: 8:12 AM
- */
-public class JeevesAuthenticationDetailSource extends WebAuthenticationDetailsSource {
-    @Override
-    public WebAuthenticationDetails buildDetails(HttpServletRequest context) {
-        final NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
-        return new JeevesAuthenticationDetails(context, nodeInfo);
-    }
-}
+  angular.module('gn_timezone_selector', ['gn_timezone_selector_directive']);
+})();
