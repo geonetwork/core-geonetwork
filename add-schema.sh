@@ -71,11 +71,11 @@ then
   echo "Adding schema ${schema} dependency to web/pom.xml"
 
   sed $sedopt "${insertLine} a\\
-<dependency>\\
-<groupId>${projectGroupId}</groupId>\\
-<artifactId>schema-${schema}</artifactId>\\
-<version>${gnSchemasVersion}</version>\\
-</dependency>
+    <dependency>\\
+      <groupId>${projectGroupId}</groupId>\\
+      <artifactId>schema-${schema}</artifactId>\\
+      <version>${gnSchemasVersion}</version>\\
+    </dependency>
   " web/pom.xml
 fi
 
@@ -94,9 +94,9 @@ then
   echo "Adding schema ${schema} resources to web/pom.xml"
 
   sed $sedopt "${finalLine} a\\
- <resource>\\
-    <directory>${projectBaseDir}/../schemas/${schema}/src/main/plugin</directory>\\
-    <targetPath>${baseDir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>\\
-  </resource>
+                <resource>\\
+                  <directory>${projectBaseDir}/../schemas/${schema}/src/main/plugin</directory>\\
+                  <targetPath>${baseDir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>\\
+                </resource>
   " web/pom.xml
 fi
