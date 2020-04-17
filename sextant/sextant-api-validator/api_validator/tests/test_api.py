@@ -33,7 +33,7 @@ def test_access_site():
     v = ApiPageBuilder(
         input_yaml, output_dir, prefix_sextant_url, prefix_sextant_url_replace,
     )
-    v.base_site_url_replace_by = 'api_validator'
+    v.base_site_url_replace_by = "api_validator"
     url = "/app/api_validator/tests/test.html"
     page = open(url)
     assert True == v.write_to_html("test", v.replace_urls(page.read()))
@@ -44,7 +44,7 @@ def test_sextant_replaced():
         input_yaml, output_dir, prefix_sextant_url, prefix_sextant_url_replace,
     )
     url = "/app/api_validator/tests/test.html"
-    v.base_site_url_replace_by = 'api_validator'
+    v.base_site_url_replace_by = "api_validator"
     page = open(url)
     count = 0
     v.write_to_html("test", v.replace_urls(page.read()))
@@ -60,7 +60,7 @@ def test_find_script_src():
         input_yaml, output_dir, prefix_sextant_url, prefix_sextant_url_replace,
     )
     url = "/app/api_validator/tests/test.html"
-    v.base_site_url_replace_by = 'api_validator'
+    v.base_site_url_replace_by = "api_validator"
     page = open(url)
     count = 0
     v.write_to_html("test", v.replace_urls(page.read()))

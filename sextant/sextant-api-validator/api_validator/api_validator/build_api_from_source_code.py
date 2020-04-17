@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import yaml
-from urllib.parse import urlparse
+from urllib.parse import urlsplit
 
 
 class ApiPageBuilder:
@@ -42,10 +42,14 @@ class ApiPageBuilder:
         ignored = 0
         for site_name in self.inputs:
             print("Working on {}".format(site_name))
-            self.base_site_url_replace_by = urlparse(self.inputs[site_name]).netloc + '/'
+            self.base_site_url_replace_by = "{0.scheme}://{0.netloc}/".format(
+                urlsplit(self.inputs[site_name])
+            )
+
             print(
-              "Replacing relative urls prefix with '{}'".format(self.base_site_url_replace_by
-              )
+                "Replacing relative urls prefix with '{}'".format(
+                    self.base_site_url_replace_by
+                )
             )
             html = self.get_html(site_name)
             if not html:
@@ -72,6 +76,7 @@ class ApiPageBuilder:
         for link in soup.findAll("link"):
             if link["href"].startswith("//"):
                 continue
+
             if link["href"].startswith(tuple(self.base_site_url_lookup)):
                 for i in self.base_site_url_lookup:
                     link["href"] = link["href"].replace(
@@ -82,10 +87,14 @@ class ApiPageBuilder:
             if script.has_attr("src"):
                 if script["src"].startswith("//") and self.sextant_url_lookup != "//":
                     continue
-                if script["src"].find(self.sextant_url_lookup) != -1:
+                #  here we look only for sextant files
+                if script["src"].find(self.sextant_url_lookup) != -1 and not script[
+                    "src"
+                ].startswith("/"):
                     script["src"] = script["src"].replace(
                         self.sextant_url_lookup, self.sextant_url_replace_by, 1
                     )
+                # all src files that are not sextant with relative paths
                 else:
                     for i in self.base_site_url_lookup:
                         script["src"] = script["src"].replace(
