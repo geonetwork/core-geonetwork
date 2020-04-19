@@ -1328,14 +1328,14 @@
     <!-- Configure database config file to use. Could be
      h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi
      -->
-    <db.type>h2</db.type>
-    <db.config.file>../config-db/${db.type}.xml</db.config.file>
-    <db.host>localhost</db.host>
-    <db.port></db.port>
-    <db.name>gn</db.name>
-    <db.username>www-data</db.username>
-    <db.password>www-data</db.password>
-    <db.connectionProperties></db.connectionProperties>
+    <db.type>#{systemEnvironment['DB_TYPE']?:'h2'}</db.type>
+    <db.host>#{systemEnvironment['DB_HOST']?:'localhost'}</db.host>
+    <db.port>#{systemEnvironment['DB_PORT']}</db.port>
+    <db.name>#{systemEnvironment['DB_NAME']?:'gn'}</db.name>
+    <db.username>#{systemEnvironment['DB_USERNAME']?:'www-data'}</db.username>
+    <db.password>#{systemEnvironment['DB_PASSWORD']?:'www-data'}</db.password>
+    <db.connectionProperties>#{systemEnvironment['DB_CONNECTION_PROPERTIES']?:'LOCK_TIMEOUT=20000;DB_CLOSE_ON_EXIT=FALSE;MVCC=TRUE'}</db.connectionProperties>
+
     <db.pool.maxActive>30</db.pool.maxActive>
     <db.pool.maxIdle>10</db.pool.maxIdle>
     <db.pool.initialSize>10</db.pool.initialSize>
