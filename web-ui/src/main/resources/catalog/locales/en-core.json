@@ -1,4 +1,8 @@
 {
+    "range-relation-intersects": "Intersects",
+    "range-relation-within": "Within",
+    "range-relation-contains": "Contains",
+    "resourceTemporalDateRange": "Resource temporal coverage",
     "facet-resourceType": "Type of resources",
     "facet-availableInServices": "Available in",
     "availableInServices-availableInDownloadService": "Download service",

@@ -1050,6 +1050,23 @@
         }
       },
       {
+        "integerRange": {
+          "match": "*IntegerRange",
+          "mapping": {
+            "type": "integer_range"
+          }
+        }
+      },
+      {
+        "dateRange": {
+          "match": "*DateRange",
+          "mapping": {
+            "type": "date_range",
+            "format": "date_optional_time||yyyy-MM-dd||yyyy-MM||yyyy||epoch_millis"
+          }
+        }
+      },
+      {
         "date": {
           "match": "*Date*",
           "mapping": {

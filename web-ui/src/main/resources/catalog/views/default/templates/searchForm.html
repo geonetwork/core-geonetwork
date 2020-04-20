@@ -27,7 +27,7 @@
                     data-typeahead-wait-ms="600">
 
               <div class="input-group-btn">
-                <!--<button type="button"
+                <button type="button"
                         class="btn btn-default btn-lg"
                         title="{{'advanced' | translate}}"
                         data-ng-model="searchObj.advancedMode"
@@ -36,7 +36,7 @@
                         btn-checkbox-false="0">
                   <i class="fa fa-ellipsis-v"></i>
                   <span class="sr-only" data-translate="">advanced</span>
-                </button>-->
+                </button>
 
                 <button type="button"
                         data-ng-click="triggerSearch()"
@@ -62,9 +62,7 @@
           </div>
         </div>
         <div class="row" data-ng-show="searchObj.advancedMode">
-          <!--Advanced search form-->
           <div data-ng-include="advancedSearchTemplate"></div>
-
         </div>
       </div>
     </div>

@@ -182,21 +182,42 @@
 
       for (var prop in termss) {
         var value = termss[prop],
-            isWildcard = value[0].indexOf && value[0].indexOf('*') !== -1 || false;
+            isRange = value[0].range !== undefined,
+            isWildcard = value[0].indexOf
+              && value[0].indexOf('*') !== -1 || false;
         var queryType = isWildcard ? 'wildcard' : 'terms';
-        var clause = {};
+        var clause = null;
         var field = {};
-        if (isWildcard) {
-          if (value.length > 1) {
-            console.warn("Wildcard query not supported on array of values.",
-              value);
+        if (isRange) {
+          // "range" : {
+          //   "resourceTemporalDateRange" : {
+          //     "gte" : null,
+          //       "lte" : null,
+          //       "relation" : "intersects" // within, contains
+          //   }
+          // }
+          var r = value[0].range[Object.keys(value[0].range)[0]],
+            rangeBoundsDefined = r.gte != null && r.lte != null
+          if(rangeBoundsDefined) {
+            clause = value[0];
           }
-          field[prop] = value[0];
         } else {
-          field[prop] = value;
+          if (isWildcard) {
+            if (value.length > 1) {
+              console.warn("Wildcard query not supported on array of values.",
+                value);
+            }
+            field[prop] = value[0];
+          } else {
+            field[prop] = value;
+          }
+          clause = {};
+          clause[queryType] = field;
         }
-        clause[queryType] = field;
-        queryHook.push(clause);
+
+        if(clause != null) {
+          queryHook.push(clause);
+        }
       }
 
       if(query_string) {
