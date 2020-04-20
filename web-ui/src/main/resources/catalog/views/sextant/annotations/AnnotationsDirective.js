@@ -77,7 +77,8 @@
           /**
            * Copy-pasted from DrawDirective.js
            */
-          function createStyleFromConfig(feature, styleCfg) {
+          var createStyleFromConfig = function(feature, styleCfg) {
+            var drawType = feature.get('_type');
             var styleObjCfg = {
               fill: new ol.style.Fill({
                 color: styleCfg.fill.color
@@ -89,10 +90,10 @@
             };
 
             // It is a Text feature
-            if (feature.get('name')) {
+            if (drawType === 'text') {
               styleObjCfg.text = new ol.style.Text({
                 font: styleCfg.text.font,
-                text: feature.get('name'),
+                text: styleCfg.text.text,
                 fill: new ol.style.Fill({
                   color: styleCfg.text.fill.color
                 }),
@@ -104,7 +105,7 @@
                   }) : undefined
               });
             }
-            else if (feature.getGeometry().getType() == 'Point') {
+            else if (drawType === 'point') {
               styleObjCfg.image = new ol.style.Circle({
                 radius: styleCfg.image.radius,
                 fill: new ol.style.Fill({
@@ -113,7 +114,7 @@
               });
             }
             return new ol.style.Style(styleObjCfg);
-          }
+          };
 
           var listenerKey;
 
