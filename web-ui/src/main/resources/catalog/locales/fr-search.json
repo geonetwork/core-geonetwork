@@ -307,6 +307,7 @@
     "textStrokeWidth": "Largeur de trait",
     "textWidth": "Taille",
     "textFont": "Police",
+    "textContent":"Texte à afficher",
     "drawFillColor": "Couleur de remplissage",
     "drawStrokeColor": "Couleur de trait",
     "drawWidth": "Largeur",
