@@ -34,7 +34,7 @@
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <artifactId>performance</artifactId>
+  <artifactId>gn-performance</artifactId>
   <packaging>pom</packaging>
   <name>Performance testing module</name>
   <description>
@@ -150,7 +150,7 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>${project.groupId}</groupId>
-                  <artifactId>geonetwork-main</artifactId>
+                  <artifactId>gn-geonetwork-main</artifactId>
                   <version>${project.version}</version>
                   <type>war</type>
                 </artifactItem>

@@ -8,7 +8,7 @@
     <version>3.11.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>index</artifactId>
+  <artifactId>gn-index</artifactId>
   <name>Index module</name>
   <dependencies>
     <dependency>
@@ -21,7 +21,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>common</artifactId>
+      <artifactId>gn-common</artifactId>
       <version>${project.version}</version>
     </dependency>
     <!--<dependency>

@@ -32,25 +32,25 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>inspire-atom</artifactId>
+  <artifactId>gn-inspire-atom</artifactId>
   <name>GeoNetwork INSPIRE Atom</name>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>gn-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>common</artifactId>
+      <artifactId>gn-common</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>services</artifactId>
+      <artifactId>gn-services</artifactId>
       <version>${project.version}</version>
     </dependency>
 

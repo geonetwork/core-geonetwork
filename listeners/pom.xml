@@ -33,13 +33,13 @@
 
   <name>GeoNetwork Events</name>
   <packaging>jar</packaging>
-  <artifactId>listeners</artifactId>
+  <artifactId>gn-listeners</artifactId>
   <description>Contains all listeners from events.</description>
   <url>http://geonetwork-opensource.org</url>
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>gn-core</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

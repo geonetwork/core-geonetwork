@@ -38,9 +38,9 @@
   <!-- =========================================================== -->
   <!-- Module Description -->
   <!-- =========================================================== -->
-  <artifactId>common</artifactId>
+  <artifactId>gn-common</artifactId>
   <packaging>jar</packaging>
-  <name>common utils</name>
+  <name>GeoNetwork common utils</name>
   <description>
     Utility classes used by many or all geonetwork modules.
   </description>

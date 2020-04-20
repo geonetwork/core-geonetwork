@@ -34,7 +34,7 @@
   <version>3.7</version>
 
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>schemas</artifactId>
+  <artifactId>gn-schemas</artifactId>
   <name>GeoNetwork schema plugins</name>
   <packaging>pom</packaging>
 

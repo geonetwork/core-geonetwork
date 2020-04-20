@@ -37,7 +37,7 @@
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <artifactId>web-app</artifactId>
+  <artifactId>gn-web-app</artifactId>
   <packaging>war</packaging>
   <name>GeoNetwork Web module</name>
   <description>GeoNetwork web module description (TODO).</description>
@@ -296,23 +296,23 @@
     <!-- Generated dependencies -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>cachingxslt</artifactId>
+      <artifactId>gn-cachingxslt</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>oaipmh</artifactId>
+      <artifactId>gn-oaipmh</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency> <!-- dummy API for ARC SDE stuff -->
       <groupId>${project.groupId}</groupId>
-      <artifactId>dummy-api</artifactId>
+      <artifactId>gn-dummy-api</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>gn-core</artifactId>
       <version>${project.version}</version>
       <exclusions>
         <exclusion>
@@ -324,36 +324,36 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>services</artifactId>
+      <artifactId>gn-services</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>harvesters</artifactId>
+      <artifactId>gn-harvesters</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>health-monitor</artifactId>
+      <artifactId>gn-health-monitor</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>inspire-atom</artifactId>
+      <artifactId>gn-inspire-atom</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>doi</artifactId>
+      <artifactId>gn-doi</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>listeners</artifactId>
+      <artifactId>gn-listeners</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -438,34 +438,34 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>web-ui</artifactId>
+      <artifactId>gn-web-ui</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>domain</artifactId>
+      <artifactId>gn-domain</artifactId>
       <version>${project.version}</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>gn-core</artifactId>
       <version>${project.version}</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>services</artifactId>
+      <artifactId>gn-services</artifactId>
       <version>${project.version}</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>wro4j</artifactId>
+      <artifactId>gn-wro4j</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -480,28 +480,28 @@
     having a custom Bean to be loaded. -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19139</artifactId>
+      <artifactId>gn-schema-iso19139</artifactId>
       <version>${gn.schemas.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19110</artifactId>
+      <artifactId>gn-schema-iso19110</artifactId>
       <version>${gn.schemas.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>schema-dublin-core</artifactId>
+      <artifactId>gn-schema-dublin-core</artifactId>
       <version>${gn.schemas.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19115-3.2018</artifactId>
+      <artifactId>gn-schema-iso19115-3.2018</artifactId>
       <version>${gn.schemas.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>wfsfeature-harvester</artifactId>
+      <artifactId>gn-wfsfeature-harvester</artifactId>
       <version>${project.version}</version>
       <exclusions>
         <exclusion>
@@ -934,7 +934,7 @@
       <id>slave</id>
       <dependencies>
         <dependency>
-          <groupId>org.geonetwork-opensource</groupId>
+          <groupId>${project.groupId}</groupId>
           <artifactId>slave</artifactId>
           <version>${project.version}</version>
         </dependency>

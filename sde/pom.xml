@@ -37,7 +37,7 @@
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <artifactId>dummy-api</artifactId>
+  <artifactId>gn-dummy-api</artifactId>
   <packaging>jar</packaging>
   <name>ArcSDE module (dummy-api)</name>
   <description>
