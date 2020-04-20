@@ -43,12 +43,12 @@
           <xpath schema="iso19139" path="*/gmd:MD_Keywords/gmd:keyword/gco:CharacterString"/>
         </parameter>
 
-        <parameter name="Title" field="resourceTitle" sortField="resourceTitleObject.default.keyword" type="SupportedISOQueryables">
+        <parameter name="Title" field="resourceTitleObject.default" sortField="resourceTitleObject.default.keyword" type="SupportedISOQueryables">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
         </parameter>
 
-        <parameter name="Abstract" field="resourceAbstract"  sortField="resourceAbstractObject.default.keyword" type="SupportedISOQueryables">
+        <parameter name="Abstract" field="resourceAbstractObject.default" sortField="resourceAbstractObject.default.keyword" type="SupportedISOQueryables">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString"/>
         </parameter>
