@@ -104,6 +104,13 @@
   <!--Text-->
   <div data-ng-if="getType() == 'text'">
     <div class="form-group">
+      <div class="col-xs-12">
+        <input class="form-control"
+               ng-model="style.text.text"
+               title="{{'textContent'|translate}}">
+      </div>
+    </div>
+    <div class="form-group">
       <label class="col-xs-4"
              for="gn-draw-text-width">
         {{'textWidth'|translate}}

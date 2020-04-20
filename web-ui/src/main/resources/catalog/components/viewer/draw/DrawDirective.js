@@ -100,11 +100,12 @@
            * @return {*[]} styles array
            */
           var selectVectorStyleFn = function(feature) {
+            var drawType = feature.get('_type');
             if (feature.get('_style')) {
               var fStyle = feature.get('_style');
 
               // If text, just display text
-              if (feature.get('name')) {
+              if (drawType === 'text') {
                 return [fStyle];
               }
               var selectStyle = new ol.style.Style({
@@ -171,7 +172,7 @@
               }),
               text: new ol.style.Text({
                 font: style.text.font,
-                text: scope.text,
+                text: style.text.text,
                 fill: new ol.style.Fill({
                   color: style.text.fill.color
                 })
@@ -211,6 +212,7 @@
            * @return {ol.style.Style} the ol style
            */
           var createStyleFromConfig = function(feature, styleCfg) {
+            var drawType = feature.get('_type');
             var styleObjCfg = {
               fill: new ol.style.Fill({
                 color: styleCfg.fill.color
@@ -222,10 +224,10 @@
             };
 
             // It is a Text feature
-            if (feature.get('name')) {
+            if (drawType === 'text') {
               styleObjCfg.text = new ol.style.Text({
                 font: styleCfg.text.font,
-                text: feature.get('name'),
+                text: styleCfg.text.text,
                 fill: new ol.style.Fill({
                   color: styleCfg.text.fill.color
                 }),
@@ -237,7 +239,7 @@
                     }) : undefined
               });
             }
-            else if (feature.getGeometry().getType() == 'Point') {
+            else if (drawType === 'point') {
               styleObjCfg.image = new ol.style.Circle({
                 radius: styleCfg.image.radius,
                 fill: new ol.style.Fill({
@@ -256,6 +258,7 @@
            */
           getStyleObjFromFeature = function(feature) {
             var st = feature.get('_style');
+            var drawType = feature.get('_type');
             if (angular.isFunction(st)) {
               st = st(feature)[0];
             }
@@ -286,7 +289,7 @@
                 };
               }
             }
-            else if (feature.getGeometry().getType() == 'Point') {
+            else if (drawType === 'point') {
               styleObj.image = {
                 radius: st.getImage().getRadius(),
                 fill: {
@@ -303,11 +306,14 @@
            * it to the feature as a `_style` parameter.
            * This is done not to save style into the feature so the modify
            * layer style Fn is not overloaded.
+           * Also stores the current draw type on the feature
            *
            * @param {object} evt ol3 event draw end
+           * @param {string} drawType either 'point', 'text', 'line' or 'polygon'
            */
-          var onDrawend = function(evt) {
+          var onDrawend = function(evt, drawType) {
             var f = evt.feature;
+            f.set('_type', drawType);
             f.set('_style', createStyleFromConfig(f, scope.featureStyleCfg));
             scope.$apply();
           };
@@ -317,7 +323,7 @@
             type: 'Polygon',
             source: source
           }));
-          drawPolygon.on('drawend', onDrawend);
+          drawPolygon.on('drawend', function (evt) { onDrawend(evt, 'polygon') });
           ngeoDecorateInteraction(drawPolygon, map);
           drawPolygon.active = false;
           scope.drawPolygon = drawPolygon;
@@ -327,7 +333,7 @@
             type: 'Point',
             source: source
           }));
-          drawPoint.on('drawend', onDrawend);
+          drawPoint.on('drawend', function (evt) { onDrawend(evt, 'point') });
           ngeoDecorateInteraction(drawPoint, map);
           drawPoint.active = false;
           scope.drawPoint = drawPoint;
@@ -337,7 +343,7 @@
             type: 'LineString',
             source: source
           }));
-          drawLine.on('drawend', onDrawend);
+          drawLine.on('drawend', function (evt) { onDrawend(evt, 'line') });
           ngeoDecorateInteraction(drawLine, map);
           drawLine.active = false;
           scope.drawLine = drawLine;
@@ -348,10 +354,7 @@
             source: source,
             style: drawTextStyleFn
           }));
-          drawText.on('drawend', function(evt) {
-            evt.feature.set('name', scope.text);
-            onDrawend(evt);
-          });
+          drawText.on('drawend', function (evt) { onDrawend(evt, 'text') });
           ngeoDecorateInteraction(drawText, map);
           drawText.active = false;
           scope.drawText = drawText;
@@ -427,7 +430,7 @@
 
               // Save the feature style
               clone.set('_style', getStyleObjFromFeature(feature));
-              clone.set('name', feature.get('name'));
+              clone.set('_type', feature.get('_type'));
               features.push(clone);
             });
 
@@ -466,6 +469,19 @@
 
                 // Set each feature its style
                 angular.forEach(features, function(f, i) {
+                  // for backwards compatiblity (features used to have text stores in the 'name' prop,
+                  // and not their type)
+                  if (!f.get('_type')) {
+                    if (f.get('name')) {
+                      f.set('_type', 'text');
+                      var style = f.get('_style');
+                      style.text.text = f.get('name');
+                      f.set('name', undefined);
+                    }
+                    else if (f.getGeometry().getType() === 'Point') f.set('_type', 'point');
+                    else if (f.getGeometry().getType() === 'Polygon') f.set('_type', 'polygon');
+                    else if (f.getGeometry().getType() === 'LineString') f.set('_type', 'line');
+                  }
                   f.set('_style', createStyleFromConfig(f, f.get('_style')));
                 });
                 source.addFeatures(features);
@@ -534,11 +550,7 @@
 
           scope.getActiveDrawType = function() {
             if (scope.editedFeature) {
-              if (scope.editedFeature.get('name')) {
-                return 'text';
-              }
-              return scope.editedFeature.getGeometry().getType().
-                  toLocaleLowerCase();
+              return scope.editedFeature.get('_type');
             }
             if (scope.drawPoint.active) return 'point';
             else if (scope.drawLine.active) return 'line';

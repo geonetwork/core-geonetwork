@@ -315,6 +315,7 @@
   "textStrokeWidth": "Stroke width",
   "textWidth":"Size",
   "textFont":"Font",
+  "textContent":"Text to display",
   "drawFillColor":"Fill color",
   "drawStrokeColor":"Stroke color",
   "drawWidth":"Width",
