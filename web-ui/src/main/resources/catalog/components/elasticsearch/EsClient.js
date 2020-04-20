@@ -48,8 +48,8 @@
       );
     };
 
-    this.suggest = function(field, query) {
-      var params = gnESService.getSuggestParams(field, query);
+    this.suggest = function(field, query, searchObj) {
+      var params = gnESService.getSuggestParams(field, query, searchObj);
       return callApi('_search', params).then(
         function(response) {
           var d = response.data.hits.hits.flatMap(function(md) {

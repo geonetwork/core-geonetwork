@@ -100,8 +100,8 @@
            * @param {string} val any filter
            * @return {HttpPromise} promise
            */
-          this.getAnySuggestions = function(val) {
-            return gnESClient.suggest('resourceTitle', val);
+          this.getAnySuggestions = function(val, searchObj) {
+            return gnESClient.suggest('resourceTitle', val, searchObj);
           };
 
 

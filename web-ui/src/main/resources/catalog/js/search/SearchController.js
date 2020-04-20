@@ -95,8 +95,8 @@
       $scope.advancedSearchTemplate = gnSearchSettings.advancedSearchTemplate ||
         '../../catalog/views/default/templates/advancedSearchForm/defaultAdvancedSearchForm.html';
 
-      $scope.getAnySuggestions = function(val) {
-        return suggestService.getAnySuggestions(val);
+      $scope.getAnySuggestions = function(val, searchObj) {
+        return suggestService.getAnySuggestions(val, searchObj);
       };
 
       $scope.keywordsOptions = {

@@ -141,14 +141,18 @@ goog.require('gn_alert');
           },
           'autocompleteConfig': {
             'query': {
-              "multi_match": {
-                "query": "",
-                "type": "bool_prefix",
-                "fields": [
-                  "anytext",
-                  "anytext._2gram",
-                  "anytext._3gram"
-                ]
+              'bool': {
+                'must': [{
+                  'multi_match': {
+                    "query": "",
+                    "type": "bool_prefix",
+                    "fields": [
+                      "anytext",
+                      "anytext._2gram",
+                      "anytext._3gram"
+                    ]
+                  }
+                }]
               }
             },
             '_source': ['resourceTitleObject']
