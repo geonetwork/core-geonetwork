@@ -257,8 +257,6 @@ public class EsSearchManager implements ISearchManager {
     @Autowired
     private GeonetworkDataDirectory dataDirectory;
 
-    public static final String INDEX_DIRECTORY = "index";
-
 
     private void createIndex(String indexId, String indexName, boolean dropIndexFirst) throws IOException {
         if (dropIndexFirst) {
@@ -287,7 +285,7 @@ public class EsSearchManager implements ISearchManager {
                 // Check version of the index - how ?
 
                 // Create it if not
-                Path indexConfiguration = dataDirectory.getConfigDir().resolve(INDEX_DIRECTORY).resolve(indexId + ".json");
+                Path indexConfiguration = dataDirectory.getIndexConfigDir().resolve(indexId + ".json");
                 if (Files.exists(indexConfiguration)) {
                     String configuration;
                     try (InputStream is = Files.newInputStream(indexConfiguration, StandardOpenOption.READ)) {

@@ -66,7 +66,7 @@ public class GeonetworkDataDirectory {
 
     private Path webappDir;
     private Path systemDataDir;
-    private Path luceneDir;
+    private Path indexConfigDir;
     private Path configDir;
     private Path thesauriDir;
     private Path schemaPluginsDir;
@@ -264,8 +264,8 @@ public class GeonetworkDataDirectory {
             + systemDataDir);
 
         // Set subfolder data directory
-        luceneDir = setDir(jeevesServlet, webappName, handlerConfig, luceneDir, ".lucene" + KEY_SUFFIX,
-            Geonet.Config.LUCENE_DIR, "index");
+        indexConfigDir = setDir(jeevesServlet, webappName, handlerConfig, indexConfigDir, ".indexConfig" + KEY_SUFFIX,
+            Geonet.Config.INDEX_CONFIG_DIR, "config","index");
 
         configDir = setDir(jeevesServlet, webappName, handlerConfig, configDir, ".config" + KEY_SUFFIX,
             Geonet.Config.CONFIG_DIR, "config");
@@ -373,6 +373,21 @@ public class GeonetworkDataDirectory {
                 Log.error(Geonet.DATA_DIRECTORY, "     - Logo copy failed: " + e.getMessage(), e);
             }
         }
+
+
+        if (!Files.exists(this.indexConfigDir) || IO.isEmptyDir(this.indexConfigDir)) {
+            Log.info(Geonet.DATA_DIRECTORY, "     - Copying index configuration in data directory ...");
+            try {
+                final Path srcFile = getDefaultDataDir(webappDir).resolve("config").resolve(INDEX_DIRECTORY);
+                IO.copyDirectoryOrFile(srcFile, this.indexConfigDir, false);
+            } catch (IOException e) {
+                Log.info(
+                    Geonet.DATA_DIRECTORY,
+                    "      - Error copying index configuration: "
+                        + e.getMessage());
+            }
+        }
+
         Path schemaCatFile = configDir.resolve(Geonet.File.SCHEMA_PLUGINS_CATALOG);
         if (!Files.exists(schemaCatFile)) {
             Log.info(Geonet.DATA_DIRECTORY, "     - Copying schema plugin catalogue ...");
@@ -480,19 +495,19 @@ public class GeonetworkDataDirectory {
     }
 
     /**
-     * Get the directory to store the lucene indices in.
+     * Get the directory to store the index configuration in.
      *
-     * @return The directory to store the lucene indices in.
+     * @return The directory to store the index configuration in.
      */
-    public Path getLuceneDir() {
-        return luceneDir;
+    public Path getIndexConfigDir() {
+        return indexConfigDir;
     }
 
     /**
-     * Set the directory to store the lucene indices in.
+     * Set the directory to store the index configuration in.
      */
-    public void setLuceneDir(Path luceneDir) {
-        this.luceneDir = luceneDir;
+    public void setIndexConfigDir(Path indexConfigDir) {
+        this.indexConfigDir = indexConfigDir;
     }
 
     /**
