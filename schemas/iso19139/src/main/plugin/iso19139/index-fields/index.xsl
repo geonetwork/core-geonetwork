@@ -769,7 +769,6 @@
               "gte": "<xsl:value-of select="normalize-space(gml:beginPosition|gml:begin/gml:TimeInstant/gml:timePosition)"/>"
               <xsl:if test="not($end/@indeterminatePosition = 'now')">
                 ,"lte": "<xsl:value-of select="normalize-space($end)"/>"
-                <xsl:message>lte</xsl:message>
               </xsl:if>
               }</resourceTemporalDateRange>
           </xsl:for-each>
