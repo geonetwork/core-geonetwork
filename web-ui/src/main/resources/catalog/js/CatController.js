@@ -172,7 +172,7 @@ goog.require('gn_alert');
           // TODOES
           'facetTabField': '',
           'facetConfig': {
-            'resourceType': {
+            'codelist_hierarchyLevel_text': {
               'terms': {
                 'field': 'codelist_hierarchyLevel_text'
               },
