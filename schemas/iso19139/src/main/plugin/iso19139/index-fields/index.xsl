@@ -714,7 +714,7 @@
                     <location><xsl:value-of select="concat($s, ',', $w)"/></location>
                   </xsl:when>
                   <xsl:otherwise>
-                    <geom>
+                    <geom type="object">
                       <xsl:text>{"type": "Polygon",</xsl:text>
                       <xsl:text>"coordinates": [[</xsl:text>
                       <xsl:value-of select="concat('[', $w, ',', $s, ']')"/>
