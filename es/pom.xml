@@ -38,7 +38,6 @@
                   </url>
                   <unpack>true</unpack>
                   <outputDirectory>${project.basedir}</outputDirectory>
-                  <sha512>${es.version.sha512}</sha512>
                 </configuration>
               </execution>
             </executions>

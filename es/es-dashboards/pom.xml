@@ -56,7 +56,6 @@
                   </url>
                   <unpack>true</unpack>
                   <outputDirectory>${project.basedir}</outputDirectory>
-                  <sha512>${kb.version.sha512}</sha512>
                 </configuration>
               </execution>
             </executions>
@@ -95,7 +94,6 @@
         <kb.executable>kibana.bat</kb.executable>
         <kb.platform>windows-x86</kb.platform>
         <kb.installer.extension>zip</kb.installer.extension>
-        <kb.version.sha512>8da834f51a9876c5f98c474c77ff66924fdf0eb57412cee29e6b8ac05d93169c1a3b4a8c85600bfa48d772ae3cb77a517a87c38f461c3fd3211f47bba4b2a46e</kb.version.sha512>
       </properties>
     </profile>
   </profiles>
