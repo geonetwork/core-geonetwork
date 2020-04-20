@@ -1377,7 +1377,7 @@
     <xbean.version>3.18</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.5.9</httpcomponents.version>
-    <gn.schemas.version>3.7</gn.schemas.version>
+    <gn.schemas.version>4.0</gn.schemas.version>
     <skipIT>true</skipIT> <!-- disable integration tests by default, use the "it" profile to run them which enables them -->
   </properties>
 </project>
