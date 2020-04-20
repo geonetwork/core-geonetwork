@@ -378,7 +378,7 @@ public class GeonetworkDataDirectory {
         if (!Files.exists(this.indexConfigDir) || IO.isEmptyDir(this.indexConfigDir)) {
             Log.info(Geonet.DATA_DIRECTORY, "     - Copying index configuration in data directory ...");
             try {
-                final Path srcFile = getDefaultDataDir(webappDir).resolve("config").resolve(INDEX_DIRECTORY);
+                final Path srcFile = getDefaultDataDir(webappDir).resolve("config").resolve("index");
                 IO.copyDirectoryOrFile(srcFile, this.indexConfigDir, false);
             } catch (IOException e) {
                 Log.info(
