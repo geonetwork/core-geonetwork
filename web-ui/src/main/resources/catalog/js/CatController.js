@@ -1027,10 +1027,18 @@ goog.require('gn_alert');
 
 
       $scope.healthCheck = {};
+      // Flag to show the health index error panel
+      // By default hidden, only to be displayed if the
+      // health check for the index returns an error.
+      $scope.showHealthIndexError = false;
+
       function healthCheckStatus(data) {
         angular.forEach(data, function(o) {
           $scope.healthCheck[o.name] = (o.status === 'OK');
         });
+
+        $scope.showHealthIndexError = (!$scope.healthCheck) ||
+          ($scope.healthCheck && $scope.healthCheck.IndexHealthCheck == false);
       };
       $http.get('../../warninghealthcheck')
         .success(healthCheckStatus)

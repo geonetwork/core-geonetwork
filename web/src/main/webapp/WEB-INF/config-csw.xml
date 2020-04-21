@@ -100,8 +100,7 @@
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='publication']/gmd:date/gco:Date|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='publication']/gmd:date/gco:Date"/>
         </parameter>
 
-        <!-- TODO: Check ES index field -->
-        <parameter name="OrganisationName" field="orgName" type="SupportedISOQueryables">
+        <parameter name="OrganisationName" field="OrgForResource" type="SupportedISOQueryables">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
         </parameter>
@@ -173,15 +172,13 @@
                  path="gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance/@uom"/>
         </parameter>
 
-        <!-- TODO: Check ES index field -->
-        <parameter name="TempExtent_begin" field="tempExtentBegin" type="SupportedISOQueryables"
+        <parameter name="TempExtent_begin" field="resourceTemporalDateRange" type="SupportedISOQueryables"
                    range="true">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification|gmd:identificationInfo/*/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition|gmd:identificationInfo/gmd:MD_DataIdentification|gmd:identificationInfo/*/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition/gml:begin/gml:TimeInstant/gml:timePosition"/>
         </parameter>
 
-        <!-- TODO: Check ES index field -->
-        <parameter name="TempExtent_end" field="tempExtentEnd" type="SupportedISOQueryables"
+        <parameter name="TempExtent_end" field="resourceTemporalDateRange" type="SupportedISOQueryables"
                    range="true">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification|gmd:identificationInfo/*/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition|gmd:identificationInfo/gmd:MD_DataIdentification|gmd:identificationInfo/*/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition/gml:end/gml:TimeInstant/gml:timePosition"/>
@@ -268,7 +265,7 @@
                  path="[gmd:identificationInfo//gmd:MD_DataIdentification/gmd:resourceConstraints//gmd:otherConstraints/gco:CharacterString|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints//gmd:otherConstraints/gco:CharacterString"/>
         </parameter>
 
-        <parameter name="Classification" field="classif" type="AdditionalQueryables">
+        <parameter name="Classification" field="codelist_classification" type="AdditionalQueryables">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:classification/gmd:MD_ClassificationCode/@codeListValue|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:classification/gmd:MD_ClassificationCode/@codeListValue"/>
         </parameter>
@@ -276,7 +273,7 @@
         <parameter name="ConditionApplyingToAccessAndUse" field="conditionApplyingToAccessAndUse"
                    type="AdditionalQueryables"/>
 
-        <parameter name="MetadataPointOfContact" field="metadataPOC" type="AdditionalQueryables">
+        <parameter name="MetadataPointOfContact" field="Org" type="AdditionalQueryables">
           <xpath schema="iso19139" path="gmd:contact/*/gmd:organisationName/gco:CharacterString"/>
         </parameter>
 
@@ -285,7 +282,7 @@
                  path="gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement/gco:CharacterString"/>
         </parameter>
 
-        <parameter name="ResponsiblePartyRole" field="responsiblePartyRole"
+        <parameter name="ResponsiblePartyRole" field="contactForResource.role"
                    type="AdditionalQueryables"/>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - -->
