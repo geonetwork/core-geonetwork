@@ -958,6 +958,5 @@
     <system.specific.overrides></system.specific.overrides>
     <rootProjectDir>${basedir}/..</rootProjectDir>
     <wro4jOutput>${project.build.directory}/wro4j-output/</wro4jOutput>
-    <es.spring.profile>es</es.spring.profile>
   </properties>
 </project>
