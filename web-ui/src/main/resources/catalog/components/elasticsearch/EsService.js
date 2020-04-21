@@ -72,7 +72,7 @@
           if (luceneQueryString) {
             queryStringParams.push(luceneQueryString);
           }
-          queryHook.push({
+          queryHook.must.push({
             query_string: {
               query: queryStringParams.join(' AND ').trim()
             }
@@ -81,7 +81,7 @@
 
         // ranges criteria (for dates)
         if (p.creationDateFrom || p.creationDateTo) {
-          queryHook.push({
+          queryHook.must.push({
             range: {
               createDate : {
                 gte: p.creationDateFrom || undefined,
@@ -92,7 +92,7 @@
           });
         }
         if (p.dateFrom || p.dateTo) {
-          queryHook.push({
+          queryHook.must.push({
             range: {
               changeDate : {
                 gte: p.dateFrom || undefined,
@@ -106,7 +106,7 @@
           if ($rootScope.user.isEditorOrMore() && !$rootScope.user.isAdmin()) {
             // Append user group query
             if ($rootScope.user.groupsWithEditor.length > 0) {
-              queryHook.push({
+              queryHook.must.push({
                 terms: {
                   "op2" : $rootScope.user.groupsWithEditor
                 }
@@ -130,12 +130,14 @@
 
         for (var prop in termss) {
           var value = termss[prop],
+            isNegative = prop.startsWith('-'),
+            fieldName = isNegative ? prop.slice(1) : prop,
             isRange = value[0] && value[0].range !== undefined,
             isWildcard = value[0] && value[0].indexOf
-              && value[0].indexOf('*') !== -1 || false;
-          var queryType = isWildcard ? 'wildcard' : 'terms';
-          var clause = null;
-          var field = {};
+              && value[0].indexOf('*') !== -1 || false,
+            queryType = isWildcard ? 'wildcard' : 'terms',
+            clause = null,
+            field = {};
           if (isRange) {
             // "range" : {
             //   "resourceTemporalDateRange" : {
@@ -155,16 +157,20 @@
                 console.warn("Wildcard query not supported on array of values.",
                   value);
               }
-              field[prop] = value[0];
+              field[fieldName] = value[0];
             } else {
-              field[prop] = value;
+              field[fieldName] = value;
             }
             clause = {};
             clause[queryType] = field;
           }
 
           if(clause != null) {
-            queryHook.push(clause);
+            var condition = isNegative ? 'must_not' : 'must';
+            if (!queryHook[condition]) {
+              queryHook[condition] = [];
+            }
+            queryHook[condition].push(clause);
           }
         }
 
@@ -176,7 +182,7 @@
             [extent[2], extent[1]]
           ];
 
-          queryHook.push({
+          queryHook.must.push({
             'geo_shape': {
               'geom': {
                 'shape': {
@@ -200,7 +206,7 @@
         //     must: []
         //   }
         // };
-        // var queryHook = query.bool.must;
+        // var queryHook = query.bool;
 
         var query = {
           "function_score": {
@@ -241,7 +247,7 @@
           }
         };
 
-        var queryHook = query.function_score.query.bool.must;
+        var queryHook = query.function_score.query.bool;
         this.buildQueryClauses(queryHook, p, luceneQueryString);
 
         if(p.from) {
@@ -300,7 +306,7 @@
           params.query.bool.must[0].multi_match.query = query;
 
           // Inject current search to contextualize suggestions
-          var queryHook = params.query.bool.must;
+          var queryHook = params.query.bool;
           var luceneQueryString = currentSearch.state && currentSearch.state.filters ? gnEsLuceneQueryParser.facetsToLuceneQuery(currentSearch.state.filters) : undefined;
 
           this.buildQueryClauses(queryHook, currentSearch.params, luceneQueryString);
