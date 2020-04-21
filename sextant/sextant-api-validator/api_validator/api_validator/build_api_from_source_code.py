@@ -76,13 +76,11 @@ class ApiPageBuilder:
         for link in soup.findAll("link"):
             if link["href"].startswith("//"):
                 continue
-
             if link["href"].startswith(tuple(self.base_site_url_lookup)):
                 for i in self.base_site_url_lookup:
                     link["href"] = link["href"].replace(
                         i, self.base_site_url_replace_by, 1
                     )
-
         for script in soup.findAll("script"):
             if script.has_attr("src"):
                 if script["src"].startswith("//") and self.sextant_url_lookup != "//":
@@ -94,6 +92,9 @@ class ApiPageBuilder:
                     script["src"] = script["src"].replace(
                         self.sextant_url_lookup, self.sextant_url_replace_by, 1
                     )
+                # do not deal with external scripts
+                elif script["src"].startswith("http"):
+                    continue
                 # all src files that are not sextant with relative paths
                 else:
                     for i in self.base_site_url_lookup:
