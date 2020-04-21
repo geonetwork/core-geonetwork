@@ -3,7 +3,7 @@
     "range-relation-within": "Within",
     "range-relation-contains": "Contains",
     "resourceTemporalDateRange": "Resource temporal coverage",
-    "facet-resourceType": "Type of resources",
+    "facet-codelist_hierarchyLevel_text": "Type of resources",
     "facet-availableInServices": "Available in",
     "availableInServices-availableInDownloadService": "Download service",
     "availableInServices-availableInViewService": "View service",

@@ -559,6 +559,8 @@
     "metadataInternalId": "Choose a metadata internal identifier",
     "metadataStatus": "Metadata information",
     "metadataWithIndexingErrors": "Metadata with indexing errors",
+    "indexRecordsWithErrors": "Index records with errors",
+    "top10IndexingErrors": "Top 10 indexing errors:",
     "metadataErrorReport": "Error report",
     "moreExamples": "More examples",
     "moreStandardInfo": "More information ...",

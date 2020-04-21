@@ -119,6 +119,23 @@
             'documentStandard'
           ]
         }
+      },
+      recordsWithErrors: {
+        facets: {
+          "indexingErrorMsg": {
+            "terms": {
+              "field": "indexingErrorMsg.keyword",
+              "size": 10
+            }
+          }
+        },
+        source: {
+          includes: [
+            'id',
+            'uuid',
+            'index*'
+          ]
+        }
       }
     };
 
