@@ -110,7 +110,7 @@ goog.require('gn_alert');
           'showSocialBarInFooter': true,
           'fluidLayout': true,
           'facetConfig': {
-            'resourceType': {
+            'codelist_hierarchyLevel_text': {
               'terms': {
                 'field': 'codelist_hierarchyLevel_text',
                 'size': 10

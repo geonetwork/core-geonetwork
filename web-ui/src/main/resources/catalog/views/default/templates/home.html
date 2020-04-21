@@ -131,18 +131,18 @@
           </span>
         </div>
       </div>
-      <div class="col-sm-12 col-md-3" data-ng-show="searchInfo.aggregations.resourceType.buckets.length > 0">
+      <div class="col-sm-12 col-md-3" data-ng-show="searchInfo.aggregations.codelist_hierarchyLevel_text.buckets.length > 0">
         <h4>
           <span data-translate="">browseTypes</span>
         </h4>
         <div class="row">
-            <span data-ng-repeat="(key, facet) in searchInfo.aggregations.resourceType.buckets"
+            <span data-ng-repeat="(key, facet) in searchInfo.aggregations.codelist_hierarchyLevel_text.buckets"
                   data-ng-show="facet.key"
                   class="col-xs-12 col-sm-6 col-md-12 chips-card">
               <div class="badge-result badge-result-type pull-left">
                 <a title="{{facet.key}}"
                   class="pull-left clearfix"
-                  data-ng-href='#/search?query_string={"resourceType": {"{{facet.key}}": true} }'>
+                  data-ng-href='#/search?query_string={"codelist_hierarchyLevel_text": {"{{facet.key}}": true} }'>
                   <span class="badge-icon pull-left">
                     <i class="fa fa-3x fa-table gn-icon gn-icon-{{facet.key}}"></i>
                   </span>
