@@ -26,6 +26,7 @@ services:
       - geonetwork:/var/lib/geonetwork_data
     depends_on:
       - elasticsearch
+      - database
 
   elasticsearch:
     image: elasticsearch:7.6.2
