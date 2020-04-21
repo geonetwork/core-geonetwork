@@ -44,3 +44,17 @@ Le service `geonetwork` (dans la section `environment` du fichier YAML) indique
 quelles variables d'environnement peuvent être positionnées pour adapter la
 configuration de l'image docker.
 
+# Création des indexes ES
+
+Les indexes ne sont pas créés automatiquement, si on utilise l'ES de la
+composition, il faudra récupérer l'IP du conteneur et effectuer les opérations
+suivantes depuis le répertoire es/ du dépot (adapter l'IP du conteneur en
+conséquence):
+
+```
+curl -X PUT http://172.30.0.3:9200/sxt-features -H "Content-Type:application/json" -d @config/features.json
+curl -X PUT http://172.30.0.3:9200/sxt-records -H "Content-Type:application/json"  -d @config/records.json
+curl -X PUT http://172.30.0.3:9200/sxt-searchlogs -H "Content-Type:application/json"  -d @config/searchlogs.json
+curl -X PUT http://172.30.0.3:9200/sxt-checkpoint -H "Content-Type:application/json"  -d @config/checkpoint.json
+
+```
