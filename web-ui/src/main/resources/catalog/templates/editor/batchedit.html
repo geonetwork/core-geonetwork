@@ -381,7 +381,7 @@
               </ul>
             </div>
             <div class="col-sm-6"
-                 data-ng-hide="selectedRecords.metadata.length > 0">
+                 data-ng-hide="selectedRecords.total.value > 0">
               <p class="alert alert-warning"
                  data-ng-show="selectedRecordsCount == 0"
                  data-translate="">selectRecordsToEdit</p>
@@ -391,11 +391,11 @@
                  data-translate-values="{count: selectedRecordsCount}">tooManyRecordInSelForSearch</p>
             </div>
             <div class="col-sm-6"
-                 data-ng-show="selectedRecords.metadata.length > 0">
+                 data-ng-show="selectedRecords.total.value > 0">
               <h4 data-translate="">aboutToUpdateTheFollowing</h4>
               <ul>
-                <li data-ng-repeat="record in selectedRecords.metadata">
-                  <a data-ng-href="catalog.search#/metadata/{{record.uuid}}">{{record.resourceTitle}}</a>
+                <li data-ng-repeat="record in selectedRecords.hits">
+                  <a data-ng-href="catalog.search#/metadata/{{record._id}}">{{record._source.resourceTitleObject.default}}</a>
                 </li>
               </ul>
             </div>
