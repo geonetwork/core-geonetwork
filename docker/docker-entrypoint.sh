@@ -56,10 +56,12 @@ if [ "$1" = 'catalina.sh' ]; then
 
     if [ "$ES_INDEX_RECORDS" != "gn-records" ] ; then
       sed -i "s#es.index.records=gn-records#es.index.records=${ES_INDEX_RECORDS}#" $CATALINA_HOME/webapps/geonetwork/WEB-INF/config.properties ;
+      sed -i "s#gn-records#${ES_INDEX_RECORDS}#g" $CATALINA_HOME/webapps/geonetwork/WEB-INF/web.xml ;
     fi
 
     if [ "$ES_INDEX_FEATURES" != "gn-features" ] ; then
       sed -i "s#es.index.features=gn-features#es.index.features=${ES_INDEX_FEATURES}#" $CATALINA_HOME/webapps/geonetwork/WEB-INF/config.properties ;
+      sed -i "s#gn-features#${ES_INDEX_FEATURES}#g" $CATALINA_HOME/webapps/geonetwork/WEB-INF/web.xml ;
     fi
 
     if [ "$KB_URL" != "http://localhost:5601" ]; then
