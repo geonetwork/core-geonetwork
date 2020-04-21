@@ -130,8 +130,8 @@
 
         for (var prop in termss) {
           var value = termss[prop],
-            isRange = value[0].range !== undefined,
-            isWildcard = value[0].indexOf
+            isRange = value[0] && value[0].range !== undefined,
+            isWildcard = value[0] && value[0].indexOf
               && value[0].indexOf('*') !== -1 || false;
           var queryType = isWildcard ? 'wildcard' : 'terms';
           var clause = null;

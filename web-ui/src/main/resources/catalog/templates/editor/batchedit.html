@@ -78,6 +78,7 @@
                       </button>
 
                       <button type="button"
+                              data-ng-disabled="searchResults.selectedCount < 1"
                               data-ng-class="{'disabled': searchResults.selectedCount < 1}"
                               data-ng-click="searchSelection(defaultSearchObj.params);"
                               title="{{'resetSearchToDisplayAll' | translate}}"

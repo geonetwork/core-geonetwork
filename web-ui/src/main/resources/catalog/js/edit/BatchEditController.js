@@ -158,7 +158,7 @@
       $scope.searchSelection = function(params) {
         $http.get('../api/selections/be101').success(function(uuids) {
           $scope.searchObj.params = angular.extend({
-            _uuid: uuids.join(' or ')
+            uuid: uuids
           },
           $scope.defaultSearchObj.params);
           $scope.triggerSearch();
