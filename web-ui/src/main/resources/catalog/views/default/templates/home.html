@@ -2,14 +2,14 @@
   <div class="row gn-row-main">
     <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
       <div class="col-sm-4 col-sm-offset-6 ng-cloak"
-           data-ng-if="!!(healthCheck && healthCheck.IndexHealthCheck) == false">
+           data-ng-if="showHealthIndexError">
         <div class="alert alert-warning text-center">
           <h3 data-translate="">indexNotAvailable</h3>
           <i class="fa fa-fw fa-cogs fa-3x"/>
         </div>
       </div>
       <div class="col-sm-8 col-sm-offset-2"
-           data-ng-if="healthCheck && healthCheck.IndexHealthCheck">
+           data-ng-if="!showHealthIndexError">
 
         <div class="input-group gn-form-any">
           <input type="text"
