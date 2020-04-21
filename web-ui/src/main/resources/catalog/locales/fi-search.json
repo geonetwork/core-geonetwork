@@ -89,6 +89,7 @@
     "addToMap": "Lisää kartalle",
     "addToMaponlinesrc": "Lisää kartalle",
     "addServiceLayersToMaponlinesrc": "Add service layer to map",
+    "viewLayerInExternalViewer": "View layer in external viewer",
     "mapLinkonlinesrc": "Lataa kartta",
     "openRecord": "Katso dokumenttia",
     "openRecordhasfeaturecat": "Liittyvä dokumentti",

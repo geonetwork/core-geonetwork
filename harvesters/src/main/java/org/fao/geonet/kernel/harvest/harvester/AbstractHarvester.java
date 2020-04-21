@@ -70,6 +70,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -95,6 +96,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -269,6 +271,32 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
     private void doUnschedule() throws SchedulerException {
         getScheduler().deleteJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
+    }
+
+    /**
+     * Deletes the harvester job from the scheduler and schedule it again.
+     * @throws SchedulerException
+     */
+    public void doReschedule() throws SchedulerException {
+        doUnschedule();
+        doSchedule();
+    }
+
+    /**
+     * Get the timezone of the harvester cron trigger.
+     * @return a time zone.
+     * @throws SchedulerException
+     */
+    public TimeZone getTriggerTimezone() throws SchedulerException {
+        Scheduler scheduler = getScheduler();
+        List<? extends Trigger> jobTriggers = scheduler.getTriggersOfJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
+        for (Trigger t : jobTriggers) {
+            if (t instanceof CronTrigger) {
+                CronTrigger ct = (CronTrigger) t;
+                return ct.getTimeZone();
+            }
+        }
+        return null;
     }
 
     public static Scheduler getScheduler() throws SchedulerException {

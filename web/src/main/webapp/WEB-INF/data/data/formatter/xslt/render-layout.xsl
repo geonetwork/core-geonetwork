@@ -394,7 +394,7 @@
                 priority="2">
     <xsl:param name="base" select="$metadata"/>
 
-    <div class="entry name">
+    <div class="entry name gn-field-template">
       <xsl:if test="@name">
         <xsl:variable name="title"
                       select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>

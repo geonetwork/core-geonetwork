@@ -34,6 +34,7 @@
                 version="2.0" extension-element-prefixes="saxon"
                 exclude-result-prefixes="gmx xsi gmd gco gml gts srv xlink exslt geonet">
 
+  <xsl:include href="metadata-utils.xsl"/>
 
   <xsl:template name="view-with-header-iso19139">
     <xsl:param name="tabs"/>
@@ -382,6 +383,12 @@
 
 
   <xsl:template mode="block" match="gmd:identificationInfo/*/gmd:language" priority="99">
+   <xsl:variable name="lang">
+      <xsl:call-template name="langId_from_gmdlanguage19139">
+            <xsl:with-param name="gmdlanguage" select="."/>
+      </xsl:call-template>
+   </xsl:variable>
+
     <xsl:call-template name="simpleElementSimpleGUI">
       <xsl:with-param name="title">
         <xsl:call-template name="getTitle">
@@ -400,7 +407,7 @@
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="edit" select="false()"/>
           <xsl:with-param name="value"
-                          select="gco:CharacterString|gmd:LanguageCode/@codeListValue"/>
+                          select="$lang"/>
         </xsl:call-template>
       </xsl:with-param>
     </xsl:call-template>

@@ -48,7 +48,7 @@
 
                 var statusSystemRating = gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
                 if (statusSystemRating == 'advanced') {
-                  $scope.isUserFeedbackEnabled = true;
+                  scope.isUserFeedbackEnabled = true;
                 }
 
                 scope.recaptchaEnabled =
