@@ -60,7 +60,8 @@
     this.configs = {
       search: {
         facets: gnGlobalSettings.gnCfg.mods.search.facetConfig,
-        source: defaultSource
+        source: defaultSource,
+        track_total_hits: true
       },
       home: {
         facets: gnGlobalSettings.gnCfg.mods.home.facetConfig,
@@ -98,7 +99,8 @@
             'dateStamp',
             'documentStandard'
           ]
-        }
+        },
+        track_total_hits: true
       },
       directory: {
         facets: gnGlobalSettings.gnCfg.mods.editor.facetConfig,
@@ -118,7 +120,8 @@
             'changeDate',
             'documentStandard'
           ]
-        }
+        },
+        track_total_hits: true
       },
       recordsWithErrors: {
         facets: {
@@ -135,7 +138,8 @@
             'uuid',
             'index*'
           ]
-        }
+        },
+        track_total_hits: true
       }
     };
 
@@ -147,6 +151,14 @@
     this.addSourceConfiguration = function(esParams, type) {
       var source = typeof type === 'string' ? this.configs[type].source : type;
       esParams._source = source;
+
+
+      // By default limit to 10000.
+      // Set to true will be a bit slower
+      // See https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html#request-body-search-track-total-hits
+      if (this.configs[type].track_total_hits) {
+        esParams.track_total_hits = this.configs[type].track_total_hits;
+      }
     };
 
     this.getUIModel = function(response, request) {

@@ -992,9 +992,10 @@ goog.require('gn_alert');
               });
             } else {
               return $http.post('../api/search/records/_search',
-                {"size": 0,
-                    "query": {"query_string": {"query": "+isTemplate:n"}},
-                    "aggs": gnGlobalSettings.gnCfg.mods.home.facetConfig}).
+                {size: 0,
+                    track_total_hits: true,
+                    query: {query_string: {query: "+isTemplate:n"}},
+                    aggs: gnGlobalSettings.gnCfg.mods.home.facetConfig}).
               then(function(r) {
                 $scope.searchInfo = r.data;
                 $scope.browse = $scope.searchInfo.aggregations.inspireThemeUri ? 'inspire' : 'topics';

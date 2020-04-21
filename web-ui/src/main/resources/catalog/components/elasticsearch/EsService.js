@@ -280,6 +280,7 @@
         gnESFacet.addFacets(params, searchConfigId);
         gnESFacet.addSourceConfiguration(params, searchConfigId);
 
+
         return params;
       };
 
