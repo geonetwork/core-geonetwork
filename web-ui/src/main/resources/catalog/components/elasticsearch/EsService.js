@@ -63,7 +63,6 @@
           'sortBy', 'sortOrder', 'resultType', 'facet.q', 'any', 'geometry', 'query_string',
           'creationDateFrom', 'creationDateTo', 'dateFrom', 'dateTo', 'geom', 'relation',
           'editable'];
-
         if(p.any || luceneQueryString) {
           var queryStringParams = [];
           if (p.any) {
@@ -142,8 +141,8 @@
             // "range" : {
             //   "resourceTemporalDateRange" : {
             //     "gte" : null,
-            //       "lte" : null,
-            //       "relation" : "intersects" // within, contains
+            //     "lte" : null,
+            //     "relation" : "intersects" // within, contains
             //   }
             // }
             var r = value[0].range[Object.keys(value[0].range)[0]],

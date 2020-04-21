@@ -476,9 +476,9 @@ goog.require('gn_alert');
                 'size': 10
               }
             },
-            'documentStandard': {
+            'schema': {
               'terms': {
-                'field': 'documentStandard',
+                'field': 'schema.keyword',
                 'size': 10
               }
             },

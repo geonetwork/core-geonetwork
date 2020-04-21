@@ -141,7 +141,7 @@
                 var record = results.hits.hits[k];
                 values.push({
                   id: record._source.id,
-                  title: {eng: record._source.resourceTitle}
+                  title: {eng: record._source.resourceTitleObject.default}
                 });
               }
             }
