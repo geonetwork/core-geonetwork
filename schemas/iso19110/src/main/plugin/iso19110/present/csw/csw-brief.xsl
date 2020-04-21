@@ -31,10 +31,6 @@
                 version="1.0"
                 exclude-result-prefixes="gco gfc gmx">
 
-  <xsl:param name="displayInfo"/>
-
-  <!-- ============================================================================= -->
-
   <xsl:template
     match="gfc:FC_FeatureCatalogue|gfc:FC_FeatureType|*[@gco:isoType='gfc:FC_FeatureCatalogue']">
 
@@ -57,21 +53,10 @@
       </xsl:for-each>
 
       <dc:type>FeatureCatalogue</dc:type>
-
-      <!-- GeoNetwork elements added when resultType is equal to results_with_summary -->
-      <xsl:if test="$displayInfo = 'true'">
-        <xsl:copy-of select="$info"/>
-      </xsl:if>
-
     </csw:BriefRecord>
   </xsl:template>
-
-  <!-- ============================================================================= -->
 
   <xsl:template match="*">
     <xsl:apply-templates select="*"/>
   </xsl:template>
-
-  <!-- ============================================================================= -->
-
 </xsl:stylesheet>

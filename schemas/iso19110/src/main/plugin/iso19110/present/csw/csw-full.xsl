@@ -30,10 +30,6 @@
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 version="1.0" exclude-result-prefixes="gco gfc gmx">
 
-  <xsl:param name="displayInfo"/>
-
-  <!-- ============================================================================= -->
-
   <xsl:template
     match="gfc:FC_FeatureCatalogue|gfc:FC_FeatureType|*[@gco:isoType='gfc:FC_FeatureCatalogue']">
 
@@ -87,21 +83,11 @@
           <xsl:value-of select="gco:CharacterString"/>
         </dct:abstract>
       </xsl:for-each>
-
-      <!-- GeoNetwork elements added when resultType is equal to results_with_summary -->
-      <xsl:if test="$displayInfo = 'true'">
-        <xsl:copy-of select="$info"/>
-      </xsl:if>
-
     </csw:Record>
   </xsl:template>
-
-  <!-- ============================================================================= -->
 
   <xsl:template match="*">
     <xsl:apply-templates select="*"/>
   </xsl:template>
-
-  <!-- ============================================================================= -->
 
 </xsl:stylesheet>

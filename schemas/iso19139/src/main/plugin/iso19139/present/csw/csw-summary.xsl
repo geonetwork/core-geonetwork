@@ -33,7 +33,6 @@
                 version="1.0"
                 exclude-result-prefixes="gmd srv gco">
 
-  <xsl:param name="displayInfo"/>
   <xsl:param name="lang"/>
 
   <xsl:variable name="metadata"
@@ -132,12 +131,6 @@
             <xsl:for-each select="gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString">
                 <dc:source><xsl:value-of select="."/></dc:source>
                 </xsl:for-each>-->
-
-
-      <!-- GeoNetwork elements added when resultType is equal to results_with_summary -->
-      <xsl:if test="$displayInfo = 'true'">
-        <xsl:copy-of select="$info"/>
-      </xsl:if>
 
     </csw:SummaryRecord>
   </xsl:template>

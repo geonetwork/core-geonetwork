@@ -564,7 +564,6 @@ public class SearchController {
         } else {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("lang", displayLanguage);
-            params.put("displayInfo", "false");
 
             try {
                 result = Xml.transform(result, styleSheet, params);
@@ -643,7 +642,6 @@ public class SearchController {
         if (Files.exists(styleSheet)) {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("lang", displayLanguage);
-            params.put("displayInfo", "false");
 
             try {
                 result = Xml.transform(result, styleSheet, params);

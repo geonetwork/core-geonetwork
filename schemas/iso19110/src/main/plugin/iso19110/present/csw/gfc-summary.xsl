@@ -26,8 +26,6 @@
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 version="2.0" exclude-result-prefixes="#all">
 
-  <xsl:param name="displayInfo"/>
-
   <xsl:template match="gfc:FC_FeatureCatalogue|gfc:FC_FeatureType">
     <xsl:variable name="info" select="geonet:info"/>
     <xsl:copy>
@@ -35,11 +33,6 @@
       <xsl:apply-templates select="gfc:name|gfc:typeName"/>
       <xsl:apply-templates select="gfc:scope"/>
       <xsl:apply-templates select="gfc:producer"/>
-      <!-- GeoNetwork elements added when resultType is equal to results_with_summary -->
-      <xsl:if test="$displayInfo = 'true'">
-        <xsl:copy-of select="$info"/>
-      </xsl:if>
-
     </xsl:copy>
   </xsl:template>
 
