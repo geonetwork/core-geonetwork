@@ -113,19 +113,7 @@
 
             <div class="row">
               <div class="col-md-3 gn-search-facet">
-
-                <div data-search-filter-tags
-                     data-dimensions="searchResults.dimension"
-                     data-use-location-parameters="false"
-                     ng-if="isFilterTagsDisplayed && searchResults.dimension"></div>
-
-                <!-- Hierachical facet mode -->
-                <div data-ng-show="searchResults.records.length > 0"
-                     data-gn-facet-dimension-list="searchResults.dimension"
-                     data-params="searchObj.params"
-                     data-facet-type="facetsSummaryType"
-                     data-current-facets="currentFacets">
-                </div>
+                <div data-es-facets="searchResults.facets"/>
               </div>
               <div class="col-md-9">
             <span class="loading fa fa-spinner fa-spin"

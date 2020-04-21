@@ -37,8 +37,10 @@
       };
       $scope.isFilterTagsDisplayed =
           gnGlobalSettings.gnCfg.mods.editor.isFilterTagsDisplayed;
+
       $scope.defaultSearchObj = {
         permalink: false,
+        configId: 'editor',
         sortbyValues: gnSearchSettings.sortbyValues,
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         selectionBucket: 'be101',
@@ -48,13 +50,11 @@
           sortOrder: 'desc',
           isTemplate: ['y', 'n'],
           editable: 'true',
-          resultType: $scope.facetsSummaryType,
           from: 1,
           to: 20
         }
       };
       angular.extend($scope.searchObj, $scope.defaultSearchObj);
-
 
       // Only my record toggle
       $scope.toggleOnlyMyRecord = function(callback) {
@@ -160,10 +160,12 @@
     '$compile',
     '$httpParamSerializer',
     'gnSearchSettings',
+    'gnGlobalSettings',
     'gnCurrentEdit',
     'gnSchemaManagerService',
     function($scope, $location, $http, $compile, $httpParamSerializer,
-        gnSearchSettings, gnCurrentEdit, gnSchemaManagerService) {
+        gnSearchSettings, gnGlobalSettings,
+        gnCurrentEdit, gnSchemaManagerService) {
 
       // Simple tab handling.
       $scope.selectedStep = 1;
@@ -200,26 +202,6 @@
       }];
       gnSearchSettings.resultTemplate =
           gnSearchSettings.resultViewTpls[0].tplUrl;
-
-      $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType = 'manager';
-
-      gnSearchSettings.sortbyValues = [{
-        sortBy: 'relevance',
-        sortOrder: ''
-      }, {
-        sortBy: 'changeDate',
-        sortOrder: 'desc'
-      }, {
-        sortBy: 'resourceTitleObject.default.keyword',
-        sortOrder: ''
-      }];
-
-      gnSearchSettings.hitsperpageValues = [20, 50, 100];
-
-      gnSearchSettings.paginationInfo = {
-        hitsPerPage: gnSearchSettings.hitsperpageValues[1]
-      };
-
 
       // TODO: Improve for other standards
       // Object used by directory directive
