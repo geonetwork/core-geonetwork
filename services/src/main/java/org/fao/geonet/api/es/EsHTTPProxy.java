@@ -31,7 +31,6 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.collect.Sets;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -76,7 +75,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.FileSystem;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -393,12 +391,7 @@ public class EsHTTPProxy {
                 }
 
                 try {
-                    if (!addPermissions) {
-                        IOUtils.copy(streamFromServer, streamToClient);
-                    } else {
-                        addUserInfoToJson(context, httpSession, streamFromServer, streamToClient, selectionBucket);
-                    }
-
+                    processResponse(context, httpSession, streamFromServer, streamToClient, selectionBucket, addPermissions);
                     streamToClient.flush();
                 } finally {
                     IOUtils.closeQuietly(streamFromServer);
@@ -420,16 +413,30 @@ public class EsHTTPProxy {
         }
     }
 
-    private void addUserInfoToJson(ServiceContext context, HttpSession httpSession, InputStream streamFromServer, OutputStream streamToClient, String bucket) throws Exception {
+    private void processResponse(ServiceContext context, HttpSession httpSession,
+                                 InputStream streamFromServer, OutputStream streamToClient,
+                                 String bucket, boolean addPermissions) throws Exception {
         JsonParser parser = JsonStreamUtils.jsonFactory.createParser(streamFromServer);
         JsonGenerator generator = JsonStreamUtils.jsonFactory.createGenerator(streamToClient);
         parser.nextToken();  //Go to the first token
 
-        final Set<String> selections = SelectionManager.getManager(ApiUtils.getUserSession(httpSession)).getSelection(bucket);
+        final Set<String> selections = (addPermissions?
+            SelectionManager.getManager(ApiUtils.getUserSession(httpSession)).getSelection(bucket):new HashSet<>());
 
         JsonStreamUtils.addInfoToDocs(parser, generator, doc -> {
-            addUserInfo(doc, context);
-            addSelectionInfo(doc, selections);
+            if (addPermissions) {
+                addUserInfo(doc, context);
+                addSelectionInfo(doc, selections);
+            }
+
+            // Remove fields with privileges info
+            if (doc.has("_source")) {
+                ObjectNode sourceNode = (ObjectNode) doc.get("_source");
+
+                for (ReservedOperation o : ReservedOperation.values()) {
+                    sourceNode.remove("op" + o.getId());
+                }
+            }
         });
         generator.flush();
         generator.close();
