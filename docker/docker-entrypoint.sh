@@ -40,16 +40,9 @@ if [ "$1" = 'catalina.sh' ]; then
     # Reconfigure Elasticsearch & Kibana if necessary
     if [ "$ES_HOST" != "localhost" ]; then
       sed -i "s#http://localhost:9200#${ES_PROTOCOL}://${ES_HOST}:${ES_PORT}#g" $CATALINA_HOME/webapps/geonetwork/WEB-INF/web.xml ;
-      sed -i "s#es.host=localhost#es.host=${ES_HOST}#" $CATALINA_HOME/webapps/geonetwork/WEB-INF/config.properties ;
+      sed -i "s#es.url=http://localhost:9200#es.url=${ES_PROTOCOL}://${ES_HOST}:${ES_PORT}#" $CATALINA_HOME/webapps/geonetwork/WEB-INF/config.properties ;
     fi;
 
-    if [ "$ES_PROTOCOL" != "http" ] ; then
-      sed -i "s#es.protocol=http#es.protocol=${ES_PROTOCOL}#" $CATALINA_HOME/webapps/geonetwork/WEB-INF/config.properties ;
-    fi
-
-    if [ "$ES_PORT" != "9200" ] ; then
-      sed -i "s#es.port=9200#es.port=${ES_PORT}#" $CATALINA_HOME/webapps/geonetwork/WEB-INF/config.properties ;
-    fi
     if [ "$ES_USERNAME" != "" ] ; then
       sed -i "s#es.username=#es.username=${ES_USERNAME}#" $CATALINA_HOME/webapps/geonetwork/WEB-INF/config.properties ;
     fi
@@ -62,11 +55,11 @@ if [ "$1" = 'catalina.sh' ]; then
     fi
 
     if [ "$ES_INDEX_RECORDS" != "gn-records" ] ; then
-      sed -i "s#es.index.records=gn-records=#es.index.records=${ES_INDEX_RECORDS}#" $CATALINA_HOME/webapps/geonetwork/WEB-INF/config.properties ;
+      sed -i "s#es.index.records=gn-records#es.index.records=${ES_INDEX_RECORDS}#" $CATALINA_HOME/webapps/geonetwork/WEB-INF/config.properties ;
     fi
 
     if [ "$ES_INDEX_FEATURES" != "gn-features" ] ; then
-      sed -i "s#es.index.features=gn-features=#es.index.features=${ES_INDEX_RECORDS}#" $CATALINA_HOME/webapps/geonetwork/WEB-INF/config.properties ;
+      sed -i "s#es.index.features=gn-features#es.index.features=${ES_INDEX_FEATURES}#" $CATALINA_HOME/webapps/geonetwork/WEB-INF/config.properties ;
     fi
 
     if [ "$KB_URL" != "http://localhost:5601" ]; then
