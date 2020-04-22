@@ -2,8 +2,8 @@
 
 ### Manual installation
 
-Download Elasticsearch (at least 7.2.1 for Geonetwork 3.8.x) from https://www.elastic.co/fr/downloads/elasticsearch
-and copy it to the ES module. eg. es/elasticsearch-7.2.1
+Download Elasticsearch (at least 7.6.2 for Geonetwork 3.8.x) from https://www.elastic.co/fr/downloads/elasticsearch
+and copy it to the ES module. eg. es/elasticsearch-7.6.2
  
 Start ES using:
 
@@ -46,6 +46,7 @@ curl -X DELETE http://localhost:9200/$IDX_PREFIX-records
 curl -X DELETE http://localhost:9200/$IDX_PREFIX-features
 curl -X DELETE http://localhost:9200/$IDX_PREFIX-searchlogs
 ```
+
  Check that elasticsearch is running by visiting http://localhost:9200 in a browser
 
 ### Multilingual configuration (beta)

@@ -189,45 +189,6 @@
                               ng-selected="'advanced' == s.value">{{'advanced' | translate}}
                       </option>
                     </select>
-                    <select data-ng-switch-when="system/requestedLanguage/only" class="form-control"
-                            name="{{s.name}}">
-                      <option value="off"
-                              ng-selected="'off' == s.value">{{'system/requestedLanguage/only-value1'
-                        | translate}}
-                      </option>
-                      <option value="prefer_locale"
-                              ng-selected="'prefer_locale' == s.value">
-                        {{'system/requestedLanguage/only-value2' | translate}}
-                      </option>
-                      <option value="prefer_docLocale"
-                              ng-selected="'prefer_docLocale' == s.value">
-                        {{'system/requestedLanguage/only-value3' | translate}}
-                      </option>
-                      <option value="only_locale"
-                              ng-selected="'only_locale' == s.value">
-                        {{'system/requestedLanguage/only-value4' | translate}}
-                      </option>
-                      <option value="only_docLocale"
-                              ng-selected="'only_docLocale' == s.value">
-                        {{'system/requestedLanguage/only-value5' | translate}}
-                      </option>
-                      <option value="prefer_ui_locale"
-                              ng-selected="'prefer_ui_locale' == s.value">
-                        {{'system/requestedLanguage/only-value6' | translate}}
-                      </option>
-                      <option value="only_ui_locale"
-                              ng-selected="'only_ui_locale' == s.value">
-                        {{'system/requestedLanguage/only-value7' | translate}}
-                      </option>
-                      <option value="prefer_ui_docLocale"
-                              ng-selected="'prefer_ui_docLocale' == s.value">
-                        {{'system/requestedLanguage/only-value8' | translate}}
-                      </option>
-                      <option value="only_ui_docLocale"
-                              ng-selected="'only_ui_docLocale' == s.value">
-                        {{'system/requestedLanguage/only-value9' | translate}}
-                      </option>
-                    </select>
 
                     <select data-ng-switch-when="system/inspire/atom" class="form-control"
                             name="{{s.name}}" data-ng-model="atomFeedType">
