@@ -30,7 +30,6 @@ import org.fao.geonet.kernel.setting.Settings;
  */
 public enum SettingSet {
     INSPIRE(new String[]{
-        Settings.SYSTEM_INSPIRE_ENABLE_SEARCH_PANEL,
         Settings.SYSTEM_INSPIRE_ENABLE
     }),
     HARVESTER(new String[]{
