@@ -45,10 +45,6 @@ public class Settings {
     public static final String SYSTEM_PROXY_USERNAME = "system/proxy/username";
     public static final String SYSTEM_PROXY_PASSWORD = "system/proxy/password";
     public static final String SYSTEM_PROXY_IGNOREHOSTLIST = "system/proxy/ignorehostlist";
-    public static final GNSetting SYSTEM_LUCENE_IGNORECHARS = new GNSetting("system/requestedLanguage/ignorechars", true);
-    public static final String SYSTEM_REQUESTED_LANGUAGE_SORTED = "system/requestedLanguage/sorted";
-    public static final String SYSTEM_REQUESTED_LANGUAGE_ONLY = "system/requestedLanguage/only";
-    public static final String SYSTEM_AUTODETECT_ENABLE = "system/autodetect/enable";
     public static final String SYSTEM_XLINKRESOLVER_ENABLE = "system/xlinkResolver/enable";
     public static final String SYSTEM_XLINK_ALLOW_REFERENCED_DELETION = "system/xlinkResolver/referencedDeletionAllowed";
     public static final String SYSTEM_SERVER_LOG = "system/server/log";
@@ -57,11 +53,6 @@ public class Settings {
     public static final String SYSTEM_INSPIRE_ATOM = "system/inspire/atom";
     public static final String SYSTEM_INSPIRE_ATOM_SCHEDULE = "system/inspire/atomSchedule";
     public static final String SYSTEM_PREFER_GROUP_LOGO = "system/metadata/prefergrouplogo";
-    public static final String SYSTEM_REQUESTEDLANGUAGE_SORTED = "system/requestedLanguage/sorted";
-    public static final String SYSTEM_INDEXOPTIMIZER_ENABLE = "system/indexoptimizer/enable";
-    public static final String SYSTEM_INDEXOPTIMIZER_HOUR = "system/indexoptimizer/at/hour";
-    public static final String SYSTEM_INDEXOPTIMIZER_MIN = "system/indexoptimizer/at/min";
-    public static final String SYSTEM_INDEXOPTIMIZER_SEC = "system/indexoptimizer/at/sec";
     public static final String SYSTEM_SEARCHSTATS = "system/searchStats/enable";
     public static final String SYSTEM_FEEDBACK_EMAIL = "system/feedback/email";
     public static final String SYSTEM_FEEDBACK_MAILSERVER_HOST = "system/feedback/mailServer/host";

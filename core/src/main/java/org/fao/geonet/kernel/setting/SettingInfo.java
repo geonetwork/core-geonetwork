@@ -110,22 +110,12 @@ public class SettingInfo {
         return value;
     }
 
-
-    public boolean getLuceneIndexOptimizerSchedulerEnabled() {
-        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-    String value = settingManager.getValue(Settings.SYSTEM_INDEXOPTIMIZER_ENABLE);
-        if (value == null) return false;
-        else return value.equals("true");
-    }
-
     public boolean isXLinkResolverEnabled() {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
         String value = settingManager.getValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE);
         if (value == null) return false;
         else return value.equals("true");
     }
-
-    //---------------------------------------------------------------------------
 
     public boolean isSearchStatsEnabled() {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
@@ -138,27 +128,4 @@ public class SettingInfo {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
         return settingManager.getValue("system/feedback/email");
     }
-
-
-    public enum SearchRequestLanguage {
-        OFF("off", null);
-
-        public final String databaseValue;
-        public final String fieldName;
-
-        SearchRequestLanguage(String databaseValue, String fieldName) {
-            this.databaseValue = databaseValue;
-            this.fieldName = fieldName;
-        }
-
-        public static SearchRequestLanguage find(String value) {
-            for (SearchRequestLanguage enumValue : values()) {
-                if (enumValue.databaseValue.equals(value)) {
-                    return enumValue;
-                }
-            }
-            return OFF;
-        }
-    }
-
 }
