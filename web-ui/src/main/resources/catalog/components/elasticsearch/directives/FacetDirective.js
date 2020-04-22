@@ -161,9 +161,6 @@
       if (!item.isNested) {
         this.facetsCtrl.lastUpdatedFacet = facet;
       }
-      else{
-        this.facetsCtrl.lastUpdatedFacet = facet;
-      }
     } else if (facet.type === 'filters') {
       value = item.query_string.query_string.query;
       if(item.inverted) {
