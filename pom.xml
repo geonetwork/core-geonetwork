@@ -446,8 +446,6 @@
         <artifactId>fop-pdf-images</artifactId>
         <version>${fop.version}</version>
       </dependency>
-
-      <!-- Jetty stuff -->
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-server</artifactId>
@@ -463,8 +461,6 @@
         <artifactId>jetty-webapp</artifactId>
         <version>${jetty.version}</version>
       </dependency>
-
-      <!-- Apache -->
       <dependency>
         <groupId>commons-lang</groupId>
         <artifactId>commons-lang</artifactId>
@@ -474,7 +470,6 @@
         <groupId>commons-logging</groupId>
         <artifactId>commons-logging</artifactId>
         <version>1.1.1</version>
-        <!-- 1.0.2 in Geonetwork -->
       </dependency>
       <dependency>
         <groupId>commons-net</groupId>
@@ -786,35 +781,26 @@
         <artifactId>cog-jglobus</artifactId>
         <version>1.2-060802</version>
       </dependency>
-
-      <!-- svnkit stuff -->
       <dependency>
         <groupId>org.tmatesoft.svnkit</groupId>
         <artifactId>svnkit</artifactId>
         <version>1.7.8</version>
       </dependency>
-
-      <!-- Databased stuff -->
       <dependency>
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <version>1.3.174</version>
       </dependency>
-      <!-- Other stuff -->
       <dependency>
         <groupId>dlib</groupId>  <!--FIXME Handled by local repository -->
         <artifactId>dlib</artifactId>
         <version>1.0</version> <!-- FIXME totally unknown -->
       </dependency>
-
-      <!-- Lib utils -->
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>18.0</version>
       </dependency>
-
-      <!-- Monitoring libraries -->
       <dependency>
         <groupId>com.yammer.metrics</groupId>
         <artifactId>metrics-core</artifactId>
@@ -872,8 +858,6 @@
         <version>${xmlunit.version}</version>
         <scope>test</scope>
       </dependency>
-
-      <!-- db -->
       <dependency>
         <groupId>org.postgis</groupId>
         <artifactId>postgis-jdbc</artifactId>
@@ -907,20 +891,6 @@
         <artifactId>izpack-standalone-compiler</artifactId>
         <version>4.3.1</version>
       </dependency>
-      <!-- language detection -->
-      <dependency>
-        <groupId>com.cybozu.labs</groupId>
-        <artifactId>langdetect</artifactId>
-        <version>1.1-20120112</version>
-      </dependency>
-      <dependency>
-        <groupId>net.arnx.jsonic</groupId>
-        <artifactId>jsonic</artifactId>
-        <version>1.2.0</version>
-      </dependency>
-      <!-- end language detection -->
-
-      <!-- Spring dependencies -->
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
@@ -1004,7 +974,6 @@
         <artifactId>springfox-swagger2</artifactId>
         <version>2.8.0</version>
       </dependency>
-      <!-- Persistence dependencies -->
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-entitymanager</artifactId>
@@ -1020,13 +989,11 @@
         <artifactId>spring-data-jpa</artifactId>
         <version>1.4.1.RELEASE</version>
       </dependency>
-
       <dependency>
         <groupId>com.fasterxml.jackson.datatype</groupId>
         <artifactId>jackson-datatype-hibernate4</artifactId>
         <version>2.9.7</version>
       </dependency>
-
       <dependency>
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>jsr305</artifactId>
@@ -1054,7 +1021,6 @@
           </exclusion>
         </exclusions>
       </dependency>
-
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
@@ -1080,20 +1046,16 @@
         <artifactId>jaxb-impl</artifactId>
         <version>2.2.7</version>
       </dependency>
-
       <dependency>
         <groupId>org.elasticsearch.client</groupId>
         <artifactId>elasticsearch-rest-high-level-client</artifactId>
         <version>${es.version}</version>
       </dependency>
-
-      <!-- Apache commons csv -->
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-csv</artifactId>
         <version>1.2</version>
       </dependency>
-
       <dependency>
         <groupId>org.apache.pdfbox</groupId>
         <artifactId>pdfbox</artifactId>
@@ -1220,6 +1182,7 @@
     <module>messaging</module>
     <module>estest</module>
     <module>index</module>
+    <module>app</module>
   </modules>
 
   <profiles>
