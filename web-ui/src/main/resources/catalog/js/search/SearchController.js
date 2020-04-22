@@ -53,12 +53,13 @@
     'gnSearchSettings',
     'gnGlobalSettings',
     'gnConfig',
+    'gnConfigService',
     'gnESClient',
     'gnESService',
     'orderByFilter',
     function($scope, $q, $http, suggestService,
-             gnAlertService, gnSearchSettings, gnGlobalSettings,
-             gnConfig, gnESClient,gnESService, orderByFilter) {
+             gnAlertService, gnSearchSettings, gnGlobalSettings, gnConfig,
+             gnConfigService, gnESClient,gnESService, orderByFilter) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
@@ -70,11 +71,15 @@
       };
 
       $scope.isUserFeedbackEnabled = false;
+      $scope.isInspireEnabled = false;
 
-      var statusSystemRating = gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
-      if (statusSystemRating == 'advanced') {
-        $scope.isUserFeedbackEnabled = true;
-      }
+      gnConfigService.loadPromise.then(function(settings) {
+        $scope.isUserFeedbackEnabled =
+          (settings[gnConfig.key.isRatingUserFeedbackEnabled] == 'advanced');
+
+        $scope.isInspireEnabled =
+          (settings[gnConfig.key.isInspireEnabled] == true);
+      });
 
       $scope.isUserSearchesEnabled = gnGlobalSettings.gnCfg.mods.search.usersearches.enabled;
       $scope.displayFeaturedSearchesPanel =

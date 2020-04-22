@@ -81,7 +81,7 @@
         <h4>
           <span data-translate="">browseBy</span>
           <span
-            data-ng-show="searchInfo.aggregations.inspireThemeUri">
+            data-ng-show="isInspireEnabled && searchInfo.aggregations.inspireThemeUri">
             <label data-ng-show="searchInfo.aggregations.inspireThemeUri">
               <input type="radio" name="browse" value="inspire" data-ng-model="browse"/>
               <span data-translate="">inspireThemes</span>
