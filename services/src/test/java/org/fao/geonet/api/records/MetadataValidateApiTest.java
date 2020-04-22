@@ -23,8 +23,6 @@ import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -41,7 +39,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 // TODOES
@@ -208,7 +205,6 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
                 context,
                 metadata,
                 sampleMetadataXml,
-                false,
                 false,
                 false,
                 NO,

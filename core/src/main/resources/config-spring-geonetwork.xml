@@ -80,8 +80,6 @@
         lazy-init="true"/>
   <bean id="SettingInfo" class="org.fao.geonet.kernel.setting.SettingInfo" lazy-init="true"/>
   <bean id="SettingManager" class="org.fao.geonet.kernel.setting.SettingManager" lazy-init="true"/>
-  <bean id="MetadataNotifierManager" class="org.fao.geonet.notifier.MetadataNotifierManager"
-        lazy-init="true"/>
   <bean id="IsoLanguagesMapper" class="org.fao.geonet.languages.IsoLanguagesMapper"
         lazy-init="true"/>
   <bean id="selectionManager" class="org.fao.geonet.kernel.SelectionManager" lazy-init="true"/>
@@ -184,13 +182,6 @@
         lazy-init="true"
         scope="prototype"/>
 
-  <bean id="MetadataNotifierTask"
-        class="org.fao.geonet.notifier.MetadataNotifierTask"
-        lazy-init="true" scope="prototype"/>
-
-  <bean id="MetadataNotifierClient"
-        class="org.fao.geonet.notifier.MetadataNotifierClient"
-        lazy-init="true" scope="prototype"/>
 
   <bean id="backupMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
     <property name="jobDetail">

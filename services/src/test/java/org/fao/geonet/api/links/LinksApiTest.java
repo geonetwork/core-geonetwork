@@ -41,7 +41,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
@@ -152,7 +151,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         metadata.getHarvestInfo().setHarvested(false);
 
 
-        this.id = dataManager.insertMetadata(context, metadata, sampleMetadataXml, false, false, false, UpdateDatestamp.NO,
+        this.id = dataManager.insertMetadata(context, metadata, sampleMetadataXml, false, false, UpdateDatestamp.NO,
                 false, false).getId();
 
 

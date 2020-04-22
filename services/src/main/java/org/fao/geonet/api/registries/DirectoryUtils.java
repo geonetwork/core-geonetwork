@@ -80,7 +80,7 @@ public class DirectoryUtils {
                         context,
                         subtemplate,
                         (Element) entry.clone(),
-                        notify, index, ufo,
+                            index, ufo,
                         UpdateDatestamp.NO,
                         publicForGroup, refreshReaders);
 

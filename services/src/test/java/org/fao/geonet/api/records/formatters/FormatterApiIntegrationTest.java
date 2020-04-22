@@ -135,7 +135,7 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
         metadata.getSourceInfo().setOwner(1).setSourceId(source);
         metadata.getHarvestInfo().setHarvested(false);
 
-        this.id = dataManager.insertMetadata(serviceContext, metadata, sampleMetadataXml, false, false, false, UpdateDatestamp.NO,
+        this.id = dataManager.insertMetadata(serviceContext, metadata, sampleMetadataXml, false, false, UpdateDatestamp.NO,
             false, false).getId();
 
         dataManager.indexMetadata(Lists.newArrayList("" + this.id));

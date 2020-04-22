@@ -65,7 +65,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.fao.geonet.lib.DbLib;
-import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -109,7 +108,6 @@ public class Geonetwork implements ApplicationHandler {
     private Logger logger;
     private Path appPath;
     private EsSearchManager searchMan;
-    private MetadataNotifierControl metadataNotifierControl;
     private ConfigurableApplicationContext _applicationContext;
     private OaiPmhDispatcher oaipmhDis;
 
@@ -301,13 +299,6 @@ public class Geonetwork implements ApplicationHandler {
         // This can happen if the application has been updated with a new version preserving the database and
         // images/logos folder is not copied from old application
         createSiteLogo(settingMan.getSiteId(), context, context.getAppPath());
-
-
-        // Notify unregistered metadata at startup. Needed, for example, when the user enables the notifier config
-        // to notify the existing metadata in database
-        // TODO: Fix DataManager.getUnregisteredMetadata and uncomment next lines
-        metadataNotifierControl = new MetadataNotifierControl(context);
-        metadataNotifierControl.runOnce();
 
         //--- load proxy information from settings into Jeeves for observers such
         //--- as jeeves.utils.XmlResolver to use
@@ -536,12 +527,6 @@ public class Geonetwork implements ApplicationHandler {
     }
 
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Stop
-    //---
-    //---------------------------------------------------------------------------
-
     public void stop() {
         logger.info("Stopping geonetwork...");
         AbstractEntityListenerManager.setSystemRunning(false);
@@ -550,17 +535,6 @@ public class Geonetwork implements ApplicationHandler {
         CswHarvesterResponseExecutionService.getExecutionService().shutdownNow();
 
         InspireAtomHarvesterScheduler.shutdown();
-
-        logger.info("  - MetadataNotifier ...");
-        try {
-            metadataNotifierControl.shutDown();
-        } catch (Exception e) {
-            logger.error("Raised exception while stopping metadatanotifier");
-            logger.error("  Exception : " + e);
-            logger.error("  Message   : " + e.getMessage());
-            logger.error("  Stack     : " + Util.getStackTrace(e));
-        }
-
 
         logger.info("  - Harvest Manager...");
         _applicationContext.getBean(HarvestManager.class).shutdown();

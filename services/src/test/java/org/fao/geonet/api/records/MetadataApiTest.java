@@ -63,7 +63,6 @@ import javax.persistence.PersistenceContext;
 
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.ApiParams;
-import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
@@ -72,7 +71,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
 import org.fao.geonet.kernel.UpdateDatestamp;
-import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
@@ -145,7 +143,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         metadata.getHarvestInfo().setHarvested(false);
 
 
-        this.id = dataManager.insertMetadata(context, metadata, sampleMetadataXml, false, false, false, UpdateDatestamp.NO,
+        this.id = dataManager.insertMetadata(context, metadata, sampleMetadataXml, false, false, UpdateDatestamp.NO,
             false, false).getId();
 
 
@@ -576,7 +574,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         final String DATASET_UUID = "842f9143-fd7d-452c-96b4-425ca1281642";
 
 
-        /* TODOES 
+        /* TODOES
 	 mockMvc.perform(get("/srv/api/records/" + MAIN_UUID + "/related")
             .session(mockHttpSession)
             .accept(MediaType.APPLICATION_JSON))
