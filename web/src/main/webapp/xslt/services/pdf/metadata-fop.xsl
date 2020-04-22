@@ -232,7 +232,7 @@
                           padding-top="4pt" padding-bottom="4pt"
                           padding-left="4pt" padding-right="4pt"
                           id="section-{uuid}">
-                  <xsl:value-of select="resourceTitle"/>
+                  <xsl:value-of select="resourceTitleObject"/>
                 </fo:block>
               </fo:table-cell>
             </fo:table-row>
@@ -249,15 +249,15 @@
 
                       <xsl:call-template name="info-rows">
                         <xsl:with-param name="label" select="$translations/abstract"/>
-                        <xsl:with-param name="value" select="resourceAbstract"/>
+                        <xsl:with-param name="value" select="resourceAbstractObject"/>
                       </xsl:call-template>
 
                       <xsl:call-template name="info-rows">
                         <xsl:with-param name="label" select="$translations/extent"/>
                         <xsl:with-param name="content">
-                          <xsl:for-each select="geom[. != '']">
+                          <xsl:if test="geom[. != '']">
                             <xsl:variable name="url"
-                                          select="concat($nodeUrl, 'eng/region.getmap.png?mapsrs=EPSG:3857&amp;width=365&amp;background=settings&amp;geomsrs=EPSG:4326&amp;geom=', .)"/>
+                                          select="concat($nodeUrl, 'api/records/', uuid, '/extents.png')"/>
 
                             <fo:basic-link text-decoration="underline"
                                            color="$link-color"
@@ -270,7 +270,7 @@
                                 </xsl:attribute>
                               </fo:external-graphic>
                             </fo:basic-link>
-                          </xsl:for-each>
+                          </xsl:if>
                         </xsl:with-param>
                       </xsl:call-template>
 

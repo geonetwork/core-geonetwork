@@ -313,8 +313,8 @@ public class CatalogApi {
             .add("geom")
             .add(SOURCE_CATALOGUE)
             .add(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)
-            .add(Geonet.IndexFieldNames.RESOURCETITLE)
-            .add(Geonet.IndexFieldNames.RESOURCEABSTRACT).build();
+            .add("resourceTitleObject.default") // TODOES multilingual
+            .add("resourceAbstractObject.default").build();
     }
 
 
@@ -390,6 +390,11 @@ public class CatalogApi {
                     Element t = new Element(e.getKey());
                     t.setText((String) v);
                     r.addContent(t);
+                } else if (v instanceof HashMap && e.getKey().endsWith("Object")) {
+                    Element t = new Element(e.getKey());
+                    Map<String, String> textFields = (HashMap) e.getValue();
+                    t.setText(textFields.get("default"));
+                    r.addContent(t);
                 } else if (v instanceof ArrayList && e.getKey().equals("link")) {
                     //landform|Physiography of North and Central Eurasia Landform|http://geonetwork3.fao.org/ows/7386_landf|OGC:WMS-1.1.1-http-get-map|application/vnd.ogc.wms_xml
                     ((ArrayList) v).forEach(i -> {
@@ -416,6 +421,10 @@ public class CatalogApi {
                             r.addContent(t);
                         }
                     });
+                } else {
+                    Element t = new Element(e.getKey());
+                    t.setText(v.toString());
+                    r.addContent(t);
                 }
             });
             response.addContent(r);
