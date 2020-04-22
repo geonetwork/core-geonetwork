@@ -211,25 +211,7 @@
   </Match>
 
 
-  <!-- The following bugs are hard to fix should be fixed because they can cause problems in servers with multiple geonetworks running -->
-  <Match>
-    <Or>
-      <Class name="org.fao.geonet.kernel.search.LuceneSearcher"/>
-      <Class name="org.fao.geonet.kernel.search.spatial.SpatialIndexWriter"/>
-      <Class name="org.fao.geonet.kernel.search.SearchManager"/>
-    </Or>
-    <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"/>
-  </Match>
-
   <!-- TODO: Excluded these findbug checks in the services module for now, Travis needs to be running first.  -->
-  <Match>
-    <Class name="org.fao.geonet.guiservices.csw.virtual.Update"/>
-    <Bug pattern="BX_UNBOXING_IMMEDIATELY_REBOXED"/>
-    <Or>
-      <Method name="exec"/>
-      <Method name="valueOf"/>
-    </Or>
-  </Match>
   <Match>
     <Class name="org.fao.geonet.services.log.List"/>
     <Bug pattern="SS_SHOULD_BE_STATIC"/>

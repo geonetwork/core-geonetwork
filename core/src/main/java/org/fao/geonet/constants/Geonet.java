@@ -54,11 +54,8 @@ public final class Geonet {
     public static final String THESAURUS_MAN = GEONETWORK + ".thesaurus-man";
     public static final String THESAURUS = GEONETWORK + ".thesaurus";
     public static final String SEARCH_ENGINE = GEONETWORK + ".search";
-    public static final String FACET_ENGINE = GEONETWORK + ".facet";
     public static final String CUSTOM_ELEMENTSET = GEONETWORK + ".customelementset";
     public static final String INDEX_ENGINE = GEONETWORK + ".index";
-    public static final String LUCENE = GEONETWORK + ".lucene";
-    public static final String LUCENE_TRACKING = LUCENE + ".tracking";
     public static final String MEF = GEONETWORK + ".mef";
     public static final String CSW = GEONETWORK + ".csw";
     public static final String LDAP = GEONETWORK + ".ldap";
@@ -95,12 +92,6 @@ public final class Geonet {
      */
     public static final class File {
         public static final String SCHEMA = "schema.xsd";
-        public static final String SCHEMATRON = "schematron.xsl";
-        public static final String SCHEMATRON_XML = "schematron_xml.xsl";
-        public static final String SCHEMATRON_VERBID = "schematron_verbid.xsl";
-        public static final String SEARCH_LUCENE = "lucene.xsl";
-        public static final String SEARCH_Z3950_CLIENT = "z3950Client.xsl";
-        public static final String SEARCH_Z3950_SERVER = "z3950Server.xsl";
         public static final String UPDATE_FIXED_INFO = "update-fixed-info.xsl";
         public static final String UPDATE_FIXED_INFO_SUBTEMPLATE = "update-fixed-info-subtemplate.xsl";
         public static final String UPDATE_CHILD_FROM_PARENT_INFO = "update-child-from-parent-info.xsl";
@@ -120,12 +111,6 @@ public final class Geonet {
         public static final String SORT_HARVESTERS = "sort-harvesters.xsl";
         public static final String JZKITAPPLICATIONCONTEXT = "JZkitApplicationContext.xml";
         public static final String INFLATE_METADATA = "inflate-metadata.xsl";
-
-        /**
-         * Stylesheet to convert a CQL parameter to a filter.
-         */
-        public static final String CQL_TO_FILTER = "cql-to-filter.xsl";
-        public static final String FILTER_TO_LUCENE = "filter-to-lucene.xsl";
         public static final String LICENSE_ANNEX = "license-annex.html";
         public static final String LICENSE_ANNEX_XSL = "metadata-license-annex.xsl";
         public static final String METADATA_BRIEF = "metadata-brief.xsl";

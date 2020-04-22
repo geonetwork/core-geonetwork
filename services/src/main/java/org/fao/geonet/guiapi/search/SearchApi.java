@@ -23,30 +23,29 @@
 
 package org.fao.geonet.guiapi.search;
 
-import io.swagger.annotations.*;
-import jeeves.server.ServiceConfig;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
-import org.fao.geonet.services.util.SearchDefaults;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Map;
 
 @RequestMapping(value = {
     "/{portal}/search"
