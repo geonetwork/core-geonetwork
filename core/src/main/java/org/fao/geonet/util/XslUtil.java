@@ -86,6 +86,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.w3c.dom.Node;
@@ -261,12 +262,16 @@ public final class XslUtil {
      * @return Return the JSON config as string or an empty object.
      */
     public static String getUiConfiguration(String key) {
-        final String defaultUiConfiguration = NodeInfo.DEFAULT_NODE;
-        NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
+        String nodeId = org.fao.geonet.NodeInfo.DEFAULT_NODE;
+        try {
+            org.fao.geonet.NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(org.fao.geonet.NodeInfo.class);
+            nodeId = nodeInfo.getId();
+        } catch (BeanCreationException e) {
+        }
         SourceRepository sourceRepository= ApplicationContextHolder.get().getBean(SourceRepository.class);
         UiSettingsRepository uiSettingsRepository = ApplicationContextHolder.get().getBean(UiSettingsRepository.class);
 
-        Source portal = sourceRepository.findOne(nodeInfo.getId());
+        org.fao.geonet.domain.Source portal = sourceRepository.findOne(nodeId);
 
         if (uiSettingsRepository != null) {
             UiSetting one = null;
@@ -277,7 +282,7 @@ public final class XslUtil {
                 one = uiSettingsRepository.findOne(key);
             }
             else if (one == null) {
-                one = uiSettingsRepository.findOne(defaultUiConfiguration);
+                one = uiSettingsRepository.findOne(org.fao.geonet.NodeInfo.DEFAULT_NODE);
             }
 
             if (one != null) {

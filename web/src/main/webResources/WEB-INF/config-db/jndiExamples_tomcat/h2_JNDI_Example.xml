@@ -22,21 +22,14 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       default-lazy-init="true"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-	">
-
-  <bean id="jdbcDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-    <!-- comp/env/jdbc/geonetwork works with WEB-INF/jetty-env.xml supplied with GN -->
-    <property name="jndiName" value="java:comp/env/jdbc/geonetwork"/>
-    <property name="cache" value="true"/>
-    <property name="exposeAccessContext" value="false"/>
-  </bean>
-
-  <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
-    <constructor-arg value="POSTGRESQL"/>
-  </bean>
-</beans>
+<!-- See the README.md file for instructions to configure/use this file -->
+<Context>
+  <Environment name="gnDatabaseDialect" value="H2" type="java.lang.String" override="false"/>
+  <Resource name="jdbc/geonetwork" auth="Container"
+            factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+            type="javax.sql.DataSource" driverClassName="org.h2.Driver"
+            url="jdbc:h2:gn;LOCK_TIMEOUT=20000;DB_CLOSE_ON_EXIT=FALSE;MVCC=TRUE"
+            username="www-data" password="www-data"
+            maxActive="20" maxIdle="10"
+            defaultAutoCommit="false" maxWait="-1"/>
+</Context>

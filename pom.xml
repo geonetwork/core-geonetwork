@@ -1231,7 +1231,7 @@
     <!--<app.properties>file:/${geonetwork.dir}/config.properties</app.properties>-->
 
     <!-- Configure database config file to use. Could be
-     h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi-postgres-postgis
+     h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi
      -->
     <db.type>h2</db.type>
     <db.config.file>../config-db/${db.type}.xml</db.config.file>
