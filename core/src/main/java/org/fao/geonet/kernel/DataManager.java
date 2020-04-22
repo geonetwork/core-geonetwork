@@ -436,21 +436,6 @@ public class DataManager {
     }
 
     @Deprecated
-    public Element getThumbnails(ServiceContext context, String metadataId) throws Exception {
-        return metadataUtils.getThumbnails(context, metadataId);
-    }
-
-    @Deprecated
-    public void setThumbnail(ServiceContext context, String id, boolean small, String file, boolean indexAfterChange) throws Exception {
-        metadataUtils.setThumbnail(context, id, small, file, indexAfterChange);
-    }
-
-    @Deprecated
-    public void unsetThumbnail(ServiceContext context, String id, boolean small, boolean indexAfterChange) throws Exception {
-        metadataUtils.unsetThumbnail(context, id, small, indexAfterChange);
-    }
-
-    @Deprecated
     public void setDataCommons(ServiceContext context, String id, String licenseurl, String imageurl, String jurisdiction,
                                String licensename, String type) throws Exception {
         metadataUtils.setDataCommons(context, id, licenseurl, imageurl, jurisdiction, licensename, type);

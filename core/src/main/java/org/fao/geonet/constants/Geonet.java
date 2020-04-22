@@ -109,11 +109,8 @@ public final class Geonet {
         public static final String EXTRACT_SKOS_FROM_ISO19135 = "xml_iso19135ToSKOS.xsl";
         public static final String EXTRACT_DATE_MODIFIED = "extract-date-modified.xsl";
         public static final String SET_UUID = "set-uuid.xsl";
-        public static final String EXTRACT_THUMBNAILS = "extract-thumbnails.xsl";
         public static final String SET_CREATIVECOMMONS = "set-creativecommons.xsl";
         public static final String SET_DATACOMMONS = "set-datacommons.xsl";
-        public static final String SET_THUMBNAIL = "set-thumbnail.xsl";
-        public static final String UNSET_THUMBNAIL = "unset-thumbnail.xsl";
         public static final String SCHEMA_SUGGESTIONS = "schema-suggestions.xml";
         public static final String SCHEMA_SUBSTITUTES = "schema-substitutes.xml";
         public static final String SCHEMA_CONVERSIONS = "schema-conversions.xml";
