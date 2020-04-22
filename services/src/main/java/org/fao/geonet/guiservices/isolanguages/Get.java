@@ -32,21 +32,12 @@ import org.jdom.Element;
 
 import java.nio.file.Path;
 
-//=============================================================================
-
 public class Get implements Service {
     private Element languages;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //--------------------------------------------------------------------------
 
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
-    //--------------------------------------------------------------------------
 
     public Element exec(Element params, ServiceContext context) throws Exception {
 
@@ -56,6 +47,3 @@ public class Get implements Service {
         return (Element) languages.clone();
     }
 }
-
-//=============================================================================
-

@@ -32,8 +32,6 @@ import org.jdom.Element;
 
 import java.nio.file.Path;
 
-//=============================================================================
-
 /**
  * Service used to return all languages in the system
  */
@@ -42,16 +40,7 @@ public class Get implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //--------------------------------------------------------------------------
-
     public Element exec(Element params, ServiceContext context) throws Exception {
         return context.getBean(LanguageRepository.class).findAllAsXml();
     }
 }
-
-//=============================================================================
-

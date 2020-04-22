@@ -31,22 +31,6 @@
       </output>
     </service>
 
-    <service name="catalog.viewer">
-      <documentation>Map viewer</documentation>
-      <output sheet="../xslt/ui-metadata/viewer.xsl">
-        <xml name="i18n" file="xml/i18n.xml"/>
-      </output>
-    </service>
-
-    <service name="md.view">
-      <documentation>View a metadata record</documentation>
-      <class name=".services.metadata.View"/>
-      <output sheet="../xslt/ui-metadata/view/view.xsl">
-        <xml name="i18n" file="xml/i18n.xml"/>
-      </output>
-      <error sheet="../xslt/common/error.xsl"/>
-    </service>
-
     <service name="display">
       <documentation>View a metadata record using one of the formatters</documentation>
       <output sheet="../xslt/ui-metadata/view/formatter-viewer.xsl">

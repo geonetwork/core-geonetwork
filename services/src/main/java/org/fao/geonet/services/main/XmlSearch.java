@@ -42,12 +42,6 @@ public class XmlSearch implements Service {
     private int maxRecordValue = 100;
     private boolean allowUnboundedQueries = false;
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
-
     public void init(Path appPath, ServiceConfig config) throws Exception {
         _config = config;
         _searchFast = config.getValue(Geonet.SearchResult.FAST, "true");
