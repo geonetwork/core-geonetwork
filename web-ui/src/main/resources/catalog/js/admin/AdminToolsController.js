@@ -88,11 +88,11 @@
               label: 'catalogueAdminTools',
               icon: 'fa-search',
               href: '#/tools/index'
-            },{
-              type: 'batch',
-              label: 'batchProcess',
-              icon: 'fa-medkit',
-              href: '#/tools/batch'
+            // },{
+            //   type: 'batch',
+            //   label: 'batchProcess',
+            //   icon: 'fa-medkit',
+            //   href: '#/tools/batch'
             },{
               type: 'transferownership',
               label: 'transfertPrivs',
