@@ -509,7 +509,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
     }
 
     private Element toDublinCore(Element md) {
-        Path styleSheet = context.getAppPath().resolve("conversion/oai_dc-to-dublin-core/main.xsl");
+        Path styleSheet = context.getAppPath().resolve(Geonet.Path.STYLESHEETS).resolve("conversion/oai_dc-to-dublin-core/main.xsl");
 
         try
         {
