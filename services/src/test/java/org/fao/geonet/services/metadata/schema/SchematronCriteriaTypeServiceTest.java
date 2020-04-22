@@ -24,9 +24,6 @@
 package org.fao.geonet.services.metadata.schema;
 
 import jeeves.server.context.ServiceContext;
-
-import net.arnx.jsonic.JSON;
-
 import org.fao.geonet.domain.Schematron;
 import org.fao.geonet.domain.SchematronRequirement;
 import org.fao.geonet.kernel.SchemaManager;
@@ -36,19 +33,14 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 
-import java.io.File;
-import java.util.List;
-
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import java.io.File;
+import java.util.List;
 
-import static org.fao.geonet.domain.SchematronCriteriaType.ALWAYS_ACCEPT;
-import static org.fao.geonet.domain.SchematronCriteriaType.GROUP;
-import static org.fao.geonet.domain.SchematronCriteriaType.XPATH;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.fao.geonet.domain.SchematronCriteriaType.*;
+import static org.junit.Assert.*;
 
 /**
  * Test for the json service.
@@ -75,8 +67,6 @@ public class SchematronCriteriaTypeServiceTest extends AbstractServiceIntegratio
         assertEquals(SchematronRequirement.values().length, requirements.getChildren().size());
 
         String json = Xml.getJSON(schemas);
-        new JSON().parse(json);
-        // no exception ??? good
 
         assertEqualsText("iso19139", schemas, "iso19139/name");
         String resultAsString = Xml.getString(schemas);

@@ -41,11 +41,7 @@ public final class Geonet {
     public static final String DEFAULT_LANGUAGE = "eng";
 
     public static final String CC_API_REST_URL = "http://api.creativecommons.org/rest/1.5/simple/chooser";
-    public static final String LUCENE_LOCALE_KEY = "_locale";
-    //
-    //--- logging
-    //
-    public static final String LANGUAGEDETECTOR = "LanguageDetector";
+
     public static final String GEONETWORK = "geonetwork";
     public static final String HARVEST_MAN = GEONETWORK + ".harvest-man";
     public static final String HARVESTER = GEONETWORK + ".harvester";

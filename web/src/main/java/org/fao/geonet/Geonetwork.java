@@ -26,7 +26,6 @@ package org.fao.geonet;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
-import jeeves.server.JeevesEngine;
 import jeeves.server.JeevesProxyInfo;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -38,13 +37,25 @@ import org.fao.geonet.api.records.formatters.FormatterApi;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.fao.geonet.api.site.LogUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.Setting;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
 import org.fao.geonet.events.server.ServerStartup;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.inspireatom.InspireAtomType;
 import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
-import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.SvnManager;
+import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.XmlSerializerSvn;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
@@ -53,7 +64,6 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
-import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.lib.DbLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.repository.MetadataRepository;
@@ -252,21 +262,9 @@ public class Geonetwork implements ApplicationHandler {
             svnManager.init();
         }
 
-        /**
-         * Initialize language detector
-         */
-        LanguageDetector.init(appPath.resolve(_applicationContext.getBean(Geonet.Config.LANGUAGE_PROFILES_DIR, String.class)));
-
-        //------------------------------------------------------------------------
-        //--- Initialize thesaurus
-
         logger.info("  - Thesaurus...");
 
         _applicationContext.getBean(ThesaurusManager.class).init(false, context, thesauriDir);
-
-
-        //------------------------------------------------------------------------
-        //--- initialize catalogue services for the web
 
         logger.info("  - Open Archive Initiative (OAI-PMH) server...");
 

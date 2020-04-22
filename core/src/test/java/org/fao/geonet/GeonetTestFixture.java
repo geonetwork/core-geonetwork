@@ -34,7 +34,6 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
@@ -48,7 +47,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -56,7 +59,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.fao.geonet.constants.Geonet.Config.LANGUAGE_PROFILES_DIR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -113,8 +115,6 @@ public class GeonetTestFixture {
 
                     Path schemaPluginsDir = templateDataDirectory.resolve("config/schema_plugins");
                     deploySchema(webappDir, schemaPluginsDir);
-                    LanguageDetector.init(AbstractCoreIntegrationTest.getWebappDir(test.getClass()).resolve(_applicationContext.getBean
-                        (LANGUAGE_PROFILES_DIR, String.class)));
 
                     final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
                     final ServiceConfig serviceConfig = new ServiceConfig(Lists.<Element>newArrayList());

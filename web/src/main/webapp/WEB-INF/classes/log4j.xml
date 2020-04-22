@@ -69,11 +69,8 @@
   <logger name="geonetwork.editorfillelement">
     <level value="ERROR"/>
   </logger>
-  <logger name="geonetwork.LanguageDetector">
-    <level value="ERROR"/>
-  </logger>
   <logger name="geonetwork.index">
-    <level value="DEBUG"/>
+    <level value="WARNING"/>
   </logger>
   <logger name="geonetwork.csw">
     <level value="ERROR"/>
