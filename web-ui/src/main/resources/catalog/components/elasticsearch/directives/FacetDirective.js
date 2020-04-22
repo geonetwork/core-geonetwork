@@ -44,7 +44,7 @@
       }.bind(this),
       function (newValue) {
         if (!newValue) return
-        var lastFacet = this.lastUpdatedFacet
+        /*var lastFacet = this.lastUpdatedFacet
 
         if (this._isFlatTermsFacet(lastFacet) && this.searchCtrl.hasFiltersForKey(lastFacet.key)) {
           this.list.forEach(function (f) {
@@ -53,7 +53,7 @@
             }
           }.bind(this))
           this.lastUpdatedFacet = null
-        }
+        }*/
       }.bind(this)
     )
   }
@@ -159,6 +159,9 @@
     var value = !item.inverted;
     if (facet.type === 'terms') {
       if (!item.isNested) {
+        this.facetsCtrl.lastUpdatedFacet = facet;
+      }
+      else{
         this.facetsCtrl.lastUpdatedFacet = facet;
       }
     } else if (facet.type === 'filters') {
