@@ -27,27 +27,15 @@
 
 package jeeves.server;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.PreDestroy;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.xml.transform.TransformerConfigurationException;
-
+import jeeves.component.ProfileManager;
+import jeeves.constants.ConfigFile;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.ApplicationHandler;
+import jeeves.monitor.MonitorManager;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+import jeeves.server.sources.ServiceRequest;
+import jeeves.server.sources.http.JeevesServlet;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.fao.geonet.ApplicationContextHolder;
@@ -60,21 +48,26 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import jeeves.component.ProfileManager;
-import jeeves.constants.ConfigFile;
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.ApplicationHandler;
-import jeeves.monitor.MonitorManager;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
-import jeeves.server.overrides.ConfigurationOverrides;
-import jeeves.server.sources.ServiceRequest;
-import jeeves.server.sources.http.JeevesServlet;
-
-//=============================================================================
+import javax.annotation.PreDestroy;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.xml.transform.TransformerConfigurationException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This is the main class. It handles http connections and inits the system
@@ -99,12 +92,6 @@ public class JeevesEngine {
     private Path _appPath;
     private int _maxUploadSize;
 
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //---------------------------------------------------------------------------
 
     public static void handleStartupError(Throwable e) {
         Log.fatal(Log.ENGINE, "Raised exception during init");
@@ -139,9 +126,6 @@ public class JeevesEngine {
             if (Files.exists(log4jConfig)) {
                 PropertyConfigurator.configure(log4jConfig.toUri().toURL());
             }
-
-            ConfigurationOverrides.DEFAULT.updateLoggingAsAccordingToOverrides(servletContext, appPath);
-
 
             _monitorManager.init(servletContext, baseUrl);
             JeevesEngine.this._appPath = appPath;
@@ -269,8 +253,6 @@ public class JeevesEngine {
         info("Loading : " + file);
 
         Element configRoot = Xml.loadFile(file);
-
-        ConfigurationOverrides.DEFAULT.updateWithOverrides(file.toString(), servletContext, _appPath, configRoot);
 
         Element elGeneral = configRoot.getChild(ConfigFile.Child.GENERAL);
         Element elDefault = configRoot.getChild(ConfigFile.Child.DEFAULT);

@@ -24,8 +24,6 @@
 package org.fao.geonet.kernel.csw;
 
 import jeeves.constants.ConfigFile;
-import jeeves.server.overrides.ConfigurationOverrides;
-
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -37,10 +35,14 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.nio.file.Path;
-import java.util.*;
-
 import javax.servlet.ServletContext;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class CatalogConfiguration {
 
@@ -96,7 +98,6 @@ public class CatalogConfiguration {
         Log.info(Geonet.CSW, "Loading : " + configFile);
 
         Element configRoot = Xml.loadFile(configFile);
-        ConfigurationOverrides.DEFAULT.updateWithOverrides(configFile.toString(), _servletContext, _dataDir.getWebappDir(), configRoot);
 
         @SuppressWarnings("unchecked")
         List<Element> operationsList = configRoot.getChildren(Csw.ConfigFile.Child.OPERATIONS);
@@ -318,10 +319,6 @@ public class CatalogConfiguration {
             return _additionalQueryables;
     }
 
-
-    // -------------
-    //   Getters
-    // -------------
 
     /**
      * @return the _numberOfKeywords

@@ -24,7 +24,6 @@
 package org.fao.geonet.component.csw;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.server.overrides.ConfigurationOverrides;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;

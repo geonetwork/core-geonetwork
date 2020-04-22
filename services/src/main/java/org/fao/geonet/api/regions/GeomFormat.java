@@ -42,7 +42,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public enum GeomFormat {
-
     WKT {
         private final transient WKTWriter wktWriter = new WKTWriter();
         private final transient WKTReader wktReader = new WKTReader();

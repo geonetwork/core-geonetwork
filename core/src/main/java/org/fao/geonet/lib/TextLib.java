@@ -23,45 +23,42 @@
 
 package org.fao.geonet.lib;
 
-import jeeves.server.overrides.ConfigurationOverrides;
-
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.IO;
 
+import javax.servlet.ServletContext;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import javax.servlet.ServletContext;
-
-//=============================================================================
-
 public class TextLib {
     private static final Random RANDOM = new Random();
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
 
     public List<String> load(ServletContext servletContext, Path appPath, Path file) throws IOException {
         return load(servletContext, appPath, file, "ISO-8859-1");
     }
 
     public List<String> load(ServletContext servletContext, Path appPath, Path file, String encoding) throws IOException {
-        BufferedReader ir = IO.newBufferedReader(file, Charset.forName(encoding));
-
-        return ConfigurationOverrides.DEFAULT.loadTextFileAndUpdate(file.toString(), servletContext, appPath, ir);
+        BufferedReader reader = IO.newBufferedReader(file, Charset.forName(encoding));
+        List<String> al = new ArrayList<String>();
+        String line = reader.readLine();
+        try {
+            while (line != null) {
+                al.add(line);
+                line = reader.readLine();
+            }
+            return al;
+        } finally {
+            reader.close();
+        }
     }
-
-    //---------------------------------------------------------------------------
 
     public void save(Path file, List<String> lines) throws IOException {
         try (BufferedWriter ow = Files.newBufferedWriter(file, Charset.forName("ISO-8859-1"))) {
@@ -71,8 +68,6 @@ public class TextLib {
             }
         }
     }
-
-    //---------------------------------------------------------------------------
 
     public String getProperty(List<String> lines, String name) {
         for (String line : lines)
@@ -90,8 +85,6 @@ public class TextLib {
 
         return null;
     }
-
-    //---------------------------------------------------------------------------
 
     public void setProperty(List<String> lines, String name, String value) {
         for (int i = 0; i < lines.size(); i++) {
@@ -111,8 +104,6 @@ public class TextLib {
         lines.add(name + "=" + value);
     }
 
-    //---------------------------------------------------------------------------
-
     public String getRandomString(int length) {
         StringBuffer sb = new StringBuffer();
 
@@ -121,8 +112,6 @@ public class TextLib {
 
         return sb.toString();
     }
-
-    //---------------------------------------------------------------------------
 
     public char getRandomChar() {
         int pos = RANDOM.nextInt() * 62;
@@ -140,8 +129,6 @@ public class TextLib {
         return (char) ('0' + pos);
     }
 
-    //---------------------------------------------------------------------------
-
     public void replace(List<String> lines, Map<String, ? extends Object> vars) {
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
@@ -153,6 +140,3 @@ public class TextLib {
         }
     }
 }
-
-//=============================================================================
-
