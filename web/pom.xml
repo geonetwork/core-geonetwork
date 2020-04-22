@@ -414,17 +414,6 @@
       <groupId>com.yammer.metrics</groupId>
       <artifactId>metrics-log4j</artifactId>
     </dependency>
-
-    <!-- language detection -->
-    <dependency>
-      <groupId>com.cybozu.labs</groupId>
-      <artifactId>langdetect</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>net.arnx.jsonic</groupId>
-      <artifactId>jsonic</artifactId>
-    </dependency>
-    <!-- end language detection -->
     <dependency>
       <groupId>opendap</groupId>
       <artifactId>opendap</artifactId>

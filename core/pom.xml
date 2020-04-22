@@ -438,18 +438,6 @@
       <artifactId>netcdf</artifactId>
       <version>4.3.23</version>
     </dependency>
-
-    <!-- language detection -->
-    <dependency>
-      <groupId>com.cybozu.labs</groupId>
-      <artifactId>langdetect</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>net.arnx.jsonic</groupId>
-      <artifactId>jsonic</artifactId>
-      <version>1.2.0</version>
-    </dependency>
-    <!-- end language detection -->
     <dependency>
       <groupId>opendap</groupId>
       <artifactId>opendap</artifactId>
