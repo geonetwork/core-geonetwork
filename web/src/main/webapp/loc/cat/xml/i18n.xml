@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<i18n>
+  <viewInGE>View in Google Earth</viewInGE>
+  <warning>Warning!</warning>
+  <addA>Add</addA>
+  <nojs>Javascript is not enabled. Enable it or click
+    <a
+      href="../search">here to search
+    </a>
+    in a degraded mode.
+  </nojs>
+  <selectView>Choose view</selectView>
+  <moreTabs>More information</moreTabs>
+  <nodeChangeWarning>Node Change Warning</nodeChangeWarning>
+  <nodeChangeInfo>Warning: You are no longer in the same node that you logged into.</nodeChangeInfo>
+  <nodeChangeBack>If you would like to return to the node you logged into click:</nodeChangeBack>
+  <nodeChangeForward>If you would like to logout and return to the previous url click:
+  </nodeChangeForward>
+  <serviceNotAllowedTitle>Service not available</serviceNotAllowedTitle>
+  <serviceNotAllowed>The service {1} does not exist or you don't have privileges to access it.
+  </serviceNotAllowed>
+  <linkToHome>
+    <span>Return to the <a href="../..">search page</a>.
+    </span>
+  </linkToHome>
+</i18n>
