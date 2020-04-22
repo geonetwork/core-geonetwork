@@ -69,7 +69,7 @@ public class UrlAnalyzerTest extends AbstractCoreIntegrationTest {
 
     @Autowired
     protected MetadataLinkRepository metadataLinkRepository;
-    
+
     @Autowired
     private UrlChecker urlChecker;
 
@@ -287,7 +287,6 @@ public class UrlAnalyzerTest extends AbstractCoreIntegrationTest {
                 context,
                 metadata,
                 element,
-                false,
                 true,
                 false,
                 NO,

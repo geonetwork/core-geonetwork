@@ -23,22 +23,10 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
-import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
-
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.PostConstruct;
-
+import com.google.common.base.Optional;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.NotImplementedException;
-import org.elasticsearch.action.update.UpdateResponse;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -52,7 +40,6 @@ import org.fao.geonet.domain.MetadataRatingByIpId;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
@@ -60,13 +47,11 @@ import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.MetadataRatingByIpRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SimpleMetadata;
@@ -84,17 +69,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.google.common.base.Optional;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 
 public class BaseMetadataUtils implements IMetadataUtils {
     @Autowired
     private MetadataRepository metadataRepository;
-
-    @Autowired
-    private MetadataNotifierManager metadataNotifierManager;
 
     // FIXME Remove when get rid of Jeeves
     private ServiceContext servContext;
@@ -142,24 +131,6 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @PostConstruct
     public void init() {
         this.metadataIndexer.setMetadataUtils(this);
-    }
-
-    /**
-     * @param md
-     * @param metadataId
-     * @throws Exception
-     */
-    @Override
-    public void notifyMetadataChange(Element md, String metadataId) throws Exception {
-        final AbstractMetadata metadata = findOne(metadataId);
-        if (metadata != null && metadata.getDataInfo().getType() == MetadataType.METADATA) {
-            MetadataSchema mds = schemaManager.getSchema(metadata.getDataInfo().getSchemaId());
-            Pair<String, Element> editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
-            XmlSerializer.removeFilteredElement(md, editXpathFilter, mds.getNamespaces());
-
-            String uuid = getMetadataUuid(metadataId);
-            metadataNotifierManager.updateMetadata(md, metadataId, uuid, getServiceContext());
-        }
     }
 
     /**
@@ -747,10 +718,6 @@ public class BaseMetadataUtils implements IMetadataUtils {
         getXmlSerializer().update(metadataId, md, changeDate, true, uuid, context);
 
         if (indexAfterChange) {
-            // Notifies the metadata change to metatada notifier service
-            notifyMetadataChange(md, metadataId);
-
-            // --- update search criteria
             metadataIndexer.indexMetadata(metadataId, true);
         }
     }

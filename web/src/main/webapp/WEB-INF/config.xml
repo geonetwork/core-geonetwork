@@ -100,8 +100,6 @@
         -->
     <param name="preferredSchema" value="iso19139"/>
     <param name="jzkitConfig" value="JZkitApplicationContext.xml"/>
-    <param name="metadataNotifierConfig" value="WEB-INF/config-notifier.xml"/>
-
 
     <!-- The maximum number of writes in a transaction on the spatial index
 
@@ -164,7 +162,6 @@
   <include>config/config-service-admin.xml</include>
   <include>config/config-service-admin-harvesting.xml</include>
   <include>config/config-service-admin-schematron.xml</include>
-  <include>config/config-service-admin-notification.xml</include>
   <include>config/config-service-admin-formatter.xml</include>
   <include>config/config-service-csw.xml</include>
   <include>config/config-ui-search.xml</include>

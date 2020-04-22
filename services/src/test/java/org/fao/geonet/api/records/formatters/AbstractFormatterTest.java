@@ -123,7 +123,7 @@ public abstract class AbstractFormatterTest extends AbstractServiceIntegrationTe
         MetadataHarvestInfo harvestInfo = new MetadataHarvestInfo().setHarvested(isHarvested());
         metadata.setHarvestInfo(harvestInfo);
         metadata.setData(xml);
-        this.id = dataManager.insertMetadata(serviceContext, metadata, metadata.getXmlData(false), false, true, false,
+        this.id = dataManager.insertMetadata(serviceContext, metadata, metadata.getXmlData(false), true, false,
             UpdateDatestamp.NO, false, false).getId();
     }
 

@@ -56,7 +56,6 @@ import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
@@ -77,8 +76,6 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.annotation.Nonnull;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -86,7 +83,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 
@@ -524,7 +520,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         }
 
         try {
-            newMetadata = (MetadataDraft) metadataManager.insertMetadata(context, newMetadata, xml, false, true, true,
+            newMetadata = (MetadataDraft) metadataManager.insertMetadata(context, newMetadata, xml, true, true,
                 UpdateDatestamp.YES, false, true);
 
             Integer finalId = newMetadata.getId();

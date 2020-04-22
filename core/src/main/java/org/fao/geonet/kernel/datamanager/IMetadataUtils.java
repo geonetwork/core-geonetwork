@@ -66,15 +66,6 @@ public interface IMetadataUtils {
     public void init(ServiceContext context, Boolean force) throws Exception;
 
     /**
-     * Notify a metadata modification
-     *
-     * @param md
-     * @param metadataId
-     * @throws Exception
-     */
-    void notifyMetadataChange(Element md, String metadataId) throws Exception;
-
-    /**
      * Return the uuid of the record with the defined id
      *
      * @param id
@@ -388,7 +379,7 @@ public interface IMetadataUtils {
      * Find the record with the UUID uuid
      *
      * @param firstMetadataId
-     * 
+     *
      * @param uuid
      * @return
      */
@@ -397,7 +388,7 @@ public interface IMetadataUtils {
 
     /**
      * Find all records with the UUID uuid
-     * 
+     *
      * @param uuid
      * @return
      */
@@ -439,7 +430,7 @@ public interface IMetadataUtils {
 
     /**
      * Find all the metadata with the identifiers
-     * 
+     *
      * @see org.springframework.data.repository.CrudRepository#findAll(java.lang.Iterable)
      * @param spec
      * @param order

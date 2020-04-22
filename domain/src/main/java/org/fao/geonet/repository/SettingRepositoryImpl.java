@@ -36,12 +36,6 @@ import javax.persistence.criteria.Root;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.Setting_;
 
-/**
- * Implementation for MetadataNotifierRepositoryCustom methods.
- * <p/>
- * User: francois Date: 8/28/13 Time: 7:31 AM To change this template use File | Settings | File
- * Templates.
- */
 public class SettingRepositoryImpl implements SettingRepositoryCustom {
 
     @PersistenceContext

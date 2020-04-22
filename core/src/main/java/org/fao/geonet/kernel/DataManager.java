@@ -364,10 +364,10 @@ public class DataManager {
     }
 
     @Deprecated
-    public AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, boolean notifyChange, boolean index,
+    public AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, boolean index,
                                            boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, boolean forceRefreshReaders)
         throws Exception {
-        return metadataManager.insertMetadata(context, newMetadata, metadataXml, notifyChange, index, updateFixedInfo, updateDatestamp,
+        return metadataManager.insertMetadata(context, newMetadata, metadataXml, index, updateFixedInfo, updateDatestamp,
             fullRightsForGroup, forceRefreshReaders);
     }
 
@@ -590,11 +590,6 @@ public class DataManager {
     @VisibleForTesting
     public void buildPrivilegesMetadataInfo(ServiceContext context, Map<String, Element> mdIdToInfoMap) throws Exception {
         metadataManager.buildPrivilegesMetadataInfo(context, mdIdToInfoMap);
-    }
-
-    @Deprecated
-    public void notifyMetadataChange(Element md, String metadataId) throws Exception {
-        metadataUtils.notifyMetadataChange(md, metadataId);
     }
 
     @Deprecated

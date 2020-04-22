@@ -402,7 +402,7 @@ public class FragmentHarvester extends BaseAligner {
 
         addCategories(metadata, params.categories, localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
@@ -636,7 +636,7 @@ public class FragmentHarvester extends BaseAligner {
             }
             metadata.getCategories().add(metadataCategory);
         }
-        metadata = metadataManager.insertMetadata(context, metadata, template, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, template, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 

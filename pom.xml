@@ -1182,7 +1182,6 @@
     <module>messaging</module>
     <module>estest</module>
     <module>index</module>
-    <module>app</module>
   </modules>
 
   <profiles>
