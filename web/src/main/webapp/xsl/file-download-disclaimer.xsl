@@ -6,7 +6,7 @@
                 version="1.0"
 >
 
-  <xsl:include href="modal.xsl"/>
+  <!--<xsl:include href="modal.xsl"/>-->
   <xsl:include href="metadata.xsl"/>
 
   <!--

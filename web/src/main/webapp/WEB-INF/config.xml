@@ -154,7 +154,6 @@
 
   </services>
 
-  <include>config-metadata.xml</include>
   <include>config/config-service-search.xml</include>
   <include>config/config-service-sru.xml</include>
   <include>config/config-service-oai.xml</include>
