@@ -213,7 +213,7 @@ public class CswFilter2Es extends AbstractFilterVisitor {
             final String escapeRe = Pattern.quote(filter.getEscape()) + "(.)";
             result = result.replaceAll(escapeRe, "\\\\$1");
         }
-        return escapeLikeLiteral(result);
+        return result;
     }
 
     public String getFilter() {
