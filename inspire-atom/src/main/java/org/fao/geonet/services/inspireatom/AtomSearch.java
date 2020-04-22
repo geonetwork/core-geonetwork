@@ -22,35 +22,13 @@
 //==============================================================================
 package org.fao.geonet.services.inspireatom;
 
-import com.google.common.base.Joiner;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.lang.NotImplementedException;
-import org.fao.geonet.csw.common.util.Xml;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.InspireAtomFeed;
-import org.fao.geonet.inspireatom.InspireAtomService;
-import org.fao.geonet.inspireatom.util.InspireAtomUtil;
-import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.utils.Log;
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.inspireatom.InspireAtomType;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.main.Result;
-import org.fao.geonet.services.main.Search;
-import org.jdom.Content;
 import org.jdom.Element;
 
 import java.nio.file.Path;
-import java.util.List;
 
 /**
  * INSPIRE atom search service.

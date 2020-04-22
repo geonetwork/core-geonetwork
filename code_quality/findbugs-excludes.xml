@@ -258,14 +258,6 @@
     <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
   </Match>
   <Match>
-    <Class name="org.fao.geonet.services.region.GetMap"/>
-    <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
-    <Or>
-      <Method name="computeGeomInDomainOfValidity"/>
-      <Method name="next"/>
-    </Or>
-  </Match>
-  <Match>
     <Class name="org.fao.geonet.api.regions.ListRegionsResponse"/>
     <Bug pattern="URF_UNREAD_FIELD"/>
   </Match>
