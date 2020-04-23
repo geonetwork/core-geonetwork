@@ -711,7 +711,7 @@
         <version>${geotools.version}</version>
         <exclusions>
           <exclusion>
-					<!-- org.apache.xml:xml-commons-resolver:jar:1.2 -->
+            <!-- org.apache.xml:xml-commons-resolver:jar:1.2 -->
             <groupId>org.apache.xml</groupId>
             <artifactId>xml-commons-resolver</artifactId>
           </exclusion>
