@@ -1,5 +1,4 @@
 <div>
-
   <!--- These are the actual values returned to the server -->
   <input type="hidden" ng-repeat="(lang,text) in config.values"  value="{{text}}" name="_lang_{{lang}}_{{root_id}}" lang="{{lang}}"/>
 
@@ -11,6 +10,8 @@
     </div>
 
     <div ng-if="c.type == 'thesaurus'"  >
+
+
       <input class="form-control hidden"
              data-gn-keyword-picker=""
              data-thesaurus-key="{{c.thesaurus}}"
@@ -18,7 +19,7 @@
              data-focus-to-input="false"
              lang="{{lang}}"
              type="text"
-             ng-model="$parent.$parent.individualValues[lang][$parent.$index]"
+             ng-model="$parent.individualValues[lang][$parent.$index]"
              ng-repeat="(lang,langValues) in individualValues"/>
 
     </div>
