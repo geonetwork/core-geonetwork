@@ -64,6 +64,7 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
@@ -76,11 +77,27 @@ import jeeves.server.context.ServiceContext;
  * Handles the access to a metadata depending on the metadata/group.
  */
 public class AccessManager {
-    //--------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //--------------------------------------------------------------------------
+
+    @Autowired
+    SettingRepository settingRepository;
+
+    @Autowired
+    IMetadataUtils metadataUtils;
+
+    @Autowired
+    OperationRepository operationRepository;
+
+    @Autowired
+    OperationAllowedRepository operationAllowedRepository;
+
+    @Autowired
+    GroupRepository groupRepository;
+
+    @Autowired
+    UserGroupRepository userGroupRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     /**
      * Given a user(session) a list of groups and a metadata returns all operations that user can
@@ -96,12 +113,10 @@ public class AccessManager {
      * TODO javadoc.
      */
     public Set<Operation> getOperations(ServiceContext context, String mdId, String ip, Collection<Operation> operations) throws Exception {
-        OperationRepository _opRepository = context.getBean(OperationRepository.class);
-
         Set<Operation> results;
         // if user is an administrator OR is the owner of the record then allow all operations
         if (isOwner(context, mdId)) {
-            results = new HashSet<>(_opRepository.findAll());
+            results = new HashSet<>(operationRepository.findAll());
         } else {
             if (operations == null) {
                 results = new HashSet<>(getAllOperations(context, mdId, ip));
@@ -111,7 +126,7 @@ public class AccessManager {
 
             UserSession us = context.getUserSession();
             if (us.isAuthenticated() && us.getProfile() == Profile.Editor && us.getProfile() == Profile.Reviewer) {
-                results.add(_opRepository.findReservedOperation(ReservedOperation.view));
+                results.add(operationRepository.findReservedOperation(ReservedOperation.view));
             }
         }
 
@@ -132,15 +147,12 @@ public class AccessManager {
      * Returns all operations permitted by the user on a particular metadata.
      */
     public Set<Operation> getAllOperations(ServiceContext context, String mdId, String ip) throws Exception {
-        OperationRepository _opRepository = context.getBean(OperationRepository.class);
-        OperationAllowedRepository _opAllowedRepository = context.getBean(OperationAllowedRepository.class);
-
         HashSet<Operation> operations = new HashSet<Operation>();
         Set<Integer> groups = getUserGroups(context.getUserSession(),
             ip, false);
-        for (OperationAllowed opAllow : _opAllowedRepository.findByMetadataId(mdId)) {
+        for (OperationAllowed opAllow : operationAllowedRepository.findByMetadataId(mdId)) {
             if (groups.contains(opAllow.getId().getGroupId())) {
-                operations.add(_opRepository.findOne(opAllow.getId().getOperationId()));
+                operations.add(operationRepository.findOne(opAllow.getId().getOperationId()));
             }
         }
         return operations;
@@ -153,8 +165,6 @@ public class AccessManager {
      */
     public Set<Integer> getUserGroups(UserSession usrSess, String ip, boolean editingGroupsOnly) throws Exception {
         final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        GroupRepository _groupRepository = applicationContext.getBean(GroupRepository.class);
-        UserGroupRepository _userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
 
         Set<Integer> hs = new HashSet<Integer>();
 
@@ -170,7 +180,7 @@ public class AccessManager {
             hs.add(ReservedGroup.guest.getId());
 
             if (Profile.Administrator == usrSess.getProfile()) {
-                List<Integer> allGroupIds = _groupRepository.findIds();
+                List<Integer> allGroupIds = groupRepository.findIds();
 
                 hs.addAll(allGroupIds);
             } else {
@@ -179,7 +189,7 @@ public class AccessManager {
                     spec = Specifications.where(spec).and(UserGroupSpecs.hasProfile(Profile.Editor));
                 }
 
-                hs.addAll(_userGroupRepository.findGroupIds(spec));
+                hs.addAll(userGroupRepository.findGroupIds(spec));
             }
         }
         return hs;
@@ -204,7 +214,6 @@ public class AccessManager {
 
     public Set<Integer> getReviewerGroups(UserSession usrSess) throws Exception {
         Set<Integer> hs = new HashSet<Integer>();
-        UserGroupRepository _userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
 
         // get other groups
         if (usrSess.isAuthenticated()) {
@@ -214,7 +223,7 @@ public class AccessManager {
                 .where(spec)
                 .and(UserGroupSpecs.hasProfile(Profile.Reviewer));
 
-            hs.addAll(_userGroupRepository.findGroupIds(spec));
+            hs.addAll(userGroupRepository.findGroupIds(spec));
         }
         return hs;
     }
@@ -225,11 +234,6 @@ public class AccessManager {
      * @param userId the id of the user
      */
     public Set<Integer> getVisibleGroups(final int userId) throws Exception {
-        final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        UserRepository userRepository = applicationContext.getBean(UserRepository.class);
-        UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
-        GroupRepository groupRepository = applicationContext.getBean(GroupRepository.class);
-
         Set<Integer> hs = new HashSet<Integer>();
 
         User user = userRepository.findOne(userId);
@@ -294,10 +298,7 @@ public class AccessManager {
      * @param id The metadata internal identifier
      */
     public boolean isOwner(final ServiceContext context, final String id) throws Exception {
-
-        //--- retrieve metadata info
-        AbstractMetadata info = context.getBean(IMetadataUtils.class).findOne(id);
-
+        AbstractMetadata info = metadataUtils.findOne(id);
         if (info == null)
             return false;
         final MetadataSourceInfo sourceInfo = info.getSourceInfo();
@@ -366,7 +367,7 @@ public class AccessManager {
      * Returns content reviewers for metadata records.
      */
     public Element getContentReviewers(ServiceContext context, final Set<Integer> metadataIds) throws Exception {
-        List<Pair<Integer, User>> results = context.getBean(UserRepository.class).findAllByGroupOwnerNameAndProfile(metadataIds,
+        List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(metadataIds,
             Profile.Reviewer, SortUtils.createSort(User_.name));
 
         Element resultEl = new Element("results");
@@ -388,11 +389,10 @@ public class AccessManager {
      * @param metadataId the id of the metadata
      */
     public boolean isVisibleToAll(final String metadataId) throws Exception {
-        AbstractMetadata metadata = ApplicationContextHolder.get().getBean(IMetadataUtils.class).findOne(metadataId);
+        AbstractMetadata metadata = metadataUtils.findOne(metadataId);
         if (metadata == null) {
             return false;
         } else {
-            GroupRepositoryCustom groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
             Group allGroup = groupRepository.findReservedGroup(ReservedGroup.all);
             int opId = ReservedOperation.view.getId();
             return hasPermission(metadata, allGroup, opId);
@@ -438,8 +438,7 @@ public class AccessManager {
      * @param opId     the id of the operation to check for
      */
     public boolean hasPermission(final AbstractMetadata metadata, final Group group, final int opId) {
-        OperationAllowedRepository opAllowedRepository = ApplicationContextHolder.get().getBean(OperationAllowedRepository.class);
-        return opAllowedRepository.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(group.getId(), metadata.getId(), opId) != null;
+        return operationAllowedRepository.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(group.getId(), metadata.getId(), opId) != null;
     }
 
     /**
@@ -475,10 +474,7 @@ public class AccessManager {
         if (us == null || !us.isAuthenticated())
             return false;
 
-
-        OperationAllowedRepository opAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
-        List<OperationAllowed> allOpAlloweds = opAllowedRepository.findAll(where(hasMetadataId(id)).and(hasOperation(ReservedOperation
+        List<OperationAllowed> allOpAlloweds = operationAllowedRepository.findAll(where(hasMetadataId(id)).and(hasOperation(ReservedOperation
             .editing)));
 
         if (allOpAlloweds.isEmpty()) {
@@ -507,11 +503,6 @@ public class AccessManager {
         if (us == null || !us.isAuthenticated())
             return false;
 
-
-        OperationAllowedRepository opAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
-        IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
-
         Specifications spec = where(UserGroupSpecs.hasProfile(Profile.Reviewer)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
 
         List<Integer> opAlloweds = new ArrayList<Integer>();
@@ -522,35 +513,18 @@ public class AccessManager {
         return (!userGroupRepository.findAll(spec).isEmpty());
     }
 
-    /**
-     * TODO javadoc.
-     */
     public int getPrivilegeId(final String name) {
-        OperationRepository opRepository = ApplicationContextHolder.get().getBean(OperationRepository.class);
-        final Operation op = opRepository.findByName(name);
+        final Operation op = operationRepository.findByName(name);
         if (op == null) {
             throw new IllegalArgumentException("No Operation/privilege found with name: " + name);
         }
         return op.getId();
     }
 
-    /**
-     * TODO javadoc.
-     */
     public String getPrivilegeName(int id) {
-        OperationRepository opRepository = ApplicationContextHolder.get().getBean(OperationRepository.class);
-        return opRepository.findOne(id).getName();
+        return operationRepository.findOne(id).getName();
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //--------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     */
     public boolean isIntranet(String ip) {
         //--- consider IPv4 & IPv6 loopback
         //--- we use 'startsWith' because some addresses can be 0:0:0:0:0:0:0:1%0
@@ -568,8 +542,6 @@ public class AccessManager {
         }
 
         // IPv4
-
-        SettingRepository settingRepository= ApplicationContextHolder.get().getBean(SettingRepository.class);
         Setting network = settingRepository.findOne(Settings.SYSTEM_INTRANET_NETWORK);
         Setting netmask = settingRepository.findOne(Settings.SYSTEM_INTRANET_NETMASK);
 
