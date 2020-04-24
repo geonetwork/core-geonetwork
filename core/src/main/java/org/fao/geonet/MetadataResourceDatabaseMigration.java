@@ -184,20 +184,22 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
                     final Element xml = Xml.loadString(resultSet.getString(1), false);
                     final int id = resultSet.getInt(2);
                     final String uuid = resultSet.getString(3);
+                    System.out.println(uuid);
                     boolean changed = updateMetadataResourcesLink(xml, uuid, settingManager);
                     if (changed) {
                         String updatedData = Xml.getString(xml);
                         update.setString(1, updatedData);
                         update.setInt(2, id);
-                        update.addBatch();
+                        update.execute();
+//                        update.addBatch();
                         numInBatch++;
-                        if (numInBatch > 200) {
-                            update.executeBatch();
-                            numInBatch = 0;
-                        }
+//                        if (numInBatch > 200) {
+//                            update.executeBatch();
+//                            numInBatch = 0;
+//                        }
                     }
                 }
-                update.executeBatch();
+//                update.executeBatch();
             } catch (java.sql.BatchUpdateException e) {
                 Log.error(Geonet.GEONETWORK, "Error occurred while updating resource links:" + e.getMessage(), e);
                 SQLException next = e.getNextException();
@@ -205,10 +207,11 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
                     Log.error(Geonet.GEONETWORK, "Next error: " + next.getMessage(), next);
                     next = e.getNextException();
                 }
-
-                throw new RuntimeException(e);
+                System.out.println(e.getMessage());
+//                throw new RuntimeException(e);
             } catch (Exception e) {
-                throw new Error(e);
+                System.out.println(e.getMessage());
+//                throw new Error(e);
             }
         }
     }
