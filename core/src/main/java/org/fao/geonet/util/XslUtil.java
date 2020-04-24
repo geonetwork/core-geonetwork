@@ -23,39 +23,31 @@
 
 package org.fao.geonet.util;
 
-import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.parseGml;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.Locale;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import jeeves.component.ProfileManager;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.client.config.RequestConfig;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IsoLanguage;
+import org.fao.geonet.domain.LinkStatus;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.UiSetting;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
@@ -68,43 +60,56 @@ import org.fao.geonet.kernel.security.shibboleth.ShibbolethUserConfiguration;
 import org.fao.geonet.kernel.security.shibboleth.ShibbolethUserUtils;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.url.UrlChecker;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.IsoLanguageRepository;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UiSettingsRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
-import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.gml3.GMLConfiguration;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Parser;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.output.DOMOutputter;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.client.ClientHttpResponse;
 import org.w3c.dom.Node;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Function;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.MultiPolygon;
+import javax.annotation.Nonnull;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import jeeves.component.ProfileManager;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import net.objecthunter.exp4j.Expression;
-import net.objecthunter.exp4j.ExpressionBuilder;
+import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.parseGml;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_ORGANIZATION;
+import static org.fao.geonet.utils.Xml.getXmlFromJSON;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All params are objects because
@@ -179,24 +184,41 @@ public final class XslUtil {
     }
 
     /**
-     * Get the UI configuration. Return the JSON string.
+     * Get the UI configuration. UI configuration can be defined
+     * at portal level (see Source table) or as a UI (see settings_iu table).
      *
-     * @param key Optional key, if null, return a default configuration nammed 'srv'
-     *            if exist. If not, empty config is returned.
-     * @return
+     *
+     * @param key Optional key, if null,
+     *            check the portal UI config and if null,
+     *            return a default configuration named 'srv' if exist.
+     *            If not, empty config is returned.
+     *
+     * @return Return the JSON config as string or an empty object.
      */
     public static String getUiConfiguration(String key) {
-        final String defaultUiConfiguration = "srv";
+        String nodeId = org.fao.geonet.NodeInfo.DEFAULT_NODE;
+        try {
+            org.fao.geonet.NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(org.fao.geonet.NodeInfo.class);
+            nodeId = nodeInfo.getId();
+        } catch (BeanCreationException e) {
+        }
+        SourceRepository sourceRepository= ApplicationContextHolder.get().getBean(SourceRepository.class);
         UiSettingsRepository uiSettingsRepository = ApplicationContextHolder.get().getBean(UiSettingsRepository.class);
+
+        org.fao.geonet.domain.Source portal = sourceRepository.findOne(nodeId);
 
         if (uiSettingsRepository != null) {
             UiSetting one = null;
-            if (StringUtils.isNotEmpty(key)) {
+            if (portal != null && StringUtils.isNotEmpty(portal.getUiConfig())) {
+                one = uiSettingsRepository.findOne(portal.getUiConfig());
+            }
+            else if (StringUtils.isNotEmpty(key)) {
                 one = uiSettingsRepository.findOne(key);
             }
-            if (one == null) {
-                one = uiSettingsRepository.findOne(defaultUiConfiguration);
+            else if (one == null) {
+                one = uiSettingsRepository.findOne(org.fao.geonet.NodeInfo.DEFAULT_NODE);
             }
+
             if (one != null) {
                 return one.getConfiguration();
             } else {
@@ -257,6 +279,29 @@ public final class XslUtil {
         return "";
     }
 
+    /**
+     * Return the name of the current catalogue.
+     * If the main one, then get the name on the source table with the site id.
+     * If a sub portal, use the sub portal key.
+     *
+     * @param key   Sub portal key
+     * @return
+     */
+    public static String getNodeName(String key, String lang, boolean withOrganization) {
+        SettingManager settingsMan = ApplicationContextHolder.get().getBean(SettingManager.class);
+        if (StringUtils.isEmpty(key)) {
+            key =  ApplicationContextHolder.get().getBean(NodeInfo.class).getId();
+        }
+        if (NodeInfo.DEFAULT_NODE.equals(key)) {
+            key = settingsMan.getSiteId();
+        }
+        SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
+        Source source = sourceRepository.findOne(key);
+
+        return source != null ? source.getLabel(lang) : settingsMan.getSiteName()
+            + (withOrganization ? " - " + settingsMan.getValue(SYSTEM_SITE_ORGANIZATION) : "");
+    }
+
 
     public static String getJsonSettingValue(String key, String path) {
         if (key == null) {
@@ -283,11 +328,28 @@ public final class XslUtil {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK,"XslUtil getJsonSettingValue error: " + e.getMessage(), e);
         }
         return "";
     }
 
+
+    public static Node downloadJsonAsXML(String url) {
+        HttpGet httpGet = new HttpGet(url);
+        HttpClient client = new DefaultHttpClient();
+        try {
+            final HttpResponse httpResponse = client.execute(httpGet);
+            final String jsonResponse = IOUtils.toString(
+                httpResponse.getEntity().getContent(),
+                String.valueOf(StandardCharsets.UTF_8)).trim();
+            Element element = getXmlFromJSON(jsonResponse);
+            DOMOutputter outputter = new DOMOutputter();
+            return outputter.output(new Document(element));
+        } catch (IOException | JDOMException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * Check if bean is defined in the context
@@ -556,7 +618,6 @@ public final class XslUtil {
         }
     }
 
-
     /**
      * Returns the HTTP code  or error message if error occurs during URL connection.
      *
@@ -564,63 +625,12 @@ public final class XslUtil {
      * @return the numeric code of the HTTP request or a String with an error.
      */
     public static String getUrlStatus(String url) {
-        return getUrlStatus(url, 5);
-
-    }
-
-    /**
-     * Returns the HTTP code  or error message if error occurs during URL connection.
-     *
-     * @param url       The URL to ckeck.
-     * @param tryNumber the number of remaining tries.
-     */
-    public static String getUrlStatus(String url, int tryNumber) {
-        if (tryNumber < 1) {
-            // protect against redirect loops
-            return "ERR_TOO_MANY_REDIRECTS";
+        UrlChecker urlChecker = ApplicationContextHolder.get().getBean(UrlChecker.class);
+        LinkStatus urlStatus = urlChecker.getUrlStatus(url);
+        if (urlStatus.getStatusValue().equalsIgnoreCase("4XX") || urlStatus.getStatusValue().equalsIgnoreCase("310")) {
+           return urlStatus.getStatusInfo();
         }
-        HttpHead head = new HttpHead(url);
-        GeonetHttpRequestFactory requestFactory = ApplicationContextHolder.get().getBean(GeonetHttpRequestFactory.class);
-        ClientHttpResponse response = null;
-        try {
-            response = requestFactory.execute(head, new Function<HttpClientBuilder, Void>() {
-                @Nullable
-                @Override
-                public Void apply(@Nullable HttpClientBuilder originalConfig) {
-                    RequestConfig.Builder config = RequestConfig.custom()
-                        .setConnectTimeout(1000)
-                        .setConnectionRequestTimeout(3000)
-                        .setSocketTimeout(5000);
-                    RequestConfig requestConfig = config.build();
-                    originalConfig.setDefaultRequestConfig(requestConfig);
-
-                    return null;
-                }
-            });
-            //response = requestFactory.execute(head);
-            if (response.getRawStatusCode() == HttpStatus.SC_BAD_REQUEST
-                || response.getRawStatusCode() == HttpStatus.SC_METHOD_NOT_ALLOWED
-                || response.getRawStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                // the website doesn't support HEAD requests. Need to do a GET...
-                response.close();
-                HttpGet get = new HttpGet(url);
-                response = requestFactory.execute(get);
-            }
-
-            if (response.getStatusCode().is3xxRedirection() && response.getHeaders().containsKey("Location")) {
-                // follow the redirects
-                return getUrlStatus(response.getHeaders().getFirst("Location"), tryNumber - 1);
-            }
-
-            return String.valueOf(response.getRawStatusCode());
-        } catch (IOException e) {
-            Log.error(Geonet.GEONETWORK, "IOException validating  " + url + " URL. " + e.getMessage(), e);
-            return e.getMessage();
-        } finally {
-            if (response != null) {
-                response.close();
-            }
-        }
+        return urlStatus.getStatusValue();
     }
 
     public static String threeCharLangCode(String langCode) {
@@ -727,8 +737,13 @@ public final class XslUtil {
             String srs = geomElement.getAttributeValue("srsName");
             CoordinateReferenceSystem geomSrs = DefaultGeographicCRS.WGS84;
             if (srs != null && !(srs.equals(""))) geomSrs = CRS.decode(srs);
-
-            Parser parser = new Parser(new GMLConfiguration());
+            Parser[] parsers = GMLParsers.create();
+            Parser parser = null;
+            if (geomElement.getNamespace().equals(Geonet.Namespaces.GML32)) {
+              parser = parsers[1];
+            } else {
+              parser = parsers[0];
+            }
             MultiPolygon jts = parseGml(parser, gml);
 
 
@@ -766,7 +781,7 @@ public final class XslUtil {
                 return outputter.output(new Document(metadata));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK,"XslUtil getRecord error: " + e.getMessage(), e);
         }
         return null;
     }
@@ -795,7 +810,7 @@ public final class XslUtil {
 
             return e.evaluate();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK,"XslUtil evaluate error: " + e.getMessage(), e);
             return null;
         }
     }
@@ -834,7 +849,7 @@ public final class XslUtil {
         try {
             return DefaultEncoder.getInstance().encodeForURL(str);
         } catch (EncodingException ex) {
-            ex.printStackTrace();
+            Log.error(Geonet.GEONETWORK,"XslUtil encode for URL error: " + ex.getMessage(), ex);
             return str;
         }
     }
@@ -876,7 +891,7 @@ public final class XslUtil {
         try {
             return java.net.URLDecoder.decode(str, "UTF-8");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Log.error(Geonet.GEONETWORK,"XslUtil decodeURLParameter error: " + ex.getMessage(), ex);
             return str;
         }
     }
@@ -942,5 +957,37 @@ public final class XslUtil {
         ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
 
         return thesaurusManager.getThesauriDirectory().toString();
+    }
+
+
+    /**
+     * Utility method to retrieve the name (label) for an iso language using it's code for a specific language.
+     * <p>
+     * Usage:
+     * <p>
+     * <xsl:stylesheet
+     * xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+     * ...
+     * xmlns:java="java:org.fao.geonet.util.XslUtil" ...>
+     * <p>
+     * <xsl:variable name="thesauriDir" select="java:getIsoLanguageLabel('dut', 'eng')"/>
+     *
+     * @param code      Code of the IsoLanguage to retrieve the name.
+     * @param language  Language to retrieve the IsoLanguage name.
+     * @return
+     */
+    public static String getIsoLanguageLabel(String code, String language) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        IsoLanguageRepository isoLanguageRepository = applicationContext.getBean(IsoLanguageRepository.class);
+
+        List<IsoLanguage> languageValues = isoLanguageRepository.findAllByCode(code);
+
+        String languageLabel = code;
+
+        if (!languageValues.isEmpty()) {
+            languageLabel = languageValues.get(0).getLabelTranslations().get(language);
+        }
+
+        return languageLabel;
     }
 }

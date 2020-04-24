@@ -51,7 +51,8 @@
         scope: {
           value: '@gnFieldDurationDiv',
           label: '@label',
-          ref: '@ref'
+          ref: '@ref',
+          required: '@required'
         },
         templateUrl: '../../catalog/components/edit/fieldduration/partials/' +
             'fieldduration.html',
@@ -86,7 +87,7 @@
           scope.hours = parseInt(tokens[5]);
           scope.minutes = parseInt(tokens[6]);
           scope.secondes = parseInt(tokens[7]);
-
+          scope.isDisabled = scope.ref == undefined;
           // Compute duration when any components change
           angular.forEach(['sign', 'years', 'monthes', 'days',
                            'hours', 'minutes', 'secondes'],

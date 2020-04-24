@@ -35,9 +35,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.FileUploadTooBigEx;
 import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,10 +59,18 @@ import org.springframework.web.multipart.MultipartRequest;
 public class GenericController {
     public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
 
-    @RequestMapping(value = "/{lang}/{service}")
+    @Autowired
+    NodeInfo node;
+
+
+    @RequestMapping(value = {
+        "/{portal}/{lang:[a-z]{3}}/{service:.+}"
+    })
     @ResponseBody
-    public void dispatch(@PathVariable String lang,
-                         @PathVariable String service, HttpServletRequest request,
+    public void dispatch(@PathVariable String portal,
+                         @PathVariable String lang,
+                         @PathVariable String service,
+                         HttpServletRequest request,
                          HttpServletResponse response)
         throws Exception {
         HttpSession httpSession = request.getSession(false);
@@ -118,7 +128,8 @@ public class GenericController {
         JeevesEngine jeeves = jeevesApplicationContext.getBean(JeevesEngine.class);
         try {
             final Path uploadDir = jeeves.getUploadDir();
-            srvReq = ServiceRequestFactory.create(request, response, uploadDir, jeeves.getMaxUploadSize());
+            srvReq = ServiceRequestFactory.create(request, response,
+                portal, lang, service, uploadDir, jeeves.getMaxUploadSize());
         } catch (FileUploadTooBigEx e) {
             StringBuffer sb = new StringBuffer();
             sb.append("File upload too big - exceeds ").append(jeeves.getMaxUploadSize()).append(" Mb\n");

@@ -25,7 +25,8 @@
 <xsl:stylesheet xmlns:app="http://www.deegree.org/app"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:wfs="http://www.opengis.net/wfs"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -52,7 +53,7 @@
         </xsl:attribute>
       </xsl:if>
 
-      <xsl:apply-templates select="gml:featureMember"/>
+      <xsl:apply-templates select="gml:featureMember|gml320:featureMember"/>
     </records>
   </xsl:template>
 
@@ -61,7 +62,7 @@
     <xsl:apply-templates select="//*[@gml:id=$linkid]"/>
   </xsl:template>
 
-  <xsl:template match="gml:featureMember">
+  <xsl:template match="gml:featureMember|gml320:featureMember">
     <xsl:apply-templates select="app:Philosopher"/>
   </xsl:template>
 
@@ -70,32 +71,32 @@
 
       <!-- boundingBox -->
 
-      <fragment id="boundingbox" uuid="{@gml:id}_boundingbox" title="{concat(app:name,':',app:id)}">
+      <fragment id="boundingbox" uuid="{@gml:id|@gml320:id}_boundingbox" title="{concat(app:name,':',app:id)}">
         <gmd:EX_Extent>
           <gmd:geographicElement>
             <gmd:EX_GeographicBoundingBox>
               <gmd:westBoundLongitude>
                 <gco:Decimal>
                   <xsl:value-of
-                    select="substring-before(gml:boundedBy/gml:Envelope/gml:pos[1],' ')"/>
+                    select="substring-before(gml:boundedBy/gml:Envelope/gml:pos[1]|gml320:boundedBy/gml320:Envelope/gml320:pos[1],' ')"/>
                 </gco:Decimal>
               </gmd:westBoundLongitude>
               <gmd:eastBoundLongitude>
                 <gco:Decimal>
                   <xsl:value-of
-                    select="substring-after(gml:boundedBy/gml:Envelope/gml:pos[1],' ')"/>
+                    select="substring-after(gml:boundedBy/gml:Envelope/gml:pos[1]|gml320:boundedBy/gml320:Envelope/gml320:pos[1],' ')"/>
                 </gco:Decimal>
               </gmd:eastBoundLongitude>
               <gmd:southBoundLatitude>
                 <gco:Decimal>
                   <xsl:value-of
-                    select="substring-before(gml:boundedBy/gml:Envelope/gml:pos[2],' ')"/>
+                    select="substring-before(gml:boundedBy/gml:Envelope/gml:pos[2]|gml320:boundedBy/gml320:Envelope/gml320:pos[2],' ')"/>
                 </gco:Decimal>
               </gmd:southBoundLatitude>
               <gmd:northBoundLatitude>
                 <gco:Decimal>
                   <xsl:value-of
-                    select="substring-after(gml:boundedBy/gml:Envelope/gml:pos[2],' ')"/>
+                    select="substring-after(gml:boundedBy/gml:Envelope/gml:pos[2]|gml320:boundedBy/gml320:Envelope/gml320:pos[2],' ')"/>
                 </gco:Decimal>
               </gmd:northBoundLatitude>
             </gmd:EX_GeographicBoundingBox>
@@ -105,7 +106,7 @@
 
       <!-- pointOfContact -->
 
-      <fragment id="contactinfo" uuid="{@gml:id}_contactinfo"
+      <fragment id="contactinfo" uuid="{@gml:id|@gml320:id}_contactinfo"
                 title="{concat(app:name,':',app:id,':contactinfo')}">
         <gmd:CI_ResponsibleParty>
           <gmd:individualName>
@@ -129,7 +130,7 @@
 
       <!-- keywords -->
 
-      <fragment id="keywords" uuid="{@gml:id}_keywords"
+      <fragment id="keywords" uuid="{@gml:id|@gml320:id}_keywords"
                 title="{concat(app:name,':',app:id,':keywords')}">
         <gmd:descriptiveKeywords>
           <gmd:MD_Keywords>
@@ -154,7 +155,7 @@
 
       <!-- citation -->
 
-      <fragment id="citation" uuid="{@gml:id}_citation"
+      <fragment id="citation" uuid="{@gml:id|@gml320:id}_citation"
                 title="{concat(app:name,':',app:id,':citation')}">
         <gmd:CI_Citation>
           <gmd:title>
@@ -184,13 +185,13 @@
             </gmd:CI_Date>
           </gmd:date>
           <!-- xlink to contactinfo fragment defined above -->
-          <gmd:citedResponsibleParty xlink:href="#{@gml:id}_contactinfo"/>
+          <gmd:citedResponsibleParty xlink:href="#{@gml:id|@gml320:id}_contactinfo"/>
         </gmd:CI_Citation>
       </fragment>
 
       <!-- abstract -->
 
-      <fragment id="abstract" uuid="{@gml:id}_abstract"
+      <fragment id="abstract" uuid="{@gml:id|@gml320:id}_abstract"
                 title="{concat(app:name,':',app:id,':abstract')}">
         <gmd:abstract>
           <gco:CharacterString>
@@ -211,7 +212,7 @@
 
       <!-- temporal extent = lifespan -->
 
-      <fragment id="tempextent" uuid="{@gml:id}_tempextent"
+      <fragment id="tempextent" uuid="{@gml:id|@gml320:id}_tempextent"
                 title="{concat(app:name,':',app:id,':tempextent')}">
         <gmd:temporalElement>
           <gmd:EX_TemporalExtent>

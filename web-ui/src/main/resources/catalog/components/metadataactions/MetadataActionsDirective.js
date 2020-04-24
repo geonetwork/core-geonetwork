@@ -52,7 +52,8 @@
         scope: {
           md: '=gnMetadataStatusUpdater',
           statusType: '@',
-          task: '='
+          task: '=',
+          statusToSelect: '@'
         },
         link: function(scope) {
           var user = scope.$parent.user;
@@ -74,7 +75,7 @@
                   success(function(data) {
                     scope.status =
                        data !== 'null' ? data.status : null;
-                    scope.newStatus.status = data.currentStatus.id.statusId;
+                    scope.newStatus.status = scope.statusToSelect;
                     scope.lastStatus = data.currentStatus.id.statusId;
                   });
             } else {
@@ -433,6 +434,9 @@
           var bucket = attrs['selectionBucket'];
           var mdUuid = attrs['gnTransferOwnership'];
           scope.selectedUserGroup = null;
+          scope.groupsLoaded = false;
+          scope.userGroupDefined = false;
+          scope.userGroups = null;
 
           scope.selectUser = function(user) {
             scope.selectedUser = user;
@@ -470,9 +474,14 @@
                 } else {
                   scope.userGroupDefined = false;
                 }
-              });
+              }).finally(function() {
+                scope.groupsLoaded = true;
+          });
 
           scope.save = function() {
+            if (!scope.selectedUserGroup) {
+              return;
+            }
             var url = '../api/records/';
             if (bucket != 'null') {
               url += 'ownership?bucket=' + bucket + '&';

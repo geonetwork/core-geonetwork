@@ -156,27 +156,26 @@ public abstract class XmlSerializer {
      * and the string read is converted into xml.
      *
      * @param isIndexingTask If true, then withheld elements are not removed.
-     * @param forEditing If true, then withheld elements are not removed.
+     * @param applyOperationsFilters If true, then withheld elements are filtered according to user privileges.
      */
-    protected Element internalSelect(String id, boolean isIndexingTask, boolean forEditing) throws Exception {
-        IMetadataUtils _metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
+    protected Element internalSelect(String id, boolean isIndexingTask, boolean applyOperationsFilters) throws Exception {
+        IMetadataUtils _metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
 
-        AbstractMetadata metadata = _metadataRepository.findOne(Integer.parseInt(id));
+        AbstractMetadata metadata = _metadataUtils.findOne(Integer.parseInt(id));
 
         if (metadata == null)
             return null;
 
-        return removeHiddenElements(isIndexingTask, metadata, forEditing);
+        return removeHiddenElements(isIndexingTask, metadata, applyOperationsFilters);
     }
 
-    public Element removeHiddenElements(boolean isIndexingTask, AbstractMetadata metadata, boolean forEditing) throws Exception {
+    public Element removeHiddenElements(boolean isIndexingTask, AbstractMetadata metadata, boolean applyOperationsFilters) throws Exception {
         AccessManager accessManager = ApplicationContextHolder.get().getBean(AccessManager.class);
         DataManager _dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
 
         String id = String.valueOf(metadata.getId());
         Element metadataXml = metadata.getXmlData(false);
-
-        if (!isIndexingTask && !forEditing) {
+        if (!isIndexingTask && applyOperationsFilters) {
             ServiceContext context = ServiceContext.get();
             MetadataSchema mds = _dataManager.getSchema(metadata.getDataInfo().getSchemaId());
 
@@ -241,7 +240,7 @@ public abstract class XmlSerializer {
                             final String uuid) throws SQLException {
         if (resolveXLinks()) Processor.removeXLink(xml);
 
-        IMetadataManager _metadataRepository = ApplicationContextHolder.get().getBean(IMetadataManager.class);
+        IMetadataManager _metadataManager = ApplicationContextHolder.get().getBean(IMetadataManager.class);
         IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
 
         int metadataId = Integer.valueOf(id);
@@ -261,19 +260,20 @@ public abstract class XmlSerializer {
             md.setUuid(uuid);
         }
 
-        _metadataRepository.save(md);
+        _metadataManager.save(md);
     }
 
     /**
      * Deletes an xml element given its id.
      */
+
     protected void deleteDb(String id) throws Exception {
-        IMetadataManager _metadataRepository = ApplicationContextHolder.get().getBean(IMetadataManager.class);
+        IMetadataManager _metadataManager = ApplicationContextHolder.get().getBean(IMetadataManager.class);
 
         // TODO: Ultimately we want to remove any xlinks in this document
         // that aren't already in use from the xlink cache. For now we
         // rely on the admin clearing cache and reindexing regularly
-        _metadataRepository.delete(Integer.valueOf(id));
+        _metadataManager.delete(Integer.valueOf(id));
 
 //        Assert.isTrue(!_metadataRepository.exists(Integer.valueOf(id)), "Metadata should have been deleted");
 
@@ -298,7 +298,7 @@ public abstract class XmlSerializer {
      */
     public abstract Element select(ServiceContext context, String id) throws Exception;
 
-    public abstract Element selectNoXLinkResolver(String id, boolean isIndexingTask, boolean forEditing)
+    public abstract Element selectNoXLinkResolver(String id, boolean isIndexingTask, boolean applyOperationsFilters)
         throws Exception;
 
     public static class ThreadLocalConfiguration {

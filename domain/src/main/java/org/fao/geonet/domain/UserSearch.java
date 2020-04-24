@@ -28,9 +28,7 @@ import org.fao.geonet.entitylistener.UserSearchEntityListenerManager;
 import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A user custom search.
@@ -52,10 +50,10 @@ public class UserSearch extends Localized implements Serializable {
     private User creator;
     private String logo;
 
+    private Set<Group> groups = new HashSet<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
-    @Column(nullable = false)
     public int getId() {
         return id;
     }
@@ -90,6 +88,14 @@ public class UserSearch extends Localized implements Serializable {
         return creator;
     }
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(
+        name = "usersearch_group",
+        joinColumns = @JoinColumn(name = "usersearch_id"),
+        inverseJoinColumns = @JoinColumn(name = "group_id"))
+    public Set<Group> getGroups() {
+        return groups;
+    }
 
     @Column
     @Nullable
@@ -133,6 +139,10 @@ public class UserSearch extends Localized implements Serializable {
         return this;
     }
 
+    public UserSearch setGroups(Set<Group> groups) {
+        this.groups = groups;
+        return this;
+    }
 
     @Override
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
@@ -154,12 +164,13 @@ public class UserSearch extends Localized implements Serializable {
             featuredType == that.featuredType &&
             creationDate.equals(that.creationDate) &&
             creator.equals(that.creator) &&
-            Objects.equals(logo, that.logo);
+            Objects.equals(logo, that.logo) &&
+            Objects.equals(groups, that.groups);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, url, featuredType, creationDate, creator, logo);
+        return Objects.hash(id, url, featuredType, creationDate, creator, logo, groups);
     }
 
     @Override

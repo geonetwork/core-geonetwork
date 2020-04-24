@@ -41,7 +41,7 @@ import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -64,7 +64,7 @@ import jeeves.services.ReadWriteController;
 @Deprecated
 public class BatchNewOwner {
 
-    @RequestMapping(value = "/{lang}/metadata.batch.newowner", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/metadata.batch.newowner", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public NewOwnerResult exec(
@@ -115,7 +115,7 @@ public class BatchNewOwner {
             //--- check existence and access
             AbstractMetadata info = null;
             if (id != null) {
-                info = context.getBean(MetadataRepository.class).findOne(id);
+                info = context.getBean(IMetadataUtils.class).findOne(id);
             }
             if (info == null) {
                 if (id != null) {

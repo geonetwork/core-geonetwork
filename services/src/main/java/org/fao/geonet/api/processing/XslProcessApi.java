@@ -48,6 +48,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -89,8 +90,8 @@ import springfox.documentation.annotations.ApiIgnore;
  * @author fxprunayre
  */
 @RequestMapping(value = {
-    "/api/processes",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/processes",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/processes"
 })
 @Api(value = "processes",
@@ -100,6 +101,11 @@ import springfox.documentation.annotations.ApiIgnore;
 @ReadWriteController
 public class XslProcessApi {
 
+    @Autowired
+    DataManager dataMan;
+
+    @Autowired
+    SchemaManager schemaMan;
 
     @ApiOperation(
         value = "Preview process result applied to one or more records",
@@ -166,9 +172,6 @@ public class XslProcessApi {
 
         try {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
-            ApplicationContext context = ApplicationContextHolder.get();
-            DataManager dataMan = context.getBean(DataManager.class);
-            SchemaManager schemaMan = context.getBean(SchemaManager.class);
 
             final String siteURL = request.getRequestURL().toString() + "?" + request.getQueryString();
             Element mergedDocuments = new Element("records");
@@ -196,13 +199,13 @@ public class XslProcessApi {
                     // Save processed metadata
                     if (isText) {
                         output.append(XslProcessUtils.processAsText(ApiUtils.createServiceContext(request),
-                            id, process, true,
+                            id, process, false,
                             xslProcessingReport, siteURL, request.getParameterMap())
                         );
                     } else {
                         Element record = XslProcessUtils.process(ApiUtils.createServiceContext(request),
-                            id, process, true, true,
-                            xslProcessingReport, siteURL, request.getParameterMap());
+                            id, process, false, false,
+                            false, xslProcessingReport, siteURL, request.getParameterMap());
                         if (record != null) {
                             preview.addContent(record.detach());
                         }
@@ -249,7 +252,6 @@ public class XslProcessApi {
         value = "/{process}",
         method = RequestMethod.POST,
         produces = {
-            MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE
         })
     @ResponseBody
@@ -277,6 +279,16 @@ public class XslProcessApi {
             required = false
         )
             String bucket,
+        @ApiParam(
+            value = ApiParams.API_PARAM_UPDATE_DATESTAMP,
+            required = false,
+            defaultValue = "true"
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = "true"
+        )
+            boolean updateDateStamp,
         @ApiParam(value = "Index after processing",
             required = false,
             example = "false")
@@ -293,8 +305,6 @@ public class XslProcessApi {
 
         try {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
-            ApplicationContext context = ApplicationContextHolder.get();
-            DataManager dataMan = context.getBean(DataManager.class);
             UserSession userSession = ApiUtils.getUserSession(httpSession);
 
             final String siteURL = request.getRequestURL().toString() + "?" + request.getQueryString();
@@ -304,7 +314,7 @@ public class XslProcessApi {
             BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(
                 ApiUtils.createServiceContext(request),
                 dataMan, records, process, httpSession, siteURL,
-                xslProcessingReport, request, index, userSession.getUserIdAsInt());
+                xslProcessingReport, request, index, updateDateStamp, userSession.getUserIdAsInt());
             m.process();
 
         } catch (Exception exception) {
@@ -319,6 +329,7 @@ public class XslProcessApi {
     static final class BatchXslMetadataReindexer extends
         MetadataIndexerProcessor {
         private final boolean index;
+        private final boolean updateDateStamp;
         Set<String> records;
         String process;
         String siteURL;
@@ -336,12 +347,13 @@ public class XslProcessApi {
                                          String siteURL,
                                          XsltMetadataProcessingReport xslProcessingReport,
                                          HttpServletRequest request, boolean index,
-                                         int userId) {
+                                         boolean updateDateStamp, int userId) {
             super(dm);
             this.records = records;
             this.process = process;
             this.session = session;
             this.index = index;
+            this.updateDateStamp = updateDateStamp;
             this.siteURL = siteURL;
             this.request = request;
             this.xslProcessingReport = xslProcessingReport;
@@ -361,7 +373,7 @@ public class XslProcessApi {
                 Element beforeMetadata = dataMan.getMetadata(context, id, false, false, false);
 
                 XslProcessUtils.process(context, id, process,
-                    true, index, xslProcessingReport,
+                    true, index, updateDateStamp, xslProcessingReport,
                     siteURL, request.getParameterMap());
 
                 Element afterMetadata = dataMan.getMetadata(context, id, false, false, false);

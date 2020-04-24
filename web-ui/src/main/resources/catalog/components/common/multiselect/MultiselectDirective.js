@@ -149,7 +149,6 @@
               scope.options.sort(scope.sortFn);
             }
           };
-
         }
       };
     }]);

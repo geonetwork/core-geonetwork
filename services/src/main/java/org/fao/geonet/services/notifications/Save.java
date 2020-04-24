@@ -112,7 +112,6 @@ public class Save extends NotInReadOnlyModeService {
      * to be updated
      */
     public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        System.out.println("notifications save:\n" + Xml.getString(params));
         Map<String, NotificationTarget> notificationTargets = new HashMap<String, NotificationTarget>();
         @SuppressWarnings("unchecked")
         List<Element> parameters = params.getChildren();
@@ -169,7 +168,7 @@ public class Save extends NotInReadOnlyModeService {
      */
     private NotificationTarget parameterToNotificationTarget(Element parameter, NotificationTarget notificationTarget) {
         String member = parameter.getName().substring(0, parameter.getName().lastIndexOf('-'));
-        System.out.println(member);
+
         if (member.equals("id")) {
             notificationTarget.setId(parameter.getText());
             notificationTarget.setPreExisting(true);

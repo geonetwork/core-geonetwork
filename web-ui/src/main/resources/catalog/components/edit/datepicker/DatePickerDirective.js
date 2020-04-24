@@ -94,7 +94,7 @@
              } else {
                var isDateTime = scope.value.indexOf('T') !== -1;
                var tokens = scope.value.split('T');
-               scope.date = new Date(isDateTime ? tokens[0] : scope.value);
+               scope.date = new Date(moment(isDateTime ? tokens[0] : scope.value).utc().format());
                scope.time = isDateTime ?
                moment(tokens[1], 'HH:mm:ss').toDate() :
                undefined;
@@ -160,29 +160,24 @@
                if (tag === '') {
                  scope.xmlSnippet = scope.dateTime;
                } else {
-                 if (scope.dateTime != '' ||
-                     scope.indeterminatePosition != '') {
-                   var attribute = '';
-                   if (scope.withIndeterminatePosition &&
-                   scope.indeterminatePosition !== '') {
-                     attribute = ' indeterminatePosition="' +
-                     scope.indeterminatePosition + '"';
-                   }
-
-                   if (scope.dateTime == null) {
-                     scope.dateTime = '';
-                   }
-
-                   scope.xmlSnippet = '<' + tag +
-                   ' xmlns:' +
-                        namespace + '="' +
-                        gnSchemaManagerService.findNamespaceUri(namespace,
-                   gnCurrentEdit.schema) + '"' +
-                   attribute + '>' +
-                   scope.dateTime + '</' + tag + '>';
-                 } else {
-                   scope.xmlSnippet = '';
+                 var attribute = '';
+                 if (scope.withIndeterminatePosition &&
+                 scope.indeterminatePosition !== '') {
+                   attribute = ' indeterminatePosition="' +
+                   scope.indeterminatePosition + '"';
                  }
+
+                 if (scope.dateTime == null) {
+                   scope.dateTime = '';
+                 }
+
+                 scope.xmlSnippet = '<' + tag +
+                 ' xmlns:' +
+                      namespace + '="' +
+                      gnSchemaManagerService.findNamespaceUri(namespace,
+                 gnCurrentEdit.schema) + '"' +
+                 attribute + '>' +
+                 scope.dateTime + '</' + tag + '>';
                }
              };
 

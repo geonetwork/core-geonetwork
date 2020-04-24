@@ -51,16 +51,17 @@
     '$translate',
     '$q',
     '$http',
+    'gnConfig',
     function($rootScope, $timeout, $location, gnHttp,
              gnMetadataManager, gnAlertService, gnSearchSettings,
              gnUtilityService, gnShareService, gnPopup, gnMdFormatter,
-             $translate, $q, $http) {
+             $translate, $q, $http, gnConfig) {
 
       var windowName = 'geonetwork';
       var windowOption = '';
       var translations = null;
       $translate(['metadataPublished', 'metadataUnpublished',
-        'metadataPublishedError', 'metadataUnpublishedError']).then(function(t) {
+        'metadataPublishedError', 'metadataUnpublishedError', 'metadataValidated']).then(function(t) {
         translations = t;
       });
       var alertResult = function(msg) {
@@ -125,8 +126,12 @@
        * Export one metadata to RDF format.
        * @param {string} uuid
        */
-      this.metadataRDF = function(uuid) {
+      this.metadataRDF = function(uuid, approved) {
         var url = gnHttp.getService('mdGetRDF') + '?uuid=' + uuid;
+
+        url += angular.isDefined(approved) ?
+            '&approved=' + approved : '';
+
         location.replace(url);
       };
 
@@ -135,12 +140,15 @@
        * one metadata, else export the whole selection.
        * @param {string} uuid
        */
-      this.metadataMEF = function(uuid, bucket) {
+      this.metadataMEF = function(uuid, bucket, approved) {
+
         var url = gnHttp.getService('mdGetMEF') + '?version=2';
         url += angular.isDefined(uuid) ?
             '&uuid=' + uuid : '&format=full';
         url += angular.isDefined(bucket) ?
             '&bucket=' + bucket : '';
+        url += angular.isDefined(approved) ?
+            '&approved=' + approved : '';
 
         location.replace(url);
       };
@@ -162,9 +170,19 @@
               'bucket=' + bucket, null, {
                     method: 'PUT'
                   }).then(function(data) {
-            alertResult(data.data);
-            $rootScope.$broadcast('operationOnSelectionStop');
-            $rootScope.$broadcast('search');
+            $rootScope.processReport = data.data;
+
+            // A report is returned
+            gnUtilityService.openModal({
+              title: translations.metadataValidated,
+              content: '<div gn-batch-report="processReport"></div>',
+              className: 'gn-validation-popup',
+              onCloseCallback: function () {
+                $rootScope.$broadcast('operationOnSelectionStop');
+                $rootScope.$broadcast('search');
+                $rootScope.processReport = null;
+              }
+            }, $rootScope, 'metadataValidationUpdated');
           });
         }
       };
@@ -201,30 +219,34 @@
         }, scope, 'PrivilegesUpdated');
       };
 
-      this.openUpdateStatusPanel = function(scope, statusType, t) {
+      this.openUpdateStatusPanel = function(scope, statusType, t, statusToBe, label) {
         scope.task = t;
+        scope.statusToSelect = statusToBe;
         gnUtilityService.openModal({
-          title: 'updateStatus',
+          title: 'mdStatusTitle-' + label,
           content: '<div data-gn-metadata-status-updater="md" ' +
-                        'data-status-type="' + statusType + '" task="t"></div>'
+                        'data-status-to-select="' + statusToBe +
+                        '" data-status-type="' + statusType + '" task="t"></div>'
         }, scope, 'metadataStatusUpdated');
       };
 
       this.startWorkflow = function(md, scope) {
         return $http.put('../api/records/' + md.getId() +
             '/status', {status: 1, changeMessage: 'Enable workflow'}).then(
-            function(data) {
+            function(response) {
               gnMetadataManager.updateMdObj(md);
               scope.$emit('metadataStatusUpdated', true);
               scope.$emit('StatusUpdated', {
                 msg: $translate.instant('metadataStatusUpdatedWithNoErrors'),
                 timeout: 2,
                 type: 'success'});
-            }, function(data) {
+            }, function(response) {
               scope.$emit('metadataStatusUpdated', false);
+
+
               scope.$emit('StatusUpdated', {
                 title: $translate.instant('metadataStatusUpdatedErrors'),
-                error: data,
+                error: response.data,
                 timeout: 0,
                 type: 'danger'});
             });
@@ -288,10 +310,21 @@
        * @return {*}
        */
       this.publish = function(md, bucket, flag, scope) {
-        scope.$broadcast('operationOnSelectionStart');
         if (md) {
           flag = md.isPublished() ? 'off' : 'on';
         }
+
+        scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
+
+        //Warn about possible workflow changes on batch changes
+        // or when record is not approved
+        if((!md || md.mdStatus != 2) && flag === 'on' && scope.isMdWorkflowEnable) {
+          if(!confirm($translate.instant('warnPublishDraft'))){
+            return;
+          }
+        }
+
+        scope.$broadcast('operationOnSelectionStart');
         var onOrOff = flag === 'on';
 
         return gnShareService.publish(
@@ -411,6 +444,26 @@
             type: 'danger'
           });
         });
+      };
+
+      /**
+       * Validates the current selection of metadata records.
+       * @param {String} bucket
+       */
+      this.validateMdInspire = function(bucket) {
+
+        $rootScope.$broadcast('operationOnSelectionStart');
+        $rootScope.$broadcast('inspireMdValidationStart');
+
+        return gnHttp.callService('../api/records/validate/inspire?' +
+          'bucket=' + bucket, null, {
+          method: 'PUT'
+        }).then(function(data) {
+          $rootScope.$broadcast('inspireMdValidationStop');
+          $rootScope.$broadcast('operationOnSelectionStop');
+          $rootScope.$broadcast('search');
+        });
+
       };
 
       /**

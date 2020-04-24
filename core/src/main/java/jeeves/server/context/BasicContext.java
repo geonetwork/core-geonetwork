@@ -118,6 +118,13 @@ public class BasicContext implements Logger {
         return jeevesApplicationContext.getBean(beanType);
     }
 
+    public
+    @Nonnull
+    <T> T getBean(String name, Class<T> beanType) {
+        return jeevesApplicationContext.getBean(name, beanType);
+    }
+
+
     //--------------------------------------------------------------------------
 
     public EntityManager getEntityManager() {
@@ -187,7 +194,10 @@ public class BasicContext implements Logger {
      * @return the id of the current node.
      */
     public String getNodeId() {
-        return this.jeevesApplicationContext.getBean(NodeInfo.class).getId();
+        try {
+            return this.jeevesApplicationContext.getBean(NodeInfo.class).getId();
+        } catch (Exception e) {}
+        return NodeInfo.DEFAULT_NODE;
     }
 }
 

@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>3.7.0-SNAPSHOT</version>
+  <version>3.11.0-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -119,6 +119,11 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.1.2</version>
+        </plugin>
+        <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>jslint-maven-plugin</artifactId>
           <version>1.0.1</version>
@@ -126,12 +131,12 @@
         <plugin>
           <groupId>org.bsc.maven</groupId>
           <artifactId>maven-processor-plugin</artifactId>
-          <version>2.2.3</version>
+          <version>3.3.3</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>2.6</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -146,12 +151,17 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
-          <version>2.3</version>
+          <version>3.2.3</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-          <version>1.2</version>
+          <version>1.6.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>3.0.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -216,13 +226,36 @@
           <artifactId>maven-eclipse-plugin</artifactId>
           <version>2.9</version>
         </plugin>
+        <plugin>
+          <groupId>com.googlecode.maven-download-plugin</groupId>
+          <artifactId>download-maven-plugin</artifactId>
+          <version>1.4.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.1.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.8</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.0.0-M3</version>
+        </plugin>
+
       </plugins>
     </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.5.1</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
@@ -237,7 +270,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
         <configuration>
           <encoding>UTF-8</encoding>
         </configuration>
@@ -246,7 +278,6 @@
       <!-- artifact assembly -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.5.4</version>
         <configuration>
           <descriptors>
             <descriptor>release/zip-war.xml</descriptor>
@@ -258,15 +289,30 @@
       </plugin>
       <!-- run integration tests after unit tests -->
       <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>get-cpu-count</id>
+            <goals>
+              <goal>cpu-count</goal>
+            </goals>
+            <configuration>
+              <cpuCount>system.numCores</cpuCount>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.18.1</version>
         <configuration>
-          <argLine>-Dfile.encoding=UTF-8 -Xmx512M</argLine>
+          <argLine>-Dfile.encoding=UTF-8 -Xmx1G</argLine>
           <!--<rerunFailingTestsCount>5</rerunFailingTestsCount>-->
           <runOrder>alphabetical</runOrder>
+          <forkCount>${system.numCores}</forkCount>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
-          <forkCount>4</forkCount>
           <excludes>
             <exclude>**/*PerformanceTest.java</exclude>
           </excludes>
@@ -338,6 +384,13 @@
         <groupId>com.github.lookfirst</groupId>
         <artifactId>sardine</artifactId>
         <version>5.1-GEONETWORK</version>
+        <exclusions>
+          <exclusion>
+            <!-- depends on an old version of httpcore, but the new one is backward compatible -->
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -387,6 +440,12 @@
         <version>2.3</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.apache.xmlgraphics</groupId>
+        <artifactId>fop-pdf-images</artifactId>
+        <version>2.3</version>
+      </dependency>
+
       <!-- Jetty stuff -->
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
@@ -427,9 +486,9 @@
         <version>1.6</version>
       </dependency>
       <dependency>
-        <groupId>commons-dbcp</groupId>
-        <artifactId>commons-dbcp</artifactId>
-        <version>1.4</version>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-dbcp2</artifactId>
+        <version>2.6.0</version>
       </dependency>
       <dependency>
         <groupId>commons-pool</groupId>
@@ -515,11 +574,6 @@
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-core</artifactId>
         <version>${log4j2.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.httpcomponents</groupId>
-        <artifactId>httpcore</artifactId>
-        <version>${httpcomponents.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
@@ -657,7 +711,7 @@
         <version>${geotools.version}</version>
         <exclusions>
           <exclusion>
-					<!-- org.apache.xml:xml-commons-resolver:jar:1.2 -->
+            <!-- org.apache.xml:xml-commons-resolver:jar:1.2 -->
             <groupId>org.apache.xml</groupId>
             <artifactId>xml-commons-resolver</artifactId>
           </exclusion>
@@ -757,7 +811,7 @@
       <dependency>
         <groupId>joda-time</groupId>
         <artifactId>joda-time</artifactId>
-        <version>1.5.2</version>
+        <version>2.10.3</version>
       </dependency>
       <dependency>
         <groupId>jaxen</groupId>
@@ -1053,17 +1107,17 @@
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>2.9.8</version>
+        <version>${jackson.version}</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
-        <version>2.9.8</version>
+        <version>${jackson.version}</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
-        <version>2.9.8</version>
+        <version>${jackson.version}</version>
       </dependency>
       <dependency>
         <groupId>javax.xml.bind</groupId>
@@ -1097,6 +1151,12 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-csv</artifactId>
         <version>1.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.pdfbox</groupId>
+        <artifactId>pdfbox</artifactId>
+        <version>2.0.19</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -1133,18 +1193,11 @@
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
-      <id>geotools</id>
-      <name>Geotools repository</name>
-      <url>http://download.osgeo.org/webdav/geotools/</url>
+      <id>osgeo</id>
+      <name>OSGeo repository</name>
+      <url>https://repo.osgeo.org/repository/release/</url>
     </repository>
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>boundless</id>
-      <name>Boundless repository</name>
-      <url>http://repo.boundlessgeo.com/main/</url>
-    </repository>
+
     <repository>
       <snapshots>
         <enabled>false</enabled>
@@ -1153,7 +1206,6 @@
       <name>Developer k-int repository</name>
       <url>http://maven.k-int.com/content/repositories/releases/</url>
     </repository>
-
 
     <repository>
       <snapshots>
@@ -1167,28 +1219,17 @@
       <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
     </repository>
 
-    <repository>
-      <id>mvnrepository.com</id>
-      <name>Repository that has juniversalchardet</name>
-      <url>http://mvnrepository.com/artifact</url>
-    </repository>
-    <repository>
-      <id>maven.geo-solutions.it</id>
-      <name>geo-solutions</name>
-      <url>http://maven.geo-solutions.it</url>
-    </repository>
-
-    <repository>
-      <id>maven2</id>
-      <name>Repository maven2</name>
-      <url>http://repo.maven.apache.org/maven2</url>
-    </repository>
-
     <!-- seasar repo, has jsonic - used by langdetect -->
     <repository>
       <id>maven.seasar.org</id>
       <name>The Seasar Foundation Maven2 Repository</name>
       <url>http://maven.seasar.org/maven2</url>
+    </repository>
+
+    <repository>
+      <id>georchestra-mfprint</id>
+      <name>build-releases</name>
+      <url>https://packages.georchestra.org/artifactory/mapfish-print</url>
     </repository>
 
   </repositories>
@@ -1223,6 +1264,7 @@
     <module>oaipmh</module>
     <module>events</module>
     <module>core</module>
+    <module>listeners</module>
     <module>schemas</module>
     <module>csw-server</module>
     <module>harvesters</module>
@@ -1252,10 +1294,10 @@
         </file>
       </activation>
       <modules>
-	<module>slave</module>
+        <module>slave</module>
         <module>schemas-test</module>
         <module>web-ui</module>
-        <module>web-ui-docs</module>
+        <!--<module>web-ui-docs</module>-->
         <module>web</module>
       </modules>
     </profile>
@@ -1284,7 +1326,7 @@
     <!--<app.properties>file:/${geonetwork.dir}/config.properties</app.properties>-->
 
     <!-- Configure database config file to use. Could be
-     h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi-postgres-postgis
+     h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi
      -->
     <db.type>h2</db.type>
     <db.config.file>../config-db/${db.type}.xml</db.config.file>
@@ -1293,8 +1335,9 @@
     <db.name>gn</db.name>
     <db.username>www-data</db.username>
     <db.password>www-data</db.password>
-    <db.pool.maxActive>10</db.pool.maxActive>
-
+    <db.pool.maxActive>30</db.pool.maxActive>
+    <db.pool.maxIdle>10</db.pool.maxIdle>
+    <db.pool.initialSize>10</db.pool.initialSize>
 
     <!-- Default catalog language when accessing the home page
     ie. http://localhost:8080/geonetwork. -->
@@ -1313,14 +1356,17 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>6.4.2</es.version>
-    <es.version.sha512>23c610a8cd33d4229e8b79b0dc5e1f106e5f186d45c83e9994bb15708d2ce4e763fcb7c9be0f652ebdf12905be7f4ced14e1d8e18f6240dfe5ccb4a064239f86</es.version.sha512>
+    <es.version>7.4.2</es.version>
+    <es.version.sha512>64cc3e77f4271a5477c8c979fa48728d96890cad68b0daac6566f4dda25b4d4a80784eaafeaa874a6b434c034fcacb8a5751fdb445919191bae4aa4958c793b7</es.version.sha512>
+    <es.platform>linux-x86_64</es.platform>
+    <es.installer.extension>tar.gz</es.installer.extension>
     <es.port></es.port>
     <es.host></es.host>
     <es.url></es.url>
     <es.index.features></es.index.features>
     <es.index.features.type></es.index.features.type>
     <es.index.records></es.index.records>
+    <es.index.records_public></es.index.records_public>
     <es.index.records.type></es.index.records.type>
     <es.index.searchlogs></es.index.searchlogs>
     <es.index.searchlogs.type></es.index.searchlogs.type>
@@ -1334,7 +1380,9 @@
     <es.username></es.username>
     <es.password></es.password>
 
-    <kb.version.sha512>b3b422c3bd157e363f528a27f5243f2ee13eba3e3bb22e1a7a9f24ea33f75b864643e297047379dfbef040a0eaa05ed6d998dd2cfe798b9d058f5b3d346f4d1d</kb.version.sha512>
+    <kb.version.sha512>41c18340c204c82d03d24eda8bd5915e6f762868f39ecea53f4571a2fb7348df383606f30f5d3d56a9cb5953422efcfc5a09e6a0590d4e2ce55990efe298b331</kb.version.sha512>
+    <kb.platform>linux-x86_64</kb.platform>
+    <kb.installer.extension>tar.gz</kb.installer.extension>
     <kb.port></kb.port>
     <kb.url></kb.url>
 
@@ -1353,9 +1401,9 @@
     <cors.allowedHosts>*</cors.allowedHosts>
 
 
-    <jetty.version>9.4.12.v20180830</jetty.version>
-    <jetty.file>jetty-distribution-9.4.12.v20180830</jetty.file>
-    <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.12.v20180830/${jetty.file}.tar.gz</jetty.download>
+    <jetty.version>9.4.27.v20200227</jetty.version>
+    <jetty.file>jetty-distribution-${jetty.version}</jetty.file>
+    <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
@@ -1364,7 +1412,7 @@
 
     <lucene.version>4.9.0</lucene.version>
 
-    <spring.version>4.2.6.RELEASE</spring.version>
+    <spring.version>4.3.0.RELEASE</spring.version>
     <spring.security.version>3.2.0.RELEASE</spring.security.version>
     <metrics.version>2.1.1</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
@@ -1376,7 +1424,8 @@
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <print-lib.version>2.1.4</print-lib.version>
+    <print-lib.version>2.1.6</print-lib.version>
+    <jackson.version>2.10.3</jackson.version>
     <flying-saucer>9.0.7</flying-saucer>
     <camel.version>2.14.4</camel.version>
     <log4j.version>1.2.17</log4j.version>
@@ -1384,7 +1433,7 @@
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>3.18</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
-    <httpcomponents.version>4.4.1</httpcomponents.version>
+    <httpcomponents.version>4.5.9</httpcomponents.version>
     <gn.schemas.version>3.7</gn.schemas.version>
   </properties>
 </project>

@@ -11,12 +11,12 @@
         <span ng-if="table.loader.isLoading()" class="badge">
           <i class="fa fa-spin fa-spinner"></i>
         </span>
-        <span ng-if="!table.loader.isLoading() && table.loader.getCount() > 0" class="badge">{{table.loader.getCount()}}</span>
+        <span ng-init="ctrl.currentTable=table" ng-if="!table.loader.isLoading() && table.loader.getCount() > 0" class="badge">{{table.loader.getCount()}}</span>
       </a>
     </li>
   </ul>
 
-  <div class="tab-content" data-ng-show="ctrl.currentTable == table" ng-repeat="table in ctrl.tables" data-ng-init="ctrl.currentTable = ctrl.tables[0]">
+  <div class="tab-content" data-ng-show="ctrl.currentTable == table" ng-repeat="table in ctrl.tables">
     <gn-features-table gn-features-table-loader="table.loader" gn-features-table-loader-map="ctrl.map"></gn-features-table>
   </div>
 

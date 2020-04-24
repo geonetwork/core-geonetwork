@@ -35,13 +35,14 @@
           <li class="divider"/>
           <li>
             <a class="btn btn-link"
-               href="http://quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger"
+               href="http://www.quartz-scheduler.org/documentation/quartz-2.1.7/tutorials/crontrigger"
                target="_blank"
                data-translate="">moreExamples</a>
           </li>
         </ul>
       </div>
     </div>
+    <p ng-show="timeZone" class="help-block" data-translate="" data-translate-values="{ timeZoneTransl: timeZone, zoneOffset: timeZoneOffset}">harvesterTimeZoneHelp</p>
   </div>
 
   <div id="gn-harvest-settings-selected-schedule-run-row" data-ng-show="harvester.options.status === 'active'">

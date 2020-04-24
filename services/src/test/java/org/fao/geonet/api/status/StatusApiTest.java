@@ -63,11 +63,11 @@ public class StatusApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/api/status")
+        this.mockMvc.perform(get("/srv/api/status")
             .accept(MediaType.parseMediaType("application/json"))
             .session(this.mockHttpSession))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$", hasSize(statusValueCount.intValue())));
     }
 }

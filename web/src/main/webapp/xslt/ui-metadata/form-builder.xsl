@@ -157,6 +157,7 @@
 
             <xsl:attribute name="data-ref" select="concat('_', $editInfo/@ref)"/>
             <xsl:attribute name="data-label" select="$label/label"/>
+            <xsl:attribute name="data-required" select="$isRequired"/>
           </span>
           <div class="col-sm-1 gn-control">
             <xsl:if test="not($isDisabled)">
@@ -628,6 +629,35 @@
                               data-gn-field-tooltip="{$schema}|{@tooltip}"
                               data-gn-language-picker=""
                               id="{$id}_{@label}"/>
+                      </xsl:when>
+                      <xsl:when test="@use = 'data-gn-keyword-picker'">
+                        <input class="form-control"
+                               value="{value}"
+                               data-gn-field-tooltip="{$schema}|{@tooltip}"
+                               data-gn-keyword-picker=""
+                               id="{$id}_{@label}">
+
+                          <xsl:for-each select="directiveAttributes/attribute::*">
+                            <xsl:variable name="directiveAttributeName" select="name()"/>
+
+                            <xsl:attribute name="{$directiveAttributeName}">
+                              <xsl:choose>
+                                <xsl:when test="$keyValues and
+                                                count($keyValues/field[@name = $valueLabelKey]/
+                                  directiveAttributes[@name = $directiveAttributeName]) > 0">
+                                  <xsl:value-of select="$keyValues/field[@name = $valueLabelKey]/
+                                  directiveAttributes[@name = $directiveAttributeName]/text()"/>
+                                </xsl:when>
+                                <xsl:when test="starts-with(., 'eval#')">
+                                  <!-- Empty value for XPath to evaluate. -->
+                                </xsl:when>
+                                <xsl:otherwise>
+                                  <xsl:value-of select="."/>
+                                </xsl:otherwise>
+                              </xsl:choose>
+                            </xsl:attribute>
+                          </xsl:for-each>
+                        </input>
                       </xsl:when>
                       <xsl:when test="starts-with(@use, 'gn-')">
                         <input class="form-control"
@@ -1384,8 +1414,11 @@
     <xsl:variable name="fieldName"
                   select="concat('_', $ref, '_', replace($attributeName, ':', 'COLON'))"/>
 
-    <div class="form-group" id="gn-attr-{$fieldName}">
+    <div class="form-group gn-attr-{replace($attributeName, ':', '_')}" id="gn-attr-{$fieldName}">
       <label class="col-sm-4">
+        <xsl:if test="$attributeName = 'xlink:href'">
+          <i class="fa fa-link fa-fw"/>
+        </xsl:if>
         <xsl:value-of select="gn-fn-metadata:getLabel($schema, $attributeName, $labels)/label"/>
       </label>
       <div class="col-sm-7">
@@ -1468,7 +1501,10 @@
     <xsl:param name="insertRef" select="''"/>
 
     <xsl:variable name="attributeLabel" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
-    <button type="button" class="btn btn-default btn-xs"
+    <xsl:variable name="fieldName"
+                  select="concat(replace(@name, ':', 'COLON'), '_', $insertRef)"/>
+    <button type="button" class="btn btn-default btn-xs btn-attr btn-xs gn-attr-{replace(@name, ':', '_')}"
+            id="gn-attr-add-button-{$fieldName}"
             data-gn-click-and-spin="add('{$ref}', '{@name}', '{$insertRef}', null, true)"
             title="{$attributeLabel/description}">
       <i class="fa fa-plus fa-fw"/>
@@ -1494,16 +1530,34 @@
     </div>
   </xsl:template>
 
+  <!-- Render suggest directive action -->
+  <xsl:template name="render-suggest-button">
+    <xsl:param name="process-name"/>
+    <xsl:param name="process-params"/>
+    <xsl:param name="btnClass" required="no"/>
+
+    <div class="row form-group gn-field gn-extra-field gn-process-{$process-name}">
+      <div class="col-xs-10 col-xs-offset-2">
+        <span data-gn-suggest-button="{$process-name}"
+              data-params="{$process-params}"
+              data-icon="{$btnClass}"
+              data-name="{normalize-space($strings/*[name() = $process-name])}"
+              data-help="{normalize-space($strings/*[name() = concat($process-name, 'Help')])}"/>
+      </div>
+    </div>
+  </xsl:template>
+
 
   <!-- Render associated resource action -->
   <xsl:template name="render-associated-resource-button">
     <xsl:param name="type"/>
+    <xsl:param name="options"/>
     <xsl:param name="label"/>
 
     <div class="row form-group gn-field gn-extra-field">
       <div class="col-xs-10 col-xs-offset-2">
         <a class="btn gn-associated-resource-btn"
-           data-ng-click="gnOnlinesrc.onOpenPopup('{$type}')">
+           data-ng-click="gnOnlinesrc.onOpenPopup('{$type}'{if ($options != '') then concat(', ''', $options, '''') else ''})">
           <i class="fa gn-icon-{$type}"></i>&#160;
           <span data-translate="">
             <xsl:choose>
@@ -1681,7 +1735,14 @@
                       <xsl:otherwise>
                         <!-- Call schema render mode of the field without label and controls.-->
                         <saxon:call-template name="{concat('dispatch-', $schema)}">
-                          <xsl:with-param name="base" select="."/>
+                          <xsl:with-param name="base" select=".[name() != 'directiveAttributes']"/>
+                          <xsl:with-param name="config" as="node()?">
+                            <xsl:if test="@use">
+                              <field>
+                                <xsl:copy-of select="@use|directiveAttributes"/>
+                              </field>
+                            </xsl:if>
+                          </xsl:with-param>
                         </saxon:call-template>
                       </xsl:otherwise>
                     </xsl:choose>

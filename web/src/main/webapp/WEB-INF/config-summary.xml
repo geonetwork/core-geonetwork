@@ -65,6 +65,7 @@
       * (optional) translator: Define a DB translator to retrieve label from description
           tables (eg. categoriesdes) or codelist translator to retrieve label from schema
           codelists files.
+      * (optional) pageSize: "show more"/"show less" page size of the facet items in the UI
 
     eg. for category
 
@@ -100,12 +101,14 @@
     <facet name="title" indexKey="title" label="titles"/>
     <facet name="metadataType" indexKey="_isTemplate" label="metadataTypes"/>
     <facet name="isValid" indexKey="_valid" label="isValid"/>
+    <facet name="isValidInspire" indexKey="_valid_inspire" label="isValidInspire"/>
     <facet name="isHarvested" indexKey="_isHarvested" label="isHarvested"/>
     <facet name="mdStatus" indexKey="_status" label="mdStatus"/>
     <facet name="status" indexKey="cl_status" label="status"/>
     <facet name="sourceCatalog" indexKey="_source" label="sourceCatalog"/>
     <facet name="standard" indexKey="_schema" label="standards"/>
     <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
+    <facet name="recordOwner" indexKey="recordOwner" label="recordOwner"/>
     <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
     <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
 	  <facet name="isPublishedToAll" indexKey="_isPublishedToAll" label="isPublishedToAll" />
@@ -169,8 +172,10 @@
       <item facet="sourceCatalog"
             translator="db:org.fao.geonet.repository.SourceRepository:findOneByUuid"/>
       <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>
+      <item facet="isValidInspire" max="3" sortBy="value" translator="apploc:validStatus-"/>
       <item facet="groupOwner" max="199" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+      <item facet="recordOwner" max="45" sortBy="value"/>
       <item facet="publishedForGroup" max="199" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
       <item facet="standard" max="15" sortBy="value"/>
@@ -208,6 +213,7 @@
       <item facet="groupOwner" max="99" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
       <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>
+      <item facet="recordOwner" max="45" sortBy="value"/>
     </summaryType>
     <summaryType name="contact" format="DIMENSION">
       <item facet="orgNameTree" max="99"/>

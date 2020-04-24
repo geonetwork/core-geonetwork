@@ -28,14 +28,24 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import jeeves.server.UserSession;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.UiSetting;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UiSettingsRepository;
-import org.springframework.context.ApplicationContext;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -47,12 +57,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpSession;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RequestMapping(value = {
-    "/api/ui",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/ui",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/ui"
 })
 @Api(value = "ui",
@@ -60,6 +74,15 @@ import java.util.List;
     description = "User interface configuration operations")
 @Controller("ui")
 public class UiSettingApi {
+
+    @Autowired
+    UiSettingsRepository uiSettingsRepository;
+
+    @Autowired
+    SourceRepository sourceRepository;
+
+    @Autowired
+    UserGroupRepository userGroupRepository;
 
     @ApiOperation(
         value = "Get UI configuration",
@@ -75,10 +98,7 @@ public class UiSettingApi {
     @ResponseBody
     public List<UiSetting> getUiConfigurations(
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        UiSettingsRepository uiSettingList =
-            appContext.getBean(UiSettingsRepository.class);
-        return uiSettingList.findAll();
+        return uiSettingsRepository.findAll();
     }
 
 
@@ -108,10 +128,6 @@ public class UiSettingApi {
         @RequestBody
             UiSetting uiConfiguration
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        UiSettingsRepository uiSettingsRepository =
-            appContext.getBean(UiSettingsRepository.class);
-
         if (StringUtils.isEmpty(uiConfiguration.getId())) {
             throw new IllegalArgumentException(String.format(
                 "A UI configuration MUST have an id. The id could be a string to easily identify the configuration.", uiConfiguration.getId()
@@ -155,9 +171,6 @@ public class UiSettingApi {
         @PathVariable
             String uiIdentifier
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        UiSettingsRepository uiSettingsRepository =
-            appContext.getBean(UiSettingsRepository.class);
         UiSetting uiConfiguration = uiSettingsRepository.findOne(uiIdentifier);
         if (uiConfiguration == null) {
             throw new ResourceNotFoundException(String.format(
@@ -194,15 +207,36 @@ public class UiSettingApi {
             name = "UI configuration"
         )
         @RequestBody
-        UiSetting uiConfiguration
+        UiSetting uiConfiguration,
+        @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        UiSettingsRepository uiSettingsRepository =
-            appContext.getBean(UiSettingsRepository.class);
-
         UiSetting one = uiSettingsRepository.findOne(uiIdentifier);
         if (one != null) {
-            uiSettingsRepository.save(uiConfiguration);
+            // For user admin, check that the UI is used by a portal managed by the user.
+            UserSession session = ApiUtils.getUserSession(httpSession);
+            boolean isUserAdmin = session.getProfile().equals(Profile.UserAdmin);
+            if (isUserAdmin) {
+                Specifications<UserGroup> spec =
+                    Specifications.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
+                spec = spec.and(UserGroupSpecs.hasProfile(Profile.UserAdmin));
+
+                Set<Integer> ids = new HashSet<Integer>(userGroupRepository.findGroupIds(spec));
+
+                final List<Source> sources = sourceRepository.findByGroupOwnerIn(ids);
+                boolean isUiConfigForOneOfUserPortal = false;
+                for(Source s : sources) {
+                    if (uiIdentifier.equals(s.getUiConfig())) {
+                        uiSettingsRepository.save(uiConfiguration);
+                        return new ResponseEntity(HttpStatus.NO_CONTENT);
+                    }
+                }
+                throw new NotAllowedException(String.format(
+                    "UI configuration with id '%s' is not used in any portal managed by current user. You are not allowed to update this configuration.",
+                    uiIdentifier
+                ));
+            } else {
+                uiSettingsRepository.save(uiConfiguration);
+            }
         } else {
             throw new ResourceNotFoundException(String.format(
                 "UI configuration with id '%s' does not exist.",
@@ -236,10 +270,6 @@ public class UiSettingApi {
         @PathVariable
         String uiIdentifier
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        UiSettingsRepository uiSettingsRepository =
-            appContext.getBean(UiSettingsRepository.class);
-
         UiSetting one = uiSettingsRepository.findOne(uiIdentifier);
         if (one != null) {
             uiSettingsRepository.delete(uiIdentifier);

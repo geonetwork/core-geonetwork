@@ -71,10 +71,10 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
         Long mapServersCount = mapServerRepo.count();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(get("/api/mapservers")
+        this.mockMvc.perform(get("/srv/api/mapservers")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$", hasSize(mapServersCount.intValue())));
     }
 
@@ -84,10 +84,10 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
         Assert.assertNotNull(mapServer);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(get("/api/mapservers/" + mapServer.getId())
+        this.mockMvc.perform(get("/srv/api/mapservers/" + mapServer.getId())
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.name", is(mapServer.getName())));
     }
 
@@ -99,11 +99,11 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(get("/api/mapservers/100")
+        this.mockMvc.perform(get("/srv/api/mapservers/100")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
     @Test
@@ -124,9 +124,9 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(put("/api/mapservers")
+        this.mockMvc.perform(put("/srv/api/mapservers")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(201));
@@ -149,9 +149,9 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(put("/api/mapservers/" + mapServerToUpdate.getId())
+        this.mockMvc.perform(put("/srv/api/mapservers/" + mapServerToUpdate.getId())
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -177,9 +177,9 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(put("/api/mapservers/222")
+        this.mockMvc.perform(put("/srv/api/mapservers/222")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404));
@@ -196,7 +196,7 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(delete("/api/mapservers/" + mapServerToDelete.getId())
+        this.mockMvc.perform(delete("/srv/api/mapservers/" + mapServerToDelete.getId())
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -215,11 +215,11 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Check 404 is returned
-        this.mockMvc.perform(delete("/api/mapservers/222")
+        this.mockMvc.perform(delete("/srv/api/mapservers/222")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
     /**

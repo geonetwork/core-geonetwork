@@ -50,7 +50,7 @@ import jeeves.services.ReadWriteController;
 @ReadWriteController
 @Deprecated
 public class Remove {
-    @RequestMapping(value = "/{lang}/admin.category.remove", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.category.remove", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public CategoryUpdateResponse exec(

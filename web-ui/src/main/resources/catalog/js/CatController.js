@@ -24,12 +24,12 @@
 (function() {
   goog.provide('gn_cat_controller');
 
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
 goog.require('gn_admin_menu');
 goog.require('gn_external_viewer');
 goog.require('gn_history');
@@ -67,6 +67,13 @@ goog.require('gn_alert');
         'default': '/geonetwork'
       },
       'mods': {
+        'global': {
+          'humanizeDates': true
+        },
+        'footer':{
+          'enabled': true,
+          'showSocialBarInFooter': true
+        },
         'header': {
           'enabled': true,
           'languages': {
@@ -80,23 +87,31 @@ goog.require('gn_alert');
             'cat': 'ca',
             'fin': 'fi',
             'ice': 'is',
-            'ita' : 'it',
+            'ita': 'it',
+            'por': 'pt',
             'rus': 'ru',
             'chi': 'zh',
             'slo': 'sk'
           },
           'isLogoInHeader': false,
-          'logoInHeaderPosition': 'left'
+          'logoInHeaderPosition': 'left',
+          'fluidHeaderLayout': true,
+          'showGNName': true,
+          'isHeaderFixed': false
+        },
+        'cookieWarning': {
+          'enabled': true,
+          'cookieWarningMoreInfoLink': '',
+          'cookieWarningRejectLink': ''
         },
         'home': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.search#/home',
-          'showSocialBarInFooter': true,
+          'appUrl': '../../{{node}}/{{lang}}/catalog.search#/home',
           'fluidLayout': true
         },
         'search': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.search#/search',
+          'appUrl': '../../{{node}}/{{lang}}/catalog.search#/search',
           'hitsperpageValues': [10, 50, 100],
           'paginationInfo': {
             'hitsPerPage': 20
@@ -141,52 +156,79 @@ goog.require('gn_alert');
                 'search/resultsview/partials/viewtemplates/grid.html',
             'tooltip': 'Grid',
             'icon': 'fa-th'
+          },{
+            'tplUrl': '../../catalog/components/' +
+              'search/resultsview/partials/viewtemplates/list.html',
+            'tooltip': 'List',
+            'icon': 'fa-bars'
           }],
           'resultTemplate': '../../catalog/components/' +
               'search/resultsview/partials/viewtemplates/grid.html',
           'formatter': {
             'list': [{
+              'label': 'defaultView',
+              'url' : ''
+            }, {
               'label': 'full',
-              'url' : '../api/records/{{uuid}}/' +
-                  'formatters/xsl-view?root=div&view=advanced'
-            }]
+              'url' : '/formatters/xsl-view?root=div&view=advanced'
+            }],
+            defaultUrl: ''
           },
+          'downloadFormatter': [{
+            'label': 'exportMEF',
+            'url': '/formatters/zip?withRelated=false',
+            'class': 'fa-file-zip-o'
+          }, {
+            'label': 'exportPDF',
+            'url' : '/formatters/xsl-view?output=pdf&language=${lang}',
+            'class': 'fa-file-pdf-o'
+          }, {
+            'label': 'exportXML',
+            // 'url' : '/formatters/xml?attachment=false',
+            'url' : '/formatters/xml',
+            'class': 'fa-file-code-o'
+          }],
           'grid': {
             'related': ['parent', 'children', 'services', 'datasets']
           },
           'linkTypes': {
             'links': ['LINK', 'kml'],
             'downloads': ['DOWNLOAD'],
-            'layers': ['OGC'],
+            'layers': ['OGC', 'ESRI:REST'],
             'maps': ['ows']
           },
           'isFilterTagsDisplayedInSearch': false,
           'usersearches': {
             'enabled': false,
             'displayFeaturedSearchesPanel': false
+          },
+          'savedSelection': {
+            'enabled': true
           }
         },
         'map': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.search#/map',
+          'appUrl': '../../{{node}}/{{lang}}/catalog.search#/map',
           'externalViewer': {
             'enabled': false,
+            'enabledViewAction': false,
             'baseUrl': 'http://www.example.com/viewer',
-            'urlTemplate': 'http://www.example.com/viewer?url=${service.url}&type=${service.type}&layer=${service.name}',
+            'urlTemplate': 'http://www.example.com/viewer?url=${service.url}&type=${service.type}&layer=${service.title}&lang=${iso2lang}&title=${md.defaultTitle}',
             'openNewWindow': false,
             'valuesSeparator': ','
           },
-          'is3DModeAllowed': true,
+          'is3DModeAllowed': false,
           'isSaveMapInCatalogAllowed': true,
           'isExportMapAsImageEnabled': false,
           'storage': 'sessionStorage',
+          'bingKey': '',
           'listOfServices': {
             'wms': [],
             'wmts': []
           },
           'projection': 'EPSG:3857',
           'projectionList': [{
-            'code': 'EPSG:4326',
+            'code': 'urn:ogc:def:crs:EPSG:6.6:4326',
             'label': 'WGS84 (EPSG:4326)'
           }, {
             'code': 'EPSG:3857',
@@ -225,7 +267,8 @@ goog.require('gn_alert');
             'context': '',
             'extent': [0, 0, 0, 0],
             'layers': [{'type': 'osm'}]
-          }
+          },
+          'autoFitOnLayer': false
         },
         'geocoder': {
             'enabled': true,
@@ -237,7 +280,7 @@ goog.require('gn_alert');
         },
         'editor': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.edit',
+          'appUrl': '../../{{node}}/{{lang}}/catalog.edit',
           'isUserRecordsOnly': false,
           'isFilterTagsDisplayed': false,
           'fluidEditorLayout': true,
@@ -247,18 +290,18 @@ goog.require('gn_alert');
         },
         'admin': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/admin.console'
+          'appUrl': '../../{{node}}/{{lang}}/admin.console'
         },
         'signin': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.signin'
+          'appUrl': '../../{{node}}/{{lang}}/catalog.signin'
         },
         'signout': {
           'appUrl': '../../signout'
         },
         'page': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.search#/page'
+          'appUrl': '../../{{node}}/{{lang}}/catalog.search#/page'
         }
       }
     };
@@ -270,7 +313,7 @@ goog.require('gn_alert');
       requireProxy: [],
       gnCfg: angular.copy(defaultConfig),
       gnUrl: '',
-      docUrl: 'http://geonetwork-opensource.org/manuals/3.4.x/',
+      docUrl: 'https://geonetwork-opensource.org/manuals/3.8.x/',
       //docUrl: '../../doc/',
       modelOptions: {
         updateOn: 'default blur',
@@ -435,12 +478,16 @@ goog.require('gn_alert');
              gnViewerSettings, gnSearchSettings, $cookies,
              gnExternalViewer, gnAlertService) {
       $scope.version = '0.0.1';
-
+      var defaultNode = 'srv';
 
       // Links for social media
       $scope.socialMediaLink = $location.absUrl();
       $scope.getPermalink = gnUtilityService.getPermalink;
       $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
+      $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
+      $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
+      $scope.isHeaderFixed = gnGlobalSettings.gnCfg.mods.header.isHeaderFixed;
+      $scope.isLogoInHeader = gnGlobalSettings.gnCfg.mods.header.isLogoInHeader;
 
       // If gnLangs current already set by config, do not use URL
       $scope.langs = gnGlobalSettings.gnCfg.mods.header.languages;
@@ -449,7 +496,7 @@ goog.require('gn_alert');
 
       $scope.getSocialLinksVisible = function() {
         var onMdView =  $location.absUrl().indexOf('/metadata/') > -1;
-        return !onMdView && gnGlobalSettings.gnCfg.mods.home.showSocialBarInFooter;
+        return !onMdView && gnGlobalSettings.gnCfg.mods.footer.showSocialBarInFooter;
       };
 
       function detectNode(detector) {
@@ -459,7 +506,7 @@ goog.require('gn_alert');
             return res[1];
           }
         }
-        return detector.default || 'srv';
+        return detector.default || defaultNode;
       }
 
 
@@ -483,16 +530,25 @@ goog.require('gn_alert');
         return detector.default || 'geonetwork';
       }
       $scope.nodeId = detectNode(gnGlobalSettings.gnCfg.nodeDetector);
+      $scope.isDefaultNode = $scope.nodeId === defaultNode;
       $scope.service = detectService(gnGlobalSettings.gnCfg.serviceDetector);
+      $scope.redirectUrlAfterSign = window.location.href;
+
       gnGlobalSettings.nodeId = $scope.nodeId;
       gnConfig.env = gnConfig.env ||  {};
       gnConfig.env.node = $scope.nodeId;
       gnConfig.env.baseURL = detectBaseURL(gnGlobalSettings.gnCfg.baseURLDetector);
 
+      $scope.signoutUrl = gnGlobalSettings.gnCfg.mods.signout.appUrl
+        + '?redirectUrl='
+        + window.location.href.slice(
+            0,
+            window.location.href.indexOf(gnConfig.env.node) + gnConfig.env.node.length);
+
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
-        'spa': 'Español', 'cat': 'Català', 'cze': 'Czech',
+        'spa': 'Español', 'por': 'Portuguesa', 'cat': 'Català', 'cze': 'Czech',
         'ita': 'Italiano', 'fin': 'Suomeksi', 'ice': 'Íslenska',
         'rus': 'русский', 'chi': '中文', 'slo': 'Slovenčina'};
       $scope.url = '';
@@ -561,6 +617,7 @@ goog.require('gn_alert');
           angular.forEach(gnConfig['map.proj4js'], function(item) {
             proj4.defs(item.code, item.value);
           });
+          ol.proj.proj4.register(proj4);
         }
       });
 
@@ -676,6 +733,11 @@ goog.require('gn_alert');
             Math.floor(Math.random() * 10000)).
             success(function(me, status) {
               if (angular.isObject(me)) {
+
+                me['isAdmin'] = function(groupId) {
+                  return me.admin;
+                }
+
                 angular.forEach($scope.profiles, function(profile) {
                   // Builds is<ProfileName>ForGroup methods
                   // to check the profile in the group

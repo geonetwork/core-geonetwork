@@ -1,10 +1,9 @@
+@import "gn_bootstrap.less";
+
 @import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
 // import the css files as less files so they are included in the final output of wro4j
-@import (less) "../lib/style/ol.css";
-@import (less) "../lib/style/datetimepicker.css";
 @import (less) "../lib/jquery.ext/jquery.fileupload-ui.css";
 @import "gn.less";
-
 
 @import "../lib/style/bootstrap/less/glyphicons.less";
 
@@ -31,61 +30,6 @@ input[type=text], input[type=number], select {
 }
 
 
-.gn-drawmap-panel {
-  table  {
-    .form-group {
-      width: 150px;
-    }
-    .btn-group {
-      margin-left: 15px;
-    }
-  }
-  .form-group {
-    margin-left: 0px;
-    margin-right: 0px;
-  }
-  .col-left, .col-right {
-   width: 25%;
-  }
-  .col-middle {
-   width: 50%;
-  }
-  table {
-   width:100%
-  }
-  .map {
-   height: 300px;
-   width: 100%;
-  }
-
-  .gn-proj-select {
-    width: 250px;
-    vertical-align: top;
-  }
-  [data-gn-region-picker], [gn-region-picker] {
-    .fa {
-      position: absolute;
-      top: 11px;
-      z-index: 20;
-      right: 10px;
-      &.fa-spinner {
-        right: 25px;
-      }
-      &.fa-times-circle {
-        cursor: pointer;
-      }
-    }
-  }
-  input[type=number] {
-    margin-top: 15px;
-    margin-bottom: 15px;
-    text-align: center;
-  }
-  .dropdown-menu {
-    font-size: 13px;
-    text-align: left;
-  }
-}
 .gn-geopublisher-panel {
   .map {
    height: 300px;
@@ -522,6 +466,12 @@ form.gn-editor {
       top: 2px;
     }
   }
+  .gn-validation-report {
+    .list-group-item {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+  }
 }
 
 .gn-autocomplete-list {
@@ -557,6 +507,14 @@ form.gn-tab-inspire {
     padding-left: 10px;
     padding-right: 5px;
     // background-color: #fbfcfb;
+    .row > div.col-md-10 {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .row > div.col-md-10:hover {
+      white-space: unset;
+    }
     .row > div {
       padding-left: 1px;
       padding-right: 1px;
@@ -614,6 +572,12 @@ form.gn-tab-inspire {
         color: @gray-darker;
       }
     }
+  }
+}
+// margin for a validation block in a date row
+.gn-date {
+  .gn-validation-report {
+    margin-top: 10px;
   }
 }
 .onlinesrc-container, [gn-directory-entry-list-selector] {
@@ -679,7 +643,7 @@ table.gn-data-store {
 }
 
 .open > .dropdown-menu {
-  max-height: 25em;
+  max-height: 30em;
   overflow-y: auto;
 }
 
@@ -870,9 +834,57 @@ gn-directory-associated-md {
 }
 
 // md type widget (used only in editor for now)
-gn-md-type-widget {
+gn-md-type-widget, gn-md-type-inspire-validation-widget {
   display: inline-block;
   & > div {
+    border-radius: 1000px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 14px;
+    position: relative;
+    color: white;
+    margin-top: -0.2em;
+    margin-bottom: -0.4em;
+    background-color: @gray-light;
+    overflow: hidden;
+
+    &.valid-status-1, &.valid-inspire-status-1 {
+      background-color: @gray-light;
+    }
+    &.valid-status0, &.valid-inspire-status0 {
+      background-color: @btn-danger-bg;
+    }
+    &.valid-status1, &.valid-inspire-status1 {
+      background-color: @btn-success-bg;
+    }
+    &.md-type-t {
+      background-color: @btn-primary-bg;
+    }
+    a {
+      color: #fff;
+      &:hover {
+        color: #fff;
+      }
+    }
+    &::after {
+      content: '';
+      background-color: rgba(255, 255, 255, 0.25);
+      position: absolute;
+      top: 0px;
+      height: 50%;
+      left: 0px;
+      right: 0px;
+    }
+  }
+}
+
+
+// md type widget (used only in editor for now)
+gn-draft-validation-widget {
+  display: inline-block;
+  small small {
     border-radius: 1000px;
     width: 24px;
     height: 24px;
@@ -910,31 +922,38 @@ gn-md-type-widget {
     }
   }
 }
+
 .gn-editor-board {
   .table.gn-results-editor td {
-    gn-md-type-widget {
+    gn-md-type-widget, gn-md-type-inspire-validation-widget {
       margin-top: 5px;
     }
   }
 }
 
-.gn-fixed-scroll {
-  position:fixed;
-  top: 70px;
-  margin-right: 15px;
-  z-index: 10;
-  .gn-btn-fix {
-    color: #333;
-    background-color: #e6e6e6;
-    border-color: #adadad;
-    outline: 0;
-    background-image: none;
-    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+.gn-editor-sidebar {
+  margin-top: 15px;
+  padding-bottom: 150px;
+}
+@media (min-width: @screen-md-min) {
+  .scrollbar-white() {
+    &::-webkit-scrollbar-track, &::-webkit-scrollbar-thumb {
+      -webkit-box-shadow: inset 0 0 6px #fff;
+    }
+    &::-webkit-scrollbar-thumb:window-inactive {
+      background: #fff;
+    }
+  }
+  .gn-editor-sidebar {
+    margin-top: 0;
+    position: fixed;
+    right: 0;
+    overflow: auto;
+    max-height: 100%;
+    padding-bottom: 110px;
+    .scrollbar-white();
   }
 }
-
-
 
 gn-bounding-polygon {
   label {
@@ -948,3 +967,10 @@ gn-bounding-polygon {
     font-size: 0.9em;
   }
 }
+
+ // scrollspy
+  .gn-scroll-spy {
+    .btn.btn-round {
+      border-radius: 50% !important;
+    }
+  }

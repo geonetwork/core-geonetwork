@@ -396,7 +396,7 @@ public class QueryRequest {
             listOfDocumentsToIndex.put(id, mapper.writeValueAsString(doc));
 
             client = ApplicationContextHolder.get().getBean(EsClient.class);
-            client.bulkRequest(index, indexType, listOfDocumentsToIndex);
+            client.bulkRequest(index, listOfDocumentsToIndex);
         } catch (JsonProcessingException e) {
             Log.debug(Geonet.SEARCH_LOGGER, String.format(
                 "Error occured while building JSON for search requests: %s", e.getMessage()

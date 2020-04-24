@@ -44,8 +44,8 @@ public interface IMEFVisitor {
     public void handleFeatureCat(Element md, int index) throws Exception;
 
     public void handlePublicFile(String file, String changeDate,
-                                 InputStream is, int index) throws IOException;
+                                 InputStream is, int index) throws Exception;
 
     public void handlePrivateFile(String file, String changeDate,
-                                  InputStream is, int index) throws IOException;
+                                  InputStream is, int index) throws Exception;
 }

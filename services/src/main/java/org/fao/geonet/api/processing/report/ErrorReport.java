@@ -42,6 +42,11 @@ public class ErrorReport extends Report {
         this.stack = Util.getStackTrace(e);
     }
 
+    public ErrorReport(String e) {
+        super(e);
+        this.stack = "";
+    }
+
     @XmlElement(value = "stacktrace")
     public String getStack() {
         return stack;

@@ -37,6 +37,7 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
@@ -62,13 +63,14 @@ public class XslProcessUtils {
     /**
      * Process a metadata record and add information about the processing to one or more sets for
      * reporting.
-     *
-     * @param id      The metadata identifier corresponding to the metadata record to process
+     *  @param id      The metadata identifier corresponding to the metadata record to process
      * @param process The process name
+     * @param updateDateStamp
      */
     public static Element process(ServiceContext context, String id,
                                   String process,
                                   boolean save, boolean index,
+                                  boolean updateDateStamp,
                                   XsltMetadataProcessingReport report,
                                   String siteUrl,
                                   Map<String, String[]> params) throws Exception {
@@ -120,7 +122,7 @@ public class XslProcessUtils {
             Element processedMetadata = null;
             try {
                 boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
-                Element md = dataMan.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+                Element md = metadataManager.getMetadata(context, id, forEditing, false, withValidationErrors, keepXlinkAttributes);
 
                 Map<String, Object> xslParameter = new HashMap<>();
 
@@ -180,8 +182,6 @@ public class XslProcessUtils {
                         }
                     }
 
-                    // Always udpate metadata date stamp on metadata processing (minor edit has no effect).
-                    boolean updateDateStamp = true;
                     dataMan.updateMetadata(context, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
                     if (index) {
                         dataMan.indexMetadata(id, true, null);
@@ -195,7 +195,7 @@ public class XslProcessUtils {
             } catch (Exception e) {
                 report.addMetadataError(iId, e);
                 context.error("  Processing failed with error " + e.getMessage());
-                e.printStackTrace();
+                context.error(e);
             }
             return processedMetadata;
         }
@@ -257,6 +257,7 @@ public class XslProcessUtils {
                 xslParameter.put("nodeUrl", settingsMan.getNodeURL());
                 xslParameter.put("catalogUrl", settingsMan.getSiteURL(context));
                 xslParameter.put("nodeId", context.getNodeId());
+                xslParameter.put("thesauriDir", context.getApplicationContext().getBean(GeonetworkDataDirectory.class).getThesauriDir().toAbsolutePath().toString());
 
                 for (Map.Entry<String, String[]> parameter : params.entrySet()) {
                     String value = parameter.getValue()[0].trim();
@@ -292,7 +293,7 @@ public class XslProcessUtils {
             } catch (Exception e) {
                 report.addMetadataError(iId, e);
                 context.error("  Processing failed with error " + e.getMessage());
-                e.printStackTrace();
+                context.error(e);
             }
             return sw.toString();
         }

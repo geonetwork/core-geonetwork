@@ -34,6 +34,7 @@ import org.fao.geonet.harvester.wfsfeatures.event.WFSHarvesterEvent;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.harvester.wfsfeatures.worker.EsWFSFeatureIndexer;
 import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder;
+import org.fao.geonet.utils.Log;
 import org.geonetwork.messaging.JMSMessager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -50,8 +51,8 @@ import java.util.HashMap;
  */
 @Controller
 @RequestMapping(value = {
-        "/api/workers/data/wfs/actions",
-        "/api/" + API.VERSION_0_1 + "/workers/data/wfs/actions"
+        "/{portal}/api/workers/data/wfs/actions",
+        "/{portal}/api/" + API.VERSION_0_1 + "/workers/data/wfs/actions"
 })
 @Api(value = "workers",
         tags= "workers",
@@ -128,7 +129,7 @@ public class WFSHarvesterApi {
     @ExceptionHandler({
             Exception.class})
     public Object exceptionHandler(final Exception exception) {
-            exception.printStackTrace();
+            Log.error(API.LOG_MODULE_NAME, exception.getMessage(), exception);
             return  new HashMap() {{
                     put("result", "failed");
                     put("type", "file_not_found");

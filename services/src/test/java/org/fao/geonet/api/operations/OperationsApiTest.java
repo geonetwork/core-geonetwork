@@ -58,10 +58,10 @@ public class OperationsApiTest extends AbstractServiceIntegrationTest {
         Long operationsCount = operationsRepo.count();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(get("/api/operations")
+        this.mockMvc.perform(get("/srv/api/operations")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$", hasSize(operationsCount.intValue())));
     }
 }

@@ -23,11 +23,9 @@
 package org.fao.geonet.guiservices.csw;
 
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.domain.CswCapabilitiesInfoField;
 import org.fao.geonet.domain.responses.CswConfigurationResponse;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -37,7 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller("admin.config.csw")
 public class Get {
 
-    @RequestMapping(value = "/{lang}/admin.config.csw", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.config.csw", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
@@ -47,18 +45,14 @@ public class Get {
 
         CswConfigurationResponse response = new CswConfigurationResponse();
 
-        String cswContactIdValue = sm.getValue(Settings.SYSTEM_CSW_CONTACT_ID);
-        if (cswContactIdValue == null) {
-            cswContactIdValue = "-1";
+        String capabilityRecordUuid = sm.getValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID);
+        if (capabilityRecordUuid == null) {
+            capabilityRecordUuid = "-1";
         }
-
-        final CswCapabilitiesInfoFieldRepository infoFieldRepository = applicationContext.getBean(CswCapabilitiesInfoFieldRepository.class);
-        java.util.List<CswCapabilitiesInfoField> capabilitiesInfoFields = infoFieldRepository.findAll(); //AsXml();
 
         response.setCswEnabled(sm.getValueAsBool(Settings.SYSTEM_CSW_ENABLE));
         response.setCswMetadataPublic(sm.getValueAsBool(Settings.SYSTEM_CSW_METADATA_PUBLIC));
-        response.setCswContactId(Integer.parseInt(cswContactIdValue));
-        response.setCapabilitiesInfoFields(capabilitiesInfoFields);
+        response.setCapabilityRecordUuid(Integer.parseInt(capabilityRecordUuid));
 
         return response;
     }

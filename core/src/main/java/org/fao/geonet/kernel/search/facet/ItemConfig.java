@@ -30,6 +30,8 @@ public class ItemConfig {
      * Default number of values for a facet
      */
     public static final int DEFAULT_MAX_KEYS = 10;
+    public static final int DEFAULT_PAGE_SIZE = 5000;
+
     /**
      * Default depth of sub categories to count
      */
@@ -42,6 +44,8 @@ public class ItemConfig {
     private int depth;
     private String translator;
     private TranslatorFactory translatorFactory;
+    private int pageSize;
+
 
     public ItemConfig(Dimension dimension, TranslatorFactory translatorFactory) {
         this.dimension = dimension;
@@ -51,6 +55,7 @@ public class ItemConfig {
         sortBy = SortBy.COUNT;
         sortOrder = SortOrder.DESCENDING;
         depth = DEFAULT_DEPTH;
+        pageSize = DEFAULT_PAGE_SIZE;
     }
 
     /**
@@ -106,6 +111,14 @@ public class ItemConfig {
 
     public void setMax(int max) {
         this.max = max;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
     public void setTranslator(String translator) {

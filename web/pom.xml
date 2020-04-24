@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.7.0-SNAPSHOT</version>
+    <version>3.11.0-SNAPSHOT</version>
   </parent>
 
 
@@ -229,10 +229,6 @@
       <artifactId>httpclient</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpcore</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-net</groupId>
       <artifactId>commons-net</artifactId>
     </dependency>
@@ -387,6 +383,12 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>listeners</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <!-- Handled locally by a temporarly repository -->
     <dependency>
       <groupId>dlib</groupId>
@@ -424,7 +426,7 @@
     <dependency>
       <groupId>edu.ucar</groupId>
       <artifactId>netcdf</artifactId>
-      <version>4.0.patch</version>
+      <version>4.3.23</version>
     </dependency>
 
     <!-- Monitoring libraries -->
@@ -523,6 +525,11 @@
       <artifactId>schema-dublin-core</artifactId>
       <version>${gn.schemas.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>schema-iso19115-3.2018</artifactId>
+      <version>${gn.schemas.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -578,7 +585,7 @@
 	    <plugin>
 	        <groupId>pl.project13.maven</groupId>
 	        <artifactId>git-commit-id-plugin</artifactId>
-	        <version>2.2.1</version>
+	        <version>2.2.6</version>
 	        <executions>
                   <execution>
                     <phase>initialize</phase>
@@ -673,7 +680,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.7</version>
         <executions>
           <execution>
             <id>add-source</id>
@@ -694,7 +700,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.5</version>
         <executions>
           <execution>
             <id>copy-filter-webResource</id>
@@ -750,6 +755,11 @@
                 </resource>
                 <resource>
                   <directory>${project.basedir}/../schemas/csw-record/src/main/plugin</directory>
+                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
+                  </targetPath>
+                </resource>
+                <resource>
+                  <directory>${project.basedir}/../schemas/iso19115-3.2018/src/main/plugin</directory>
                   <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
                   </targetPath>
                 </resource>
@@ -943,6 +953,7 @@
         <es.index.features>gn-features</es.index.features>
         <es.index.features.type>features</es.index.features.type>
         <es.index.records>gn-records</es.index.records>
+        <es.index.records_public></es.index.records_public>
         <es.index.records.type>records</es.index.records.type>
         <es.index.searchlogs>gn-searchlogs</es.index.searchlogs>
         <es.index.searchlogs.type>searchlogs</es.index.searchlogs.type>

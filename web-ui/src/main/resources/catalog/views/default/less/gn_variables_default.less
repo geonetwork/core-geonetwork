@@ -10,8 +10,9 @@
 
 // body background (image & color)
 //
-// when there is an empty string, no background image is used.
-@gn-background-image: '';
+// change the variable to a string pointing towards an image, like 'www.dummy.net/image.png'. When no
+// background image is needed, leave as is (none).
+@gn-background-image: none;
 @gn-background-color: @body-bg;
 
 // overwrite color for accessibility
@@ -27,12 +28,15 @@
 
 // header
 @gn-header-background: #fff;
+@gn-header-height: 50px;
 // menu bar
 @gn-menubar-height: 50px;
 @gn-menubar-background: @navbar-default-bg;
 @gn-menubar-background-active: @navbar-default-link-active-bg;
+@gn-menubar-color-active: @navbar-default-link-color;
 @gn-menubar-color: @navbar-default-link-color;
 @gn-menubar-color-hover: @navbar-default-link-hover-color;
+@gn-menubar-background-hover: @navbar-default-link-hover-bg;
 @gn-menubar-border-color: @navbar-default-border;
 
 // bottombar
@@ -44,6 +48,14 @@
 
 // home page
 //
+// ----- search input
+@gn-search-outline-color: @brand-primary;
+@gn-search-button-background-color: @brand-primary;
+@gn-search-button-color: @btn-primary-color;
+
+@gn-search-outline-color-red: red(@gn-search-outline-color);
+@gn-search-outline-color-green: green(@gn-search-outline-color);
+@gn-search-outline-color-blue: blue(@gn-search-outline-color);
 // ----- topics block
 @gn-topics-background-color: @well-bg;
 // ----- info block

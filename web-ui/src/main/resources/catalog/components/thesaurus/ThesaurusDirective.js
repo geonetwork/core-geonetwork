@@ -62,6 +62,8 @@
              mode: '@gnThesaurusSelector',
              elementName: '@',
              elementRef: '@',
+             freekeywordElementName: '@',
+             freekeywordElementRef: '@',
              domId: '@',
              selectorOnly: '@',
              transformation: '@',
@@ -114,7 +116,11 @@
 
              scope.add = function() {
                return gnEditor.add(gnCurrentEdit.id,
-               scope.elementRef, scope.elementName, scope.domId, 'before');
+                   scope.freekeywordElementRef || scope.elementRef,
+                 scope.freekeywordElementName || scope.elementName,
+                        scope.domId, 'before').then(function() {
+                 gnEditor.save(gnCurrentEdit.id, true);
+               });
              };
 
              scope.addThesaurus = function(thesaurusIdentifier) {
@@ -501,11 +507,13 @@
       return {
         restrict: 'A',
         scope: {
+             fauxMultilingual: '@fauxMultilingual' // we are doing our own multi-lingual support
         },
         link: function(scope, element, attrs) {
           scope.thesaurusKey = attrs.thesaurusKey || '';
           scope.orderById = attrs.orderById || 'false';
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
+          scope.fauxMultilingual = scope.fauxMultilingual==="true"; //default false
 
 
 
@@ -581,7 +589,10 @@
               // Could be in the case it was already encoded.
               var input = element.parent().parent().find('[name=' + scope.conceptIdElementName + ']');
 
-              var isFirstMultilingualElement = element.prev('div.gn-keyword-picker-concept-id').length === 0;
+              var insertionPoint = isMultilingualMode ?
+                element.closest('div[data-gn-multilingual-field]').find('div.well') : element;
+
+              var isFirstMultilingualElement = insertionPoint.siblings('div.gn-keyword-picker-concept-id').length === 0;
 
               if ((!isMultilingualMode && input.length === 0) ||
                 // Add an extra form element to store the value
@@ -591,13 +602,18 @@
                 (isMultilingualMode && isFirstMultilingualElement && input.length === 0)) {
 
                 var conceptIdElement =  angular.element(
-                  '<div class="well well-sm gn-keyword-picker-concept-id">' +
-                  '<label class="col-sm-4" data-translate>Link</label>' +
-                  '<input name="' + scope.conceptIdElementName + '" ' +
+                  '<div class="well well-sm gn-keyword-picker-concept-id row">' +
+                  '  <div class="form-group">' +
+                  '    <label class="col-sm-4"><i class="fa fa-link fa-fw"/><span data-translate>URL</span></label>' +
+                  '    <div class="col-sm-6"><input name="' + scope.conceptIdElementName + '" ' +
                   '       class="gn-field-link form-control"/>' +
+                  '    </div>' +
+                  '    <div class="col-sm-2"><a class="btn btn-link" title="{{\'resetUrl\' | translate}}" data-ng-click="resetUrl()"><i class="fa fa-times text-danger"/></a></div>' +
+                  '  </div>' +
                   '</div>');
-                element.after(conceptIdElement);
-                }
+                insertionPoint[isMultilingualMode ? 'before' : 'after'](
+                  $compile(conceptIdElement)(scope));
+              }
             }
 
             // Init typeahead
@@ -625,18 +641,20 @@
             }).bind('typeahead:selected',
               $.proxy(function(obj, keyword) {
                 var inputs = $(obj.currentTarget).parent().parent().find('input.tt-input');
-                if (isMultilingualMode && inputs.size() > 0) {
+                if ((isMultilingualMode||scope.fauxMultilingual) && inputs.size() > 0) {
                   for (var i = 0; i < inputs.size(); i ++) {
                     var input = inputs.get(i);
                     var lang = input.getAttribute('lang');
                     var value = keyword.props.values[gnCurrentEdit.allLanguages.code2iso['#' + lang]];
                     if (value) {
-                      $(input).val(value);
-                    }
+                      $(input).typeahead('val', value);
+                      // this makes sure that angular knows the value has changed
+                      $(input).triggerHandler('input');
+                     }
                     // If no value for the language, value is not set.
                   }
                 } else {
-                  $(obj.currentTarget).val(keyword.label);
+                  $(obj.currentTarget).typeahead('val', keyword.label);
                 }
 
                 if(scope.conceptIdElementName) {
@@ -644,14 +662,24 @@
                   // This directive may depend on others and populate
                   // the same target input field for the attribute.
                   // Use a search instead of a scope element to cope with init order.
-                  var input = element.parent().parent().find('[name=' + scope.conceptIdElementName + ']');
+
+                  var insertionPoint = isMultilingualMode ?
+                    element.closest('div[data-gn-multilingual-field]') : element.parent().parent();
+                  var input = insertionPoint.find('[name=' + scope.conceptIdElementName + ']');
                   input.val(keywordKey);
                 }
               }, $(element))
             );
 
 
-
+            scope.resetUrl = function () {
+              if(scope.conceptIdElementName) {
+                var insertionPoint = isMultilingualMode ?
+                  element.closest('div[data-gn-multilingual-field]') : element;
+                var input = insertionPoint.find('[name=' + scope.conceptIdElementName + ']');
+                input.val('');
+              }
+            };
 
             // When clicking the element trigger input
             // to show autocompletion list.

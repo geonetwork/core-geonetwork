@@ -44,8 +44,8 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.Operation;
@@ -54,10 +54,10 @@ import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.OperationAllowed_;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.SortUtils;
@@ -144,7 +144,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
                 repoUrl = SVNURL.fromFile(subFile);
 
             } else {
-                e.printStackTrace();
+                Log.error(Geonet.SVN_MANAGER, "Problem creating or using repository at path " + subversionPath + ", " + e.getMessage(),  e);
                 throw new IllegalArgumentException("Problem creating or using repository at path " + subversionPath);
             }
         }
@@ -154,8 +154,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
         try {
             repo = getRepository();
         } catch (SVNException se) {
-            Log.error(Geonet.SVN_MANAGER, "Failed to open subversion repo at path " + subversionPath);
-            se.printStackTrace();
+            Log.error(Geonet.SVN_MANAGER, "Failed to open subversion repo at path " + subversionPath, se);
             throw se;
         }
 
@@ -250,14 +249,12 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
                 if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
                     Log.debug(Geonet.SVN_MANAGER, "Committed changes to subversion repository for metadata ids " + task.ids);
             } catch (Exception e) {
-                Log.error(Geonet.SVN_MANAGER, "Failed to commit changes to subversion repository for metadata ids " + task.ids);
-                e.printStackTrace();
+                Log.error(Geonet.SVN_MANAGER, "Failed to commit changes to subversion repository for metadata ids " + task.ids, e);
                 if (editor != null) {
                     try {
                         editor.abortEdit();
                     } catch (Exception ex) {
-                        Log.error(Geonet.SVN_MANAGER, "Failed to abort subversion editor");
-                        ex.printStackTrace();
+                        Log.error(Geonet.SVN_MANAGER, "Failed to abort subversion editor", ex);
                     }
                 }
             } finally {
@@ -361,7 +358,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
                     + "channel " + status);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.SVN_MANAGER, "Failed to set history for metadata to subversion repo at path " + subversionPath, e);
         }
     }
 
@@ -419,8 +416,8 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             editor.closeDir();
             editor.closeEdit();
         } catch (SVNException svne) {
+            Log.error(Geonet.SVN_MANAGER, "Create metadata dir. error: " + svne.getMessage(), svne);
             editor.abortEdit();
-            svne.printStackTrace();
             throw svne;
         }
 
@@ -440,8 +437,8 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Commit returned " + commitInfo);
         } catch (SVNException svne) {
+            Log.error(Geonet.SVN_MANAGER, "Create metadata dir. error: " + svne.getMessage(), svne);
             editor.abortEdit();
-            svne.printStackTrace();
             throw svne;
         }
     }
@@ -473,8 +470,8 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Directory for metadata " + id + " deleted: " + commitInfo);
         } catch (SVNException svne) {
+            Log.error(Geonet.SVN_MANAGER, "Delete metadata dir. error: " +  svne.getMessage(),  svne);
             editor.abortEdit(); // abort the update on the XML in the repository
-            svne.printStackTrace();
             throw svne;
         }
     }
@@ -574,8 +571,8 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             // get the metadata status and if different commit changes
             commitMetadataStatus(editor, id, dataMan);
         } catch (Exception e) {
+            Log.error(Geonet.SVN_MANAGER, "Failed to commit metadata to  subversion repo at path " + subversionPath, e);
             editor.abortEdit();
-            e.printStackTrace();
             throw e;
         }
     }
@@ -697,7 +694,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
         // get owner from the database
         Set<Integer> ids = new HashSet<Integer>();
         ids.add(Integer.valueOf(id));
-        AbstractMetadata metadata = this.context.getBean(MetadataRepository.class).findOne(id);
+        AbstractMetadata metadata = this.context.getBean(IMetadataUtils.class).findOne(id);
         User user = this.context.getBean(UserRepository.class).findOne(metadata.getSourceInfo().getOwner());
         // Backwards compatibility.  Format the metadata as XML in same format as previous versions.
         Element xml = new Element("results").addContent(

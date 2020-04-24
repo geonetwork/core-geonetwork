@@ -31,7 +31,7 @@ public class BatchOpsMetadatReindexerTest {
     @Test
     public void syncMonoThread() throws Exception {
         int numberOfAvailableThreads = 1;
-        final Set<Thread> usedTread = new HashSet();
+        final Set<Thread> usedTread = new HashSet<>();
         prepareEnvMocks(numberOfAvailableThreads);
         DataManager mockDataMan = createMockDataManager(usedTread);
         Set<Integer> toIndex = createMetadataToIndex();
@@ -48,7 +48,7 @@ public class BatchOpsMetadatReindexerTest {
     @Test
     public void syncMultiThread() throws Exception {
         int numberOfAvailableThreads = 4;
-        final Set<Thread> usedTread = new HashSet();
+        final Set<Thread> usedTread = new HashSet<>();
         prepareEnvMocks(numberOfAvailableThreads);
         DataManager mockDataMan = createMockDataManager(usedTread);
         Set<Integer> toIndex = createMetadataToIndex();
@@ -64,7 +64,7 @@ public class BatchOpsMetadatReindexerTest {
     @Test
     public void syncManyThreadButRunInCurrent() throws Exception {
         int numberOfAvailableThreads = 4;
-        final Set<Thread> usedTread = new HashSet();
+        final Set<Thread> usedTread = new HashSet<>();
         prepareEnvMocks(numberOfAvailableThreads);
         DataManager mockDataMan = createMockDataManager(usedTread);
         Set<Integer> toIndex = createMetadataToIndex();
@@ -81,17 +81,17 @@ public class BatchOpsMetadatReindexerTest {
     @Test
     public void asyncMonoThread() throws Exception {
         int numberOfAvailableThreads = 1;
-        final Set<Thread> usedTread = new HashSet();
+        final Set<Thread> usedTread = new HashSet<>();
         prepareEnvMocks(numberOfAvailableThreads);
         CountDownLatch latch = new CountDownLatch(1);
         DataManager mockDataMan = createBlockingMockDataManager(usedTread, latch);
         Set<Integer> toIndex = createMetadataToIndex();
 
         BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
-        toTest.wrapAsyncProcess(false);
-
         assertEquals(0, toTest.getProcessed());
         assertEquals(4, toTest.getToProcessCount());
+
+        toTest.wrapAsyncProcess(false);
 
         latch.countDown();
         Thread.sleep(500);
@@ -106,17 +106,17 @@ public class BatchOpsMetadatReindexerTest {
     @Test
     public void asyncMultiThread() throws Exception {
         int numberOfAvailableThreads = 4;
-        final Set<Thread> usedTread = new HashSet();
+        final Set<Thread> usedTread = new HashSet<>();
         prepareEnvMocks(numberOfAvailableThreads);
         CountDownLatch latch = new CountDownLatch(1);
         DataManager mockDataMan = createBlockingMockDataManager(usedTread, latch);
         Set<Integer> toIndex = createMetadataToIndex();
 
         BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
-        toTest.wrapAsyncProcess(false);
 
         assertEquals(0, toTest.getProcessed());
         assertEquals(4, toTest.getToProcessCount());
+        toTest.wrapAsyncProcess(false);
 
         latch.countDown();
         Thread.sleep(500);
@@ -130,7 +130,7 @@ public class BatchOpsMetadatReindexerTest {
     @Test
     public void asyncManyThreadButRunInCurrent() throws Exception {
         int numberOfAvailableThreads = 4;
-        final Set<Thread> usedTread = new HashSet();
+        final Set<Thread> usedTread = new HashSet<>();
         prepareEnvMocks(numberOfAvailableThreads);
         CountDownLatch latch = new CountDownLatch(1);
         DataManager mockDataMan = createBlockingMockDataManager(usedTread, latch);
@@ -206,7 +206,7 @@ public class BatchOpsMetadatReindexerTest {
     }
 
     private Set<Integer> createMetadataToIndex() {
-        Set<Integer> toIndex = new HashSet();
+        Set<Integer> toIndex = new HashSet<>();
         toIndex.add(1);
         toIndex.add(2);
         toIndex.add(3);

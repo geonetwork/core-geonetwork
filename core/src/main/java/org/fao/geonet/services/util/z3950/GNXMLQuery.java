@@ -154,7 +154,7 @@ class GNRemoteQueryDecoder {
             };
             qnv.visit(rn);
         } catch (InvalidQueryException iqe) {
-            iqe.printStackTrace();
+            Log.error(Geonet.SRU, "GNRemoteQueryDecoder - invalid query error: " + iqe.getMessage(), iqe);
         }
     }
 

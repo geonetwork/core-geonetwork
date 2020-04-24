@@ -28,15 +28,16 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NoResultsFoundException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -48,10 +49,12 @@ import org.fao.geonet.repository.SourceRepository;
 import org.jdom.Element;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,8 +72,8 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
 @RequestMapping(value = {
-    "/api/harvesters",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/harvesters",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/harvesters"
 })
 @Api(value = "harvesters",
@@ -78,6 +81,24 @@ import io.swagger.annotations.Authorization;
     description = "Harvester operations")
 @Controller("harvesters")
 public class HarvestersApi {
+
+    @Autowired
+    private HarvestManager harvestManager;
+
+    @Autowired
+    private SourceRepository sourceRepository;
+
+    @Autowired
+    private IMetadataUtils metadataRepository;
+
+    @Autowired
+    private IMetadataManager metadataManager;
+
+    @Autowired
+    private DataManager dataManager;
+
+    @Autowired
+    HarvestHistoryRepository historyRepository;
 
     @ApiOperation(
         value = "Assign harvester records to a new source",
@@ -109,11 +130,8 @@ public class HarvestersApi {
             value = "The target source UUID"
         )
         @RequestParam
-            String source,
-        HttpServletRequest request) throws Exception {
+            String source) throws Exception {
         final long elapsedTime = System.currentTimeMillis();
-        final ApplicationContext applicationContext = ApplicationContextHolder.get();
-        final HarvestManager harvestManager = applicationContext.getBean(HarvestManager.class);
         final AbstractHarvester harvester = harvestManager.getHarvester(harvesterUuid);
         if (harvester == null) {
             throw new ResourceNotFoundException(String.format(
@@ -121,7 +139,6 @@ public class HarvestersApi {
                 harvesterUuid));
         }
 
-        final SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
         final Source sourceNode = sourceRepository.findOneByUuid(source);
         if (sourceNode == null) {
             throw new ResourceNotFoundException(String.format(
@@ -129,8 +146,6 @@ public class HarvestersApi {
                 source));
         }
 
-        final IMetadataUtils metadataRepository = applicationContext.getBean(IMetadataUtils.class);
-        final IMetadataManager metadataManager = applicationContext.getBean(IMetadataManager.class);
         final List<? extends AbstractMetadata> allHarvestedRecords = metadataRepository.findAllByHarvestInfo_Uuid(harvesterUuid);
         List<String> records = new ArrayList<>(allHarvestedRecords.size());
 
@@ -150,8 +165,6 @@ public class HarvestersApi {
             records.add(record.getId() + "");
         }
 
-
-        DataManager dataManager = applicationContext.getBean(DataManager.class);
         dataManager.indexMetadata(records);
 
         // Add an harvester history step
@@ -161,7 +174,6 @@ public class HarvestersApi {
         final String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
         final ISODate lastRunDate = new ISODate(lastRun);
 
-        HarvestHistoryRepository historyRepository = applicationContext.getBean(HarvestHistoryRepository.class);
         HarvestHistory history = new HarvestHistory();
         history.setDeleted(true);
         history.setElapsedTime((int) elapsedTime);
@@ -174,5 +186,49 @@ public class HarvestersApi {
         historyRepository.save(history);
 
         return new HttpEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
+
+    @ApiOperation(
+        value = "Check if a harvester name or host already exist",
+        notes = "",
+        authorizations = {
+            @Authorization(value = "basicAuth")
+        },
+        nickname = "checkHarvesterPropertyExist")
+    @RequestMapping(
+        value = "/properties/{property}",
+        method = RequestMethod.GET
+    )
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasRole('UserAdmin')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Property does not exist."),
+        @ApiResponse(code = 404, message = "A property with that value already exist."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
+    public ResponseEntity<HttpStatus> checkHarvesterPropertyExist(
+        @ApiParam(
+            value = "The harvester property to check"
+        )
+        @PathVariable
+            String property,
+        @ApiParam(
+            value = "The value to search"
+        )
+        @RequestParam
+            String exist,
+        HttpServletRequest request) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        final Element list = harvestManager.get(null, context, "site[1]/name[1]");
+        if (list.getChildren().stream()
+                .filter(h -> h instanceof Element)
+                    .map(h -> ((Element) h).getChild("site").getChild(property).getTextTrim())
+                    .anyMatch(name -> ((String) name).equalsIgnoreCase(exist))) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

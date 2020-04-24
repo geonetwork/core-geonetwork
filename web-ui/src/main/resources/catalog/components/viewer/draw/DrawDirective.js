@@ -60,8 +60,8 @@
    *   <li>text</li>
    */
   module.directive('gnDraw', [
-    'ngeoDecorateInteraction',
-    function(ngeoDecorateInteraction) {
+    'olDecorateInteraction',
+    function(olDecorateInteraction) {
       return {
         restrict: 'A',
         replace: false,
@@ -303,7 +303,7 @@
             source: source
           }));
           drawPolygon.on('drawend', onDrawend);
-          ngeoDecorateInteraction(drawPolygon, map);
+          olDecorateInteraction(drawPolygon, map);
           drawPolygon.active = false;
           scope.drawPolygon = drawPolygon;
           map.addInteraction(drawPolygon);
@@ -313,7 +313,7 @@
             source: source
           }));
           drawPoint.on('drawend', onDrawend);
-          ngeoDecorateInteraction(drawPoint, map);
+          olDecorateInteraction(drawPoint, map);
           drawPoint.active = false;
           scope.drawPoint = drawPoint;
           map.addInteraction(drawPoint);
@@ -323,7 +323,7 @@
             source: source
           }));
           drawLine.on('drawend', onDrawend);
-          ngeoDecorateInteraction(drawLine, map);
+          olDecorateInteraction(drawLine, map);
           drawLine.active = false;
           scope.drawLine = drawLine;
           map.addInteraction(drawLine);
@@ -337,7 +337,7 @@
             evt.feature.set('name', scope.text);
             onDrawend(evt);
           });
-          ngeoDecorateInteraction(drawText, map);
+          olDecorateInteraction(drawText, map);
           drawText.active = false;
           scope.drawText = drawText;
           map.addInteraction(drawText);
@@ -460,7 +460,7 @@
                 this.clear();
                 scope.$apply();
               });
-          ngeoDecorateInteraction(deleteF, map);
+          olDecorateInteraction(deleteF, map);
           deleteF.active = false;
           scope.deleteF = deleteF;
           map.addInteraction(deleteF);

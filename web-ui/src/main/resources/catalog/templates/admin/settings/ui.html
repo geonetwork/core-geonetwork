@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12"  data-ng-controller="GnSystemSettingsController">
-      
+
       <div class="navbar btn-toolbar">
         <form class="form-inline">
           <div class="well well-lg"
@@ -48,11 +48,14 @@
           </div>
         </form>
       </div>
-      
+
       <div class="panel panel-default"
            data-ng-show="uiConfiguration">
         <div class="panel-heading">
           <span data-translate="">ui</span>
+
+          <div data-gn-need-help="administrator-guide/configuring-the-catalog/user-interface-configuration.html"
+               class="pull-right"></div>
         </div>
         <div class="panel-body">
           <div class="row">
@@ -107,9 +110,6 @@
             <span class="fa fa-save"></span>
             {{"saveSettings"|translate}}
           </button>
-
-          <div data-gn-need-help="administrator-guide/configuring-the-catalog/system-configuration.html"
-              class="pull-right"></div>
         </div>
       </div>
     </div>

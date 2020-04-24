@@ -28,10 +28,12 @@
 
   module.directive(
       'gnMdValidationTools', ['gnConfig', '$http', '$interval',
-      'gnAlertService', '$translate', 'gnPopup',
-      'gnCurrentEdit', 'gnConfigService',
+      'gnAlertService', '$translate', 'gnPopup', '$timeout',
+      'gnCurrentEdit', 'gnConfigService', 'gnSearchManagerService', 'Metadata',
         function(gnConfig, $http, $interval, gnAlertService,
-                 $translate, gnPopup, gnCurrentEdit, gnConfigService) {
+                 $translate, gnPopup, $timeout,
+                 gnCurrentEdit, gnConfigService,
+                 gnSearchManagerService, Metadata) {
           return {
             restrict: 'AEC',
             replace: true,
@@ -41,23 +43,37 @@
               scope.isDownloadingRecord = false;
               scope.isDownloadedRecord = false;
               scope.isEnabled = false;
+              scope.testSuites = {}
+
+
 
               scope.$watch('gnCurrentEdit.uuid', function(newValue, oldValue) {
+                if (newValue == undefined) {
+                  return;
+                }
                 scope.isEnabled = true;
                 scope.inspMdUuid = newValue;
+                scope.md = gnCurrentEdit.metadata;
+                $http({
+                  method: 'GET',
+                  url: '../api/records/' + scope.inspMdUuid +
+                    '/validate/inspire/testsuites'
+                }).then(function(r) {
+                  scope.testsuites = r.data;
+                });
 
                 gnConfigService.load().then(function(c) {
-                  // INSPIRE validator only support ISO19139 records.
-                  // TODO: For other schema support we may need to convert the record
-                  // to ISO19139 first. eg. ISO19115-3
+                  // INSPIRE validator only support ISO19139/115-3 records.
+                  // This assume that those schema have and ISO19139 formatter
+                  // which is the format supported by the validator
                   scope.isInspireValidationEnabled =
                     gnConfig[gnConfig.key.isInspireEnabled] &&
                     angular.isString(gnConfig['system.inspire.remotevalidation.url']) &&
-                    (gnCurrentEdit.schema === 'iso19139');
+                    gnCurrentEdit.schema.match(/iso19139|iso19115-3/) != null;
                 });
               });
 
-              scope.validateInspire = function() {
+              scope.validateInspire = function(test) {
 
                 if (scope.isEnabled) {
 
@@ -67,7 +83,7 @@
                   $http({
                     method: 'PUT',
                     url: '../api/records/' + scope.inspMdUuid +
-                    '/validate/inspire'
+                    '/validate/inspire?testsuite=' + test
                   }).then(function mySucces(response) {
                     if (angular.isDefined(response.data) && response.data != null) {
                       scope.checkInBackgroud(response.data);
@@ -107,6 +123,17 @@
                 }
               };
 
+              function reloadRecord() {
+                gnSearchManagerService.gnSearch({
+                  _id: gnCurrentEdit.id,
+                  _content_type: 'json',
+                  _isTemplate: 'y or n or s',
+                  _draft: 'y or n or e',
+                  fast: 'index'
+                }).then(function(data) {
+                  scope.md = new Metadata(data.metadata[0]);
+                });
+              }
               scope.checkInBackgroud = function(token) {
                 scope.stop = undefined;
                 scope.stop = $interval(function() {
@@ -123,7 +150,9 @@
                       scope.reportStatus = response.data.status;
                       scope.reportURL = response.data.report;
                       scope.showDisclaimer(scope.reportURL, scope.reportStatus);
-
+                      $timeout(function() {
+                        reloadRecord();
+                      }, 5000);
                     } else if (response.status == 201) {
                       // continue
                     }

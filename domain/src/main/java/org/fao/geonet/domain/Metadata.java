@@ -23,14 +23,15 @@
 
 package org.fao.geonet.domain;
 
-import org.apache.lucene.document.Document;
-import org.fao.geonet.domain.userfeedback.UserFeedback;
-import org.fao.geonet.entitylistener.MetadataEntityListenerManager;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
@@ -39,10 +40,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
+import org.apache.lucene.document.Document;
+import org.fao.geonet.domain.userfeedback.UserFeedback;
+import org.fao.geonet.entitylistener.MetadataEntityListenerManager;
 
 /**
  * @See {@link AbstractMetadata}
@@ -56,11 +57,10 @@ public class Metadata extends AbstractMetadata implements Serializable {
 
     private static final long serialVersionUID = -5557599895424227101L;
     public static final String TABLENAME = "Metadata";
-    private Set<MetadataCategory> metadataCategories = new HashSet<MetadataCategory>();
+    public static final String METADATA_CATEG_JOIN_TABLE_NAME = "MetadataCateg";
     private List<UserFeedback> userFeedbacks;
 
     public Metadata() {
-        super();
     }
 
     public static Metadata createFromLuceneIndexDocument(Document doc) {
@@ -75,8 +75,12 @@ public class Metadata extends AbstractMetadata implements Serializable {
      *
      * @return the metadata categories
      */
-    @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.REFRESH }, fetch = FetchType.EAGER)
-    @JoinTable(name = METADATA_CATEG_JOIN_TABLE_NAME, joinColumns = @JoinColumn(name = "metadataId"), inverseJoinColumns = @JoinColumn(name = METADATA_CATEG_JOIN_TABLE_CATEGORY_ID))
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH},
+            fetch = FetchType.EAGER)
+    @JoinTable(name = METADATA_CATEG_JOIN_TABLE_NAME,
+            joinColumns = @JoinColumn(name = "metadataId"),
+            inverseJoinColumns = @JoinColumn(name =
+            METADATA_CATEG_JOIN_TABLE_CATEGORY_ID))
     @Nonnull
     public Set<MetadataCategory> getMetadataCategories() {
         return metadataCategories;
@@ -87,7 +91,7 @@ public class Metadata extends AbstractMetadata implements Serializable {
      *
      * @param categories
      */
-    public void setMetadataCategories(@Nonnull Set<MetadataCategory> categories) {
+    protected void setMetadataCategories(@Nonnull Set<MetadataCategory> categories) {
         this.metadataCategories = categories;
     }
 

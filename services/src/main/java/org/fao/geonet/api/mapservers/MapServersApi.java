@@ -32,12 +32,14 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.mapservers.model.AnonymousMapserver;
 import org.fao.geonet.api.records.attachments.FilesystemStore;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.MapServer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MapServerRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -59,8 +61,8 @@ import static org.fao.geonet.api.mapservers.MapServersUtils.*;
  */
 
 @RequestMapping(value = {
-    "/api/mapservers",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/mapservers",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/mapservers"
 })
 @Api(value = "mapservers",
@@ -74,6 +76,19 @@ public class MapServersApi {
     public static final String MSG_MAPSERVER_WITH_ID_NOT_FOUND = "Mapserver with id '%s' not found.";
     @Autowired
     LanguageUtils languageUtils;
+
+    @Autowired
+    MapServerRepository mapServerRepository;
+
+    @Autowired
+    @Qualifier("resourceStore")
+    Store store;
+
+    @Autowired
+    SettingManager settingManager;
+
+    @Autowired
+    GeonetHttpRequestFactory requestFactory;
 
     @ApiOperation(
         value = "Get mapservers",
@@ -100,10 +115,7 @@ public class MapServersApi {
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
     List<AnonymousMapserver> getMapservers() throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-
-        List<MapServer> mapServers = applicationContext.getBean(MapServerRepository.class)
-            .findAll();
+        List<MapServer> mapServers = mapServerRepository.findAll();
         List<AnonymousMapserver> list = new ArrayList<>(mapServers.size());
         mapServers.stream().forEach(e -> list.add(new AnonymousMapserver(e)));
         return list;
@@ -133,10 +145,7 @@ public class MapServersApi {
             example = "")
         @PathVariable String mapserverId
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        MapServer mapserver =
-            applicationContext.getBean(MapServerRepository.class)
-                .findOneById(mapserverId);
+        MapServer mapserver = mapServerRepository.findOneById(mapserverId);
         if (mapserver == null) {
             throw new ResourceNotFoundException(String.format(
                 MSG_MAPSERVER_WITH_ID_NOT_FOUND,
@@ -177,18 +186,14 @@ public class MapServersApi {
         @RequestBody
             MapServer mapserver
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        MapServerRepository repo =
-            applicationContext.getBean(MapServerRepository.class);
-
-        MapServer existingMapserver = repo.findOneById(mapserver.getId());
+        MapServer existingMapserver = mapServerRepository.findOneById(mapserver.getId());
         if (existingMapserver != null) {
             throw new IllegalArgumentException(String.format(
                 "Mapserver with id '%d' already exists.",
                 mapserver.getId()
             ));
         } else {
-            repo.save(mapserver);
+            mapServerRepository.save(mapserver);
         }
         return new ResponseEntity<>(mapserver.getId(), HttpStatus.CREATED);
     }
@@ -225,13 +230,9 @@ public class MapServersApi {
         @RequestBody
             MapServer mapserver
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        MapServerRepository repo =
-            applicationContext.getBean(MapServerRepository.class);
-
-        MapServer existingMapserver = repo.findOneById(mapserverId);
+        MapServer existingMapserver = mapServerRepository.findOneById(mapserverId);
         if (existingMapserver != null) {
-            updateMapserver(mapserverId, mapserver, repo);
+            updateMapserver(mapserverId, mapserver, mapServerRepository);
         } else {
             throw new ResourceNotFoundException(String.format(
                 MSG_MAPSERVER_WITH_ID_NOT_FOUND,
@@ -279,13 +280,9 @@ public class MapServersApi {
         @RequestParam
             String password
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        MapServerRepository repository =
-            applicationContext.getBean(MapServerRepository.class);
-
-        MapServer existingMapserver = repository.findOneById(mapserverId);
+        MapServer existingMapserver = mapServerRepository.findOneById(mapserverId);
         if (existingMapserver != null) {
-            repository.update(mapserverId, entity -> {
+            mapServerRepository.update(mapserverId, entity -> {
                 entity.setUsername(username);
                 entity.setPassword(password);
             });
@@ -342,12 +339,9 @@ public class MapServersApi {
         )
         @PathVariable Integer mapserverId
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        MapServerRepository repo =
-            applicationContext.getBean(MapServerRepository.class);
-        MapServer m = repo.findOneById(mapserverId);
+        MapServer m = mapServerRepository.findOneById(mapserverId);
         if (m != null) {
-            repo.delete(m);
+            mapServerRepository.delete(m);
         } else {
             throw new ResourceNotFoundException(String.format(
                 MSG_MAPSERVER_WITH_ID_NOT_FOUND,
@@ -533,20 +527,13 @@ public class MapServersApi {
         metadataAbstract = metadataAbstract.replace("\\n", "");
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        MapServerRepository repo =
-            applicationContext.getBean(MapServerRepository.class);
-        FilesystemStore store = applicationContext.getBean(FilesystemStore.class);
-        MapServer m = repo.findOneById(mapserverId);
+        MapServer m = mapServerRepository.findOneById(mapserverId);
         GeoServerNode g = new GeoServerNode(m);
 
 
         ServiceContext context = ApiUtils.createServiceContext(request);
-        context.setAsThreadLocal();
 
-        SettingManager settingManager = applicationContext.getBean(SettingManager.class);
         String baseUrl = settingManager.getSiteURL(context);
-        final GeonetHttpRequestFactory requestFactory =
-            applicationContext.getBean(GeonetHttpRequestFactory.class);
         GeoServerRest gs = new GeoServerRest(requestFactory, g.getUrl(),
             g.getUsername(), g.getUserpassword(),
             g.getNamespacePrefix(), baseUrl, settingManager.getNodeURL(),
@@ -582,10 +569,11 @@ public class MapServersApi {
                     metadataUuid, metadataTitle, metadataAbstract);
             } else {
                 // Get ZIP file from data directory
-                Path f = store.getResource(context, metadataUuid, resource);
-                return addZipFile(action, gs,
-                    f, resource,
-                    metadataUuid, metadataTitle, metadataAbstract);
+                try (Store.ResourceHolder f = store.getResource(context, metadataUuid, resource)) {
+                    return addZipFile(action, gs,
+                                      f.getPath(), resource,
+                                      metadataUuid, metadataTitle, metadataAbstract);
+                }
             }
         }
     }

@@ -69,7 +69,7 @@ public class UploadAndProcess {
     @Autowired
     private ServiceManager serviceManager;
 
-    @RequestMapping(value = {"/{lang}/resource.upload.and.link", "/{lang}/resource-onlinesrc-upload"}, produces = {
+    @RequestMapping(value = {"/{portal}/{lang}/resource.upload.and.link", "/{portal}/{lang}/resource-onlinesrc-upload"}, produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public IdResponse exec(HttpServletRequest request,
@@ -98,7 +98,7 @@ public class UploadAndProcess {
 
         String fname = file.getOriginalFilename();
         String fsize = Long.toString(file.getSize());
-        IResourceUploadHandler uploadHook = (IResourceUploadHandler) context.getApplicationContext().getBean("resourceUploadHandler");
+        IResourceUploadHandler uploadHook = context.getBean("resourceUploadHandler", IResourceUploadHandler.class);
         uploadHook.onUpload(file.getInputStream(), context, access, overwrite, Integer.parseInt(id), fname, Double.parseDouble(fsize));
 
 
@@ -118,7 +118,7 @@ public class UploadAndProcess {
         try {
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
             processedMetadata = XslProcessUtils.process(context, id, process,
-                true, true, report, siteURL, allParams);
+                true, true, true, report, siteURL, allParams);
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
                     + report.getNumberOfRecordNotFound() + ", Not owner:" + report.getNumberOfRecordsNotEditable()

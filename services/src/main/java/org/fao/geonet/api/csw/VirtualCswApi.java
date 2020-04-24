@@ -30,6 +30,7 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Service;
 import org.fao.geonet.repository.ServiceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,8 +42,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequestMapping(value = {
-    "/api/csw/virtuals",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/csw/virtuals",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/csw/virtuals"
 })
 @Api(value = "csw",
@@ -53,6 +54,10 @@ public class VirtualCswApi {
 
     public static final String API_PARAM_CSW_SERVICE_IDENTIFIER = "Service identifier";
     public static final String API_PARAM_CSW_SERVICE_DETAILS = "Service details";
+
+    @Autowired
+    private ServiceRepository serviceRepository;
+
 
     @ApiOperation(
         value = "Get virtual CSW services",
@@ -70,8 +75,6 @@ public class VirtualCswApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<Service> getAllVirtualCsw() throws Exception {
-        ServiceRepository serviceRepository =
-            ApplicationContextHolder.get().getBean(ServiceRepository.class);
         return serviceRepository.findAll();
     }
 
@@ -96,8 +99,6 @@ public class VirtualCswApi {
         @PathVariable
             int identifier
     ) throws Exception {
-        ServiceRepository serviceRepository =
-            ApplicationContextHolder.get().getBean(ServiceRepository.class);
         Service service = serviceRepository.findOne(identifier);
         if (service == null) {
             throw new ResourceNotFoundException(String.format(
@@ -138,9 +139,6 @@ public class VirtualCswApi {
         @RequestBody
             Service service
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceRepository serviceRepository =
-            applicationContext.getBean(ServiceRepository.class);
 
         Service existing = serviceRepository.findOneByName(service.getName());
         if (existing != null) {
@@ -148,7 +146,12 @@ public class VirtualCswApi {
                 "A service already exist with this name '%s'. Choose another name.",
                 service.getName()));
         }
+        service.getParameters().forEach(p -> {
+            p.setService(service);
+        });
         serviceRepository.save(service);
+
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
         applicationContext.getBean(JeevesEngine.class)
             .loadConfigDB(applicationContext, service.getId());
         return new ResponseEntity<>(service.getId(), HttpStatus.CREATED);
@@ -186,10 +189,6 @@ public class VirtualCswApi {
         @RequestBody
             Service service
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceRepository serviceRepository =
-            applicationContext.getBean(ServiceRepository.class);
-
         Service existing = serviceRepository.findOne(identifier);
         if (existing != null) {
             // Attach params to service in case not set by client.
@@ -203,6 +202,7 @@ public class VirtualCswApi {
                 identifier
             ));
         }
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
         applicationContext.getBean(JeevesEngine.class)
             .loadConfigDB(applicationContext, identifier);
     }
@@ -233,13 +233,11 @@ public class VirtualCswApi {
         @PathVariable
             int identifier
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceRepository serviceRepository =
-            applicationContext.getBean(ServiceRepository.class);
         Service existing = serviceRepository.findOne(identifier);
         if (existing != null) {
             serviceRepository.delete(identifier);
 
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
             applicationContext.getBean(JeevesEngine.class)
                 .loadConfigDB(applicationContext, Integer.valueOf(identifier));
         } else {

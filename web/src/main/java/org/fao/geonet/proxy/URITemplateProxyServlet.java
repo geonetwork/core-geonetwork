@@ -26,7 +26,8 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
                 "Access-Control-Allow-Origin",
                 "Vary",
                 "Access-Control-Allow-Credentials",
-                "Strict-Transport-Security"};
+                "Strict-Transport-Security",
+                "Etag"};
         for (String header : headers) {
             hopByHopHeaders.addHeader(new BasicHeader(header, null));
         }

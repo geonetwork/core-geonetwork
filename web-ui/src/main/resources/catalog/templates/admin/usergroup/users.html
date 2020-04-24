@@ -34,11 +34,9 @@
           <i class="fa fa-plus"/>
           <span data-translate="">newUser</span>
         </button>
-
-        <div
-          data-gn-need-help="administrator-guide/managing-users-and-groups/creating-user.html"></div>
       </div>
     </div>
+    <div data-gn-need-help="administrator-guide/managing-users-and-groups/creating-user.html"></div>
   </div>
 
   <div class="col-lg-8" data-ng-hide="userSelected.id == null">
@@ -65,9 +63,8 @@
           >saveUser</span></button>
           <button type="button" class="btn pull-right btn-danger"
                   data-ng-disabled="searchResults.count > 0"
-                  data-ng-show="user.isUserAdminOrMore()"
+                  data-ng-show="user.isUserAdminOrMore() && (userSelected.id && userSelected.id >= 0)"
                   data-gn-confirm-click="{{'userDeleteConfirm' | translate}}"
-                  data-ng-hide="!userSelected.id || userSelected.id<0"
                   data-ng-click="deleteUser(userSelected.id)" id="gn-btn-user-delete">
             <i class="fa fa-times"></i> <span data-translate=""
           >deleteUser</span></button>
@@ -91,7 +88,8 @@
               </div>
             </div>
 
-            <div data-ng-class="gnUserEdit.username.$error.required ? 'has-error' : ''"
+            <div data-ng-class="gnUserEdit.username.$error.required ||
+                                gnUserEdit.username.$error.gnDuplicateCheck ? 'has-error' : ''"
                  class="form-group">
               <label class="control-label col-sm-3" data-translate="">username</label>
               <div class="col-sm-9">
@@ -99,9 +97,17 @@
                        class="form-control"
                        data-ng-model="userSelected.username"
                        data-ng-required="true"
+                       required=""
+                       data-ng-model-options="{debounce: 200}"
+                       data-gn-duplicate-check="userSelected.username"
+                       data-gn-duplicate-check-apply="userOperation == 'newuser'"
+                       data-gn-duplicate-check-remote="../api/users/properties/userid?exist={value}"
                        data-ng-disabled="!user.isUserAdminOrMore()"
                        autocomplete="off"/>
                 <p class="help-block" data-translate="">usernameHelp</p>
+                <p class="help-block"
+                   ng-if="gnUserEdit.username.$error.gnDuplicateCheck"
+                   data-translate="">duplicatedValueFoundUserName</p>
               </div>
             </div>
             <!-- Password are disabled when updating user -->

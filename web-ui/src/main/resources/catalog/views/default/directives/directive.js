@@ -86,8 +86,9 @@
     }
   ]);
 
-  module.directive('gnMdActionsMenu', ['gnMetadataActions', '$http', 'gnConfig',
-    function(gnMetadataActions, $http, gnConfig) {
+  module.directive('gnMdActionsMenu', ['gnMetadataActions',
+    '$http', 'gnConfig', 'gnConfigService', 'gnGlobalSettings',
+    function(gnMetadataActions, $http, gnConfig, gnConfigService, gnGlobalSettings) {
       return {
         restrict: 'A',
         replace: true,
@@ -96,9 +97,14 @@
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
+          scope.formatterList = gnGlobalSettings.gnCfg.mods.search.downloadFormatter;
 
           scope.tasks = [];
           scope.hasVisibletasks = false;
+
+          gnConfigService.load().then(function(c) {
+            scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
+          });
 
           function loadTasks() {
             return $http.get('../api/status/task', {cache: true}).
@@ -110,7 +116,9 @@
 
           scope.getVisibleTasks = function() {
             $.each(scope.tasks, function(i,t) {
-              scope.hasVisibletasks = scope.taskConfiguration[t.name].isVisible();
+              scope.hasVisibletasks = scope.taskConfiguration[t.name] &&
+                scope.taskConfiguration[t.name].isVisible &&
+                scope.taskConfiguration[t.name].isVisible();
             });
           }
 

@@ -54,7 +54,6 @@
         <sec:filter-chain pattern="/static/wroAPI" filters=""/>-->
         <sec:filter-chain pattern="/static/**" filters=""/>
         <sec:filter-chain pattern="/catalog/**" filters=""/>
-        <sec:filter-chain pattern="/test/**" filters=""/>
         <sec:filter-chain pattern="/" filters=""/>
         <sec:filter-chain pattern="/*.html" filters=""/>
         <sec:filter-chain pattern="/*.jsp" filters=""/>
@@ -69,15 +68,6 @@
         <sec:filter-chain pattern="/xsl/harvesting/**" filters=""/>
         <sec:filter-chain pattern="/xsl/ownership/**" filters=""/>
         <ref bean="coreFilterChain"/>
-        <!-- <sec:filter-chain pattern="/**" filters="securityContextPersistenceFilter,
-                logoutFilter,
-                formLoginFilter,
-               basicAuthenticationFilter,
-                requestCacheFilter,
-                anonymousFilter,
-                sessionMgmtFilter,
-               exceptionTranslationFilter,
-               filterSecurityInterceptor" /> -->
       </list>
     </constructor-arg>
   </bean>
@@ -103,7 +93,6 @@
         <ref bean="logoutFilter"/>
         <!-- A filter that check if an external service already authenticated user
                      (default implementation does nothing but can be overridden) -->
-        <ref bean="multiNodeAuthenticationFilter"/>
         <ref bean="preAuthenticationFilter"/>
         <ref bean="basicAuthenticationFilter"/>
         <ref bean="formLoginFilter"/>
@@ -117,10 +106,6 @@
   </bean>
   <!-- A filter that check if an external service already authenticated user
                      (default implementation does nothing but can be overridden) -->
-  <bean id="multiNodeAuthenticationFilter"
-        class="jeeves.config.springutil.MultiNodeAuthenticationFilter">
-    <property name="location" value="${wrongNodeRedirectURL}"/>
-  </bean>
   <bean id="preAuthenticationFilter" class="jeeves.config.springutil.PassthroughFilter"/>
   <bean id="securityContextPersistenceFilter"
         class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
@@ -166,7 +151,6 @@
         <constructor-arg name="pattern" value="/signin"/>
       </bean>
     </property>
-    <property name="authenticationDetailsSource" ref="authenticationDetailsSource"/>
     <property name="authenticationFailureHandler">
       <bean
         class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
@@ -194,11 +178,7 @@
         class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
     <constructor-arg index="0" ref="authenticationManager"/>
     <constructor-arg index="1" ref="basicAuthenticationEntryPoint"/>
-    <property name="authenticationDetailsSource" ref="authenticationDetailsSource"/>
   </bean>
-
-  <bean id="authenticationDetailsSource"
-        class="jeeves.config.springutil.JeevesAuthenticationDetailSource"/>
 
   <bean id="basicAuthenticationEntryPoint"
         class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
@@ -228,6 +208,7 @@
   <bean id="logoutSuccessHandler"
         class="jeeves.config.springutil.JeevesNodeAwareLogoutSuccessHandler">
     <property name="defaultTargetUrl" value="${logout.success.url}"></property>
+    <property name="targetUrlParameter" value="redirectUrl"/>
   </bean>
   <bean id="requestCacheFilter"
         class="org.springframework.security.web.savedrequest.RequestCacheAwareFilter"/>
@@ -240,7 +221,7 @@
   </bean>
 
   <bean id="defaultAuthenticationEntryPoint"
-        class="jeeves.config.springutil.JeevesNodeAwareLoginUrlEntryPoint">
+        class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
     <constructor-arg name="loginFormUrl" value="${loginForm}"/>
   </bean>
 

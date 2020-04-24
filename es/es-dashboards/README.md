@@ -2,13 +2,13 @@
 
 ### Manual installation
 
-Download Kibana from https://www.elastic.co/fr/downloads/kibana
+Download Kibana from https://www.elastic.co/fr/downloads/kibana. For Geonetwork 3.8.x download at least version 7.2.1
 
 Set Kibana base path and index name in config/kibana.yml:
 
 ```
 server.basePath: "/geonetwork/dashboards"
-
+server.rewriteBasePath: false
 kibana.index: ".dashboards"
 
 ```
@@ -24,54 +24,9 @@ cd kibana/bin
 ./kibana
 ```
 
-
-Start GeoNetwork, Kibana should be running from:
-
-```
-http://localhost:8080/geonetwork/dashboard
-
-```
-
-If not starting properly, check Kibana log file (eg. may fail if Elasticsearch version
-is not compatible with Kibana version).
-
-
-Export/Import configuration:
-```
-npm install elasticdump -g
-
-cd data
-
-# Export 
-
-elasticdump \
-  --input=http://localhost:9200/.dashboards \
-  --output=index-dashboards-mapping.json \
-  --type=mapping
-
-elasticdump \
-  --input=http://localhost:9200/.dashboards \
-  --output=index-dashboards.json
-  
-  
-# Import 
-
-elasticdump \
-  --input=index-dashboards-mapping.json \
-  --output=http://localhost:9200/.dashboards \
-  --type=mapping
-
-elasticdump \
-  --input=index-dashboards.json \
-  --output=http://localhost:9200/.dashboards 
-  
-```
-
-
-
 ### Maven installation
 
-Maven could take care of the installation steps:
+Maven can take care of the installation steps:
 * download
 * initialize collection
 * start
@@ -83,4 +38,32 @@ cd es/es-dashboard
 mvn install -Pkb-download
 mvn exec:exec -Dkb-start
 ```
+
+### Import Configuration
+
+Kibana should be running from:
+
+```
+http://localhost:5601
+
+```
+ and should be visible within the geonetwork interface at:
+ 
+```
+http://localhost:8080/geonetwork/dashboards
+
+```
+
+If it does not start properly, check Kibana log files (eg. it may fail if Elasticsearch version
+is not compatible with Kibana version).
+
+Visit Kibana in a browser using one of the above links and go to 'Saved Objects'. Import export.json from https://github.com/geonetwork/core-geonetwork/blob/master/es/es-dashboards/data/export.json
+
+### Production Use
+
+Kibana can be installed from the debian files, and 7.3.2 is confirmed as working with Geonetwork 3.8.x.
+
+Set Kibana to start when the server starts up, using the instructions at https://www.elastic.co/guide/en/kibana/current/start-stop.html
+
+
 

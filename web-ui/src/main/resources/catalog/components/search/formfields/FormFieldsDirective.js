@@ -128,6 +128,7 @@
               }, config)).on('typeahead:selected', function(event, datum) {
                 field.typeahead('val', '');
                 $(element).tagsinput('add', datum);
+                field.data('ttTypeahead').input.trigger('queryChanged');
               });
 
               function allOrSearchFn(q, sync) {
@@ -164,6 +165,16 @@
                   scope.$apply();
                 }
                 refreshDatum();
+              });
+
+              scope.$on('beforeSearchReset', function(){
+                field.typeahead('val', '');
+                stringValues= [];
+                for (i = 0; i < prev.length; i++) {
+                  $(element).tagsinput('remove', prev[i]);
+                }
+                prev = [];
+                field.data('ttTypeahead').input.trigger('queryChanged');
               });
 
               // model -> ui
@@ -274,6 +285,8 @@
             ownerGroup: '=',
             lang: '=',
             groups: '=',
+            disabled: '=?',
+            optional: '@?',
             excludeSpecialGroups: '='
           },
 
@@ -282,7 +295,9 @@
             if (attrs.profile) {
               url = '../api/groups?profile=' + attrs.profile;
             }
-            var optional = attrs.hasOwnProperty('optional');
+            var optional = scope.optional != 'false' ? true : false;
+            var setDefaultValue = attrs['setDefaultValue'] == 'false' ? false : true;
+            scope.disabled = scope.disabled ? true : false;
 
             $http.get(url, {cache: true}).
                 success(function(data) {
@@ -300,9 +315,12 @@
                   }
 
                   // Select by default the first group.
-                  if ((angular.isUndefined(scope.ownerGroup) ||
-                    scope.ownerGroup === '') && data) {
-                    scope.ownerGroup = scope.groups[0].id;
+                  if (setDefaultValue && (angular.isUndefined(scope.ownerGroup) ||
+                    scope.ownerGroup === '' ||
+                    scope.ownerGroup === null) && data) {
+                    // Requires to be converted to string, otherwise
+                    // angularjs adds empty non valid option
+                    scope.ownerGroup = scope.groups[0].id + "";
                   }
                   if (optional) {
                     scope.groups.unshift({
@@ -312,7 +330,6 @@
                   }
                 });
           }
-
         };
       }])
 
@@ -618,6 +635,14 @@
                     }
                   });
 
+              scope.codelistFilter = '';
+              scope.$watch('gnCurrentEdit.codelistFilter',
+                function(n, o) {
+                  if (n && n !== o) {
+                    scope.codelistFilter = n;
+                    init();
+                  }
+                });
               var init = function() {
                 var schema = attrs['schema'] ||
                     gnCurrentEdit.schema || 'iso19139';
@@ -625,14 +650,14 @@
 
                 scope.type = attrs['schemaInfoCombo'];
                 if (scope.type == 'codelist') {
-                  gnSchemaManagerService.getCodelist(config).then(
+                  gnSchemaManagerService.getCodelist(config, scope.codelistFilter).then(
                       function(data) {
                         scope.infos = angular.copy(data.entry);
                         addBlankValueAndSetDefault();
                       });
                 }
                 else if (scope.type == 'element') {
-                  gnSchemaManagerService.getElementInfo(config).then(
+                  gnSchemaManagerService.getElementInfo(config, scope.codelistFilter).then(
                       function(data) {
                         scope.infos = data.helper ? data.helper.option : null;
                         addBlankValueAndSetDefault();
@@ -698,14 +723,14 @@
    * @name gn_formfields.directive:gnBboxInput
    * @restrict A
    * @requires gnMap
-   * @requires ngeoDecorateInteraction
+   * @requires olDecorateInteraction
    *
    * @description
    * The `gnBboxInput` directive provides an input widget for bounding boxes.
    */
       .directive('gnBboxInput', [
         'gnMap',
-        'ngeoDecorateInteraction',
+        'olDecorateInteraction',
         function(gnMap, goDecoI) {
 
           var extentFromValue = function(str) {

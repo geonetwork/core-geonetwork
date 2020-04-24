@@ -293,7 +293,7 @@
   module.value('gnHttpServices', {
     mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
     mdGetRDF: 'rdf.metadata.get',
-    mdGetMEF: 'mef.export',
+    mdGetMEF: 'mef.export', // Deprecated service
     mdGetXML19139: 'xml_iso19139',
     csv: 'csv.search',
 
@@ -511,16 +511,20 @@
          */
         getServiceURL: function() {
           var port = '';
-          if(gnConfig['system.server.protocol']==='http' &&
+          if (gnConfig['system.server.protocol'] === 'http' &&
              gnConfig['system.server.port'] &&
-             gnConfig['system.server.port']!=null &&
-             gnConfig['system.server.port']!=80) {
-            port = ':'+gnConfig['system.server.port'];
-          } else if(gnConfig['system.server.protocol']==='https' &&
-             gnConfig['system.server.port'] &&
-             gnConfig['system.server.port']!=null &&
-             gnConfig['system.server.port']!=443) {
-            port = ':'+gnConfig['system.server.port'];
+             gnConfig['system.server.port'] != null &&
+             gnConfig['system.server.port'] != 80) {
+
+            port = ':' + gnConfig['system.server.port'];
+
+          } else if (gnConfig['system.server.protocol'] === 'https' &&
+             gnConfig['system.server.securePort'] &&
+             gnConfig['system.server.securePort'] != null &&
+             gnConfig['system.server.securePort'] != 443) {
+
+            port = ':' + gnConfig['system.server.securePort'];
+
           }
 
           var url = gnConfig['system.server.protocol'] + '://' +
@@ -550,7 +554,7 @@
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
         'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails',
-        'creationDate', 'publicationDate', 'revisionDate'];
+        'creationDate', 'publicationDate', 'revisionDate', 'spatialRepresentationType_text'];
       var listOfJsonFields = ['keywordGroup', 'crsDetails'];
       // See below; probably not necessary
       var record = this;
@@ -723,8 +727,8 @@
         return ret;
       },
       getThumbnails: function() {
+        var images = {list: []};
         if (angular.isArray(this.image)) {
-          var images = {list: []};
           for (var i = 0; i < this.image.length; i++) {
             var s = this.image[i].split('|');
             var insertFn = 'push';
@@ -734,8 +738,19 @@
             } else if (s[0] === 'overview') {
               images.big = s[1];
             }
+
+            //Is it a draft?
+            if( s[1].indexOf("/api/records/") >= 0
+                &&  s[1].indexOf("/api/records/")<  s[1].indexOf("/attachments/")) {
+              s[1] += "?approved=" + (this.draft != 'y');
+            }
+
+
             images.list[insertFn]({url: s[1], label: s[2]});
           }
+        } else if (angular.isDefined(this.image)){
+          var s = this.image.split('|');
+          images.list.push({url: s[1], label: s[2]});
         }
         return images;
       },
@@ -759,7 +774,8 @@
               name: s[5] || '',
               position: s[6] || '',
               address: s[7] || '',
-              phone: s[8] || ''
+              phone: s[8] || '',
+              website: s[11] || ''
             };
             if (s[1] === 'resource') {
               this.allContacts.resource.push(contact);

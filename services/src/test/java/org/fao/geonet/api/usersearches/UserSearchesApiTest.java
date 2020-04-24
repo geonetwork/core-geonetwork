@@ -75,23 +75,23 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/api/usersearches")
+        this.mockMvc.perform(get("/srv/api/usersearches")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(2)))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(jsonPath("$", hasSize(3)))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
     @Test
     public void getFeaturedUserSearches() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(get("/api/usersearches/featured")
+        this.mockMvc.perform(get("/srv/api/usersearches/featured")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
     @Test
@@ -103,7 +103,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(delete("/api/usersearches/" + userSearchToDelete.getId())
+        this.mockMvc.perform(delete("/srv/api/usersearches/" + userSearchToDelete.getId())
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -130,9 +130,9 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        MvcResult result = this.mockMvc.perform(put("/api/usersearches")
+        MvcResult result = this.mockMvc.perform(put("/srv/api/usersearches")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(201))
@@ -162,9 +162,9 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(put("/api/usersearches/" + userSearchId)
+        this.mockMvc.perform(put("/srv/api/usersearches/" + userSearchId)
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));

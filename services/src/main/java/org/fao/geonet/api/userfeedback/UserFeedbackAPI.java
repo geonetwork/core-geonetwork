@@ -48,8 +48,8 @@ import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.userfeedback.UserFeedbackUtils.RatingAverage;
 import org.fao.geonet.api.userfeedback.service.IUserFeedbackService;
 import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.userfeedback.RatingCriteria;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
@@ -61,8 +61,6 @@ import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -87,12 +85,23 @@ import springfox.documentation.annotations.ApiIgnore;
 /**
  * User Feedback REST API.
  */
-@RequestMapping(value = { "/api", "/api/" + API.VERSION_0_1 })
+@RequestMapping(value = { "/{portal}/api", "/{portal}/api/" + API.VERSION_0_1 })
 @Api(value = "userfeedback", tags = "userfeedback",
     description = "User feedback")
 @Controller("userfeedback")
 public class UserFeedbackAPI {
 
+    @Autowired
+    LanguageUtils languageUtils;
+
+    @Autowired
+    SettingManager settingManager;
+
+    @Autowired
+    RatingCriteriaRepository criteriaRepository;
+
+    @Autowired
+    MetadataRepository metadataRepository;
 
     /**
      * Gets rating criteria
@@ -113,15 +122,12 @@ public class UserFeedbackAPI {
     public List<RatingCriteria> getRatingCriteria(
         @ApiIgnore final HttpServletResponse response
     ) {
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
         if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
             response.setStatus(HttpStatus.FORBIDDEN.value());
             return null;
         } else {
-            RatingCriteriaRepository criteriaRepository = appContext.getBean(RatingCriteriaRepository.class);
             return criteriaRepository.findAll();
         }
     }
@@ -151,8 +157,6 @@ public class UserFeedbackAPI {
     final HttpServletRequest request)
             throws Exception {
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
         if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
@@ -193,8 +197,6 @@ public class UserFeedbackAPI {
         @ApiIgnore final HttpServletResponse response,
         @ApiIgnore final HttpSession httpSession) {
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
         if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
@@ -228,7 +230,7 @@ public class UserFeedbackAPI {
 
             return utils.getAverage(userFeedbackService.retrieveUserFeedbackForMetadata(metadataUuid, -1, published));
         } catch (final Exception e) {
-            e.printStackTrace();
+            Log.error(API.LOG_MODULE_NAME, "UserFeedbackAPI - getMetadataRating: " + e.getMessage(), e);
             return null;
         }
     }
@@ -259,8 +261,6 @@ public class UserFeedbackAPI {
           @ApiIgnore final HttpSession httpSession)
             throws Exception {
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
         if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
@@ -389,8 +389,6 @@ public class UserFeedbackAPI {
         int size,
         HttpServletResponse response,
         HttpSession httpSession) {
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
         if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
@@ -423,7 +421,7 @@ public class UserFeedbackAPI {
 
             return listUserfeedback.stream().map(feedback -> UserFeedbackUtils.convertToDto(feedback)).collect(Collectors.toList());
         } catch (final Exception e) {
-            e.printStackTrace();
+            Log.error(API.LOG_MODULE_NAME, "UserFeedbackAPI - getUserFeedback: " + e.getMessage(), e);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             return null;
         }
@@ -438,9 +436,6 @@ public class UserFeedbackAPI {
     private IUserFeedbackService getUserFeedbackService() {
         return (IUserFeedbackService) ApplicationContextHolder.get().getBean("userFeedbackService");
     }
-
-    @Autowired
-    LanguageUtils languageUtils;
 
     /**
      * New user feedback.
@@ -462,8 +457,6 @@ public class UserFeedbackAPI {
         @ApiIgnore final HttpSession httpSession,
         @ApiIgnore final HttpServletRequest request) throws Exception {
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
         if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
@@ -498,7 +491,7 @@ public class UserFeedbackAPI {
 
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (final Exception e) {
-            e.printStackTrace();
+            Log.error(API.LOG_MODULE_NAME, "UserFeedbackAPI - newUserFeedback: " + e.getMessage(), e);
             throw e;
         }
     }
@@ -588,19 +581,15 @@ public class UserFeedbackAPI {
         final String metadataEmail,
         @ApiIgnore final HttpServletRequest request
     ) throws IOException {
-        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        SettingManager sm = applicationContext.getBean(SettingManager.class);
-        MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
-
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
-        boolean recaptchaEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
+        boolean recaptchaEnabled = settingManager.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
 
         if (recaptchaEnabled) {
             boolean validRecaptcha = RecaptchaChecker.verify(recaptcha,
-                sm.getValue(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY));
+                settingManager.getValue(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY));
             if (!validRecaptcha) {
                 return new ResponseEntity<>(
                     messages.getString("recaptcha_not_valid"), HttpStatus.PRECONDITION_FAILED);
@@ -609,14 +598,14 @@ public class UserFeedbackAPI {
 
 
 
-        String to = sm.getValue(SYSTEM_FEEDBACK_EMAIL);
-        String catalogueName = sm.getValue(SYSTEM_SITE_NAME_PATH);
+        String to = settingManager.getValue(SYSTEM_FEEDBACK_EMAIL);
+        String catalogueName = settingManager.getValue(SYSTEM_SITE_NAME_PATH);
 
         List<String> toAddress = new LinkedList<String>();
         toAddress.add(to);
         if (isNotBlank(metadataEmail)) {
             //Check metadata email belongs to metadata security!!
-            Metadata md = metadataRepository.findOneByUuid(metadataUuid);
+            AbstractMetadata md = metadataRepository.findOneByUuid(metadataUuid);
             if(md.getData().indexOf(metadataEmail) > 0) {
                 toAddress.add(metadataEmail);
             }
@@ -631,8 +620,8 @@ public class UserFeedbackAPI {
             String.format(
                 messages.getString("user_feedback_text"),
                 name, org, function, email, phone, title, type, category, comments,
-                sm.getNodeURL(), metadataUuid),
-            sm);
+                settingManager.getNodeURL(), metadataUuid),
+            settingManager);
 
         return new ResponseEntity(HttpStatus.CREATED);
     }
@@ -679,8 +668,6 @@ public class UserFeedbackAPI {
         @ApiIgnore final HttpSession httpSession)
             throws Exception {
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
         if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
@@ -696,7 +683,7 @@ public class UserFeedbackAPI {
         } catch (final ObjectNotFoundException e) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         } catch (final Exception e) {
-            e.printStackTrace();
+            Log.error(API.LOG_MODULE_NAME, "UserFeedbackAPI - publish: " + e.getMessage(), e);
         }
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);

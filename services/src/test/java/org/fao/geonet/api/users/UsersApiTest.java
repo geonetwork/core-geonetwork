@@ -80,12 +80,12 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/api/users")
+        this.mockMvc.perform(get("/srv/api/users")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(5)))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
     @Test
@@ -94,11 +94,11 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/api/users/222")
+        this.mockMvc.perform(get("/srv/api/users/222")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
     @Test
@@ -107,11 +107,11 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/api/users/1")
+        this.mockMvc.perform(get("/srv/api/users/1")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
 
@@ -124,13 +124,13 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/api/users/" + editorUser.getId() + "/groups")
+        this.mockMvc.perform(get("/srv/api/users/" + editorUser.getId() + "/groups")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
             .andExpect(jsonPath("$[0].id.groupId", is(sampleGroup.getId())))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
     @Test
@@ -142,7 +142,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(delete("/api/users/" + userToDelete.getId())
+        this.mockMvc.perform(delete("/srv/api/users/" + userToDelete.getId())
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -161,11 +161,11 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Check 404 is returned
-        this.mockMvc.perform(delete("/api/users/222")
+        this.mockMvc.perform(delete("/srv/api/users/222")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
     @Test
@@ -178,12 +178,12 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAs(user);
 
         // Check 400 is returned and a message indicating that a user can't delete himself
-        this.mockMvc.perform(delete("/api/users/" + user.getId())
+        this.mockMvc.perform(delete("/srv/api/users/" + user.getId())
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
             .andExpect(jsonPath("$.description", is("You cannot delete yourself from the user database")))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
     @Test
@@ -208,12 +208,12 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAs(userAdmin);
 
         // Check 400 is returned and a message indicating that a user can't delete himself
-        this.mockMvc.perform(delete("/api/users/" + userToDelete.getId())
+        this.mockMvc.perform(delete("/srv/api/users/" + userToDelete.getId())
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
             .andExpect(jsonPath("$.description", is("You don't have rights to delete this user because the user is not part of your group")))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
 
@@ -235,9 +235,9 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(put("/api/users")
+        this.mockMvc.perform(put("/srv/api/users")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -264,9 +264,9 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Check 400 is returned and a message indicating that username is required
-        this.mockMvc.perform(put("/api/users")
+        this.mockMvc.perform(put("/srv/api/users")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.description", is("username is a required parameter for newuser operation")))
@@ -292,9 +292,9 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Check 400 is returned and a message indicating that username is duplicated
-        this.mockMvc.perform(put("/api/users")
+        this.mockMvc.perform(put("/srv/api/users")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.description", is("Users with username " + user.getUsername()
@@ -322,9 +322,9 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Check 400 is returned and a message indicating that username is duplicated
-        this.mockMvc.perform(put("/api/users")
+        this.mockMvc.perform(put("/srv/api/users")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.description", is("Users with username " + user.getUsername()
@@ -342,10 +342,10 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(post("/api/users/" + user.getId() + "/actions/forget-password")
+        this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
             .param("password", "newpassword")
             .param("password2", "newpassword")
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -364,10 +364,10 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAs(user);
 
         // Try to update the password of admin user from a user with Editor profile
-        this.mockMvc.perform(post("/api/users/" + admin.getId() + "/actions/forget-password")
+        this.mockMvc.perform(post("/srv/api/users/" + admin.getId() + "/actions/forget-password")
             .param("password", "newpassword")
             .param("password2", "newpassword")
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.description", is("You don't have rights to do this")))
@@ -384,8 +384,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Check 400 is returned and a message indicating that passwords should be equal
-        this.mockMvc.perform(post("/api/users/" + user.getId() + "/actions/forget-password")
-            .contentType(MediaType.APPLICATION_JSON)
+        this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .param("password", "newpassword")
             .param("password2", "newpassword2")
             .session(this.mockHttpSession)
@@ -404,8 +404,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Check 404 is returned
-        this.mockMvc.perform(post("/api/users/" + userId + "/actions/forget-password")
-            .contentType(MediaType.APPLICATION_JSON)
+        this.mockMvc.perform(post("/srv/api/users/" + userId + "/actions/forget-password")
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .param("password", "newpassword")
             .param("password2", "newpassword")
             .session(this.mockHttpSession)
@@ -423,8 +423,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         Assert.assertTrue(user.getProfile().equals(Profile.Editor));
         this.mockHttpSession = loginAs(user);
 
-        this.mockMvc.perform(post("/api/users/" + user.getId() + "/actions/forget-password")
-            .contentType(MediaType.APPLICATION_JSON)
+        this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .param("password", "newpassword")
             .param("password2", "newpassword")
             .session(this.mockHttpSession)
@@ -452,9 +452,9 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(put("/api/users/" + userToUpdate.getId())
+        this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -486,9 +486,9 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Check 400 is returned and a message indicating that username is duplicated
-        this.mockMvc.perform(put("/api/users/" + userToUpdate.getId())
+        this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.description", is("Another user with username "
@@ -521,9 +521,9 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Check 400 is returned and a message indicating that username is duplicated
-        this.mockMvc.perform(put("/api/users/" + userToUpdate.getId())
+        this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.description", is("Another user with username 'testuser-editor' ignore case already exists")))
@@ -555,9 +555,9 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Check 400 is returned and a message indicating that username is duplicated
-        this.mockMvc.perform(put("/api/users/" + userToUpdate.getId())
+        this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -588,9 +588,9 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Check 400 is returned and a message indicating that username is duplicated
-        this.mockMvc.perform(put("/api/users/" + userToUpdate.getId())
+        this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))

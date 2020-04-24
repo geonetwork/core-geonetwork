@@ -32,8 +32,8 @@ import java.util.List;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-        "/api/reports",
-        "/api/" + API.VERSION_0_1
+        "/{portal}/api/reports",
+        "/{portal}/api/" + API.VERSION_0_1
                 + "/reports"
 })
 @Api(value = ApiParams.API_CLASS_RECORD_TAG,

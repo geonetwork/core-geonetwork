@@ -7,6 +7,7 @@ public enum RelatedItemType {
 
     children,
     parent,
+    brothersAndSisters,
     siblings,
     associated,
     services,

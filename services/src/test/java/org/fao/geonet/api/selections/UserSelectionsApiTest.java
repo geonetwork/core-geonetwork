@@ -84,11 +84,11 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void getSelection() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(get("/api/userselections")
+        this.mockMvc.perform(get("/srv/api/userselections")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$", hasSize(2)));
     }
 
@@ -97,7 +97,7 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
     public void deleteNonExistingSelection() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         this.mockHttpSession = loginAsAdmin();
-        this.mockMvc.perform(delete("/api/userselections/99999")
+        this.mockMvc.perform(delete("/srv/api/userselections/99999")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNotFound());
@@ -126,9 +126,9 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(put("/api/userselections")
+        this.mockMvc.perform(put("/srv/api/userselections")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(201));
@@ -163,13 +163,13 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Create
-        MvcResult r = this.mockMvc.perform(put("/api/userselections")
+        MvcResult r = this.mockMvc.perform(put("/srv/api/userselections")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(201))
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andReturn();
 
         // Check in DB
@@ -180,19 +180,19 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
 
         // Check in API
         // Unknown selection set return 404
-        this.mockMvc.perform(put("/api/userselections/11111/11111")
+        this.mockMvc.perform(put("/srv/api/userselections/11111/11111")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNotFound());
 
         // Unknown user return 404
-        this.mockMvc.perform(put("/api/userselections/" + createdSelection.getId() + "/11111")
+        this.mockMvc.perform(put("/srv/api/userselections/" + createdSelection.getId() + "/11111")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNotFound());
 
         // Unkown metadata return 404
-        this.mockMvc.perform(put("/api/userselections/" + createdSelection.getId() + "/1?uuid=ABCD")
+        this.mockMvc.perform(put("/srv/api/userselections/" + createdSelection.getId() + "/1?uuid=ABCD")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNotFound());
@@ -200,27 +200,27 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
 
         String metadataId = importMetadata(context);
         String metadataUuid = _dataManager.getMetadataUuid(metadataId);
-        this.mockMvc.perform(put("/api/userselections/" + createdSelection.getId() + "/1?uuid=" + metadataUuid)
+        this.mockMvc.perform(put("/srv/api/userselections/" + createdSelection.getId() + "/1?uuid=" + metadataUuid)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isCreated());
 
-        this.mockMvc.perform(get("/api/userselections/" + createdSelection.getId() + "/1")
+        this.mockMvc.perform(get("/srv/api/userselections/" + createdSelection.getId() + "/1")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$", hasSize(1)))
             .andExpect(jsonPath("$[*]", hasItem(metadataUuid)));
 
-        this.mockMvc.perform(delete("/api/userselections/" + createdSelection.getId() + "/1?uuid=" + metadataUuid)
+        this.mockMvc.perform(delete("/srv/api/userselections/" + createdSelection.getId() + "/1?uuid=" + metadataUuid)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNoContent());
 
 
         // Delete
-        this.mockMvc.perform(delete("/api/userselections/" + createdSelection.getId())
+        this.mockMvc.perform(delete("/srv/api/userselections/" + createdSelection.getId())
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
 

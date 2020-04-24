@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -36,9 +37,9 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -63,6 +64,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
     private ServiceContext context;
     private XmlRequest request;
     private DataManager dataMan;
+    private IMetadataManager metadataManager;
     private CategoryMapper localCateg;
     private GroupMapper localGroups;
     private UUIDMapper localUuids;
@@ -76,6 +78,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         dataMan = gc.getBean(DataManager.class);
+        metadataManager = gc.getBean(IMetadataManager.class);
         result = new HarvestResult();
 
         //--- setup REST operation rest/document?id={uuid}
@@ -95,7 +98,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
         localGroups = new GroupMapper(context);
         localUuids = new UUIDMapper(context.getBean(IMetadataUtils.class), params.getUuid());
 
-        dataMan.flush();
+        metadataManager.flush();
 
         //-----------------------------------------------------------------------
         //--- remove old metadata
@@ -110,9 +113,9 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
 
                 if (log.isDebugEnabled())
                     log.debug("  - Removing old metadata with local id:" + id);
-                dataMan.deleteMetadata(context, id);
+                metadataManager.deleteMetadata(context, id);
 
-                dataMan.flush();
+                metadataManager.flush();
 
                 result.locallyRemoved++;
             }
@@ -184,13 +187,13 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
             setHarvested(true).
             setUuid(params.getUuid());
 
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         dataMan.indexMetadata(id, Math.random() < 0.01, null);
         result.addedMetadata++;
@@ -227,15 +230,15 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                final AbstractMetadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
+                final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-                repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-                addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+                repository.deleteAllByMetadataId(Integer.parseInt(id));
+                addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-                metadata.getMetadataCategories().clear();
-                addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
-                dataMan.flush();
+                metadata.getCategories().clear();
+                addCategories(metadata, params.getCategories(), localCateg, context, null, true);
+                metadataManager.flush();
 
                 dataMan.indexMetadata(id, Math.random() < 0.01, null);
                 result.updatedMetadata++;
@@ -274,9 +277,9 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
             try {
                 response = request.execute();
             } catch (Exception e) {
-                e.printStackTrace();
                 log.error("Getting record from GeoPortal REST raised exception: " + e.getMessage());
                 log.error("Sent request " + request.getSentData());
+                log.error(e);
                 throw new Exception(e);
             }
 
@@ -285,7 +288,12 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
             }
 
             try {
-                params.getValidate().validate(dataMan, context, response);
+                Integer groupIdVal = null;
+                if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                    groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                }
+
+                params.getValidate().validate(dataMan, context, response, groupIdVal);
             } catch (Exception e) {
                 log.info("Ignoring invalid metadata with uuid " + uuid);
                 result.doesNotValidate++;
@@ -307,7 +315,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
             return response;
         } catch (Exception e) {
             log.warning("Raised exception while getting record : " + e);
-            e.printStackTrace();
+            log.error(e);
             result.unretrievable++;
 
             //--- we don't raise any exception here. Just try to go on

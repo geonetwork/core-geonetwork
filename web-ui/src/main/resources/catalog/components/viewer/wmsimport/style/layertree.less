@@ -1,22 +1,32 @@
 .layerTree {
-  li {
-    padding: 2px;
-  }
-  ul ul {
-    margin: 2px 0 0 0;
-    padding-left: 5px;
-    .list-group-item {
-      border-width: 1px 0 0 0;
-      border-radius: 0;
+  .gn-layer-tree {
+    padding: 0;
+    list-style: none;
+    ul {
+      margin-left: 20px;
+      li {
+        padding: 0px;
+        list-style: none;
+      }
+    } 
+    a {
+      line-height: 22px;
+      padding: 3px 0;
+      &:active, &:focus {
+        text-decoration: none;
+      }
     }
-    display: none;
-  }
-  a {
-    line-height: 22px;
-    &:hover, &:active {
-      text-decoration: none;
+    .gn-layer-actions {
+      white-space: nowrap;
+    }
+    .gn-layer-toolbar {
+      float: right;
+      .btn-link {
+        color: #000;
+      }
     }
   }
+
   label {
     color: #444;
     font-weight: normal;
@@ -46,23 +56,14 @@
       }
     }
   }
-  .form-group {
-    margin-bottom: 0;
-  }
-  .list-group {
-    background-color: #fff;
-    margin-bottom: 10px;
-  }
-  .list-group-item {
-    padding-left: 2px;
-  }
   .dropdown-menu {
     width: 100%;
     font-size: 12px;
-    a {
-      padding: 3px 0 3px .5em;
-      margin-right: .5em;
-      overflow-x: hidden;
+    li {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 95%;
     }
   }
   .truncate {
@@ -72,30 +73,10 @@
     white-space: nowrap;
   }
   .popover {
-    max-width: 0;
+    max-width: 250px;
+    width: 250px;
     li {
       padding: 2px 0px;
     }
-  }
-}
-.layers, .layerTree {
-  max-height: 50em;
-  transition: max-height .25s ease;
-}
-[gn-wms-import="wms"], [gn-wms-import="wfs"] {
-  .list-group {
-    .list-group {
-      max-height: 250px;
-      overflow: auto;
-    }
-  }
-}
-[gn-wms-import="wmts"] {
-  .list-group {
-    max-height: 250px;
-    overflow: auto;
-  }
-  .truncate {
-    width: 15em;
   }
 }

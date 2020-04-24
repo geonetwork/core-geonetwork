@@ -295,21 +295,23 @@
 
     <xsl:text>&#xA;</xsl:text>.. code-block:: xml
     <xsl:value-of select="gndoc:nl(2)"/>
-    <xsl:variable name="text"
-                  select="saxon:serialize($code, 'default-serialize-mode')"/>
-    <xsl:for-each select="tokenize($text, '\n')">
-      <xsl:choose>
-        <!-- Strip namespaces -->
-        <xsl:when test="matches(normalize-space(.), '^xmlns:.*&quot;$')">
-          <!--<xsl:if test="position() = 2"><xsl:text>    </xsl:text>...<xsl:text>&#xA;</xsl:text></xsl:if>-->
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>    </xsl:text><xsl:value-of select="."/><xsl:text>&#xA;</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
+    <xsl:for-each select="$code">
+      <xsl:variable name="text"
+                    select="saxon:serialize(., 'default-serialize-mode')"/>
+      <xsl:for-each select="tokenize($text, '\n')">
+        <xsl:choose>
+          <!-- Strip namespaces -->
+          <xsl:when test="matches(normalize-space(.), '^xmlns:.*&quot;$')">
+            <!--<xsl:if test="position() = 2"><xsl:text>    </xsl:text>...<xsl:text>&#xA;</xsl:text></xsl:if>-->
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>    </xsl:text><xsl:value-of select="."/><xsl:text>&#xA;</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
 
+      </xsl:for-each>
+      <xsl:value-of select="gndoc:nl(2)"/>
     </xsl:for-each>
-    <xsl:value-of select="gndoc:nl(2)"/>
   </xsl:function>
 
 

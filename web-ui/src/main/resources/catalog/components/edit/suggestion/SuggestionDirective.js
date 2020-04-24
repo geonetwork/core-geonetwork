@@ -90,6 +90,40 @@
            }
          };
        }])
+      .directive('gnSuggestButton', ['gnEditor', 'gnSuggestion',
+      function(gnEditor, gnSuggestion) {
+
+        return {
+          restrict: 'A',
+          replace: true,
+          scope: {
+            processId: '@gnSuggestButton',
+            params: '@',
+            name: '@',
+            help: '@',
+            icon: '@'
+          },
+          templateUrl: '../../catalog/components/edit/' +
+            'suggestion/partials/' +
+            'suggestbutton.html',
+          link: function(scope, element, attrs) {
+            scope.sugg = undefined;
+            scope.gnSuggestion = gnSuggestion;
+            gnSuggestion.load(scope.$parent.lang || 'eng').
+              success(function(data) {
+                if (data && !angular.isString(data)) {
+                  scope.suggestions = data;
+                  for(var i = 0; i < data.length; i ++) {
+                    if (data[i].process === scope.processId) {
+                      scope.sugg = data[i];
+                      break;
+                    }
+                  }
+                }
+            });
+          }
+        };
+      }])
       .directive('gnRunSuggestion', ['gnSuggestion', '$interpolate',
         function(gnSuggestion, $interpolate) {
           return {

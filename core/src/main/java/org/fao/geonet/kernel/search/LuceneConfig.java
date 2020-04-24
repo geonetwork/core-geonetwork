@@ -314,7 +314,7 @@ public class LuceneConfig {
                                 fieldBoost.put(name, Float.parseFloat(boost));
                             } catch (Exception exc) {
                                 // TODO: handle exception
-                                exc.printStackTrace();
+                                Log.error(Geonet.SEARCH_ENGINE, "LuceneConfig error: " + exc.getMessage(), exc);
                             }
                         }
                     }
@@ -481,8 +481,7 @@ public class LuceneConfig {
                 } catch (ClassNotFoundException e) {
                     Log.warning(Geonet.SEARCH_ENGINE,
                         "  Class not found for parameter: " + name
-                            + ", type: " + paramType);
-                    e.printStackTrace();
+                            + ", type: " + paramType, e);
                     return;
                 }
 

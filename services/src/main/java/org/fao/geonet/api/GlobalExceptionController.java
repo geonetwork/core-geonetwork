@@ -35,6 +35,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
@@ -82,6 +83,16 @@ public class GlobalExceptionController {
     }
 
     @ResponseBody
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler({
+        SecurityException.class,
+        AccessDeniedException.class
+    })
+    public Object securityHandler(final Exception exception) {
+        return new ApiError("forbidden", exception.getClass().getSimpleName(), exception.getMessage());
+    }
+
+    @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
         MaxUploadSizeExceededException.class
@@ -100,6 +111,18 @@ public class GlobalExceptionController {
     public ApiError runtimeExceptionHandler(final Exception exception) {
         return new ApiError("runtime_exception", exception.getClass().getSimpleName(), exception.getMessage());
     }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({
+        FeatureNotEnabledException.class
+    })
+    public ApiError runtimeExceptionHandler(final FeatureNotEnabledException exception) {
+        return new ApiError("feature_disabled", exception.getClass().getSimpleName(), exception.getMessage());
+    }
+
+
+
 
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

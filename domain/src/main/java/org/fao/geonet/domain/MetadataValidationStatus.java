@@ -29,7 +29,7 @@ package org.fao.geonet.domain;
  * @author Jesse
  */
 public enum MetadataValidationStatus {
-    INVALID, VALID, NEVER_CALCULATED;
+    INVALID, VALID, NEVER_CALCULATED, DOES_NOT_APPLY;
 
     public String getCode() {
         return String.valueOf(ordinal());

@@ -49,6 +49,7 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
@@ -57,6 +58,8 @@ import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.services.metadata.Show;
 import org.fao.geonet.services.relations.Get;
 import org.fao.geonet.utils.BinaryFile;
@@ -64,6 +67,8 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
 import com.google.common.base.Joiner;
@@ -77,6 +82,8 @@ import jeeves.server.context.ServiceContext;
  */
 public class MetadataUtils {
     public static final boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.SEARCH_ENGINE);
 
     public static Element getRelated(ServiceContext context, int iId, String uuid,
                                      RelatedItemType[] type,
@@ -113,7 +120,7 @@ public class MetadataUtils {
         // Search for children of this record
         if (listOfTypes.size() == 0 ||
             listOfTypes.contains(RelatedItemType.children)) {
-            relatedRecords.addContent(search(uuid, "children", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "children", context, from, to, fast, null));
         }
 
         // Get parent record from this record
@@ -122,7 +129,17 @@ public class MetadataUtils {
             Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md);
             if (listOfUUIDs.size() > 0) {
                 String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                relatedRecords.addContent(search(joinedUUIDs, "parent", context, from, to, fast));
+                relatedRecords.addContent(search(joinedUUIDs, "parent", context, from, to, fast, null));
+            }
+        }
+
+        // Brothers and sisters are not returned by default
+        // It is only on demand and output as siblings.
+        if (schemaPlugin != null && listOfTypes.contains(RelatedItemType.brothersAndSisters)) {
+            Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md);
+            if (listOfUUIDs.size() > 0) {
+                String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
+                relatedRecords.addContent(search(joinedUUIDs, RelatedItemType.brothersAndSisters.value(), context, from, to, fast, uuid));
             }
         }
 
@@ -150,13 +167,13 @@ public class MetadataUtils {
         // Search for records where an aggregate point to this record
         if (listOfTypes.size() == 0 ||
             listOfTypes.contains(RelatedItemType.associated)) {
-            relatedRecords.addContent(search(uuid, "associated", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "associated", context, from, to, fast, null));
         }
 
         // Search for services
         if (listOfTypes.size() == 0 ||
             listOfTypes.contains(RelatedItemType.services)) {
-            relatedRecords.addContent(search(uuid, "services", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "services", context, from, to, fast, null));
         }
 
         // Related record from uuiref attributes in metadata record
@@ -172,7 +189,7 @@ public class MetadataUtils {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedDatasetUUIDs(md);
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
                     String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                    relatedRecords.addContent(search(joinedUUIDs, "datasets", context, from, to, fast));
+                    relatedRecords.addContent(search(joinedUUIDs, "datasets", context, from, to, fast, null));
                 }
             }
             // if source, return source datasets defined in the current record
@@ -181,7 +198,7 @@ public class MetadataUtils {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedSourceUUIDs(md);
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
                     String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                    relatedRecords.addContent(search(joinedUUIDs, "sources", context, from, to, fast));
+                    relatedRecords.addContent(search(joinedUUIDs, "sources", context, from, to, fast, null));
                 }
             }
             // if fcat
@@ -198,7 +215,11 @@ public class MetadataUtils {
                         Element metadata = new Element("metadata");
                         Element response = new Element("response");
                         Element current = getRecord(fcat_uuid, context, dm);
-                        metadata.addContent(current);
+                        if (current != null) {
+                            metadata.addContent(current);
+                        } else {
+                            LOGGER.error("Feature catalogue with UUID {} referenced in {} was not found.", fcat_uuid, uuid);
+                        }
                         response.addContent(metadata);
                         fcat.addContent(response);
                     }
@@ -214,7 +235,7 @@ public class MetadataUtils {
         if (listOfTypes.size() == 0 ||
             listOfTypes.contains(RelatedItemType.hassources)) {
             // Return records where this record is a source dataset
-            relatedRecords.addContent(search(uuid, "hassources", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "hassources", context, from, to, fast, null));
         }
 
         // Relation table is preserved for backward compatibility but should not be used anymore.
@@ -223,7 +244,7 @@ public class MetadataUtils {
             // Related records could be feature catalogue defined in relation table
             relatedRecords.addContent(new Element("related").addContent(Get.getRelation(iId, "full", context)));
             // Or feature catalogue define in feature catalogue citation
-            relatedRecords.addContent(search(uuid, "hasfeaturecats", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "hasfeaturecats", context, from, to, fast, null));
         }
 
         // XSL transformation is used on the metadata record to extract
@@ -238,7 +259,7 @@ public class MetadataUtils {
     }
 
 
-    private static Element search(String uuid, String type, ServiceContext context, String from, String to, String fast) throws Exception {
+    private static Element search(String uuid, String type, ServiceContext context, String from, String to, String fast, String exclude) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SearchManager searchMan = gc.getBean(SearchManager.class);
 
@@ -251,7 +272,9 @@ public class MetadataUtils {
             Element parameters = new Element(Jeeves.Elem.REQUEST);
             if ("children".equals(type))
                 parameters.addContent(new Element("parentUuid").setText(uuid));
-            else if ("services".equals(type))
+            else if ("brothersAndSisters".equals(type)) {
+                parameters.addContent(new Element("parentUuid").setText(uuid));
+            } else if ("services".equals(type))
                 parameters.addContent(new Element("operatesOn").setText(uuid));
             else if ("hasfeaturecats".equals(type))
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
@@ -266,6 +289,10 @@ public class MetadataUtils {
                 "parent".equals(type))
                 parameters.addContent(new Element("uuid").setText(uuid));
 
+            if (exclude != null) {
+                parameters.addContent(new Element("without__uuid").setText(exclude));
+            }
+
             parameters.addContent(new Element("fast").addContent("index"));
             parameters.addContent(new Element("sortBy").addContent("title"));
             parameters.addContent(new Element("sortOrder").addContent("reverse"));
@@ -276,7 +303,7 @@ public class MetadataUtils {
             ServiceConfig config = new ServiceConfig();
             searcher.search(context, parameters, config);
 
-            Element response = new Element(type);
+            Element response = new Element(type.equals("brothersAndSisters") ? "siblings" : type);
             Element relatedElement = searcher.present(context, parameters, config);
             response.addContent(relatedElement);
             return response;
@@ -344,6 +371,7 @@ public class MetadataUtils {
     }
 
     public static void backupRecord(AbstractMetadata metadata, ServiceContext context) {
+    	Log.trace(Geonet.DATA_MANAGER, "Backing up record " + metadata.getId());
         Path outDir = Lib.resource.getRemovedDir(metadata.getId());
         Path outFile;
         try {
@@ -358,18 +386,45 @@ public class MetadataUtils {
 
         Path file = null;
         try {
-            file = MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false, false);
+            file = MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false, false, true);
             Files.createDirectories(outDir);
             try (InputStream is = IO.newInputStream(file);
                  OutputStream os = Files.newOutputStream(outFile)) {
                 BinaryFile.copy(is, os);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK,"Backup record. Error: " + e.getMessage(), e);
         } finally {
             if (file == null) {
                 IO.deleteFile(file, false, Geonet.MEF);
             }
         }
+    }
+
+
+    /**
+     * Returns the metadata validation status from the database, calculating/storing the validation if not stored.
+     *
+     * @param metadata
+     * @param context
+     * @return
+     */
+    public static boolean retrieveMetadataValidationStatus(AbstractMetadata metadata, ServiceContext context) throws Exception {
+        MetadataValidationRepository metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
+        IMetadataValidator validator = context.getBean(IMetadataValidator.class);
+        DataManager dataManager = context.getBean(DataManager.class);
+
+        boolean hasValidation =
+            (metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(metadata.getId())) > 0);
+
+        if (!hasValidation) {
+            validator.doValidate(metadata, context.getLanguage());
+            dataManager.indexMetadata(metadata.getId() + "", true, null);
+        }
+
+        boolean isInvalid =
+            (metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(metadata.getId())) > 0);
+
+        return isInvalid;
     }
 }

@@ -25,17 +25,16 @@ package org.fao.geonet.api.usersearches.model;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserSearch;
 import org.fao.geonet.domain.UserSearchFeaturedType;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserRepository;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * DTO class for user custom search information {@link org.fao.geonet.domain.UserSearch}.
@@ -55,6 +54,7 @@ public class UserSearchDto implements Serializable {
     private String creator;
     private String logo;
     private Map<String, String> names = new HashMap<>();
+    private List<Integer> groups = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -125,6 +125,19 @@ public class UserSearchDto implements Serializable {
         this.names.put(lang, name);
     }
 
+    public List<Integer> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Integer> groups) {
+        this.groups = groups;
+    }
+
+    public void addGroup(Integer groupId) {
+        this.groups.add(groupId);
+    }
+
+
     public UserSearch asUserSearch() {
         UserSearch userSearch = new UserSearch();
 
@@ -154,6 +167,19 @@ public class UserSearchDto implements Serializable {
 
         this.getNames().forEach((key, value) -> userSearch.getLabelTranslations().put(key, value));
 
+        GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
+        Set<Group> groups = new HashSet<>();
+        getGroups().forEach(groupId -> {
+            if (groupId != null) {
+                Group g = groupRepository.findOne(groupId);
+
+                if (g != null) {
+                    groups.add(g);
+                }
+            }
+        });
+        userSearch.setGroups(groups);
+
         return userSearch;
     }
 
@@ -174,9 +200,10 @@ public class UserSearchDto implements Serializable {
 
         userSearch.getLabelTranslations().forEach((key, value) -> dto.addName(key, value));
 
+        userSearch.getGroups().forEach(group -> dto.addGroup(group.getId()));
+
         return dto;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -190,11 +217,12 @@ public class UserSearchDto implements Serializable {
             creationDate.equals(that.creationDate) &&
             creator.equals(that.creator) &&
             Objects.equals(logo, that.logo) &&
-            names.equals(that.names);
+            names.equals(that.names) &&
+            Objects.equals(groups, that.groups);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, url, featuredType, creationDate, creatorId, creator, logo, names);
+        return Objects.hash(id, url, featuredType, creationDate, creatorId, creator, logo, names, groups);
     }
 }

@@ -30,7 +30,6 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.index.SpatialIndex;
 import com.vividsolutions.jts.index.strtree.STRtree;
-
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
@@ -63,6 +62,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Path;
@@ -74,8 +74,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.logging.Level;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * This class is responsible for extracting geographic information from metadata and writing that
@@ -91,7 +89,7 @@ public class SpatialIndexWriter implements FeatureListener {
     public static final int MAX_WRITES_IN_TRANSACTION = 1000;
     static final String SPATIAL_FILTER_JCS = "SpatialFilterCache";
     private static int _writes;
-    private final Parser _parser;
+    private final Parser[] _parsers;
     private final Transaction _transaction;
     private final Lock _lock;
     private int _maxWrites;
@@ -107,15 +105,17 @@ public class SpatialIndexWriter implements FeatureListener {
      * @param maxWrites Maximum number of writes in a transaction. If set to 1 then AUTO_COMMIT is
      *                  being used.
      */
-    public SpatialIndexWriter(DataStore datastore, Parser parser,
+    public SpatialIndexWriter(DataStore datastore, Parser[] parsers,
                               Transaction transaction, int maxWrites, Lock lock)
         throws Exception {
         // Note: The Configuration takes a long time to create so it is worth
         // re-using the same Configuration
         _lock = lock;
-        _parser = parser;
-        _parser.setStrict(false);
-        _parser.setValidating(false);
+        _parsers = parsers;
+        for (Parser _parser : _parsers) {
+          _parser.setStrict(false);
+          _parser.setValidating(false);
+        }
         _transaction = transaction;
         _maxWrites = maxWrites;
 
@@ -132,7 +132,11 @@ public class SpatialIndexWriter implements FeatureListener {
      * Extracts a Geometry Collection from metadata default visibility for testing access.
      */
     static MultiPolygon extractGeometriesFrom(Path schemaDir,
-                                              Element metadata, Parser parser, Map<String, String> errorMessage) throws Exception {
+                                              Element metadata, Parser[] parsers, Map<String, String> errorMessage) throws Exception {
+        return getSpatialExtent(schemaDir, metadata, parsers, new SpatialIndexingErrorHandler(errorMessage));
+    }
+
+    public static MultiPolygon getSpatialExtent(Path schemaDir, Element metadata, Parser[] parsers, ErrorHandler errorHandler) throws Exception {
         org.geotools.util.logging.Logging.getLogger("org.geotools.xml")
             .setLevel(Level.SEVERE);
         Path sSheet = schemaDir.resolve("extract-gml.xsl").toAbsolutePath();
@@ -142,6 +146,12 @@ public class SpatialIndexWriter implements FeatureListener {
         }
         List<Polygon> allPolygons = new ArrayList<Polygon>();
         for (Element geom : (List<Element>) transform.getChildren()) {
+        	Parser parser = null;
+        	if (geom.getNamespace().equals(Geonet.Namespaces.GML32)) {
+        	  parser = parsers[1]; // geotools gml3.2 parser
+        	} else {
+        	  parser = parsers[0];
+        	}
             String srs = geom.getAttributeValue("srsName");
             CoordinateReferenceSystem sourceCRS = DefaultGeographicCRS.WGS84;
             String gml = Xml.getString(geom);
@@ -160,9 +170,7 @@ public class SpatialIndexWriter implements FeatureListener {
                     allPolygons.add((Polygon) jts.getGeometryN(i));
                 }
             } catch (Exception e) {
-                errorMessage.put("PARSE", gml + ". Error is:" + e.getMessage());
-                Log.error(Geonet.INDEX_ENGINE, "Failed to convert gml to jts object: " + gml + "\n\t" + e.getMessage());
-                e.printStackTrace();
+                errorHandler.handleParseException(e, gml);
                 // continue
             }
         }
@@ -177,12 +185,30 @@ public class SpatialIndexWriter implements FeatureListener {
 
 
             } catch (Exception e) {
-                errorMessage.put("BUILD", allPolygons + ". Error is:" + e.getMessage());
-                Log.error(Geonet.INDEX_ENGINE, "Failed to create a MultiPolygon from: " + allPolygons);
-                e.printStackTrace();
+                errorHandler.handleBuildException(e, allPolygons);
                 // continue
                 return null;
             }
+        }
+    }
+
+    static private class SpatialIndexingErrorHandler implements ErrorHandler {
+        private final Map<String, String> errorMessage;
+
+        public SpatialIndexingErrorHandler(Map<String, String> errorMessage) {
+            this.errorMessage = errorMessage;
+        }
+
+        @Override
+        public void handleParseException(Exception e, String gml) {
+            errorMessage.put("PARSE", gml + ". Error is:" + e.getMessage());
+            Log.error(Geonet.INDEX_ENGINE, "Failed to convert gml to jts object: " + gml + "\n\t" + e.getMessage(), e);
+        }
+
+        @Override
+        public void handleBuildException(Exception e, List<Polygon> allPolygons) {
+            errorMessage.put("BUILD", allPolygons + ". Error is:" + e.getMessage());
+            Log.error(Geonet.INDEX_ENGINE, "Failed to create a MultiPolygon from: " + allPolygons, e);
         }
     }
 
@@ -241,7 +267,7 @@ public class SpatialIndexWriter implements FeatureListener {
             _index = null;
             errorMessage = new HashMap<>();
             Geometry geometry = extractGeometriesFrom(
-                schemaDir, metadata, _parser, errorMessage);
+                schemaDir, metadata, _parsers, errorMessage);
 
             if (geometry != null && !geometry.getEnvelopeInternal().isNull()) {
                 MemoryFeatureCollection features = new MemoryFeatureCollection(_featureStore.getSchema());
@@ -291,7 +317,7 @@ public class SpatialIndexWriter implements FeatureListener {
             _featureStore.setTransaction(Transaction.AUTO_COMMIT);
             // Done by JCSServletContextListener: SpatialFilter.getJCSCache().clear();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.INDEX_ENGINE,"SpatialIndexWriter close error: " + e.getMessage(), e);
         } finally {
             _lock.unlock();
         }
@@ -315,7 +341,7 @@ public class SpatialIndexWriter implements FeatureListener {
             try {
                 SpatialFilter.getJCSCache().clear();
             } catch (Throwable e) {
-                e.printStackTrace();
+                Log.error(Geonet.INDEX_ENGINE,"SpatialIndexWriter JCSCache clear error: " + e.getMessage(), e);
             }
             _writes++;
         } finally {
@@ -342,7 +368,7 @@ public class SpatialIndexWriter implements FeatureListener {
             try {
                 SpatialFilter.getJCSCache().clear();
             } catch (Throwable e) {
-                e.printStackTrace();
+                Log.error(Geonet.INDEX_ENGINE,"SpatialIndexWriter JCSCache clear error: " + e.getMessage(), e);
             }
             _writes++;
         } finally {
@@ -361,7 +387,7 @@ public class SpatialIndexWriter implements FeatureListener {
                 SpatialFilter.getJCSCache().clear();
             }
         } catch (Throwable e) {
-            e.printStackTrace();
+            Log.error(Geonet.INDEX_ENGINE,"SpatialIndexWriter JCSCache commit error: " + e.getMessage(), e);
         } finally {
             _lock.unlock();
         }
@@ -400,7 +426,7 @@ public class SpatialIndexWriter implements FeatureListener {
         try {
             SpatialFilter.getJCSCache().clear();
         } catch (CacheException e) {
-            e.printStackTrace();
+            Log.error(Geonet.INDEX_ENGINE,"SpatialIndexWriter JCSCache clear error: " + e.getMessage(), e);
         }
         _index = new STRtree();
 
@@ -499,7 +525,7 @@ public class SpatialIndexWriter implements FeatureListener {
         } else if (geometry instanceof MultiPolygon) {
             return (MultiPolygon) geometry;
         }
-        String message = geometry.getClass() + " cannot be converted to a polygon. Check Metadata";
+        String message = geometry.getClass() + " cannot be converted to a polygon. Check metadata";
         Log.error(Geonet.INDEX_ENGINE, message);
         throw new IllegalArgumentException(message);
     }

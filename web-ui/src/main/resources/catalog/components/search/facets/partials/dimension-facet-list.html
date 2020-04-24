@@ -26,6 +26,7 @@
     </h4>
     <div data-gn-facet-dimension-category="f.category"
          data-category-key="fLabel"
+         data-page-size="getPageSize(f)";
          data-params="params"
          data-facet-config="facetConfig"
          data-ng-class="{'collapse': fLvlCollapse[fLabel]}">
@@ -35,7 +36,7 @@
 
 
   <ul class="nav nav-pills" data-ng-if="isTabMode">
-    <li data-ng-repeat="c in tabs.category | orderBy: 'label'"
+    <li data-ng-repeat="c in tabs.category"
         data-ng-init="path = buildPath(c);"
         role="presentation"
         data-ng-class="{'active': c.isSelected}">

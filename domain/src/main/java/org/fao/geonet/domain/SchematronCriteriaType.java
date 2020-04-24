@@ -26,7 +26,10 @@
  */
 package org.fao.geonet.domain;
 
-import org.fao.geonet.ApplicationContextHolder;
+import java.util.Arrays;
+import java.util.List;
+
+import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -38,9 +41,6 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Used on {@link SchematronCriteria}
@@ -63,10 +63,29 @@ public enum SchematronCriteriaType {
             for (int i = 0; i < values.length; i++) {
                 ids[i] = Integer.valueOf(values[i]);
             }
-            final Specification<Metadata> correctOwner = MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(ids));
-            final Specification<Metadata> correctId = MetadataSpecs.hasMetadataId(metadataId);
+            final Specification<MetadataDraft> correctOwnerDraft = (Specification<MetadataDraft>)MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(ids));
+            final Specification<MetadataDraft> correctIdDraft = (Specification<MetadataDraft>)MetadataSpecs.hasMetadataId(metadataId);
+            final Specifications<MetadataDraft> finalSpecDraft = Specifications.where(correctIdDraft).and(correctOwnerDraft);
+            final Specification<Metadata> correctOwner = (Specification<Metadata>)MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(ids));
+            final Specification<Metadata> correctId = (Specification<Metadata>)MetadataSpecs.hasMetadataId(metadataId);
             final Specifications<Metadata> finalSpec = Specifications.where(correctId).and(correctOwner);
-            return applicationContext.getBean(MetadataRepository.class).count(finalSpec) > 0;
+            return applicationContext.getBean(MetadataRepository.class).count(finalSpec)
+                    + applicationContext.getBean(MetadataDraftRepository.class).count(finalSpecDraft) > 0;
+        }
+
+        @Override
+        public boolean accepts(ApplicationContext applicationContext, String value, Element metadata,
+                               List<Namespace> metadataNamespaces, Integer metadataGroupOwner) {
+
+            String[] values = value.split(",");
+            Integer[] ids = new Integer[values.length];
+            for (int i = 0; i < values.length; i++) {
+                ids[i] = Integer.valueOf(values[i]);
+            }
+
+            // used to evaluate an external metadata to import, metadataGroupOwner should be provided
+            // with the destination metadata group owner
+            return Arrays.asList(ids).contains(metadataGroupOwner);
         }
     }),
 
@@ -97,6 +116,13 @@ public enum SchematronCriteriaType {
             }
             return false;
         }
+        @Override
+        public boolean accepts(ApplicationContext applicationContext, String value, Element metadata,
+                               List<Namespace> metadataNamespaces, Integer metadataGroupOwner) {
+
+            // Use dummy value for metadataId, not used in the accepts method
+           return accepts(applicationContext, value, -1, metadata, metadataNamespaces);
+        }
     }),
 
     /**
@@ -106,6 +132,12 @@ public enum SchematronCriteriaType {
         @Override
         public boolean accepts(ApplicationContext applicationContext, String value, int metadataId, Element metadata,
                                List<Namespace> metadataNamespaces) {
+            return true;
+        }
+
+        @Override
+        public boolean accepts(ApplicationContext applicationContext, String value, Element metadata,
+                               List<Namespace> metadataNamespaces, Integer metadataGroupOwner) {
             return true;
         }
     }),
@@ -123,5 +155,10 @@ public enum SchematronCriteriaType {
     public boolean accepts(ApplicationContext applicationContext, String value, int metadataId, Element metadata,
                            List<Namespace> metadataNamespaces) {
         return evaluator.accepts(applicationContext, value, metadataId, metadata, metadataNamespaces);
+    }
+
+    public boolean accepts(ApplicationContext applicationContext, String value, Element metadata,
+                           List<Namespace> metadataNamespaces, Integer groupOwnerId ) {
+        return evaluator.accepts(applicationContext, value, metadata, metadataNamespaces, groupOwnerId);
     }
 }

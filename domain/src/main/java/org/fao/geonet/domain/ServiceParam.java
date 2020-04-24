@@ -118,7 +118,7 @@ public class ServiceParam extends GeonetEntity {
      * @return the request associated with this entity.
      */
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(referencedColumnName = "id", name = "service")
     public Service getService() {
         return this.service;

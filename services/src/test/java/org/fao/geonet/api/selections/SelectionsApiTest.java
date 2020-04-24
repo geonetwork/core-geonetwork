@@ -82,11 +82,11 @@ public class SelectionsApiTest  extends AbstractServiceIntegrationTest {
         UserSession session = ApiUtils.getUserSession( this.mockHttpSession);
         int selected = SelectionManager.getManager(session).getSelection(SelectionManager.SELECTION_METADATA).size();
 
-        this.mockMvc.perform(get("/api/selections/" + SelectionManager.SELECTION_METADATA)
+        this.mockMvc.perform(get("/srv/api/selections/" + SelectionManager.SELECTION_METADATA)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$", hasSize(selected)));
     }
 
@@ -94,12 +94,12 @@ public class SelectionsApiTest  extends AbstractServiceIntegrationTest {
     public void addSelection() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(put("/api/selections/" + SelectionManager.SELECTION_METADATA)
+        this.mockMvc.perform(put("/srv/api/selections/" + SelectionManager.SELECTION_METADATA)
             .param("uuid", "uuid3")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(201))
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(content().string("3"));
 
         // Check also the SelectionManager
@@ -113,11 +113,11 @@ public class SelectionsApiTest  extends AbstractServiceIntegrationTest {
     public void clearSelectionAll() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(delete("/api/selections/" + SelectionManager.SELECTION_METADATA)
+        this.mockMvc.perform(delete("/srv/api/selections/" + SelectionManager.SELECTION_METADATA)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(content().string("0"));
 
         // Check also the SelectionManager
@@ -131,12 +131,12 @@ public class SelectionsApiTest  extends AbstractServiceIntegrationTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
         // Remove only 1 item from the selection
-        this.mockMvc.perform(delete("/api/selections/" + SelectionManager.SELECTION_METADATA)
+        this.mockMvc.perform(delete("/srv/api/selections/" + SelectionManager.SELECTION_METADATA)
             .param("uuid", "uuid1")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(content().string("1"));
 
         // Check also the SelectionManager

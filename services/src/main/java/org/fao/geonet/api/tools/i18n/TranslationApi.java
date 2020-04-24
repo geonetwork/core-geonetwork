@@ -22,33 +22,12 @@
  */
 
 package org.fao.geonet.api.tools.i18n;
-//==============================================================================
-//===	Copyright (C) 2001-2015 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
-//===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
-//===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
-//===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
-//==============================================================================
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.IsoLanguage;
+import org.fao.geonet.domain.Localized;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.Schematron;
@@ -90,8 +69,8 @@ import io.swagger.annotations.ApiOperation;
  */
 
 @RequestMapping(value = {
-    "/api/tools/i18n",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/tools/i18n",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/tools/i18n"
 })
 @Api(value = "tools",
@@ -107,6 +86,21 @@ public class TranslationApi implements ApplicationContextAware {
     SchemaManager schemaManager;
     @Autowired
     LanguageUtils languageUtils;
+    @Autowired
+    StatusValueRepository statusValueRepository;
+    @Autowired
+    MetadataCategoryRepository categoryRepository;
+    @Autowired
+    GroupRepository groupRepository;
+    @Autowired
+    OperationRepository operationRepository;
+    @Autowired
+    SourceRepository sourceRepository;
+    @Autowired
+    SchematronRepository schematronRepository;
+    @Autowired
+    IsoLanguageRepository isoLanguageRepository;
+
     private ApplicationContext context;
 
     public synchronized void setApplicationContext(ApplicationContext context) {
@@ -138,83 +132,82 @@ public class TranslationApi implements ApplicationContextAware {
         String language = languageUtils.locale2gnCode(locale.getISO3Language());
 
         if (type == null || type.contains("StatusValue")) {
-            StatusValueRepository repository =
-                applicationContext.getBean(StatusValueRepository.class);
-            List<StatusValue> valueList = repository.findAll();
+            List<StatusValue> valueList = statusValueRepository.findAll();
             Iterator<StatusValue> valueIterator = valueList.iterator();
             while (valueIterator.hasNext()) {
                 StatusValue entity = valueIterator.next();
-                response.put("status-" + entity.getId() + "", entity.getLabel(language));
+                response.put("status-" + entity.getId() + "",
+                    getLabelOrKey(entity, language, entity.getId() + ""));
             }
         }
 
         if (type == null || type.contains("MetadataCategory")) {
-            MetadataCategoryRepository categoryRepository =
-                applicationContext.getBean(MetadataCategoryRepository.class);
             List<MetadataCategory> metadataCategoryList = categoryRepository.findAll();
             Iterator<MetadataCategory> metadataCategoryIterator = metadataCategoryList.iterator();
             while (metadataCategoryIterator.hasNext()) {
                 MetadataCategory entity = metadataCategoryIterator.next();
-                response.put("cat-" + entity.getName() + "", entity.getLabel(language));
+                response.put("cat-" + entity.getName() + "",
+                    getLabelOrKey(entity, language, entity.getName()));
             }
         }
 
         if (type == null || type.contains("Group")) {
-            GroupRepository groupRepository =
-                applicationContext.getBean(GroupRepository.class);
             List<Group> groupList = groupRepository.findAll();
             Iterator<Group> groupIterator = groupList.iterator();
             while (groupIterator.hasNext()) {
                 Group entity = groupIterator.next();
-                response.put("group-" + entity.getId() + "", entity.getLabel(language));
+                response.put("group-" + entity.getId() + "",
+                    getLabelOrKey(entity, language, entity.getName()));
             }
         }
 
         if (type == null || type.contains("Operation")) {
-            OperationRepository operationRepository =
-                applicationContext.getBean(OperationRepository.class);
             List<Operation> operationList = operationRepository.findAll();
             Iterator<Operation> operationIterator = operationList.iterator();
             while (operationIterator.hasNext()) {
                 Operation entity = operationIterator.next();
-                response.put("op-" + entity.getId() + "", entity.getLabel(language));
-                response.put("op-" + entity.getName() + "", entity.getLabel(language));
+                response.put("op-" + entity.getId() + "",
+                             getLabelOrKey(entity, language, entity.getId() + ""));
+                response.put("op-" + entity.getName() + "",
+                             getLabelOrKey(entity, language, entity.getName()));
             }
         }
 
         if (type == null || type.contains("Source")) {
-            SourceRepository sourceRepository =
-                applicationContext.getBean(SourceRepository.class);
             List<Source> sourceList = sourceRepository.findAll();
             Iterator<Source> sourceIterator = sourceList.iterator();
             while (sourceIterator.hasNext()) {
                 Source entity = sourceIterator.next();
-                response.put("source-" + entity.getUuid() + "", entity.getLabel(language));
+                response.put("source-" + entity.getUuid() + "",
+                             getLabelOrKey(entity, language, entity.getUuid()));
             }
         }
 
         if (type == null || type.contains("Schematron")) {
-            SchematronRepository schematronRepository =
-                applicationContext.getBean(SchematronRepository.class);
             List<Schematron> schematronList = schematronRepository.findAll();
             Iterator<Schematron> schematronIterator = schematronList.iterator();
             while (schematronIterator.hasNext()) {
                 Schematron entity = schematronIterator.next();
-                response.put("sch-" + entity.getRuleName() + "", entity.getLabel(language));
+                response.put("sch-" + entity.getRuleName() + "",
+                             getLabelOrKey(entity, language, entity.getRuleName()));
             }
         }
 
         if (type == null || type.contains("IsoLanguage")) {
-            IsoLanguageRepository isoLanguageRepository =
-                applicationContext.getBean(IsoLanguageRepository.class);
             List<IsoLanguage> isoLanguageList = isoLanguageRepository.findAll();
             Iterator<IsoLanguage> isoLanguageIterator = isoLanguageList.iterator();
             while (isoLanguageIterator.hasNext()) {
                 IsoLanguage entity = isoLanguageIterator.next();
-                response.put("lang-" + entity.getCode() + "", entity.getLabel(language));
+                response.put("lang-" + entity.getCode() + "",
+                             getLabelOrKey(entity, language, entity.getCode()));
             }
         }
         return response;
+    }
+
+    private String getLabelOrKey(Localized entity, String language, String defaultValue) {
+        String value = entity.getLabel(language);
+        return value != null ? value : defaultValue;
     }
 
 

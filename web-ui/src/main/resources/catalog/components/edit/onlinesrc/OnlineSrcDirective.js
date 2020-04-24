@@ -211,6 +211,7 @@
               scope.readonly = attrs['readonly'] || false;
               scope.gnCurrentEdit.associatedPanelConfigId = attrs['configId'] || 'default';
               scope.relations = {};
+              scope.gnCurrentEdit.codelistFilter  = attrs['codelistFilter'];
 
               /**
                * Calls service 'relations.get' to load
@@ -244,8 +245,19 @@
 
               loadRelations();
 
+              scope.sortLinksOptions = ['protocol', 'lUrl', 'title'];
+              scope.sortLinksProperty = scope.sortLinksOptions[0];
+              scope.sortLinksReverse = true;
+
               scope.sortLinks = function(g) {
-                return $filter('gnLocalized')(g.title);
+                return $filter('gnLocalized')(g[scope.sortLinksProperty]) || g[scope.sortLinksProperty];
+              };
+
+                scope.sortLinksBy = function(p) {
+                scope.sortLinksReverse =
+                  (scope.sortLinksProperty !== null && scope.sortLinksProperty === p)
+                  ? !scope.sortLinksReverse : false;
+                scope.sortLinksProperty = p;
               };
             }
           };
@@ -331,12 +343,19 @@
                 // directive and the SearchFormController scope that
                 // is contained by the directive
                 scope.stateObj = {};
+                var projectedExtent = null;
+
 
                 function loadLayers() {
                   if (!angular.isArray(scope.map.getSize()) ||
                       scope.map.getSize().indexOf(0) >= 0) {
                     $timeout(function() {
                       scope.map.updateSize();
+                      if (projectedExtent != null) {
+                        scope.map.getView().fit(
+                          projectedExtent,
+                          scope.map.getSize());
+                      }
                     }, 300);
                   }
 
@@ -345,8 +364,30 @@
                     scope.map.removeLayer(layer);
                   });
 
-                  scope.map.addLayer(gnMap.getLayersFromConfig());
+                  var conf = gnMap.getMapConfig();
 
+                  scope.map.addLayer(new ol.layer.Tile({
+                    source:  new ol.source.OSM()
+                  }));
+                  // TODO: Add base layer from config
+                  // This does not work because createLayerFromProperties
+                  // return a promise and base layer is added twice.
+                  // if (conf.useOSM) {
+                  //   scope.map.addLayer(new ol.layer.Tile({
+                  //     source:  new ol.source.OSM(),
+                  //     type: 'base'
+                  //   }));
+                  // }
+                  // else {
+                  //   conf['map-editor'].layers.forEach(function(layerInfo) {
+                  //     gnMap.createLayerFromProperties(layerInfo, scope.map)
+                  //       .then(function(layer) {
+                  //         if (layer) {
+                  //           scope.map.addLayer(layer);
+                  //         }
+                  //       });
+                  //   });
+                  // }
                   // Add each WMS layer to the map
                   scope.layers = scope.gnCurrentEdit.layerConfig;
                   angular.forEach(scope.gnCurrentEdit.layerConfig,
@@ -362,12 +403,11 @@
                         }));
                       });
 
-                  var listenerExtent = scope.$watch(
-                		  'angular.isArray(scope.gnCurrentEdit.extent)', function() {
 
-                	  if (angular.isArray(scope.gnCurrentEdit.extent)) {
+                  var listenerExtent = scope.$watch(
+                    'angular.isArray(scope.gnCurrentEdit.extent)', function() {
+                        if (angular.isArray(scope.gnCurrentEdit.extent)) {
                           // FIXME : only first extent is took into account
-                          var projectedExtent;
                           var extent = scope.gnCurrentEdit.extent &&
                               scope.gnCurrentEdit.extent[0];
                           var proj = ol.proj.get(gnMap.getMapConfig().projection);
@@ -398,10 +438,10 @@
                   //Added mandatory custom params here to avoid
                   //changing other printing services
                   jsonSpec = angular.extend(
-                		  scope.jsonSpec,
-                		  {
-                			  hasNoTitle: true
-                		  });
+                    scope.jsonSpec,
+                    {
+                      hasNoTitle: true
+                    });
 
                   return $http.put('../api/0.1/records/' +
                       scope.gnCurrentEdit.uuid +
@@ -470,19 +510,40 @@
                   return scope.config.types[0];
                 }
 
-                gnOnlinesrc.register('onlinesrc', function(linkToEdit) {
+                gnOnlinesrc.register('onlinesrc', function(linkToEditOrType) {
+                  var linkToEdit = undefined, linkType = undefined;
+                  if (angular.isDefined(linkToEditOrType)) {
+                    if (angular.isObject(linkToEditOrType)) {
+                        linkToEdit = linkToEditOrType;
+                      } else if (angular.isString(linkToEditOrType)) {
+                        linkType = linkToEditOrType;
+                      }
+                  }
+
                   scope.isEditing = angular.isDefined(linkToEdit);
+                  scope.codelistFilter = scope.gnCurrentEdit && scope.gnCurrentEdit.codelistFilter;
 
                   scope.metadataId = gnCurrentEdit.id;
                   scope.schema = gnCurrentEdit.schema;
 
                   var init = function() {
+                    function getType(linkType) {
+                      for (var i = 0; i < scope.config.types.length; i++) {
+                          var t = scope.config.types[i];
+                          if (t.label === linkType) {
+                              return t;
+                            }
+                        }
+                      return scope.config.types[0];
+                    };
+
                     var typeConfig = linkToEdit ?
                       getTypeConfig(linkToEdit) :
-                      scope.config.types[0];
+                      getType(linkType);
                     scope.config.multilingualFields = [];
                     angular.forEach(typeConfig.fields, function(f, k) {
-                      if (f.isMultilingual !== false) {
+                    if (scope.isMdMultilingual &&
+                        f.isMultilingual !== false) {
                         scope.config.multilingualFields.push(k);
                       }
                     });
@@ -582,9 +643,9 @@
                         selectedLayers: []
                       };
                     } else {
-                      scope.editingKey= null;
-                      scope.params.linkType= scope.config.types[0];
-                      scope.params.protocol= null;
+                      scope.editingKey = null;
+                      scope.params.linkType = typeConfig;
+                      scope.params.protocol = null;
                       scope.params.name= '';
                       scope.params.desc= '';
                       initMultilingualFields();
@@ -685,13 +746,12 @@
                  * @param {string} value of the attribute
                  */
                 function setParameterValue(pName, value) {
-                  var p = scope.params;
                   if (scope.isFieldMultilingual(pName)) {
                     $.each(scope.mdLangs, function(key, v) {
-                      p[pName][v] = value;
+                      scope.params[pName][v] = value;
                     });
                   } else {
-                    p[pName] = value;
+                    scope.params[pName] = value;
                   }
                 }
 
@@ -888,7 +948,7 @@
 
                   if (curUrl) {
                     scope.loadCurrentLink();
-                    scope.isImage = curUrl.match(/.*.(png|jpg|gif)$/i);
+                    scope.isImage = curUrl.match(/.*.(png|jpg|jpeg|gif)$/i);
                   }
 
                 };
@@ -959,10 +1019,12 @@
                         }
                       });
                     }
+                    // Set a default label
                     if (!scope.isEditing &&
                         angular.isDefined(newValue.copyLabel)) {
-                      scope.params[newValue.copyLabel] =
-                          $translate(newValue.label);
+                      setParameterValue(
+                        newValue.copyLabel,
+                        $translate.instant(newValue.label));
                     }
 
                     if (newValue.sources && newValue.sources.thumbnailMaker) {
@@ -1069,6 +1131,8 @@
                   scope.popupid = '#linkto' + scope.mode + '-popup';
                   scope.alertMsg = null;
                   scope.layerSelectionMode = 'multiple';
+                  scope.onlineSrcLink = '';
+                  scope.addOnlineSrcInDataset = true;
 
                   gnOnlinesrc.register(scope.mode, function() {
                     $(scope.popupid).modal('show');
@@ -1076,31 +1140,47 @@
                     // parameters of the online resource form
                     scope.srcParams = {selectedLayers: []};
 
-                    var searchParams = {
-                      type: scope.mode
-                    };
+                    var searchParams = {};
+                    if (scope.mode === 'service') {
+                      searchParams.type = scope.mode;
+                    } else {
+                      // Any records which are not services
+                      // ie. dataset, series, ...
+                      searchParams['without-type'] = 'service';
+                    }
                     scope.$broadcast('resetSearch', searchParams);
                     scope.layers = [];
+
                     // Load service layers on load
                     if (scope.mode !== 'service') {
-                      // TODO: Check the appropriate WMS service
-                      // or list URLs if many
+                      // If linking a dataset and the service is a WMS
+                      // List all layers. The service WMS link can be added
+                      // as online source in the target dataset.
+                      // TODO: list all URLs if many
                       // TODO: If service URL is added, user need to reload
                       // editor to get URL or current record.
                       var links = [];
                       links = links.concat(
-                          gnCurrentEdit.metadata.getLinksByType('OGC:WMS'));
-                      links = links.concat(
-                          gnCurrentEdit.metadata.getLinksByType('wms'));
-                      if (angular.isArray(links) && links.length === 1) {
-                        var serviceUrl = links[0].url;
-                        scope.loadCurrentLink(serviceUrl);
-                        scope.srcParams.url = serviceUrl;
+                          gnCurrentEdit.metadata.getLinksByType('ogc', 'atom'));
+                      if (links.length > 0) {
+                        scope.onlineSrcLink = links[0].url;
                         scope.srcParams.protocol = links[0].protocol || '';
+                        scope.loadCurrentLink(scope.onlineSrcLink);
+                        scope.srcParams.url = scope.onlineSrcLink;
                         scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
+
+                        scope.addOnlineSrcInDataset = true;
                       } else {
                         scope.alertMsg =
                             $translate.instant('linkToServiceWithoutURLError');
+
+                        // If no WMS found, suggest to add a link to the service landing page
+                        // Default is false.
+                        // Build a link to the service metadata record
+                        scope.onlineSrcLink = gnConfigService.getServiceURL() +
+                          "api/records/" + gnCurrentEdit.uuid;
+
+                        scope.addOnlineSrcInDataset = false;
                       }
                     }
                   });
@@ -1121,16 +1201,34 @@
                   scope.loadCurrentLink = function(url) {
                     scope.alertMsg = null;
 
-                    return gnOwsCapabilities.getWMSCapabilities(url)
-                        .then(function(capabilities) {
-                          scope.layers = [];
-                          scope.srcParams.selectedLayers = [];
-                          scope.layers.push(capabilities.Layer[0]);
-                          angular.forEach(scope.layers[0].Layer, function(l) {
-                            scope.layers.push(l);
-                            // TODO: We may have more than one level
+                    var serviceType = scope.srcParams.protocol.toLowerCase();
+                    if (serviceType.indexOf('ogc') !== -1) {
+                      return gnOwsCapabilities[
+                        serviceType.indexOf('wfs') !== -1 ?
+                          'getWFSCapabilities' : 'getWMSCapabilities'](url)
+                          .then(function(capabilities) {
+                            scope.layers = [];
+                            scope.srcParams.selectedLayers = [];
+                            if (capabilities.Layer) {
+                              scope.layers.push(capabilities.Layer[0]);
+                              angular.forEach(scope.layers[0].Layer, function(l) {
+                                scope.layers.push(l);
+                                // TODO: We may have more than one level
+                              });
+                            } else if (capabilities.featureTypeList) {
+                              angular.forEach(capabilities.featureTypeList.featureType, function(l) {
+                                var name = l.name.prefix + ":" + l.name.localPart;
+                                var layer = {
+                                  'Name': name,
+                                  'Title': l.title || name,
+                                  'abstract': l.abstract || ''
+                                };
+
+                                scope.layers.push(layer);
+                              });
+                            }
                           });
-                        });
+                    }
                   };
 
                   /**
@@ -1150,9 +1248,8 @@
                         var links = [];
                         scope.layers = [];
                         scope.srcParams.selectedLayers = [];
-                        // TODO: WFS ?
-                        links = links.concat(md.getLinksByType('OGC:WMS'));
-                        links = links.concat(md.getLinksByType('wms'));
+
+                        links = links.concat(md.getLinksByType('ogc', 'atom'));
                         scope.srcParams.uuidSrv = md.getUuid();
                         scope.srcParams.identifier =
                           (gnCurrentEdit.metadata.identifier && gnCurrentEdit.metadata.identifier[0]) ?
@@ -1162,26 +1259,27 @@
                         scope.srcParams.source = gnCurrentEdit.metadata.source;
 
 
-                        if (angular.isArray(links) && links.length === 1) {
-                          scope.loadCurrentLink(links[0].url);
-                          scope.srcParams.url = links[0].url;
+                        if (links.length > 0) {
+                          scope.onlineSrcLink = links[0].url;
+                          scope.srcParams.protocol = links[0].protocol || 'OGC:WMS';
+                          scope.loadCurrentLink(scope.onlineSrcLink);
+                          scope.srcParams.url = scope.onlineSrcLink;
+                          scope.addOnlineSrcInDataset = true;
                         } else {
                           scope.srcParams.name = scope.currentMdTitle;
                           scope.srcParams.desc = scope.currentMdTitle;
                           scope.srcParams.protocol = "WWW:LINK-1.0-http--link";
-                          scope.srcParams.url =  gnConfigService.getServiceURL() +
-                            "api/records/" +
-                            md.getUuid() + "/formatters/xml";
+                          scope.onlineSrcLink = gnConfigService.getServiceURL() +
+                            "api/records/" + md.getUuid();
+                          scope.srcParams.url = scope.onlineSrcLink;
+                          scope.addOnlineSrcInDataset = false;
                         }
                       } else {
-                        // dataset
                         scope.srcParams.uuidDS = md.getUuid();
                         scope.srcParams.name = gnCurrentEdit.mdTitle;
                         scope.srcParams.desc = gnCurrentEdit.mdTitle;
                         scope.srcParams.protocol = "WWW:LINK-1.0-http--link";
-                        scope.srcParams.url =  gnConfigService.getServiceURL() +
-                          "api/records/" +
-                          md.getUuid() + "/formatters/xml";
+                        scope.srcParams.url = scope.onlineSrcLink;
                         scope.srcParams.identifier = (md.identifier && md.identifier[0]) ? md.identifier[0] : '';
                         scope.srcParams.source = md.source;
                       }
@@ -1194,13 +1292,13 @@
                    *  - link a service to a dataset
                    * Hide modal on success.
                    */
-                  scope.linkTo = function() {
+                  scope.linkTo = function(addOnlineSrcInDataset) {
                     if (scope.mode === 'service') {
                       return gnOnlinesrc.
-                          linkToService(scope.srcParams, scope.popupid);
+                          linkToService(scope.srcParams, scope.popupid, addOnlineSrcInDataset);
                     } else {
                       return gnOnlinesrc.
-                          linkToDataset(scope.srcParams, scope.popupid);
+                          linkToDataset(scope.srcParams, scope.popupid, addOnlineSrcInDataset);
                     }
                   };
                 }
@@ -1208,6 +1306,7 @@
             }
           };
         }])
+
 
       /**
      * @ngdoc directive
@@ -1369,7 +1468,22 @@
                    * Register a method on popup open to reset
                    * the search form and trigger a search.
                    */
-                  gnOnlinesrc.register('sibling', function() {
+                  gnOnlinesrc.register('sibling', function(config) {
+                    if (config && !angular.isObject(config)) {
+                      config = angular.fromJson(config);
+                    }
+
+                    scope.config = {
+                      associationTypeForced:
+                        angular.isDefined(config && config.associationType),
+                      associationType:
+                        (config && config.associationType) || null,
+                      initiativeTypeForced:
+                        angular.isDefined(config && config.initiativeType),
+                      initiativeType:
+                        (config && config.initiativeType) || null
+                    };
+
                     $(scope.popupid).modal('show');
 
                     scope.$broadcast('resetSearch');

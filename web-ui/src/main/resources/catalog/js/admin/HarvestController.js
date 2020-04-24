@@ -30,10 +30,12 @@
 
   goog.require('gn_harvest_report_controller');
   goog.require('gn_harvest_settings_controller');
+  goog.require('gn_dashboard_wfs_indexing_controller');
   goog.require('gn_harvester');
 
   var module = angular.module('gn_harvest_controller',
       ['gn_harvest_settings_controller',
+        'gn_dashboard_wfs_indexing_controller',
        'gn_harvest_report_controller', 'gn_harvester']);
 
 
@@ -45,11 +47,9 @@
     function($scope, $http, gnUtilityService) {
       $scope.isLoadingHarvester = false;
       $scope.harvesters = null;
+      $scope.pageMenu = {tabs: {}};
 
-      $scope.pageMenu = {
-        folder: 'harvest/',
-        defaultTab: 'harvest-settings',
-        tabs:
+      $scope.pageMenu.tabs =
             [{
               type: 'harvest-settings',
               label: 'harvesterSetting',
@@ -60,7 +60,31 @@
               label: 'harvesterReport',
               icon: 'fa-th',
               href: '#/harvest/harvest-report'
-            }]
+            }];
+
+      function loadConditionalTabs() {
+        if ($scope.healthCheck.IndexHealthCheck === true) {
+          $scope.pageMenu.tabs = $scope.pageMenu.tabs.concat({
+            type: 'wfs-indexing',
+            label: 'wfs-indexing',
+            icon: 'fa-map-marker',
+            href: '#/harvest/wfs-indexing'
+          });
+        }
+      }
+
+      loadConditionalTabs();
+
+      $scope.$watch('healthCheck.IndexHealthCheck', function (n, o) {
+        if (n !== o) {
+          loadConditionalTabs();
+        }
+      });
+
+      $scope.pageMenu = {
+        folder: 'harvest/',
+        defaultTab: 'harvest-settings',
+        tabs: $scope.pageMenu.tabs
       };
 
       $scope.loadHarvesters = function() {

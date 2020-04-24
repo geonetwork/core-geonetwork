@@ -27,7 +27,8 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
@@ -49,8 +50,11 @@
   <!-- Ignore group element. -->
   <xsl:template mode="mode-iso19139"
                 match="gml:*[
-                    starts-with(name(.), 'gml:TimePeriodTypeGROUP_ELEMENT') or
-                    starts-with(name(.), 'gml:TimeInstantTypeGROUP_ELEMENT')
+                    starts-with(local-name(.), 'TimePeriodTypeGROUP_ELEMENT') or
+                    starts-with(local-name(.), 'TimeInstantTypeGROUP_ELEMENT')
+                ]|gml320:*[
+                    starts-with(local-name(.), 'TimePeriodTypeGROUP_ELEMENT') or
+                    starts-with(local-name(.), 'TimeInstantTypeGROUP_ELEMENT')
                 ]"
                 priority="1000"/>
 
@@ -65,7 +69,7 @@
 
     <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
     <xsl:variable name="flatModeException"
-                  select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name)"/>
+                  select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name,  name(..))"/>
 
 
     <xsl:if test="$name = 'gmd:descriptiveKeywords' and count(../gmd:descriptiveKeywords) = 0">
@@ -74,8 +78,6 @@
       </xsl:call-template>
     </xsl:if>
 
-
-    <!-- TODO: this should be common to all schemas -->
     <xsl:if test="$isEditing and
       (not($isFlatMode) or $flatModeException)">
 
@@ -83,23 +85,66 @@
                     select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
       <xsl:variable name="label"
                     select="gn-fn-metadata:getLabel($schema, $name, $labels, name(..), '', '')"/>
-      <xsl:call-template name="render-element-to-add">
-        <!-- TODO: add xpath and isoType to get label ? -->
-        <xsl:with-param name="label" select="$label/label"/>
-        <xsl:with-param name="class" select="if ($label/class) then $label/class else ''"/>
-        <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
-        <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
-        <xsl:with-param name="directive" select="$directive"/>
-        <xsl:with-param name="childEditInfo" select="."/>
-        <xsl:with-param name="parentEditInfo" select="../gn:element"/>
-        <xsl:with-param name="isFirst" select="count(preceding-sibling::*[name() = $name]) = 0"/>
-      </xsl:call-template>
 
+
+      <xsl:choose>
+        <!-- Specifc case when adding a new keyword using the gn-thesaurus-selector
+        in a view where descriptiveKeyword is a flat mode exception. In this case
+        the "Add keyword" button will add a new descriptiveKeyword block if none exists
+        and it will insert a keyword in the first descriptiveKeyword block (not referencing thesaurus)
+        ie. free text keyword block.
+
+        The goal here is to avoid to have multiple free text descriptiveKeyword sections.
+        -->
+        <xsl:when test="$flatModeException and $name = 'gmd:descriptiveKeywords'">
+          <xsl:variable name="freeTextKeywordBlocks"
+                        select="../gmd:descriptiveKeywords[not(*/gmd:thesaurusName)]"/>
+          <xsl:variable name="isFreeTextKeywordBlockExist"
+                        select="count($freeTextKeywordBlocks) > 0"/>
+          <xsl:variable name="freeTextKeywordTarget"
+                        select="if ($isFreeTextKeywordBlockExist) then $freeTextKeywordBlocks[1]/*/gn:child[@name = 'keyword'] else ."/>
+
+          <xsl:variable name="directive" as="node()?">
+            <xsl:for-each select="$directive">
+              <xsl:copy>
+                <xsl:copy-of select="@*"/>
+                <directiveAttributes data-freekeyword-element-ref="{$freeTextKeywordTarget/../gn:element/@ref}"
+                                     data-freekeyword-element-name="{concat($freeTextKeywordTarget/@prefix, ':', $freeTextKeywordTarget/@name)}">
+                  <xsl:copy-of select="directiveAttributes/@*"/>
+                </directiveAttributes>
+              </xsl:copy>
+            </xsl:for-each>
+          </xsl:variable>
+
+          <xsl:call-template name="render-element-to-add">
+            <xsl:with-param name="label" select="$label/label"/>
+            <xsl:with-param name="class" select="if ($label/class) then $label/class else ''"/>
+            <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
+            <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
+            <xsl:with-param name="directive" select="$directive"/>
+            <xsl:with-param name="childEditInfo" select="."/>
+            <xsl:with-param name="parentEditInfo" select="../gn:element"/>
+            <xsl:with-param name="isFirst" select="count(preceding-sibling::*[name() = $name]) = 0"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="render-element-to-add">
+            <xsl:with-param name="label" select="$label/label"/>
+            <xsl:with-param name="class" select="if ($label/class) then $label/class else ''"/>
+            <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
+            <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
+            <xsl:with-param name="directive" select="$directive"/>
+            <xsl:with-param name="childEditInfo" select="."/>
+            <xsl:with-param name="parentEditInfo" select="../gn:element"/>
+            <xsl:with-param name="isFirst" select="count(preceding-sibling::*[name() = $name]) = 0"/>
+          </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
   </xsl:template>
 
   <!-- Visit all XML tree recursively -->
-  <xsl:template mode="mode-iso19139" match="gmd:*|gmx:*|gml:*|srv:*|gts:*">
+  <xsl:template mode="mode-iso19139" match="gmd:*|gmx:*|gml:*|gml320:*|srv:*|gts:*">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="refToDelete" required="no"/>
@@ -185,7 +230,7 @@
                 match="*[gco:CharacterString|gmx:Anchor|gco:Integer|gco:Decimal|
        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
        gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName|gmd:PT_FreeText|
-       gts:TM_PeriodDuration|gml:duration]">
+       gts:TM_PeriodDuration|gml:duration|gml320:duration]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
@@ -214,7 +259,7 @@
     <xsl:variable name="monoLingualValue" select="gco:CharacterString|gmx:Anchor|gco:Integer|gco:Decimal|
       gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
       gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName|
-       gts:TM_PeriodDuration|gml:duration"/>
+       gts:TM_PeriodDuration|gml:duration|gml320:duration"/>
     <xsl:variable name="theElement"
                   select="if ($isMultilingualElement and $hasOnlyPTFreeText or not($monoLingualValue))
                           then gmd:PT_FreeText
@@ -237,16 +282,22 @@
       current element and its children (eg. @uom in gco:Distance).
       A list of exception is defined in form-builder.xsl#render-for-field-for-attribute. -->
       <xsl:apply-templates mode="render-for-field-for-attribute"
-                           select="
-            @*|
-            gn:attribute[not(@name = parent::node()/@*/name())]">
+                           select="@*">
         <xsl:with-param name="ref" select="gn:element/@ref"/>
         <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
       </xsl:apply-templates>
       <xsl:apply-templates mode="render-for-field-for-attribute"
-                           select="
-        */@*|
-        */gn:attribute[not(@name = parent::node()/@*/name())]">
+                           select="*/@*">
+        <xsl:with-param name="ref" select="$theElement/gn:element/@ref"/>
+        <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
+      </xsl:apply-templates>
+      <xsl:apply-templates mode="render-for-field-for-attribute"
+                           select="gn:attribute[not(@name = parent::node()/@*/name())]">
+        <xsl:with-param name="ref" select="gn:element/@ref"/>
+        <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
+      </xsl:apply-templates>
+      <xsl:apply-templates mode="render-for-field-for-attribute"
+                           select="*/gn:attribute[not(@name = parent::node()/@*/name())]">
         <xsl:with-param name="ref" select="$theElement/gn:element/@ref"/>
         <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
       </xsl:apply-templates>
@@ -343,7 +394,7 @@
             </xsl:element>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:copy-of select="gn-fn-metadata:getFieldDirective($editorConfig, name())"/>
+            <xsl:copy-of select="gn-fn-metadata:getFieldDirective($editorConfig, name(), $xpath)"/>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:with-param>
@@ -455,6 +506,7 @@
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="codelists" select="$iso19139codelists" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
+    <xsl:param name="refToDelete" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
@@ -484,7 +536,8 @@
       <xsl:with-param name="name"
                       select="if ($isEditing) then concat(*/gn:element/@ref, '_codeListValue') else ''"/>
       <xsl:with-param name="editInfo" select="*/gn:element"/>
-      <xsl:with-param name="parentEditInfo" select="gn:element"/>
+      <xsl:with-param name="parentEditInfo"
+                      select="if ($refToDelete) then $refToDelete else gn:element"/>
       <xsl:with-param name="listOfValues"
                       select="gn-fn-metadata:getCodeListValues($schema, name(*[@codeListValue]), $codelists, .)"/>
       <xsl:with-param name="isFirst"
@@ -533,7 +586,8 @@
 
 
   <!-- the gml element having no child eg. gml:name. -->
-  <xsl:template mode="mode-iso19139" priority="100" match="gml:*[count(.//gn:element) = 1]">
+  <xsl:template mode="mode-iso19139" priority="100"
+                match="gml:*[count(.//gn:element) = 1]|gml320:*[count(.//gn:element) = 1]">
     <xsl:variable name="name" select="name(.)"/>
 
     <xsl:variable name="labelConfig" select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>

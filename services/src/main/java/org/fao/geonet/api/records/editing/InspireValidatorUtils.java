@@ -25,93 +25,190 @@ package org.fao.geonet.api.records.editing;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
+import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.client.ClientHttpResponse;
 
-import javassist.NotFoundException;
+import com.google.common.base.Function;
+import com.google.common.io.CharStreams;
 
-// A static style interface for methods in Inspire Service.
+import jeeves.server.context.ServiceContext;
+
+// Utility class to access methods in Inspire Service.
 // Based on ETF Web API v.2 BETA
 public class InspireValidatorUtils {
 
-    /** The Constant USER_AGENT. */
+    @Autowired
+    private GeonetHttpRequestFactory requestFactory;
+
+    /**
+     * The Constant USER_AGENT.
+     */
     private final static String USER_AGENT = "Mozilla/5.0";
 
-    /** The Constant ACCEPT. */
+    /**
+     * The Constant ACCEPT.
+     */
     private final static String ACCEPT = "application/json";
 
-    /** The Constant CheckStatus_URL. */
+    /**
+     * The Constant CheckStatus_URL.
+     */
     private final static String CheckStatus_URL = "/v2/status";
 
-    /** The Constant ExecutableTestSuites_URL. */
+    /**
+     * The Constant ExecutableTestSuites_URL.
+     */
     private final static String ExecutableTestSuites_URL = "/v2/ExecutableTestSuites";
 
-    /** The Constant TestObjects_URL. */
+    /**
+     * The Constant TestObjects_URL.
+     */
     private final static String TestObjects_URL = "/v2/TestObjects";
 
-    /** The Constant TestRuns_URL. */
+    /**
+     * The Constant TestRuns_URL.
+     */
     private final static String TestRuns_URL = "/v2/TestRuns";
 
-    /** The Constant TESTS_TO_RUN. */
-    private final static String[] TESTS_TO_RUN = {"Conformance class: INSPIRE Profile based on EN ISO 19115 and EN ISO 19119", "Conformance class: XML encoding of ISO 19115/19119 metadata"};
+    /**
+     * Test status PASSED.
+     */
+    public final static String TEST_STATUS_PASSED = "PASSED";
+
+    /**
+     * Test status FAILED.
+     */
+    public final static String TEST_STATUS_FAILED = "FAILED";
+
+    /**
+     * Test status PASSED_MANUAL.
+     */
+    public final static String TEST_STATUS_PASSED_MANUAL = "PASSED_MANUAL";
+
+     /**
+     * Test status UNDEFINED.
+     */
+     public final static String TEST_STATUS_UNDEFINED = "UNDEFINED";
+
+    /**
+     * Test status NOT_APPLICABLE.
+     */
+    public final static String TEST_STATUS_NOT_APPLICABLE = "NOT_APPLICABLE";
+
+    /**
+     * Test status INTERNAL_ERROR.
+     */
+    public final static String TEST_STATUS_INTERNAL_ERROR = "INTERNAL_ERROR";
+
+
+    public String defaultTestSuite;
+
+    private Map<String, String[]> testsuites;
+
+    private Map<String, String> testsuitesConditions;
+
+    private Integer maxNumberOfEtfChecks;
+
+    private Long intervalBetweenEtfChecks;
+
+
+    public String getDefaultTestSuite() {
+        return defaultTestSuite;
+    }
+
+    public void setDefaultTestSuite(String defaultTestSuite) {
+        this.defaultTestSuite = defaultTestSuite;
+    }
+
+    public void setTestsuites(Map<String, String[]> testsuites) {
+        this.testsuites = testsuites;
+    }
+
+    public Map getTestsuites() {
+        return testsuites;
+    }
+
+    public void setTestsuitesConditions(Map<String, String> testsuitesConditions) {
+        this.testsuitesConditions = testsuitesConditions;
+    }
+
+    public Map getTestsuitesConditions() {
+        return testsuitesConditions;
+    }
+
+    public Integer getMaxNumberOfEtfChecks() {
+        return maxNumberOfEtfChecks;
+    }
+
+    public void setMaxNumberOfEtfChecks(Integer maxNumberOfEtfChecks) {
+        this.maxNumberOfEtfChecks = maxNumberOfEtfChecks;
+    }
+
+    public Long getIntervalBetweenEtfChecks() {
+        return intervalBetweenEtfChecks;
+    }
+
+    public void setIntervalBetweenEtfChecks(Long intervalBetweenEtfChecks) {
+        this.intervalBetweenEtfChecks = intervalBetweenEtfChecks;
+    }
+
+    public InspireValidatorUtils() {
+    }
 
     /**
      * Check service status.
      *
      * @param endPoint the end point
-     * @param client the client (optional) (optional)
      * @return true, if successful
+     * @throws IOException
      */
-    public static boolean checkServiceStatus(String endPoint, CloseableHttpClient client) {
+    public boolean checkServiceStatus(ServiceContext context, String endPoint) throws IOException {
 
-        boolean close = false;
-        if(client == null) {
-            client = HttpClients.createDefault();
-            close = true;
-        }
         HttpGet request = new HttpGet(endPoint + CheckStatus_URL);
 
         // add request header
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
-        HttpResponse response;
 
-        try {
-            response = client.execute(request);
-        } catch(Exception e) {
-            Log.warning(Log.SERVICE, "Error calling INSPIRE service: " + endPoint, e);
-            return false;
-        } finally {
-            if(close) {
-                try {
-                    client.close();
-                } catch (IOException e) {
-                    Log.error(Log.SERVICE, "Error closing CloseableHttpClient: " + endPoint, e);
-                }
+        try (ClientHttpResponse response = this.execute(context, request)) {
+            if (response.getStatusCode().value() == 200) {
+                return true;
+            } else {
+                Log.warning(Log.SERVICE, "INSPIRE service not available: " + endPoint + CheckStatus_URL);
+                return false;
             }
-        }
-
-        if(response.getStatusLine().getStatusCode() == 200) {
-            return true;
-        } else {
-            Log.warning(Log.SERVICE, "INSPIRE service not available: " + endPoint + CheckStatus_URL);
+        } catch (Exception e) {
+            Log.warning(Log.SERVICE, "Error calling INSPIRE service: " + endPoint, e);
             return false;
         }
     }
@@ -121,25 +218,18 @@ public class InspireValidatorUtils {
      *
      * @param endPoint the end point
      * @param xml the xml
-     * @param client the client (optional)
      * @return the string
-     * @throws IOException Signals that an I/O exception has occurred.
-     * @throws JSONException the JSON exception
      */
-    private static String uploadMetadataFile(String endPoint, InputStream xml, CloseableHttpClient client) throws IOException, JSONException {
+    private String uploadMetadataFile(ServiceContext context, String endPoint, InputStream xml) {
 
-        boolean close = false;
-        if(client == null) {
-            client = HttpClients.createDefault();
-            close = true;
-        }
+        HttpPost request = new HttpPost(endPoint + TestObjects_URL + "?action=upload");
+
+        request.addHeader("User-Agent", USER_AGENT);
+        request.addHeader("Accept", ACCEPT);
+
+        ClientHttpResponse response = null;
 
         try {
-
-            HttpPost request = new HttpPost(endPoint + TestObjects_URL + "?action=upload");
-
-            request.addHeader("User-Agent", USER_AGENT);
-            request.addHeader("Accept", ACCEPT);
 
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.addBinaryBody("fileupload", xml, ContentType.TEXT_XML, "file.xml");
@@ -147,29 +237,24 @@ public class InspireValidatorUtils {
 
             request.setEntity(entity);
 
-            HttpResponse response = client.execute(request);
+            response = this.execute(context, request);
 
-            if(response.getStatusLine().getStatusCode() == 200) {
+            if (response.getStatusCode().value() == 200) {
 
-                ResponseHandler<String> handler = new BasicResponseHandler();
-                String body = handler.handleResponse(response);
+                new BasicResponseHandler();
+                String body = CharStreams.toString(new InputStreamReader(response.getBody()));
                 JSONObject jsonRoot = new JSONObject(body);
                 return jsonRoot.getJSONObject("testObject").getString("id");
             } else {
-                Log.warning(Log.SERVICE, "WARNING: INSPIRE service HTTP response: " + response.getStatusLine().getStatusCode() + " for " + TestObjects_URL);
+                Log.warning(Log.SERVICE,
+                        "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for " + TestObjects_URL);
                 return null;
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.error(Log.SERVICE, "Error calling INSPIRE service: " + endPoint, e);
             return null;
         } finally {
-            if(close) {
-                try {
-                    client.close();
-                } catch (IOException e) {
-                    Log.error(Log.SERVICE, "Error closing CloseableHttpClient: " + endPoint, e);
-                }
-            }
+            IOUtils.closeQuietly(response);
         }
     }
 
@@ -177,33 +262,31 @@ public class InspireValidatorUtils {
      * Gets the tests.
      *
      * @param endPoint the end point
-     * @param client the client (optional)
+     * @param testsuite
      * @return the tests
      */
-    private static List<String> getTests(String endPoint, CloseableHttpClient client) {
-
-        boolean close = false;
-        if(client == null) {
-            client = HttpClients.createDefault();
-            close = true;
+    private List<String> getTests(ServiceContext context, String endPoint, String testsuite) {
+        if (testsuite == null) {
+            testsuite = getDefaultTestSuite();
         }
 
+        HttpGet request = new HttpGet(endPoint + ExecutableTestSuites_URL);
+
+        request.addHeader("User-Agent", USER_AGENT);
+        request.addHeader("Accept", ACCEPT);
+        ClientHttpResponse response = null;
+
         try {
+            String[] tests = testsuites.get(testsuite);
 
-            HttpGet request = new HttpGet(endPoint + ExecutableTestSuites_URL);
+            response = this.execute(context, request);
 
-            request.addHeader("User-Agent", USER_AGENT);
-            request.addHeader("Accept", ACCEPT);
-            HttpResponse response;
-
-            response = client.execute(request);
-
-            if(response.getStatusLine().getStatusCode() == 200) {
+            if (response.getStatusCode().value() == 200) {
 
                 List<String> testList = new ArrayList<>();
 
-                ResponseHandler<String> handler = new BasicResponseHandler();
-                String body = handler.handleResponse(response);
+                new BasicResponseHandler();
+                String body = CharStreams.toString(new InputStreamReader(response.getBody()));
 
                 JSONObject jsonRoot = new JSONObject(body);
 
@@ -211,36 +294,31 @@ public class InspireValidatorUtils {
                 JSONObject executableTestSuites = etfItemCollection.getJSONObject("executableTestSuites");
                 JSONArray executableTestSuiteArray = executableTestSuites.getJSONArray("ExecutableTestSuite");
 
-                for(int i=0; i < executableTestSuiteArray.length(); i++) {
+                for (int i = 0; i < executableTestSuiteArray.length(); i++) {
                     JSONObject test = executableTestSuiteArray.getJSONObject(i);
 
                     boolean ok = false;
 
-                    for (String testToRun : TESTS_TO_RUN) {
+                    for (String testToRun : tests) {
                         ok = ok || testToRun.equals(test.getString("label"));
                     }
 
-                    if(ok) {
+                    if (ok) {
                         testList.add(test.getString("id"));
                     }
                 }
 
                 return testList;
             } else {
-                Log.warning(Log.SERVICE, "WARNING: INSPIRE service HTTP response: " + response.getStatusLine().getStatusCode() + " for " + ExecutableTestSuites_URL);
+                Log.warning(Log.SERVICE,
+                        "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for " + ExecutableTestSuites_URL);
                 return null;
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
             return null;
         } finally {
-            if(close) {
-                try {
-                    client.close();
-                } catch (IOException e) {
-                    Log.error(Log.SERVICE, "Error closing CloseableHttpClient: " + endPoint, e);
-                }
-            }
+            IOUtils.closeQuietly(response);
         }
     }
 
@@ -250,23 +328,19 @@ public class InspireValidatorUtils {
      * @param endPoint the end point
      * @param fileId the file id
      * @param testList the test list
-     * @param client the client (optional)
      * @return the string
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
      */
-    private static String testRun(String endPoint, String fileId, List<String> testList, String testTitle, CloseableHttpClient client)
-            throws IOException, JSONException {
+    private String testRun(ServiceContext context, String endPoint, String fileId, List<String> testList, String testTitle) {
 
-        boolean close = false;
-        if(client == null) {
-            client = HttpClients.createDefault();
-            close = true;
-        }
+        HttpPost request = new HttpPost(endPoint + TestRuns_URL);
+        request.setHeader("Content-type", ACCEPT);
+        request.addHeader("User-Agent", USER_AGENT);
+        request.addHeader("Accept", ACCEPT);
+        ClientHttpResponse response = null;
 
         try {
-            HttpPost request = new HttpPost(endPoint + TestRuns_URL);
-
             JSONObject json = new JSONObject();
             JSONArray tests = new JSONArray();
             JSONObject argumets = new JSONObject();
@@ -289,38 +363,28 @@ public class InspireValidatorUtils {
             StringEntity entity = new StringEntity(json.toString());
             request.setEntity(entity);
 
-            request.setHeader("Content-type", ACCEPT);
-            request.addHeader("User-Agent", USER_AGENT);
-            request.addHeader("Accept", ACCEPT);
-            HttpResponse response;
+            response = this.execute(context, request);
 
-            response = client.execute(request);
+            if (response.getStatusCode().value() == 201) {
 
-            if(response.getStatusLine().getStatusCode() == 201) {
-
-                ResponseHandler<String> handler = new BasicResponseHandler();
-                String body = handler.handleResponse(response);
+                String body = CharStreams.toString(new InputStreamReader(response.getBody()));
 
                 JSONObject jsonRoot = new JSONObject(body);
-                String testId = jsonRoot.getJSONObject("EtfItemCollection").getJSONObject("testRuns").getJSONObject("TestRun").getString("id");
+                String testId = jsonRoot.getJSONObject("EtfItemCollection").getJSONObject("testRuns").getJSONObject("TestRun")
+                        .getString("id");
 
                 return testId;
             } else {
-                Log.warning(Log.SERVICE, "WARNING: INSPIRE service HTTP response: " + response.getStatusLine().getStatusCode() + " for " + TestRuns_URL);
+                Log.warning(Log.SERVICE,
+                        "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for " + TestRuns_URL);
                 return null;
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
             return null;
         } finally {
-            if(close) {
-                try {
-                    client.close();
-                } catch (IOException e) {
-                    Log.error(Log.SERVICE, "Error closing CloseableHttpClient: " + endPoint, e);
-                }
-            }
+            IOUtils.closeQuietly(response);
         }
     }
 
@@ -329,64 +393,43 @@ public class InspireValidatorUtils {
      *
      * @param endPoint the end point
      * @param testId the test id
-     * @param client the client (optional)
      * @return true, if is ready
      * @throws Exception
      */
-    public static boolean isReady(String endPoint, String testId, CloseableHttpClient client) throws Exception {
-
-        if(testId == null) {
+    public boolean isReady(ServiceContext context, String endPoint, String testId) throws Exception {
+        if (testId == null) {
             return false;
         }
 
-        boolean close = false;
-        if(client == null) {
-            client = HttpClients.createDefault();
-            close = true;
-        }
+        HttpGet request = new HttpGet(endPoint + TestRuns_URL + "/" + testId + "/progress");
 
-        try {
+        request.addHeader("User-Agent", USER_AGENT);
+        request.addHeader("Accept", ACCEPT);
 
-            HttpGet request = new HttpGet(endPoint + TestRuns_URL + "/" + testId + "/progress");
-
-            request.addHeader("User-Agent", USER_AGENT);
-            request.addHeader("Accept", ACCEPT);
-            HttpResponse response;
-
-            response = client.execute(request);
-
-            if(response.getStatusLine().getStatusCode() == 200) {
-
-                ResponseHandler<String> handler = new BasicResponseHandler();
-                String body = handler.handleResponse(response);
+        try (ClientHttpResponse response = this.execute(context, request)) {
+            if (response.getStatusCode().value() == 200) {
+                String body = CharStreams.toString(new InputStreamReader(response.getBody()));
 
                 JSONObject jsonRoot = new JSONObject(body);
 
                 // Completed when estimated number of Test Steps is equal to completed Test Steps
                 // Somehow this condition is necessary but not sufficient
                 // so another check on real value of test is evaluated
-                return jsonRoot.getInt("val") == jsonRoot.getInt("max") & InspireValidatorUtils.isPassed(endPoint, testId, client) != null;
+                return jsonRoot.getInt("val") == jsonRoot.getInt("max") & isPassed(context, endPoint, testId) != null;
 
-            } else if (response.getStatusLine().getStatusCode() == 404) {
+            } else if (response.getStatusCode().value() == 404) {
 
-                throw new NotFoundException("Test not found");
+                throw new ResourceNotFoundException("Test not found");
 
             } else {
-                Log.warning(Log.SERVICE, "WARNING: INSPIRE service HTTP response: " + response.getStatusLine().getStatusCode() + " for " + TestRuns_URL + "?view=progress");
+                Log.warning(Log.SERVICE, "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for "
+                        + TestRuns_URL + "?view=progress");
             }
-        } catch (NotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             throw e;
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
             throw e;
-        } finally {
-            if(close) {
-                try {
-                    client.close();
-                } catch (IOException e) {
-                    Log.error(Log.SERVICE, "Error closing CloseableHttpClient: " + endPoint, e);
-                }
-            }
         }
 
         return false;
@@ -397,68 +440,50 @@ public class InspireValidatorUtils {
      *
      * @param endPoint the end point
      * @param testId the test id
-     * @param client the client (optional)
      * @return the string
      * @throws Exception
      */
-    public static String isPassed(String endPoint, String testId, CloseableHttpClient client) throws Exception {
+    public String isPassed(ServiceContext context, String endPoint, String testId) throws Exception {
 
-        if(testId == null) {
+        if (testId == null) {
             throw new Exception("");
         }
 
-        boolean close = false;
-        if(client == null) {
-            client = HttpClients.createDefault();
-            close = true;
-        }
+        HttpGet request = new HttpGet(endPoint + TestRuns_URL + "/" + testId);
 
-        try {
+        request.addHeader("User-Agent", USER_AGENT);
+        request.addHeader("Accept", ACCEPT);
 
-            HttpGet request = new HttpGet(endPoint + TestRuns_URL + "/" + testId);
+        try (ClientHttpResponse response = this.execute(context, request)) {
 
-            request.addHeader("User-Agent", USER_AGENT);
-            request.addHeader("Accept", ACCEPT);
-            HttpResponse response;
+            if (response.getStatusCode().value() == 200) {
 
-            response = client.execute(request);
-
-            if(response.getStatusLine().getStatusCode() == 200) {
-
-                ResponseHandler<String> handler = new BasicResponseHandler();
-                String body = handler.handleResponse(response);
+                String body = CharStreams.toString(new InputStreamReader(response.getBody()));
 
                 JSONObject jsonRoot = new JSONObject(body);
 
                 try {
-                    return jsonRoot.getJSONObject("EtfItemCollection").getJSONObject("testRuns").getJSONObject("TestRun").getString("status");
+                    return jsonRoot.getJSONObject("EtfItemCollection").getJSONObject("testRuns").getJSONObject("TestRun")
+                            .getString("status");
                 } catch (JSONException e) {
                     return null;
                 }
 
-            }  else if (response.getStatusLine().getStatusCode() == 404) {
+            } else if (response.getStatusCode().value() == 404) {
 
-                throw new NotFoundException("Test not found");
+                throw new ResourceNotFoundException("Test not found");
 
             } else {
-                Log.warning(Log.SERVICE, "WARNING: INSPIRE service HTTP response: " + response.getStatusLine().getStatusCode() + " for " + TestRuns_URL + "?view=progress");
+                Log.warning(Log.SERVICE, "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for "
+                        + TestRuns_URL + "?view=progress");
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
             throw e;
-        } finally {
-            if(close) {
-                try {
-                    client.close();
-                } catch (IOException e) {
-                    Log.error(Log.SERVICE, "Error closing CloseableHttpClient: " + endPoint, e);
-                }
-            }
         }
 
         return null;
     }
-
 
     /**
      * Gets the report url.
@@ -467,7 +492,7 @@ public class InspireValidatorUtils {
      * @param testId the test id
      * @return the report url
      */
-    public static String getReportUrl(String endPoint, String testId) {
+    public String getReportUrl(String endPoint, String testId) {
 
         return endPoint + TestRuns_URL + "/" + testId + ".html";
     }
@@ -485,35 +510,49 @@ public class InspireValidatorUtils {
     }
 
     /**
+     * Gets the report url in XML format.
+     *
+     * @param endPoint the end point
+     * @param testId the test id
+     * @return the report url
+     */
+    public static String getReportUrlXML(String endPoint, String testId) {
+
+        return endPoint + TestRuns_URL + "/" + testId + ".xml";
+    }
+
+    /**
      * Submit file.
      *
      * @param record the record
+     * @param testsuite
      * @return the string
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
      */
-    public static String submitFile(String serviceEndpoint, InputStream record, String testTitle) throws IOException, JSONException {
-
-        CloseableHttpClient client = HttpClients.createDefault();
+    public String submitFile(ServiceContext context, String serviceEndpoint, InputStream record, String testsuite, String testTitle)
+            throws IOException, JSONException {
 
         try {
-            if (InspireValidatorUtils.checkServiceStatus(serviceEndpoint, client)) {
+            if (checkServiceStatus(context, serviceEndpoint)) {
                 // Get the tests to execute
-                List<String> tests = InspireValidatorUtils.getTests(serviceEndpoint, client);
+                List<String> tests = getTests(context, serviceEndpoint, testsuite);
                 // Upload file to test
-                String testFileId = InspireValidatorUtils.uploadMetadataFile(serviceEndpoint, record, client);
+                String testFileId = uploadMetadataFile(context, serviceEndpoint, record);
 
-                if(testFileId == null) {
-                    Log.error(Log.SERVICE, "File not valid.", new Exception());
+                if (testFileId == null) {
+                    Log.error(Log.SERVICE, "File not valid.", new IllegalArgumentException());
                     return null;
                 }
 
-                if(tests==null || tests.size()==0) {
-                    Log.error(Log.SERVICE, "Default test sequence not supported. Check org.fao.geonet.api.records.editing.InspireValidatorUtils.TESTS_TO_RUN.", new Exception());
+                if (tests == null || tests.size() == 0) {
+                    Log.error(Log.SERVICE,
+                            "Default test sequence not supported. Check org.fao.geonet.api.records.editing.InspireValidatorUtils.TESTS_TO_RUN_TG13.",
+                            new Exception());
                     return null;
                 }
                 // Return test id from Inspire service
-                return InspireValidatorUtils.testRun(serviceEndpoint, testFileId, tests, testTitle, client);
+                return testRun(context, serviceEndpoint, testFileId, tests, testTitle);
 
             } else {
                 ServiceNotFoundEx ex = new ServiceNotFoundEx(serviceEndpoint);
@@ -521,9 +560,143 @@ public class InspireValidatorUtils {
                 throw ex;
             }
         } finally {
-            client.close();
+            // client.close();
         }
     }
 
-}
+    public String retrieveReport(ServiceContext context, String endPoint) throws Exception {
 
+        HttpGet request = new HttpGet(endPoint);
+
+        // add request header
+        request.addHeader("User-Agent", USER_AGENT);
+        request.addHeader("Accept", ACCEPT);
+
+
+        try (ClientHttpResponse response = this.execute(context, request)) {
+            return IOUtils.toString(response.getBody(), StandardCharsets.UTF_8.name());
+        } catch (Exception e) {
+            Log.warning(Log.SERVICE, "Error calling INSPIRE service to retrieve the result report: " + endPoint, e);
+            throw e;
+        }
+    }
+
+    public void waitUntilReady(ServiceContext context, String endPoint, String testId) throws Exception {
+        int checkCounter = 1;
+
+        while (checkCounter++ <= maxNumberOfEtfChecks) {
+            if (isReady(context, endPoint, testId)) {
+               return;
+            }
+
+            Thread.sleep(intervalBetweenEtfChecks);
+        }
+
+        throw new Exception("ETF validation task hasn't finish after " + maxNumberOfEtfChecks + " checks.");
+    }
+
+    /**
+     * Calculates the metadata validation status in GeoNetwork
+     * based on the INSPIRE validator result.
+     *  - UNDEFINED, INTERNAL_ERROR --> MetadataValidationStatus.NEVER_CALCULATED
+     *  - PASSED, PASSED_MANUAL --> MetadataValidationStatus.VALID
+     *  - NOT_APPLICABLE --> MetadataValidationStatus.DOES_NOT_APPLY
+     *  - Other cases --> MetadataValidationStatus.INVALID
+     *
+     * @param validationStatus
+     * @return
+     */
+    public MetadataValidationStatus calculateValidationStatus(String validationStatus) {
+        boolean isUndefined = validationStatus.equalsIgnoreCase(TEST_STATUS_UNDEFINED);
+        boolean isNotApplicable = validationStatus.equalsIgnoreCase(TEST_STATUS_NOT_APPLICABLE);
+        boolean executed = !validationStatus.equalsIgnoreCase(TEST_STATUS_INTERNAL_ERROR);
+
+        MetadataValidationStatus metadataValidationStatus;
+
+        if (isNotApplicable) {
+            metadataValidationStatus = MetadataValidationStatus.DOES_NOT_APPLY;
+        } else if (!isUndefined && executed) {
+            boolean isValid = validationStatus.equalsIgnoreCase(TEST_STATUS_PASSED) ||
+                validationStatus.equalsIgnoreCase(TEST_STATUS_PASSED_MANUAL);
+
+            metadataValidationStatus =
+                (isValid?MetadataValidationStatus.VALID:MetadataValidationStatus.INVALID);
+        } else {
+            metadataValidationStatus = MetadataValidationStatus.NEVER_CALCULATED;
+        }
+
+        return metadataValidationStatus;
+    }
+
+    /**
+     * Calculate the test suites to apply:
+     *  - Checks if any rule for the schema, otherwise
+     *  - checks if any rule in the schema dependency hierarchy.
+     *
+     * @param schemaid
+     * @param metadataSchemaUtils
+     * @return
+     */
+    public Map<String, String> calculateTestsuitesToApply(String schemaid,
+                                                          IMetadataSchemaUtils metadataSchemaUtils) {
+        Map<String, String> testsuitesConditions = getTestsuitesConditions();
+
+        // Check for rules for the schema
+        Map<String, String> testsuitesConditionsForSchema = testsuitesConditions.entrySet().stream()
+            .filter(x-> x.getKey().split("::")[0].equalsIgnoreCase(schemaid))
+            .collect(Collectors.toMap(map -> map.getKey().split("::")[1], map -> map.getValue()));
+
+        // If no rules found, check the rules in the dependencies of the schema
+        if (testsuitesConditionsForSchema.isEmpty()) {
+            MetadataSchema metadataSchema = metadataSchemaUtils.getSchema(schemaid);
+
+            Set<String> schemasProcessed = new HashSet<>();
+
+            String schemaDependsOn = metadataSchema.getDependsOn();
+
+            boolean conditionsFound = false;
+
+            while (StringUtils.isNotEmpty(schemaDependsOn) &&
+                !schemasProcessed.contains(schemaDependsOn) &&
+                !conditionsFound) {
+
+                schemasProcessed.add(schemaDependsOn);
+
+                String schemaDependsOnFilter = schemaDependsOn;
+                testsuitesConditionsForSchema = testsuitesConditions.entrySet().stream()
+                    .filter(x-> x.getKey().split("::")[0].equalsIgnoreCase(schemaDependsOnFilter))
+                    .collect(Collectors.toMap(map -> map.getKey().split("::")[1], map -> map.getValue()));
+
+                conditionsFound = !testsuitesConditionsForSchema.isEmpty();
+
+                // If no conditions found, check the schema dependency (if defined)
+                if (!conditionsFound) {
+                    metadataSchema = metadataSchemaUtils.getSchema(schemaDependsOn);
+                    schemaDependsOn = metadataSchema.getDependsOn();
+                }
+            }
+        }
+
+        return testsuitesConditionsForSchema;
+    }
+
+
+    /**
+     *  Executes the HttpUriRequest
+     * @param request
+     * @return response of execute method
+     * @throws IOException
+     */
+    private ClientHttpResponse execute(ServiceContext context, HttpUriRequest request) throws IOException {
+
+        final Function<HttpClientBuilder, Void> proxyConfiguration = new Function<HttpClientBuilder, Void>() {
+            @Nullable
+            @Override
+            public Void apply(@Nonnull HttpClientBuilder input) {
+                Lib.net.setupProxy(context, input, request.getURI().getHost());
+                return null;                }
+        };
+        return requestFactory.execute(request, proxyConfiguration);
+    }
+
+}

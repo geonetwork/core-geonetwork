@@ -82,9 +82,9 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(put("/api/ui")
+        this.mockMvc.perform(put("/srv/api/ui")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("text/plain")))
             .andExpect(status().is(201));
@@ -99,7 +99,7 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(get("/api/ui/" + uiConfiguration.getId())
+        this.mockMvc.perform(get("/srv/api/ui/" + uiConfiguration.getId())
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id", is(uiConfiguration.getId())));
@@ -115,9 +115,10 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(put("/api/ui/" + uiConfiguration.getId())
+        this.mockMvc.perform(put("/srv/api/ui/" + uiConfiguration.getId())
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
+            .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
 
@@ -127,7 +128,7 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(delete("/api/ui/" + uiConfiguration.getId())
+        this.mockMvc.perform(delete("/srv/api/ui/" + uiConfiguration.getId())
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
     }
@@ -138,7 +139,7 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(get("/api/ui")
+        this.mockMvc.perform(get("/srv/api/ui")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(uiConfigurations.size())));
@@ -152,7 +153,7 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        MvcResult result = this.mockMvc.perform(get("/api/ui/222")
+        MvcResult result = this.mockMvc.perform(get("/srv/api/ui/222")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
             .andReturn();
@@ -166,7 +167,7 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(delete("/api/ui/222")
+        this.mockMvc.perform(delete("/srv/api/ui/222")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404));
     }
@@ -179,7 +180,7 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(delete("/api/ui/222")
+        this.mockMvc.perform(delete("/srv/api/ui/222")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404));
     }

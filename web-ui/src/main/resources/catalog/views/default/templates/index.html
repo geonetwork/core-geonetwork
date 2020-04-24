@@ -1,12 +1,12 @@
 <header class="gn-header"
         data-ng-show="gnCfg.mods.header.enabled && gnCfg.mods.header.isLogoInHeader">
-  <div class="container">
+  <div data-ng-class="fluidHeaderLayout ? 'container-fluid' : 'container'">
     <div class=row>
       <div class="col-md-12 text-{{gnCfg.mods.header.logoInHeaderPosition}}">
         <a data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
           <img class="{{gnCfg.mods.header.logoInHeaderPosition}}"
                alt="{{'siteLogo' | translate}}"
-               data-ng-src="{{gnUrl}}../images/logos/{{info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
+               data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
           </a>
       </div>
     </div>
@@ -36,7 +36,9 @@
            data-ng-include="'../../catalog/views/default/templates/map.html'"
            data-ng-show="activeTab == '/map'"/>
       <div data-ng-include="'../../catalog/views/default/templates/recordView.html'"
-           data-ng-show="activeTab == '/metadata'"/>
+           data-ng-show="activeTab == '/metadata'" class="gn-view-approved"/>
+      <div data-ng-include="'../../catalog/views/default/templates/recordView.html'"
+           data-ng-show="activeTab == '/metadraf'" class="gn-view-not-approved"/>
       <div data-ng-include="'../../catalog/views/default/templates/page.html'"
            data-ng-if="activeTab == '/page'"/>
     </div>
@@ -45,5 +47,6 @@
 
 
 <div class="navbar navbar-default gn-bottom-bar" role="navigation"
+     data-ng-show="gnCfg.mods.footer.enabled"
      data-ng-include="'../../catalog/views/default/templates/footer.html'">
 </div>

@@ -23,34 +23,39 @@
 
 package org.fao.geonet.guiservices.metadata;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
-import org.fao.geonet.domain.*;
-import org.fao.geonet.exceptions.OperationNotAllowedEx;
+import java.nio.file.Path;
+import java.util.List;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataDataInfo_;
+import org.fao.geonet.domain.Metadata_;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 
-import java.nio.file.Path;
-import java.util.List;
-
-import static org.springframework.data.jpa.domain.Specifications.*;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Retrieves the metadata owned by a user. Depending on user profile:
@@ -98,7 +103,7 @@ public class GetByOwner implements Service {
         Specifications<Metadata> spec;
         // if the user is an admin, return all metadata
         if (userProfile == Profile.Administrator) {
-            spec = where(MetadataSpecs.isHarvested(false));
+            spec = where((Specification<Metadata>)MetadataSpecs.isHarvested(false));
         } else if (userProfile == Profile.Reviewer || userProfile == Profile.UserAdmin) {
             final List<UserGroup> groups = context.getBean(UserGroupRepository.class).findAll(UserGroupSpecs.hasUserId(ownerId));
             List<Integer> groupIds = Lists.transform(groups, new Function<UserGroup, Integer>() {
@@ -108,10 +113,10 @@ public class GetByOwner implements Service {
                     return input.getId().getGroupId();
                 }
             });
-            spec = where(MetadataSpecs.isHarvested(false)).and(MetadataSpecs.isOwnedByOneOfFollowingGroups(groupIds));
+            spec = where((Specification<Metadata>)MetadataSpecs.isHarvested(false)).and((Specification<Metadata>)MetadataSpecs.isOwnedByOneOfFollowingGroups(groupIds));
             // if the user is a reviewer, return all metadata of the user's groups
         } else if (userProfile == Profile.Editor) {
-            spec = where(MetadataSpecs.isOwnedByUser(ownerId)).and(MetadataSpecs.isHarvested(false));
+            spec = where((Specification<Metadata>)MetadataSpecs.isOwnedByUser(ownerId)).and((Specification<Metadata>)MetadataSpecs.isHarvested(false));
             // if the user is an editor, return metadata owned by this user
         } else {
             throw new OperationNotAllowedEx("Unauthorized user " + ownerId + " attempted to list editable metadata ");
@@ -131,10 +136,11 @@ public class GetByOwner implements Service {
             throw new IllegalArgumentException("Unknown sortBy parameter: " + sortBy);
         }
 
-        List<Metadata> metadataList = context.getBean(MetadataRepository.class).findAll(spec, order);
+        List<? extends AbstractMetadata> metadataList = 
+        		context.getBean(IMetadataUtils.class).findAll((Specification<Metadata>)spec, order);
         _response = new Element("response");
 
-        for (Metadata rec : metadataList) {
+        for (AbstractMetadata rec : metadataList) {
             String id = "" + rec.getId();
             boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
             Element md = gc.getBean(DataManager.class).getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);

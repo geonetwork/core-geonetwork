@@ -1,43 +1,28 @@
-<form name="myForm">
+<form name="myForm" id="gn-workflow-status-change">
   <input type="hidden" name="_csrf" value="{{csrf}}"/>
-  <div class="row" data-ng-if="statusType === 'workflow'">
-    <div class="col-md-4">
-      <!-- TODO: Status are disabled based on profiles and
-      previous values. See https://github.com/geonetwork/core-geonetwork/blob/develop/web/src/main/webapp/xsl/metadata-status.xsl#L15 -->
-      <div class="radio"
-           data-ng-repeat="s in status | orderBy: 'displayOrder'"
-           data-ng-class="{disabled : cantStatus(s.id)}">
-        <label>
-          <input type="radio"
-                 name="status"
-                 value="{{::s.id}}"
-                 data-ng-model="newStatus.status" data-ng-disabled="cantChangeStatus(s.id)">
-          {{s.label[lang]}}
-          <span data-ng-if="lastStatus == s.id">
-            (<span data-translate="">currentStatus</span>)
-          </span>
-        </label>
-      </div>
+  <div data-ng-if="statusType === 'workflow'">
+
+    <div class="form-group">
+      <label for="gn-change-message"
+            data-translate="">statusLogMessage</label>
+      <textarea class="form-control"
+                id="gn-change-message"
+                rows="4"
+                data-ng-model="newStatus.changeMessage"></textarea>
     </div>
-    <div class="col-md-8">
-      <div class="form-group">
-        <label for="gn-change-message"
-               data-translate="">statusLogMessage</label>
-        <textarea class="form-control"
-                  id="gn-change-message"
-                  data-ng-model="newStatus.changeMessage"></textarea>
-      </div>
 
-
-      <div class="btn-toolbar">
+    <div class="modal-footer-inline clearfix">
+      <div data-gn-need-help="user-guide/workflow/life-cycle.html"
+          data-icon-only="true"
+          class="pull-left"></div>
+      <div class="btn-toolbar pull-right">    
         <button class="btn btn-default"
                 data-gn-click-and-spin="updateStatus()">
-          <i class="fa fa-code-fork"></i>&nbsp;
-          <span data-translate="">updateStatus</span>
+          {{"mdStatusButton-" + statusToSelect | translate}}
         </button>
-
-        <div data-gn-need-help="user-guide/workflow/life-cycle.html"
-             data-icon-only="true"></div>
+        <button class="btn btn-default" type="button" data-dismiss="modal">
+          <span data-translate="">cancel</span>
+        </button>
       </div>
     </div>
   </div>

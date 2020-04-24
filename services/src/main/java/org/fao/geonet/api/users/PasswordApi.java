@@ -35,7 +35,6 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -64,8 +63,8 @@ import jeeves.server.context.ServiceContext;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-    "/api/user",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/user",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/user"
 })
 @Api(value = "users",
@@ -76,6 +75,10 @@ public class PasswordApi {
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     @Autowired
     LanguageUtils languageUtils;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    SettingManager sm;
 
     @ApiOperation(value = "Update user password",
         nickname = "updatePassword",
@@ -102,7 +105,6 @@ public class PasswordApi {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        final UserRepository userRepository = context.getBean(UserRepository.class);
         User user = userRepository.findOneByUsername(username);
         if (user == null) {
             return new ResponseEntity<>(String.format(
@@ -136,8 +138,6 @@ public class PasswordApi {
         user.getSecurity().setPassword(PasswordUtil.encode(context, passwordAndChangeKey.getPassword()));
         userRepository.save(user);
 
-
-        SettingManager sm = context.getBean(SettingManager.class);
         String adminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
         String subject = String.format(
             messages.getString("password_change_subject"),
@@ -187,8 +187,8 @@ public class PasswordApi {
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        final User user = appContext.getBean(UserRepository.class).findOneByUsername(username);
+
+        final User user = userRepository.findOneByUsername(username);
         if (user == null) {
             return new ResponseEntity<>(String.format(
                 messages.getString("user_not_found"),
@@ -211,7 +211,6 @@ public class PasswordApi {
         }
 
         // get mail settings
-        SettingManager sm = appContext.getBean(SettingManager.class);
         String adminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
         // construct change key - only valid today

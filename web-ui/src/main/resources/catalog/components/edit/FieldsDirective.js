@@ -72,17 +72,17 @@
         link: function(scope, element, attrs) {
           // Using Jquery to parse attribute to preserve
           // leading/trailing space which may have sense
-          scope.prefix = element.attr('data-prefix') || '';
-          scope.suffix = element.attr('data-suffix') || '';
+          var prefix = element.attr('data-prefix') || '';
+          var suffix = element.attr('data-suffix') || '';
           var fieldType = attrs['fieldType'] || 'text';
 
           // Create an input
           var input = $('<input class="form-control" type="' + fieldType + '">');
           // Copy the value without prefix/suffix
           input.val(element.val()
-            .replace(scope.prefix, '')
-            .replace(scope.suffix, '')).change(function() {
-            element.val(scope.prefix + input.val() + scope.suffix);
+            .replace(prefix, '')
+            .replace(suffix, '')).change(function() {
+            element.val(prefix + input.val() + suffix);
           });
           element.after(input);
           element.hide();
@@ -494,6 +494,7 @@
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
+          var btns = element.find('a').has('.fa-times.text-danger');
 
           element.on('mouseover', function(e) {
             e.stopPropagation();
@@ -501,13 +502,11 @@
             // on touchscreen delete action will not be visible
 
             element.addClass('field-bg');
-            element.find('a').has('.fa-times.text-danger')
-                .css('visibility', 'visible');
+            btns.css('visibility', 'visible');
           });
           element.on('mouseout', function() {
             element.removeClass('field-bg');
-            element.find('a').has('.fa-times.text-danger')
-                .css('visibility', 'hidden');
+            btns.css('visibility', 'hidden');
           });
         }
       };

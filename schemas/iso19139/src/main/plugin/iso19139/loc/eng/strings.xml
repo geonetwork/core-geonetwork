@@ -139,6 +139,8 @@
   <otherConstraints>Other constraints</otherConstraints>
   <operatesOn>Coupled resource</operatesOn>
   <extent>Geographic bounding box</extent>
+  <spatialExtent>Spatial extent</spatialExtent>
+
   <freeTextKeywords>Other keywords</freeTextKeywords>
   <resource_url>URL</resource_url>
   <resource_protocol>Protocol</resource_protocol>
@@ -232,4 +234,11 @@
   <trueValue>Yes</trueValue>
   <falseValue>No</falseValue>
   <nilValue>Undefined</nilValue>
+  <logo>logo</logo>
+  <overview>overview</overview>
+  <thumbnail>thumbnail</thumbnail>
+  <north>north</north>
+  <east>east</east>
+  <south>south</south>
+  <west>west</west>
 </strings>

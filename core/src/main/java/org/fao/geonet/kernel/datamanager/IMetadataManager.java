@@ -1,3 +1,26 @@
+//=============================================================================
+//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
 package org.fao.geonet.kernel.datamanager;
 
 import java.util.Map;
@@ -7,6 +30,7 @@ import javax.annotation.Nonnull;
 
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.repository.BatchUpdateQuery;
@@ -21,7 +45,7 @@ import jeeves.server.context.ServiceContext;
 
 /**
  * Utility interface to handle record insertions, removals and updates
- * 
+ *
  * @author delawen
  *
  */
@@ -29,7 +53,7 @@ public interface IMetadataManager {
 
     /**
      * This is a hopefully soon to be deprecated initialization function to replace the @Autowired annotation
-     * 
+     *
      * @param context
      * @param force
      * @throws Exception
@@ -38,7 +62,7 @@ public interface IMetadataManager {
 
     /**
      * Removes the record with the id metadataId
-     * 
+     *
      * @param context
      * @param metadataId
      * @throws Exception
@@ -47,9 +71,9 @@ public interface IMetadataManager {
 
     /**
      * Removes a record without notifying.
-     * 
+     *
      * FIXME explain better why this and not {@link #deleteMetadata(ServiceContext, String)}
-     * 
+     *
      * @param context
      * @param metadataId
      * @throws Exception
@@ -127,10 +151,15 @@ public interface IMetadataManager {
      * Retrieves a metadata (in xml) given its id; adds editing information if requested and validation errors if requested.
      *
      * @param forEditing Add extra element to build metadocument {@link EditLib#expandElements(String, Element)}
+     * @param applyOperationsFilters Filter elements based on operation filters
+     *                               eg. Remove WMS if not dynamic. For example, when processing
+     *                               a record, the complete records need to be processed and saved (not a filtered version), set it to false.
+     *                               If editing, set it to false.
      * @param keepXlinkAttributes When XLinks are resolved in non edit mode, do not remove XLink attributes.
      */
-    Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors,
-            boolean keepXlinkAttributes) throws Exception;
+    Element getMetadata(ServiceContext srvContext, String id,
+                        boolean forEditing, boolean applyOperationsFilters,
+                        boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception;
 
     /**
      * Update of owner info.
@@ -186,15 +215,15 @@ public interface IMetadataManager {
 
     /**
      * Returns a helpful EditLib for other utility classes
-     * 
+     *
      * @return
      */
     EditLib getEditLib();
 
     /**
-     * Saves an IMetadata into the database. Useful to avoid using the MetadataRepository classes directly, who may not know how to handle
-     * IMetadata types
-     * 
+     * Saves an AbstractMetadata into the database. Useful to avoid using the MetadataRepository classes directly, who may not know how to handle
+     * AbstractMetadata types
+     *
      * @param info
      */
     public AbstractMetadata save(AbstractMetadata info);
@@ -214,14 +243,14 @@ public interface IMetadataManager {
 
     /**
      * Delete all records that matches the specification
-     * 
+     *
      * @param specification
      */
     public void deleteAll(Specification<? extends AbstractMetadata> specification);
 
     /**
      * Remove the record with the identifier id
-     * 
+     *
      * @param id
      */
     public void delete(Integer id);
@@ -236,5 +265,9 @@ public interface IMetadataManager {
      * @param <V> The type of the attribute
      * @return a {@link BatchUpdateQuery} object to allow for updating multiple objects in a single query.
      */
-    public void createBatchUpdateQuery(PathSpec<Metadata, String> servicesPath, String newUuid, Specification<Metadata> harvested);
+    public void createBatchUpdateQuery(PathSpec<? extends AbstractMetadata, String> servicesPath, String newUuid,
+            Specification<? extends AbstractMetadata> harvested);
+
+
+	public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> specs);
 }

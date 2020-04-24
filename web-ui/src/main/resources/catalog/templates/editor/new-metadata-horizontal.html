@@ -4,6 +4,9 @@
   <div class="alert alert-warning" data-ng-hide="hasTemplates"
        data-translate="">noTemplatesAvailable
   </div>
+  <div class="alert alert-warning" data-ng-show="groups.length === 0"
+       data-translate="">youAreNotMemberOfAnyGroup
+  </div>
 
   <div class="progress progress-striped active"
        data-ng-show="hasTemplates && mdList === null">
@@ -61,8 +64,13 @@
           <strong>{{(ownerGroup.label[lang] || '...') | translate}}</strong>
         </div>
         <div class="panel-body">
-          <div data-groups-combo="" data-owner-group="ownerGroup" lang="lang"
-               data-groups="groups" data-profile="Editor" data-exclude-special-groups="true"/>
+          <div data-groups-combo=""
+               data-optional="{{user.isAdministrator()}}"
+               data-owner-group="ownerGroup"
+               lang="lang"
+               data-groups="groups"
+               data-profile="Editor"
+               data-exclude-special-groups="true"/>
         </div>
       </div>
     </div>
@@ -100,13 +108,13 @@
       <div class="btn-group">
         <button type="button" class="btn btn-success"
                 data-gn-click-and-spin="createNewMetadata()"
-                data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())) )}">
+                data-ng-disabled="(!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())))">
           <i class="fa fa-plus"/>
           <span data-translate="">createMetadata</span>
         </button>
         <button type="button"
                 class="btn btn-success dropdown-toggle"
-                data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())) )}"
+                data-ng-disabled="(!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())))"
                 data-toggle="dropdown">
           <span class="caret"></span>&nbsp;
         </button>
@@ -124,4 +132,6 @@
       </a>
     </div>
   </div>
+
+  <div data-gn-need-help="user-guide/describing-information/creating-metadata.html"></div>
 </div>

@@ -118,11 +118,14 @@
       <field name="_featured" tagName="featured"/>
       <field name="_owner" tagName="owner"/>
       <field name="_userinfo" tagName="userinfo"/>
-      <field name="_ownername" tagName="ownername"/>
+      <field name="recordOwner" tagName="recordOwner"/>
       <field name="_cat" tagName="category"/>
       <field name="topicCat" tagName="topicCat"/>
       <field name="inspirethemewithac" tagName="inspirethemewithac"/>
       <field name="_valid" tagName="valid"/>
+      <field name="_valid_inspire" tagName="validInspire"/>
+      <field name="_inspireValidationDate" tagName="inspireValidationDate"/>
+      <field name="_inspireReportUrl" tagName="inspireReportUrl"/>
       <field name="_valid_schematron-rules-geonetwork" tagName="valid_schematron-rules-geonetwork"/>
       <field name="_valid_schematron-rules-iso" tagName="valid_schematron-rules-iso"/>
       <field name="_valid_schematron-rules-inspire" tagName="valid_schematron-rules-inspire"/>
@@ -173,6 +176,7 @@
       <field name="tempExtentBegin" tagName="tempExtentBegin"/>
       <field name="tempExtentEnd" tagName="tempExtentEnd"/>
       <field name="geoBox" tagName="geoBox"/>
+      <field name="boundingPolygon" tagName="boundingPolygon"/>
       <field name="extentDesc" tagName="geoDesc"/>
       <field name="geoDescCode" tagName="geoDescCode"/>
       <field name="_indexingError" tagName="idxError"/>
@@ -182,7 +186,9 @@
       <field name="_logo" tagName="logo"/>
       <field name="standardName" tagName="standardName"/>
       <field name="_groupWebsite" tagName="groupWebsite"/>
-      <field name="attributeTable" tagName="attributeTable"/>
+      <field name="featureTypes" tagName="featureTypes"/>
+      <field name="versionIdentifier" tagName="versionIdentifier"/>
+      <field name="_draft" tagName="draft"/>
     </dumpFields>
   </search>
 

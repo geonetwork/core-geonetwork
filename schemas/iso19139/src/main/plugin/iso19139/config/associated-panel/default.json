@@ -12,13 +12,24 @@
         "protocol": {
           "value": "WWW:LINK-1.0-http--link",
           "isMultilingual": false,
-          "required": true
+          "required": true,
+          "tooltip": "gmd:protocol"
         },
-        "url": {"isMultilingual": false},
-        "name": {},
-        "desc": {},
-        "function": {"isMultilingual": false},
-        "applicationProfile": {"isMultilingual": false}
+        "url": {
+          "isMultilingual": false,
+          "required": true,
+          "tooltip": "gmd:URL"
+        },
+        "name": {"tooltip": "gmd:name"},
+        "desc": {"tooltip": "gmd:description"},
+        "function": {
+          "isMultilingual": false,
+          "tooltip": "gmd:function"
+        },
+        "applicationProfile": {
+          "isMultilingual": false,
+          "tooltip": "gmd:applicationProfile"
+        }
       }
     }, {
       "label": "addThumbnail",
@@ -32,7 +43,8 @@
       "fields": {
         "url": {
           "param": "thumbnail_url",
-          "isMultilingual": false
+          "isMultilingual": false,
+          "required": true
         },
         "name": {"param": "thumbnail_desc"}
       }

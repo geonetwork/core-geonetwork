@@ -32,13 +32,19 @@
   goog.require('gn_directoryassociatedmd');
   goog.require('gn_facets');
   goog.require('gn_mdtypewidget');
+  goog.require('gn_mdtypeinspirevalidationwidget');
+  goog.require('gn_draftvalidationwidget');
+  goog.require('gn_batchtask');
 
   var module = angular.module('gn_directory_controller', [
     'gn_catalog_service',
     'gn_facets',
     'gn_directoryassociatedmd',
     'pascalprecht.translate',
-    'gn_mdtypewidget'
+    'gn_mdtypewidget',
+    'gn_mdtypeinspirevalidationwidget',
+    'gn_draftvalidationwidget',
+    'gn_batchtask'
   ]);
 
   /**

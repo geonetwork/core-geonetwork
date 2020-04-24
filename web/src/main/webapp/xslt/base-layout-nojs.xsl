@@ -35,7 +35,6 @@
   <xsl:output omit-xml-declaration="yes" method="html" doctype-system="html" indent="yes"
               encoding="UTF-8"/>
 
-
   <xsl:include href="common/base-variables.xsl"/>
   <xsl:include href="common/render-html.xsl"/>
 

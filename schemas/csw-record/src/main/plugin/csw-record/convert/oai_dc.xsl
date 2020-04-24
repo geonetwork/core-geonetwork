@@ -24,7 +24,8 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
-                version="1.0">
+                version="1.0"
+                exclude-result-prefixes="csw">
 
   <!-- ============================================================================================ -->
 

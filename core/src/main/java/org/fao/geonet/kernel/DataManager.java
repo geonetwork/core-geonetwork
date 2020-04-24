@@ -1,6 +1,5 @@
 //==============================================================================
 //===
-
 //=== DataManager
 //===
 //=============================================================================
@@ -41,7 +40,6 @@ import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
@@ -58,7 +56,6 @@ import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.repository.UserGroupRepository;
-import org.jdom.Document;
 import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,25 +112,9 @@ public class DataManager {
      * @param force Force reindexing all from scratch
      **/
     public void init(ServiceContext context, Boolean force) throws Exception {
-        // FIXME remove all the inits when/if ever autowiring works fine
-        this.metadataManager = context.getBean(IMetadataManager.class);
-        this.metadataManager.init(context, force);
-        this.metadataUtils = context.getBean(IMetadataUtils.class);
-        this.metadataUtils.init(context, force);
-        this.metadataIndexer = context.getBean(IMetadataIndexer.class);
         this.metadataIndexer.init(context, force);
-        this.metadataValidator = context.getBean(IMetadataValidator.class);
-        this.metadataValidator.init(context, force);
-        this.metadataOperations = context.getBean(IMetadataOperations.class);
-        this.metadataOperations.init(context, force);
-        this.metadataStatus = context.getBean(IMetadataStatus.class);
-        this.metadataStatus.init(context, force);
-        this.metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
-        this.metadataSchemaUtils.init(context, force);
-        this.metadataCategory = context.getBean(IMetadataCategory.class);
-        this.metadataCategory.init(context, force);
-        this.accessManager = context.getBean(AccessManager.class);
-        // remove all the inits when/if ever autowiring works fine
+        this.metadataManager.init(context, force);
+        this.metadataUtils.init(context, force);
 
         // FIXME this shouldn't login automatically ever!
         if (context.getUserSession() == null) {
@@ -147,15 +128,15 @@ public class DataManager {
     }
 
     @Deprecated
-    public static void validateMetadata(String schema, Element xml, ServiceContext context) throws Exception {
+    public static void validateExternalMetadata(String schema, Element xml, ServiceContext context, Integer groupOwner) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        gc.getBean(IMetadataValidator.class).validateMetadata(schema, xml, context, " ");
+        gc.getBean(IMetadataValidator.class).validateExternalMetadata(schema, xml, context, " ", groupOwner);
     }
 
     @Deprecated
-    public static void validateMetadata(String schema, Element xml, ServiceContext context, String fileName) throws Exception {
+    public static void validateExternalMetadata(String schema, Element xml, ServiceContext context, String fileName, Integer groupOwner) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        gc.getBean(IMetadataValidator.class).validateMetadata(schema, xml, context, fileName);
+        gc.getBean(IMetadataValidator.class).validateExternalMetadata(schema, xml, context, fileName, groupOwner);
     }
 
     @Deprecated
@@ -230,8 +211,8 @@ public class DataManager {
     }
 
     @Deprecated
-    public Element doSchemaTronForEditor(String schema, Element md, String lang) throws Exception {
-        return metadataValidator.doSchemaTronForEditor(schema, md, lang);
+    public Element doSchemaTronForEditor(String schema, Element md, String lang, Integer groupOwner) throws Exception {
+        return metadataValidator.doSchemaTronForEditor(schema, md, lang, groupOwner);
     }
 
     @Deprecated
@@ -412,7 +393,7 @@ public class DataManager {
     @Deprecated
     public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors,
             boolean keepXlinkAttributes) throws Exception {
-        return metadataManager.getMetadata(srvContext, id, forEditing, withEditorValidationErrors, keepXlinkAttributes);
+        return metadataManager.getMetadata(srvContext, id, forEditing, !forEditing, withEditorValidationErrors, keepXlinkAttributes);
     }
 
     @Deprecated
@@ -441,7 +422,7 @@ public class DataManager {
     }
 
     @Deprecated
-    public synchronized AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
+    public AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
             final boolean validate, final boolean ufo, final boolean index, final String lang, final String changeDate,
             final boolean updateDateStamp) throws Exception {
         return metadataManager.updateMetadata(context, metadataId, md, validate, ufo, index, lang, changeDate, updateDateStamp);
@@ -456,16 +437,6 @@ public class DataManager {
     public Element applyCustomSchematronRules(String schema, int metadataId, Element md, String lang,
             List<MetadataValidation> validations) {
         return metadataValidator.applyCustomSchematronRules(schema, metadataId, md, lang, validations);
-    }
-
-    @Deprecated
-    public synchronized void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
-        metadataManager.deleteMetadata(context, metadataId);
-    }
-
-    @Deprecated
-    public synchronized void deleteMetadataGroup(ServiceContext context, String metadataId) throws Exception {
-        metadataManager.deleteMetadataGroup(context, metadataId);
     }
 
     @Deprecated

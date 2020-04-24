@@ -68,12 +68,12 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
 
-        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate/internal")
+        toTest.perform(put("/srv/api/records/" + subTemplate.getUuid() + "/validate/internal")
                 .param(REQ_VALID_PARAM, "true")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
                 .andExpect(jsonPath("$.report").value(hasSize(0)));
 
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
@@ -89,12 +89,12 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
 
-        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate/internal")
+        toTest.perform(put("/srv/api/records/" + subTemplate.getUuid() + "/validate/internal")
                 .param(REQ_VALID_PARAM, "false")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
                 .andExpect(jsonPath("$.report").value(hasSize(0)));
 
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
@@ -110,11 +110,11 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
 
-        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate/internal")
+        toTest.perform(put("/srv/api/records/" + subTemplate.getUuid() + "/validate/internal")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
                 .andExpect(jsonPath("$.message").value("BadParameterEx"))
                 .andExpect(jsonPath("$.description").value("Parameter isvalid MUST be set for subtemplate."));
 
@@ -130,12 +130,12 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAnonymous();
 
-        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate/internal")
+        toTest.perform(put("/srv/api/records/" + subTemplate.getUuid() + "/validate/internal")
                 .param(REQ_VALID_PARAM, "true")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
                 .andExpect(jsonPath("$.message").value("SecurityException"));
 
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
@@ -151,12 +151,12 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
 
-        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate/internal")
+        toTest.perform(put("/srv/api/records/" + subTemplate.getUuid() + "/validate/internal")
                 .param(REQ_VALID_PARAM, "true")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
                 .andExpect(jsonPath("$.message").value("BadParameterEx"))
                 .andExpect(jsonPath("$.description").value("Parameter isvalid can't be set if it is not a Subtemplate. You cannot force validation of a metadata or a template."));
 

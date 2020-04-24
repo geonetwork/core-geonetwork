@@ -64,7 +64,7 @@
     <property name="paramName" value="\${language.default}"/>
   </bean>
   <bean id="urlLocaleChangeInterceptor" class="org.fao.geonet.i18n.UrlLocaleChangeInterceptor">
-    <property name="urlPosition" value="0"/>
+    <property name="urlPosition" value="2"/>
   </bean>
 
   <bean id="readWriteMvcInterceptor" class="jeeves.config.springutil.ReadOnlyMvcInterceptor"/>
@@ -95,6 +95,13 @@
     </property>
   </bean>
 
+  <!-- Static resources -->
+  <mvc:resources mapping="/catalog/**" location="/catalog/" order="0"/>
+  <mvc:resources mapping="/images/**" location="/images/" order="0"/>
+  <mvc:resources mapping="/map/**" location="/map/" order="0"/>
+  <mvc:resources mapping="/xml/**" location="/xml/" order="0"/>
+  <mvc:resources mapping="/doc/**" location="/doc/" order="0"/>
+
   <mvc:annotation-driven content-negotiation-manager="cnManager">
     <mvc:message-converters>
       <bean class="org.fao.geonet.api.DOMElementMessageConverter"/>
@@ -114,5 +121,9 @@
         </property>
       </bean>
     </mvc:message-converters>
+    <mvc:argument-resolvers>
+      <bean class="org.springframework.data.web.PageableHandlerMethodArgumentResolver"/>
+      <bean class="org.springframework.data.web.SortHandlerMethodArgumentResolver"/>
+    </mvc:argument-resolvers>
   </mvc:annotation-driven>
 </beans>

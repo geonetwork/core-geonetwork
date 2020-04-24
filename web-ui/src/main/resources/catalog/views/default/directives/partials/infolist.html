@@ -1,19 +1,31 @@
 <ul class="row gn-info-list">
   <li
     data-ng-repeat="md in searchResults.records"
-    data-ng-click="openRecord($index, md, searchResults.records)"
+    gn-metadata-open="md"
+    gn-records="searchResults.records"
+    gn-formatter="formatter.defaultUrl"
     id="gn-info-list-mw-{{md.getUuid()}}">
     <section class="resultcard clearfix"
              data-ng-class="md.getThumbnails().list[0].url ? 'hasThumbnail' : 'noThumbnail'">
 
       <div class="title">
-        <h4>{{md.title || md.defaultTitle}}&nbsp;</h4>
+        <a href=""
+           gn-metadata-open="md"
+           gn-records="searchResults.records"
+           gn-formatter="formatter.defaultUrl">
+          <h4>{{md.title || md.defaultTitle}}&nbsp;</h4>
+        </a>
       </div>
 
       <div class="gn-md-thumbnail">
-        <div class="gn-img-thumbnail"
-             style="background-image: url({{md.getThumbnails().list[0].url}})">
-        </div>
+        <a href=""
+           gn-metadata-open="md"
+           gn-records="searchResults.records"
+           gn-formatter="formatter.defaultUrl">
+          <div class="gn-img-thumbnail"
+               style="background-image: url({{md.getThumbnails().list[0].url}})">
+          </div>
+        </a>
       </div>
 
       <div class="content">

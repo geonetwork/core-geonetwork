@@ -58,10 +58,10 @@ public class IsoLanguagesApiTest extends AbstractServiceIntegrationTest {
         Long languagesCount = languageRepo.count();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(get("/api/isolanguages")
+        this.mockMvc.perform(get("/srv/api/isolanguages")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$", hasSize(languagesCount.intValue())));
     }
 }

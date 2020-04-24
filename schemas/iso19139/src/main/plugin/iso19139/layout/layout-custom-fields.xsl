@@ -26,7 +26,8 @@
                 xmlns:gts="http://www.isotc211.org/2005/gts"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
@@ -140,6 +141,10 @@
           <xsl:with-param name="parentEditInfo" select="$refToDelete"/>
         </xsl:call-template>
       </div>
+
+      <div class="col-sm-offset-2 col-sm-9">
+        <xsl:call-template name="get-errors"/>
+      </div>
     </div>
   </xsl:template>
 
@@ -150,7 +155,9 @@
   <!-- gml:TimePeriod (format = %Y-%m-%dThh:mm:ss) -->
   <!-- ===================================================================== -->
 
-  <xsl:template mode="mode-iso19139" match="gml:beginPosition|gml:endPosition|gml:timePosition"
+  <xsl:template mode="mode-iso19139"
+                match="gml:beginPosition|gml:endPosition|gml:timePosition|
+                       gml320:beginPosition|gml320:endPosition|gml320:timePosition"
                 priority="200">
 
 
@@ -277,7 +284,8 @@
       <xsl:with-param name="subTreeSnippet">
 
         <xsl:variable name="geometry">
-          <xsl:apply-templates select="gmd:polygon/gml:MultiSurface|gmd:polygon/gml:LineString"
+          <xsl:apply-templates select="gmd:polygon/gml:MultiSurface|gmd:polygon/gml:LineString|
+                                       gmd:polygon/gml320:MultiSurface|gmd:polygon/gml320:LineString"
                                mode="gn-element-cleaner"/>
         </xsl:variable>
 
