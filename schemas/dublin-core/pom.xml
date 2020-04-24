@@ -26,6 +26,9 @@
         <directory>src/main/config/translations</directory>
         <targetPath>META-INF/catalog/locales</targetPath>
       </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
     </resources>
     <plugins>
       <plugin>
