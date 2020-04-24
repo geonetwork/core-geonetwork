@@ -59,19 +59,20 @@
     <property name="usernameKey" value="${shibbolethConfiguration.usernameKey}"/>
     <property name="surnameKey" value="${shibbolethConfiguration.surnameKey}"/>
     <property name="firstnameKey" value="${shibbolethConfiguration.firstnameKey}"/>
+    <property name="organisationKey" value="${shibbolethConfiguration.organisationKey}"/>
     <property name="profileKey" value="${shibbolethConfiguration.profileKey}"/>
     <property name="groupKey" value="${shibbolethConfiguration.groupKey}"/>
     <property name="emailKey" value="${shibbolethConfiguration.emailKey}"/>
     <property name="roleGroupKey" value="${shibbolethConfiguration.roleGroupKey}"/>
-    
+
     <property name="defaultGroup" value="${shibbolethConfiguration.defaultGroup}"/>
 
     <property name="updateProfile" value="${shibbolethConfiguration.updateProfile}"/>
     <property name="updateGroup" value="${shibbolethConfiguration.updateGroup}"/>
-   
+
     <property name="arraySeparator" value="${shibbolethConfiguration.arraySeparator}"/>
     <property name="roleGroupSeparator" value="${shibbolethConfiguration.roleGroupSeparator}"/>
- 
+
 		<property name="hideLogin"
 			value="${shibbolethConfiguration.hideLogin}" />
 	</bean>
@@ -100,7 +101,7 @@
 		<ref bean="csrfFilter" />
 		<!-- To disable csrf security (not recommended) comment the upper line -->
 		<ref bean="logoutFilter" />
-		<!-- A filter that check if an external service already authenticated user 
+		<!-- A filter that check if an external service already authenticated user
 			(default implementation does nothing but can be overridden) -->
 		<ref bean="multiNodeAuthenticationFilter" />
 		<ref bean="preAuthenticationFilter" />

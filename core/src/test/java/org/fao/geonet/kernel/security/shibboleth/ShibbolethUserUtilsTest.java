@@ -4,7 +4,7 @@
  * and United Nations Environment Programme (UNEP)
  *
  * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of thgroupLengthNotMatchProfileLengthe GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or (at
  * your option) any later version.
  *
@@ -65,6 +65,7 @@ public class ShibbolethUserUtilsTest extends AbstractCoreIntegrationTest {
 	private String email = "blabla@bleble.bli";
 	private String firstname = "First of her name";
 	private String groupname = "ShibTestGroup";
+    private String organisation = "Organisation";
 
 	@Before
 	public void setUp() {
@@ -80,7 +81,9 @@ public class ShibbolethUserUtilsTest extends AbstractCoreIntegrationTest {
 		config.setSurnameKey("SURNAME_KEY");
 		config.setUpdateGroup(true);
 		config.setUpdateProfile(true);
-		config.setUsernameKey("USERNAME_KEY");
+        config.setUsernameKey("USERNAME_KEY");
+		config.setOrganisationKey("ORGANISATION_KEY");
+        config.setRoleGroupSeparator(",");
 
 		for (int i = 1; i < 5; i++) {
 			Group group = new Group();
@@ -106,12 +109,13 @@ public class ShibbolethUserUtilsTest extends AbstractCoreIntegrationTest {
 		assertNull("User already exists", user);
 
 		String group = groupname + "1";
-		String profile = Profile.UserAdmin.name() + config.getArraySeparator() + Profile.Administrator.name();
+		String groups = group + config.getArraySeparator() + group;
+        String profile = Profile.UserAdmin.name() + config.getArraySeparator() + Profile.Administrator.name();
 
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.addHeader(this.config.getEmailKey(), email);
 		request.addHeader(this.config.getFirstnameKey(), firstname);
-		request.addHeader(this.config.getGroupKey(), group);
+		request.addHeader(this.config.getGroupKey(), groups);
 		request.addHeader(this.config.getProfileKey(), profile);
 		request.addHeader(this.config.getSurnameKey(), surname);
 		request.addHeader(this.config.getUsernameKey(), username);
@@ -129,11 +133,12 @@ public class ShibbolethUserUtilsTest extends AbstractCoreIntegrationTest {
 
 		// Second round, same user different authorization
 		group = groupname + "3";
-		profile = Profile.Guest.name() + config.getArraySeparator() + Profile.Editor.name();
+        groups = group + config.getArraySeparator() + group;
+        profile = Profile.Guest.name() + config.getArraySeparator() + Profile.Editor.name();
 		request = new MockHttpServletRequest();
 		request.addHeader(this.config.getEmailKey(), email);
 		request.addHeader(this.config.getFirstnameKey(), firstname);
-		request.addHeader(this.config.getGroupKey(), group);
+		request.addHeader(this.config.getGroupKey(), groups);
 		request.addHeader(this.config.getProfileKey(), profile);
 		request.addHeader(this.config.getSurnameKey(), surname);
 		request.addHeader(this.config.getUsernameKey(), username);
@@ -160,12 +165,13 @@ public class ShibbolethUserUtilsTest extends AbstractCoreIntegrationTest {
 		assertNull("User already exists", user);
 
 		String group = groupname + "1";
+        String groups = group + config.getArraySeparator() + group ;
 		String profile = Profile.UserAdmin.name() + config.getArraySeparator() + Profile.Administrator.name();
 
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.addHeader(this.config.getEmailKey(), email);
 		request.addHeader(this.config.getFirstnameKey(), firstname);
-		request.addHeader(this.config.getGroupKey(), group);
+		request.addHeader(this.config.getGroupKey(), groups);
 		request.addHeader(this.config.getProfileKey(), profile);
 		request.addHeader(this.config.getSurnameKey(), surname);
 		request.addHeader(this.config.getUsernameKey(), username);
@@ -183,10 +189,12 @@ public class ShibbolethUserUtilsTest extends AbstractCoreIntegrationTest {
 
 		// Second round, same user different authorization but the original
 		// authorization should be kept (no updateProfile, updateGroups)
+        String groupNew = groupname + "3";
+        String groupsgroupNew = groupNew + config.getArraySeparator() + groupNew ;
 		request = new MockHttpServletRequest();
 		request.addHeader(this.config.getEmailKey(), email);
 		request.addHeader(this.config.getFirstnameKey(), firstname);
-		request.addHeader(this.config.getGroupKey(), groupname + "3");
+		request.addHeader(this.config.getGroupKey(), groupsgroupNew);
 		request.addHeader(this.config.getProfileKey(),
 				Profile.Guest.name() + config.getArraySeparator() + Profile.Editor.name());
 		request.addHeader(this.config.getSurnameKey(), surname);
@@ -221,6 +229,7 @@ public class ShibbolethUserUtilsTest extends AbstractCoreIntegrationTest {
 		request.addHeader(this.config.getProfileKey(), profile);
 		request.addHeader(this.config.getSurnameKey(), surname);
 		request.addHeader(this.config.getUsernameKey(), username);
+        request.addHeader(this.config.getOrganisationKey(), organisation);
 
 		utils.setupUser(request, this.config);
 

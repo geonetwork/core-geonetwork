@@ -47,6 +47,9 @@ import org.springframework.util.StringUtils;
 
 import jeeves.component.ProfileManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author ETj (etj at geo-solutions.it)
  * @author María Arias de Reyna (delawen)
@@ -95,27 +98,47 @@ public class ShibbolethUserUtils {
 		String username = getHeader(req, config.getUsernameKey(), "");
 		String surname = getHeader(req, config.getSurnameKey(), "");
 		String firstname = getHeader(req, config.getFirstnameKey(), "");
+        String organisation = getHeader(req, config.getOrganisationKey(), "");
 		String email = getHeader(req, config.getEmailKey(), "");
 		String arraySeparator = config.getArraySeparator();
 		String roleGroupSeparator = config.getRoleGroupSeparator();
 
-		String profile_header = getHeader(req, config.getProfileKey(), Profile.Guest.name());
-		String[] profiles = new String[0];
-		if (!StringUtils.isEmpty(profile_header)) {
-			profiles = profile_header.split(arraySeparator);
-		}
+        // RoleGroupKey header format: sample,UserAdmin;sample,Editor
+        // It has precedence over individual ProfileKey and GroupKey headers if all are provided.
+        //      - ProfileKey header format: UserAdmin;Editor
+        //      - GroupKey header format: sample;sample
+        String roleGroup_header = getHeader(req, config.getRoleGroupKey(), "");
+        String[] roleGroups = new String[0];
+        if (!StringUtils.isEmpty(roleGroup_header)) {
+            roleGroups = roleGroup_header.split(arraySeparator);
+        } else {
+            String profile_header = getHeader(req, config.getProfileKey(), Profile.Guest.name());
+            String[] profiles = new String[0];
+            if (!StringUtils.isEmpty(profile_header)) {
+                profiles = profile_header.split(arraySeparator);
+            }
 
-		String group_header = getHeader(req, config.getGroupKey(), config.getDefaultGroup());
-		String[] groups = new String[0];
-		if (!StringUtils.isEmpty(group_header)) {
-			groups = group_header.split(arraySeparator);
-		}
+            String group_header = getHeader(req, config.getGroupKey(), config.getDefaultGroup());
+            String[] groups = new String[0];
+            if (!StringUtils.isEmpty(group_header)) {
+                groups = group_header.split(arraySeparator);
+            }
 
-		String roleGroup_header = getHeader(req, config.getRoleGroupKey(), config.getDefaultGroup());
-		String[] roleGroups = new String[0];
-		if (!StringUtils.isEmpty(roleGroup_header)) {
-			roleGroups = roleGroup_header.split(arraySeparator);
-		}
+            List<String> roleGroupsList = new ArrayList<>();
+            for(int i = 0; i < groups.length; i++) {
+                String profile;
+                if (profiles.length > i) {
+                    profile = profiles[i];
+                } else {
+                    // Fallback if no profile
+                    profile = Profile.Guest.toString();
+                }
+
+                roleGroupsList.add(groups[i] + roleGroupSeparator + profile);
+            }
+
+            roleGroups = roleGroupsList.stream().toArray(String[]::new);
+        }
 
 		if (!StringUtils.isEmpty(username)) {
 
@@ -134,13 +157,13 @@ public class ShibbolethUserUtils {
 					userGroupRepository.deleteAll(UserGroupSpecs.hasUserId(user.getId()));
 
 					// Now we add the groups
-					assignGroups(groupRepository, userGroupRepository, profiles, groups, roleGroups,
+					assignGroups(groupRepository, userGroupRepository, roleGroups,
 							roleGroupSeparator, user);
 				}
 
 				// Assign the highest profile available
 				if (config.isUpdateProfile()) {
-					assignProfile(profiles, roleGroups, roleGroupSeparator, user);
+					assignProfile(roleGroups, roleGroupSeparator, user);
 					userRepository.save(user);
 				}
 
@@ -149,16 +172,17 @@ public class ShibbolethUserUtils {
 				user.setUsername(username);
 				user.setSurname(surname);
 				user.setName(firstname);
+                user.setOrganisation(organisation);
 
 				// Add email
 				if (!StringUtils.isEmpty(email)) {
 					user.getEmailAddresses().add(email);
 				}
 
-				assignProfile(profiles, roleGroups, roleGroupSeparator, user);
+				assignProfile(roleGroups, roleGroupSeparator, user);
 				userRepository.save(user);
 
-				assignGroups(groupRepository, userGroupRepository, profiles, groups, roleGroups, roleGroupSeparator,
+				assignGroups(groupRepository, userGroupRepository, roleGroups, roleGroupSeparator,
 						user);
 			}
 
@@ -174,6 +198,7 @@ public class ShibbolethUserUtils {
 				if (ldapUserDetails == null) {
 					ldapUserDetails = new LDAPUser(username);
 					ldapUserDetails.getUser().setName(firstname).setSurname(surname);
+                    ldapUserDetails.getUser().setOrganisation(organisation);
 
 					ldapUserDetails.getUser().setProfile(user.getProfile());
 					ldapUserDetails.getUser().getEmailAddresses().clear();
@@ -196,44 +221,9 @@ public class ShibbolethUserUtils {
 	}
 
 	private void assignGroups(GroupRepository groupRepository, UserGroupRepository userGroupRepository,
-			String[] profiles, String[] groups, String[] role_groups, String separator, User user) {
+                              String[] role_groups, String separator, User user) {
 		// Assign groups
 		int i = 0;
-
-		for (String group : groups) {
-			Group g = groupRepository.findByName(group);
-
-			if (g == null) {
-				g = new Group();
-				g.setName(group);
-				groupRepository.save(g);
-			}
-
-			UserGroup usergroup = new UserGroup();
-			usergroup.setGroup(g);
-			usergroup.setUser(user);
-			if (profiles.length > i) {
-				Profile profile = Profile.findProfileIgnoreCase(profiles[i]);
-				if (profile.equals(Profile.Administrator)) {
-					// As we are assigning to a group, it is UserAdmin instead
-					profile = Profile.UserAdmin;
-				}
-				usergroup.setProfile(profile);
-
-				if (profile.equals(Profile.Reviewer)) {
-					UserGroup ug = new UserGroup();
-					ug.setGroup(g);
-					ug.setUser(user);
-					ug.setProfile(Profile.Editor);
-					userGroupRepository.save(ug);
-				}
-			} else {
-				// Failback if no profile
-				usergroup.setProfile(Profile.Guest);
-			}
-			userGroupRepository.save(usergroup);
-			i++;
-		}
 
 		for (String rg : role_groups) {
 			String[] tmp = rg.split(separator);
@@ -278,18 +268,9 @@ public class ShibbolethUserUtils {
 		}
 	}
 
-	private void assignProfile(String[] profiles, String[] role_groups, String roleGroupSeparator, User user) {
+	private void assignProfile(String[] role_groups, String roleGroupSeparator, User user) {
 		// Assign the highest profile to the user
 		user.setProfile(null);
-
-		for (String profile : profiles) {
-			Profile p = Profile.findProfileIgnoreCase(profile);
-			if (p != null && user.getProfile() == null) {
-				user.setProfile(p);
-			} else if (p != null && user.getProfile().compareTo(p) >= 0) {
-				user.setProfile(p);
-			}
-		}
 
 		for (String rg : role_groups) {
 			String[] tmp = rg.split(roleGroupSeparator);
@@ -312,7 +293,8 @@ public class ShibbolethUserUtils {
 		private String username;
 		private String name;
 		private String surname;
-		private String profile;
+		private String organisation;
+        private String profile;
 
 		static MinimalUser create(ServletRequest request, ShibbolethUserConfiguration config) {
 
@@ -322,6 +304,7 @@ public class ShibbolethUserUtils {
 			String username = getHeader(req, config.getUsernameKey(), "");
 			String surname = getHeader(req, config.getSurnameKey(), "");
 			String firstname = getHeader(req, config.getFirstnameKey(), "");
+            String organisation = getHeader(req, config.getOrganisationKey(), "");
 			String profile = getHeader(req, config.getProfileKey(), "");
 
 			if (username.trim().length() > 0) {
@@ -330,6 +313,7 @@ public class ShibbolethUserUtils {
 				user.setUsername(username);
 				user.setName(firstname);
 				user.setSurname(surname);
+				user.setOrganisation(organisation);
 				user.setProfile(profile);
 				return user;
 
@@ -362,7 +346,15 @@ public class ShibbolethUserUtils {
 			this.surname = surname;
 		}
 
-		public String getProfile() {
+        public String getOrganisation() {
+            return organisation;
+        }
+
+        public void setOrganisation(String organisation) {
+            this.organisation = organisation;
+        }
+
+        public String getProfile() {
 			return profile;
 		}
 
