@@ -48,17 +48,15 @@
 
       $scope.downloadAsCsv = function() {
         var maxPageSize = 20000;
-        window.location.replace('../api/records/links/csv?'
-          + 'groupIdFilter='
-            + ($scope.groupIdFilter == 'undefined'  ? '' : $scope.groupIdFilter)
-          + '&groupOwnerIdFilter='
-            + ($scope.groupOwnerIdFilter == 'undefined'  ? '' : $scope.groupOwnerIdFilter)
-          + '&filter=' + $scope.filter.filter
+        window.open('../api/records/links/csv?'
+          + (!!$scope.groupIdFilter && $scope.groupIdFilter != 'undefined'  ? 'groupIdFilter=' + $scope.groupIdFilter : '')
+          + (!!$scope.groupOwnerIdFilter && $scope.groupOwnerIdFilter != 'undefined'  ?   '&groupOwnerIdFilter='+ $scope.groupOwnerIdFilter : '')
+          + (!!$scope.filter.filter && $scope.filter.filter != 'undefined'  ? '&filter=' + $scope.filter.filter : '')
           + '&page=0&size=' + maxPageSize + '&sort=lastState%2Cdesc');
       };
 
       $scope.removeAll = function() {
-        $http.delete('../api/records/links');
+        $http.delete('../api/records/links').then($scope.triggerSearch);
       };
 
       $window.lastState = {ok: 'OK', ko: 'KO', unknown: '?'};
