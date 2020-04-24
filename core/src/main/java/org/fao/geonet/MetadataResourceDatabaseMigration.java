@@ -71,19 +71,21 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
             ISO19139Namespaces.GCO);
 
     private static final String XPATH_RESOURCES =
-            "*//*[contains(text(), '/resources.get?')]";
+        "*//*[contains(text(), '/resources.get?')]";
     private static final String XPATH_THUMBNAIL_WITH_NO_URL =
-            "*//gmd:MD_BrowseGraphic" +
-                    "[gmd:fileDescription/gco:CharacterString = 'thumbnail' or " +
-                    "gmd:fileDescription/gco:CharacterString = 'large_thumbnail']/gmd:fileName/" +
-                    "gco:CharacterString[not(starts-with(normalize-space(text()), 'http'))]";
+        "*//gmd:MD_BrowseGraphic" +
+            "[gmd:fileDescription/gco:CharacterString = 'thumbnail' or " +
+            "gmd:fileDescription/gco:CharacterString = 'large_thumbnail']/gmd:fileName/" +
+            "gco:CharacterString[not(starts-with(normalize-space(text()), 'http'))]";
     private static final String XPATH_THUMBNAIL_WITH_URL =
-            "*//gmd:graphicOverview/gmd:MD_BrowseGraphic[gmd:fileDescription/gco:CharacterString]/gmd:fileName/gco:CharacterString[starts-with(normalize-space(text()), 'http')]";
+        "*//gmd:graphicOverview/gmd:MD_BrowseGraphic[gmd:fileDescription/gco:CharacterString]/gmd:fileName/gco:CharacterString[starts-with(normalize-space(text()), 'http')]";
+
     private static final String XPATH_ATTACHMENTS_WITH_URL =
-            "*//gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'WWW:DOWNLOAD-1.0-http--download']/gmd:linkage/gmd:URL";
+        "*//gmd:CI_OnlineResource/gmd:linkage/gmd:URL";
+    private static final String URL_ATTACHED_RESOURCES = "api/records/%s/attachments/";
 
     private static final Pattern pattern = Pattern.compile(
-            "(.*)\\/([a-zA-Z0-9_\\-]+)\\/([a-z]{2,3})\\/{1,2}resources.get\\?.*fname=([\\p{L}\\w\\s\\.\\-]+)(&.*|$)");
+        "(.*)\\/([a-zA-Z0-9_\\-]+)\\/([a-z]{2,3})\\/{1,2}resources.get\\?.*fname=([\\p{L}\\w\\s_=\\(\\)\\.\\-%:]+)(&.*|$)");
 
     public static boolean updateMetadataResourcesLink(@Nonnull Element xml,
                                                       @Nullable String uuid,
@@ -110,19 +112,20 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
                 element.setText(
                     regexMatcher.replaceAll(
                         settingManager.getNodeURL() +
-                                    "api/records/" + uuid + "/attachments/$4"));
+                            "api/records/" + uuid + "/attachments/$4"));
                 changed = true;
             }
-            
+
             // ATTACHMENTS
             // This fix the imports of metadata with attachments
             @SuppressWarnings("unchecked") final List<Element> linksAttachmentsUrl =
-                    Lists.newArrayList((Iterable<? extends Element>)
-                            Xml.selectNodes(xml, XPATH_ATTACHMENTS_WITH_URL, NAMESPACES));
+                Lists.newArrayList((Iterable<? extends Element>)
+                    Xml.selectNodes(xml, XPATH_ATTACHMENTS_WITH_URL, NAMESPACES));
 
             for (Element element : linksAttachmentsUrl) {
                 final String url = element.getText();
-                if(url.indexOf("api/records/") > 0) {
+                // Extra check if the URL contains the current UUID and rest API url pattern
+                if(url.indexOf(String.format(URL_ATTACHED_RESOURCES, uuid)) > 0) {
                     element.setText(url.replace(url.substring(0, url.indexOf("api/records/")), settingManager.getNodeURL()));
                     changed = true;
                 }
@@ -132,8 +135,8 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
             // This fix the imports from older versions of GN
             // where the thumbnails contains just the filename
             @SuppressWarnings("unchecked") final List<Element> linksThumbnailsNoUrl =
-                    Lists.newArrayList((Iterable<? extends Element>)
-                            Xml.selectNodes(xml, XPATH_THUMBNAIL_WITH_NO_URL, NAMESPACES));
+                Lists.newArrayList((Iterable<? extends Element>)
+                    Xml.selectNodes(xml, XPATH_THUMBNAIL_WITH_NO_URL, NAMESPACES));
 
             for (Element element : linksThumbnailsNoUrl) {
                 final String filename = element.getText();
@@ -147,8 +150,8 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
             // This fix the imports from current versions of GN
             // where the thumbnails contains the full URL of the resource
             @SuppressWarnings("unchecked") final List<Element> linksThumbnailsWithUrl =
-                    Lists.newArrayList((Iterable<? extends Element>)
-                            Xml.selectNodes(xml, XPATH_THUMBNAIL_WITH_URL, NAMESPACES));
+                Lists.newArrayList((Iterable<? extends Element>)
+                    Xml.selectNodes(xml, XPATH_THUMBNAIL_WITH_URL, NAMESPACES));
 
             for (Element element : linksThumbnailsWithUrl) {
                 final String url = element.getText();
@@ -175,39 +178,40 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
                      "SELECT data,id,uuid FROM metadata WHERE isharvested = 'n'")
             ) {
                 int numInBatch = 0;
-                final SettingManager settingManager = applicationContext.getBean(SettingManager.class);
+                final SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
 
                 while (resultSet.next()) {
                     final Element xml = Xml.loadString(resultSet.getString(1), false);
                     final int id = resultSet.getInt(2);
                     final String uuid = resultSet.getString(3);
+                    System.out.println(uuid);
                     boolean changed = updateMetadataResourcesLink(xml, uuid, settingManager);
                     if (changed) {
                         String updatedData = Xml.getString(xml);
                         update.setString(1, updatedData);
                         update.setInt(2, id);
-                        update.addBatch();
+                        update.execute();
+//                        update.addBatch();
                         numInBatch++;
-                        if (numInBatch > 200) {
-                            update.executeBatch();
-                            numInBatch = 0;
-                        }
+//                        if (numInBatch > 200) {
+//                            update.executeBatch();
+//                            numInBatch = 0;
+//                        }
                     }
                 }
-                update.executeBatch();
+//                update.executeBatch();
             } catch (java.sql.BatchUpdateException e) {
-                System.out.println("Error occurred while updating resource links:");
-                e.printStackTrace();
+                Log.error(Geonet.GEONETWORK, "Error occurred while updating resource links:" + e.getMessage(), e);
                 SQLException next = e.getNextException();
                 while (next != null) {
-                    System.err.println("Next error: ");
-                    next.printStackTrace();
+                    Log.error(Geonet.GEONETWORK, "Next error: " + next.getMessage(), next);
                     next = e.getNextException();
                 }
-
-                throw new RuntimeException(e);
+                System.out.println(e.getMessage());
+//                throw new RuntimeException(e);
             } catch (Exception e) {
-                throw new Error(e);
+                System.out.println(e);
+//                throw new Error(e);
             }
         }
     }
