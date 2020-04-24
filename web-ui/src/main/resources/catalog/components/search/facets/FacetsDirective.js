@@ -419,12 +419,12 @@
           // dates must be sorted ASC
           scope.$watch('datesCount', function(counts) {
             if (counts) {
-              var data = counts.map(function(d) {
+              var data = counts.map(function(d, i, array) {
                 return {
                   event: d.value,
                   time: {
                     begin: d.value,
-                    end: d.value
+                    end: i < array.length - 1 ? array[i + 1].value : d.value
                   },
                   value: d.count
                 };

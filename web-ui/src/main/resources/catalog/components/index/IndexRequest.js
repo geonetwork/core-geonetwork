@@ -743,25 +743,27 @@
         .unique();
 
       // compute bucket interval
-      var interval = 'day';
+      var interval = 'week';
       var minDate = initialParam ? moment(initialParam.values.from, 'DD-MM-YYYY') : moment(_.min(allDates));
       var maxDate = initialParam ? moment(initialParam.values.to, 'DD-MM-YYYY') : moment(_.max(allDates));
       var fullRange = maxDate.diff(minDate, 'days');
-      if (fullRange > 100) interval = 'week';
       if (fullRange > 1000) interval = 'month';
 
       var groupedDates = _.groupBy(allDates, function(date) {
         return moment(date).startOf(interval).valueOf();
       });
+      groupedDates = Object.keys(groupedDates)
+        .map(function(key) { return parseInt(key); })
+        .sort(function(a, b) { return Math.sign(a - b); });
 
-      Object.keys(groupedDates).forEach(function(date) {
+      groupedDates.forEach(function(date, i, array) {
         var rangeSpec = {
           bool: {
             must: [{range: {}}, {range: {}}]
           }
         };
         rangeSpec.bool.must[0].range[v.minField] = {
-          lte: date,
+          lte: i < array.length - 1 ? array[i + 1] : date,
           format: 'epoch_millis'
         };
         rangeSpec.bool.must[1].range[v.maxField] = {
@@ -770,8 +772,6 @@
         };
         filters[date] = rangeSpec;
       }.bind(this));
-
-      console.log('buckets for range dates:', Object.keys(filters).length)
 
       ret[k] = {
         filters: {
