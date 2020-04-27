@@ -141,7 +141,7 @@
 
     <form class="navbar-form navbar-right language-switcher">
       <span class="gn-menuheader-xs visible-xs"
-            data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !shibbolethEnabled"
+            data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !shibbolethHideLogin"
             data-translate="">language</span>
       <div class="form-group"
            data-gn-language-switcher="lang"
@@ -198,7 +198,7 @@
         </ul>
       </li>
       <li class="dropdown dropdown-hover open signin-dropdown"
-        data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !shibbolethEnabled">
+        data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !shibbolethHideLogin">
         <a href="{{gnCfg.mods.signin.appUrl | signInLink}}"
            title="{{'signIn'|translate}}"
            class="dropdown-toggle gn-menuheader-xs"

@@ -8,7 +8,7 @@
         <div class="panel-body">
           <p data-translate="">loginText</p>
           <form class="form-horizontal" name="gnSigninForm" action="{{formAction}}"
-                method="post" role="form" data-ng-if="::user" data-ng-show="!shibbolethEnabled">
+                method="post" role="form" data-ng-if="::user" data-ng-show="!shibbolethHideLogin">
             <input type="hidden" name="_csrf" value="{{csrf}}"/>
   
             <!-- username -->

@@ -56,6 +56,8 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
+import org.fao.geonet.kernel.security.shibboleth.ShibbolethUserConfiguration;
+import org.fao.geonet.kernel.security.shibboleth.ShibbolethUserUtils;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.url.UrlChecker;
@@ -357,6 +359,21 @@ public final class XslUtil {
     public static boolean existsBean(String beanId) {
         return ProfileManager.existsBean(beanId);
     }
+
+	/**
+	 * Check if Shibboleth should show login
+	 *
+	 * @param beanId
+	 *            id of the bean to look up
+	 */
+	public static boolean shibbolethHideLogin() {
+		if (existsBean("shibbolethConfiguration")) {
+			ServiceContext serviceContext = ServiceContext.get();
+			ShibbolethUserConfiguration shib = serviceContext.getBean(ShibbolethUserConfiguration.class);
+			return shib.getHideLogin();
+		}
+		return false;
+	}
 
     /**
      * Optimistically check if user can access a given url.  If not possible to determine then the
