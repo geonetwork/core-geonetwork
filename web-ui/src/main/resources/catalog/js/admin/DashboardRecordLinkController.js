@@ -51,7 +51,7 @@
         window.open('../api/records/links/csv?'
           + (!!$scope.groupIdFilter && $scope.groupIdFilter != 'undefined'  ? 'groupIdFilter=' + $scope.groupIdFilter : '')
           + (!!$scope.groupOwnerIdFilter && $scope.groupOwnerIdFilter != 'undefined'  ?   '&groupOwnerIdFilter='+ $scope.groupOwnerIdFilter : '')
-          + (!!$scope.filter.filter && $scope.filter.filter != 'undefined'  ? '&filter=' + $scope.filter.filter : '')
+          + (!!$scope.filter.filter && $scope.filter.filter != 'undefined'  ? '&filter=' + encodeURIComponent($scope.filter.filter) : '')
           + '&page=0&size=' + maxPageSize + '&sort=lastState%2Cdesc');
       };
 
