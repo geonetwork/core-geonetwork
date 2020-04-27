@@ -34,16 +34,21 @@ public class ShibbolethUserConfiguration {
     private String usernameKey;
     private String surnameKey;
     private String firstnameKey;
+    private String organisationKey;
     private String profileKey;
     private String groupKey;
     private String emailKey;
+    private String roleGroupKey;
 
     private String defaultGroup;
 
     private boolean updateProfile;
     private boolean updateGroup;
-    
+
     private String arraySeparator;
+    private String roleGroupSeparator;
+
+    private Boolean hideLogin;
 
     public String getUsernameKey() {
         return usernameKey;
@@ -73,6 +78,17 @@ public class ShibbolethUserConfiguration {
             firstnameKey = "";
         }
         this.firstnameKey = firstnameKey;
+    }
+
+    public String getOrganisationKey() {
+        return organisationKey;
+    }
+
+    public void setOrganisationKey(String organisationKey) {
+        if(StringUtils.isEmpty(organisationKey)) {
+            organisationKey = "";
+        }
+        this.organisationKey = organisationKey;
     }
 
     public String getProfileKey() {
@@ -107,7 +123,7 @@ public class ShibbolethUserConfiguration {
         }
         this.defaultGroup = defaultGroup;
     }
-    
+
     public boolean isUpdateProfile() {
         return updateProfile;
     }
@@ -144,6 +160,36 @@ public class ShibbolethUserConfiguration {
 			arraySeparator = ";";
 		}
 		this.arraySeparator = arraySeparator;
+	}
+
+	public Boolean getHideLogin() {
+		return hideLogin;
+	}
+
+	public void setHideLogin(Boolean hideLogin) {
+		if(hideLogin == null) {
+			hideLogin = true;
+		}
+		this.hideLogin = hideLogin;
+	}
+
+	public String getRoleGroupKey() {
+		return roleGroupKey;
+	}
+
+	public void setRoleGroupKey(String roleGroupKey) {
+		this.roleGroupKey = roleGroupKey;
+	}
+
+	public String getRoleGroupSeparator() {
+		return roleGroupSeparator;
+	}
+
+	public void setRoleGroupSeparator(String roleGroupSeparator) {
+		if(StringUtils.isEmpty(arraySeparator)) {
+			arraySeparator = ",";
+		}
+		this.roleGroupSeparator = roleGroupSeparator;
 	}
 }
 
