@@ -45,8 +45,11 @@
           determine facet values for the indexing field.
           The bean must implement the org.fao.kernel.search.classifier.Classifier interface
           Defaults to a classifier which uses the value of the field to be indexed
+      * localized: (optional, default FALSE) indicates if the field can contain multilingual values.
+          SHOULD NOT be applied to "code" values, like topic categories/codelist/etc, for
+          these fields should be defined a translator in the summary section for the field.
 
-      When a facet definitionis modified or added, the index MUST be rebuilt.
+      When a facet definition is modified or added, the index MUST be rebuilt.
 
       How facet summaries should be built and formatted for each summary type is defined
       in the summaryTypes element. The summaryTypes element contains a number of summary type elements each
@@ -81,8 +84,8 @@
 
   <facets>
     <facet name="keyword" indexKey="keyword" label="keywords" localized="true"/>
-    <facet name="topicCat" indexKey="topicCat" label="topicCats" localized="true"/>
-    <facet name="category" indexKey="_cat" label="categories" localized="true"/>
+    <facet name="topicCat" indexKey="topicCat" label="topicCats" />
+    <facet name="category" indexKey="_cat" label="categories" />
     <facet name="inspireTheme" indexKey="inspiretheme" label="inspireThemes"/>
     <facet name="inspireThemeWithAc" indexKey="inspirethemewithac" label="inspireThemesWithAc"/>
     <facet name="inspireThemeURI" indexKey="inspirethemeuri" label="inspireThemesURI"/>
