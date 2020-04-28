@@ -1283,22 +1283,16 @@
   <!--     Maven repository is implicit and doesn't need to be specified. -->
   <!-- ================================================================== -->
   <repositories>
+
     <repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
-      <id>geotools</id>
-      <name>Geotools repository</name>
-      <url>http://download.osgeo.org/webdav/geotools/</url>
+      <id>osgeo</id>
+      <name>OSGeo repository</name>
+      <url>https://repo.osgeo.org/repository/release/</url>
     </repository>
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>boundless</id>
-      <name>Boundless repository</name>
-      <url>http://repo.boundlessgeo.com/main/</url>
-    </repository>
+
     <repository>
       <snapshots>
         <enabled>false</enabled>
