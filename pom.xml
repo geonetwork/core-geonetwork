@@ -1331,10 +1331,11 @@
     <db.type>h2</db.type>
     <db.config.file>../config-db/${db.type}.xml</db.config.file>
     <db.host>localhost</db.host>
-    <db.port>5432</db.port>
+    <db.port></db.port>
     <db.name>gn</db.name>
     <db.username>www-data</db.username>
     <db.password>www-data</db.password>
+    <db.connectionProperties></db.connectionProperties>
     <db.pool.maxActive>30</db.pool.maxActive>
     <db.pool.maxIdle>10</db.pool.maxIdle>
     <db.pool.initialSize>10</db.pool.initialSize>
