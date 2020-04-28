@@ -38,7 +38,7 @@ then
 fi
 
 
-if [[ $1 =~ ^[0-9]+.[0-9]+.[0-9x]+(-SNAPSHOT|-RC[0-2]|-[0-9]+)?$ ]]; then
+if [[ $1 =~ ^[0-9]+.[0-9]+.[0-9x]+(-SNAPSHOT|-RC[0-2]|-alpha.[0-9]+|-[0-9]+)?$ ]]; then
     echo
 else
 	echo
@@ -50,7 +50,7 @@ else
 	exit
 fi
 
-if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9x]+(-SNAPSHOT|-RC[0-2]|-[0-9]+)?$ ]]; then
+if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9x]+(-SNAPSHOT|-RC[0-2]|-alpha.[0-9]+|-[0-9]+)?$ ]]; then
     # Retrieve version and subversion
     if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+-.*$ ]]; then
         new_version_main=`echo $2 | cut -d- -f1`
