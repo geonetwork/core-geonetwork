@@ -1334,7 +1334,7 @@
     <db.name>#{systemEnvironment['DB_NAME']?:'gn'}</db.name>
     <db.username>#{systemEnvironment['DB_USERNAME']?:'www-data'}</db.username>
     <db.password>#{systemEnvironment['DB_PASSWORD']?:'www-data'}</db.password>
-    <db.connectionProperties>#{systemEnvironment['DB_CONNECTION_PROPERTIES']?:'LOCK_TIMEOUT=20000;DB_CLOSE_ON_EXIT=FALSE;MVCC=TRUE'}</db.connectionProperties>
+    <db.connectionProperties>#{systemEnvironment['DB_CONNECTION_PROPERTIES']}</db.connectionProperties>
 
     <db.pool.maxActive>30</db.pool.maxActive>
     <db.pool.maxIdle>10</db.pool.maxIdle>
