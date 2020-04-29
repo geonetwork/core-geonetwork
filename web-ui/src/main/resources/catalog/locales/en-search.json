@@ -437,6 +437,8 @@
   "hideLegend": "Hide legend",
   "selectStyle": "Select a style",
   "setOpacity": "Set the opacity",
+  "PriorityDataset":"Priority dataset",
+  "SpatialScope":"Spatial scope",
   "mdActions": "Available actions",
   "mdActions-view": "Viewable",
   "mdActions-download": "Downloadable",
