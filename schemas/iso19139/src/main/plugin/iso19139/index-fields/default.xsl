@@ -62,6 +62,12 @@
                 select="if ($inspire!='false') then document(concat('file:///', replace($thesauriDir, '\\', '/'), '/external/thesauri/theme/httpinspireeceuropaeutheme-theme.rdf')) else ''"/>
   <xsl:variable name="inspire-theme"
                 select="if ($inspire!='false') then $inspire-thesaurus//skos:Concept else ''"/>
+  <!--
+    This list contains substrings from keyword-uri's. if a keyword-uri contains the substring, the uri will be added to a field named as the substring
+    Typically used in keywords from thesauri from the INSPIRE registry, to be used as facet, keyword should be added using gmx:Anchor
+  -->
+  <xsl:variable name="inspire-thesauri-as-filter" select="'PriorityDataset,SpatialScope,featureconcept,SpatialDataServiceCategory'"/>
+
 
   <!-- If identification creation, publication and revision date
     should be indexed as a temporal extent information (eg. in INSPIRE
@@ -330,53 +336,62 @@
 
         <xsl:for-each select="$listOfKeywords">
           <xsl:variable name="keyword" select="string(.)"/>
-
+          <xsl:variable name="keyURI" select="./@xlink:href"/>
           <Field name="keyword" string="{$keyword}" store="true" index="true"/>
 
           <!-- If INSPIRE is enabled, check if the keyword is one of the 34 themes
                and index annex, theme and theme in english. -->
-          <xsl:if test="$inspire='true' and normalize-space(lower-case($thesaurusName)) = 'gemet - inspire themes, version 1.0'">
+          <xsl:if test="$inspire='true'">
+            <xsl:if test="$keyURI">
+              <xsl:for-each select="tokenize($inspire-thesauri-as-filter,',')">
+                <xsl:if test="contains($keyURI,concat('/',.,'/'))">
+                  <Field name="{.}" string="{$keyURI}" store="true" index="true"/>
+                </xsl:if> 
+              </xsl:for-each>
+            </xsl:if>
+            <xsl:if test="normalize-space(lower-case($thesaurusName)) = 'gemet - inspire themes, version 1.0'">
 
-            <xsl:if test="string-length(.) &gt; 0">
+              <xsl:if test="string-length(.) &gt; 0">
 
-              <xsl:variable name="inspireannex">
-                <xsl:call-template name="determineInspireAnnex">
-                  <xsl:with-param name="keyword" select="$keyword"/>
-                  <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
-                </xsl:call-template>
-              </xsl:variable>
-
-              <xsl:variable name="inspireThemeAcronym">
-                <xsl:call-template name="getInspireThemeAcronym">
-                  <xsl:with-param name="keyword" select="$keyword"/>
-                </xsl:call-template>
-              </xsl:variable>
-
-              <!-- Add the inspire field if it's one of the 34 themes -->
-              <xsl:if test="normalize-space($inspireannex)!=''">
-                <Field name="inspiretheme" string="{$keyword}" store="true" index="true"/>
-                <Field name="inspirethemewithac"
-                       string="{concat($inspireThemeAcronym, '|', $keyword)}"
-                       store="true" index="true"/>
-
-                <!--<Field name="inspirethemeacronym" string="{$inspireThemeAcronym}" store="true" index="true"/>-->
-                <xsl:variable name="inspireThemeURI"
-                              select="$inspire-theme[skos:prefLabel = $keyword]/@rdf:about"/>
-                <Field name="inspirethemeuri" string="{$inspireThemeURI}" store="true"
-                       index="true"/>
-
-                <xsl:variable name="englishInspireTheme">
-                  <xsl:call-template name="translateInspireThemeToEnglish">
+                <xsl:variable name="inspireannex">
+                  <xsl:call-template name="determineInspireAnnex">
                     <xsl:with-param name="keyword" select="$keyword"/>
                     <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
                   </xsl:call-template>
                 </xsl:variable>
 
-                <Field name="inspiretheme_en" string="{$englishInspireTheme}" store="true"
-                       index="true"/>
-                <Field name="inspireannex" string="{$inspireannex}" store="true" index="true"/>
-                <!-- FIXME : inspirecat field will be set multiple time if one record has many themes -->
-                <Field name="inspirecat" string="true" store="false" index="true"/>
+                <xsl:variable name="inspireThemeAcronym">
+                  <xsl:call-template name="getInspireThemeAcronym">
+                    <xsl:with-param name="keyword" select="$keyword"/>
+                  </xsl:call-template>
+                </xsl:variable>
+
+                <!-- Add the inspire field if it's one of the 34 themes -->
+                <xsl:if test="normalize-space($inspireannex)!=''">
+                  <Field name="inspiretheme" string="{$keyword}" store="true" index="true"/>
+                  <Field name="inspirethemewithac"
+                        string="{concat($inspireThemeAcronym, '|', $keyword)}"
+                        store="true" index="true"/>
+
+                  <!--<Field name="inspirethemeacronym" string="{$inspireThemeAcronym}" store="true" index="true"/>-->
+                  <xsl:variable name="inspireThemeURI"
+                                select="$inspire-theme[skos:prefLabel = $keyword]/@rdf:about"/>
+                  <Field name="inspirethemeuri" string="{$inspireThemeURI}" store="true"
+                        index="true"/>
+
+                  <xsl:variable name="englishInspireTheme">
+                    <xsl:call-template name="translateInspireThemeToEnglish">
+                      <xsl:with-param name="keyword" select="$keyword"/>
+                      <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
+                    </xsl:call-template>
+                  </xsl:variable>
+
+                  <Field name="inspiretheme_en" string="{$englishInspireTheme}" store="true"
+                        index="true"/>
+                  <Field name="inspireannex" string="{$inspireannex}" store="true" index="true"/>
+                  <!-- FIXME : inspirecat field will be set multiple time if one record has many themes -->
+                  <Field name="inspirecat" string="true" store="false" index="true"/>
+                </xsl:if>
               </xsl:if>
             </xsl:if>
           </xsl:if>

@@ -111,7 +111,10 @@
     <facet name="recordOwner" indexKey="recordOwner" label="recordOwner"/>
     <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
     <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
-	  <facet name="isPublishedToAll" indexKey="_isPublishedToAll" label="isPublishedToAll" />
+    <facet name="isPublishedToAll" indexKey="_isPublishedToAll" label="isPublishedToAll" />
+    <!-- INSPIRE; facet based on keyword-URI -->
+    <facet name="PriorityDataset" indexKey="PriorityDataset" label="PriorityDataset"/>
+    <facet name="SpatialScope" indexKey="SpatialScope" label="SpatialScope"/>
     <!--
     Example configuration for hierarchical facet based on
     the GeoNetwork region thesaurus or GEMET.
@@ -139,6 +142,10 @@
       <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
       <item facet="inspireThemeURI" sortBy="value" sortOrder="asc" max="35"
             translator="term:http://inspire.ec.europa.eu/theme"/>
+      <item facet="SpatialScope" sortBy="value" sortOrder="asc" max="6"
+            translator="term:http://inspire.ec.europa.eu/metadata-codelist/SpatialScope"/>
+      <item facet="PriorityDataset" sortBy="value" sortOrder="asc" max="15"
+            translator="term:http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset"/>
       <!--<item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>-->
       <!--<item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>-->
       <item facet="keyword" max="15"/>
@@ -194,6 +201,10 @@
       <item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>
       <item facet="inspireThemeURI" sortBy="value" sortOrder="asc" max="35"
             translator="term:http://inspire.ec.europa.eu/theme"/>
+      <item facet="SpatialScope" sortBy="value" sortOrder="asc" max="6"
+            translator="term:http://inspire.ec.europa.eu/metadata-codelist/SpatialScope"/>
+      <item facet="PriorityDataset" sortBy="value" sortOrder="asc" max="15"
+            translator="term:http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset"/>
       <item facet="keyword" max="15"/>
       <item facet="orgName" max="25"/>
       <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
