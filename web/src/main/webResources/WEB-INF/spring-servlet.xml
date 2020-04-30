@@ -68,7 +68,9 @@
   </bean>
 
   <bean id="readWriteMvcInterceptor" class="jeeves.config.springutil.ReadOnlyMvcInterceptor"/>
-  <bean id="apiMvcInterceptor" class="org.fao.geonet.api.AllRequestsInterceptor"/>
+  <bean id="apiMvcInterceptor" class="org.fao.geonet.api.AllRequestsInterceptor">
+    <property name="botRegexpFilter" value="\${bot.regexpFilter}"/>
+  </bean>
 
   <mvc:interceptors>
     <ref bean="localeChangeInterceptor"/>
