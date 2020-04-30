@@ -278,12 +278,13 @@
     '$translate',
     '$sce',
     'gnAlertService',
+    'gnConfig',
     'gnSearchSettings',
     '$q',
     'gnMetadataManager',
     'sxtService',
     function($rootScope, $http, $compile, $translate,
-             $sce, gnAlertService,
+             $sce, gnAlertService, gnConfig,
              gnSearchSettings, $q, gnMetadataManager, sxtService) {
 
 
@@ -353,7 +354,7 @@
             var newscope = scope ? scope.$new() :
                 angular.element($('#sxt-controller')).scope().$new();
             newscope.container = '.links';
-
+            newscope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
             newscope.fragment =
                 $compile(angular.element(response.data))(newscope);
 
