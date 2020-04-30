@@ -3,9 +3,9 @@
   <input type="hidden" ng-repeat="(lang,text) in config.values"  value="{{text}}" name="_lang_{{lang}}_{{root_id}}" lang="{{lang}}"/>
 
 
-<div>
+<div style="padding-left: 15px; padding-right: 15px">
   <div class="form-group" ng-repeat="c in config.config" ng-if="c.type !== 'fixedValue'">
-    <div>
+    <div ng-if="c.heading[currentUILang] != ''">
       <label for="field_{{$index}}" class=" ">{{c.heading[currentUILang]}}</label>
     </div>
 
