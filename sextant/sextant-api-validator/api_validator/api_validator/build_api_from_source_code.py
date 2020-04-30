@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import yaml
 from urllib.parse import urlsplit
+import urllib.parse
 
 
 class ApiPageBuilder:
@@ -14,6 +15,7 @@ class ApiPageBuilder:
         self.base_site_url_replace_by = None
         self.sextant_url_lookup = sextant_url_lookup
         self.sextant_url_replace_by = sextant_url_replace_by
+        self.working_url = None
 
     def read_yaml(self, input_file):
         with open(input_file) as f:
@@ -21,6 +23,7 @@ class ApiPageBuilder:
 
     def get_html(self, site_name):
         url = self.inputs[site_name]
+        self.working_url = url
         return self.get_source_code(url)
 
     def write_to_html(self, site_name, html):
@@ -64,18 +67,24 @@ class ApiPageBuilder:
         for a in soup.findAll("a"):
             if a["href"].startswith("//"):
                 continue
+            if a["href"].startswith(".."):
+                a["href"] = self.replace_relative_in_path(a["href"])
             if a["href"].startswith(tuple(self.base_site_url_lookup)):
                 for i in self.base_site_url_lookup:
                     a["href"] = a["href"].replace(i, self.base_site_url_replace_by, 1)
         for img in soup.findAll("img"):
             if img["src"].startswith("//"):
                 continue
+            if img["src"].startswith(".."):
+                img["src"] = self.replace_relative_in_path(img["src"])
             if img["src"].startswith(tuple(self.base_site_url_lookup)):
                 for i in self.base_site_url_lookup:
                     img["src"] = img["src"].replace(i, self.base_site_url_replace_by, 1)
         for link in soup.findAll("link"):
             if link["href"].startswith("//"):
                 continue
+            if link["href"].startswith(".."):
+                link["href"] = self.replace_relative_in_path(link["href"])
             if link["href"].startswith(tuple(self.base_site_url_lookup)):
                 for i in self.base_site_url_lookup:
                     link["href"] = link["href"].replace(
@@ -86,6 +95,8 @@ class ApiPageBuilder:
                 if script["src"].startswith("//") and self.sextant_url_lookup != "//":
                     continue
                 #  here we look only for sextant files
+                if script["src"].startswith(".."):
+                    script["src"] = self.replace_relative_in_path(script["src"])
                 if script["src"].find(self.sextant_url_lookup) != -1 and not script[
                     "src"
                 ].startswith("/"):
@@ -103,6 +114,9 @@ class ApiPageBuilder:
                         )
         result = str(soup)
         return result
+
+    def replace_relative_in_path(self, url):
+        return urllib.parse.urljoin(self.working_url, url)
 
     @staticmethod
     def get_source_code(url):
