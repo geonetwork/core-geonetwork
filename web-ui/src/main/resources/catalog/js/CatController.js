@@ -361,6 +361,7 @@ goog.require('gn_alert');
         var copy = angular.copy(defaultConfig);
         copy.mods.header.languages = {};
         copy.mods.search.grid.related = [];
+        copy.mods.map["map-editor"].layers = [];
         return copy;
       },
       getProxyUrl: function() {
