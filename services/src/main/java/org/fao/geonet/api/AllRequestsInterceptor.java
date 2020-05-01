@@ -23,31 +23,29 @@
 
 package org.fao.geonet.api;
 
+import jeeves.constants.Jeeves;
+import jeeves.server.UserSession;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import jeeves.constants.Jeeves;
-import jeeves.server.UserSession;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * In charge of creating a new {@link UserSession} if not existing. Avoid to create any sessions for
- * crawlers.
+ * In charge of creating a new {@link UserSession} if not existing.
+ * Avoid to create any sessions for crawlers.
  */
 public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
 
     /**
      * List of bots to avoid.
      */
-    @Value("${bot.regexpFilter}:.*(bot|crawler|baiduspider|80legs|ia_archiver|voyager|yahoo! slurp|mediapartners-google).*")
+    @Value("${bot.regexpFilter:.*(bot|crawler|baiduspider|80legs|ia_archiver|voyager|yahoo! slurp|mediapartners-google).*}")
     public String botRegexpFilter = "";
 
     private Pattern regex = Pattern.compile(botRegexpFilter, Pattern.CASE_INSENSITIVE);
@@ -60,7 +58,7 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
 
     /**
      * Create the {@link UserSession} and add it to the HttpSession.
-     *
+     * <p>
      * If a crawler, check that session is null and if not, invalidate it.
      */
     private void createSessionForAllButNotCrawlers(HttpServletRequest request) {
