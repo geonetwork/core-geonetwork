@@ -47,7 +47,7 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
     /**
      * List of bots to avoid.
      */
-    @Value("${bot.regexpfilter}:.*(bot|crawler|baiduspider|80legs|ia_archiver|voyager|yahoo! slurp|mediapartners-google).*")
+    @Value("${bot.regexpFilter}:.*(bot|crawler|baiduspider|80legs|ia_archiver|voyager|yahoo! slurp|mediapartners-google).*")
     public String botRegexpFilter = "";
 
     private Pattern regex = Pattern.compile(botRegexpFilter, Pattern.CASE_INSENSITIVE);
