@@ -1391,7 +1391,7 @@
 
     <!-- Avoid to create any sessions for crawlers.
     Define the list of User-Agent to be considered as bot. -->
-    <bot.regexpFilter>.*(bot|crawler|baiduspider|80legs|ia_archiver|voyager|yahoo! slurp|mediapartners-google|Linguee Bot|SemrushBot).*</bot.regexpFilter>
+    <!-- bot.regexpFilter>.*(bot|crawler|baiduspider|80legs|ia_archiver|voyager|yahoo! slurp|mediapartners-google|Linguee Bot|SemrushBot).*</bot.regexpFilter-->
 
     <!-- List of comma separated values of hosts for which
     CORS headers are added (eg. www.geonetwork-opensource.org,osgeo.org).

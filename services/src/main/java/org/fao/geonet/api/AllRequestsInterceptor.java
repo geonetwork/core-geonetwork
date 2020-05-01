@@ -30,6 +30,7 @@ import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -45,10 +46,21 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
     /**
      * List of bots to avoid.
      */
-    @Value("${bot.regexpFilter:.*(bot|crawler|baiduspider|80legs|ia_archiver|voyager|yahoo! slurp|mediapartners-google).*}")
-    public String botRegexpFilter = "";
+    private final String BOT_REGEXP_FILTER_DEFAULT=".*(bot|crawler|baiduspider|80legs|ia_archiver|voyager|yahoo! slurp|mediapartners-google).*";
 
-    private Pattern regex = Pattern.compile(botRegexpFilter, Pattern.CASE_INSENSITIVE);
+    @Value("${bot.regexpFilter}")
+    public String botRegexpFilter=null;
+
+    private Pattern regex=null;
+
+    @PostConstruct
+    private void initBotRegexpFilter() {
+        // Check for null or cases where maven resource filter (@bot.regexpFilter@) was not evaluated as it was missing.
+        if (botRegexpFilter==null || "".equals(botRegexpFilter) || "@bot.regexpFilter@".equals(botRegexpFilter)) {
+            botRegexpFilter=BOT_REGEXP_FILTER_DEFAULT;
+        }
+        regex = Pattern.compile(botRegexpFilter, Pattern.CASE_INSENSITIVE);
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -105,7 +117,7 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
     }
 
     public void setBotRegexpFilter(String botRegexpFilter) {
-        regex = Pattern.compile(botRegexpFilter, Pattern.CASE_INSENSITIVE);
         this.botRegexpFilter = botRegexpFilter;
+        initBotRegexpFilter();
     }
 }
