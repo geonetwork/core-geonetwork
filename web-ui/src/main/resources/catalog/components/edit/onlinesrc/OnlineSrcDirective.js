@@ -1500,7 +1500,7 @@
                   // SEXTANT SPECIFIC
                   if (scope.params.protocol === 'OGC:WMS' && scope.params.annotationsEnabled) {
                     var annotationsApiUrl = new URL(window.location.origin + window.location.pathname + '../../../api/annotations/');
-                    var layerName = $filter('gnLocalized')(scope.params.name);
+                    var layerName = $filter('gnLocalized')(scope.params.name) || scope.params.name;
                     processParams.annotationsUrl = annotationsApiUrl + scope.gnCurrentEdit.uuid + '_' + layerName;
                   }
                   // END SEXTANT SPECIFIC
