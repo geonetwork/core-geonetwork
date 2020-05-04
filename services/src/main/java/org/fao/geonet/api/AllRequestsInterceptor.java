@@ -46,18 +46,19 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
     /**
      * List of bots to avoid.
      */
-    private final String BOT_REGEXP_FILTER_DEFAULT=".*(bot|crawler|baiduspider|80legs|ia_archiver|voyager|yahoo! slurp|mediapartners-google).*";
+    private final String BOT_REGEXP_FILTER_DEFAULT =
+        ".*(bot|crawler|baiduspider|80legs|ia_archiver|voyager|yahoo! slurp|mediapartners-google|Linguee Bot|SemrushBot).*";
 
     @Value("${bot.regexpFilter}")
-    public String botRegexpFilter=null;
+    public String botRegexpFilter = null;
 
-    private Pattern regex=null;
+    private Pattern regex = null;
 
     @PostConstruct
     private void initBotRegexpFilter() {
         // Check for null or cases where maven resource filter (@bot.regexpFilter@) was not evaluated as it was missing.
-        if (botRegexpFilter==null || "".equals(botRegexpFilter) || "@bot.regexpFilter@".equals(botRegexpFilter)) {
-            botRegexpFilter=BOT_REGEXP_FILTER_DEFAULT;
+        if (botRegexpFilter == null || "".equals(botRegexpFilter) || "@bot.regexpFilter@".equals(botRegexpFilter)) {
+            botRegexpFilter = BOT_REGEXP_FILTER_DEFAULT;
         }
         regex = Pattern.compile(botRegexpFilter, Pattern.CASE_INSENSITIVE);
     }
