@@ -1,8 +1,8 @@
 package org.fao.geonet.kernel.search.spatial;
 
-import com.vividsolutions.jts.geom.Polygon;
-
 import java.util.List;
+
+import org.locationtech.jts.geom.Polygon;
 
 public interface ErrorHandler {
     void handleParseException(Exception e, String gml);
