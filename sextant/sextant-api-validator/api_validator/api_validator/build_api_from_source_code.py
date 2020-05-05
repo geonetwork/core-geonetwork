@@ -64,6 +64,8 @@ class ApiPageBuilder:
 
     def replace_urls(self, html):
         soup = BeautifulSoup(html, features="html5lib")
+        for base in soup.findAll("base"):
+            base.unwrap()
         for a in soup.findAll("a"):
             if a["href"].startswith("//"):
                 continue
@@ -104,7 +106,9 @@ class ApiPageBuilder:
                         self.sextant_url_lookup, self.sextant_url_replace_by, 1
                     )
                 # do not deal with external scripts
-                elif script["src"].startswith("http"):
+                elif script["src"].startswith("http") or script["src"].startswith(
+                    "https"
+                ):
                     continue
                 # all src files that are not sextant with relative paths
                 else:
