@@ -24,7 +24,6 @@
 package org.fao.geonet.api.records.extent;
 
 import com.google.common.base.Optional;
-import com.vividsolutions.jts.geom.Envelope;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -45,6 +44,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
+import org.locationtech.jts.geom.Envelope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

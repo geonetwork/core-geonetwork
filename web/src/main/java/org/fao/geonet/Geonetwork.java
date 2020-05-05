@@ -37,25 +37,13 @@ import org.fao.geonet.api.records.formatters.FormatterApi;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.fao.geonet.api.site.LogUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.Setting;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.SourceType;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
 import org.fao.geonet.events.server.ServerStartup;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.inspireatom.InspireAtomType;
 import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.SvnManager;
-import org.fao.geonet.kernel.ThesaurusManager;
-import org.fao.geonet.kernel.XmlSerializer;
-import org.fao.geonet.kernel.XmlSerializerSvn;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
@@ -100,6 +88,7 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 
 /**
  * This is the main class, it handles http connections and inits the system.

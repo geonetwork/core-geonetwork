@@ -554,7 +554,11 @@ public class Importer {
                     "Missing siteId parameter from info.xml file");
 
             // --- only update sources table if source is not current site
-            if (!source.equals(gc.getBean(SettingManager.class).getSiteId())) {
+            SourceRepository sourceRepository = context.getBean(SourceRepository.class);
+            Source sourceObject = sourceRepository.findOneByUuid(source);
+            if (sourceObject == null
+                || (!source.equals(gc.getBean(SettingManager.class).getSiteId())
+                    &&  SourceType.harvester != sourceObject.getType())) {
                 Source source1 = new Source(source, sourceName, sourceTranslations, SourceType.externalportal);
                 context.getBean(SourceRepository.class).save(source1);
             }

@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <i18n>
-  <viewInGE>View in Google Earth</viewInGE>
-  <warning>Warning!</warning>
-  <addA>Add</addA>
-  <nojs>Javascript is not enabled. Enable it or click
+  <viewInGE>Ver no Google Earth</viewInGE>
+  <warning>Aviso!</warning>
+  <addA>Adicionar</addA>
+  <nojs>Javascript não está habilitado. Habilite ou clique
     <a
-      href="../search">here to search
+      href="../search">aqui
     </a>
-    in a degraded mode.
+    para buscar em modo degradado.
   </nojs>
-  <selectView>Choose view</selectView>
-  <moreTabs>More information</moreTabs>
-  <nodeChangeWarning>Node Change Warning</nodeChangeWarning>
-  <nodeChangeInfo>Warning: You are no longer in the same node that you logged into.</nodeChangeInfo>
-  <nodeChangeBack>If you would like to return to the node you logged into click:</nodeChangeBack>
-  <nodeChangeForward>If you would like to logout and return to the previous url click:
+  <selectView>Escolher visualização</selectView>
+  <moreTabs>Mais informação</moreTabs>
+  <nodeChangeWarning>Aviso de Mudança de Nó</nodeChangeWarning>
+  <nodeChangeInfo>Aviso: Você não está mais no mesmo nó em que fez login.</nodeChangeInfo>
+  <nodeChangeBack>Se você quiser voltar para o nó em que fez login, clique:</nodeChangeBack>
+  <nodeChangeForward>Se você quiser fazer logout e retornar para a URL anterior, clique:
   </nodeChangeForward>
-  <serviceNotAllowedTitle>Service not available</serviceNotAllowedTitle>
-  <serviceNotAllowed>The service {1} does not exist or you don't have privileges to access it.
+  <serviceNotAllowedTitle>Serviço indisponível</serviceNotAllowedTitle>
+  <serviceNotAllowed>O serviço {1} não existe ou você não tem os privilégios para acessá-lo.
   </serviceNotAllowed>
   <linkToHome>
-    <span>Return to the <a href="../..">search page</a>.
+    <span>Retornar para a <a href="../..">página de busca</a>.
     </span>
   </linkToHome>
 </i18n>

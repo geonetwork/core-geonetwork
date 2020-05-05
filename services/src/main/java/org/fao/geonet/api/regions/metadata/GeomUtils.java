@@ -1,9 +1,5 @@
 package org.fao.geonet.api.regions.metadata;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.spatial.ErrorHandler;
 import org.fao.geonet.utils.Log;
@@ -11,8 +7,12 @@ import org.fao.geonet.utils.Xml;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.geotools.xml.Parser;
+import org.geotools.xsd.Parser;
 import org.jdom.Element;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Polygon;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.xml.sax.SAXException;
@@ -28,9 +28,6 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class GeomUtils {
-
-
-
     public static MultiPolygon getSpatialExtent(Path schemaDir, Element metadata, Parser[] parsers, ErrorHandler errorHandler) throws Exception {
         org.geotools.util.logging.Logging.getLogger("org.geotools.xml")
             .setLevel(Level.SEVERE);

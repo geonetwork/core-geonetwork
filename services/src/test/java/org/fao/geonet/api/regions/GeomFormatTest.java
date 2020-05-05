@@ -23,9 +23,9 @@
 
 package org.fao.geonet.api.regions;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
-import org.geotools.xml.Encoder;
+import org.geotools.xsd.Encoder;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;

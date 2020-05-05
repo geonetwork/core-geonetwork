@@ -24,11 +24,6 @@
 package org.fao.geonet.api.regions.metadata;
 
 import com.google.common.base.Optional;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
@@ -42,23 +37,19 @@ import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.Request;
-import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.spatial.ErrorHandler;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.geotools.xml.Parser;
+import org.geotools.xsd.Parser;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.locationtech.jts.geom.*;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+
 
 /**
  * TODO: A polygon may be exclusion and in such case should be substracted from the overall extent?

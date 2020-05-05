@@ -44,7 +44,6 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.csw.services.getrecords.es.CswFilter2Es;
@@ -54,10 +53,9 @@ import org.fao.geonet.kernel.search.EsFilterBuilder;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.geotools.xml.Configuration;
-import org.geotools.xml.Parser;
+import org.geotools.xsd.Configuration;
+import org.geotools.xsd.Parser;
 import org.jdom.Attribute;
-import org.jdom.Comment;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -71,12 +69,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 public class SearchController {

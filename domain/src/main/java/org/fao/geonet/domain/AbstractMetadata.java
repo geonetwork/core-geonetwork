@@ -22,32 +22,19 @@
  */
 package org.fao.geonet.domain;
 
-import com.vividsolutions.jts.util.Assert;
 import org.fao.geonet.utils.Xml;
 import org.hibernate.annotations.Type;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.springframework.util.Assert;
 
 import javax.annotation.Nonnull;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 
 /**
  * An entity representing a metadata object in the database. The xml, groups and operations are lazily loaded so accessing then will need to

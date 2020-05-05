@@ -23,14 +23,12 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords.es;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTWriter;
-
 import org.fao.geonet.kernel.csw.services.getrecords.IFieldMapper;
 import org.geotools.filter.expression.AbstractExpressionVisitor;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
-import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTWriter;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.referencing.FactoryException;
@@ -38,9 +36,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
-import java.util.ArrayList;
 import java.util.Deque;
-import java.util.List;
 
 public class Expression2CswVisitor extends AbstractExpressionVisitor {
     public static final WKTWriter WKT_WRITER = new WKTWriter();

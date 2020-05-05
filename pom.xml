@@ -141,7 +141,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>2.6.1</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <groupId>net.alchim31.maven</groupId>
@@ -270,6 +270,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
+        <version>3.1.0</version>
         <configuration>
           <encoding>UTF-8</encoding>
         </configuration>
@@ -377,9 +378,9 @@
         <version>9.1.0.8b</version>
       </dependency>
       <dependency>
-        <groupId>com.vividsolutions</groupId>
-        <artifactId>jts</artifactId>
-        <version>1.13</version>
+        <groupId>org.locationtech.jts</groupId>
+        <artifactId>jts-core</artifactId>
+        <version>1.16.1</version>
       </dependency>
       <dependency>
         <groupId>com.github.lookfirst</groupId>
@@ -627,11 +628,6 @@
 
       <!-- Geotools and spatial search stuff -->
       <dependency>
-        <groupId>org.geotools</groupId>
-        <artifactId>gt-api</artifactId>
-        <version>${geotools.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.geotools.xsd</groupId>
         <artifactId>gt-xsd-gml3</artifactId>
         <version>${geotools.version}</version>
@@ -657,7 +653,7 @@
         <version>${geotools.version}</version>
         <exclusions>
           <exclusion>
-					<!-- org.apache.xml:xml-commons-resolver:jar:1.2 -->
+            <!-- org.apache.xml:xml-commons-resolver:jar:1.2 -->
             <groupId>org.apache.xml</groupId>
             <artifactId>xml-commons-resolver</artifactId>
           </exclusion>
@@ -666,6 +662,16 @@
       <dependency>
         <groupId>org.geotools.xsd</groupId>
         <artifactId>gt-xsd-filter</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-wfs</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-fes</artifactId>
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
@@ -680,12 +686,17 @@
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
+        <artifactId>gt-render</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
         <artifactId>gt-epsg-hsql</artifactId>
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
-        <artifactId>gt-wfs</artifactId>
+        <artifactId>gt-wfs-ng</artifactId>
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
@@ -1236,10 +1247,11 @@
     <db.type>h2</db.type>
     <db.config.file>../config-db/${db.type}.xml</db.config.file>
     <db.host>localhost</db.host>
-    <db.port>5432</db.port>
+    <db.port></db.port>
     <db.name>gn</db.name>
     <db.username>www-data</db.username>
     <db.password>www-data</db.password>
+    <db.connectionProperties></db.connectionProperties>
     <db.pool.maxActive>30</db.pool.maxActive>
     <db.pool.maxIdle>10</db.pool.maxIdle>
     <db.pool.initialSize>10</db.pool.initialSize>
@@ -1308,8 +1320,8 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>16.0</geotools.version>
-    <pg.version>9.4.1211</pg.version>
+    <geotools.version>23.0</geotools.version>
+    <pg.version>42.2.5</pg.version>
 
     <spring.version>4.3.0.RELEASE</spring.version>
     <spring.security.version>3.2.0.RELEASE</spring.security.version>

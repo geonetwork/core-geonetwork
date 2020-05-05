@@ -23,7 +23,7 @@
 
 package org.fao.geonet.api.regions;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.api.regions.metadata.MetadataRegionSearchRequest.Id;
