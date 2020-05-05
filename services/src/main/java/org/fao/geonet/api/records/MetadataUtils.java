@@ -153,7 +153,7 @@ public class MetadataUtils {
             if (listOfAssociatedResources != null) {
                 for (AssociatedResource resource : listOfAssociatedResources) {
                     // Search in the index to use the portal filter and verify the metadata is available for the portal
-                    Element searchResult = search(resource.getUuid(), RelatedItemType.siblings.value(), context, from, to, fast, uuid);
+                    Element searchResult = search(resource.getUuid(), RelatedItemType.siblings.value(), context, from, to, fast, null);
                     // If can't be find, skip the result.
                     if (!hasResult(searchResult)) {
                         continue;
@@ -221,7 +221,7 @@ public class MetadataUtils {
 
                     for (String fcat_uuid : listOfUUIDs) {
                         // Search in the index to use the portal filter and verify the metadata is available for the portal
-                        Element searchResult = search(fcat_uuid, RelatedItemType.fcats.value(), context, from, to, fast, uuid);
+                        Element searchResult = search(fcat_uuid, RelatedItemType.fcats.value(), context, from, to, fast, null);
                         // If can't be find, skip the result.
                         if (!hasResult(searchResult)) {
                             continue;
