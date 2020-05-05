@@ -45,9 +45,10 @@
  *   The configuration (see example, below) defines;
  *
  *    a) how the fields are joined together ("; " in this example) -- combiner
- *    b) root_id of the field in the metadata.  We'll set values like ("_lang_eng_14")
- *    c) values -- actual Metadata record values (one per language)
- *    d) configuration - this defines how the edit fields are shown to the user
+ *    b) root_id of the field in the metadata.
+ *    c) refs - this is the refs that should be sent back to the server to update fields
+ *    d) values -- actual Metadata record values (one per language)
+ *    e) configuration - this defines how the edit fields are shown to the user
  *        a) type - what type is this?  (fixedValue, thesaurus, freeText)
  *        b) heading - helper text to show ABOVE the field
  *        c) other configuration information
@@ -77,6 +78,11 @@
   * * {
      *   "combiner":"; ",
      *   "root_id":"14",
+     *   "refs":
+     *          {
+     *            "eng":"15" ,           # default document lang - this is ref to <CharacterString>
+     *            "fra":"lang_fra_14"    # missing lang - this will be created in record if set
+     *          }
      *   "defaultLang":"eng",
      *   "values":
      *       {
@@ -190,6 +196,7 @@
                           gnGlobalSettings
                         )].substring(1);
             scope.root_id = scope.config.root_id;
+            scope.refs = scope.config.refs;
             scope.element = element;
             //we need to do this because GN trims a trailing "; ", which causes problems
             scope.combinerSimple = scope.config.combiner.trim(); //"; " -> ";"
