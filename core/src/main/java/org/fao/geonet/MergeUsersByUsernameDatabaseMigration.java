@@ -76,6 +76,7 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
 
         mergeGroups(applicationContext, duplicatedUserList, userToKeep);
         transferMetadata(applicationContext, duplicatedUserList, userToKeep);
+        transferMetadataStatus(applicationContext, duplicatedUserList, userToKeep);
         transferSavedSelections(applicationContext, duplicatedUserList, userToKeep);
 
         User tempUser = new User();
@@ -100,6 +101,15 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
 
         for (int i = 1; i < duplicatedUserList.size(); i++) { // i intentionally initialised to 1
             userSavedSelectionRepository.deleteAllByUser(duplicatedUserList.get(i).getId());
+        }
+    }
+
+    private void transferMetadataStatus(ApplicationContext applicationContext, List<User> duplicatedUserList, User userToKeep) {
+        MetadataStatusRepository metadataStatusRepository = applicationContext.getBean(MetadataStatusRepository.class);
+        // TODO
+
+        for (int i = 1; i < duplicatedUserList.size(); i++) { // i intentionally initialised to 1
+            metadataStatusRepository.deleteAllById_UserId(duplicatedUserList.get(i).getId());
         }
     }
 
