@@ -76,8 +76,8 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
 
         mergeGroups(applicationContext, duplicatedUserList, userToKeep);
         transferMetadata(applicationContext, duplicatedUserList, userToKeep);
-        transferMetadataStatus(applicationContext, duplicatedUserList, userToKeep);
-        transferSavedSelections(applicationContext, duplicatedUserList, userToKeep);
+        deleteMetadataStatus(applicationContext, duplicatedUserList, userToKeep);
+        deleteSavedSelections(applicationContext, duplicatedUserList, userToKeep);
 
         User tempUser = new User();
         for (int i = duplicatedUserList.size() - 1; i >= 0; i--) { // i = 1  is intended
@@ -95,19 +95,15 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
         userRepository.save(userToKeep);
     }
 
-    private void transferSavedSelections(ApplicationContext applicationContext, List<User> duplicatedUserList, User userToKeep) {
+    private void deleteSavedSelections(ApplicationContext applicationContext, List<User> duplicatedUserList, User userToKeep) {
         UserSavedSelectionRepository userSavedSelectionRepository = applicationContext.getBean(UserSavedSelectionRepository.class);
-        // TODO
-
         for (int i = 1; i < duplicatedUserList.size(); i++) { // i intentionally initialised to 1
             userSavedSelectionRepository.deleteAllByUser(duplicatedUserList.get(i).getId());
         }
     }
 
-    private void transferMetadataStatus(ApplicationContext applicationContext, List<User> duplicatedUserList, User userToKeep) {
+    private void deleteMetadataStatus(ApplicationContext applicationContext, List<User> duplicatedUserList, User userToKeep) {
         MetadataStatusRepository metadataStatusRepository = applicationContext.getBean(MetadataStatusRepository.class);
-        // TODO
-
         for (int i = 1; i < duplicatedUserList.size(); i++) { // i intentionally initialised to 1
             metadataStatusRepository.deleteAllById_UserId(duplicatedUserList.get(i).getId());
         }
