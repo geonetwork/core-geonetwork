@@ -1328,14 +1328,17 @@
     <!-- Configure database config file to use. Could be
      h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi
      -->
-    <db.type>h2</db.type>
-    <db.config.file>../config-db/${db.type}.xml</db.config.file>
-    <db.host>localhost</db.host>
-    <db.port></db.port>
-    <db.name>gn</db.name>
-    <db.username>www-data</db.username>
-    <db.password>www-data</db.password>
-    <db.connectionProperties></db.connectionProperties>
+    <db.type>#{systemEnvironment['GEONETWORK_DB_TYPE']?:'h2'}</db.type>
+    <!-- Instead of using db_type a specific config file can be specified 
+         Note: do not reference ${db_type} in this value or it will cause errors due to SpEL not being evaluated before import -->
+    <db.config.file></db.config.file>
+    <db.host>#{systemEnvironment['GEONETWORK_DB_HOST']?:'localhost'}</db.host>
+    <db.port>#{systemEnvironment['GEONETWORK_DB_PORT']}</db.port>
+    <db.name>#{systemEnvironment['GEONETWORK_DB_NAME']?:'gn'}</db.name>
+    <db.username>#{systemEnvironment['GEONETWORK_DB_USERNAME']?:'www-data'}</db.username>
+    <db.password>#{systemEnvironment['GEONETWORK_DB_PASSWORD']?:'www-data'}</db.password>
+    <db.connectionProperties>#{systemEnvironment['GEONETWORK_DB_CONNECTION_PROPERTIES']}</db.connectionProperties>
+
     <db.pool.maxActive>30</db.pool.maxActive>
     <db.pool.maxIdle>10</db.pool.maxIdle>
     <db.pool.initialSize>10</db.pool.initialSize>
