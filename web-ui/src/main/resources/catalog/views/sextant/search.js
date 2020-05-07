@@ -46,7 +46,8 @@
     }
     $('.gn .sxt-loading').remove();
     $('.gn').css({
-      'overflow': 'auto'
+      'overflow-y': 'auto',
+      'overflow-x': 'hidden'
     });
   }
 
