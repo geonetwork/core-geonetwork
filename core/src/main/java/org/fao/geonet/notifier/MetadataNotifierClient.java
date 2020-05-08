@@ -82,6 +82,7 @@ public class MetadataNotifierClient {
             final RequestConfig.Builder configBuilder = RequestConfig.custom();
             configBuilder.setMaxRedirects(3);
 
+            method.addHeader("accept-charset", "UTF-8");
             method.setEntity(entity);
 
             final boolean authenticationEnabled = StringUtils.isNotBlank(notifier.getUsername()) && notifier.getPassword() != null &&
