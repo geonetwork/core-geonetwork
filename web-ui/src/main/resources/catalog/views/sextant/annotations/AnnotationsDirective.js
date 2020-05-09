@@ -194,7 +194,7 @@
 
           scope.$on('$destroy', function() {
             scope.map.removeLayer(scope.annotationsLayer);
-            scope.annotationsLayer.getSource().unByKey(listenerKey);
+            scope.annotationsLayer.getSource().un(listenerKey);
             scope.annotationsLayer.active = false;
           });
         }

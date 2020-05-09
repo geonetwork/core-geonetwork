@@ -105,9 +105,11 @@
   <div data-ng-if="getType() == 'text'">
     <div class="form-group">
       <div class="col-xs-12">
-        <input class="form-control"
-               ng-model="style.text.text"
-               title="{{'textContent'|translate}}">
+        <label >{{'textInput'|translate}}
+          <input class="form-control" ng-model="style.text.text"
+                 placeholder="{{'textInput'|translate}}"
+                 title="{{'tipDrawText'|translate}}">
+        </label>
       </div>
     </div>
     <div class="form-group">
