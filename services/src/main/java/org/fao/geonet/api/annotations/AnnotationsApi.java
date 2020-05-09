@@ -24,7 +24,7 @@ import java.util.Date;
 import static java.util.UUID.randomUUID;
 
 @RestController
-@RequestMapping("/api/annotations")
+@RequestMapping("/{portal}/api/annotations")
 public class AnnotationsApi {
 
     @Autowired
