@@ -788,12 +788,21 @@
                  *  If it is an URL, we just call a $http.get
                  */
                 scope.addOnlinesrc = function() {
+                  var processParams = {};
+
+                  // SEXTANT SPECIFIC
+                  if (scope.params.protocol === 'OGC:WMS' && scope.params.annotationsEnabled) {
+                    var annotationsApiUrl = new URL(window.location.origin + window.location.pathname + '../../../api/annotations/');
+                    var layerName = $filter('gnLocalized')(scope.params.name) || scope.params.name;
+                    processParams.annotationsUrl = annotationsApiUrl + scope.gnCurrentEdit.uuid + '_' + layerName;
+                  }
+                  // END SEXTANT SPECIFIC
+
                   scope.config.multilingualFields.forEach(function(f) {
                     scope.params[f] = buildObjectParameter(scope.params[f]);
 
                   });
 
-                  var processParams = {};
                   angular.forEach(scope.params.linkType.fields,
                       function(value, key) {
                         if (value.param) {
@@ -812,13 +821,6 @@
                     processParams.selectedLayers = scope.params.selectedLayers;
                   }
                   processParams.process = scope.params.linkType.process;
-
-                  // SEXTANT SPECIFIC
-                  if (scope.params.protocol === 'OGC:WMS' && scope.params.annotationsEnabled) {
-                    var annotationsApiUrl = new URL(window.location.origin + window.location.pathname + '../../../api/annotations/');
-                    processParams.annotationsUrl = annotationsApiUrl + scope.gnCurrentEdit.uuid + '#' + scope.params.name;
-                  }
-                  // END SEXTANT SPECIFIC
 
                   return scope.onlinesrcService.add(
                       processParams, scope.popupid).then(function() {

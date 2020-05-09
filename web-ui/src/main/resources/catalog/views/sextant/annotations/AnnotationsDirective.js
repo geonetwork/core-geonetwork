@@ -7,8 +7,8 @@
    * Directive for editing shared annotations, optionally linked to
    * a XML metadata record.
    */
-  module.directive('sxtAnnotationsEditor', ['sxtAnnotationsService', '$rootScope',
-    function(sxtAnnotationsService, $rootScope) {
+  module.directive('sxtAnnotationsEditor', ['sxtAnnotationsService', '$rootScope', '$timeout',
+    function(sxtAnnotationsService, $rootScope, $timeout) {
       return {
         restrict: 'E',
         scope: {
@@ -20,6 +20,7 @@
           scope.annotationsUuid = scope.layer.get('annotationsUuid');
           scope.metadataObj = scope.layer.get('md');
           scope.metadataUuid = scope.metadataObj ? scope.metadataObj.getUuid() : null;
+
           var user = $rootScope.user;
 
           if (!scope.annotationsUuid) {
@@ -62,9 +63,22 @@
           scope.readOnly = scope.metadataObj && !(user.canEditRecord && user.canEditRecord(scope.metadataObj));
 
           /**
+           * True if something has changed and should be saved
+           * @type {boolean}
+           */
+          scope.annotationsChanged = false;
+
+          /**
+           * Show a success notification
+           * @type {boolean}
+           */
+          scope.saveSuccess = false;
+
+          /**
            * Copy-pasted from DrawDirective.js
            */
-          function createStyleFromConfig(feature, styleCfg) {
+          var createStyleFromConfig = function(feature, styleCfg) {
+            var drawType = feature.get('_type');
             var styleObjCfg = {
               fill: new ol.style.Fill({
                 color: styleCfg.fill.color
@@ -76,10 +90,10 @@
             };
 
             // It is a Text feature
-            if (feature.get('name')) {
+            if (drawType === 'text') {
               styleObjCfg.text = new ol.style.Text({
                 font: styleCfg.text.font,
-                text: feature.get('name'),
+                text: styleCfg.text.text,
                 fill: new ol.style.Fill({
                   color: styleCfg.text.fill.color
                 }),
@@ -91,7 +105,7 @@
                   }) : undefined
               });
             }
-            else if (feature.getGeometry().getType() == 'Point') {
+            else if (drawType === 'point') {
               styleObjCfg.image = new ol.style.Circle({
                 radius: styleCfg.image.radius,
                 fill: new ol.style.Fill({
@@ -100,7 +114,9 @@
               });
             }
             return new ol.style.Style(styleObjCfg);
-          }
+          };
+
+          var listenerKey;
 
           // set current annotation entity to be modified
           function setCurrentAnnotation(annotation) {
@@ -130,6 +146,10 @@
               var source = scope.annotationsLayer.getSource();
               source.addFeatures(features);
             }
+
+            listenerKey = scope.annotationsLayer.getSource().on(['changefeature', 'addfeature', 'removefeature'], function() {
+              scope.annotationsChanged = true;
+            })
           }
 
           // initial loading of annotation entity
@@ -162,14 +182,19 @@
               metadataUuid: scope.metadataUuid || undefined
             }).then(function (response) {
               scope.updatingAnnotation = false;
+              scope.annotationsChanged = false;
               if (response.error) {
                 scope.error = response.error;
+              } else {
+                scope.saveSuccess = true;
+                $timeout(function() { scope.saveSuccess = false; }, 2000);
               }
             });
           }
 
           scope.$on('$destroy', function() {
             scope.map.removeLayer(scope.annotationsLayer);
+            scope.annotationsLayer.getSource().unByKey(listenerKey);
             scope.annotationsLayer.active = false;
           });
         }

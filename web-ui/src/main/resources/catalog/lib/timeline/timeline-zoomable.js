@@ -284,8 +284,9 @@ function TimeLine(element, callback, options) {
 
   // will be used to filter out invisible blocks
   function isVisible(d) {
-    var x = timelineX(d.event);
-    return x >= 0 && x <= timelineWidth;
+    var x0 = timelineX(d.time.begin);
+    var x1 = timelineX(d.time.end);
+    return x1 >= 0 && x0 <= timelineWidth;
   };
 
   function refreshGraphMaxData() {
@@ -305,9 +306,9 @@ function TimeLine(element, callback, options) {
         .filter(isVisible).style('display', 'block')
         .attr("x", function(d) { return timelineX(d.event); })
         .attr("width", function(d) {
-          // one day is 86400000 ms; min width is 2px
+          // min width is 3px
           return Math.max(
-            timelineX(d.event) - timelineX(d.event - 86400000),
+            timelineX(d.time.end) - timelineX(d.time.begin),
             3 / timelineScale
           );
         })
@@ -345,9 +346,9 @@ function TimeLine(element, callback, options) {
         .filter(isVisible).style('display', 'block')
         .attr("x", function(d) { return timelineX(d.event); })
         .attr("width", function(d) {
-          // one day is 86400000 ms; min width is 2px
+          // min width is 3px
           return Math.max(
-            timelineX(d.event) - timelineX(d.event - 86400000),
+            timelineX(d.time.end) - timelineX(d.time.begin),
             3 / timelineScale
           );
         })

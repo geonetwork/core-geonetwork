@@ -241,7 +241,7 @@
 
             var rangeDateP =
                 this.createFacetSpecFromDateRanges_(
-                resp.indexData.aggregations);
+                resp.indexData.aggregations, qParams);
 
             return this.search(qParams, angular.merge(
                 {}, this.initialParams.facets, rangeDateP, statsP, aggs)
@@ -722,36 +722,55 @@
    * Build ES aggs params (filters) from both dates values.
    * The params is a filter, where all entries are a combo of 2 single ranges.
    * @param {Object} aggs
+   * @param {Object} params
    * @return {{}}
    * @private
    */
   geonetwork.gnIndexRequest.prototype.createFacetSpecFromDateRanges_ =
-      function(aggs) {
+      function(aggs, params) {
     var filters = {};
     var ret = {};
 
     angular.forEach(this.initialParams.rangeDates, function(v, k) {
       if (v.minField == undefined) return;
 
+      var initialParam = params.params && params.params[k];
+
       var minF = aggs[v.minField];
       var maxF = aggs[v.maxField];
-      var allD = minF.buckets.concat(maxF.buckets).unique();
+      var allDates = minF.buckets.concat(maxF.buckets)
+        .map(function(bucket) { return bucket.key })
+        .unique();
 
-      allD.forEach(function(b) {
+      // compute bucket interval
+      var interval = 'week';
+      var minDate = initialParam ? moment(initialParam.values.from, 'DD-MM-YYYY') : moment(_.min(allDates));
+      var maxDate = initialParam ? moment(initialParam.values.to, 'DD-MM-YYYY') : moment(_.max(allDates));
+      var fullRange = maxDate.diff(minDate, 'days');
+      if (fullRange > 1000) interval = 'month';
+
+      var groupedDates = _.groupBy(allDates, function(date) {
+        return moment(date).startOf(interval).valueOf();
+      });
+      groupedDates = Object.keys(groupedDates)
+        .map(function(key) { return parseInt(key); })
+        .sort(function(a, b) { return Math.sign(a - b); });
+
+      groupedDates.forEach(function(date, i, array) {
         var rangeSpec = {
           bool: {
             must: [{range: {}}, {range: {}}]
           }
         };
         rangeSpec.bool.must[0].range[v.minField] = {
-          lte: b.key,
+          lte: i < array.length - 1 ? array[i + 1] : date,
           format: 'epoch_millis'
         };
         rangeSpec.bool.must[1].range[v.maxField] = {
-          gte: b.key,
+          gte: date,
           format: 'epoch_millis'
         };
-        filters[b.key] = rangeSpec;
+        filters[date] = rangeSpec;
       }.bind(this));
 
       ret[k] = {

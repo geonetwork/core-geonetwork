@@ -2105,7 +2105,7 @@
             }
 
             // SEXTANT SPECIFIC: ANNOTATIONS
-            var annotationLinks = md.getLinksByType('ANNOTATIONS');
+            var annotationLinks = md.getLinksByType(linkGroup, 'ANNOTATIONS');
             if (annotationLinks.length) {
               // example url: http://localhost:8080/geonetwork/srv/api/annotations/BIOMED_NATURE_FONDS_CORSE_P_ANNOTATIONS
               var uuid = annotationLinks[0].url.match(/[^\/]*$/)[0]
