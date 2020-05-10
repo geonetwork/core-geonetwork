@@ -405,11 +405,17 @@
           }
           angular.forEach(values, function(v, k) {
             var escaped = k.replace(/'/g, '\\\'');
-            clause.push(
-                (config.isTokenized) ?
-                '(' + paramName + " LIKE '%" + escaped + "%')" :
-                '(' + paramName + " = '" + escaped + "')"
-            );
+            if (config.isTokenized) {
+              var sep = config.tokenSeparator;
+              clause.push(
+                '(' + paramName + " = '" + escaped + "')",
+                '(' + paramName + " LIKE '%" + sep + escaped + sep + "%')",
+                '(' + paramName + " LIKE '%" + sep + escaped + "')",
+                '(' + paramName + " LIKE '" + escaped + sep + "%')"
+              );
+            } else {
+              clause.push('(' + paramName + " = '" + escaped + "')");
+            }
           });
           if (clause.length == 0) return;
           where.push('(' + clause.join(' OR ') + ')');
