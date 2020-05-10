@@ -921,7 +921,7 @@
           range[fieldName] = {
             gte: gte,
             lte: lte,
-            format: 'dd-MM-YYYY'
+            format: 'dd-MM-yyyy'
           };
           params.query.bool.must.push({
             range: range
@@ -930,7 +930,7 @@
         else {
           range[this.initialParams.rangeDates[fieldName].minField] = {
             lte: lte,
-            format: 'dd-MM-YYYY'
+            format: 'dd-MM-yyyy'
           };
           params.query.bool.must.push({
             range: range
@@ -938,7 +938,7 @@
           range = {};
           range[this.initialParams.rangeDates[fieldName].maxField] = {
             gte: gte,
-            format: 'dd-MM-YYYY'
+            format: 'dd-MM-yyyy'
           };
           params.query.bool.must.push({
             range: range
