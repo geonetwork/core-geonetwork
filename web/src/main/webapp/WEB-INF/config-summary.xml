@@ -128,7 +128,7 @@
 
     <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
     <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
-	  <facet name="isPublishedToAll" indexKey="_isPublishedToAll" label="isPublishedToAll" />
+	<facet name="isPublishedToAll" indexKey="_isPublishedToAll" label="isPublishedToAll" />
 
 
     <facet name="p01" label="p01" indexKey="thesaurus-external.parameter.NVS.P01"/>
