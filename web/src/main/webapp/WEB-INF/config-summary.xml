@@ -136,7 +136,9 @@
     <facet name="p03" label="p03" indexKey="thesaurus-external.parameter.NVS.P03"/>
     <facet name="p35" label="p35" indexKey="thesaurus-external.parameter.NVS.P35"/>
     <facet name="A05" label="A05" indexKey="thesaurus-external.parameter.NVS.A05"/>
-	  <facet name="C19" label="C19" indexKey="thesaurus-external.reference-geographical-area.NVS.C19"/>
+	<facet name="C19" label="C19" indexKey="thesaurus-external.reference-geographical-area.NVS.C19"/>
+    <facet name="L04" label="L04" indexKey="thesaurus-external.parameter.NVS.L04"/>
+    <facet name="P36" label="P36" indexKey="thesaurus-external.parameter.NVS.P36"/>	  
 
     <facet name="atlantos_element" label="atlantos_element" indexKey="thesaurus-local.theme.atlantos_element"/>
 
@@ -283,7 +285,9 @@
       <item facet="p35" max="300"/>
       <item facet="A05" max="300"/>
       <item facet="C19" max="300"/>
-	    <item facet="atlantos_element" max="300"/>
+      <item facet="L04" max="300"/>
+      <item facet="P36" max="300"/>       
+	  <item facet="atlantos_element" max="300"/>
       <item facet="portail-donnees-facette-discipline" max="300"/>
       <item facet="portail-donnees-facette-type" max="300"/>
       <item facet="portail-donnees-facette-comment" max="300"/>
