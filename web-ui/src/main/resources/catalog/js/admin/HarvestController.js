@@ -60,26 +60,37 @@
               label: 'harvesterReport',
               icon: 'fa-th',
               href: '#/harvest/harvest-report'
-            }];
+            },
+            // SEXTANT SPECIFIC: disable conditional tab (WFS indexing always on)
+            {
+              type: 'wfs-indexing',
+              label: 'wfs-indexing',
+              icon: 'fa-map-marker',
+              href: '#/harvest/wfs-indexing'
+            }
+            // END SEXTANT SPECIFIC
+            ];
 
-      function loadConditionalTabs() {
-        if ($scope.healthCheck.IndexHealthCheck === true) {
-          $scope.pageMenu.tabs = $scope.pageMenu.tabs.concat({
-            type: 'wfs-indexing',
-            label: 'wfs-indexing',
-            icon: 'fa-map-marker',
-            href: '#/harvest/wfs-indexing'
-          });
-        }
-      }
-
-      loadConditionalTabs();
-
-      $scope.$watch('healthCheck.IndexHealthCheck', function (n, o) {
-        if (n !== o) {
-          loadConditionalTabs();
-        }
-      });
+      // SEXTANT SPECIFIC: disable conditional tab (WFS indexing always on)
+      // function loadConditionalTabs() {
+      //   if ($scope.healthCheck.IndexHealthCheck === true) {
+      //     $scope.pageMenu.tabs = $scope.pageMenu.tabs.concat({
+      //       type: 'wfs-indexing',
+      //       label: 'wfs-indexing',
+      //       icon: 'fa-map-marker',
+      //       href: '#/harvest/wfs-indexing'
+      //     });
+      //   }
+      // }
+      //
+      // loadConditionalTabs();
+      //
+      // $scope.$watch('healthCheck.IndexHealthCheck', function (n, o) {
+      //   if (n !== o) {
+      //     loadConditionalTabs();
+      //   }
+      // });
+      // END SEXTANT SPECIFIC
 
       $scope.pageMenu = {
         folder: 'harvest/',
