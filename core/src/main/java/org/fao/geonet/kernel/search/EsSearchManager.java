@@ -268,7 +268,7 @@ public class EsSearchManager implements ISearchManager {
                 }
             } catch (Exception e) {
                 // index does not exist ?
-                LOGGER.debug("Error during index '{}' removal. Error is: %s", new Object[]{indexName, e.getMessage()});
+                LOGGER.debug("Error during index '{}' removal. Error is: {}", new Object[]{indexName, e.getMessage()});
             }
         }
 
