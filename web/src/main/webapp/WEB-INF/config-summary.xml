@@ -319,8 +319,6 @@
       <item facet="lops-projets" max="300"/>
       <item facet="simm-reglementaire" max="300"/>
       <item facet="simm-thematiques" max="300"/>
-      <item facet="simm-reglementaire" max="300"/>
-      <item facet="simm-thematiques" max="300"/>      
 	  
       <item facet="cersat-platform" max="300"/>      
       <item facet="cersat-acquisition-pattern" max="300"/>      
