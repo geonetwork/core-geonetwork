@@ -1328,10 +1328,20 @@
     <!-- Configure database config file to use. Could be
      h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi
      -->
-    <db.type>#{systemEnvironment['GEONETWORK_DB_TYPE']?:'h2'}</db.type>
-    <!-- Instead of using db_type a specific config file can be specified 
-         Note: do not reference ${db_type} in this value or it will cause errors due to SpEL not being evaluated before import -->
-    <db.config.file></db.config.file>
+    <!--
+    The following environment variable can also be set for connecting to the database.
+        GEONETWORK_DB_TYPE=h2
+        GEONETWORK_DB_HOST=localhost
+        GEONETWORK_DB_PORT=
+        GEONETWORK_DB_NAME=gn
+        GEONETWORK_DB_USERNAME=www-data
+        GEONETWORK_DB_PASSWORD=www-data
+        GEONETWORK_DB_CONNECTION_PROPERTIES=
+    -->
+
+    <db.type>${geonetwork.db.type:h2}</db.type>
+    <!-- Instead of using db_type a specific config file can be specified -->
+    <db.config.file>../config-db/${db.type}.xml</db.config.file>
     <db.host>#{systemEnvironment['GEONETWORK_DB_HOST']?:'localhost'}</db.host>
     <db.port>#{systemEnvironment['GEONETWORK_DB_PORT']}</db.port>
     <db.name>#{systemEnvironment['GEONETWORK_DB_NAME']?:'gn'}</db.name>
