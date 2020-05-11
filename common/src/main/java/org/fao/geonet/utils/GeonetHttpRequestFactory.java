@@ -33,6 +33,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.config.SocketConfig;
 import org.apache.http.conn.ConnectionRequest;
 import org.apache.http.conn.HttpClientConnectionManager;
@@ -183,6 +184,20 @@ public class GeonetHttpRequestFactory {
             return new AdaptingResponse(httpClient, httpClient.execute(request));
         }
 
+    }
+
+    public ClientHttpResponse execute(HttpUriRequest request,
+                                      Function<HttpClientBuilder, Void> configurator,
+                                      HttpClientContext r) throws IOException {
+        final HttpClientBuilder clientBuilder = getDefaultHttpClientBuilder();
+        configurator.apply(clientBuilder);
+        CloseableHttpClient httpClient = clientBuilder.build();
+
+        if (r != null) {
+            return new AdaptingResponse(httpClient, httpClient.execute(request, r));
+        } else {
+            return new AdaptingResponse(httpClient, httpClient.execute(request));
+        }
     }
 
     public HttpClientBuilder getDefaultHttpClientBuilder() {
