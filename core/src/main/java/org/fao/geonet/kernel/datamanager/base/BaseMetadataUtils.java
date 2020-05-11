@@ -988,4 +988,9 @@ public class BaseMetadataUtils implements IMetadataUtils {
         }
         throw new NotImplementedException("Unknown AbstractMetadata subtype: " + spec.getClass().getName());
     }
+
+    @Override
+    public void cloneFiles(AbstractMetadata original, AbstractMetadata dest) {
+        // Empty implementation for non-draft mode as not used
+    }
 }

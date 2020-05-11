@@ -583,6 +583,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         return templateId;
     }
 
+    @Override
     public void cloneFiles(AbstractMetadata original, AbstractMetadata dest) {
         try {
             StoreUtils.copyDataDir(context, original.getUuid(), dest.getUuid(), true);
