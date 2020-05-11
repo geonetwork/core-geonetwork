@@ -131,14 +131,14 @@
                     ng-if="currentJob.cronScheduleProducerId"
                     ng-click="updateSchedule(currentJob)">
               <span class="fa" ng-class="settingsLoading ? 'fa-spinner fa-spin' : 'fa-save'"></span>
-              <span translate>update</span>
+              <span translate>wfsIndexingUpdateSchedule</span>
             </button>
             <button type="button" class="btn btn-success"
                     ng-disabled="settingsLoading || !scheduleSettingsForm.$valid"
                     ng-if="!currentJob.cronScheduleProducerId"
                     ng-click="updateSchedule(currentJob)">
               <span class="fa" ng-class="settingsLoading ? 'fa-spinner fa-spin' : 'fa-plus'"></span>
-              <span translate>create</span>
+              <span translate>wfsIndexingCreateSchedule</span>
             </button>
           </div>
         </div>
