@@ -175,6 +175,14 @@
     
     <facet name="simm-reglementaire" indexKey="thesaurus-local.theme.simm.reglementaire" label="simm-reglementaire"/>
     <facet name="simm-thematiques" indexKey="thesaurus-local.theme.simm.thematiques" label="simm-thematiques"/>
+    
+    <facet name="cersat-platform" indexKey="thesaurus-local.theme.cersat_platform" label="cersat-platform"/>
+    <facet name="cersat-acquisition-pattern" indexKey="thesaurus-local.theme.cersat_acquisition_pattern" label="cersat-acquisition-pattern"/>
+    <facet name="cersat-compositing" indexKey="thesaurus-local.theme.cersat_compositing" label="cersat-compositing"/>
+    <facet name="cersat-latency" indexKey="thesaurus-local.theme.cersat_latency" label="cersat-latency"/>
+    <facet name="myocean-reference-geographical-area" indexKey="thesaurus-local.reference-geographical-area.myocean.reference-geographical-area" label="myocean-reference-geographical-area"/>
+    <facet name="cersat-parameter" indexKey="thesaurus-local.theme.cersat_parameter" label="cersat-parameter"/>
+    <facet name="theme-GCMDparameter" indexKey="thesaurus-external.theme.GCMDparameter" label="theme-GCMDparameter"/>
 
     <facet name="mdActions" indexKey="_mdActions" label="mdActions"/>
   </facets>
@@ -310,7 +318,16 @@
       <item facet="odatis_type_jeux_donnee" max="300"/>
       <item facet="lops-projets" max="300"/>
       <item facet="simm-reglementaire" max="300"/>
-      <item facet="simm-thematiques" max="300"/>      
+      <item facet="simm-thematiques" max="300"/>
+      
+      <item facet="cersat-platform" max="300"/>      
+      <item facet="cersat-acquisition-pattern" max="300"/>      
+      <item facet="cersat-compositing" max="300"/>      
+      <item facet="cersat-latency" max="300"/>      
+      <item facet="myocean-reference-geographical-area" max="300"/>      
+      <item facet="cersat-parameter" max="300"/>      
+      <item facet="theme-GCMDparameter" max="300"/>
+      
       <item facet="mdActions"/>
       <!--<item facet="metadataPOC" max="15"/>-->
     </summaryType>
