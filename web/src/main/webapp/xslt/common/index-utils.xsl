@@ -47,6 +47,34 @@
   <xsl:variable name="maxFieldLength" select="32000" as="xs:integer"/>
 
 
+  <!-- A date, dateTime, Year or Year and Month
+  Valid with regards to index date supported types:
+  date_optional_time||yyyy-MM-dd||yyyy-MM||yyyy||epoch_millis
+  -->
+  <xsl:function name="gn-fn-index:is-isoDate" as="xs:boolean">
+    <xsl:param name="value" as="xs:string?"/>
+    <xsl:value-of select="if ($value castable as xs:date
+                          or $value castable as xs:dateTime
+                          or matches($value, '[0-9]{4}(-[0-9]{2})?'))
+                          then true() else false()"/>
+  </xsl:function>
+
+  <!-- 2020-12-12 -->
+  <xsl:function name="gn-fn-index:is-date" as="xs:boolean">
+    <xsl:param name="value" as="xs:string?"/>
+    <xsl:value-of select="if ($value castable as xs:date)
+                          then true() else false()"/>
+  </xsl:function>
+
+
+  <!-- 2020-12-12T12:00:00 -->
+  <xsl:function name="gn-fn-index:is-dateTime" as="xs:boolean">
+    <xsl:param name="value" as="xs:string?"/>
+    <xsl:value-of select="if ($value castable as xs:dateTime)
+                          then true() else false()"/>
+  </xsl:function>
+
+
   <xsl:function name="gn-fn-index:add-field" as="node()*">
     <xsl:param name="fieldName" as="xs:string"/>
     <xsl:param name="fieldValue" as="xs:string?"/>
