@@ -66,7 +66,13 @@
         if(p.any || luceneQueryString) {
           var queryStringParams = [];
           if (p.any) {
-            queryStringParams.push(escapeSpecialCharacters(p.any));
+            var queryExpression = p.any.match(/^q\((.*)\)$/);
+            if (queryExpression == null) {
+              queryStringParams.push(escapeSpecialCharacters(p.any));
+            } else {
+              queryStringParams.push(queryExpression[1]);
+            }
+
           }
           if (luceneQueryString) {
             queryStringParams.push(luceneQueryString);
