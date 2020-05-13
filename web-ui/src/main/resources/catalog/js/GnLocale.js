@@ -88,6 +88,7 @@
         var allPromises = [];
 
         options.locales.push('custom');
+        options.locales.push('v4');
 
         angular.forEach(options.locales, function(value, index) {
           var langUrl = buildUrl(options.prefix, options.key,

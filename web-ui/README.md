@@ -30,3 +30,20 @@ Maven build running with profile "jslint" runs:
  mvn clean install -Pjslint
 ```
 
+
+## Translate client app
+
+Generate a transifex token API from https://www.transifex.com/user/settings/api/
+
+Install transifex client:
+
+```shell script
+sudo apt-get install transifex-client
+```
+
+Download translations from transifex:
+
+```shell script
+cd web-ui
+./download-from-transifex.sh
+```

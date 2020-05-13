@@ -508,5 +508,6 @@
     "warnPublishDraft": "Þegar færslur eru birtar með vinnuflæði virkt, mun staðan breytast yfir í  'Samþykkt. Ertu viss um að þú viljir halda áfram?",
     "cancelWorkingCopy": "Hætta við vinnuafrit",
     "deleteWorkingCopyRecordConfirm": "Ertu viss um að þú viljir fjarlægja vinnuafritið '{{titill}}'?",
-    "workingCopy": "Vinnuafrit"
+    "workingCopy": "Vinnuafrit",
+    "metadataValidated": "Metadata validated."
 }

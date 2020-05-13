@@ -1318,8 +1318,6 @@
     "ui-externalViewer-valuesSeparator-help": "This will be used when the user requests visualization of multiple layers.",
     "ui-externalViewer-openNewWindow": "Open new window",
     "ui-externalViewer-openNewWindow-help": "If checked, the external viewer will be opened in a new tab/window.",
-    "indexInEsDoneError": "There is an error with the ElasticSearch index. See the logs for details",
-    "indexInEsDone": "The ElasticSearch index completed successfully",
     "projectionSwitcherTool": "Projection Switcher Tool",
     "ui-minx": "Min X",
     "ui-maxx": "Max X",
