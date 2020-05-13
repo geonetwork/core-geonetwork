@@ -1,0 +1,223 @@
+@import "../../../style/gn_search.less";
+// variables for manipulating the theme
+@import "gn_variables_default.less"; // must be last
+
+// ----- topics
+.gn-row-topics {
+  background-color: @gn-topics-background-color;
+  padding: 30px 20px 40px 20px;
+  h4 {
+    font-size: 16px;
+    margin-bottom: 20px;
+    label {
+      margin-bottom: 0;
+    }
+  }
+  .chips-card {
+    padding-bottom: 0px;
+  }
+}
+
+// badges
+// 
+// ----- image/icon
+.badge-result {
+  border-radius: 20px !important;
+  float: left;
+  height: 40px;
+  line-height: 43px;
+  text-align: center;
+  vertical-align: bottom;
+  width: auto;
+  font-size: 12px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  background: transparent;
+  a {
+    color: #fff;
+    border-radius: 20px; 
+    padding-right: 10px;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  .badge {
+    margin-top: -7px;
+    margin-left: -16px;
+    background-color: #4d4c4c;
+    font-weight: normal;
+  }
+}
+// ----- colors
+.badge-result-topic a {
+  background: #2c6ea7;
+  &:hover {
+    background: #215481; 
+  }
+}
+.badge-result-type a {
+  background: #078A00;
+  &:hover {
+    background: #078A00; 
+  }
+}
+.badge-result-inspire {
+  .bg-iti-bu,
+  .bg-iti-15,
+  .bg-iti-cp,
+  .bg-iti-6,
+  .bg-iti-gg,
+  .bg-iti-2,
+  .bg-iti-gn,
+  .bg-iti-3,
+  .bg-iti-oi,
+  .bg-iti-12,
+  .bg-iti-rs,
+  .bg-iti-1 {
+    background: #b2b2b2;
+    &:hover {
+      background: #9e9d9d;
+    }
+  }
+  .bg-iti-am,
+  .bg-iti-24,
+  .bg-iti-au,
+  .bg-iti-4,
+  .bg-iti-hh,
+  .bg-iti-18,
+  .bg-iti-lu,
+  .bg-iti-17,
+  .bg-iti-pd,
+  .bg-iti-23,
+  .bg-iti-su,
+  .bg-iti-14 {
+    background: #ea572d;
+    &:hover {
+      background: #d8481f;
+    }
+  }
+  .bg-iti-ad,
+  .bg-iti-5,
+  .bg-iti-af,
+  .bg-iti-22,
+  .bg-iti-el,
+  .bg-iti-10,
+  .bg-iti-er,
+  .bg-iti-33,
+  .bg-iti-pf,
+  .bg-iti-21,
+  .bg-iti-tn,
+  .bg-iti-7,
+  .bg-iti-us,
+  .bg-iti-19 {
+    background: #f59e00;
+    &:hover {
+      background: #e49300;
+    }
+  }
+  .bg-iti-ac,
+  .bg-iti-26,
+  .bg-iti-ef,
+  .bg-iti-20,
+  .bg-iti-hy,
+  .bg-iti-8,
+  .bg-iti-mf,
+  .bg-iti-27,
+  .bg-iti-of,
+  .bg-iti-28,
+  .bg-iti-sr,
+  .bg-iti-29 {
+    background: #36a9e1;
+    &:hover {
+      background: #1e89bd;
+    }
+  }
+  .bg-iti-br,
+  .bg-iti-30,
+  .bg-iti-hb,
+  .bg-iti-31,
+  .bg-iti-lc,
+  .bg-iti-11,
+  .bg-iti-ps,
+  .bg-iti-9,
+  .bg-iti-sd,
+  .bg-iti-32 {
+    background: #95c11f;
+    &:hover {
+      background: #89b513;
+    }
+  }
+  .bg-iti-ge,
+  .bg-iti-13,
+  .bg-iti-mr,
+  .bg-iti-34,
+  .bg-iti-nz,
+  .bg-iti-25,
+  .bg-iti-so,
+  .bg-iti-16 {
+    background: #b17f4a;
+    &:hover {
+      background: #925c22;
+    }
+  }
+  .badge-icon {
+    i {
+      color: #fff;
+      line-height: 40px;
+    }
+  }
+}
+// ----- icon
+.badge-icon {
+  font-size: 7px;
+  color: #fff;
+  background: #333;
+  background: rgba(51, 51, 51, 0.65);
+  width: 40px;
+  height: 40px;
+  display: block;
+  padding: 0;
+  border-radius: 50%;
+  line-height: 50px;
+  min-width: 0;
+}
+// ----- text
+.badge-text {
+  height: 100%;
+  line-height: 110%;
+  padding-left: 8px;
+  padding-right: 4px;
+  margin-top: 13px;
+  font-size: 13px;
+  max-width: 13vw;
+  white-space: nowrap;
+  color: #fff;
+}
+@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+  .gn-row-topics {
+    .badge-text {
+      max-width: 34vw;
+    }
+  }
+  .container {
+    .gn-row-topics {
+      .badge-text {
+        max-width: 26vw;
+      }
+    }
+  }
+}
+@media (max-width: @screen-xs-max) {
+  .gn-row-topics {
+    .badge-text {
+      max-width: 56vw;
+    }
+  }
+  .container {
+    .gn-row-topics {
+      .badge-text {
+        max-width: 48vw;
+      }
+    }
+  }
+}

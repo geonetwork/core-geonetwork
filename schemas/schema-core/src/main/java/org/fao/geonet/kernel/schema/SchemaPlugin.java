@@ -24,16 +24,15 @@
 package org.fao.geonet.kernel.schema;
 
 import com.google.common.collect.ImmutableSet;
-
+import org.jdom.Element;
 import org.jdom.Namespace;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Created by francois on 6/16/14.
@@ -81,4 +80,50 @@ public abstract class SchemaPlugin implements CSWPlugin {
     public Set<Namespace> getNamespaces() {
         return allNamespaces;
     }
+
+    private List<String> xpathTitle;
+
+    public void setXpathTitle(List<String> xpathTitle) {
+        this.xpathTitle = xpathTitle;
+    }
+
+    public List<String> getXpathTitle() {
+        return xpathTitle;
+    }
+
+    protected List<String> elementsToProcess = new ArrayList<>();
+
+    public void setElementsToProcess(List<String> elementsToProcess) {
+        this.elementsToProcess = elementsToProcess;
+    }
+
+    /**
+     Links to analyze in a metadata record
+     */
+    protected List<HttpLink> analyzedLinks;
+
+    public void setAnalyzedLinks(List<HttpLink> analyzedLinks) {
+        this.analyzedLinks = analyzedLinks;
+    }
+
+    public List<HttpLink> getAnalyzedLinks() {
+        return analyzedLinks;
+    }
+
+
+    /**
+     * Processes the passed element. This base class just return the same element without modifications
+     * but can be overridden in a schema plugin in order to modify an element
+     * by one of its substitutes.
+     *
+     * @param el element to process.
+     * @param attributeName
+     * @param parsedAttributeName the name of the attribute, for example <code>xlink:href</code>
+     * @param attributeValue
+     *
+     * @return the processed element.
+     */
+    public Element processElement(Element el, String attributeName, String parsedAttributeName, String attributeValue) {
+        return el;
+    };
 }

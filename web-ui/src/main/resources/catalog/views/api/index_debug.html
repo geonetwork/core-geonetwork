@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GeoNetwork JS API testing page</title>
+  <link href="/geonetwork/static/gn_search_default.css" rel="stylesheet" media="screen">
+</head>
+<body ng-app="gn_search_default" data-ng-controller="GnCatController">
+<div data-ng-include="'../../catalog/views/default/templates/index.html'" class="gn-full"></div>
+<script src="/geonetwork/catalog/lib/modernizr.js"></script>
+<script src="/geonetwork/catalog/lib/closure/base.js"></script>
+<script src="/geonetwork/catalog/lib/base64.js"></script>
+<script src="/geonetwork/catalog/lib/jquery-2.2.4.js"></script>
+<script src="/geonetwork/catalog/lib/moment+langs.min.js"></script>
+<script src="/geonetwork/catalog/lib/angular/angular.js"></script>
+<script src="/geonetwork/catalog/lib/angular/angular-resource.js"></script>
+<script src="/geonetwork/catalog/lib/angular/angular-route.js"></script>
+<script src="/geonetwork/catalog/lib/angular/angular-sanitize.js"></script>
+<script src="/geonetwork/catalog/lib/angular/angular-gettext.min.js"></script>
+<script src="/geonetwork/catalog/lib/angular/angular-cookies.js"></script>
+<script src="/geonetwork/catalog/lib/angular-translate.js"></script>
+<script src="/geonetwork/catalog/lib/angular-md5.js"></script>
+<script src="/geonetwork/catalog/lib/angular-filter.min.js"></script>
+<script src="/geonetwork/catalog/lib/angular.ext/hotkeys/hotkeys.js"></script>
+<script src="/geonetwork/catalog/lib/angular.ext/datetimepicker.js"></script>
+<script src="/geonetwork/catalog/lib/angular.ext/buttons.js"></script>
+<script src="/geonetwork/catalog/lib/angular.ext/rating.js"></script>
+<script src="/geonetwork/catalog/lib/angular.ext/typeahead.js"></script>
+<script src="/geonetwork/catalog/lib/angular.ext/position.js"></script>
+<script src="/geonetwork/catalog/lib/angular.ext/bindHtml.js"></script>
+<script src="/geonetwork/catalog/lib/angular.ext/tabs.js"></script>
+<script src="/geonetwork/catalog/lib/angular.ext/slider.js"></script>
+<script src="/geonetwork/catalog/lib/angular.ext/date.js"></script>
+<script src="/geonetwork/catalog/lib/angular.ext/angular-floatThead.js"></script>
+<script src="/geonetwork/catalog/lib/angular.ext/colorpicker/angularjs-color-picker.js"></script>
+<script src="/geonetwork/catalog/lib/tinycolor.js"></script>
+<script src="/geonetwork/catalog/lib/style/bootstrap/dist/js/bootstrap.js"></script>
+<script src="/geonetwork/catalog/lib/jquery.ext/jquery-ui-slider.min.js"></script>
+<script src="/geonetwork/catalog/lib/proj4js-compressed.js"></script>
+
+<!-- No 3D. -->
+<script src="/geonetwork/catalog/lib/openlayers/ol.js"></script>
+
+<script src="/geonetwork/catalog/lib/FileSaver/FileSaver.min.js"></script>
+<script src="/geonetwork/catalog/lib/tableExport/tableExport.min.js"></script>
+<script src="/geonetwork/catalog/lib/zip/zip.js"></script>
+<script src="/geonetwork/catalog/lib/jsonix/jsonix/Jsonix-min.js"></script>
+<script type="text/javascript">
+  zip.workerScriptsPath = "/geonetwork/catalog/lib/zip/";
+</script>
+<script src="/geonetwork/catalog/lib/jquery.ext/jquery.ui.widget.js"></script>
+<script src="/geonetwork/catalog/lib/jquery.ext/jquery.iframe-transport.js"></script>
+<script src="/geonetwork/catalog/lib/jquery.ext/jquery.fileupload.js"></script>
+<script src="/geonetwork/catalog/lib/jquery.ext/jquery.fileupload-process.js"></script>
+<script src="/geonetwork/catalog/lib/jquery.ext/jquery.fileupload-angular.js"></script>
+<script src="/geonetwork/catalog/lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"></script>
+<script src="/geonetwork/catalog/lib/bootstrap.ext/typeahead.js/handlebars-v2.0.0.js"></script>
+<script src="/geonetwork/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.js"></script>
+<script src="/geonetwork/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"></script>
+<script src="/geonetwork/catalog/lib/bootstrap-table/dist/bootstrap-table.js"></script>
+<script src="/geonetwork/catalog/lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js"></script>
+<script src="/geonetwork/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
+<script src="/geonetwork/catalog/lib/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+<script src="/geonetwork/static/closure_deps.js"></script>
+
+<script>
+  goog.require('gn_search_default');
+</script>
+
+<script type="text/javascript">
+  // Parse config from config URL parameter
+  var tokens = /config=([^&]+)/.exec(window.location.search),
+    config = tokens ? tokens[1] : undefined,
+    defaultConfig = {
+      "langDetector": {
+        "fromHtmlTag": true,
+        "default": "en"
+      },
+      "nodeDetector": {
+        "default": "srv"
+      },
+      "mods": {
+        "header": {
+          "enabled": true,
+          "languages": {
+            "eng": "en",
+            "dut": "du",
+            "fre": "fr",
+            "ger": "de",
+            "kor": "ko",
+            "spa": "es",
+            "cze": "cs",
+            "cat": "ca",
+            "fin": "fi",
+            "ice": "is"
+          }
+        },
+        "home": {
+          "enabled": true,
+          "appUrl": "#/home"
+        },
+        "search": {
+          "enabled": true,
+          "appUrl": "#/search",
+          "hitsperpageValues": [10, 50, 100],
+          "filters": {},
+          "paginationInfo": {
+            "hitsPerPage": 20
+          },
+          'defaultSearchString': '',
+          "facetsSummaryType": "details",
+          "sortbyValues": [{
+            "sortBy": "relevance",
+            "sortOrder": ""
+          }, {
+            "sortBy": "changeDate",
+            "sortOrder": ""
+          }, {
+            "sortBy": "title",
+            "sortOrder": "reverse"
+          }, {
+            "sortBy": "rating",
+            "sortOrder": ""
+          }, {
+            "sortBy": "popularity",
+            "sortOrder": ""
+          }, {
+            "sortBy": "denominatorDesc",
+            "sortOrder": ""
+          }, {
+            "sortBy": "denominatorAsc",
+            "sortOrder": "reverse"
+          }],
+          "sortBy": "relevance",
+          "resultViewTpls": [{
+            "tplUrl": "../../catalog/components/search/resultsview/partials/viewtemplates/grid.html",
+            "tooltip": "Grid",
+            "icon": "fa-th"
+          }],
+          "resultTemplate": "../../catalog/components/search/resultsview/partials/viewtemplates/grid.html",
+          "formatter": {
+            "list": [{
+              "label": "full",
+              "url" : "../api/records/{{md.getUuid()}}/formatters/xsl-view?root=div&view=advanced"
+            }]
+          },
+          "linkTypes": {
+            "links": ["LINK", "kml"],
+            "downloads": ["DOWNLOAD"],
+            "layers":["OGC"],
+            "maps": ["ows"]
+          }
+        },
+        "map": {
+          "enabled": true,
+          "appUrl": "#/map",
+          "is3DModeAllowed": true,
+          "storage": "sessionStorage",
+          "map": "../../map/config-viewer.xml",
+          "listOfServices": {
+            "wms": [{"name": "BRGM", "url": "http://geoservices.brgm.fr/geologie"}],
+            "wmts": []},
+          "useOSM": true,
+          "context": "",
+          "layer": {
+            "url": "http://www2.demis.nl/mapserver/wms.asp?",
+            "layers": "Countries",
+            "version": "1.1.1"
+          },
+          "projection": "EPSG:3857",
+          "projectionList": [{
+            "code": "EPSG:4326",
+            "label": "WGS84 (EPSG:4326)"
+          }, {
+            "code": "EPSG:3857",
+            "label": "Google mercator (EPSG:3857)"
+          }]
+        },
+        "editor": {
+          "enabled": true,
+          "appUrl": "../../srv/eng/catalog.edit"
+        },
+        "admin": {
+          "enabled": true,
+          "appUrl": "../../srv/eng/admin.console"
+        },
+        "signin": {
+          "enabled": true,
+          "appUrl": "../../srv/eng/catalog.signin"
+        },
+        "signout": {
+          "appUrl": "../../signout"
+        }
+      }
+    };
+
+  if (config) {
+    try {
+      config = angular.fromJson(decodeURIComponent(config));
+    } catch (e) {
+      console.warn('Invalid configuration: ' + config + '. Using default.');
+      console.warn(e);
+      config = defaultConfig;
+    }
+  } else {
+    config = defaultConfig;
+  }
+
+  var cfgModule = angular.module('gn_config', []);
+  cfgModule.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
+    function (gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
+      gnGlobalSettings.init(config, 'http://localhost:8080/geonetwork/srv/', gnViewerSettings, gnSearchSettings);
+    }]);
+</script>
+</body>
+</html>

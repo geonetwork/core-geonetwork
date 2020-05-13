@@ -37,6 +37,8 @@
   -->
   <xsl:variable name="gnUri" select="'http://www.fao.org/geonetwork'"/>
 
+  <xsl:variable name="buildNumber"
+                select="util:getBuildNumber()"/>
 
   <xsl:variable name="uiResourcesPath" select="'../../catalog/'"/>
 
@@ -44,7 +46,10 @@
   <xsl:variable name="service" select="/root/gui/reqService"/>
 
   <xsl:variable name="i18n" select="/root/gui/i18n"/>
+  <!-- Used by SearchApi loading translation from JSON locale files. -->
+  <xsl:variable name="t" select="/root/translations"/>
   <xsl:variable name="lang" select="/root/gui/language"/>
+  <xsl:variable name="lang2chars" select="/root/gui/lang2chars"/>
   <xsl:variable name="requestParameters" select="/root/request"/>
 
   <!-- XSL using this variable should be refactored to not rely on the
@@ -57,12 +62,14 @@
 
   <xsl:variable name="searchView"
                 select="if (/root/request/view) then /root/request/view else if(util:getSettingValue('system/ui/defaultView')) then util:getSettingValue('system/ui/defaultView') else 'default'"></xsl:variable>
-  <xsl:variable name="owsContext" select="/root/request/owscontext"/>
-  <xsl:variable name="wmsUrl" select="/root/request/wmsurl"/>
-  <xsl:variable name="layerName" select="/root/request/layername"/>
-  <xsl:variable name="layerGroup" select="/root/request/layergroup"/>
   <xsl:variable name="angularModule"
                 select="if ($angularApp = 'gn_search') then concat('gn_search_', $searchView) else $angularApp"></xsl:variable>
+
+  <xsl:variable name="shibbolethOn"
+                select="util:existsBean('shibbolethConfiguration')"/>
+                
+  <xsl:variable name="shibbolethHideLogin"
+                select="util:shibbolethHideLogin()"/>
 
   <!-- Define which JS module to load using Closure -->
   <xsl:variable name="angularApp" select="
@@ -77,9 +84,9 @@
     else if ($service = 'catalog.edit') then 'gn_editor'
     else if ($service = 'catalog.viewer') then 'gn_viewer'
     else if ($service = 'catalog.search'
-      or $service = 'catalog.search.nojs'
+      or $service = 'search'
       or $service = 'md.format.html') then 'gn_search'
-    else if ($service = 'md.viewer') then 'gn_formatter_viewer'
+    else if ($service = 'display') then 'gn_formatter_viewer'
     else 'gn'"/>
 
   <xsl:variable name="customFilename" select="concat($angularApp, '_', $searchView)"></xsl:variable>
@@ -96,12 +103,13 @@
   <!-- URL for services - may not be defined FIXME or use fullURL instead -->
   <xsl:variable name="siteURL" select="/root/gui/siteURL"/>
 
+  <xsl:variable name="nodeUrl"
+                select="util:getSettingValue('nodeUrl')"/>
+
   <!-- URL for webapp root -->
-  <xsl:variable name="baseURL" select="substring-before($siteURL,'/srv/')"/>
+  <xsl:variable name="baseURL" select="/root/gui/baseUrl"/>
   <!-- Full URL with protocol, host and port -->
-  <xsl:variable name="fullURL" select="concat($env/system/server/protocol, '://',
-    $env/system/server/host, ':',
-    $env/system/server/port)"/>
+  <xsl:variable name="fullURL" select="/root/gui/serverUrl"/>
   <!-- Full URL for services -->
   <xsl:variable name="fullURLForService" select="concat($fullURL, /root/gui/locService)"/>
   <xsl:variable name="fullURLForWebapp" select="concat($fullURL, /root/gui/url)"/>
@@ -114,11 +122,25 @@
 
   <xsl:variable name="isJsEnabled" select="not(ends-with($service, '-nojs'))"/>
 
+  <!-- TODO: Can be improved.
+  If there is no config in the database then this is always false.
+  If CatController default config was set it to true, 3D JS dependencies will not be loaded.
+  CatController default config is false and if user wants to enable 3D
+  he/she has to create a config from the admin.
+   -->
   <xsl:variable name="is3DModeAllowed"
                 select="if ($service = 'catalog.search' and
-                            ($env/map/is3DModeAllowed = 'true' or /root/request/with3d))
+                            (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.map.is3DModeAllowed') = 'true' or /root/request/with3d))
                         then true()
                         else false()"/>
+
+  <xsl:variable name="isSocialbarEnabled"
+                select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.recordview.isSocialbarEnabled') = 'true')
+                        then true()
+                        else false()"/>
+
+  <xsl:variable name="isRecaptchaEnabled"
+                select="$env/system/userSelfRegistration/recaptcha/enable = 'true'" />
 
   <!-- TODO: retrieve from settings -->
   <xsl:variable name="geopublishMatchingPattern"

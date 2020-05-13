@@ -32,8 +32,10 @@
           return {
             restrict: 'A',
             scope: true,
-            templateUrl: '../../catalog/components/search/map/' +
-                'partials/mapfield.html',
+            templateUrl: function(elem, attrs) {
+              return attrs.template || '../../catalog/components/search/map/' +
+                  'partials/mapfield.html';
+            },
             compile: function compile(tElement, tAttrs, transclude) {
               return {
                 pre: function preLink(scope, iElement, iAttrs, controller) {
@@ -77,7 +79,9 @@
                    */
                   scope.setRelation = function(rel) {
                     scope.searchObj.params.relation = rel;
-                    scope.triggerSearch();
+                    if (!!scope.searchObj.params.geometry) {
+                      scope.triggerSearch();
+                    }
                   };
                 }
               };
@@ -87,12 +91,12 @@
       ])
 
       .directive('gnDrawBboxBtn', [
-        'ngeoDecorateInteraction',
+        'olDecorateInteraction',
         '$parse',
         '$translate',
         'gnSearchSettings',
         'gnMap',
-        function(ngeoDecorateInteraction, $parse, $translate,
+        function(olDecorateInteraction, $parse, $translate,
                  gnSearchSettings) {
           return {
             restrict: 'A',
@@ -101,7 +105,7 @@
               var dragbox = new ol.interaction.DragBox({
                 style: gnSearchSettings.olStyles.drawBbox
               });
-              ngeoDecorateInteraction(dragbox, $scope.map);
+              olDecorateInteraction(dragbox, $scope.map);
               dragbox.active = false;
               $scope.map.addInteraction(dragbox);
               $scope.interaction = dragbox;
@@ -149,9 +153,9 @@
               }
               scope.getButtonTitle = function() {
                 if (scope.interaction.active) {
-                  return $translate('clickToRemoveSpatialFilter');
+                  return $translate.instant('clickToRemoveSpatialFilter');
                 } else {
-                  return $translate('drawAnExtentToFilter');
+                  return $translate.instant('drawAnExtentToFilter');
                 }
               };
               scope.interaction.on('boxend', function() {
@@ -170,14 +174,18 @@
               scope.$watch('interaction.active', function(v, o) {
                 if (!v && o) {
                   resetSpatialFilter();
-                  scope.triggerSearch();
+                  if (!!scope.searchObj.params.geometry) {
+                    scope.triggerSearch();
+                  }
                 }
               });
 
               // When search form is reset, remove the geom
-              scope.$on('beforeSearchReset', function() {
-                resetSpatialFilter();
-                scope.interaction.active = false;
+              scope.$on('beforeSearchReset', function(event, preserveGeometrySearch) {
+                if (!preserveGeometrySearch) {
+                  resetSpatialFilter();
+                  scope.interaction.active = false;
+                }
               });
             }
           };

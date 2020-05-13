@@ -1,0 +1,20 @@
+<div class="search-filter-tags panel panel-success" ng-if="currentFilters.length">
+  <div class="panel-heading flex-row">
+    <span translate>activeFilters</span>
+    <div class="flex-spacer flex-grow"></div>
+    <a href ng-click="removeAll()"
+       class="btn btn-default btn-xs remove-all"
+       translate>removeAllFilters</a>
+  </div>
+  <div class="panel-body">
+    <a href class="filter-group flex-row flex-wrap"
+       title="{{'removeThisFilter' | translate}}"
+       ng-repeat="filter in currentFilters"
+       ng-click="removeFilter(filter)">
+      <span class="fa fa-times text-danger delete-icon"></span>
+      <strong class="text-no-wrap text-uppercase" translate>{{filter.key}}</strong>
+      <div class="flex-spacer"></div>
+      <span translate>{{filter.value | translatearray}}</span>
+    </a>
+  </div>
+</div>

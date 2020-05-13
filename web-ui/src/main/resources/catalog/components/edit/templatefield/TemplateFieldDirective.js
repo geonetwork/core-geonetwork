@@ -24,44 +24,81 @@
 (function() {
   goog.provide('gn_template_field_directive');
 
-  var module = angular.module('gn_template_field_directive', []);
-  module.directive('gnTemplateFieldAddButton', ['gnEditor', 'gnCurrentEdit',
-    function(gnEditor, gnCurrentEdit) {
+  var module = angular.module('gn_template_field_directive',
+      ['pascalprecht.translate']);
+  module.directive('gnTemplateFieldAddButton',
+      ['gnEditor', 'gnCurrentEdit', '$rootScope', '$translate',
+       function(gnEditor, gnCurrentEdit, $rootScope, $translate) {
 
-      return {
-        restrict: 'A',
-        replace: true,
-        scope: {
-          id: '@gnTemplateFieldAddButton'
-        },
-        link: function(scope, element, attrs) {
-          var textarea = $(element).parent()
-              .find('textarea[name=' + scope.id + ']');
-          // Unregister this textarea to the form
-          // It will be only submitted if user click the add button
-          textarea.removeAttr('name');
+         return {
+           restrict: 'A',
+           replace: true,
+           scope: {
+             id: '@gnTemplateFieldAddButton'
+           },
+           link: function(scope, element, attrs) {
+             var textarea = $(element).parent()
+                 .find('textarea[name=' + scope.id + ']'),
+             hasChoice =
+                 angular.isDefined($(element).attr('data-has-choice'));
 
-          scope.addFromTemplate = function() {
-            textarea.attr('name', scope.id);
+             // Unregister this textarea to the form
+             // It will be only submitted if user click the add button
+             textarea.removeAttr('name');
 
-            // Save and refreshform
-            gnEditor.save(gnCurrentEdit.id, true);
-          };
+             scope.addFromTemplate = function() {
+               textarea.attr('name', scope.id);
 
-          $(element).click(scope.addFromTemplate);
-        }
-      };
-    }]),
+               // Save and refreshform
+               gnEditor.save(gnCurrentEdit.id, true).then(function() {
+                  // success. Do nothing
+               }, function(rejectedValue) {
+                  $rootScope.$broadcast('StatusUpdated', {
+                   title: $translate.instant('runServiceError'),
+                   error: rejectedValue,
+                   timeout: 0,
+                   type: 'danger'
+                  });
+               });
+             };
+
+             var chooseTemplate = function(id) {
+               textarea.val($(element).parent()
+               .find('textarea#' + id + '-value').val());
+
+               scope.addFromTemplate();
+             };
+
+             if (!hasChoice) {
+               // Register click event on main button
+               // which will add snippet from the single
+               // textarea
+               $(element).click(scope.addFromTemplate);
+             } else {
+               // Register click on each choices
+               var choices = $(element)
+               .find('ul > li > a');
+               choices.each(function(idx, e) {
+                 var id = $(e).attr('id');
+                 $(e).click(function() {
+                   chooseTemplate(id);
+                 });
+               });
+             }
+           }
+         };
+       }]);
+
   /**
-     * The template field directive managed a custom field which
-     * is based on an XML snippet to be sent in the form with some
-     * string to be replace from related inputs.
-     *
-     * This allows to edit a complex XML structure with simple
-     * form fields. eg. a date of creation where only the date field
-     * is displayed to the end user and the creation codelist value
-     * is in the XML template for the field.
-     */
+   * The template field directive managed a custom field which
+   * is based on an XML snippet to be sent in the form with some
+   * string to be replace from related inputs.
+   *
+   * This allows to edit a complex XML structure with simple
+   * form fields. eg. a date of creation where only the date field
+   * is displayed to the end user and the creation codelist value
+   * is in the XML template for the field.
+   */
   module.directive('gnTemplateField', ['$http', '$rootScope', '$timeout',
     function($http, $rootScope, $timeout) {
 

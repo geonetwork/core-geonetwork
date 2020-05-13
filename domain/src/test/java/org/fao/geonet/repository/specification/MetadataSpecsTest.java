@@ -70,7 +70,7 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
     @Test
     public void testHasMetadataId() throws Exception {
         Metadata md1 = _repository.save(newMetadata(_inc));
-        assertFindsCorrectMd(md1, hasMetadataId(md1.getId()), true);
+        assertFindsCorrectMd(md1, (Specification<Metadata>)hasMetadataId(md1.getId()), true);
     }
 
     @Test
@@ -87,13 +87,13 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         metadata3.getDataInfo().setType(MetadataType.TEMPLATE);
         Metadata md3 = _repository.save(metadata3);
 
-        assertEquals(1, _repository.findAll(hasType(MetadataType.METADATA)).size());
-        assertEquals(1, _repository.findAll(hasType(MetadataType.SUB_TEMPLATE)).size());
-        assertEquals(1, _repository.findAll(hasType(MetadataType.TEMPLATE)).size());
+        assertEquals(1, _repository.findAll((Specification<Metadata>)hasType(MetadataType.METADATA)).size());
+        assertEquals(1, _repository.findAll((Specification<Metadata>)hasType(MetadataType.SUB_TEMPLATE)).size());
+        assertEquals(1, _repository.findAll((Specification<Metadata>)hasType(MetadataType.TEMPLATE)).size());
 
-        assertEquals(md1.getId(), _repository.findOne(hasType(MetadataType.METADATA)).getId());
-        assertEquals(md2.getId(), _repository.findOne(hasType(MetadataType.SUB_TEMPLATE)).getId());
-        assertEquals(md3.getId(), _repository.findOne(hasType(MetadataType.TEMPLATE)).getId());
+        assertEquals(md1.getId(), _repository.findOne((Specification<Metadata>)hasType(MetadataType.METADATA)).getId());
+        assertEquals(md2.getId(), _repository.findOne((Specification<Metadata>)hasType(MetadataType.SUB_TEMPLATE)).getId());
+        assertEquals(md3.getId(), _repository.findOne((Specification<Metadata>)hasType(MetadataType.TEMPLATE)).getId());
     }
 
     @Test
@@ -108,12 +108,12 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         metadata2.getDataInfo().setSchemaId(schemaId2);
         Metadata md2 = _repository.save(metadata2);
 
-        assertEquals(1, _repository.findAll(hasSchemaId(schemaId1)).size());
-        assertEquals(1, _repository.findAll(hasSchemaId(schemaId2)).size());
-        assertEquals(0, _repository.findAll(hasSchemaId("other")).size());
+        assertEquals(1, _repository.findAll((Specification<Metadata>)hasSchemaId(schemaId1)).size());
+        assertEquals(1, _repository.findAll((Specification<Metadata>)hasSchemaId(schemaId2)).size());
+        assertEquals(0, _repository.findAll((Specification<Metadata>)hasSchemaId("other")).size());
 
-        assertEquals(md1.getId(), _repository.findOne(hasSchemaId(schemaId1)).getId());
-        assertEquals(md2.getId(), _repository.findOne(hasSchemaId(schemaId2)).getId());
+        assertEquals(md1.getId(), _repository.findOne((Specification<Metadata>)hasSchemaId(schemaId1)).getId());
+        assertEquals(md2.getId(), _repository.findOne((Specification<Metadata>)hasSchemaId(schemaId2)).getId());
     }
 
     @Test
@@ -137,22 +137,22 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         metadata3.getCategories().add(cat2);
         Metadata md3 = _repository.save(metadata3);
 
-        List<Metadata> found = _repository.findAll(hasCategory(cat1), SortUtils.createSort(Metadata_.id));
+        List<Metadata> found = _repository.findAll((Specification<Metadata>)hasCategory(cat1), SortUtils.createSort(Metadata_.id));
 
         assertEquals(2, found.size());
         assertEquals(md1.getId(), found.get(0).getId());
         assertEquals(md2.getId(), found.get(1).getId());
 
-        found = _repository.findAll(hasCategory(cat2), SortUtils.createSort(Metadata_.id));
+        found = _repository.findAll((Specification<Metadata>)hasCategory(cat2), SortUtils.createSort(Metadata_.id));
         assertEquals(2, found.size());
         assertEquals(md1.getId(), found.get(0).getId());
         assertEquals(md3.getId(), found.get(1).getId());
 
-        found = _repository.findAll(hasCategory(cat3), SortUtils.createSort(Metadata_.id));
+        found = _repository.findAll((Specification<Metadata>)hasCategory(cat3), SortUtils.createSort(Metadata_.id));
         assertEquals(1, found.size());
         assertEquals(md2.getId(), found.get(0).getId());
 
-        found = _repository.findAll(hasCategory(cat4), SortUtils.createSort(Metadata_.id));
+        found = _repository.findAll((Specification<Metadata>)hasCategory(cat4), SortUtils.createSort(Metadata_.id));
         assertEquals(0, found.size());
 
     }
@@ -174,11 +174,11 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         metadata3.getSourceInfo().setGroupOwner(3);
         Metadata md3 = _repository.save(metadata3);
 
-        List<Metadata> found = _repository.findAll(isOwnedByOneOfFollowingGroups(Arrays.asList(1)));
+        List<Metadata> found = _repository.findAll((Specification<Metadata>)isOwnedByOneOfFollowingGroups(Arrays.asList(1)));
         assertEquals(1, found.size());
         assertEquals(md1.getId(), found.get(0).getId());
 
-        found = _repository.findAll(isOwnedByOneOfFollowingGroups(Arrays.asList(1, 3)), SortUtils.createSort(Metadata_.id));
+        found = _repository.findAll((Specification<Metadata>)isOwnedByOneOfFollowingGroups(Arrays.asList(1, 3)), SortUtils.createSort(Metadata_.id));
         assertEquals(2, found.size());
         assertEquals(md1.getId(), found.get(0).getId());
         assertEquals(md3.getId(), found.get(1).getId());
@@ -187,7 +187,7 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
     @Test
     public void testHasMetadataUuid() throws Exception {
         Metadata md1 = _repository.save(newMetadata(_inc));
-        Specification<Metadata> spec = hasMetadataUuid(md1.getUuid());
+        Specification<Metadata> spec = (Specification<Metadata>)hasMetadataUuid(md1.getUuid());
 
         assertFindsCorrectMd(md1, spec, true);
     }
@@ -196,7 +196,7 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
     @Test
     public void testHasHarvesterUuid() throws Exception {
         Metadata md1 = _repository.save(newMetadata(_inc));
-        Specification<Metadata> spec = hasHarvesterUuid(md1.getHarvestInfo().getUuid());
+        Specification<Metadata> spec = (Specification<Metadata>)hasHarvesterUuid(md1.getHarvestInfo().getUuid());
         assertFindsCorrectMd(md1, spec, true);
     }
 
@@ -209,8 +209,8 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         md2.getHarvestInfo().setHarvested(true);
         md2 = _repository.save(md2);
 
-        assertFindsCorrectMd(md1, isHarvested(false), false);
-        assertFindsCorrectMd(md2, isHarvested(true), false);
+        assertFindsCorrectMd(md1, (Specification<Metadata>)isHarvested(false), false);
+        assertFindsCorrectMd(md2, (Specification<Metadata>)isHarvested(true), false);
     }
 
     @Test
@@ -220,14 +220,14 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         Metadata md2 = newMetadata(_inc);
         md2 = _repository.save(md2);
 
-        List<Metadata> all = _repository.findAll(hasMetadataIdIn(Arrays.asList(md1.getId())));
+        List<Metadata> all = _repository.findAll((Specification<Metadata>)hasMetadataIdIn(Arrays.asList(md1.getId())));
         assertEquals(1, all.size());
         assertEquals(md1.getId(), all.get(0).getId());
 
-        all = _repository.findAll(hasMetadataIdIn(Arrays.asList(md1.getId(), md2.getId())));
+        all = _repository.findAll((Specification<Metadata>)hasMetadataIdIn(Arrays.asList(md1.getId(), md2.getId())));
         assertEquals(2, all.size());
 
-        all = _repository.findAll(hasMetadataIdIn(Collections.<Integer>emptyList()));
+        all = _repository.findAll((Specification<Metadata>)hasMetadataIdIn(Collections.<Integer>emptyList()));
         assertTrue(all.isEmpty());
 
 
@@ -242,14 +242,14 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         md2.getDataInfo().setType(MetadataType.SUB_TEMPLATE);
         md2 = _repository.save(md2);
 
-        assertFindsCorrectMd(md1, isType(MetadataType.METADATA), false);
-        assertFindsCorrectMd(md2, isType(MetadataType.SUB_TEMPLATE), false);
+        assertFindsCorrectMd(md1, (Specification<Metadata>)isType(MetadataType.METADATA), false);
+        assertFindsCorrectMd(md2, (Specification<Metadata>)isType(MetadataType.SUB_TEMPLATE), false);
     }
 
     @Test
     public void testHasSource() throws Exception {
         Metadata md1 = _repository.save(newMetadata(_inc));
-        Specification<Metadata> spec = hasSource(md1.getSourceInfo().getSourceId());
+        Specification<Metadata> spec = (Specification<Metadata>)hasSource(md1.getSourceInfo().getSourceId());
         assertFindsCorrectMd(md1, spec, true);
     }
 
@@ -260,9 +260,9 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         entity.getDataInfo().setExtra(extra);
         Metadata md1 = _repository.save(entity);
 
-        assertFindsCorrectMd(md1, hasExtra(extra), true);
+        assertFindsCorrectMd(md1, (Specification<Metadata>)hasExtra(extra), true);
 
-        assertEquals(0, _repository.count(hasExtra("wrong extra")));
+        assertEquals(0, _repository.count((Specification<Metadata>)hasExtra("wrong extra")));
     }
 
     private void assertFindsCorrectMd(Metadata md1, Specification<Metadata> spec, boolean addNewMetadata) {

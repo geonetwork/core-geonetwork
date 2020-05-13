@@ -170,6 +170,10 @@ public class SchematronCriteria extends GeonetEntity {
         return getType().accepts(applicationContext, getValue(), metadataId, metadata, metadataNamespaces);
     }
 
+    public boolean accepts(ApplicationContext applicationContext, Element metadata, List<Namespace> metadataNamespaces, Integer groupOwnerId) {
+        return getType().accepts(applicationContext, getValue(), metadata, metadataNamespaces, groupOwnerId);
+    }
+
     @Override
     protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {
         final Element element = super.asXml(alreadyEncoded);
@@ -188,6 +192,8 @@ public class SchematronCriteria extends GeonetEntity {
 
     /**
      * Create a copy of the c
+     *
+     * @return
      */
     public SchematronCriteria copy() {
         SchematronCriteria copy = new SchematronCriteria();

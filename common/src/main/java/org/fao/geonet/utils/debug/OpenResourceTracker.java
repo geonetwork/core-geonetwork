@@ -75,7 +75,6 @@ public class OpenResourceTracker extends RuntimeException {
         }
 
         final String message = "Resource Leak detected: First " + numExceptionsToPrint + " of " + openResources.size() + " open file stacktraces to: " + log;
-        System.out.println(message);
         Log.error(Log.JEEVES, message);
     }
 

@@ -28,12 +28,12 @@
                 exclude-result-prefixes="tr gnf">
 
   <xsl:include href="sharedFormatterDir/functions.xsl"/>
-
+  <!-- tr is defined at  core-geonetwork/services/src/main/java/org/fao/geonet/api/records/formatters/SchemaLocalizations.java -->
   <xsl:template match="/">
     <html>
       <body>
         <div class="tr">
-          <xsl:value-of select="tr:node-label(tr:create('iso19139'), 'gmd:title', 'gmd:parent')"/>
+          <xsl:value-of select="tr:nodeLabel(tr:create('iso19139'), 'gmd:title', 'gmd:parent')"/>
         </div>
         <xsl:copy-of select="gnf:p()"/>
       </body>

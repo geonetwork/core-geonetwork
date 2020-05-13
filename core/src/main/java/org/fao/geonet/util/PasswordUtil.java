@@ -23,25 +23,22 @@
 
 package org.fao.geonet.util;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
-
-import javax.servlet.ServletContext;
-
-import org.fao.geonet.Constants;
-import org.fao.geonet.exceptions.UserNotFoundEx;
-
 import jeeves.server.context.ServiceContext;
-
+import org.fao.geonet.Constants;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserSecurityNotification;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.repository.UserRepository;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import javax.servlet.ServletContext;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 
 /**
  * Geonetwork has had several password storing mechanisms in the past and upgrading is a tricky
@@ -59,11 +56,11 @@ public class PasswordUtil {
     public static final String PASSWORD_COLUMN = "password";
 
     /**
-     * Check the security column for the {@value org.fao.geonet.domain.UserSecurityNotification.UPDATE_HASH_REQUIRED}
+     * Check the security column for the {@link UserSecurityNotification#UPDATE_HASH_REQUIRED}.
      * tag.
      *
-     * @param securityField The securityField the
-     * @return true if the user needs its hash updated
+     * @param user the user to check.
+     * @return true if the user needs its hash updated.
      */
     public static boolean hasOldHash(User user) {
         return user.getSecurity().getSecurityNotifications().contains(UserSecurityNotification.UPDATE_HASH_REQUIRED);
@@ -169,17 +166,17 @@ public class PasswordUtil {
     }
 
     /**
-     * Updates database with new password if passwords match
+     * Updates database with new password if passwords match.
      *
      * @param matchOldPassword if false and oldPassword is null then password will be updated
-     *                         without checking old password
-     * @param oldPassword      the old password (obtained from user. not a hash)
-     * @param newPassword      the new password
-     * @param iUserId          the user id
-     * @param servletContext   the servlet context, used to obtain the password encoder
-     * @return the xml from the database query containing the new password hash
-     * @throws SQLException   if an error occurred during a database access
-     * @throws UserNotFoundEx if the id does not reference a user
+     *                         without checking old password.
+     * @param oldPassword      the old password (obtained from user. not a hash).
+     * @param newPassword      the new password.
+     * @param iUserId          the user id.
+     * @param appContext       the application context, used to obtain the password encoder.
+     * @return the xml from the database query containing the new password hash.
+     * @throws SQLException   if an error occurred during a database access.
+     * @throws UserNotFoundEx if the id does not reference a user.
      */
     public static User updatePasswordWithNew(boolean matchOldPassword, String oldPassword,
                                              String newPassword, Integer iUserId, ApplicationContext appContext) throws SQLException, UserNotFoundEx {
@@ -207,7 +204,8 @@ public class PasswordUtil {
      * @throws UserNotFoundEx if the id does not reference a user
      */
     public static User updatePasswordWithNew(boolean matchOldPassword, String oldPassword,
-                                             String newPassword, User user, PasswordEncoder encoder, UserRepository repository) throws SQLException, UserNotFoundEx {
+                                             String newPassword, User user, PasswordEncoder encoder,
+                                             UserRepository repository) throws SQLException, UserNotFoundEx {
         String hash = user.getPassword();
         if (hasOldHash(user)) {
             if ((matchOldPassword || newPassword != null) && !matchesOldHash(hash, newPassword)) {

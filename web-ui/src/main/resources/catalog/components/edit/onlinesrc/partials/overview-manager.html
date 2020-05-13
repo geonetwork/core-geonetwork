@@ -1,0 +1,57 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <i class="fa gn-icon-thumbnail"></i><i class="icon-external-link"></i>&nbsp;
+    <span
+      data-translate="">overview</span>
+  </div>
+  <div class="panel-body">
+
+    <ul class="list-inline">
+      <!-- Current thumbnails -->
+      <li class="gn-list-thumb thumbnail"
+          data-ng-repeat="thumb in relations.thumbnails">
+        <img class="thumb-small"
+             title="{{thumb.title | gnLocalized: lang}}"
+             data-ng-src="{{thumb.lUrl || thumb.id}}"/>
+
+        <a href="" class="onlinesrc-remove"
+           data-ng-if="readonly !== true"
+           data-gn-confirm-click="{{'removeThumbnailConfirm' | translate:{url: thumb.lUrl} }}"
+           data-gn-click-and-spin="removeOverview(thumb)"
+           title="{{'removeThumbnail' | translate}}">
+          <i class="btn fa fa-times text-danger"></i>
+        </a>
+      </li>
+      <!-- The one currently uploaded -->
+      <li data-ng-repeat="file in queue"
+          class="gn-list-thumb thumbnail">
+        <i class="fa gn-icon-thumbnail fa-5x"></i>
+        {{file.name}}
+      </li>
+    </ul>
+
+    <form class="form-horizontal"
+          role="form"
+          method="POST"
+          enctype="multipart/form-data"
+          data-file-upload="filestoreUploadOptions">
+
+      <!-- The upload zone -->
+      <span class="btn btn-success btn-block fileinput-button"
+            data-ng-class="{disabled: disabled}"
+            data-ng-hide="relations.thumbnails.length >= numberOfOverviews">
+       <i class="fa fa-fw fa-plus-circle"
+          data-ng-class="{hidden: active()}"/>
+       <i class="fa fa-fw fa-spinner fa-spin"
+          data-ng-class="{hidden: !active()}"
+          data-file-upload-progress="progress()"
+          data-file-upload-done="loadRelations()"/>
+        <span data-translate="">chooseImage</span>
+        <input type="file"
+               name="file"
+               data-ng-disabled="disabled"/>
+      </span>
+
+    </form>
+  </div>
+</div>

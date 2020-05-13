@@ -2335,7 +2335,7 @@
     <description>Main theme(s) of the datset</description>
     <condition>mandatory</condition>
   </element>
-  <element name="gmd:MD_TopicCategoryCode">
+  <element name="gmd:MD_TopicCategoryCode" alias="topicCategory">
     <label>Tematisk hovedkategori</label>
     <description>Grov overordnet gruppering av tematiske kategorier for å
       muliggjøre søk på geografiske datasett. Kan også anvendes for å
@@ -2547,8 +2547,6 @@
     <label>Sluttdato</label>
     <description>Formattert som 2007-09-12T15:00:00 (ÅÅÅÅ-MM-DDTtt:mm:ss)</description>
   </element>
-  >>>>>>> cd2dec4... Change all protocolChoice value to helper value (each language) and remove all
-  protocolChoice reference in xsl files
 
   <element name="gml:relatedTime">
     <label>Related time</label>
@@ -3055,7 +3053,7 @@
     </description>
   </element>
   <element name="xlink:href">
-    <label>Link href</label>
+    <label>URL</label>
     <description>Supplies the data that allows an XLink application to find a remote resource (or
       resource fragment) [W3C XLINK]
     </description>

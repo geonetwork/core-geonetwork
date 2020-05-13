@@ -24,9 +24,9 @@
 
 <strings>
   <schematron.title>INSPIRE Rules</schematron.title>
-  <!-- INSPIRE metadata rules translation / START -->
+    <!-- INSPIRE metadata rules translation / START -->
 
-  <!-- List of pattern title -->
+    <!-- List of pattern title -->
   <identification>Identification</identification>
   <dataIdentification>Data Identification</dataIdentification>
   <serviceIdentification>Service Identification</serviceIdentification>
@@ -54,9 +54,9 @@
   <alert.M36>
     <div>
       <h2>Resource abstract is missing.</h2>
-      <br/>
+      <br />
       <b>Example:</b>
-      <br/>
+      <br />
       Dataset contains large scale (1:1.000) topography, which covers the whole country.
     </div>
   </alert.M36>
@@ -68,9 +68,9 @@
   <alert.M37>
     <div>
       <h2>Resource type is missing or has a wrong value.</h2>
-      <br/>
+      <br />
       <b>Implementing instructions:</b>
-      <br/>
+      <br />
       The values of MD_ScopeCode in the scope of the
       directive (See SC4 in 1.2) are:
       <ul>
@@ -85,17 +85,17 @@
   </alert.M37>
   <report.M37>
     <div>
-      <h2>Resource type is:</h2>
+      <h2>Resource type is: </h2>
     </div>
   </report.M37>
   <alert.M38>
     <div>
       <h2>Unique resource identifier is missing</h2>
-      <br/>
+      <br />
       <b>Implementing instructions</b>
-      <br/>
+      <br />
       Mandatory for dataset and dataset series.
-      <br/>
+      <br />
       <b>Example:</b>
       527c4cac-070c-4bca-9aaf-92bece7be902
     </div>
@@ -109,7 +109,7 @@
   <alert.M39>
     <div>
       <h2>INSPIRE - ISO topic category is mandatory</h2>
-      <br/>
+      <br />
       The topic categories defined in Part D 2 of the INSPIRE
       Implementing rules for metadata are derived directly from
       the topic categories defined in B.5.27 of ISO 19115.
@@ -132,12 +132,12 @@
     </div>
   </alert.M40>
   <report.M40>
-    <div>INSPIRE theme(s) found.</div>
+    <div> INSPIRE theme(s) found.</div>
   </report.M40>
   <alert.M41>
     <div>
       <h2>INSPIRE - Geographic bounding box is mandatory</h2>
-      <br/>
+      <br />
       <ul>
         <li>
           Mandatory for spatial dataset and dataset series.
@@ -206,14 +206,14 @@
       <h2>INSPIRE - Temporal reference is mandatory</h2>
       No instance of Temporal reference has been found.
       <b>Implementing instructions</b>
-      <br/>
+      <br />
       Each instance of the temporal extent may be an interval
       of dates or an individual date. The overall time period
       covered by the content of the resource may be
       composed of one or many instances.
-      <br/>
+      <br />
       Or a reference date of the cited resource (publication, last revision or creation).
-      <br/>
+      <br />
       <b>Example:</b>
       From 1977-03-10T11:45:30 to 2005-01-15T09:10:00
     </div>
@@ -225,10 +225,10 @@
     </div>
   </alert.M42.creation>
   <report.M42.begin>
-    <div>Temporal extent (begin) found:</div>
+    <div>Temporal extent (begin) found: </div>
   </report.M42.begin>
   <report.M42.end>
-    <div>Temporal extent (end) found:</div>
+    <div>Temporal extent (end) found: </div>
   </report.M42.end>
   <report.M42.publication>
     <div>Date of publication of the resource found:</div>
@@ -244,7 +244,7 @@
   <alert.M43>
     <div>
       <h2>INSPIRE - Lineage is mandatory</h2>
-      <br/>
+      <br />
       <ul>
         <li>Mandatory for spatial dataset and spatial dataset series.</li>
         <li>Not applicable to services.</li>
@@ -252,13 +252,13 @@
       In addition to general explanation of the data producer’s knowledge
       about the lineage of a dataset it is possible to put data quality
       statements here.
-      <br/>
+      <br />
       A single ISO 19115 metadata set may comprise more than one set of
       Implementing instructions quality information, each of them having one or zero lineage
       statement. There shall be one and only one set of quality information
       scoped to the full resource and having a lineage statement (See
       SC6 in 1.2).
-      <br/>
+      <br />
       <b>Example:</b>
       Dataset has been digitised from the standard 1:5.000 map
 
@@ -275,15 +275,15 @@
     <div>
       <h2>INSPIRE - Conformity is mandatory (in DQ_DomainConsistency.result.DQ_ConformanceResult)
       </h2>
-      <br/>
+      <br />
       <b>Implementing instructions</b>
-      <br/>
+      <br />
       The first two degrees of conformity defined in Part D 5 of
       the INSPIRE Implementing rules for metadata map to two
       values of the Boolean domain of ISO 19115. The last value
       corresponds to the case where no conformance statement
       is expressed in the metadata for the related specification.
-      <br/>
+      <br />
 
       <b>Example:</b>
       title “INSPIRE Implementing rules laying down
@@ -319,12 +319,12 @@
     <div>There shall be at least one instance of 'accessConstraints'</div>
   </alert.M45.ca>
   <report.M45.ca>
-    <div>instance(s) of 'accessConstraints' found.</div>
+    <div> instance(s) of 'accessConstraints' found.</div>
   </report.M45.ca>
   <alert.M45.or>
     <div>The value of 'accessConstraints' must be 'otherRestrictions',
-      if there are instances of 'otherConstraints' expressing limitations on public access. Check
-      access constraints list and other constraints text field.
+      if there are instances of 'otherConstraints' expressing limitations on public access. Check access
+      constraints list and other constraints text field.
     </div>
   </alert.M45.or>
   <report.M45.or>
@@ -341,7 +341,7 @@
   <alert.M45>
     <div>
       <h2>INSPIRE - Conditions for access and use is mandatory</h2>
-      <br/>
+      <br />
     </div>
   </alert.M45>
   <alert.M46>
@@ -351,14 +351,14 @@
   </alert.M46>
 
 
+
   <alert.M47>
     <div>
       <h2>INSPIRE - Responsible organisation for the resource is mandatory</h2>
-      <br/>
+      <br />
       Relative to a responsible organisation, but there may be
-      many responsible organisations for a single resource. Organisation name and email are
-      required.
-      <br/>
+      many responsible organisations for a single resource. Organisation name and email are required.
+      <br />
       See identification section / point of contact.
     </div>
   </alert.M47>
@@ -375,14 +375,14 @@
   <alert.M48>
     <div>
       <h2>INSPIRE - Metadata point of contact is mandatory</h2>
-      <br/>
+      <br />
       <b>Implementing instructions:</b>
-      <br/>
+      <br />
       The role of the responsible party serving as a metadata
       point of contact is out of scope of the INSPIRE
       Implementing Rules, but this property is mandated by ISO
       19115. Its value can be defaulted to pointOfContact.
-      <br/>
+      <br />
       See metadata section.
     </div>
   </alert.M48>
@@ -402,7 +402,7 @@
   <alert.M49>
     <div>
       <h2>INSPIRE - Metadata language is mandatory</h2>
-      <br/>
+      <br />
       The language property is not mandated by ISO 19115, but
       is mandated for conformance to the INSPIRE Metadata
       Implementing rules
@@ -427,16 +427,15 @@
   <alert.M51>
     <div>
       <h2>INSPIRE (service) - Coupled resource is mandatory if linkage to data sets on which the
-        service operates are available
-      </h2>
-      <br/>
+        service operates are available</h2>
+      <br />
       <b>Implementing instructions</b>
-      <br/>
+      <br />
       Not applicable to dataset and dataset series
-      <br/>
+      <br />
       Conditional to services: Mandatory if linkage to datasets on which the service operates are
       available.
-      <br/>
+      <br />
 
       <ul>
         <li>The property shall be implemented by reference (See
@@ -453,16 +452,16 @@
     </div>
   </alert.M51>
   <report.M51>
-    <div>Coupled resources found:</div>
+    <div>Coupled resources found: </div>
   </report.M51>
   <alert.M52>
     <div>
       <h2>INSPIRE - Resource locator is mandatory if linkage is available</h2>
-      <br/>
+      <br />
       See advanved view / distribution section / only resource element.
-      <br/>
+      <br />
       <b>Implementing instructions:</b>
-      <br/>
+      <br />
       <ul>
         <li>Specify a valid URL to the resource. If no direct link to
           a resource is available, provide link to a contact point
@@ -488,46 +487,44 @@
   <alert.M53>
     <div>
       <h2>INSPIRE - There may be zero or one condition applying to access and use</h2>
-      <br/>
+      <br />
       Access constraints applied to assure the protection of
       privacy or intellectual property, and any special restrictions
       or limitations on obtaining the resource.
-      <br/>
+      <br />
       <b>Example:</b>
       intellectualPropertyRights (rights to financial benefit from
       and control of distribution of non-tangible property that is a
       result of creativity).
-      <br/>
+      <br />
       Classification:
       <b>Example:</b>
       restricted (not for general disclosure)
-      <br/>
+      <br />
       Use limitation:
       <b>Example:</b>
       not to be used for navigation
-      <br/>
+      <br />
     </div>
   </alert.M53>
   <alert.M54>
     <div>
       <h2>INSPIRE - The value of accessConstraints is otherRestrictions, if and only if they are
-        instances of otherConstraints expressing limitations on public access
-      </h2>
+        instances of otherConstraints expressing limitations on public access</h2>
     </div>
   </alert.M54>
   <alert.M55>
     <div>
       <h2>INSPIRE (datasets and series) - Resource language is mandatory if the resource includes
-        textual information
-      </h2>
-      <br/>
+        textual information</h2>
+      <br />
       An instance of the language property is mandated by ISO
       19115 ; it can be defaulted to the value of the Metadata
       Implementing instructions Language when the dataset or the dataset series does not
       contain textual information.
-      <br/>
+      <br />
       <b>Implementing instructions:</b>
-      <br/>
+      <br />
       Codelist (See ISO/TS 19139) based on alpha-3 codes of
       ISO 639-2.
     </div>
@@ -538,9 +535,8 @@
   <alert.M56>
     <div>
       <h2>INSPIRE - Spatial resolution is mandatory if an equivalent scale or a resolution distance
-        can be specified
-      </h2>
-      <br/>
+        can be specified</h2>
+      <br />
       <b>Implementing instructions:</b>
       <ul>
         <li>
@@ -569,11 +565,10 @@
 
   <alert.M58>
     <div>Missing service taxonomy information (select on or more keyword from
-      "inspire-service-taxonomy.rdf" thesaurus)
-    </div>
+      "inspire-service-taxonomy.rdf" thesaurus)</div>
   </alert.M58>
   <report.M58>
-    <div>service taxonomy classification defined.</div>
+    <div> service taxonomy classification defined.</div>
   </report.M58>
   <alert.M59>
     <div>
@@ -583,11 +578,11 @@
   <alert.M60>
     <div>
       <h2>[ISO19119 for services] - ServiceType is mandatory</h2>
-      <br/>
+      <br />
       Mandatory for services.
-      <br/>
+      <br />
       Not applicable to dataset and dataset series
-      <br/>
+      <br />
       <b>Example:</b>
       'view', 'discovery', 'download', 'transformation', 'invoke', 'other'
     </div>
@@ -595,5 +590,5 @@
   <report.M60>
     <div>Service type is:</div>
   </report.M60>
-  <!-- INSPIRE metadata rules translation / END -->
+    <!-- INSPIRE metadata rules translation / END -->
 </strings>

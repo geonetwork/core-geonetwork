@@ -23,33 +23,10 @@
 
 package org.fao.geonet.kernel.mef;
 
-import org.apache.commons.io.IOUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.ZipUtil;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Operation;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.exceptions.BadInputEx;
-import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.OperationRepository;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Document;
-import org.jdom.Element;
+import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
+import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
+import static org.fao.geonet.kernel.mef.MEFConstants.FS;
+import static org.fao.geonet.kernel.mef.MEFConstants.VERSION;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -73,12 +50,38 @@ import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Nonnull;
 
-import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.IOUtils;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.ZipUtil;
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Operation;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.OperationRepository;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
 
-import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
-import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
-import static org.fao.geonet.kernel.mef.MEFConstants.FS;
-import static org.fao.geonet.kernel.mef.MEFConstants.VERSION;
+import jeeves.server.context.ServiceContext;
 
 
 /**
@@ -119,18 +122,32 @@ public class MEFLib {
     // --------------------------------------------------------------------------
 
     public static Path doExport(ServiceContext context, String uuid,
-                                String format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+                                String format, boolean skipUUID, boolean resolveXlink,
+                                boolean removeXlinkAttribute, boolean addSchemaLocation,
+                                boolean approved) throws Exception {
         return MEFExporter.doExport(context, uuid, Format.parse(format),
-            skipUUID, resolveXlink, removeXlinkAttribute);
+            skipUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation, approved);
+    }
+
+    // --------------------------------------------------------------------------
+
+    public static Path doExport(ServiceContext context, Integer id,
+                                String format, boolean skipUUID, boolean resolveXlink,
+                                boolean removeXlinkAttribute, boolean addSchemaLocation) throws Exception {
+        return MEFExporter.doExport(context, id, Format.parse(format),
+            skipUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation);
     }
 
     // --------------------------------------------------------------------------
 
     public static Path doMEF2Export(ServiceContext context,
-                                    Set<String> uuids, String format, boolean skipUUID, Path stylePath, boolean resolveXlink, boolean removeXlinkAttribute)
+                                    Set<String> uuids, String format, boolean skipUUID, Path stylePath, boolean resolveXlink,
+                                    boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation,
+                                    boolean approved)
         throws Exception {
         return MEF2Exporter.doExport(context, uuids, Format.parse(format),
-            skipUUID, stylePath, resolveXlink, removeXlinkAttribute);
+            skipUUID, stylePath, resolveXlink, removeXlinkAttribute,
+            skipError, addSchemaLocation, approved);
     }
 
     // --------------------------------------------------------------------------
@@ -169,17 +186,45 @@ public class MEFLib {
      * @return A pair composed of the domain object metadata AND the record to be exported (includes
      * Xlink resolution and filters depending on user session).
      */
-    static Pair<Metadata, String> retrieveMetadata(ServiceContext context, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
+    static Pair<AbstractMetadata, String> retrieveMetadata(ServiceContext context, AbstractMetadata metadata,
+                                                   boolean resolveXlink,
+                                                   boolean removeXlinkAttribute,
+                                                   boolean addSchemaLocation)
         throws Exception {
 
-        final Metadata metadata = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
-
         if (metadata == null) {
-            throw new MetadataNotFoundEx("uuid=" + uuid);
+            throw new MetadataNotFoundEx("");
         }
 
 
-        // Retrieve the metadata document
+        return retrieveMetadata(context, removeXlinkAttribute, addSchemaLocation, metadata);
+    }
+
+    /**
+     * Get metadata record.
+     *
+     * @return A pair composed of the domain object metadata AND the record to be exported (includes
+     * Xlink resolution and filters depending on user session).
+     */
+    static Pair<AbstractMetadata, String> retrieveMetadata(ServiceContext context, Integer id,
+                                                   boolean resolveXlink,
+                                                   boolean removeXlinkAttribute,
+                                                   boolean addSchemaLocation)
+        throws Exception {
+
+        final AbstractMetadata metadata = context.getBean(IMetadataUtils.class).findOne(id);
+
+        if (metadata == null) {
+            throw new MetadataNotFoundEx("id=" + id);
+        }
+
+
+        return retrieveMetadata(context, removeXlinkAttribute, addSchemaLocation, metadata);
+    }
+
+	private static Pair<AbstractMetadata, String> retrieveMetadata(ServiceContext context, boolean removeXlinkAttribute,
+			boolean addSchemaLocation, final AbstractMetadata metadata) throws Exception {
+		// Retrieve the metadata document
         // using data manager in order to
         // apply all filters (like XLinks,
         // withheld)
@@ -189,6 +234,26 @@ public class MEFLib {
         boolean withEditorValidationErrors = false;
         Element metadataForExportXml = dm.getMetadata(context, id, forEditing, withEditorValidationErrors, !removeXlinkAttribute);
         metadataForExportXml.removeChild("info", Edit.NAMESPACE);
+
+        if (addSchemaLocation) {
+            SchemaManager schemaManager = context.getBean(SchemaManager.class);
+
+            Attribute schemaLocAtt = schemaManager.getSchemaLocation(
+                metadata.getDataInfo().getSchemaId(), context);
+
+            if (schemaLocAtt != null) {
+                if (metadataForExportXml.getAttribute(
+                    schemaLocAtt.getName(),
+                    schemaLocAtt.getNamespace()) == null) {
+                    metadataForExportXml.setAttribute(schemaLocAtt);
+                    // make sure namespace declaration for schemalocation is present -
+                    // remove it first (does nothing if not there) then add it
+                    metadataForExportXml.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
+                    metadataForExportXml.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+                }
+            }
+        }
+
         String metadataForExportAsString = Xml.getString(metadataForExportXml);
 
         // Prepend xml declaration if needed.
@@ -199,7 +264,7 @@ public class MEFLib {
         }
 
         return Pair.read(metadata, metadataForExportAsString);
-    }
+	}
 
     /**
      * Add file to ZIP file
@@ -259,8 +324,9 @@ public class MEFLib {
     /**
      * Build an info file.
      */
-    static String buildInfoFile(ServiceContext context, Metadata md,
-                                Format format, Path pubDir, Path priDir, boolean skipUUID)
+    static String buildInfoFile(ServiceContext context, AbstractMetadata md,
+                                Format format, List<MetadataResource> pubResources,
+                                List<MetadataResource> priResources, boolean skipUUID)
         throws Exception {
         Element info = new Element("info");
         info.setAttribute("version", VERSION);
@@ -269,8 +335,12 @@ public class MEFLib {
         info.addContent(buildInfoCategories(md));
         info.addContent(buildInfoPrivileges(context, md));
 
-        info.addContent(buildInfoFiles("public", pubDir.toString()));
-        info.addContent(buildInfoFiles("private", priDir.toString()));
+        info.addContent(buildInfoFiles("public", pubResources));
+        if (priResources != null) {
+            info.addContent(buildInfoFiles("private", priResources));
+        } else {
+            info.addContent(new Element("private"));
+        }
 
         return Xml.getString(new Document(info));
     }
@@ -280,7 +350,7 @@ public class MEFLib {
      *
      * @param skipUUID If true, do not add uuid, site identifier and site name.
      */
-    static Element buildInfoGeneral(Metadata md, Format format,
+    static Element buildInfoGeneral(AbstractMetadata md, Format format,
                                     boolean skipUUID, ServiceContext context) {
         String id = String.valueOf(md.getId());
         String uuid = md.getUuid();
@@ -318,7 +388,7 @@ public class MEFLib {
     /**
      * Build category section of info file.
      */
-    static Element buildInfoCategories(Metadata md)
+    static Element buildInfoCategories(AbstractMetadata md)
         throws SQLException {
         Element categ = new Element("categories");
 
@@ -338,7 +408,7 @@ public class MEFLib {
     /**
      * Build priviliges section of info file.
      */
-    static Element buildInfoPrivileges(ServiceContext context, Metadata md)
+    static Element buildInfoPrivileges(ServiceContext context, AbstractMetadata md)
         throws Exception {
 
         int iId = md.getId();
@@ -422,17 +492,16 @@ public class MEFLib {
     /**
      * Build file section of info file.
      */
-    static Element buildInfoFiles(String name, String dir) {
+    static Element buildInfoFiles(String name, List<MetadataResource> resources) {
         Element root = new Element(name);
 
-        File[] files = new File(dir).listFiles(filter);
 
-        if (files != null)
-            for (File file : files) {
-                String date = new ISODate(file.lastModified(), false).toString();
+        if (resources != null)
+            for (MetadataResource resource : resources) {
+                String date = new ISODate(resource.getLastModification().getTime(), false).toString();
 
                 Element el = new Element("file");
-                el.setAttribute("name", file.getName());
+                el.setAttribute("name", resource.getFilename());
                 el.setAttribute("changeDate", date);
 
                 root.addContent(el);

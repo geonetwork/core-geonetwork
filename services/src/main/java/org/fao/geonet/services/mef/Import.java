@@ -45,6 +45,7 @@ import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
@@ -87,6 +88,8 @@ public class Import extends NotInReadOnlyModeService {
         String mefFile = Util.getParam(params, "mefFile");
         String fileType = Util.getParam(params, "file_type", "mef");
         Path uploadDir = context.getUploadDir();
+
+        FilePathChecker.verify(mefFile);
 
         Path file = uploadDir.resolve(mefFile);
 

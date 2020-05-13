@@ -24,14 +24,12 @@
 package org.fao.geonet.kernel.search;
 
 import jeeves.server.context.ServiceContext;
-
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.log.SearcherLogger;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
+import org.fao.geonet.utils.Log;
 
 /**
  * Task to launch a new thread for search logging.
@@ -42,8 +40,6 @@ import org.springframework.transaction.annotation.Propagation;
  * @author francois
  */
 public class SearchLoggerTask implements Runnable {
-    boolean logSpatialObject;
-    String luceneTermsToExclude;
     Query query;
     int numHits;
     Sort sort;
@@ -52,12 +48,9 @@ public class SearchLoggerTask implements Runnable {
     private ServiceContext srvContext;
 
     public void configure(ServiceContext srvContext,
-                          boolean logSpatialObject, String luceneTermsToExclude,
                           Query query, int numHits, Sort sort, String geomWKT,
                           String value) {
         this.srvContext = srvContext;
-        this.logSpatialObject = logSpatialObject;
-        this.luceneTermsToExclude = luceneTermsToExclude;
         this.query = query;
         this.numHits = numHits;
         this.sort = sort;
@@ -67,10 +60,10 @@ public class SearchLoggerTask implements Runnable {
 
     public void run() {
         try {
-            SearcherLogger searchLogger = new SearcherLogger(srvContext, logSpatialObject, luceneTermsToExclude);
-            searchLogger.logSearch(query, numHits, sort, geomWKT, value);
+            SearcherLogger searchLogger = ApplicationContextHolder.get().getBean(SearcherLogger.class);
+            searchLogger.logSearch(srvContext, query, numHits, sort, geomWKT, value);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.SEARCH_LOGGER, "SearchLogger task error:" + e.getMessage(), e);
         }
     }
 }

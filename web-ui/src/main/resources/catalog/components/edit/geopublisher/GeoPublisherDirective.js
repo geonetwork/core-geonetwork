@@ -29,7 +29,7 @@
   /**
    */
   angular.module('gn_geopublisher_directive',
-      ['gn_owscontext_service'])
+      ['gn_owscontext_service', 'pascalprecht.translate'])
       .directive('gnGeoPublisher', [
         'gnMap',
         'gnOwsContextService',
@@ -39,9 +39,10 @@
         'gnCurrentEdit',
         '$timeout',
         '$translate',
+        '$rootScope',
         function(gnMap, gnOwsContextService, gnOnlinesrc,
             gnGeoPublisher, gnEditor, gnCurrentEdit,
-            $timeout, $translate) {
+            $timeout, $translate, $rootScope) {
           return {
             restrict: 'A',
             replace: true,
@@ -150,11 +151,20 @@
                 }
 
                 $timeout(function() {
-                  gnEditor.save(true);
+                  gnEditor.save(true).then(function() {
+                    // success. Nothing to do.
+                  }, function(rejectedValue) {
+                    $rootScope.$broadcast('StatusUpdated', {
+                      title: $translate.instant('runServiceError'),
+                      error: rejectedValue,
+                      timeout: 0,
+                      type: 'danger'
+                    });
+                  });
                 });
               };
               scope.openStyler = function() {
-                window.open(scope.gsNode.stylerUrl +
+                window.open(scope.gsNode.stylerurl +
                     '?namespace=' + scope.gsNode.namespacePrefix +
                     '&layer=' + scope.wmsLayerName);
               };
@@ -190,7 +200,7 @@
                 if (n != o) {
                   scope.checkNode(scope.gsNode.id);
                   scope.hasStyler = !angular.isArray(
-                      scope.gsNode.stylerUrl);
+                      scope.gsNode.stylerurl);
                 }
               });
 
@@ -208,7 +218,8 @@
                   scope.layer = null;
                 }
                 scope.isPublished = false;
-                gnGeoPublisher.checkNode(scope.gsNode.id, scope.name).then(
+                return gnGeoPublisher.checkNode(
+                    scope.gsNode.id, scope.name).then(
                     function(r) {
                       if (r.status === 404) {
                         scope.statusCode = r.data.description;
@@ -217,7 +228,10 @@
                         readResponse(r.data, 'check');
                       }
                     }, function(r) {
-                      scope.statusCode = r.data.description;
+                      // Service returns text.
+                      // Extract exception message from this
+                      scope.statusCode =
+                       r.data.match('GeoPublisherException: (.*)\n')[1];
                       scope.isPublished = false;
                     });
               };
@@ -226,7 +240,7 @@
                * Publish the layer on the gsNode
                */
               scope.publish = function() {
-                gnGeoPublisher.publishNode(scope.gsNode.id,
+                return gnGeoPublisher.publishNode(scope.gsNode.id,
                     scope.name,
                     scope.resource.title,
                     scope.resource['abstract']).success(function(data) {
@@ -245,8 +259,8 @@
                 if (scope.layer != null) {
                   map.removeLayer(scope.layer);
                 }
-                gnGeoPublisher.unpublishNode(scope.gsNode.id, scope.name)
-                  .success(function(data) {
+                return gnGeoPublisher.unpublishNode(scope.gsNode.id, scope.name)
+                    .success(function(data) {
                       scope.statusCode = data;
                       scope.isPublished = false;
                     }).error(function(data) {

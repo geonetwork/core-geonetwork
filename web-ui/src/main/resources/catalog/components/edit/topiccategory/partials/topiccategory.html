@@ -1,0 +1,17 @@
+<span data-ng-class="required ? 'gn-required' : ''">
+  <label class="col-sm-2 control-label">
+    {{label}}
+  </label>
+  <div class="col-sm-9 gn-value"
+       data-ng-class="maxTags && selected.length == maxTags ? 'gn-maxtags' : ''"
+       title="{{selected.length}}/{{maxTagsLabel}} {{'tagsAllowed' | translate}}">
+    <input type="text" id="tagsinput_{{ref}}"
+           class="form-control"></input>
+  </div>
+
+  <!-- The topic categories snippet to insert once received -->
+  <input name="_P{{ref}}"
+         type="hidden"
+         value="{{xpath}}" />
+  <input name="_P{{ref}}_xml" type="hidden" value="{{buildFinalSnippet()}}" />
+</span>

@@ -22,31 +22,7 @@
 
 package org.fao.geonet.kernel;
 
-import com.google.common.collect.Maps;
-
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Constants;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.ThesaurusActivation;
-import org.fao.geonet.kernel.oaipmh.Lib;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.ThesaurusActivationRepository;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.openrdf.sesame.Sesame;
-import org.openrdf.sesame.config.ConfigurationException;
-import org.openrdf.sesame.config.RepositoryConfig;
-import org.openrdf.sesame.config.SailConfig;
-import org.openrdf.sesame.constants.RDFFormat;
-import org.openrdf.sesame.repository.local.LocalRepository;
-import org.openrdf.sesame.repository.local.LocalService;
+import static com.google.common.io.Files.getNameWithoutExtension;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -65,10 +41,34 @@ import java.util.concurrent.Executors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Constants;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ThesaurusActivation;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.oaipmh.Lib;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.repository.ThesaurusActivationRepository;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.openrdf.sesame.Sesame;
+import org.openrdf.sesame.config.ConfigurationException;
+import org.openrdf.sesame.config.RepositoryConfig;
+import org.openrdf.sesame.config.SailConfig;
+import org.openrdf.sesame.constants.RDFFormat;
+import org.openrdf.sesame.repository.local.LocalRepository;
+import org.openrdf.sesame.repository.local.LocalService;
+
+import com.google.common.collect.Maps;
+
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-
-import static com.google.common.io.Files.getNameWithoutExtension;
 
 
 public class ThesaurusManager implements ThesaurusFinder {
@@ -214,7 +214,7 @@ public class ThesaurusManager implements ThesaurusFinder {
      * @param os   OutputStream to write rdf to from XSLT conversion
      */
     private void getRegisterMetadataAsRdf(String uuid, OutputStream os, ServiceContext context) throws Exception {
-        Metadata mdInfo = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
+        AbstractMetadata mdInfo = context.getBean(IMetadataUtils.class).findOneByUuid(uuid);
         Integer id = mdInfo.getId();
         final DataManager dataManager = context.getBean(DataManager.class);
         Element md = dataManager.getMetadata("" + id);
@@ -300,7 +300,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 
             gst.setRepository(thesaurusRepository);
         } catch (ConfigurationException e) {
-            e.printStackTrace();
+            Log.error(Geonet.THESAURUS_MAN, "Create Thesaurus Repository error", e);
             throw e;
         }
     }
@@ -338,7 +338,7 @@ public class ThesaurusManager implements ThesaurusFinder {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.error(Geonet.THESAURUS_MAN, "Get Thesaurus By Concept Scheme error", e);
             }
         }
 
@@ -373,8 +373,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         try (OutputStream outputRdfStream = Files.newOutputStream(thesaurusFile)) {
             getRegisterMetadataAsRdf(uuid, outputRdfStream, context);
         } catch (Exception e) {
-            Log.error(Geonet.THESAURUS_MAN, "Register thesaurus " + aRdfDataFile + " could not be read/converted from ISO19135 record in catalog - skipping");
-            e.printStackTrace();
+            Log.error(Geonet.THESAURUS_MAN, "Register thesaurus " + aRdfDataFile + " could not be read/converted from ISO19135 record in catalog - skipping", e);
         }
 
         String theKey = gst.getKey();
@@ -506,8 +505,7 @@ public class ThesaurusManager implements ThesaurusFinder {
                     Log.error(Geonet.THESAURUS_MAN, "Error rebuilding thesaurus table : " + e.getMessage() + "\n" + Util.getStackTrace(e));
                 }
             } catch (Exception e) {
-                Log.debug(Geonet.THESAURUS_MAN, "Thesaurus table rebuilding thread threw exception");
-                e.printStackTrace();
+                Log.debug(Geonet.THESAURUS_MAN, "Thesaurus table rebuilding thread threw exception", e);
             }
         }
     }

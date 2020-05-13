@@ -25,6 +25,7 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.MetadataValidationId;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ import java.util.List;
  * @author Jesse
  */
 public interface MetadataValidationRepository extends GeonetRepository<MetadataValidation, MetadataValidationId>,
-    MetadataValidationRepositoryCustom {
+        MetadataValidationRepositoryCustom, JpaSpecificationExecutor<MetadataValidation> {
     /**
      * Find all validation entities related to the metadata identified by metadataId.
      *

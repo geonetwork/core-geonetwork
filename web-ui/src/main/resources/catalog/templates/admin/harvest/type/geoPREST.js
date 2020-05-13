@@ -7,9 +7,9 @@ var gnHarvestergeoPREST = {
             "@type": "geoPREST",
             "owner": [""],
             "ownerGroup": [""],
+            "ownerUser": [""],
             "site":   {
               "name": "",
-              "translations": {},
               "uuid": "",
               "icon" : "blank.png",
               "account":     {
@@ -26,6 +26,7 @@ var gnHarvestergeoPREST = {
             "options":   {
               "every": "0 0 0 ? * *",
               "oneRunOnly": false,
+              "overrideUuid" : "SKIP",
               "status": ""
             },
             "searches": [{
@@ -46,34 +47,35 @@ var gnHarvestergeoPREST = {
           };
     },
     buildResponse : function(h, $scope) {
-        var body = '<node id="' + h['@id'] + '" ' 
-                + '    type="' + h['@type'] + '">' 
-                + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
-                + '  <site>' 
+        var body = '<node id="' + h['@id'] + '" '
+                + '    type="' + h['@type'] + '">'
+                + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
+                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>' 
+                + '  <site>'
                 + '    <name>' + h.site.name + '</name>'
-                + $scope.buildTranslations(h)
                 + '    <baseUrl>' + h.site.baseUrl.replace(/&/g, '&amp;') + '</baseUrl>'
-                + '    <icon>' + h.site.icon + '</icon>' 
+                + '    <icon>' + h.site.icon + '</icon>'
                 + '    <account>'
                 + '      <use>' + h.site.account.use + '</use>'
-                + '      <username>' + h.site.account.username + '</username>' 
-                + '      <password>' + h.site.account.password + '</password>' 
+                + '      <username>' + h.site.account.username + '</username>'
+                + '      <password>' + h.site.account.password + '</password>'
                 + '    </account>'
-                + '  </site>' 
+                + '  </site>'
                 + '  <searches>'
                 + '    <search>'
                 + '      <freeText>' + h.searches[0].freeText + '</freeText>'
                 + '    </search>'
                 + '  </searches>'
-                + '  <options>' 
-                + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
+                + '  <options>'
+                + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'
+                + '    <overrideUuid>' + h.options.overrideUuid + '</overrideUuid>'
                 + '    <every>' + h.options.every + '</every>'
                 + '    <status>' + h.options.status + '</status>'
-                + '  </options>' 
+                + '  </options>'
                 + '  <content>'
                 + '    <validate>' + h.content.validate + '</validate>'
                 + '    <importxslt>' + h.content.importxslt + '</importxslt>'
-                + '  </content>' 
+                + '  </content>'
                 + $scope.buildResponseGroup(h)
                 + $scope.buildResponseCategory(h) + '</node>';
         return body;

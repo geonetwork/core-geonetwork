@@ -1,0 +1,32 @@
+<section>
+  <h2><i class="fa fa-fw fa-history"/>
+    <span data-translate="">recordHistory</span>
+  </h2>
+  <div class="btn-group">
+    <label data-ng-repeat="(k, v) in filter.types"
+           class="btn btn-default"
+           title="{{k + 'Type' | translate}}">
+      <input type="checkbox" autocomplete="off" data-ng-model="filter.types[k]"/>
+      <i class="fa fa-fw"
+         data-ng-class="{
+            'fa-code-fork': k === 'workflow',
+            'fa-tasks': k === 'task',
+            'fa-edit': k === 'event'}"></i>
+      {{k + 'Type' | translate}}
+    </label>
+  </div>
+
+  <ul class="timeline timeline-1-col"
+      data-ng-show="history.length > 0">
+    <li data-ng-repeat="h in history"
+        data-gn-record-history-step="h"
+        data-no-title="true"/>
+    <li class="timeline-inverted"
+        data-ng-show="hasMoreRecords">
+      <a data-ng-click="more()">
+        <i class="fa fa-fw fa-plus"></i>
+        <span data-translate="">more</span>
+      </a>
+    </li>
+  </ul>
+</section>

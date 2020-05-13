@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-lg-12">
     <div class="panel panel-default">
-      <div class="panel-heading" data-translate="">indexAdmin</div>
+      <div class="panel-heading" data-translate="">catalogueAdminTools</div>
       <div class="panel-body">
         <div class="row">
           <div class="col-lg-4">
@@ -50,6 +50,21 @@
           </div>
           <div class="col-lg-8" data-translate="">reloadLuceneConfigHelp</div>
         </div>
+        <hr/>
+
+        <br/>
+        <div class="row">
+          <div class="col-lg-4">
+            <button type="button" class="btn btn-warning btn-lg btn-block"
+                    data-gn-click-and-spin="indexInEs()"
+                    data-translate=""
+            >indexInEs
+            </button>
+
+          </div>
+          <div class="col-lg-8" data-translate="">indexInEsHelp</div>
+        </div>
+        <hr/>
 
         <br/>
         <div class="row">
@@ -81,6 +96,41 @@
             </button>
           </div>
           <div class="col-lg-8" data-translate="">formatterCacheHelp</div>
+        </div>
+
+        <hr ng-if="::isBackupArchiveEnabled"/>
+        <br ng-if="::isBackupArchiveEnabled"/>
+        <div ng-if="::isBackupArchiveEnabled" class="row">
+          <div class="col-lg-4">
+            <button type="button" class="btn btn-success btn-lg btn-block"
+                    data-gn-click-and-spin="triggerBackupArchive()"
+                    data-translate=""
+            >triggerBackupArchive
+            </button>
+
+          </div>
+          <div class="col-lg-8" data-translate="">triggerBackupArchiveHelp</div>
+        </div>
+        <br ng-if="::isBackupArchiveEnabled"/>
+        <div ng-if="::isBackupArchiveEnabled" class="row">
+          <div class="col-lg-4">
+            <a href="../api/records/backups/latest" class="btn btn-success btn-lg btn-block">
+              <span translate="">downloadBackupArchive</span>
+            </a>
+
+          </div>
+          <div class="col-lg-8" data-translate="">downloadBackupArchiveHelp</div>
+        </div>
+        <hr/>
+
+        <br/>
+        <div class="row">
+          <div class="col-lg-4">
+            <a class="btn btn-default btn-lg btn-block"
+               href="../../doc/api"
+                    data-translate="">APITest</a>
+          </div>
+          <div class="col-lg-8" data-translate="">APIHelp</div>
         </div>
       </div>
     </div>

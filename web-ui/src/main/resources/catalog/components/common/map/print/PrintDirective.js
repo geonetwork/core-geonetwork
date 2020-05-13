@@ -51,6 +51,58 @@
         heightMargin: 0,
         widthMargin: 0
       };
+
+      /**
+       * Unmanaged layer with custom render method
+       * used to draw the grey rectangle for print extent
+       */
+      var overlayCanvas = document.createElement('canvas');
+      overlayCanvas.style.position = 'absolute';
+      overlayCanvas.style.width = '100%';
+      overlayCanvas.style.height = '100%';
+      var overlayLayer = new ol.layer.Layer({
+        render: function() {
+          // print rectangle might not be ready if config is loading
+          if (!printRectangle) {
+            return;
+          }
+
+          var size = $scope.map.getSize();
+          var height = size[1] * ol.has.DEVICE_PIXEL_RATIO;
+          var width = size[0] * ol.has.DEVICE_PIXEL_RATIO;
+          overlayCanvas.width = width;
+          overlayCanvas.height = height;
+          var ctx = overlayCanvas.getContext('2d');
+          
+
+          var minx, miny, maxx, maxy;
+          minx = printRectangle[0], miny = printRectangle[1],
+            maxx = printRectangle[2], maxy = printRectangle[3];
+
+          ctx.beginPath();
+          // Outside polygon, must be clockwise
+          ctx.moveTo(0, 0);
+          ctx.lineTo(width, 0);
+          ctx.lineTo(width, height);
+          ctx.lineTo(0, height);
+          ctx.lineTo(0, 0);
+          ctx.closePath();
+
+          // Inner polygon,must be counter-clockwise
+          ctx.moveTo(minx, miny);
+          ctx.lineTo(minx, maxy);
+          ctx.lineTo(maxx, maxy);
+          ctx.lineTo(maxx, miny);
+          ctx.lineTo(minx, miny);
+          ctx.closePath();
+
+          ctx.fillStyle = 'rgba(0, 5, 25, 0.75)';
+          ctx.fill();
+
+          return overlayCanvas;
+        }
+      });
+
       // Get print config
       var updatePrintConfig = function() {
         var http = $http.get($scope.options.printConfigUrl);
@@ -75,11 +127,10 @@
         return http;
       };
 
+
       var activate = function() {
         updatePrintConfig().then(function() {
           deregister = [
-            $scope.map.on('precompose', handlePreCompose),
-            $scope.map.on('postcompose', handlePostCompose),
             $scope.map.getView().on('propertychange', function(event) {
               updatePrintRectanglePixels($scope.scale);
             })
@@ -87,15 +138,17 @@
           $scope.scale = getOptimalScale();
           refreshComp();
           registerEvents();
+          overlayLayer.setMap($scope.map);
         });
       };
 
       var deactivate = function() {
         if (deregister) {
           for (var i = 0; i < deregister.length; i++) {
-            deregister[i].src.unByKey(deregister[i]);
+            ol.Observable.unByKey(deregister[i]);
           }
         }
+        overlayLayer.setMap(null);
         refreshComp();
       };
 
@@ -104,45 +157,6 @@
         if ($scope.map) {
           $scope.map.render();
         }
-      };
-
-      // Compose events
-      var handlePreCompose = function(evt) {
-        var ctx = evt.context;
-        ctx.save();
-      };
-
-      var handlePostCompose = function(evt) {
-        var ctx = evt.context;
-        var size = $scope.map.getSize();
-        var height = size[1] * ol.has.DEVICE_PIXEL_RATIO;
-        var width = size[0] * ol.has.DEVICE_PIXEL_RATIO;
-
-        var minx, miny, maxx, maxy;
-        minx = printRectangle[0], miny = printRectangle[1],
-        maxx = printRectangle[2], maxy = printRectangle[3];
-
-        ctx.beginPath();
-        // Outside polygon, must be clockwise
-        ctx.moveTo(0, 0);
-        ctx.lineTo(width, 0);
-        ctx.lineTo(width, height);
-        ctx.lineTo(0, height);
-        ctx.lineTo(0, 0);
-        ctx.closePath();
-
-        // Inner polygon,must be counter-clockwise
-        ctx.moveTo(minx, miny);
-        ctx.lineTo(minx, maxy);
-        ctx.lineTo(maxx, maxy);
-        ctx.lineTo(maxx, miny);
-        ctx.lineTo(minx, miny);
-        ctx.closePath();
-
-        ctx.fillStyle = 'rgba(0, 5, 25, 0.75)';
-        ctx.fill();
-
-        ctx.restore();
       };
 
       // Listeners
@@ -180,14 +194,14 @@
               resolution >= minResolution) {
             if (src instanceof ol.source.WMTS) {
               encLayer = $scope.encoders.layers['WMTS'].call(this,
-                  layer, layerConfig);
+                  layer, layerConfig, proj);
             } else if (src instanceof ol.source.OSM) {
               encLayer = $scope.encoders.layers['OSM'].call(this,
                   layer, layerConfig);
             } else if (src instanceof ol.source.ImageWMS ||
                 src instanceof ol.source.TileWMS) {
               encLayer = $scope.encoders.layers['WMS'].call(this,
-                  layer, layerConfig);
+                  layer, layerConfig, proj);
             } else if (layer instanceof ol.layer.Vector) {
               var features = [];
               src.forEachFeatureInExtent(ext, function(feat) {
@@ -465,7 +479,7 @@
             });
             return enc;
           },
-          'WMS': function(layer, config) {
+          'WMS': function(layer, config, proj) {
             var enc = $scope.encoders.
                 layers['Layer'].call(this, layer);
             var params = layer.getSource().getParams();
@@ -485,7 +499,7 @@
               customParams: {
                 'EXCEPTIONS': 'XML',
                 'TRANSPARENT': 'true',
-                'CRS': 'EPSG:4326', // FIXME
+                'CRS': proj.getCode(), 
                 'TIME': params.TIME
               },
               singleTile: config.singleTile || true
@@ -548,7 +562,7 @@
             enc.classes.push({
               name: '',
               icon: $scope.options.legendUrl +
-                  layer.bodId + '_' + $translate.uses() + format
+                  layer.bodId + '_' + $translate.use() + format
             });
             return enc;
           },
@@ -578,7 +592,7 @@
         bodyEl.addClass(waitclass);
         var view = $scope.map.getView();
         var proj = view.getProjection();
-        var lang = $translate.uses();
+        var lang = $translate.use();
         var defaultPage = {};
         defaultPage['lang' + lang] = true;
         var encLayers = [];
@@ -668,6 +682,7 @@
           enableLegends: (encLegends && encLegends.length > 0),
           pages: [
             angular.extend({
+              title: '', //default
               center: getPrintRectangleCenterCoord(),
               // scale has to be one of the advertise by the print server
               scale: getOptimalScale().value,

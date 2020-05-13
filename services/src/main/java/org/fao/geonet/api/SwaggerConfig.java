@@ -29,6 +29,7 @@ import com.google.common.base.Predicate;
 
 import com.fasterxml.classmate.TypeResolver;
 
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.UserSecurity;
 import org.jdom.Element;
 import org.joda.time.LocalDate;
@@ -36,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -54,27 +56,16 @@ import static com.google.common.collect.Lists.newArrayList;
 import static springfox.documentation.builders.PathSelectors.regex;
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
-@EnableWebMvc
+@PropertySource("classpath:swagger.properties")
 @Configuration
-@Service
 @ComponentScan(basePackages = {
     "org.fao.geonet.api",
     "org.fao.geonet.monitor.service"
 })
 @EnableSwagger2 //Loads the spring beans required by the framework
 public class SwaggerConfig {
-    @Autowired
-    private TypeResolver typeResolver;
-
-    private Docket doc;
-
-    private Predicate<String> paths() {
-        return or(
-            regex("/api/" + API.VERSION_0_1 + ".*")
-        );
-    }
-
-    public void loadApi() {
+    @Bean
+    public Docket api() {
         this.doc = new Docket(DocumentationType.SWAGGER_2)
             .apiInfo(new ApiInfo(
                 "GeoNetwork Api Documentation (beta)",
@@ -88,7 +79,7 @@ public class SwaggerConfig {
             .apis(RequestHandlerSelectors.any())
             .paths(paths())
             .build()
-            .pathMapping("/srv/")
+            .pathMapping("/")
             .directModelSubstitute(LocalDate.class, String.class)
             .directModelSubstitute(UserSecurity.class, Object.class)
             .directModelSubstitute(Element.class, Object.class)
@@ -98,30 +89,18 @@ public class SwaggerConfig {
                     typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
                     typeResolver.resolve(WildcardType.class)))
             .useDefaultResponseMessages(false)
-//                .globalResponseMessage(RequestMethod.GET,
-//                        newArrayList(new ResponseMessageBuilder()
-//                                .code(500)
-//                                .message("500 message")
-//                                .responseModel(new ModelRef("Error"))
-//                                .build()))
-            .securitySchemes(newArrayList(new BasicAuth("basicAuth")))
-//                .securityContexts(newArrayList(securityContext()))
-//                .enableUrlTemplating(true)
-//                .globalOperationParameters(
-//                        newArrayList(new ParameterBuilder()
-//                                .name("_content_type")
-//                                .description("Description of someGlobalParameter")
-//                                .modelRef(new ModelRef("string"))
-//                                .parameterType("query")
-//                                .required(true)
-//                                .build()))
-        ;
+            .securitySchemes(newArrayList(new BasicAuth("basicAuth")));
+        return this.doc;
     }
 
-    @Bean
-    public Docket geonetworkApi() {
-        // TODO: Add not id in pathMapping
-        loadApi();
-        return this.doc;
+    @Autowired
+    private TypeResolver typeResolver;
+
+    private Docket doc;
+
+    private Predicate<String> paths() {
+        return or(
+            regex("/.*/api/" + API.VERSION_0_1 + "/.*")
+        );
     }
 }

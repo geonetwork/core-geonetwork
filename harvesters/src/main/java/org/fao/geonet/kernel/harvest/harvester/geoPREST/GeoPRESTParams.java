@@ -23,15 +23,12 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
-import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +70,11 @@ public class GeoPRESTParams extends AbstractParams {
 
     //---------------------------------------------------------------------------
 
+    @Override
+    public String getIcon() {
+        return icon;
+    }
+
     public GeoPRESTParams(DataManager dm) {
         super(dm);
     }
@@ -91,14 +93,6 @@ public class GeoPRESTParams extends AbstractParams {
 
         baseUrl = Util.getParam(site, "baseUrl", "");
         maxResults = MAX_HARVEST_RESULTS;
-
-        try {
-            baseUrl = URLDecoder.decode(baseUrl, Constants.ENCODING);
-        } catch (UnsupportedEncodingException x) {
-            System.out.println(x.getMessage());
-            x.printStackTrace();
-            // TODO should not swallow
-        }
         icon = Util.getParam(site, "icon", "default.gif");
 
         addSearches(searches);
@@ -118,15 +112,6 @@ public class GeoPRESTParams extends AbstractParams {
 
         baseUrl = Util.getParam(site, "baseUrl", baseUrl);
         maxResults = MAX_HARVEST_RESULTS;
-
-        try {
-            baseUrl = URLDecoder.decode(baseUrl, Constants.ENCODING);
-        } catch (UnsupportedEncodingException x) {
-            System.out.println(x.getMessage());
-            x.printStackTrace();
-            // TODO should not swallow
-        }
-
         icon = Util.getParam(site, "icon", icon);
 
         //--- if some search queries are given, we drop the previous ones and

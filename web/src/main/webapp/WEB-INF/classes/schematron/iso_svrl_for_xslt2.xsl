@@ -268,7 +268,17 @@
     <xsl:param name="lang"/>
     <xsl:param name="see"/>
     <xsl:param name="space"/>
-    <svrl:failed-assert ref="#_{{geonet:element/@ref}}" test="{$test}">
+
+    <xsl:variable name="ref">
+      <xsl:choose>
+        <xsl:when test="string-length( $see ) &gt; 0 and (starts-with($see, 'http') or starts-with($see, 'https'))"><xsl:value-of select="'geonet:element/@ref'"/></xsl:when>
+        <xsl:when test="string-length( $see ) &gt; 0"><xsl:value-of select="concat('(',$see,')[1]')"/></xsl:when>
+        <xsl:otherwise><xsl:value-of select="'geonet:element/@ref'"/></xsl:otherwise>
+      </xsl:choose>
+
+    </xsl:variable>
+
+    <svrl:failed-assert ref="#_{{{$ref}}}" test="{$test}">
       <xsl:if test="string-length( $id ) &gt; 0">
         <axsl:attribute name="id">
           <xsl:value-of select=" $id "/>

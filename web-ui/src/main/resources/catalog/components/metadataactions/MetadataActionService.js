@@ -24,12 +24,16 @@
 (function() {
   goog.provide('gn_mdactions_service');
 
+
+
+
   goog.require('gn_category');
+  goog.require('gn_popup');
   goog.require('gn_share');
 
 
   var module = angular.module('gn_mdactions_service', [
-    'gn_share', 'gn_category'
+    'gn_share', 'gn_category', 'gn_popup'
   ]);
 
   module.service('gnMetadataActions', [
@@ -40,42 +44,31 @@
     'gnMetadataManager',
     'gnAlertService',
     'gnSearchSettings',
+    'gnUtilityService',
+    'gnShareService',
     'gnPopup',
     'gnMdFormatter',
     '$translate',
     '$q',
     '$http',
+    'gnConfig',
     function($rootScope, $timeout, $location, gnHttp,
              gnMetadataManager, gnAlertService, gnSearchSettings,
-             gnPopup, gnMdFormatter,
-             $translate, $q, $http) {
+             gnUtilityService, gnShareService, gnPopup, gnMdFormatter,
+             $translate, $q, $http, gnConfig) {
 
       var windowName = 'geonetwork';
       var windowOption = '';
-
+      var translations = null;
+      $translate(['metadataPublished', 'metadataUnpublished',
+        'metadataPublishedError', 'metadataUnpublishedError', 'metadataValidated']).then(function(t) {
+        translations = t;
+      });
       var alertResult = function(msg) {
         gnAlertService.addAlert({
           msg: msg,
           type: 'success'
         });
-      };
-
-      /**
-       * Open a popup and compile object content.
-       * Bind to an event to close the popup.
-       * @param {Object} o popup config
-       * @param {Object} scope to build content uppon
-       * @param {string} eventName
-       */
-      var openModal = function(o, scope, eventName) {
-        var popup = gnPopup.create(o, scope);
-        var myListener = $rootScope.$on(eventName,
-            function(e, o) {
-              $timeout(function() {
-                popup.close();
-              }, 0);
-              myListener();
-            });
       };
 
       var callBatch = function(service) {
@@ -107,7 +100,7 @@
        * (uuid), we print only one metadata.
        * @param {Object|string} params
        */
-      this.metadataPrint = function(params) {
+      this.metadataPrint = function(params, bucket) {
         var url;
         if (angular.isObject(params) && params.sortBy) {
           url = gnHttp.getService('mdGetPDFSelection');
@@ -115,6 +108,7 @@
           if (params.sortOrder) {
             url += '&sortOrder=' + params.sortOrder;
           }
+          url += '&bucket=' + bucket;
           location.replace(url);
         }
         else if (angular.isString(params)) {
@@ -132,8 +126,12 @@
        * Export one metadata to RDF format.
        * @param {string} uuid
        */
-      this.metadataRDF = function(uuid) {
+      this.metadataRDF = function(uuid, approved) {
         var url = gnHttp.getService('mdGetRDF') + '?uuid=' + uuid;
+
+        url += angular.isDefined(approved) ?
+            '&approved=' + approved : '';
+
         location.replace(url);
       };
 
@@ -142,40 +140,59 @@
        * one metadata, else export the whole selection.
        * @param {string} uuid
        */
-      this.metadataMEF = function(uuid) {
+      this.metadataMEF = function(uuid, bucket, approved) {
+
         var url = gnHttp.getService('mdGetMEF') + '?version=2';
         url += angular.isDefined(uuid) ?
             '&uuid=' + uuid : '&format=full';
+        url += angular.isDefined(bucket) ?
+            '&bucket=' + bucket : '';
+        url += angular.isDefined(approved) ?
+            '&approved=' + approved : '';
 
         location.replace(url);
       };
 
-      this.exportCSV = function() {
-        window.open(gnHttp.getService('csv'), windowName, windowOption);
+      this.exportCSV = function(bucket) {
+        window.open(gnHttp.getService('csv') +
+            '?bucket=' + bucket, windowName, windowOption);
       };
-      this.validateMd = function(md) {
+      this.validateMd = function(md, bucket) {
+
+        $rootScope.$broadcast('operationOnSelectionStart');
         if (md) {
           return gnMetadataManager.validate(md.getId()).then(function() {
-            $rootScope.$broadcast('mdSelectNone');
+            $rootScope.$broadcast('operationOnSelectionStop');
             $rootScope.$broadcast('search');
           });
-        }
-        else {
-          return gnHttp.callService('../api/records/validate', null,
-                                    {
-                                      method: 'PUT'
-                                    }).then(function(data) {
-            alertResult(data.data);
-            $rootScope.$broadcast('mdSelectNone');
-            $rootScope.$broadcast('search');
+        } else {
+          return gnHttp.callService('../api/records/validate?' +
+              'bucket=' + bucket, null, {
+                    method: 'PUT'
+                  }).then(function(data) {
+            $rootScope.processReport = data.data;
+
+            // A report is returned
+            gnUtilityService.openModal({
+              title: translations.metadataValidated,
+              content: '<div gn-batch-report="processReport"></div>',
+              className: 'gn-validation-popup',
+              onCloseCallback: function () {
+                $rootScope.$broadcast('operationOnSelectionStop');
+                $rootScope.$broadcast('search');
+                $rootScope.processReport = null;
+              }
+            }, $rootScope, 'metadataValidationUpdated');
           });
         }
       };
 
-      this.deleteMd = function(md) {
+      this.deleteMd = function(md, bucket) {
+        $rootScope.$broadcast('operationOnSelectionStart');
         if (md) {
           return gnMetadataManager.remove(md.getId()).then(function() {
             $rootScope.$broadcast('mdSelectNone');
+            $rootScope.$broadcast('operationOnSelectionStop');
             // TODO: Here we may introduce a delay to not display the deleted
             // record in results.
             // https://github.com/geonetwork/core-geonetwork/issues/759
@@ -183,74 +200,89 @@
           });
         }
         else {
-          return $http.delete('../api/records').then(function() {
+          return $http.delete('../api/records?' +
+              'bucket=' + bucket).then(function() {
             $rootScope.$broadcast('mdSelectNone');
+            $rootScope.$broadcast('operationOnSelectionStop');
             $rootScope.$broadcast('search');
           });
         }
       };
 
+
       this.openPrivilegesPanel = function(md, scope) {
-        openModal({
-          title: $translate('privileges') + ' - ' +
+        gnUtilityService.openModal({
+          title: $translate.instant('privileges') + ' - ' +
               (md.title || md.defaultTitle),
-          content: '<div gn-share="' + md.getId() + '"></div>'
+          content: '<div gn-share="' + md.getId() + '"></div>',
+          className: 'gn-privileges-popup'
         }, scope, 'PrivilegesUpdated');
       };
 
-      this.openUpdateStatusPanel = function(scope) {
-        openModal({
-          title: 'updateStatus',
-          content: '<div data-gn-metadata-status-updater="md"></div>'
+      this.openUpdateStatusPanel = function(scope, statusType, t, statusToBe, label) {
+        scope.task = t;
+        scope.statusToSelect = statusToBe;
+        gnUtilityService.openModal({
+          title: 'mdStatusTitle-' + label,
+          content: '<div data-gn-metadata-status-updater="md" ' +
+                        'data-status-to-select="' + statusToBe +
+                        '" data-status-type="' + statusType + '" task="t"></div>'
         }, scope, 'metadataStatusUpdated');
       };
 
       this.startWorkflow = function(md, scope) {
         return $http.put('../api/records/' + md.getId() +
-            '/status?status=1&comment=Enable workflow').then(
-            function(data) {
+            '/status', {status: 1, changeMessage: 'Enable workflow'}).then(
+            function(response) {
               gnMetadataManager.updateMdObj(md);
               scope.$emit('metadataStatusUpdated', true);
               scope.$emit('StatusUpdated', {
-                msg: $translate('metadataStatusUpdatedWithNoErrors'),
+                msg: $translate.instant('metadataStatusUpdatedWithNoErrors'),
                 timeout: 2,
                 type: 'success'});
-            }, function(data) {
+            }, function(response) {
               scope.$emit('metadataStatusUpdated', false);
+
+
               scope.$emit('StatusUpdated', {
-                title: $translate('metadataStatusUpdatedErrors'),
-                error: data,
+                title: $translate.instant('metadataStatusUpdatedErrors'),
+                error: response.data,
                 timeout: 0,
                 type: 'danger'});
             });
       };
 
-      this.openPrivilegesBatchPanel = function(scope) {
-        openModal({
+      this.openPrivilegesBatchPanel = function(scope, bucket) {
+        gnUtilityService.openModal({
           title: 'privileges',
-          content: '<div gn-share="" gn-share-batch="true"></div>'
+          content: '<div gn-share="" ' +
+              'gn-share-batch="true" ' +
+              'selection-bucket="' + bucket + '"></div>',
+          className: 'gn-privileges-popup'
         }, scope, 'PrivilegesUpdated');
       };
       this.openBatchEditing = function(scope) {
         $location.path('/batchediting');
       };
-      this.openCategoriesBatchPanel = function(scope) {
-        openModal({
+      this.openCategoriesBatchPanel = function(bucket, scope) {
+        gnUtilityService.openModal({
           title: 'categories',
-          content: '<div gn-batch-categories=""></div>'
+          content: '<div gn-batch-categories="" ' +
+              'selection-bucket="' + bucket + '"></div>'
         }, scope, 'CategoriesUpdated');
       };
 
-      this.openTransferOwnership = function(md, scope) {
+      this.openTransferOwnership = function(md, bucket, scope) {
         var uuid = md ? md.getUuid() : '';
         var ownerId = md ? md.getOwnerId() : '';
         var groupOwner = md ? md.getGroupOwner() : '';
-        openModal({
+        gnUtilityService.openModal({
           title: 'transferOwnership',
           content: '<div gn-transfer-ownership="' + uuid +
               '" gn-transfer-md-owner="' + ownerId + '" ' +
-              '" gn-transfer-md-group-owner="' + groupOwner + '"></div>'
-        }, scope, 'TransferOwnership');
+              '" gn-transfer-md-group-owner="' + groupOwner + '" ' +
+              'selection-bucket="' + bucket + '"></div>'
+        }, scope, 'TransferOwnershipDone');
       };
       /**
        * Duplicate the given metadata. Open the editor in new page.
@@ -277,53 +309,70 @@
        * @param {string} flag
        * @return {*}
        */
-      this.publish = function(md, flag) {
-
+      this.publish = function(md, bucket, flag, scope) {
         if (md) {
           flag = md.isPublished() ? 'off' : 'on';
         }
-        var service = flag === 'on' ? 'publish' : 'unpublish';
 
-        var publishNotification = function(data) {
-          var message = '<h4>' + $translate(service + 'Completed') +
-              '</h4><dl class="dl-horizontal"><dt>' +
-              $translate('mdPublished') + '</dt><dd>' +
-              data.data.published + '</dd><dt>' +
-              $translate('mdUnpublished') + '</dt><dd>' +
-              data.data.unpublished + '</dd><dt>' +
-              $translate('mdUnmodified') + '</dt><dd>' +
-              data.data.unmodified + '</dd><dt>' +
-              $translate('mdDisallowed') + '</dt><dd>' +
-              data.data.disallowed + '</dd></dl>';
+        scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
 
-          var success = 'success';
-          if (md) {
-            if ((flag === 'on' && data.data.published === 0) ||
-                (flag !== 'on' && data.data.unpublished === 0)) {
-              if (data.data.unmodified > 0) {
-                message = $translate('metadataUnchanged');
-              } else if (data.data.disallowed > 0) {
-                message = $translate('accessRestricted');
-              }
-              success = 'danger';
-            }
+        //Warn about possible workflow changes on batch changes
+        // or when record is not approved
+        if((!md || md.mdStatus != 2) && flag === 'on' && scope.isMdWorkflowEnable) {
+          if(!confirm($translate.instant('warnPublishDraft'))){
+            return;
           }
-          gnAlertService.addAlert({
-            msg: message,
-            type: success
-          });
-
-          if (md && success === 'success') {
-            md.publish();
-          }
-        };
-        if (angular.isDefined(md)) {
-          return gnHttp.callService(service, {
-            ids: md.getId()
-          }).then(publishNotification);
-        } else {
-          return gnHttp.callService(service, {}).then(publishNotification);
         }
+
+        scope.$broadcast('operationOnSelectionStart');
+        var onOrOff = flag === 'on';
+
+        return gnShareService.publish(
+            angular.isDefined(md) ? md.getId() : undefined,
+            angular.isDefined(md) ? undefined : bucket,
+            onOrOff, $rootScope.user)
+            .then(
+            function(response) {
+              if (response.data !== '') {
+                scope.processReport = response.data;
+
+                // A report is returned
+                gnUtilityService.openModal({
+                  title: onOrOff ? translations.metadataPublished :
+                    translations.metadataUnpublished,
+                  content: '<div gn-batch-report="processReport"></div>',
+                  className: 'gn-privileges-popup',
+                  onCloseCallback: function() {
+                    scope.$emit('PrivilegesUpdated', true);
+                    scope.$broadcast('operationOnSelectionStop');
+                    scope.processReport = null;
+                  }
+                }, scope, 'PrivilegesUpdated');
+
+              } else {
+                scope.$emit('PrivilegesUpdated', true);
+                scope.$broadcast('operationOnSelectionStop');
+                scope.$emit('StatusUpdated', {
+                  msg: onOrOff ? translations.metadataPublished :
+                    translations.metadataUnpublished,
+                  timeout: 0,
+                  type: 'success'});
+              }
+
+              if (md) {
+                md.publish();
+              }
+            }, function(response) {
+              scope.$emit('PrivilegesUpdated', false);
+              scope.$broadcast('operationOnSelectionStop');
+              scope.$emit('StatusUpdated', {
+                title: onOrOff ? translations.metadataPublishedError :
+                  translations.metadataUnpublishedError,
+                error: response.data,
+                timeout: 0,
+                type: 'danger'});
+            });
+
       };
 
       this.assignGroup = function(metadataId, groupId) {
@@ -369,13 +418,63 @@
        * @param {Object} md
        */
       this.getPermalink = function(md) {
-
         var url = $location.absUrl().split('#')[0] + '#/metadata/' +
             md.getUuid();
-        gnPopup.createModal({
-          title: 'permalink',
-          content: '<div gn-permalink-input="' + url + '"></div>'
+        gnUtilityService.getPermalink(md.title || md.defaultTitle, url);
+      };
+
+      /**
+       * Index the current selection of metadata records.
+       * @param {String} bucket
+       */
+      this.indexSelection = function(bucket) {
+        return $http.get('../api/records/index', {
+          params: {
+            bucket: bucket
+          }
+        }).then(function(response) {
+          var res = response.data;
+          gnAlertService.addAlert({
+            msg: $translate.instant('selection.indexing.count', res),
+            type: res.success ? 'success' : 'danger'
+          });
+        }, function(response) {
+          gnAlertService.addAlert({
+            msg: $translate.instant('selection.indexing.error'),
+            type: 'danger'
+          });
         });
+      };
+
+      /**
+       * Validates the current selection of metadata records.
+       * @param {String} bucket
+       */
+      this.validateMdInspire = function(bucket) {
+
+        $rootScope.$broadcast('operationOnSelectionStart');
+        $rootScope.$broadcast('inspireMdValidationStart');
+
+        return gnHttp.callService('../api/records/validate/inspire?' +
+          'bucket=' + bucket, null, {
+          method: 'PUT'
+        }).then(function(data) {
+          $rootScope.$broadcast('inspireMdValidationStop');
+          $rootScope.$broadcast('operationOnSelectionStop');
+          $rootScope.$broadcast('search');
+        });
+
+      };
+
+      /**
+       * Format a CRS description object for rendering
+       * @param {Object} crsDetails expected keys: code, codeSpace, name
+       */
+      this.formatCrs = function(crsDetails) {
+        var crs = (crsDetails.codeSpace && crsDetails.codeSpace + ':') +
+            crsDetails.code;
+        if (crsDetails.name) return crsDetails.name + ' (' + crs + ')';
+        else return crs;
       };
     }]);
 })();

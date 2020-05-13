@@ -42,7 +42,7 @@
                 'partials/filestore.html',
             scope: {
               uuid: '=gnFileStore',
-              current: '=',
+              selectCallback: '&',
               filter: '='
             },
             link: function(scope, element, attrs, controller) {
@@ -54,7 +54,7 @@
                   'public' : attrs['defaultStatus'];
 
               scope.setResource = function(r) {
-                scope.current = r;
+                scope.selectCallback({ selected: r });
               };
               scope.id = Math.random();
               scope.metadataResources = [];
@@ -71,7 +71,7 @@
                   scope.loadMetadataResources();
                 }, function(data) {
                   $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate('resourceUploadError'),
+                    title: $translate.instant('resourceUploadError'),
                     error: {
                       message: (data.errorThrown || data.statusText) +
                           (angular.isFunction(data.response) ?
@@ -96,7 +96,7 @@
 
               var uploadResourceFailed = function(e, data) {
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate('resourceUploadError'),
+                  title: $translate.instant('resourceUploadError'),
                   error: {
                     message: data.errorThrown +
                         angular.isDefined(
@@ -123,12 +123,13 @@
                   scope.filestoreUploadOptions = {
                     autoUpload: scope.autoUpload,
                     url: '../api/0.1/records/' + scope.uuid +
-                        '/attachments?share=' + defaultStatus,
+                        '/attachments?visibility=' + defaultStatus,
                     dropZone: $('#' + scope.id),
                     singleUpload: false,
                     // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
                     done: uploadResourceSuccess,
-                    fail: uploadResourceFailed
+                    fail: uploadResourceFailed,
+                    headers: {'X-XSRF-TOKEN': $rootScope.csrf}
                   };
                 }
               });

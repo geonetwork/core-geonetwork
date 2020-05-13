@@ -23,16 +23,26 @@
 
 package org.fao.geonet.api.site;
 
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
+import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.FilePathChecker;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -47,24 +57,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import javax.servlet.http.HttpServletRequest;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
-/**
- *
- */
+import java.util.stream.Collectors;
 
 @RequestMapping(value = {
-    "/api/logos",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/logos",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/logos"
 })
 @Api(value = "logos",
@@ -75,8 +80,8 @@ public class LogosApi {
     private static final String iconExt[] = {".gif", ".png", ".jpg", ".jpeg"};
     private DirectoryStream.Filter<Path> iconFilter = new DirectoryStream.Filter<Path>() {
         @Override
-        public boolean accept(Path file) throws IOException {
-            if (file == null || !Files.isRegularFile(file))
+        public boolean accept(Path file) {
+            if (file == null || (Files.exists(file) && !Files.isRegularFile(file)))
                 return false;
             if (file.getFileName() != null) {
                 String name = file.getFileName().toString();
@@ -107,8 +112,9 @@ public class LogosApi {
     @ResponseBody
     public Set<String> get(
         HttpServletRequest request
-    ) throws Exception {
-        Set<Path> icons = Resources.listFiles(
+    ) {
+        ApplicationContext context = ApplicationContextHolder.get();
+        Set<Path> icons = context.getBean(Resources.class).listFiles(
             ApiUtils.createServiceContext(request),
             "harvesting",
             iconFilter);
@@ -118,8 +124,6 @@ public class LogosApi {
         }
         return iconsList;
     }
-
-    private volatile Path logoDirectory;
 
     @ApiOperation(
         value = "Add a logo",
@@ -133,7 +137,7 @@ public class LogosApi {
         method = RequestMethod.POST)
     @PreAuthorize("hasRole('UserAdmin')")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Logo added.") ,
+        @ApiResponse(code = 201, message = "Logo added."),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -150,54 +154,43 @@ public class LogosApi {
             defaultValue = "false",
             required = false
         )
-            boolean overwrite
+            boolean overwrite,
+            HttpServletRequest request
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        Path directoryPath;
-        synchronized (this) {
-            if (this.logoDirectory == null) {
-                this.logoDirectory = Resources.locateHarvesterLogosDirSMVC(appContext);
-            }
-            directoryPath = this.logoDirectory;
-        }
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final Resources resources = appContext.getBean(Resources.class);
+        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        final Path directoryPath = resources.locateHarvesterLogosDirSMVC(appContext);
 
         for (MultipartFile f : file) {
-            String fileName = f.getName();
+            String fileName = f.getOriginalFilename();
 
             checkFileName(fileName);
 
-            Path filePath = directoryPath.resolve(f.getOriginalFilename());
-            if (Files.exists(filePath) && overwrite) {
-                IO.deleteFile(filePath, true, "Deleting file");
-                filePath = directoryPath.resolve(f.getOriginalFilename());
-            }
-
-            filePath = Files.createFile(filePath);
-
-            try (OutputStream stream = Files.newOutputStream(filePath)) {
-                int read;
-                byte[] bytes = new byte[1024];
-                InputStream is = f.getInputStream();
-                while ((read = is.read(bytes)) != -1) {
-                    stream.write(bytes, 0, read);
+            try (Resources.ResourceHolder holder = resources.getWritableImage(serviceContext, fileName, directoryPath)) {
+                if (Files.exists(holder.getPath()) && !overwrite) {
+                    holder.abort();
+                    throw new ResourceAlreadyExistException(fileName);
                 }
+                Files.copy(f.getInputStream(), holder.getPath());
             }
         }
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
     private void checkFileName(String fileName) throws Exception {
-        if (fileName.contains("..")) {
-            throw new BadParameterEx(
-                "Invalid character found in resource name.",
-                fileName);
-        }
+        FilePathChecker.verify(fileName);
 
-        if ("".equals(fileName)) {
+        if (StringUtils.isEmpty(fileName)) {
             throw new Exception("File name is not defined.");
         }
     }
 
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
+
+    @Autowired
+    GroupRepository groupRepository;
 
     @ApiOperation(
         value = "Remove a logo",
@@ -213,28 +206,41 @@ public class LogosApi {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('UserAdmin')")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Logo removed.") ,
-        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND) ,
+        @ApiResponse(code = 204, message = "Logo removed."),
+        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody
     public void deleteLogo(
         @ApiParam(value = "The logo filename to delete")
         @PathVariable
-            String file
+        String file,
+        HttpServletRequest request
     ) throws Exception {
         checkFileName(file);
+        FilePathChecker.verify(file);
 
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
-        Path nodeLogoDirectory = dataDirectory.getResourcesDir()
-            .resolve("images").resolve("harvesting");
-        Path logoFile = nodeLogoDirectory.resolve(file);
-        if (Files.exists(logoFile)) {
-            Files.delete(logoFile);
-        } else {
-            throw new ResourceNotFoundException(String.format(
-                "No logo found with filename '%s'.", file));
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final Resources resources = appContext.getBean(Resources.class);
+        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        final Path nodeLogoDirectory = resources.locateHarvesterLogosDirSMVC(appContext);
+
+        try (Resources.ResourceHolder image = resources.getImage(serviceContext, file, nodeLogoDirectory)){
+            if (image != null) {
+                final List<Group> groups = groupRepository.findByLogo(file);
+                if (groups != null && groups.size() > 0) {
+                    final List<String> groupIds =
+                        groups.stream().map(Group::getName).collect(Collectors.toList());
+                    throw new IllegalArgumentException(String.format(
+                        "Logo '%s' is used by %d group(s). Assign another logo to the following groups: %s.",
+                        file, groups.size(), groupIds.toString()));
+                }
+
+                resources.deleteImageIfExists(file, nodeLogoDirectory);
+            } else {
+                throw new ResourceNotFoundException(String.format(
+                    "No logo found with filename '%s'.", file));
+            }
         }
     }
 }

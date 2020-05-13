@@ -1,0 +1,46 @@
+<li data-ng-class='::!isParentNode ? "leaf" : ""'>
+  <div class="flex-col">
+    <div class="flex-row width-100 flex-align-stretch">
+      <div class="flex-col flex-grow">
+        <a href=""
+           class="truncate"
+           data-ng-click="isParentNode ? toggleNode($event) : addLayer(null, $event)"
+           title="{{member.Title || member.title}}">
+          <i class='fa fa-fw'
+             data-ng-class='::isParentNode ? "fa-folder-open-o" : "fa-map-o"'></i>
+          {{member.Title || member.title}}
+          <span data-ng-if="member.Style.length === 1">
+            &nbsp;({{member.Style[0].Title}})
+          </span>
+        </a>
+      </div>
+      <div class="gn-layer-toolbar btn-group btn-group-xs">
+        <div class="gn-layer-actions"
+            data-ng-if="!isParentNode && member.Style.length > 1">
+          <div gn-popover
+               gn-popover-placement="bottom">
+            <a gn-popover-anchor role="button"
+               tabindex="0"
+               class="btn btn-link btn-xs"
+              >
+              <i class="fa fa-paint-brush"></i>
+              <i class="fa fa-fw fa-caret-down"></i>
+            </a>
+
+            <div gn-popover-content>
+              <div data-gn-layer-styles="member.Style"
+                   data-gn-layer-styles-on-click="addLayer(style)"/>
+            </div>
+          </div>
+        </div>
+        <a href=""
+          class="btn btn-link btn-xs"
+          data-ng-click="isParentNode ? toggleNode($event) : addLayer(null, $event)"
+          data-ng-if="!isParentNode" class="btn btn-default btn-xs"
+          title="{{(isParentNode ? 'showGroupLayers' : 'addToMap') | translate}}">
+          <i class="fa fa-fw fa-plus"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</li>

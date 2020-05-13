@@ -27,13 +27,14 @@ import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.search.Sort;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
-import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
@@ -48,14 +49,11 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.gml2.GMLConfiguration;
-import org.jdom.Content;
-import org.jdom.Element;
-import org.jdom.Namespace;
+import org.jdom.*;
 import org.springframework.context.ApplicationContext;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -119,17 +117,38 @@ public class SearchController {
             Element info = res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
             String schema = info.getChildText(Edit.Info.Elem.SCHEMA);
 
+            // Add schemaLocation from schema config if not present in the metadata
+            Attribute schemaLocAtt = scm.getSchemaLocation(
+                schema, context);
+
+            if (schemaLocAtt != null) {
+                if (res.getAttribute(
+                    schemaLocAtt.getName(),
+                    schemaLocAtt.getNamespace()) == null) {
+                    res.setAttribute(schemaLocAtt);
+                    // make sure namespace declaration for schemalocation is present -
+                    // remove it first (does nothing if not there) then add it
+                    res.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
+                    res.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+                }
+            }
 
             // apply stylesheet according to setName and schema
             //
             // OGC 07-045 :
             // Because for this application profile it is not possible that a query includes more than one
             // typename, any value(s) of the typeNames attribute of the elementSetName element are ignored.
-            res = applyElementSetName(context, scm, schema, res, outSchema, setName, resultType, id, displayLanguage);
-            //
-            // apply elementnames
-            //
+            res = org.fao.geonet.csw.common.util.Xml.applyElementSetName(context, scm, schema, res, outSchema, setName, resultType, id, displayLanguage);
+
             res = applyElementNames(context, elemNames, typeName, scm, schema, res, resultType, info, strategy);
+
+            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                Log.debug(Geonet.CSW_SEARCH, "SearchController:retrieveMetadata: before applying postprocessing on metadata Element for id " + id);
+
+            res = applyPostProcessing(context, scm, schema, res, outSchema, setName, resultType, id, displayLanguage);
+
+            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                Log.debug(Geonet.CSW_SEARCH, "SearchController:retrieveMetadata: All processing is complete on metadata Element for id " + id);
 
             if (res != null) {
                 if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
@@ -139,52 +158,12 @@ public class SearchController {
                     Log.debug(Geonet.CSW_SEARCH, "SearchController returns null");
             }
             return res;
+        } catch (InvalidParameterValueEx e) {
+            throw e;
         } catch (Exception e) {
             context.error("Error while getting metadata with id : " + id);
             context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
             throw new NoApplicableCodeEx("Raised exception while getting metadata :" + e);
-        }
-    }
-
-    /**
-     * Applies stylesheet according to ElementSetName and schema.
-     *
-     * @param context        Service context
-     * @param schemaManager  schemamanager
-     * @param schema         schema
-     * @param result         result
-     * @param outputSchema   requested OutputSchema
-     * @param elementSetName requested ElementSetName
-     * @param resultType     requested ResultTYpe
-     * @param id             metadata id
-     * @return metadata
-     * @throws InvalidParameterValueEx hmm
-     */
-    private static Element applyElementSetName(ServiceContext context, SchemaManager schemaManager, String schema,
-                                               Element result, String outputSchema, ElementSetName elementSetName,
-                                               ResultType resultType, String id, String displayLanguage) throws InvalidParameterValueEx {
-        Path schemaDir = schemaManager.getSchemaCSWPresentDir(schema);
-        Path styleSheet = schemaDir.resolve(outputSchema + "-" + elementSetName + ".xsl");
-
-        if (!Files.exists(styleSheet)) {
-            context.warning(
-                String.format(
-                    "OutputSchema '%s' not supported for metadata with '%s' (%s). Corresponding XSL transformation '%s' does not exist. The record will not be returned in response.",
-                    outputSchema, id, schema, styleSheet.toString()));
-            return null;
-        } else {
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("lang", displayLanguage);
-            params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
-
-            try {
-                result = Xml.transform(result, styleSheet, params);
-            } catch (Exception e) {
-                context.error("Error while transforming metadata with id : " + id + " using " + styleSheet);
-                context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
-                return null;
-            }
-            return result;
         }
     }
 
@@ -378,8 +357,7 @@ public class SearchController {
                         break;
                     }
                 } catch (Exception x) {
-                    Log.error(Geonet.CSW_SEARCH, x.getMessage());
-                    x.printStackTrace();
+                    Log.error(Geonet.CSW_SEARCH, x.getMessage(), x);
                     throw new InvalidParameterValueEx("elementName has invalid XPath : " + elementName, x.getMessage());
                 }
             }
@@ -465,6 +443,16 @@ public class SearchController {
         Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher.search(context, filterExpr, filterVersion,
             typeName, sort, resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
 
+        Element summary = summaryAndSearchResults.one();
+        int numMatches = Integer.parseInt(summary.getAttributeValue("count"));
+        if (numMatches != 0 && startPos > numMatches) {
+            throw new InvalidParameterValueEx("startPosition", String.format(
+                "Start position (%d) can't be greater than number of matching records (%d for current search).",
+                startPos, numMatches
+            ));
+        }
+
+
         final SettingInfo settingInfo = context.getBean(SearchManager.class).getSettingInfo();
         String displayLanguage = LuceneSearcher.determineLanguage(context, filterExpr, settingInfo).presentationLanguage;
         // retrieve actual metadata for results
@@ -474,16 +462,19 @@ public class SearchController {
         //
         // properties of search result
         //
-        Element summary = summaryAndSearchResults.one();
-        int numMatches = Integer.parseInt(summary.getAttributeValue("count"));
         results.setAttribute("numberOfRecordsMatched", numMatches + "");
         results.setAttribute("numberOfRecordsReturned", counter + "");
         results.setAttribute("elementSet", setName.toString());
 
-        if (numMatches > counter) {
-            results.setAttribute("nextRecord", counter + startPos + "");
-        } else {
+        int nextRecord = counter + startPos;
+        if (nextRecord > numMatches) {
+            //  "number of records returned to client nextRecord -
+            // position of next record in the result set
+            // (0 if no records remain)"
+            // Cf. http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd
             results.setAttribute("nextRecord", "0");
+        } else {
+            results.setAttribute("nextRecord", nextRecord + "");
         }
 
         return Pair.read(summary, results);
@@ -519,21 +510,82 @@ public class SearchController {
         for (int i = 0; (i < maxRecords) && (i < resultsList.size()); i++) {
             ResultItem resultItem = resultsList.get(i);
             String id = resultItem.getID();
-            Element md = retrieveMetadata(context, id, elementSetName, outputSchema, elementNames, typeName, resultType, strategy, displayLanguage);
-            // metadata cannot be retrieved
-            if (md == null) {
-                context.warning("SearchController : Metadata not found or invalid schema : " + id);
-            }
-            // metadata can be retrieved
-            else {
-                // metadata must be included in response
-                if ((resultType == ResultType.RESULTS || resultType == ResultType.RESULTS_WITH_SUMMARY)) {
-                    results.addContent(md);
+            Element md = null;
+
+            try {
+                md = retrieveMetadata(context, id, elementSetName, outputSchema, elementNames, typeName, resultType, strategy, displayLanguage);
+                // metadata cannot be retrieved
+                if (md == null) {
+                    results.addContent(new Comment(String.format("Metadata with id '%s' returned null.", id)));
+                    context.warning("SearchController : Metadata not found or invalid schema : " + id);
                 }
-                counter++;
+                // metadata can be retrieved
+                else {
+                    // metadata must be included in response
+                    if ((resultType == ResultType.RESULTS || resultType == ResultType.RESULTS_WITH_SUMMARY)) {
+                        results.addContent(md);
+                    }
+                }
+            } catch (InvalidParameterValueEx e) {
+                results.addContent(new Comment(e.getMessage()));
             }
+            counter++;
         }
         return counter;
     }
 
+    /**
+     * Applies postprocessing stylesheet if available.
+     *
+     * Postprocessing files should be in the present/csw folder of the schema and have this naming:
+     *
+     * For default CSW service
+     *
+     * 1) gmd-csw-postprocessing.xsl : Postprocessing xsl applied for CSW service when requesting iso (gmd) output
+     * 2) csw-csw-postprocessing.xsl : Postprocessing xsl applied for CSW service when requesting ogc (csw) output
+     *
+     * For a custom CSW service named csw-inspire
+     *
+     * 1) gmd-csw-inspire-postprocessing.xsl : Postprocessing xsl applied for custom CSW csw-inspire service when requesting iso output
+     * 2) csw-csw-inspire-postprocessing.xsl : Postprocessing xsl applied for custom CSW csw-inspire service when requesting ogc (csw) output
+     *
+     * @param context Service context
+     * @param schemaManager schemamanager
+     * @param schema schema
+     * @param result result
+     * @param outputSchema requested OutputSchema
+     * @param elementSetName requested ElementSetName
+     * @param resultType requested ResultTYpe
+     * @param id metadata id
+     * @param displayLanguage language to use in response
+     * @return metadata
+     * @throws InvalidParameterValueEx hmm
+     */
+    private static Element applyPostProcessing(ServiceContext context, SchemaManager schemaManager, String schema,
+                                               Element result, String outputSchema, ElementSetName elementSetName,
+                                               ResultType resultType, String id, String displayLanguage) throws InvalidParameterValueEx {
+        Path schemaDir  = schemaManager.getSchemaCSWPresentDir(schema);
+        final NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
+
+
+        Path styleSheet = schemaDir.resolve(outputSchema + "-"
+            + (context.getService().equals("csw") ? nodeInfo.getId() : context.getService())
+            + "-postprocessing.xsl");
+
+        if (Files.exists(styleSheet)) {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("lang", displayLanguage);
+            params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
+
+            try {
+                result = Xml.transform(result, styleSheet, params);
+            } catch (Exception e) {
+                context.error("Error while transforming metadata with id : " + id + " using " + styleSheet);
+                context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
+                return null;
+            }
+        }
+
+        return result;
+    }
 }

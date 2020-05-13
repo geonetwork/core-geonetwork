@@ -1,0 +1,8 @@
+<div class="dynamic-list">
+  <select class="form-control " data-ng-model="ownerUser">
+    <option data-ng-repeat="u in users | orderBy:['name', 'surname', 'username']" value="{{u['@id'] || u.id}}"
+            data-ng-selected="ownerUser == (u['@id'] ? u['@id'] : u.id)">
+              {{u.name}} {{u.surname}} ({{u.username}})
+    </option>
+  </select>
+</div>

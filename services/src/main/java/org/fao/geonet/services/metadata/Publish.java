@@ -23,34 +23,7 @@
 
 package org.fao.geonet.services.metadata;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Function;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
-
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.exceptions.ServiceNotAllowedEx;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.specification.OperationAllowedSpecs;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -66,7 +39,44 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.records.MetadataUtils;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.ServiceNotAllowedEx;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+import org.fao.geonet.util.WorkflowUtil;
+import org.jdom.Document;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 
 /**
  * Service to publish and unpublish one or more metadata.  This service only modifies guest, all and
@@ -74,6 +84,7 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasM
  *
  * @author Jesse on 1/16/2015.
  */
+@Deprecated
 @Controller("md.publish")
 public class Publish {
 
@@ -81,7 +92,7 @@ public class Publish {
     boolean testing = false;
 
 
-    @RequestMapping(value = "/{lang}/md.publish", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/md.publish", produces = {
         MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseBody
     public PublishReport publish(
@@ -97,7 +108,7 @@ public class Publish {
     }
 
 
-    @RequestMapping(value = "/{lang}/md.unpublish", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/md.unpublish", produces = {
         MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseBody
     public PublishReport unpublish(
@@ -125,6 +136,15 @@ public class Publish {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         DataManager dataManager = appContext.getBean(DataManager.class);
         OperationAllowedRepository operationAllowedRepository = appContext.getBean(OperationAllowedRepository.class);
+        IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
+        MetadataValidationRepository metadataValidationRepository = appContext.getBean(MetadataValidationRepository.class);
+        IMetadataStatus metadataStatusRepository = appContext.getBean(IMetadataStatus.class);
+        SettingManager sm = appContext.getBean(SettingManager.class);
+        IMetadataValidator validator = appContext.getBean(IMetadataValidator.class);
+        GroupRepository groupRepository = appContext.getBean(GroupRepository.class);
+
+        boolean allowPublishInvalidMd = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD);
+        boolean allowPublishNonApprovedMd = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_NON_APPROVED_MD);
 
         final PublishReport report = new PublishReport();
 
@@ -153,6 +173,27 @@ public class Publish {
 
             List<OperationAllowed> operationAllowed = operationAllowedRepository.findAll(allOpsSpec);
             if (publish) {
+                AbstractMetadata metadata = metadataRepository.findOne(mdId);
+
+                if (!allowPublishInvalidMd) {
+                    boolean isInvalid = MetadataUtils.retrieveMetadataValidationStatus(metadata, serviceContext);
+
+                    if (isInvalid) {
+                        report.incNoValid();
+                        continue;
+                    }
+                }
+
+                if (!allowPublishNonApprovedMd) {
+                    MetadataStatus metadataStatus = metadataStatusRepository.getStatus(metadata.getId());
+
+                    String statusId = metadataStatus.getId().getStatusId() + "";
+                    if (!statusId.equals(StatusValue.Status.APPROVED)) {
+                        report.incNoApproved();
+                        continue;
+                    }
+                }
+
                 doPublish(serviceContext, report, groupIds, toIndex, operationIds, mdId, allOpsSpec, operationAllowed);
             } else {
                 doUnpublish(serviceContext, report, groupIds, toIndex, operationIds, mdId, allOpsSpec, operationAllowed);
@@ -273,10 +314,12 @@ public class Publish {
     }
 
 
+
+
     @XmlRootElement(name = "publishReport")
     @XmlAccessorType(XmlAccessType.FIELD)
     public static final class PublishReport implements Serializable {
-        private int published, unpublished, unmodified, disallowed;
+        private int published, unpublished, unmodified, disallowed, novalid, noapproved;
 
         public void incPublished() {
             published++;
@@ -292,6 +335,14 @@ public class Publish {
 
         public void incDisallowed() {
             disallowed++;
+        }
+
+        public void incNoValid() {
+            novalid++;
+        }
+
+        public void incNoApproved() {
+            noapproved++;
         }
 
         public int getPublished() {
@@ -310,14 +361,24 @@ public class Publish {
             return disallowed;
         }
 
+        public int getNovalid() {
+            return novalid;
+        }
+
+        public int getNoapproved() {
+            return noapproved;
+        }
+
         @Override
         public String toString() {
             return "PublishReport{" +
-                "published=" + published +
-                ", unpublished=" + unpublished +
-                ", unmodified=" + unmodified +
-                ", disallowed=" + disallowed +
-                '}';
+                   "published=" + published +
+                   ", unpublished=" + unpublished +
+                   ", unmodified=" + unmodified +
+                   ", disallowed=" + disallowed +
+                   ", novalid=" + novalid +
+                   ", noapproved=" + noapproved +
+                   '}';
         }
     }
 }

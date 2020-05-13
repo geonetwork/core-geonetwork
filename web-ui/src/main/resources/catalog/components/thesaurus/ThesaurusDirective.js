@@ -24,7 +24,8 @@
 (function() {
   goog.provide('gn_thesaurus_directive');
 
-  var module = angular.module('gn_thesaurus_directive', []);
+  var module = angular.module('gn_thesaurus_directive',
+      ['pascalprecht.translate']);
 
   /**
    * @ngdoc directive
@@ -48,10 +49,10 @@
   module.directive('gnThesaurusSelector',
       ['$timeout',
        'gnThesaurusService', 'gnEditor',
-       'gnEditorXMLService', 'gnCurrentEdit',
+       'gnEditorXMLService', 'gnCurrentEdit', '$rootScope', '$translate',
        function($timeout,
-               gnThesaurusService, gnEditor,
-               gnEditorXMLService, gnCurrentEdit) {
+                gnThesaurusService, gnEditor,
+                gnEditorXMLService, gnCurrentEdit, $rootScope, $translate) {
 
          return {
            restrict: 'A',
@@ -61,6 +62,8 @@
              mode: '@gnThesaurusSelector',
              elementName: '@',
              elementRef: '@',
+             freekeywordElementName: '@',
+             freekeywordElementRef: '@',
              domId: '@',
              selectorOnly: '@',
              transformation: '@',
@@ -76,7 +79,7 @@
              scope.snippetRef = null;
              var restrictionList = scope.include ? (
              scope.include.indexOf(',') !== -1 ?
-                 scope.include.split(',') : [scope.include]) : [];
+             scope.include.split(',') : [scope.include]) : [];
 
              var includeThesaurus = [];
              var excludeThesaurus = [];
@@ -113,30 +116,42 @@
 
              scope.add = function() {
                return gnEditor.add(gnCurrentEdit.id,
-               scope.elementRef, scope.elementName, scope.domId, 'before');
+                   scope.freekeywordElementRef || scope.elementRef,
+                 scope.freekeywordElementName || scope.elementName,
+                        scope.domId, 'before').then(function() {
+                 gnEditor.save(gnCurrentEdit.id, true);
+               });
              };
 
              scope.addThesaurus = function(thesaurusIdentifier) {
                if (scope.selectorOnly) {
                  scope.$parent.thesaurusKey = scope.thesaurusKey =
-                         thesaurusIdentifier;
+                 thesaurusIdentifier;
                } else {
                  gnCurrentEdit.working = true;
                  return gnThesaurusService
-                 .getXML(thesaurusIdentifier,  null,
+                  .getXML(thesaurusIdentifier, null,
                  attrs.transformation).then(
-                         function(data) {
+                 function(data) {
                    // Add the fragment to the form
                    scope.snippet = data;
-                   scope.snippetRef = gnEditor.
-                                 buildXMLFieldName(
-                                   scope.elementRef,
-                                   scope.elementName);
+                   scope.snippetRef = gnEditor.buildXMLFieldName(
+                   scope.elementRef,
+                   scope.elementName);
 
 
                    $timeout(function() {
                      // Save the metadata and refresh the form
-                     gnEditor.save(gnCurrentEdit.id, true);
+                     gnEditor.save(gnCurrentEdit.id, true).then(function() {
+                       // success. Nothing to do.
+                     }, function(rejectedValue) {
+                       $rootScope.$broadcast('StatusUpdated', {
+                         title: $translate.instant('runServiceError'),
+                         error: rejectedValue,
+                         timeout: 0,
+                         type: 'danger'
+                       });
+                     });
                    });
                  });
                }
@@ -169,27 +184,28 @@
   module.directive('gnKeywordSelector',
       ['$compile', '$timeout', '$translate',
        'gnThesaurusService', 'gnEditor',
-       'Keyword',
+       'Keyword', 'gnLangs',
        function($compile, $timeout, $translate,
-               gnThesaurusService, gnEditor, Keyword) {
+                gnThesaurusService, gnEditor, Keyword, gnLangs) {
 
          return {
            restrict: 'A',
            replace: true,
            transclude: true,
            scope: {
-             mode: '@gnKeywordSelector',
              elementRef: '@',
              thesaurusKey: '@',
              keywords: '@',
              transformations: '@',
              currentTransformation: '@',
              lang: '@',
+             orderById: '@',
              textgroupOnly: '@',
 
              // Max number of tags allowed. Use 1 to restrict to only
              // on keyword.
-             maxTags: '@'
+             maxTags: '@',
+             thesaurusTitle: '@'
            },
            templateUrl: '../../catalog/components/thesaurus/' +
            'partials/keywordselector.html',
@@ -266,7 +282,7 @@
                // If no keyword, set the default transformation
                if (
                $.inArray(scope.currentTransformation,
-                   scope.transformationLists) === -1 &&
+               scope.transformationLists) === -1 &&
                scope.initialKeywords.length === 0) {
 
                  scope.setTransformation(scope.transformationLists[0]);
@@ -279,9 +295,10 @@
                  var counter = 0;
                  angular.forEach(scope.initialKeywords, function(keyword) {
                    // One keyword only and exact match search
+                   // in current editor language.
                    gnThesaurusService.getKeywords(keyword,
-                   scope.thesaurusKey, scope.mainLang, 1, 'MATCH')
-                     .then(function(listOfKeywords) {
+                   scope.thesaurusKey, gnLangs.current, 1, 'MATCH')
+                   .then(function(listOfKeywords) {
                      counter++;
 
                      listOfKeywords[0] &&
@@ -302,108 +319,102 @@
                }
 
                // Then register search filter change
-               // Only applies to multiselect mode
                scope.$watch('filter', search);
              };
 
              // Used by skos-browser to add keywords from the
              // skos hierarchy to the current list of tags
              scope.addThesaurusConcept = function(uri, text) {
-                var textArr = [];
-                textArr['#text'] = text;
-                var k = {
-                  uri: uri,
-                  value: textArr
-                };
-                var keyword = new Keyword(k);
+               var textArr = [];
+               textArr['#text'] = text;
+               var k = {
+                 uri: uri,
+                 value: textArr
+               };
+               var keyword = new Keyword(k);
 
-                var thisId = '#tagsinput_' + scope.elementRef;
-                // Add to tags
-                $(thisId).tagsinput('add', keyword);
+               var thisId = '#tagsinput_' + scope.elementRef;
+               // Add to tags
+               $(thisId).tagsinput('add', keyword);
 
-                // Update selection and snippet
-                scope.selected = $(thisId).tagsinput('items');
-                getSnippet(); // FIXME: should not be necessary
+               // Update selection and snippet
+               angular.copy($(thisId).tagsinput('items'), scope.selected);
+               getSnippet(); // FIXME: should not be necessary
                // as there is a watch on it ?
 
-                // Clear typeahead
-                $(thisId).tagsinput('input').typeahead('setQuery', '');
+               // Clear typeahead
+               $(thisId).tagsinput('input').typeahead('val', '');
              };
 
              // Init typeahead and tag input
              var initTagsInput = function() {
                var id = '#tagsinput_' + scope.elementRef;
                $timeout(function() {
-                 $(id).tagsinput({
-                   itemValue: 'label',
-                   itemText: 'label',
-                   maxTags: scope.maxTags
-                 });
-
-                 // Add selection to the list of tags
-                 angular.forEach(scope.selected, function(keyword) {
-                   $(id).tagsinput('add', keyword);
-                 });
-
-                 // Load all keywords from thesaurus on startup
-                 gnThesaurusService.getKeywords('',
-                 scope.thesaurusKey, scope.mainLang, scope.max)
-                  .then(function(listOfKeywords) {
-
-                   var field = $(id).tagsinput('input');
-                   field.attr('placeholder', $translate('searchKeyword'));
-
-                   var keywordsAutocompleter =
-                   gnThesaurusService.getKeywordAutocompleter({
-                     thesaurusKey: scope.thesaurusKey,
-                     dataToExclude: scope.selected,
-                     lang: scope.mainLang
+                 try {
+                   $(id).tagsinput({
+                     itemValue: 'label',
+                     itemText: 'label',
+                     maxTags: scope.maxTags
                    });
 
-                   // Init typeahead
-                   field.typeahead({
-                     minLength: 0,
-                     highlight: true
-                     // template: '<p>{{label}}</p>'
-                     // TODO: could be nice to have definition
-                   }, {
-                     name: 'keyword',
-                     displayKey: 'label',
-                     source: keywordsAutocompleter.ttAdapter()
-                   }).bind('typeahead:selected',
-                   $.proxy(function(obj, keyword) {
-                     // Add to tags
-                     this.tagsinput('add', keyword);
-
-                     // Update selection and snippet
-                     angular.copy(this.tagsinput('items'), scope.selected);
-                     getSnippet(); // FIXME: should not be necessary
-                     // as there is a watch on it ?
-
-                     // Clear typeahead
-                     this.tagsinput('input').typeahead('val', '');
-                   }, $(id))
-                   );
-
-                   $(id).on('itemRemoved', function() {
-                     angular.copy($(this).tagsinput('items'), scope.selected);
-                     getSnippet();
+                   // Add selection to the list of tags
+                   angular.forEach(scope.selected, function(keyword) {
+                     $(id).tagsinput('add', keyword);
                    });
 
-                   // When clicking the element trigger input
-                   // to show autocompletion list.
-                   // https://github.com/twitter/typeahead.js/issues/798
-                   field.on('typeahead:opened', function() {
-                     var initial = field.val(),
-                     ev = $.Event('keydown');
-                     ev.keyCode = ev.which = 40;
-                     field.trigger(ev);
-                     if (field.val() != initial) {
-                       field.val('');
-                     }
-                     return true;
+                   // Load all keywords from thesaurus on startup
+                   gnThesaurusService.getKeywords('',
+                   scope.thesaurusKey, gnLangs.current, scope.max)
+                    .then(function(listOfKeywords) {
+
+                     var field = $(id).tagsinput('input');
+                     field.attr('placeholder',
+                     $translate.instant('searchKeyword'));
+
+                     var keywordsAutocompleter =
+                     gnThesaurusService.getKeywordAutocompleter({
+                       thesaurusKey: scope.thesaurusKey,
+                       dataToExclude: scope.selected,
+                       lang: gnLangs.current,
+                       orderById: scope.orderById
+                     });
+
+                     // Init typeahead
+                     field.typeahead({
+                       minLength: 0,
+                       highlight: true
+                       // template: '<p>{{label}}</p>'
+                       // TODO: could be nice to have definition
+                     }, {
+                       name: 'keyword',
+                       displayKey: 'label',
+                       limit: Infinity,
+                       source: keywordsAutocompleter.ttAdapter()
+                     }).bind('typeahead:selected',
+                     $.proxy(function(obj, keyword) {
+                       // Add to tags
+                       this.tagsinput('add', keyword);
+
+                       // Update selection and snippet
+                       angular.copy(this.tagsinput('items'), scope.selected);
+                       getSnippet(); // FIXME: should not be necessary
+                       // as there is a watch on it ?
+
+                       // Clear typeahead
+                       this.tagsinput('input').typeahead('val', '');
+                     }, $(id))
+                     );
+
+                     $(id).on('itemRemoved', function() {
+                       angular.copy($(this)
+                       .tagsinput('items'), scope.selected);
+                       getSnippet();
+                     });
                    });
-                 });
+                 } catch (e) {
+                   console.warn('No tagsinput for ' + id +
+                   ', error: ' + e.message);
+                 }
                });
              };
 
@@ -414,9 +425,7 @@
                  scope.$watch('results', getSnippet);
                  scope.$watch('selected', getSnippet);
 
-                 if (scope.mode === 'tagsinput') {
-                   initTagsInput();
-                 }
+                 initTagsInput();
                } else if (scope.invalidKeywordMatch) {
                  // invalidate element ref to not trigger
                  // an update of the record with an invalid
@@ -428,7 +437,7 @@
 
              var search = function() {
                gnThesaurusService.getKeywords(scope.filter,
-               scope.thesaurusKey, scope.lang, scope.max)
+               scope.thesaurusKey, gnLangs.current, scope.max)
                 .then(function(listOfKeywords) {
                  // Remove from search already selected keywords
                  scope.results = $.grep(listOfKeywords, function(n) {
@@ -483,32 +492,42 @@
 
 
   /**
-     * @ngdoc directive
-     * @name gn_thesaurus.directive:gnKeywordPicker
-     * @function
-     *
-     * @description
-     * Provide simple keyword search.
-     *
-     * We can't transclude input (http://plnkr.co/edit/R2O2ixWA1QJUsVcUHl0N)
-     */
+   * @ngdoc directive
+   * @name gn_thesaurus.directive:gnKeywordPicker
+   * @function
+   *
+   * @description
+   * Provide simple keyword search.
+   *
+   * We can't transclude input (http://plnkr.co/edit/R2O2ixWA1QJUsVcUHl0N)
+   */
   module.directive('gnKeywordPicker', [
-    'gnThesaurusService', '$compile', '$translate',
-    function(gnThesaurusService, $compile, $translate) {
+    'gnThesaurusService', '$compile', '$translate', 'gnCurrentEdit',
+    function(gnThesaurusService, $compile, $translate, gnCurrentEdit) {
       return {
         restrict: 'A',
+        scope: {
+             fauxMultilingual: '@fauxMultilingual' // we are doing our own multi-lingual support
+        },
         link: function(scope, element, attrs) {
-          scope.thesaurusKey = attrs.thesaurusKey ||  '';
+          scope.thesaurusKey = attrs.thesaurusKey || '';
+          scope.orderById = attrs.orderById || 'false';
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
+          scope.fauxMultilingual = scope.fauxMultilingual==="true"; //default false
+
+
+
+          var displayDefinition = attrs.displayDefinition || '';
+          var numberOfSuggestions = attrs.numberOfSuggestions || 20;
           var initialized = false;
 
           // Create an input group around the element
           // with a thesaurus selector on the right.
           var addThesaurusSelectorOnElement = function() {
-            var inputGroup = angular.
-                element('<div class="input-group"></div>');
-            var dropDown = angular.
-                element('<div class="input-group-btn"></div>');
+            var inputGroup = angular.element(
+                '<div class="input-group"></div>');
+            var dropDown = angular.element(
+                '<div class="input-group-btn"></div>');
             // Thesaurus selector is a directive
             var thesaurusSel = '<span data-gn-thesaurus-selector="" ' +
                 'data-selector-only="true"></span>';
@@ -525,33 +544,142 @@
             // Get list of available thesaurus (if not defined
             // by scope)
             element.typeahead('destroy');
-            element.attr('placeholder', $translate('searchOrTypeKeyword'));
+            element.attr('placeholder',
+                $translate.instant('searchOrTypeKeyword'));
 
             // Thesaurus selector is not added if the key is defined
             // by configuration
             if (!initialized && !attrs.thesaurusKey) {
               addThesaurusSelectorOnElement(element);
             }
+            var searchLanguage = gnCurrentEdit.allLanguages.code2iso['#' + attrs.lang] ||
+              gnCurrentEdit.mdLanguage ||
+              scope.lang;
             var keywordsAutocompleter =
                 gnThesaurusService.getKeywordAutocompleter({
                   thesaurusKey: scope.thesaurusKey,
-                  lang: scope.lang
+                  lang: searchLanguage,
+                  outputLang: gnCurrentEdit.allLanguages && gnCurrentEdit.allLanguages.iso ?
+                         gnCurrentEdit.allLanguages.iso.join(',') :
+                         (gnCurrentEdit.mdLanguage || scope.lang),
+                  orderById: scope.orderById
                 });
+
+
+            // Multilingual support
+            // In multilingual mode, update all inputs
+            // based on information returned by thesaurus service
+            // (there is one input per language with a specific
+            // field name)
+            var isMultilingualMode =
+              $(element).closest('div[data-gn-multilingual-field]').size() === 1;
+
+            // When concept id attribute is set, then an extra input field is used.
+            // Eg. in ISO schema, an Anchor element is used.
+            // In such case, an xlink:href attribute store the concept id.
+            // By default, such an attribute is identified in the form by
+            // the parent element id + '_' + attribute name
+            if (angular.isDefined(attrs.thesaurusConceptIdAttribute)) {
+              scope.conceptIdElementName =
+                // In multilingual mode, the ref to the CharacterString is known using the id
+                (isMultilingualMode ? '_' + attrs.id.replace('gn-field-', '') : attrs.name) +
+                '_' + attrs.thesaurusConceptIdAttribute;
+
+              // Check that the element does not exist already in the form
+              // Could be in the case it was already encoded.
+              var input = element.parent().parent().find('[name=' + scope.conceptIdElementName + ']');
+
+              var insertionPoint = isMultilingualMode ?
+                element.closest('div[data-gn-multilingual-field]').find('div.well') : element;
+
+              var isFirstMultilingualElement = insertionPoint.siblings('div.gn-keyword-picker-concept-id').length === 0;
+
+              if ((!isMultilingualMode && input.length === 0) ||
+                // Add an extra form element to store the value
+                // If multilingual, only one field is added to the first input
+                // eg. in ISO19139, the xlink:href attribute is part of the
+                // CharacterString and not to the children
+                (isMultilingualMode && isFirstMultilingualElement && input.length === 0)) {
+
+                var conceptIdElement =  angular.element(
+                  '<div class="well well-sm gn-keyword-picker-concept-id row">' +
+                  '  <div class="form-group">' +
+                  '    <label class="col-sm-4"><i class="fa fa-link fa-fw"/><span data-translate>URL</span></label>' +
+                  '    <div class="col-sm-6"><input name="' + scope.conceptIdElementName + '" ' +
+                  '       class="gn-field-link form-control"/>' +
+                  '    </div>' +
+                  '    <div class="col-sm-2"><a class="btn btn-link" title="{{\'resetUrl\' | translate}}" data-ng-click="resetUrl()"><i class="fa fa-times text-danger"/></a></div>' +
+                  '  </div>' +
+                  '</div>');
+                insertionPoint[isMultilingualMode ? 'before' : 'after'](
+                  $compile(conceptIdElement)(scope));
+              }
+            }
 
             // Init typeahead
             element.typeahead({
               minLength: 0,
               highlight: true
-              // template: '<p>{{label}}</p>'
-              // TODO: could be nice to have definition
             }, {
               name: 'keyword',
-              displayKey: 'label',
-              source: keywordsAutocompleter.ttAdapter()
-              // templates: {
-              // header: '<h4>' + scope.thesaurusKey + '</h4>'
-              // }
-            });
+              limit: numberOfSuggestions,
+              source: keywordsAutocompleter.ttAdapter(),
+              displayKey: function (data) {
+                 return data.props.values[searchLanguage] || data.props.value;
+              },
+              templates: {
+                suggestion: function (data) {
+                  var def = data.props.definitions[searchLanguage];
+                  var text = '<p>' + data.props.values[searchLanguage] + '';
+                  if (displayDefinition && def != '') {
+                    text += ' - <i>' + def + '</i>';
+                  }
+                  return text + '</p>';
+                }
+               // header: '<h4>' + scope.thesaurusKey + '</h4>'
+              }
+            }).bind('typeahead:selected',
+              $.proxy(function(obj, keyword) {
+                var inputs = $(obj.currentTarget).parent().parent().find('input.tt-input');
+                if ((isMultilingualMode||scope.fauxMultilingual) && inputs.size() > 0) {
+                  for (var i = 0; i < inputs.size(); i ++) {
+                    var input = inputs.get(i);
+                    var lang = input.getAttribute('lang');
+                    var value = keyword.props.values[gnCurrentEdit.allLanguages.code2iso['#' + lang]];
+                    if (value) {
+                      $(input).typeahead('val', value);
+                      // this makes sure that angular knows the value has changed
+                      $(input).triggerHandler('input');
+                     }
+                    // If no value for the language, value is not set.
+                  }
+                } else {
+                  $(obj.currentTarget).typeahead('val', keyword.label);
+                }
+
+                if(scope.conceptIdElementName) {
+                  var keywordKey = keyword.props.uri;
+                  // This directive may depend on others and populate
+                  // the same target input field for the attribute.
+                  // Use a search instead of a scope element to cope with init order.
+
+                  var insertionPoint = isMultilingualMode ?
+                    element.closest('div[data-gn-multilingual-field]') : element.parent().parent();
+                  var input = insertionPoint.find('[name=' + scope.conceptIdElementName + ']');
+                  input.val(keywordKey);
+                }
+              }, $(element))
+            );
+
+
+            scope.resetUrl = function () {
+              if(scope.conceptIdElementName) {
+                var insertionPoint = isMultilingualMode ?
+                  element.closest('div[data-gn-multilingual-field]') : element;
+                var input = insertionPoint.find('[name=' + scope.conceptIdElementName + ']');
+                input.val('');
+              }
+            };
 
             // When clicking the element trigger input
             // to show autocompletion list.
@@ -573,6 +701,12 @@
 
           scope.$watch('thesaurusKey', function(newValue) {
             init();
+          });
+
+          element.on('$destroy', function () {
+            if (scope.conceptIdElement) {
+              scope.conceptIdElement.remove();
+            }
           });
         }
       };

@@ -128,7 +128,8 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
 
         String source = sourceRepository.findAll().get(0).getUuid();
         this.schema = schemaManager.autodetectSchema(sampleMetadataXml);
-        final Metadata metadata = new Metadata().setDataAndFixCR(sampleMetadataXml).setUuid(uuid);
+        final Metadata metadata = new Metadata();
+        metadata.setDataAndFixCR(sampleMetadataXml).setUuid(uuid);
         metadata.getDataInfo().setRoot(sampleMetadataXml.getQualifiedName()).setSchemaId(this.schema).setType(MetadataType.METADATA);
         metadata.getSourceInfo().setOwner(1).setSourceId(source);
         metadata.getHarvestInfo().setHarvested(false);
@@ -158,6 +159,7 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
             MockHttpServletRequest request = new MockHttpServletRequest();
             request.getSession();
             request.addParameter("h2IdentInfo", "true");
+            request.setMethod("GET");
 
             MockHttpServletResponse response = new MockHttpServletResponse();
             formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, _100, new ServletWebRequest(request, response));

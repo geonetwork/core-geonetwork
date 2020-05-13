@@ -23,8 +23,9 @@
 
 package org.fao.geonet;
 
-import com.vividsolutions.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.MultiPolygon;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
+import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.server.JeevesEngine;
 import jeeves.server.JeevesProxyInfo;
@@ -36,6 +37,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
+import org.fao.geonet.events.server.ServerStartup;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.inspireatom.InspireAtomType;
 import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
@@ -87,6 +89,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.servlet.ServletContext;
@@ -153,8 +156,10 @@ public class Geonetwork implements ApplicationHandler {
         ServletPathFinder finder = new ServletPathFinder(this._applicationContext.getBean(ServletContext.class));
         appPath = finder.getAppPath();
         String baseURL = context.getBaseUrl();
-        String webappName = baseURL.substring(1);
-        // TODO : if webappName is "". ie no context
+        String webappName = "";
+        if (StringUtils.isNotEmpty(baseURL)) {
+            webappName = baseURL.substring(1);
+        }
 
         final SystemInfo systemInfo = _applicationContext.getBean(SystemInfo.class);
         String version = systemInfo.getVersion();
@@ -223,8 +228,7 @@ public class Geonetwork implements ApplicationHandler {
 
 
         } catch (Exception e) {
-          logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + e.getMessage());
-          e.printStackTrace();
+          logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + Util.getStackTrace(e));
         }
 
         //------------------------------------------------------------------------
@@ -247,13 +251,6 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Search...");
 
-        boolean logSpatialObject = "true".equalsIgnoreCase(handlerConfig.getMandatoryValue(Geonet.Config.STAT_LOG_SPATIAL_OBJECTS));
-        boolean logAsynch = "true".equalsIgnoreCase(handlerConfig.getMandatoryValue(Geonet.Config.STAT_LOG_ASYNCH));
-        logger.info("  - Log spatial object: " + logSpatialObject);
-        logger.info("  - Log in asynch mode: " + logAsynch);
-
-        String luceneTermsToExclude = "";
-        luceneTermsToExclude = handlerConfig.getMandatoryValue(Geonet.Config.STAT_LUCENE_TERMS_EXCLUDE);
 
         LuceneConfig lc = _applicationContext.getBean(LuceneConfig.class);
         lc.configure(luceneConfigXmlFile);
@@ -278,14 +275,11 @@ public class Geonetwork implements ApplicationHandler {
         } catch (NumberFormatException nfe) {
             logger.error("Invalid config parameter: maximum number of writes to spatial index in a transaction (maxWritesInTransaction)"
                 + ", Using " + maxWritesInTransaction + " instead.");
-            nfe.printStackTrace();
         }
 
         SettingInfo settingInfo = context.getBean(SettingInfo.class);
         searchMan = _applicationContext.getBean(SearchManager.class);
-        searchMan.init(logAsynch,
-            logSpatialObject, luceneTermsToExclude,
-            maxWritesInTransaction);
+        searchMan.init(maxWritesInTransaction);
 
 
         // if the validator exists the proxyCallbackURL needs to have the external host and
@@ -353,10 +347,10 @@ public class Geonetwork implements ApplicationHandler {
         SourceRepository sourceRepository = _applicationContext.getBean(SourceRepository.class);
         if (sourceRepository.findOneByUuid(settingMan.getSiteId()) == null) {
             final Source source = sourceRepository.save(
-                new Source()
-                    .setLocal(true)
-                    .setName(settingMan.getSiteName())
-                    .setUuid(settingMan.getSiteId()));
+                new Source(settingMan.getSiteId(),
+                    settingMan.getSiteName(),
+                    null,
+                    SourceType.portal));
         }
 
         // Creates a default site logo, only if the logo image doesn't exists
@@ -415,6 +409,9 @@ public class Geonetwork implements ApplicationHandler {
         fillCaches(context);
 
         AbstractEntityListenerManager.setSystemRunning(true);
+
+        this._applicationContext.publishEvent(new ServerStartup(this._applicationContext));
+
         return gnContext;
     }
 
@@ -453,7 +450,10 @@ public class Geonetwork implements ApplicationHandler {
 
                     for (String formatterName : formattersToInitialize) {
                         Log.info(Geonet.GEONETWORK, "Initializing the Formatter with id: " + formatterName);
+                        final MockHttpSession servletSession = new MockHttpSession(servletContext);
+                        servletSession.setAttribute(Jeeves.Elem.SESSION,  context.getUserSession());
                         final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
+                        servletRequest.setSession(servletSession);
                         final MockHttpServletResponse response = new MockHttpServletResponse();
                         try {
                             formatService.exec("eng", FormatType.html.toString(), mdId.toString(), null, formatterName,
@@ -478,7 +478,7 @@ public class Geonetwork implements ApplicationHandler {
         if (count == 0) {
             try {
                 // import data from init files
-                List<Pair<String, String>> importData = context.getApplicationContext().getBean("initial-data", List.class);
+                List<Pair<String, String>> importData = context.getBean("initial-data", List.class);
                 final DbLib dbLib = new DbLib();
                 for (Pair<String, String> pair : importData) {
                     final ServletContext servletContext = context.getServlet().getServletContext();
@@ -535,8 +535,7 @@ public class Geonetwork implements ApplicationHandler {
                     }
                 } catch (Throwable x) {
                     // any uncaught exception would cause the scheduled execution to silently stop
-                    logger.error("DBHeartBeat error: " + x.getMessage() + " This error is ignored.");
-                    x.printStackTrace();
+                    logger.error("DBHeartBeat error: " + x.getMessage() + " This error is ignored. Error details: " + Util.getStackTrace(x));
                 }
             }
 
@@ -561,13 +560,11 @@ public class Geonetwork implements ApplicationHandler {
      */
     private void createSiteLogo(String nodeUuid, ServiceContext context, Path appPath) {
         try {
-            Path logosDir = Resources.locateLogosDir(context);
+            final Resources resources = context.getBean(Resources.class);
+            Path logosDir = resources.locateLogosDir(context);
             Path logo = logosDir.resolve(nodeUuid + ".png");
             if (!Files.exists(logo)) {
-                final ServletContext servletContext = context.getServlet().getServletContext();
-                byte[] logoData = Resources.loadImage(servletContext, appPath,
-                    "images/harvesting/GN3.png", new byte[0]).one();
-                Files.write(logo, logoData);
+                resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + "GN3.png", nodeUuid);
             }
         } catch (Throwable e) {
             logger.error("      Error when setting the logo: " + e.getMessage());
@@ -646,6 +643,10 @@ public class Geonetwork implements ApplicationHandler {
             logger.info("Using shapefile " + file.getAbsolutePath());
         }
         ShapefileDataStore ids = new ShapefileDataStore(file.toURI().toURL());
+        // It looks like we're facing this issue
+        // https://osgeo-org.atlassian.net/browse/GEOT-5830
+        // And spatial search does not return any results.
+        ids.setFidIndexed(false);
         ids.setNamespaceURI("http://geonetwork.org");
         ids.setMemoryMapped(false);
         ids.setCharset(Charset.forName(Constants.ENCODING));

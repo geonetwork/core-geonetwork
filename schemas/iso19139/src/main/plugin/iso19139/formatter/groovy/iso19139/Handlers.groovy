@@ -53,6 +53,7 @@ public class Handlers {
         handlers.add name: 'Text Elements', select: matchers.isTextEl, isoTextEl
         handlers.add name: 'Simple Text Elements', select: matchers.isSimpleTextEl, isoSimpleTextEl
         handlers.add name: 'URL Elements', select: matchers.isUrlEl, isoUrlEl
+        handlers.add name: 'Anchor URL Elements', select: matchers.isAnchorUrlEl, isoAnchorUrlEl
         handlers.add name: 'Simple Elements', select: matchers.isBasicType, isoBasicType
         handlers.add name: 'Boolean Elements', select: matchers.isBooleanEl, isoBooleanEl
         handlers.add name: 'CodeList Elements', select: matchers.isCodeListEl, isoCodeListEl
@@ -106,6 +107,7 @@ public class Handlers {
 
     def isoTextEl = { isofunc.isoTextEl(it, isofunc.isoText(it))}
     def isoUrlEl = { isofunc.isoUrlEl(it, isofunc.isoUrlText(it), isofunc.isoUrlText(it))}
+    def isoAnchorUrlEl = { isofunc.isoUrlEl(it, isofunc.isoAnchorUrlLink(it), isofunc.isoAnchorUrlText(it))}
     def isoDatasetUriEl = { isofunc.isoUrlEl(it, isofunc.isoText(it), isofunc.isoText(it))}
     def isoCodeListEl = {isofunc.isoTextEl(it, f.codelistValueLabel(it))}
     def isoBasicType = {isofunc.isoTextEl(it, it.'*'.text())}
@@ -215,7 +217,7 @@ public class Handlers {
                 tip = this.f.translate("noUuidInLink")
                 cls = 'text-muted'
             } else {
-                href = env.localizedUrl + 'md.viewer#/full_view/' + identifier
+                href = env.localizedUrl + 'display#/' + identifier + '/formatters/full_view/'
                 tip = href
             }
             def category = opName.trim().isEmpty() ? 'uncategorized' : opName
@@ -401,7 +403,7 @@ public class Handlers {
             def xpath = f.getXPathFrom(el);
 
             if (xpath != null) {
-                def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@xpath$xpath\"\n" +
+                def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=settings&amp;id=metadata:@id$mdId:@xpath$xpath\"\n" +
                         "         style=\"min-width:${width/4}px; min-height:${width/4}px;\" />"
 
                 def inclusion = el.'gmd:extentTypeCode'.text() == '0' ? 'exclusive' : 'inclusive';

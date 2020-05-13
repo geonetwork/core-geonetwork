@@ -27,12 +27,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import jeeves.constants.Jeeves;
+import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -76,7 +78,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpSession;
 
 import jeeves.constants.ConfigFile;
 import jeeves.server.UserSession;
@@ -204,6 +205,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         context.setMaxUploadSize(100);
         context.setOutputMethod(ServiceRequest.OutputMethod.DEFAULT);
         context.setBaseUrl("geonetwork");
+        context.getBean(ServiceManager.class).registerContext(Geonet.CONTEXT_NAME, gc);
 
         assertDataDirInMemoryFS(context);
 
@@ -256,6 +258,13 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return loginAs(user);
     }
 
+    public User loginAs(User user, ServiceContext context) {
+        UserSession userSession = new UserSession();
+        userSession.loginAs(user);
+        context.setUserSession(userSession);
+        return user;
+    }
+
     public MockHttpSession loginAs(User user) {
         MockHttpSession session = new MockHttpSession();
 
@@ -305,7 +314,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         List<Source> sources = sourceRepository.findAll();
 
         if (sources.isEmpty()) {
-            final Source source = sourceRepository.save(new Source().setLocal(true).setName("localsource").setUuid("uuidOfLocalSorce"));
+            final Source source = sourceRepository.save(new Source().setType(SourceType.portal).setName("localsource").setUuid("uuidOfLocalSource"));
             sources = Lists.newArrayList(source);
         }
 
@@ -318,7 +327,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             id, createDate, createDate,
             "" + groupId, metadataType);
 
-        dataManager.indexMetadata(id.get(0), true);
+        dataManager.indexMetadata(id.get(0), true, null);
         return Integer.parseInt(id.get(0));
     }
 

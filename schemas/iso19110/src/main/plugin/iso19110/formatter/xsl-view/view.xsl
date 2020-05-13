@@ -34,7 +34,7 @@
                 version="2.0"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
-
+ <!-- tr is defined at  core-geonetwork/services/src/main/java/org/fao/geonet/api/records/formatters/SchemaLocalizations.java -->
   <!-- Load the editor configuration to be able
   to render the different views -->
   <xsl:variable name="configuration"
@@ -80,7 +80,7 @@
       <dt>
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:node-label(tr:create($schema), name(), null)"/>
+                                else tr:nodeLabel(tr:create($schema), name(), null)"/>
       </dt>
       <dd>
         <xsl:apply-templates mode="render-value" select="*|*/@codeListValue"/>
@@ -99,7 +99,7 @@
       *[$isFlatMode = false() and gmd:* and not(gco:CharacterString) and not(gmd:URL)]">
     <div class="entry name">
       <h3>
-        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
+        <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
       </h3>
       <div class="target">
         <xsl:apply-templates mode="render-field" select="*"/>
@@ -161,12 +161,19 @@
 
   <!-- ... Dates -->
   <xsl:template mode="render-value" match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
-    <xsl:value-of select="format-date(., $dateFormats/date/for[@lang = $language]/text())"/>
+    <xsl:variable name="df" select="if (string($dateFormats/dateTime/for[@lang = $language]/text()))
+                                    then $dateFormats/dateTime/for[@lang = $language]/text()
+                                    else $dateFormats/dateTime/for[@default = 'true']/text()" />
+    <xsl:value-of select="format-dateTime(., $df)"/>
   </xsl:template>
 
+  <!-- if (tns:Employee/tns:EmpId = 4) then 'new' else 'old'-->
   <xsl:template mode="render-value"
                 match="gco:DateTime[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}')]">
-    <xsl:value-of select="format-dateTime(., $dateFormats/dateTime/for[@lang = $language]/text())"/>
+    <xsl:variable name="df" select="if (string($dateFormats/dateTime/for[@lang = $language]/text()))
+                                    then $dateFormats/dateTime/for[@lang = $language]/text()
+                                    else $dateFormats/dateTime/for[@default = 'true']/text()" />
+    <xsl:value-of select="format-dateTime(., $df)"/>
   </xsl:template>
 
   <xsl:template mode="render-value" match="gco:Date|gco:DateTime">
@@ -176,7 +183,7 @@
   <!-- ... Codelists -->
   <xsl:template mode="render-value" match="@codeListValue">
     <xsl:variable name="id" select="."/>
-    <!--<xsl:value-of select="tr:node-label(tr:create($schema), .)"/>-->
+    <!--<xsl:value-of select="tr:nodeLabel(tr:create($schema), .)"/>-->
     <xsl:variable name="codelistTranslation"
                   select="$schemaCodelists//entry[code = $id]/label"/>
 

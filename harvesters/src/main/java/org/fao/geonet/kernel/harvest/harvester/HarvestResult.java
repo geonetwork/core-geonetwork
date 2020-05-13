@@ -30,7 +30,9 @@ public class HarvestResult {
     public int collectionDatasetRecords;    // = md for collection datasets
     public int couldNotInsert;
     public int datasetUuidExist;    // = uuid already in catalogue
+    public int privilegesAppendedOnExistingRecord;
     public int doesNotValidate;            // = 0 cos' not validated
+    public int xpathFilterExcluded;
     public int duplicatedResource;
     public int fragmentsMatched;    // = fragments matched in md templates
     public int fragmentsReturned;    // = fragments generated
@@ -57,4 +59,6 @@ public class HarvestResult {
     public int uuidSkipped;
     public int thumbnails;                // = number of thumbnail generated
     public int thumbnailsFailed;        // = number of thumbnail creation which failed
+    /** Number of metadata managed by other harvester. */
+    public int managedByOtherHarvester;
 }

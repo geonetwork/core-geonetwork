@@ -1,3 +1,5 @@
+package v300;
+
 /*
  * Copyright (C) 2001-2016 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
@@ -32,7 +34,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class SetSequenceValueToMaxOfMetadataAndStats implements DatabaseMigrationTask {
+public class SetSequenceValueToMaxOfMetadataAndStats extends DatabaseMigrationTask {
     @Override
     public void update(Connection connection) throws SQLException {
         Log.debug(Geonet.DB, "SetSequenceValueToMaxOfMetadataAndStats");
@@ -89,13 +91,13 @@ public class SetSequenceValueToMaxOfMetadataAndStats implements DatabaseMigratio
                 Log.debug(Geonet.DB, "  Sequence updated.");
             } catch (Exception e) {
                 Log.debug(Geonet.DB, "  Sequence not updated. Error is: " + e.getMessage());
-                e.printStackTrace();
+                Log.error(Geonet.DB, e);
                 // On Oracle : To restart the sequence at a different number, you must drop and re-create it.
             }
         } catch (Exception e) {
             Log.debug(Geonet.DB, "  Exception while updating sequence. " +
                 "Error is: " + e.getMessage());
-            e.printStackTrace();
+            Log.error(Geonet.DB, e);
         }
     }
 }

@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.1.0-SNAPSHOT</version>
+    <version>3.11.0-SNAPSHOT</version>
   </parent>
 
 
@@ -57,7 +57,18 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
     </dependency>
-    <!-- rewrite url servletfilter -->
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.tuckey</groupId>
       <artifactId>urlrewritefilter</artifactId>
@@ -113,6 +124,10 @@
       <artifactId>spring-web</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.jolokia</groupId>
+      <artifactId>jolokia-core</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
       <scope>compile</scope>
@@ -132,10 +147,6 @@
       <artifactId>marc4j</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.geotools</groupId>
-      <artifactId>gt-api</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-xml</artifactId>
@@ -174,8 +185,8 @@
     </dependency>
 
     <dependency>
-      <groupId>com.vividsolutions</groupId>
-      <artifactId>jts</artifactId>
+      <groupId>org.locationtech.jts</groupId>
+      <artifactId>jts-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.lucene</groupId>
@@ -206,7 +217,7 @@
       <artifactId>pcj</artifactId>
     </dependency>
     <dependency>
-      <groupId>batik</groupId>
+      <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-ext</artifactId>
     </dependency>
     <dependency>
@@ -254,12 +265,20 @@
       <artifactId>h2</artifactId>
     </dependency>
     <dependency>
-      <groupId>postgresql</groupId>
+      <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
     </dependency>
     <dependency>
       <groupId>org.postgis</groupId>
       <artifactId>postgis-jdbc</artifactId>
+      <exclusions>
+        <!-- excluded because it redefines some classes provided by the JDBC postgresql driver,
+             polluting the classloader. -->
+        <exclusion>
+          <groupId>org.postgis</groupId>
+          <artifactId>postgis-stubs</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>mysql</groupId>
@@ -323,6 +342,12 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>core</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>javax.servlet-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -346,6 +371,17 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>inspire-atom</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>doi</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>listeners</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -386,7 +422,7 @@
     <dependency>
       <groupId>edu.ucar</groupId>
       <artifactId>netcdf</artifactId>
-      <version>4.0.patch</version>
+      <version>4.3.23</version>
     </dependency>
 
     <!-- Monitoring libraries -->
@@ -473,41 +509,178 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19139</artifactId>
-      <version>${project.version}</version>
+      <version>${gn.schemas.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>schema-csw-record</artifactId>
+      <version>${gn.schemas.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19110</artifactId>
-      <version>${project.version}</version>
+      <version>${gn.schemas.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-dublin-core</artifactId>
-      <version>${project.version}</version>
+      <version>${gn.schemas.version}</version>
     </dependency>
-
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>solr-bridge</artifactId>
-      <version>${project.version}</version>
+      <artifactId>schema-iso19115-3.2018</artifactId>
+      <version>${gn.schemas.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>wfsfeature-harvester</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>servlet-api-2.5</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.geronimo.specs</groupId>
+          <artifactId>geronimo-servlet_3.0_spec</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>jsp-api-2.1</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.0.1</version>
+      <scope>provided</scope>
+    </dependency>
 
+    <dependency>
+      <groupId>org.mitre.dsmiley.httpproxy</groupId>
+      <artifactId>smiley-http-proxy-servlet</artifactId>
+      <version>1.9</version>
+    </dependency>
+
+    <!--Detect urls in String and transform to html format-->
+    <dependency>
+      <groupId>org.nibor.autolink</groupId>
+      <artifactId>autolink</artifactId>
+      <version>0.6.0</version>
+    </dependency>
   </dependencies>
 
 
   <build>
+
     <plugins>
+
+      <!-- Generate a properties file with the commit hash to be displayed on the admin.console -->
+	    <plugin>
+	        <groupId>pl.project13.maven</groupId>
+	        <artifactId>git-commit-id-plugin</artifactId>
+	        <version>2.2.6</version>
+	        <executions>
+                  <execution>
+                    <phase>initialize</phase>
+	                <id>get-the-git-infos</id>
+	                <goals>
+	                    <goal>revision</goal>
+	                </goals>
+	            </execution>
+	        </executions>
+
+	        <configuration>
+	            <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
+	            <prefix>git</prefix>
+	            <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
+	            <dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
+	            <verbose>false</verbose>
+	            <generateGitPropertiesFile>true</generateGitPropertiesFile>
+	            <generateGitPropertiesFilename>src/main/webResources/WEB-INF/classes/git.properties</generateGitPropertiesFilename>
+	            <!-- Denotes the format to save properties in. Valid options are "properties" (default) and "json". Properties will be saved to the generateGitPropertiesFilename if generateGitPropertiesFile is set to `true`. -->
+	            <format>properties</format>
+	            <skipPoms>true</skipPoms>
+	            <injectAllReactorProjects>true</injectAllReactorProjects>
+	            <failOnNoGitDirectory>false</failOnNoGitDirectory>
+	            <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
+	            <skip>false</skip>
+	            <runOnlyOnce>false</runOnlyOnce>
+	            <excludeProperties>
+	            </excludeProperties>
+							<includeOnlyProperties>
+								<includeOnlyProperty>^git.tags$</includeOnlyProperty>
+								<includeOnlyProperty>^git.branch$</includeOnlyProperty>
+								<includeOnlyProperty>^git.commit.id$</includeOnlyProperty>
+								<includeOnlyProperty>^git.commit.id.describe.short$</includeOnlyProperty>
+								<includeOnlyProperty>^git.build.time$</includeOnlyProperty>
+							</includeOnlyProperties>
+	            <replacementProperties>
+	            </replacementProperties>
+	            <useNativeGit>false</useNativeGit>
+	            <abbrevLength>7</abbrevLength>
+	            <commitIdGenerationMode>flat</commitIdGenerationMode>
+	            <gitDescribe>
+	                <skip>false</skip>
+	                <always>false</always>
+	                <abbrev>7</abbrev>
+	                <dirty>-dirty</dirty>
+	                <match>*</match>
+	                <tags>true</tags>
+	                <forceLongFormat>false</forceLongFormat>
+	            </gitDescribe>
+	            <!-- @since 2.2.2 -->
+	            <!--
+	                Since version **2.2.2** the maven-git-commit-id-plugin comes equipped with an additional validation utility which can be used to verify if your project properties are set as you would like to have them set.
+	                *Note*: This configuration will only be taken into account when the additional goal `validateRevision` is configured inside an execution.
+	            -->
+	            <validationProperties>
+	                <validationProperty>
+	                    <!--
+	                         A descriptive name that will be used to be able to identify the validation that does not match up (will be displayed in the error message).
+	                    -->
+	                    <name>validating project version</name>
+	                    <!--
+	                         the value that needs the validation
+	                         *Note* : In order to be able to validate the generated git-properties inside the pom itself you may need to set the configuration `<injectAllReactorProjects>true</injectAllReactorProjects>`.
+	                    -->
+	                    <value>${project.version}</value>
+	                    <!--
+	                        the expected value
+	                    -->
+	                    <shouldMatchTo><![CDATA[^.*(?<!-SNAPSHOT)$]]></shouldMatchTo>
+	                </validationProperty>
+	                <!-- the next validationProperty you would like to validate -->
+	            </validationProperties>
+	            <validationShouldFailIfNoMatch>false</validationShouldFailIfNoMatch>
+	        </configuration>
+
+	    </plugin>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>src/main/webapp/WEB-INF/data/config/schema_plugins</directory>
+              <includes>
+                <include>**/*</include>
+              </includes>
+              <followSymlinks>false</followSymlinks>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.7</version>
         <executions>
           <execution>
             <id>add-source</id>
@@ -528,7 +701,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.5</version>
         <executions>
           <execution>
             <id>copy-filter-webResource</id>
@@ -537,6 +709,7 @@
               <goal>copy-resources</goal>
             </goals>
             <configuration>
+              <escapeString>\</escapeString>
               <includeEmptyDirs>false</includeEmptyDirs>
               <outputDirectory>${build.webapp.resources}</outputDirectory>
               <resources>
@@ -586,6 +759,11 @@
                   <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
                   </targetPath>
                 </resource>
+                <resource>
+                  <directory>${project.basedir}/../schemas/iso19115-3.2018/src/main/plugin</directory>
+                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
+                  </targetPath>
+                </resource>
                 <!-- Copy the documentation in the webapp. -->
                 <resource>
                   <directory>${project.basedir}/../docs/manuals/target/doc</directory>
@@ -596,29 +774,18 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <version>1.3</version>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>create</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <timestampFormat>{0,date,MM/dd/yyyy hh:mm:ss a}</timestampFormat>
-          <doCheck>false</doCheck>
-          <doUpdate>false</doUpdate>
-          <revisionOnScmFailure>true</revisionOnScmFailure>
-        </configuration>
-      </plugin>
 
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
+          <archive>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+            <manifestEntries>
+              <Implementation-Build>${git.commit.id}</Implementation-Build>
+            </manifestEntries>
+          </archive>
           <archiveClasses>true</archiveClasses>
           <!-- Filter resources according to current profile properties
               (see src/main/filters) and copy them to the webapp -->
@@ -640,18 +807,38 @@
           <!-- <packagingExcludes>WEB-INF/data/**</packagingExcludes> -->
           <packagingExcludes>
             xml/schemas/**,
+            WEB-INF/data/*.db,
+            WEB-INF/data/index/**,
+            WEB-INF/data/data/backup/**,
+            WEB-INF/data/data/resources/htmlcache/**,
             catalog/lib/style/bootstrap/docs/**,
             catalog/lib/style/bootstrap/fonts/**,
             catalog/lib/style/bootstrap/grunt/**,
             catalog/lib/style/bootstrap/test-infra/**,
             catalog/lib/style/font-awesome/css/**,
             catalog/lib/style/font-awesome/src/**,
-            catalog/lib/style/font-awesome/scss/**
+            catalog/lib/style/font-awesome/scss/**,
+            catalog/lib/style/font-awesome/*.json,
+            catalog/lib/style/font-awesome/Gemfile*,
+            catalog/lib/style/font-awesome/.*,
+            catalog/lib/style/font-awesome/*.txt,
+            catalog/lib/style/font-awesome/*.md,
+            catalog/lib/style/bootstrap/*.json,
+            catalog/lib/style/bootstrap/Gemfile*,
+            catalog/lib/style/bootstrap/.*,
+            catalog/lib/style/bootstrap/*.txt,
+            catalog/lib/style/bootstrap/*.md,
+            catalog/lib/bootstrap-table/*.json,
+            catalog/lib/bootstrap-table/Gemfile*,
+            catalog/lib/bootstrap-table/.*,
+            catalog/lib/bootstrap-table/*.txt,
+            catalog/lib/bootstrap-table/*.md,
+            catalog/lib/bootstrap-table/docs/**
           </packagingExcludes>
           <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
           <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
           <attachClasses>true</attachClasses>
-          <warName>geonetwork</warName>
+          <warName>${application.name}</warName>
           <webappDirectory>${project.build.directory}/geonetwork</webappDirectory>
         </configuration>
       </plugin>
@@ -662,7 +849,7 @@
           <contextXml>${basedir}/jetty-context.xml</contextXml>
           <webAppSourceDirectory>${project.build.directory}/geonetwork</webAppSourceDirectory>
           <webApp>
-            <contextPath>/geonetwork</contextPath>
+            <contextPath>/${application.name}</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
               <resourcesAsCSV>
@@ -675,11 +862,14 @@
           <systemProperties>
             <systemProperty>
               <name>org.eclipse.jetty.server.Request.maxFormContentSize</name>
-              <value>500000</value>
+              <value>5000000</value>
             </systemProperty>
           </systemProperties>
+          <httpConnector>
+            <port>${jetty.port}</port>
+          </httpConnector>
           <stopKey>JETTY_TOP</stopKey>
-          <stopPort>8090</stopPort>
+          <stopPort>${jetty.stop.port}</stopPort>
         </configuration>
       </plugin>
     </plugins>
@@ -738,6 +928,7 @@
       </activation>
       <properties>
         <env>dev</env>
+        <wro.debug>true</wro.debug>
       </properties>
     </profile>
     <profile>
@@ -751,6 +942,37 @@
       <properties>
         <env>inspire</env>
       </properties>
+    </profile>
+    <profile>
+      <id>es</id>
+      <properties>
+        <es.spring.profile>es</es.spring.profile>
+
+        <es.port>9200</es.port>
+        <es.host>localhost</es.host>
+        <es.url>http://${es.host}:${es.port}</es.url>
+        <es.index.features>gn-features</es.index.features>
+        <es.index.features.type>features</es.index.features.type>
+        <es.index.records>gn-records</es.index.records>
+        <es.index.records_public></es.index.records_public>
+        <es.index.records.type>records</es.index.records.type>
+        <es.index.searchlogs>gn-searchlogs</es.index.searchlogs>
+        <es.index.searchlogs.type>searchlogs</es.index.searchlogs.type>
+
+        <kb.port>5601</kb.port>
+        <kb.url>http://localhost:${kb.port}</kb.url>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>slave</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.geonetwork-opensource</groupId>
+          <artifactId>slave</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
     </profile>
   </profiles>
 

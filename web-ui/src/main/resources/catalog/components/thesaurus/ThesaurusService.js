@@ -74,16 +74,20 @@
           'Thesaurus',
           function($q, $rootScope, $http, gnUrlUtils, Keyword, Thesaurus) {
             var getKeywordsSearchUrl = function(filter,
-                thesaurus, lang, max, typeSearch) {
+                thesaurus, lang, max, typeSearch, outputLang) {
+              var parameters = {
+                type: typeSearch || 'CONTAINS',
+                thesaurus: thesaurus,
+                rows: max,
+                q: filter || '',
+                uri: ('*' + filter + '*') || '',
+                lang: lang || 'eng'
+              };
+              if (outputLang) {
+                parameters['pLang'] = outputLang;
+              }
               return gnUrlUtils.append('../api/registries/vocabularies/search',
-                  gnUrlUtils.toKeyValue({
-                    type: typeSearch || 'CONTAINS',
-                    thesaurus: thesaurus,
-                    rows: max,
-                    q: filter || '',
-                    uri: ('*' + filter + '*') || '',
-                    lang: lang || 'eng'
-                  })
+                  gnUrlUtils.toKeyValue(parameters)
               );
             };
 
@@ -178,6 +182,7 @@
                */
               DEFAULT_NUMBER_OF_SUGGESTIONS: 30,
               getKeywordAutocompleter: function(config) {
+
                 var keywordsAutocompleter = new Bloodhound({
                   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
                   queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -187,12 +192,28 @@
                     url: this.getKeywordsSearchUrl('QUERY',
                         config.thesaurusKey || '',
                         config.lang,
-                        config.max || this.DEFAULT_NUMBER_OF_RESULTS),
+                        config.max || this.DEFAULT_NUMBER_OF_RESULTS,
+                        undefined,
+                        config.outputLang),
                     filter: function(data) {
+                      if (config.orderById == 'true') {
+                        data.sort(function (a, b) {
+                          var nameA = a.uri.toUpperCase();
+                          var nameB = b.uri.toUpperCase();
+                          if (nameA < nameB) {
+                            return -1;
+                          }
+                          if (nameA > nameB) {
+                            return 1;
+                          }
+                          return 0;
+                        });
+                      }
                       return parseKeywordsResponse(data, config.dataToExclude);
                     }
                   }
                 });
+
                 keywordsAutocompleter.initialize();
                 return keywordsAutocompleter;
               },
@@ -212,7 +233,6 @@
                   thesaurus: thesaurus,
                   id: keywordUris instanceof Array ?
                       keywordUris.join(',') : keywordUris || '',
-                  multiple: keywordUris instanceof Array ? 'true' : 'false',
                   transformation: transformation || 'to-iso19139-keyword'
                 };
                 if (lang) {
@@ -221,7 +241,8 @@
                 if (textgroupOnly) {
                   params.textgroupOnly = textgroupOnly;
                 }
-                var url = gnUrlUtils.append('thesaurus.keyword',
+                var url = gnUrlUtils.append(
+                '../api/registries/vocabularies/keyword',
                     gnUrlUtils.toKeyValue(params)
                     );
                 $http.get(url, { cache: true }).

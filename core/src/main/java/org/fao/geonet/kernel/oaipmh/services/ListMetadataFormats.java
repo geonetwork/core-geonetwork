@@ -23,14 +23,15 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
-import jeeves.server.context.ServiceContext;
-import jeeves.server.overrides.ConfigurationOverrides;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import org.fao.oaipmh.requests.AbstractRequest;
 import org.fao.oaipmh.requests.ListMetadataFormatsRequest;
@@ -42,9 +43,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.overrides.ConfigurationOverrides;
 
 //=============================================================================
 
@@ -76,7 +76,7 @@ public class ListMetadataFormats implements OaiPmhService {
 
         String uuid = req.getIdentifier();
         if (uuid != null) {
-            String schema = context.getBean(MetadataRepository.class).findOneByUuid(uuid).getDataInfo().getSchemaId();
+            String schema = context.getBean(IMetadataUtils.class).findOneByUuid(uuid).getDataInfo().getSchemaId();
             res.addFormat(getSchemaInfo(context, sm, schema));
         } else {
             for (String schema : sm.getSchemas())

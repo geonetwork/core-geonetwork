@@ -35,7 +35,15 @@
       return {
         get: function() {
           return $http.put(
-              '../api/records/' + gnCurrentEdit.uuid + '/validate');
+              '../api/records/' + gnCurrentEdit.uuid + '/validate/internal');
+        },
+        errorCheck: function() {
+          return this.get()
+              .then(function(response) {
+                return response.data.report.some(function(rule) {
+                  return rule.requirement === 'REQUIRED' && rule.error;
+                });
+              });
         }
       };
     }]);

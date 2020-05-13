@@ -25,6 +25,9 @@ package org.fao.geonet.kernel.schema;
 
 import org.jdom.Element;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by francois on 31/01/15.
  */
@@ -38,4 +41,27 @@ public interface ISOPlugin {
      * Return an element to be use as default when creating new elements.
      */
     Element createBasicTypeCharacterString();
+
+
+    /**
+     * Add operatesOn and coupledResource element to a service metadata record.
+     * @return the updated record
+     */
+    Element addOperatesOn(Element serviceRecord, Map<String, String> layers, String serviceType, String baseUrl);
+
+    class Extent {
+        public double xmin;
+        public double xmax;
+        public double ymin;
+        public double ymax;
+
+        public Extent(Double xmin, Double xmax, Double ymin, Double ymax) {
+            this.xmin = xmin;
+            this.xmax = xmax;
+            this.ymin = ymin;
+            this.ymax = ymax;
+        }
+    }
+
+    List<Extent> getExtents(Element record);
 }

@@ -41,7 +41,7 @@ import java.util.Collection;
 /**
  * Returns a specific region and coordinates given its id
  */
-
+@Deprecated
 public class Get implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

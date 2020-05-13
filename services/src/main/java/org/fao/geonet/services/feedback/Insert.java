@@ -31,8 +31,9 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.util.MailSender;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.MailUtil;
 import org.jdom.Element;
 
@@ -40,27 +41,13 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
-//=============================================================================
-
 /**
  * Stores the feedback from a user into the database and sends an e-mail
  */
 
 public class Insert implements Service {
-    // --------------------------------------------------------------------------
-    // ---
-    // --- Init
-    // ---
-    // --------------------------------------------------------------------------
-
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
-
-    // --------------------------------------------------------------------------
-    // ---
-    // --- Service
-    // ---
-    // --------------------------------------------------------------------------
 
     public Element exec(Element params, final ServiceContext context)
             throws Exception {
@@ -74,7 +61,7 @@ public class Insert implements Service {
         String gender = Util.getParam(params, "gender", "-");
         String phone = Util.getParam(params, "phone", null);
 
-        String comments = Util.getParam(params, Params.COMMENTS);
+        String comments = Util.getParam(params, Params.COMMENTS, "");
         String subject = Util.getParam(params, Params.SUBJECT, "New feedback");
 
         String function = Util.getParam(params, "function", "-");
@@ -92,7 +79,12 @@ public class Insert implements Service {
         List<String> toAddress = new LinkedList<String>();
         toAddress.add(to);
         if (metadataEmail != null) {
-            toAddress.add(metadataEmail);
+            //Check metadata email belongs to metadata
+            //security!!
+            AbstractMetadata md = gc.getBean(MetadataRepository.class).findOneByUuid(uuid);
+            if(md.getData().indexOf(metadataEmail) > 0) {
+                toAddress.add(metadataEmail);
+            }
         }
 
         StringBuilder message = new StringBuilder();
@@ -120,5 +112,3 @@ public class Insert implements Service {
         return new Element("response").addContent(params.cloneContent());
     }
 }
-
-// =============================================================================

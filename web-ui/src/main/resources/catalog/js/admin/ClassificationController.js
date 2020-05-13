@@ -27,9 +27,10 @@
 
   goog.require('gn_categories_controller');
   goog.require('gn_thesaurus_controller');
+  goog.require('gn_registry');
 
   var module = angular.module('gn_classification_controller',
-      ['gn_thesaurus_controller', 'gn_categories_controller']);
+      ['gn_thesaurus_controller', 'gn_categories_controller', 'gn_registry']);
 
 
   /**
@@ -46,14 +47,9 @@
            [{
              type: 'thesaurus',
              label: 'manageThesaurus',
-             icon: 'fa-archive',
+             icon: 'fa-book',
              href: '#/classification/thesaurus'
            },{
-              type: 'directory',
-              label: 'manageDirectory',
-              icon: 'fa-list-ul',
-              href: 'catalog.edit#/directory'
-            },{
              type: 'categories',
              label: 'manageCategory',
              icon: 'fa-tags',

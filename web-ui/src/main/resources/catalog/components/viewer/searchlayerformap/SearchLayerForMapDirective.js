@@ -50,7 +50,8 @@
         templateUrl: '../../catalog/components/viewer/searchlayerformap/' +
             'partials/searchlayerformap.html',
         scope: {
-          map: '=gnSearchLayerForMap'
+          map: '=gnSearchLayerForMap',
+          mode: '@'
         },
         controller: ['$scope',
           function($scope) {
@@ -59,11 +60,15 @@
               hitsperpageValues: gnSearchSettings.hitsperpageValues,
               sortbyValues: gnSearchSettings.sortbyValues,
               params: {
-                protocol: 'OGC:WMS*',
                 from: 1,
                 to: 9
               }
             };
+            if ($scope.mode === 'map') {
+              $scope.searchObj.params.type = 'interactiveMap';
+            } else {
+              $scope.searchObj.params.protocol = 'OGC:WMS*';
+            }
             $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
             $scope.paginationInfo = {

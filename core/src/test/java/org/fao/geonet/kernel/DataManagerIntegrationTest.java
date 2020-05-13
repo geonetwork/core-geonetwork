@@ -23,16 +23,25 @@
 
 package org.fao.geonet.kernel;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Maps;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
@@ -40,7 +49,9 @@ import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.GroupRepository;
@@ -56,19 +67,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import com.google.common.base.Optional;
+import com.google.common.collect.Maps;
 
-import javax.annotation.Nonnull;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Tests for the DataManager.
@@ -78,11 +81,15 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
     DataManager _dataManager;
+
+    @Autowired
+    IMetadataManager metadataManager;
+
     @Autowired
     MetadataRepository _metadataRepository;
 
     static void doSetHarvesterDataTest(MetadataRepository metadataRepository, DataManager dataManager, int metadataId) throws Exception {
-        Metadata metadata = metadataRepository.findOne(metadataId);
+        AbstractMetadata metadata = metadataRepository.findOne(metadataId);
 
         assertNull(metadata.getHarvestInfo().getUuid());
         assertNull(metadata.getHarvestInfo().getUri());
@@ -146,7 +153,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
 
         assertEquals(count + 1, _metadataRepository.count());
 
-        _dataManager.deleteMetadata(serviceContext, mdId);
+        metadataManager.deleteMetadata(serviceContext, mdId);
 
         assertEquals(count, _metadataRepository.count());
     }
@@ -188,26 +195,27 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         final User principal = serviceContext.getUserSession().getPrincipal();
 
         final GroupRepository bean = serviceContext.getBean(GroupRepository.class);
+        final IMetadataManager metadataManager = serviceContext.getBean(IMetadataManager.class);
         Group group = bean.findAll().get(0);
 
         MetadataCategory category = serviceContext.getBean(MetadataCategoryRepository.class).findAll().get(0);
 
         final SourceRepository sourceRepository = serviceContext.getBean(SourceRepository.class);
-        Source source = sourceRepository.save(new Source().setLocal(true).setName("GN").setUuid("sourceuuid"));
+        Source source = sourceRepository.save(new Source().setType(SourceType.portal).setName("GN").setUuid("sourceuuid"));
 
         final Element sampleMetadataXml = super.getSampleMetadataXml();
-        final Metadata metadata = new Metadata();
+        final AbstractMetadata metadata = new Metadata();
         metadata.setDataAndFixCR(sampleMetadataXml)
             .setUuid(UUID.randomUUID().toString());
         metadata.getCategories().add(category);
         metadata.getDataInfo().setSchemaId("iso19139");
         metadata.getSourceInfo().setSourceId(source.getUuid()).setOwner(1);
 
-        final Metadata templateMd = _metadataRepository.save(metadata);
+        final AbstractMetadata templateMd = metadataManager.save(metadata);
         final String newMetadataId = _dataManager.createMetadata(serviceContext, "" + metadata.getId(), "" + group.getId(), source.getUuid(),
             principal.getId(), templateMd.getUuid(), MetadataType.METADATA.codeString, true);
 
-        Metadata newMetadata = _metadataRepository.findOne(newMetadataId);
+        AbstractMetadata newMetadata = _metadataRepository.findOne(newMetadataId);
         assertEquals(1, newMetadata.getCategories().size());
         assertEquals(category, newMetadata.getCategories().iterator().next());
         assertEqualsText(metadata.getUuid(), newMetadata.getXmlData(false), "gmd:parentIdentifier/gco:CharacterString");
@@ -267,7 +275,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(startIndexDocs + (2 * numDocsPerMd), numDocs(searchManager, lang));
         assertEquals(startMdCount + 2, _metadataRepository.count());
 
-        Specification<Metadata> spec = where(MetadataSpecs.hasMetadataId(md1)).or(MetadataSpecs.hasMetadataId(md2));
+        Specification<Metadata> spec = where((Specification<Metadata>)MetadataSpecs.hasMetadataId(md1)).or((Specification<Metadata>)MetadataSpecs.hasMetadataId(md2));
         _dataManager.batchDeleteMetadataAndUpdateIndex(spec);
 
         assertEquals(startMdCount, _metadataRepository.count());

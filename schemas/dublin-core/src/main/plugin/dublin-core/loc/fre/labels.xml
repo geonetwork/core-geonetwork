@@ -42,6 +42,8 @@
 
   <element name="dc:subject">
     <label>Mots-clés</label>
+    <btnClass>fa fa-tag</btnClass>
+    <btnLabel>Ajouter un mot-clé</btnLabel>
     <description>Mots-clés, phrases de résumé, ou codes de classement.</description>
     <example/>
   </element>

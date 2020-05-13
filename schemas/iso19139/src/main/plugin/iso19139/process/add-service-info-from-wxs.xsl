@@ -51,6 +51,8 @@
     <msg id="b" xml:lang="fre">est décrit dans la section resource en ligne. Exécuter cette action
       pour ajouter ou remplacer les informations relatives aux opérations
     </msg>
+    <msg id="a" xml:lang="dut">Er is een verwijzing gevonden naar de WMS of WFS service </msg>
+    <msg id="b" xml:lang="dut">. Voer deze functie uit om operationele informatie toe te voegen of bij te werken. </msg>
   </xsl:variable>
 
   <!-- Process parameters and variables-->
@@ -270,7 +272,7 @@
                   </gmd:description>
                   <gmd:function>
                     <gmd:CI_OnLineFunctionCode
-                      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode"
+                      codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode"
                       codeListValue="information"/>
                   </gmd:function>
                 </gmd:CI_OnlineResource>

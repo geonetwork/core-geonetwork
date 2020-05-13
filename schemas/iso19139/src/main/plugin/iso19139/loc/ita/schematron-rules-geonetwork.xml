@@ -39,13 +39,4 @@
     </div>
   </alert.M500>
   <report.M500>La lingua principale per il metadato è:</report.M500>
-  <alert.M501>
-    <div>Dichiarare la lingua principale per il metadato solo una volta (vedi Advanced view /
-      metadata section).
-      <br/>
-      <span class="validationReportSuggestion">Suggerimento: rimuoverlo dalla sezione di lingua.
-      </span>
-    </div>
-  </alert.M501>
-  <report.M501>Nessuna lingua duplicata trovata</report.M501>
 </strings>

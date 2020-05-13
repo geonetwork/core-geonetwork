@@ -130,15 +130,7 @@ public class CaseInsensitiveFieldComparatorSource extends FieldComparatorSource 
         @Override
         public int compareBottom(int doc) {
             final String val2 = readerValue(doc);
-            if (bottom == null) {
-                if (val2 == null) {
-                    return 0;
-                }
-                return -1;
-            } else if (val2 == null) {
-                return 1;
-            }
-            return bottom.compareTo(val2);
+            return doCompare(bottom, val2);
         }
 
         private String readerValue(int doc) {
@@ -163,9 +155,7 @@ public class CaseInsensitiveFieldComparatorSource extends FieldComparatorSource 
         @Override
         public void copy(int slot, int doc) {
             String val = readerValue(doc);
-            if (val != null) {
-                values[slot] = val;
-            }
+            values[slot] = val;
         }
 
         @Override

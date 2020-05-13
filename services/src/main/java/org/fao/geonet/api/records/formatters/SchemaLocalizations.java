@@ -31,11 +31,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 
 import groovy.util.slurpersupport.GPathResult;
 
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.records.formatters.groovy.CurrentLanguageHolder;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.kernel.SchemaManager;
@@ -119,9 +122,13 @@ public class SchemaLocalizations {
         ServletRequestAttributes attributes = (ServletRequestAttributes) obj;
         HttpServletRequest request = attributes.getRequest();
 
-        ServletContext context = request.getSession(false).getServletContext();
-        final ApplicationContext appContext = getApplicationContextFromServletContext(context);
-        final String lang3 = ServiceRequestFactory.extractLanguage(request.getPathInfo());
+
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final ServiceContext serviceContext = ServiceContext.get();
+
+        final String lang3 = serviceContext != null ?
+            serviceContext.getLanguage() :
+            appContext.getBean(LanguageUtils.class).getIso3langCode(request.getLocales());
         final String lang2 = appContext.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(lang3);
         CurrentLanguageHolder languageHolder = new CurrentLanguageHolder() {
             @Override

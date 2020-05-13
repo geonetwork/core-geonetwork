@@ -33,6 +33,12 @@
     Build the form from the schema plugin form configuration.
     -->
 
+  <xsl:template mode="form-builder" match="directive">
+    <div>
+      <xsl:copy-of select="@*"/>
+    </div>
+  </xsl:template>
+
 
   <!-- Create a fieldset in the editor with custom
     legend if attribute name is defined or default
@@ -40,31 +46,47 @@
   <xsl:template mode="form-builder" match="section[@name]|fieldset">
     <xsl:param name="base" as="node()"/>
 
-    <xsl:variable name="sectionName" select="@name"/>
+    <xsl:variable name="match">
+      <xsl:choose>
+        <xsl:when test="@displayIfRecord">
+          <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
+            <xsl:with-param name="base" select="$metadata"/>
+            <xsl:with-param name="in" select="concat('/../', @displayIfRecord)"/>
+          </saxon:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="true()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
 
-    <xsl:choose>
-      <xsl:when test="$sectionName">
-        <fieldset data-gn-field-highlight="">
-          <!-- Get translation for labels.
-          If labels contains ':', search into labels.xml. -->
-          <legend data-gn-slide-toggle="">
-            <xsl:value-of
-              select="if (contains($sectionName, ':'))
-                then gn-fn-metadata:getLabel($schema, $sectionName, $labels)/label
-                else $strings/*[name() = $sectionName]"
-            />
-          </legend>
-          <xsl:apply-templates mode="form-builder" select="@*|*">
+    <xsl:if test="$match = true()">
+      <xsl:variable name="sectionName" select="@name"/>
+
+      <xsl:choose>
+        <xsl:when test="$sectionName">
+          <fieldset data-gn-field-highlight="" class="gn-{@name}">
+            <!-- Get translation for labels.
+            If labels contains ':', search into labels.xml. -->
+            <legend data-gn-slide-toggle="">
+              <xsl:value-of
+                select="if (contains($sectionName, ':'))
+                  then gn-fn-metadata:getLabel($schema, $sectionName, $labels)/label
+                  else $strings/*[name() = $sectionName]"
+              />
+            </legend>
+            <xsl:apply-templates mode="form-builder" select="@*[name() != 'displayIfRecord']|*">
+              <xsl:with-param name="base" select="$base"/>
+            </xsl:apply-templates>
+          </fieldset>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates mode="form-builder" select="@*[name() != 'displayIfRecord']|*">
             <xsl:with-param name="base" select="$base"/>
           </xsl:apply-templates>
-        </fieldset>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates mode="form-builder" select="@*|*">
-          <xsl:with-param name="base" select="$base"/>
-        </xsl:apply-templates>
-      </xsl:otherwise>
-    </xsl:choose>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>
   </xsl:template>
 
 
@@ -114,6 +136,14 @@
           <xsl:call-template name="render-batch-process-button">
             <xsl:with-param name="process-name" select="@process"/>
             <xsl:with-param name="process-params" select="@params"/>
+            <xsl:with-param name="btnClass" select="@btnClass"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:when test="@type = 'suggest' and @process">
+          <xsl:call-template name="render-suggest-button">
+            <xsl:with-param name="process-name" select="@process"/>
+            <xsl:with-param name="process-params" select="@params"/>
+            <xsl:with-param name="btnClass" select="@btnClass"/>
           </xsl:call-template>
         </xsl:when>
         <xsl:when test="@type = 'associatedResource'">
@@ -121,12 +151,42 @@
           <xsl:variable name="label" select="$strings/*[name() = $labelKey]"/>
           <xsl:call-template name="render-associated-resource-button">
             <xsl:with-param name="type" select="@process"/>
+            <xsl:with-param name="options" select="directiveAttributes"/>
             <xsl:with-param name="label" select="if ($label != '') then $label else $labelKey"/>
           </xsl:call-template>
         </xsl:when>
       </xsl:choose>
     </xsl:if>
   </xsl:template>
+
+
+  <!-- Call an XSL template by name.  -->
+  <xsl:template mode="form-builder" match="xsl">
+    <xsl:param name="base" as="node()"/>
+
+    <xsl:variable name="nodes">
+      <saxon:call-template name="{concat('evaluate-', $schema)}">
+        <xsl:with-param name="base" select="$base"/>
+        <xsl:with-param name="in" select="concat('/../', @xpath)"/>
+      </saxon:call-template>
+    </xsl:variable>
+
+    <xsl:variable name="mode" select="@mode"/>
+    <xsl:variable name="config" select="."/>
+    <xsl:for-each select="$nodes/*">
+      <xsl:variable name="originalNode"
+                    select="gn-fn-metadata:getOriginalNode($base, .)"/>
+
+      <xsl:for-each select="$originalNode">
+        <saxon:call-template name="{$mode}">
+          <xsl:with-param name="base" select="$base"/>
+          <xsl:with-param name="config" select="$config"/>
+        </saxon:call-template>
+      </xsl:for-each>
+    </xsl:for-each>
+  </xsl:template>
+
+
 
   <!-- Element to ignore in that mode -->
   <xsl:template mode="form-builder" match="@name"/>
@@ -140,6 +200,8 @@
     <xsl:param name="base" as="node()"/>
 
     <xsl:if test="@xpath">
+      <xsl:variable name="config" select="."/>
+
       <!-- Seach any nodes in the metadata matching the XPath.
 
       We could have called saxon-evaluate from here like:
@@ -208,7 +270,7 @@
         In that case, a geonet:child element should exist in the document.
         -->
       <xsl:choose>
-        <xsl:when test="$isDisplayed and not(@templateModeOnly)">
+        <xsl:when test="$isDisplayed = 'true' and not(@templateModeOnly)">
           <xsl:variable name="configName" select="@name"/>
 
 
@@ -243,6 +305,7 @@
                                         then $overrideLabel
                                         else ''"/>
                   <xsl:with-param name="refToDelete" select="$refToDelete/gn:element"/>
+                  <xsl:with-param name="config" select="$config"/>
                 </saxon:call-template>
               </xsl:when>
               <xsl:otherwise>
@@ -266,6 +329,7 @@
                                         then $overrideLabel
                                         else ''"/>
                     <xsl:with-param name="refToDelete" select="$refToDelete/gn:element"/>
+                    <xsl:with-param name="config" select="$config"/>
                   </saxon:call-template>
                 </xsl:for-each>
               </xsl:otherwise>
@@ -289,17 +353,17 @@
             <xsl:for-each select="$nonExistingChildParent/*/gn:child[@name = $childName]">
               <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
 
-              <xsl:variable name="directive"
-                            select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
-              <xsl:call-template name="render-element-to-add">
-                <xsl:with-param name="label"
+              <xsl:variable name="labelConfig"
+                            select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>
+
+              <saxon:call-template name="{concat('dispatch-', $schema)}">
+                <xsl:with-param name="base" select="."/>
+                <xsl:with-param name="overrideLabel"
                                 select="if ($configName != '')
-                          then $strings/*[name() = $configName]
-                          else gn-fn-metadata:getLabel($schema, $name, $labels)/label"/>
-                <xsl:with-param name="directive" select="$directive"/>
-                <xsl:with-param name="childEditInfo" select="."/>
-                <xsl:with-param name="parentEditInfo" select="../gn:element"/>
-              </xsl:call-template>
+                                        then $strings/*[name() = $configName]
+                                        else $labelConfig/label"/>
+                <xsl:with-param name="config" select="$config"/>
+              </saxon:call-template>
             </xsl:for-each>
           </xsl:if>
 
@@ -616,8 +680,8 @@
     <!--<xsl:message>## Add action</xsl:message>
     <xsl:message><xsl:copy-of select="."/></xsl:message>
     <xsl:message>Is displayed: <xsl:copy-of select="$isDisplayed"/> because no if provided or if attribute XPath '<xsl:value-of select="@if"/>' expression found a match.</xsl:message>
-    <xsl:message> = Display action <xsl:value-of select="$nonExistingChildParent/* and $isDisplayed = 'true'"/></xsl:message>
-    -->
+    <xsl:message> = Display action <xsl:value-of select="$nonExistingChildParent/* and $isDisplayed = 'true'"/></xsl:message>-->
+
     <xsl:if test="$nonExistingChildParent/* and $isDisplayed = 'true'">
       <xsl:variable name="childName" select="@or"/>
 
@@ -630,14 +694,18 @@
                     select="if ($btnOverrideName)
                             then $strings/*[name() = $btnOverrideName]
                             else ''"/>
+
+      <!-- If multiple elements $elementName contains multiple values. Use the first one in getLabel to avoid failure. -->
+      <xsl:variable name="labelConfig"
+                    select="gn-fn-metadata:getLabel($schema, $elementName[1], $labels)"/>
       <xsl:variable name="name"
                     select="if ($btnName != '')
                             then $btnName
-                            else gn-fn-metadata:getLabel($schema, $elementName, $labels)/label"/>
-      <xsl:variable name="btnLabel" select="@btnLabel"/>
-      <xsl:variable name="btnClass" select="@btnClass"/>
+                            else $labelConfig/label"/>
+      <xsl:variable name="class" select="if (@class != '') then @class else $labelConfig/class"/>
+      <xsl:variable name="btnLabel" select="if (@btnLabel != '') then @btnLabel else $labelConfig/btnLabel"/>
+      <xsl:variable name="btnClass" select="if (@btnClass != '') then @btnLabel else $labelConfig/btnClass"/>
       <xsl:variable name="btnLabelTranslation" select="$strings/*[name() = $btnLabel]"/>
-      <xsl:variable name="directive" select="."/>
 
       <xsl:choose>
         <xsl:when test="template">
@@ -663,15 +731,19 @@
             <xsl:with-param name="btnLabel"
                             select="if ($btnLabelTranslation != '') then $btnLabelTranslation else $btnLabel"/>
             <xsl:with-param name="btnClass" select="@btnClass"/>
+            <xsl:with-param name="class" select="@class"/>
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
+          <xsl:variable name="directive" select="."/>
+
           <xsl:for-each select="$nonExistingChildParent/*/gn:child[@name = $childName]">
             <xsl:call-template name="render-element-to-add">
               <xsl:with-param name="label" select="$name"/>
               <xsl:with-param name="directive" select="$directive"/>
               <xsl:with-param name="childEditInfo" select="."/>
               <xsl:with-param name="parentEditInfo" select="../gn:element"/>
+              <xsl:with-param name="class" select="$class"/>
               <xsl:with-param name="btnClass" select="$btnClass"/>
               <xsl:with-param name="btnLabel" select="$btnLabelTranslation"/>
             </xsl:call-template>

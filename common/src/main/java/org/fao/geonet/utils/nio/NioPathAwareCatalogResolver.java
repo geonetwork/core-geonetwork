@@ -98,6 +98,11 @@ public class NioPathAwareCatalogResolver extends CatalogResolver {
 
     @Override
     public Source resolve(String href, String base) throws TransformerException {
+        // For http resources delegate to parent class
+        if (href.startsWith("http")) {
+            return super.resolve(href, base);
+        }
+
         for (ResolverRewriteDirective urlRewrite : urlRewriteDirectives.values()) {
             if (urlRewrite.appliesTo(href)) {
                 href = urlRewrite.rewrite(href);

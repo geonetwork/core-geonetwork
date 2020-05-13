@@ -27,6 +27,7 @@
 
   goog.require('ga_print_directive');
   goog.require('gn_utility');
+  goog.require('gn_filestore');
 
   /**
    * @ngdoc overview
@@ -36,7 +37,6 @@
    * Provide directives for online resources
    * <ul>
    * <li>gnOnlinesrcList</li>
-   * <li>gnAddThumbnail</li>
    * <li>gnAddOnlinesrc</li>
    * <li>gnLinkServiceToDataset</li>
    * <li>gnLinkToMetadata</li>
@@ -44,9 +44,127 @@
    */
   angular.module('gn_onlinesrc_directive', [
     'gn_utility',
+    'gn_filestore',
     'blueimp.fileupload',
     'ga_print_directive'
   ])
+  /**
+   * Simple interface to add or remove overview.
+   *
+   * This directive handle in one step the add to filestore
+   * action and the update metadata record steps. User
+   * can easily drag & drop thumbnails in here.
+   *
+   * It does not provide the possibility to set
+   * overview name and description. See onlineSrcList directive
+   * or full editor mode.
+   */
+    .directive('gnOverviewManager', [
+      'gnOnlinesrc', 'gnFileStoreService', 'gnCurrentEdit', '$rootScope', '$translate',
+      function(gnOnlinesrc, gnFileStoreService, gnCurrentEdit, $rootScope, $translate) {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/edit/onlinesrc/' +
+          'partials/overview-manager.html',
+          scope: {},
+          link: function (scope, element, attrs) {
+            scope.relations = {};
+            scope.uuid = undefined;
+            scope.lang = scope.$parent.lang;
+            scope.readonly = false;
+            scope.numberOfOverviews = parseInt(attrs['numberOfOverviews']) || Infinity;
+
+            // Load thumbnail list.
+            var loadRelations = function() {
+              gnOnlinesrc.getAllResources(['thumbnail'])
+                .then(function(data) {
+                  var res = gnOnlinesrc.formatResources(
+                    data,
+                    scope.lang,
+                    gnCurrentEdit.mdLanguage);
+                  scope.relations = res.relations;
+                });
+            };
+
+            // Upload overview once dropped or selected
+            var uploadOverview = function() {
+              scope.queue = [];
+              scope.filestoreUploadOptions = {
+                autoUpload: true,
+                url: '../api/0.1/records/' + gnCurrentEdit.uuid +
+                '/attachments?visibility=public',
+                dropZone: $('#gn-overview-dropzone'),
+                singleUpload: true,
+                // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
+                done: uploadResourceSuccess,
+                fail: uploadResourceFailed,
+                headers: {'X-XSRF-TOKEN': $rootScope.csrf}
+              };
+            };
+
+            var linkOverviewToRecord = function (link) {
+              var params = {
+                thumbnail_url: link.url,
+                thumbnail_desc: link.name || '',
+                process: 'thumbnail-add',
+                id: gnCurrentEdit.id
+              };
+              gnOnlinesrc.add(params);
+            };
+
+            var uploadResourceSuccess = function(e, data) {
+              $rootScope.$broadcast('gnFileStoreUploadDone');
+              scope.clear(scope.queue);
+              linkOverviewToRecord(data.response().jqXHR.responseJSON);
+            };
+
+            scope.$on('gnFileStoreUploadDone', scope.loadRelations);
+
+            var uploadResourceFailed = function(e, data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('resourceUploadError'),
+                error: {
+                  message: data.errorThrown +
+                  angular.isDefined(
+                    data.response().jqXHR.responseJSON.message) ?
+                    data.response().jqXHR.responseJSON.message : ''
+                },
+                timeout: 0,
+                type: 'danger'});
+              scope.clear(scope.queue);
+            };
+
+            scope.removeOverview = function(thumbnail) {
+              var url = thumbnail.url[gnCurrentEdit.mdLanguage];
+              if (url.match(".*/api/records/(.*)/attachments/.*") == null) {
+                // An external URL
+                gnOnlinesrc.removeThumbnail(thumbnail).then(function() {
+                  // and update list.
+                  loadRelations();
+                });
+              } else {
+                // A thumbnail from the filestore
+                gnFileStoreService.delete({url: url}).then(function () {
+                  // then remove from record
+                  gnOnlinesrc.removeThumbnail(thumbnail).then(function() {
+                    // and update list.
+                    loadRelations();
+                  })
+                });
+              }
+
+            };
+            scope.$watch('gnCurrentEdit.uuid', function(n, o) {
+              if (angular.isUndefined(scope.uuid) ||
+                n != o) {
+                scope.uuid = n;
+                loadRelations();
+                uploadOverview();
+              }
+            });
+          }
+        }
+      }])
 
   /**
    * @ngdoc directive
@@ -82,12 +200,18 @@
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
                 'partials/onlinesrcList.html',
-            scope: {},
+            scope: {
+              types: '@'
+            },
             link: function(scope, element, attrs) {
               scope.onlinesrcService = gnOnlinesrc;
               scope.gnCurrentEdit = gnCurrentEdit;
               scope.allowEdits = true;
               scope.lang = scope.$parent.lang;
+              scope.readonly = attrs['readonly'] || false;
+              scope.gnCurrentEdit.associatedPanelConfigId = attrs['configId'] || 'default';
+              scope.relations = {};
+              scope.gnCurrentEdit.codelistFilter  = attrs['codelistFilter'];
 
               /**
                * Calls service 'relations.get' to load
@@ -97,22 +221,18 @@
               var loadRelations = function() {
                 gnOnlinesrc.getAllResources()
                     .then(function(data) {
-                      scope.relations = data;
+                      var res = gnOnlinesrc.formatResources(
+                                            data,
+                                            scope.lang,
+                                            gnCurrentEdit.mdLanguage);
+                      scope.relations = res.relations;
+                      scope.siblingTypes = scope.siblingTypes;
+
                     });
               };
               scope.isCategoryEnable = function(category) {
-                var config = gnCurrentEdit.schemaConfig.related;
-                if (config.readonly === true) {
-                  return false;
-                } else {
-                  if (config.categories &&
-                      config.categories.length > 0 &&
-                      $.inArray(category, config.categories) === -1) {
-                    return false;
-                  } else {
-                    return true;
-                  }
-                }
+                return angular.isUndefined(scope.types) ? true :
+                        category.match(scope.types) !== null;
               };
 
               // Reload relations when a directive requires it
@@ -123,15 +243,21 @@
                 }
               });
 
-              // When saving is done, refresh related resources
-              scope.$watch('gnCurrentEdit.version',
-                  function(newValue, oldValue) {
-                    if (parseInt(newValue || 0) > parseInt(oldValue || 0)) {
-                      loadRelations();
-                    }
-                  });
+              loadRelations();
+
+              scope.sortLinksOptions = ['protocol', 'lUrl', 'title'];
+              scope.sortLinksProperty = scope.sortLinksOptions[0];
+              scope.sortLinksReverse = true;
+
               scope.sortLinks = function(g) {
-                return $filter('gnLocalized')(g);
+                return $filter('gnLocalized')(g[scope.sortLinksProperty]) || g[scope.sortLinksProperty];
+              };
+
+                scope.sortLinksBy = function(p) {
+                scope.sortLinksReverse =
+                  (scope.sortLinksProperty !== null && scope.sortLinksProperty === p)
+                  ? !scope.sortLinksReverse : false;
+                scope.sortLinksProperty = p;
               };
             }
           };
@@ -165,6 +291,7 @@
         'gnOnlinesrc',
         'gnOwsCapabilities',
         'gnWfsService',
+        'gnSchemaManagerService',
         'gnEditor',
         'gnCurrentEdit',
         'gnMap',
@@ -175,9 +302,10 @@
         '$timeout',
         '$http',
         '$filter',
-        function(gnOnlinesrc, gnOwsCapabilities, gnWfsService,
+        '$log',
+        function(gnOnlinesrc, gnOwsCapabilities, gnWfsService, gnSchemaManagerService,
             gnEditor, gnCurrentEdit, gnMap, gnGlobalSettings, Metadata,
-            $rootScope, $translate, $timeout, $http, $filter) {
+            $rootScope, $translate, $timeout, $http, $filter, $log) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -185,541 +313,17 @@
             link: {
               pre: function preLink(scope) {
                 scope.searchObj = {
+                  internal: true,
                   params: {}
                 };
                 scope.modelOptions =
                     angular.copy(gnGlobalSettings.modelOptions);
+
+                scope.ctrl = {};
               },
               post: function(scope, element, attrs) {
                 scope.popupid = attrs['gnPopupid'];
 
-                //{
-                //  // Optional / optGroup
-                //  group: 'onlineDiscover',
-                //  // Label
-                //    label: 'onlineDiscoverWMS',
-                //  // Optional / On select copy the label in desc field
-                //  copyLabel: 'desc',
-                //  // Optional / Icon
-                //  icon: 'fa gn-icon-onlinesrc',
-                //  // XSL process to run
-                //  process: 'onlinesrc-add',
-                //  // Optional / List of fields
-                //  // (URL only will be displayed if none)
-                //  fields: {
-                //  'url': {},
-                //  'protocol': {
-                //    // Fixed value
-                //    value: 'OGC:WMS',
-                //      // Hide field
-                //      hidden: true},
-                //  'name': {},
-                //  'desc': {
-                //    // Rename parameter for the XSL process
-                //    param: 'myParam'},
-                //  'function': {value: 'browsing', hidden: true}
-                //}
-                //}
-
-                var schemaConfig = {
-                  'dublin-core': {
-                    display: 'radio',
-                    types: [{
-                      label: 'addOnlinesrc',
-                      sources: {
-                        filestore: true,
-                        thumbnailMaker: true
-                      },
-                      icon: 'fa gn-icon-onlinesrc',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {}
-                      }
-                    }]
-                  },
-                  'iso19139': {
-                    display: 'radio',
-                    types: [{
-                      label: 'addOnlinesrc',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa gn-icon-onlinesrc',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {value: 'WWW:LINK-1.0-http--link'},
-                        'name': {},
-                        'desc': {},
-                        'function': {},
-                        'applicationProfile': {}
-                      }
-                    }, {
-                      label: 'addThumbnail',
-                      sources: {
-                        filestore: true,
-                        thumbnailMaker: true
-                      },
-                      icon: 'fa gn-icon-thumbnail',
-                      fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
-                      process: 'thumbnail-add',
-                      fields: {
-                        'url': {param: 'thumbnail_url'},
-                        'name': {param: 'thumbnail_desc'}
-                      }
-                    }]
-                  },
-                  'iso19115-3': {
-                    display: 'select',
-                    types: [{
-                      group: 'onlineDiscover',
-                      label: 'onlineDiscoverThumbnail',
-                      sources: {
-                        filestore: true,
-                        thumbnailMaker: true
-                      },
-                      icon: 'fa gn-icon-thumbnail',
-                      fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
-                      process: 'thumbnail-add',
-                      fields: {
-                        'url': {},
-                        'name': {param: 'desc'}
-                      }
-                    }, {
-                      group: 'onlineDiscover',
-                      label: 'onlineDiscoverInApp',
-                      copyLabel: 'name',
-                      sources: {
-                        metadataStore: {
-                          label: 'searchAnApplication',
-                          params: {
-                            type: 'application'
-                          }
-                        }
-                      },
-                      icon: 'fa gn-icon-map',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'browsing', hidden: true}
-                      }
-                    }, {
-                      group: 'onlineDiscover',
-                      label: 'onlineDiscoverWMS',
-                      copyLabel: 'desc',
-                      icon: 'fa gn-icon-onlinesrc',
-                      sources: {
-                        metadataStore: {
-                          label: 'searchAservice',
-                          params: {
-                            serviceType: 'OGC:WMS or WMS or view'
-                          }
-                        }
-                      },
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {value: 'OGC:WMS', hidden: true},
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'browsing', hidden: true}
-                      }
-                    }, {
-                      group: 'onlineDiscover',
-                      label: 'onlineDiscoverINSPIREView',
-                      copyLabel: 'desc',
-                      icon: 'fa gn-icon-onlinesrc',
-                      sources: {
-                        metadataStore: {
-                          label: 'searchAservice',
-                          params: {
-                            serviceType: 'view'
-                          }
-                        }
-                      },
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {value: 'OGC:WMS', hidden: true},
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'browsing', hidden: true},
-                        'applicationProfile': {
-                          value: 'inspire-view', hidden: true
-                        }
-                      }
-                    }, {
-                      group: 'onlineDiscover',
-                      label: 'onlineDiscoverWMTS',
-                      copyLabel: 'desc',
-                      icon: 'fa gn-icon-onlinesrc',
-                      sources: {
-                        metadataStore: {
-                          label: 'searchAservice',
-                          params: {
-                            serviceType: 'OGC:WMTS or WMTS'
-                          }
-                        }
-                      },
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {value: 'OGC:WMTS', hidden: true},
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'browsing', hidden: true}
-                      }
-                    }, {
-                      group: 'onlineDiscover',
-                      label: 'onlineDiscoverArcGIS',
-                      copyLabel: 'desc',
-                      icon: 'fa gn-icon-onlinesrc',
-                      sources: {
-                        metadataStore: {
-                          label: 'searchAservice',
-                          params: {
-                            serviceType: 'ESRI:REST'
-                          }
-                        }
-                      },
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {value: 'ESRI:REST', hidden: true},
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'browsing', hidden: true}
-                      }
-                    }, {
-                      group: 'onlineDiscover',
-                      label: 'onlineDiscoverKML',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa gn-icon-onlinesrc',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'browsing', hidden: true},
-                        'applicationProfile': {
-                          value: 'application/vnd.google-earth.kml+xml',
-                          hidden: true
-                        }
-                      }
-                    }, {
-                      group: 'onlineDiscover',
-                      label: 'onlineDiscoverMap',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa gn-icon-map',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'browsing', hidden: true},
-                        'applicationProfile': 'applicationProfile'
-                      }
-                    }, {
-                      group: 'onlineDownload',
-                      label: 'onlineDownloadFile',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa gn-icon-onlinesrc',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'download', hidden: true}
-                      }
-                    }, {
-                      group: 'onlineDownload',
-                      label: 'onlineDownloadKML',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa gn-icon-onlinesrc',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'download', hidden: true},
-                        'applicationProfile': {
-                          value: 'application/vnd.google-earth.kml+xml',
-                          hidden: true
-                        }
-                      }
-                    }, {
-                      group: 'onlineDownload',
-                      label: 'onlineDownloadWWW',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa gn-icon-onlinesrc',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'download', hidden: true}
-                      }
-                    }, {
-                      group: 'onlineDownload',
-                      label: 'onlineDownloadWFS',
-                      copyLabel: 'desc',
-                      icon: 'fa gn-icon-onlinesrc',
-                      sources: {
-                        metadataStore: {
-                          label: 'searchAservice',
-                          params: {
-                            serviceType: 'OGC:WFS or WFS or download'
-                          }
-                        }
-                      },
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {value: 'OGC:WFS', hidden: true},
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'download', hidden: true}
-                      }
-                    }, {
-                      group: 'onlineDownload',
-                      label: 'onlineDownloadWCS',
-                      copyLabel: 'desc',
-                      icon: 'fa gn-icon-onlinesrc',
-                      sources: {
-                        metadataStore: {
-                          label: 'searchAservice',
-                          params: {
-                            serviceType: 'OGC:WCS or WCS'
-                          }
-                        }
-                      },
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {value: 'OGC:WCS', hidden: true},
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'download', hidden: true}
-                      }
-                    }, {
-                      group: 'onlineDownload',
-                      label: 'onlineDownloadINSPIRE',
-                      copyLabel: 'desc',
-                      icon: 'fa gn-icon-onlinesrc',
-                      sources: {
-                        metadataStore: {
-                          label: 'searchAservice',
-                          params: {
-                            serviceType: 'download'
-                          }
-                        }
-                      },
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {value: 'OGC:WFS', hidden: true},
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'download', hidden: true},
-                        'applicationProfile': {
-                          value: 'inspire-download', hidden: true
-                        }
-                      }
-                    }, {
-                      group: 'onlineUse',
-                      label: 'onlineUseFcats',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa fa-table',
-                      process: 'fcats-file-add',
-                      fields: {
-                        'url': {},
-                        'name': {}
-                      }
-                    }, {
-                      group: 'onlineUse',
-                      label: 'onlineUseDQReport',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa fa-table',
-                      process: 'dq-report-add',
-                      fields: {
-                        'url': {},
-                        'name': {},
-                        'desc': {},
-                        'type': {param: 'type', value: 'qualityReport'}
-                      }
-                    }, {
-                      group: 'onlineUse',
-                      label: 'onlineUseDQTOR',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa fa-table',
-                      process: 'dq-report-add',
-                      fields: {
-                        'url': {},
-                        'name': {},
-                        'desc': {},
-                        'type': {param: 'type', value: 'qualitySpecification'}
-                      }
-                    }, {
-                      group: 'onlineUse',
-                      label: 'onlineUseDQProdReport',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa fa-table',
-                      process: 'dq-report-add',
-                      fields: {
-                        'url': {},
-                        'name': {},
-                        'desc': {},
-                        'type': {param: 'type', value: 'lineage'}
-                      }
-                    }, {
-                      group: 'onlineUse',
-                      label: 'onlineUseLegendLYR',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      fileStoreFilter: '*.{lyr,LYR}',
-                      icon: 'fa fa-table',
-                      process: 'legend-add',
-                      fields: {
-                        'url': {},
-                        'name': {}
-                      }
-                    }, {
-                      group: 'onlineUse',
-                      label: 'onlineUseStyleSLD',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      fileStoreFilter: '*.{sld,SLD}',
-                      icon: 'fa fa-table',
-                      process: 'legend-add',
-                      fields: {
-                        'url': {},
-                        'name': {}
-                      }
-                    }, {
-                      group: 'onlineUse',
-                      label: 'onlineUseStyleQML',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      fileStoreFilter: '*.{qml,QML}',
-                      icon: 'fa fa-table',
-                      process: 'legend-add',
-                      fields: {
-                        'url': {},
-                        'name': {}
-                      }
-                      //},{
-                      //  group: 'onlineUse',
-                      //  label: 'onlineUseLimitation',
-                      //  copyLabel: 'name',
-                      //  sources: {
-                      //    templatestore: true,
-                      //    filestore: true
-                      //  },
-                      //  icon: 'fa fa-table',
-                      //  process: 'use-limitation-add',
-                      //  fields: {
-                      //  }
-                      //},{
-                      //  group: 'onlineUse',
-                      //  label: 'onlineAccessLimitation',
-                      //  copyLabel: 'name',
-                      //  sources: {
-                      //    templatestore: true,
-                      //    filestore: true
-                      //  },
-                      //  icon: 'fa fa-table',
-                      //  process: 'use-limitation-add',
-                      //  fields: {
-                      //  }
-                    }, {
-                      group: 'onlineMore',
-                      label: 'onlineMoreWWW',
-                      copyLabel: 'name',
-                      icon: 'fa gn-icon-onlinesrc',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'information', hidden: true}
-                      }
-                    }, {
-                      group: 'onlineMore',
-                      label: 'onlineMoreFile',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa gn-icon-onlinesrc',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'information', hidden: true}
-                      }
-                    }]
-                  }
-                };
                 scope.config = null;
                 scope.linkType = null;
 
@@ -729,6 +333,7 @@
                 scope.map = null;
 
                 scope.searchObj = {
+                  internal: true,
                   params: {
                     sortBy: 'title'
                   }
@@ -738,12 +343,19 @@
                 // directive and the SearchFormController scope that
                 // is contained by the directive
                 scope.stateObj = {};
+                var projectedExtent = null;
+
 
                 function loadLayers() {
                   if (!angular.isArray(scope.map.getSize()) ||
                       scope.map.getSize().indexOf(0) >= 0) {
                     $timeout(function() {
                       scope.map.updateSize();
+                      if (projectedExtent != null) {
+                        scope.map.getView().fit(
+                          projectedExtent,
+                          scope.map.getSize());
+                      }
                     }, 300);
                   }
 
@@ -752,8 +364,30 @@
                     scope.map.removeLayer(layer);
                   });
 
-                  scope.map.addLayer(gnMap.getLayersFromConfig());
+                  var conf = gnMap.getMapConfig();
 
+                  scope.map.addLayer(new ol.layer.Tile({
+                    source:  new ol.source.OSM()
+                  }));
+                  // TODO: Add base layer from config
+                  // This does not work because createLayerFromProperties
+                  // return a promise and base layer is added twice.
+                  // if (conf.useOSM) {
+                  //   scope.map.addLayer(new ol.layer.Tile({
+                  //     source:  new ol.source.OSM(),
+                  //     type: 'base'
+                  //   }));
+                  // }
+                  // else {
+                  //   conf['map-editor'].layers.forEach(function(layerInfo) {
+                  //     gnMap.createLayerFromProperties(layerInfo, scope.map)
+                  //       .then(function(layer) {
+                  //         if (layer) {
+                  //           scope.map.addLayer(layer);
+                  //         }
+                  //       });
+                  //   });
+                  // }
                   // Add each WMS layer to the map
                   scope.layers = scope.gnCurrentEdit.layerConfig;
                   angular.forEach(scope.gnCurrentEdit.layerConfig,
@@ -769,32 +403,52 @@
                         }));
                       });
 
-                  $timeout(function() {
-                    if (angular.isArray(scope.gnCurrentEdit.extent)) {
-                      // FIXME : only first extent is took into account
-                      var extent = scope.gnCurrentEdit.extent[0],
-                          proj = ol.proj.get(gnMap.getMapConfig().projection),
-                          projectedExtent =
-                          ol.extent.containsExtent(
-                          proj.getWorldExtent(),
-                          extent) ?
-                          gnMap.reprojExtent(extent, 'EPSG:4326', proj) :
-                          proj.getExtent();
-                      scope.map.getView().fit(
-                          projectedExtent,
-                          scope.map.getSize());
-                    }
-                    // Trigger init of print directive
-                    scope.mode = 'thumbnailMaker';
-                  }, 300);
-                };
+
+                  var listenerExtent = scope.$watch(
+                    'angular.isArray(scope.gnCurrentEdit.extent)', function() {
+                        if (angular.isArray(scope.gnCurrentEdit.extent)) {
+                          // FIXME : only first extent is took into account
+                          var extent = scope.gnCurrentEdit.extent &&
+                              scope.gnCurrentEdit.extent[0];
+                          var proj = ol.proj.get(gnMap.getMapConfig().projection);
+
+                          if (!extent || !ol.extent.containsExtent(
+                              proj.getWorldExtent(),
+                              extent)) {
+                            projectedExtent = proj.getExtent();
+                          }
+                          else {
+                            projectedExtent =
+                                gnMap.reprojExtent(extent, 'EPSG:4326', proj);
+                          }
+                          scope.map.getView().fit(
+                              projectedExtent,
+                              scope.map.getSize());
+
+                          //unregister
+                          listenerExtent();
+                        }
+                  });
+
+                  // Trigger init of print directive
+                  scope.mode = 'thumbnailMaker';
+                }
 
                 scope.generateThumbnail = function() {
+                  //Added mandatory custom params here to avoid
+                  //changing other printing services
+                  jsonSpec = angular.extend(
+                    scope.jsonSpec,
+                    {
+                      hasNoTitle: true
+                    });
+
                   return $http.put('../api/0.1/records/' +
                       scope.gnCurrentEdit.uuid +
                       '/attachments/print-thumbnail', null, {
                         params: {
-                          jsonConfig: angular.fromJson(scope.jsonSpec)
+                          jsonConfig: angular.fromJson(jsonSpec),
+                          rotationAngle: ((jsonSpec.layout == 'landscape')? 90 : 0)
                         }
                       }).then(function() {
                     $rootScope.$broadcast('gnFileStoreUploadDone');
@@ -854,115 +508,171 @@
                     }
                   }
                   return scope.config.types[0];
-                };
-                gnOnlinesrc.register('onlinesrc', function(linkToEdit) {
+                }
+
+                gnOnlinesrc.register('onlinesrc', function(linkToEditOrType) {
+                  var linkToEdit = undefined, linkType = undefined;
+                  if (angular.isDefined(linkToEditOrType)) {
+                    if (angular.isObject(linkToEditOrType)) {
+                        linkToEdit = linkToEditOrType;
+                      } else if (angular.isString(linkToEditOrType)) {
+                        linkType = linkToEditOrType;
+                      }
+                  }
+
                   scope.isEditing = angular.isDefined(linkToEdit);
+                  scope.codelistFilter = scope.gnCurrentEdit && scope.gnCurrentEdit.codelistFilter;
 
                   scope.metadataId = gnCurrentEdit.id;
                   scope.schema = gnCurrentEdit.schema;
-                  scope.config = schemaConfig[scope.schema];
-                  if (scope.config === undefined &&
-                      scope.schema.indexOf('iso19139') === 0) {
-                    scope.config = schemaConfig['iso19139'];
-                  }
 
-                  if (gnCurrentEdit.mdOtherLanguages) {
+                  var init = function() {
+                    function getType(linkType) {
+                      for (var i = 0; i < scope.config.types.length; i++) {
+                          var t = scope.config.types[i];
+                          if (t.label === linkType) {
+                              return t;
+                            }
+                        }
+                      return scope.config.types[0];
+                    };
 
-                    scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
-                    scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
+                    var typeConfig = linkToEdit ?
+                      getTypeConfig(linkToEdit) :
+                      getType(linkType);
+                    scope.config.multilingualFields = [];
+                    angular.forEach(typeConfig.fields, function(f, k) {
+                    if (scope.isMdMultilingual &&
+                        f.isMultilingual !== false) {
+                        scope.config.multilingualFields.push(k);
+                      }
+                    });
 
-                    // not multilingual {"fre":"#"}
-                    if (Object.keys(scope.mdLangs).length > 1) {
-                      scope.isMdMultilingual = true;
-                      scope.mdLang = gnCurrentEdit.mdLanguage;
+                    if (gnCurrentEdit.mdOtherLanguages) {
+                      scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
+                      scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
 
-                      for (var p in scope.mdLangs) {
-                        var v = scope.mdLangs[p];
-                        if (v.indexOf('#') == 0) {
-                          var l = v.substr(1);
-                          if (!l) {
-                            l = scope.mdLang;
+                      // not multilingual {"fre":"#"}
+                      if (Object.keys(scope.mdLangs).length > 1) {
+                        scope.isMdMultilingual = true;
+                        scope.mdLang = gnCurrentEdit.mdLanguage;
+
+                        for (var p in scope.mdLangs) {
+                          var v = scope.mdLangs[p];
+                          if (v.indexOf('#') === 0) {
+                            var l = v.substr(1);
+                            if (!l) {
+                              l = scope.mdLang;
+                            }
+                            scope.mdLangs[p] = l;
                           }
-                          scope.mdLangs[p] = l;
+                        }
+                      } else {
+                        scope.isMdMultilingual = false;
+                      }
+                    }
+
+                    initThumbnailMaker();
+                    resetForm();
+
+                    $(scope.popupid).modal('show');
+
+
+                    if (scope.isEditing) {
+                      // If the title object contains more than one value,
+                      // Then the record resource is multilingual (and
+                      // probably the record also).
+                      // scope.isMdMultilingual =
+                      //   Object.keys(linkToEdit.title).length > 1 ||
+                      //   Object.keys(linkToEdit.description).length > 1;
+
+
+                      // Create a key which will be sent to XSL processing
+                      // for finding which element to edit.
+                      var keyName = $filter('gnLocalized')(linkToEdit.title);
+                      var keyUrl = $filter('gnLocalized')(linkToEdit.url);
+                      if (scope.isMdMultilingual) {
+                        // Key in multilingual mode is
+                        // the title in the main language
+                        keyName = linkToEdit.title[scope.mdLang];
+                        keyUrl = linkToEdit.url[scope.mdLang];
+                        if (!keyName || ! keyUrl) {
+                          $log.warn(
+                            'Failed to compute key for updating the resource.');
                         }
                       }
-                    } else {
-                      scope.isMdMultilingual = false;
-                    }
-                  }
+                      scope.editingKey = [keyUrl, linkToEdit.protocol,
+                        keyName].join('');
 
-                  initThumbnailMaker();
-                  resetForm();
+                      scope.OGCProtocol = checkIsOgc(linkToEdit.protocol);
 
-                  $(scope.popupid).modal('show');
-
-                  if (scope.isEditing) {
-                    // If the title object contains more than one value,
-                    // Then the record resource is multilingual (and
-                    // probably the record also).
-                    // scope.isMdMultilingual =
-                    //   Object.keys(linkToEdit.title).length > 1 ||
-                    //   Object.keys(linkToEdit.description).length > 1;
-
-
-                    // Create a key which will be sent to XSL processing
-                    // for finding which element to edit.
-                    var keysuffix = $filter('gnLocalized')(linkToEdit.title);
-                    if (scope.isMdMultilingual) {
-                      // Key in multilingual mode is
-                      // the title in the main language
-                      keysuffix =
-                          linkToEdit.title[Object.keys(scope.mdLangs)[0]];
-                      if (angular.isUndefined(keysuffix)) {
-                        console.warn(
-                            'Failed to compute key for updating the resource.');
-                      }
-                    }
-                    scope.editingKey = [linkToEdit.url,
-                                        linkToEdit.protocol,
-                                        keysuffix].join('');
-
-                    scope.OGCProtocol = checkIsOgc(linkToEdit.protocol);
-
-                    var name = $filter('gnLocalized')(linkToEdit.title),
-                        desc = $filter('gnLocalized')(linkToEdit.description);
-
-                    // For multilingual record, build
-                    // name and desc based on loc IDs
-                    // and no iso3letter code.
-                    // If OGC, only take into account, the first element
-                    if (scope.isMdMultilingual && scope.OGCProtocol == null) {
-                      name = {};
-                      desc = {};
-                      $.each(scope.mdLangs, function(key, v) {
-                        name[v] =
-                            (linkToEdit.title && linkToEdit.title[key]) || '';
-                      });
-                      $.each(scope.mdLangs, function(key, v) {
-                        desc[v] =
-                            (linkToEdit.description &&
-                             linkToEdit.description[key]) || '';
-                      });
-                    }
-
-                    scope.params = {
-                      linkType: getTypeConfig(linkToEdit),
-                      url: linkToEdit.url,
-                      protocol: linkToEdit.protocol,
-                      name: name,
-                      desc: desc,
-                      applicationProfile: linkToEdit.applicationProfile,
-                      function: linkToEdit.function,
-                      selectedLayers: []
+                      // For multilingual record, build
+                      // name and desc based on loc IDs
+                      // and no iso3letter code.
+                      // If OGC, only take into account, the first element
+                      var fields = {
+                        name: 'title',
+                        desc: 'description',
+                        url: 'url'
                       };
-                      } else{
-                      scope.editingKey= null;
-                      scope.params.linkType= scope.config.types[0];
-                      scope.params.protocol= null;
-                      setParameterValue(scope.params.name, '');
-                      setParameterValue(scope.params.desc, '');
+
+                      angular.forEach(fields, function(value, field) {
+                        if (scope.isFieldMultilingual(field)) {
+                          var e = {};
+                          $.each(scope.mdLangs, function(key, v) {
+                            e[v] =
+                              (linkToEdit[fields[field]] &&
+                                linkToEdit[fields[field]][key]) || '';
+                          });
+                          fields[field] = e;
+                        }
+                        else {
+                          fields[field] =
+                            $filter('gnLocalized')(linkToEdit[fields[field]]);
+                        }
+                      });
+
+                      scope.params = {
+                        linkType: typeConfig,
+                        url: fields.url,
+                        protocol: linkToEdit.protocol,
+                        name: fields.name,
+                        desc: fields.desc,
+                        applicationProfile: linkToEdit.applicationProfile,
+                        function: linkToEdit.function,
+                        selectedLayers: []
+                      };
+                    } else {
+                      scope.editingKey = null;
+                      scope.params.linkType = typeConfig;
+                      scope.params.protocol = null;
+                      scope.params.name= '';
+                      scope.params.desc= '';
+                      initMultilingualFields();
                     }
+                  };
+                  function loadConfigAndInit(withInit) {
+                    gnSchemaManagerService.getEditorAssociationPanelConfig(
+                      gnCurrentEdit.schema,
+                      gnCurrentEdit.associatedPanelConfigId).then(function (r) {
+                      scope.config = r.config;
+
+                      if (withInit) {
+                        init();
+                      }
+                    });
+                  };
+
+                  scope.$watch('gnCurrentEdit.associatedPanelConfigId',
+                    function(n, o) {
+                      if (n && n !== o) {
+                        loadConfigAndInit(false);
+                      }
                   });
+
+                  loadConfigAndInit(true);
+
+                });
 
                 // mode can be 'url' or 'thumbnailMaker' to init thumbnail panel
                 scope.mode = 'url';
@@ -993,14 +703,30 @@
                   scope.layers = [];
                   scope.OGCProtocol = false;
                   if (scope.params && !scope.isEditing) {
-                    scope.params.name = scope.isMdMultilingual ? {} : '';
-                    scope.params.desc = scope.isMdMultilingual ? {} : '';
+                    scope.params.name = '';
+                    scope.params.desc = '';
+                    initMultilingualFields();
                     scope.params.selectedLayers = [];
                     scope.params.layers = [];
                   }
                 };
 
+                var initMultilingualFields = function() {
+                  scope.config.multilingualFields.forEach(function(f) {
+                    scope.params[f] = {};
+                    setParameterValue(f, '');
+                  });
+                };
 
+
+                /**
+                 * Build the multingual structure if need for the onlinesrc
+                 * param (name, desc, url).
+                 * Struct like {'ger':'', 'eng': ''}
+                 *
+                 * @param {String} param
+                 * @return {*}
+                 */
                 function buildObjectParameter(param) {
                   if (angular.isObject(param)) {
                     var name = [];
@@ -1012,13 +738,20 @@
                   return param;
                 }
 
-                function setParameterValue(param, value) {
-                  if (scope.isMdMultilingual) {
+                /**
+                 * Set a vlue to a onlinesrc parameter (url, desc, name).
+                 * Value as string if monolingual, else set to each lang.
+                 *
+                 * @param {String} pName name of attribute in `scope.params`
+                 * @param {string} value of the attribute
+                 */
+                function setParameterValue(pName, value) {
+                  if (scope.isFieldMultilingual(pName)) {
                     $.each(scope.mdLangs, function(key, v) {
-                      param[v] = value;
+                      scope.params[pName][v] = value;
                     });
                   } else {
-                    param = value;
+                    scope.params[pName] = value;
                   }
                 }
 
@@ -1029,9 +762,10 @@
                  *  If it is an URL, we just call a $http.get
                  */
                 scope.addOnlinesrc = function() {
-                  scope.params.name = buildObjectParameter(scope.params.name);
-                  scope.params.desc = buildObjectParameter(scope.params.desc);
+                  scope.config.multilingualFields.forEach(function(f) {
+                    scope.params[f] = buildObjectParameter(scope.params[f]);
 
+                  });
 
                   var processParams = {};
                   angular.forEach(scope.params.linkType.fields,
@@ -1071,59 +805,93 @@
                  * passed to the layers grid directive.
                  */
                 scope.loadCurrentLink = function(reportError) {
-                  if (angular.isUndefined(scope.params.url) ||
-                      scope.params.url == '') {
+                  var withGroupLayers = true;
+
+                  // If multilingual or not
+                  var url = scope.params.url;
+                  if (angular.isObject(url)) {
+                    url = url[scope.ctrl.urlCurLang];
+                  }
+
+                  if (!url) {
                     return;
                   }
                   if (scope.OGCProtocol) {
                     scope.layers = [];
-                    if (scope.OGCProtocol == 'WMS') {
-                      return gnOwsCapabilities.getWMSCapabilities(
-                          scope.params.url)
+                    if (scope.OGCProtocol === 'WMS') {
+                      return gnOwsCapabilities.getWMSCapabilities(url, true)
                           .then(function(capabilities) {
                             scope.layers = [];
                             scope.isUrlOk = true;
                             angular.forEach(capabilities.layers, function(l) {
-                              if (angular.isDefined(l.Name)) {
+                              if (withGroupLayers || (!withGroupLayers && angular.isDefined(l.Name))) {
                                 scope.layers.push(l);
                               }
                             });
-                          }).catch (function(error) {
+                          }).catch(function(error) {
                             scope.isUrlOk = error === 200;
                           });
-                    } else if (scope.OGCProtocol == 'WFS') {
-                      return gnWfsService.getCapabilities(
-                          scope.params.url)
+                    } else if (scope.OGCProtocol === 'WMTS') {
+                      return gnOwsCapabilities.getWMTSCapabilities(url)
                           .then(function(capabilities) {
                             scope.layers = [];
                             scope.isUrlOk = true;
-                            angular.forEach(
-                               capabilities.featureTypeList.featureType,
-                               function(l) {
-                                 if (angular.isDefined(l.name)) {
-                                   scope.layers.push({
-                                     Name: l.name.localPart,
-                                     abstract: l._abstract,
-                                     Title: l.title
-                                   });
-                                 }
+                            angular.forEach(capabilities.Layer, function(l) {
+                              if (angular.isDefined(l.Identifier)) {
+                                scope.layers.push({
+                                    "Name": l.Identifier,
+                                    "Title": l.Title
+                                  });
+                              }
+                            });
+                          }).catch(function(error) {
+                            scope.isUrlOk = error === 200;
+                          });
+                    } else if (scope.OGCProtocol === 'WFS') {
+                      return gnWfsService.getCapabilities(url)
+                        .then(function(capabilities) {
+                          scope.layers = [];
+                          scope.isUrlOk = true;
+                          angular.forEach(
+                           capabilities.featureTypeList.featureType,
+                           function(l) {
+                             if (angular.isDefined(l.name)) {
+                               scope.layers.push({
+                                 Name: l.name.prefix+':'+l.name.localPart,
+                                 abstract: angular.isArray(l._abstract)?l._abstract[0].value:l._abstract,
+                                 Title: angular.isArray(l.title)?l.title[0].value:l.title
                                });
-                          }).catch (function(error) {
+                             }
+                           });
+                      }).catch(function(error) {
+                        scope.isUrlOk = error === 200;
+                      });
+                    } else if (scope.OGCProtocol === 'WCS') {
+                      return gnOwsCapabilities.getWCSCapabilities(url)
+                        .then(function(capabilities) {
+                          scope.layers = [];
+                          scope.isUrlOk = true;
+                          angular.forEach(
+                             capabilities.contents.coverageSummary,
+                             function(l) {
+                               if (angular.isDefined(l.identifier)) {
+                                 scope.layers.push({
+                                   Name: l.identifier,
+                                   abstract: angular.isArray(l._abstract)?l._abstract[0]["value"]:'',
+                                   Title: angular.isArray(l.title)?l.title[0]["value"]:l.identifier
+                                 });
+                               }
+                             });
+                          }).catch(function(error) {
                             scope.isUrlOk = error === 200;
                           });
                     }
-                  } else if (scope.params.url.indexOf('http') === 0) {
-                    var useProxy =
-                        scope.params.url.indexOf(location.hostname) === -1;
-                    var url = useProxy ?
-                        '../../proxy?url=' +
-                        encodeURIComponent(scope.params.url) : scope.params.url;
+                  } else if (url.indexOf('http') === 0) {
                     return $http.get(url).then(function(response) {
                       scope.isUrlOk = response.status === 200;
                     },
                     function(response) {
-                      // Proxy may return 500 when document is not proxyable
-                      scope.isUrlOk = response.status === 200;
+                      scope.isUrlOk = response.status === 500;
                     });
                   } else {
                     scope.isUrlOk = true;
@@ -1131,16 +899,23 @@
                 };
 
                 function checkIsOgc(protocol) {
+
                   if (protocol && protocol.indexOf('OGC:WMS') >= 0) {
                     return 'WMS';
                   }
                   else if (protocol && protocol.indexOf('OGC:WFS') >= 0) {
                     return 'WFS';
                   }
+                  else if (protocol && protocol.indexOf('OGC:WMTS') >= 0) {
+                    return 'WMTS';
+                  }
+                  else if (protocol && protocol.indexOf('OGC:WCS') >= 0) {
+                    return 'WCS';
+                  }
                   else {
                     return null;
                   }
-                };
+                }
 
                 /**
                  * On protocol combo Change.
@@ -1148,7 +923,7 @@
                  * layer grid and call or not a getCapabilities.
                  */
                 scope.$watch('params.protocol', function(n, o) {
-                  if (!angular.isUndefined(scope.params.protocol) && o != n) {
+                  if (!angular.isUndefined(scope.params.protocol) && o !== n) {
                     resetProtocol();
                     scope.OGCProtocol = checkIsOgc(scope.params.protocol);
                     if (scope.OGCProtocol != null && !scope.isEditing) {
@@ -1165,13 +940,20 @@
                  * On URL change, reload WMS capabilities
                  * if the protocol is WMS
                  */
-                scope.$watch('params.url', function() {
-                  if (!angular.isUndefined(scope.params.url)) {
+                var updateImageTag = function() {
+                  scope.isImage = false;
+                  var urls = scope.params.url;
+                  var curUrl = angular.isObject(urls) ?
+                      urls[scope.ctrl.urlCurLang] : urls;
+
+                  if (curUrl) {
                     scope.loadCurrentLink();
-                    scope.isImage =
-                        scope.params.url.match(/.*.(png|jpg|gif)$/i);
+                    scope.isImage = curUrl.match(/.*.(png|jpg|jpeg|gif)$/i);
                   }
-                });
+
+                };
+                scope.$watch('params.url', updateImageTag, true);
+                scope.$watch('ctrl.urlCurLang', updateImageTag, true);
 
                 /**
                  * Concat layer names and title in params names
@@ -1180,7 +962,7 @@
                  * them to the record.
                  */
                 scope.$watchCollection('params.selectedLayers', function(n, o) {
-                  if (o != n &&
+                  if (o !== n &&
                       scope.params.selectedLayers &&
                       scope.params.selectedLayers.length > 0) {
                     var names = [],
@@ -1191,10 +973,18 @@
                           names.push(layer.Name || layer.name);
                           descs.push(layer.Title || layer.title);
                         });
-                    angular.extend(scope.params, {
-                      name: names.join(','),
-                      desc: descs.join(',')
-                    });
+
+                    if (scope.isMdMultilingual) {
+                      var langCode = scope.mdLangs[scope.mdLang];
+                      scope.params.name[langCode] = names.join(',');
+                      scope.params.desc[langCode] = descs.join(',');
+                    }
+                    else {
+                      angular.extend(scope.params, {
+                        name: names.join(','),
+                        desc: descs.join(',')
+                      });
+                    }
                   }
                 });
 
@@ -1204,8 +994,16 @@
                    */
                 scope.$watch('params.linkType', function(newValue, oldValue) {
                   if (newValue !== oldValue) {
+                    scope.config.multilingualFields = [];
+                    angular.forEach(newValue.fields, function(f, k) {
+                      if (f.isMultilingual !== false) {
+                        scope.config.multilingualFields.push(k);
+                      }
+                    });
+
                     if (!scope.isEditing) {
                       resetForm();
+                      initMultilingualFields();
                     }
 
                     if (newValue.sources && newValue.sources.metadataStore) {
@@ -1221,10 +1019,12 @@
                         }
                       });
                     }
+                    // Set a default label
                     if (!scope.isEditing &&
                         angular.isDefined(newValue.copyLabel)) {
-                      scope.params[newValue.copyLabel] =
-                          $translate(newValue.label);
+                      setParameterValue(
+                        newValue.copyLabel,
+                        $translate.instant(newValue.label));
                     }
 
                     if (newValue.sources && newValue.sources.thumbnailMaker) {
@@ -1233,29 +1033,33 @@
                   }
                 });
 
-                scope.resource = null;
-                scope.$watch('resource', function() {
-                  if (scope.resource && scope.resource.url) {
-                    scope.params.url = '';
-                    setParameterValue(scope.params.name, '');
-                    $timeout(function() {
-                      scope.params.url = scope.resource.url;
-                      setParameterValue(scope.params.name,
-                          scope.resource.id.split('/').splice(2).join('/'));
-                    }, 100);
+                /**
+                 * Update url and name from uploaded resource.
+                 * Triggered on file store selection change.
+                 */
+                scope.selectUploadedResource = function(res) {
+                  if (res && res.url) {
+                    var o = {
+                      name: res.id.split('/').splice(2).join('/'),
+                      url: res.url
+                    };
+                    ['url', 'name'].forEach(function(pName) {
+                      setParameterValue(pName, o[pName]);
+                    });
+                    scope.params.protocol = 'WWW:DOWNLOAD-1.0-http--download';
                   }
-                });
+                };
 
                 scope.$watchCollection('stateObj.selectRecords',
                     function(n, o) {
                       if (!angular.isUndefined(scope.stateObj.selectRecords) &&
                           scope.stateObj.selectRecords.length > 0 &&
-                          n != o) {
+                          n !== o) {
                         scope.metadataLinks = [];
                         scope.metadataTitle = '';
                         var md = new Metadata(scope.stateObj.selectRecords[0]);
                         var links = md.getLinksByType();
-                        if (angular.isArray(links) && links.length == 1) {
+                        if (angular.isArray(links) && links.length === 1) {
                           scope.params.url = links[0].url;
                         } else {
                           scope.metadataLinks = links;
@@ -1263,6 +1067,12 @@
                         }
                       }
                     });
+
+                scope.isFieldMultilingual = function(field) {
+                  return scope.isMdMultilingual &&
+                      scope.config.multilingualFields &&
+                      scope.config.multilingualFields.indexOf(field) >= 0;
+                };
               }
             }
           };
@@ -1297,8 +1107,10 @@
         '$rootScope',
         '$translate',
         'gnGlobalSettings',
+        'gnConfigService',
         function(gnOnlinesrc, Metadata, gnOwsCapabilities,
-            gnCurrentEdit, $rootScope, $translate, gnGlobalSettings) {
+                 gnCurrentEdit, $rootScope, $translate,
+                 gnGlobalSettings, gnConfigService) {
           return {
             restrict: 'A',
             scope: {},
@@ -1308,6 +1120,7 @@
               return {
                 pre: function preLink(scope) {
                   scope.searchObj = {
+                    internal: true,
                     params: {}
                   };
                   scope.modelOptions =
@@ -1318,6 +1131,8 @@
                   scope.popupid = '#linkto' + scope.mode + '-popup';
                   scope.alertMsg = null;
                   scope.layerSelectionMode = 'multiple';
+                  scope.onlineSrcLink = '';
+                  scope.addOnlineSrcInDataset = true;
 
                   gnOnlinesrc.register(scope.mode, function() {
                     $(scope.popupid).modal('show');
@@ -1325,31 +1140,47 @@
                     // parameters of the online resource form
                     scope.srcParams = {selectedLayers: []};
 
-                    var searchParams = {
-                      type: scope.mode
-                    };
+                    var searchParams = {};
+                    if (scope.mode === 'service') {
+                      searchParams.type = scope.mode;
+                    } else {
+                      // Any records which are not services
+                      // ie. dataset, series, ...
+                      searchParams['without-type'] = 'service';
+                    }
                     scope.$broadcast('resetSearch', searchParams);
                     scope.layers = [];
+
                     // Load service layers on load
                     if (scope.mode !== 'service') {
-                      // TODO: Check the appropriate WMS service
-                      // or list URLs if many
+                      // If linking a dataset and the service is a WMS
+                      // List all layers. The service WMS link can be added
+                      // as online source in the target dataset.
+                      // TODO: list all URLs if many
                       // TODO: If service URL is added, user need to reload
                       // editor to get URL or current record.
                       var links = [];
                       links = links.concat(
-                          gnCurrentEdit.metadata.getLinksByType('OGC:WMS'));
-                      links = links.concat(
-                          gnCurrentEdit.metadata.getLinksByType('wms'));
-                      if (angular.isArray(links) && links.length == 1) {
-                        var serviceUrl = links[0].url;
-                        scope.loadCurrentLink(serviceUrl);
-                        scope.srcParams.url = serviceUrl;
+                          gnCurrentEdit.metadata.getLinksByType('ogc', 'atom'));
+                      if (links.length > 0) {
+                        scope.onlineSrcLink = links[0].url;
                         scope.srcParams.protocol = links[0].protocol || '';
+                        scope.loadCurrentLink(scope.onlineSrcLink);
+                        scope.srcParams.url = scope.onlineSrcLink;
                         scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
+
+                        scope.addOnlineSrcInDataset = true;
                       } else {
                         scope.alertMsg =
-                            $translate('linkToServiceWithoutURLError');
+                            $translate.instant('linkToServiceWithoutURLError');
+
+                        // If no WMS found, suggest to add a link to the service landing page
+                        // Default is false.
+                        // Build a link to the service metadata record
+                        scope.onlineSrcLink = gnConfigService.getServiceURL() +
+                          "api/records/" + gnCurrentEdit.uuid;
+
+                        scope.addOnlineSrcInDataset = false;
                       }
                     }
                   });
@@ -1369,16 +1200,35 @@
                    */
                   scope.loadCurrentLink = function(url) {
                     scope.alertMsg = null;
-                    return gnOwsCapabilities.getWMSCapabilities(url)
-                        .then(function(capabilities) {
-                          scope.layers = [];
-                          scope.srcParams.selectedLayers = [];
-                          scope.layers.push(capabilities.Layer[0]);
-                          angular.forEach(scope.layers[0].Layer, function(l) {
-                            scope.layers.push(l);
-                            // TODO: We may have more than one level
+
+                    var serviceType = scope.srcParams.protocol.toLowerCase();
+                    if (serviceType.indexOf('ogc') !== -1) {
+                      return gnOwsCapabilities[
+                        serviceType.indexOf('wfs') !== -1 ?
+                          'getWFSCapabilities' : 'getWMSCapabilities'](url)
+                          .then(function(capabilities) {
+                            scope.layers = [];
+                            scope.srcParams.selectedLayers = [];
+                            if (capabilities.Layer) {
+                              scope.layers.push(capabilities.Layer[0]);
+                              angular.forEach(scope.layers[0].Layer, function(l) {
+                                scope.layers.push(l);
+                                // TODO: We may have more than one level
+                              });
+                            } else if (capabilities.featureTypeList) {
+                              angular.forEach(capabilities.featureTypeList.featureType, function(l) {
+                                var name = l.name.prefix + ":" + l.name.localPart;
+                                var layer = {
+                                  'Name': name,
+                                  'Title': l.title || name,
+                                  'abstract': l.abstract || ''
+                                };
+
+                                scope.layers.push(layer);
+                              });
+                            }
                           });
-                        });
+                    }
                   };
 
                   /**
@@ -1394,27 +1244,44 @@
                         scope.stateObj.selectRecords.length > 0) {
                       var md = new Metadata(scope.stateObj.selectRecords[0]);
                       scope.currentMdTitle = md.title || md.defaultTitle;
-                      if (scope.mode == 'service') {
+                      if (scope.mode === 'service') {
                         var links = [];
                         scope.layers = [];
                         scope.srcParams.selectedLayers = [];
-                        // TODO: WFS ?
-                        links = links.concat(md.getLinksByType('OGC:WMS'));
-                        links = links.concat(md.getLinksByType('wms'));
-                        scope.srcParams.uuidSrv = md.getUuid();
-                        scope.srcParams.uuidDS = gnCurrentEdit.uuid;
 
-                        if (angular.isArray(links) && links.length == 1) {
-                          scope.loadCurrentLink(links[0].url);
-                          scope.srcParams.url = links[0].url;
+                        links = links.concat(md.getLinksByType('ogc', 'atom'));
+                        scope.srcParams.uuidSrv = md.getUuid();
+                        scope.srcParams.identifier =
+                          (gnCurrentEdit.metadata.identifier && gnCurrentEdit.metadata.identifier[0]) ?
+                            gnCurrentEdit.metadata.identifier[0] : '';
+                        scope.srcParams.uuidDS = gnCurrentEdit.uuid;
+                        //the uuid of the source catalog (harvester)
+                        scope.srcParams.source = gnCurrentEdit.metadata.source;
+
+
+                        if (links.length > 0) {
+                          scope.onlineSrcLink = links[0].url;
+                          scope.srcParams.protocol = links[0].protocol || 'OGC:WMS';
+                          scope.loadCurrentLink(scope.onlineSrcLink);
+                          scope.srcParams.url = scope.onlineSrcLink;
+                          scope.addOnlineSrcInDataset = true;
                         } else {
-                          scope.srcParams.url = '';
-                          scope.alertMsg =
-                              $translate('linkToServiceWithoutURLError');
+                          scope.srcParams.name = scope.currentMdTitle;
+                          scope.srcParams.desc = scope.currentMdTitle;
+                          scope.srcParams.protocol = "WWW:LINK-1.0-http--link";
+                          scope.onlineSrcLink = gnConfigService.getServiceURL() +
+                            "api/records/" + md.getUuid();
+                          scope.srcParams.url = scope.onlineSrcLink;
+                          scope.addOnlineSrcInDataset = false;
                         }
-                      }
-                      else {
+                      } else {
                         scope.srcParams.uuidDS = md.getUuid();
+                        scope.srcParams.name = gnCurrentEdit.mdTitle;
+                        scope.srcParams.desc = gnCurrentEdit.mdTitle;
+                        scope.srcParams.protocol = "WWW:LINK-1.0-http--link";
+                        scope.srcParams.url = scope.onlineSrcLink;
+                        scope.srcParams.identifier = (md.identifier && md.identifier[0]) ? md.identifier[0] : '';
+                        scope.srcParams.source = md.source;
                       }
                     }
                   });
@@ -1425,13 +1292,13 @@
                    *  - link a service to a dataset
                    * Hide modal on success.
                    */
-                  scope.linkTo = function() {
-                    if (scope.mode == 'service') {
+                  scope.linkTo = function(addOnlineSrcInDataset) {
+                    if (scope.mode === 'service') {
                       return gnOnlinesrc.
-                          linkToService(scope.srcParams, scope.popupid);
+                          linkToService(scope.srcParams, scope.popupid, addOnlineSrcInDataset);
                     } else {
                       return gnOnlinesrc.
-                          linkToDataset(scope.srcParams, scope.popupid);
+                          linkToDataset(scope.srcParams, scope.popupid, addOnlineSrcInDataset);
                     }
                   };
                 }
@@ -1439,6 +1306,7 @@
             }
           };
         }])
+
 
       /**
      * @ngdoc directive
@@ -1473,6 +1341,7 @@
               return {
                 pre: function preLink(scope) {
                   scope.searchObj = {
+                    internal: true,
                     any: '',
                     params: {}
                   };
@@ -1498,28 +1367,28 @@
                   gnOnlinesrc.register(scope.mode, function() {
                     $(scope.popupid).modal('show');
                     var searchParams = {};
-                    if (scope.mode == 'fcats') {
+                    if (scope.mode === 'fcats') {
                       searchParams = {
                         _schema: 'iso19110'
                       };
                       scope.btn = {
-                        label: $translate('linkToFeatureCatalog')
+                        label: $translate.instant('linkToFeatureCatalog')
                       };
                     }
-                    else if (scope.mode == 'parent') {
+                    else if (scope.mode === 'parent') {
                       searchParams = {
                         hitsPerPage: 10
                       };
                       scope.btn = {
-                        label: $translate('linkToParent')
+                        label: $translate.instant('linkToParent')
                       };
                     }
-                    else if (scope.mode == 'source') {
+                    else if (scope.mode === 'source') {
                       searchParams = {
                         hitsPerPage: 10
                       };
                       scope.btn = {
-                        label: $translate('linkToSource')
+                        label: $translate.instant('linkToSource')
                       };
                     }
                     scope.$broadcast('resetSearch', searchParams);
@@ -1559,9 +1428,36 @@
             compile: function compile(tElement, tAttrs, transclude) {
               return {
                 pre: function preLink(scope) {
+                  scope.ctrl = {};
                   scope.searchObj = {
-                    params: {}
+                    internal: true,
+                    any: '',
+                    defaultParams: {
+                      any: '',
+                      from: 1,
+                      to: 50,
+                      sortBy: 'title',
+                      sortOrder: 'reverse'
+                      // resultType: 'hits'
+                    }
                   };
+                  scope.searchObj.params = angular.extend({},
+                      scope.searchObj.defaultParams);
+
+                  // Define configuration to restrict search
+                  // to a subset of records when an initiative type
+                  // and/or association type is selected.
+                  // eg. crossReference-study restrict to DC records
+                  // using _schema=dublin-core
+                  scope.searchParamsPerType = {
+                    //'crossReference-study': {
+                    //  _schema: 'dublin-core'
+                    //},
+                    //'crossReference-*': {
+                    //  _isHarvested: 'n'
+                    //}
+                  };
+
                   scope.modelOptions =
                       angular.copy(gnGlobalSettings.modelOptions);
                 },
@@ -1572,20 +1468,69 @@
                    * Register a method on popup open to reset
                    * the search form and trigger a search.
                    */
-                  gnOnlinesrc.register('sibling', function() {
+                  gnOnlinesrc.register('sibling', function(config) {
+                    if (config && !angular.isObject(config)) {
+                      config = angular.fromJson(config);
+                    }
+
+                    scope.config = {
+                      associationTypeForced:
+                        angular.isDefined(config && config.associationType),
+                      associationType:
+                        (config && config.associationType) || null,
+                      initiativeTypeForced:
+                        angular.isDefined(config && config.initiativeType),
+                      initiativeType:
+                        (config && config.initiativeType) || null
+                    };
+
                     $(scope.popupid).modal('show');
 
                     scope.$broadcast('resetSearch');
                     scope.selection = [];
                   });
 
+                  // Append * for like search
+                  scope.updateParams = function() {
+                    scope.searchObj.params.any =
+                        '*' + scope.searchObj.any + '*';
+                  };
+
+                  // Based on initiative type and association type
+                  // define custom search parameter and refresh search
+                  var setSearchParamsPerType = function() {
+                    var p = scope.searchParamsPerType[
+                        scope.config.associationType + '-' +
+                        scope.config.initiativeType
+                        ];
+                    var pall = scope.searchParamsPerType[
+                        scope.config.associationType + '-*'
+                        ];
+                    scope.searchObj.params = angular.extend({},
+                        scope.searchObj.defaultParams,
+                        angular.isDefined(p) ? p : (
+                        angular.isDefined(pall) ? pall : {}));
+                    scope.$broadcast('resetSearch', scope.searchObj.params);
+                  };
+
+                  scope.config = {
+                    associationType: null,
+                    initiativeType: null
+                  };
+
+                  scope.$watchCollection('config', function(n, o) {
+                    if (n && n !== o) {
+                      setSearchParamsPerType();
+                    }
+                  });
+
                   /**
-                   * Search a metada record into the selection.
+                   * Search a metadata record into the selection.
                    * Return the index or -1 if not present.
                    */
                   var findObj = function(md) {
                     for (i = 0; i < scope.selection.length; ++i) {
-                      if (scope.selection[i].md == md) {
+                      if (scope.selection[i].md === md) {
                         return i;
                       }
                     }
@@ -1641,8 +1586,8 @@
                           obj.initiativeType);
                     }
                     var params = {
-                      initiativeType: scope.initiativeType,
-                      associationType: scope.associationType,
+                      initiativeType: scope.config.initiativeType,
+                      associationType: scope.config.associationType,
                       uuids: uuids.join(',')
                     };
                     return gnOnlinesrc.linkToSibling(params, scope.popupid);

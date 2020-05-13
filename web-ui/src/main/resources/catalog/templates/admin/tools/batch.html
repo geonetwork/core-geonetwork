@@ -9,6 +9,7 @@
 
         <form data-ng-search-form=""
               data-runSearch="false">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
           <div class="row">
             <div class="col-md-6">
@@ -32,7 +33,7 @@
 
               <div class="input-group gn-form-any">
                 <input type="text"
-                       class="form-control input-lg"
+                       class="form-control"
                        id="gn-any-field"
                        data-ng-model="searchObj.params.any"
                        data-ng-model-options="modelOptions"
@@ -70,7 +71,7 @@
                     <select class="form-control" id="gn-batchSearchGroupOwner"
                             data-ng-model="searchObj.params.group">
                       <option></option>
-                      <option data-ng-repeat="g in batchSearchGroups" value="{{g.id}}"
+                      <option data-ng-repeat="g in batchSearchGroups | orderBy:'name' " value="{{g.id}}"
                       >{{g.label[lang]|empty:g.name}}
                       </option>
                     </select>
@@ -82,9 +83,8 @@
                     <select class="form-control" id="gn-batchSearchOwner"
                             data-ng-model="searchObj.params._owner">
                       <option></option>
-                      <option data-ng-repeat="u in batchSearchUsers.users"
-                              value="{{u.value.id}}">{{u.value.name}}
-                        {{u.value.surname}}
+                      <option data-ng-repeat="u in batchSearchUsers | orderBy: 'username'"
+                              value="{{u.id}}">{{u.name}} {{u.surname}} ({{u.username}})
                       </option>
                     </select>
                   </div>
@@ -148,6 +148,7 @@
       <div class="panel-heading" data-translate="">configureProcess</div>
       <div class="panel-body">
         <form class="form-horizontal" id="gn-batch-process">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
           <select class="form-control"
                   data-ng-disabled="selection.length == 0"
                   data-ng-model="data.selectedProcess"

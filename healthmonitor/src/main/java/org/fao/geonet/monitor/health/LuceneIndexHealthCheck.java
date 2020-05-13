@@ -45,7 +45,7 @@ import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
  */
 public class LuceneIndexHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {
-        return new HealthCheck("Lucene Index") {
+        return new HealthCheck(this.getClass().getSimpleName()) {
             @Override
             protected Result check() throws Exception {
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

@@ -25,8 +25,10 @@ package org.fao.geonet.api.records.formatters;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.utils.FilePathChecker;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,7 +50,7 @@ import static com.google.common.io.Files.getFileExtension;
 @Controller("md.formatter.resource")
 public class Resource extends AbstractFormatService {
 
-    @RequestMapping(value = "/{lang}/md.formatter.resource")
+    @RequestMapping(value = "/{portal}/{lang}/md.formatter.resource")
     public void exec(
         @RequestParam(Params.ID) String xslid,
         @RequestParam(Params.FNAME) String fileName,
@@ -59,6 +61,13 @@ public class Resource extends AbstractFormatService {
         Path schemaDir = null;
         if (schema != null) {
             schemaDir = applicationContext.getBean(SchemaManager.class).getSchemaDir(schema);
+        }
+
+        try {
+            FilePathChecker.verify(fileName);
+        } catch (BadParameterEx ex) {
+            response.sendError(403, fileName + " does not identify a file in the " + xslid + " format bundle");
+            return;
         }
 
         Path formatDir = getAndVerifyFormatDir(applicationContext.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);

@@ -33,6 +33,18 @@ import org.jdom.output.XMLOutputter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+
+import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.Util;
+import org.fao.geonet.csw.common.ElementSetName;
+import org.fao.geonet.csw.common.ResultType;
+import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
+import org.fao.geonet.kernel.SchemaManager;
 
 //=============================================================================
 
@@ -96,6 +108,51 @@ public class Xml {
 
         return outputter.outputString(data);
     }
+
+    /**
+     * Applies stylesheet according to ElementSetName and schema.
+     *
+     * @param context        Service context
+     * @param schemaManager  schemamanager
+     * @param schema         schema
+     * @param result         result
+     * @param outputSchema   requested OutputSchema
+     * @param elementSetName requested ElementSetName
+     * @param resultType     requested ResultTYpe
+     * @param id             metadata id
+     * @return metadata
+     * @throws InvalidParameterValueEx hmm
+     */
+    public static Element applyElementSetName(ServiceContext context, SchemaManager schemaManager, String schema,
+                                               Element result, String outputSchema, ElementSetName elementSetName,
+                                               ResultType resultType, String id, String displayLanguage) throws InvalidParameterValueEx {
+        Path schemaDir = schemaManager.getSchemaCSWPresentDir(schema);
+        Path styleSheet = schemaDir.resolve(outputSchema + "-" + elementSetName + ".xsl");
+
+        if (!Files.exists(styleSheet)) {
+            throw new InvalidParameterValueEx("OutputSchema",
+                String.format(
+                    "OutputSchema '%s' not supported for metadata with '%s' (%s).\nCorresponding XSL transformation '%s' does not exist for this schema.\nThe record will not be returned in response.",
+                    outputSchema, id, schema, styleSheet.getFileName()));
+        } else {
+            Map<String, Object> params = new HashMap<>();
+            params.put("lang", displayLanguage);
+            params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
+
+            try {
+                result = org.fao.geonet.utils.Xml.transform(result, styleSheet, params);
+            } catch (Exception e) {
+                String msg = String.format(
+                    "Error occured while transforming metadata with id '%s' using '%s'.",
+                    id, styleSheet.getFileName());
+                context.error(msg);
+                context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
+                throw new InvalidParameterValueEx("OutputSchema", msg);
+            }
+            return result;
+        }
+    }
+
 }
 
 //=============================================================================

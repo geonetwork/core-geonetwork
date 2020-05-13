@@ -63,40 +63,44 @@
         restrict: 'A',
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
-          $http.get('../api/regions?categoryId=' +
-              'http://geonetwork-opensource.org/regions%23country', {}, {
+          element.on('focus', function() {
+            $http.get('../api/regions?categoryId=' +
+              'http%3A%2F%2Fwww.naturalearthdata.com%2Fne_admin%23Country',
+              {}, {
                 cache: true
               }).success(function(response) {
-            var data = response.region;
+              var data = response.region;
 
-            // Compute default name and add a
-            // tokens element which is used for filter
-            angular.forEach(data, function(country) {
-              country.tokens = [];
-              angular.forEach(country.label, function(label) {
-                country.tokens.push(label);
+              // Compute default name and add a
+              // tokens element which is used for filter
+              angular.forEach(data, function(country) {
+                country.tokens = [];
+                angular.forEach(country.label, function(label) {
+                  country.tokens.push(label);
+                });
+                country.name = country.label[scope.lang];
               });
-              country.name = country.label[scope.lang];
+              var source = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: data,
+                limit: 30
+              });
+              source.initialize();
+              $(element).typeahead({
+                minLength: 0,
+                highlight: true
+              }, {
+                name: 'countries',
+                displayKey: 'name',
+                source: source.ttAdapter()
+              }).on('typeahead:selected', function(event, datum) {
+                if (angular.isFunction(scope.onRegionSelect)) {
+                  scope.onRegionSelect(datum);
+                }
+              });
             });
-            var source = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-              queryTokenizer: Bloodhound.tokenizers.whitespace,
-              local: data,
-              limit: 30
-            });
-            source.initialize();
-            $(element).typeahead({
-              minLength: 0,
-              highlight: true
-            }, {
-              name: 'countries',
-              displayKey: 'name',
-              source: source.ttAdapter()
-            }).on('typeahead:selected', function(event, datum) {
-              if (angular.isFunction(scope.onRegionSelect)) {
-                scope.onRegionSelect(datum);
-              }
-            });
+            element.unbind("focus")
           });
         }
       };
@@ -113,16 +117,89 @@
         link: function(scope, element, attrs) {
           scope.gnRegionService = gnRegionService;
 
+          var addGeonames = !attrs['disableGeonames'];
+          scope.regionTypes = [];
+
+          function setDefault() {
+            var defaultThesaurus = attrs['default'];
+            for (t in scope.regionTypes) {
+              if (scope.regionTypes[t].name === defaultThesaurus) {
+                scope.regionType = scope.regionTypes[t];
+                return;
+              }
+            }
+            scope.regionType = scope.regionTypes[0];
+          }
+
           /**
-          * Load list on init to fill the dropdown
-          */
+           * Load list on init to fill the dropdown
+           */
           gnRegionService.loadList().then(function(data) {
-            scope.regionType = data[0];
+            scope.regionTypes = angular.copy(data);
+            if (addGeonames) {
+              scope.regionTypes.unshift({
+                name: 'Geonames',
+                id: 'geonames'
+              });
+            }
+            setDefault();
           });
 
           scope.setRegion = function(regionType) {
             scope.regionType = regionType;
           };
+        }
+      };
+    }]);
+
+  module.directive('gnUserPicker', ['$http',
+    function($http) {
+      return {
+        restrict: 'A',
+        scope: {
+          user: '=gnUserPicker'
+        },
+        link: function(scope, element, attrs) {
+          element.attr('placeholder', '...');
+          // TODO: Add by profile and by group
+          $http.get('../api/users',
+            {}, {
+              cache: true
+            }).then(function(r) {
+            // var data = data;
+            var source = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              local: r.data,
+              identify: function(obj) { return obj.username; },
+              limit: 30
+            });
+
+            function sourceWithDefaults(q, sync) {
+              if (q === '') {
+                sync(source.all());
+              } else {
+                source.search(q, sync);
+              }
+            }
+
+            source.initialize();
+            $(element).typeahead({
+              minLength: 0,
+              highlight: true
+            }, {
+              displayKey: 'username',
+              templates: {
+                suggestion: function(datum) {
+                  return '<p>' + datum.name + ' ' + datum.surname +
+                         ' (' + datum.profile + ')</p>';
+                }
+              },
+              source: sourceWithDefaults
+            }).on('typeahead:selected', function(event, datum) {
+              scope.user = datum;
+            });
+          });
         }
       };
     }]);
@@ -150,6 +227,77 @@
       };
     }]);
 
+  module.directive('gnDuplicateCheck', ['$translate', '$http', '$q',
+    function($translate, $http, $q) {
+      return {
+        restrict: 'A',
+        require: 'ngModel',
+        scope: {
+          value: '=gnDuplicateCheck',
+          list: '=gnDuplicateCheckList',
+          apply: '=gnDuplicateCheckApply',
+          remote: '@gnDuplicateCheckRemote',
+          property: '@gnDuplicateCheckProperty'
+        },
+        link: function(scope, element, attrs, ngModel) {
+          var cssClass = 'gn-duplicate';
+          if (!angular.isArray(scope.list) && scope.remote === undefined) {
+            console.warn('gnDuplicateCheck need an array of values for the list or a remote URL.')
+            return;
+          }
+
+          if (angular.isArray(scope.list)) {
+            var existingValues = scope.property ? [] : scope.list;
+            if (scope.property) {
+              var path = scope.property.split('.');
+              for (var i = 0; i < scope.list.length; i++) {
+                var v = scope.list[i];
+                if (angular.isObject(v)) {
+                  for (var j = 0; j < path.length; j++) {
+                    v = v[path[j]];
+                    existingValues.push(v);
+                  }
+                }
+              }
+            }
+          }
+
+          ngModel.$asyncValidators.gnDuplicateCheck = function(value, viewValue) {
+            value = value || viewValue;
+            if (scope.apply === false) {
+              return $q.when(true);
+            }
+            if (angular.isArray(existingValues)) {
+              if (existingValues.indexOf(value) !== -1) {
+                ngModel.$setValidity(cssClass, false);
+                return $q.reject(false);
+              } else {
+                return $q.when(true);
+              }
+            } else if (scope.remote) {
+              var deferred = $q.defer();
+
+              // Promise server side check
+              $http.get(scope.remote.replace('{value}', value)).then(function (r){
+                if (r.status !== 404) {
+                  ngModel.$setValidity(cssClass, false);
+                  deferred.reject(false);
+                } else {
+                  ngModel.$setValidity(cssClass, true);
+                  deferred.resolve(true);
+                }
+              }, function (e){
+                ngModel.$setValidity(cssClass, true);
+                deferred.resolve(true);
+              });
+
+              return deferred.promise;
+            }
+          };
+        }
+      };
+    }]);
+
   /**
    * Region picker coupled with typeahead.
    * scope.region will tell what kind of region to load
@@ -161,8 +309,10 @@
    * to catch event from selection.
    */
   module.directive('gnRegionPickerInput', [
-    'gnRegionService',
-    function(gnRegionService) {
+    'gnRegionService', 'gnUrlUtils', 'gnGlobalSettings',
+    'gnViewerSettings',
+    function(gnRegionService, gnUrlUtils, gnGlobalSettings,
+        gnViewerSettings) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -178,30 +328,108 @@
           }
           scope.$watch('regionType', function(val) {
             if (scope.regionType) {
-              gnRegionService.loadRegion(scope.regionType, scope.lang).then(
-                  function(data) {
-                    $(element).typeahead('destroy');
-                    var source = new Bloodhound({
-                      datumTokenizer:
-                          Bloodhound.tokenizers.obj.whitespace('name'),
-                      queryTokenizer: Bloodhound.tokenizers.whitespace,
-                      local: data,
-                      limit: 30
-                    });
-                    source.initialize();
-                    $(element).typeahead({
-                      minLength: 0,
-                      highlight: true
-                    }, {
-                      name: 'countries',
-                      displayKey: 'name',
-                      source: source.ttAdapter()
-                    }).on('typeahead:selected', function(event, datum) {
-                      if (angular.isFunction(scope.onRegionSelect)) {
-                        scope.onRegionSelect(datum);
+
+              if (scope.regionType.id == 'geonames') {
+                $(element).typeahead('destroy');
+                var url = gnViewerSettings.geocoder;
+                url = gnUrlUtils.append(url, gnUrlUtils.toKeyValue({
+                  lang: scope.lang,
+                  style: 'full',
+                  type: 'json',
+                  maxRows: 10,
+                  name_startsWith: 'QUERY',
+                  username: 'georchestra'
+                }));
+
+                url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
+
+                var autocompleter = new Bloodhound({
+                  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                  queryTokenizer: Bloodhound.tokenizers.whitespace,
+                  limit: 30,
+                  remote: {
+                    wildcard: 'QUERY',
+                    url: url,
+                    ajax: {
+                      beforeSend: function() {
+                        scope.regionLoading = true;
+                        scope.$apply();
+                      },
+                      complete: function() {
+                        scope.regionLoading = false;
+                        scope.$apply();
+                      }
+                    },
+                    filter: function(data) {
+                      return data.geonames;
+                    }
+                  }
+                });
+                autocompleter.initialize();
+                $(element).typeahead({
+                  minLength: 1,
+                  highlight: true
+                }, {
+                  name: 'places',
+                  displayKey: 'name',
+                  source: autocompleter.ttAdapter(),
+                  templates: {
+                    suggestion: function(loc) {
+                      var props = [];
+                      ['adminName1', 'countryName'].
+                          forEach(function(p) {
+                            if (loc[p]) { props.push(loc[p]); }
+                          });
+                      return '<div>' + loc.name + ((props.length == 0) ? '' :
+                          ' — <em>' + props.join(', ') + '</em></div>');
+                    }
+                  }
+
+                }).on('typeahead:selected', function(event, datum) {
+                  if (angular.isFunction(scope.onRegionSelect)) {
+                    scope.onRegionSelect(datum);
+                  }
+                });
+              }
+              else {
+                gnRegionService.loadRegion(scope.regionType, scope.lang).then(
+                    function(data) {
+                      if (data) {
+                        $(element).typeahead('destroy');
+                        var source = new Bloodhound({
+                          datumTokenizer:
+                              Bloodhound.tokenizers.obj.whitespace('name'),
+                          queryTokenizer: Bloodhound.tokenizers.whitespace,
+                          local: data
+                        });
+                        source.initialize();
+
+                        function allOrSearchFn(q, sync) {
+                          if (q === '') {
+                            sync(source.all());
+                            // This is the only change needed to get 'ALL'
+                            // items as the defaults
+                          } else {
+                            source.search(q, sync);
+                          }
+                        }
+
+                        $(element).typeahead({
+                          minLength: 0,
+                          highlight: true
+                        }, {
+                          name: 'countries',
+                          displayKey: 'name',
+                          limit: 100,
+                          source: allOrSearchFn
+                        }).on('typeahead:selected', function(event, datum) {
+                          if (angular.isFunction(scope.onRegionSelect)) {
+                            scope.onRegionSelect(datum);
+                          }
+                        });
                       }
                     });
-                  });
+              }
             }
           });
         }
@@ -228,43 +456,46 @@
         restrict: 'A',
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
-          $http.get('../api/isolanguages', {}, {
-            cache: true
-          }).success(function(data) {
-            // Compute default name and add a
-            // tokens element which is used for filter
-            angular.forEach(data, function(lang) {
-              var defaultName = lang.label['eng'];
-              lang.name = lang.label[scope.lang] || defaultName;
-              lang.tokens = [lang.name, lang.code, defaultName];
-            });
-            var source = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-              queryTokenizer: Bloodhound.tokenizers.whitespace,
-              local: data,
-              limit: 30
-            });
-            source.initialize();
-            $(element).typeahead({
-              minLength: 0,
-              highlight: true
-            }, {
-              name: 'isoLanguages',
-              displayKey: 'code',
-              source: source.ttAdapter(),
-              templates: {
-                suggestion: function(datum) {
-                  return '<p>' + datum.name + ' (' + datum.code + ')</p>';
+          element.on('focus', function() {
+            $http.get('../api/isolanguages', {}, {
+              cache: true
+            }).success(function(data) {
+              // Compute default name and add a
+              // tokens element which is used for filter
+              angular.forEach(data, function(lang) {
+                var defaultName = lang.label['eng'];
+                lang.name = lang.label[scope.lang] || defaultName;
+                lang.tokens = [lang.name, lang.code, defaultName];
+              });
+              var source = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: data,
+                limit: 30
+              });
+              source.initialize();
+              $(element).typeahead({
+                minLength: 0,
+                highlight: true
+              }, {
+                name: 'isoLanguages',
+                displayKey: 'code',
+                source: source.ttAdapter(),
+                templates: {
+                  suggestion: function(datum) {
+                    return '<p>' + datum.name + ' (' + datum.code + ')</p>';
+                  }
                 }
-              }
+              });
             });
-          });
+            element.unbind("focus")
+          })
         }
       };
     }]);
 
-  module.directive('gnHumanizeTime', [
-    function() {
+  module.directive('gnHumanizeTime', ['gnGlobalSettings', 'gnHumanizeTimeService',
+    function(gnGlobalSettings, gnHumanizeTimeService) {
       return {
         restrict: 'A',
         template: '<span title="{{title}}">{{value}}</span>',
@@ -274,28 +505,13 @@
           fromNow: '@'
         },
         link: function linkFn(scope, element, attr) {
+          var useFromNowSetting = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
           scope.$watch('date', function(originalDate) {
             if (originalDate) {
-              // Moment will properly parse YYYY, YYYY-MM,
-              // YYYY-MM-DDTHH:mm:ss which are the formats
-              // used in the common metadata standards.
-              // By the way check Z
-              var date = null, suffix = 'Z';
-              if (originalDate.indexOf(suffix,
-                  originalDate.length - suffix.length) !== -1) {
-                date = moment(originalDate, 'YYYY-MM-DDtHH-mm-SSSZ');
-              } else {
-                date = moment(originalDate);
-              }
-              if (date.isValid()) {
-                var fromNow = date.fromNow();
-                var formattedDate = scope.format ?
-                    date.format(scope.format) :
-                    date.toString();
-                scope.value = scope.fromNow !== undefined ?
-                    fromNow : formattedDate;
-                scope.title = scope.fromNow !== undefined ?
-                    formattedDate : fromNow;
+              var attempt = gnHumanizeTimeService(originalDate, scope.format, scope.fromNow !== undefined)
+              if (attempt !== undefined) {
+                scope.value = attempt.value;
+                scope.title = attempt.title;
               }
             }
           });
@@ -327,13 +543,13 @@
              var params = angular.fromJson(element.attr('params') || '{}');
 
              var url = gnUrlUtils.append('q?_content_type=json',
-             gnUrlUtils.toKeyValue(angular.extend({
+              gnUrlUtils.toKeyValue(angular.extend({
                _isTemplate: 'n',
                any: '*QUERY*',
                sortBy: 'title',
                fast: 'index'
              }, params)
-             )
+              )
              );
              var parseResponse = function(data) {
                var records = gnSearchManagerService.format(data);
@@ -430,15 +646,15 @@
              element.attr('placeholder', '...');
 
              var url = gnUrlUtils.append('q@json',
-             gnUrlUtils.toKeyValue({
-               _isTemplate: 's',
-               any: '*QUERY*',
-               _root: 'gmd:CI_ResponsibleParty',
-               sortBy: 'title',
-               sortOrder: 'reverse',
-               resultType: 'subtemplates',
-               fast: 'index'
-             })
+              gnUrlUtils.toKeyValue({
+                _isTemplate: 's',
+                any: '*QUERY*',
+                _root: 'gmd:CI_ResponsibleParty',
+                sortBy: 'title',
+                sortOrder: 'reverse',
+                resultType: 'subtemplates',
+                fast: 'index'
+              })
              );
              var parseResponse = function(data) {
                var records = gnSearchManagerService.format(data);
@@ -485,7 +701,8 @@
   module.directive('gnAutogrow', function() {
     // add helper for measurement to body
     var testObj = angular.element('<textarea ' +
-        ' style="height: 0px; position: absolute; visibility: hidden;"/>');
+        ' style="height: 0px; position: ' +
+        'absolute; top: 0; visibility: hidden;"/>');
     angular.element(window.document.body).append(testObj);
 
     return {
@@ -574,7 +791,7 @@
         restrict: 'A',
         compile: function(scope, element, attr) {
           var fn = $parse(element['gnClickAndSpin'], null, true);
-          return function ngEventHandler(scope, element) {
+          return function ngEventHandler(scope, element, attr) {
             var running = false;
             var icon = element.find('i');
             var spinner = null;
@@ -589,7 +806,10 @@
             var done = function() {
               running = false;
               element.removeClass('running');
-              element.removeClass('disabled');
+              var stayDisabled = attr['gnClickAndSpinStayDisabled'];
+              if (!stayDisabled) {
+                element.removeClass('disabled');
+              }
               element.find('i').first().remove();
               icon.removeClass('hidden');
             };
@@ -645,9 +865,19 @@
 
   /**
    * Use to initialize bootstrap datepicker
+   * Can handle two pickers to select a range
+   * The change callback will be called when the value is updated from the
+   * calendar component. When modified from outside, the internal value of the
+   * picker will be updated accordingly so that the calendar stays in sync.
    */
-  module.directive('gnBootstrapDatepicker', [
-    function() {
+  module.directive('gnBootstrapDatepicker', ['$timeout', 'gnLangs',
+    function($timeout, gnLangs) {
+
+      // to MM-dd-yyyy
+      var formatDate = function(day, month, year) {
+        return ('0' + day).slice(-2) + '-' +
+            ('0' + month).slice(-2) + '-' + year;
+      };
 
       var getMaxInProp = function(obj) {
         var year = {
@@ -664,75 +894,219 @@
         };
 
         for (var k in obj) {
+          k = parseInt(k);
           if (k < year.min) year.min = k;
           if (k > year.max) year.max = k;
         }
         for (k in obj[year.min]) {
+          k = parseInt(k);
           if (k < month.min) month.min = k;
         }
         for (k in obj[year.max]) {
+          k = parseInt(k);
           if (k > month.max) month.max = k;
         }
         for (k in obj[year.min][month.min]) {
-          if (obj[year.min][month.min][k] < day.min) day.min =
-                obj[year.min][month.min][k];
+          k = parseInt(k);
+          if (obj[year.min][month.min][k] < day.min) {
+            day.min = obj[year.min][month.min][k];
+          }
         }
         for (k in obj[year.max][month.max]) {
-          if (obj[year.min][month.min][k] > day.max) day.max =
-                obj[year.min][month.min][k];
+          k = parseInt(k);
+
+          if (obj[year.min][month.min][k] > day.max) {
+            day.max = obj[year.min][month.min][k];
+          }
         }
 
         return {
-          min: month.min + 1 + '/' + day.min + '/' + year.min,
-          max: month.max + 1 + '/' + day.max + '/' + year.max
+          min: formatDate(day.min, month.min + 1, year.min),
+          max: formatDate(day.max, month.max + 1, year.max)
         };
       };
+
+      // check that the date is in dd-mm-yyyy string format
+      function isDateValid(date) {
+        return moment(date, 'DD-MM-YYYY', true).isValid();
+      }
 
       return {
         restrict: 'A',
         scope: {
           date: '=gnBootstrapDatepicker',
-          dates: '=dateAvailable'
+          dates: '=dateAvailable',
+          onChangeFn: '&?'
         },
-        link: function(scope, element, attrs, ngModelCtrl) {
+        link: function(scope, element, attrs) {
 
-          var available = function(date) {
-            if (scope.dates[date.getFullYear()] &&
-                scope.dates[date.getFullYear()][date.getMonth()] &&
-                $.inArray(date.getDate(),
-                    scope.dates[date.getFullYear()][date.getMonth()]) != -1) {
-              return true;
-            } else {
-              return false;
+          var available, limits;
+          var rendered = false;
+          var isRange = ($(element).find('input').length == 2);
+          var highlight = attrs['dateOnlyHighlight'] === 'true';
+
+          // TODO: handle available dates change?
+          // scope.$watch('dates', function(dates, old) {
+          // });
+
+          var init = function() {
+            if (scope.dates) {
+              // Time epoch
+              if (angular.isArray(scope.dates) &&
+                  Number.isInteger(scope.dates[0])) {
+
+                limits = {
+                  min: new Date(Math.min.apply(null, scope.dates)),
+                  max: new Date(Math.max.apply(null, scope.dates))
+                };
+
+                scope.times = scope.dates.map(function(time) {
+                  return moment(time).format('YYYY-MM-DD');
+                });
+
+                available = function(date) {
+                  return scope.times.indexOf(
+                      moment(date).format('YYYY-MM-DD')) >= 0;
+                };
+              }
+
+              // ncwms dates object (year/month/day)
+              else if (angular.isObject(scope.dates)) {
+
+                limits = getMaxInProp(scope.dates);
+
+                available = function(date) {
+                  if (scope.dates[date.getFullYear()] &&
+                      scope.dates[date.getFullYear()][date.getMonth()] &&
+                      $.inArray(date.getDate(),
+                      scope.dates[date.getFullYear()][date.getMonth()]) != -1) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                };
+              }
+            }
+
+            if (rendered) {
+              $(element).datepicker('destroy');
+            }
+
+            var datepickConfig = {
+              container: typeof sxtSettings != 'undefined' ?
+                  '.g' : 'body',
+              autoclose: true,
+              keepEmptyValues: true,
+              clearBtn: true,
+              todayHighlight: false,
+              language: gnLangs.getIso2Lang(gnLangs.getCurrent())
+            };
+
+            if (angular.isDefined(scope.dates)) {
+              angular.extend(datepickConfig, {
+                beforeShowDay: function(dt, a, b) {
+                  var isEnable = available(dt);
+                  return highlight ? (isEnable ? 'gn-date-hl' : undefined) :
+                      isEnable;
+                },
+                startDate: limits.min,
+                endDate: limits.max
+              });
+            }
+            $(element).datepicker(datepickConfig)
+                .on('changeDate clearDate', function(ev) {
+                  // view -> model
+                  scope.$apply(function() {
+                    if (!isRange) {
+                      var date = $(element).find('input')[0].value;
+                      scope.date = date !== '' ? date : undefined;
+                    }
+                    else {
+                      var target = ev.target;
+                      var pickers = $(element).find('input');
+                      var dateFrom = pickers[0].value;
+                      var dateTo = pickers[1].value;
+                      var changed = false;
+
+                      // only apply the date which was modified if it is valid
+                      // (or cleared)
+                      if (target === pickers[0] &&
+                      (isDateValid(dateFrom) || dateFrom == '')) {
+                        scope.date.from = dateFrom !== '' ?
+                        dateFrom : undefined;
+                        changed = true;
+                      } else if (target === pickers[1] &&
+                      (isDateValid(dateTo) || dateTo == '')) {
+                        scope.date.to = dateTo !== '' ?
+                        dateTo : undefined;
+                        changed = true;
+                      }
+
+                      // call the change function if the value was changed
+                      if (changed) {
+                        scope.internalChange = true;
+                        scope.onChangeFn();
+                      }
+                    }
+                  });
+                });
+            rendered = true;
+
+            // set initial dates (use $timeout to avoid messing with ng digest)
+            if (scope.date) {
+              $timeout(function() {
+                var picker = $(element).data('datepicker');
+                if (isRange) {
+                  picker.pickers[0].setDate(scope.date.from);
+                  picker.pickers[1].setDate(scope.date.to);
+                } else {
+                  picker.setDate(scope.date);
+                }
+              });
             }
           };
 
-          var limits;
-          if (scope.dates) {
-            limits = getMaxInProp(scope.dates);
-
-          }
-
-          $(element).datepicker(angular.isDefined(scope.dates) ? {
-            beforeShowDay: function(dt, a, b) {
-              return available(dt);
-            },
-            startDate: limits.min,
-            endDate: limits.max
-          } : {}).on('changeDate', function(ev) {
-            // view -> model
-            scope.$apply(function() {
-              scope.date = $(element).find('input')[0].value;
-            });
-          });
+          init();
 
           // model -> view
-          scope.$watch('date', function(v) {
-            if (angular.isUndefined(v)) {
-              v = '';
-            }
-            $(element).find('input')[0].value = v;
-          });
+          if (!isRange) {
+            scope.$watch('date', function(v, o) {
+
+              if (angular.isDefined(v) &&
+                  angular.isFunction(scope.onChangeFn)) {
+                scope.onChangeFn();
+              }
+              if (v != o) {
+                $(element).find('input')[0].value = v || '';
+              }
+            });
+          }
+          else {
+            scope.$watchCollection('date', function(newValue, oldValue) {
+              if (!scope.date) {
+                scope.date = {};
+                return;
+              }
+              // skip if internal change
+              if (scope.internalChange) {
+                scope.internalChange = false;
+                return;
+              }
+              var dateFrom = (newValue && newValue.from) || '';
+              var dateTo = (newValue && newValue.to) || '';
+              var previousFrom = (oldValue && oldValue.from) || '';
+              var previousTo = (oldValue && oldValue.to) || '';
+              if (dateFrom != previousFrom || dateTo != previousTo) {
+                $timeout(function() {
+                  var picker = $(element).data('datepicker');
+                  $(element).find('input')[0].value = dateFrom;
+                  $(element).find('input')[1].value = dateTo;
+                  picker.pickers[0].update();
+                  picker.pickers[1].update();
+                });
+              }
+            });
+          }
         }
       };
     }]);
@@ -764,6 +1138,9 @@
         replace: false,
         compile: function compile(tElement, tAttrs) {
           var cacheId = tAttrs.cache ? tAttrs.cache + '.paginator' : '';
+          var getItemsFunctionName = tAttrs.getItemsFunctionName ? tAttrs.getItemsFunctionName: 'pageItems';
+          var firstPageFunctionName = tAttrs.firstPageFunctionName ? tAttrs.firstPageFunctionName: 'firstPage';
+
           return {
             pre: function preLink(scope) {
               scope.pageSizeList = [10, 20, 50, 100];
@@ -818,12 +1195,12 @@
 
               // ---- Functions available in parent scope -----
 
-              scope.$parent.firstPage = function() {
+              scope.$parent[firstPageFunctionName] = function() {
                 scope.firstPage();
               };
               // Function that returns the reduced items list,
               // to use in ng-repeat
-              scope.$parent.pageItems = function() {
+              scope.$parent[getItemsFunctionName] = function() {
                 if (angular.isArray(scope.items())) {
                   var start = scope.paginator.currentPage *
                       scope.paginator.pageSize;
@@ -916,61 +1293,102 @@
    * to the parent element (required to highlight
    * element in navbar)
    */
-  module.directive('gnActiveTbItem', ['$location', function($location) {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
-        var link = attrs.gnActiveTbItem, href,
-            isCurrentService = false;
+  module.directive('gnActiveTbItem', ['$location', 'gnLangs', 'gnConfig',
+    function($location, gnLangs, gnConfig) {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          var link = attrs.gnActiveTbItem, href,
+              isCurrentService = false;
 
-        // Insert debug mode between service and route
-        if (link.indexOf('#') !== -1) {
-          var tokens = link.split('#');
-          isCurrentService = window.location.pathname.
-              match('.*' + tokens[0] + '$') !== null;
-          href =
-              (isCurrentService ? '' :
-              tokens[0] + (scope.isDebug ? '?debug' : '')
-              ) + '#' +
-              tokens[1];
-        } else {
-          isCurrentService = window.location.pathname.
-              match('.*' + link + '$') !== null;
-          href =
-              isCurrentService ? '#/' : link + (scope.isDebug ? '?debug' : '');
+          // Replace lang in link
+          link = link.replace('{{lang}}', gnLangs.getCurrent());
+          link = link.replace('{{node}}', gnConfig.env.node);
 
-        }
-
-        // Set the href attribute for the element
-        // with the link containing the debug mode
-        // or not
-        element.attr('href', href);
-
-        function checkActive() {
-          // Ignore the service parameters and
-          // check url contains path
-          var isActive = $location.absUrl().replace(/\?.*#/, '#').
-              match('.*' + link + '.*') !== null;
-
-          if (isActive) {
-            element.parent().addClass('active');
+          // Insert debug mode between service and route
+          if (link.indexOf('#') !== -1) {
+            var tokens = link.split('#');
+            isCurrentService = window.location.pathname.
+                match('.*' + tokens[0] + '$') !== null;
+            href =
+                (isCurrentService ? '' :
+                tokens[0] + (scope.isDebug ? '?debug' : '')
+                ) + '#' +
+                tokens[1];
           } else {
-            element.parent().removeClass('active');
+            isCurrentService = window.location.pathname.
+                match('.*' + link + '$') !== null;
+            href =
+                isCurrentService ? '#/' : link +
+                (scope.isDebug ? '?debug' : '');
+
           }
+
+          // Set the href attribute for the element
+          // with the link containing the debug mode
+          // or not
+          element.attr('href', href);
+
+          function checkActive() {
+            // regexps for getting the service & path
+            var serviceRE = /\/?([^\/\?#]*)\??[^\/]*(?:#|$)/;
+            var pathRE = /#\/?([^\?]*)/;
+
+            // compare current url & input href
+            var url = $location.absUrl();
+            var currentService =
+                url.match(serviceRE) ? url.match(serviceRE)[1] : '';
+            var currentPath = $location.path().substring(1);
+            var targetService =
+                link.match(serviceRE) ? link.match(serviceRE)[1] : '';
+            var targetPath =
+                link.match(pathRE) ? link.match(pathRE)[1] : '';
+            var isActive = currentService == targetService &&
+                (!targetPath || currentPath.indexOf(targetPath) > -1);
+
+            if (isActive) {
+              element.parent().addClass('active');
+            } else {
+              element.parent().removeClass('active');
+            }
+          }
+
+          scope.$on('$locationChangeSuccess', checkActive);
+
+          checkActive();
         }
-
-        scope.$on('$locationChangeSuccess', checkActive);
-
-        checkActive();
-      }
-    };
-  }]);
+      };
+    }]);
+  module.filter('signInLink', ['$location', 'gnLangs', 'gnConfig',
+    function($location, gnLangs, gnConfig) {
+      return function(href) {
+        href = href.replace('{{lang}}', gnLangs.getCurrent())
+                   .replace('{{node}}', gnConfig.env.node) +
+            '?redirect=' + encodeURIComponent(window.location.href);
+        return href;
+      }}
+  ]);
   module.filter('newlines', function() {
-    return function(text) {
-      if (text) {
-        return text.replace(/(\r)?\n/g, '<br/>');
+    return function(value) {
+      if (angular.isArray(value)) {
+        var finalText = '';
+        angular.forEach(value, function(value, key) {
+          if (value) {
+            finalText += '<p>' + value + '</p>';
+          }
+        });
+
+        return finalText;
+
+      } else if (angular.isString(value)) {
+        if (value) {
+          return value.replace(/(\r)?\n/g, '<br/>')
+              .replace(/(&#13;)?&#10;/g, '<br/>');
+        } else {
+          return value;
+        }
       } else {
-        return text;
+        return value;
       }
     }
   });
@@ -1014,18 +1432,41 @@
     return {
       restrict: 'A',
       link: function(scope, element, attr, ngModel) {
+        var modalElt;
 
         element.bind('click', function() {
-          var img = scope.$eval(attr['gnImgModal']);
+          var imgOrMd = scope.$eval(attr['gnImgModal']);
+          var img = undefined;
+          if(imgOrMd.getThumbnails) {
+            var imgs = imgOrMd.getThumbnails();
+            var url = $(element).attr('src');
+            for (var i = 0; i < imgs.list.length; i++) {
+              if (imgs.list[i].url === url) {
+                img = imgs.list[i];
+                break;
+              }
+            }
+          } else {
+            img = imgOrMd;
+          }
+
+          // Toggle the modal if already displayed
+          if (modalElt) {
+            modalElt.modal('hide');
+            modalElt = null;
+            return;
+          }
           if (img) {
             var label = (img.label || (
                 $filter('gnLocalized')(img.title, scope.lang)) || '');
             var labelDiv =
                 '<div class="gn-img-background">' +
-                '  <div class="gn-img-thumbnail-caption">' + label + '</div>' +
+                '  <div class="gn-img-thumbnail-caption">' +
+                label + '</div>' +
                 '</div>';
-            var modalElt = angular.element('' +
-                '<div class="modal fade in">' +
+            modalElt = angular.element('' +
+                '<div class="modal fade in"' +
+                '     id="gn-img-modal-"' + img.id + '>' +
                 '<div class="modal-dialog gn-img-modal in">' +
                 '  <button type=button class="btn btn-link gn-btn-modal-img">' +
                 '<i class="fa fa-times text-danger"/></button>' +
@@ -1037,7 +1478,9 @@
             $(document.body).append(modalElt);
             modalElt.modal();
             modalElt.on('hidden.bs.modal', function() {
-              modalElt.remove();
+              if (modalElt) {
+                modalElt.remove();
+              }
             });
             modalElt.find('.gn-btn-modal-img').on('click', function() {
               modalElt.modal('hide');
@@ -1085,8 +1528,13 @@
           content.css('display', 'none').appendTo(element);
         });
 
+        var hidePopover = function() {
+          button.popover('hide');
+          button.data('bs.popover').inState.click = false;
+        };
+
         // can’t use dismiss boostrap option: incompatible with opacity slider
-        $('body').on('mousedown click', function(e) {
+        var onMousedown = function(e) {
           if ((button.data('bs.popover') && button.data('bs.popover').$tip) &&
               (button[0] != e.target) &&
               (!$.contains(button[0], e.target)) &&
@@ -1094,19 +1542,83 @@
               $(e.target).parents('.popover')[0] !=
               button.data('bs.popover').$tip[0])
           ) {
-            $timeout(function() {
-              button.popover('hide');
-            }, 30);
+            $timeout(hidePopover, 30, false);
           }
-        });
+        };
+
+        $('body').on('mousedown click', onMousedown);
 
         if (attrs['gnPopoverDismiss']) {
-          $(attrs['gnPopoverDismiss']).on('scroll', function() {
-            button.popover('hide');
-          });
+          $(attrs['gnPopoverDismiss']).on('scroll', hidePopover);
         }
 
+        element.on('$destroy', function() {
+          $('body').off('mousedown click', onMousedown);
+          if (attrs['gnPopoverDismiss']) {
+            $(attrs['gnPopoverDismiss']).off('scroll', hidePopover);
+          }
+        });
       }
     };
   }]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_utility.directive:gnLynky
+   *
+   * @description
+   * If the text provided contains the following format:
+   * link|URL|Text, it's converted to an hyperlink, otherwise
+   * the text is displayed without any formatting.
+   *
+   */
+  module.directive('gnLynky', ['$compile',
+    function($compile) {
+      return {
+        restrict: 'A',
+        scope: {
+          text: '@gnLynky'
+        },
+        link: function(scope, element, attrs) {
+          if ((scope.text.indexOf('link') == 0) &&
+              (scope.text.split('|').length == 3)) {
+            scope.link = scope.text.split('|')[1];
+            scope.value = scope.text.split('|')[2];
+
+            element.replaceWith($compile('<a data-ng-href="{{link}}" ' +
+                'data-ng-bind-html="value | newlines"></a>')(scope));
+          } else {
+
+            element.replaceWith($compile('<span ' +
+                'data-ng-bind-html="text | linky | newlines"></span>')(scope));
+          }
+        }
+
+      };
+    }
+  ]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_utility.directive:gnStringToNumber
+   *
+   * @description
+   * Converts a string with a number value to a number.
+   * To be used for example in input type=number fields
+   * when the model value is stored in a string field.
+   *
+   */
+  module.directive('gnStringToNumber', function() {
+    return {
+      require: 'ngModel',
+      link: function (scope, element, attrs, ngModel) {
+        ngModel.$parsers.push(function (value) {
+          return '' + value;
+        });
+        ngModel.$formatters.push(function (value) {
+          return parseFloat(value);
+        });
+      }
+    };
+  });
 })();

@@ -7,9 +7,9 @@ var gnHarvestergeonetwork20 = {
             "@type": "geonetwork20",
             "owner": [""],
             "ownerGroup": [""],
+            "ownerUser": [""],
             "site":   {
               "name": "",
-              "translations": {},
               "uuid": "",
               "account":     {
                 "use": false,
@@ -28,6 +28,7 @@ var gnHarvestergeonetwork20 = {
             "options":   {
               "every": "0 0 0 ? * *",
               "oneRunOnly": false,
+              "overrideUuid" : "SKIP",
               "status": ""
             },
             "searches": [{
@@ -54,20 +55,20 @@ var gnHarvestergeonetwork20 = {
           };
     },
     buildResponse : function(h, $scope) {
-        var body = '<node id="' + h['@id'] + '" ' 
-                + '    type="' + h['@type'] + '">' 
-                + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
-                + '  <site>' 
+        var body = '<node id="' + h['@id'] + '" '
+                + '    type="' + h['@type'] + '">'
+                + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
+                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>' 
+                + '  <site>'
                 + '    <name>' + h.site.name + '</name>'
-                + $scope.buildTranslations(h)
                 + '    <host>' + h.site.host.replace(/&/g, '&amp;') + '</host>'
-                + '    <icon>' + h.site.icon + '</icon>' 
+                + '    <icon>' + h.site.icon + '</icon>'
                 + '    <account>'
                 + '      <use>' + h.site.account.use + '</use>'
-                + '      <username>' + h.site.account.username + '</username>' 
-                + '      <password>' + h.site.account.password + '</password>' 
+                + '      <username>' + h.site.account.username + '</username>'
+                + '      <password>' + h.site.account.password + '</password>'
                 + '    </account>'
-                + '  </site>' 
+                + '  </site>'
                 + '  <searches>'
                 + '    <search>'
                 + '      <freeText>' + h.searches[0].freeText + '</freeText>'
@@ -79,15 +80,16 @@ var gnHarvestergeonetwork20 = {
                 + '      <siteId>' + (h.searches[0].siteId || '') + '</siteId>'
                 + '    </search>'
                 + '  </searches>'
-                + '  <options>' 
-                + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
+                + '  <options>'
+                + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'
+                + '    <overrideUuid>' + h.options.overrideUuid + '</overrideUuid>'
                 + '    <every>' + h.options.every + '</every>'
                 + '    <status>' + h.options.status + '</status>'
-                + '  </options>' 
+                + '  </options>'
                 + '  <content>'
                 + '    <validate>' + h.content.validate + '</validate>'
                 + '    <importxslt>' + h.content.importxslt + '</importxslt>'
-                + '  </content>' 
+                + '  </content>'
                 + $scope.buildResponseGroup(h)
                 + $scope.buildResponseCategory(h) + '</node>';
         return body;

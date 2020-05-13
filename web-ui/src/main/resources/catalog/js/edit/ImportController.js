@@ -44,8 +44,10 @@
    */
   module.controller('GnImportController', [
     '$scope',
+    '$rootScope',
     'gnMetadataManager',
-    function($scope, gnMetadataManager) {
+    '$window',
+    function($scope,  $rootScope, gnMetadataManager, $window) {
       $scope.importMode = 'uploadFile';
       $scope.file_type = 'single';
       $scope.queue = [];
@@ -58,6 +60,7 @@
         serverFolder: '',
         recursiveSearch: false,
         rejectIfInvalid: false,
+        publishToAll: false,
         assignToCatalog: true,
         transformWith: '_none_',
         group: null,
@@ -81,7 +84,8 @@
       $scope.mdImportUploadOptions = {
         autoUpload: false,
         done: uploadImportMdDone,
-        fail: uploadImportMdError
+        fail: uploadImportMdError,
+        headers: {'X-XSRF-TOKEN': $rootScope.csrf}
       };
 
 
@@ -149,6 +153,8 @@
               $(formId).serialize(), $scope.params.xml).then(
               onSuccessFn, onErrorFn);
         }
+        // scroll to top
+        $window.scrollTo(0, 0);
       };
     }
   ]);

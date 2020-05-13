@@ -27,6 +27,7 @@
 
   goog.require('gn_formatter_lib');
   goog.require('gn_map_field_directive');
+  goog.require('gn_field_duration_directive');
   goog.require('gn_mdactions');
   goog.require('gn_mdview');
   goog.require('gn_module');
@@ -38,23 +39,26 @@
     'gn_module',
     'gn_resultsview',
     'gn_map_field_directive',
+    'gn_field_duration_directive',
     'gn_search_controller',
     'gn_viewer',
     'gn_mdview',
     'gn_mdactions',
     'ui.bootstrap.buttons',
-    'ui.bootstrap.tabs',
-    'ngeo'
+    'ui.bootstrap.tabs'
   ]);
 
-  module.constant('gnSearchSettings', {});
-  module.constant('gnViewerSettings', {});
 
   module.config(['$LOCALES', function($LOCALES) {
     $LOCALES.push('search');
-    $LOCALES.push('/../api/0.1/tools/i18n/db?type=MetadataCategory');
+    $LOCALES.push('/../api/0.1/tools/i18n/db?' +
+        'type=MetadataCategory&type=Operation&type=Group&type=StatusValue');
     $LOCALES.push('/../api/0.1/standards/iso19139/' +
         'codelists/gmd%3AMD_TopicCategoryCode');
+    $LOCALES.push('/../api/0.1/standards/iso19139/' +
+        'codelists/gmd%3ADS_AssociationTypeCode');
+    $LOCALES.push('/../api/0.1/standards/iso19139/' +
+        'codelists/gmd%3ADS_InitiativeTypeCode');
   }]);
 
 })();

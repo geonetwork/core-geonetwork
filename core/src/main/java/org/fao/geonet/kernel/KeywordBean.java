@@ -187,7 +187,7 @@ public class KeywordBean {
 
             Element ciDateDatetypeEl = new Element("dateType", Namespaces.GMD);
             Element ciDateDatetypeCodeEl = new Element("CI_DateTypeCode", Namespaces.GMD);
-            ciDateDatetypeCodeEl.setAttribute("codeList", "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode");
+            ciDateDatetypeCodeEl.setAttribute("codeList", "http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode");
             ciDateDatetypeCodeEl.setAttribute("codeListValue", "publication");
 
             ciDateDatetypeEl.addContent(ciDateDatetypeCodeEl);
@@ -697,4 +697,30 @@ public class KeywordBean {
     public String toString() {
         return getUriCode() + " : " + getDefaultValue();
     }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		KeywordBean other = (KeywordBean) obj;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		return true;
+	}
+
 }

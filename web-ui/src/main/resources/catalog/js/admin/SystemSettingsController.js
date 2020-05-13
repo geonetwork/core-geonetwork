@@ -24,9 +24,12 @@
 (function() {
   goog.provide('gn_system_settings_controller');
 
+  goog.require('gn_ui_config');
+  goog.require('gn_timezone_selector')
+
 
   var module = angular.module('gn_system_settings_controller',
-      []);
+      ['gn_ui_config', 'gn_timezone_selector']);
 
   module.filter('hideLanguages', function() {
     return function(input) {
@@ -39,6 +42,24 @@
       return filtered;
     }
   });
+
+  /**
+   * Filters internal settings used by GeoNetwork,
+   * not intended to be configured by the user.
+   */
+  module.filter('hideGeoNetworkInternalSettings', function() {
+    return function(input) {
+      var filtered = [];
+      var internal = ['system/userFeedback/lastNotificationDate'];
+      angular.forEach(input, function(el) {
+        if (internal.indexOf(el.name) === -1) {
+          filtered.push(el);
+        }
+      });
+      return filtered;
+    }
+  });
+
   module.filter('orderObjectBy', function() {
     return function(input, attribute) {
       if (!angular.isObject(input)) return input;
@@ -66,12 +87,13 @@
    */
   module.controller('GnSystemSettingsController', [
     '$scope', '$http', '$rootScope', '$translate', '$location',
-    'gnUtilityService',
+    'gnUtilityService', '$timeout', 'gnGlobalSettings',
     function($scope, $http, $rootScope, $translate, $location,
-        gnUtilityService) {
+        gnUtilityService, $timeout, gnGlobalSettings) {
 
       $scope.settings = [];
       $scope.initalSettings = [];
+      $scope.uiConfigurations = [];
       $scope.sectionsLevel1 = {};
       $scope.systemUsers = null;
       $scope.processTitle = '';
@@ -87,12 +109,12 @@
             $scope.systemInfo.stagingProfile)
             .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('profileUpdated'),
+                msg: $translate.instant('profileUpdated'),
                 timeout: 2,
                 type: 'success'});
             }).error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('profileUpdatedFailed'),
+                msg: $translate.instant('profileUpdatedFailed'),
                 timeout: 2,
                 type: 'danger'});
             });
@@ -115,11 +137,13 @@
             .success(function(data) {
               $scope.systemInfo = data;
             });
+
         // load log files
         $http.get('../api/site/logging')
             .success(function(data) {
               $scope.logfiles = data;
             });
+
         $http.get('../api/site/settings/details')
             .success(function(data) {
 
@@ -138,6 +162,14 @@
 
 
               for (var i = 0; i < $scope.settings.length; i++) {
+
+                if ($scope.settings[i].name == 'metadata/workflow/enable') {
+                  $scope.workflowEnable =  ($scope.settings[i].value == 'true');
+
+                } else if ($scope.settings[i].name == 'metadata/workflow/draftWhenInGroup') {
+                  $scope.draftInAllGroups = ($scope.settings[i].value == '.*');
+                }
+
                 var tokens = $scope.settings[i].name.split('/');
                 // Extract level 1 and 2 sections
                 if (tokens) {
@@ -160,11 +192,96 @@
                     });
                   }
                 }
+
+                var target = $location.search()['scrollTo'];
+                if (target) {
+                  $timeout(function () {
+                    gnUtilityService.scrollTo(target);
+                  }, 300);
+                }
               }
             }).error(function(data) {
               // TODO
             });
+        loadUiConfigurations();
       }
+
+      $scope.lastUiConfiguration = undefined;
+
+      function loadUiConfigurations() {
+        $scope.uiConfiguration = undefined;
+        $scope.uiConfigurationId = '';
+        $scope.uiConfigurationIdIsValid = false;
+        $http.get('../api/ui')
+          .success(function(data) {
+            for (var i = 0; i < data.length; i ++) {
+              data[i].configuration == angular.toJson(data[i].configuration);
+
+              // Select last one updated or created
+              if (angular.isDefined($scope.lastUiConfiguration) &&
+                $scope.lastUiConfiguration == data[i].id) {
+                $scope.uiConfiguration = data[i];
+              }
+            }
+            $scope.uiConfigurations = data;
+
+            // Select the first
+            if ($scope.uiConfigurations.length > 0 &&
+                angular.isUndefined($scope.uiConfiguration)) {
+              $scope.uiConfiguration = $scope.uiConfigurations[0];
+            }
+          });
+      };
+
+      $scope.$watch('uiConfigurationId', function (n, o) {
+        if (n !== o) {
+          $http.get('../api/ui/' + n)
+            .then(function(r) {
+              $scope.uiConfigurationIdIsValid = r.status === 404;
+            }, function(r) {
+              $scope.uiConfigurationIdIsValid = r.status === 404;
+            });
+        }
+      });
+
+      /**
+       * Create the default configuration based on the
+       * one defined in CatController.
+       */
+      $scope.createDefaultUiConfig = function() {
+        var defaultConfigId = 'srv';
+        $scope.lastUiConfiguration = defaultConfigId;
+        $scope.createOrUpdateUiConfiguration(false, defaultConfigId);
+      };
+      $scope.updateUiConfig = function() {
+        $scope.createOrUpdateUiConfiguration(true);
+      };
+      $scope.createOrUpdateUiConfiguration = function(isUpdate, id) {
+        var newid = id || $scope.uiConfiguration.id;
+        $scope.lastUiConfiguration = newid;
+        if (newid) {
+          $http.put('../api/ui' + (isUpdate ? '/' + newid : ''), {
+            "id": newid,
+            // TODO: copy an existing one?
+            "configuration": (isUpdate ? $scope.uiConfiguration.configuration : JSON.stringify(gnGlobalSettings.gnCfg))
+          }, {responseType: 'text'}).then(function(r) {
+            loadUiConfigurations();
+          }, function(r) {
+            $rootScope.$broadcast('StatusUpdated', {
+              title: $translate.instant('uiConfigUpdateError'),
+              error: r.data,
+              timeout: 0,
+              type: 'danger'});
+          });
+        }
+      };
+
+      $scope.deleteUiConfig = function() {
+        $scope.lastUiConfiguration = undefined;
+        $http.delete('../api/ui/' + $scope.uiConfiguration.id).then(function(r) {
+          loadUiConfigurations();
+        });
+      };
 
       function loadUsers() {
         $http.get('../api/users').success(function(data) {
@@ -177,7 +294,7 @@
          */
       var filterBySection = function(elements, section) {
         var settings = [];
-        var regexp = new RegExp('^' + section);
+        var regexp = new RegExp('^' + section + '/.*|^' + section + '$');
         for (var i = 0; i < elements.length; i++) {
           var s = elements[i];
           if (regexp.test(s.name)) {
@@ -192,6 +309,8 @@
          * broadcast success status and reload catalog info.
          */
       $scope.saveSettings = function(formId) {
+        // Used to disable some UI form elements that should not be submitted.
+        $(".gn-no-setting" ).attr("disabled", true);
 
         $http.post('../api/site/settings',
             gnUtilityService.serialize(formId), {
@@ -199,26 +318,31 @@
                     'application/x-www-form-urlencoded'}
             })
             .success(function(data) {
+              $(".gn-no-setting" ).attr("disabled", false);
+
+
               $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('settingsUpdated'),
+                msg: $translate.instant('settingsUpdated'),
                 timeout: 2,
                 type: 'success'});
 
               $scope.loadCatalogInfo();
             })
             .error(function(data) {
-                  $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate('settingsUpdateError'),
-                    error: data,
-                    timeout: 0,
-                    type: 'danger'});
-                });
+              $(".gn-no-setting" ).attr("disabled", false);
+
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('settingsUpdateError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
       };
       $scope.processName = null;
       $scope.processRecommended = function(processName) {
         $scope.processName = processName;
         $scope.processTitle =
-            $translate('processRecommendedOnHostChange-help', {
+            $translate.instant('processRecommendedOnHostChange-help', {
               old: buildUrl($scope.initalSettings),
               by: buildUrl($scope.settings)
             });
@@ -227,10 +351,81 @@
       $scope.processRecommendedForId = function(processName) {
         $scope.resourceIdProcessName = processName;
         $scope.processResourceTitle =
-            $translate('processRecommendedOnHostChange-help', {
+            $translate.instant('processRecommendedOnHostChange-help', {
               old: buildUrl($scope.initalSettings),
               by: buildUrl($scope.settings)
             });
+      };
+      $scope.filterForm = function(e,formId) {
+
+        var filterValue = e.target.value.toLowerCase();
+
+        $(formId + " .form-group").filter(function() {
+
+          var filterText = $(this).find('label').text().toLowerCase();
+          var matchStart = filterText.indexOf("" + filterValue.toLowerCase() + "");
+
+          if (matchStart > -1) {
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
+          // check parent
+          $scope.filterParent($(this));
+        });
+      };
+      $scope.resetFilter = function(formId) {
+
+        $(formId + " .form-group").each(function() {
+          // clear filter
+          $('#filter-settings').val('');
+          // show the element
+          $(this).show();
+          // show the fieldsets
+          $(formId + ' fieldset').show();
+        });
+
+      };
+
+      // check the parent for visible children
+      $scope.filterParent = function(element) {
+
+        var doFilterMain = true;
+        // go back to the fieldset
+        var fieldsetParent = element.parent().parent();
+        // check for UI settings
+        if (fieldsetParent.prop('nodeName').toLowerCase() != 'fieldset') {
+          fieldsetParent = element.parent();
+          doFilterMain = false;
+        }
+        // reset
+        fieldsetParent.show();
+        fieldsetParent.parent().show();
+        // count visible elements
+        var counter = fieldsetParent.children('div').children(':visible').length;
+
+        if (counter > 0) {
+          fieldsetParent.show();
+        } else {
+          fieldsetParent.hide();
+        }
+        if (doFilterMain) {
+          $scope.filterMain(fieldsetParent);
+        }
+      };
+
+      // filter the main parent (for Settings)
+      $scope.filterMain = function(element) {
+
+        var parentMain = element.parent();
+        var counter = parentMain.children('fieldset:visible').length;
+
+        if (counter > 0) {
+          parentMain.show();
+        } else {
+          parentMain.hide();
+        }
+
       };
 
       $scope.testMailConfiguration = function() {
@@ -251,8 +446,20 @@
         var protocol = filterBySection(settings,
             'system/server/protocol')[0].value;
 
-        return protocol + '://' + host + (port == '80' ? '' : ':' + port);
+        return protocol + '://' + host +
+                (isPortRequired(procotol, port) ? ':' + port : '');
       };
+
+      var isPortRequired = function(protocol, port) {
+        if (protocol == 'http' && port == '80') {
+          return false;
+        } else if (protocol == 'https' && port == '443') {
+          return false;
+        } else {
+          return true;
+        }
+      }
+
       /**
        * Save settings and move to the batch process page
        *

@@ -1267,7 +1267,7 @@
     </metadata>
   </inspireSection>
   <inspireAddConformity>Ajouter une section conformité INSPIRE</inspireAddConformity>
-  <xsdError>Erreur</xsdError>
+  <xsdError>Erreur de validation XSD</xsdError>
   <yourRegistration js="true">Création du compte ...</yourRegistration>
   <zip>Code postal</zip>
 
@@ -1710,4 +1710,12 @@
   <tag_label>Tags</tag_label>
   <map_label>Carte</map_label>
   <unknown>Unknown</unknown>
+
+  <pdfReportTocTitle>Contents</pdfReportTocTitle>
+  <onTheWeb>Plus d'information</onTheWeb>
+  <format>Format</format>
+  <spatialRepresentationType>Type de donnée</spatialRepresentationType>
+  <constraints>Contraintes d’accès et d’utilisation</constraints>
+  <updateFrequency>Fréquence de mise à jour</updateFrequency>
+  <lastUpdate>Fiche mise à jour</lastUpdate>
 </strings>

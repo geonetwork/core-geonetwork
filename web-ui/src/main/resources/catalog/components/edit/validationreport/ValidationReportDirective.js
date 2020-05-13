@@ -32,8 +32,9 @@
   angular.module('gn_validation_report_directive', [
     'gn_utility'
   ])
-      .directive('gnValidationReport', ['gnValidation', 'gnCurrentEdit',
-        function(gnValidation, gnCurrentEdit) {
+      .directive('gnValidationReport', [
+        'gnValidation', 'gnCurrentEdit', '$location',
+        function(gnValidation, gnCurrentEdit, $location) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/validationreport/' +
@@ -42,6 +43,7 @@
             link: function(scope) {
               scope.showErrors = false;
               scope.showSuccess = false;
+              scope.alwaysOnTop = false;
               scope.gnCurrentEdit = gnCurrentEdit;
               scope.loading = false;
               scope.ruleTypes = [];
@@ -79,7 +81,13 @@
                   scope.ruleTypes = scope.ruleTypes.concat(optional);
                   scope.hasSuccess = scope.ruleTypes.length > 0;
                   scope.loading = false;
+                }).finally(function() {
+                  scope.loading = false;
                 });
+              };
+
+              scope.scrollTo = function(ref) {
+                $location.search('scrollTo', '#gn-el-' + ref.split('_')[1]);
               };
 
               scope.labelImportanceClass = function(type) {
@@ -97,7 +105,6 @@
               scope.toggleShowSuccess = function() {
                 scope.showSuccess = !scope.showSuccess;
               };
-
               scope.getClass = function(type) {
                 if (scope.numberOfRules > 0) {
                   if (type === 'icon') {

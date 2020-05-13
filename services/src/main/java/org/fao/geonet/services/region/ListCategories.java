@@ -27,6 +27,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.api.regions.ThesaurusBasedRegionsDAO;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.jdom.Element;

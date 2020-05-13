@@ -26,17 +26,14 @@ package org.fao.geonet.api.records.formatters.groovy.util;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.groovy.Environment;
 import org.fao.geonet.api.records.formatters.groovy.Functions;
 import org.fao.geonet.api.records.formatters.groovy.Handlers;
 import org.fao.geonet.api.records.formatters.groovy.template.FileResult;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -145,8 +142,13 @@ public class Summary {
     }
 
     private boolean resourceUrlExists(String imgFile) {
-        final Path mdDataDir = Lib.resource.getDir(env.getBean(GeonetworkDataDirectory.class), Params.Access.PUBLIC, env.getMetadataId());
-        return Files.exists(mdDataDir.resolve(imgFile));
+        final Store store = env.getBean("resourceStore", Store.class);
+        try {
+            return store.getResourceDescription(env.getContext(), env.getMetadataUUID(), MetadataResourceVisibility.PUBLIC,
+                                                imgFile, true) != null;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private boolean thumbnailIsUrl(String img) {

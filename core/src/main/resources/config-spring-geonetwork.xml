@@ -30,6 +30,11 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     ">
+
+  <context:property-placeholder location="${app.properties}"
+                                file-encoding="UTF-8"
+                                ignore-unresolvable="true" />
+
   <context:annotation-config/>
   <bean id="ProfileManager" class="jeeves.component.ProfileManager" lazy-init="true"/>
   <bean id="MonitorManager" class="jeeves.monitor.MonitorManager" lazy-init="true"/>
@@ -52,7 +57,11 @@
 
   <bean id="translatorFactory" class="org.fao.geonet.kernel.search.TranslatorFactory"/>
 
+  <bean id="urlAnalyzer" class="org.fao.geonet.kernel.url.UrlAnalyzer" lazy-init="true"/>
+  <bean id="urlChecker" class="org.fao.geonet.kernel.url.UrlChecker" lazy-init="true"/>
   <bean id="SearchManager" class="org.fao.geonet.kernel.search.SearchManager" lazy-init="true"/>
+  <bean id="SearchLogger" class="org.fao.geonet.kernel.search.log.SearcherLogger" lazy-init="true"/>
+  <bean id="EsSearchManager" class="org.fao.geonet.kernel.search.EsSearchManager" lazy-init="true"/>
   <bean id="LuceneIndexLanguageTracker"
         class="org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker" lazy-init="true"/>
   <bean id="HarvesterSettingsManager" class="org.fao.geonet.kernel.setting.HarvesterSettingsManager"
@@ -68,14 +77,22 @@
         scope="singleton"/>
   <bean id="schematronValidator" class="org.fao.geonet.kernel.SchematronValidator" lazy-init="false"
         scope="singleton"/>
+  <bean id="schematronValidatorExternalMd" class="org.fao.geonet.kernel.SchematronValidatorExternalMd" lazy-init="false"
+        scope="singleton"/>
+
+  <!-- List of records to index in a moment ...-->
+  <bean id="indexingList"
+        class="org.fao.geonet.kernel.search.index.IndexingList"/>
 
 
-  <bean id="indexingList" class="org.fao.geonet.kernel.search.index.IndexingList"/>
-
-  <bean name="indexingTaskJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-    <property name="jobClass" value="org.fao.geonet.kernel.search.index.IndexingTask"/>
+  <!-- Task indexing indexingList content -->
+  <bean name="indexingTaskJob"
+        class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+    <property name="jobClass"
+              value="org.fao.geonet.kernel.search.index.IndexingTask"/>
   </bean>
 
+  <!-- Scheduling of the indexing task -->
   <bean id="indexingTaskTrigger"
         class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
     <property name="jobDetail" ref="indexingTaskJob"/>
@@ -83,13 +100,35 @@
     <property name="startDelay" value="60000"/>
   </bean>
 
-  <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+
+
+  <!-- Task notifying user watching records -->
+  <bean name="watchListNotificationTaskJob"
+        class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+    <property name="jobClass"
+              value="org.fao.geonet.kernel.WatchListNotifier"/>
+  </bean>
+
+  <!-- Scheduling of the notification task -->
+  <bean id="watchListNotificationTaskTrigger"
+        class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <property name="jobDetail" ref="watchListNotificationTaskJob"/>
+    <property name="cronExpression" value="${usersavedselection.watchlist.frequency}"/>
+    <property name="startDelay" value="60000"/>
+  </bean>
+
+
+
+  <bean id="gnBackgroundJobScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <property name="schedulerName" value="gnBackgroundJobScheduler"/>
     <property name="jobFactory">
       <bean class="org.fao.geonet.util.spring.AutowiringSpringBeanJobFactory"/>
     </property>
     <property name="triggers">
       <list>
         <ref bean="indexingTaskTrigger"/>
+        <ref bean="watchListNotificationTaskTrigger"/>
+        <ref bean="backupMetadataCronTrigger" />
       </list>
     </property>
     <property name="quartzProperties">
@@ -102,10 +141,79 @@
     </property>
   </bean>
 
-  <bean id="SearchLoggerTask" class="org.fao.geonet.kernel.search.SearchLoggerTask" lazy-init="true"
+  <bean id="SearchLoggerTask"
+        class="org.fao.geonet.kernel.search.SearchLoggerTask"
+        lazy-init="true"
         scope="prototype"/>
-  <bean id="MetadataNotifierTask" class="org.fao.geonet.notifier.MetadataNotifierTask"
+
+  <bean id="MetadataNotifierTask"
+        class="org.fao.geonet.notifier.MetadataNotifierTask"
         lazy-init="true" scope="prototype"/>
-  <bean id="MetadataNotifierClient" class="org.fao.geonet.notifier.MetadataNotifierClient"
+
+  <bean id="MetadataNotifierClient"
+        class="org.fao.geonet.notifier.MetadataNotifierClient"
         lazy-init="true" scope="prototype"/>
+
+  <bean id="backupMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <property name="jobDetail">
+      <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="org.fao.geonet.kernel.backup.ArchiveAllMetadataJob"/>
+        <property name="name" value="archiveAllMetadata" />
+        <property name="group" value="gnBackgroundTasks" />
+      </bean>
+    </property>
+    <property name="cronExpression" value="0 0 6 ? * *" />
+  </bean>
+
+
+    <!--<bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataManager"/>-->
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataValidator"/>
+    <!--<bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils"/>-->
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataOperations"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataStatus"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataSchemaUtils"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataCategory"/>
+
+  <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
+    <property name="namingStrategy" ref="namingStrategy"/>
+  </bean>
+  <bean id="namingStrategy"
+        class="org.springframework.jmx.export.naming.KeyNamingStrategy">
+    <property name="mappings">
+      <props>
+        <prop key="jdbcDataSource">org.apache.commons.dbcp2:name=jdbcDataSource</prop>
+      </props>
+    </property>
+  </bean>
+
+
+  <bean id="filesystemStore"
+        class="org.fao.geonet.api.records.attachments.FilesystemStore"/>
+
+  <bean id="resourceStore"
+        class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">
+    <constructor-arg index="0" ref="filesystemStore"/>
+  </bean>
+
+  <bean id="resources" class="org.fao.geonet.resources.FileResources"/>
+
+  <!-- If you want data stored in S3, use that instead: -->
+  <!--  <bean id="s3credentials" class="org.fao.geonet.resources.S3Credentials">-->
+  <!--    <property name="region" value="eu-west-1"/>-->
+  <!--    <property name="bucket" value="geonetwork-test"/>-->
+  <!--    <property name="keyPrefix" value="geonetwork"/>-->
+  <!--    &lt;!&ndash; Only needed if you don't have a ~/.aws/credentials &ndash;&gt;-->
+  <!--    <property name="accessKey" value="MyAccessKey"/>-->
+  <!--    <property name="secretKey" value="MySecretKey"/>-->
+  <!--    &lt;!&ndash; Only needed when not using Amazon S3&ndash;&gt;-->
+  <!--    <property name="endpoint" value="sos-ch-dk-2.exo.io"/>-->
+  <!--  </bean>-->
+  <!--  <bean id="filesystemStore" class="org.fao.geonet.api.records.attachments.S3Store" />-->
+  <!--  <bean id="resourceStore"-->
+  <!--        class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">-->
+  <!--    <constructor-arg index="0" ref="filesystemStore"/>-->
+  <!--  </bean>-->
+  <!--  <bean id="resources" class="org.fao.geonet.resources.S3Resources"/>-->
+
 </beans>

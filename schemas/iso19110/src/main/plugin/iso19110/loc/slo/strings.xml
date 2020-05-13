@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ Tento program je slobodný softvér: môžete ho šíriť a upravovať podľa ustanovení Všeobecnej
+  ~ verejnej licencie GNU (GNU General Public Licence), vydávanej nadáciou Free Software Foundation,
+  ~ a to buď podľa 2. verzie tejto Licencie, alebo (podľa vášho uváženia) ktorejkoľvek neskoršej verzie.
+  ~
+  ~ Tento program je šírený v nádeji, že bude užitočný, avšak BEZ AKEJKOĽVEK ZÁRUKY. Neposkytujú
+  ~ sa ani odvodené záruky OBCHODOVATEĽNOSTI alebo VHODNOSTI PRE URČITÝ ÚČEL. Ďalšie
+  ~ podrobnosti hľadajte vo Všeobecnej verejnej licencii GNU.
+  ~
+  ~ Kópiu Všeobecnej verejnej licencie GNU ste mali dostať spolu s týmto programom. Ak sa tak nestalo,
+  ~ napíšte na: Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+  ~ USA.
+  ~
+  ~ Kontakt: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rím - Taliansko. email: geonetwork@osgeo.org
+  -->
+
+<strings>
+  <xml_iso19110>Uložiť metaúdaje ako súbor XML ISO19110</xml_iso19110>
+  <xml_iso19110Tooai_dc>Uložiť metaúdaje ako súbor XML OAI Dublin Core</xml_iso19110Tooai_dc>
+
+
+  <advanced>Celý rozsah</advanced>
+  <default>Jednoduchý</default>
+  <xml>XML</xml>
+</strings>

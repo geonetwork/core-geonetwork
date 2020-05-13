@@ -23,6 +23,7 @@
 package org.fao.geonet.api.selections;
 
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.kernel.SelectionManager;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jeeves.server.UserSession;
+import springfox.documentation.annotations.ApiIgnore;
 
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
 
@@ -53,8 +55,8 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
  * Select a list of elements stored in session.
  */
 @RequestMapping(value = {
-    "/api/selections",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/selections",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/selections"
 })
 @Api(value = "selections",
@@ -64,7 +66,7 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
 public class SelectionsApi {
 
     @ApiOperation(value = "Get current selection",
-        nickname = "get")
+        nickname = "getSelection")
     @RequestMapping(
         method = RequestMethod.GET,
         value = "/{bucket}",
@@ -80,6 +82,7 @@ public class SelectionsApi {
             example = "metadata")
         @PathVariable
             String bucket,
+        @ApiIgnore
         HttpSession httpSession
     )
         throws Exception {
@@ -93,7 +96,7 @@ public class SelectionsApi {
 
 
     @ApiOperation(value = "Select one or more items",
-        nickname = "add")
+        nickname = "addToSelection")
     @RequestMapping(
         method = RequestMethod.PUT,
         value = "/{bucket}",
@@ -112,7 +115,9 @@ public class SelectionsApi {
             required = false)
         @RequestParam(required = false)
             String[] uuid,
+        @ApiIgnore
         HttpSession httpSession,
+        @ApiIgnore
         HttpServletRequest request
     )
         throws Exception {
@@ -131,7 +136,7 @@ public class SelectionsApi {
 
 
     @ApiOperation(value = "Clear selection or remove items",
-        nickname = "clear")
+        nickname = "clearSelection")
     @RequestMapping(
         method = RequestMethod.DELETE,
         value = "/{bucket}",
@@ -141,7 +146,7 @@ public class SelectionsApi {
     public
     @ResponseBody
     ResponseEntity<Integer> clear(
-        @ApiParam(value = "Bucket name",
+        @ApiParam(value = ApiParams.API_PARAM_BUCKET_NAME,
             required = true,
             example = "metadata")
         @PathVariable
@@ -151,7 +156,9 @@ public class SelectionsApi {
             required = false)
         @RequestParam(required = false)
             String[] uuid,
+        @ApiIgnore
         HttpSession httpSession,
+        @ApiIgnore
         HttpServletRequest request
     )
         throws Exception {

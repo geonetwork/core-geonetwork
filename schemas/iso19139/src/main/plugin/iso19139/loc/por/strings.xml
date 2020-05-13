@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
@@ -23,12 +23,216 @@
   -->
 
 <strings>
-  <understandResource>Information about the dataset</understandResource>
-  <relatedResources>Related services and linked data</relatedResources>
-  <techInfo>Technical information</techInfo>
-  <contactInfo>Contact information</contactInfo>
-  <mdContactInfo>Metadata contact</mdContactInfo>
-  <refDate>Reference date</refDate>
-  <temporalRef>Temporal information</temporalRef>
-  <constraintInfo>Access constraint information</constraintInfo>
+  <understandResource>Informações sobre o conjunto de dados</understandResource>
+  <relatedResources>Serviços relacionados e dados associados</relatedResources>
+  <techInfo>Informação técnica</techInfo>
+  <contactInfo>Informações de contato</contactInfo>
+  <mdContactInfo>Contato de metadados</mdContactInfo>
+  <refDate>Data de referência</refDate>
+  <temporalRef>Informações temporais</temporalRef>
+  <constraintInfo>Informações sobre restrições de acesso</constraintInfo>
+  <xml_iso19139>Salve os metadados como um arquivo ISO19139 XML</xml_iso19139>
+  <xml_iso19139Tooai_dc>Salve os metadados como um arquivo XML do OAI Dublin Core</xml_iso19139Tooai_dc>
+
+  <!-- New strings added for the AngularJS editor -->
+  <!-- View and tabs -->
+  <advanced>Completo</advanced>
+  <default>Simples</default>
+  <simple>Simples</simple>
+  <inspire>INSPIRE</inspire>
+  <inspire_sds>SDS</inspire_sds>
+
+  <keywordFrom>Palavras chave - </keywordFrom>
+  <resource>Recurso</resource>
+  <xml>XML</xml>
+  <metadata>Metadados</metadata>
+  <identificationInfo>Identificação</identificationInfo>
+  <distributionInfo>Distribuição</distributionInfo>
+  <dataQualityInfo>Qualidade</dataQualityInfo>
+  <spatialRepresentationInfo>Representação espacial</spatialRepresentationInfo>
+  <referenceSystemInfo>Sistema de referência</referenceSystemInfo>
+  <contentInfo>Conteúdo</contentInfo>
+  <portrayalCatalogueInfo>Descrição</portrayalCatalogueInfo>
+  <metadataConstraints>Md. restrições</metadataConstraints>
+  <metadataMaintenance>Md. manutenção</metadataMaintenance>
+  <applicationSchemaInfo>Informações do esquema</applicationSchemaInfo>
+  <noThesaurusName>Palavras-chave</noThesaurusName>
+  <bboxesSection>Cobertura geográfica</bboxesSection>
+  <overviews>Visões gerais</overviews>
+  <metadataInXML>XML</metadataInXML>
+  <providedBy>Providenciado por</providedBy>
+  <shareOnSocialSite>Compartilhar em sites de interesse social</shareOnSocialSite>
+  <viewMode>Views</viewMode>
+  <linkToPortal>Acesso ao portal</linkToPortal>
+  <linkToPortal-help>Leia aqui os detalhes completos e o acesso aos dados</linkToPortal-help>
+  <citationProposal>Proposta de citação</citationProposal>
+  <citationProposal-help>Esta proposta foi gerada automaticamente, verifique se os autores dos metadados não especificaram os requisitos de citação personalizada.</citationProposal-help>
+  <associatedResources>Recursos associados</associatedResources>
+
+  <!-- XSD error translation -->
+  <invalidElement>Conteúdo inválido encontrado no elemento </invalidElement>
+  <onElementOf>Um dos seguintes elementos </onElementOf>
+  <isExpected> é esperado.</isExpected>
+  <isNotComplete> não está completo.</isNotComplete>
+  <elementLocated> O elemento pai é  </elementLocated>
+  <missingElement>Elemento que falta em </missingElement>
+  <invalidValue>Valor inválido ou em falta.</invalidValue>
+  <notValidFor>  não é um valor válido para  </notValidFor>
+  <xsdErrorIs>Erro XSD é: </xsdErrorIs>
+  <inElement> no elemento  </inElement>
+  <enum1>Valor </enum1>
+  <enum2> não é válido para o campo </enum2>
+  <enum3>Os valores potenciais são: </enum3>
+
+  <!-- INSPIRE view labels and help -->
+  <url>Recurso Online</url>
+  <identifier>Identificador do recurso</identifier>
+  <rsIdentifier>Projeção</rsIdentifier>
+  <referenceDate>Informações temporais</referenceDate>
+  <creationDate>Data de criação</creationDate>
+  <hierarchyLevel>Nível Hierárquico</hierarchyLevel>
+  <publicationDate>Data de publicação</publicationDate>
+  <revisionDate>Data de revisão</revisionDate>
+  <temporalRangeSection>Extensão temporal</temporalRangeSection>
+  <beginPosition>Começo</beginPosition>
+  <endPosition>Fim</endPosition>
+  <conformity>Conformidade</conformity>
+  <conformity_title>Título</conformity_title>
+  <conformity_date>Data</conformity_date>
+  <explanation>Explicação</explanation>
+  <pass>Conformidade</pass>
+  <indeterminatePosition>Posição indeterminada</indeterminatePosition>
+  <pointOfContact>Contato para o recurso</pointOfContact>
+  <metadataPointOfContact>Contato para os metadados</metadataPointOfContact>
+  <organisationName>Nome da organização</organisationName>
+  <electronicMailAddress>Email</electronicMailAddress>
+  <role>Função</role>
+  <encoding>Codificação</encoding>
+  <inspireTheme>Temas INSPIRE </inspireTheme>
+  <inspireThemeURI>Temas INSPIRE </inspireThemeURI>
+  <format>Formato</format>
+  <format_version>Version</format_version>
+  <format_specification>Especificação</format_specification>
+  <lineage>Linhagem</lineage>
+  <spatialResolution>Resolução espacial (escala)</spatialResolution>
+  <spatialDistance>Resolução espacial (distância)</spatialDistance>
+  <accessConstraints>Restrições de acesso</accessConstraints>
+  <useConstraints>Restrições de uso</useConstraints>
+  <useLimitation>Limitação de uso</useLimitation>
+  <add-resource-id>Calcular o identificador do recurso</add-resource-id>
+  <add-resource-idHelp>Compor o identificador do recurso utilizando a URL do catálogo e os metadados
+     identificador (eg. http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).
+  </add-resource-idHelp>
+  <add-extent-from-geokeywords>Calcular a extensão a partir da palavra-chave</add-extent-from-geokeywords>
+  <add-extent-from-geokeywordsHelp>Analisar cada palavra-chave do tipo lugar e adicionar extensão de correspondência.
+  </add-extent-from-geokeywordsHelp>
+  <classificationSection>Classificação de dados e serviços</classificationSection>
+  <temporalSection>Referência temporal</temporalSection>
+  <restrictionsSection>Restrições de acesso e utilização</restrictionsSection>
+  <metadataSection>Informações sobre metadados</metadataSection>
+  <responsibleOrganisationSection>Organização responsável (s)</responsibleOrganisationSection>
+  <qualityAndValiditySection>secção qualidade e validade</qualityAndValiditySection>
+  <spatialRepresentationType>Tipo de representação espacial</spatialRepresentationType>
+  <topicCategory>Tópico código de Categoria </topicCategory>
+  <metadataLanguage>Idioma dos metadados</metadataLanguage>
+  <inspireServiceTaxonomy>INSPIRE Service Taxonomy</inspireServiceTaxonomy>
+  <otherConstraints>Outras restrições</otherConstraints>
+  <operatesOn>acoplado Recurso </operatesOn>
+  <extent>Caixa de delimitação geográfica</extent>
+  <spatialExtent>Extensão espacial</spatialExtent>
+
+  <freeTextKeywords>Outras palavras-chave</freeTextKeywords>
+  <resource_url>URL</resource_url>
+  <resource_protocol>Protocolo</resource_protocol>
+
+  <addCrs>Projeção</addCrs>
+  <addCrs4936>ETRS89-XYZ</addCrs4936>
+  <addCrs4937>ETRS89-GRS80h</addCrs4937>
+  <addCrs4258>ETRS89-GRS80</addCrs4258>
+  <addCrs3035>ETRS89-LAEA</addCrs3035>
+  <addCrs3034>ETRS89-LCC</addCrs3034>
+  <addCrs3038>ETRS89-TM26N</addCrs3038>
+  <addCrs3039>ETRS89-TM27N</addCrs3039>
+  <addCrs3040>ETRS89-TM28N</addCrs3040>
+  <addCrs3041>ETRS89-TM29N</addCrs3041>
+  <addCrs3042>ETRS89-TM30N</addCrs3042>
+  <addCrs3043>ETRS89-TM31N</addCrs3043>
+  <addCrs3044>ETRS89-TM32N</addCrs3044>
+  <addCrs3045>ETRS89-TM33N</addCrs3045>
+  <addCrs3046>ETRS89-TM34N</addCrs3046>
+  <addCrs3047>ETRS89-TM35N</addCrs3047>
+  <addCrs3048>ETRS89-TM36N</addCrs3048>
+  <addCrs3049>ETRS89-TM37N</addCrs3049>
+  <addCrs3050>ETRS89-TM38N</addCrs3050>
+  <addCrs3051>ETRS89-TM39N</addCrs3051>
+  <addCrs5730>EVRS</addCrs5730>
+  <addCrs7409>ETRS89-GRS80-EVRS</addCrs7409>
+
+  <!-- String for INSPIRE SDS tab -->
+
+  <inspire_sds_cc1>Classe de Conformidade 1: invocável</inspire_sds_cc1>
+  <inspire_sds_cc2>Classe de conformidade 2: interoperável</inspire_sds_cc2>
+  <inspire_sds_cc3>Classe de conformidade 3: harmonizada</inspire_sds_cc3>
+
+  <sds-category>Category</sds-category>
+  <inspire_add_pass>Adicionar elemento de passe</inspire_add_pass>
+  <sds-add-dataquality>Adicionar elemento de Qualidade de Dados</sds-add-dataquality>
+  <sds-add-dataqualityHelp>TG4: Para cada serviço de dados espaciais, deve haver um e apenas um conjunto
+     de informação de qualidade (elemento dataQualityInfo) scoped para "serviço".
+  </sds-add-dataqualityHelp>
+  <sds-add-tech-spec>Adicionar uma especificação técnica</sds-add-tech-spec>
+  <sds-add-tech-specHelp>TG8: O elemento de metadados de especificação deve ao menos referir-se a ou 
+    conter uma especificação técnica à qual o serviço de dados espaciais invocável está em total conformidade, 
+    fornecendo todos os elementos técnicos necessários, para realmente invocar o serviço e habilitar o seu uso.
+  </sds-add-tech-specHelp>
+  <sds-tech-spec>Especificações técnicas</sds-tech-spec>
+  <conformity_desc>Título da especificação técnica</conformity_desc>
+  <conformity_linkage>Tech spec URL</conformity_linkage>
+
+
+  <sds-section-qos>Quality of Service</sds-section-qos>
+  <sds-add-qualityofservice>Acrescentar critérios de Qualidade de Serviço em falta</sds-add-qualityofservice>
+  <sds-add-qualityofserviceHelp>A SDS INSPIRE exige três critérios de qualidade de serviço relatados nos metadados: Disponibilidade, Desempenho e Capacidade. Este botão irá adicionar o critérios em falta.</sds-add-qualityofserviceHelp>
+  <qos_measure>Medida:</qos_measure>
+  <qos_uom>UOM</qos_uom>
+  <qos_description>Descrição</qos_description>
+  <qos_value>Valor</qos_value>
+  <sds-section-crs>Sistema de referência de coordenadas</sds-section-crs>
+
+  <sds-fix-category>Fixar o elemento Categoria</sds-fix-category>
+  <sds-fix-categoryHelp>(Rec1) Substituir gco:CharacterString por gmx:Anchor no descrição elemento de metadados. </sds-fix-categoryHelp>
+
+  <sds-accesspoint>URL do Ponto de Acesso</sds-accesspoint>
+  <sds-add-accesspoint>Adicionar Ponto de Acesso</sds-add-accesspoint>
+
+  <sds-endpoint>Endpoint URL</sds-endpoint>
+  <sds-add-endpoint>Adicionar ponto final</sds-add-endpoint>
+
+  <sds-addNoConstraints>Sem Limitação</sds-addNoConstraints>
+  <sds-addNoConstraintsHelp>Adicione um elemento que documente que não há limitação para isso
+    serviço.
+  </sds-addNoConstraintsHelp>
+  <sds-addUnknownConstraints>Limitação Desconhecida</sds-addUnknownConstraints>
+  <sds-addConstraints>Restrições personalizáveis</sds-addConstraints>
+
+  <sds>
+    <noConditionsApply>Não se aplicam condições</noConditionsApply>
+    <conditionsUnknown>Condições desconhecidas</conditionsUnknown>
+  </sds>
+
+  <sds-limitation>Limitação</sds-limitation>
+
+  <sds-section-custodian>Responsável pela custódia</sds-section-custodian>
+  <sds-addOperation>Adicionar Operação</sds-addOperation>
+
+  <trueValue>Sim</trueValue>
+  <falseValue>Não</falseValue>
+  <nilValue>Indefinido</nilValue>
+  <logo>logótipo</logo>
+  <overview>visão geral</overview>
+  <thumbnail>miniatura</thumbnail>
+  <north>norte</north>
+  <east>leste</east>
+  <south>sul</south>
+  <west>oeste</west>
 </strings>

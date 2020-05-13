@@ -1,0 +1,43 @@
+<!-- Dataset Atom -->
+<div data-ng-if="atomChecked">
+  <!-- Atom not available -->
+  <div data-ng-if="!isAtomAvailable" class="clearfix gn-margin-top gn-margin-bottom">
+    <div class="fa fa-warning fa-2x fa-fw pull-left"></div>
+    <div class="pull-left ngr-width-80" data-translate="">atomCapabilitiesNotAvailable</div>
+  </div>
+
+  <!-- choose dataset from service -->
+  <!-- only when layer does not match
+      <div data-ng-if="isAtomAvailable && layerName && !atomLinks" class="clearfix ngr-margin-top ngr-margin-bottom">
+    <div class="fa fa-warning fa-2x fa-fw pull-left"></div>
+    <div data-translate=""
+          class="pull-left gn-width-80"
+          data-translate-values="{layerName:'{{layerName}}'}">atomLayerNotAvailable</div>
+  </div>-->
+  <div class="row" data-ng-if="isAtomAvailable && atomDatasets">
+    <div class="col-md-8 gn-nopadding-left"><br/>
+      <select class="form-control"
+              data-ng-model="layerSelected" data-ng-change="update(layerSelected)"
+              data-ng-options="ilayer as ilayer.title for ilayer in atomDatasets | orderBy: 'title'">
+        <option value="">{{"atomChooseLayerToAdd" | translate}}</option>
+      </select>
+    </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- show links from dataset atom -->
+  <div class="btn-group" data-ng-if="isAtomAvailable && isLayerInAtom && atomLinks">
+      <br/><b>{{'atomDatasetsInFeed' | translate}}</b><br/>
+      <div class="gn-atom">
+          <div data-ng-repeat="link in atomLinks track by $index">
+              <a href="{{link.url}}" target="_blank">{{link.title||link.url}}</a> ({{link.length}}mb, {{link.type}}, {{link.crs}})<br/>
+          </div>
+      </div>
+  </div>
+
+</div>
+<div data-ng-if="!atomChecked">
+  <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+  <span class="sr-only">Loading...</span>
+</div>

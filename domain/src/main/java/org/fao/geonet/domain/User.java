@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.entitylistener.UserEntityListenerManager;
+import org.fao.geonet.domain.converter.BooleanToYNConverter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -59,8 +60,8 @@ public class User extends GeonetEntity implements UserDetails {
     private String _username;
     private String _surname;
     private String _name;
-    private Set<String> _email = new HashSet<String>();
-    private Set<Address> _addresses = new LinkedHashSet<Address>();
+    private Set<String> _email = new HashSet<>();
+    private Set<Address> _addresses = new LinkedHashSet<>();
     private String _organisation;
     private String _kind;
     private Profile _profile = Profile.RegisteredUser;
@@ -210,8 +211,9 @@ public class User extends GeonetEntity implements UserDetails {
      *
      * @param email all the email addresses.
      */
-    protected void setEmailAddresses(Set<String> email) {
+    public User setEmailAddresses(Set<String> email) {
         this._email = email;
+        return this;
     }
 
     /**
@@ -374,7 +376,7 @@ public class User extends GeonetEntity implements UserDetails {
         ArrayList<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
         final String nodeId = getSecurity().getNodeId();
         if (nodeId != null) {
-            auths.add(new SimpleGrantedAuthority(NODE_APPLICATION_CONTEXT_KEY + nodeId));
+            auths.add(new SimpleGrantedAuthority(NODE_APPLICATION_CONTEXT_KEY));
         }
 
         if (_profile != null) {
@@ -403,7 +405,9 @@ public class User extends GeonetEntity implements UserDetails {
         return true;
     }
 
-    @Column
+    @Column(name = "isenabled", nullable = false, length = 1, columnDefinition="CHAR(1) DEFAULT 'y'")
+    @Convert(converter = BooleanToYNConverter.class)
+    @Override
     public boolean isEnabled() {
         if (_isEnabled == null) {
             this._isEnabled = true;
@@ -421,7 +425,7 @@ public class User extends GeonetEntity implements UserDetails {
      *
      * @param otherUser     other user to merge data from.
      * @param mergeNullData if true then also set null values from other user. If false then only
-     *                      merge non-null data
+     *                      merge non-null data.
      */
     public void mergeUser(User otherUser, boolean mergeNullData) {
         if (mergeNullData || StringUtils.isNotBlank(otherUser.getUsername())) {
@@ -454,7 +458,7 @@ public class User extends GeonetEntity implements UserDetails {
                 Address address = iterator.next();
                 boolean found = false;
 
-                for (Iterator<Address> iterator2 = otherAddresses.iterator(); iterator.hasNext(); ) {
+                for (Iterator<Address> iterator2 = otherAddresses.iterator(); iterator2.hasNext(); ) {
                     Address otherAddress = iterator2.next();
                     if (otherAddress.getId() == address.getId()) {
                         address.mergeAddress(otherAddress, mergeNullData);

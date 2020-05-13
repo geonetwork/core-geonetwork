@@ -28,28 +28,48 @@
     'ui.bootstrap.tpls',
     'ui.bootstrap.rating']);
 
+  /**
+   * Directive to set the proper link to open
+   * a metadata record in the default angular view
+   * or using a formatter.
+   */
   module.directive('gnMetadataOpen', [
-    '$http',
-    '$sanitize',
-    '$compile',
-    'gnSearchSettings',
-    '$sce',
-    'gnMdView',
-    function($http, $sanitize, $compile, gnSearchSettings, $sce, gnMdView) {
+    'gnMdViewObj', 'gnMdView',
+    function(gnMdViewObj, gnMdView) {
       return {
         restrict: 'A',
         scope: {
           md: '=gnMetadataOpen',
+          formatter: '=gnFormatter',
+          records: '=gnRecords',
           selector: '@gnMetadataOpenSelector'
         },
-
         link: function(scope, element, attrs, controller) {
+          scope.$watch('md', function(n, o) {
+            if (n == null || n == undefined) {
+              return;
+            }
 
-          element.on('click', function(e) {
-            e.preventDefault();
-            gnMdView.setLocationUuid(scope.md.getUuid());
-            gnMdView.setCurrentMdScope(scope.$parent);
-            scope.$apply();
+            var formatter = scope.formatter === undefined || scope.formatter == '' ?
+              undefined :
+              scope.formatter.replace('../api/records/{{uuid}}/formatters/', '');
+
+            var hyperlinkTagName = 'A';
+            if (element.get(0).tagName === hyperlinkTagName) {
+              var url = '#/' +
+                (scope.md.draft == 'y' ? 'metadraf' : 'metadata') +
+                '/' + scope.md.getUuid() +
+                (scope.formatter === undefined || scope.formatter == '' ?
+                  '' :
+                  formatter);
+              element.attr('href', url);
+            } else {
+              element.on('click', function(e) {
+                gnMdView.setLocationUuid(scope.md.getUuid(), formatter);
+              });
+            }
+
+            gnMdViewObj.records = scope.records;
           });
         }
       };
@@ -59,16 +79,24 @@
   module.directive('gnMetadataDisplay', [
     'gnMdView', 'gnSearchSettings', function(gnMdView, gnSearchSettings) {
       return {
-        templateUrl: '../../catalog/components/search/mdview/partials/' +
-            'mdpanel.html',
         scope: true,
+        templateUrl: function(elem, attrs) {
+          return attrs.template ||
+              '../../catalog/components/search/mdview/partials/' +
+              'mdpanel.html';
+        },
         link: function(scope, element, attrs, controller) {
 
           var unRegister;
 
+          element.find('.panel-body').append(scope.fragment);
           scope.dismiss = function() {
             unRegister();
-            gnMdView.removeLocationUuid();
+            // Do not close parent mdview
+            if ($('[gn-metadata-display] ~ [gn-metadata-display]')
+                .length == 0) {
+              gnMdView.removeLocationUuid();
+            }
             element.remove();
             //TODO: is the scope destroyed ?
           };
@@ -84,8 +112,8 @@
     }]);
 
   module.directive('gnMetadataRate', [
-    '$http',
-    function($http) {
+    '$http', 'gnConfig',
+    function($http, gnConfig) {
       return {
         templateUrl: '../../catalog/components/search/mdview/partials/' +
             'rate.html',
@@ -96,6 +124,17 @@
         },
 
         link: function(scope, element, attrs, controller) {
+          scope.isRatingEnabled = false;
+
+          var statusSystemRating =
+            gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
+          if (statusSystemRating == 'advanced') {
+            scope.isUserFeedbackEnabled = true;
+          }
+          if (statusSystemRating == 'basic') {
+            scope.isRatingEnabled = true;
+          }
+
           scope.$watch('md', function() {
             scope.rate = scope.md ? scope.md.rating : null;
           });
@@ -107,6 +146,139 @@
               scope.rate = data;
             });
           };
+        }
+      };
+    }]
+  );
+
+  /**
+   * Directive to provide 3 visualization modes for metadata contacts
+   * in metadata detail page:
+   *
+   * - 'default': plain list of contacts.
+   *
+   * - 'role': grouped by role, then by organisation. Example rendering:
+   *
+   *      Resource provider
+   *       Organisation 1
+   *       List of users with role
+   *       Address organisation 1
+   *
+   *       Organisation 2
+   *       List of users with role
+   *       Address organisation 1
+   *
+   *      Custodian,Distributor
+   *       Organisation 1
+   *       List of users with role
+   *       Address organisation 1
+   *
+   * - 'org-role': grouped by organisation, then by role. Example rendering:
+   *
+   *      Organisation 1
+   *      Address organisation 1
+   *      Resource provider : user1@mail.com
+   *      Custodian, Distributor :  user2@mail.com
+   *
+   *      Organisation 2
+   *      Address organisation 2
+   *      Resource provider : user3@mail.com
+   */
+  module.directive('gnMetadataContacts', [
+    '$http',
+    function($http) {
+      return {
+        templateUrl: '../../catalog/components/search/mdview/partials/' +
+            'contact.html',
+        restrict: 'A',
+        scope: {
+          mdContacts: '=gnMetadataContacts',
+          mode: '@gnMode'
+        },
+        link: function(scope, element, attrs, controller) {
+          if (['default', 'role', 'org-role'].indexOf(scope.mode) == -1) {
+            scope.mode = 'default';
+          }
+
+          scope.calculateContacts = function() {
+            if (scope.mode != 'default') {
+              var groupByOrgAndMailOrName = function(resources) {
+                return _.groupBy(resources,
+                  function(contact) {
+                    if (contact.email) {
+                      return contact.org + '#' + contact.email;
+                    } else {
+                      return contact.org + '#' + contact.name;
+                    }
+                  });
+              };
+
+              var aggregateRoles = function(resources) {
+                return _.map(resources,
+                  function(contact) {
+                    var copy = angular.copy(contact[0]);
+                    angular.extend(copy, {
+                      roles: _.pluck(contact, 'role')
+                    });
+
+                    return copy;
+                  });
+              };
+
+              if (scope.mode == 'role') {
+                var contactsByOrgAndMailOrName =
+                  groupByOrgAndMailOrName(scope.mdContacts);
+
+                var contactsWithAggregatedRoles =
+                  aggregateRoles(contactsByOrgAndMailOrName);
+
+                /**
+                 * Contacts format:
+                 *
+                 * {
+               *    {[roles]: [{contact1}, {contact2}, ... },
+               *    {[roles]: [{contact3}, {contact4}, ... },
+               * }
+                 *
+                 */
+                scope.mdContactsByRole =
+                  _.groupBy(contactsWithAggregatedRoles, function(c) {
+                    return c.roles;
+                  });
+              } else if (scope.mode == 'org-role') {
+                /**
+                 * Contacts format:
+                 *
+                 * {
+               *    {organisation1: [{contact1}, {contact2}, ... },
+               *    {organisation2: [{contact3}, {contact4}, ... },
+               * }
+                 *
+                 */
+                scope.orgWebsite = {};
+                scope.mdContactsByOrgRole = _.groupBy(scope.mdContacts,
+                  function(contact) {
+                    if (contact.website !== '') {
+                     scope.orgWebsite[contact.org] = contact.website;
+                    }
+                    return contact.org;
+                  });
+
+                for (var key in scope.mdContactsByOrgRole) {
+                  var value = scope.mdContactsByOrgRole[key];
+
+                  var contactsByOrgAndMailOrName = groupByOrgAndMailOrName(value);
+
+                  scope.mdContactsByOrgRole[key] =
+                    aggregateRoles(contactsByOrgAndMailOrName);
+                }
+              }
+            }
+          };
+
+          scope.$watch('mdContacts', function () {
+            scope.calculateContacts();
+          });
         }
       };
     }]

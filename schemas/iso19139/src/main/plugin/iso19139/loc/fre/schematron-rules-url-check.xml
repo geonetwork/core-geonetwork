@@ -1,0 +1,6 @@
+<strings>
+  <schematron.title>Validation des liens</schematron.title>
+  <invalidURLCheck>Vérification des URLs</invalidURLCheck>
+  <alert.invalidURL><div>Le lien semble invalide. Une erreur a été retournée : </div></alert.invalidURL>
+  <alert.validURL><div>Le lien fonctionne.</div></alert.validURL>
+</strings>

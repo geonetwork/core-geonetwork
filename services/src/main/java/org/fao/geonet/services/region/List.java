@@ -142,7 +142,7 @@ public class List {
      * @param maxRecords limit the number of results returned - optional
      */
 
-    @RequestMapping(value = "/{lang}/regions.list", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/regions.list", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public ListRegionsResponse exec(@PathVariable String lang,

@@ -22,35 +22,54 @@
  */
 package org.fao.geonet.services.metadata;
 
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
+import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.fao.geonet.api.records.editing.BatchEditsApi;
-import org.fao.geonet.api.records.model.BatchEditParameter;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.fao.geonet.kernel.BatchEditParameter;
 import org.fao.geonet.csw.common.util.Xml;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 
-import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
-import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import jeeves.server.context.ServiceContext;
 
 public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
 
     List<String> uuids = new ArrayList();
     String firstMetadataId = null;
     ServiceContext context;
+
     @Autowired
-    private MetadataRepository repository;
+    private WebApplicationContext wac;
+
+    @Autowired
+    private IMetadataUtils repository;
+
+    private MockMvc mockMvc;
+
+    private MockHttpSession mockHttpSession;
 
     @Before
     public void loadSamples() throws Exception {
@@ -77,26 +96,29 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void testParameterMustBeSet() throws Exception {
-        final BatchEditsApi batchEditsService = new BatchEditsApi();
-        batchEditsService.setApplicationContext(context.getApplicationContext());
-        final BatchEditParameter[] parameters = new BatchEditParameter[]{};
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        try {
-            batchEditsService.batchEdit(
-                new String[]{firstMetadataId},
-                parameters);
-        } catch (java.lang.IllegalArgumentException exception) {
-            assertSame("Service MUST fail if no parameter are defined",
-                exception.getClass(), IllegalArgumentException.class);
-        }
+        final BatchEditParameter[] parameters = new BatchEditParameter[]{};
+        Gson gson = new GsonBuilder()
+                .create();
+        JsonElement jsonEl = gson.toJsonTree(parameters);
+
+        this.mockHttpSession = loginAsAdmin();
+
+        // Check 400 is returned and a message indicating that edit must be defined
+        this.mockMvc.perform(put("/srv/api/records/batchediting?uuids=" + firstMetadataId)
+                .content(jsonEl.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(jsonPath("$.description", is("At least one edit must be defined.")))
+                .andExpect(status().is(400));
+
     }
 
 
     @Test
     public void testUpdateRecord() throws Exception {
-        final BatchEditsApi batchEditsService = new BatchEditsApi();
-        batchEditsService.setApplicationContext(context.getApplicationContext());
-
         final BatchEditParameter[] listOfupdates = new BatchEditParameter[]{
             new BatchEditParameter(
                 "gmd:identificationInfo/gmd:MD_DataIdentification/" +
@@ -110,10 +132,22 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
             )
         };
 
-        batchEditsService.batchEdit(
-            new String[]{firstMetadataId},
-            listOfupdates);
-        Metadata updatedRecord = repository.findOneByUuid(firstMetadataId);
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        Gson gson = new GsonBuilder()
+                .create();
+        JsonElement jsonEl = gson.toJsonTree(listOfupdates);
+
+        // Check 201 is returned
+        this.mockMvc.perform(put("/srv/api/records/batchediting?uuids=" + firstMetadataId)
+                .content(jsonEl.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().is(201));
+
+        AbstractMetadata updatedRecord = repository.findOneByUuid(firstMetadataId);
         Element xml = Xml.loadString(updatedRecord.getData(), false);
 
         for (BatchEditParameter p : listOfupdates) {

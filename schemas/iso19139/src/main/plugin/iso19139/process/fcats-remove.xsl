@@ -23,13 +23,11 @@
   -->
 
 <!--
-Stylesheet used to update metadata for a service and
-detach a dataset metadata
+Stylesheet used to detach a feature catalogue
 -->
 <xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:geonet="http://www.fao.org/geonetwork"
-                version="2.0"
->
+                version="2.0">
 
   <xsl:param name="uuidref"/>
 

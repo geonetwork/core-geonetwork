@@ -56,6 +56,7 @@ import jeeves.server.context.ServiceContext;
  *
  * @author heikki doeleman
  */
+@Deprecated
 public class Receptor implements Service {
 
     //private static final String NOREPLY = "noreply@nationaalgeoregister.nl";

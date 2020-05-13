@@ -23,15 +23,19 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
+
+import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
@@ -42,14 +46,10 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
-import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
-
-import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Stores all operations allowed for a metadata.
@@ -91,7 +91,7 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 
                 //--- check access
 
-                Metadata info = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
+                AbstractMetadata info = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
                 if (info == null) {
                     notFound.add(uuid);
                 } else if (!accessMan.isOwner(context, String.valueOf(info.getId()))) {

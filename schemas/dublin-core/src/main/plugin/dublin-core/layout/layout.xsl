@@ -35,6 +35,10 @@
     <xsl:value-of select="$metadata/descendant::node()/dc:language[1]"/>
   </xsl:template>
 
+  <xsl:template name="get-dublin-core-title">
+    <xsl:value-of select="$metadata//dc:title"/>
+  </xsl:template>
+
   <!-- No multilingual support in Dublin core -->
   <xsl:template name="get-dublin-core-other-languages-as-json"/>
 
@@ -133,16 +137,18 @@
     <xsl:variable name="added" select="parent::node()/parent::node()/@gn:addedObj"/>
     <xsl:variable name="container" select="parent::node()/parent::node()"/>
 
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+
     <!-- Add view and edit template-->
     <xsl:call-template name="render-element">
-      <xsl:with-param name="label" select="$labelConfig/label"/>
+      <xsl:with-param name="label" select="$labelConfig"/>
       <xsl:with-param name="value" select="."/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>
             <xsl:with-param name="widgetParams"/>-->
-      <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+      <xsl:with-param name="xpath" select="$xpath"/>
       <!--<xsl:with-param name="attributesSnippet" as="node()"/>-->
-      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
+      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '', $xpath)"/>
       <xsl:with-param name="name" select="if ($isEditing) then gn:element/@ref else ''"/>
       <xsl:with-param name="editInfo"
                       select="gn:element"/>
@@ -167,9 +173,9 @@
       test="$isEditing and
             (
               not($isFlatMode) or
-              gn-fn-metadata:isFieldFlatModeException($viewConfig, $name)
+              gn-fn-metadata:isFieldFlatModeException($viewConfig, $name,  name(..))
             ) and
-            $service != 'md.element.add' and
+            $service != 'embedded' and
             count(following-sibling::node()[name() = $name]) = 0">
 
       <!-- Create configuration to add action button for this element. -->
@@ -181,7 +187,14 @@
           <xsl:copy-of select="$dcConfig/gn:choose[@name = $name]"/>
         </gn:child>
       </xsl:variable>
+
+      <xsl:variable name="label"
+                    select="gn-fn-metadata:getLabel($schema, $name, $labels, '', '', '')"/>
       <xsl:call-template name="render-element-to-add">
+        <xsl:with-param name="label" select="$label/label"/>
+        <xsl:with-param name="class" select="if ($label/class) then $label/class else ''"/>
+        <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
+        <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
         <xsl:with-param name="childEditInfo" select="$newElementConfig/gn:child"/>
         <xsl:with-param name="parentEditInfo" select="$dcConfig/parent::node()/gn:element"/>
         <xsl:with-param name="isFirst" select="false()"/>
@@ -193,13 +206,15 @@
   <!-- Readonly elements -->
   <xsl:template mode="mode-dublin-core" priority="200" match="dc:identifier|dct:modified">
 
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
-                      select="gn-fn-metadata:getLabel($schema, name(), $labels)/label"/>
+                      select="gn-fn-metadata:getLabel($schema, name(), $labels)"/>
       <xsl:with-param name="value" select="."/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
-      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
+      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '', $xpath)"/>
       <xsl:with-param name="name" select="''"/>
       <xsl:with-param name="editInfo" select="*/gn:element"/>
       <xsl:with-param name="parentEditInfo" select="gn:element"/>

@@ -23,19 +23,18 @@
 
 package org.fao.geonet.kernel.search;
 
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.constants.Geonet;
-import org.jdom.Element;
 
 /**
  * Search parameters that can be provided by a search client.
@@ -63,6 +62,7 @@ public class UserQueryInput {
      */
     public static final List<String> RESERVED_FIELDS = Arrays.asList(
         SearchParameter.GROUP,
+        SearchParameter.GROUPEDIT,
         Geonet.SearchResult.FAST,
         Geonet.SearchResult.SORT_BY,
         Geonet.SearchResult.SORT_ORDER,
@@ -105,6 +105,12 @@ public class UserQueryInput {
         SearchParameter.DENOMINATORFROM,
         SearchParameter.DENOMINATORTO,
         SearchParameter.DENOMINATOR,
+        SearchParameter.RATING,
+        SearchParameter.RATINGFROM,
+        SearchParameter.RATINGTO,
+        SearchParameter.FEEDBACKCOUNT,
+        SearchParameter.FEEDBACKCOUNTFROM,
+        SearchParameter.FEEDBACKCOUNTTO,
         SearchParameter.CREATIONDATEFROM,
         SearchParameter.CREATIONDATETO);
     /**
@@ -115,19 +121,26 @@ public class UserQueryInput {
         LuceneIndexField.REVISION_DATE,
         LuceneIndexField.PUBLICATION_DATE,
         LuceneIndexField.CREATE_DATE,
-        LuceneIndexField.DENOMINATOR);
+        LuceneIndexField.DENOMINATOR,
+        SearchParameter.RATING,
+        SearchParameter.FEEDBACKCOUNT);
     private static final List<String> RANGE_FIELDS_FROM = Arrays.asList(
         SearchParameter.DATEFROM,
         SearchParameter.REVISIONDATEFROM,
         SearchParameter.PUBLICATIONDATEFROM,
         SearchParameter.CREATIONDATEFROM,
-        SearchParameter.DENOMINATORFROM);
+        SearchParameter.DENOMINATORFROM,
+        SearchParameter.RATINGFROM,
+        SearchParameter.FEEDBACKCOUNTFROM
+        );
     private static final List<String> RANGE_FIELDS_TO = Arrays.asList(
         SearchParameter.DATETO,
         SearchParameter.REVISIONDATETO,
         SearchParameter.PUBLICATIONDATETO,
         SearchParameter.CREATIONDATETO,
-        SearchParameter.DENOMINATORTO);
+        SearchParameter.DENOMINATORTO,
+        SearchParameter.RATINGTO,
+        SearchParameter.FEEDBACKCOUNTTO);
     private static Map<String, String> searchParamToLuceneField = new LinkedHashMap<String, String>();
 
     static {
@@ -278,7 +291,13 @@ public class UserQueryInput {
         try {
             if (currentValues == null) {
                 Set<String> values = new LinkedHashSet<String>();
-                values.add(URLDecoder.decode(nodeValue, "UTF-8"));
+                String val = nodeValue;
+                try {
+                    val = URLDecoder.decode(nodeValue, "UTF-8");
+                } catch (IllegalArgumentException iea) {
+                    // keep val as the original nodeValue
+                }
+                values.add(val);
                 hash.put(nodeName, values);
             } else {
                 currentValues.add(URLDecoder.decode(nodeValue, "UTF-8"));

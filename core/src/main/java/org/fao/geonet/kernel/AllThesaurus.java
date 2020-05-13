@@ -28,7 +28,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
@@ -92,7 +92,7 @@ public class AllThesaurus extends Thesaurus {
     static String buildKeywordUri(String thesaurusKey, String uri) {
         try {
             thesaurusKey = URLEncoder.encode(thesaurusKey, Constants.ENCODING);
-            uri = URLEncoder.encode(uri, Constants.ENCODING);
+//            uri = URLEncoder.encode(uri, Constants.ENCODING);
             return URI_CODE_PREFIX + thesaurusKey + SEPARATOR + uri;
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);

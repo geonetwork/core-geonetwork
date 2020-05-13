@@ -75,9 +75,7 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
             metasearcher = searchMan.newSearcher(SearcherType.LUCENE, SEARCH_Z3950_SERVER);
 
         } catch (Exception e) {
-            if (Log.isDebugEnabled(Geonet.SRU))
-                Log.debug(Geonet.SRU, "error constructing GNresult set: " + e);
-            e.printStackTrace();
+            Log.error(Geonet.SRU, "error constructing GNresult set: " + e.getMessage(), e);
         }
     }
 
@@ -109,8 +107,7 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
             setTaskStatusCode(IRResultSetStatus.COMPLETE);
 
         } catch (Throwable e) {
-            Log.error(Geonet.SRU, "error evaluating query.." + e);
-            e.printStackTrace();
+            Log.error(Geonet.SRU, "error evaluating query.." + e.getMessage(), e);
         }
         return (getStatus());
     }

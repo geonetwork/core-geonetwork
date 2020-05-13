@@ -522,4 +522,28 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (2,'eng','Approved');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'eng','Retired');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'eng','Submitted');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'eng','Rejected');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (50,'eng','Record created.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (51,'eng','Record updated.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (52,'eng','Attachment {{h.currentStatus}} added.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (53,'eng','Attachment {{h.previousStatus}} deleted.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (54,'eng','Owner changed from {{h.previousStatus}} to {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (55,'eng','Group owner changed from {{h.previousStatus}} to {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (56,'eng','Privileges updated.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (57,'eng','Category changed. Now categories are {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (58,'eng','Validation triggered. Exit status is now {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (59,'eng','Status changed from {{h.previousStatus}} to {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (60,'eng','Record updated by process {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'eng','Record deleted.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'eng','Record imported.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'eng','DOI creation request');
 
+
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'eng','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'eng','Watch list');
+
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (-1,'eng', 'Average');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (0,'eng', 'Completeness#Is the information on this page complete enough to know what you can expect from this dataset?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (1,'eng', 'Discoverability#Was it easy to find this information page?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (2,'eng', 'Readability#Was it easy to read and understand the contents of this page?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (3,'eng', 'Data quality#Does the dataset contain the information you expected, the dataset has enough accuracy, the data is valid/up-to-date?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (4,'eng', 'Service quality#The dataset is provided as a service or mediatype that is easy to work with?');

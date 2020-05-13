@@ -92,7 +92,8 @@
     <xsl:value-of select="gndoc:writeln(concat($schemaTitle, ' (', $schema, ')'), '#')"/>
 
     <xsl:value-of select="gndoc:nl(2)"/>
-    <xsl:value-of select="gndoc:writeln($schemaDesc)"/>
+    <xsl:copy-of select="$schemaDesc"/>
+<!--    <xsl:value-of select="gndoc:writeln($schemaDesc)"/>-->
     <xsl:value-of select="gndoc:nl(2)"/>
     <xsl:value-of select="gndoc:writeln(concat($t/schema-url, $schemaUrl))"/>
     <xsl:value-of select="gndoc:nl(2)"/>
@@ -263,7 +264,10 @@
       <!-- Try to match on xpath even if config editor use * in xpath -->
 
       <xsl:variable name="nodeDescWithXpath"
-                    select="$l[@name = $nodeName and matches(@context, replace($xpath, '\*', '.*'))]"/>
+                    select="$l[@name = $nodeName and
+                              matches(@context,
+                                replace(replace(replace($xpath,
+                                  '\*', '.*'), '\[', '\\['), '\]', '\\]'))]"/>
 
       <xsl:variable name="nodeDesc">
         <xsl:choose>

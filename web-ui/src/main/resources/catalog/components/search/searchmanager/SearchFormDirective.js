@@ -37,12 +37,14 @@
   goog.require('gn_facets');
   goog.require('gn_search_form_results_directive');
   goog.require('gn_selection_directive');
+  goog.require('search_filter_tags_directive');
 
   var module = angular.module('gn_search_form_controller', [
     'gn_catalog_service',
     'gn_facets',
     'gn_selection_directive',
-    'gn_search_form_results_directive'
+    'gn_search_form_results_directive',
+    'search_filter_tags_directive'
   ]);
 
   /**
@@ -62,14 +64,33 @@
     /** State of the facets of the current search */
     $scope.currentFacets = [];
 
-    /** Object were are stored result search information */
+    /** Object where are stored result search information */
     $scope.searchResults = {
       records: [],
-      count: -1
+      count: -1,
+      selectionBucket:
+          $scope.searchObj.selectionBucket ||
+          (Math.random() + '').replace('.', '')
     };
+    $scope.finalParams = {};
 
     $scope.searching = 0;
     $scope.paginationInfo = $scope.paginationInfo || {};
+
+    /**
+     * Return the current search parameters.
+     **/
+    this.getSearchParams = function() {
+      return $scope.searchObj.params;
+    };
+
+    this.getFinalParams = function() {
+      return $scope.finalParams;
+    };
+
+    this.getSearchResults = function() {
+      return $scope.searchResults;
+    };
 
     /**
      * Tells if there is a pagination directive nested to this one.
@@ -85,6 +106,8 @@
         self.resetPagination();
       }
     };
+
+
 
     /**
      * Reset pagination 'from' and 'to' params and merge them
@@ -124,6 +147,25 @@
           $scope.searchObj.params,
           defaultParams);
 
+      // Add hidden filters which may
+      // restrict search (do not add an existing filter)
+      if ($scope.searchObj.filters) {
+        angular.forEach($scope.searchObj.filters,
+            function(value, key) {
+              var p = $scope.searchObj.params[key];
+              if (p) {
+                if (p !== value && (!p.indexOf || p.indexOf(value) === -1)) {
+                  if (!angular.isArray(p)) {
+                    $scope.searchObj.params[key] = [p];
+                  }
+                  $scope.searchObj.params[key].push(value);
+                }
+              } else {
+                $scope.searchObj.params[key] = value;
+              }
+            });
+      }
+
       // Set default pagination if not set
       if ((!keepPagination &&
           !$scope.searchObj.permalink) ||
@@ -146,10 +188,14 @@
             gnFacetService.getParamsFromFacets($scope.currentFacets));
       }
 
+      params.bucket = $scope.searchResults.selectionBucket || 'metadata';
+
       var finalParams = angular.extend(params, hiddenParams);
-      gnSearchManagerService.gnSearch(finalParams).then(
+      $scope.finalParams = finalParams;
+      gnSearchManagerService.gnSearch(
+                              finalParams, null,
+                              $scope.searchObj.internal).then(
           function(data) {
-            $scope.searching--;
             $scope.searchResults.records = [];
             for (var i = 0; i < data.metadata.length; i++) {
               $scope.searchResults.records.push(new Metadata(data.metadata[i]));
@@ -159,8 +205,7 @@
             $scope.searchResults.dimension = data.dimension;
 
             // compute page number for pagination
-            if ($scope.searchResults.records.length > 0 &&
-                $scope.hasPagination) {
+            if ($scope.hasPagination) {
 
               var paging = $scope.paginationInfo;
 
@@ -181,7 +226,9 @@
                   );
               paging.from = (paging.currentPage - 1) * paging.hitsPerPage + 1;
             }
-          });
+          }).finally(function() {
+        $scope.searching--;
+      });
     };
 
 
@@ -290,9 +337,9 @@
       angular.extend($scope.searchObj.params, params);
     };
 
-    this.resetSearch = function(searchParams) {
+    this.resetSearch = function(searchParams, preserveGeometrySearch) {
 
-      $scope.$broadcast('beforeSearchReset');
+      $scope.$broadcast('beforeSearchReset', preserveGeometrySearch);
 
       if (searchParams) {
         $scope.searchObj.params = searchParams;
@@ -310,8 +357,8 @@
       $scope.triggerSearch();
       $scope.$broadcast('resetSelection');
     };
-    $scope.$on('resetSearch', function(evt, searchParams) {
-      $scope.controller.resetSearch(searchParams);
+    $scope.$on('resetSearch', function(evt, searchParams, preserveGeometrySearch) {
+      $scope.controller.resetSearch(searchParams, preserveGeometrySearch);
     });
 
     $scope.$on('search', function() {
@@ -321,7 +368,8 @@
     $scope.$on('clearResults', function() {
       $scope.searchResults = {
         records: [],
-        count: 0
+        count: 0,
+        selectionBucket: $scope.searchObj.selectionBucket
       };
     });
 
@@ -338,6 +386,11 @@
     'gnSearchLocation'
   ];
 
+  /**
+   * Possible attributes:
+   *  * runSearch: run search inmediately after the  directive is loaded.
+   *  * waitForUser: wait until a user id is available to trigger the search.
+   */
   module.directive('ngSearchForm', [
     'gnSearchLocation',
     function(gnSearchLocation) {
@@ -348,14 +401,26 @@
         controllerAs: 'controller',
         link: function(scope, element, attrs) {
 
-          scope.resetSearch = function(htmlElementOrDefaultSearch) {
-            //TODO: remove geocat ref
-            $('.geocat-search').find('.bootstrap-tagsinput .tag').remove();
+          scope.resetSearch = function(htmlElementOrDefaultSearch, preserveGeometrySearch) {
             if (angular.isObject(htmlElementOrDefaultSearch)) {
-              scope.controller.resetSearch(htmlElementOrDefaultSearch);
+              scope.controller.resetSearch(htmlElementOrDefaultSearch, preserveGeometrySearch);
             } else {
               scope.controller.resetSearch();
               $(htmlElementOrDefaultSearch).focus();
+            }
+          };
+
+          var waitForPagination = function() {
+            // wait for pagination to be set before triggering search
+            if (element.find('[data-gn-pagination]').length > 0) {
+              var unregisterFn = scope.$watch('hasPagination', function() {
+                if (scope.hasPagination) {
+                  scope.triggerSearch(true);
+                  unregisterFn();
+                }
+              });
+            } else {
+              scope.triggerSearch(false);
             }
           };
 
@@ -371,16 +436,17 @@
                   gnSearchLocation.getParams());
             }
 
-            // wait for pagination to be set before triggering search
-            if (element.find('[data-gn-pagination]').length > 0) {
-              var unregisterFn = scope.$watch('hasPagination', function() {
-                if (scope.hasPagination) {
-                  scope.triggerSearch(true);
-                  unregisterFn();
+            if (attrs.waitForUser === "true") {
+              var userUnwatch = scope.$watch('user.id', function(userNewVal) {
+                // Don't trigger the search until the user id has been loaded
+                // Unregister the watch once we have the user id.
+                if (angular.isDefined(userNewVal)) {
+                  waitForPagination();
+                  userUnwatch();
                 }
               });
             } else {
-              scope.triggerSearch(false);
+              waitForPagination();
             }
           }
         }

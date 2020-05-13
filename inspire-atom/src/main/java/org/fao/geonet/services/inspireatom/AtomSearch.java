@@ -100,7 +100,7 @@ public class AtomSearch implements Service {
             List<String> datasetIdentifiers = InspireAtomUtil.extractRelatedDatasetsIdentifiers(schema, md, dm);
 
             // Remove fileIdentifier from params
-            params.removeContent(1);
+            params.removeChild("fileIdentifier");
 
             // Add query filter
             String values = Joiner.on(" or ").join(datasetIdentifiers);

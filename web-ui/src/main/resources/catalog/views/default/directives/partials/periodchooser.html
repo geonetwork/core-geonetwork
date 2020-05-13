@@ -4,7 +4,7 @@
             data-toggle="dropdown" aria-expanded="false">
       <span data-translate="">{{label}}</span> <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu" role="menu">
+    <ul class="dropdown-menu" role="list">
       <li data-ng-repeat="o in options">
         <a href=""
            data-ng-click="setPeriod(o)"
@@ -18,6 +18,8 @@
            data-date-format="yyyy-mm-dd"
            data-gn-bootstrap-datepicker="dateFrom">
         <input class="form-control" type="text"
+               data-ng-model="dateFrom"
+               aria-label="{{'from' | translate}}"
                placeholder="{{'from' | translate}}"/>
       <span class="input-group-addon"><i
         class="fa fa-calendar"></i></span>
@@ -28,6 +30,8 @@
            data-date-format="yyyy-mm-dd"
            data-gn-bootstrap-datepicker="dateTo">
         <input class="form-control" type="text"
+               data-ng-model="dateTo"
+               aria-label="{{'to' | translate}}"
                placeholder="{{'to' | translate}}"/>
         <span class="input-group-addon"><i
           class="fa fa-calendar"></i></span>

@@ -31,6 +31,7 @@ public class SearchParameter {
 
     public static final String OWNER = "owner";
     public static final String GROUP = "group";
+    public static final String GROUPEDIT = "groupEdit";
     public static final String GROUPOWNER = "groupOwner";
     public static final String ISREVIEWER = "isReviewer";
     public static final String ISUSERADMIN = "isUserAdmin";
@@ -103,4 +104,10 @@ public class SearchParameter {
     public static final String OP_DYNAMIC = "_operation5";
     public static final String OP_FEATURED = "_operation6";
 
+    public static final String FEEDBACKCOUNT = "feedbackCount";
+    public static final String FEEDBACKCOUNTFROM = "feedbackCountFrom";
+    public static final String FEEDBACKCOUNTTO = "feedbackCountTo";
+    public static final String RATING = "_rating";
+    public static final String RATINGFROM = "_ratingFrom";
+    public static final String RATINGTO = "_ratingTo";
 }

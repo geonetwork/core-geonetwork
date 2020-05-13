@@ -22,7 +22,9 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+				xmlns:util="java:org.fao.geonet.util.XslUtil"
+				version="2.0"
                 exclude-result-prefixes="#all">
 
   <xsl:include href="../../common/base-variables.xsl"/>
@@ -73,15 +75,10 @@
       <xsl:choose>
         <xsl:when test="$pStart = $pEnd">
           <sitemap xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-            <xsl:variable name="formatParam">
-              <xsl:if test="string($format)"><xsl:value-of select="$format"/>/
-              </xsl:if>
-            </xsl:variable>
-            <loc><xsl:value-of select="/root/gui/env/server/protocol"/>://<xsl:value-of
-              select="/root/gui/env/server/host"/>:<xsl:value-of
-              select="/root/gui/env/server/port"/><xsl:value-of select="/root/gui/url"/>/sitemap/<xsl:value-of
-              select="$formatParam"/><xsl:value-of select="$pStart"/>/<xsl:value-of
-              select="/root/gui/language"/>
+            <xsl:variable name="formatParam"
+                          select="if (string($format)) then concat('format=', $format, '&amp;') else ''"/>
+            <loc>
+              <xsl:value-of select="concat($nodeUrl, 'api/sitemap?', $formatParam, 'doc=', $pStart)"/>
             </loc>
             <lastmod>
               <xsl:value-of select="$changeDate"/>
@@ -113,30 +110,18 @@
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
       <xsl:for-each select="metadata/record">
         <xsl:variable name="uuid" select="uuid"/>
-        <xsl:variable name="schemaid" select="datainfo/schemaid"/>
-        <xsl:variable name="changedate" select="datainfo/changedate"/>
+        <xsl:variable name="schemaid" select="schemaid"/>
+        <xsl:variable name="changedate" select="changedate"/>
 
         <url>
           <loc>
             <xsl:choose>
               <xsl:when test="$format='xml'">
-                <xsl:variable name="metadataUrlValue">
-                  <xsl:call-template name="metadataXmlDocUrl">
-                    <xsl:with-param name="schemaid" select="$schemaid"/>
-                    <xsl:with-param name="uuid" select="$uuid"/>
-                  </xsl:call-template>
-                </xsl:variable>
-                <xsl:value-of select="$env/system/server/protocol"/>://<xsl:value-of
-                select="$env/system/server/host"/>:<xsl:value-of
-                select="$env/system/server/port"/><xsl:value-of select="/root/gui/locService"/>/<xsl:value-of
-                select="$metadataUrlValue"/>
+                <xsl:value-of select="concat($nodeUrl, 'api/records/', $uuid, '/formatters/xml')"/>
               </xsl:when>
 
               <xsl:otherwise>
-                <xsl:value-of select="$env/system/server/protocol"/>://<xsl:value-of
-                select="$env/system/server/host"/>:<xsl:value-of
-                select="$env/system/server/port"/><xsl:value-of select="/root/gui/url"/>/?uuid=<xsl:value-of
-                select="$uuid"/>
+                <xsl:value-of select="concat($nodeUrl, 'api/records/', $uuid)"/>
               </xsl:otherwise>
             </xsl:choose>
           </loc>
@@ -162,10 +147,7 @@
           (RDF)
         </sc:datasetLabel>
         <xsl:for-each select="metadata/record">
-          <sc:dataDumpLocation><xsl:value-of select="$env/system/server/protocol"/>://<xsl:value-of
-            select="$env/system/server/host"/>:<xsl:value-of
-            select="$env/system/server/port"/><xsl:value-of select="/root/gui/url"/>/srv/eng/rdf.metadata.get?uuid=<xsl:value-of
-            select="uuid"/>
+          <sc:dataDumpLocation><xsl:value-of select="concat($nodeUrl, 'eng/rdf.metadata.get?uuid=', uuid)"/>
           </sc:dataDumpLocation>
         </xsl:for-each>
         <!--For 5 latests update:
@@ -181,24 +163,4 @@
     </urlset>
   </xsl:template>
 
-
-  <xsl:template name="metadataXmlDocUrl">
-    <xsl:param name="schemaid"/>
-    <xsl:param name="uuid"/>
-
-    <xsl:choose>
-      <xsl:when test="$schemaid='dublin-core'">xml_dublin-core?uuid=<xsl:value-of select="$uuid"/>
-      </xsl:when>
-      <xsl:when test="$schemaid='fgdc-std'">xml_fgdc-std?uuid=<xsl:value-of select="$uuid"/>
-      </xsl:when>
-      <xsl:when test="$schemaid='iso19115'">xml_iso19115to19139?uuid=<xsl:value-of select="$uuid"/>
-      </xsl:when>
-      <xsl:when test="$schemaid='iso19110'">xml_iso19110?uuid=<xsl:value-of select="$uuid"/>
-      </xsl:when>
-      <xsl:when test="$schemaid='iso19139'">xml_iso19139?uuid=<xsl:value-of select="$uuid"/>
-      </xsl:when>
-      <xsl:otherwise>xml.metadata.get?uuid=<xsl:value-of select="$uuid"/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
 </xsl:stylesheet>

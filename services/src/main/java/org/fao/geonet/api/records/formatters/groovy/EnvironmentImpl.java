@@ -40,7 +40,7 @@ import org.apache.lucene.search.TopFieldCollector;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterParams;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -71,7 +71,7 @@ public class EnvironmentImpl implements Environment {
     private final String resourceUrl;
     private final Multimap<String, ParamValue> params = ArrayListMultimap.create();
     private final FormatType formatType;
-    private final Metadata metadataInfo;
+    private final AbstractMetadata metadataInfo;
     private final String locUrl;
     private final Element jdomMetadata;
     private final ServiceContext serviceContext;
@@ -224,9 +224,18 @@ public class EnvironmentImpl implements Environment {
         return Collections.unmodifiableMap(this.indexInfo.asMap());
     }
 
+    @Override public ServiceContext getContext() {
+        return this.serviceContext;
+    }
+
     @Override
     public <T> T getBean(Class<T> clazz) {
         return this.serviceContext.getBean(clazz);
+    }
+
+    @Override
+    public <T> T getBean(String name, Class<T> clazz) {
+        return this.serviceContext.getBean(name, clazz);
     }
 
     @Override

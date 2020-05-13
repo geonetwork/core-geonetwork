@@ -34,7 +34,8 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:ogc="http://www.opengis.net/rdf#"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:iso19139="http://geonetwork-opensource.org/schemas/iso19139"
@@ -55,8 +56,8 @@
   <!-- FIME : $url comes from a global variable. -->
   <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']" mode="record-reference">
     <!-- TODO : a metadata record may contains aggregate. In that case create one dataset per aggregate member. -->
-    <dcat:dataset rdf:resource="{$url}/resource/{iso19139:getResourceCode(.)}"/>
-    <dcat:record rdf:resource="{$url}/metadata/{gmd:fileIdentifier/gco:CharacterString}"/>
+    <dcat:dataset rdf:resource="{$resourcePrefix}/datasets/{iso19139:getResourceCode(.)}"/>
+    <dcat:record rdf:resource="{$resourcePrefix}/records/{gmd:fileIdentifier/gco:CharacterString}"/>
   </xsl:template>
 
 
@@ -71,9 +72,9 @@
 
       xpath: //gmd:MD_Metadata|//*[@gco:isoType='gmd:MD_Metadata']
     -->
-    <dcat:CatalogRecord rdf:about="{$url}/metadata/{gmd:fileIdentifier/gco:CharacterString}">
+    <dcat:CatalogRecord rdf:about="{$resourcePrefix}/records/{gmd:fileIdentifier/gco:CharacterString}">
       <!-- Link to a dcat:Dataset or a rdf:Description for services and feature catalogue. -->
-      <foaf:primaryTopic rdf:resource="{$url}/resource/{iso19139:getResourceCode(.)}"/>
+      <foaf:primaryTopic rdf:resource="{$resourcePrefix}/resources/{iso19139:getResourceCode(.)}"/>
 
       <!-- Metadata change date.
       "The date is encoded as a literal in "YYYY-MM-DD" form (ISO 8601 Date and Time Formats)." -->
@@ -101,7 +102,7 @@
     <xsl:param name="uuid"/>
 
     <dct:references>
-      <rdf:Description rdf:about="{$url}/srv/eng/xml.metadata.get?uuid={$uuid}">
+      <rdf:Description rdf:about="{$resourcePrefix}/records/{$uuid}/formatters/xml">
         <dct:format>
           <dct:IMT>
             <rdf:value>application/xml</rdf:value>
@@ -112,7 +113,7 @@
     </dct:references>
 
     <dct:references>
-      <rdf:Description rdf:about="{$url}?uuid={$uuid}">
+      <rdf:Description rdf:about="{$resourcePrefix}/records/{$uuid}">
         <dct:format>
           <dct:IMT>
             <rdf:value>text/html</rdf:value>
@@ -131,9 +132,9 @@
       select="//gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword/gco:CharacterString" group-by=".">
       <!-- FIXME maybe only do that, if keyword URI is available (when xlink is used ?) -->
       <skos:Concept
-        rdf:about="{$url}/thesaurus/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}/{encode-for-uri(.)}">
+        rdf:about="{$resourcePrefix}/registries/vocabularies/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}/concepts/{encode-for-uri(.)}">
         <skos:inScheme
-          rdf:resource="{$url}/thesaurus/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}"/>
+          rdf:resource="{$resourcePrefix}/registries/vocabularies/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}"/>
         <skos:prefLabel>
           <xsl:value-of select="."/>
         </skos:prefLabel>
@@ -213,7 +214,7 @@
 
         xpath: //gmd:organisationName
       -->
-      <foaf:Organization rdf:about="{$url}/organization/{encode-for-uri(current-grouping-key())}">
+      <foaf:Organization rdf:about="{$resourcePrefix}/organizations/{encode-for-uri(current-grouping-key())}">
         <foaf:name>
           <xsl:value-of select="current-grouping-key()"/>
         </foaf:name>
@@ -222,7 +223,7 @@
           select="//gmd:CI_ResponsibleParty[gmd:organisationName/gco:CharacterString=current-grouping-key()]"
           group-by="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString">
           <foaf:member
-            rdf:resource="{$url}/organization/{encode-for-uri(iso19139:getContactId(.))}"/>
+            rdf:resource="{$resourcePrefix}/persons/{encode-for-uri(iso19139:getContactId(.))}"/>
         </xsl:for-each-group>
       </foaf:Organization>
     </xsl:for-each-group>
@@ -230,11 +231,11 @@
 
     <xsl:for-each-group select="//gmd:CI_ResponsibleParty"
                         group-by="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString">
-      <!-- Organization memeber
+      <!-- Organization member
 
         xpath: //gmd:CI_ResponsibleParty-->
 
-      <foaf:Agent rdf:about="{$url}/person/{encode-for-uri(iso19139:getContactId(.))}">
+      <foaf:Agent rdf:about="{$resourcePrefix}/persons/{encode-for-uri(iso19139:getContactId(.))}">
         <xsl:if test="gmd:individualName/gco:CharacterString">
           <foaf:name>
             <xsl:value-of select="gmd:individualName/gco:CharacterString"/>
@@ -268,7 +269,7 @@
   <xsl:template
     match="srv:SV_ServiceIdentification|*[contains(@gco:isoType, 'SV_ServiceIdentification')]"
     mode="to-dcat">
-    <rdf:Description rdf:about="{$url}/resource/{iso19139:getResourceCode(../../.)}">
+    <rdf:Description rdf:about="{$resourcePrefix}/resource/{iso19139:getResourceCode(../../.)}">
       <xsl:call-template name="to-dcat"/>
     </rdf:Description>
   </xsl:template>
@@ -282,7 +283,7 @@
   -->
   <xsl:template match="gmd:MD_DataIdentification|*[contains(@gco:isoType, 'MD_DataIdentification')]"
                 mode="to-dcat">
-    <dcat:Dataset rdf:about="{$url}/resource/{iso19139:getResourceCode(../../.)}">
+    <dcat:Dataset rdf:about="{$resourcePrefix}/datasets/{iso19139:getResourceCode(../../.)}">
       <xsl:call-template name="to-dcat"/>
     </dcat:Dataset>
   </xsl:template>
@@ -328,14 +329,14 @@
       select="gmd:descriptiveKeywords/gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword/gco:CharacterString">
       <!-- FIXME maybe only do that, if keyword URI is available (when xlink is used ?) -->
       <dcat:theme
-        rdf:resource="{$url}/thesaurus/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}/{.}"/>
+        rdf:resource="{$resourcePrefix}/registries/vocabularies/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}/concepts/{.}"/>
     </xsl:for-each>
     <!-- xpath: gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor -->
     <!-- xpath: gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharaceterString -->
     <!-- xpath: gmd:identificationInfo/*/gmd:topicCategory/gmd:MD_TopicCategoryCode -->
     <xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode[.!='']">
       <!-- FIXME Is there any public URI pointing to topicCategory enumeration ? -->
-      <dcat:theme rdf:resource="{$url}/thesaurus/iso/topicCategory/{.}"/>
+      <dcat:theme rdf:resource="{$resourcePrefix}/registries/vocabularies/isoTopicCategory/concepts/{.}"/>
     </xsl:for-each>
 
     <!-- Thumbnail -->
@@ -371,12 +372,12 @@
     <!-- "The temporal period that the dataset covers." -->
     <!-- TODO could be improved-->
     <xsl:for-each
-      select="gmd:extent/*/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod">
+      select="gmd:extent/*/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/(gml:TimePeriod|gml320:TimePeriod)">
       <dct:temporal>
-        <xsl:value-of select="gml:beginPosition"/>
-        <xsl:if test="gml:endPosition">
+        <xsl:value-of select="gml:beginPosition|gml320:beginPosition"/>
+        <xsl:if test="gml:endPosition|gml320:endPosition">
           /
-          <xsl:value-of select="gml:endPosition"/>
+          <xsl:value-of select="gml:endPosition|gml320:endPosition"/>
         </xsl:if>
       </dct:temporal>
     </xsl:for-each>
@@ -397,7 +398,7 @@
 
     <!-- "An entity responsible for making the dataset available" -->
     <xsl:for-each select="gmd:pointOfContact/*/gmd:organisationName/gco:CharacterString[.!='']">
-      <dct:publisher rdf:resource="{$url}/organization/{encode-for-uri(.)}"/>
+      <dct:publisher rdf:resource="{$resourcePrefix}/organizations/{encode-for-uri(.)}"/>
     </xsl:for-each>
     <!-- xpath: gmd:identificationInfo/*/gmd:pointOfContact -->
 
@@ -459,39 +460,39 @@
     -->
     <xsl:for-each
       select="../../gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation/@uuidref ">
-      <dcat:dataDictionary rdf:resource="{$url}/metadata/{.}"/>
+      <dcat:dataDictionary rdf:resource="{$resourcePrefix}/records/{.}"/>
     </xsl:for-each>
     <!-- xpath: gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation/@uuidref -->
 
     <!-- Dataset relation
     -->
     <xsl:for-each select="srv:operatesOn/@uuidref ">
-      <dct:relation rdf:resource="{$url}/metadata/{.}"/>
+      <dct:relation rdf:resource="{$resourcePrefix}/records/{.}"/>
     </xsl:for-each>
 
 
     <xsl:for-each select="gmd:aggregationInfo/gmd:MD_AggregateInformation">
       <dct:relation
-        rdf:resource="{$url}/metadata/{gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString}"/>
+        rdf:resource="{$resourcePrefix}/records/{gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString}"/>
     </xsl:for-each>
 
     <!-- Source relation -->
     <xsl:for-each select="/root/gui/relation/sources/response/metadata">
-      <dct:relation rdf:resource="{$url}/metadata/{geonet:info/uuid}"/>
+      <dct:relation rdf:resource="{$resourcePrefix}/records/{geonet:info/uuid}"/>
     </xsl:for-each>
 
 
     <!-- Parent/child relation -->
     <xsl:for-each select="../../gmd:parentIdentifier/gco:CharacterString[.!='']">
-      <dct:relation rdf:resource="{$url}/metadata/{.}"/>
+      <dct:relation rdf:resource="{$resourcePrefix}/records/{.}"/>
     </xsl:for-each>
     <xsl:for-each select="/root/gui/relation/children/response/metadata">
-      <dct:relation rdf:resource="{$url}/metadata/{geonet:info/uuid}"/>
+      <dct:relation rdf:resource="{$resourcePrefix}/records/{geonet:info/uuid}"/>
     </xsl:for-each>
 
     <!-- Service relation -->
     <xsl:for-each select="/root/gui/relations/services/response/metadata">
-      <dct:relation rdf:resource="{$url}/metadata/{geonet:info/uuid}"/>
+      <dct:relation rdf:resource="{$resourcePrefix}/records/{geonet:info/uuid}"/>
     </xsl:for-each>
 
 

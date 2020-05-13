@@ -23,26 +23,32 @@
 
 package org.fao.geonet.api.site;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import javax.sql.DataSource;
+import javax.xml.transform.TransformerFactory;
+
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.LuceneConfig;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Properties;
-
-import javax.sql.DataSource;
-import javax.xml.transform.TransformerFactory;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -89,24 +95,37 @@ public class SiteInformation {
         this.databaseProperties = databaseProperties;
     }
 
+    @JsonProperty(value = "version")
+    public Map<String, String> getVersionProperties() {
+        return versionProperties;
+    }
+
+    public void setVersionProperties(HashMap<String, String> versionProperties) {
+        this.versionProperties = versionProperties;
+    }
+
     private HashMap<String, String> catProperties = new HashMap<String, String>();
     private HashMap<String, String> indexProperties = new HashMap<String, String>();
     private HashMap<String, String> systemProperties = new HashMap<String, String>();
     private HashMap<String, String> databaseProperties = new HashMap<String, String>();
+    private HashMap<String, String> versionProperties = new HashMap<String, String>();
 
     public SiteInformation(final ServiceContext context, final GeonetContext gc) {
-        loadCatalogueInfo(gc);
-        try {
-            loadDatabaseInfo(context);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if(context.getUserSession().isAuthenticated()) {
+            loadCatalogueInfo(gc);
+            try {
+                loadDatabaseInfo(context);
+            } catch (SQLException e) {
+                Log.error(Geonet.GEONETWORK, e.getMessage(), e);
+            }
+            try {
+                loadIndexInfo(context);
+            } catch (IOException e) {
+                Log.error(Geonet.GEONETWORK, e.getMessage(), e);
+            }
+            loadVersionInfo(context);
+            loadSystemInfo();
         }
-        try {
-            loadIndexInfo(context);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        loadSystemInfo();
     }
 
     /**
@@ -115,27 +134,21 @@ public class SiteInformation {
     private void loadCatalogueInfo(final GeonetContext gc) {
         ServiceConfig sc = gc.getBean(ServiceConfig.class);
 
-        String[] props = {Geonet.Config.DATA_DIR, Geonet.Config.CODELIST_DIR,
-            Geonet.Config.CONFIG_DIR, Geonet.Config.SCHEMAPLUGINS_DIR,
-            Geonet.Config.SUBVERSION_PATH, Geonet.Config.RESOURCES_DIR,
-            Geonet.Config.FORMATTER_PATH, Geonet.Config.BACKUP_DIR};
+        String[] props = { Geonet.Config.DATA_DIR, Geonet.Config.CODELIST_DIR, Geonet.Config.CONFIG_DIR, Geonet.Config.SCHEMAPLUGINS_DIR,
+                Geonet.Config.SUBVERSION_PATH, Geonet.Config.RESOURCES_DIR, Geonet.Config.FORMATTER_PATH, Geonet.Config.BACKUP_DIR };
 
         for (String prop : props) {
             catProperties.put("data." + prop, sc.getValue(prop));
         }
     }
 
-
     /**
      * Compute information about the current system.
      */
     private void loadSystemInfo() {
-        systemProperties.put("java.version",
-            properties.getProperty("java.version"));
-        systemProperties.put("java.vm.name",
-            properties.getProperty("java.vm.name"));
-        systemProperties.put("java.vm.vendor",
-            properties.getProperty("java.vm.vendor"));
+        systemProperties.put("java.version", properties.getProperty("java.version"));
+        systemProperties.put("java.vm.name", properties.getProperty("java.vm.name"));
+        systemProperties.put("java.vm.vendor", properties.getProperty("java.vm.vendor"));
 
         systemProperties.put("os.name", properties.getProperty("os.name"));
         systemProperties.put("os.arch", properties.getProperty("os.arch"));
@@ -161,16 +174,10 @@ public class SiteInformation {
         final GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
         Path luceneDir = dataDirectory.getLuceneDir();
         indexProperties.put("index.path", luceneDir.toAbsolutePath().normalize().toString());
-        Path lDir = dataDirectory.getSpatialIndexPath();
         if (Files.exists(luceneDir)) {
             long size = ApiUtils.sizeOfDirectory(luceneDir);
             indexProperties.put("index.size", "" + size); // lucene + Shapefile
             // if exist
-        }
-
-        if (Files.exists(lDir)) {
-            long size = ApiUtils.sizeOfDirectory(lDir);
-            indexProperties.put("index.size.lucene", "" + size);
         }
         indexProperties.put("index.lucene.config", context.getBean(LuceneConfig.class).toString());
     }
@@ -187,26 +194,46 @@ public class SiteInformation {
             dbURL = connection.getMetaData().getURL();
             databaseProperties.put("db.openattempt", "Database Opened Successfully");
 
-
             if (connection instanceof BasicDataSource) {
                 BasicDataSource basicDataSource = (BasicDataSource) connection;
                 try {
                     databaseProperties.put("db.numactive", "" + basicDataSource.getNumActive());
                     databaseProperties.put("db.numidle", "" + basicDataSource.getNumIdle());
-                    databaseProperties.put("db.maxactive", "" + basicDataSource.getMaxActive());
+                    databaseProperties.put("db.maxactive", "" + basicDataSource.getMaxTotal());
                 } catch (Exception e) {
                     databaseProperties.put("db.statserror", "Failed to get stats on database connections. Error is: " + e.getMessage());
                 }
             }
 
         } catch (Exception e) {
-            databaseProperties.put("db.openattempt", "Failed to open database connection, Check config.xml db file configuration. Error" +
-                " is: " + e.getMessage());
+            databaseProperties.put("db.openattempt",
+                    "Failed to open database connection, Check config.xml db file configuration. Error" + " is: " + e.getMessage());
         } finally {
             if (connection != null) {
                 connection.close();
             }
         }
         databaseProperties.put("db.url", dbURL);
+    }
+
+    /**
+     * Compute information about git commit.
+     */
+    private void loadVersionInfo(ServiceContext context) {
+        Properties prop = new Properties();
+
+        try (InputStream input = getClass().getResourceAsStream("/git.properties")) {
+            prop.load(input);
+
+            Enumeration<?> e = prop.propertyNames();
+            while (e.hasMoreElements()) {
+                String key = (String) e.nextElement();
+                String value = prop.getProperty(key);
+                versionProperties.put(key, value);
+            }
+
+        } catch (Exception ex) {
+            Log.error(Geonet.GEONETWORK, ex.getMessage(), ex);
+        }
     }
 }

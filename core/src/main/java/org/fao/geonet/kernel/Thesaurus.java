@@ -719,7 +719,10 @@ public class Thesaurus {
             theNSs.add(Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/"));
 
             this.defaultNamespace = null;
-            Element title = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dc:title|skos:Collection/dc:title|skos:Collection/dcterms:title|rdf:Description/dc:title", theNSs);
+            Element title = Xml.selectElement(thesaurusEl,
+                "skos:ConceptScheme/dc:title|skos:ConceptScheme/dcterms:title|" +
+                    "skos:Collection/dc:title|skos:Collection/dcterms:title|" +
+                    "rdf:Description/dc:title|rdf:Description/dcterms:title", theNSs);
 
             if (title != null) {
                 this.title = title.getValue();

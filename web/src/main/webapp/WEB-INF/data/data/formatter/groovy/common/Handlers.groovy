@@ -1,15 +1,12 @@
 package common
+
 import jeeves.server.context.ServiceContext
-import org.fao.geonet.constants.Geonet
-import org.fao.geonet.guiservices.metadata.GetRelated
-import org.fao.geonet.kernel.GeonetworkDataDirectory
-import org.fao.geonet.api.records.formatters.FormatType
+import org.fao.geonet.api.records.MetadataUtils
 import org.fao.geonet.api.records.formatters.groovy.Environment
-import org.fao.geonet.api.records.formatters.groovy.util.AssociatedLink
-import org.fao.geonet.api.records.formatters.groovy.util.Direction
-import org.fao.geonet.api.records.formatters.groovy.util.LinkBlock
-import org.fao.geonet.api.records.formatters.groovy.util.LinkType
-import org.fao.geonet.api.records.formatters.groovy.util.NavBarItem
+import org.fao.geonet.api.records.formatters.groovy.util.*
+import org.fao.geonet.api.records.model.related.RelatedItemType
+import org.fao.geonet.constants.Geonet
+import org.fao.geonet.kernel.GeonetworkDataDirectory
 import org.fao.geonet.utils.Xml
 import org.jdom.Element
 
@@ -99,15 +96,16 @@ public class Handlers {
     def htmlOrXmlStart = {
         if (func.isHtmlOutput()) {
             def minimize = ''
+            def baseUrl = func.f.fparams.url;
             if (env.param("debug").toBool()) {
                 minimize = '?minimize=false'
             }
             String cssLinks = """
-    <link rel="stylesheet" href="../../static/gn_bootstrap.css$minimize"/>
-    <link rel="stylesheet" href="../../static/gn_metadata.css$minimize"/>""";
+    <link rel="stylesheet" href="$baseUrl../../static/gn_bootstrap.css$minimize"/>
+    <link rel="stylesheet" href="$baseUrl../../static/gn_metadata.css$minimize"/>""";
 
             if (func.isPDFOutput()) {
-                cssLinks = """<link rel="stylesheet" href="../../static/gn_metadata_pdf.css$minimize"/>"""
+                cssLinks = """<link rel="stylesheet" href="$baseUrl../../static/gn_metadata_pdf.css$minimize"/>"""
             }
             return """
 <!DOCTYPE html>
@@ -115,8 +113,8 @@ public class Handlers {
 <head lang="en">
     <meta charset="UTF-8"/>
     $cssLinks
-    <script src="../../static/lib.js$minimize"></script>
-    <script src="../../static/gn_formatter_lib.js$minimize"></script>
+    <script src="$baseUrl../../static/lib.js$minimize"></script>
+    <script src="$baseUrl../../static/gn_formatter_lib.js$minimize"></script>
 </head>
 <body>
 """
@@ -127,11 +125,19 @@ public class Handlers {
 
     def htmlOrXmlEnd = {
         def required = "";
+        def tabToggle = "";
+        def activeTab = env.param('tab').toString();
+
+        if (activeTab != 'Null Value') {
+            tabToggle = "gnFormatter.toggleTab('$activeTab');"
+        }
+
         if (!func.isPDFOutput()) {
             required = """
 <script type="text/javascript">
 //<![CDATA[
     gnFormatter.formatterOnComplete();
+    $tabToggle
 //]]>
 </script>"""
         }
@@ -154,55 +160,64 @@ public class Handlers {
         LinkBlock hierarchy = new LinkBlock("associated-link", "fa fa-sitemap")
         Element related = getRelatedReport(id, uuid)
 
-        related.getChildren("relation").each { rel ->
-            def type = rel.getAttributeValue("type")
-            def direction = Direction.CHILD
-            def association = rel.getAttributeValue("association")
-            if (type == "sibling") {
-                if (association != null && association != '') {
-                    type = association;
-                    direction = Direction.PARENT
-                }
-            } else if (type == "services" || type == "sources" || type == "parent" || type == "fcats") {
-                direction = Direction.PARENT
-            } else if( type == 'associated') {
-                Element aggIndexEl = rel.getChildren().find{it.getName() startsWith "agg_"}
-                if (aggIndexEl != null) {
-                    type = aggIndexEl.name.substring(4)
-                }
-            }
+        related.getChildren().each { rel ->
 
-            def relatedIdInfo = addRelation(hierarchy, uuid, rel, type, direction)
-
-            if (relatedIdInfo != null && direction == Direction.PARENT) {
-                def parentUUID = relatedIdInfo['uuid'] as String
-                def report = getRelatedReport(relatedIdInfo['id'] as int, parentUUID)
-                report.getChildren("relation").each { potentialSiblingRel ->
-                     def relType = potentialSiblingRel.getAttributeValue("type")
-                    if (association != null) {
-                        boolean isAggSibling = potentialSiblingRel.getChildren("agg_$association").any {
-                            it.getTextTrim() == parentUUID
-                        }
-                        if (isAggSibling) {
-                            addRelation(hierarchy, parentUUID, potentialSiblingRel, association, Direction.SIBLING)
-                        }
-                    } else if (relType == 'datasets' || relType == 'hassource' || relType == 'hasfeaturecat') {
-                        addRelation(hierarchy, parentUUID, potentialSiblingRel, relType, Direction.SIBLING)
-                    } else if (relType == 'children') {
-                        addRelation(hierarchy, parentUUID, potentialSiblingRel, "siblings", Direction.SIBLING)
+            rel.getChildren("item").each { item ->
+                def type = rel.name
+                def direction = Direction.CHILD
+                def association
+                if (type == "siblings") {
+                    association = item.getChildText("associationType")
+                    if (association != null && association != '') {
+                        type = association;
+                        direction = Direction.PARENT
                     }
+                } else if (type == "services" || type == "sources" || type == "parent" || type == "fcats") {
+                    direction = Direction.PARENT
+                } else if( type == 'associated') {
+                    Element aggIndexEl = item.getChildren().find{it.getName() startsWith "agg_"}
+                    if (aggIndexEl != null) {
+                        type = aggIndexEl.name.substring(4)
+                    }
+                } else if (type == "onlines" || type == "thumbnails") {
+                    return;
+                }
 
+                def relatedIdInfo = addRelation(hierarchy, uuid, item, type, direction)
+
+                if (relatedIdInfo != null && direction == Direction.PARENT) {
+                    def parentUUID = relatedIdInfo['uuid'] as String
+                    def report = getRelatedReport(relatedIdInfo['id'] as int, parentUUID)
+
+                    report.getChildren().each { potentialSiblingRel ->
+                        def relType = potentialSiblingRel.name
+                        potentialSiblingRel.getChildren("item").
+                                findAll { it.getChildren("id").any {!it.getTextTrim().equals(uuid)}}.
+                                each { potentialSiblingItem ->
+                                    if (association != null) {
+                                        boolean isAggSibling = potentialSiblingItem.getChildren("agg_$association").any {
+                                            it.getTextTrim() == parentUUID
+                                        }
+                                        if (isAggSibling) {
+                                            addRelation(hierarchy, parentUUID, potentialSiblingItem, association, Direction.SIBLING)
+                                        }
+                                    } else if (relType == 'datasets' || relType == 'hassource' || relType == 'hasfeaturecat') {
+                                        addRelation(hierarchy, parentUUID, potentialSiblingItem, relType, Direction.SIBLING)
+                                    } else if (relType == 'children') {
+                                        addRelation(hierarchy, parentUUID, potentialSiblingItem, "siblings", Direction.SIBLING)
+                                    }
+                        }
+                    }
                 }
             }
         }
-
         return hierarchy;
     }
 
     private Element getRelatedReport(int id, String uuid) {
-        def getRelatedBean = this.env.getBean(GetRelated.class)
         def relatedXsl = this.env.getBean(GeonetworkDataDirectory).getWebappDir().resolve("xslt/services/metadata/relation.xsl");
-        def raw = getRelatedBean.getRelated(ServiceContext.get(), id, uuid, "", 1, 1000, true)
+        def RelatedItemType[] types = [];
+        def raw = MetadataUtils.getRelated(ServiceContext.get(), id, uuid, types, 1, 1000, true)
         def withGui = new Element("root").addContent(Arrays.asList(
                 new Element("gui").addContent(Arrays.asList(
                         new Element("language").setText(env.lang3),
@@ -231,56 +246,33 @@ public class Handlers {
         linkType.iconHtml = """
   <i class="fa ${arrow}" title="${f.translate(direction.name().toLowerCase() + "-plural")}"></i>
 """
-        def md = rel.getChild("metadata")
+      def relUuid = rel.getChild("id").getText()
+      def relId = rel.getChild("mdid").getText()
+      def title = rel.getChild("title").getChild("value").getText()
+      def desc = rel.getChild("description").getChild("value").getText()
+      if (title == null || title.isEmpty()) {
+        title = relUuid;
+      }
 
-        def mdEl, relUuid, relId;
+      def href = createShowMetadataHref(relUuid)
+      def cls = uuid.trim().isEmpty() ? "text-muted" : ''
 
-        def relInfo = rel.getChild("info", Geonet.Namespaces.GEONET)
+      def link = new AssociatedLink(href, title, cls)
+      link.setAbstract(desc);
+      link.metadataId = relUuid;
+      link.setLogo(rel.getChildText('logo'));
 
-        if (md != null) {
-            relUuid = md.getChild("info", Geonet.Namespaces.GEONET).getChildText("uuid")
-            relId = md.getChild("info", Geonet.Namespaces.GEONET).getChildText("id")
-            mdEl = md;
-        } else if (rel.getChild("info", Geonet.Namespaces.GEONET) != null && relInfo.getChildText("uuid") != null) {
-            relUuid = relInfo.getChildText("uuid")
-            relId = relInfo.getChildText("id")
-            mdEl = rel;
-        } else {
-            relUuid = rel.getChildText("uuid")
-            relId = rel.getChildText("id")
-            mdEl = rel
-        }
+      hierarchy.put(linkType, link)
 
-        if (relUuid != null && env.metadataUUID != relUuid) {
-            def href = createShowMetadataHref(relUuid)
-            def title = mdEl.getChildText("title")
-            if (title == null || title.isEmpty()) {
-                title = mdEl.getChildText("defaultTitle")
-            }
+      return ['uuid': relUuid, 'id': relId]
 
-            if (title == null || title.isEmpty()) {
-                title = relUuid;
-            }
-
-            def cls = uuid.trim().isEmpty() ? "text-muted" : ''
-
-            def link = new AssociatedLink(href, title, cls)
-            link.setAbstract(rel.getChildText('abstract'));
-            link.setLogo(rel.getChildText('logo'));
-            link.metadataId = relUuid;
-
-            hierarchy.put(linkType, link)
-
-            return ['uuid': relUuid, 'id' : relId]
-        }
-        return null;
     }
 
     private String createShowMetadataHref(String uuid) {
         if (uuid.trim().isEmpty()) {
             return "javascript:alert('" + this.f.translate("noUuidInLink") + "');"
         } else {
-            return this.env.localizedUrl + "md.viewer#/full_view/" + URLEncoder.encode(uuid, "UTF-8")
+            return this.env.localizedUrl + "display#/" + URLEncoder.encode(uuid, "UTF-8") + "/formatters/full_view"
         }
     }
 

@@ -45,10 +45,13 @@
     <msg id="a" xml:lang="fre">thème(s) INSPIRE trouvé(s). Exécuter cette action pour ajouter une
       section sur la cohérence topologique.
     </msg>
+    <msg id="a" xml:lang="dut">
+INSPIRE-thema (s) gevonden. Voer deze taak uit om een topologische consistentie sectie item toe te voegen.
+    </msg>
   </xsl:variable>
 
   <xsl:variable name="inspire-thesaurus-dq-topo"
-                select="document(concat('file:///', replace(util:getConfigValue('codeListDir'), '\\', '/'), '/external/thesauri/theme/inspire-theme.rdf'))"/>
+                select="document(concat('file:///', replace(util:getConfigValue('codeListDir'), '\\', '/'), '/external/thesauri/theme/httpinspireeceuropaeutheme-theme.rdf'))"/>
 
   <xsl:template name="list-inspire-add-dq-toporeport">
     <suggestion process="inspire-add-dq-toporeport"/>

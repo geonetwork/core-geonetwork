@@ -25,6 +25,7 @@ package org.fao.geonet.api.categories;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import junit.framework.Assert;
+import org.fao.geonet.api.FieldNameExclusionStrategy;
 import org.fao.geonet.api.JsonFieldNamingStrategy;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -42,9 +43,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -70,7 +69,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(get("/api/tags")
+        this.mockMvc.perform(get("/srv/api/tags")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(categories.size())));
@@ -83,7 +82,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(get("/api/tags/" + category.getId())
+        this.mockMvc.perform(get("/srv/api/tags/" + category.getId())
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name", is(category.getName())));
@@ -97,12 +96,10 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        MvcResult result = this.mockMvc.perform(get("/api/tags/222")
+        MvcResult result = this.mockMvc.perform(get("/srv/api/tags/222")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
             .andReturn();
-
-        System.out.println(result.getResponse().getContentAsString());
     }
 
     @Test
@@ -112,7 +109,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(delete("/api/tags/" + category.getId())
+        this.mockMvc.perform(delete("/srv/api/tags/" + category.getId())
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
     }
@@ -124,7 +121,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(delete("/api/tags/222")
+        this.mockMvc.perform(delete("/srv/api/tags/222")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404));
     }
@@ -140,6 +137,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations", "_records"))
             .create();
         String json = gson.toJson(newCategory);
 
@@ -147,9 +145,9 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(put("/api/tags")
+        this.mockMvc.perform(put("/srv/api/tags")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -160,6 +158,8 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void updateTag() throws Exception {
+        // TODO test with update and creation with an anonymous user
+
         MetadataCategory category = _categoriesRepo.findOne(1);
         Assert.assertNotNull(category);
 
@@ -167,17 +167,19 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations", "_records"))
             .create();
         String json = gson.toJson(category);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(put("/api/tags/" + category.getId())
+        this.mockMvc.perform(put("/srv/api/tags/" + category.getId())
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
     }
+
 
     @Test
     public void updateNonExistingTag() throws Exception {
@@ -186,7 +188,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(delete("/api/tags/222")
+        this.mockMvc.perform(delete("/srv/api/tags/222")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404));
     }

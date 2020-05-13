@@ -1,9 +1,11 @@
 <div>
   <form class="ng-pristine ng-valid" role="form">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
     <div class="form-group" data-ng-class="{'has-error' : !validUrl}">
 
       <!--File URL-->
       <input class="form-control input-sm ng-pristine ng-valid"
+             aria-label="{{'KMLfileURL'|translate}}"
              placeholder="{{'KMLfileURL'|translate}}" type="text"
              data-ng-model="url" data-ng-model-options="{debounce: 500}"
              data-ng-change="kmlCtrl.addKml(url, map)">
@@ -12,11 +14,12 @@
 
       <!--KMZ upload-->
       <div class="fu">
-        <button type="button" class="btn btn-info">
+        <button type="button" class="btn btn-default">
           <span class="fa fa-upload"></span>
           {{'UploadKMZfile'|translate}}
         </button>
         <input class="form-control input-sm ng-pristine ng-valid" type="file"
+               aria-label="{{'UploadKMZfile'|translate}}"
                accept="application/vnd.google-earth.kmz" id="kmz-file-input">
       </div>
       <div class="list-group" id="file-list">

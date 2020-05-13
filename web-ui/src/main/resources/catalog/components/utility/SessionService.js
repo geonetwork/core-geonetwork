@@ -24,7 +24,8 @@
 (function() {
   goog.provide('gn_session_service');
 
-  var module = angular.module('gn_session_service', ['ngCookies']);
+  var module = angular.module('gn_session_service',
+      ['ngCookies', 'ngSanitize']);
 
   /**
    * Session check & warning service
@@ -57,19 +58,20 @@
         return session;
       };
       function getRemainingTime() {
-        session.start = moment(parseInt($cookies.serverTime));
+        session.start = moment(parseInt($cookies.get('serverTime')));
         // 0 session length means user is not authenticated.
         session.length =
-            ($cookies.sessionExpiry - $cookies.serverTime) / 1000;
+            ($cookies.get('sessionExpiry') - $cookies.get('serverTime')) / 1000;
         session.remainingTime =
             Math.round(
-            moment(parseInt($cookies.sessionExpiry)).diff(
+            moment(parseInt($cookies.get('sessionExpiry'))).diff(
             moment()) / 1000);
+
         return session.remainingTime;
       };
       function check(user) {
         // User is not yet authenticated
-        if ($cookies.sessionExpiry === $cookies.serverTime) {
+        if ($cookies.get('sessionExpiry') === $cookies.get('serverTime')) {
           return;
         }
 
@@ -80,21 +82,23 @@
             session.remainingTime < session.alertWhen) {
           if (session.remainingTime < 0) {
             $rootScope.$broadcast('StatusUpdated', {
-              title: $translate('sessionIsProbablyCancelled'),
-              msg: $translate('sessionAlertDisconnectedMsg', {
+              title: $translate.instant('sessionIsProbablyCancelled'),
+              msg: $translate.instant('sessionAlertDisconnectedMsg', {
                 startedAt: session.start.format('YYYY-MM-DD HH:mm:ss'),
                 length: session.length
               }),
+              id: 'session-alert',
               timeout: session.checkInterval,
               type: 'danger'});
           } else {
             $rootScope.$broadcast('StatusUpdated', {
-              title: $translate('sessionIsAboutToBeCancelled'),
-              msg: $translate('sessionAlertMsg', {
+              title: $translate.instant('sessionIsAboutToBeCancelled'),
+              msg: $translate.instant('sessionAlertMsg', {
                 startedAt: session.start.format('YYYY-MM-DD HH:mm:ss'),
                 willBeCancelledIn: session.remainingTime,
                 length: session.length
               }),
+              id: 'session-alert',
               timeout: session.checkInterval,
               type: 'danger'});
           }

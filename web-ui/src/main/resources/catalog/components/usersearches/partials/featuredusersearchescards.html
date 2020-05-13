@@ -1,0 +1,20 @@
+<ul class="row gn-info-list">
+  <li
+    data-ng-repeat="row in featuredSearches"
+    data-ng-click="search(row.url)"
+    id="gn-info-list-mw-{row.id}}">
+    <section class="resultcard clearfix"
+             data-ng-class="row.url ? 'hasThumbnail' : 'noThumbnail'">
+
+      <div class="title">
+        <h4>{{row.names[lang] || row.names['eng'] || ('userSearchNameMissing' | translate)}}&nbsp;</h4>
+      </div>
+
+      <div class="gn-md-thumbnail">
+        <div class="gn-img-thumbnail"
+             style="background-image: url({{row.logo}})">
+        </div>
+      </div>
+    </section>
+  </li>
+</ul>

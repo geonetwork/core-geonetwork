@@ -58,7 +58,7 @@
 
       <gmd:hierarchyLevel>
         <gmd:MD_ScopeCode
-          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode"
           codeListValue="dataset"/>
       </gmd:hierarchyLevel>
 
@@ -110,7 +110,7 @@
             </gmd:contactInfo>
             <gmd:role>
               <gmd:CI_RoleCode
-                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
                 codeListValue="author"/>
             </gmd:role>
           </gmd:CI_ResponsibleParty>
@@ -171,6 +171,16 @@
 
       <gmd:distributionInfo>
         <gmd:MD_Distribution>
+          <gmd:distributionFormat>
+            <gmd:MD_Format>
+              <gmd:name>
+                <gco:CharacterString>OGC:OWS-C</gco:CharacterString>
+              </gmd:name>
+              <gmd:version gco:nilReason="missing">
+                <gco:CharacterString/>
+              </gmd:version>
+            </gmd:MD_Format>
+          </gmd:distributionFormat>
           <gmd:transferOptions>
             <gmd:MD_DigitalTransferOptions>
 
@@ -269,7 +279,7 @@
             <gmd:DQ_Scope>
               <gmd:level>
                 <gmd:MD_ScopeCode codeListValue="dataset"
-                                  codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"/>
+                                  codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode"/>
               </gmd:level>
             </gmd:DQ_Scope>
           </gmd:scope>

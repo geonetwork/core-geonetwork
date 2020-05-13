@@ -23,7 +23,9 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:gn="http://www.fao.org/geonetwork" xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:saxon="http://saxon.sf.net/"
                 version="2.0" extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
@@ -42,7 +44,7 @@
     <xsl:param name="evaluatedNode" as="node()"/>
 
     <xsl:variable name="nodeRef" select="$evaluatedNode/gn:element/@ref"/>
-    <xsl:variable name="node" select="$metadata//*[gn:element/@ref = $nodeRef]"/>
+    <xsl:variable name="node" select="$metadata//*[gn:element/@ref = $nodeRef][not(ancestor::svrl:*)]"/>
 
     <!--<xsl:message>#getOriginalNode ==================</xsl:message>
     <xsl:message><xsl:value-of select="$evaluatedNode/*/gn:element/@ref"/></xsl:message>
@@ -100,8 +102,12 @@
     </xsl:variable>
 
     <!-- Name with context in current schema -->
-    <xsl:variable name="schemaLabelWithContext"
+    <xsl:variable name="schemaLabelWithContextCollection"
                   select="$labels/element[@name=$escapedName and (@context=$xpath or @context=$parent or @context=$parentIsoType)]"/>
+    <xsl:variable name="schemaLabelWithContext" select="$schemaLabelWithContextCollection[1]"/>
+    <xsl:if test="count($schemaLabelWithContextCollection) > 1">
+      <xsl:message>WARNING: gn-fn-metadata:getLabel | multiple labels found for element '<xsl:value-of select="$escapedName"/>' with context=('<xsl:value-of select="$xpath"/>' or '<xsl:value-of select="$parent"/>' or '<xsl:value-of select="$parentIsoType"/>') in schema <xsl:value-of select="$schema"/></xsl:message>
+    </xsl:if>
 
     <!-- Name in current schema -->
     <xsl:variable name="schemaLabel"
@@ -319,7 +325,9 @@
 
     <!-- Name with context in current schema -->
     <xsl:variable name="helper"
-                  select="$labels/element[@name=$name and (@context=$xpath or @context=$context)]/helper"/>
+                  select="if (string($xpath) or string($context))
+                          then $labels/element[@name=$name and (@context=$xpath or @context=$context)]/helper
+                          else $labels/element[@name=$name and not(string(@context))]/helper"/>
 
     <xsl:choose>
       <xsl:when test="$helper">
@@ -345,19 +353,74 @@
     <xsl:param name="name" as="xs:string"/>
     <!-- The element containing the value eg. gco:Date -->
     <xsl:param name="childName" as="xs:string?"/>
+    <xsl:param name="xpath" as="xs:string?"/>
 
     <xsl:variable name="childType"
                   select="normalize-space($configuration/editor/fields/for[@name = $childName]/@use)"/>
+    <xsl:variable name="childTypeXpath"
+                  select="normalize-space($configuration/editor/fields/for[@name = $childName and @xpath = $xpath]/@use)"/>
     <xsl:variable name="type"
-                  select="normalize-space($configuration/editor/fields/for[@name = $name]/@use)"/>
+                  select="normalize-space($configuration/editor/fields/for[@name = $name and not(@xpath)]/@use)"/>
+    <xsl:variable name="typeXpath"
+                  select="normalize-space($configuration/editor/fields/for[@name = $name and @xpath = $xpath]/@use)"/>
 
     <xsl:value-of
-      select="if ($childType != '')
+      select="if ($childTypeXpath != '')
+      then $childTypeXpath
+      else if ($childType != '')
       then $childType
+      else if ($typeXpath != '')
+      then $typeXpath
       else if ($type != '')
       then $type
       else $defaultFieldType"
     />
+
+  </xsl:function>
+
+  <xsl:function name="gn-fn-metadata:getAttributeFieldType" as="xs:string">
+    <xsl:param name="configuration" as="node()"/>
+    <!-- The container element gmx:fileName/@src-->
+    <xsl:param name="attributeNameWithParent" as="xs:string"/>
+
+    <xsl:variable name="type"
+                  select="normalize-space($configuration/editor/fields/for[@name = $attributeNameWithParent]/@use)"/>
+
+    <xsl:value-of
+      select="if ($type != '')
+      then $type
+      else $defaultFieldType"
+    />
+  </xsl:function>
+
+
+  <!-- Return the directive to use for editing. -->
+  <xsl:function name="gn-fn-metadata:getFieldDirective" as="node()">
+    <xsl:param name="configuration" as="node()"/>
+    <xsl:param name="name" as="xs:string"/>
+    <xsl:param name="xpath" as="xs:string?"/>
+
+    <xsl:variable name="type"
+                  select="$configuration/editor/fields/for[@name = $name and starts-with(@use, 'data-') and not(@xpath)]"/>
+    <xsl:variable name="typeWithXpath"
+                  select="$configuration/editor/fields/for[@name = $name and starts-with(@use, 'data-') and @xpath = $xpath]"/>
+    <xsl:choose>
+      <xsl:when test="$typeWithXpath">
+        <xsl:element name="directive">
+          <xsl:attribute name="data-directive-name" select="$typeWithXpath/@use"/>
+          <xsl:copy-of select="$typeWithXpath/directiveAttributes/@*"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:when test="$type">
+        <xsl:element name="directive">
+          <xsl:attribute name="data-directive-name" select="$type/@use"/>
+          <xsl:copy-of select="$type/directiveAttributes/@*"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <null/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:function>
 
 
@@ -392,17 +455,25 @@
 
   <!-- Return if a flat mode exception has been defined in the current view for a field. -->
   <xsl:function name="gn-fn-metadata:isFieldFlatModeException" as="xs:boolean">
-    <xsl:param name="configuration" as="node()"/>
+    <xsl:param name="configuration" as="node()?"/>
     <xsl:param name="name" as="xs:string"/>
+    <xsl:param name="parent" as="xs:string?" />
 
-    <xsl:variable name="exception"
-                  select="count($configuration/flatModeExceptions/for[@name = $name])"/>
+    <xsl:choose>
+      <xsl:when test="not($configuration)">
+        <xsl:value-of select="false()"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="exception"
+                      select="if (string($parent))
+                  then count($configuration/flatModeExceptions/for[@name = $name and (not(@excludeFrom) or (@excludeFrom and not(contains(@excludeFrom, $parent))))])
+                  else count($configuration/flatModeExceptions/for[@name = $name])"/>
 
-    <xsl:value-of
-      select="if ($exception > 0)
-      then true()
-      else false()"
-    />
+        <xsl:value-of select="if ($exception > 0)
+                      then true()
+                      else false()"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:function>
 
   <xsl:function name="gn-fn-metadata:getXPath" as="xs:string">
@@ -457,7 +528,8 @@
     <xsl:param name="md" as="node()"/>
     <xsl:param name="withPosition" as="xs:boolean"/>
 
-    <xsl:variable name="node" select="$md/descendant::node()[gn:element/@ref = $nodeRef]"/>
+    <!-- when walking thru expanded document with validation report info, ignore report info avoid ing multiple matches-->
+    <xsl:variable name="node" select="$md/descendant::node()[gn:element/@ref = $nodeRef][not(ancestor::*[name() = 'geonet:report'])]"/>
 
     <xsl:value-of select="gn-fn-metadata:getXPath($node, $withPosition)"/>
   </xsl:function>

@@ -24,24 +24,24 @@
 package org.fao.geonet.services.metadata;
 
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
+import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-
-import java.nio.file.Path;
-import java.util.List;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Stores all operations allowed for a metadata. Called by the metadata.admin service.
@@ -77,10 +77,10 @@ public class UpdateCategories extends NotInReadOnlyModeService {
             throw new IllegalArgumentException("Metadata not found --> " + id);
 
         //--- remove old operations
-        context.getBean(MetadataRepository.class).update(iLocalId, new Updater<Metadata>() {
+        context.getBean(IMetadataManager.class).update(iLocalId, new Updater<Metadata>() {
             @Override
             public void apply(@Nonnull Metadata entity) {
-                entity.getCategories().clear();
+                entity.getMetadataCategories().clear();
             }
         });
 
@@ -96,7 +96,7 @@ public class UpdateCategories extends NotInReadOnlyModeService {
         }
 
         //--- index metadata
-        dataMan.indexMetadata(id, true);
+        dataMan.indexMetadata(id, true, null);
 
         //--- return id for showing
         return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));

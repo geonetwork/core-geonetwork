@@ -68,7 +68,7 @@ public abstract class AbstractHarvesterServiceIntegrationTest
             .setAttribute("owner", "1")
             .addContent(new Element("site")
                 .addContent(new Element("ownerId").setText("1"))
-                .addContent(new Element("ownerGroupId").setText("2"))
+                .addContent(new Element("ownerGroup").setText("2"))
                 .addContent(new Element("name").setText("testHarvester"))
                 .addContent(new Element("uuid").setText("testHarvesetUuid"))
                 .addContent(new Element("icon").setText("icon.png")))

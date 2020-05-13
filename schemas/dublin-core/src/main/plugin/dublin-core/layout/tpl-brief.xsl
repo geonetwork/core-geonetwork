@@ -76,7 +76,7 @@
       <image>IMAGE</image>
       -->
       <!-- TODO : ows:BoundingBox -->
-      <xsl:variable name="coverage" select="dc:coverage"/>
+      <xsl:variable name="coverage" select="dc:coverage[1]"/>
       <xsl:variable name="n" select="substring-after($coverage,'North ')"/>
       <xsl:variable name="north" select="substring-before($n,',')"/>
       <xsl:variable name="s" select="substring-after($coverage,'South ')"/>

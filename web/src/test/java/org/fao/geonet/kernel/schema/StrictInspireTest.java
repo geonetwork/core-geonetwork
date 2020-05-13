@@ -67,7 +67,7 @@ public class StrictInspireTest extends AbstractInspireTest {
     @Before
     public void before() {
         super.before();
-        Pair<Element, Path> compiledResult = compileSchematron(getSchematronFile("iso19139", "schematron-rules-inspire-strict.disabled.sch"));
+        Pair<Element, Path> compiledResult = compileSchematron(getSchematronFile("iso19139", "schematron-rules-inspire-strict.sch"));
         inspire_schematron = compiledResult.one();
         schematronXsl = compiledResult.two();
     }
@@ -146,7 +146,7 @@ public class StrictInspireTest extends AbstractInspireTest {
 
         Element failure = (Element) results.getDescendants(FAILURE_FILTER).next();
 
-        assertTrue(failure.getAttributeValue("test"), failure.getAttributeValue("test").contains("$has" + lang.getKey() + "Title"));
+        assertTrue(failure.getAttributeValue("test"), failure.getAttributeValue("test").equals("count($specification_inspire) > 0"));
 
         final List<?> failureMessageTextElements = Xml.selectNodes(failure, "*//text()");
         final Text expectedTextFromFailure = (Text) failureMessageTextElements.get(0);

@@ -4,14 +4,14 @@
             class="btn btn-default dropdown-toggle"
             data-toggle="dropdown"
             aria-expanded="false">
-      <i class="fa fa-sort"/>&nbsp;
       <span data-translate=""
             data-translate-values="{field: '{{params.sortBy | translate}}'}"
-            class="hidden-xs">sortedBy</span>
-      <span class="caret"></span>
+            class="">sortedBy</span>
+      <i class="fa fa-sort fa-fw"/>
     </button>
     <ul class="dropdown-menu" role="menu">
       <li data-ng-repeat="v in ::values"
+          role="menuitem"
           data-ng-class="v.sortBy === params.sortBy ? 'disabled' : ''">
         <a data-ng-click="sortBy(v)">{{v.sortBy | translate}}</a></li>
     </ul>

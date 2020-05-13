@@ -33,18 +33,18 @@
   <xsl:template mode="render-xml" match="*">
     <xsl:choose>
       <xsl:when test="$isEditing">
-        <!-- TODO: could help editor to have basic
-        syntax highlighting. -->
-        <textarea name="data" class="gn-textarea-xml form-control" data-gn-autogrow="">
+        <!-- Remove gn:* element -->
+        <xsl:variable name="strippedXml">
+          <xsl:apply-templates mode="gn-element-cleaner" select="."/>
+        </xsl:variable>
 
-          <!-- Remove gn:* element -->
-          <xsl:variable name="strippedXml">
-            <xsl:apply-templates mode="gn-element-cleaner" select="."/>
-          </xsl:variable>
-
-          <!-- Render XML in textarea -->
+        <!-- Render XML in textarea -->
+        <div id="xmleditor"
+             ui-ace="{{useWrapMode:true,showGutter:true,mode:'xml',onLoad:xmlEditorLoaded,onChange:xmlEditorChange}}">
           <xsl:value-of
-            select="saxon:serialize($strippedXml, 'default-indent-mode')"></xsl:value-of>
+            select="saxon:serialize($strippedXml, 'default-indent-mode')"/>
+        </div>
+        <textarea name="data" class="hidden">
         </textarea>
       </xsl:when>
       <xsl:otherwise>

@@ -63,8 +63,8 @@
       var icons = {
         featureCatalog: 'fa-table',
         service: 'fa-cog',
-        map: 'fa-globe',
-        staticMap: 'fa-globe',
+        map: 'fa-map',
+        staticMap: 'fa-map',
         dataset: 'fa-file'
       };
 
@@ -95,7 +95,8 @@
               fullPrivileges,
               $routeParams.template,
               false,
-              $routeParams.tab);
+              $routeParams.tab,
+              true);
         } else {
 
           // Metadata creation could be on a template
@@ -110,7 +111,7 @@
 
           // TODO: Better handling of lots of templates
           gnSearchManagerService.search('qi?_content_type=json&' +
-              query + '&fast=index&from=1&to=200').
+              query + '&fast=index&from=1&to=200&_isTemplate=y or n').
               then(function(data) {
 
                 $scope.mdList = data;
@@ -156,13 +157,15 @@
       $scope.getTemplateNamesByType = function(type) {
         var tpls = [];
         for (var i = 0; i < $scope.mdList.metadata.length; i++) {
-          var mdType = $scope.mdList.metadata[i].type || unknownType;
+          var md = $scope.mdList.metadata[i];
+          md.title = md.title || md.defaultTitle;
+          var mdType = md.type || unknownType;
           if (mdType instanceof Array) {
             if (mdType.indexOf(type) >= 0) {
-              tpls.push($scope.mdList.metadata[i]);
+              tpls.push(md);
             }
           } else if (mdType == type) {
-            tpls.push($scope.mdList.metadata[i]);
+            tpls.push(md);
           }
         }
 
@@ -188,11 +191,11 @@
 
 
       if ($routeParams.childOf) {
-        $scope.title = $translate('createChildOf');
+        $scope.title = $translate.instant('createChildOf');
       } else if ($routeParams.from) {
-        $scope.title = $translate('createCopyOf');
+        $scope.title = $translate.instant('createCopyOf');
       } else {
-        $scope.title = $translate('createA');
+        $scope.title = $translate.instant('createA');
       }
 
       $scope.createNewMetadata = function(isPublic) {
@@ -226,10 +229,11 @@
             $scope.isTemplate,
             $routeParams.childOf ? true : false,
             undefined,
-            metadataUuid
+            metadataUuid,
+            true
         ).error(function(data) {
           $rootScope.$broadcast('StatusUpdated', {
-            title: $translate('createMetadataError'),
+            title: $translate.instant('createMetadataError'),
             error: data.error,
             timeout: 0,
             type: 'danger'});

@@ -60,9 +60,9 @@ USA.
 
 -->
 
-	<sch:title xmlns="http://www.w3.org/2001/XMLSchema">Schematron validation for ISO
-		19115(19139)</sch:title>
-	<sch:ns prefix="gml" uri="http://www.opengis.net/gml"/>
+	<sch:title xmlns="http://www.w3.org/2001/XMLSchema">ISO rules</sch:title>
+  <sch:ns prefix="gml" uri="http://www.opengis.net/gml/3.2"/>
+  <sch:ns prefix="gml320" uri="http://www.opengis.net/gml"/>
 	<sch:ns prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
 	<sch:ns prefix="srv" uri="http://www.isotc211.org/2005/srv"/>
 	<sch:ns prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
@@ -88,7 +88,7 @@ USA.
 	<sch:pattern>
 		<sch:title>$loc/strings/M7</sch:title>
 		<!-- UNVERIFIED -->
-		<sch:rule id="CRSLabelsPosType" context="//gml:DirectPositionType">
+		<sch:rule id="CRSLabelsPosType" context="//*[local-name() = 'DirectPositionType']">
 			<sch:report test="not(@srsDimension) or @srsName"
 				>$loc/strings/alert.M6.directPosition</sch:report>
 			<sch:report test="not(@axisLabels) or @srsName"

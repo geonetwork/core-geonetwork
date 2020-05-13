@@ -45,8 +45,8 @@
    * display only an icon and no label.
    *
    */
-  module.directive('gnNeedHelp', ['gnGlobalSettings',
-    function(gnGlobalSettings) {
+  module.directive('gnNeedHelp', ['gnGlobalSettings', 'gnAlertService', '$http', '$q', '$translate',
+    function(gnGlobalSettings, gnAlertService, $http, $q, $translate) {
       return {
         restrict: 'A',
         replace: true,
@@ -55,17 +55,29 @@
         link: function(scope, element, attrs) {
           scope.iconOnly = attrs.iconOnly === 'true';
           var helpBaseUrl = gnGlobalSettings.docUrl ||
-              'http://geonetwork-opensource.org/manuals/trunk/';
+              'https://geonetwork-opensource.org/manuals/trunk/';
+
+          var testAndOpen = function(url) {
+            var defer = $q.defer();
+            $http.head(url).then(function(data) {
+              window.open(url, 'gn-documentation');
+              defer.resolve(data);
+            }, function(data) {
+              gnAlertService.addAlert({
+                msg: $translate.instant('docPageNotFoundAtUrl') + ' ' + url,
+                type: 'warning'
+              });
+              defer.reject(data);
+            });
+            return defer.promise;
+          };
 
           scope.showHelp = function() {
             var page = attrs.gnNeedHelp;
             var helpPageUrl = helpBaseUrl + gnGlobalSettings.lang + '/' + page;
-            // GeoNetwork website language folder are different
-            if (helpBaseUrl.indexOf('http://geonet') === 0) {
-              lang = gnGlobalSettings.lang == 'fr' ? 'fra' : 'eng';
-              helpPageUrl = helpBaseUrl + lang + '/users/' + page;
-            }
-            window.open(helpPageUrl, 'gn-documentation');
+            testAndOpen(helpPageUrl).then(function() {}, function() {
+              testAndOpen( helpBaseUrl + 'en/' + page)
+            });
             return true;
           };
         }

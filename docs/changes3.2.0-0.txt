@@ -1,0 +1,1226 @@
+================================================================================
+===
+=== GeoNetwork 3.2.0: List of changes
+===
+================================================================================
+- Update doc module.
+- User feedback is disabled by default as there is no mail server enable by default. Add help instruction in settings. Feedback / Do not display it if no SMTP server configured #1605.
+- Format using space (not tabs).
+- Doc / Fix error on XPath with filter condition - build broken by SDS.
+- Set all privileges option is un-labelled in batch privileges form #1686
+- User administrators can't create users - Remove error check in create user service #1690
+- Use POST for user reset password service #1684
+- Turn off header causing CSS issue #1674. This needs more work.
+- Updates from transifex.
+- Fix path with double /.
+- JSLint.
+- Editor / Keywords are edited in the GUI language and not in the main metadata language (this last option would not allow multilingual editing).
+- Editor / Fix attribute editing when using a template mode field.
+- Editor / Fix editing of function and app profile in ISO19139 broken by API change.
+- Import / From folder, mef file errors are not reported #1689.
+- Import / Restore MEF version 1 import.
+- Merge pull request #1565 from juanluisrp/groups-api
+- Merge pull request #1666 from g2timo/bug/inspire_indexing_windows
+- Merge pull request #1676 from juanluisrp/set-related-items-to-null
+- Metadata editor: thesaurus request returning http 500 #1680.
+- Import / Report error and info in case of MEF file import.
+- Allow configure locale files in views (#1533)
+- Searching for record or template with and OR clause fails #1679.
+- Merge pull request #1634 from juanluisrp/api-tests
+- Editor / Section / Add CSS class based on section name (useful to apply custom styling).
+- fix typo in json
+- Fix register_email_message in Message.properties
+- Fix  register_email_message in Message.properties
+- Merge branch 'develop' into groups-api
+- Merge pull request #1647 from fxprunayre/improvement/table-view-for-contact
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Add Finnish translations to UI
+- Set thumbnails and onlines to null in related resp
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Xslt formatter: multilingual fields are not rendered properly #1675
+- Merge branch 'develop' into api-tests
+- Fix API tests
+- Findbugs version used in GeoNetwork doesn't work with Java 8 #1670
+- Search for "<script" instead of "<"
+- "Security" Bug Fixing: Escaping javascript XSS on error messages
+- Search for "<script" instead of "<"
+- "Security" Bug Fixing: Escaping javascript XSS on error messages
+- fixed manuals
+- fixed indexing of inspire keywords on windows
+- Merge remote-tracking branch 'origin/develop' into develop
+- Mix of language #1665.
+- Only send feedback emails based on metadata when the recipent is on the metadata
+- Merge branch 'develop' into api-tests
+- Add facet label (used in ISO19115-3)
+- HttpProxy / Fix URL built when extra params are added to the request. The request may be wrong but it looks like some user use that feature to avoid caching on the remote server. So fix incorrect URL build.
+- Gravatar loads through http on a https page #1653.
+- #1577  Publish button should be disabled if metadata record does not validate (#1659)
+- Merge remote-tracking branch 'origin/develop' into develop
+- Why is ldap on by default?
+- Fix category selection in groups.
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Search statistics return all the same graphs #1661
+- Update from transifex.
+- Fix getRelated and downloadZip MetadataAPI tests
+- Register the context in ServiceManager to avoid a NPE
+- Merge branch 'develop' into api-tests
+- Updating docs
+- Merge remote-tracking branch 'origin/develop' into develop
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Dublin core / Fix related to embeded mode and API change.
+- Record view / Group keyword by thesaurus #1654
+- Update en-core.json (#1652)
+- Update en-search.json (#1651)
+- Update en-admin.json (#1650)
+- Return error message if the user tries to update a user with other existing username #1611
+- Updating tutorials
+- Directory / Restore capability to use ISO19139 contact directory in ISO19115-3 - was dropped in API change
+- ISO19139 / Index contact not having organisation #1649 - simplify contact indexing.
+- ISO19139 / Index contact email, role and uuid #1648
+- ISO19139 / Add table view mode for contact (in flat mode or when using an editor config with xsl mode).
+- Remove deprecated directive - related to #1385.
+- Groups combo / Select first group in scope list (not in service response group list which may be filtered)
+- Updating docs reference
+- Merge remote-tracking branch 'origin/develop' into develop
+- Editor / Table mode / Add more doc and TODOs.
+- Editor / Record fragment can search (instead of only using a list of UUID).
+- Associated resources / Link to sibling open metadata view (like others).
+- #1610 CORS filter causes error responses go to success handlers in AngularJs. Fix for GN API requests
+- Add more doc.
+- Privileges / Add operation filter & order, icons, spinner on load.
+- Fix opensearch descriptor xslt #1546. Service portal.opensearch fails #1485.
+- Fix order of element (related to #1479).
+- Merge remote-tracking branch 'origin/develop' into develop
+- JSLint.
+- harvesters - plugging the harvester error counter (#1641)
+- Option to sync All layers in the Map Viewer and the Mini Map (#1644)
+- Merge remote-tracking branch 'origin/develop' into develop
+- Use schema documentation title/description in metadata create and metadata import tempates/samples pages #1479.
+- XSL Utils / Add function to evalute expressions.
+- Add node URL in processing as the API may be used.
+- Editor / Add configuration of button icon for process action.
+- Fix action type.
+- Fix action type.
+- Add missing injection.
+- Remove extra slash.
+- Synchronize background layer between main map and search map #1500.
+- Editor / Add action can be based on a directive. Add an example. Also add a directive that is using savedQuery API to insert fragment from one metadata record to another. This is used to copy quality reports for example.
+- Editor / Associated resources / Fix removal of some type of link. Remove old API usage.
+- Editor / XML View / Add code editor. (#1642)
+- SavedQuery / Add support for multiple results and to attribute, node or text match #1640.
+- Fix API path.
+- Editor / Add missing (but supported) if attribute in text element in config-editor.xsd.
+- Update from transifex.
+- Merge remote-tracking branch 'origin/develop' into develop
+- Editor / Associated resources / Siblings / Add search filters based on type #1639.
+- Editor / Expansion of element was not adding geonet:child due to API change.
+- During migration insure datatype for JSON settings is set to 3. Older version was changing it to 1 ie. String during validation.
+- ISO19139 / Index standardName in language xsl
+- Source catalog facets display UUIDs #1268
+- Add appProfile info and linksTree in metadata object.
+- Feature table column with link - backport from Sextant.
+- Update manuals.
+- Editor / Fix region selection.
+- Editor / After adding an element with cardinality 0..1, add action is still available (see https://github.com/geonetwork/core-geonetwork/issues/1636)
+- Add missing labels for privs panel.
+- JSlint + update from transifex.
+- API / Regions - tests
+- API / Selections - tests
+-  API / MetadataIdentifiers - tests and fixes
+- Get feature from row improvement.
+- Link between layers and services (backport from Sextant)
+- Cleaning / Duplicated function.
+- Fix duplication of template
+- Editor / Add XSL and table modes (#1635)
+- print-config.yaml has wrong title for A4 landscape #1628
+- fixed unselect checkbox issue (#1620)
+- Add schema.org tags in xsl formatter. (#1609)
+- MapQuest tiles not available anymore.
+- Better comment.
+- Map / Graticule label not displayed #1630.
+- Placename search doesn't work if you reproject the basemap #1631.
+- Merge pull request #1632 from pvalsecc/leak
+- Merge pull request #1627 from ianturton/javascript
+- Merge pull request #1625 from ianturton/transfer
+- Merge pull request #1626 from kkoistinen/patch-4
+- Merge pull request #1624 from kkoistinen/patch-3
+- Merge pull request #1623 from kkoistinen/patch-2
+- Merge pull request #1622 from kkoistinen/patch-1
+- Test MetadataAPI class
+- Fix bad url build when retrieving image for PDFs
+- Caching 500000 formatted MDs in RAM is not a good idea
+- Use query parameters
+- Lucene optimisation now shrinks the files
+- Tests for MetadataApi
+-  API / MapServers fix API class / Sources  - tests
+- API / MapServers - tests
+- API / Operations - tests
+-  API / IsoLanguages, Status - tests
+- fixed annoying null pointer issue
+- Update CatController.js
+- fixed transfert to transfer
+- Update strings.xml
+- Update criteria-type.xml
+- Create schematron-rules-inspire-sds.xml
+-  API / Refactor JsonFieldNamingStrategy for tests
+- API / VirtualCsw - tests
+- ISO19139 / Add missing gmx xsd in schema location.
+- Merge branch 'pvalsecc-clean_stop' into develop
+- Merge branch 'clean_stop' of https://github.com/pvalsecc/core-geonetwork into pvalsecc-clean_stop
+- API / Add file headers, remove unused imports
+-  API / Tags - tests
+- API / Me - tests
+- API / Groups - tests. Improve in Users API tests
+- Stop some threads when the webapp is stopped
+- API / Site - tests
+- Harvesting / CSW / XSLT transformation not saved #1617.
+- Updates from transifex.
+- Merge remote-tracking branch 'origin/develop' into develop
+- Fix startup script on windows.
+- API / Users - add additional tests and fixes
+- Merge remote-tracking branch 'origin/develop' into develop
+- API / Users - add file header and remove unused imports
+- API / Users - initial unit tests and fixes
+- API / Updates in groups form for the API changes
+- API / Improve doc.
+- API / Users management
+- API / Transfert ownership for one record.
+- LDAP / Assign default group even if importPrivilegesFromLdap is false. Without this, if you assign Editor profile, then user is member of no group and can't create any record.
+- Fix non existing icon.
+- Merge pull request #1608 from spacebelGIS/topconcept
+- Update submodule GeoServer to version 2.9.0.
+- Improve UX of topconcept for hierarchical thesaursus (#278)
+- Cleaning / Remove unused cargo plugin.
+- Add empty folder for Jetty to properly start the first time.
+- Merge remote-tracking branch 'origin/develop' into develop
+- Load samples / Fix select all schema.
+- Installer / Cleanup startup script.
+- Merge pull request #1591 from juanluisrp/ingore-mail-ssl-cert-option
+- Merge branch 'develop' into ingore-mail-ssl-cert-option
+- Fix bad merge of config from old Jetty to new version.
+- Associated resource / Do wildcard search when looking for other md.
+- Merge branch 'spacebelGIS-facetsToggle' into develop
+- Merge branch 'facetsToggle' of https://github.com/spacebelGIS/core-geonetwork into spacebelGIS-facetsToggle
+- New metadata / Select the only one group if there is only one.
+- Merge branch 'spacebelGIS-minimapToggle' into develop
+- Prefix CSS class by 'gn-'.
+- Merge branch 'minimapToggle' of https://github.com/spacebelGIS/core-geonetwork into spacebelGIS-minimapToggle
+- Merge remote-tracking branch 'origin/develop' into develop
+- Merge pull request #1601 from spacebelGIS/fixhelpinform
+- JSLint. Properly edit JSON settings.
+- Tests are working again. Broken by 01e8f76c74df5f127c91c2009c453865b83541c2.
+- Fix missing translation for validate in search page selection menu. Related to #1602.
+- Merge remote-tracking branch 'origin/develop' into develop
+- Fix invalid JS introduced in 1580d2b81fcfd97ae5d8bec464f119e31623e878. Now, wro4j compile JS properly and translations are loaded in admin.console.
+- Merge pull request #1604 from juanluisrp/fix-startswith-cors
+- Fix use of string.startsWith for IE
+- Updates from transifex.
+- Merge remote-tracking branch 'origin/develop' into develop
+- API / Use it for identifier templates.
+- Reenabling CORS
+- Removing console.log debug
+- In non debug mode, it doesn't try the second call
+- #1603 Force csw:Record outputschema in GetRecords for CSW harvester to retrieve uuid,change date of remote records
+- #1603 Retrieve for SimpleMetadata (used in harvesters) the date in the format stored instead of only short format
+- fix Unexpected behavior of the helper button in a form #1600
+- Merge branch '3.0.x' of github.com:geonetwork/core-geonetwork into develop
+- Adding copyright and styling issues
+- Merge branch '3.0.x' into develop
+- Fixes #1555
+- Fix download link for Solr.
+- Merge pull request #1592 from geonetwork/api
+- API / Cleaning and docs.
+- API / Cleaning and docs.
+- Merge remote-tracking branch 'origin/develop' into api
+- Metadata view / Mix or records in relation panel #1516. Add the capability to abort pending request when switching to another record.
+- Formating.
+- Formatter / XSL / Email links are wrong one multiple emails #1596.
+- Multilingual / Links always displayed in default language #1595.
+- Fix children field missing when related items are requested as JSON
+- Replace system.out call by Log.error calls
+- Better support for CORS. Now available everywhere
+- API / Misc fix for language handling, keyword search and logos.
+- Fix typo in settings
+- Fix typo in settings
+- Restore settings order
+- API / Transfer owner.
+- Add an option for ingnoring the errors related with the SSL certificate of the mail server
+- API / Delete batch.
+- API / Misc fix, cleaning, better error message.
+- API / Search keywords.
+- API / Update groups.
+- API / Logging and threads.
+- Avoid loop in redirect.
+- API / Settings.
+- API / CSW test.
+- API / virtual CSW config.
+- API / Metadata identifiers.
+- Fix style.
+- API / Geopublication - It works, but a rework could be welcomed to clean up status code and messages.
+- API / Mapservers admin.
+- API / Standards.
+- API / Migrates processing and suggestions. Now we can preview a process by using GET method. POST will save.
+- API / Editor now use Spring MVC services only for save/add/remove/reorder. It looks like performance are slightly better probably because the XML doc to create the form is a bit smaller (it only includes what the editor needs and only labels for the schema of the current metadata).
+- Editor / Fix remove action.
+- Editor / Fix remove action.
+- Merge remote-tracking branch 'origin/develop' into api
+- Multinode / Fix mix of users.
+- Multinode / Fix mix of users.
+- API / Fix info path.
+- API / Start migration of editor.
+- Transifex update
+- API / Use API to import record.
+- API / Sharing settings.
+- Fixing bug: when showing labels on add buttons that use prefix, strings didn't behave right
+- API / Set sharing settings for a record.
+- API / Load templates and samples.
+- API / Set privileges.
+- API / Metadata sharing.
+- Fixing comparison
+- Using encodeUriComponent instead of encodeURI in case we use weird characters on the URL
+- Removing explicit proxyUrls
+- JSLint fixes
+- Removing variable no longer used: we now use cache
+- Caching by host and port instead of by full url
+- Adding a CORS interceptor for every ajax call
+- API / Set record status. Now StatusAction and SAFactory are now created by Spring and not Jeeves.
+- Fix for unit tests
+- API / Create new record.
+- JSLint.
+- API / Rate a record.
+- Merge remote-tracking branch 'origin/api' into api
+- API / Record validation, batch validation, delete, rating, XSL formatter is now default.
+- Fixing styling issues
+- Fixing merge
+- Feedback form for metadata
+- formatter: check code on 2 and 3 characters for multilingual fields
+- Link dataset to service fails #1495. Applied code from develop branch that was fixing this
+- more white space between the 2 sections on the form
+- added hardcoded values to the feedback selects
+- Styling of the feedback form: - labels - headers Added extra fields on the form
+- styling the feedback form
+- #1539 Denominator range queries doesn't work as expected
+- When having multiple pager in the same page, only one should listen to events.
+- Fix JS error.
+- Move to next page when last record is displayed. Add pager at the bottom of the page.
+- API / Import MEF.
+- Return a 403 error instead a redirection to the login form
+- Refactor the error response to ApiError class
+- Merge pull request #1584 from MichelGabriel/develop
+- vertical alignment of the icons on the admin dashboard
+- API / Add import one or more record from XML using requestBody or file or URL.
+- Remove trailing comma in AdminToolsController
+- API / Add DELETE record. Metadata UUID or ID are now supported in path.
+- Merge remote-tracking branch 'origin/develop' into api
+- Merge remote-tracking branch 'origin/api' into api
+- API / Formatters.
+- Fixes for  message-converter to deal with Hibernate lazy loading and API / User groups service
+- Updates from transifex.
+- Privileges / More robust checks on operation parameters in case some others are added. Exception was triggered when a '__param' was used.
+- Commented the message-converter to deal with Hibernate lazy loading, causes some issues with labels list in multilingual entities. To check further
+- Merge remote-tracking branch 'origin/api' into api
+- API / Fix directory duplicated bean.
+- Merge branch 'api' of https://github.com/geonetwork/core-geonetwork into api
+- Object Mapper to support JSON serialization and deserialization of Hibernate specific datatypes and properties; especially lazy-loading aspects
+- API / Migrate subtemplate service.
+- API / Migrate logo service and staging.
+- Merge remote-tracking branch 'origin/api' into api
+- Fix tests.
+- API / User reset password update url format
+- Restore default jndi support (including for jetty)
+-  API / Migrate user delete/reset password and fix authorisation in groups api
+- Fix node change warning page CSS load.
+- JMS config is only in parent context.
+- API / Login and logout are now /signin and /signout instead of j_spring_security_(check|logout).
+- Group api and doc in one folder.
+- API / Sources / Ignore local prop.
+- Merge remote-tracking branch 'origin/develop' into api
+- API / Migrate groups (pending to migrate groups update)
+- API / Migrate sources.
+- JSLint.
+- Add link to API doc and move it to the doc folder.
+- Merge branch 'develop' of https://github.com/geonetwork/core-geonetwork into develop
+- Fix for #1583
+- Merge remote-tracking branch 'origin/develop' into api
+- Editor / Fix template mode XPath must be relative to original node.
+- Merge remote-tracking branch 'origin/api' into api
+- API / Migrate category services.
+- Use annotations for secure controllers
+- Editor / Template mode / Fix removal button
+- Fixes  #1563
+- Fixes #1520
+- Fixes #1187
+- When access is denied return a 403 with no HTML body
+- Fixes #1531
+- Drop ServiceContext when possible.
+- Merge remote-tracking branch 'origin/develop' into api
+- Stop gt-xml (GT15) from bringing in xml-commons-resolver-1.2 which has broken url handling for windows
+- add special case 3char -> 2char code mapping in javascript
+- Merge remote-tracking branch 'origin/api' into api
+- Drop ServiceContext usage when possible.
+- Use annotations for secure controllers
+- Disable API specific init.
+- Add AllRequestInterceptors to take care of session and bots.
+- Merge remote-tracking branch 'origin/develop' into api
+- Fix jetty-webapps.xml
+- Merge branch 'remove-z3950-keep-sru' into develop
+- Fixes to keep SRU
+- Fix springfox version.
+- Merge remote-tracking branch 'origin/develop' into api
+- Merge pull request #1578 from fxprunayre/cleaning/formatting
+- Merge remote-tracking branch 'upstream/develop' into cleaning/formatting
+- Merge pull request #1568 from geonetwork/solr-wfs-indexing
+- Formatter / Remove root metadata tag which creates invalid HTML pages if you start from <html>
+- API / Add PUT/DELETE languages .
+- Cleaning / Move all settings to one constant class.
+- API / Migrate service.
+- Jetty / Update #1580.
+- Formatting / Fix formatter test.
+- Formatting / HTML.
+- Formatting / XSL - restore proper formatting on XSLTs using text mode output and when using saxon:evalute (which requires namespaces to be declared for XPath evaluation to work even if not used in the XSLT).
+- Formatting / Fix tests.
+- Formatting / XML and XSD.
+- Formatting / pom.xml and XSL.
+- Formatting / Java.
+- Format code and cleaning.
+- Update test to use new XMLUnit version.
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Editor / Add editing of related documents  (#1564)
+- Merge remote-tracking branch 'origin/solr-wfs-indexing' into solr-wfs-indexing
+- Avoid to send null to solr facet range, allow heatmap if no appProfile, one time binding does not work here (not sure why). Improve layout.
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Fix file path
+- New metadata / Add filter when list of template is long #1575.
+- Wro4j / Add capability to rebuild cache and reload model #1574.
+- Map / 3D / Update ol3cesium to be able to configure proxy #1560.
+- JSLint.
+- Map / 3D / Update ol3cesium to be able to configure proxy #1560.
+- No need for DEBUG in production mode.
+- Fix warning on startup.
+- Merge remote-tracking branch 'origin/develop' into develop
+- Editor / Add support for removing an ancestor of a field #1571.
+- Restore element added in https://github.com/geonetwork/core-geonetwork/commit/f0f1d3614a3d0ee4a81d6f1b4f92459f8f55ae61 and dropped at some point.
+- wfstable: dbl click fit extent set higher min res
+- Fix path to source files for bootstrap-table
+- wfsfilter: table show all attributes of the filter not only the filtered ones by applicationProfile
+- wps: add tooltip with abstract from describeprocess on form inputs
+- Merge remote-tracking branch 'upstream/develop' into cleaning/z3950-keep-sru
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Improve processing report. (#1558)
+- Test pass.
+- Ignore test on sextant (not public).
+- Require java 8
+- Use an utility class to detect the mime type #1565
+- Fix issue with message format when using single quotes #1565
+- Merge remote-tracking branch 'upstream/develop' into solr-wfs-indexing
+- Wfs / Trim tokenized field.
+- Add i18n for reporting exceptions #1565
+- Merge pull request #1557 from pvgenuchten/xss-1556
+- Editor / CRS / No way to close the autocomplete list #1567.
+- Editor / Add has-error class even for field with helper.
+- Update to Solr 6.0.1.
+- Editor / Subtemplate / Do LIKE search.
+- Editor / Field in template mode / Codelist not initialized #1566.
+- Fix bad merge
+- wfsfilter: remove admin btn if no element
+- Fix reset solrobj state on reset action
+- Make heatmap optional from application profile
+- can pass a title to multifacet panel
+- Fix for tests.
+- Cleaning log config and try to better log errors.
+- Cleaning.
+- Cleanup logger.
+- Update to Solr 6.0.0. Move the doc to the manual.
+- Backport de bricoles de sextant.
+- Update to GeoTools 15 (instead of the patched 14-SNAPSHOT). The different issues are solved by forcing GT to use Xalan using system properties.
+- Add javax.xml.transform.TransformerFactory in system info. GN still use Saxon, but GeoTools (used for SLD creation) MUST use Xalan. Use system property -Djavax.xml.transform.TransformerFactory=org.apache.xalan.processor.TransformerFactoryImpl to force GT to use Xalan. On Tomcat this is required. On Jetty not.
+- Improve SLD builder.
+- Groups API
+- Editor / Add collapsing for suggestion and validation panel.
+- formatter: keep end of line in summary abstract
+- Editor / Helper / Radio mode other option is textarea
+- Thesaurus / Results ordered only if search on all thesaurus #1559.
+- [gn] - Fix heatmap leaks
+- wfsfilter: fix layer if no spatial filter is set
+- [gn] dragBox interaction now needs a css class
+- Cleaning / Remove web client module (ie. ExtJS app) (#1464)
+- Crop layer when geographic filter set
+- [gn] Export all data & not just current page
+- feature table highlight fixed on mouseout
+- fix some code for new ol3 version 3.15 event.key.src -> .target map.forEachFeatureAtPixel call back can have null layer if layer is not managed, see doc vectorContext.drawPointGeometry -> drawGeometry
+- update ngeo need to add angular-gettext module but we hack its content not to override  directive and filter gettext key name is now gettexttranslate instead of translate (but not used in geonetwork)
+- wfsfilter: reset bbox filter on filters reset
+- remove debug message in xss development
+- resolves #1556 by introducing a filter which stips html tags from uri input
+- Directory / Add the capability to synchronize with a subset of the directory eg. &fq=_groupPublished=IFREMER will only synchronize entries published for group IFREMER.
+- Merge remote-tracking branch 'origin/develop' into develop
+- Fix MD language corruption
+- Merge pull request #1551 from geonetwork/vulnerabilities
+- Merge branch 'develop' into vulnerabilities
+- Fixing tests
+- On editor dashboard, order facets by label, not by id (which is what the service returns)
+- Updates from transifex.
+- #1550: fix a dup entry in ISO19139 German loc file
+- #1549: fix ISO2 code for German
+- Bug fix: when you don't administer a group, privileges associated to that group of the user you are editing should remain static.
+- #1545: Update Spring version to support Java 8
+- Fix JSLint issues
+- Merge pull request #1542 from oscarfonts/xml-translations-es-ca
+- Spanish and Catalan translations for iso19139 XML files
+- Merge branch '3.0.x' into develop
+- Merge branch 'oscarfonts-i18n-es-ca' into 3.0.x
+- Merge branch 'i18n-es-ca' of https://github.com/oscarfonts/core-geonetwork into oscarfonts-i18n-es-ca
+- Updating locales with Transifex
+- Adding catalan to the transifex script
+- Merge branch 'develop' of https://github.com/geonetwork/core-geonetwork into develop
+- Findbugs fixes
+- Merge branch '3.0.x' of github.com:geonetwork/core-geonetwork into develop
+- Remove culr and wget from the list of "non-session crawlers"
+- Memory bug fixed: Do not create httpSessions for crawlers/bots-
+- Findbugs fixes
+- Findbugs fixes
+- Findbugs fixes
+- Fixes for CSW harvesting #1267 #1429 #1355
+- Additional json translation files
+- Spanish & Catalan UI translations
+- [gn] All csv export to feature table
+- Display geom on hover instead of click
+- Fix GFI results pagination, set default to 10
+- wfstable: add link icon for url
+- viewer: add maxfeature infinity for getfeatureinfo
+- CSW Update - partial updates are not working if xpath provided starts with the metadata root element #1529
+- solr: facet count as int even for numeric fields
+- wfsfilter: set projection 4326 for bbox input
+- Merge remote-tracking branch 'origin/solr-wfs-indexing' into solr-wfs-indexing
+- viewer: quick css fix
+- Update user with basic auth fails with NPE #1521.
+- Directory synchro / Fix uuid retrieval. Better error report if subtemplate has no match.
+- Restore doc submodule dropped in 8a1e6a4ccc6ae69380775f1786c98870830659f2.
+- Editor / Template field / Attribute are not preserved when merging template with target node #1525.
+- Merge branch '3.0.x' of github.com:geonetwork/core-geonetwork into develop
+- Fixing missing service config security that made editing of users remove their groups per profile.
+- wps: improve form layout
+- GFI: fix error on table row (click|dblclick)
+- Fix feature table overflowe
+- Improve wfs filter layout
+- viewer: fix default loading in wps directive
+- Remove duplicated url
+- Fixing publish / unpublish logic (SB-434)
+- viewer: fix layer.get('metadataUuid')
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Improved version of Xml.filterElementValues that allows to define the namespace for the attribute also
+- Privileges / Publish to all if reviewer of a group that can edit #1530.
+- Merge remote-tracking branch 'origin/develop' into develop
+- Fix group published translations for authenticated user. Related to f5dd1e1a1f56875a4a2ef5ad9c7f69745eeab87f.
+- Merge pull request #1526 from pvgenuchten/showgrouplabels
+- Merge branch '3.0.x' of github.com:geonetwork/core-geonetwork into develop
+- Fixes  #1504
+- Fixes #1505
+- Updates from transifex.
+- Add more doc.
+- Add toggle button in the editor
+- Use proxy settings in region getmap service #1528
+- Add translate directive, uppercase in css
+- Add wps panel from layermanager if process is available
+- ui: add feedLayer to be able to retrieve other resources from a layer bind WMS with WPS,WFS and downloads
+- Fix angular injection
+- Remove old GFI code
+- Add new GFI marker
+- Port ncwms’s GFI to FeaturesLoader
+- Feed layer with ncwms info
+- Fix NCWMS url
+- Fix wms import type
+- Limit layer name size in featuretable’s tab
+- Closable feature table
+- Recenter on row dblclick in solr search table
+- Do not create tab for invisible layer
+- WFS filter cleanup
+- Refactor solr params management
+- Maintain a state history in solr request object
+- Add counter & loader to  solr results tab
+- GFI results improvements: styles, ordering
+- Display feature (solr) on row click
+- Add data table from wfs filter
+- Feature table click search filter on geometry point
+- feature table: plug solrmanager
+- Plug FeaturesTables to GFI response
+- fTable: add loaders
+- Add featuresTable module
+- Move to angular 1.5.2
+- #1507 add an "empty" filter with alternative that verifies if empty array is returned in json and replaces by an alternative (or empty string)
+- Add .editorconfig. (#1517)
+- Add button to the toggle function for facets
+- Add button to the toggle function of the minimap
+- Remove unused processing instruction.
+- Update GeoServer submodule.
+- Point to online doc by default (for user to get the latest)
+- Merge pull request #1513 from spacebelGIS/hierarchical_thesaurus_template
+- Merge pull request #1514 from fxprunayre/doc/inwebapp
+- Merge pull request #1512 from OpenBfS/jdbc_port_configurable-3.0.x
+- Merge pull request #1194 from Delawen/shibboleth_improvements
+- Merge branch '3.0.x' of github.com:geonetwork/core-geonetwork into 3.0.x
+- Merge branch 'josegar74-fix/field-name-fix-mysql' into 3.0.x
+- Merge branch 'fix/field-name-fix-mysql' of https://github.com/josegar74/core-geonetwork into josegar74-fix/field-name-fix-mysql
+- Merge pull request #1457 from pmauduit/domain-parametrized-query
+- #1519 Delete harvester history button doesn't refresh the history panel
+- SDS: fix SDS tab conditional visibility.
+- Editor / Contact selector / Add filters to popup search if set.
+- Typo
+- Merge remote-tracking branch 'origin/solr-wfs-indexing' into solr-wfs-indexing
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Enable camel and WFS indexer log.
+- Merge pull request #1510 from OpenBfS/jdbc_port_configurable
+- Merge remote-tracking branch 'origin/develop' into develop
+- Merge branch 'spacebelGIS-improvement/admin/dropdown_menu' into develop
+- Add a dropdown menu for the admin section #1439. JSLint
+- Merge branch 'improvement/admin/dropdown_menu' of https://github.com/spacebelGIS/core-geonetwork into spacebelGIS-improvement/admin/dropdown_menu
+- Merge pull request #1509 from fxprunayre/improvement/migration/calldbmigrationstepfromapi
+- Editor / Avoid not assignable expression error.
+- Merge pull request #1515 from spacebelGIS/admin-translate
+- Forgot key,value in en-admin.json
+- Indexation + boostrap color
+- Merge remote-tracking branch 'origin/develop' into doc/inwebapp
+- Documentation / Generate schema doc and embed doc in webapp.
+- Modify template of the hierarchical thesaurus
+- Documentation / Remove old schema loc files to RST conversion made in Bolsena 2014.
+- Schema fixes found when generating schema doc.
+- Documentation / Add link from app to doc. Add the capability to link to online doc or webapp doc.
+- replaced static port 5432 in postgres.xml to support dynamic port configuration using jdbc.port from jdbc.properties
+- replaced static port 5432 in postgres.xml to support dynamic port configuration using jdbc.port from jdbc.properties
+- Dublin core / Removed custom view.
+- Fixes #1506
+- Merge remote-tracking branch 'origin/develop' into cleaning/z3950-keep-sru
+- Merge remote-tracking branch 'origin/develop' into develop
+- Editor / Link service to dataset / Load service layers when popup open (to not to make user thinks the list will change when another dataset is choosen. Add current selection title next to the list of layers to make the user understand that the selected layers in the service layers list should match the selected dataset.
+- Do not display layers with no name
+- Add API endpoint to call db migration step manually.
+- Merge pull request #1398 from spacebelGIS/adminTranslate
+- Update en-admin.json
+- French alert when adding wms #1465.
+- Move API to api package instead of services and rename to follow API guideline. Add /records/{{uuid}} service (#1508).
+- Update doc submodule.
+- Removed dir in data dir instead of WEB-INF/data/removed #1427.
+- Updating docs module
+- viewer: Add 'zoom to extent' for WMTS layer manage WGS84BoundingBox from WMTS getCapabilities
+- Optimise wps directive parameters
+- SDS: align GER string files.
+- Merge remote-tracking branch 'origin/develop' into cleaning/z3950-keep-sru
+- Cleaning Z3950 / Remove server - keeping SRU.
+- Fix gnFocusOn directive injection
+- Cleaning Z3950 / Remove harvester.
+- Cleaning Z3950 / Remove harvester.
+- Add info?type=groupsAll to get all the groups
+- Updates from transifex.
+- Update doc submodule.
+- Merge pull request #1499 from geosolutions-it/3.0.x_INSPIRE-SDS-squashed
+- #1445: Implement INSPIRE Spatial Data Services (SDS)
+- Metadata editor layout: Handle forceLabel attribute in field rendering
+- Metadata editor: handle readonly attribute in field rendering
+- Add missing label
+- ngeo.Debounce require not needed.
+- ngeo.Debounce require not needed.
+- Avoid to use geometry as resourceTitle.
+- Fix tooltip position based on map position. Add WFS 1.1.0 indexing for better GeoServer support.
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Merge remote-tracking branch 'origin/solr-wfs-indexing' into solr-wfs-indexing
+- Revert "small CSS improvements for homepage"
+- Improve tooltip layout. Add support for WFS with urn:ogc:def:crs:EPSG:: for CRS. Fix add WFS to map. Disable add to map functions for KML, WFS, WMTS, ... when viewer disabled.
+- solr: manage geometry search add geom bbox in wfs filter improve facet collapse/expand system
+- Merge branch 'develop' of https://github.com/geonetwork/core-geonetwork into develop
+- Revert commits bca1efab106be086949ee6ae8d34e3b493723d41, 698ff9a27340512230ad1b3f8e9c695933170f78 causing tests failing
+- Revert "Added variable for x-small and use it for language labels"
+- Merge remote-tracking branch 'origin/solr-wfs-indexing' into solr-wfs-indexing
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Merge remote-tracking branch 'origin/develop' into develop
+- Add back support for WMS in background layers. Properly save WMS bg layer. JSLint.
+- wfsfilter: keep collapsed state of facet panel after search
+- Fixing authorization service on minified javascript
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Merge pull request #1492 from pvgenuchten/nojs-layout
+- Merge pull request #1490 from fxprunayre/improvement/directory-extractor
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Merge remote-tracking branch 'origin/develop' into develop
+- Merge branch 'doublebyte1-maps' into develop
+- Added support for Stamen
+- ui: Fix horizontal scroll bar height
+- #1498 Map viewer: config-viewer.xml is not loaded when using an external data directory
+- Editor / Contact list from directory could be long #1450 - Trigger search when popup is opened.
+- undo overwrite default application 'gn' for other requests
+- introduce header/footer for no-js ui, and link each search result to /metadata/{uuid} (urlrewrite can forward this to some formatter for the metadata)
+- Update version to 3.0.5-SNAPSHOT
+- Feature field have now ft_ as prefix. Fix attribute name in SLD.
+- Merge branch '3.0.x' of github.com:geonetwork/core-geonetwork into vulnerabilities
+- Merge pull request #1469 from fxprunayre/improvement/edit-a-set-of-record
+- Add missing copyright.
+- Directory / Add service to collect and synchronize entries.
+- viewer - Fix OWS context boundingbox if 4326, coordinates are reversed
+- Editor / iso19115 and fgdc-std are not available anymore. Remove check
+- viewer: auto detect if need to use proxy on OWS context from url loading
+- viewer: Fix print of annotations
+- viewer:  Can have a WMS layer as background layer in OWS context
+- Add a filter capability in the schema-suggestion.xml
+- viewer: be sure at least one background layer is set (from context) solve an issue were the hidden='false' bg layer failed, no bg layer was set
+- formatter: check code on 2 and 3 characters for multilingual fields
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Merge remote-tracking branch 'origin/solr-wfs-indexing' into solr-wfs-indexing
+- Manually define heatmap gridlevel based on map view zoom.
+- Merge remote-tracking branch 'origin/develop' into develop
+- ISO19139 / Add isChild flag (some user wants to exclude children from search results).
+- Avoid to mix report when multiple harvesting run in //. Add ft_ field prefix for feature attribute field to easily select them on query with fl=ft_*. Compute field names only once.
+- Vulnerabilities: Use OWASP to escape HTML request parameters when directly used on xsl
+- Fixes #1413 If the service is not allowed, just redirect to home page
+- Autocomplete off for passwords and change to type password on harvester settings
+- Upgrading some minor versions of libraries
+- Close #1455 - Fix find wmts layer in capabitlities from its identifier
+- allow user to change its user details and password. close #1258
+- Merge pull request #1482 from gmlewis/develop
+- Editor / Contact list from directory could be long #1450 - sort role.
+- Upgrade Apache Commons Collections to v3.2.2
+- Editor / ISO19139 / Simplify editor for measure field #1474 - Add support for only setting units without values.
+- Editor / Attachements / Popup has no overflow #1481.
+- JSLint.
+- Thesaurus admin / Avoid to have double # in concept ids.
+- Create new namespace gonetwork for application object definition
+- fix of footer bar
+- Small documentation and UI improvements
+- Introduction text
+- Update manuals submodule.
+- Fix test.
+- Updated localized strings fix in Dutch string
+- Updated localized strings and minor update to font sizes
+- Changes to array to work with bash 3 on OSX as well
+- Merge branch 'develop' of https://github.com/geonetwork/core-geonetwork into develop
+- Changes to array to work with bash 3 on OSX as well
+- Update comment for OSX install instruction
+- Added variable for x-small and use it for language labels
+- UI font size improvements and standardization
+- Update docs submodule
+- small CSS improvements for homepage
+- updated minor edits in docs
+- added server.prop to gitignore
+- Thesaurus admin / Fix undefined in skos label or def when switching between languages. Search by ID with URI component in.
+- Merge pull request #1478 from fxprunayre/schema/documentation
+- Merge remote-tracking branch 'origin/develop' into improvement/edit-a-set-of-record
+- Merge remote-tracking branch 'origin/develop' into schema/documentation
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Thesaurus admin / Fix undefined in skos definition. Search by Id (#1473). Set Id with a default UUID.
+- Update doc submodule.
+- Parent doc is unique to allow group search.
+- Add draft paging (need more work). Add a default config for searching any type of docs. Better support generic search.
+- Add feature title. Update copyright.
+- Schema identification / Add doc for DC and ISO19110.
+- Schema identification / Add documentation
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Do not add copyright to directive template.
+- Editor / Add choice element does not take context in account for labels. eg. ISO19115-3 mri:distance.
+- Batch edit for reviewer or more.
+- Merge remote-tracking branch 'origin/develop' into improvement/edit-a-set-of-record
+- Merge pull request #1459 from fxprunayre/cleaning/copyright
+- ISO19139 / Simplify editor for measure field #1474 - forgot to commit latest change fixing remove action and editing something which is not gco:Distance.
+- Editor / Contact list / Add default role from directive attribute - related to #1452.
+- ISO19139 / Simplify editor for measure field #1474.
+- Editor / Keyword search by id #1473
+- JSlint. Restore table view column name. Improve heatmap tooltip.
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Merge remote-tracking branch 'origin/develop' into develop
+- Updates from transifex.
+- Add tooltip on heatmap count.
+- Merge remote-tracking branch 'origin/solr-wfs-indexing' into solr-wfs-indexing
+- Remove dependency on iso19115-3.
+- Properly reload heatmap if directive is used by adding it to the DOM
+- Add log before index to have an idea of how long is the index phase. Fix delete missing typename.
+- Remove unused var.
+- Save report when starting indexing. Only hard commit. Up to 5 concurrent indexing tasks.
+- Do not print exception.
+- Update to Solr 5.4.1. Rename collection name without '-' not supported in Solr 5.x
+- Merge pull request #1472 from josegar74/improvements/xlink-resolver-ignores-in-settings
+- Configure XLink resolver ignored elements in the system settings
+- Fix doc. Add resource status.
+- Move batch edit and selection services to API.
+- Add missing copyright.
+- Improve error reporting on invalid XML fragment.
+- Remove duplicated batch edit field definition.
+- Batch edit / Updates related to last merge.
+- Batch edit / Create mode if match exist.
+- Batch edit / Add report.
+- Add processing report.
+- Apply batch on selection. Fix spinner.
+- ISO19139 / Batch editing / Add service support.
+- Clone fragment if it may be inserted in multiple records.
+- Merge remote-tracking branch 'origin/develop' into improvement/edit-a-set-of-record
+- Fix topicCat template.
+- 'merge'
+- wfsfilter: fix back application profile
+- solr: separate init baseUrl and init base params (facet, stats) functions
+- Merge branch 'develop' of https://github.com/geonetwork/core-geonetwork into develop
+- minor edits to docs
+- Ext Editor / Error on records having xsi attributes on certain elements
+- Remove useless tmp folder in web-ui
+- Add wikiTextEl function for no escaped text pair in formatter
+- Merge pull request #1463 from fxprunayre/cleaning/oldtests
+- Merge pull request #1462 from fxprunayre/cleaning/jeevesemptydir
+- Remove old test folder.
+- Remove empty Jeeves folder.
+- Small edits in the developer documentation
+- Rename field 'key' for HarvesterData table as 'key' is a reserved work, to avoid issues when creating the table by Hibernate is some databases like MySql
+- Add copyright when missing / Drop duplicates.
+- Add copyright when missing / do not add it to META-INF config files.
+- Add copyright when missing / pom and fix ML links.
+- Add copyright when missing / web-ui.
+- JSlint.
+- Add copyright when missing / web.
+- Add copyright when missing / services.
+- Add copyright when missing / sde.
+- Add copyright when missing / schemas-test.
+- Add copyright when missing / schemas.
+- Add copyright when missing / oaipmh.
+- Add copyright when missing / jmeter.
+- Add copyright when missing / installer.
+- Add copyright when missing / inspire-atom.
+- Add copyright when missing / healthmonitor.
+- Add copyright when missing / harvesters.
+- Add copyright when missing / events.
+- Add copyright when missing / e2e-tests.
+- Add copyright when missing / domain.
+- Add copyright when missing / docker.
+- Add copyright when missing / cswtest.
+- Add copyright when missing / csw-server.
+- Add copyright when missing / core.
+- Add copyright when missing / common.
+- Add copyright when missing / code_quality.
+- Add copyright when missing / cachingxslt.
+- Close #1455 - Fix find wmts layer in capabitlities from its identifier
+- Add delimiter in formatter if multiple citation identifiers
+- viewer: Dont remove url layer on first context load
+- domain - fixing SQLi
+- Fix WFS download button if init on directive load or layer change. Avoid to duplicate heatmap layer.
+- Cleanup heatmap when layer is removed. Toggle heatmap visibility.
+- Increase grid precision.
+- JSLint.
+- JSLint. Move heatmap generic function to SolrService. Use a separate query to retrieve the heatmap and update it on map moveend.
+- ncwms: add check on getMetadata response to ensure it's a ncwms
+- Add solr extra params and use it for heatmap facet.
+- Merge remote-tracking branch 'origin/solr-wfs-indexing' into solr-wfs-indexing
+- Add experimental heatmap preview.
+- Merge branch 'solrManager' into solr-wfs-indexing
+- Update solrmanager: manage range facets
+- Geometry idx field name is geom.
+- Indexing timestamp type.
+- solr: Compute range facets with stats
+- Base solr data table on solr request manager
+- Base wfs filter on solr request manager
+- Add solr requests manager
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Merge pull request #1438 from fxprunayre/improvement/download-if-wfs
+- Merge remote-tracking branch 'origin/develop' into improvement/download-if-wfs
+- Merge pull request #1452 from fxprunayre/improvement/editor-entry-selector
+- ui: improve css: scrollbar and outline
+- Cleanup. Features are always retrieved in WGS84.
+- viewer: use sessionStorage to store OWS Context
+- Add ability to configure which storage to use
+- ui: Improve and fix gnLocale management
+- Add gnLangs constant to manage lang codes (2 or 3 char)
+- Editor / Contact list from directory could be long #1450 - Modal should not destroy context if provided; this was breaking reopening the modal.
+- Editor / Contact list from directory could be long #1450.
+- Merge remote-tracking branch 'origin/develop' into develop
+- Registered user should request a specific profile but it should not be set on creation. Fix build.
+- Cleaning. This file is not used.
+- Merge pull request #1443 from josegar74/improvements/mail-tls-support
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Add metadata UUID to link features with the metadata record (for later make join query or groups).
+- Retreive features in WGS84. Default limitation on maxFeatures is on server side.
+- Add field to store parent document and resource type.
+- Support TLS mode for mail server configuration #1441. Add migration sql
+- Merge remote-tracking branch 'origin/develop' into develop
+- Selection / Priviles / Add more details about the process.
+- Updated Dockerfile
+- Update install.xml
+- Merge remote-tracking branch 'origin/develop' into develop
+-  Editor / View / Add element may not take flat mode in account #1446.
+- Merge branch 'develop' of https://github.com/geonetwork/core-geonetwork into develop
+- Full installation of GeoNetwork opensource
+- Merge remote-tracking branch 'origin/develop' into develop
+- Editor / Resource panel / Allows non URL eg. file link on lan, or jdbc connection.
+- Dockerfile for GeoNetwork
+- Editor / View / Add element may not take flat mode in account #1446.
+- Merge remote-tracking branch 'origin/develop' into develop
+- Editor / Codelist / Radio mode / Set tooltip on label and not only the radio.
+- Update dropdown menu
+- Merge remote-tracking branch 'origin/develop' into improvement/admin/dropdown_menu
+-  Support TLS mode for mail server configuration #1441. Fixes for mail tester function, to display the error message, not a generic message
+- Support TLS mode for mail server configuration #1441
+- Merge pull request #1434 from fxprunayre/improvement/password/change-by-email-for-all
+- Add a dropdown menu for the admin section
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Add download button if layer accessible using WFS.
+- Merge pull request #1437 from fxprunayre/improvement/migrate-to-new-doc
+- Add new 3.x docs as submodule.
+- Remove old 2.10.x doc and move installer file to its folder.
+- Editor / Date with indeterminate position layout #1435.
+- Editor / More strict checks.
+- Editor / Fix evaluation of text/element/attribute. Fix add action based on templates.
+- Merge remote-tracking branch 'origin/develop' into develop
+- Fix regression related to https://github.com/geonetwork/core-geonetwork/issues/1329.
+- Tag old services as deprecated.
+- Angular app is using API for password reminder and self registration.
+- Migrate password reminder to Spring MVC
+- viewer: fix ratio if map size is null, and round to lower
+- viewer - all bglayers are loaded even though one fail
+- Merge remote-tracking branch 'origin/develop' into develop
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Merge pull request #1431 from fxprunayre/fix/1428
+- Dublin Core / dct:references and dc:relation should be handle in a similar ways. Related to #459.
+- Cleaning.
+- Remove unused exception.
+- Fix help links and improve logo layout in grid view.
+- Translate tooltips on category, topic category #1428. Trigger search when clicking on a category. Display labels for category and ISO topics.
+- Move translation service to API and add service to retrieve schema plugin codelist as JSON.
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Add more doc link.
+- Fix NPE when collecting stats on range query.
+- Record view / Better layout for word break in related item.
+- Associated resources / More robust link to dataset/service (improve layout, add some help, add protocol depending on service).
+- XSL formatter broken #1423.
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Delete a record reset search parameters #1421. JSLint.
+- Search results / Group button for selection styling could be better #1420.
+- Region API / Top concepts not translated #1419.
+- Logo too big #1418.
+- Update API doc page title.
+- XSD to do basic validation of labels.xml and codelist.xml.
+- Merge remote-tracking branch 'origin/solr-wfs-indexing' into solr-wfs-indexing
+- Testing SLD_BODY but most of the time cause issue with Request URI too large.
+- Allows indexing of harvested records.
+- Some doc.
+- Move SLD service to API. Add operation to clean past SLDs.
+- viewer - Remove ol.source.KML and fix KML url loading
+- Editor / Thesaurus selector / Do not display thesaurus already used #1412.
+- Merge remote-tracking branch 'upstream/solr-wfs-indexing' into solr-wfs-indexing
+- Merge remote-tracking branch 'upstream/develop' into solr-wfs-indexing
+- viewer: change Bing key
+- Add support for SLD with PropertyIsLike when field is tokenized during Solr indexing.
+- viewer: Fix wms import
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Editor / Add action using directive can also add simple element.
+- ISO19115-3 / Related resources / Add capability to select URL from metadata records - https://github.com/metadata101/iso19115-3/issues/17.
+- Import / Add warning for unsupported file exception #1411.
+- Editor / Online resources / Set name and description when selecting WMS layers #1410
+- ISO19139 / Multilingual record / Add online resource even if only one translation is provided.
+- Merge remote-tracking branch 'origin/develop' into develop
+- Updates from transifex.
+- Fix appProfile load.
+- Fix focus on directive.
+- Column name and facet can be defined in ISO19110 feature catalog (applies only to ISO19115-3 records where feature catalogue is embedded in metadata record).
+- Move SavedQuery concept to schema to be able to create pre-defined queries for any schema. This is used to retrieve WFS feature indexing config which could be stored for example in ISO19139 or ISO19115-3 applicationProfile.
+- Feature geometry indexing / Less strict CRS check - needs improvement.
+- Improve workflow, CSS, remove useless code.
+- Improve services. Removed unused.
+- Merge remote-tracking branch 'origin/solr-wfs-indexing' into solr-wfs-indexing
+- Fix column name for multivalued fields. Add some flexibility on appProfile search.
+- Retrieve appProfile and send indexing options if needed.
+- wfs: improve ui
+- update to font-awesome 4.5.0
+- wfs: improve wfsfilter directive
+- Merge remote-tracking branch 'origin/solr-wfs-indexing' into solr-wfs-indexing
+- Move Solr service to API.
+- Merge remote-tracking branch 'upstream/develop' into solr-wfs-indexing
+- map : set language in geonames query for localisation search input
+- map: add single tile layer config
+- update mapService from sextant
+- Use custom version of gt-main to fix Transformer exception on Tomcat.
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Formatter / XSL / Template field not rendered by element #1408.
+- Updates from transifex.
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- Merge remote-tracking branch 'origin/develop' into develop
+- Resource download request log level.
+- Harvester / OGC / Add support for WFS metadataURL #1403. Improve error messages.
+- Merge pull request #1404 from spacebelGIS/default_tab_user_management
+- Harvester / LFS / Improve perf #1406.
+- Change default tab 'Manage users'
+- Avoid exception when no top concept found.
+- Merge pull request #1385 from fxprunayre/improvement/metadata/resources
+- Metadata resource / ISO19115-3 / Add configuration, appProfile, function and improve links.
+- Avoid JS error when map not yet initialized.
+- Log missing resource stats at DEBUG level.
+- ISO19139 / Add alias for function.
+- Metadata resource / Properly align remove control in resource list. Increase highlight of selected layers.
+- Dublin core / Avoid to insert duplicate isPartOf element.
+- Dublin core / Relations should be empty in template. The online resource manager will add the link.
+- Dublin core / Avoid to insert duplicates in references.
+- Remove API doc reload. Need more work.
+- Metadata resources / Improve API status code and exceptions.
+- Metadata resources / Improve API Exceptions.
+- Move swagger-ui to api-doc folder.
+- Move swagger-ui to api-doc folder.
+- JSLint.
+- Use nio when possible.
+- Metadata resources / Dublin core can have multiple thumbnails. Main thumbnail is the first one in a record. Simplify call to XSL process.
+- ISO19139 / Templates / Remove empty graphic overview or online resource links.
+- Add FilesystemStore test. Fix errors in samples.
+- Merge remote-tracking branch 'origin/develop' into improvement/metadata/resources
+- Fix typo
+- Add two translations admin/harvesting/webservices
+- Merge pull request #1394 from fxprunayre/fix/testsuite-java8
+- Update to Spring security 3.2 for compatibility with Spring 4.
+- fixing travis.yml
+- schema-test & web - testsuite
+- travis - configuring for testing against openjdk7 and 8
+- services - Fixing tests
+- services - fixing integration tests
+- Services - fixing compilation issue
+- core - fixing testsuite in both java7 and 8
+- core - lucene query testsuite passing java7 / java8
+- core - lucene query testsuite fixed in java8
+- core - ensure to use data structures that preserve order
+- GN - reverting options for surefire
+- removing useless code in pom.xml
+- core - fixing testsuite
+- common - refresh application context before launching tests
+- Fix typo.
+- Merge remote-tracking branch 'origin/develop' into improvement/metadata/resources
+- Merge pull request #1388 from fxprunayre/improvement/xpathapi
+- Improve social links see https://github.com/geonetwork/core-geonetwork/pull/1390.
+- Merge pull request #1390 from spacebelGIS/Social_media
+- Metadata resources / Cleaning.
+- Merge remote-tracking branch 'origin/develop' into improvement/metadata/resources
+- Refactor - Create specific module for all Solr code. Init workers module.
+- Add draft data browser view.
+- Backport code from Sextant. Replace implementation made in Sextant (and drop duplicates from GN).
+- Some refactoring.
+- Add social media links (footer)
+- wfs.harvest is now using PUT method and an object as parameter.
+- Restore and improve all steps required to check if WFS is indexed, trigger indexing, display facets, filter, ...
+- Merge remote-tracking branch 'origin/develop' into solr-wfs-indexing
+- XPath API update improvements
+- XPath API / Add support for multiple matching nodes. Allows to delete or update all nodes matching an expression.
+- Merge remote-tracking branch 'origin/develop' into improvement/edit-a-set-of-record
+- Fixes #1191
+- Merge remote-tracking branch 'origin/develop' into improvement/edit-a-set-of-record
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Fixes #1191 Unexpected record returned in search when from is greater than the records count
+- Metadata resources / Add example of extension for ISO19115-3 feature catalog.
+- Merge remote-tracking branch 'origin/develop' into improvement/metadata/resources
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Metadata resources / Add ISO19139 profil support and ISO19115-3 draft support.
+- Metadata resources / Add DB migration.
+- Metadata resources / Improve form validation.
+- Metadata resources / ISO19139 / Add support for multilingual thumbnail description.
+- Metadata relations / Add DC config.
+- JSLint.
+- Fix API path.
+- Add swagger-ui.
+- Metadata resources / Improve API, Fix reload after save.
+- Add Swagger API configuration.
+- Metadata resources / Fix event name - properly refresh store content after generating thumbnail using mapprint.
+- Merge remote-tracking branch 'origin/3.0.x' into improvement/metadata/resources
+- Add copyright.
+- Metadata resources / Stop manipulating filestore resource URL in UFO.
+- Metadata resources / Use the filestore for linking document to a metadata record.
+- Map print / Restore thumbnail layout (dropped in https://github.com/geonetwork/core-geonetwork/commit/4284514ec404cf5e8879bf7991e53be2036999aa#commitcomment-15316106), preserved the landscape mode and prefer a square shape for thumbnail.
+- Metadata resources / Add filestore and new resources API.
+- solr: preserve describe feature type order in index info
+- Merge remote-tracking branch 'origin/3.0.x' into improvement/edit-a-set-of-record
+- wfs: the filter input trigger a new solr search instead of just filtering previous results
+- wfs: update wfs filter panel
+- wfs: add a reset facet button
+- wfs: get the correct WMS service url to build the SLD
+- jslint
+- wfs: update ui add filter reload facets on search sort by occurency
+- Rationalize templates for enumerations, ensure correct editInfo is used and treat topicCategory consistently as field in editor
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Clarify doc.
+- Add document containing information about the harvested task (mainly list of columns required for facetting.
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Merge branch '3.0.x' of github.com:geonetwork/core-geonetwork into develop
+- Batch edit / Fix case where insertion point is the same as the root node of the fragment. In ISO19139 use the create mode by default for field with cardinality > 1.
+- Batch edit / Add mode to create element. Improve ISO19115-3 support.
+- Batch edit / Add support for a records in different schemas. Adding dc:title updates.
+- Batch edit / Reorganize code.
+- Batch edit / Cleaning labels.
+- Fix test.
+- Batch edit / Add xpath mode.
+- Batch edit / Add delete support.
+- wfs: move indexing feature button in wfsfilter directive
+- wfs: add spin on filter button
+- wfs: change facet ui structure to use ng-model
+- Batch edit / reset changes.
+- Organize import.
+- Batch edit / Better support insertion
+- Add missing copyright.
+- Add MDC logger to create log file containing execution identifier. This identifier could be used to return the log for the execution to the user. Add testing route from XML config file for testing multithreading and error handling.
+- Add JMS configuration to start activeMQ when running mvn camel:run.
+- Load JMS configuration to start activeMQ when running mvn camel:run.
+- Avoid exception when no UUID provided.
+- WFS filter / Unset SLD when no filter. Handle feature type with colon. Collapsed facets by default.
+- Add layer filter.
+- Configure Solr URL and collection from properties.
+- Add harvesters logs to gitignore
+- Generate facet UI client side improve and go ahead with the wfs indexing ui
+- Make sld generator service return a JSON instead of a string
+- Add new service to get applicationProfile from a metadata : harvest.wfs.config
+- Use a custom jar for gt-wms
+- Move hravestRunner to services
+- Keep protocol in WFS url.
+- Merge remote-tracking branch 'origin/3.0.x' into solr-wfs-indexing
+- JSLint.
+- Improve harvest start service.
+- Extract constants.
+- Display index WFS only for editor or more.
+- Add messaging module and move SolrProxy.
+- Fix gt 14 update
+- Merge pull request #1305 from Vampouille/merge_sld
+- Add TODOs. Support WFS harvested by OGC WxS harvester.
+- Feature indexing / Improve CRS check and fix axisOrder.
+- Autowired can't be used on object which may be different depending on the node. Retrieve them from the application context instead.
+- Improve WFS add to map menu.
+- Merge pull request #1300 from landryb/fix/1298
+- Merge pull request #1301 from landryb/fix/1299
+- Merge pull request #1302 from landryb/fix/1293
+- Merge pull request #1303 from landryb/fix/1294
+- Initialize group labels when importing a group from LDAP (#1294)
+- Fix ldap attributes mapping (1293)
+- Check if current opAllowed is a notify operation, continue otherwise (#1299)
+- Get username from userSession before updating metadataFileDownload from a task (#1298)
+- Batch edits / Add support for ISO19139 extent.
+- Add unit test for TextFile storage service
+- Rename File class to TextFile to avoid conflict with java.io.File
+- Make unit test offline
+- move SLDUtil to wms package
+- Add helpers to store and retrieve custom SLD file
+- add helper to parse JSON and produce SLD Filter
+- Add helper to build SLD from list of Styles and merge SLD with a custom filter
+- Add helper to retreive styles from WMS server
+- Update geotools version from 8.6 to 14
+- Merge pull request #1202 from yblatti/develop
+- Fix required for GeoTools update.
+- Index geometry when in WFS84.
+- Add JMS message to delete features from a previously harvested featureType.
+- Move Solr URL configuration to maven properties.
+- Merge remote-tracking branch 'origin/solr-wfs-indexing' into solr-wfs-indexing
+- Merge remote-tracking branch 'origin/3.0.x' into solr-wfs-indexing
+- Merge remote-tracking branch 'origin/develop' into develop
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Add range facets
+- Batch edits / Add support for codelist based field.
+- Batch edits / Add-remove changes. Display changes before apply.
+- add a wfsFilter directive that build a multi facet panel from config found for the WFS layer    <div gn-wfs-filter-facets feature-type-name=SISMER_mesures wfs-url=http://visi-sextant.ifremer.fr/cgi-bin/sextant/wfs/bgmb uuid=26f848cc-2a3b-4623-a395-61048d2f5e91></div>
+- Add utility directive to autocomplete on metadata field eg. title. Useful for setting parentIdentifier UUID for example.
+- Batch edits / Add draft iso19139 configuration.
+- Fix JAXB mapping for fixed attribute.
+- Batch edits / Add get batch edit configuration service.
+- Batch edits / Add XSD schema for editor configuration and Object mapping.
+- add solrfacets service that build solr query from WFS config to return a solr facet object
+- Batch edits / Add support for autocomplete on language.
+- fix shapefile DS for geotools 14
+- create 2 services for wfs indexing
+- use geotools to parse featureType and features
+- Add basic button to trigger harvester from metadata view.
+- Add JMS broker for messaging between webapp and harvester.
+- Fix camel:run.
+- Some TODO - constants for config.
+- Avoid NPE when catalog is not up and running. Reducing dependency with GN. If no config set, index all.
+- Add a route for testing. Disabled by default.
+- add a wfsproxy service to proxy remote solr instance
+- add a featuretype config Loader class
+- use json to index features tells what attribute to index and their type
+- change to srv-catalog in clean script
+- index WFS from metadata instead of url get the url and typename from online resource (protocol WFS)
+- Merge pull request #1281 from gollogly/patch-2
+- Update README.md
+- connect route to spring-event
+- Add docType field to Solr schema to make distinction between features and metadata records. Add node id to collection name for multinode mode.
+- Merge remote-tracking branch 'origin/solr-wfs-indexing' into solr-wfs-indexing
+- Create a new module for camel harvesters
+- Add shell script to delete all docs.
+- Merge remote-tracking branch 'origin/solr-wfs-indexing' into solr-wfs-indexing
+- Fix version.
+- Update pom.xml
+- Add sample Camel app for WFS harvesting.
+- Exclude solr install from git status. Reorder doc section.
+- Solr download, install, init and start/stop documented and available as maven task.
+- Exclude wro4j cache from git status.
+- Batch edits / Draft angular app.
+- Batch edits / Draft implementation.
+- Selection / Add service to retrieve current list of selected records.
+- Migrate selection service to Spring MVC.
+- Migrate selection service to Spring MVC.
+- Merge branch '3.0.x' of github.com:geonetwork/core-geonetwork into develop
+- Merge pull request #1179 from landryb/bugfix/fix-multipleip-accessmanager
+- Make 'request' KVP param case insensitive - fix #1199
+- Fixing shibboleth configuration for latest changes (new filterchain for authentication and some non-autowired objects)
+- Only take the first IP address when parsing client IP.
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Merge pull request #1165 from openearth/disable_focus_on_up_down_buttons
+- Up and down control shouldn't have focus when using tabs. Tabindex set to -1 for up and down angle.
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Merge pull request #1071 from openearth/postgres_postgis_configuration
+- Merge pull request #1129 from fgravin/contactHarvest
+- prefix gn-recordtype directive name
+- no-msg
+- Merge branch '3.0.x' of github.com:geonetwork/core-geonetwork into develop
+- harvester: get uuid from submtemplate is there is no in gmd:fileidentifier improve error reporting if no uuid has been found set a random uuid for document that haven't any
+- Add record type parameter for filesystem harvesters
+- Merge pull request #1115 from znc-sistemas/develop
+- Fix import project on eclispe image path
+- Fix markdown external links
+- Add tips on building Geonetwork 3
+- Findbug fixes: catch errors on weird data directories
+- Findbugs fix: check that the data directory is correct on schemas
+- Findbugs fix: check that the data directory is correct
+- Findbugs fixing: if there were no sufficient connections, we were still returning ok result
+- Fixing findbugs... and findbugs was right. Recursive call was missing the return statement
+- Error catching when removing metadata
+- Zoom to Extent button also working with WFS
+- Check SRS/CRS before loading WFS layer. Check also bounding box and center the map. Extent button still not working
+- First cleanup not supported INSPIRE extensions when processing a wfs getCapabilities
+- Merge branch '3.0.x' of github.com:geonetwork/core-geonetwork into develop
+- Improve performance on WxS harvester: batch indexing on a separated thread. This doesn't really lower the load of GeoNetwork in total... unless you have a lot of harvesters at the same time.
+- Performance improvement on WxS harvester: Do not delete and insert on each run. Just update and remove if it is gone. Also, fixed the summary numbers.
+- Merge branch '3.0.x' of github.com:geonetwork/core-geonetwork into develop
+- Merge pull request #1092 from grootstebozewolf/containerBasedTravisBuild
+- left out whitespace
+- Explicit sudo false to trigger container based Travis CI
+- Merge pull request #1063 from grootstebozewolf/yuicompressor
+- Merge pull request #1073 from geonetwork/revert-1064-defaultPortFix
+- Merge pull request #1069 from grootstebozewolf/guestdownloadRemoved
+- Merge pull request #1068 from grootstebozewolf/fixedLangCodeCheck
+- Merge pull request #1067 from grootstebozewolf/removedFileWrite
+- Revert "Fixed default port from URL"
+- Merge pull request #1066 from grootstebozewolf/noReturnValueForUnhealhty
+- Merge pull request #1062 from grootstebozewolf/LocalXLinksInMetadataIntegrationTest
+- Merge pull request #1065 from grootstebozewolf/addedSiteUrl
+- Postgres Postgis database configuration that allows storing the spatial index in postgis and configure the jdbc.properties in the tomcat config directory.
+- siteUrl is required.
+- Ammended test, port 80 and 443 have sentinal values which will remove the :80 and :443 from the URI. Some harvesters break when these values are added.
+- Reverted test and HttpFactoryRequest
+- Added comment, this probably is the way the unit test was intended.
+- Ammended LuceneSearcherPresentTest.java guestdownload is no longer an option, and inverted download, dynamic and featured values to true.
+- Merge branch 'develop' of https://github.com/geonetwork/core-geonetwork into addedSiteUrl
+- Ammended check, was useless condition before.
+- Added return value of unhealthy code path.
+- Merge pull request #1064 from grootstebozewolf/defaultPortFix
+- Added siteUrl
+- Fixed default port from URL
+- Commented out write to e:/tmp/view.html
+- Ammended LocalXLinksInMetadataIntegrationTest to always increment.
+- Upgraded yuicompressor
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Merge remote-tracking branch 'origin/develop' into develop
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Merge pull request #1020 from pmauduit/war-exclusion-879
+- Update web-ui-docs readme to serve the docs
+- Excluding useless files in bootstrap and font-awesome (#879)
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Removing duplicated definition of LDAPUtils
+- Some fixes for RDF: secure port and not giving ugly errors if trying to access some of the identifier urls
+- Extract the method for creating the callables which index the metadata into a method so it can be overridden.
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Update to 3.1.0-SNAPSHOT version number.
+- Merge remote-tracking branch 'origin/3.0.x' into develop
+- Fix the javascript in the association tab of full viewer so that one can drill down into the associations

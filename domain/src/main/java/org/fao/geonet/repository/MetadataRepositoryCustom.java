@@ -23,35 +23,30 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataSourceInfo;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.repository.reports.MetadataReportsQueries;
-import org.fao.geonet.repository.statistic.MetadataStatisticsQueries;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataSourceInfo;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.repository.reports.MetadataReportsQueries;
+import org.jdom.Element;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.repository.NoRepositoryBean;
+
 /**
  * Custom (Non spring-data) Query methods for {@link Metadata} entities.
  *
  * @author Jesse
  */
-public interface MetadataRepositoryCustom {
-    /**
-     * Return an object that contains functions for calculating several different statistical
-     * calculations (related to the metadata) based on the data in the database.
-     *
-     * @return an object for performing statistic calculation queries.
-     */
-    MetadataStatisticsQueries getMetadataStatistics();
+@NoRepositoryBean
+public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
 
     /**
      * Return an object that contains functions for calculating several different statistical
@@ -71,7 +66,7 @@ public interface MetadataRepositoryCustom {
      * @param id the id in string form instead of integer.
      */
     @Nullable
-    Metadata findOne(@Nonnull String id);
+    T findOne(@Nonnull String id);
 
     /**
      * Find the list of Metadata Ids and changes dates for the metadata. <p> When constructing sort
@@ -88,11 +83,11 @@ public interface MetadataRepositoryCustom {
     /**
      * Find all ids of metadata that match the specification.
      *
-     * @param spec the specification for identifying the metadata.
+     * @param specs the specification for identifying the metadata.
      * @return all ids
      */
     @Nonnull
-    List<Integer> findAllIdsBy(@Nonnull Specification<Metadata> spec);
+    List<Integer> findAllIdsBy(@Nonnull Specification<T> specs);
 
     /**
      * Find the metadata that has the oldest change date.
@@ -100,7 +95,7 @@ public interface MetadataRepositoryCustom {
      * @return the metadata with the oldest change date
      */
     @Nullable
-    Metadata findOneOldestByChangeDate();
+    T findOneOldestByChangeDate();
 
     /**
      * Load the source info objects for all the metadata selected by the spec.
@@ -108,11 +103,29 @@ public interface MetadataRepositoryCustom {
      * @param spec the specification identifying the metadata of interest
      * @return a map of metadataId -> SourceInfo
      */
-    Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<Metadata> spec);
+    Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<T> spec);
 
     /**
      * Load only the basic info for a metadata. Used in harvesters, mostly.
      */
     List<SimpleMetadata> findAllSimple(String harvestUuid);
 
+    /**
+     * Find all metadata on specified page. Returns the uuid, changedate and schemaid
+     *
+     * @param uuid the uuid of the harvester
+     * @return all metadata harvested by the identified harvester.
+     */
+    @Nullable
+    Element findAllUuidsAndChangeDatesAndSchemaId(List<Integer> ids, @Nonnull Pageable pageable);
+
+    /**
+     * Find all metadata. Returns the uuid, changedate and schemaid
+     *
+     * @param uuid the uuid of the harvester
+     * @return all metadata harvested by the identified harvester.
+     */
+    @Nullable
+    Element findAllUuidsAndChangeDatesAndSchemaId(List<Integer> ids);
+    
 }

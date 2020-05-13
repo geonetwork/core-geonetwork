@@ -1751,6 +1751,7 @@ de métadonnées de données « BD Carthage métropole »
   </element>-->
   <element name="gmd:citedResponsibleParty" id="367.0">
     <label>Responsable</label>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Information sur le nom et la position d'une personne individuelle ou d'une
       organisation responsable pour la ressource
     </description>
@@ -1878,10 +1879,13 @@ de métadonnées de données « BD Carthage métropole »
   </element>
   <element name="gmd:contact" id="8.0">
     <label>Contact</label>
+    <btnClass>fa fa-user-plus</btnClass>
     <description></description>
   </element>
   <element name="gmd:contact" id="8.0" context="gmd:MD_Metadata">
     <label>Point de contact des métadonnées</label>
+    <btnLabel>Ajouter un contact</btnLabel>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Organisme responsable pour les informations que contiennent les métadonnées.
     </description>
     <help>Fonction (propriétaire, prestataire, gestionnaire, etc.) de la personne ou du service
@@ -1923,6 +1927,7 @@ de métadonnées de données « BD Carthage métropole »
   </element>
   <element name="gmd:contact" id="148.1" context="gmd:MD_MaintenanceInformation">
     <label>Contact pour la mise à jour</label>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Indications concernant la personne ou l'organisation qui est responsable de la mis
       à jour des métadonnées
     </description>
@@ -2080,6 +2085,7 @@ de métadonnées de données « BD Carthage métropole »
   </element>-->
   <element name="gmd:date" id="144.0" context="gmd:MD_MaintenanceInformation">
     <label>Date de la prochaine mise à jour</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Date de la prochaine mise à jour de la ressource</description>
     <help>Date de la prochaine mise à jour (jj.mm.aaaa).</help>
     <condition/>
@@ -2089,6 +2095,7 @@ de métadonnées de données « BD Carthage métropole »
   <element name="gmd:date" id="362.0"
            context="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date">
     <label>Date de référence</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Date de référence pour la ressource en question</description>
     <help>Date de référence indiquée sous forme de date (jj.mm.aaaa) et de type de date (création,
       publication, traitement). Ces informations sont du type CI_Date et sont gérées dans la classe
@@ -2143,6 +2150,7 @@ date de mise en ligne du service, en tant que date de publication.
   <element name="gmd:date" id="362.0"
            context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date">
     <label>Date de référence</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Date de référence pour la ressource en question</description>
     <help>Date de référence indiquée sous forme de date (jj.mm.aaaa) et de type de date (création,
       publication, traitement). Ces informations sont du type CI_Date et sont gérées dans la classe
@@ -2194,11 +2202,13 @@ date de mise en ligne du service, en tant que date de publication.
   </element>
   <element name="gmd:date" id="362.0">
     <label>Date</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description/>
     <condition/>
   </element>
   <element name="gmd:dateOfNextUpdate" id="144.0">
     <label>Date de la prochaine mise à jour</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Date de la prochaine mise à jour de la ressource</description>
     <help>Date de la prochaine mise à jour (jj.mm.aaaa).</help>
     <condition/>
@@ -2206,6 +2216,7 @@ date de mise en ligne du service, en tant que date de publication.
   </element>
   <element name="gmd:dateStamp" id="9.0">
     <label>Date des métadonnées</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Date de création des métadonnées</description>
     <help>Date de création des métadonnées. Elle est automatiquement attribuée par l'application.
     </help>
@@ -2544,6 +2555,7 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
   </element>
   <element name="gmd:distributorContact" id="280.0">
     <label>Contact</label>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Services depuis lesquels la ressource peut être obtenue. Cette liste n''a pas
       besoin d'être exhaustive
     </description>
@@ -3223,6 +3235,7 @@ période de temps couverte par le service.
   </element>
   <element name="gmd:keyword" id="53.0">
     <label>Mot Clé</label>
+    <btnClass>fa fa-tag</btnClass>
     <description>Mots, notions ou phrases courants utilisés pour décrire le sujet</description>
     <help>Mots clés du jeu de données par l'intermédiaire desquels il peut être caractérisé et
       défini. Ces termes sont également utilisés en tant qu''arguments de recherche. Ces
@@ -4120,6 +4133,8 @@ période de temps couverte par le service.
   </element>
   <element name="gmd:parentIdentifier" id="5.0">
     <label>Identifiant de la fiche de métadonnées parent</label>
+    <btnLabel>Associer à une fiche parent</btnLabel>
+    <btnClass>fa fa-sitemap</btnClass>
     <description>L'identifiant de la fiche de métadonnées parent permet d'effectuer un lien entre
       les fiches descriptives de
       ressources liées hiérarchiquement. Ce mécanisme est utilisé notamment dans le cas de relations
@@ -4194,6 +4209,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
   </element>
   <element name="gmd:pointOfContact" id="29.0">
     <label>Contact pour la ressource</label>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Identification, et mode de communication avec, des personnes ou des organisations
       associées aux ressources
     </description>
@@ -4334,6 +4350,8 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
     <help>Protocole de connexion utilisé, par exemple FTP.</help>
     <condition/>
     <helper sort="true">
+      <option value="ESRI:REST">ArcGIS REST Services</option>
+      <option value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</option>
       <option value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
       <option value="OGC:KML">OGC-KML Keyhole Markup Language</option>
       <option value="OGC:GML">OGC-GML Geography Markup Language</option>
@@ -4346,26 +4364,41 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
       <option value="OGC:SPS">OGC-SPS Sensor Planning Service</option>
       <option value="OGC:SAS">OGC-SAS Sensor Alert Service</option>
       <option value="OGC:WCS">OGC-WCS Web Coverage Service</option>
+      <option value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</option>
       <option value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</option>
       <option value="OGC:WFS">OGC-WFS Web Feature Service</option>
+      <option value="INSPIRE Atom">INSPIRE Atom</option>
+      <option value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</option>
       <option value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
       <option value="OGC:WMC">OGC-WMC Web Map Context</option>
-      <option value="OGC:OWS-C">OGC OWS Context</option>
       <option value="OGC:WMS">OGC-WMS Web Map Service</option>
+      <option value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</option>
+      <option value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver 1.3.0)</option>
+      <option value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</option>
+      <option value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)</option>
+      <option value="OGC:WMTS">OGC-WMTS Web Map Tiled Service</option>
+      <option value="OGC:WMTS-1.0.0-http-get-capabilities">OGC-WMTS Capabilities service (ver 1.0.0)</option>
+      <option value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)</option>
+      <option value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</option>
       <option value="OGC:WNS">OGC-WNS Web Notification Service</option>
       <option value="OGC:WPS">OGC-WPS Web Processing Service</option>
+      <option value="OGC:OWS-C">OGC OWS Context</option>
       <option value="WWW:DOWNLOAD-1.0-ftp--download">Fichier à télécharger (FTP)</option>
       <option value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</option>
       <option value="FILE:GEO">Fichier SIG</option>
       <option value="FILE:RASTER">Fichier SIG RASTER</option>
       <option value="WWW:LINK-1.0-http--ical">iCalendar (URL)</option>
       <option value="WWW:LINK-1.0-http--link" default="">Adresse Internet (URL)</option>
+      <option value="DOI">Digital Object Identifier (DOI)</option>
+      <option value="WWW:LINK-1.0-http--partners">Site partenaire (URL)</option>
+      <option value="WWW:LINK-1.0-http--related">Site associé (URL)</option>
       <option value="WWW:LINK-1.0-http--rss">Fil RSS (URL)</option>
+      <option value="WWW:LINK-1.0-http--samples">Présentation produit (URL)</option>
       <option value="DB:POSTGIS">Base de données / Table PostGIS</option>
       <option value="DB:ORACLE">Base de données / ORACLE</option>
       <option value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</option>
       <option value="RBNB:DATATURBINE">Data Turbine</option>
-      <option value="UKST">Unknown Service Type</option>
+      <option value="UKST">Type de service inconnu</option>
     </helper>
   </element>
   <element name="gmd:purpose" id="26.0">
@@ -5156,7 +5189,7 @@ l’IGN (WPS)
   </element>
   <element name="gmd:title" id="360.0"
            context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title">
-    <label>Intitulé de la resource</label>
+    <label>Intitulé de la ressource</label>
     <description>Nom avec lequel la ressource en question est connue</description>
     <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
     L’intitulé (ou le titre) de la ressource doit être un nom caractéristique
@@ -5872,6 +5905,7 @@ INSPIRE doit être fournie.
   </element>
   <element name="srv:serviceContact">
     <label>Contact</label>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Informations permettant contacter le fournisseur du service</description>
   </element>
   <element name="srv:name">
@@ -6367,8 +6401,12 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <label>Nom</label>
     <description></description>
   </element>
+  <element name="xlink:title">
+    <label>Libellé de l'URL</label>
+    <description></description>
+  </element>
   <element name="xlink:href">
-    <label>Link href</label>
+    <label>URL</label>
     <description>Supplies the data that allows an XLink application to find a remote resource (or
       resource fragment) [W3C XLINK]
     </description>
@@ -6453,6 +6491,10 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <label>Minimum</label>
     <description/>
   </element>
+  <element name="gco:upper">
+    <label>Maximum</label>
+    <description></description>
+  </element>
   <element name="gmx:language">
     <label>Langue des métadonnées</label>
     <description></description>
@@ -6499,7 +6541,13 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
   <element name="gco:Measure">
     <label>Mesure</label>
   </element>
+  <element name="gco:Integer">
+    <label>Nombre entier</label>
+  </element>
   <element name="gco:Scale">
     <label>Échelle</label>
+  </element>
+  <element name="gco:Boolean">
+    <label>Booléen</label>
   </element>
 </labels>

@@ -43,6 +43,10 @@
     <label>Scope</label>
     <description>Scope definition</description>
   </element>
+  <element name="gco:range">
+    <label>Range</label>
+    <description></description>
+  </element>
   <element name="gfc:versionNumber">
     <label>Version</label>
     <description>Catalogue version</description>
@@ -76,7 +80,7 @@
     <description>Association, attribute, operation, ...</description>
   </element>
   <element name="gfc:definition">
-    <label>Definition</label>
+    <label>Werte Name</label>
     <description>Property definition</description>
   </element>
   <element name="gfc:fieldOfApplication">
@@ -91,24 +95,16 @@
     <label>Responsible party</label>
     <description>Responsible party</description>
   </element>
-  <element name="gco:lower">
-    <label>Lower cardinality</label>
-    <description>Lower cardinality</description>
-  </element>
-  <element name="gco:upper">
-    <label>Upper cardinality</label>
-    <description>Upper cardinality</description>
-  </element>
   <element name="gfc:cardinality">
     <label>Cardinalities</label>
     <description>Cardinalities</description>
   </element>
   <element name="gfc:label">
-    <label>Label</label>
+    <label>Name</label>
     <description/>
   </element>
   <element name="gfc:listedValue">
-    <label>Codelist</label>
+    <label>Werteliste</label>
     <description>List of values for this element.</description>
   </element>
   <element name="gfc:constrainedBy">
@@ -120,7 +116,7 @@
     <description></description>
   </element>
   <element name="gfc:code">
-    <label>Code</label>
+    <label>Schlüssel</label>
     <description></description>
   </element>
   <element name="gfc:isOrdered">
@@ -188,7 +184,7 @@
     <description></description>
   </element>
   <element name="gfc:memberName">
-    <label>Member name</label>
+    <label>Name des Attributs</label>
     <description></description>
   </element>
   <element name="gfc:FC_Constraint">
@@ -236,6 +232,27 @@
   <element name="gfc:valueMeasurementUnit">
     <label>Value measurement unit</label>
   </element>
+
+  <element name="gco:aName" context="gco:TypeName">
+    <label>Feldtyp</label>
+    <description/>
+    <helper>
+      <option value="BOOLEAN">BOOLEAN</option>
+      <option value="BYTE">BYTE</option>
+      <option value="CHARACTER">CHARACTER</option>
+      <option value="DATE">DATE</option>
+      <option value="DATETIME">DATETIME</option>
+      <option value="DOUBLE">DOUBLE</option>
+      <option value="FLOAT">FLOAT</option>
+      <option value="INTEGER">INTEGER</option>
+      <option value="NUMERIC">NUMERIC</option>
+      <option value="REAL">REAL</option>
+      <option value="SERIAL">SERIAL</option>
+      <option value="VARCHAR">VARCHAR</option>
+      <option value="TEXT">TEXT</option>
+    </helper>
+  </element>
+
   <!-- ==================================================== -->
   <element name="gmx:name">
     <label>Name</label>

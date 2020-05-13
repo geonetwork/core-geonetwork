@@ -23,7 +23,9 @@
 
 package org.fao.geonet.services;
 
-import jeeves.server.context.ServiceContext;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Set;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
@@ -34,16 +36,17 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.exceptions.MissingParameterEx;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
+import org.fao.geonet.repository.MetadataDraftRepository;
 import org.jdom.Element;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Set;
+import jeeves.server.context.ServiceContext;
 
 public class Utils {
 
@@ -64,7 +67,7 @@ public class Utils {
         String id;
         GeonetContext gc = (GeonetContext) context
             .getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm = gc.getBean(DataManager.class);
+        IMetadataUtils dm = gc.getBean(IMetadataUtils.class);
 
         id = lookupByFileId(params, gc);
         if (id == null) {
@@ -73,6 +76,21 @@ public class Utils {
                 String uuid = Util.getParam(params, uuidParamName);
                 // lookup ID by UUID
                 id = dm.getMetadataId(uuid);
+                
+                //Do we want the draft version?
+                Boolean approved = Util.getParam(params, "approved", true);
+                if(!approved) {
+                    //Is the user editor for this metadata?
+                	AccessManager am = context.getBean(AccessManager.class);
+                	if(am.canEdit(context, id)) {
+                		AbstractMetadata draft = gc.getBean(MetadataDraftRepository.class).findOneByUuid(uuid);
+                		if(draft != null) {
+                			id = String.valueOf(draft.getId());
+                		}	
+                	}
+                }
+                
+                
             } catch (MissingParameterEx x) {
                 // request does not contain UUID; use ID from request
                 try {

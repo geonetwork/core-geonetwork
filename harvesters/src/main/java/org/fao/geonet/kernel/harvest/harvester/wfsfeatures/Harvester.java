@@ -25,15 +25,15 @@ package org.fao.geonet.kernel.harvest.harvester.wfsfeatures;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
@@ -43,7 +43,6 @@ import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.Fragme
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
@@ -53,6 +52,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
+import javax.xml.stream.FactoryConfigurationError;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -66,8 +66,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.xml.stream.FactoryConfigurationError;
 
 //=============================================================================
 
@@ -136,7 +134,7 @@ class Harvester implements IHarvester<HarvestResult> {
     //---------------------------------------------------------------------------
     private ServiceContext context;
     private WfsFeaturesParams params;
-    private DataManager dataMan;
+    private IMetadataManager metadataManager;
     private SchemaManager schemaMan;
     private HarvestResult result;
     private UUIDMapper localUuids;
@@ -170,11 +168,11 @@ class Harvester implements IHarvester<HarvestResult> {
         result = new HarvestResult();
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        dataMan = gc.getBean(DataManager.class);
+        metadataManager = gc.getBean(IMetadataManager.class);
         schemaMan = gc.getBean(SchemaManager.class);
         SettingInfo si = context.getBean(SettingInfo.class);
         String siteUrl = si.getSiteUrl() + context.getBaseUrl();
-        metadataGetService = siteUrl + "/srv/en/xml.metadata.get";
+        metadataGetService = "local://"+context.getNodeId()+"/api/records/";
         ssParams.put("siteUrl", siteUrl);
     }
 
@@ -205,7 +203,7 @@ class Harvester implements IHarvester<HarvestResult> {
         log.info("Retrieving metadata fragments for : " + params.getName());
 
         //--- collect all existing metadata uuids before we update
-        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         localUuids = new UUIDMapper(metadataRepository, params.getUuid());
 
         //--- parse the xml query from the string - TODO: default should be
@@ -216,7 +214,7 @@ class Harvester implements IHarvester<HarvestResult> {
         try {
             wfsQuery = Xml.loadString(params.query, false);
         } catch (JDOMException e) {
-            errors.add(new HarvestError(e, log));
+            errors.add(new HarvestError(context, e));
             throw new BadParameterEx("GetFeature Query failed to parse\n", params.query);
         }
 
@@ -343,12 +341,12 @@ class Harvester implements IHarvester<HarvestResult> {
             try {
                 String isTemplate = localUuids.getTemplate(uuid);
                 if (isTemplate.equals("s")) {
-                    Processor.uncacheXLinkUri(metadataGetService + "?uuid=" + uuid);
+                    Processor.uncacheXLinkUri(metadataGetService + uuid);
                 }
 
                 if (!updatedMetadata.contains(uuid)) {
                     String id = localUuids.getID(uuid);
-                    dataMan.deleteMetadata(context, id);
+                    metadataManager.deleteMetadata(context, id);
 
                     if (isTemplate.equals("s")) {
                         result.subtemplatesRemoved++;
@@ -357,16 +355,16 @@ class Harvester implements IHarvester<HarvestResult> {
                     }
                 }
             } catch (CacheException e) {
-                HarvestError error = new HarvestError(e, log);
+                HarvestError error = new HarvestError(context, e);
                 this.errors.add(error);
             } catch (Exception e) {
-                HarvestError error = new HarvestError(e, log);
+                HarvestError error = new HarvestError(context, e);
                 this.errors.add(error);
             }
         }
 
         if (result.subtemplatesRemoved + result.locallyRemoved > 0) {
-            dataMan.flush();
+            metadataManager.flush();
         }
     }
 

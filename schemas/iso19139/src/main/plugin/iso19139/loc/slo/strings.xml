@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+<strings>
+  <understandresource>Informácie o súbore údajov</understandresource>
+  <relatedresources>Súvisiace služby a prepojené údaje</relatedresources>
+  <techinfo>Technická informácia</techinfo>
+  <contactinfo>Kontaktné informácie</contactinfo>
+  <mdcontactinfo>Kontakt metaúdajov</mdcontactinfo>
+  <refdate>Referenčný dátum</refdate>
+  <temporalref>Časové informácie</temporalref>
+  <constraintinfo>Informácie o obmedzeniach prístupu</constraintinfo>
+  <xml_iso19139>Uložte tieto metaúdaje ako súbor XML ISO19139</xml_iso19139>
+  <xml_iso19139tooai_dc>Uložte tieto metaúdaje ako súbor OAI Dublin Core XML </xml_iso19139tooai_dc>
+  <!-- New strings added for the AngularJS editor -->
+  <!-- View and tabs -->
+  <advanced>Úplný </advanced>
+  <default>Jednoduchý</default>
+  <simple>Jednoduchý</simple>
+  <inspire>INSPIRE</inspire>
+  <inspire_sds>SDS</inspire_sds>
+  <keywordfrom>Kľúčové slová -</keywordfrom>
+  <resource>Zdroj</resource>
+  <xml>XML</xml>
+  <metadata>Metaúdaje</metadata>
+  <identificationinfo>Identifikácia</identificationinfo>
+  <distributioninfo>Distribúcia</distributioninfo>
+  <dataqualityinfo>Kvalita</dataqualityinfo>
+  <spatialrepresentationinfo>Priestorová reprezentácia</spatialrepresentationinfo>
+  <referencesysteminfo>Referenčný systém</referencesysteminfo>
+  <contentinfo>Obsah</contentinfo>
+  <portrayalcatalogueinfo>Zobrazenie</portrayalcatalogueinfo>
+  <metadataconstraints>Md. constraints</metadataconstraints>
+  <metadatamaintenance>Md. maintenance</metadatamaintenance>
+  <applicationschemainfo>Informácie o schéme</applicationschemainfo>
+  <nothesaurusname>Kľúčové slová</nothesaurusname>
+  <bboxessection>Geografický rozsah</bboxessection>
+  <overviews>Prehľady</overviews>
+  <metadatainxml>XML</metadatainxml>
+  <providedby>Poskytované</providedby>
+  <shareonsocialsite>Zdieľané na sociálnych sieťach </shareonsocialsite>
+  <viewmode>Pohľady</viewmode>
+  <linktoportal>Prístup na portál</linktoportal>
+  <linktoportal-help>Prečítajte si všetky podrobnosti a prístup k údajom.</linktoportal-help>
+  <citationproposal>Návrh citácie</citationproposal>
+  <citationproposal-help>Tento návrh bol automaticky generovaný, skontrolujte, či autori metaúdajov nešpecifikovali vlastné požiadavky na citáciu.</citationproposal-help>
+  <associatedresources>Pridružené zdroje</associatedresources>
+  <!-- XSD error translation -->
+  <invalidelement>Neplatný prvok. Neplatný obsah bol nájdený od prvku:</invalidelement>
+  <onelementof>Jeden z nasledujúcich prvkov</onelementof>
+  <isexpected>je očakávaný.</isexpected>
+  <isnotcomplete>nekompletný.</isnotcomplete>
+  <elementlocated>Rodičovský prvok je</elementlocated>
+  <missingelement>Chýba prvok. Obsah prvku:</missingelement>
+  <invalidvalue>Neplatná alebo chýbajúca hodnota.</invalidvalue>
+  <notvalidfor>nie je platná hodnota pre</notvalidfor>
+  <xsderroris>XSD chyba je:</xsderroris>
+  <inelement>v prvku</inelement>
+  <enum1>Hodnota</enum1>
+  <enum2>nie je platné pre pole</enum2>
+  <enum3>Zoznam hodnôt je:</enum3>
+  <!-- INSPIRE view labels and help -->
+  <url>Online zdroj</url>
+  <identifier>Identifikátor zdrojov</identifier>
+  <rsidentifier>Projekcia</rsidentifier>
+  <referencedate>Časové informácie</referencedate>
+  <creationdate>Dátum vytvorenia</creationdate>
+  <hierarchylevel>Úroveň hierarchie</hierarchylevel>
+  <publicationdate>Dátum publikácie</publicationdate>
+  <revisiondate>Dátum revízie</revisiondate>
+  <temporalrangesection>Časový rozsah</temporalrangesection>
+  <beginposition>Začiatok</beginposition>
+  <endposition>Koniec</endposition>
+  <conformity>Súlad</conformity>
+  <conformity_title>Názov</conformity_title>
+  <conformity_date>Dátum</conformity_date>
+  <explanation>Vysvetlenie</explanation>
+  <pass>Súlad</pass>
+  <indeterminateposition>Neurčitá poloha</indeterminateposition>
+  <pointofcontact>Kontakt pre zdroj</pointofcontact>
+  <metadatapointofcontact>Kontakt pre metaúdaje</metadatapointofcontact>
+  <organisationname>Názov organizácie</organisationname>
+  <electronicmailaddress>Email</electronicmailaddress>
+  <role>Úloha </role>
+  <encoding>Kódovanie</encoding>
+  <inspiretheme>INSPIRE témy</inspiretheme>
+  <inspirethemeuri>INSPIRE témy</inspirethemeuri>
+  <format>Formát</format>
+  <format_version>Verzia</format_version>
+  <format_specification>Špecifikácia </format_specification>
+  <lineage>Pôvod</lineage>
+  <spatialresolution>Priestorové rozlíšenie (mierka)</spatialresolution>
+  <spatialdistance>Priestorové rozlíšenie (vzdialenosť) </spatialdistance>
+  <accessconstraints>Obmedzenia prístupu </accessconstraints>
+  <useconstraints>Obmedzenia používania</useconstraints>
+  <uselimitation>Obmedzenie použitia</uselimitation>
+  <add-resource-id>Odhadnúť identifikátor zdroja</add-resource-id>
+  <add-resource-idhelp>
+Zložte identifikátor zdroja pomocou adresy URL katalógu a identifikátora 
+    metaúdajov (napríklad http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).</add-resource-idhelp>
+  <add-extent-from-geokeywords>Vypočítť rozsah z kľúčového slova</add-extent-from-geokeywords>
+  <add-extent-from-geokeywordshelp>Analyzovať každé kľúčové slovo typu miesta a pridajte zodpovedajúci rozsah.</add-extent-from-geokeywordshelp>
+  <classificationsection>Klasifikácia údajov a služieb</classificationsection>
+  <temporalsection>Časová referencia</temporalsection>
+  <restrictionssection>Obmedzenia prístupu a používania</restrictionssection>
+  <metadatasection>Informácie o metaúdajoch</metadatasection>
+  <responsibleorganisationsection>Zodpovedná organizácia (organizácie)</responsibleorganisationsection>
+  <qualityandvaliditysection>Kvalita a platnosť</qualityandvaliditysection>
+  <spatialrepresentationtype>Typ priestorovej reprezentácie </spatialrepresentationtype>
+  <topiccategory>Kód kategórie témy</topiccategory>
+  <metadatalanguage>Jazyk metaúdajov</metadatalanguage>
+  <inspireservicetaxonomy>INSPIRE služba taxonómie </inspireservicetaxonomy>
+  <otherconstraints>Ďalšie obmedzenia</otherconstraints>
+  <operateson>Združený zdroj</operateson>
+  <extent>Geografické ohraničenie </extent>
+  <spatialExtent>Priestorový rozsah</spatialExtent>
+  <freetextkeywords>Ďalšie kľúčové slová </freetextkeywords>
+  <resource_url>URL</resource_url>
+  <resource_protocol>Protokol</resource_protocol>
+  <addcrs>Projekcia</addcrs>
+  <addcrs4936>ETRS89-XYZ</addcrs4936>
+  <addcrs4937>ETRS89-GRS80h</addcrs4937>
+  <addcrs4258>ETRS89-GRS80</addcrs4258>
+  <addcrs3035>ETRS89-LAEA</addcrs3035>
+  <addcrs3034>ETRS89-LCC</addcrs3034>
+  <addcrs3038>ETRS89-TM26N</addcrs3038>
+  <addcrs3039>ETRS89-TM27N</addcrs3039>
+  <addcrs3040>ETRS89-TM28N</addcrs3040>
+  <addcrs3041>ETRS89-TM29N</addcrs3041>
+  <addcrs3042>ETRS89-TM30N</addcrs3042>
+  <addcrs3043>ETRS89-TM31N</addcrs3043>
+  <addcrs3044>ETRS89-TM32N</addcrs3044>
+  <addcrs3045>ETRS89-TM33N</addcrs3045>
+  <addcrs3046>ETRS89-TM34N</addcrs3046>
+  <addcrs3047>ETRS89-TM35N</addcrs3047>
+  <addcrs3048>ETRS89-TM36N</addcrs3048>
+  <addcrs3049>ETRS89-TM37N</addcrs3049>
+  <addcrs3050>ETRS89-TM38N</addcrs3050>
+  <addcrs3051>ETRS89-TM39N</addcrs3051>
+  <addcrs5730>EVRS</addcrs5730>
+  <addcrs7409>ETRS89-GRS80-EVRS</addcrs7409>
+  <!-- String for INSPIRE SDS tab -->
+  <inspire_sds_cc1>Conformance class 1: invocable</inspire_sds_cc1>
+  <inspire_sds_cc2>Trieda súladu 2: interoperabilný</inspire_sds_cc2>
+  <inspire_sds_cc3>Trieda súladu 3: harmonizovaný</inspire_sds_cc3>
+  <sds-category>Kategória</sds-category>
+  <inspire_add_pass>Pridať priechodný prvok</inspire_add_pass>
+  <sds-add-dataquality>Pridať DataQuality prvok</sds-add-dataquality>
+  <sds-add-dataqualityhelp>TG4: Pre každú službu priestorových údajov musí existovať  len jeden súbor informácií 
+    o kvalite (prvok dataQualityInfo), ktorého účelom je "služba".</sds-add-dataqualityhelp>
+  <sds-add-tech-spec>Pridať technickú špecifikáciu</sds-add-tech-spec>
+  <sds-add-tech-spechelp>TG8: Prvok špecifikácie metaúdajov sa musí aspoň týkať alebo obsahovať
+     jednu technickú špecifikáciu, na ktorú sa úplne zhoduje invokatívna služba priestorových údajov,
+    poskytnúť všetky potrebné technické prvky, skutočne odvolávať službu a umožniť jej
+     využitie..</sds-add-tech-spechelp>
+  <sds-tech-spec>Technická špecifikácia</sds-tech-spec>
+  <conformity_desc>Názov technickej špecifikácie</conformity_desc>
+  <conformity_linkage>Technická špecifikácia URL</conformity_linkage>
+  <sds-section-qos>Kvalita servisu</sds-section-qos>
+  <sds-add-qualityofservice>Pridať chýbajúce kritériá kvality služby</sds-add-qualityofservice>
+  <sds-add-qualityofservicehelp>INSPIRE SDS vyžaduje tri kritériá kvality služieb, ktoré sa majú 
+    uviesť v metaúdajoch: dostupnosť, výkonnosť a kapacita. Týmto tlačidlom sa pridajú chýbajúce kritériá.</sds-add-qualityofservicehelp>
+  <qos_measure>Measure:</qos_measure>
+  <qos_uom>UOM</qos_uom>
+  <qos_description>Popis</qos_description>
+  <qos_value>Hodnota</qos_value>
+  <sds-section-crs>Súradnicový referenčný systém</sds-section-crs>
+  <sds-fix-category>Opraviť prvok kategórie</sds-fix-category>
+  <sds-fix-categoryhelp>(Rec1) Replace gco:CharacterString with gmx:Anchor in the description
+    metadata element.</sds-fix-categoryhelp>
+  <sds-accesspoint>Adresa URL prístupového bodu</sds-accesspoint>
+  <sds-add-accesspoint>Pridať adresu prístupového bodu</sds-add-accesspoint>
+  <sds-endpoint>Adresa URL koncového bodu</sds-endpoint>
+  <sds-add-endpoint>Pridať koncový bod</sds-add-endpoint>
+  <sds-addnoconstraints>Žiadne obmedzenie</sds-addnoconstraints>
+  <sds-addnoconstraintshelp>Pridať prvok, ktorý dokumentuje, že pre túto službu nie sú 
+    žiadne obmedzenia.</sds-addnoconstraintshelp>
+  <sds-addunknownconstraints>Neznáme obmedzenie</sds-addunknownconstraints>
+  <sds-addconstraints>Prispôsobiteľné obmedzenia</sds-addconstraints>
+  <sds>
+    <noconditionsapply>Nie sú splnené žiadne podmienky</noconditionsapply>
+    <conditionsunknown>Podmienky sú neznáme</conditionsunknown>
+  </sds>
+  <sds-limitation>Obmedzenie</sds-limitation>
+  <sds-section-custodian>Responsible custodian</sds-section-custodian>
+  <sds-addoperation>Add Operation</sds-addoperation>
+
+  <trueValue>Yes</trueValue>
+  <falseValue>No</falseValue>
+  <nilValue>Nil</nilValue>
+</strings>

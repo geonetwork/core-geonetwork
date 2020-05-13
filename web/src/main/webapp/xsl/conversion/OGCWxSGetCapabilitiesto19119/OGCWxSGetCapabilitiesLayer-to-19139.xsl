@@ -58,9 +58,7 @@
     <xsl:variable name="ows">
       <xsl:choose>
         <xsl:when
-          test="local-name(.)='WFS_Capabilities' and namespace-uri(.)='http://www.opengis.net/wfs' and @version='1.1.0'">
-          true
-        </xsl:when>
+          test="local-name(.)='WFS_Capabilities' and namespace-uri(.)='http://www.opengis.net/wfs' and @version='1.1.0'">true</xsl:when>
         <xsl:otherwise>false</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>

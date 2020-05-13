@@ -23,56 +23,12 @@
 
 package org.fao.geonet.kernel.mef;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Maps;
+import static org.fao.geonet.domain.Localized.translationXmlToLangMap;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataDataInfo;
-import org.fao.geonet.domain.MetadataRelation;
-import org.fao.geonet.domain.MetadataRelationId;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.exceptions.BadFormatEx;
-import org.fao.geonet.exceptions.NoSchemaMatchesException;
-import org.fao.geonet.exceptions.UnAuthorizedException;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRelationRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.Updater;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-import org.fao.oaipmh.exceptions.BadArgumentException;
-import org.jdom.Element;
-import org.springframework.context.ApplicationContext;
-import org.springframework.util.StringUtils;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -80,11 +36,56 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
-import static org.fao.geonet.domain.Localized.translationXmlToLangMap;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.MetadataResourceDatabaseMigration;
+import org.fao.geonet.Util;
+import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.domain.MetadataRelation;
+import org.fao.geonet.domain.MetadataRelationId;
+import org.fao.geonet.domain.MetadataResourceVisibility;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
+import org.fao.geonet.exceptions.BadFormatEx;
+import org.fao.geonet.exceptions.NoSchemaMatchesException;
+import org.fao.geonet.exceptions.UnAuthorizedException;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataRelationRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.Updater;
+import org.fao.geonet.utils.FilePathChecker;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.fao.oaipmh.exceptions.BadArgumentException;
+import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
+
+import com.google.common.base.Optional;
+import com.google.common.collect.Maps;
+
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 public class Importer {
     @Deprecated
@@ -121,6 +122,7 @@ public class Importer {
                                         final Path mefFile) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         final DataManager dm = applicationContext.getBean(DataManager.class);
+        final SettingManager sm = applicationContext.getBean(SettingManager.class);
 
         // Load preferred schema and set to iso19139 by default
         String preferredSchema = applicationContext.getBean(ServiceConfig.class).getValue("preferredSchema", "iso19139");
@@ -181,6 +183,7 @@ public class Importer {
 
                 Element metadataValidForImport;
 
+
                 Map<String, Pair<String, Element>> mdFiles = new HashMap<String, Pair<String, Element>>();
                 for (Path file : metadataXmlFiles) {
                     if (file != null && java.nio.file.Files.isRegularFile(file)) {
@@ -194,6 +197,7 @@ public class Importer {
                             }
 
                             String currFile = "Found metadata file " + file.getParent().getParent().relativize(file);
+
                             mdFiles.put(metadataSchema, Pair.read(currFile, metadata));
 
                         } catch (NoSchemaMatchesException e) {
@@ -274,14 +278,12 @@ public class Importer {
                 String changeDate = null;
                 String sourceName = null;
                 Map<String, String> sourceTranslations = Maps.newHashMap();
-                String recordSource = source;
                 // Schema in info.xml is not used here anymore.
                 // It is used in handleMetadataFiles as the first option to pick a
                 // metadata file from those in a metadata dir in a MEF2
                 // String schema = null;
                 String rating = null;
                 String popularity = null;
-                String groupId = null;
                 Element categs = null;
                 final Element privileges;
 
@@ -290,9 +292,11 @@ public class Importer {
 
 
                 if (!style.equals("_none_")) {
+                    FilePathChecker.verify(style);
+
                     final GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
                     Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS);
-                    Path xsltPath = stylePath.resolve(style);
+                    Path xsltPath = stylePath.resolve(style + ".xsl");
                     if (Files.exists(xsltPath)) {
                         md.add(index, Xml.transform(md.get(index), xsltPath));
                     } else {
@@ -320,10 +324,6 @@ public class Importer {
                                 .setAttribute("name", c));
                         }
                     }
-                    if (StringUtils.isEmpty(source)) {
-                        recordSource = context.getBean(SettingManager.class).getSiteId();
-                    }
-
                     privileges = new Element("group");
                     privileges.addContent(new Element("operation")
                         .setAttribute("name", "view"));
@@ -342,6 +342,9 @@ public class Importer {
                         // Get the Metadata uuid if it's not a template.
                         uuid = dm.extractUUID(schema, md.get(index));
                     } else if (isTemplate == MetadataType.SUB_TEMPLATE) {
+                        // Get subtemplate uuid if defined in @uuid at root
+                        uuid = md.get(index).getAttributeValue("uuid");
+                    } else if (isTemplate == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
                         // Get subtemplate uuid if defined in @uuid at root
                         uuid = md.get(index).getAttributeValue("uuid");
                     }
@@ -363,12 +366,8 @@ public class Importer {
                         if (Log.isDebugEnabled(Geonet.MEF)) {
                             Log.debug(Geonet.MEF, "Assign to local catalog");
                         }
-                        recordSource = context.getBean(SettingManager.class).getSiteId();
                     } else {
                         // --- If siteId is not set, set to current node
-                        if (StringUtils.isEmpty(source)) {
-                            recordSource = context.getBean(SettingManager.class).getSiteId();
-                        }
                         sourceName = general.getChildText("siteName");
                         sourceTranslations = translationXmlToLangMap(general.getChildren("siteTranslations"));
                         if (Log.isDebugEnabled(Geonet.MEF))
@@ -378,9 +377,23 @@ public class Importer {
                     popularity = general.getChildText("popularity");
                 }
 
+                if (schema.startsWith("iso19139")) {
+                    // In GeoNetwork 3.x, links to resources changed:
+                    // * thumbnails contains full URL instead of file name only
+                    // * API mode change old URL structure.
+                    MetadataResourceDatabaseMigration.updateMetadataResourcesLink(
+                        metadata, null, sm
+                    );
+                }
+
                 if (validate) {
+                    Integer groupIdVal = null;
+                    if (org.apache.commons.lang.StringUtils.isNotEmpty(groupId)) {
+                        groupIdVal = Integer.parseInt(groupId);
+                    }
+
                     // Validate xsd and schematron
-                    DataManager.validateMetadata(schema, metadata, context);
+                    DataManager.validateExternalMetadata(schema, metadata, context, groupIdVal);
                 }
 
 
@@ -429,7 +442,7 @@ public class Importer {
                 final String finalRating = rating;
                 final Element finalCategs = categs;
                 final String finalGroupId = groupId;
-                context.getBean(MetadataRepository.class).update(iMetadataId, new Updater<Metadata>() {
+                context.getBean(IMetadataManager.class).update(iMetadataId, new Updater<Metadata>() {
                     @Override
                     public void apply(@Nonnull final Metadata metadata) {
                         final MetadataDataInfo dataInfo = metadata.getDataInfo();
@@ -445,7 +458,7 @@ public class Importer {
 
                         addCategoriesToMetadata(metadata, finalCategs, context);
 
-                        if (finalGroupId == null) {
+                        if (finalGroupId == null || finalGroupId.equals("")) {
                             Group ownerGroup = addPrivileges(context, dm, iMetadataId, privileges);
                             if (ownerGroup != null) {
                                 metadata.getSourceInfo().setGroupOwner(ownerGroup.getId());
@@ -462,35 +475,26 @@ public class Importer {
                 });
 
 
-                Path pubDir = Lib.resource.getDir(context, "public", metadataIdMap
-                    .get(index));
-                Path priDir = Lib.resource.getDir(context, "private", metadataIdMap
-                    .get(index));
-
-                Files.createDirectories(pubDir);
-                Files.createDirectories(priDir);
-
-
-                dm.indexMetadata(metadataIdMap.get(index), true);
+                dm.indexMetadata(metadataIdMap.get(index), true, null);
             }
 
             // --------------------------------------------------------------------
 
             public void handlePublicFile(String file, String changeDate,
-                                         InputStream is, int index) throws IOException {
+                                         InputStream is, int index) throws Exception {
                 if (Log.isDebugEnabled(Geonet.MEF)) {
                     Log.debug(Geonet.MEF, "Adding public file with name=" + file);
                 }
-                saveFile(context, metadataIdMap.get(index), "public", file, changeDate, is);
+                saveFile(context, metadataIdMap.get(index), MetadataResourceVisibility.PUBLIC, file, changeDate, is);
             }
 
             // --------------------------------------------------------------------
 
             public void handlePrivateFile(String file, String changeDate,
-                                          InputStream is, int index) throws IOException {
+                                          InputStream is, int index) throws Exception {
                 if (Log.isDebugEnabled(Geonet.MEF))
                     Log.debug(Geonet.MEF, "Adding private file with name=" + file);
-                saveFile(context, metadataIdMap.get(index), "private", file, changeDate,
+                saveFile(context, metadataIdMap.get(index), MetadataResourceVisibility.PRIVATE, file, changeDate,
                     is);
             }
 
@@ -499,7 +503,7 @@ public class Importer {
         return metadataIdMap;
     }
 
-    public static void addCategoriesToMetadata(Metadata metadata, Element finalCategs, ServiceContext context) {
+    public static void addCategoriesToMetadata(AbstractMetadata metadata, Element finalCategs, ServiceContext context) {
         if (finalCategs != null) {
             final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
             for (Object cat : finalCategs.getChildren()) {
@@ -530,7 +534,7 @@ public class Importer {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
-
+        IMetadataManager metadataManager = gc.getBean(IMetadataManager.class);
 
         if (uuid == null || uuid.equals("")
             || uuidAction == MEFLib.UuidAction.GENERATEUUID) {
@@ -551,8 +555,12 @@ public class Importer {
                     "Missing siteId parameter from info.xml file");
 
             // --- only update sources table if source is not current site
-            if (!source.equals(gc.getBean(SettingManager.class).getSiteId())) {
-                Source source1 = new Source(source, sourceName, sourceTranslations, true);
+            SourceRepository sourceRepository = context.getBean(SourceRepository.class);
+            Source sourceObject = sourceRepository.findOneByUuid(source);
+            if (sourceObject == null
+                || (!source.equals(gc.getBean(SettingManager.class).getSiteId())
+                    &&  SourceType.harvester != sourceObject.getType())) {
+                Source source1 = new Source(source, sourceName, sourceTranslations, SourceType.externalportal);
                 context.getBean(SourceRepository.class).save(source1);
             }
         }
@@ -564,8 +572,8 @@ public class Importer {
                     if (Log.isDebugEnabled(Geonet.MEF)) {
                         Log.debug(Geonet.MEF, "Deleting existing metadata with UUID : " + uuid);
                     }
-                    dm.deleteMetadata(context, dm.getMetadataId(uuid));
-                    dm.flush();
+                    metadataManager.deleteMetadata(context, dm.getMetadataId(uuid));
+                    metadataManager.flush();
                 }
                 // user does not hav privileges to replace the existing metadata
                 else {
@@ -584,10 +592,9 @@ public class Importer {
         // insert metadata
         //
         int userid = context.getUserSession().getUserIdAsInt();
-        String docType = null, title = null, category = null;
-        boolean ufo = false, indexImmediate = false;
+        String docType = null, category = null; boolean ufo = false, indexImmediate = false;
 
-        String metadataId = dm.insertMetadata(context, schema, md.get(index), uuid,
+        String metadataId = metadataManager.insertMetadata(context, schema, md.get(index), uuid,
             userid, groupId, source, isTemplate.codeString, docType, category, createDate, changeDate, ufo, indexImmediate);
 
         dm.activateWorkflowIfConfigured(context, metadataId, groupId);
@@ -599,14 +606,13 @@ public class Importer {
     // --------------------------------------------------------------------------
 
     private static void saveFile(ServiceContext context, String id,
-                                 String access, String file, String changeDate, InputStream is)
-        throws IOException {
-        Path dir = Lib.resource.getDir(context, access, id);
-
-        Path outFile = dir.resolve(file);
-        Files.copy(is, outFile);
-
-        IO.touch(outFile, FileTime.from(new ISODate(changeDate).toDate().getTime(), TimeUnit.MILLISECONDS));
+                                 MetadataResourceVisibility access, String file, String changeDate, InputStream is)
+        throws Exception {
+        final Store store = context.getBean("resourceStore", Store.class);
+        final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+        final String metadataUuid = metadataUtils.getMetadataUuid(id);
+        assert metadataUuid != null;
+        store.putResource(context, metadataUuid, file, is, new ISODate(changeDate).toDate(), access, true);
     }
 
     /**

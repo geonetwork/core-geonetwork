@@ -23,10 +23,7 @@
 
 package org.fao.geonet.monitor.health;
 
-import com.yammer.metrics.core.HealthCheck;
-
-import jeeves.monitor.HealthCheckFactory;
-import jeeves.server.context.ServiceContext;
+import java.util.List;
 
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.HarvestHistory_;
@@ -43,7 +40,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.List;
+import com.yammer.metrics.core.HealthCheck;
+
+import jeeves.monitor.HealthCheckFactory;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Verifies that all metadata have been correctly indexed (without errors)
@@ -52,7 +52,7 @@ import java.util.List;
  */
 public class HarvestersHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {
-        return new HealthCheck("Harvesting Errors") {
+        return new HealthCheck(this.getClass().getSimpleName()) {
             @Override
             protected Result check() throws Exception {
                 final HarvesterSettingRepository repository = context.getBean(HarvesterSettingRepository.class);

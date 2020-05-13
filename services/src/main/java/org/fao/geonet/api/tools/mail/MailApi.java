@@ -48,7 +48,6 @@ package org.fao.geonet.api.tools.mail;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.util.MailUtil;
@@ -71,15 +70,14 @@ import javax.servlet.ServletRequest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import jeeves.server.context.ServiceContext;
 
 /**
  *
  */
 
 @RequestMapping(value = {
-    "/api/tools/mail",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/tools/mail",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/tools/mail"
 })
 @Api(value = "tools",
@@ -90,6 +88,9 @@ public class MailApi {
 
     @Autowired
     LanguageUtils languageUtils;
+
+    @Autowired
+    SettingManager settingManager;
 
     @ApiOperation(value = "Test mail configuration",
         notes = "Send an email to the catalog feedback email.",
@@ -103,19 +104,22 @@ public class MailApi {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        SettingManager sm = appContext.getBean(SettingManager.class);
-        String to = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
+        String to = settingManager.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
         String subject = String.format(messages.getString(
             "mail_config_test_subject"),
-            sm.getSiteName(),
+            settingManager.getSiteName(),
             to);
+        String message = String.format(messages.getString(
+            "mail_config_test_message"),
+            settingManager.getNodeURL(),
+            settingManager.getNodeURL(),
+            settingManager.getNodeURL());
         try {
-            MailUtil.testSendMail(to, subject, "Empty message", sm, to, "");
+            MailUtil.testSendMail(to, subject, null, message, settingManager, to, "");
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_config_test_success"), to), HttpStatus.CREATED);
         } catch (Exception ex) {
-            Log.error("geonetwork.api", "Error sending test email", ex);
+            Log.error(API.LOG_MODULE_NAME, "Error sending test email", ex);
             String error = ex.getMessage();
             if (ex.getCause() != null) error = error + ". " + ex.getCause().getMessage();
             return new ResponseEntity<>(String.format(

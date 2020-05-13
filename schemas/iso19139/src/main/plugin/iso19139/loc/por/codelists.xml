@@ -1596,7 +1596,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
   </codelist>
   <!-- ==================================================== -->
-  <codelist name="gmd:MD_TopicCategoryCode">
+  <codelist name="gmd:MD_TopicCategoryCode" alias="topicCategory">
     <entry>
       <code>farming</code>
       <label>Agricultura, Pesca, Pecuária</label>

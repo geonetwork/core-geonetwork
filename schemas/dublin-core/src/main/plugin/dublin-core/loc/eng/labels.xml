@@ -48,6 +48,8 @@
   <!-- ==================================================== -->
   <element name="dc:subject">
     <label>Subject and Keywords</label>
+    <btnClass>fa fa-tag</btnClass>
+    <btnLabel>Add keyword</btnLabel>
     <description>A topic of the content of the resource. Typically, Subject will be expressed as
       keywords, key phrases, or classification codes that describe a topic of the resource.
     </description>

@@ -1,0 +1,91 @@
+================================================================================
+===
+=== GeoNetwork 3.0.5: List of changes
+===
+================================================================================
+- Set all privileges option is un-labelled in batch privileges form #1686
+- Apply in 3.0.x the commit 822f813c495cfc2c326ffc4713298cf878ae126f: when you don't administer a group, privileges associated to …that group of the user you are editing should remain static.
+- Use POST for user update and reset password services #1684
+- Adding missing translations
+- Merge pull request #1124 from grootstebozewolf/NioPathAwareCatalogResolverFix
+- Merge pull request #1669 from josegar74/improvements/anchor-href
+- Merge pull request #1683 from oscarfonts/3.0.x
+- Fenomen, Feature => Objecte Geogràfic
+- Catalan & Spanish updates from Transifex
+- More catalan & spanish translations
+- Citation identifier 3.14
+- Extracte => Resum 3.13
+- Voice => Telephon
+- Typo. 3.4
+- Translated <abbrLabel>s. 2.13
+- Tanslation correction. 2.6
+- Label for gmd:CI_OnLineFunctionCode (2.5)
+- Revisión 2.3
+- Rename loc files
+- Add Finnish translations to UI
+- Xslt formatter: multilingual fields are not rendered properly #1675
+- Display links in gmx:Anchor (used for gmd:useLimitation) with hyperlinks in metadata views
+- Search for "<script" instead of "<"
+- "Security" Bug Fixing: Escaping javascript XSS on error messages
+- #1577  Publish button should be disabled if metadata record does not validate (#1659)
+- Search statistics return all the same graphs #1661
+- Update en-core.json (#1652)
+- Update en-search.json (#1651)
+- Update en-admin.json (#1650)
+- #1603 Force csw:Record outputschema in GetRecords for CSW harvester to retrieve uuid,change date of remote records
+- #1603 Retrieve for SimpleMetadata (used in harvesters) the date in the format stored instead of only short format
+- Adding copyright and styling issues
+- Fixes #1555
+- Multinode / Fix mix of users.
+- Transifex update
+- Fixing bug: when showing labels on add buttons that use prefix, strings didn't behave right
+- Fix for unit tests
+- formatter: check code on 2 and 3 characters for multilingual fields
+- Link dataset to service fails #1495. Applied code from develop branch that was fixing this
+- #1539 Denominator range queries doesn't work as expected
+- Fixes  #1563
+- Fixes #1520
+- Fixes #1187
+- Fixes #1531
+- add special case 3char -> 2char code mapping in javascript
+- #1550: fix a dup entry in ISO19139 German loc file
+- #1549: fix ISO2 code for German
+- #1545: Update Spring version to support Java 8
+- Merge pull request #1542 from oscarfonts/xml-translations-es-ca
+- Spanish and Catalan translations for iso19139 XML files
+- Merge branch 'oscarfonts-i18n-es-ca' into 3.0.x
+- Merge branch 'i18n-es-ca' of https://github.com/oscarfonts/core-geonetwork into oscarfonts-i18n-es-ca
+- Updating locales with Transifex
+- Adding catalan to the transifex script
+- Remove culr and wget from the list of "non-session crawlers"
+- Memory bug fixed: Do not create httpSessions for crawlers/bots-
+- Fixes for CSW harvesting #1267 #1429 #1355
+- Additional json translation files
+- Spanish & Catalan UI translations
+- CSW Update - partial updates are not working if xpath provided starts with the metadata root element #1529
+- Fixing missing service config security that made editing of users remove their groups per profile.
+- Improved version of Xml.filterElementValues that allows to define the namespace for the attribute also
+- Fixes  #1504
+- Fixes #1505
+- Use proxy settings in region getmap service #1528
+- Update GeoServer submodule.
+- Merge pull request #1512 from OpenBfS/jdbc_port_configurable-3.0.x
+- Merge pull request #1194 from Delawen/shibboleth_improvements
+- Merge branch '3.0.x' of github.com:geonetwork/core-geonetwork into 3.0.x
+- Merge branch 'josegar74-fix/field-name-fix-mysql' into 3.0.x
+- Merge branch 'fix/field-name-fix-mysql' of https://github.com/josegar74/core-geonetwork into josegar74-fix/field-name-fix-mysql
+- Merge pull request #1457 from pmauduit/domain-parametrized-query
+- #1519 Delete harvester history button doesn't refresh the history panel
+- SDS: fix SDS tab conditional visibility.
+- replaced static port 5432 in postgres.xml to support dynamic port configuration using jdbc.port from jdbc.properties
+- SDS: align GER string files.
+- Merge pull request #1499 from geosolutions-it/3.0.x_INSPIRE-SDS-squashed
+- #1445: Implement INSPIRE Spatial Data Services (SDS)
+- Metadata editor layout: Handle forceLabel attribute in field rendering
+- Metadata editor: handle readonly attribute in field rendering
+- #1498 Map viewer: config-viewer.xml is not loaded when using an external data directory
+- Update version to 3.0.5-SNAPSHOT
+- Rename field 'key' for HarvesterData table as 'key' is a reserved work, to avoid issues when creating the table by Hibernate is some databases like MySql
+- domain - fixing SQLi
+- Fixing shibboleth configuration for latest changes (new filterchain for authentication and some non-autowired objects)
+- Added exception for path resolver.

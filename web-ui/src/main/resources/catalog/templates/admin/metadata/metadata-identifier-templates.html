@@ -48,6 +48,7 @@
       <div class="panel-body">
         <form id="gn-metadata-identifier-template-edit" name="gnMetadataIdentifierTemplateEdit"
               class="form-horizontal">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
           <input type="hidden" name="id" data-ng-model="mdIdentifierTemplateSelected.id"
                  value="{{mdIdentifierTemplateSelected.id}}"/>
 

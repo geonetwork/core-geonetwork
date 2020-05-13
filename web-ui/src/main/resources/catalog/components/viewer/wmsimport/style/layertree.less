@@ -1,21 +1,37 @@
 .layerTree {
-  min-height: 10em;
-  li {
+  .gn-layer-tree {
     padding: 0;
-  }
-  ul ul {
-    margin: 0;
-    padding-left: 10px;
-    .list-group-item {
-      border-width: 1px 0 0 0;
+    list-style: none;
+    ul {
+      margin-left: 20px;
+      li {
+        padding: 0px;
+        list-style: none;
+      }
+    } 
+    a {
+      line-height: 22px;
+      padding: 3px 0;
+      &:active, &:focus {
+        text-decoration: none;
+      }
     }
-    display: none;
+    .gn-layer-actions {
+      white-space: nowrap;
+    }
+    .gn-layer-toolbar {
+      float: right;
+      .btn-link {
+        color: #000;
+      }
+    }
   }
+
   label {
     color: #444;
     font-weight: normal;
     display: block;
-    padding: 10px 0 10px 15px;
+    padding: 10px 0 10px 0px;
     margin-bottom: 0;
     &:hover {
       color: #000;
@@ -40,20 +56,27 @@
       }
     }
   }
-  .list-group-item {
-    padding-right: 0;
-  }
   .dropdown-menu {
     width: 100%;
     font-size: 12px;
-    a {
-      padding: 3px 0 3px .5em;
-      margin-right: .5em;
-      overflow-x: hidden;
+    li {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 95%;
     }
   }
-}
-.layers, .layerTree {
-  max-height: 50em;
-  transition: max-height .25s ease;
+  .truncate {
+    width: 16em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .popover {
+    max-width: 250px;
+    width: 250px;
+    li {
+      padding: 2px 0px;
+    }
+  }
 }

@@ -42,11 +42,11 @@ import com.yammer.metrics.core.HealthCheck;
  */
 public class CswGetRecordsHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {
-        return new HealthCheck("Csw GetRecords") {
+        return new HealthCheck(this.getClass().getSimpleName()) {
             @Override
             protected Result check() throws Exception {
                 try {
-                    LocalServiceRequest request = LocalServiceRequest.create("local://csw?request=GetRecords&service=CSW&MaxRecords=1&constraintlanguage=FILTER&version=2.0.2&resulttype=results");
+                    LocalServiceRequest request = LocalServiceRequest.create("local://csw?request=GetRecords&service=CSW&MaxRecords=1&constraintlanguage=FILTER&version=2.0.2&resulttype=results&typeNames=csw:Record");
                     request.setDebug(false);
                     request.setLanguage("eng");
                     request.setInputMethod(InputMethod.GET);

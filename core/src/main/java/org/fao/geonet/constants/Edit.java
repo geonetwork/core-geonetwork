@@ -99,7 +99,15 @@ public final class Edit {
         }
     }
 
-    //--------------------------------------------------------------------------
+    public static final class ValidationReport {
+        public static final String VALIDATIONREPORT = "validationReport";
+        public static final String XPATH = "path";
+        public static final String MESSAGE = "message";
+        public static final String DOCUMENTATION = "documentation";
+        public static final String ERRORCODE = "error";
+        public static final String LINE_AND_COLUMN = "line";
+        public static final String TYPE = "type";
+    }
 
     public static final class Element {
         public static final class Attr {

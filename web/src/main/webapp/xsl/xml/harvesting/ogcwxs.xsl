@@ -37,6 +37,12 @@
     <useLayer>
       <xsl:value-of select="useLayer/value"/>
     </useLayer>
+    <datasetTemplateUuid>
+      <xsl:value-of select="datasetTemplateUuid/value"/>
+    </datasetTemplateUuid>
+    <serviceTemplateUuid>
+      <xsl:value-of select="serviceTemplateUuid/value"/>
+    </serviceTemplateUuid>
     <useLayerMd>
       <xsl:value-of select="useLayerMd/value"/>
     </useLayerMd>

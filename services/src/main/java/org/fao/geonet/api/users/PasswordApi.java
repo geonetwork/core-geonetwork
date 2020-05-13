@@ -25,6 +25,7 @@ package org.fao.geonet.api.users;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.security.ldap.LDAPConstants;
@@ -34,7 +35,6 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +53,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -63,8 +63,8 @@ import jeeves.server.context.ServiceContext;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-    "/api/user",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/user",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/user"
 })
 @Api(value = "users",
@@ -75,6 +75,10 @@ public class PasswordApi {
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     @Autowired
     LanguageUtils languageUtils;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    SettingManager sm;
 
     @ApiOperation(value = "Update user password",
         nickname = "updatePassword",
@@ -94,14 +98,13 @@ public class PasswordApi {
             required = true)
         @RequestBody
             PasswordUpdateParameter passwordAndChangeKey,
-        ServletRequest request)
+        HttpServletRequest request)
         throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
-        ServiceContext context = ServiceContext.get();
+        ServiceContext context = ApiUtils.createServiceContext(request);
 
-        final UserRepository userRepository = context.getBean(UserRepository.class);
         User user = userRepository.findOneByUsername(username);
         if (user == null) {
             return new ResponseEntity<>(String.format(
@@ -135,8 +138,6 @@ public class PasswordApi {
         user.getSecurity().setPassword(PasswordUtil.encode(context, passwordAndChangeKey.getPassword()));
         userRepository.save(user);
 
-
-        SettingManager sm = context.getBean(SettingManager.class);
         String adminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
         String subject = String.format(
             messages.getString("password_change_subject"),
@@ -151,7 +152,7 @@ public class PasswordApi {
         if (!MailUtil.sendMail(user.getEmail(),
             subject,
             content,
-            sm,
+            null, sm,
             adminEmail, "")) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
@@ -179,14 +180,15 @@ public class PasswordApi {
             required = true)
         @PathVariable
             String username,
-        ServletRequest request)
+        HttpServletRequest request)
         throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         String language = locale.getISO3Language();
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        final User user = appContext.getBean(UserRepository.class).findOneByUsername(username);
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+
+        final User user = userRepository.findOneByUsername(username);
         if (user == null) {
             return new ResponseEntity<>(String.format(
                 messages.getString("user_not_found"),
@@ -209,7 +211,6 @@ public class PasswordApi {
         }
 
         // get mail settings
-        SettingManager sm = appContext.getBean(SettingManager.class);
         String adminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
         // construct change key - only valid today
@@ -217,7 +218,7 @@ public class PasswordApi {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         String todaysDate = sdf.format(cal.getTime());
-        String changeKey = PasswordUtil.encode(ServiceContext.get(),
+        String changeKey = PasswordUtil.encode(serviceContext,
             scrambledPassword + todaysDate);
 
         String subject = String.format(
@@ -236,7 +237,7 @@ public class PasswordApi {
         if (!MailUtil.sendMail(email,
             subject,
             content,
-            sm,
+            null, sm,
             adminEmail, "")) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);

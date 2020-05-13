@@ -88,13 +88,13 @@
             .success(function(data) {
               loadMapservers();
               $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('mapserverUpdated'),
+                msg: $translate.instant('mapserverUpdated'),
                 timeout: 2,
                 type: 'success'});
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('mapserverUpdateError'),
+                title: $translate.instant('mapserverUpdateError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});
@@ -110,18 +110,23 @@
       };
 
       $scope.saveNewPassword = function() {
+        var data = $.param( {
+          username: $scope.resetUsername,
+          password: $scope.resetPassword
+        });
+
         $http.post('../api/mapservers/' +
-            $scope.mapserverSelected.id + '/auth', null, {params:
-                  {
-                    username: $scope.resetUsername,
-                    password: $scope.resetPassword
-                  }})
-            .success(function(data) {
-              $scope.resetPassword = null;
-              $('#passwordResetModal').modal('hide');
-            }).error(function(data) {
-              // TODO
-            });
+          $scope.mapserverSelected.id + '/auth',
+          data,
+          {
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          })
+          .success(function(data) {
+            $scope.resetPassword = null;
+            $('#passwordResetModal').modal('hide');
+          }).error(function(data) {
+            // TODO
+          });
 
       };
       $scope.deleteMapServer = function() {
@@ -132,7 +137,7 @@
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('mapserverDeleteError'),
+                title: $translate.instant('mapserverDeleteError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});

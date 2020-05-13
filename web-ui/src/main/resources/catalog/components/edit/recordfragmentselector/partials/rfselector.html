@@ -1,0 +1,55 @@
+<div class="row">
+  <div data-ng-search-form="" class="col-md-7">
+    <div class="input-group">
+      <input type="text"
+             class="form-control"
+             placeholder="{{'search' | translate}}"
+             data-ng-model="searchObj.any"
+             data-ng-model-options="modelOptions"
+             data-ng-focus="updateParams();triggerSearch()"
+             data-ng-change="updateParams();triggerSearch()"/>
+
+      <!-- The autocomplete list -->
+      <div class="list-group tt-menu gn-autocomplete-list"
+           data-ng-show="searchResults.records.length > 0 && sourceRecord === null">
+        <span class="tt-suggestions">
+          <div class="tt-suggestion"
+               data-ng-repeat="r in searchResults.records"
+               data-ng-click="setSource(r)">
+            {{r.title}}
+          </div>
+        </span>
+      </div>
+
+      <div class="input-group-btn"
+           data-ng-show="fragments">
+        <a class="btn btn-default"
+           data-ng-click="setSource()">
+          <i class="fa fa-times"></i>&nbsp;
+          {{sourceRecordTitle | limitTo: 20 }}{{sourceRecordTitle.length > 20 ? '...' : ''}}
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="col-md-5"
+       data-ng-show="fragments">
+    <button type="button" class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+      <span data-translate="">chooseAFragment</span>&nbsp;
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right">
+      <li data-ng-repeat="(key, value) in fragments">
+        <a href="" data-ng-click="addFragment(value)">
+          {{key}}&nbsp;
+          <i class="fa fa-plus pull-right"/>
+        </a>
+      </li>
+    </ul>
+    <input name="{{snippetRef}}" type="hidden"/>
+  </div>
+</div>

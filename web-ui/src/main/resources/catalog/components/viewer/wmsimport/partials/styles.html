@@ -1,0 +1,40 @@
+<div data-ng-show="styles.length > 1">
+  <div data-ng-hide="layout === 'select'">
+    <label>{{styles.length + '&nbsp;' + ('layerStylesAvailable' | translate)}}</label>
+    <ul>
+      <li data-ng-repeat="s in styles | orderBy:'Title'"
+          class="flex-row width-100">
+        <div class="btn-group" role="group">
+          <div class="flex-row">
+            <div class="flex-col">
+              <a data-ng-click="clickFn(s)"
+                 data-ng-disabled="current.Name === s.Name"
+                 title="{{::'addToMap' | translate}}">
+                {{::s.Title || s.Name}}
+                <i class="fa fa-plus"></i>
+              </a>
+            </div>
+            <div class="flex-col">
+              <a class="btn btn-xs btn-link"
+                 data-gn-img-modal="{url: s.LegendURL[0].OnlineResource, title: (s.Title || s.Name), id: s.Name}"
+                 title="{{'previewLegend' | translate}}">
+                <i class="fa fa-image"/>
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+
+  <select class="form-control"
+          data-ng-show="layout === 'select'"
+          data-ng-model="data.currentStyle"
+          data-ng-options="(s.Title || s.Name) for s in styles track by s.Name"
+          title="{{styles.length + ('layerStylesAvailable' | translate)}}">
+    <option value="" disabled="disabled">
+      {{styles.length + ('layerStylesAvailable' | translate)}}
+    </option>
+  </select>
+</div>

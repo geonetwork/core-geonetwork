@@ -11,7 +11,7 @@
   </gmd:language>
   <gmd:characterSet>
     <gmd:MD_CharacterSetCode codeListValue="utf8"
-                             codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"
+                             codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode"
     />
   </gmd:characterSet>
   <gmd:parentIdentifier>
@@ -19,7 +19,7 @@
   </gmd:parentIdentifier>
   <gmd:hierarchyLevel>
     <gmd:MD_ScopeCode
-      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+      codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode"
       codeListValue=""/>
   </gmd:hierarchyLevel>
   <gmd:hierarchyLevelName gco:nilReason="missing">
@@ -76,7 +76,7 @@
       </gmd:contactInfo>
       <gmd:role>
         <gmd:CI_RoleCode
-          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
           codeListValue="pointOfContact"/>
       </gmd:role>
     </gmd:CI_ResponsibleParty>
@@ -116,7 +116,7 @@
               </gmd:date>
               <gmd:dateType>
                 <gmd:CI_DateTypeCode
-                  codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                  codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                   codeListValue="creation"/>
               </gmd:dateType>
             </gmd:CI_Date>
@@ -126,7 +126,7 @@
           </gmd:edition>
           <gmd:presentationForm>
             <gmd:CI_PresentationFormCode
-              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_PresentationFormCode"
+              codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_PresentationFormCode"
               codeListValue="mapDigital"/>
           </gmd:presentationForm>
         </gmd:CI_Citation>
@@ -159,14 +159,14 @@
       </gmd:purpose>
       <gmd:status>
         <gmd:MD_ProgressCode
-          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ProgressCode"
+          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ProgressCode"
           codeListValue="completed"/>
       </gmd:status>
       <gmd:resourceMaintenance>
         <gmd:MD_MaintenanceInformation>
           <gmd:maintenanceAndUpdateFrequency>
             <gmd:MD_MaintenanceFrequencyCode
-              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode"
+              codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_MaintenanceFrequencyCode"
               codeListValue="asNeeded"/>
           </gmd:maintenanceAndUpdateFrequency>
         </gmd:MD_MaintenanceInformation>
@@ -245,7 +245,7 @@
       </gmd:resourceConstraints>
       <gmd:spatialRepresentationType>
         <gmd:MD_SpatialRepresentationTypeCode
-          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode"
+          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_SpatialRepresentationTypeCode"
           codeListValue="vector"/>
       </gmd:spatialRepresentationType>
       <gmd:spatialResolution>
@@ -264,7 +264,7 @@
       </gmd:language>
       <gmd:characterSet>
         <gmd:MD_CharacterSetCode
-          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"
+          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode"
           codeListValue="utf8"/>
       </gmd:characterSet>
       <gmd:topicCategory>
@@ -391,7 +391,7 @@
             <gmd:MD_Medium>
               <gmd:mediumFormat>
                 <gmd:MD_MediumFormatCode
-                  codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_MediumFormatCode"
+                  codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_MediumFormatCode"
                   codeListValue=""/>
               </gmd:mediumFormat>
             </gmd:MD_Medium>
@@ -406,7 +406,7 @@
         <gmd:DQ_Scope>
           <gmd:level>
             <gmd:MD_ScopeCode
-              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+              codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode"
               codeListValue="dataset"/>
           </gmd:level>
         </gmd:DQ_Scope>

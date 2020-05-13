@@ -24,9 +24,11 @@
 (function() {
   goog.provide('gn_share_directive');
 
+
+  goog.require('gn_popup');
   goog.require('gn_share_service');
 
-  var module = angular.module('gn_share_directive', ['gn_share_service']);
+  var module = angular.module('gn_share_directive', ['gn_share_service', 'gn_popup']);
 
   /**
    * @ngdoc directive
@@ -46,8 +48,8 @@
    * TODO: User group only privilege
    */
   module.directive('gnShare', [
-    'gnShareService', 'gnShareConstants', 'gnConfig', '$translate', '$filter',
-    function(gnShareService, gnShareConstants, gnConfig, $translate, $filter) {
+    'gnShareService', 'gnShareConstants', 'gnConfig', 'gnUtilityService', '$translate', '$filter',
+    function(gnShareService, gnShareConstants, gnConfig, gnUtilityService, $translate, $filter) {
 
       return {
         restrict: 'A',
@@ -56,15 +58,24 @@
             'panel.html',
         scope: {
           id: '=gnShare',
-          batch: '@gnShareBatch'
+          batch: '@gnShareBatch',
+          selectionBucket: '@'
         },
         link: function(scope) {
+          var translations = null, isBatch = scope.batch === 'true';
+          $translate(['privilegesUpdated',
+            'privilegesUpdatedError']).then(function(t) {
+            translations = t;
+          });
+
+
           scope.onlyUserGroup = gnConfig['system.metadataprivs.usergrouponly'];
           scope.disableAllCol = gnShareConstants.disableAllCol;
           scope.displayProfile = gnShareConstants.displayProfile;
+          scope.icons = gnShareConstants.icons;
 
           angular.extend(scope, {
-            batch: scope.batch === 'true',
+            batch: isBatch,
             lang: scope.$parent.lang,
             user: scope.$parent.user,
             internalOperations: gnShareConstants.internalOperations,
@@ -79,7 +90,7 @@
           var loadPrivileges;
           var fillGrid = function(data) {
             scope.privileges = data.privileges;
-            // scope.operations = data.operations;
+            scope.operations = data.operations;
             scope.isAdminOrReviewer = data.isAdminOrReviewer;
           };
 
@@ -126,7 +137,7 @@
             if (!replace) {
               var updateCheckBoxes = [];
               $('#opsForm input.ng-dirty[type=checkbox][data-ng-model]')
-                .each(function(c, el) {
+                  .each(function(c, el) {
                     updateCheckBoxes.push($(el).attr('name'));
                   });
               angular.forEach(scope.privileges, function(value, group) {
@@ -139,24 +150,50 @@
                 });
               });
             }
-            return gnShareService.savePrivileges(scope.id,
-                                                 scope.privileges,
-                                                 scope.user,
-                                                 replace).then(
-                function(data) {
-                  scope.$emit('PrivilegesUpdated', true);
-                  scope.$emit('StatusUpdated', {
-                    msg: $translate('privilegesUpdated'),
-                    timeout: 0,
-                    type: 'success'});
-                }, function(data) {
+            return gnShareService.savePrivileges(
+                isBatch ? undefined : scope.id,
+                isBatch ? scope.selectionBucket : undefined,
+                scope.privileges,
+                scope.user,
+                replace).then(
+                function(response) {
+                  if (response.data !== '') {
+                    scope.processReport = response.data;
+
+                    // A report is returned
+                    gnUtilityService.openModal({
+                      title: translations.privilegesUpdated,
+                      content: '<div gn-batch-report="processReport"></div>',
+                      className: 'gn-privileges-popup',
+                      onCloseCallback: function() {
+                        scope.$emit('PrivilegesUpdated', true);
+                        scope.processReport = null;
+                      }
+                    }, scope, 'PrivilegesUpdated');
+                  } else {
+                    scope.$emit('PrivilegesUpdated', true);
+                    scope.$emit('StatusUpdated', {
+                      msg: translations.privilegesUpdated,
+                      timeout: 0,
+                      type: 'success'});
+                  }
+
+                }, function(response) {
                   scope.$emit('PrivilegesUpdated', false);
                   scope.$emit('StatusUpdated', {
-                    title: $translate('privilegesUpdatedError'),
-                    error: data,
+                    title: translations.privilegesUpdatedError,
+                    error: response.data,
                     timeout: 0,
                     type: 'danger'});
                 });
+          };
+
+          scope.pFilter = '';
+          scope.pFilterFn = function(v) {
+            if (scope.pFilter === '') return true;
+            var v = $translate.instant('group-' + v.group);
+            return v.toLowerCase().indexOf(
+                scope.pFilter.toLocaleLowerCase()) >= 0;
           };
 
           scope.sorter = {
@@ -175,13 +212,13 @@
 
           scope.sortGroups = function(g) {
             if (scope.sorter.predicate == 'g') {
-              return $translate(g.group);
+              return $translate.instant('group-' + g.group);
             }
             else if (scope.sorter.predicate == 'p') {
               return g.userProfile;
             }
             else {
-              return g.privileges[scope.sorter.predicate].value;
+              return g.operations[scope.sorter.predicate];
             }
           };
 

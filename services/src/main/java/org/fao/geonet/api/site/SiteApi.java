@@ -23,12 +23,17 @@
 
 package org.fao.geonet.api.site;
 
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import jeeves.component.ProfileManager;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.server.JeevesProxyInfo;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
@@ -38,31 +43,48 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.doi.client.DoiManager;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataSourceInfo_;
+import org.fao.geonet.domain.Metadata_;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.Setting;
+import org.fao.geonet.domain.SettingDataType;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.harvest.HarvestManager;
+import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
-import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.ProxyInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.imageio.ImageIO;
@@ -75,7 +97,12 @@ import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 import static org.apache.commons.fileupload.util.Streams.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
@@ -85,8 +112,8 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
  */
 
 @RequestMapping(value = {
-    "/api/site",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/site",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/site"
 })
 @Api(value = API_CLASS_CATALOG_TAG,
@@ -94,6 +121,18 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
     description = ApiParams.API_CLASS_CATALOG_OPS)
 @Controller("site")
 public class SiteApi {
+
+    @Autowired
+    SettingManager settingManager;
+
+    @Autowired
+    NodeInfo node;
+
+    @Autowired
+    SourceRepository sourceRepository;
+
+    @Autowired
+    LanguageUtils languageUtils;
 
     public static void reloadServices(ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -108,7 +147,8 @@ public class SiteApi {
                 dataMan.disableOptimizer();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            context.error("Reload services. Error: " + e.getMessage());
+            context.error(e);
             throw new OperationAbortedEx("Parameters saved but cannot restart Lucene Index Optimizer: " + e.getMessage());
         }
 
@@ -124,15 +164,26 @@ public class SiteApi {
                 String username = settingMan.getValue(Settings.SYSTEM_PROXY_USERNAME);
                 String password = settingMan.getValue(Settings.SYSTEM_PROXY_PASSWORD);
                 pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
+            } else {
+                pi.setProxyInfo(null, -1, null, null);
             }
+
+            // Update http.proxyHost, http.proxyPort and http.nonProxyHosts
+            Lib.net.setupProxy(settingMan);
         } catch (Exception e) {
-            e.printStackTrace();
+            context.error("Reload services. Error: " + e.getMessage());
+            context.error(e);
             throw new OperationAbortedEx("Parameters saved but cannot set proxy information: " + e.getMessage());
         }
+        DoiManager doiManager = gc.getBean(DoiManager.class);
+        doiManager.loadConfig();
+
+        HarvestManager harvestManager = context.getBean(HarvestManager.class);
+        harvestManager.rescheduleActiveHarvesters();
     }
 
     @ApiOperation(
-        value = "Get site description",
+        value = "Get site (or portal) description",
         notes = "",
         nickname = "getDescription")
     @RequestMapping(
@@ -144,18 +195,33 @@ public class SiteApi {
     })
     @ResponseBody
     public SettingsListResponse get(
+        @ApiIgnore
+        HttpServletRequest request
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        SettingManager sm = appContext.getBean(SettingManager.class);
-
         SettingsListResponse response = new SettingsListResponse();
-        response.setSettings(sm.getSettings(new String[]{
+        response.setSettings(settingManager.getSettings(new String[]{
             Settings.SYSTEM_SITE_NAME_PATH,
             Settings.SYSTEM_SITE_ORGANIZATION,
             Settings.SYSTEM_SITE_SITE_ID_PATH,
             Settings.SYSTEM_PLATFORM_VERSION,
             Settings.SYSTEM_PLATFORM_SUBVERSION
         }));
+        if (!NodeInfo.DEFAULT_NODE.equals(node.getId())) {
+            Source source = sourceRepository.findOne(node.getId());
+            if (source != null) {
+                String iso3langCode = languageUtils.getIso3langCode(request.getLocales());
+                final List<Setting> settings = response.getSettings();
+                settings.add(
+                    new Setting().setName(Settings.NODE_DEFAULT)
+                        .setValue("false"));
+                settings.add(
+                    new Setting().setName(Settings.NODE)
+                        .setValue(source.getUuid()));
+                settings.add(
+                    new Setting().setName(Settings.NODE_NAME)
+                        .setValue(source != null ? source.getLabel(iso3langCode) : source.getName()));
+            }
+        }
         return response;
     }
 
@@ -203,8 +269,18 @@ public class SiteApi {
 
         List<String> settingList = new ArrayList<>();
         if (set == null && key == null) {
+            final SettingRepository settingRepository = appContext.getBean(SettingRepository.class);
             final List<org.fao.geonet.domain.Setting> publicSettings =
-                appContext.getBean(SettingRepository.class).findAllByInternal(false);
+                settingRepository.findAllByInternal(false);
+
+            // Add virtual settings based on internal settings.
+            // eg. if mail server is defined, allow email interactions ...
+            String mailServer = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+            publicSettings.add(new Setting()
+                .setName(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST + Settings.VIRTUAL_SETTINGS_SUFFIX_ISDEFINED)
+                .setDataType(SettingDataType.BOOLEAN)
+                .setValue(StringUtils.isNotEmpty(mailServer) + ""));
+
 
             SettingsListResponse response = new SettingsListResponse();
             response.setSettings(publicSettings);
@@ -314,7 +390,7 @@ public class SiteApi {
     @ApiOperation(
         value = "Save settings",
         notes = "",
-        nickname = "getSettingsDetails")
+        nickname = "saveSettingsDetails")
     @RequestMapping(
         path = "/settings",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -328,7 +404,7 @@ public class SiteApi {
     })
     public void saveSettings(
         @ApiIgnore
-        @ApiParam(hidden = true)
+        @ApiParam(hidden = false)
         @RequestParam
             Map<String, String> allRequestParams,
         HttpServletRequest request,
@@ -341,19 +417,35 @@ public class SiteApi {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         SettingManager sm = applicationContext.getBean(SettingManager.class);
         String currentUuid = sm.getSiteId();
+        String oldSiteName = sm.getSiteName();
 
         if (!sm.setValues(allRequestParams)) {
             throw new OperationAbortedEx("Cannot set all values");
+        }
+
+        String newSiteName = sm.getSiteName();
+        // Update site source name/translations if the site name is updated
+        if (!oldSiteName.equals(newSiteName)) {
+            SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
+            Source siteSource = sourceRepository.findOne(currentUuid);
+
+            if (siteSource != null) {
+                siteSource.setName(newSiteName);
+                siteSource.getLabelTranslations().forEach(
+                    (l, t) -> siteSource.getLabelTranslations().put(l, newSiteName)
+                );
+                sourceRepository.save(siteSource);
+            }
         }
 
         // And reload services
         String newUuid = allRequestParams.get(Settings.SYSTEM_SITE_SITE_ID_PATH);
 
         if (newUuid != null && !currentUuid.equals(newUuid)) {
-            final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
+            final IMetadataManager metadataRepository = applicationContext.getBean(IMetadataManager.class);
             final SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
             final Source source = sourceRepository.findOne(currentUuid);
-            Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.isLocal());
+            Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.getType());
             sourceRepository.save(newSource);
 
             PathSpec<Metadata, String> servicesPath = new PathSpec<Metadata, String>() {
@@ -389,10 +481,9 @@ public class SiteApi {
         @ApiResponse(code = 200, message = "Site information.")
     })
     @ResponseBody
-    public SiteInformation getInformation(
+    public SiteInformation getInformation(HttpServletRequest request
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        ServiceContext context = ServiceContext.get();
+        ServiceContext context = ApiUtils.createServiceContext(request);
         return new SiteInformation(context, (GeonetContext) context
             .getHandlerContext(Geonet.CONTEXT_NAME));
     }
@@ -474,6 +565,104 @@ public class SiteApi {
     }
 
     @ApiOperation(
+        value = "Index",
+        notes = "",
+        nickname = "index")
+    @RequestMapping(
+        path = "/index",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseBody
+    public HttpEntity index(
+        @ApiParam(value = "Drop and recreate index",
+            required = false)
+        @RequestParam(required = false, defaultValue = "true")
+        boolean reset,
+        @ApiParam(value = "Records having only XLinks",
+            required = false)
+        @RequestParam(required = false, defaultValue = "false")
+            boolean havingXlinkOnly,
+//        @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
+//            required = false,
+//            example = "")
+//        @RequestParam(required = false)
+//        String[] uuids,
+        @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+        String bucket,
+        HttpServletRequest request
+    ) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        SearchManager searchMan = ApplicationContextHolder.get().getBean(SearchManager.class);
+
+        searchMan.rebuildIndex(context, havingXlinkOnly, reset, bucket);
+
+        return new HttpEntity<>(HttpStatus.CREATED);
+    }
+
+    @ApiOperation(
+        value = "Index in Elastic",
+        notes = "",
+        nickname = "indexes")
+    @RequestMapping(
+        path = "/index/es",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseBody
+    public HttpEntity indexEs(
+        @ApiParam(value = "Drop and recreate index",
+            required = false)
+        @RequestParam(required = false, defaultValue = "true")
+            boolean reset,
+        @ApiParam(value = "Records having only XLinks",
+            required = false)
+        @RequestParam(required = false, defaultValue = "false")
+            boolean havingXlinkOnly,
+//        @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
+//            required = false,
+//            example = "")
+//        @RequestParam(required = false)
+//        String[] uuids,
+        @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
+        HttpServletRequest request
+    ) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
+
+        searchMan.rebuildIndex(context, havingXlinkOnly, reset, bucket);
+
+        return new HttpEntity<>(HttpStatus.CREATED);
+    }
+
+    @ApiOperation(
+        value = "Delete index in Elastic",
+        notes = "",
+        nickname = "deleteIndexes")
+    @RequestMapping(
+        path = "/index/es",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseBody
+    public HttpEntity deleteIndexEs() throws Exception {
+        EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
+        searchMan.clearIndex();
+        return new HttpEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @ApiOperation(
         value = "Get build details",
         notes = "To know when and how this version of the application was built.",
         nickname = "getSystemInfo")
@@ -521,55 +710,66 @@ public class SiteApi {
             defaultValue = "false",
             required = false
         )
-            boolean asFavicon
+            boolean asFavicon,
+        HttpServletRequest request
 
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        Path logoDirectory = Resources.locateHarvesterLogosDirSMVC(appContext);
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final Resources resources = appContext.getBean(Resources.class);
+        final Path logoDirectory = resources.locateHarvesterLogosDirSMVC(appContext);
+        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
         checkFileName(file);
+        FilePathChecker.verify(file);
 
         SettingManager settingMan = appContext.getBean(SettingManager.class);
-        GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
         String nodeUuid = settingMan.getSiteId();
 
+        Resources.ResourceHolder holder = resources.getImage(serviceContext, file, logoDirectory);
+        final Path resourcesDir =
+            resources.locateResourcesDir(request.getServletContext(), serviceContext.getApplicationContext());
+        if (holder == null || holder.getPath() == null) {
+            holder = resources.getImage(serviceContext, "images/harvesting/" + file, resourcesDir);
+        }
         try {
-            Path logoFilePath = logoDirectory.resolve(file);
-            Path nodeLogoDirectory = dataDirectory.getResourcesDir()
-                .resolve("images");
-            if (!Files.exists(logoFilePath)) {
-                logoFilePath = nodeLogoDirectory.resolve("harvesting").resolve(file);
-            }
-            try (InputStream inputStream = Files.newInputStream(logoFilePath)) {
+            try (InputStream inputStream = Files.newInputStream(holder.getPath())) {
                 BufferedImage source = ImageIO.read(inputStream);
 
                 if (asFavicon) {
-                    ApiUtils.createFavicon(
-                        source,
-                        dataDirectory.getResourcesDir().resolve("images").resolve("favicon.png"));
+                    try (Resources.ResourceHolder favicon =
+                             resources.getWritableImage(serviceContext, "images/logos/favicon.png",
+                                                        resourcesDir)) {
+                        ApiUtils.createFavicon(source, favicon.getPath());
+                    }
                 } else {
-                    Path logo = nodeLogoDirectory.resolve("logos").resolve(nodeUuid + ".png");
-                    Path defaultLogo = nodeLogoDirectory.resolve("images").resolve("logo.png");
-
-                    if (!file.endsWith(".png")) {
-                        try (
-                            OutputStream logoOut = Files.newOutputStream(logo);
-                            OutputStream defLogoOut = Files.newOutputStream(defaultLogo);
-                        ) {
-                            ImageIO.write(source, "png", logoOut);
-                            ImageIO.write(source, "png", defLogoOut);
+                    try (Resources.ResourceHolder logo =
+                             resources.getWritableImage(serviceContext,
+                                                        "images/logos/" + nodeUuid + ".png",
+                                                        resourcesDir);
+                         Resources.ResourceHolder defaultLogo =
+                             resources.getWritableImage(serviceContext,
+                                                        "images/logo.png", resourcesDir)) {
+                        if (!file.endsWith(".png")) {
+                            try (
+                                OutputStream logoOut = Files.newOutputStream(logo.getPath());
+                                OutputStream defLogoOut = Files.newOutputStream(defaultLogo.getPath());
+                            ) {
+                                ImageIO.write(source, "png", logoOut);
+                                ImageIO.write(source, "png", defLogoOut);
+                            }
+                        } else {
+                            Files.copy(holder.getPath(), logo.getPath(), StandardCopyOption.REPLACE_EXISTING);
+                            Files.copy(holder.getPath(), defaultLogo.getPath(),
+                                       StandardCopyOption.REPLACE_EXISTING);
                         }
-                    } else {
-                        Files.deleteIfExists(logo);
-                        IO.copyDirectoryOrFile(logoFilePath, logo, false);
-                        Files.deleteIfExists(defaultLogo);
-                        IO.copyDirectoryOrFile(logoFilePath, defaultLogo, false);
                     }
                 }
             }
         } catch (Exception e) {
             throw new Exception(
                 "Unable to move uploaded thumbnail to destination directory. Error: " + e.getMessage());
+        } finally {
+            holder.close();
         }
     }
 

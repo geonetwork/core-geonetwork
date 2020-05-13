@@ -28,7 +28,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.1.0-SNAPSHOT</version>
+    <version>3.11.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -69,11 +69,6 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-websocket</artifactId>
-      <version>${camel.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-solr</artifactId>
       <version>${camel.version}</version>
     </dependency>
     <dependency>
@@ -119,13 +114,6 @@
       <version>${slf4j.version}</version>
     </dependency>
 
-    <!--SOLR-->
-    <dependency>
-      <groupId>org.apache.solr</groupId>
-      <artifactId>solr-solrj</artifactId>
-      <version>${solr.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-core</artifactId>
@@ -150,15 +138,11 @@
     <!--Geotools-->
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.geotools</groupId>
       <artifactId>gt-xml</artifactId>
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-wfs</artifactId>
+      <artifactId>gt-wfs-ng</artifactId>
     </dependency>
 
   </dependencies>

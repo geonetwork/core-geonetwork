@@ -66,6 +66,7 @@ public class GeoServerRest {
     private String username;
     private String restUrl;
     private String baseCatalogueUrl;
+    private String nodeUrl;
     private String defaultWorkspace;
     private String response = "";
     private boolean pushStyleInWorkspace;
@@ -81,11 +82,12 @@ public class GeoServerRest {
      * @param pushStyleInWorkspace TODO
      */
     public GeoServerRest(GeonetHttpRequestFactory factory, String url, String username, String password,
-                         String defaultns, String baseCatalogueUrl, boolean pushStyleInWorkspace) {
+                         String defaultns, String baseCatalogueUrl, String nodeUrl, boolean pushStyleInWorkspace) {
         this.restUrl = url;
         this.username = username;
         this.password = password;
         this.baseCatalogueUrl = baseCatalogueUrl;
+        this.nodeUrl = nodeUrl;
         this.pushStyleInWorkspace = pushStyleInWorkspace;
         this.factory = factory;
         Log.createLogger(LOGGER_NAME);
@@ -245,7 +247,7 @@ public class GeoServerRest {
             + "<type>text/html</type>"
             + "<metadataType>TC211</metadataType>"
             + "<content>"
-            + this.baseCatalogueUrl + "/home?uuid=" + metadataUuid
+            + this.nodeUrl + "api/records/" + metadataUuid
             + "</content>"
             + "</metadataLink>"
             + "</metadataLinks>"
@@ -598,7 +600,7 @@ public class GeoServerRest {
             + "<type>text/html</type>"
             + "<metadataType>TC211</metadataType>"
             + "<content>"
-            + this.baseCatalogueUrl + "/home?uuid=" + metadataUuid
+            + this.nodeUrl + "api/records/" + metadataUuid
             + "</content>"
             + "</metadataLink>"
             + "</metadataLinks>"

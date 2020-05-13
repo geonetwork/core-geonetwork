@@ -28,6 +28,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Data Access object for the {@link Group} entities.
@@ -52,4 +53,7 @@ public interface GroupRepository extends GeonetRepository<Group, Integer>, Group
     Group findByEmail(@Nonnull String email);
 
 
+    public
+    @Nullable
+    List<Group> findByLogo(@Nonnull String logo);
 }

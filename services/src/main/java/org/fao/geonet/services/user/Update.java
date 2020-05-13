@@ -23,7 +23,7 @@
 
 package org.fao.geonet.services.user;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 import jeeves.server.UserSession;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.services.ReadWriteController;
@@ -65,7 +65,7 @@ import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 public class Update {
 
 
-    @RequestMapping(value = "/{lang}/admin.user.resetpassword", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.user.resetpassword", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
@@ -87,7 +87,7 @@ public class Update {
         return new OkResponse();
     }
 
-    @RequestMapping(value = "/{lang}/admin.user.update", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.user.update", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
@@ -291,12 +291,15 @@ public class Update {
                     + " is a required parameter for "
                     + Params.Operation.NEWUSER + " " + "operation");
             }
+
+            List<User> existingUsers = repo.findByUsernameIgnoreCase(username);
+            if (!existingUsers.isEmpty()) {
+                throw new IllegalArgumentException("Users with username "
+                    + username + " ignore case already exists");
+            }
+
             User user = repo.findOneByUsername(username);
 
-            if (user != null) {
-                throw new IllegalArgumentException("User with username "
-                    + username + " already exists");
-            }
             return new User();
         } else {
             User user = repo.findOne(id);
@@ -304,6 +307,19 @@ public class Update {
                 throw new IllegalArgumentException("No user found with id: "
                     + id);
             }
+
+            // Check no duplicated username and if we are adding a duplicate existing name with other case combination
+            List<User> usersWithUsernameIgnoreCase = repo.findByUsernameIgnoreCase(username);
+            if (usersWithUsernameIgnoreCase.size() != 0 &&
+                (!usersWithUsernameIgnoreCase.stream().anyMatch(u -> u.getId() == Integer.parseInt(id))
+                    || usersWithUsernameIgnoreCase.stream().anyMatch(u ->
+                    u.getUsername().equals(username) && u.getId() != Integer.parseInt(id))
+                )) {
+                throw new IllegalArgumentException(String.format(
+                    "Another user with username '%s' ignore case already exists", user.getUsername()));
+            }
+
+
             return user;
         }
     }

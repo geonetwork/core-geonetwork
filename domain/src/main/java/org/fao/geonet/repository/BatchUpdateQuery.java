@@ -23,7 +23,6 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.repository.statistic.PathSpec;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
@@ -43,7 +42,7 @@ import java.util.List;
  * User: Jesse Date: 10/4/13 Time: 11:38 AM
  *
  * @param <T> They type of entity this query will update
- * @see org.fao.geonet.repository.GeonetRepository#createBatchUpdateQuery(org.fao.geonet.repository.statistic.PathSpec,
+ * @see org.fao.geonet.repository.GeonetRepository#createBatchUpdateQuery(PathSpec,
  * Object, org.springframework.data.jpa.domain.Specification)
  */
 public class BatchUpdateQuery<T> {

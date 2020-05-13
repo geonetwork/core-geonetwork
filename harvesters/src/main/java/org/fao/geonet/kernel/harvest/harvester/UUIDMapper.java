@@ -26,7 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester;
 import java.util.HashMap;
 import java.util.List;
 
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.SimpleMetadata;
 
 //=============================================================================
@@ -47,7 +47,7 @@ public class UUIDMapper {
     //---
     //--------------------------------------------------------------------------
 
-    public UUIDMapper(MetadataRepository repo, String harvestUuid) throws Exception {
+    public UUIDMapper(IMetadataUtils repo, String harvestUuid) throws Exception {
 
         final List<SimpleMetadata> all = repo.findAllSimple(harvestUuid);
 

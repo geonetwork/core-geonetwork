@@ -32,7 +32,8 @@
     '$rootScope',
     '$http',
     'gnHttp',
-    function(gnUtilityService, $q, $rootScope, $http, gnHttp) {
+    function(gnUtilityService, $q, $rootScope,
+             $http, gnHttp) {
       /**
        * Utility to format a search response. JSON response
        * when containing one element will not make an array.
@@ -155,6 +156,7 @@
                 filter += '&' + key + '=' + value;
               });
           search('q?_content_type=json&fast=index' +
+              '&bucket=' + scope.searchResults.selectionBucket +
               filter +
               '&from=' + (pageOptions.currentPage *
               pageOptions.hitsPerPage + 1) +
@@ -189,9 +191,10 @@
 
       // TODO: remove search call to use params instead
       // of url and use gnSearch only (then rename it to search)
-      var gnSearch = function(params, error) {
+      var gnSearch = function(params, error, internal) {
         var defer = $q.defer();
-        gnHttp.callService('search', params).
+        gnHttp.callService(internal ? 'internalSearch' : 'search',
+            params).
             success(function(data, status) {
               defer.resolve(format(data));
             }).
@@ -200,6 +203,7 @@
             });
         return defer.promise;
       };
+
       var indexSetOfRecords = function(params) {
         var defer = $q.defer();
         var defaultParams = {
@@ -218,6 +222,8 @@
           } else {
             defer.reject('No records to index');
           }
+        }, function(reason) {
+          defer.reject('error: ' + reason);
         });
         return defer.promise;
       };
@@ -237,28 +243,29 @@
             });
         return defer.promise;
       };
-      var selected = function() {
-        return $http.get('../api/selections/metadata');
+      var selected = function(bucket) {
+        return $http.get('../api/selections/' + (bucket || 'metadata'));
       };
-      var select = function(uuid) {
-        return $http.put('../api/selections/metadata', null, {
+      var select = function(uuid, bucket) {
+        return $http.put('../api/selections/' + (bucket || 'metadata'), null, {
           params: {
             uuid: uuid
           }
         });
       };
-      var unselect = function(uuid) {
-        return $http.delete('../api/selections/metadata', null, {
-          params: {
-            uuid: uuid
-          }
-        });
+      var unselect = function(uuid, bucket) {
+        return $http.delete('../api/selections/' + (bucket || 'metadata'),
+            {
+              params: {
+                uuid: uuid
+              }
+            });
       };
-      var selectAll = function() {
-        return $http.put('../api/selections/metadata');
+      var selectAll = function(bucket) {
+        return $http.put('../api/selections/' + (bucket || 'metadata'));
       };
-      var selectNone = function() {
-        return $http.delete('../api/selections/metadata');
+      var selectNone = function(bucket) {
+        return $http.delete('../api/selections/' + (bucket || 'metadata'));
       };
 
       return {

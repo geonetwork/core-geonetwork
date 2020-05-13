@@ -22,7 +22,7 @@
 //==============================================================================
 package org.fao.geonet.services.config;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -155,17 +155,12 @@ public class GetInfo implements Service {
         final GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
         Path luceneDir = dataDirectory.getLuceneDir();
         indexProperties.put("index.path", luceneDir.toAbsolutePath().normalize().toString());
-        Path lDir = dataDirectory.getSpatialIndexPath();
         if (Files.exists(luceneDir)) {
             long size = sizeOfDirectory(luceneDir) / 1024;
             indexProperties.put("index.size", "" + size); // lucene + Shapefile
             // if exist
         }
 
-        if (Files.exists(lDir)) {
-            long size = sizeOfDirectory(lDir) / 1024;
-            indexProperties.put("index.size.lucene", "" + size);
-        }
         indexProperties.put("index.lucene.config", context.getBean(LuceneConfig.class).toString());
     }
 
@@ -200,7 +195,7 @@ public class GetInfo implements Service {
                 try {
                     databaseProperties.put("db.numactive", "" + basicDataSource.getNumActive());
                     databaseProperties.put("db.numidle", "" + basicDataSource.getNumIdle());
-                    databaseProperties.put("db.maxactive", "" + basicDataSource.getMaxActive());
+                    databaseProperties.put("db.maxactive", "" + basicDataSource.getMaxTotal());
                 } catch (Exception e) {
                     databaseProperties.put("db.statserror", "Failed to get stats on database connections. Error is: " + e.getMessage());
                 }

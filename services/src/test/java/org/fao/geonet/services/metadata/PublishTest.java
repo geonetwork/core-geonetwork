@@ -104,7 +104,7 @@ public class PublishTest extends AbstractServiceIntegrationTest {
         final String metadataId = metadataIds.get(0);
 
         allowedRepository.deleteAll();
-        dataManager.indexMetadata(metadataId, true);
+        dataManager.indexMetadata(metadataId, true, null);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.getSession();
@@ -117,7 +117,7 @@ public class PublishTest extends AbstractServiceIntegrationTest {
         assertPublishedInIndex(true, metadataId);
 
         allowedRepository.deleteAll();
-        dataManager.indexMetadata(metadataId, true);
+        dataManager.indexMetadata(metadataId, true, null);
         assertPublishedInIndex(false, metadataId);
 
         SecurityContextHolder.clearContext();

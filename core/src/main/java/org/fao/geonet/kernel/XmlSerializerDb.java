@@ -25,12 +25,11 @@ package org.fao.geonet.kernel;
 
 import java.sql.SQLException;
 
+import org.fao.geonet.domain.AbstractMetadata;
+import org.jdom.Element;
+
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.jdom.Element;
 
 /**
  * This class is responsible of reading and writing xml on the database. It works on tables like
@@ -43,7 +42,7 @@ public class XmlSerializerDb extends XmlSerializer {
      * and the string read is converted into xml, XLinks are resolved when config'd on.
      */
     public Element select(ServiceContext context, String id) throws Exception {
-        Element rec = internalSelect(id, false);
+        Element rec = internalSelect(id, false, true);
         if (resolveXLinks()) Processor.detachXLink(rec, context);
         return rec;
     }
@@ -53,8 +52,8 @@ public class XmlSerializerDb extends XmlSerializer {
      * and the string read is converted into xml, XLinks are NOT resolved even if they are config'd
      * on - this is used when you want to do XLink processing yourself.
      */
-    public Element selectNoXLinkResolver(String id, boolean isIndexingTask) throws Exception {
-        return internalSelect(id, isIndexingTask);
+    public Element selectNoXLinkResolver(String id, boolean isIndexingTask, boolean applyOperationsFilters) throws Exception {
+        return internalSelect(id, isIndexingTask, applyOperationsFilters);
     }
 
     /**
@@ -65,7 +64,7 @@ public class XmlSerializerDb extends XmlSerializer {
      * @param context     a service context
      * @return the saved metadata
      */
-    public Metadata insert(final Metadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
+    public AbstractMetadata insert(final AbstractMetadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
         return insertDb(newMetadata, dataXml, context);
 
     }

@@ -22,17 +22,22 @@
 
 package org.fao.geonet.kernel.search;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
@@ -41,9 +46,8 @@ import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 //==============================================================================
 
@@ -82,12 +86,14 @@ class UnusedSearcher extends MetaSearcher {
         context.info("UnusedSearcher : using maxDiff=" + maxDiff);
 
         //--- proper search
-        final Specifications<Metadata> spec = Specifications.where(MetadataSpecs.isType(MetadataType.TEMPLATE)).and(MetadataSpecs.isHarvested(false))
-            .and(MetadataSpecs.hasSource(siteId));
+        final Specifications<Metadata> spec = 
+        		Specifications.where((Specification<Metadata>)MetadataSpecs.isType(MetadataType.TEMPLATE))
+        		.and((Specification<Metadata>)MetadataSpecs.isHarvested(false))
+        		.and((Specification<Metadata>)MetadataSpecs.hasSource(siteId));
 
-        final List<Metadata> list = context.getBean(MetadataRepository.class).findAll(spec);
+        final List<? extends AbstractMetadata> list = context.getBean(IMetadataUtils.class).findAll(spec);
 
-        for (Metadata rec : list) {
+        for (AbstractMetadata rec : list) {
             int id = rec.getId();
 
             ISODate createDate = rec.getDataInfo().getCreateDate();
@@ -191,6 +197,11 @@ class UnusedSearcher extends MetaSearcher {
         Element elCategories = new Element("categories");
         elSummary.addContent(elCategories);
     }
+    
+    
+    public long getVersionToken() {
+    	return -1;
+    };    
 }
 
 //==============================================================================

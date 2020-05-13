@@ -1,0 +1,60 @@
+@import "../../../style/gn_search.less";
+
+/* Pagination */
+.gn-pager {
+  /* Hide the first/last page button */
+  .gn-pager-start {
+    li:nth-child(1) {
+      display: none;
+    }
+  }
+  .gn-pager-end {
+    li:nth-child(2) {
+      display: none;
+    }
+  }
+
+  /* Button on the right, current page info on the left */
+  .btn-group {
+    float: left;
+
+    /* Drop down to select hits is a simple link */
+    button {
+      .btn-link();
+    }
+
+    /* Inline hits options */
+    li {
+      a {
+        padding: 2px 10px;
+      }
+      display: inline-block;
+    }
+    li.dropdown-header {
+      display: block;
+    }
+  }
+}
+
+.pagination > .disabled > span, .pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus, .pagination > .disabled > a,
+.pagination > .disabled > a:hover, .pagination > .disabled > a:focus {
+  border-color: @btn-default-border;
+}
+.pagination > li > a, .pagination > li > span {
+  border-color: @btn-default-border;
+  color: @btn-default-color;
+  &:hover {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+    color: @btn-default-color;
+  }
+}
+
+// nojs styles
+.gn-nojs {
+  .gn-pages {
+    padding-bottom: 20px;
+    background: #fff;
+  }
+}

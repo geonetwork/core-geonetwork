@@ -661,8 +661,7 @@ public class ConfigurationOverrides {
         try {
             updateWithOverrides(servletRelativePath, context, appPath, elem);
         } catch (Exception e) {
-            e.printStackTrace();
-            Log.error(Log.JEEVES, "Unable to read overrides for config.xml: " + e);
+            Log.error(Log.JEEVES, "Unable to read overrides for config.xml: " + e.getMessage(), e);
         }
         return elem;
     }

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.2//EN"
+  "http://tuckey.org/res/dtds/urlrewrite3.2.dtd">
+<!--
+    Configuration file for UrlRewriteFilter http://tuckey.org/urlrewrite/
+-->
+<urlrewrite use-query-string="true" use-context="false">
+
+  <rule>
+    <note>API Documentation redirection as Spring does not redirect to index.html.</note>
+    <from>^/doc/api/?$</from>
+    <to type="permanent-redirect">%{context-path}/doc/api/index.html</to>
+  </rule>
+
+  <!-- Rule to redirect URL to resources from RDF output -->
+  <rule>
+    <note>Redirect to default formatter when accessing
+    /{portal}/metadata/{uuid}.</note>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/metadata/(.*)$</from>
+    <to type="forward">$1/api/records/$3</to>
+  </rule>
+  <rule>
+    <note>In the catalog, a resource is equivalent to one record.
+      So redirect to metadata formatter.</note>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/resources/(.*)$</from>
+    <to type="forward">$1/api/records/$3</to>
+  </rule>
+  <rule>
+    <note>In the catalog, a dataset is equivalent to one record.
+    So redirect to metadata formatter.</note>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/datasets/(.*)$</from>
+    <to type="forward">$1/search?_uuid_OR_identifier=$3</to>
+  </rule>
+  <rule>
+    <note>Catalog information page. List all records for the catalog.
+      Redirect to search page.
+    </note>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/catalogs/(.*)$</from>
+    <to type="forward">$1/search?_source=$3</to>
+  </rule>
+  <rule>
+    <note>Organization information page.</note>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/organizations/(.*)$</from>
+    <to type="forward">$1/search?orgName=$3</to>
+  </rule>
+  <rule>
+    <note>Tag information page.</note>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/registries/vocabularies/.*/concepts/(.*)$</from>
+    <to type="forward">$1/search?keyword=$3</to>
+  </rule>
+  <rule>
+    <note>Vocabulary information page.</note>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/registries/vocabularies/(.*)$</from>
+    <to type="forward">$1/search?thesaurusName=$3</to>
+  </rule>
+  <rule>
+    <note>Organization information page. List all records for an organization.
+      Redirect to search page with organization filter.
+    </note>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/persons/(.*)$</from>
+    <to type="forward">$1/search?responsiblePartyEmail=$3</to>
+  </rule>
+  <rule>
+    <note>
+      Redirect catalog resources scheme to the underlying API.
+      This was introduce to resolve RDF resources. Usually, it is
+      recommended to set a resource identifier prefix in the settings
+      and set a reverse proxy to properly resolve resources
+      described in the catalog.
+
+      By default, resource identifier prefix is set to
+      'http://localhost:8080/geonetwork/srv' and a such
+      'http://localhost:8080/geonetwork/srv/catalog/records/{{uuid}}' is redirected to the API
+      'http://localhost:8080/geonetwork/srv/api/records/{{uuid}}'.
+
+      User may prefer to have custom resources links, eg.
+      'http://data.geonetwork-opensource.org/records/{{uuid}}'. In that case,
+      set the resource identifier to 'http://data.geonetwork-opensource.org/'.
+
+      Resources URI scheme is the following:
+      * /resources/{{uuid}}: Not resolvable
+      * /resources/records/{{uuid}}
+      * /resources/datasets/{{uuid}}
+      * /resources/organizations/{{name}}: Not resolvable
+      * /resources/persons/{{email}}: Not resolvable
+      * /resources/registries/vocabularies/{{thesaurusIdentifier}}:
+      * /resources/registries/vocabularies/{{thesaurusIdentifier}}/concepts/{{keywordName}}
+
+    </note>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/(.*)$</from>
+    <to type="forward">$1/api/$3</to>
+  </rule>
+
+
+  <rule>
+    <note>
+      Retrieves robots.txt filemap pointing to sitemaps for better indexing.
+    </note>
+    <from>^/robots.txt$</from>
+    <to type="forward" last="true">/srv/api/robots.txt</to>
+  </rule>
+
+  <rule>
+    <note>
+      Redirects to hash with page name
+      Example URL: http://localhost:8080/geonetwork/page/about
+    </note>
+    <from>^/(.*)/page/(.*)</from>
+    <to type="permanent-redirect">%{context-path}/#/page/$2?page=$2</to>
+  </rule>
+
+
+
+  <rule>
+    <note>
+      INSPIRE Atom OpenSearchDescription
+    </note>
+    <from>^/opensearch/(.*)/(.*)/OpenSearchDescription.xml$</from>
+    <to type="forward">/srv/$1/atom.description?fileIdentifier=$2</to>
+  </rule>
+
+  <rule>
+    <note>
+      INSPIRE Atom search (html)
+    </note>
+    <from>^/opensearch/(.*)/(.*)/searchhtml?(.*)$</from>
+    <to type="forward">/srv/$1/atom.search.html?fileIdentifier=$2</to>
+  </rule>
+
+  <rule>
+    <note>
+      INSPIRE Atom search (html)
+    </note>
+    <from>^/opensearch/(.*)/searchhtml?(.*)$</from>
+    <to type="forward">/srv/$1/atom.search.html</to>
+  </rule>
+
+  <rule>
+    <note>
+      INSPIRE Atom search
+    </note>
+    <from>^/opensearch/(.*)/(.*)/search?(.*)$</from>
+    <to type="forward">/srv/$1/atom.search?fileIdentifier=$2</to>
+  </rule>
+
+  <rule>
+    <note>
+      INSPIRE Atom search
+    </note>
+    <from>^/opensearch/(.*)/search?(.*)$</from>
+    <to type="forward">/srv/$1/atom.search</to>
+  </rule>
+
+  <rule>
+    <note>
+      INSPIRE HTML search
+    </note>
+    <from>^/(.*)/(.*)/opensearch/htmlsearch\?.*q=(.*)</from>
+<!--
+    <to type="forward">/$1/$2/catalog.search#/search?any=$3</to>
+-->
+    <to type="permanent-redirect">%{context-path}/$1/$2/catalog.search#/search?any=$3</to>
+  </rule>
+
+  <rule>
+    <note>
+      INSPIRE Atom Describe (service)
+    </note>
+    <from>^/opensearch/(.*)/(.*)/describe?(.*)$</from>
+    <to type="forward">/srv/$1/atom.describe?fileIdentifier=$2</to>
+  </rule>
+
+  <rule>
+    <note>
+      INSPIRE Atom DescribeBy
+    </note>
+    <from>^/opensearch/(.*)/describe?(.*)$</from>
+    <to type="forward">/srv/$1/atom.describe</to>
+  </rule>
+
+  <rule>
+    <note>
+      INSPIRE Atom Predefined Service Describe
+    </note>
+    <from>^/(.*)/atom.predefined.service?(.*)$</from>
+    <to type="forward">/srv/atom/describe/service?$2</to>
+  </rule>
+
+  <rule>
+    <note>
+      INSPIRE Atom Predefined Dataset Describe
+    </note>
+    <from>^/(.*)/atom.predefined.dataset?(.*)$</from>
+    <to type="forward">/srv/atom/describe/dataset?$2</to>
+  </rule>
+
+  <rule>
+    <note>
+      INSPIRE Atom GetData
+    </note>
+    <from>^/opensearch/(.*)/download?(.*)$</from>
+    <to type="forward">/srv/$1/atom.download</to>
+  </rule>
+
+
+  <!-- hide jsession id from google bot -->
+  <outbound-rule encodefirst="true">
+    <condition name="user-agent">googlebot.*</condition>
+    <from>^(.*);jsessionid=.*(\?.*)$</from>
+    <to>$1$2</to>
+  </outbound-rule>
+
+</urlrewrite>

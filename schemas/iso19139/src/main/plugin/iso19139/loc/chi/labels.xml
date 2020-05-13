@@ -1809,7 +1809,7 @@
     </description>
   </element>
   <!-- ==================================================== -->
-  <element name="gmd:MD_TopicCategoryCode">
+  <element name="gmd:MD_TopicCategoryCode" alias="topicCategory">
     <label>Topic category code</label>
     <description>High-level geographic data thematic classification to
       assist in the grouping and
@@ -2888,7 +2888,7 @@
     <description>Name of the Spatial Reference System. By default set to
       geographic (epsg:4326)
     </description>
-    <example>urn:x-ogc:def:crs:EPSG:6.6:4326</example>
+    <example>urn:ogc:def:crs:EPSG:6.6:4326</example>
   </element>
 
   <!-- ==================================================== -->
@@ -3123,7 +3123,7 @@
     </description>
   </element>
   <element name="xlink:href">
-    <label>Link href</label>
+    <label>URL</label>
     <description>Supplies the data that allows an XLink application to find a remote resource (or
       resource fragment) [W3C XLINK]
     </description>

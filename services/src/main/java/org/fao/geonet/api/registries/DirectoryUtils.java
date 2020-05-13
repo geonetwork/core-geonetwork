@@ -1,15 +1,21 @@
 package org.fao.geonet.api.registries;
 
-import com.google.common.collect.Table;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
@@ -24,11 +30,7 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.Text;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Table;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
@@ -44,20 +46,21 @@ public class DirectoryUtils {
     /**
      * Save entries and metadata
      */
-    public static void saveEntries(CollectResults collectResults,
-                                   String sourceIdentifier,
-                                   Integer owner,
-                                   Integer groupOwner,
-                                   boolean saveRecord) {
-        ServiceContext context = ServiceContext.get();
+    public static Map<String, Exception> saveEntries(ServiceContext context,
+                                                     CollectResults collectResults,
+                                                     String sourceIdentifier,
+                                                     Integer owner,
+                                                     Integer groupOwner,
+                                                     boolean saveRecord) {
         DataManager dataManager = context.getBean(DataManager.class);
-        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         Table<String, String, Element> entries = collectResults.getEntries();
         Iterator<String> entriesIterator =
             entries.rowKeySet().iterator();
-        Metadata record = collectResults.getRecord();
+        AbstractMetadata record = collectResults.getRecord();
         boolean validate = false, index = false, ufo = false,
             notify = false, publicForGroup = true, refreshReaders = false;
+        Map<String, Exception> errors = new HashMap<>();
 
         while (entriesIterator.hasNext()) {
             String identifier = entriesIterator.next();
@@ -66,9 +69,10 @@ public class DirectoryUtils {
             String uuid = uuidAndEntry.keySet().iterator().next();
             Element entry = uuidAndEntry.values().iterator().next();
 
-            Metadata dbSubTemplate = metadataRepository.findOneByUuid(uuid);
+            AbstractMetadata dbSubTemplate = metadataRepository.findOneByUuid(uuid);
             if (dbSubTemplate == null) {
-                Metadata subtemplate = new Metadata().setUuid(uuid);
+                AbstractMetadata subtemplate = new Metadata();
+                subtemplate.setUuid(uuid);
                 subtemplate.getDataInfo().
                     setSchemaId(record.getDataInfo().getSchemaId()).
                     setRoot(entry.getQualifiedName()).
@@ -90,7 +94,8 @@ public class DirectoryUtils {
                         uuid, subtemplate.getId());
                     // TODO: Set categories ? privileges
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.error(LOGGER, e.getMessage(), e);
+                    errors.put(uuid, e);
                 }
             } else {
                 try {
@@ -102,7 +107,8 @@ public class DirectoryUtils {
                     collectResults.getEntryIdentifiers().put(
                         uuid, dbSubTemplate.getId());
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.error(LOGGER, e.getMessage(), e);
+                    errors.put(uuid, e);
                 }
             }
         }
@@ -113,19 +119,21 @@ public class DirectoryUtils {
                     validate, ufo, index, context.getLanguage(),
                     new ISODate().toString(), true);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.error(LOGGER, e.getMessage(), e);
             }
         }
+        return errors;
     }
 
     /**
      * Extract all entries matching a specific XPath. If an entry is found multiple times in the
      * record, and the identifier match, only one is reported (the last one).
      */
-    public static CollectResults collectEntries(Metadata record,
+    public static CollectResults collectEntries(ServiceContext context,
+                                                AbstractMetadata record,
                                                 String xpath,
                                                 String identifierXpath) throws Exception {
-        return collectEntries(record, xpath, identifierXpath, null, false, false, null);
+        return collectEntries(context, record, xpath, identifierXpath, null, false, false, null);
     }
 
     /**
@@ -133,18 +141,20 @@ public class DirectoryUtils {
      * subtemplate list, the record one is updated. To preserve properties from the record, use the
      * propertiesToCopy
      */
-    public static CollectResults synchronizeEntries(Metadata record,
+    public static CollectResults synchronizeEntries(ServiceContext context,
+                                                    AbstractMetadata record,
                                                     String xpath,
                                                     String identifierXpath,
                                                     List<String> propertiesToCopy,
                                                     boolean substituteAsXLink,
                                                     String directoryFilterQuery) throws Exception {
-        return collectEntries(record, xpath, identifierXpath,
+        return collectEntries(context, record, xpath, identifierXpath,
             propertiesToCopy, substituteAsXLink, true, directoryFilterQuery);
     }
 
 
-    private static CollectResults collectEntries(Metadata record,
+    private static CollectResults collectEntries(ServiceContext context,
+                                                 AbstractMetadata record,
                                                  String xpath,
                                                  String identifierXpath,
                                                  List<String> propertiesToCopy,
@@ -153,7 +163,7 @@ public class DirectoryUtils {
                                                  String directoryFilterQuery) throws Exception {
         CollectResults collectResults = new CollectResults(record);
         Map<String, List<Namespace>> namespaceList = new HashMap<String, List<Namespace>>();
-        ServiceContext context = ServiceContext.get();
+
         MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
         if (Log.isDebugEnabled(LOGGER)) {
@@ -261,7 +271,7 @@ public class DirectoryUtils {
                     Element subTemplateElement = null;
                     // Search in DB by UUID matching entry UUID
                     if (StringUtils.isEmpty(searchIndexField)) {
-                        Metadata subTemplate = metadataRepository.findOneByUuid(uuid);
+                        AbstractMetadata subTemplate = metadataRepository.findOneByUuid(uuid);
                         if (subTemplate != null) {
                             subTemplateElement = subTemplate.getXmlData(false);
                         }
@@ -280,9 +290,9 @@ public class DirectoryUtils {
                             }
                         }
                         parameters.put(searchIndexField, identifier);
-                        String id = search(parameters);
+                        String id = search(context, parameters);
                         if (id != null) {
-                            Metadata subTemplate = metadataRepository.findOne(id);
+                            AbstractMetadata subTemplate = metadataRepository.findOne(id);
                             if (subTemplate != null) {
                                 uuid = subTemplate.getUuid();
                                 subTemplateElement = subTemplate.getXmlData(false);
@@ -398,9 +408,9 @@ public class DirectoryUtils {
      *
      * @return The record identifier
      */
-    private static String search(Map<String, String> searchParameters) {
+    private static String search(ServiceContext context, Map<String, String> searchParameters) {
         ServiceConfig _config = new ServiceConfig();
-        ServiceContext context = ServiceContext.get();
+
         SearchManager searchMan = context.getBean(SearchManager.class);
 
         try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
@@ -423,7 +433,7 @@ public class DirectoryUtils {
                 return record.getChild("info", Geonet.Namespaces.GEONET).getChildText("id");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(LOGGER, e.getMessage(), e);
         }
         return null;
     }

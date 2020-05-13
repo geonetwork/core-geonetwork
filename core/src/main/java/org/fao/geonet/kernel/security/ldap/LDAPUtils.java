@@ -70,8 +70,15 @@ public class LDAPUtils {
         }
         User toSave = getUser(user, importPrivilegesFromLdap, userName);
 
-        // Add user groups
-        if (user.getPrivileges().size() > 0) {
+        // Add user groups if the user has no group assigned.
+        // This means that if some privileges has been assigned
+        // to the user after the creation, those are preserved.
+        // The default one from the LDAP config are only set
+        // it user has no privileges.
+        UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
+        List<UserGroup> existingGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(user.getUser().getId()));
+
+        if (existingGroups.size() == 0 && user.getPrivileges().size() > 0) {
             entityManager.flush();
             entityManager.clear();
             List<UserGroup> ug = getPrivilegesAndCreateGroups(user,
@@ -82,7 +89,7 @@ public class LDAPUtils {
     }
 
     @Transactional
-    private User getUser(LDAPUser user, boolean importPrivilegesFromLdap,
+    protected User getUser(LDAPUser user, boolean importPrivilegesFromLdap,
                          String userName) {
         UserRepository userRepo = ApplicationContextHolder.get().getBean(UserRepository.class);
 
@@ -119,7 +126,7 @@ public class LDAPUtils {
     }
 
     @Transactional
-    private List<UserGroup> getPrivilegesAndCreateGroups(LDAPUser user,
+    protected List<UserGroup> getPrivilegesAndCreateGroups(LDAPUser user,
                                                          boolean createNonExistingLdapGroup, User toSave) {
         GroupRepository groupRepo = ApplicationContextHolder.get().getBean(GroupRepository.class);
 
@@ -168,10 +175,9 @@ public class LDAPUtils {
     }
 
     @Transactional
-    private void setUserGroups(final User user, List<UserGroup> userGroups)
+    protected void setUserGroups(final User user, List<UserGroup> userGroups)
         throws Exception {
         UserGroupRepository userGroupRepo = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
-        ;
 
         Collection<UserGroup> all = userGroupRepo.findAll(UserGroupSpecs
             .hasUserId(user.getId()));
@@ -288,7 +294,7 @@ public class LDAPUtils {
                 }
             }
         } catch (NamingException e) {
-            e.printStackTrace();
+            Log.error(Geonet.LDAP, e.getMessage(), e);
         }
         return userInfo;
     }

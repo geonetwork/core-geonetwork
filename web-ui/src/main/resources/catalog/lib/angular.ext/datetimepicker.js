@@ -79,13 +79,13 @@ angular.module('ui.bootstrap.datetimepicker', [])
         "       <tr>" +
         "           <th class='left'" +
         "               data-ng-click=\"changeView(data.currentView, data.leftDate, $event)\"" +
-        "               ><i class='glyphicon glyphicon-arrow-left'/></th>" +
+        "               ><i class='fa fa-arrow-left'/></th>" +
         "           <th class='switch' colspan='5'" +
         "               data-ng-click=\"changeView(data.previousView, data.currentDate, $event)\"" +
         ">{{ data.title }}</th>" +
         "           <th class='right'" +
         "               data-ng-click=\"changeView(data.currentView, data.rightDate, $event)\"" +
-        "             ><i class='glyphicon glyphicon-arrow-right'/></th>" +
+        "             ><i class='fa fa-arrow-right'/></th>" +
         "       </tr>" +
         "       <tr>" +
         "           <th class='dow' data-ng-repeat='day in data.dayNames' >{{ day }}</th>" +

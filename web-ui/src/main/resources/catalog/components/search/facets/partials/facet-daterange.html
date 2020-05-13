@@ -1,0 +1,18 @@
+<div class="gn-facet-daterange">
+  <div class="gn-graph ui-timeline" ng-show="showGraph">
+    <div class="gn-graph-buttons">
+      <button type="button" class="zoomBtn" rel="zoomIn" title="Zoom In">+</button>
+      <button type="button" class="zoomBtn" rel="zoomOut" title="Zoom Out">-</button>
+    </div>
+  </div>
+  <div class="input-daterange input-group input-group-sm"
+      gn-bootstrap-datepicker="pickerValues"
+      data-date-format="dd-mm-yyyy"
+      on-change-fn="updateCallback({from: pickerValues.from, to: pickerValues.to})"
+      date-only-highlight="true"
+      date-available="dates">
+    <input type="text" class="input-sm form-control" name="start" value="{{::pickerValues.from}}"/>
+    <span class="input-group-addon" translate>dateToDate</span>
+    <input type="text" class="input-sm form-control" name="end" value="{{::pickerValues.to}}" />
+  </div>
+</div>

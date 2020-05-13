@@ -23,16 +23,16 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.server.context.ServiceContext;
-import jeeves.xlink.Processor;
+import java.sql.SQLException;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
-import java.sql.SQLException;
+import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
 
 /**
  * This class is responsible for reading and writing metadata extras from the database and xml from
@@ -44,8 +44,8 @@ public class XmlSerializerSvn extends XmlSerializer {
      * Retrieves the xml element whose id matches the given one. The element is read from the
      * database as subversion may be busy with commit changes.
      */
-    protected Element internalSelect(String id, boolean isIndexingTask) throws Exception {
-        Element rec = super.internalSelect(id, isIndexingTask);
+    protected Element internalSelect(String id, boolean isIndexingTask, boolean applyOperationsFilters) throws Exception {
+        Element rec = super.internalSelect(id, isIndexingTask, applyOperationsFilters);
         if (rec != null) return (Element) rec.detach();
         else return null;
     }
@@ -56,7 +56,7 @@ public class XmlSerializerSvn extends XmlSerializer {
      * config'd on.
      */
     public Element select(ServiceContext context, String id) throws Exception {
-        Element rec = internalSelect(id, false);
+        Element rec = internalSelect(id, false, false);
         if (resolveXLinks()) Processor.detachXLink(rec, context);
         return rec;
     }
@@ -66,8 +66,8 @@ public class XmlSerializerSvn extends XmlSerializer {
      * subversion and the string read is converted into xml, XLinks are NOT resolved even if they
      * are config'd on - this is used when you want to do XLink processing yourself.
      */
-    public Element selectNoXLinkResolver(String id, boolean isIndexingTask) throws Exception {
-        return internalSelect(id, isIndexingTask);
+    public Element selectNoXLinkResolver(String id, boolean isIndexingTask, boolean applyOperationsFilters) throws Exception {
+        return internalSelect(id, isIndexingTask, applyOperationsFilters);
     }
 
     /**
@@ -80,7 +80,7 @@ public class XmlSerializerSvn extends XmlSerializer {
      * @param context     a service context
      * @return the saved metadata
      */
-    public Metadata insert(final Metadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
+    public AbstractMetadata insert(final AbstractMetadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
         return insertDb(newMetadata, dataXml, context);
     }
 

@@ -26,8 +26,7 @@
   xmlns:gmd="http://www.isotc211.org/2005/gmd"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:gco="http://www.isotc211.org/2005/gco"
-  xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.isotc211.org/2005/gmd ../schema.xsd"
->
+  xmlns:gml="http://www.opengis.net/gml/3.2">
   <gmd:fileIdentifier>
     <gco:CharacterString>cdecfe47-1780-4dda-9fdf-e0a099e4ba9b</gco:CharacterString>
   </gmd:fileIdentifier>
@@ -101,7 +100,7 @@
     <gco:CharacterString>1.0</gco:CharacterString>
   </gmd:metadataStandardVersion>
   <gmd:locale>
-    <gmd:PT_Locale id="FRE">
+    <gmd:PT_Locale id="FR">
       <gmd:languageCode>
         <gmd:LanguageCode codeList="" codeListValue="fre"/>
       </gmd:languageCode>
@@ -109,7 +108,7 @@
     </gmd:PT_Locale>
   </gmd:locale>
   <gmd:locale>
-    <gmd:PT_Locale id="GER">
+    <gmd:PT_Locale id="GE">
       <gmd:languageCode>
         <gmd:LanguageCode codeList="" codeListValue="ger"/>
       </gmd:languageCode>
@@ -117,7 +116,7 @@
     </gmd:PT_Locale>
   </gmd:locale>
   <gmd:locale>
-    <gmd:PT_Locale id="CHI">
+    <gmd:PT_Locale id="CH">
       <gmd:languageCode>
         <gmd:LanguageCode codeList="" codeListValue="chi"/>
       </gmd:languageCode>
@@ -127,7 +126,7 @@
     </gmd:PT_Locale>
   </gmd:locale>
   <gmd:locale>
-    <gmd:PT_Locale id="ARA">
+    <gmd:PT_Locale id="AR">
       <gmd:languageCode>
         <gmd:LanguageCode codeList="" codeListValue="ara"/>
       </gmd:languageCode>
@@ -137,7 +136,7 @@
     </gmd:PT_Locale>
   </gmd:locale>
   <gmd:locale>
-    <gmd:PT_Locale id="SPA">
+    <gmd:PT_Locale id="SP">
       <gmd:languageCode>
         <gmd:LanguageCode codeList="" codeListValue="spa"/>
       </gmd:languageCode>
@@ -147,7 +146,7 @@
     </gmd:PT_Locale>
   </gmd:locale>
   <gmd:locale>
-    <gmd:PT_Locale id="RUS">
+    <gmd:PT_Locale id="RU">
       <gmd:languageCode>
         <gmd:LanguageCode codeList="" codeListValue="rus"/>
       </gmd:languageCode>
@@ -176,32 +175,32 @@
             </gco:CharacterString>
             <gmd:PT_FreeText>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#FRE">Modèle de données vectorielles en
+                <gmd:LocalisedCharacterString locale="#FR">Modèle de données vectorielles en
                   ISO19139 (multilingue)
                 </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#GER">Vorlage für die Vektor-Daten in ISO19139
+                <gmd:LocalisedCharacterString locale="#GE">Vorlage für die Vektor-Daten in ISO19139
                   (mehrsprachig)
                 </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#SPA">De plantilla para el vector de datos en
+                <gmd:LocalisedCharacterString locale="#SP">De plantilla para el vector de datos en
                   ISO19139 (multilingüe)
                 </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#RUS">Шаблон для векторных данных в ISO19139
+                <gmd:LocalisedCharacterString locale="#RU">Шаблон для векторных данных в ISO19139
                   (многоязычное)
                 </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#ARA">نموذج البيانات الموجهة في ISO19139
+                <gmd:LocalisedCharacterString locale="#AR">نموذج البيانات الموجهة في ISO19139
                   (متعددة اللغات)
                 </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#CHI">模板矢量数据ISO19139（多种语言）
+                <gmd:LocalisedCharacterString locale="#CH">模板矢量数据ISO19139（多种语言）
                 </gmd:LocalisedCharacterString>
               </gmd:textGroup>
             </gmd:PT_FreeText>
@@ -234,19 +233,19 @@
         </gco:CharacterString>
         <gmd:PT_FreeText>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#CHI">
+            <gmd:LocalisedCharacterString locale="#CH">
               元数据标准的ISO19115是首选元数据标准使用。这个模板是多语种的默认语言设置为英语。其他语言可以用来翻译部分的元数据记录。主要语言是界定元一节。其他语言可以增加元数据节/地区因素。
             </gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#ARA">فإن معيار ISO19115 الفوقية هو المفضل
+            <gmd:LocalisedCharacterString locale="#AR">فإن معيار ISO19115 الفوقية هو المفضل
               لاستخدام البيانات الوصفية القياسية. هذا القالب هو متعدد اللغات مع اللغة الافتراضية
               لمجموعة الانجليزية. لغة أخرى يمكن استخدامها لتحويل جزء من الفوقية. اللغة الرئيسية هي
               تحديد الفوقية في هذا الباب. لغات أخرى يمكن أن تضاف إلى الباب الفوقية / عنصر المكان.
             </gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#RUS">В метаданных стандарта ISO19115
+            <gmd:LocalisedCharacterString locale="#RU">В метаданных стандарта ISO19115
               предпочтительным является стандарт метаданных для использования. Этот шаблон
               многоязычный с языком по умолчанию установлен на английском языке. Другие языки могут
               использоваться для перевода части метаданных записи. Основным языком является
@@ -255,7 +254,7 @@
             </gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#SPA">El estándar de metadatos ISO19115 es el
+            <gmd:LocalisedCharacterString locale="#SP">El estándar de metadatos ISO19115 es el
               estándar de metadatos a utilizar. Esta plantilla es multilingüe, con un idioma por
               defecto configurado en Inglés. En otros idiomas puede ser usado para traducir parte
               del registro de metadatos. Idioma principal es definir los metadatos en la sección.
@@ -263,7 +262,7 @@
             </gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#GER">Die ISO19115 Metadaten-Standard ist der
+            <gmd:LocalisedCharacterString locale="#GE">Die ISO19115 Metadaten-Standard ist der
               bevorzugte Metadaten-Standard zu verwenden. Diese Vorlage ist mehrsprachig mit einer
               Standard-Sprache auf Englisch. Andere Sprache verwendet werden könnten, um Teil der
               Metadaten werden. Sprache definieren, ist in Abschnitt Metadaten. Weitere Sprachen
@@ -271,7 +270,7 @@
             </gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#FRE">La norme de métadonnées ISO19115 est la
+            <gmd:LocalisedCharacterString locale="#FR">La norme de métadonnées ISO19115 est la
               norme de métadonnées à utiliser. Ce modèle est multilingue avec une langue par défaut
               en anglais. D'autres langues pourraient être utilisées pour traduire une partie de la
               de métadonnées. La langue principale est de définir dans la section des métadonnées.

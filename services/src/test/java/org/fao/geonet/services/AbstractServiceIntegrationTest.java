@@ -24,6 +24,7 @@
 package org.fao.geonet.services;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -33,6 +34,9 @@ import org.springframework.test.context.web.WebAppConfiguration;
  * User: Jesse Date: 10/17/13 Time: 9:53 AM
  */
 @WebAppConfiguration()
-@ContextConfiguration(inheritLocations = true, locations = "classpath:services-repository-test-context.xml")
+@ContextConfiguration(inheritLocations = true,
+    locations = {"classpath:services-repository-test-context.xml", "classpath:services-web-test-context.xml"})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class AbstractServiceIntegrationTest extends AbstractCoreIntegrationTest {
+    public static final String API_JSON_EXPECTED_ENCODING = "application/json;charset=UTF-8";
 }

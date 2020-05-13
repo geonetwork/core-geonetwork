@@ -24,8 +24,10 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
-                xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="#all"
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                exclude-result-prefixes="#all"
                 version="2.0">
 
   <!--
@@ -43,7 +45,7 @@
   of URL+Name -->
   <xsl:param name="updateKey"/>
 
-  <xsl:template match="gmd:MD_DataIdentification|*[@gco:isoType='gmd:MD_DataIdentification']">
+  <xsl:template match="gmd:identificationInfo/*">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:apply-templates select="gmd:citation"/>
@@ -73,16 +75,30 @@
       <xsl:apply-templates select="gmd:environmentDescription"/>
       <xsl:apply-templates select="gmd:extent"/>
       <xsl:apply-templates select="gmd:supplementalInformation"/>
+
+      <xsl:apply-templates select="srv:*"/>
+
+      <xsl:apply-templates select="*[namespace-uri()!='http://www.isotc211.org/2005/gmd' and
+                                     namespace-uri()!='http://www.isotc211.org/2005/srv']"/>
     </xsl:copy>
   </xsl:template>
 
 
   <xsl:template match="gmd:graphicOverview[concat(
-                          */gmd:fileName/gco:CharacterString,
-                          */gmd:fileDescription/gco:CharacterString) = normalize-space($updateKey)]">
+                         */gmd:fileName/gco:CharacterString,
+                         */gmd:fileName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'],
+                         */gmd:fileDescription/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'],
+                         */gmd:fileDescription/gco:CharacterString) = normalize-space($updateKey)]">
     <xsl:call-template name="fill"/>
   </xsl:template>
 
+  <!-- TMP TO REMOVE when gco:characterString is added in multilingual elements
+    <xsl:template match="gmd:graphicOverview[concat(
+                            */gmd:fileName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'],
+                            */gmd:fileDescription/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE']) = normalize-space($updateKey)]">
+      <xsl:call-template name="fill"/>
+    </xsl:template>
+  -->
 
   <xsl:template name="fill">
     <xsl:if test="$thumbnail_url != ''">
@@ -97,10 +113,49 @@
       <gmd:graphicOverview>
         <gmd:MD_BrowseGraphic>
           <gmd:fileName>
-            <gco:CharacterString>
-              <xsl:value-of select="$thumbnail_url"/>
-            </gco:CharacterString>
+            <xsl:choose>
+
+              <!--Multilingual-->
+              <xsl:when test="contains($thumbnail_url, '|')">
+                <xsl:for-each select="tokenize($thumbnail_url, $separator)">
+                  <xsl:variable name="nameLang"
+                                select="substring-before(., '#')"></xsl:variable>
+                  <xsl:variable name="nameValue"
+                                select="substring-after(., '#')"></xsl:variable>
+
+                  <xsl:if test="$useOnlyPTFreeText = false() and $nameLang = $mainLang">
+                    <gco:CharacterString>
+                      <xsl:value-of select="$nameValue"/>
+                    </gco:CharacterString>
+                  </xsl:if>
+                </xsl:for-each>
+
+                <gmd:PT_FreeText>
+                  <xsl:for-each select="tokenize($thumbnail_url, $separator)">
+                    <xsl:variable name="nameLang"
+                                  select="substring-before(., '#')"></xsl:variable>
+                    <xsl:variable name="nameValue"
+                                  select="substring-after(., '#')"></xsl:variable>
+
+                    <xsl:if test="$useOnlyPTFreeText = true() or
+                                    $nameLang != $mainLang">
+                      <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="{concat('#', $nameLang)}">
+                          <xsl:value-of select="$nameValue"/>
+                        </gmd:LocalisedCharacterString>
+                      </gmd:textGroup>
+                    </xsl:if>
+                  </xsl:for-each>
+                </gmd:PT_FreeText>
+              </xsl:when>
+              <xsl:otherwise>
+                <gco:CharacterString>
+                  <xsl:value-of select="$thumbnail_url"/>
+                </gco:CharacterString>
+              </xsl:otherwise>
+            </xsl:choose>
           </gmd:fileName>
+
           <xsl:if test="$thumbnail_desc!=''">
             <gmd:fileDescription>
 

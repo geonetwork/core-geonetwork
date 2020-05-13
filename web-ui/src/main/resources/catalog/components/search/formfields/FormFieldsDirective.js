@@ -26,17 +26,16 @@
   goog.provide('gn_formfields_directive');
 
   angular.module('gn_formfields_directive', [])
-  /**
-   * @ngdoc directive
-   * @name gn_formfields.directive:gnTypeahead
-   * @restrict A
-   *
-   * @description
-   * It binds a tagsinput to the input for multi select.
-   * By default, the list is shown on click even if the input value is
-   * empty.
-   */
-
+      /**
+       * @ngdoc directive
+       * @name gn_formfields.directive:gnTypeahead
+       * @restrict A
+       *
+       * @description
+       * It binds a tagsinput to the input for multi select.
+       * By default, the list is shown on click even if the input value is
+       * empty.
+       */
       .directive('gnTypeahead', [function() {
 
         /**
@@ -119,16 +118,28 @@
               var field = $(element).tagsinput('input');
               field.typeahead({
                 minLength: 0,
-                hint: true,
+                hint: scope.$eval(attrs.gnTypeaheadDisableHint) ? false : true,
                 highlight: true
               }, angular.extend({
                 name: 'datasource',
                 displayKey: 'name',
-                source: engine.ttAdapter()
+                limit: Infinity,
+                source: (data?allOrSearchFn:engine.ttAdapter())
               }, config)).on('typeahead:selected', function(event, datum) {
                 field.typeahead('val', '');
                 $(element).tagsinput('add', datum);
+                field.data('ttTypeahead').input.trigger('queryChanged');
               });
+
+              function allOrSearchFn(q, sync) {
+                if (q === '') {
+                  sync(engine.all());
+                  // This is the only change needed to get 'ALL'
+                  // items as the defaults
+                } else {
+                  engine.search(q, sync);
+                }
+              }
 
               /** Binds input content to model values */
               var stringValues = [];
@@ -154,6 +165,16 @@
                   scope.$apply();
                 }
                 refreshDatum();
+              });
+
+              scope.$on('beforeSearchReset', function(){
+                field.typeahead('val', '');
+                stringValues= [];
+                for (i = 0; i < prev.length; i++) {
+                  $(element).tagsinput('remove', prev[i]);
+                }
+                prev = [];
+                field.data('ttTypeahead').input.trigger('queryChanged');
               });
 
               // model -> ui
@@ -222,16 +243,50 @@
       }])
 
 
-      .directive('groupsCombo', ['$http', function($http) {
+
+
+      .directive('usersCombo', ['$http', function($http) {
         return {
 
           restrict: 'A',
           templateUrl: '../../catalog/components/search/formfields/' +
+              'partials/usersCombo.html',
+          scope: {
+            ownerUser: '=',
+            users: '='
+          },
+
+          link: function(scope, element, attrs) {
+            var url = 'info?_content_type=json&type=users';
+
+            $http.get(url, {cache: true}).success(function(data) {
+              scope.users = data !== 'null' ? data.users : null;
+
+              // Select by default the first group.
+              if ((angular.isUndefined(scope.ownerUser) ||
+                  scope.ownerUser === '') &&
+                  data.users && data.users.length > 0) {
+                scope.ownerUser = data.users[0]['@id'];
+              }
+            });
+          }
+
+        };
+      }])
+
+      .directive('groupsCombo', ['$http', function($http) {
+        return {
+
+          restrict: 'A',
+          templateUrl:
+              '../../catalog/components/search/formfields/' +
               'partials/groupsCombo.html',
           scope: {
             ownerGroup: '=',
             lang: '=',
             groups: '=',
+            disabled: '=?',
+            optional: '@?',
             excludeSpecialGroups: '='
           },
 
@@ -240,6 +295,10 @@
             if (attrs.profile) {
               url = '../api/groups?profile=' + attrs.profile;
             }
+            var optional = scope.optional != 'false' ? true : false;
+            var setDefaultValue = attrs['setDefaultValue'] == 'false' ? false : true;
+            scope.disabled = scope.disabled ? true : false;
+
             $http.get(url, {cache: true}).
                 success(function(data) {
                   //data-ng-if is not correctly updating groups.
@@ -256,13 +315,21 @@
                   }
 
                   // Select by default the first group.
-                  if ((angular.isUndefined(scope.ownerGroup) ||
-                      scope.ownerGroup === '') && data) {
-                    scope.ownerGroup = data[0].id;
+                  if (setDefaultValue && (angular.isUndefined(scope.ownerGroup) ||
+                    scope.ownerGroup === '' ||
+                    scope.ownerGroup === null) && data) {
+                    // Requires to be converted to string, otherwise
+                    // angularjs adds empty non valid option
+                    scope.ownerGroup = scope.groups[0].id + "";
+                  }
+                  if (optional) {
+                    scope.groups.unshift({
+                      id: 'undefined',
+                      name: ''
+                    });
                   }
                 });
           }
-
         };
       }])
 
@@ -301,8 +368,6 @@
               values: '=gnSortbyValues'
             },
             link: function(scope, element, attrs, searchFormCtrl) {
-              scope.params.sortBy = scope.params.sortBy ||
-                  scope.values[0].sortBy;
               scope.sortBy = function(v) {
                 angular.extend(scope.params, v);
                 searchFormCtrl.triggerSearch(true);
@@ -310,7 +375,7 @@
               hotkeys.bindTo(scope)
                   .add({
                     combo: 's',
-                    description: $translate('hotkeySortBy'),
+                    description: $translate.instant('hotkeySortBy'),
                     callback: function() {
                       for (var i = 0; i < scope.values.length; i++) {
                         if (scope.values[i].sortBy === scope.params.sortBy) {
@@ -531,15 +596,18 @@
             scope: {
               selectedInfo: '=',
               lang: '=',
-              allowBlank: '@'
+              allowBlank: '@',
+              infos: '=?schemaInfoComboValues'
             },
             link: function(scope, element, attrs) {
               var initialized = false;
               var defaultValue;
+              var allowBlank = attrs['allowBlank'] == true;
 
               var addBlankValueAndSetDefault = function() {
                 var blank = {label: '', code: ''};
-                if (scope.infos != null && scope.allowBlank !== undefined) {
+                if (scope.infos != null && scope.infos.length &&
+                    allowBlank) {
                   scope.infos.unshift(blank);
                 }
                 // Search default value
@@ -550,9 +618,10 @@
                 });
 
                 // If no blank value allowed select default or first
-                // If no value defined, select defautl or blank one
+                // If no value defined, select default or blank one
                 if (!angular.isDefined(scope.selectedInfo)) {
-                  scope.selectedInfo = defaultValue || scope.infos[0].code;
+                  scope.selectedInfo = defaultValue
+                    || (scope.infos && scope.infos.length > 0 ? scope.infos[0].code : defaultValue);
                 }
                 // This will avoid to have undefined selected option
                 // on top of the list.
@@ -561,11 +630,19 @@
               scope.gnCurrentEdit = gnCurrentEdit;
               scope.$watch('gnCurrentEdit.schema',
                   function(newValue, oldValue) {
-                    if (newValue !== oldValue) {
+                    if (!initialized && angular.isDefined(newValue)) {
                       init();
                     }
                   });
 
+              scope.codelistFilter = '';
+              scope.$watch('gnCurrentEdit.codelistFilter',
+                function(n, o) {
+                  if (n && n !== o) {
+                    scope.codelistFilter = n;
+                    init();
+                  }
+                });
               var init = function() {
                 var schema = attrs['schema'] ||
                     gnCurrentEdit.schema || 'iso19139';
@@ -573,14 +650,14 @@
 
                 scope.type = attrs['schemaInfoCombo'];
                 if (scope.type == 'codelist') {
-                  gnSchemaManagerService.getCodelist(config).then(
+                  gnSchemaManagerService.getCodelist(config, scope.codelistFilter).then(
                       function(data) {
-                        scope.infos = data.entry;
+                        scope.infos = angular.copy(data.entry);
                         addBlankValueAndSetDefault();
                       });
                 }
                 else if (scope.type == 'element') {
-                  gnSchemaManagerService.getElementInfo(config).then(
+                  gnSchemaManagerService.getElementInfo(config, scope.codelistFilter).then(
                       function(data) {
                         scope.infos = data.helper ? data.helper.option : null;
                         addBlankValueAndSetDefault();
@@ -632,7 +709,9 @@
             scope.recordTypes = [
               {key: 'METADATA', value: 'METADATA'},
               {key: 'TEMPLATE', value: 'TEMPLATE'},
-              {key: 'SUB_TEMPLATE', value: 'SUB_TEMPLATE'}
+              {key: 'SUB_TEMPLATE', value: 'SUB_TEMPLATE'},
+              {key: 'TEMPLATE_OF_SUB_TEMPLATE',
+                value: 'TEMPLATE_OF_SUB_TEMPLATE'}
             ];
           }
         };
@@ -644,14 +723,14 @@
    * @name gn_formfields.directive:gnBboxInput
    * @restrict A
    * @requires gnMap
-   * @requires ngeoDecorateInteraction
+   * @requires olDecorateInteraction
    *
    * @description
    * The `gnBboxInput` directive provides an input widget for bounding boxes.
    */
       .directive('gnBboxInput', [
         'gnMap',
-        'ngeoDecorateInteraction',
+        'olDecorateInteraction',
         function(gnMap, goDecoI) {
 
           var extentFromValue = function(str) {
@@ -672,7 +751,9 @@
             scope: {
               crs: '=?',
               value: '=',
-              map: '='
+              required: '=',
+              map: '=',
+              readOnly: '<'
             },
             templateUrl: '../../catalog/components/search/formfields/' +
                 'partials/bboxInput.html',
@@ -717,6 +798,7 @@
               dragboxInteraction.active = false;
 
               scope.clear = function() {
+                scope.valueInternalChange = true;
                 scope.value = '';
                 scope.extent = extentFromValue(scope.value);
                 scope.updateMap();
@@ -745,14 +827,14 @@
                 scope.extent = extent.map(function(coord) {
                   return Math.round(coord * 10000) / 10000;
                 });
-                scope.value = valueFromExtent(scope.extent);
-                scope.updateMap();
+                scope.onBboxChange();
 
                 scope.$apply();
               });
               scope.dragboxInteraction = dragboxInteraction;
 
               scope.onBboxChange = function() {
+                scope.valueInternalChange = true;
                 scope.value = valueFromExtent(scope.extent);
                 scope.updateMap();
               };
@@ -761,6 +843,18 @@
                 clearMap();
                 scope.map.removeLayer(layer);
               });
+
+              // watch external change of value
+              if (scope.$eval(attrs['watchValueChange'])) {
+                scope.$watch('value', function(newValue) {
+                  if (scope.valueInternalChange) {
+                    scope.valueInternalChange = false;
+                  } else {
+                    scope.extent = extentFromValue(newValue);
+                    scope.updateMap();
+                  }
+                });
+              }
             }
           };
         }

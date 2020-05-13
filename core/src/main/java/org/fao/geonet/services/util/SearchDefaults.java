@@ -26,7 +26,6 @@ package org.fao.geonet.services.util;
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
@@ -47,7 +46,7 @@ public class SearchDefaults {
      */
     private static String[][] DEFAULT_PARAMS = {
         {Geonet.SearchResult.RELATION,
-            Geonet.SearchResult.Relation.OVERLAPS},
+            Geonet.SearchResult.Relation.OVERLAPS_BBOX},
         {Geonet.SearchResult.EXTENDED, Geonet.Text.OFF},
         {Geonet.SearchResult.HITS_PER_PAGE, "10"},
         {Geonet.SearchResult.SIMILARITY, "1"},
@@ -82,7 +81,7 @@ public class SearchDefaults {
             }
 
             // Add other elements send by the request
-            // It could be extra parameters handle by Lucene in lucene.xsl
+            // It could be extra parameters handled by Lucene in lucene.xsl
             // and not set by default
             @SuppressWarnings("unchecked")
             List<Element> otherEl = request.getChildren();

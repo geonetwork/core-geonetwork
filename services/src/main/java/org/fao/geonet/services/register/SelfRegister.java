@@ -41,6 +41,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -51,8 +52,11 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.PasswordUtil;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
 
@@ -87,6 +91,14 @@ public class SelfRegister extends NotInReadOnlyModeService {
     public Element serviceSpecificExec(Element params, ServiceContext context)
         throws Exception {
 
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager sm = gc.getBean(SettingManager.class);
+
+        boolean isEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_ENABLE);
+        if (!isEnabled) {
+            throw new ServiceNotAllowedEx("User self-registration is disabled");
+        }
+
         final GeonetworkDataDirectory dataDir = context.getBean(GeonetworkDataDirectory.class);
         this.stylePath = dataDir.resolveWebResource(Geonet.Path.XSLT_FOLDER).resolve("services").resolve("account");
 
@@ -107,9 +119,6 @@ public class SelfRegister extends NotInReadOnlyModeService {
         String username = email;
         String password = getInitPassword();
 
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SettingManager sm = gc.getBean(SettingManager.class);
-
         String catalogAdminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
         String thisSite = sm.getSiteName();
 
@@ -122,6 +131,11 @@ public class SelfRegister extends NotInReadOnlyModeService {
 
         final UserRepository userRepository = context.getBean(UserRepository.class);
         if (userRepository.findOneByEmail(email) != null) {
+            return element.addContent(new Element("result").setText("errorEmailAddressAlreadyRegistered"));
+        }
+
+        if (userRepository.findByUsernameIgnoreCase(username).size() != 0) {
+            // username is ignored and the email is used as username in selfregister
             return element.addContent(new Element("result").setText("errorEmailAddressAlreadyRegistered"));
         }
 
@@ -181,6 +195,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
         root.addContent(new Element("password").setText(password));
 
         String template = Util.getParam(params, Params.TEMPLATE, PASSWORD_EMAIL_XSLT);
+        FilePathChecker.verify(template);
         Path emailXslt = stylePath.resolve(template);
         Element elEmail = Xml.transform(root, emailXslt);
 
@@ -188,7 +203,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
         String subject = elEmail.getChildText("subject");
         String message = elEmail.getChildText("content");
 
-        return MailUtil.sendMail(email, subject, message, sm);
+        return MailUtil.sendMail(email, subject, message, null, sm);
     }
 
 
@@ -207,13 +222,14 @@ public class SelfRegister extends NotInReadOnlyModeService {
         root.addContent((Element) params.clone());
 
         String profileTemplate = Util.getParam(params, PROFILE_TEMPLATE, PROFILE_EMAIL_XSLT);
+        FilePathChecker.verify(profileTemplate);
         Path emailXslt = stylePath.resolve(profileTemplate);
         Element elEmail = Xml.transform(root, emailXslt);
 
         String subject = elEmail.getChildText("subject");
         String message = elEmail.getChildText("content");
 
-        return MailUtil.sendMail(from, subject, message, sm);
+        return MailUtil.sendMail(from, subject, message, null, sm);
     }
 
     // --------------------------------------------------------------------------

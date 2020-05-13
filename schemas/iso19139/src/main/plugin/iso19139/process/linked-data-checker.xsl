@@ -33,12 +33,14 @@
 
   <!-- i18n information -->
   <xsl:variable name="linked-data-checker-loc">
-    <msg id="a" xml:lang="eng">return an error (</msg>
+    <msg id="a" xml:lang="eng"> returns an error (</msg>
     <msg id="b" xml:lang="eng">). Run this task to remove it.</msg>
-    <msg id="a" xml:lang="fre">a retourné une erreur (</msg>
+    <msg id="a" xml:lang="fre"> a retourné une erreur (</msg>
     <msg id="b" xml:lang="fre">). Si l'erreur persiste, corriger le lien manuellement ou exécuter
       cette action pour le supprimer.
     </msg>
+    <msg id="a" xml:lang="dut"> is niet bereikbaar of geeft een fout (</msg>
+    <msg id="b" xml:lang="dut">). Functie verwijdert de link.</msg>
   </xsl:variable>
 
   <xsl:template name="list-linked-data-checker">
@@ -64,10 +66,10 @@
     <xsl:param name="url"/>
     <xsl:param name="type"/>
 
-    <xsl:variable name="status" select="java:getUrlStatus($url)"/>
+    <xsl:variable name="status" select="java:validateURL($url)"/>
     <!--    <xsl:message>Check:<xsl:value-of select="."/>|<xsl:value-of select="$status"/></xsl:message>
     -->
-    <xsl:if test="$status!=''">
+    <xsl:if test="$status != true()">
       <suggestion process="linked-data-checker" id="{generate-id()}" category="links" target="all">
         <name xml:lang="en">
           <xsl:value-of select="$type"/>

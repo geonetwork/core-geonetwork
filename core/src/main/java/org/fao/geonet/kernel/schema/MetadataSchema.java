@@ -34,6 +34,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
@@ -49,6 +50,7 @@ import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
 import java.io.FileNotFoundException;
@@ -71,7 +73,7 @@ import javax.xml.bind.Unmarshaller;
 //==============================================================================
 
 @JsonPropertyOrder({
-    "name", "targetNamespace", "namespaces",
+    "name", "titles", "descriptions", "standardUrl", "targetNamespace", "namespaces",
     "readwriteUUID", "schematronRules"
 })
 public class MetadataSchema {
@@ -90,6 +92,11 @@ public class MetadataSchema {
         new HashMap<String, Pair<String, Element>>();
     private String schemaName;
     private Path schemaDir;
+    private String standardUrl;
+    private String appMinorVersionSupported;
+    private String appMajorVersionSupported;
+    private Map<String, String> titles = new HashMap<>();
+    private Map<String, String> descriptions = new HashMap<>();
     private String primeNS;
     private String[] schematronRules;
     private boolean canEdit = false;
@@ -99,6 +106,9 @@ public class MetadataSchema {
     private SchematronRepository schemaRepo;
     private SchematronCriteriaGroupRepository criteriaGroupRepository;
     private SchemaPlugin schemaPlugin;
+
+    private String dependsOn;
+
 
     //---------------------------------------------------------------------------
     //---
@@ -151,7 +161,7 @@ public class MetadataSchema {
                 Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
                 return (Editor) unmarshaller.unmarshal(metadataSchemaConfig.toFile());
             } catch (JAXBException e) {
-                e.printStackTrace();
+                Log.error(Geonet.SCHEMA_MANAGER, " Get config editor. Error is " + e.getMessage(), e);
                 throw new RuntimeException(e);
             }
         }
@@ -388,8 +398,9 @@ public class MetadataSchema {
         Path schematronResourceDir = basePath.resolve("WEB-INF").resolve("classes").resolve(SCHEMATRON_DIR);
         Path schemaSchematronDir = schemaDir.resolve(SCHEMATRON_DIR);
         Path schematronCompilationFile = schematronResourceDir.resolve("iso_svrl_for_xslt2.xsl");
+        Path schematronExpandFile = schematronResourceDir.resolve("iso_abstract_expand.xsl");
 
-        if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
+        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
             Log.debug(Geonet.SCHEMA_MANAGER, "     Schematron compilation for schema " + schemaName);
             Log.debug(Geonet.SCHEMA_MANAGER, "          - compiling with " + schematronCompilationFile);
             Log.debug(Geonet.SCHEMA_MANAGER, "          - rules location is " + schemaSchematronDir);
@@ -408,7 +419,9 @@ public class MetadataSchema {
 
                     try (OutputStream schematronXsl = Files.newOutputStream(schematronXslFilePath)) {
                         Element schematronRule = Xml.loadFile(schemaSchematronDir.resolve(rule));
-                        Xml.transform(schematronRule, schematronCompilationFile, schematronXsl);
+                        // Expand schematron abstract rules
+                        Element schematronExpandXml = Xml.transform(schematronRule, schematronExpandFile);
+                        Xml.transform(schematronExpandXml, schematronCompilationFile, schematronXsl);
                     } catch (FileNotFoundException e) {
                         Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule file not found " + schematronXslFilePath
                             + ". Error is " + e.getMessage());
@@ -560,6 +573,54 @@ public class MetadataSchema {
         this.readwriteUUID = readwriteUUID;
     }
 
+    public String getStandardUrl() {
+        return standardUrl;
+    }
+
+    public void setStandardUrl(String standardUrl) {
+        this.standardUrl = standardUrl;
+    }
+
+    public String getAppMinorVersionSupported() {
+        return appMinorVersionSupported;
+    }
+
+    public void setAppMinorVersionSupported(String appMinorVersionSupported) {
+        this.appMinorVersionSupported = appMinorVersionSupported;
+    }
+
+    public String getAppMajorVersionSupported() {
+        return appMajorVersionSupported;
+    }
+
+    public void setAppMajorVersionSupported(String appMajorVersionSupported) {
+        this.appMajorVersionSupported = appMajorVersionSupported;
+    }
+
+    public String getDependsOn() {
+        return dependsOn;
+    }
+
+    public void setDependsOn(String depends) {
+        this.dependsOn = depends;
+    }
+
+    public Map<String, String> getTitles() {
+        return titles;
+    }
+
+    public void setTitles(Map<String, String> titles) {
+        this.titles = titles;
+    }
+
+    public Map<String, String> getDescriptions() {
+        return descriptions;
+    }
+
+    public void setDescriptions(Map<String, String> descriptions) {
+        this.descriptions = descriptions;
+    }
+
     /**
      * Schematron rules filename is like "schematron-rules-iso.xsl
      */
@@ -568,6 +629,32 @@ public class MetadataSchema {
             String filename = entry.getFileName().toString();
             return filename.startsWith(SCHEMATRON_RULE_FILE_PREFIX) && filename.endsWith(XSL_FILE_EXTENSION);
         }
+    }
+
+    /**
+     * Query XML document with one of the saved query
+     * to retrieve a simple string value.
+     *
+     * @param savedQuery {@link SavedQuery}
+     * @param xml
+     */
+    public String queryString(String savedQuery, Element xml) throws ResourceNotFoundException, JDOMException {
+        SavedQuery query = schemaPlugin.getSavedQuery(savedQuery);
+        if (query == null) {
+            throw new ResourceNotFoundException(String.format(
+                "Saved query '%s' for schema '%s' not found. Available queries are '%s'.",
+                savedQuery, getName(), schemaPlugin.getSavedQueries()));
+        }
+
+        String xpath = query.getXpath();
+        if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
+            Log.error(Geonet.SCHEMA_MANAGER, String.format(
+                "Saved query XPath: %s", xpath));
+        }
+
+        return Xml.selectString(xml,
+            xpath,
+            getNamespaces());
     }
 }
 

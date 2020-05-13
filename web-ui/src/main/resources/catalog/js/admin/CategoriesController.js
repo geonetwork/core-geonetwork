@@ -57,14 +57,21 @@
        */
       $scope.deleteCategory = function(id) {
         $http.delete('../api/tags/' + id)
-            .success(function(data) {
-              $scope.unselectCategory();
-              loadCategories();
-            })
-            .error(function(data) {
+            .then(function(r) {
+              if (r.status === 204) {
+                $scope.unselectCategory();
+                loadCategories();
+              } else {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate.instant('categoryDeleteError'),
+                  error: r.data,
+                  timeout: 0,
+                  type: 'danger'});
+              }
+            }, function(r) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('categoryDeleteError'),
-                error: data,
+                title: $translate.instant('categoryDeleteError'),
+                error: r.data,
                 timeout: 0,
                 type: 'danger'});
             });
@@ -79,13 +86,13 @@
           $scope.unselectCategory();
           loadCategories();
           $rootScope.$broadcast('StatusUpdated', {
-            msg: $translate('categoryUpdated'),
+            msg: $translate.instant('categoryUpdated'),
             timeout: 2,
             type: 'success'});
         })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('categoryUpdateError'),
+                title: $translate.instant('categoryUpdateError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});

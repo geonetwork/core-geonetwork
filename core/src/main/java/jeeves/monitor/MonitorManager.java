@@ -30,6 +30,7 @@ import com.yammer.metrics.reporting.JmxReporter;
 import jeeves.constants.ConfigFile;
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Log;
@@ -76,7 +77,11 @@ public class MonitorManager {
 
     public void init(ServletContext context, String baseUrl) {
 
-        String webappName = baseUrl.substring(1);
+        String webappName = "";
+
+        if (StringUtils.isNotEmpty(baseUrl)) {
+            webappName = baseUrl.substring(1);
+        }
 
         if (context != null) {
             HealthCheckRegistry tmpHealthCheckRegistry = lookUpHealthCheckRegistry(context, HEALTH_CHECK_REGISTRY);

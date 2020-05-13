@@ -50,13 +50,18 @@
               success(function(data) {
                 scope.categories = data;
               });
+
+          scope.sortByLabel = function(c) {
+            return c.label[scope.lang];
+          };
         }
+        
       };
     }]);
 
   module.directive('gnBatchCategories', [
-    '$http', '$translate', '$q',
-    function($http, $translate, $q) {
+    'gnUtilityService', '$http', '$translate', '$q',
+    function(gnUtilityService, $http, $translate, $q) {
 
       return {
         restrict: 'A',
@@ -77,8 +82,9 @@
             var defer = $q.defer();
             var params = [];
             var url = '../api/records/tags?' +
-                      (replace ? 'clear=true&id=' : 'id=');
-
+                        '&bucket=' +
+                (attrs.selectionBucket || 'metadata') + '&' +
+                        (replace ? 'clear=true&id=' : 'id=');
             angular.forEach(scope.categories, function(c) {
               if (c.checked === true) {
                 params.push(c.id);
@@ -86,10 +92,31 @@
             });
             $http.put(url + params.join('&id='))
                 .success(function(data) {
+                  scope.processReport = data;
+
+                  gnUtilityService.openModal({
+                    title: $translate.instant('categoriesUpdated'),
+                    content: '<div gn-batch-report="processReport"></div>',
+                    className: 'gn-category-popup',
+                    onCloseCallback: function() {
+                      scope.processReport = null;
+                    }
+                  }, scope, 'CategoryUpdated');
+
                   scope.report = data;
                   defer.resolve(data);
                 }).error(function(data) {
-                  scope.report = data;
+                  scope.processReport = data;
+
+                  gnUtilityService.openModal({
+                    title: $translate.instant('categoriesUpdated'),
+                    content: '<div gn-batch-report="processReport"></div>',
+                    className: 'gn-category-popup',
+                    onCloseCallback: function() {
+                      scope.processReport = null;
+                    }
+                  }, scope, 'CategoryUpdated');
+
                   defer.reject(data);
                 });
             return defer.promise;

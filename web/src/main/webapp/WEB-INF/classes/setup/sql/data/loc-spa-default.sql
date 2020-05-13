@@ -522,3 +522,27 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (2,'spa','Approved');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'spa','Retired');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'spa','Submitted');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'spa','Rejected');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (50,'spa','Record created.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (51,'spa','Record updated.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (52,'spa','Attachment {{h.item1}} added.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (53,'spa','Attachment {{h.item1}} deleted.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (54,'spa','Owner changed from {{h.item1}} to {{h.item2}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (55,'spa','Group owner changed from {{h.item1}} to {{h.item2}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (56,'spa','Privileges updated.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (57,'spa','Category changed. Now categories are {{h.item1}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (58,'spa','Validation triggered. Exit status is now {{h.item1}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (59,'spa','Status changed from {{h.item1}} to {{h.item2}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (60,'spa','Record updated by process {{h.item1}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'spa','Record deleted.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'spa','Record imported.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'spa','DOI creation requested.');
+
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'spa','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'spa','Watch list');
+
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (-1,'spa', 'Average');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (0,'spa', 'Completeness#Is the information on this page complete enough to know what you can expect from this dataset?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (1,'spa', 'Discoverability#Was it easy to find this information page?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (2,'spa', 'Readability#Was it easy to read and understand the contents of this page?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (3,'spa', 'Data quality#Does the dataset contain the information you expected, the dataset has enough accuracy, the data is valid/up-to-date?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (4,'spa', 'Service quality#The dataset is provided as a service or mediatype that is easy to work with?');

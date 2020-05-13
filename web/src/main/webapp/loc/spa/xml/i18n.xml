@@ -5,7 +5,7 @@
   <addA>Añadir</addA>
   <nojs>Javascript no habilitado. Habilítelo o vaya al
     <a
-      href="catalog.search.nojs">here to search
+      href="../search">here to search
     </a>
     modo degradado.
   </nojs>

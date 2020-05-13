@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.XmlValue;
  *   &lt;simpleContent>
  *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
  *       &lt;attribute name="lang" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="href" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/extension>
  *   &lt;/simpleContent>
  * &lt;/complexType>
@@ -35,6 +36,8 @@ public class LocalizedString {
     protected String value;
     @XmlAttribute(name = "lang")
     protected String lang;
+    @XmlAttribute(name = "href")
+    protected String href;
 
     /**
      * Gets the value of the value property.
@@ -72,4 +75,21 @@ public class LocalizedString {
         this.lang = value;
     }
 
+    /**
+     * Gets the value of the href property.
+     *
+     * @return possible object is {@link String }
+     */
+    public String getHref() {
+        return href;
+    }
+
+    /**
+     * Sets the value of the href property.
+     *
+     * @param value allowed object is {@link String }
+     */
+    public void setHref(String value) {
+        this.href = value;
+    }
 }

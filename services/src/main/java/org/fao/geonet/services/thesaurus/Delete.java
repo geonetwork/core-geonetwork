@@ -44,6 +44,7 @@ import java.nio.file.Path;
 /**
  * Removes a thesaurus from the system.
  */
+@Deprecated
 public class Delete extends NotInReadOnlyModeService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
@@ -80,7 +81,7 @@ public class Delete extends NotInReadOnlyModeService {
                 repo.delete(thesaurusId);
             }
         } else {
-            throw new IllegalArgumentException("Thesaurus not found --> " + name);
+            throw new IllegalArgumentException("Thesaurus not found: " + name);
         }
 
         return new Element(Jeeves.Elem.RESPONSE)

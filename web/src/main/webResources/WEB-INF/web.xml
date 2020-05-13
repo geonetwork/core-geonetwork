@@ -23,13 +23,14 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://java.sun.com/xml/ns/javaee"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-         version="2.5"
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+	     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+	     http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	     version="3.0"
          metadata-complete="true">
 
-  <display-name>geonetwork</display-name>
+  <display-name>${application.name}</display-name>
   <listener>
     <listener-class>jeeves.config.springutil.JeevesContextLoaderListener</listener-class>
   </listener>
@@ -133,6 +134,36 @@
     <dispatcher>FORWARD</dispatcher>
   </filter-mapping>
 
+  <!-- XFrameOptionsFilter to avoid Clickjacking attacks.
+     See https://www.owasp.org/index.php/Clickjacking_Defense_Cheat_Sheet.
+  -->
+  <filter>
+    <filter-name>XFrameOptionsFilter</filter-name>
+    <filter-class>
+      org.fao.geonet.web.XFrameOptionsFilter
+    </filter-class>
+    <!-- Mode: DENY, SAMEORIGIN, ALLOW-FROM. Any other value will default to DENY
+          - DENY: prevents any domain from framing the content.
+          - SAMEORIGIN, which only allows the current site to frame the content.
+          - ALLOW-FROM uri, which permits the specified 'uri' to frame this page.
+            Not all browsers support this mode.
+    -->
+    <init-param>
+      <param-name>mode</param-name>
+      <param-value>DENY</param-value>
+    </init-param>
+    <!-- Allowed url. Used in ALLOW-FROM mode only -->
+    <!--<init-param>
+      <param-name>url</param-name>
+      <param-value>http://localhost:8888/</param-value>
+    </init-param>-->
+  </filter>
+  <filter-mapping>
+    <filter-name>XFrameOptionsFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+
   <!-- Resources servlet -->
   <filter>
     <filter-name>resources</filter-name>
@@ -144,6 +175,15 @@
     <init-param>
       <param-name>jeeves.configuration.overrides.file</param-name>
       <param-value>${system.specific.overrides},${web.xml.main.config.overrides}</param-value>
+    </init-param>
+  </filter>
+  <!-- Add CORS Header -->
+  <filter>
+    <filter-name>cors</filter-name>
+    <filter-class>org.fao.geonet.web.CORSResponseFilter</filter-class>
+    <init-param>
+      <param-name>allowedHosts</param-name>
+      <param-value>${cors.allowedHosts}</param-value>
     </init-param>
   </filter>
   <filter>
@@ -188,6 +228,11 @@
 
   <filter-mapping>
     <filter-name>webappMetricsFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>cors</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
@@ -313,58 +358,119 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
 
-  <servlet-mapping>
-    <servlet-name>gn-servlet</servlet-name>
-    <url-pattern>/nouse/*</url-pattern>
-  </servlet-mapping>
 
-  <!--
-  Multinode configuration: Add servlet mapping for each nodes
-  <servlet-mapping>
-      <servlet-name>gn-servlet</servlet-name>
-      <url-pattern>/node1/*</url-pattern>
-  </servlet-mapping>
-   -->
-  <!-- Servlet proxy -->
   <servlet>
     <servlet-name>HttpProxy</servlet-name>
-    <servlet-class>org.geonetwork.http.proxy.HttpProxyServlet</servlet-class>
-
-    <!-- List of allowed content types -->
+    <servlet-class>org.fao.geonet.proxy.URITemplateProxyServlet</servlet-class>
     <init-param>
-      <param-name>AllowedContentTypes</param-name>
-      <param-value>
-        application/xml,text/xml,
-        text/html,
-        text/plain,
-        image/png,
-        application/vnd.ogc.se_xml,
-        application/vnd.ogc.se+xml,
-        application/vnd.ogc.success+xml,
-        application/vnd.ogc.wms_xml,
-        application/vnd.ogc.context+xml,
-        application/vnd.ogc.gml,
-        application/vnd.ogc.sld+xml,
-        application/vnd.google-earth.kml+xml,
-        application/vnd.google-earth.kmz,
-        application/json
-      </param-value>
+      <param-name>targetUri</param-name>
+      <param-value>{url}</param-value>
     </init-param>
-
-    <!-- List of host allowed to be accessed by the proxy: If not specified or empty, any hosts is allowed -->
     <init-param>
-      <param-name>AllowedHosts</param-name>
-      <param-value/>
+      <param-name>log</param-name>
+      <param-value>true</param-value>
     </init-param>
-
-    <!-- Default proxy url if none is provided -->
     <init-param>
-      <param-name>DefaultProxyUrl</param-name>
-      <param-value>http://www.openlayers.org</param-value>
+      <param-name>http.protocol.handle-redirects</param-name>
+      <param-value>true</param-value>
     </init-param>
-
-    <load-on-startup>0</load-on-startup>
   </servlet>
+  <servlet-mapping>
+    <servlet-name>HttpProxy</servlet-name>
+    <url-pattern>/proxy/*</url-pattern>
+  </servlet-mapping>
+
+
+  <!--Direct proxy to ES server.
+  One specific proxy for features and records
+  which are requested by client apps. Redirect
+  to the proper index which may not have the default name.
+  -->
+  <servlet>
+    <servlet-name>ESFeaturesProxy</servlet-name>
+    <servlet-class>org.mitre.dsmiley.httpproxy.URITemplateProxyServlet</servlet-class>
+    <init-param>
+      <param-name>targetUri</param-name>
+      <param-value>${es.url}/${es.index.features}/{_}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>log</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ESFeaturesProxy</servlet-name>
+    <url-pattern>/index/features</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ESRecordsProxy</servlet-name>
+    <servlet-class>org.mitre.dsmiley.httpproxy.URITemplateProxyServlet</servlet-class>
+    <init-param>
+      <param-name>targetUri</param-name>
+      <param-value>${es.url}/${es.index.records}/{_}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>log</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ESRecordsProxy</servlet-name>
+    <url-pattern>/index/records</url-pattern>
+  </servlet-mapping>
+
+
+  <servlet>
+    <servlet-name>ESPublicRecordsProxy</servlet-name>
+    <servlet-class>org.mitre.dsmiley.httpproxy.URITemplateProxyServlet</servlet-class>
+    <init-param>
+      <param-name>targetUri</param-name>
+      <param-value>${es.url}/${es.index.records_public}/{_}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>log</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ESPublicRecordsProxy</servlet-name>
+    <url-pattern>/index/records_public</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>HttpDashboardProxy</servlet-name>
+    <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
+    <init-param>
+      <param-name>targetUri</param-name>
+      <param-value>${kb.url}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>log</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HttpDashboardProxy</servlet-name>
+    <url-pattern>/dashboards/*</url-pattern>
+  </servlet-mapping>
+
+
+  <servlet>
+    <servlet-name>jolokia-agent</servlet-name>
+    <servlet-class>org.jolokia.http.AgentServlet</servlet-class>
+    <init-param>
+      <param-name>policyLocation</param-name>
+      <param-value>classpath:/jolokia-access.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>jolokia-agent</servlet-name>
+    <url-pattern>/jolokia/*</url-pattern>
+  </servlet-mapping>
+
 
   <!-- Spring dispatcher servlet -->
   <servlet>
@@ -381,47 +487,19 @@
 
   <servlet-mapping>
     <servlet-name>spring</servlet-name>
-    <url-pattern>/srv/*</url-pattern>
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
-
-
-  <servlet-mapping>
-    <servlet-name>spring</servlet-name>
-    <url-pattern>/home</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>spring</servlet-name>
-    <url-pattern>/login.jsp</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>spring</servlet-name>
-    <url-pattern>/accessDenied.jsp</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>HttpProxy</servlet-name>
-    <url-pattern>/proxy</url-pattern>
-  </servlet-mapping>
-
-  <!-- Web map context servlet -->
-  <servlet>
-    <servlet-name>wmc</servlet-name>
-    <servlet-class>org.geonetwork.map.wmc.WmcServlet</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>wmc</servlet-name>
-    <url-pattern>/wmc/*</url-pattern>
-  </servlet-mapping>
-
-  <welcome-file-list>
-    <welcome-file>home</welcome-file>
-    <welcome-file>index.html</welcome-file>
-  </welcome-file-list>
 
   <session-config>
     <session-timeout>${sessionTimeout}</session-timeout>
+    <cookie-config>
+      <http-only>true</http-only>
+      <secure>${cookieSecureFlag}</secure>
+    </cookie-config>
   </session-config>
+
+  <context-param>
+    <param-name>spring.profiles.active</param-name>
+    <param-value>${es.spring.profile}</param-value>
+  </context-param>
 </web-app>

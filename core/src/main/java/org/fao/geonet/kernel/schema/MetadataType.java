@@ -145,6 +145,10 @@ public class MetadataType {
         return name;
     }
 
+    public List<String> getAlElements() {return alElements; }
+
+    public List<MetadataAttribute> getAlAttribs() {return alAttribs; }
+
     //---------------------------------------------------------------------------
     //---
     //--- Package protected API methods

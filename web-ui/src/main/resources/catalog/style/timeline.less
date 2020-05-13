@@ -2,6 +2,9 @@
   list-style: none;
   padding: 20px 0 20px;
   position: relative;
+  a {
+    cursor: pointer;
+  }
 }
 
 .timeline-1-col {
@@ -102,7 +105,6 @@
   color: #fff;
   width: 50px;
   height: 50px;
-  line-height: 50px;
   padding-top: 15px;
   font-size: 1.4em;
   text-align: center;
@@ -115,6 +117,15 @@
   border-top-left-radius: 50%;
   border-bottom-right-radius: 50%;
   border-bottom-left-radius: 50%;
+}
+.timeline > li > .timeline-badge-small {
+  width: 30px;
+  height: 30px;
+  padding-top: 5px;
+  font-size: 1em;
+  top: 25px;
+  margin-left: -16px;
+  z-index: 0;
 }
 
 .timeline > li.timeline-inverted > .timeline-panel {
@@ -175,15 +186,15 @@
   }
 
   ul.timeline > li > .timeline-panel {
-    width: calc(100% - 90px);
-    width: -moz-calc(100% - 90px);
-    width: -webkit-calc(100% - 90px);
+    width: calc(~"100% - 60px");
+    width: -moz-calc(~"100% - 60px");
+    width: -webkit-calc(~"100% - 60px");
   }
 
   ul.timeline > li > .timeline-badge {
-    left: 15px;
+    left: 25px;
     margin-left: 0;
-    top: 16px;
+    top: 25px;
   }
 
   ul.timeline > li > .timeline-panel {

@@ -27,7 +27,16 @@
 
 
 
+
+
+
+
+
+
+  goog.require('GML_3_1_1');
   goog.require('OWS_1_1_0');
+  goog.require('SMIL_2_0');
+  goog.require('SMIL_2_0_Language');
   goog.require('WPS_1_0_0');
   goog.require('XLink_1_0');
 
@@ -36,12 +45,13 @@
   // WPS Client
   // Jsonix wrapper to read or write WPS response or request
   var context = new Jsonix.Context(
-      [XLink_1_0, OWS_1_1_0, WPS_1_0_0],
+      [XLink_1_0, OWS_1_1_0, WPS_1_0_0, GML_3_1_1, SMIL_2_0, SMIL_2_0_Language],
       {
         namespacePrefixes: {
           'http://www.w3.org/1999/xlink': 'xlink',
           'http://www.opengis.net/ows/1.1': 'ows',
-          'http://www.opengis.net/wps/1.0.0': 'wps'
+          'http://www.opengis.net/wps/1.0.0': 'wps',
+          'http://www.opengis.net/gml': 'gml'
         }
       }
       );
@@ -69,10 +79,11 @@
     'gnGlobalSettings',
     'gnMap',
     '$q',
+    '$translate',
     function($http, gnOwsCapabilities, gnUrlUtils, gnGlobalSettings,
-             gnMap, $q) {
+             gnMap, $q, $translate) {
 
-      this.WMS_MIMETYPE = 'application/x-ogc-wms';
+      this.WMS_MIMETYPE_REGEX = /.*ogc-wms/;
 
       /**
        * @ngdoc method
@@ -85,25 +96,205 @@
        *
        * @param {string} uri of the wps service
        * @param {string} processId of the process
+       * @param {Object} options object
+       * @param {boolean} options.cancelPrevious if true, previous ongoing
+       *  requests are cancelled
        */
-      this.describeProcess = function(uri, processId) {
+      this.describeProcess = function(uri, processId, options) {
         url = gnOwsCapabilities.mergeDefaultParams(uri, {
           service: 'WPS',
           version: '1.0.0',
           request: 'DescribeProcess',
           identifier: processId
         });
+        options = options || {};
+
+        // cancel ongoing request
+        if (options.cancelPrevious && this.descProcCanceller) {
+          this.descProcCanceller.resolve();
+        }
+
+        // create a promise (will be used to cancel request)
+        this.descProcCanceller = $q.defer();
 
         //send request and decode result
         if (gnUrlUtils.isValid(url)) {
           return $http.get(url, {
-            cache: true
+            cache: true,
+            timeout: this.descProcCanceller.promise
           }).then(
               function(response) {
                 return unmarshaller.unmarshalString(response.data).value;
               }
           );
         }
+      };
+
+      /**
+       * @ngdoc method
+       * @methodOf gn_viewer.service:gnWpsService
+       * @name gnWpsService#getCapabilities
+       *
+       * @description
+       * Get a list of processes available on the URL through a GetCap call.
+       *
+       * @param {string} url of the wps service
+       * @param {Object} options object
+       * @param {boolean} options.cancelPrevious if true, previous ongoing
+       *  requests are cancelled
+       */
+      this.getCapabilities = function(url, options) {
+        var url = gnOwsCapabilities.mergeDefaultParams(url, {
+          service: 'WPS',
+          version: '1.0.0',
+          request: 'GetCapabilities'
+        });
+        options = options || {};
+
+        // cancel ongoing request
+        if (options.cancelPrevious && this.getCapCanceller) {
+          this.getCapCanceller.resolve();
+        }
+
+        // create a promise (will be used to cancel request)
+        this.getCapCanceller = $q.defer();
+
+        // send request and decode result
+        return $http.get(url, {
+          cache: true,
+          timeout: this.getCapCanceller.promise
+        }).then(function(response) {
+          this.getCapCanceller = null;
+          if (!response.data) {
+            return;
+          }
+          return unmarshaller.unmarshalString(response.data).value;
+        });
+      };
+
+      /**
+       * @ngdoc method
+       * @methodOf gn_viewer.service:gnWpsService
+       * @name gnWpsService#execute
+       *
+       * @description
+       * Prints a WPS Execute message as XML to be posted to a WPS service.
+       * Does a DescribeProcess call first
+       *
+       * @param {Object} processDescription from the wps service
+       * @param {Object} inputs of the process; this must be an array of
+       *  objects like so: { name: 'input_name', value: 'input value' }
+       * @param {Object} output this object must hold output identifier &
+       * mimeType as well as options such as storeExecuteResponse, lineage and
+       * status
+       * @return {string} XML message
+       */
+      this.printExecuteMessage = function(processDescription, inputs,
+          output) {
+        var me = this;
+        var description = processDescription;
+
+        var request = {
+          name: {
+            localPart: 'Execute',
+            namespaceURI: 'http://www.opengis.net/wps/1.0.0'
+          },
+          value: {
+            service: 'WPS',
+            version: '1.0.0',
+            identifier: {
+              value: description.identifier.value
+            },
+            dataInputs: {
+              input: []
+            }
+          }
+        };
+
+        var setInputData = function(input, data) {
+          if (input.literalData && data) {
+            request.value.dataInputs.input.push({
+              identifier: {
+                value: input.identifier.value
+              },
+              data: {
+                literalData: {
+                  value: data.toString()
+                }
+              }
+            });
+          }
+          if (input.complexData && data) {
+            var mimeType = input.complexData._default.format.mimeType;
+            request.value.dataInputs.input.push({
+              identifier: {
+                value: input.identifier.value
+              },
+              data: {
+                complexData: {
+                  mimeType: mimeType,
+                  content: data
+                }
+              }
+            });
+          }
+          if (input.boundingBoxData && data) {
+            var bbox = data.split(',');
+            request.value.dataInputs.input.push({
+              identifier: {
+                value: input.identifier.value
+              },
+              data: {
+                boundingBoxData: {
+                  dimensions: 2,
+                  lowerCorner: [bbox[0], bbox[1]],
+                  upperCorner: [bbox[2], bbox[3]]
+                }
+              }
+            });
+          }
+        };
+
+        for (var i = 0; i < description.dataInputs.input.length; ++i) {
+          var input = description.dataInputs.input[i];
+          var inputName = input.identifier.value;
+
+          // for each value for this input, add to message
+          inputs.filter(function(inputValue) {
+            return inputValue.name === inputName;
+          }).forEach(function(inputValue) {
+            setInputData(input, inputValue.value);
+          });
+        }
+
+        // generate response document based on output info
+        var responseDocument = {
+          lineage: output.lineage || false,
+          storeExecuteResponse: output.storeExecuteResponse || true,
+          status: output.status || false,
+          output: []
+        };
+
+        // output selection based on form control
+        angular.forEach(description.processOutputs.output,
+            function(descOutput) {
+              if (descOutput.identifier.value === output.identifier) {
+                responseDocument.output.push({
+                  asReference: output.asReference !== undefined ?
+                  output.asReference : descOutput.asReference,
+                  mimeType: output.mimeType,
+                  identifier: {
+                    value: output.identifier
+                  }
+                });
+              }
+            }, {});
+
+        request.value.responseForm = {
+          responseDocument: responseDocument
+        };
+
+        return marshaller.marshalString(request);
       };
 
       /**
@@ -121,99 +312,30 @@
        * @param {Object} output of the process
        * @param {Object} options such as storeExecuteResponse,
        * lineage and status
+       * @return {defer} promise
        */
       this.execute = function(uri, processId, inputs, responseDocument) {
         var defer = $q.defer();
-
         var me = this;
 
         this.describeProcess(uri, processId).then(
             function(data) {
+              // generate the XML message from the description
               var description = data.processDescription[0];
+              var message = me.printExecuteMessage(description, inputs,
+              responseDocument);
 
-              var url = uri;
-              var request = {
-                name: {
-                  localPart: 'Execute',
-                  namespaceURI: 'http://www.opengis.net/wps/1.0.0'
-                },
-                value: {
-                  service: 'WPS',
-                  version: '1.0.0',
-                  identifier: {
-                    value: description.identifier.value
-                  },
-                  dataInputs: {
-                    input: []
-                  }
-                }
-              };
-
-              var setInputData = function(input, data) {
-                if (input.literalData) {
-                  request.value.dataInputs.input.push({
-                    identifier: {
-                      value: input.identifier.value
-                    },
-                    data: {
-                      literalData: {
-                        value: data.toString()
-                      }
-                    }
-                  });
-                }
-                if (input.boundingBoxData) {
-                  var bbox = data.split(',');
-                  request.value.dataInputs.input.push({
-                    identifier: {
-                      value: input.identifier.value
-                    },
-                    data: {
-                      boundingBoxData: {
-                        dimensions: 2,
-                        lowerCorner: [bbox[0], bbox[1]],
-                        upperCorner: [bbox[2], bbox[3]]
-                      }
-                    }
-                  });
-                }
-              };
-
-              for (var i = 0; i < description.dataInputs.input.length; ++i) {
-                var input = description.dataInputs.input[i];
-                if (inputs[input.identifier.value] !== undefined) {
-                  setInputData(input, inputs[input.identifier.value]);
-                }
-              }
-
-              request.value.responseForm = {
-                responseDocument: $.extend(true, {
-                  lineage: false,
-                  storeExecuteResponse: true,
-                  status: false
-                }, responseDocument)
-              };
-
-              var body = marshaller.marshalString(request);
-
-              $http.post(url, body, {
+              // do the post request
+              $http.post(uri, message, {
                 headers: {'Content-Type': 'application/xml'}
-              }).then(
-                  function(data) {
-                    var response =
-                        unmarshaller.unmarshalString(data.data).value;
-                    defer.resolve(response);
-                  },
-                  function(data) {
-                    defer.reject(data);
-                  }
-              );
-
-            },
-            function(data) {
-              defer.reject(data);
-            }
-        );
+              }).then(function(data) {
+                var response =
+                unmarshaller.unmarshalString(data.data).value;
+                defer.resolve(response);
+              }, function(data) {
+                defer.reject(data);
+              });
+            });
 
         return defer.promise;
       };
@@ -231,9 +353,7 @@
       this.getStatus = function(url) {
         var defer = $q.defer();
 
-        $http.get(url, {
-          cache: true
-        }).then(
+        $http.get(url).then(
             function(data) {
               var response = unmarshaller.unmarshalString(data.data).value;
               defer.resolve(response);
@@ -247,6 +367,58 @@
       };
 
       /**
+       * Returns true if the mime type matches a WMS service
+       *
+       * @param {object} response excecuteProcess response object.
+       * @return {number} index of the output with the WMS service info; null if none found
+       */
+      this.responseHasWmsService = function(response) {
+        var outputs = response.processOutputs.output;
+        for (var i = 0; i < outputs.length; i++) {
+          try {
+            var mimeType = outputs[i].reference.mimeType;
+            if (this.WMS_MIMETYPE_REGEX.test(mimeType)) {
+              return i;
+            }
+          } catch (e) {
+          }
+        }
+        return null;
+      };
+
+      /**
+       * Returns an object if process description offers an output with WMS
+       * The object hold the properties outputIdentifier and mimeType
+       *
+       * @param {object} processDesc describeProcess response object.
+       * @param {string} outputIdentifier
+       * @return {string} object with outputIdentifier and mimeType; null if no
+       * matching mimeType
+       */
+      this.getProcessOutputWMSMimeType = function(processDesc) {
+        var result = null;
+        var me = this;
+        try {
+          var outputs = processDesc.processOutputs.output;
+          outputs.forEach(function(output) {
+            var outputId = output.identifier.value;
+            var mimeTypes = output.complexOutput.supported.format;
+            mimeTypes.forEach(function(mimeType) {
+              if (!result && me.WMS_MIMETYPE_REGEX.test(mimeType.mimeType)) {
+                result = {
+                  mimeType: mimeType.mimeType,
+                  outputIdentifier: outputId
+                };
+              }
+            });
+          });
+        } catch (e) {
+          console.warn('Failed parsing WPS process description: ', e);
+        }
+        return result;
+      };
+
+      /**
        * Try to see if the execute response is a reference with a WMS mimetype.
        * If yes, the href is a WMS getCapabilities, we load it and add all
        * the layers on the map.
@@ -254,28 +426,45 @@
        * in the layer manager.
        *
        * @param {object} response excecuteProcess response object.
+       * @param {number} index index of the output with the WMS service info
        * @param {ol.Map} map
-       * @param {ol.layer.Base} parentLayer
+       * @param {ol.layer.Base} parentLayer optional
        */
-      this.extractWmsLayerFromResponse = function(response, map, parentLayer) {
-
+      this.extractWmsLayerFromResponse = function(response, index, map, parentLayer) {
         try {
-          var ref = response.processOutputs.output[0].reference;
-          if (ref.mimeType == this.WMS_MIMETYPE) {
-            gnMap.addWmsAllLayersFromCap(map, ref.href, true).
-                then(function(layers) {
-                  layers.map(function(l) {
-                    l.set('fromWps', true);
-                    l.set('wpsParent', parentLayer);
-                    map.addLayer(l);
-                  });
+          var output = response.processOutputs.output[index];
+          var ref = output.reference;
+          var identifier = output.identifier.value;
+          gnMap.addWmsAllLayersFromCap(map, ref.href, true).
+              then(function(layers) {
+                layers.forEach(function(l) {
+                  l.set('fromWps', true);
+                  l.set('wpsParent', parentLayer);
+                  map.addLayer(l);
                 });
-          }
-        }
-        catch (e) {
-          // no WMS found
+              });
+        } catch (e) {
+          console.warn('Error extracting WMS layers from response: ', e);
         }
       };
+
+      /**
+       * Returns a label normalized for the process description
+       * Field used: `labels[currentLang]` or `label`
+       * IF no label found, return nothing
+       * @param {Object} wpsLink object holding the process link
+       */
+      this.getProcessLabel = function (wpsLink) {
+        var currentLang = $translate.use();
+        if (wpsLink.labels) {
+          return wpsLink.labels[currentLang];
+        } else if (wpsLink.label) {
+          return wpsLink.label;
+        } else {
+          return null;
+        }
+      }
     }
   ]);
+
 })();

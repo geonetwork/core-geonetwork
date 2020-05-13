@@ -29,6 +29,9 @@
     <icon>
       <xsl:value-of select="icon/value"/>
     </icon>
+    <beforeScript>
+      <xsl:value-of select="beforeScript/value"/>
+    </beforeScript>
   </xsl:template>
 
   <!-- ============================================================================================= -->

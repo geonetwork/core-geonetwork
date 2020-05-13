@@ -30,10 +30,14 @@ import java.sql.SQLException;
 
 import org.apache.http.HttpException;
 import org.apache.jcs.access.exception.CacheException;
-import org.fao.geonet.Logger;
+
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.exceptions.*;
 import org.jdom.JDOMException;
+
+import jeeves.server.context.ServiceContext;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p> Master class for harvesting errors. </p> <p> Example of usage: </p> <code> SQLException e =
@@ -44,7 +48,9 @@ import org.jdom.JDOMException;
  *
  * @author delawen
  */
-public class HarvestError {
+public class HarvestError extends AbstractHarvestError {
+
+    private static org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Geonet.HARVESTER);
 
     /**
      * Exception that caused the harvest error.
@@ -63,8 +69,8 @@ public class HarvestError {
      */
     private String hint = "Check with your administrator the error.";
 
-    public HarvestError(InvalidParameterValueEx ex, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, InvalidParameterValueEx ex) {
+    	super(context);
 
         this.origin = ex;
         this.description = "The server didn't accept one of the parameters"
@@ -73,11 +79,11 @@ public class HarvestError {
 
         this.hint = "Check that geonetwork supports the exact version of"
             + " the server you are trying to connect";
-        printLog(log);
+        printLog();
     }
 
-    public HarvestError(Throwable ex, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, Throwable ex) {
+        super(context);
 
         this.origin = ex;
         this.description = ex.getMessage();
@@ -87,156 +93,154 @@ public class HarvestError {
         // Do not print log, as it is a very generic exception
         // leave it to main caller
     }
-
-    public HarvestError(CacheException ex, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, CacheException ex) {
+        super(context);
 
         this.origin = ex;
         this.description = "Failed to update Jeeves cache: " + ex.getMessage();
-        printLog(log);
+        printLog();
     }
 
-    public HarvestError(JDOMException ex, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, JDOMException ex) {
+        super(context);
 
         this.origin = ex;
         this.description = "There was an error processing the response. " + ex.getMessage();
-        printLog(log);
+        printLog();
     }
 
-    public HarvestError(BadServerResponseEx e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, BadServerResponseEx e) {
+        super(context);
 
         this.origin = e;
         this.description = "The server returned an answer that could not be processed: "
             + e.getObject();
         this.hint = "Check the harvester is correctly configured.";
-        printLog(log);
+        printLog();
     }
 
-    public HarvestError(BadSoapResponseEx e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, BadSoapResponseEx e) {
+        super(context);
 
         this.origin = e;
         this.description = "The server returned an answer that could not be processed.";
         this.hint = "Check the harvester is correctly configured.";
-        printLog(log);
+        printLog();
     }
 
-    public HarvestError(HttpException e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, HttpException e) {
+        super(context);
 
         this.origin = e;
         this.description = "There was an error trying to reach some URL. " + e.getMessage();
-        printLog(log);
+        printLog();
     }
 
-    public HarvestError(IOException e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, IOException e) {
+        super(context);
 
         this.origin = e;
         this.description = "There was an error trying to reach an URI. " + e.getMessage();
-        printLog(log);
+        printLog();
     }
 
-    public HarvestError(MalformedURLException e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, MalformedURLException e) {
+        super(context);
 
         this.origin = e;
         this.description = "There was an error trying to reach an URL. ";
         this.hint = "Check the configuration of the harvest.";
-        printLog(log);
+        printLog();
     }
 
-    public HarvestError(UnsupportedEncodingException e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, UnsupportedEncodingException e) {
+        super(context);
 
         this.origin = e;
         this.description = "The metadata is defined on an unsupported encoding: "
             + e.getMessage();
         this.hint = "Check with your administrator the encoding error.";
-        printLog(log);
+        printLog();
     }
 
-    public HarvestError(java.text.ParseException e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, java.text.ParseException e) {
+        super(context);
 
         this.origin = e;
         this.description = "Unable to parse the metadata.";
         this.hint = "Check with your administrator about possible "
             + "network errors or corrupt data on harvested server.";
-        printLog(log);
+        printLog();
     }
 
-    public HarvestError(SQLException e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, SQLException e) {
+        super(context);
 
         this.origin = e;
         this.description = "There was an error while updating the database: "
             + e.getSQLState();
         this.hint = "Check with your administrator that the database is not corrupted.";
-        printLog(log);
+        printLog();
     }
 
-    public HarvestError(UserNotFoundEx e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, UserNotFoundEx e) {
+        super(context);
 
         this.origin = e;
         this.description = "Couldn't log in to harvest using " + e.getObject();
         this.hint = "Check username and password.";
-        printLog(log);
+        printLog();
     }
 
-    public HarvestError(SchemaMatchConflictException e, Logger log, String name) {
-        super();
+    public HarvestError(ServiceContext context, SchemaMatchConflictException e, String name) {
+        super(context);
 
         this.origin = e;
         this.description = "Couldn't match the schema for " + name;
         this.hint = "Check that the schemas used are defined on geonetwork.";
-        printLog(log);
+        printLog();
     }
-
-    public HarvestError(SchemaMatchConflictException e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, SchemaMatchConflictException e) {
+        super(context);
 
         this.origin = e;
         this.description = "Couldn't match the schema.";
         this.hint = "Check that the schemas used are defined on geonetwork.";
-        printLog(log);
+        printLog();
     }
 
-    public HarvestError(NoSchemaMatchesException e, Logger log, String name) {
-        super();
+    public HarvestError(ServiceContext context, NoSchemaMatchesException e, String name) {
+        super(context);
 
         this.origin = e;
         this.description = "Couldn't recognize the schema for " + name;
         this.hint = "Check that the schemas used are defined on geonetwork.";
-        printLog(log);
+        printLog();
     }
 
-    public HarvestError(NoSchemaMatchesException e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, NoSchemaMatchesException e) {
+        super(context);
 
         this.origin = e;
         this.description = "Couldn't recognize the schema.";
         this.hint = "Check that the schemas used are defined on geonetwork.";
-        printLog(log);
+        printLog();
     }
 
-    public HarvestError(BadXmlResponseEx e, Logger log, String capabUrl) {
-        super();
+    public HarvestError(ServiceContext context, BadXmlResponseEx e, String capabUrl) {
+        super(context);
         this.origin = e;
         this.description = "The response returned from the server doesn't look like XML";
         this.hint = "Check the URL is ok: " + capabUrl;
-        printLog(log);
+        printLog();
     }
 
-    public HarvestError(BadXmlResponseEx e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, BadXmlResponseEx e) {
+        super(context);
         this.origin = e;
         this.description = "The response returned from the server doesn't look like XML. " + e.getMessage();
         this.hint = "Check the URL is ok.";
-        printLog(log);
+        printLog();
     }
 
     public Throwable getOrigin() {
@@ -272,15 +276,15 @@ public class HarvestError {
     /**
      * Generic print on log of current harvest error
      */
-    public void printLog(Logger log) {
+    public void printLog() {
         if (this.description != null) {
-            log.warning(this.description);
+            LOGGER.warn(this.description);
         }
         if (this.hint != null) {
-            log.warning(this.hint);
+            LOGGER.warn(this.hint);
         }
         if (this.origin != null) {
-            log.error(this.origin);
+            LOGGER.error(this.origin.toString());
         }
     }
 }

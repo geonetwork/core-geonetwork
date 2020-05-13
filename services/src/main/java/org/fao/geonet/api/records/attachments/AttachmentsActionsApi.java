@@ -29,11 +29,13 @@ import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.fao.geonet.lib.Lib;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -44,6 +46,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import java.nio.file.Path;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 import jeeves.server.context.ServiceContext;
 
@@ -58,6 +61,12 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 public class AttachmentsActionsApi {
     private final ApplicationContext appContext = ApplicationContextHolder.get();
     private Store store;
+
+    @Autowired
+    DataManager dataMan;
+
+    @Autowired
+    ThumbnailMaker thumbnailMaker;
 
     public AttachmentsActionsApi() {
     }
@@ -89,7 +98,7 @@ public class AttachmentsActionsApi {
         response = MetadataResource.class,
         nickname = "createMetadataOverview")
     @RequestMapping(
-        value = "/api/" + API.VERSION_0_1 +
+        value = "/{portal}/api/" + API.VERSION_0_1 +
         "/records/{metadataUuid}/attachments/print-thumbnail",
         method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.CREATED)
@@ -110,21 +119,19 @@ public class AttachmentsActionsApi {
         @RequestParam()
             String jsonConfig,
         @ApiParam(value = "The rotation angle of the map")
-        @RequestParam(required = false, defaultValue = "0") int rotationAngle
+        @RequestParam(required = false, defaultValue = "0") int rotationAngle,
+        HttpServletRequest request
     )
         throws Exception {
-        ServiceContext context = ServiceContext.get();
-        DataManager dataMan = appContext.getBean(DataManager.class);
+        ServiceContext context = ApiUtils.createServiceContext(request);
 
         String metadataId = dataMan.getMetadataId(metadataUuid);
         Lib.resource.checkEditPrivilege(context, metadataId);
-
-        ThumbnailMaker thumbnailMaker = appContext.getBean(ThumbnailMaker.class);
 
         Path thumbnailFile = thumbnailMaker.generateThumbnail(
             jsonConfig,
             rotationAngle);
 
-        return store.putResource(metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC);
+        return store.putResource(context, metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC);
     }
 }

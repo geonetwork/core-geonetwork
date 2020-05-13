@@ -28,10 +28,14 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
@@ -39,8 +43,6 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -129,8 +131,13 @@ public class PrepareFileDownload implements Service {
     /**
      * Process the links to downloadable files
      */
-    private Element processDownloadLinks(ServiceContext context, String id, String siteURL, List<Element> elems, Element response) throws IOException {
+    private Element processDownloadLinks(ServiceContext context, String id, String siteURL, List<Element> elems, Element response) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        final Store store = context.getBean("resourceStore", Store.class);
+        final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+        final String uuid = metadataUtils.getMetadataUuid(id);
+
 
         for (Element elem : elems) {
             elem = (Element) elem.clone();
@@ -159,11 +166,11 @@ public class PrepareFileDownload implements Service {
                             }
                         }
 
-                        Path dir = Lib.resource.getDir(context, access, id);
-                        Path file = dir.resolve(fname);
-                        if (Files.exists(file)) {
-                            size = Files.size(file);
-                            Date date = new Date(Files.getLastModifiedTime(file).toMillis());
+                        final MetadataResource description =
+                                store.getResourceDescription(context, uuid, MetadataResourceVisibility.parse(access), id, true);
+                        if (description != null) {
+                            size = description.getSize();
+                            Date date = description.getLastModification();
                             dateModified = sdf.format(date);
                             found = true;
                         }

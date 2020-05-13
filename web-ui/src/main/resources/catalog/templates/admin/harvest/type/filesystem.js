@@ -7,16 +7,17 @@ var gnHarvesterfilesystem = {
             "@type" : "filesystem",
             "owner" : [],
             "ownerGroup" : [],
+            "ownerUser": [""],
             "site" : {
                 "name" : "",
-                "translations": {},
                 "uuid" : "",
                 "directory" : "/filesystem/path",
                 "recurse" : true,
-                "nodelete" : true,
+                "nodelete" : false,
                 "checkFileLastModifiedForUpdate" : true,
                 "recordType" : 'n',
-                "icon" : "blank.png"
+                "icon" : "blank.png",
+                "beforeScript": ""
             },
             "content" : {
                 "validate" : "NOVALIDATION",
@@ -25,6 +26,7 @@ var gnHarvesterfilesystem = {
             "options" : {
                 "every" : "0 0 0 ? * *",
                 "oneRunOnly" : false,
+                "overrideUuid" : "SKIP",
                 "status" : "active"
             },
             "privileges" : [ {
@@ -43,28 +45,30 @@ var gnHarvesterfilesystem = {
         };
     },
     buildResponse : function(h, $scope) {
-        var body = '<node id="' + h['@id'] + '" ' 
-                + '    type="' + h['@type'] + '">' 
-                + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
-                + '  <site>' 
+        var body = '<node id="' + h['@id'] + '" '
+                + '    type="' + h['@type'] + '">'
+                + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
+                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>'
+                + '  <site>'
                 + '    <name>' + h.site.name + '</name>'
-                + $scope.buildTranslations(h)
                 + '    <recurse>' + h.site.recurse + '</recurse>'
                 + '    <nodelete>' + h.site.nodelete + '</nodelete>'
                 + '    <checkFileLastModifiedForUpdate>' + h.site.checkFileLastModifiedForUpdate + '</checkFileLastModifiedForUpdate>'
                 + '    <directory>' + h.site.directory + '</directory>'
                 + '    <recordType>' + h.site.recordType + '</recordType>'
                 + '    <icon>' + h.site.icon + '</icon>'
-                + '  </site>' 
-                + '  <options>' 
-                + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
-                + '    <every>' + h.options.every + '</every>' 
+                + '    <beforeScript>' + h.site.beforeScript + '</beforeScript>'
+                + '  </site>'
+                + '  <options>'
+                + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'
+                + '    <overrideUuid>' + h.options.overrideUuid + '</overrideUuid>'
+                + '    <every>' + h.options.every + '</every>'
                 + '    <status>' + h.options.status + '</status>'
                 + '  </options>'
                 + '  <content>'
                 + '    <validate>' + h.content.validate + '</validate>'
                 + '    <importxslt>' + h.content.importxslt + '</importxslt>'
-                + '  </content>' 
+                + '  </content>'
                 + $scope.buildResponseGroup(h)
                 + $scope.buildResponseCategory(h) + '</node>';
         return body;

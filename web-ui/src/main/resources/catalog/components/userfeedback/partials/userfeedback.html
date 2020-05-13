@@ -1,0 +1,43 @@
+<div>
+  <section class="gn-userfeedback-sidebar">
+    <h1 data-ng-show="rating.ratingCount > 0 && loaded">
+      <span data-translate="">GUFrate</span>
+      <span>{{rating.ratingAverages['-1']}} / 5 <i class="fa fa-fw fa-star"></i></span>
+      <span data-ng-show="rating.ratingAverages && loaded"
+         data-translate=""
+         data-translate-values="{ratingCount:'{{rating.ratingCount}}'}">GUFfromRatingCountRatings</span>
+    </h1>
+    <h1 data-ng-show="rating.ratingCount === 0 && loaded"
+        data-translate="">GUFnoRatings</h1>
+
+    <ul class="gn-userfeedback-list"
+        data-ng-show="loaded">
+      <li class="gn-userfeedback-item"
+        data-ng-repeat="row in fewCommentsList">
+        <div class="gn-userfeedback-comment gn-arrow-bottom">
+          <q data-ng-show="row.comment">{{row.comment}}</q>
+          <span class="gn-userfeedback-score-{{row.ratingAVG}}"
+                data-ng-show="row.ratingAVG"> {{row.ratingAVG}} / {{ratingCategories.length}} &nbsp;
+            <i class="fa fa-fw fa-star"></i>
+          </span>
+
+          <span data-ng-hide="{{row.published}}"> -
+            <strong data-translate="">GUFwaitingForApproval</strong>
+          </span>
+        </div>
+        <div class="gn-userfeedback-user">
+          <em>
+            <img class="img-circle"
+                 data-ng-src="//gravatar.com/avatar/{{row.authorEmail}}?s=18"/>&nbsp;
+
+            {{row.authorName}}
+            <span data-ng-show="row.authorOrganization">({{row.authorOrganization}})</span>,
+            <span class="text-muted"
+                  data-gn-humanize-time="{{row.date}}"
+                  data-from-now="">{{row.date}}</span>
+          </em>
+        </div>
+      </li>
+    </ul>
+  </section>
+</div>

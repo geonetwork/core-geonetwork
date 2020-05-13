@@ -109,6 +109,7 @@
       <field name="_isHarvested" tagName="isHarvested"/>
       <field name="_popularity" tagName="popularity"/>
       <field name="_rating" tagName="rating"/>
+      <field name="feedbackCount" tagName="feedbackCount"/>
       <field name="_displayOrder" tagName="displayOrder"/>
       <field name="_view" tagName="view"/>
       <field name="_notify" tagName="notify"/>
@@ -117,11 +118,14 @@
       <field name="_featured" tagName="featured"/>
       <field name="_owner" tagName="owner"/>
       <field name="_userinfo" tagName="userinfo"/>
-      <field name="_ownername" tagName="ownername"/>
+      <field name="recordOwner" tagName="recordOwner"/>
       <field name="_cat" tagName="category"/>
       <field name="topicCat" tagName="topicCat"/>
       <field name="inspirethemewithac" tagName="inspirethemewithac"/>
       <field name="_valid" tagName="valid"/>
+      <field name="_valid_inspire" tagName="validInspire"/>
+      <field name="_inspireValidationDate" tagName="inspireValidationDate"/>
+      <field name="_inspireReportUrl" tagName="inspireReportUrl"/>
       <field name="_valid_schematron-rules-geonetwork" tagName="valid_schematron-rules-geonetwork"/>
       <field name="_valid_schematron-rules-iso" tagName="valid_schematron-rules-iso"/>
       <field name="_valid_schematron-rules-inspire" tagName="valid_schematron-rules-inspire"/>
@@ -139,7 +143,9 @@
       <field name="revisionDate" tagName="revisionDate"/>
       <field name="publicationDate" tagName="publicationDate"/>
       <field name="abstract" tagName="abstract" multilingualSortField="true"/>
+      <field name="_defaultAbstract" tagName="defaultAbstract"/>
       <field name="keyword" tagName="keyword"/>
+      <field name="keywordGroup" tagName="keywordGroup"/>
       <field name="parentUuid" tagName="parentId"/>
       <field name="type" tagName="type"/>
       <field name="identifier" tagName="identifier"/>
@@ -149,6 +155,7 @@
       <field name="denominator" tagName="denominator"/>
       <field name="resolution" tagName="resolution"/>
       <field name="crs" tagName="crs"/>
+      <field name="crsDetails" tagName="crsDetails"/>
       <field name="credit" tagName="credit"/>
       <field name="cl_status" tagName="status"/>
       <field name="cl_status_text" tagName="status_text"/>
@@ -169,6 +176,7 @@
       <field name="tempExtentBegin" tagName="tempExtentBegin"/>
       <field name="tempExtentEnd" tagName="tempExtentEnd"/>
       <field name="geoBox" tagName="geoBox"/>
+      <field name="boundingPolygon" tagName="boundingPolygon"/>
       <field name="extentDesc" tagName="geoDesc"/>
       <field name="geoDescCode" tagName="geoDescCode"/>
       <field name="_indexingError" tagName="idxError"/>
@@ -176,10 +184,11 @@
       <field name="_op0" tagName="publishedForGroup"/>
       <field name="_groupOwner" tagName="groupOwner"/>
       <field name="_logo" tagName="logo"/>
-      <field name="crs" tagName="crs"/>
       <field name="standardName" tagName="standardName"/>
       <field name="_groupWebsite" tagName="groupWebsite"/>
-      <field name="attributeTable" tagName="attributeTable"/>
+      <field name="featureTypes" tagName="featureTypes"/>
+      <field name="versionIdentifier" tagName="versionIdentifier"/>
+      <field name="_draft" tagName="draft"/>
     </dumpFields>
   </search>
 
@@ -346,6 +355,8 @@
   -->
   <numeric>
     <Field name="denominator"/>
+    <Field name="feedbackCount"/>
+    <Field name="_rating"/>
     <Field name="northBL" type="double"/>
     <Field name="eastBL" type="double"/>
     <Field name="southBL" type="double"/>

@@ -25,7 +25,7 @@ package org.fao.geonet.api.records.formatters;
 
 import com.google.common.io.ByteStreams;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 
 import net.sf.json.JSONObject;
 
@@ -35,6 +35,7 @@ import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.springframework.http.MediaType;
@@ -74,7 +75,7 @@ import static org.fao.geonet.api.records.formatters.FormatterConstants.VIEW_XSL_
 public class Register extends AbstractFormatService {
 
 
-    @RequestMapping(value = {"/{lang}/md.formatter.register"}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = {"/{portal}/{lang}/md.formatter.register"}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public JSONObject serviceSpecificExec(HttpServletRequest request,
                                           @PathVariable String lang,
@@ -92,6 +93,9 @@ public class Register extends AbstractFormatService {
                 xslid = xslid.substring(0, extentionIdx);
             }
         }
+
+        FilePathChecker.verify(xslid);
+        FilePathChecker.verify(file.getOriginalFilename());
 
         checkLegalId(Params.ID, xslid);
         Path userXslDir = context.getBean(GeonetworkDataDirectory.class).getFormatterDir();

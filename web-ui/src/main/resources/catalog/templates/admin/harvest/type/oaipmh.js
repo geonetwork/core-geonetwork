@@ -7,21 +7,23 @@ var gnHarvesteroaipmh = {
             "@type": "oaipmh",
             "owner": [""],
             "ownerGroup": [""],
+            "ownerUser": [""],
             "site":   {
               "name": "",
-              "translations": {},
               "uuid": "",
               "account":     {
                 "use": false,
                 "username": "",
                 "password": ""
               },
+              "xslfilter": [],
               "url": "",
               "icon" : "blank.png"
             },
             "options":   {
               "every": "0 0 0 ? * *",
               "oneRunOnly": false,
+              "overrideUuid" : "SKIP",
               "status": ""
             },
             "searches": [{
@@ -45,20 +47,23 @@ var gnHarvesteroaipmh = {
           };
     },
     buildResponse : function(h, $scope) {
-        var body = '<node id="' + h['@id'] + '" ' 
-                + '    type="' + h['@type'] + '">' 
-                + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
-                + '  <site>' 
+        var body = '<node id="' + h['@id'] + '" '
+                + '    type="' + h['@type'] + '">'
+                + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
+                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>'
+                + '  <site>'
                 + '    <name>' + h.site.name + '</name>'
-                + $scope.buildTranslations(h)
                 + '    <url>' + h.site.url.replace(/&/g, '&amp;') + '</url>'
-                + '    <icon>' + h.site.icon + '</icon>' 
+                + '    <icon>' + h.site.icon + '</icon>'
+                + '    <xslfilter>'
+                + (h.site.xslfilter[0] ? h.site.xslfilter.replace(/&/g, '&amp;') : '')
+                + '    </xslfilter>'
                 + '    <account>'
                 + '      <use>' + h.site.account.use + '</use>'
-                + '      <username>' + h.site.account.username + '</username>' 
-                + '      <password>' + h.site.account.password + '</password>' 
+                + '      <username>' + h.site.account.username + '</username>'
+                + '      <password>' + h.site.account.password + '</password>'
                 + '    </account>'
-                + '  </site>' 
+                + '  </site>'
                 + '  <searches>'
                 + '    <search>'
                 + '      <from>' + (h.searches[0].from || '') + '</from>'
@@ -67,13 +72,14 @@ var gnHarvesteroaipmh = {
                 + '      <prefix>' + (h.searches[0].prefix || '') + '</prefix>'
                 + '    </search>'
                 + '  </searches>'
-                + '  <options>' 
-                + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
+                + '  <options>'
+                + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'
+                + '    <overrideUuid>' + h.options.overrideUuid + '</overrideUuid>'
                 + '    <every>' + h.options.every + '</every>'
                 + '    <status>' + h.options.status + '</status>'
-                + '  </options>' 
+                + '  </options>'
                 + '  <content>'
-                + '  </content>' 
+                + '  </content>'
                 + $scope.buildResponseGroup(h)
                 + $scope.buildResponseCategory(h) + '</node>';
         return body;

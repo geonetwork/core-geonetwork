@@ -49,7 +49,7 @@
   <xsl:import href="process-utility.xsl"/>
 
   <xsl:variable name="inspire-th"
-                select="document(concat('file:///', replace(util:getConfigValue('codeListDir'), '\\', '/'), '/external/thesauri/theme/inspire-theme.rdf'))"/>
+                select="document(concat('file:///', replace(util:getConfigValue('codeListDir'), '\\', '/'), '/external/thesauri/theme/httpinspireeceuropaeutheme-theme.rdf'))"/>
 
   <xsl:variable name="itheme-topiccat-map">
     <!-- <entry>
@@ -196,6 +196,10 @@
       items. Run this suggestion to add all corresponding
       values.
     </msg>
+    <msg id="a" xml:lang="dut">INSPIRE Thema's gevonden met ontbrekende overeenkomstige
+       items. Voer deze suggestie uit om alle overeenkomstige items toe te voegen
+       waarden.
+    </msg>
     <msg id="a" xml:lang="fre">Thèmes INSPIRE et/ou des catégories ont été trouvés avec des
       correspondances manquantes. Lancer ce processus pour ajouter les correspondances.
     </msg>
@@ -334,7 +338,7 @@
 
               <gmd:type>
                 <gmd:MD_KeywordTypeCode
-                  codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                  codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_KeywordTypeCode"
                   codeListValue="theme"/>
               </gmd:type>
               <xsl:choose>
@@ -360,7 +364,7 @@
                           </gmd:date>
                           <gmd:dateType>
                             <gmd:CI_DateTypeCode
-                              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                              codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                               codeListValue="publication"/>
                           </gmd:dateType>
                         </gmd:CI_Date>

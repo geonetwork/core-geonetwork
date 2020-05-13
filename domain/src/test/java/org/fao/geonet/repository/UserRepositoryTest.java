@@ -28,6 +28,7 @@ import com.google.common.collect.Lists;
 
 import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -57,7 +58,7 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
     private EntityManager _entityManager;
 
     public static User newUser(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
+        String val = String.format("%04d", inc.incrementAndGet());
         User user = new User().setName("name" + val).setUsername("username" + val);
         user.getSecurity().setPassword("1234567");
         return user;
@@ -305,6 +306,24 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
 
         assertTrue(editUserFound);
         assertTrue(reviewerUserFound);
+    }
+
+    @Test
+    public void testFindDuplicatedUsernamesCaseInsensitive() {
+        User usernameDuplicated1 = newUser();
+        User usernameDuplicated2 = newUser();
+        User userNonDuplicated1 = newUser();
+        usernameDuplicated1.setUsername("userNamE1");
+        usernameDuplicated2.setUsername("usERNAME1");
+        _userRepo.save(usernameDuplicated1);
+        _userRepo.save(usernameDuplicated2);
+        _userRepo.save(userNonDuplicated1);
+
+        List<String> duplicatedUsernames = _userRepo.findDuplicatedUsernamesCaseInsensitive();
+        assertThat("Duplicated usernames don't match the expected ones",
+            duplicatedUsernames, CoreMatchers.is(Lists.newArrayList("username1")));
+        assertEquals(1, duplicatedUsernames.size());
+
     }
 
     private User newUser() {

@@ -36,8 +36,8 @@
   -->
   <!-- FIME : $url comes from a global variable. -->
   <xsl:template match="simpledc" mode="record-reference">
-    <dcat:dataset rdf:resource="{$url}/resource/{dc:identifier}"/>
-    <dcat:record rdf:resource="{$url}/metadata/{dc:identifier}"/>
+    <dcat:dataset rdf:resource="{$resourcePrefix}/datasets/{dc:identifier}"/>
+    <dcat:record rdf:resource="{$resourcePrefix}/records/{dc:identifier}"/>
   </xsl:template>
 
 
@@ -48,14 +48,14 @@
     <!-- Catalogue records
       "A record in a data catalog, describing a single dataset."
     -->
-    <dcat:CatalogRecord rdf:about="{$url}/metadata/{dc:identifier}">
+    <dcat:CatalogRecord rdf:about="{$resourcePrefix}/records/{dc:identifier}">
       <!-- Link to a dcat:Dataset or a rdf:Description for services and feature catalogue. -->
-      <foaf:primaryTopic rdf:resource="{$url}/resource/{dc:identifier}"/>
+      <foaf:primaryTopic rdf:resource="{$resourcePrefix}/datasets/{dc:identifier}"/>
     </dcat:CatalogRecord>
     <!-- Catalogue records
       "A record in a data catalog, describing a single dataset."
     -->
-    <dcat:Dataset rdf:about="{$url}/metadata/{dc:identifier}">
+    <dcat:Dataset rdf:about="{$resourcePrefix}/datasets/{dc:identifier}">
       <xsl:copy-of select="dc:*|dct:*"/>
     </dcat:Dataset>
   </xsl:template>

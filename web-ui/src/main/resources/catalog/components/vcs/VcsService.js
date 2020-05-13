@@ -53,7 +53,7 @@
               defer.resolve(format(data));
             }).
             error(function(data, status) {
-              defer.reject(error);
+              defer.reject(data);
             });
         return defer.promise;
       };

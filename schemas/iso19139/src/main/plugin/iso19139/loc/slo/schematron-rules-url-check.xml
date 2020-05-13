@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<strings>
+  <schematron.title>Valid&#xE1;cia URL</schematron.title>
+  <invalidurlcheck>Online kontrola odkazov na zdroje</invalidurlcheck>
+  <alert.invalidurl>
+    <div>Adresa URL je neplatn&#xE1;, chyba 404 alebo in&#xE1; chyba:</div>
+  </alert.invalidurl>
+  <alert.validurl>
+    <div>URL adresa je platn&#xE1;</div>
+  </alert.validurl>
+</strings>

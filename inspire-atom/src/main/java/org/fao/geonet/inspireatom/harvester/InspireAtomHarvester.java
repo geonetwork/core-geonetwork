@@ -23,33 +23,35 @@
 package org.fao.geonet.inspireatom.harvester;
 
 
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Logger;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.InspireAtomFeedRepository;
-import org.fao.geonet.repository.specification.InspireAtomFeedSpecs;
-import org.fao.geonet.repository.specification.MetadataSpecs;
-import org.fao.geonet.utils.Log;
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.inspireatom.util.InspireAtomUtil;
-import org.fao.geonet.domain.InspireAtomFeed;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.jdom.Element;
-import org.springframework.data.jpa.domain.Specifications;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.InspireAtomFeed;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.inspireatom.util.InspireAtomUtil;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.InspireAtomFeedRepository;
+import org.fao.geonet.repository.specification.InspireAtomFeedSpecs;
+import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
+
+import jeeves.server.context.ServiceContext;
 
 /**
  * Class to harvest the Atom documents referenced in the iso19139 in the catalog.
@@ -89,7 +91,7 @@ public class InspireAtomHarvester {
         // Using index information, as type is only available in index and not in database.
         // If retrieved from database retrieves all iso19139 metadata and should apply for each result an xslt process
         // to identify if a service or dataset (slow process)
-        List<Metadata> iso19139Metadata = InspireAtomUtil.searchMetadataByType(ServiceContext.get(), searchManager, "service");
+        List<AbstractMetadata> iso19139Metadata = InspireAtomUtil.searchMetadataByType(ServiceContext.get(), searchManager, "service");
         //List<Metadata> iso19139Metadata = metadataRepository.findAll(Specifications.where(MetadataSpecs.isType(MetadataType.METADATA)).and(MetadataSpecs.isIso19139Schema()));
 
         Element result = new Element("response");
@@ -127,8 +129,8 @@ public class InspireAtomHarvester {
 
         } catch (Exception x) {
             logger.error("ATOM feed harvest error: " + x.getMessage());
+            logger.error(x);
             result.addContent(new Element("error").setText(x.getMessage()));
-            x.printStackTrace();
         }
 
         return result;
@@ -148,8 +150,10 @@ public class InspireAtomHarvester {
         DataManager dataMan = context.getBean(DataManager.class);
         SettingManager sm = context.getBean(SettingManager.class);
 
-        final MetadataRepository metadataRepository = gc.getBean(MetadataRepository.class);
-        Metadata iso19139Metadata = metadataRepository.findOne(Specifications.where(MetadataSpecs.isType(MetadataType.METADATA)).and(MetadataSpecs.isIso19139Schema()));
+        final IMetadataUtils metadataUtils = gc.getBean(IMetadataUtils.class);
+        AbstractMetadata iso19139Metadata = metadataUtils.findOne(
+        		Specifications.where((Specification<Metadata>) MetadataSpecs.isType(MetadataType.METADATA))
+        			.and((Specification<Metadata>) MetadataSpecs.isIso19139Schema()));
 
 
         Element result = new Element("response");
@@ -184,7 +188,7 @@ public class InspireAtomHarvester {
             logger.info("ATOM feed harvest finished for metadata: " + metadataId);
         } catch (Exception x) {
             logger.error("ATOM feed harvest error: " + x.getMessage());
-            x.printStackTrace();
+            logger.error(x);
         }
     }
 
@@ -257,8 +261,8 @@ public class InspireAtomHarvester {
             } catch (Exception ex) {
                 // Log exception and continue processing the other metadata
                 logger.error("Failed to process atom feed for service metadata: " + metadataId + " " + ex.getMessage());
+                logger.error(ex);
                 result.addContent(new Element("feed").setAttribute("uuid", metadataUuid).setAttribute("error", ex.getMessage()).setAttribute("status", "error"));
-                ex.printStackTrace();
             }
         }
 
@@ -281,7 +285,7 @@ public class InspireAtomHarvester {
 
         final InspireAtomFeedRepository repository = gc.getBean(InspireAtomFeedRepository.class);
 
-        List<Metadata> iso19139Metadata = InspireAtomUtil.searchMetadataByType(ServiceContext.get(), gc.getBean(SearchManager.class), "dataset");
+        List<AbstractMetadata> iso19139Metadata = InspireAtomUtil.searchMetadataByType(ServiceContext.get(), gc.getBean(SearchManager.class), "dataset");
         //List<Metadata> iso19139Metadata = metadataRepository.findAll(Specifications.where(MetadataSpecs.isType(MetadataType.METADATA)).and(MetadataSpecs.isIso19139Schema()));
 
         Map<String, String> metadataWithAtomFeeds =
@@ -325,8 +329,8 @@ public class InspireAtomHarvester {
             } catch (Exception ex) {
                 // Log exception and continue processing the other metadata
                 logger.error("Failed to process atom feed for dataset metadata: " + metadataId + " " + ex.getMessage());
+                logger.error(ex);
                 result.addContent(new Element("feed").setAttribute("uuid", metadataUuid).setAttribute("error", ex.getMessage()).setAttribute("status", "error"));
-                ex.printStackTrace();
             }
         }
     }

@@ -1,0 +1,60 @@
+<div data-ng-show="url && url!=''">
+    <div data-ng-show="layerName!=''"
+         data-translate=""
+         data-translate-values="{url:'{{url}}', layer:'{{layerSelected.Title}} ({{layerName}})'}">
+              wmtsLinkDetails
+    </div>
+
+    <div data-ng-show="layerName==''"
+         data-translate=""
+         data-translate-values="{url:'{{url}}'}">
+              wmtsServiceLinkDetails
+    </div> <br/>
+</div>
+
+
+  <div class="btn-group" data-ng-if="isWmtsAvailable && isLayerInCapabilities && isMapViewerEnabled">
+
+    <button type="button"
+            class="btn btn-default btn-sm"
+            data-ng-click="addWmtsLayer()">
+          <span class="visible-md-*">
+            {{'addToMaponlinesrc'  | translate}}
+          </span>
+    </button>
+  </div>
+  <div data-ng-if="!isWmtsAvailable" class="clearfix gn-margin-top gn-margin-bottom">
+    <div class="fa fa-warning fa-2x fa-fw pull-left"></div>
+    <div class="pull-left" data-translate="">wmtsCapabilitiesNotAvailable</div>
+  </div>
+  <div data-ng-if="isWmtsAvailable && !isLayerInCapabilities" class="clearfix gn-margin-top gn-margin-bottom">
+    <div class="fa fa-warning fa-2x fa-fw pull-left"></div>
+    <div data-translate=""
+          class="pull-left width-75"
+          data-translate-values="{layerName:'{{layerName}}'}">wmtsLayerNotAvailable</div>
+  </div>
+  <div class="row" data-ng-if="isWmtsAvailable && !isLayerInCapabilities && isMapViewerEnabled">
+    <div class="col-md-8 gn-nopadding-left">
+      <select class="form-control"
+              data-ng-model="layerSelected"
+              data-ng-options="layer as layer.Title for layer in capabilities.Layer | orderBy: 'Title'">
+
+        <option value="">{{'wmtsChooseLayerToAdd' | translate}}</option>
+      </select>
+    </div>
+    <div class="col-md-4 gn-nopadding-left">
+      <div class="btn-group"
+           data-ng-show="layerSelected && isMapViewerEnabled">
+        <button type="button"
+                class="btn btn-default btn-sm"
+                data-ng-click="addSelectedLayerToMap(layerSelected)">
+          <span data-translate="">addToMap</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div data-ng-if="!capabilitiesChecked">
+  <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+  <span class="sr-only">Loading...</span>
+</div>

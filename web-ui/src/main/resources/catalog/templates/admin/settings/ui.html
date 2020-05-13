@@ -1,0 +1,116 @@
+<div class="row">
+    <div class="col-md-12"  data-ng-controller="GnSystemSettingsController">
+
+      <div class="navbar btn-toolbar">
+        <form class="form-inline">
+          <div class="well well-lg"
+               data-ng-cloak=""
+               data-ng-show="uiConfigurations.length === 0">
+            <div data-translate="">noConfigDefinedUsingTheDefault</div>
+            <br/>
+            <a class="btn btn-primary"
+               data-gn-click-and-spin="createDefaultUiConfig()"
+               data-translate="">createDefaultUiConfig</a>
+            <br/>
+          </div>
+
+          <div class="pull-left"
+               data-ng-show="uiConfigurations.length !== 0">
+            <label for="uiConfigurationList"
+                   title="{{'uiConfiguration-help' | translate}}"
+                   data-translate="">chooseAUiConfiguration</label>
+            <select id="uiConfigurationList"
+                    class="form-control"
+                    data-ng-options="c as c.id for c in uiConfigurations | orderBy: 'id'"
+                    data-ng-model="uiConfiguration"></select>
+          </div>
+
+          <div class="btn-toolbar pull-right">
+            <label for="addUiSettings" data-translate="">addUiSettings</label>
+
+            <div class="input-group">
+              <input class="form-control"
+                     type="text"
+                     id="addUiSettings"
+                     data-ng-model="uiConfigurationId"
+                     data-ng-model-options="{debounce: 300}"
+                     placeholder="{{'uiConfigurationName' | translate}}"/>
+              <span class="input-group-btn">
+                <button class="btn btn-primary"
+                        type="button"
+                        data-ng-disabled="!uiConfigurationIdIsValid"
+                        title="{{'createNewUiConfiguration' | translate}}"
+                        data-ng-click="createOrUpdateUiConfiguration(false, uiConfigurationId)">
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
+              </span>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel panel-default"
+           data-ng-show="uiConfiguration">
+        <div class="panel-heading">
+          <span data-translate="">ui</span>
+
+          <div data-gn-need-help="administrator-guide/configuring-the-catalog/user-interface-configuration.html"
+               class="pull-right"></div>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-lg-6 gn-nopadding-left">
+              <label for="filter-settings" data-translate="">filterSettings</label>
+              <div class="input-group">
+                <span class="input-group-addon"">
+                <i class="fa fa-filter" aria-hidden="true"></i>
+                </span>
+                <input class="form-control"
+                       type="text"
+                       id="filter-settings"
+                       placeholder="{{'filterPlaceHolder' | translate}}"
+                       data-ng-keyup="filterForm($event,'#gn-settings')" />
+                <span class="input-group-btn">
+                <button class="btn btn-default"
+                        type="button"
+                        title="{{'filterReset' | translate}}"
+                        data-ng-click="resetFilter('#gn-settings')">
+                  <i class="fa fa-close" aria-hidden="true"></i>
+                </button>
+              </span>
+              </div>
+            </div>
+            <div class="col-lg-6 gn-nopadding-right">
+              <div class="btn-toolbar">
+                <button type="submit" class="btn btn-primary pull-right"
+                        id="gn-btn-settings-save"
+                        data-ng-disabled="!gnSettings.$valid"
+                        data-ng-click="updateUiConfig()">
+                  <span class="fa fa-save"></span>
+                  {{"saveSettings"|translate}}
+                </button>
+                <button type="submit" class="btn btn-danger pull-right"
+                        id="gn-btn-settings-delete"
+                        data-ng-disabled="!uiConfiguration"
+                        data-ng-click="deleteUiConfig()">
+                  <span class="fa fa-times"></span>
+                  {{"deleteUiSettings"|translate}}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <form id="gn-settings" name="gnSettings" class="form-horizontal">
+            <div data-gn-ui-config="uiConfiguration.configuration"></div>
+          </form>
+
+          <button type="submit" class="btn btn-primary pull-right"
+                  data-ng-disabled="!gnSettings.$valid"
+                  data-ng-click="updateUiConfig()">
+            <span class="fa fa-save"></span>
+            {{"saveSettings"|translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

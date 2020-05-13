@@ -42,10 +42,10 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void getSite() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(get("/api/site")
+        this.mockMvc.perform(get("/srv/api/site")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$['system/site/name']", is("My GeoNetwork catalogue")));
     }
 
@@ -55,21 +55,25 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/api/site/settings")
+        this.mockMvc.perform(get("/srv/api/site/settings")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$['system/site/name']", is("My GeoNetwork catalogue")));
     }
 
     @Test
     public void getInformation() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(get("/api/site/info")
-            .accept(MediaType.parseMediaType("application/json")))
+
+        this.mockHttpSession = loginAsAdmin();
+
+        this.mockMvc.perform(get("/srv/api/site/info")
+            .accept(MediaType.parseMediaType("application/json"))
+            .session(this.mockHttpSession))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.catalogue['data.dataDir']", is(not(isEmptyOrNullString()))))
             .andExpect(jsonPath("$.index['index.path']", is(not(isEmptyOrNullString()))))
             .andExpect(jsonPath("$.main['java.version']", is(not(isEmptyOrNullString()))))
@@ -83,11 +87,11 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // This service returns a boolean, not encapsulated in json, can't use jsonPath
-        MvcResult result = this.mockMvc.perform(get("/api/site/info/isCasEnabled")
+        MvcResult result = this.mockMvc.perform(get("/srv/api/site/info/isCasEnabled")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andReturn();
 
         Assert.assertTrue(result.getResponse().getContentAsString().equals("false"));
@@ -101,7 +105,7 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
 
         Assert.assertTrue(systemInfo.getStagingProfile().equals(SystemInfo.Staging.development.toString()));
 
-        this.mockMvc.perform(put("/api/site/info/staging/" + SystemInfo.Staging.production.toString())
+        this.mockMvc.perform(put("/srv/api/site/info/staging/" + SystemInfo.Staging.production.toString())
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -116,11 +120,11 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // This service returns a boolean, not encapsulated in json, can't use jsonPath
-        MvcResult result = this.mockMvc.perform(get("/api/site/info/readonly")
+        MvcResult result = this.mockMvc.perform(get("/srv/api/site/info/readonly")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andReturn();
 
         Assert.assertTrue(result.getResponse().getContentAsString().equals("false"));
@@ -133,11 +137,11 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // This service returns a boolean, not encapsulated in json, can't use jsonPath
-        MvcResult result = this.mockMvc.perform(get("/api/site/indexing")
+        MvcResult result = this.mockMvc.perform(get("/srv/api/site/indexing")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andReturn();
 
         Assert.assertTrue(result.getResponse().getContentAsString().equals("false"));
@@ -146,10 +150,10 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void getSystemInfo() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(get("/api/site/info/build")
+        this.mockMvc.perform(get("/srv/api/site/info/build")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.stagingProfile", is(not(isEmptyOrNullString()))))
             .andExpect(jsonPath("$.buildDate", is(not(isEmptyOrNullString()))))
             .andExpect(jsonPath("$.version", is(not(isEmptyOrNullString()))))
@@ -159,10 +163,10 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void getXslTransformations() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(get("/api/site/info/transforms")
+        this.mockMvc.perform(get("/srv/api/site/info/transforms")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$", hasSize(greaterThan(0))));
     }
 

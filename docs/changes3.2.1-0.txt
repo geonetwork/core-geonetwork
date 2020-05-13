@@ -1,0 +1,307 @@
+================================================================================
+===
+=== GeoNetwork 3.2.1: List of changes
+===
+================================================================================
+- Update doc submodule.
+- Workflow / Fix status update error.
+- Batch process / Add selection bucket id.
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- Merge branch 'josegar74-fix/servicecontext' into 3.2.x
+- Merge pull request #1869 from geosolutions-it/32x_1849_views_settings
+- Remove usage of ServiceContext.get() in api methods
+- XslUtil twoCharLangCode method generates an error: Cannot convert eng to 2 char iso lang code - Fixed additional usages of ServiceContext.get() in XslUtil - #1739
+- Fix hierarchy facet align close #1793
+- Create child does not work #1860.
+- geopublisher broken #1853.
+- JSLint.
+- Avoid JS error.
+- FIxed defunct Default Category in Admin->Groups page #1781.
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- Harvester / User not set after save #1883 - add missing label.
+- JNDI spatial indexes in postgis - adding some doc in the XML (#1877)
+- Merge branch 'oscarfonts-reenable-category-edition' into 3.2.x
+- Merge branch 'reenable-category-edition' of https://github.com/oscarfonts/core-geonetwork into oscarfonts-reenable-category-edition
+- Fix standalone formatter view md.viewer The service was broken, all is refined, see previous commit
+- gn - Rework on md.viewer view this view is used to load a metadata in a specific formatter. Use gnFormatter to load the formatter and angular  behind this instead of call formatter rul manually. Rework on goog.requires to have all elements in formatter view
+- print form : remove extra legend field and translate
+-  privileges: remove extra column
+- privileges: remove extra filter input and refine style
+- Adding context to HarvestError creations
+- Multinode - Error accessing formatter in non default node #1870 - Fix test
+- Merge remote-tracking branch 'origin/3.0.x' into 3.2.x
+- Multinode - CSW information is not saved in non default node #1882
+- ISO19139 / Service & dataset link #1879.
+- ISO19119 / Service / add WMS link #1881.
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- ISO19139 / Add link to WMS without layer name does nothing #1880.
+- gn -Fix md.viewer view that was broken
+- AccessManager / Intranet / Do not accept empty config #1878.
+- Mapviewer / wms 1.1.* not supported #1862.
+- Multinode - Error accessing formatter in non default node #1870
+- CSW Harvester - xsl process doesn't work #1872
+- 'Fix1847' (#1865)
+- Removing useless code and adding a forceful check if a harvester does not finish when asked to.
+- Fixed long time bug in harvesters: threads waiting for stupid things forever and more!
+- #1849: Enable INSPIRE view in config-editor.xml according to settings
+- WFS indexing / Drop features and report and properly reset initial states after removal.
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- RSS broken - doesn't return results #1852.
+- Merge pull request #1854 from juanluisrp/fix-harvester-owneruser
+- Fix harvester owner user not saved on creation
+- Revert "First element of a set of elements with a minimum element of one should have the is-required asterisk on the editor"
+- Use checkboxes for category and groupOwner panels
+- Editor / Add constraint on number type.
+- Editor / ISO19139 / Add missing table header row when adding the first operatesOn element.
+- Merge pull request #1844 from oscarfonts/spanish-iso19139-3.2.x
+- Remove CSS rule that prevents categories (tags) to be switched on in record editor
+- Catalan translations: add copyright headers and apply xml formatting
+- Apply spanish translations from 3.0.x + copyright headers + xml formatting
+- Editor / Keyword / Search in correct language on init
+- Editor / ISO19139 / Optional dates may be flagged as mandatory #1838.
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- Add maven properties to set Jetty port (useful when running multiple dev envs).
+- Editor / Table mode / Add nested form #1837.
+- Merge remote-tracking branch 'origin/3.0.x' into 3.2.x
+- Unrestricted Upload - cleanup uploaded resources when jeeves request finishes - #1835
+- Formatter / XSL / Add schema dependent CSS class in case custom style may be applied per schema
+- Editor / Add title prefix for thesaurus title.
+- Removing debug
+- Editing / Lost child elements when sending XML snippet with more than one child #1834
+- Editing / Lost child elements when sending XML snippet with more than one child #1834
+- Fixing bad merges #1826
+- Fix XSL error when uuidref is present. Related to #1823
+- Fix for all harvesters: Now you can configure a user to own all records of a harvester. If the harvester is updated, all records belonging to that harvester will be updated with the new owner
+- Merge pull request #1832 from juanluisrp/url-validation-retry-request
+- Retry the request as POST when HEAD fails
+- Multinode mode: After editing metadata and saving it, displays old title in the dashboard #1831
+- Avoid NullPointerException in SessionTimeoutCookieFilter if no user-agent is send
+- Merge remote-tracking branch 'origin/3.0.x' into 3.2.x
+- Parser for WMS Capabilities should use GetMap end-point - #1787
+- Merge remote-tracking branch 'origin/3.0.x' into 3.2.x
+- Lucene 'type' field indexing differs in the multilingual indexing - #1828
+- ISO19139 / Fix overriden labels.
+- CSW / ogc:PropertyIsNotEqualTo returning 0 #1827.
+- CSW / ogc:PropertyIsNotEqualTo returning 0 #1827.
+- ISO19139 / Fix xsl issue on scopedName label.
+- Admin / CSW test / Disable call if request is empty.
+- Suggestion / Better error report reported on client side.
+- Multiple selection / Fix init on page load.
+- Suggestion / Add parameter to limit number of suggestions returned #1825.
+- Editor / Add capability to define add button label and icon #1823.
+- ISO19110 / Load ISO19139 labels which were missing and causing errors. Load labels of schema dependencies.
+- ISO19139 / Add table view for service operations.
+- Editor / Add support of fieldset removal when defining custom del xpath #1820.
+- ISO19139 / Use table mode for operatesOn.
+- Don't fail if multiple labels match name and context (#1775)
+- Selection / Add multiple selection support. (#1819)
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- Editor / Fieldset may have no matching element to edit. This is the case when using table mode. Do not display remove control in such cases.
+- Cleaing.
+- Merge branch '3.2.x' of https://github.com/geonetwork/core-geonetwork into 3.2.x
+- Remove old conflict characters `>>>> ...`
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- ISO19139 / scopedName not displayed #1815.
+- Wrong selected count in badge in the editor dashboard (#1817)
+- Add icelandic language - Update transifex script
+- Add icelandic language
+- ISO19139 / Date type code sometimes duplicated - fixed by increasing priority of ignore template.
+- Fix user unable to login after password reset in the admin console (#1814)
+- Editor / Make table layout configurable (#1813)
+- Processing / Add the capability to preview process results. (#1798)
+- Use the GeoNetwork connection manager to check the URL (#1812)
+- add required attribute to template field (#1811)
+- Directory / Add support for DQ gmd:report directory #1810.
+- JSLint - update to closure linter 2.3.19.
+- JSLint.
+- Fixes some JS errors in the thesaurus directive (#1808)
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- Editor / ISO19139 / TimeInstantType #1807.
+- Display a link to the XML editor if an error occurs (#1806)
+- Editor / Adding temporal extent may return NPE #1805.
+- JSLint.
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- ISO19139 / Bbox / Add capability to set geographicIdentifier #1801.
+- Editor / Bbox / Can't add new ones #1803.
+- Editor / Bbox / GeoNames #1802.
+- Merge branch '3.2.x' of https://github.com/geonetwork/core-geonetwork into 3.2.x
+- Merge remote-tracking branch 'origin/3.0.x' into 3.2.x
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- Remove geonet namespace as much as possible #1800.
+- Using ng-options instead of ng-repeat to make sure ng-model keeps in sync
+- Merge pull request #1795 from josegar74/improvements/file-path-validations
+- File path checks improvements
+- Security fix for entity resolver
+- Add missing space between button in record view.
+- PDF Formatter in version 3.2.0 #1768 - Use xsl-view formatter in PDF mode by default.
+- Update from tansifex.
+- Updates from transifex.
+- Record top toolbar / Add Download button and Manage record button and use clear icon to easily find the links.
+- JSLint.
+- Improve feedback form / Tooltips, drop NGR css classes, add gn-required for mandatory field, do not POST form before form is valid.
+- Add missing deps injection.
+- Record / View menu / Add XML mode (to be consistent with editor mode).
+- JSLint.
+- Result view / Add capability to open record in new tab.
+- More visible rating info.
+- Make all permalinks on record and search look the same (ie. tooltip, order, icons).
+- ui - Fix search input layout. Close #1789
+- Add tooltips on selection widget.
+- Sign in / Missing forget your password panel #1788.
+- An editor user can edit his user profile and remove privileges #1612.
+- ui - Improve home main search input layout
+- Improve mdview layout
+- Add optionnal parameter in gn-related to tell parent if results
+- Improve mdview layout
+- Make abstract more visible
+- More space for search in home page
+- Move updatedOn to sidebar
+- More coherent font sizing in mdview, homogenize buttons
+- Remove welcomeTitle
+- Remove getstared
+- Merge pull request #1784 from josegar74/improvements/inflate
+- Replace javascript ES6 String.startsWith with String.indexOf
+- Replace javascript ES6 String.includes with String.indexOf
+- Add geonames to region picker
+- [editor] - Improve spatial map input layout
+- Improve search facets style
+- Integer validity check
+- Merge pull request #1783 from fxprunayre/improvements/language-default
+- Add (optional) inflate mechanism to apply when the metadata is edited
+- Update labels.xml (#1774)
+- Default language improvement.
+- WebDav harvester fails if remote file names containing special characters like { or } #1782
+- ISO19139 / Some ISO profiles extend CI_ResponsibleParty.
+- Editor / Empty keyword even if set in XML #1779
+- Merge pull request #1724 from archaeogeek/patch-5
+- Merge pull request #1769 from juanluisrp/label-and-tooltip-codelists
+- Merge pull request #1767 from fxprunayre/improvement/editor/displaymetadatatitle
+- Use xpath to retrieve labels for codelist selects
+- Sanitize parameters in angular translate
+- Merge remote-tracking branch 'origin/3.2.x' into improvement/editor/displaymetadatatitle
+- Editor / Top tool bar / Add title.
+- [print] Fix enableLegends sent to print service
+- [gn] - Fix layout of privileges panel
+- Rename directives.js to directive.js In order to the partials got cached by wro4j
+- Template to get the helper of an element doesn't work for elements without context defined #1766
+- Disable debug mode for Jeeves for production
+- Merge pull request #1761 from oscarfonts/i18n-cat-rationale2
+- Raonament > Raó
+- Allow filtering of privileges
+- Fix print dirictive with  2
+- Merge pull request #1758 from oscarfonts/fix-crs-label
+- Merge pull request #1759 from oscarfonts/descriptiveKeywords-default-label
+- Default label for descriptiveKeywords. Closes #48
+- Merge pull request #1756 from oscarfonts/default-editor-vertical-extent
+- Merge pull request #1757 from oscarfonts/update-userlist-ie11
+- Don't prepend :: to CRS when no codeSpace is defined
+- Keep user list up to date in IE11
+- Fix VerticalExtent fields on default edit form
+- print - optimize the scales in order to make the print zone always the same size
+- Add output format in print form
+- TEMP fix print deactivate for all versions of ol3
+- Merge pull request #1738 from josegar74/fix/multilingual-fields-indexing
+- Schematron compilation doesn't expand abstract rules #1755
+- Merge pull request #1754 from juanluisrp/data-dir-env-var
+- Merge branch 'data-dir-env-var' of github.com:juanluisrp/core-geonetwork into data-dir-env-var
+- Fix lookup of GN data dir when using environment vars
+- Fix lookup of GN data dir when using environtment vars
+- Merge pull request #1753 from juanluisrp/schematron-xpath-criteria
+- Use StringsUtils contains instead the null check
+- Tests are working again. Broken by 01e8f76c74df5f127c91c2009c453865b83541c2.
+- Remove placeholder that shows duplicated text in typeahead
+- Fix empty SchematronCriteria empty value
+- Reformat code
+- Styling issues in Schematron applicability screen
+- Fix JS error when copying a SchematronCriteria group
+- Fix gnLynky directive to work with IE
+- add a load promise for configService (settings)
+- [viewer] secure ows context max ectent
+- CORS / Add header (#1748)
+- [viewer] - check for feature at pixel only for KML layers Improve perf
+- Fix WMTS layer not restored from context
+- use uri in localstorage key to avoid mismatch on same domain pages
+- Preserve overlays order when loading context
+- CORS / Add header
+- [ncwms] Fix styles/palette param in getLegendGraphic
+- Fix available dates in datepicker input
+- Fix bing key as a string in DB
+- Fix: bing map key is a string type in settings
+- Fix bing key as a string
+- Lib / Update to GeoTools 16 #1747.
+- Put bingMap key in DB admin settings (#1746)
+- [viewer] update ncwms service and directive
+- WFS Features / Indexing using RPTWithGeomSpatialField which is faster for indexing. Add some time info in log.
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- Fix missing translation related to new version #1732.
+- Improve shell script to create nodes for multinode version #1741
+- Editor / Template mode / Add usage of gn-language-picker directive.
+- Revert "Don't fail if user-agent is null"
+- Editor / Multilingual record / Fix case when helper also update a related element. Only main language is supported."
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- API / Avoid duplicates in operation names #1737.
+- Don't fail if user-agent is null
+- Editor / Fragment copy / Truncate selected target title when too long.
+- Update angular-translate to version 2.12.1. Fix for #1710. (#1732)
+- First element of a set of elements with a minimum element of one should have the is-required asterisk on the editor
+- Add missing namespace - Related to pull request #1729
+- Delete records doesn't refresh the search page results #759
+- Revert "Delete records doesn't refresh the search page results #759"
+- Delete records doesn't refresh the search page results #759
+- Import / Display report only if it contains info.
+- No JS UI / Fix relative link to record formatter.
+- Datasets endpoint could be based on metadata UUID or on resource identifier.
+- No JS UI / Fix response handling in HTML in Firefox
+- Merge pull request #1729 from juanluisrp/label-contexts
+- Add context to the label search for custom fields and templates
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- RDF / Fix link in RDF output.
+- Using proxy from XSLT if defined
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- Indexing / Add position and uuid in responsible party element.
+- Virtual CSW / Failed to save parameters #1725.
+- Update print-config.yaml
+- Adding database update
+- Update version to 3.0.6-SNAPSHOT
+- Update version to 3.0.5-0
+- Revert "Use ApiUtils.createServiceContext to avoid NPE."
+- Do not use hardcoded srv. It may be something else.
+- Use ApiUtils.createServiceContext to avoid NPE.
+- Fix database migration 3.0.5
+- Fixing bug related to harvesting csw https servers with proxy
+- RDF / URI prefix can be customized and records URI resolves. (#1616)
+- Directory / XML mode does not save entry #1713.
+- Swagger doc / When shebang contains parameters init inputs.
+- API / Do not display useless method parameters in doc.
+- Merge remote-tracking branch 'origin/3.2.x' into 3.2.x
+- Editor / Improve fragment copy layout.
+- Editor / Record fragment / Improve layout.
+- Category / Populate labels on creation (#1702).
+- CSV export / Group keyword by thesaurus #1698
+- Improve Dutch translations (#1696)
+- Update version to 3.2.1-SNAPSHOT.
+- Update version to 3.2.0-0.
+- Set all privileges option is un-labelled in batch privileges form #1686
+- Apply in 3.0.x the commit 822f813c495cfc2c326ffc4713298cf878ae126f: when you don't administer a group, privileges associated to …that group of the user you are editing should remain static.
+- Use POST for user update and reset password services #1684
+- Adding missing translations
+- Merge pull request #1124 from grootstebozewolf/NioPathAwareCatalogResolverFix
+- Merge pull request #1669 from josegar74/improvements/anchor-href
+- Merge pull request #1683 from oscarfonts/3.0.x
+- Fenomen, Feature => Objecte Geogràfic
+- Catalan & Spanish updates from Transifex
+- More catalan & spanish translations
+- Citation identifier 3.14
+- Extracte => Resum 3.13
+- Voice => Telephon
+- Typo. 3.4
+- Translated <abbrLabel>s. 2.13
+- Tanslation correction. 2.6
+- Label for gmd:CI_OnLineFunctionCode (2.5)
+- Revisión 2.3
+- Rename loc files
+- Display links in gmx:Anchor (used for gmd:useLimitation) with hyperlinks in metadata views
+- #1538 Index anylight for multilingual
+- #1538 Remove debug messages
+- #1538 Fix indexing for multilingual lucene fields: responsibleparty, inspiretheme and protocol
+- Added exception for path resolver.

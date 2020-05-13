@@ -41,9 +41,14 @@
           searchResults: '=',
           paginationInfo: '=paginationInfo',
           selection: '=selectRecords',
+          selectionBucket: '@',
           onMdClick: '='
         },
         link: function(scope, element, attrs) {
+
+          if (angular.isUndefined(scope.selectionBucket)) {
+            scope.selectionBucket = (Math.random() + '').replace('.', '');
+          }
 
           // get init options
           scope.options = {};
@@ -97,11 +102,13 @@
                 if (scope.options.selection.mode.indexOf('multiple') >= 0) {
                   if (md['geonet:info'].selected === false) {
                     md['geonet:info'].selected = true;
-                    gnSearchManagerService.select(md['geonet:info'].uuid)
+                    gnSearchManagerService.select(
+                        md['geonet:info'].uuid, scope.selectionBucket)
                         .then(updateSelectionNumber);
                   } else {
                     md['geonet:info'].selected = false;
-                    gnSearchManagerService.unselect(md['geonet:info'].uuid)
+                    gnSearchManagerService.unselect(
+                        md['geonet:info'].uuid, scope.selectionBucket)
                         .then(updateSelectionNumber);
                   }
                 }
@@ -128,9 +135,11 @@
               md['geonet:info'].selected = all;
             });
             if (all) {
-              gnSearchManagerService.selectAll().then(updateSelectionNumber);
+              gnSearchManagerService.selectAll(
+                  scope.selectionBucket).then(updateSelectionNumber);
             } else {
-              gnSearchManagerService.selectNone().then(updateSelectionNumber);
+              gnSearchManagerService.selectNone(
+                  scope.selectionBucket).then(updateSelectionNumber);
             }
           };
 

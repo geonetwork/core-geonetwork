@@ -29,6 +29,7 @@ public class Matchers {
     def env
 
     def isUrlEl = {!it.'gmd:URL'.text().isEmpty()}
+    def isAnchorUrlEl = {!it.'gmx:Anchor'['@xlink:href'].text().isEmpty()}
     def simpleElements = ['gco:Decimal', 'gco:Integer', 'gco:Scale', 'gco:Angle', 'gco:Measure', 'gco:Distance',
                           'gmd:MD_PixelOrientationCode', 'gts:TM_PeriodDuration']
 
@@ -60,7 +61,7 @@ public class Matchers {
 
     def isContainerEl = {el ->
         !isBasicType(el) && !isSimpleTextEl(el) &&
-                !isTextEl(el) && !isUrlEl(el) &&
+                !isTextEl(el) && !isUrlEl(el) && !isAnchorUrlEl(el) &&
                 !isCodeListEl(el) && !hasCodeListChild(el) &&
                 !isDateEl(el) && !hasDateChild(el) &&
                 !el.children().isEmpty()

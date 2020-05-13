@@ -1,0 +1,326 @@
+@import "../../../style/gn_search.less";
+// variables for manipulating the theme
+@import "gn_variables_default.less"; // must be last
+
+// styling for a single result: metadata view
+
+.btn-toolbar {
+  .btn-group {
+    margin-left: 0;
+    margin-right: 5px;
+  }
+  .btn-group.pull-right, .pull-right .btn-group {
+    margin-left: 5px;
+    margin-right: 0;
+  }
+}
+
+// draft
+.see-draft-alert {
+  padding: 15px 50px;
+  a {
+    color: @gray-dark;
+    &:hover {
+      color: @gray-darker;
+    }
+  }
+}
+
+.gn-md-view {
+  padding: 15px 20px;
+  background-color: @gn-md-view-background-color;
+  // highlight the active view
+  .gn-view-menu-button {
+    .dropdown-menu {
+      li {
+        &.disabled {
+          background-color: @dropdown-link-hover-bg;
+          a {
+            color: @gray-base;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+  .gn-related-item {
+    margin-top: -1px;
+    border-radius: 0;
+    padding: 10px 15px 10px 15px;
+    .col-xs-1 {
+      .fa {
+        font-size: 2em;
+      }
+      .fa-stack-1x {
+        font-size: 1em;
+      }
+      .fa-stack {
+        i {
+          opacity: 1 !important;
+        }
+        strong {
+          font-family: arial;
+          display: block;
+          margin-top: 2em;
+        }
+      }
+    }
+    h3 {
+      margin-top: 0;
+      color: #333;
+      padding-left: 0;
+      margin-bottom: 10px;
+    }
+    .table-striped td {
+      padding-left: 8px;
+    }
+    .gn-atom {
+      max-height: 250px;
+      overflow: auto;
+    }
+  }
+  .gn-md-side {
+    .gn-img-thumbnail,
+    .gn-img-extent {
+      max-width: 100%;
+    }
+    .gn-img-thumbnail {
+      border: 1px solid #ccc;
+      padding: 4px;
+    }
+    section {
+      margin-bottom: 20px;
+    }
+    h2 {
+      font-size: 16px;
+    }
+  }
+  .view-header {
+    border-bottom: 2px solid #e5e5e5;
+  }
+  .entry {
+    margin-left: 8px;
+    border-left: 2px solid #ddd;
+    padding-left: 8px;
+    h2 {
+      margin-left: -16px;
+      margin-top: 10px;
+      margin-bottom: 0px;
+      background-color: #fff;
+      padding: 5px 0;
+    }
+    dl {
+      padding-bottom: 5px;
+      dt {
+        margin-left: -5px;
+        display: table;
+        white-space: nowrap;
+        &:before {
+          border-top: 2px solid #ddd;
+          content: '';
+          display: table-cell;
+          position: relative;
+          top: 0.6em;
+          width: 15px;
+        }
+        &:before { right: 5px; }
+      }
+      dd {
+        margin-left: 10px;
+        ul {
+          padding-left: 1.5em;
+          margin: 0;
+        }
+      }
+    }
+    address {
+      margin-bottom: 0;
+    }
+    .entry {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      h2 {
+        margin-left: -5px;
+        display: table;
+        white-space: nowrap;
+        margin-bottom: 5px;
+        &:before {
+          border-top: 2px solid #ddd;
+          content: '';
+          display: table-cell;
+          position: relative;
+          top: 0.5em;
+          width: 15px;
+        }
+        &:before { right: 5px; }
+      }
+      .target {
+        margin-left: 12px;
+        margin-bottom: 5px;
+        dl {
+          margin-left: 10px;
+        }
+        .entry {
+          h2 {
+            margin-left: 5px;
+          }
+          dl {
+            margin-left: 20px;
+          }
+        }
+      }
+    }
+    .gn-contact {
+      margin-left: 10px;
+      address {
+        padding: 5px 0 10px 0;
+        line-height: 1.7em;
+      }
+    }
+  }
+  input[readonly] {
+    background:#fff;
+  }
+  .extent{
+    display:inline-block;position:relative;margin:2em 0 0 90px;
+  }
+  .coord{
+    position:absolute;width:100px;
+  }
+  .coord-north{
+    top:-1.25em;
+    left:50%;
+    margin-left:-75px;
+  }
+  .coord-south{
+    bottom:-1.25em;
+    left:50%;
+    margin-left:-75px;
+  }
+  .coord-east{
+    right:-75px;
+    top:50%;
+    margin-top:-1.25em;
+  }
+  .coord-west{
+    left:-75px;
+    top:50%;
+    margin-top:-1.25em;
+  }
+  // IE11 flexbox fix
+  .gn-record > table {
+    table-layout: fixed;
+  }
+}
+
+// nojs styles
+.gn-nojs {
+  .gn-md-view {
+    h1 {
+      margin: 15px 0 25px 0;
+      font-size: 22px;
+      i {
+        display: none;
+      }
+    }
+    blockquote {
+      font-size: 15px;
+      line-height: 1.5em;
+    }
+    .gn-md-side {
+      h2 {
+        font-size: 16px;
+      }
+      .gn-img-thumbnail {
+        line-height: 1.42857;
+        background-color: rgb(255, 255, 255);
+        display: inline-block;
+        max-width: 100%;
+        height: auto;
+        padding: 4px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: rgb(221, 221, 221);
+        border-image: initial;
+        border-radius: 4px;
+        transition: all 0.2s ease-in-out 0s;
+      }
+    }
+    h2 {
+      font-size: 18px;
+    }
+    .gn-contact {
+      padding: 8px;
+      border-top: 1px solid #ddd;
+      h2 {
+        font-size: 14px;
+        margin: 0 0 15px 0;
+      }
+    }
+    dl {
+      .clearfix();
+      border-top: 1px solid #ddd;
+      margin-bottom: 0;
+      padding-bottom: 0;
+      dt {
+        float:left;
+        width: 35%;
+        padding: 8px;
+        font-weight: 500;
+      }
+      dd {
+        float: left;
+        padding: 8px;
+        width: 65%;
+        ul {
+          padding-left: 1.2em;
+        }
+      }
+    }
+    h2.view-header, h5.view-header {
+      border-bottom: 0;
+    }
+    .entry {
+      margin-left: 0 !important;
+      padding-left: 0;
+      border-left: 0;
+      h2 {
+        font-weight: 400;
+        margin: 15px 0;
+      }
+    }
+    .extent {
+      display: inline-block;
+      position: relative;
+      margin: 2em 0px 0px 90px;
+      border-width: 1px;
+      border-style: solid;
+      border-color: rgb(204, 204, 204);
+      border-image: initial;
+    }
+
+    // tabs
+    .nav-tabs {
+      border: 0;
+      > li {
+        a {
+          border: 1px solid @nav-tabs-border-color;
+          border-radius: @border-radius-base;
+          margin: 0 5px 5px 0;
+        }
+      }
+    }
+    .tab-content {
+      #gn-tab-default {
+        h1.view-header {
+          display: none;
+        }
+      }
+      .tab-pane {
+        display: block;
+      }
+
+    }
+  }
+}

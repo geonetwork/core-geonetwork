@@ -1,0 +1,73 @@
+<span>
+  <button type="button" class="btn btn-default navbar-btn"
+          data-ng-show="!isInspireValidationEnabled"
+          title="{{'validate'|translate}}"
+          data-gn-click-and-spin="save(true, true)">
+    <i class="fa fa-check"/>&nbsp;
+    <span class="visible-lg" data-translate=""
+          title="{{'validate-help' | translate}}">validate</span>
+  </button>
+
+
+  <div class="btn-group" data-ng-show="isInspireValidationEnabled">
+    <button class="btn btn-default dropdown-toggle" type="button"
+            data-toggle="dropdown" aria-expanded="true">
+      <i data-ng-show="!isDownloadingRecord" class="fa fa-check"/>
+      <i
+        data-ng-show="isDownloadingRecord" class="fa fa-spinner fa-spin"/>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li role="presentation"><a role="menuitem" tabindex="-1"
+                                 data-gn-click-and-spin="save(true, true)"
+                                 title="{{'validate-help' | translate}}">
+        <i class="fa fa-check"/>&nbsp;
+          <span
+            class="visible-lg" data-translate="">validate</span>
+      </a>
+      </li>
+      <li class="divider"></li>
+      <li class="dropdown-header">
+        <span class="visible-lg"
+              data-translate="">validate-inspire</span></li>
+      <li class="dropdown-header">
+        <span data-translate="">lastInspireValidationStatus</span>
+        <gn-md-type-inspire-validation-widget metadata="md"></gn-md-type-inspire-validation-widget>
+      </li>
+      <li role="presentation" data-ng-show="!isDownloadingRecord"
+          data-ng-repeat="(key,value) in testsuites">
+        <a
+          role="menuitem" tabindex="-1"
+          data-gn-click-and-spin="validateInspire(key)"
+          title="{{'validate-inspire-help' | translate}} {{value.join(', ')}}">
+          <i
+            class="fa fa-chevron-right"/>&nbsp;
+
+          <span>{{key}}</span>
+      </a>
+      </li>
+
+      <li role="presentation" data-ng-show="isDownloadingRecord">
+        <a
+          role="menuitem" tabindex="-1"
+          data-gn-click-and-spin="validateInspire()"
+          title="{{'validate-inspire-help' | translate}}">
+        <i
+          class="fa fa-spinner fa-spin"/>&nbsp;
+          <span class="visible-lg"
+                data-translate="">reportGeneration</span>
+      </a>
+      </li>
+      <li role="presentation" data-ng-show="isDownloadedRecord">
+        <a role="menuitem"
+           tabindex="-1" target="_blank" href="{{reportURL}}"
+           title="{{'validate-inspire-help' | translate}}">
+          <i
+            class="fa fa-fw fa-file fa-inspire"/>&nbsp;
+          <span class="visible-lg"
+                data-translate="">reportLink</span> - {{reportStatus}}
+      </a>
+      </li>
+    </ul>
+  </div>
+</span>

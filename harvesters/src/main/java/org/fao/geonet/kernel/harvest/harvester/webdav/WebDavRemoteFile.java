@@ -25,7 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.webdav;
 
 import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
-
+import com.google.common.net.UrlEscapers;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.SchemaManager;
@@ -33,6 +33,8 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Date;
 
 
 //=============================================================================
@@ -46,8 +48,12 @@ class WebDavRemoteFile implements RemoteFile {
 
     public WebDavRemoteFile(Sardine sardine, String baseURL, DavResource davResource) {
         this.sardine = sardine;
-        path = baseURL + davResource.getPath();
-        changeDate = new ISODate(davResource.getModified().getTime(), false);
+        path = baseURL + UrlEscapers.urlFragmentEscaper().escape(davResource.getPath());
+        Date modifiedDate = davResource.getModified();
+        if (modifiedDate == null) {
+            modifiedDate = Calendar.getInstance().getTime();
+        }
+        changeDate = new ISODate(modifiedDate.getTime(), false);
     }
 
     //---------------------------------------------------------------------------

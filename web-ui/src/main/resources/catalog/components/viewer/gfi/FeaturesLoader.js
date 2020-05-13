@@ -49,7 +49,7 @@
   geonetwork.GnFeaturesLoader = function(config, $injector) {
     this.$injector = $injector;
     this.$http = this.$injector.get('$http');
-    this.gnProxyUrl = this.$injector.get('gnGlobalSettings').proxyUrl;
+    this.urlUtils = this.$injector.get('gnUrlUtils');
 
     this.layer = config.layer;
     this.map = config.map;
@@ -64,9 +64,6 @@
     return this.loading;
   };
 
-  geonetwork.GnFeaturesLoader.prototype.proxyfyUrl = function(url) {
-    return this.gnProxyUrl + encodeURIComponent(url);
-  };
 
   /**
    *
@@ -87,39 +84,97 @@
         map = this.map,
         coordinates = this.coordinates;
 
-    var uri = layer.getSource().getGetFeatureInfoUrl(
+    var uuid;
+    if(layer.get('md')) {
+      uuid = layer.get('md').getUuid();
+    } else if(layer.get('metadataUuid')) {
+      uuid = layer.get('metadataUuid');
+    }
+
+    var infoFormat = false;
+
+    //check if infoFormat is available in getCapabilities
+    if(layer.get('capRequest') &&
+      layer.get('capRequest').GetFeatureInfo &&
+      angular.isArray(layer.get('capRequest').GetFeatureInfo.Format) &&
+      layer.get('capRequest').GetFeatureInfo.Format.length > 0) {
+      if($.inArray(infoFormat,
+          layer.get('capRequest').GetFeatureInfo.Format) == -1) {
+
+        // Search for available formats friendly to us
+        // using plain standard EMACS Javascript
+        var friendlyFormats = layer.get('capRequest').GetFeatureInfo.Format
+            .filter(function (el) {
+              return el.toLowerCase().localeCompare('application/json') == 0
+              || el.toLowerCase().localeCompare('application/geojson') == 0
+              || el.toLowerCase().localeCompare('application/vnd.ogc.gml') == 0
+              || el.toLowerCase().localeCompare('text/xml') == 0;
+            });
+
+        if(friendlyFormats.length > 0) {
+          //take any of them
+          infoFormat = friendlyFormats[0];
+        }
+
+        //Heavy failback: take any available format
+        //we will deal later with this unknown and
+        //trust OpenLayers know how to deal with it
+        if(!infoFormat
+            && layer.get('capRequest').GetFeatureInfo.Format.length
+            && layer.get('capRequest').GetFeatureInfo.Format.length > 0) {
+          layer.infoFormat = layer.get('capRequest').GetFeatureInfo.Format[0];
+        }
+      }
+    }
+
+    //Did we get anything from getCapabilities?
+    if(infoFormat) {
+      layer.infoFormat = infoFormat;
+    }
+
+    var uri = layer.getSource().getFeatureInfoUrl(
         coordinates,
         map.getView().getResolution(),
         map.getView().getProjection(),
-        {
-          INFO_FORMAT: layer.ncInfo ? 'text/xml' : 'application/vnd.ogc.gml'
-        }
-        );
+        { INFO_FORMAT: infoFormat });
     uri += '&FEATURE_COUNT=2147483647';
 
     this.loading = true;
-    this.promise = this.$http.get(
-        this.proxyfyUrl(uri)).then(function(response) {
+    this.promise = this.$http.get(uri,{
+      "data": "",
+      "headers": {
+        "Content-Type": "text/plain"
+      }
+    }).then(function(response) {
 
-      this.loading = false;
-      if (layer.ncInfo) {
-        var doc = ol.xml.parse(response.data);
-        var props = {};
-        ['longitude', 'latitude', 'time', 'value'].forEach(function(v) {
-          var node = doc.getElementsByTagName(v);
-          if (node && node.length > 0) {
-            props[v] = ol.xml.getAllTextContent(node[0], true);
-          }
+      if(infoFormat &&
+        (infoFormat.toLowerCase().localeCompare('application/json') == 0 ||
+          infoFormat.toLowerCase().localeCompare('application/geojson') == 0 )) {
+        var jsonf = new ol.format.GeoJSON();
+        var features = [];
+        response.data.features.forEach(function(f) {
+          features.push(jsonf.readFeature(f));
         });
-        this.features = (props.value && props.value != 'none') ?
-            [new ol.Feature(props)] : [];
+        this.features = features;
+      } else if(infoFormat &&
+        (infoFormat.toLowerCase().localeCompare('text/xml') == 0
+        || infoFormat.toLowerCase().localeCompare('application/vnd.ogc.gml') == 0 )) {
+        var format = new ol.format.WMSGetFeatureInfo();
+        this.features = format.readFeatures(response.data, {
+          featureProjection: map.getView().getProjection()
+        });
       } else {
+        //Ooops, unknown format.
+        console.warn("Unknown format for GetFeatureInfo " + infoFormat);
+
+        //Try anyway with the default one and cross fingers
         var format = new ol.format.WMSGetFeatureInfo();
         this.features = format.readFeatures(response.data, {
           featureProjection: map.getView().getProjection()
         });
       }
 
+      this.loading = false;
       return this.features;
 
     }.bind(this), function() {
@@ -129,17 +184,78 @@
 
     }.bind(this));
 
+        this.dictionary = null;
+
+        if(uuid) {
+          this.dictionary = this.$http.get('../api/records/'+uuid+'/featureCatalog?_content_type=json')
+          .then(function(response) {
+            if(response.data['decodeMap']!=null) {
+              return response.data['decodeMap'];
+            } else {
+              return null;
+        	}
+          }.bind(this), function(err) {
+        	return null;
+          }.bind(this));
+        }
+
+  };
+
+  geonetwork.GnFeaturesGFILoader.prototype.formatUrlValues_ = function(url) {
+    return '<a href="' + url + '" target="_blank">' + linkTpl + '</a>';
   };
 
   geonetwork.GnFeaturesGFILoader.prototype.getBsTableConfig = function() {
     var pageList = [5, 10, 50, 100];
     var exclude = ['FID', 'boundedBy', 'the_geom', 'thegeom'];
     var $filter = this.$injector.get('$filter');
+    var $q = this.$injector.get('$q');
+    var that = this;
 
-    return this.promise.then(function(features) {
+    var promises = [
+      this.promise,
+      this.dictionary
+      ];
+
+    return $q.all(promises).then(function(data) {
+
+      features = data[0];
+      dictionary = data[1];
+
       if (!features || features.length == 0) {
         return;
       }
+
+      var data = features.map(function(f) {
+        var obj = f.getProperties();
+        Object.keys(obj).forEach(function(key) {
+          if (exclude.indexOf(key) == -1) {
+            var value = obj[key];
+            if (!(obj[key] instanceof Object)) {
+              //Make sure it is a string and not a number
+              obj[key] = obj[key]+'';
+
+              // Linky directive may create invalid link if a full HTTP
+              // URL is provided with character like ")" which will be
+              // considered as text (eg. Kibana link with filters).
+              if (that.urlUtils.isValid(obj[key])) {
+                obj[key] = that.formatUrlValues_(obj[key]);
+              } else {
+                obj[key] = $filter('linky')(obj[key], '_blank');
+              }
+              if (obj[key]) {
+                obj[key] = obj[key].replace(/>(.)*</, ' ' +
+                    'target="_blank">' + linkTpl + '<');
+              }
+            } else {
+              // Exclude objects which will not be displayed properly
+              exclude.push(key);
+            }
+          }
+        });
+        return obj;
+      });
+
       var columns = Object.keys(features[0].getProperties()).map(function(x) {
         return {
           field: x,
@@ -150,21 +266,20 @@
         };
       });
 
+      if(dictionary  != null) {
+        for (var i = 0; i < columns.length; i++) {
+          if(!angular.isUndefined(dictionary[columns[i]['field']])) {
+            var title = dictionary[columns[i]['field']][0];
+            var desc = dictionary[columns[i]['field']][1];
+            columns[i]['title']  = title;
+            columns[i]['titleTooltip']  = desc;
+          }
+        }
+      }
+
       return {
         columns: columns,
-        data: features.map(function(f) {
-          var obj = f.getProperties();
-          Object.keys(obj).forEach(function(key) {
-            if (exclude.indexOf(key) == -1) {
-              obj[key] = $filter('linky')(obj[key], '_blank');
-              if (obj[key]) {
-                obj[key] = obj[key].replace(/>(.)*</, ' ' +
-                    'target="_blank">' + linkTpl + '<');
-              }
-            }
-          });
-          return obj;
-        }),
+        data: data,
         pagination: true,
         pageSize: pageList[1],
         pageList: pageList
@@ -181,13 +296,26 @@
   };
 
   geonetwork.GnFeaturesGFILoader.prototype.getFeatureFromRow = function(row) {
-    var geoms = ['the_geom', 'thegeom'];
-    for (var i = 0; i < 2; i++) {
-      if (row[geoms[i]] instanceof ol.geom.Geometry) {
-        return new ol.Feature();
-        // return new ol.Feature({ // FIXME WMS-GFI doesnt guess dataProjection
-        //   geometry: row[geoms[i]]
-        // });
+    var geoms = ['the_geom', 'thegeom', 'boundedBy'];
+    for (var i = 0; i < geoms.length; i++) {
+      var geom = row[geoms[i]];
+      if (geoms[i] == 'boundedBy' && jQuery.isArray(geom)) {
+        if (geom[0] == geom[2] && geom[1] == geom[3]) {
+          geom = new ol.geom.Point([geom[0], geom[1]]);
+        } else {
+          geom = new ol.geom.Polygon.fromExtent(geom);
+        }
+        if (this.projection) {
+          geom = geom.transform(
+              this.projection,
+              this.map.getView().getProjection()
+              );
+        }
+      }
+      if (geom instanceof ol.geom.Geometry) {
+        return new ol.Feature({
+          geometry: geom
+        });
       }
     }
   };
@@ -196,26 +324,88 @@
    *
    * @constructor
    */
-  geonetwork.GnFeaturesSOLRLoader = function(config, $injector) {
+  geonetwork.GnFeaturesINDEXLoader = function(config, $injector) {
     geonetwork.GnFeaturesLoader.call(this, config, $injector);
 
     this.layer = config.layer;
     this.coordinates = config.coordinates;
-    this.solrObject = config.solrObject;
+    this.indexObject = config.indexObject;
   };
 
-  geonetwork.inherits(geonetwork.GnFeaturesSOLRLoader,
+  geonetwork.inherits(geonetwork.GnFeaturesINDEXLoader,
       geonetwork.GnFeaturesLoader);
 
-  geonetwork.GnFeaturesSOLRLoader.prototype.getBsTableConfig = function() {
+  /**
+   * Format an url type attribute to a html link <a href=...">.
+   * @return {*}
+   * @private
+   */
+  geonetwork.GnFeaturesINDEXLoader.prototype.formatUrlValues_ = function(url) {
+    var $filter = this.$injector.get('$filter');
+
+    url = this.fillUrlWithFilter_(url);
+    var link = $filter('linky')(url, '_blank');
+    if (link != url) {
+      link = link.replace(/>(.)*</,
+          ' ' + 'target="_blank">' + linkTpl + '<'
+          );
+    }
+    return link;
+  };
+
+  /**
+   * Substitutes predefined filter value in urls.
+   * http://www.emso-fr.org?${filtre_param_liste}${filtre_param_group_liste} is
+   * transformed into
+   * http://www.emso-fr.org?param_liste=Escherichia&param_group_liste=Microbio
+   * if those value are set in wfsFilter facets search.
+   *
+   * @param {string} url
+   * @return {string} substitued url
+   * @private
+   */
+  geonetwork.GnFeaturesINDEXLoader.prototype.fillUrlWithFilter_ =
+      function(url) {
+
+    var indexFilters = this.indexObject.getState();
+
+    var URL_SUBSTITUTE_PREFIX = 'filtre_';
+    var regex = /\$\{(\w+)\}/g;
+    var placeholders = [];
+    var urlFilters = [];
+    var paramsToAdd = {};
+    var match;
+
+    while (match = regex.exec(url)) {
+      placeholders.push(match[0]);
+      urlFilters.push(match[1].substring(
+          URL_SUBSTITUTE_PREFIX.length, match[1].length));
+    }
+
+    urlFilters.forEach(function(p, i) {
+      var name = p;
+      var idxName = this.indexObject.getIdxNameObj_(name).idxName;
+      var fValue = indexFilters.qParams[idxName];
+      url = url.replace(placeholders[i], '');
+
+      if (fValue) {
+        paramsToAdd[name] = Object.keys(fValue.values)[0];
+      }
+    }.bind(this));
+
+    return this.urlUtils.append(url, this.urlUtils.toKeyValue(paramsToAdd));
+  };
+
+  geonetwork.GnFeaturesINDEXLoader.prototype.getBsTableConfig = function() {
     var $q = this.$injector.get('$q');
     var defer = $q.defer();
+    var $filter = this.$injector.get('$filter');
 
     var pageList = [5, 10, 50, 100],
         columns = [],
-        solr = this.solrObject,
+        index = this.indexObject,
         map = this.map,
-        fields = solr.indexFields || solr.filteredDocTypeFieldsInfo;
+        fields = index.indexFields || index.filteredDocTypeFieldsInfo;
 
     fields.forEach(function(field) {
       if ($.inArray(field.idxName, this.excludeCols) === -1) {
@@ -223,46 +413,49 @@
           field: field.idxName,
           title: field.label,
           titleTooltip: field.label,
-          sortable: true
+          sortable: true,
+          formatter: function(val, row, index) {
+            var outputValue = val;
+            if (this.urlUtils.isValid(val)) {
+              outputValue = this.formatUrlValues_(val);
+            }
+            return outputValue;
+          }.bind(this)
         });
       }
-    });
+    }.bind(this));
 
-    // get an update solr request url with geometry filter based on a point
-    var url = this.coordinates ?
-        this.solrObject.getMergedUrl({}, {
-          pt: ol.proj.transform(this.coordinates,
-              map.getView().getProjection(), 'EPSG:4326').reverse().join(','),
-          //5 pixels radius tolerance
-          d: map.getView().getResolution() / 400,
-          sfield: solr.geomField.idxName
-        }, this.solrObject.getState()) +
-        '&fq={!geofilt sfield=' + solr.geomField.idxName + '}' :
-            this.solrObject.getMergedUrl({}, {}, this.solrObject.getState());
+    // get an update index request url with geometry filter based on a point
+    var url = this.indexObject.baseUrl;
+    var state = angular.extend({}, this.indexObject.getState());
+    state.params = state.qParams;
+    var coordinates = this.coordinates;
 
-    url = url.replace('rows=0', '');
-    if (url.indexOf('&q=') === -1) {
-      url += '&q=*:*';
-    }
     this.loading = true;
     defer.resolve({
       url: url,
+      contentType: 'application/json',
+      method: 'POST',
       queryParams: function(p) {
-        var params = {
-          rows: p.limit,
-          start: p.offset
-        };
+        var queryObject = this.indexObject.buildESParams(state, {},
+            p.offset || 0, p.limit || 10000);
         if (p.sort) {
-          params.sort = p.sort + ' ' + p.order;
+          queryObject.sort = [];
+          var sort = {};
+          sort[p.sort] = {'order' : p.order};
+          queryObject.sort.push(sort);
         }
-        return params;
-      },
-      //data: scope.data.response.docs,
+        return JSON.stringify(queryObject);
+      }.bind(this),
       responseHandler: function(res) {
-        this.count = res.response.numFound;
+        this.count = res.hits.total.value;
+        var rows = [];
+        for (var i = 0; i < res.hits.hits.length; i++) {
+          rows.push(res.hits.hits[i]._source);
+        }
         return {
-          total: res.response.numFound,
-          rows: res.response.docs
+          total: res.hits.total.value,
+          rows: rows
         };
       }.bind(this),
       onSort: function() {
@@ -279,27 +472,27 @@
       columns: columns,
       pagination: true,
       sidePagination: 'server',
-      totalRows: this.solrObject.totalCount,
+      totalRows: this.indexObject.totalCount,
       pageSize: pageList[1],
       pageList: pageList
     });
     return defer.promise;
   };
 
-  geonetwork.GnFeaturesSOLRLoader.prototype.getCount = function() {
+  geonetwork.GnFeaturesINDEXLoader.prototype.getCount = function() {
     return this.count;
   };
 
-  geonetwork.GnFeaturesSOLRLoader.prototype.getFeatureFromRow = function(row) {
-    var geom = row[this.solrObject.geomField.idxName];
+  geonetwork.GnFeaturesINDEXLoader.prototype.getFeatureFromRow = function(row) {
+    var geom = row[this.indexObject.geomField.idxName];
     if (angular.isArray(geom)) {
       geom = geom[0];
     }
-    geom = new ol.format.WKT().readFeature(geom, {
+    geom = new ol.format.GeoJSON().readGeometry(geom, {
       dataProjection: 'EPSG:4326',
       featureProjection: this.map.getView().getProjection()
     });
-    return geom;
+    return new ol.Feature({geometry: geom});
   };
 
 

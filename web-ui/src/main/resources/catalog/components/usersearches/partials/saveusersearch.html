@@ -1,0 +1,97 @@
+<div>
+  <p data-translate="">userSearchSaveHeader</p>
+
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label class="col-sm-2 control-label"
+             data-translate="">userSearchName</label>
+      <div class="col-sm-10"
+           gn-multilingual-field="{{langList}}"
+           main-language="{{currentLangShown}}">
+        <input data-ng-repeat="(lang3, lang2) in availableLangs" type="text"
+               name="name" class="form-control" lang="{{lang2}}" maxlength="255"
+               data-ng-model="userSearch.names[lang3]"/>
+      </div>
+    </div>
+
+    <div class="form-group" data-ng-show="!isFeaturedSearch()">
+      <label class="col-sm-2 control-label"
+             data-translate="">userSearchGroups</label>
+
+      <div class="col-sm-9 input-group">
+        <div data-gn-multiselect="userSearchGroups.groups"
+             data-choices="userSearchGroups.choices"></div>
+      </div>
+    </div>
+
+    <div class="panel panel-default"
+         data-ng-show="canSetFeatureTypeInSearch()">
+      <div class="panel-heading">
+        <input type="checkbox" id="featured" data-ng-checked="isFeaturedSearch()"
+               data-ng-click="toggleFeaturedType()"/>
+        <label for="featured" data-translate="">userSearchFeatured</label>
+        <i class="fa fa-star fa-fw"></i>
+      </div>
+      <div class="panel-body"
+           data-ng-show="canSetFeatureTypeInSearch() && isFeaturedSearch()">
+        <div class="form-group">
+          <label class="col-sm-2 control-label"
+                 for="featuredType"
+                 data-translate="">userSearchFeaturedDisplayIn</label>
+          <div class="col-sm-10">
+            <select class="form-control"
+                    id="featuredType"
+                    data-ng-model="userSearch.featuredType">
+              <option value="h" data-translate="">userSearchFeaturedDisplayInHomePage</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="logo"
+                 class="col-sm-2 control-label"
+                 data-translate="">userSearchLogo</label>
+          <div class="col-sm-10">
+            <input type="text" id="logo" class="form-control"
+                 data-ng-model="userSearch.logo" maxlength="255"/>
+            <img data-ng-if="userSearch.logo"
+                 data-ng-src="{{userSearch.logo}}"
+                 class="gn-source-logo"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group" data-ng-show="editMode">
+      <label class="col-sm-2 control-label"
+             for="searchUrl"
+             data-translate="">userSearchUrl</label>
+
+      <div class="col-sm-9 input-group">
+        <input type="text" id="searchUrl"
+               class="form-control" readonly="readonly"
+               data-ng-model="userSearch.url"/>
+
+        <span class="input-group-btn">
+            <button type="button"
+                    data-ng-click="updateUrl()"
+                    class="btn btn-default"
+                    data-translate="">userSearchUpdateUrl</button>
+        </span>
+      </div>
+    </div>
+
+
+  </form>
+  <br/>
+
+  <div class="btn-toolbar">
+    <button type="button"
+            class="btn btn-primary pull-right"
+            data-gn-click-and-spin="saveUserSearch(true)">
+      <i class="fa fa-fw fa-save"></i>
+      <span data-translate="">save</span>
+    </button>
+  </div>
+</div>
+

@@ -23,30 +23,49 @@
 
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
-import jeeves.server.context.ServiceContext;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.command.AbortExecutionException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.HarvesterUtil;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -60,64 +79,29 @@ import org.fao.oaipmh.responses.ListIdentifiersResponse;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
+import jeeves.server.context.ServiceContext;
+
+import javax.annotation.Nonnull;
 
 //=============================================================================
 
-class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
+class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestResult> {
+
     private HarvestResult result;
-    //--------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //--------------------------------------------------------------------------
     private Logger log;
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
     private ServiceContext context;
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //---------------------------------------------------------------------------
-    private OaiPmhParams params;
-
-    //---------------------------------------------------------------------------
     private DataManager dataMan;
-
-    //--------------------------------------------------------------------------
+    private IMetadataManager metadataManager;
+    private IMetadataIndexer metadataIndexer;
+    private IMetadataUtils metadataUtils;
     private CategoryMapper localCateg;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Private methods : addMetadata
-    //---
-    //--------------------------------------------------------------------------
     private GroupMapper localGroups;
-
-    //--------------------------------------------------------------------------
     private UUIDMapper localUuids;
 
-    //--------------------------------------------------------------------------
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
-
-    //--------------------------------------------------------------------------
+    private List<HarvestError> errors = new LinkedList<>();
 
     public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, OaiPmhParams params) {
         super(cancelMonitor);
@@ -129,6 +113,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         dataMan = gc.getBean(DataManager.class);
+        metadataManager = gc.getBean(IMetadataManager.class);
+        metadataIndexer = gc.getBean(IMetadataIndexer.class);
+        metadataUtils = gc.getBean(IMetadataUtils.class);
     }
 
     //--------------------------------------------------------------------------
@@ -148,7 +135,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         try {
             t.setUrl(new URL(params.url));
         } catch (MalformedURLException e1) {
-            HarvestError harvestError = new HarvestError(e1, log);
+            HarvestError harvestError = new HarvestError(context, e1);
             harvestError.setDescription(harvestError.getDescription() + " " + params.url);
             errors.add(harvestError);
             throw new AbortExecutionException(e1);
@@ -163,8 +150,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         //--- perform all searches
 
-        Set<RecordInfo> records = new HashSet<RecordInfo>();
+        Set<RecordInfo> records = new HashSet<>();
 
+        boolean error = false;
         for (Search s : params.getSearches()) {
 
             if (cancelMonitor.get()) {
@@ -174,15 +162,17 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             try {
                 records.addAll(search(req, s));
             } catch (Exception e) {
+                error = true;
                 log.error("Unknown error trying to harvest");
                 log.error(e.getMessage());
-                e.printStackTrace();
-                errors.add(new HarvestError(e, log));
+                log.error(e);
+                errors.add(new HarvestError(context, e));
             } catch (Throwable e) {
+                error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(e.getMessage());
-                e.printStackTrace();
-                errors.add(new HarvestError(e, log));
+                log.error(e);
+                errors.add(new HarvestError(context, e));
             }
         }
 
@@ -191,25 +181,28 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 log.debug("Doing an empty search");
                 records.addAll(search(req, Search.createEmptySearch()));
             } catch (Exception e) {
+                error = true;
                 log.error("Unknown error trying to harvest");
                 log.error(e.getMessage());
-                e.printStackTrace();
-                errors.add(new HarvestError(e, log));
-            } catch (Throwable e) {
+                log.error(e);
+                errors.add(new HarvestError(context, e));
+            } catch(Throwable e) {
+                error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(e.getMessage());
-                e.printStackTrace();
-                errors.add(new HarvestError(e, log));
+                log.error(e);
+                errors.add(new HarvestError(context, e));
             }
         }
 
         log.info("Total records processed in all searches :" + records.size());
 
         //--- align local node
-
-        if (records.size() != 0)
+        if (!error) {
             align(t, records);
-
+        } else {
+            log.warning("Due to previous errors the align process has not been called");
+        }
         return result;
     }
 
@@ -229,7 +222,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         //--- execute request and loop on response
 
-        Set<RecordInfo> records = new HashSet<RecordInfo>();
+        Set<RecordInfo> records = new HashSet<>();
 
         log.info("Searching on : " + params.getName());
 
@@ -252,21 +245,15 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             return records;
         } catch (NoRecordsMatchException e) {
             log.warning("No records were matched: " + e.getMessage());
-            this.errors.add(new HarvestError(e, log));
+            this.errors.add(new HarvestError(context, e));
             return records;
         } catch (Exception e) {
             log.warning("Raised exception when searching : " + e);
             log.warning(Util.getStackTrace(e));
-            this.errors.add(new HarvestError(e, log));
+            this.errors.add(new HarvestError(context, e));
             throw new OperationAbortedEx("Raised exception when searching", e);
         }
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
 
     private void align(XmlRequest t, Set<RecordInfo> records) throws Exception {
         log.info("Start of alignment for : " + params.getName());
@@ -277,7 +264,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         localCateg = new CategoryMapper(context);
         localGroups = new GroupMapper(context);
-        localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
+        localUuids = new UUIDMapper(context.getBean(IMetadataUtils.class), params.getUuid());
+
+        Pair<String, Map<String, Object>> filter = HarvesterUtil.parseXSLFilter(params.xslfilter);
+        String processName = filter.one();
+        Map<String, Object> processParams = filter.two();
 
         dataMan.flush();
 
@@ -295,9 +286,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
                 if (log.isDebugEnabled())
                     log.debug("  - Removing old metadata with local id:" + id);
-                dataMan.deleteMetadataGroup(context, id);
+                metadataManager.deleteMetadataGroup(context, id);
 
-                dataMan.flush();
+                metadataManager.flush();
 
                 result.locallyRemoved++;
             }
@@ -311,19 +302,58 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 return;
             }
 
-            result.totalMetadata++;
+            try {
+                String databaseId = metadataUtils.getMetadataId(ri.id);
+                if (databaseId == null) {
+                    // record doesn't exist (so it doesn't belong to this harvester)
+                    log.debug(String.format("Adding record with id %s", ri.id));
+                    processParams.put("mdChangeDate", ri.changeDate);
+                    addMetadata(t, ri, processName, processParams);
+                } else if (localUuids.getID(ri.id) == null) {
+                    // Record with such uuid already exists in the database but doesn't belong to this harvester
+                    result.datasetUuidExist++;
 
-            String id = localUuids.getID(ri.id);
+                    switch (params.getOverrideUuid()) {
+                        case OVERRIDE:
+                            processParams.put("mdChangeDate", ri.changeDate);
+                            updateMetadata(t, ri, Integer.toString(metadataUtils.findOneByUuid(ri.id).getId()),
+                                processName, processParams, true);
+                            result.updatedMetadata++;
+                            break;
+                        case RANDOM:
+                            if (log.isDebugEnabled()) {
+                                log.debug(String.format("Generating random uuid for remote record with uuid %s", ri.id));
+                            }
+                            String newRandomUuid = UUID.randomUUID().toString();
+                            processParams.put("mdChangeDate", ri.changeDate);
+                            addMetadata(t, ri, processName, processParams, newRandomUuid);
+                            break;
+                        case SKIP:
+                            log.debug("Skipping record with uuid " + ri.id);
+                            result.uuidSkipped++;
+                            break;
+                        default:
+                            //nothing
+                    }
+                } else {
+                    //record exists and belongs to this harvester
+                    String id = localUuids.getID(ri.id);
+                    processParams.put("mdChangeDate", ri.changeDate);
+                    updateMetadata(t, ri, id, processName, processParams, false);
+                }
+                result.totalMetadata++;
+            } catch (Throwable tr) {
+                errors.add(new HarvestError(this.context, tr));
+                log.error("Unable to process record from OAI (" + this.params.getName() + ")");
+                log.error("   Record failed: " + ri.id + ". Error is: " + tr.getMessage());
+                log.error(tr);
+            } finally {
+                result.originalMetadata++;
 
-            if (id == null) {
-                addMetadata(t, ri);
-            } else {
-                updateMetadata(t, ri, id);
             }
         }
 
         dataMan.forceIndexChanges();
-
         log.info("End of alignment for : " + params.getName());
     }
 
@@ -339,7 +369,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         return false;
     }
 
-    private void addMetadata(XmlRequest t, RecordInfo ri) throws Exception {
+    private void addMetadata(XmlRequest t, RecordInfo ri, String processName, Map<String, Object> processParams) throws Exception {
+        addMetadata(t, ri, processName, processParams, null);
+    }
+
+    private void addMetadata(XmlRequest t, RecordInfo ri, String processName, Map<String, Object> processParams, String newUuid) throws Exception {
         Element md = retrieveMetadata(t, ri);
 
         if (md == null)
@@ -349,12 +383,29 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         String schema = dataMan.autodetectSchema(md);
 
-        if (log.isDebugEnabled()) log.debug("  - Adding metadata with remote id : " + ri.id);
+        if (log.isDebugEnabled()) {
+            log.debug("  - Adding metadata with remote id : " + ri.id);
+        }
+
+
+        // Apply the xsl filter chosen by UI
+        if (StringUtils.isNotEmpty(params.xslfilter)) {
+            md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
+                md, processName, processParams);
+
+            schema = dataMan.autodetectSchema(md);
+        }
 
         //
         // insert metadata
         //
-        Metadata metadata = new Metadata().setUuid(ri.id);
+        AbstractMetadata metadata = new Metadata();
+        if (newUuid != null) {
+            metadata.setUuid(newUuid);
+            md = metadataUtils.setUUID(schema, newUuid, md);
+        } else {
+            metadata.setUuid(ri.id);
+        }
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
@@ -363,22 +414,27 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             setCreateDate(ri.changeDate);
         metadata.getSourceInfo().
             setSourceId(params.getUuid()).
-            setOwner(Integer.parseInt(params.getOwnerId()));
+            setOwner(getOwner());
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid());
 
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        try {
+            metadata.getSourceInfo().setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
+        } catch (NumberFormatException e) {
+        }
 
-        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
+
+        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        dataMan.flush();
+        metadataManager.flush();
 
-        dataMan.indexMetadata(id, Math.random() < 0.01);
+        dataMan.indexMetadata(id, Math.random() < 0.01, null);
         result.addedMetadata++;
     }
 
@@ -414,26 +470,36 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             } else {
 
                 try {
-                    params.getValidate().validate(dataMan, context, md);
+                    Integer groupIdVal = null;
+                    if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                        groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                    }
+
+                    params.getValidate().validate(dataMan, context, md, groupIdVal);
                     return (Element) md.detach();
                 } catch (Exception e) {
                     log.info("Skipping metadata that does not validate. Remote id : " + ri.id);
                     result.doesNotValidate++;
                 }
-            }
-        } catch (JDOMException e) {
-            HarvestError harvestError = new HarvestError(e, log);
-            harvestError.setDescription("Skipping metadata with bad XML format. Remote id : " + ri.id);
-            harvestError.printLog(log);
+        }
+    }
+
+    catch(JDOMException e) {
+            HarvestError harvestError = new HarvestError(context, e);
+            harvestError.setDescription("Skipping metadata with bad XML format. Remote id : "+ ri.id);
+            harvestError.printLog();
             this.errors.add(harvestError);
             result.badFormat++;
-        } catch (Exception e) {
-            HarvestError harvestError = new HarvestError(e, log);
-            harvestError.setDescription("Raised exception while getting metadata file : " + e);
+    }
+
+    catch(Exception e)
+    {
+            HarvestError harvestError = new HarvestError(context, e);
+            harvestError.setDescription("Raised exception while getting metadata file : "+ e);
             this.errors.add(harvestError);
-            harvestError.printLog(log);
+            harvestError.printLog();
             result.unretrievable++;
-        }
+    }
 
         //--- we don't raise any exception here. Just try to go on
         return null;
@@ -446,32 +512,52 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
     private Element toDublinCore(Element md) {
         Path styleSheet = context.getAppPath().resolve("conversion/oai_dc-to-dublin-core/main.xsl");
 
-        try {
+        try
+        {
             return Xml.transform(md, styleSheet);
-        } catch (Exception e) {
-            HarvestError harvestError = new HarvestError(e, log);
-            harvestError.setDescription("Cannot convert oai_dc to dublin core : " + e);
+        }
+        catch (Exception e)
+        {
+            HarvestError harvestError = new HarvestError(context, e);
+            harvestError.setDescription("Cannot convert oai_dc to dublin core : "+ e);
             this.errors.add(harvestError);
-            harvestError.printLog(log);
+            harvestError.printLog();
             return null;
         }
     }
 
-    private void updateMetadata(XmlRequest t, RecordInfo ri, String id) throws Exception {
+    private void updateMetadata(XmlRequest t, RecordInfo ri, String id, String processName, Map<String, Object> processParams, boolean force) throws Exception {
         String date = localUuids.getChangeDate(ri.id);
 
-        if (!ri.isMoreRecentThan(date)) {
-            if (log.isDebugEnabled())
+        if (!force && !ri.isMoreRecentThan(date)) {
+            if (log.isDebugEnabled()) {
                 log.debug("  - Metadata XML not changed for remote id : " + ri.id);
+            }
             result.unchangedMetadata++;
         } else {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("  - Updating local metadata for remote id : " + ri.id);
+            }
 
             Element md = retrieveMetadata(t, ri);
 
-            if (md == null)
+            if (md == null) {
+                result.unchangedMetadata++;
                 return;
+            }
+
+            // The schema of the metadata
+            String schema = dataMan.autodetectSchema(md, null);
+            boolean updateSchema = false;
+
+            // Apply the xsl filter chosen by UI
+            if (StringUtils.isNotEmpty(params.xslfilter)) {
+                md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
+                    md, processName, processParams);
+
+                schema = dataMan.autodetectSchema(md);
+                updateSchema = true;
+            }
 
             //
             // update metadata
@@ -480,21 +566,47 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
-            final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate.toString(),
+
+
+            if (updateSchema) {
+                MetadataValidationRepository metadataValidationRepository =
+                    context.getBean(MetadataValidationRepository.class);
+
+                final String newSchema = schema;
+                metadataManager.update(Integer.parseInt(id), new Updater<AbstractMetadata>() {
+                    @Override
+                    public void apply(@Nonnull AbstractMetadata entity) {
+                        entity.getDataInfo().setSchemaId(newSchema);
+                    }
+                });
+
+                metadataValidationRepository.deleteAll(MetadataValidationSpecs.hasMetadataId(Integer.parseInt(id)));
+            }
+
+            final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate.toString(),
                 true);
+            if (force) {
+                //change ownership of metadata to new harvester
+                metadata.getHarvestInfo().setUuid(params.getUuid());
+                metadata.getSourceInfo().setSourceId(params.getUuid());
+
+                metadataManager.save(metadata);
+            }
 
             //--- the administrator could change privileges and categories using the
             //--- web interface so we have to re-set both
 
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-            repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+            repository.deleteAllByMetadataId(Integer.parseInt(id));
+            addPrivileges(id, params.getPrivileges(), localGroups, context);
 
             metadata.getCategories().clear();
-            addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
+            addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
-            dataMan.flush();
-            dataMan.indexMetadata(id, Math.random() < 0.01);
+            metadataManager.flush();
+            dataMan.indexMetadata(id, Math.random() < 0.01, null);
+            result.updatedMetadata++;
+            metadataIndexer.indexMetadata(id, true, null);
             result.updatedMetadata++;
         }
     }

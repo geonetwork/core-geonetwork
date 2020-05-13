@@ -31,4 +31,13 @@
   <refDate>Reference date</refDate>
   <temporalRef>Temporal information</temporalRef>
   <constraintInfo>Access constraint information</constraintInfo>
+  <overviews>Overviews</overviews>
+  <metadataInXML>XML</metadataInXML>
+  <providedBy>Provided by</providedBy>
+  <shareOnSocialSite>Share on social sites</shareOnSocialSite>
+  <viewMode>Views</viewMode>
+
+  <trueValue>Yes</trueValue>
+  <falseValue>No</falseValue>
+  <nilValue>Undefined</nilValue>
 </strings>

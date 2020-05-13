@@ -23,17 +23,24 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
-import jeeves.server.context.ServiceContext;
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -41,69 +48,28 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
-public class Aligner extends BaseAligner {
-    //--------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //--------------------------------------------------------------------------
+public class Aligner extends BaseAligner<GeoPRESTParams> {
 
     private Logger log;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Alignment method
-    //---
-    //--------------------------------------------------------------------------
     private ServiceContext context;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Private methods : addMetadata
-    //---
-    //--------------------------------------------------------------------------
     private XmlRequest request;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Private methods : updateMetadata
-    //---
-    //--------------------------------------------------------------------------
-    private GeoPRESTParams params;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //--------------------------------------------------------------------------
     private DataManager dataMan;
-
-    //--------------------------------------------------------------------------
+    private IMetadataManager metadataManager;
     private CategoryMapper localCateg;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //--------------------------------------------------------------------------
     private GroupMapper localGroups;
     private UUIDMapper localUuids;
     private HarvestResult result;
+
     public Aligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext sc, GeoPRESTParams params) throws Exception {
         super(cancelMonitor);
         this.log = log;
@@ -112,6 +78,7 @@ public class Aligner extends BaseAligner {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         dataMan = gc.getBean(DataManager.class);
+        metadataManager = gc.getBean(IMetadataManager.class);
         result = new HarvestResult();
 
         //--- setup REST operation rest/document?id={uuid}
@@ -129,9 +96,9 @@ public class Aligner extends BaseAligner {
 
         localCateg = new CategoryMapper(context);
         localGroups = new GroupMapper(context);
-        localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
+        localUuids = new UUIDMapper(context.getBean(IMetadataUtils.class), params.getUuid());
 
-        dataMan.flush();
+        metadataManager.flush();
 
         //-----------------------------------------------------------------------
         //--- remove old metadata
@@ -146,9 +113,9 @@ public class Aligner extends BaseAligner {
 
                 if (log.isDebugEnabled())
                     log.debug("  - Removing old metadata with local id:" + id);
-                dataMan.deleteMetadata(context, id);
+                metadataManager.deleteMetadata(context, id);
 
-                dataMan.flush();
+                metadataManager.flush();
 
                 result.locallyRemoved++;
             }
@@ -169,8 +136,8 @@ public class Aligner extends BaseAligner {
                 else updateMetadata(ri, id);
                 result.totalMetadata++;
 
-            } catch (Throwable t) {
-                errors.add(new HarvestError(t, log));
+            }catch (Throwable t) {
+                errors.add(new HarvestError(context, t));
                 log.error("Unable to process record from csw (" + this.params.getName() + ")");
                 log.error("   Record failed: " + ri.uuid);
             }
@@ -205,7 +172,8 @@ public class Aligner extends BaseAligner {
         // insert metadata
         //
         int userid = 1;
-        Metadata metadata = new Metadata().setUuid(ri.uuid);
+        AbstractMetadata metadata = new Metadata();
+        metadata.setUuid(ri.uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
@@ -219,15 +187,15 @@ public class Aligner extends BaseAligner {
             setHarvested(true).
             setUuid(params.getUuid());
 
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        dataMan.indexMetadata(id, Math.random() < 0.01);
+        dataMan.indexMetadata(id, Math.random() < 0.01, null);
         result.addedMetadata++;
     }
 
@@ -262,17 +230,17 @@ public class Aligner extends BaseAligner {
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
+                final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-                repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-                addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+                repository.deleteAllByMetadataId(Integer.parseInt(id));
+                addPrivileges(id, params.getPrivileges(), localGroups, context);
 
                 metadata.getCategories().clear();
-                addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
-                dataMan.flush();
+                addCategories(metadata, params.getCategories(), localCateg, context, null, true);
+                metadataManager.flush();
 
-                dataMan.indexMetadata(id, Math.random() < 0.01);
+                dataMan.indexMetadata(id, Math.random() < 0.01, null);
                 result.updatedMetadata++;
             }
         }
@@ -309,9 +277,9 @@ public class Aligner extends BaseAligner {
             try {
                 response = request.execute();
             } catch (Exception e) {
-                e.printStackTrace();
                 log.error("Getting record from GeoPortal REST raised exception: " + e.getMessage());
                 log.error("Sent request " + request.getSentData());
+                log.error(e);
                 throw new Exception(e);
             }
 
@@ -320,7 +288,12 @@ public class Aligner extends BaseAligner {
             }
 
             try {
-                params.getValidate().validate(dataMan, context, response);
+                Integer groupIdVal = null;
+                if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                    groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                }
+
+                params.getValidate().validate(dataMan, context, response, groupIdVal);
             } catch (Exception e) {
                 log.info("Ignoring invalid metadata with uuid " + uuid);
                 result.doesNotValidate++;
@@ -342,7 +315,7 @@ public class Aligner extends BaseAligner {
             return response;
         } catch (Exception e) {
             log.warning("Raised exception while getting record : " + e);
-            e.printStackTrace();
+            log.error(e);
             result.unretrievable++;
 
             //--- we don't raise any exception here. Just try to go on

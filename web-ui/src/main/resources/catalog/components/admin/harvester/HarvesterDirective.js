@@ -46,15 +46,17 @@
             'identification.html',
         link: function(scope, element, attrs) {
           scope.lang = 'eng'; // FIXME
+          scope.hideIconPicker = true; // hide or show the icon picker
           scope.openTranslationModal = function() {
-            if (scope.harvester.site.translations === undefined) {
-              scope.harvester.site.translations = {};
-              for (var i = 0; i < scope.languages.length; i++) {
-                if (scope.harvester.site.translations[scope.languages[i].id] ===
-                    undefined) {
-                  scope.harvester.site.translations[scope.languages[i].id] =
-                      scope.harvester.site.name;
-                }
+            var translations = scope.harvester.site.translations;
+            if (translations === undefined || angular.isArray(translations)) {
+              translations = {};
+              scope.harvester.site.translations = translations;
+            }
+
+            for (var i = 0; i < scope.languages.length; i++) {
+              if (translations[scope.languages[i].id] === undefined) {
+                translations[scope.languages[i].id] = scope.harvester.site.name;
               }
             }
             $('#translationModal').modal('show');
@@ -64,15 +66,9 @@
               .success(function(data) {
                 scope.icons = data[0];
               });
-          // $http.get('admin.usergroups.list@json?id=' + 1)
-          //          .success(function(data) {
-          $http.get('../api/languages', {cache: true})
+          $http.get('info?_content_type=json&type=languages', {cache: true})
               .success(function(data) {
-                scope.languages = data;
-              });
-          $http.get('../api/groups', {cache: true})
-              .success(function(data) {
-                scope.groups = data;
+                scope.languages = data.language;
               });
         }
       };
@@ -101,8 +97,8 @@
   /**
      * Display harvester schedule configuration.
      */
-  module.directive('gnHarvesterSchedule', ['$translate',
-    function($translate) {
+  module.directive('gnHarvesterSchedule', ['gnConfig','$translate',
+    function(gnConfig, $translate) {
 
       return {
         restrict: 'A',
@@ -119,6 +115,10 @@
                            '0 0/5 14 * * ?',
                            '0 15 10 ? * MON-FRI',
                            '0 15 10 15 * ?'];
+          scope.timeZone = gnConfig['system.server.timeZone'];
+          if (scope.timeZone) {
+            scope.timeZoneOffset = '(GMT' + moment.tz(scope.timeZone).format('Z / z') + ')'
+          }
           scope.setSchedule = function(exp) {
             scope.harvester.options.every = exp;
           };
@@ -141,8 +141,8 @@
      * for metadata privileges. To be improved.
      */
   module.directive('gnHarvesterPrivileges',
-      ['$http', '$translate', '$rootScope',
-       function($http, $translate, $rootScope) {
+      ['$http', '$translate', '$rootScope', 'gnShareConstants',
+       function($http, $translate, $rootScope, gnShareConstants) {
 
          return {
            restrict: 'A',
@@ -169,31 +169,35 @@
              };
              var defaultPrivileges = [getPrivilege(1)];
 
-             scope.visibleTo = function(who) {
-               scope.custom = false;
-               scope.selectedPrivileges = {};
-               if (who == 'all') {
-                 scope.allGroup = false;
-                 scope.selectedPrivileges = {1: true};
-               } else if (who == 'none') {
-                 scope.allGroup = false;
-                 scope.selectedPrivileges = {1: false};
-               } else if (who == 'allGroup') {
-                 scope.allGroup = !scope.allGroup;
-                 angular.forEach(scope.groups, function(g) {
-                   scope.selectedPrivileges[g.id] = scope.allGroup;
-                 });
-               }
-             };
+             // deal with order by
+             scope.sorter = null
+             scope.setSorter = function(g) {
+               if (scope.sorter == 'name') return g.label ? g.label[scope.lang] : g.name;
+               else if (scope.sorter == 'checked') return scope.selectedPrivileges[g['@id']];
+               else return 0;
+             }
+
+             var internalGroups =  gnShareConstants.internalGroups;
+
+             scope.keepInternalGroups = function(g){
+               if (internalGroups.includes(parseInt(g['@id']))) return true;
+               else return false;
+             }
+             scope.removeInternalGroups = function(g){
+               if (internalGroups.includes(parseInt(g['@id']))) return false;
+               else return true;
+             }
              function loadGroups() {
-               $http.get('../api/groups?withReservedGroup=true',
+               $http.get('info?_content_type=json&' +
+               'type=groupsIncludingSystemGroups',
                {cache: true})
                .success(function(data) {
-                 scope.groups = data;
+                 scope.groups = data !== 'null' ? data.group : null;
                });
              }
 
              var initHarvesterPrivileges = function() {
+
                angular.forEach(scope.harvester.privileges, function(g) {
                  scope.selectedPrivileges[g['@id']] = true;
                });
@@ -256,6 +260,29 @@
               scope.setIcon = function(icon) {
                 scope.logo = icon;
               };
+            }
+          };
+        }]);
+
+  /**
+   * Extra fields common for all harvesters
+   */
+  module.directive('gnHarvesterExtras',
+      ['$http', '$translate', '$rootScope',
+        function($http, $translate, $rootScope) {
+
+          return {
+            restrict: 'A',
+            replace: false,
+            templateUrl: '../../catalog/components/admin/harvester/partials/' +
+                'extras.html',
+
+            link: function(scope, element, attrs) {
+
+              $http.get('../api/languages', {cache: true})
+                  .success(function(data) {
+                    scope.languages = data;
+                  });
             }
           };
         }]);

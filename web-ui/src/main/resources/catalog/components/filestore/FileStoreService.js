@@ -25,7 +25,9 @@
   goog.provide('gn_filestore_service');
 
   var module = angular.module('gn_filestore_service', []);
-
+  module.filter('decodeURIComponent', function() {
+    return window.decodeURIComponent;
+  });
   module.factory('gnFileStoreService',
       ['$http',
        function($http) {
@@ -34,13 +36,15 @@
              return $http.get('../api/0.1/records/' +
                                   metadataUuid + '/attachments', {
                params: {
-                 filter: filter
+                 filter: filter,
+                 _random: Math.floor(Math.random() * 10000),
+                 approved: 'false'
                }
              });
            },
            updateStatus: function(resource) {
              return $http.patch(resource.url + '?visibility=' +
-             (resource.type == 'private' ? 'public' : 'private'));
+             (resource.visibility == 'PRIVATE' ? 'public' : 'private'));
            },
            delete: function(resource) {
              return $http.delete(resource.url);

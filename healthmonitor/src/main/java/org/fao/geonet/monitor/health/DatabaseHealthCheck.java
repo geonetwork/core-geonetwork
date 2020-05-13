@@ -37,7 +37,7 @@ import org.fao.geonet.repository.SettingRepository;
  */
 public class DatabaseHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {
-        return new HealthCheck("Database Connection") {
+        return new HealthCheck(this.getClass().getSimpleName()) {
             @Override
             protected Result check() throws Exception {
                 try {

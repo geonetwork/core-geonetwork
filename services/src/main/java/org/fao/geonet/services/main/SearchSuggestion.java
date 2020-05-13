@@ -103,6 +103,7 @@ public class SearchSuggestion implements Service {
     private String _defaultSearchField = "any";
 
     private ServiceConfig _config;
+    private int _defaultSize  = 100;
 
     /**
      * Set default parameters
@@ -122,13 +123,15 @@ public class SearchSuggestion implements Service {
         throws Exception {
         // The field to search in
         String fieldName = Util.getParam(params, PARAM_FIELD, _defaultSearchField);
+        int size = Util.getParam(params, "size", _defaultSize);
+
         // The value to search for
         String searchValue = Util.getParam(params, PARAM_Q, "");
         final String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
 
         // Search index term and/or index records
         String origin = Util.getParam(params, PARAM_ORIGIN, "");
-        // The max number of terms to return - only apply while searching terms
+        // The max number of terms to look into - only apply while searching terms
         int maxNumberOfTerms = Util.getParam(params, PARAM_MAX_NUMBER_OF_TERMS,
             _maxNumberOfTerms);
         // The minimum frequency for a term value to be proposed in suggestion -
@@ -142,6 +145,7 @@ public class SearchSuggestion implements Service {
                 "Autocomplete on field: '" + fieldName + "'" +
                     "\tsearching: '" + searchValue + "'" +
                     "\tthreshold: '" + threshold + "'" +
+                    "\tsize: '" + size + "'" +
                     "\tmaxNumberOfTerms: '" + maxNumberOfTerms + "'" +
                     "\tsortBy: '" + sortBy + "'" +
                     "\tfrom: '" + origin + "'");
@@ -203,12 +207,17 @@ public class SearchSuggestion implements Service {
             collectionOfSuggestions = listOfSuggestions;
         }
 
+        int count = 0;
         for (TermFrequency suggestion : collectionOfSuggestions) {
             Element md = new Element(ELEM_ITEM);
             // md.setAttribute("term", suggestion.replaceAll("\"",""));
             md.setAttribute(ATT_TERM, suggestion.getTerm());
             md.setAttribute(ATT_FREQ, suggestion.getFrequency() + "");
             suggestionsResponse.addContent(md);
+            count ++;
+            if (count >= size) {
+                break;
+            }
         }
 
         return suggestionsResponse;

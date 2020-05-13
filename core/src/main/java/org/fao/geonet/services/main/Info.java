@@ -231,7 +231,7 @@ public class Info implements Service {
                 result.addContent(context.getBean(OperationRepository.class).findAllAsXml());
 
             } else if (type.equals(REGIONS)) {
-                RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
+                RegionsDAO dao = context.getBean(RegionsDAO.class);
                 Element regions = dao.createSearchRequest(context).xmlResult();
                 result.addContent(regions);
             } else if (type.equals(ISOLANGUAGES)) {

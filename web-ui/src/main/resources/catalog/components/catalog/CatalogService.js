@@ -81,7 +81,24 @@
          * @return {HttpPromise} Future object
          */
         validate: function(id) {
-          return $http.put('../api/records/' + id + '/validate');
+          return $http.put('../api/records/' + id + '/validate/internal');
+        },
+
+        /**
+         * @ngdoc method
+         * @name gnMetadataManager#validateDirectoryEntry
+         * @methodOf gnMetadataManager
+         *
+         * @description
+         * Validate a directory entry (shared object) from catalog
+         *
+         * @param {string} id Internal id of the directory entry
+         * @param {bool} newState true is validated, false is rejected
+         * @return {HttpPromise} Future object
+         */
+        validateDirectoryEntry: function(id, newState) {
+          var param = '?isvalid=' + (newState ? 'true' : 'false');
+          return $http.put('../api/records/' + id + '/validate/internal' + param);
         },
 
         /**
@@ -97,23 +114,44 @@
            * @param {string} id Internal id of the metadata to be copied.
            * @param {string} groupId Internal id of the group of the metadata
            * @param {boolean} withFullPrivileges privileges to assign.
-           * @param {boolean} isTemplate type of the metadata
+           * @param {boolean|string} isTemplate type of the metadata (bool is
+           *  for TEMPLATE, other values are SUB_TEMPLATE and
+           *  TEMPLATE_OF_SUB_TEMPLATE)
            * @param {boolean} isChild is child of a parent metadata
            * @param {string} metadataUuid , the uuid of the metadata to create
            *                 (when metadata uuid is set to manual)
+           * @param {boolean} hasCategoryOfSource copy categories from source
            * @return {HttpPromise} Future object
            */
         copy: function(id, groupId, withFullPrivileges,
-            isTemplate, isChild, metadataUuid) {
+            isTemplate, isChild, metadataUuid, hasCategoryOfSource) {
+          // new md type determination
+          var mdType;
+          switch (isTemplate) {
+            case 'TEMPLATE_OF_SUB_TEMPLATE':
+              mdType = 'TEMPLATE_OF_SUB_TEMPLATE';
+              break;
+
+            case 'SUB_TEMPLATE':
+              mdType = 'SUB_TEMPLATE';
+              break;
+
+            case 'TEMPLATE':
+            case true:
+              mdType = 'TEMPLATE';
+              break;
+
+            default: mdType = 'METADATA';
+          }
+
           var url = gnUrlUtils.toKeyValue({
-            metadataType: isTemplate ?
-                (isTemplate === 'SUB_TEMPLATE' ? 'SUB_TEMPLATE' : 'TEMPLATE') :
-                'METADATA',
+            metadataType: mdType,
             sourceUuid: id,
-            isChildOfSource: isChild,
+            isChildOfSource: isChild ? 'true' : 'false',
             group: groupId,
-            isVisibleByAllGroupMembers: withFullPrivileges,
-            targetUuid: metadataUuid
+            isVisibleByAllGroupMembers: withFullPrivileges ? 'true' : 'false',
+            targetUuid: metadataUuid || '',
+            hasCategoryOfSource: hasCategoryOfSource ? 'true' : 'false'
           });
           return $http.put('../api/records/duplicate?' + url, {
             headers: {
@@ -158,19 +196,23 @@
            * @param {string} tab is the metadata editor tab to open
            * @param {string} metadataUuid , the uuid of the metadata to create
            *                 (when metadata uuid is set to manual)
+           * @param {boolean} hasCategoryOfSource copy categories from source
            * @return {HttpPromise} Future object
            */
         create: function(id, groupId, withFullPrivileges,
-            isTemplate, isChild, tab, metadataUuid) {
+            isTemplate, isChild, tab, metadataUuid, hasCategoryOfSource) {
 
           return this.copy(id, groupId, withFullPrivileges,
-              isTemplate, isChild, metadataUuid).success(function(id) {
-            var path = '/metadata/' + id;
-            if (tab) {
-              path += '/tab/' + tab;
-            }
-            $location.path(path);
-          });
+              isTemplate, isChild, metadataUuid, hasCategoryOfSource)
+              .success(function(id) {
+                var path = '/metadata/' + id;
+                if (tab) {
+                  path += '/tab/' + tab;
+                }
+                $location.path(path)
+                .search('justcreated')
+                .search('redirectUrl', 'catalog.edit');
+              });
         },
 
         /**
@@ -182,11 +224,34 @@
          * Get the metadata js object from catalog. Trigger a search and
          * return a promise.
          * @param {string} uuid of the metadata
+         * @param {string} isTemplate optional isTemplate value (s, t...)
          * @return {HttpPromise} of the $http get
          */
-        getMdObjByUuid: function(uuid) {
-          return $http.get('q?_uuid=' + uuid + '' +
-              '&fast=index&_content_type=json&buildSummary=false').
+        getMdObjByUuid: function(uuid, isTemplate) {
+          return $http.get('qi?_uuid=' + uuid + '' +
+              '&fast=index&_content_type=json&buildSummary=false' +
+              (isTemplate !== undefined ? '&isTemplate=' + isTemplate : '')).
+              then(function(resp) {
+                return new Metadata(resp.data.metadata);
+              });
+        },
+
+        /**
+         * @ngdoc method
+         * @name gnMetadataManager#getMdObjById
+         * @methodOf gnMetadataManager
+         *
+         * @description
+         * Get the metadata js object from catalog. Trigger a search and
+         * return a promise.
+         * @param {string} id of the metadata
+         * @param {string} isTemplate optional isTemplate value (s, t...)
+         * @return {HttpPromise} of the $http get
+         */
+        getMdObjById: function(id, isTemplate) {
+          return $http.get('q?_id=' + id + '' +
+              '&fast=index&_content_type=json&buildSummary=false' +
+              (isTemplate !== undefined ? '&_isTemplate=' + isTemplate : '')).
               then(function(resp) {
                 return new Metadata(resp.data.metadata);
               });
@@ -200,7 +265,7 @@
          * @description
          * Update the metadata object
          *
-         * @param {object } md to reload
+         * @param {object} md to reload
          * @return {HttpPromise} of the $http get
          */
         updateMdObj: function(md) {
@@ -228,7 +293,7 @@
   module.value('gnHttpServices', {
     mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
     mdGetRDF: 'rdf.metadata.get',
-    mdGetMEF: 'mef.export',
+    mdGetMEF: 'mef.export', // Deprecated service
     mdGetXML19139: 'xml_iso19139',
     csv: 'csv.search',
 
@@ -251,9 +316,10 @@
     facetConfig: 'search/facet/config',
     selectionLayers: 'selection.layers',
 
-    // wfs indexing
-    solrproxy: '../api/0.1/search'
+    featureindexproxy: '../../index/features',
+    indexproxy: '../../index/records'
   });
+
 
   /**
    * @ngdoc service
@@ -355,6 +421,8 @@
           isXLinkEnabled: 'system.xlinkResolver.enable',
           isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
           isFeedbackEnabled: 'system.userFeedback.enable',
+          isInspireEnabled: 'system.inspireValidation.enable',
+          isRatingUserFeedbackEnabled: 'system.localratinguserfeedback.enable',
           isSearchStatEnabled: 'system.searchStats.enable',
           isHideWithHelEnabled: 'system.hidewithheldelements.enable'
         },
@@ -370,6 +438,8 @@
       isXLinkLocal: 'system.xlinkResolver.localXlinkEnable',
       isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
       isFeedbackEnabled: 'system.userFeedback.enable',
+      isInspireEnabled: 'system.inspire.enable',
+      isRatingUserFeedbackEnabled: 'system.localrating.enable',
       isSearchStatEnabled: 'system.searchStats.enable',
       isHideWithHelEnabled: 'system.hidewithheldelements.enable'
     },
@@ -388,9 +458,11 @@
    * Load the catalog config and push it to gnConfig.
    */
   module.factory('gnConfigService', [
-    '$http',
+    '$http', '$q',
     'gnConfig',
-    function($http, gnConfig) {
+    function($http, $q, gnConfig) {
+      var defer = $q.defer();
+      var loadPromise = defer.promise;
       return {
 
         /**
@@ -406,7 +478,7 @@
          */
         load: function() {
           return $http.get('../api/site/settings', {cache: true})
-            .then(function(response) {
+              .then(function(response) {
                 angular.extend(gnConfig, response.data);
                 // Replace / by . in settings name
                 angular.forEach(gnConfig, function(value, key) {
@@ -419,8 +491,12 @@
                 if (window.location.search.indexOf('with3d') !== -1) {
                   gnConfig['map.is3DModeAllowed'] = true;
                 }
+                defer.resolve(gnConfig);
+              }, function() {
+                defer.reject();
               });
         },
+        loadPromise: loadPromise,
 
         /**
          * @ngdoc method
@@ -434,9 +510,25 @@
          * @return {String} service url.
          */
         getServiceURL: function() {
+          var port = '';
+          if (gnConfig['system.server.protocol'] === 'http' &&
+             gnConfig['system.server.port'] &&
+             gnConfig['system.server.port'] != null &&
+             gnConfig['system.server.port'] != 80) {
+
+            port = ':' + gnConfig['system.server.port'];
+
+          } else if (gnConfig['system.server.protocol'] === 'https' &&
+             gnConfig['system.server.securePort'] &&
+             gnConfig['system.server.securePort'] != null &&
+             gnConfig['system.server.securePort'] != 443) {
+
+            port = ':' + gnConfig['system.server.securePort'];
+
+          }
+
           var url = gnConfig['system.server.protocol'] + '://' +
-              gnConfig['system.server.host'] + ':' +
-              gnConfig['system.server.port'] +
+              gnConfig['system.server.host'] + port +
               gnConfig.env.baseURL + '/' +
               gnConfig.env.node + '/';
           return url;
@@ -461,7 +553,10 @@
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
-        'mdLanguage', 'datasetLang', 'type', 'link'];
+        'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails',
+        'creationDate', 'publicationDate', 'revisionDate', 'spatialRepresentationType_text'];
+      var listOfJsonFields = ['keywordGroup', 'crsDetails'];
+      // See below; probably not necessary
       var record = this;
       this.linksCache = [];
       $.each(listOfArrayFields, function(idx) {
@@ -471,17 +566,61 @@
           record[field] = [record[field]];
         }
       });
+      // Note: this step does not seem to be necessary; TODO: remove or refactor
+      $.each(listOfJsonFields, function(idx) {
+        var fieldName = listOfJsonFields[idx];
+        if (angular.isDefined(record[fieldName])) {
+          try {
+            record[fieldName] = angular.fromJson(record[fieldName]);
+            var field = record[fieldName];
+
+            // Combine all document keywordGroup fields
+            // in one object. Applies to multilingual records
+            // which may have multiple values after combining
+            // documents from all index
+            // fixme: not sure how to precess this, take first array as main
+            // object or take last arrays when they appear (what is done here)
+            if (fieldName === 'keywordGroup' && angular.isArray(field)) {
+              var thesaurusList = {};
+              for (var i = 0; i < field.length; i++) {
+                var thesauri = field[i];
+                $.each(thesauri, function(key) {
+                  if (!thesaurusList[key] && thesauri[key].length)
+                    thesaurusList[key] = thesauri[key];
+                });
+              }
+              record[fieldName] = thesaurusList;
+            }
+          } catch (e) {}
+        }
+      }.bind(this));
+
+      // Create a structure that reflects the transferOption/onlinesrc tree
+      var links = [];
+      angular.forEach(this.link, function(link) {
+        var linkInfo = formatLink(link);
+        var idx = linkInfo.group - 1;
+        if (!links[idx]) {
+          links[idx] = [linkInfo];
+        }
+        else if (angular.isArray(links[idx])) {
+          links[idx].push(linkInfo);
+        }
+      });
+      this.linksTree = links;
     };
 
     function formatLink(sLink) {
       var linkInfos = sLink.split('|');
       return {
         name: linkInfos[0],
+        title: linkInfos[0],
         url: linkInfos[2],
         desc: linkInfos[1],
         protocol: linkInfos[3],
         contentType: linkInfos[4],
-        group: linkInfos[5] ? parseInt(linkInfos[5]) : undefined
+        group: linkInfos[5] ? parseInt(linkInfos[5]) : undefined,
+        applicationProfile: linkInfos[6]
       };
     }
     function parseLink(sLink) {
@@ -495,8 +634,17 @@
       getId: function() {
         return this['geonet:info'].id;
       },
+      getTitle: function() {
+        return this.title || this.defaultTitle;
+      },
       isPublished: function() {
         return this['geonet:info'].isPublishedToAll === 'true';
+      },
+      isValid: function() {
+        return this.valid === '1';
+      },
+      hasValidation: function() {
+        return (this.valid > -1);
       },
       isOwned: function() {
         return this['geonet:info'].owner === 'true';
@@ -564,7 +712,8 @@
                 }
               }
               else {
-                if (linkInfo.protocol.indexOf(type) >= 0 &&
+                if (linkInfo.protocol.toLowerCase().indexOf(
+                    type.toLowerCase()) >= 0 &&
                     (!groupId || groupId == linkInfo.group)) {
                   ret.push(linkInfo);
                 }
@@ -578,8 +727,8 @@
         return ret;
       },
       getThumbnails: function() {
+        var images = {list: []};
         if (angular.isArray(this.image)) {
-          var images = {list: []};
           for (var i = 0; i < this.image.length; i++) {
             var s = this.image[i].split('|');
             var insertFn = 'push';
@@ -589,8 +738,19 @@
             } else if (s[0] === 'overview') {
               images.big = s[1];
             }
+
+            //Is it a draft?
+            if( s[1].indexOf("/api/records/") >= 0
+                &&  s[1].indexOf("/api/records/")<  s[1].indexOf("/attachments/")) {
+              s[1] += "?approved=" + (this.draft != 'y');
+            }
+
+
             images.list[insertFn]({url: s[1], label: s[2]});
           }
+        } else if (angular.isDefined(this.image)){
+          var s = this.image.split('|');
+          images.list.push({url: s[1], label: s[2]});
         }
         return images;
       },
@@ -614,7 +774,8 @@
               name: s[5] || '',
               position: s[6] || '',
               address: s[7] || '',
-              phone: s[8] || ''
+              phone: s[8] || '',
+              website: s[11] || ''
             };
             if (s[1] === 'resource') {
               this.allContacts.resource.push(contact);

@@ -40,21 +40,26 @@
       <list>
         <sec:filter-chain pattern="/srv/swagger-resources/**" filters=""/>
         <sec:filter-chain pattern="/srv/v2/**" filters=""/>
+
+        <!-- TODO: This needs to be secured to not access private info -->
+        <sec:filter-chain pattern="/index/**" filters=""/>
+
+        <sec:filter-chain pattern="/dashboards/**" filters=""/>
+        <sec:filter-chain pattern="/jolokia/**" filters="securityContextPersistenceFilter, adminUserFilter"/>
+
+
         <sec:filter-chain pattern="/doc/**" filters=""/>
-        <sec:filter-chain pattern="/proxy**" filters=""/>
         <!-- wroAPI is protected for admin only
         This is causing issue on node-change-warning page.
         <sec:filter-chain pattern="/static/wroAPI" filters=""/>-->
         <sec:filter-chain pattern="/static/**" filters=""/>
         <sec:filter-chain pattern="/catalog/**" filters=""/>
-        <sec:filter-chain pattern="/test/**" filters=""/>
         <sec:filter-chain pattern="/" filters=""/>
         <sec:filter-chain pattern="/*.html" filters=""/>
         <sec:filter-chain pattern="/*.jsp" filters=""/>
         <sec:filter-chain pattern="/*.css" filters=""/>
         <sec:filter-chain pattern="/images/**" filters=""/>
         <sec:filter-chain pattern="/map/**" filters=""/>
-        <sec:filter-chain pattern="/wmc/**" filters=""/>
         <sec:filter-chain pattern="/htmlcache/**" filters=""/>
         <sec:filter-chain pattern="/pdf/**" filters=""/>
         <sec:filter-chain pattern="/loc/**" filters=""/>
@@ -63,15 +68,6 @@
         <sec:filter-chain pattern="/xsl/harvesting/**" filters=""/>
         <sec:filter-chain pattern="/xsl/ownership/**" filters=""/>
         <ref bean="coreFilterChain"/>
-        <!-- <sec:filter-chain pattern="/**" filters="securityContextPersistenceFilter,
-                logoutFilter,
-                formLoginFilter,
-               basicAuthenticationFilter,
-                requestCacheFilter,
-                anonymousFilter,
-                sessionMgmtFilter,
-               exceptionTranslationFilter,
-               filterSecurityInterceptor" /> -->
       </list>
     </constructor-arg>
   </bean>
@@ -79,7 +75,7 @@
 
   <bean id="coreFilterChain" class="org.springframework.security.web.DefaultSecurityFilterChain">
     <constructor-arg>
-      <bean class="org.springframework.security.web.util.AntPathRequestMatcher">
+      <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
         <constructor-arg value="/**"/>
       </bean>
     </constructor-arg>
@@ -91,10 +87,12 @@
     <constructor-arg>
       <list>
         <ref bean="securityContextPersistenceFilter"/>
+        <!-- To disable csrf security (not recommended) comment the following line -->
+        <ref bean="csrfFilter" />
+        <!-- To disable csrf security (not recommended) comment the upper line -->
         <ref bean="logoutFilter"/>
         <!-- A filter that check if an external service already authenticated user
                      (default implementation does nothing but can be overridden) -->
-        <ref bean="multiNodeAuthenticationFilter"/>
         <ref bean="preAuthenticationFilter"/>
         <ref bean="basicAuthenticationFilter"/>
         <ref bean="formLoginFilter"/>
@@ -108,34 +106,41 @@
   </bean>
   <!-- A filter that check if an external service already authenticated user
                      (default implementation does nothing but can be overridden) -->
-  <bean id="multiNodeAuthenticationFilter"
-        class="jeeves.config.springutil.MultiNodeAuthenticationFilter">
-    <property name="location" value="${wrongNodeRedirectURL}"/>
-  </bean>
   <bean id="preAuthenticationFilter" class="jeeves.config.springutil.PassthroughFilter"/>
   <bean id="securityContextPersistenceFilter"
         class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
-    <property name="securityContextRepository" ref="securityContextRepository"/>
+    <!-- repo -->
+    <constructor-arg ref="securityContextRepository"/>
   </bean>
 
   <bean id="authenticationManager"
         class="org.springframework.security.authentication.ProviderManager">
-    <property name="providers">
+    <constructor-arg>
+      <!-- providers -->
       <list>
         <!-- Check if the preAuthenticationFilter has already authenticated user -->
         <ref bean="preFilterAuthenticationProvider"/>
         <ref bean="geonetworkAuthenticationProvider"/>
       </list>
-    </property>
+    </constructor-arg>
   </bean>
 
   <bean id="securityContextRepository"
         class='org.springframework.security.web.context.HttpSessionSecurityContextRepository'>
     <property name="allowSessionCreation" value="true"/>
+    <property name="disableUrlRewriting" value="true" />
   </bean>
 
-  <bean id="formLoginFilter"
-        class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+  <bean class="org.fao.geonet.web.GeoNetworkHttpSessionRequestCache" id="requestCache">
+    <property name="allowedUrlsPatterns">
+      <set>
+        <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/catalog.*</value>
+        <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.console</value>
+      </set>
+    </property>
+  </bean>
+
+  <bean id="formLoginFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
     <property name="postOnly" value="true"/>
     <property name="usernameParameter" value="username"/>
     <property name="passwordParameter" value="password"/>
@@ -146,7 +151,6 @@
         <constructor-arg name="pattern" value="/signin"/>
       </bean>
     </property>
-    <property name="authenticationDetailsSource" ref="authenticationDetailsSource"/>
     <property name="authenticationFailureHandler">
       <bean
         class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
@@ -161,6 +165,7 @@
         class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
         <property name="defaultTargetUrl" value="/"/>
         <property name="targetUrlParameter" value="redirectUrl"/>
+        <property name="requestCache" ref="requestCache" />
       </bean>
     </property>
     <property name="sessionAuthenticationStrategy">
@@ -173,11 +178,7 @@
         class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
     <constructor-arg index="0" ref="authenticationManager"/>
     <constructor-arg index="1" ref="basicAuthenticationEntryPoint"/>
-    <property name="authenticationDetailsSource" ref="authenticationDetailsSource"/>
   </bean>
-
-  <bean id="authenticationDetailsSource"
-        class="jeeves.config.springutil.JeevesAuthenticationDetailSource"/>
 
   <bean id="basicAuthenticationEntryPoint"
         class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
@@ -207,6 +208,7 @@
   <bean id="logoutSuccessHandler"
         class="jeeves.config.springutil.JeevesNodeAwareLogoutSuccessHandler">
     <property name="defaultTargetUrl" value="${logout.success.url}"></property>
+    <property name="targetUrlParameter" value="redirectUrl"/>
   </bean>
   <bean id="requestCacheFilter"
         class="org.springframework.security.web.savedrequest.RequestCacheAwareFilter"/>
@@ -215,10 +217,11 @@
         class="org.springframework.security.web.access.ExceptionTranslationFilter">
     <constructor-arg index="0" ref="authenticationEntryPoint"/>
     <property name="accessDeniedHandler" ref="accessDeniedHandler"/>
+    <property name="requestCache" ref="requestCache" />
   </bean>
 
   <bean id="defaultAuthenticationEntryPoint"
-        class="jeeves.config.springutil.JeevesNodeAwareLoginUrlEntryPoint">
+        class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
     <constructor-arg name="loginFormUrl" value="${loginForm}"/>
   </bean>
 
@@ -300,7 +303,8 @@
 
   <bean id="accessDecisionManager"
         class="org.springframework.security.access.vote.AffirmativeBased">
-    <property name="decisionVoters">
+    <constructor-arg>
+      <!-- decisionVoters -->
       <list>
         <bean class="org.springframework.security.access.vote.RoleHierarchyVoter">
           <constructor-arg ref="roleHierarchy"/>
@@ -309,18 +313,23 @@
         <bean class="org.springframework.security.web.access.expression.WebExpressionVoter"/>
         <bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
       </list>
-    </property>
+    </constructor-arg>
   </bean>
 
+  <bean id="anonymousUser" class="org.springframework.security.core.userdetails.memory.UserAttribute">
+    <property name="password" value="anonymousUser"/>
+    <property name="authoritiesAsString" value ="ROLE_ANONYMOUS"/>
+  </bean>
   <bean id="anonymousFilter"
         class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
-    <property name="key" value="GeonetworkAnonymousUser"/>
-    <property name="userAttribute" value="anonymousUser,ROLE_ANONYMOUS"/>
+    <constructor-arg value="GeonetworkAnonymousUser" />
+    <constructor-arg value="#{anonymousUser.password}" />
+    <constructor-arg value="#{anonymousUser.authorities}" />
   </bean>
 
   <bean id="anonymousProvider"
         class="org.springframework.security.authentication.AnonymousAuthenticationProvider">
-    <property name="key" value="GeonetworkAnonymousUser"/>
+    <constructor-arg name="key" value="GeonetworkAnonymousUser"/>
   </bean>
 
   <bean id="sessionMgmtFilter"
@@ -340,4 +349,32 @@
   </bean>
 
 
+  <bean id="csrfFilter" class="org.springframework.security.web.csrf.CsrfFilter">
+    <constructor-arg>
+      <ref bean="csrfTokenRepository"/>
+    </constructor-arg>
+
+    <property name="requireCsrfProtectionMatcher" ref="geonetworkCsrfSecurityRequestMatcher" />
+  </bean>
+
+  <bean class="org.fao.geonet.security.web.csrf.CookieCsrfTokenRepository"
+        id="csrfTokenRepository">
+    <property name="cookieHttpOnly" value="false"/>
+  </bean>
+
+  <!-- RequestMatcher to exclude CSRF token from CSW requests -->
+  <bean id="geonetworkCsrfSecurityRequestMatcher"
+        class="org.fao.geonet.security.web.csrf.GeonetworkCsrfSecurityRequestMatcher">
+    <constructor-arg>
+      <set>
+        <!-- CSW requests -->
+        <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw-publication!?.*</value>
+        <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw-.*</value>
+        <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw!?.*</value>
+        <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.search!?</value>
+      </set>
+    </constructor-arg>
+  </bean>
+
+  <bean id="adminUserFilter" class="org.fao.geonet.security.AuthenticathedUserFilter"/>
 </beans>

@@ -1,5 +1,4 @@
 @import "gn.less";
-@import "timeline.less";
 
 .gn-chart{
   height:500px;
@@ -20,12 +19,24 @@
   white-space: normal;
 }
 
-.gn-logo-settings * div.gn-thumbnail{
-  text-align:center;
-  height:150px;
+.gn-logo-list {
+  .panel {
+    height: 220px;
+
+    .panel-body {
+      padding: 2px 5px 5px 5px;
+      img{
+        max-height: 125px;
+        max-width: 100%;
+      }
+    }
+  }
 }
-.gn-logo-settings * div.gn-thumbnail img{
-  max-height:60%;
+
+.bootstrap-table {
+  a {
+    word-break: break-all;
+  }
 }
 
 .harvester-logo {
@@ -50,6 +61,11 @@ fieldset.cswCriteriaInfo, ul.list-group {
   overflow-y: auto;
   overflow-x: hidden;
   max-height: 40em;
+}
+
+fieldset.cswCriteriaInfo, ul.criteria-list-group {
+  padding-right: 1em;
+  overflow-x: hidden;
 }
 
 .gn-virtual-csw .radio-inline {
@@ -116,4 +132,51 @@ ul.error-message {
 
 #admin-console-link {
   cursor: pointer;
+}
+
+// remove bottom margin from pager
+// (this breaks layout because the component may or may not be there)
+ul.pager {
+  margin-bottom: 0px;
+}
+
+#gn-thesaurus-container {
+  // Fixes gn-modal windows; TODO: fix this globally in gn-popup style
+  [gn-modal] {
+    max-width: none;
+    max-height: none;
+
+    @media (min-width: 992px) {
+      .modal-dialog {
+        width: 650px;
+      }
+    }
+  }
+
+  .thesaurus-header .panel-body {
+    padding-bottom: 0px;
+  }
+
+  .panel-heading input.filter-text {
+    width: 20%;
+    min-width: 13em;
+    height: 2em;
+  }
+
+  .list-group-item.keyword-item {
+    padding: 8px;
+    line-height: 1em;
+  }
+}
+// harvester privileges
+
+.list-group-interne {
+  background-color: #d9edf7;
+}
+ul > li > a.privilege-check-order{
+  margin-right: 20px;
+}
+ul > li.list-group-item > input {
+  margin-right: 40px;
+  margin-left: 30px;
 }

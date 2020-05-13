@@ -24,22 +24,37 @@
 (function() {
 
   goog.provide('gn_related_directive');
+
+
+
+
+
+
+
+
+  goog.require('gn_atom');
+  goog.require('gn_related_observer_directive');
   goog.require('gn_relatedresources_service');
+  goog.require('gn_wms');
+  goog.require('gn_wmts');
+  goog.require('gn_external_viewer');
 
   var module = angular.module('gn_related_directive', [
-    'gn_relatedresources_service'
+    'gn_relatedresources_service', 'gn_related_observer_directive', 'gn_wms',
+    'gn_wmts', 'gn_atom', 'gn_external_viewer'
   ]);
 
   /**
    * Shows a list of related records given an uuid with the actions defined in
    * config.js
    */
-  module.service('gnRelatedService', ['$http', '$q', function($http, $q) {
-    function get(uuid, types) {
+  module.service('gnRelatedService', ['$http', '$q',
+    function($http, $q) {
+    this.get = function(uuidOrId, types) {
       var canceller = $q.defer();
       var request = $http({
         method: 'get',
-        url: '../api/records/' + uuid + '/related?' +
+        url: '../api/records/' + uuidOrId + '/related?' +
             (types ?
             'type=' + types.split('|').join('&type=') :
             ''),
@@ -52,7 +67,8 @@
             return (response.data);
           },
           function() {
-            return ($q.reject('Something went wrong'));
+            return ($q.reject('Something went wrong loading ' +
+            'related records of type ' + types));
           }
           );
 
@@ -67,9 +83,16 @@
           }
       );
       return (promise);
-    }
-    return {
-      get: get
+    };
+
+    this.getMdsRelated = function(uuids, types) {
+      var url = '../api/related';
+      return $http.get(url, {
+        params: {
+          type: types,
+          uuid: uuids
+        }
+      });
     };
   }]);
   module
@@ -78,8 +101,12 @@
           [
         'gnRelatedService',
         'gnGlobalSettings',
+        'gnSearchSettings',
         'gnRelatedResources',
-        function(gnRelatedService, gnGlobalSettings, gnRelatedResources) {
+        'gnExternalViewer',
+        function(gnRelatedService, gnGlobalSettings,
+                 gnSearchSettings, gnRelatedResources,
+                 gnExternalViewer) {
           return {
             restrict: 'A',
             templateUrl: function(elem, attrs) {
@@ -92,24 +119,89 @@
               types: '@',
               title: '@',
               list: '@',
-              user: '='
+              filter: '@',
+              container: '@',
+              user: '=',
+              hasResults: '=?'
             },
+            require: '?^gnRelatedObserver',
             link: function(scope, element, attrs, controller) {
               var promise;
+              var elem = element[0];
+              scope.lang = scope.lang || scope.$parent.lang;
+              element.on('$destroy', function() {
+                // Unregister the directive in the observer if it is defined
+                if (controller) {
+                  controller.unregisterGnRelated(elem);
+                }
+              });
+
+              if (controller) {
+                // Register the directive in the observer
+                controller.registerGnRelated(elem);
+              }
+
               scope.updateRelations = function() {
-                scope.relations = [];
-                if (scope.uuid) {
+                scope.relations = null;
+                if (scope.id) {
                   scope.relationFound = false;
+                  if (controller) {
+                    controller.startGnRelatedRequest(elem);
+                  }
                   (promise = gnRelatedService.get(
-                     scope.uuid, scope.types)
+                     scope.id, scope.types)
                   ).then(function(data) {
-                       scope.relations = data;
-                       angular.forEach(data, function(value) {
-                         if (value) {
-                           scope.relationFound = true;
+                       angular.forEach(data, function(value, idx) {
+                         if (!value) { return; }
+
+                         // init object if required
+                         scope.relations = scope.relations || {};
+                         scope.relationFound = true;
+                         scope.hasResults = true;
+
+                         if (!scope.relations[idx]) {
+                           scope.relations[idx] = [];
+                         }
+                         if (scope.filter && angular.isArray(value)) {
+                           var tokens = scope.filter.split(':'),
+                               field = tokens[0],
+                               filter = tokens[1];
+                           scope.relations[idx] = [];
+                           for (var i = 0; i < value.length; i++) {
+                             if (filter.indexOf(value[i][field]) !== -1) {
+                                scope.relations[idx].push(value[i]);
+                             }
+                           }
+                         } else {
+                           scope.relations[idx] = value;
+                         }
+
+                         if (scope.relations.siblings && scope.relations.associated) {
+                           for (var i = 0; i < scope.relations.associated.length; i++) {
+                             if (scope.relations.siblings.filter(function (e) {
+                               return e.id === scope.relations.associated[i].id;
+                             }).length > 0) {
+                               /* siblings object contains associated element */
+                             } else {
+                               scope.relations.siblings.push(scope.relations.associated[i])
+                             }
+                           }
+                           scope.relations.associated = {};
                          }
                        });
-                     });
+
+                       if (angular.isDefined(scope.container)
+                           && scope.relations == null) {
+                         $(scope.container).hide();
+                       }
+                       if (controller) {
+                         controller.finishRequest(elem, scope.relationFound);
+                       }
+                     } , function() {
+                      if (controller) {
+                        controller.finishRequest(elem, false);
+                      }
+                  });
                 }
               };
 
@@ -119,20 +211,29 @@
               scope.hasAction = function(mainType) {
                 var fn = gnRelatedResources.map[mainType].action;
                 // If function name ends with ToMap do not display the action
-                if (fn.name.match(/.*ToMap$/) &&
+                if (fn && fn.name && fn.name.match(/.*ToMap$/) &&
                    gnGlobalSettings.isMapViewerEnabled === false) {
                   return false;
                 }
                 return angular.isFunction(fn);
               };
+              scope.externalViewerAction = function(mainType, link, md) {
+                gnExternalViewer.viewService(md, link);
+              };
+
+              scope.isLayerProtocol = gnRelatedResources.isLayerProtocol;
+              scope.externalViewerActionEnabled = gnExternalViewer.isEnabledViewAction();
+
               scope.config = gnRelatedResources;
 
               scope.$watchCollection('md', function(n, o) {
-                if (n && n !== o || angular.isUndefined(scope.uuid)) {
+                if (n && n !== o || angular.isUndefined(scope.id)) {
                   if (promise && angular.isFunction(promise.abort)) {
                     promise.abort();
                   }
-                  scope.uuid = scope.md.getUuid();
+                  if (scope.md != null) {
+                    scope.id = scope.md.getId();
+                  }
                   scope.updateRelations();
                 }
               });

@@ -25,62 +25,24 @@
   goog.provide('gn_viewer');
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   goog.require('gn_baselayerswitcher');
   goog.require('gn_draw');
   goog.require('gn_featurestable');
+  goog.require('gn_geometry');
   goog.require('gn_graticule');
+  goog.require('gn_heatmap');
+  goog.require('gn_index');
   goog.require('gn_layermanager');
+  goog.require('gn_projectionswitcher');
   goog.require('gn_localisation');
   goog.require('gn_measure');
   goog.require('gn_module');
-  goog.require('gn_ncwms');
   goog.require('gn_ows');
   goog.require('gn_owscontext');
   goog.require('gn_popup');
   goog.require('gn_print');
+  goog.require('gn_profile');
   goog.require('gn_searchlayerformap_directive');
-  goog.require('gn_solr');
   goog.require('gn_terrainswitcher_directive');
   goog.require('gn_viewer_directive');
   goog.require('gn_viewer_service');
@@ -88,6 +50,10 @@
   goog.require('gn_wfsfilter');
   goog.require('gn_wmsimport');
   goog.require('gn_wps');
+  goog.require('gn_gazetteer');
+  goog.require('gn_legendpanel_directive');
+  goog.require('gn_popover');
+
 
   /**
    * @ngdoc overview
@@ -98,13 +64,13 @@
    */
 
   var module = angular.module('gn_viewer', [
-    'gn_ncwms',
-    'gn_viewer_service',
     'gn_viewer_directive',
+    'gn_viewer_service',
     'gn_wmsimport',
     'gn_wfs_directive',
     'gn_owscontext',
     'gn_layermanager',
+    'gn_projectionswitcher',
     'gn_baselayerswitcher',
     'gn_measure',
     'gn_draw',
@@ -117,9 +83,15 @@
     'gn_searchlayerformap_directive',
     'gn_terrainswitcher_directive',
     'gn_wfsfilter',
-    'gn_solr',
+    'gn_index',
     'gn_wps',
-    'gn_featurestable'
+    'gn_featurestable',
+    'gn_geometry',
+    'gn_profile',
+    'gn_heatmap',
+    'gn_gazetteer',
+    'gn_legendpanel_directive',
+    'gn_popover'
   ]);
 
   module.controller('gnViewerController', [
@@ -127,19 +99,13 @@
     '$timeout',
     'gnViewerSettings',
     'gnMap',
-    function($scope, $timeout, gnViewerSettings, gnMap) {
+    function(
+        $scope,
+        $timeout,
+        gnViewerSettings,
+        gnMap) {
 
       var map = $scope.searchObj.viewerMap;
-
-      if (gnViewerSettings.wmsUrl && gnViewerSettings.layerName) {
-        gnMap.addWmsFromScratch(map, gnViewerSettings.wmsUrl,
-            gnViewerSettings.layerName, true).
-
-            then(function(layer) {
-              layer.set('group', gnViewerSettings.layerGroup);
-              map.addLayer(layer);
-            });
-      }
 
       // Display pop up on feature over
       var div = document.createElement('div');
@@ -180,9 +146,10 @@
           }
           overlay.setPosition(coordinate);
           $(overlay.getElement()).show();
-        }, this, function(layer) {
-          return !layer.get('temporary');
-        });
+        }.bind(this),  {
+          layerFilter: function(layer) {
+            return layer.get('getinfo');
+        }});
         if (!f) {
           hidetimer = $timeout(function() {
             $(div).hide();
@@ -196,13 +163,5 @@
         hovering = false;
       });
     }]);
-
-  module.controller('toolsController',
-      ['$scope', 'gnMeasure',
-        function($scope, gnMeasure) {
-          $scope.mInteraction = gnMeasure.create($scope.map,
-              $scope.measureObj, $scope);
-        }
-      ]);
 
 })();

@@ -20,25 +20,35 @@
 
 package org.fao.geonet.kernel.security.shibboleth;
 
+import org.springframework.util.StringUtils;
+
 /**
  * Some basic configuration info for Shibboleth logins.
  *
  * Mainly header names mapping to attributes.
  *
  * @author ETj (etj at geo-solutions.it)
+ * @author María Arias de Reyna (delawen)
  */
 public class ShibbolethUserConfiguration {
     private String usernameKey;
     private String surnameKey;
     private String firstnameKey;
+    private String organisationKey;
     private String profileKey;
     private String groupKey;
     private String emailKey;
+    private String roleGroupKey;
 
     private String defaultGroup;
 
     private boolean updateProfile;
     private boolean updateGroup;
+
+    private String arraySeparator;
+    private String roleGroupSeparator;
+
+    private Boolean hideLogin;
 
     public String getUsernameKey() {
         return usernameKey;
@@ -53,7 +63,7 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setSurnameKey(String surnameKey) {
-        if (surnameKey == null) {
+		if(StringUtils.isEmpty(surnameKey)) {
             surnameKey = "";
         }
         this.surnameKey = surnameKey;
@@ -64,10 +74,21 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setFirstnameKey(String firstnameKey) {
-        if (firstnameKey == null) {
+		if(StringUtils.isEmpty(firstnameKey)) {
             firstnameKey = "";
         }
         this.firstnameKey = firstnameKey;
+    }
+
+    public String getOrganisationKey() {
+        return organisationKey;
+    }
+
+    public void setOrganisationKey(String organisationKey) {
+        if(StringUtils.isEmpty(organisationKey)) {
+            organisationKey = "";
+        }
+        this.organisationKey = organisationKey;
     }
 
     public String getProfileKey() {
@@ -75,7 +96,7 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setProfileKey(String profileKey) {
-        if (profileKey == null) {
+		if(StringUtils.isEmpty(profileKey)) {
             profileKey = "";
         }
         this.profileKey = profileKey;
@@ -86,7 +107,7 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setGroupKey(String groupKey) {
-        if (groupKey == null) {
+		if(StringUtils.isEmpty(groupKey)) {
             groupKey = "";
         }
         this.groupKey = groupKey;
@@ -97,18 +118,12 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setDefaultGroup(String defaultGroup) {
-        if (defaultGroup == null) {
+		if(StringUtils.isEmpty(defaultGroup)) {
             defaultGroup = "";
         }
         this.defaultGroup = defaultGroup;
     }
 
-    /**
-     * Tell if the profile should be updated whenever the user login.
-     *
-     * This info is needed when the identificatian provider provides no real mean to tell the user
-     * profile.
-     */
     public boolean isUpdateProfile() {
         return updateProfile;
     }
@@ -130,11 +145,52 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setEmailKey(String emailKey) {
-        if (emailKey == null) {
+		if(StringUtils.isEmpty(emailKey)) {
             emailKey = "";
         }
         this.emailKey = emailKey;
     }
+
+	public String getArraySeparator() {
+		return arraySeparator;
+	}
+
+	public void setArraySeparator(String arraySeparator) {
+		if(StringUtils.isEmpty(arraySeparator)) {
+			arraySeparator = ";";
+		}
+		this.arraySeparator = arraySeparator;
+	}
+
+	public Boolean getHideLogin() {
+		return hideLogin;
+	}
+
+	public void setHideLogin(Boolean hideLogin) {
+		if(hideLogin == null) {
+			hideLogin = true;
+		}
+		this.hideLogin = hideLogin;
+	}
+
+	public String getRoleGroupKey() {
+		return roleGroupKey;
+	}
+
+	public void setRoleGroupKey(String roleGroupKey) {
+		this.roleGroupKey = roleGroupKey;
+	}
+
+	public String getRoleGroupSeparator() {
+		return roleGroupSeparator;
+	}
+
+	public void setRoleGroupSeparator(String roleGroupSeparator) {
+		if(StringUtils.isEmpty(arraySeparator)) {
+			arraySeparator = ",";
+		}
+		this.roleGroupSeparator = roleGroupSeparator;
+	}
 }
 
 

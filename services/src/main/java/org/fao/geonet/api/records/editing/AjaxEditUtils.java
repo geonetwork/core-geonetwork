@@ -28,9 +28,13 @@ import com.google.common.base.Optional;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import jeeves.xlink.Processor;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.kernel.AddElemValue;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -80,18 +84,23 @@ public class AjaxEditUtils extends EditUtils {
      * <p> The changes are a list of KVP. A key contains at least the element identifier from the
      * meta-document. A key starting with an "X" should contain an XML fragment for the value. </p>
      *
-     * The following KVP combinations are allowed: <ul> <li>ElementId=ElementValue </li>
-     * <li>ElementId_AttributeName=AttributeValue</li> <li>ElementId_AttributeNamespacePrefixCOLONAttributeName=AttributeValue</li>
-     * <li>XElementId=ElementValue</li> <li>XElementId_replace=ElementValue</li>
-     * <li>XElementId_ElementName=ElementValue</li> <li>XElementId_ElementName_replace=ElementValue</li>
-     * <li>P{key}=xpath with P{key}_xml=XML snippet</li> </ul>
+     * The following KVP combinations are allowed:
+     *   <ul>
+     *     <li>ElementId=ElementValue </li>
+     *     <li>ElementId_AttributeName=AttributeValue</li>
+     *     <li>ElementId_AttributeNamespacePrefixCOLONAttributeName=AttributeValue</li>
+     *     <li>XElementId=ElementValue</li> <li>XElementId_replace=ElementValue</li>
+     *     <li>XElementId_ElementName=ElementValue</li>
+     *     <li>XElementId_ElementName_replace=ElementValue</li>
+     *     <li>P{key}=xpath with P{key}_xml=XML snippet</li>
+     *   </ul>
      *
-     * ElementName MUST contain "{@value #EditLib.COLON_SEPARATOR}" instead of ":" for prefixed
+     * ElementName MUST contain "{@value EditLib#COLON_SEPARATOR}" instead of ":" for prefixed
      * elements.
      *
      * <p> When using X key ElementValue could contains many XML fragments (eg. &lt;gmd:keywords
-     * .../&gt;{@value #XML_FRAGMENT_SEPARATOR}&lt;gmd:keywords .../&gt;) separated by {@link
-     * #XML_FRAGMENT_SEPARATOR}. All those fragments are inserted to the last element of this type
+     * .../&gt;{@value EditLib#XML_FRAGMENT_SEPARATOR}&lt;gmd:keywords .../&gt;) separated by {@link
+     * EditLib#XML_FRAGMENT_SEPARATOR}. All those fragments are inserted to the last element of this type
      * in its parent if ElementName is set. If not, the element with ElementId is replaced. If
      * _replace suffix is used, then all elements having the same type than elementId are removed
      * before insertion.
@@ -135,6 +144,43 @@ public class AjaxEditUtils extends EditUtils {
         // Store XML fragments to be handled after other elements update
         Map<String, String> xmlInputs = new HashMap<String, String>();
         LinkedHashMap<String, AddElemValue> xmlAndXpathInputs = new LinkedHashMap<String, AddElemValue>();
+
+        // Preprocess
+        for (Map.Entry<String, String> entry: changes.entrySet()) {
+            String originalRef = entry.getKey().trim();
+            String ref = null;
+            String value = entry.getValue().trim();
+            String originalAttributeName = null;
+            String parsedAttributeName = null;
+
+            // Avoid empty key
+            if (originalRef.equals("")) {
+                continue;
+            }
+
+            // Ignore element if ref starts with "P" or "X"
+            if (originalRef.startsWith("X") || originalRef.startsWith("P")) {
+                continue;
+            }
+
+            if (refIsAttribute(originalRef)) {
+                originalAttributeName = parseRefAndGetAttribute(originalRef);
+                ref = parseRefAndGetNewRef(originalRef);
+                Pair<Namespace, String> attributePair = parseAttributeName(originalAttributeName, EditLib.COLON_SEPARATOR, id, md, editLib);
+                parsedAttributeName = attributePair.one().getPrefix() + ":" + attributePair.two();
+            } else {
+                continue;
+            }
+
+            String actualRef = ref != null ? ref : originalRef;
+            Element el = editLib.findElement(md, actualRef);
+            if (el == null) {
+                Log.error(Geonet.EDITOR, EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + originalRef);
+                continue;
+            }
+            SchemaPlugin schemaPlugin = SchemaManager.getSchemaPlugin(schema);
+            schemaPlugin.processElement(el, originalRef, parsedAttributeName, value);
+        }
 
         // --- update elements
         for (Map.Entry<String, String> entry : changes.entrySet()) {
@@ -230,6 +276,43 @@ public class AjaxEditUtils extends EditUtils {
     }
 
     /**
+     * Reads a ref and extract the ID part from it.
+     * @param ref the ref to check.
+     * @return the ID part.
+     */
+    private String parseRefAndGetNewRef(String ref) {
+        String newRef = ref;
+        int underscorePosition = ref.indexOf('_');
+        if (underscorePosition != -1) {
+            newRef = ref.substring(0, underscorePosition);
+        }
+        return newRef;
+    }
+
+    /**
+     * Reads a ref and extract the attribute part from it.
+     * @param ref the ref to check.
+     * @return the attribute part or null if ref doesn't contain an attribute name.
+     */
+    private String parseRefAndGetAttribute(String ref) {
+        String attribute = null;
+        int underscorePosition = ref.indexOf('_');
+        if (underscorePosition != -1) {
+            attribute = ref.substring(underscorePosition + 1);
+        }
+        return attribute;
+    }
+
+    /**
+     * Checks if a ref name represents an attribute. This kind of ref is like <code>ID_ATTRIBUTENAME</code>.
+     * @param ref a ref element.
+     * @return true ref is an attribute, false in other case.
+     */
+    private boolean refIsAttribute(String ref) {
+        return ref.indexOf('_') != -1;
+    }
+
+    /**
      * TODO javadoc.
      */
     private void setMetadataIntoSession(UserSession session, Element md, String id) {
@@ -277,8 +360,12 @@ public class AjaxEditUtils extends EditUtils {
         //--- locate the geonet:element and geonet:info elements and clone for
         //--- later re-use
         Element refEl = (Element) (el.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE)).clone();
-        Element info = (Element) (md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE)).clone();
-        md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+        Element info = null;
+
+        if(md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE) != null) {
+            info = (Element) (md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE)).clone();
+            md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+        }
 
         Element child = null;
         MetadataSchema mds = dataManager.getSchema(schema);
@@ -337,11 +424,38 @@ public class AjaxEditUtils extends EditUtils {
             editLib.expandTree(mds, el);
 
         }
-        //--- attach the info element to the child
-        child.addContent(info);
+        if(info != null) {
+            //--- attach the info element to the child
+            child.addContent(info);
+        }
 
-        //--- attach the info element to the metadata root)
-        md.addContent((Element) info.clone());
+          /* When adding an gmx:Anchor to an element, due to the following code gets also a gco:CharacterString in EditLib.
+
+           Remove the gco:CharacterString subelement in this case.
+
+          } else if (isISOPlugin &&
+            type.getElementList().contains(
+                isoPlugin.getBasicTypeCharacterStringName()) &&
+            !hasSuggestion) {
+            // expand element which have no suggestion
+            // and have a gco:CharacterString substitute.
+            // gco:CharacterString is the default.
+            if (Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
+                Log.debug(Geonet.EDITORFILLELEMENT, "####   - Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + element.getName());
+            }
+            Element child = isoPlugin.createBasicTypeCharacterString();
+            element.addContent(child);
+        */
+        if (childName != null && childName.equals("gmx:Anchor")) {
+            if (child.getChild("CharacterString", ISO19139Namespaces.GCO) != null) {
+                child.removeChild("CharacterString", ISO19139Namespaces.GCO);
+            }
+        }
+
+        if(info != null) {
+            //--- attach the info element to the metadata root)
+            md.addContent((Element) info.clone());
+        }
 
         //--- store the metadata in the session again
         setMetadataIntoSession(session, (Element) md.clone(), id);
@@ -542,9 +656,10 @@ public class AjaxEditUtils extends EditUtils {
         editLib.contractElements(md);
         String parentUuid = null;
         md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
+        Processor.processXLink(md, this.context);
 
         //--- do the validation on the metadata
-        return dataManager.doValidate(session, schema, id, md, lang, false).one();
+        return metadataValidator.doValidate(session, schema, id, md, lang, false).one();
 
     }
 
@@ -594,7 +709,7 @@ public class AjaxEditUtils extends EditUtils {
         dataManager.notifyMetadataChange(md, id);
 
         //--- update search criteria
-        dataManager.indexMetadata(id, true);
+        dataManager.indexMetadata(id, true, null);
 
         return true;
     }
@@ -643,7 +758,7 @@ public class AjaxEditUtils extends EditUtils {
         dataManager.notifyMetadataChange(md, id);
 
         //--- update search criteria
-        dataManager.indexMetadata(id, true);
+        dataManager.indexMetadata(id, true, null);
 
         return true;
     }

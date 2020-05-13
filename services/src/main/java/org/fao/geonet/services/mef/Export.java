@@ -48,6 +48,9 @@ import org.jdom.Element;
 import java.nio.file.Path;
 import java.util.*;
 
+import static org.fao.geonet.kernel.SelectionManager.SELECTION_BUCKET;
+import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
+
 /**
  * Export one or more metadata records in Metadata Exchange Format (MEF) file format. See http
  * ://trac.osgeo.org/geonetwork/wiki/MEF for more details.
@@ -82,9 +85,14 @@ public class Export implements Service {
         String uuid = Util.getParam(params, "uuid", null);
         String format = Util.getParam(params, "format", "full");
         String version = Util.getParam(params, "version", null);
+        String bucket = Util.getParam(params, SELECTION_BUCKET, SELECTION_METADATA);
+
         boolean skipUUID = Boolean.parseBoolean(Util.getParam(params, "skipUuid", "false"));
         boolean resolveXlink = Boolean.parseBoolean(Util.getParam(params, "resolveXlink", "true"));
         boolean removeXlinkAttribute = Boolean.parseBoolean(Util.getParam(params, "removeXlinkAttribute", "true"));
+        boolean addSchemaLocation = Boolean.parseBoolean(Util.getParam(params, "addSchemaLocation", "true"));
+        boolean approved = Boolean.parseBoolean(Util.getParam(params, "approved", "true"));
+
         String relatedMetadataRecord = Util
             .getParam(params, "relation", "true");
 
@@ -92,41 +100,24 @@ public class Export implements Service {
 
         Log.info(Geonet.MEF, "Create export task for selected metadata(s).");
         SelectionManager selectionManger = SelectionManager.getManager(session);
-        Set<String> uuids = selectionManger
-            .getSelection(SelectionManager.SELECTION_METADATA);
-        Set<String> uuidsBeforeExp = Collections
-            .synchronizedSet(new HashSet<String>(0));
+        Set<String> uuids = selectionManger.getSelection(bucket);
+
         Log.info(Geonet.MEF, "Current record(s) in selection: " + uuids.size());
-        uuidsBeforeExp.addAll(uuids);
 
         // If provided uuid, export the metadata record only
+        selectionManger.close(SelectionManager.SELECTION_METADATA);
         if (uuid != null) {
-            SelectionManager.getManager(session).close(SelectionManager.SELECTION_METADATA);
-
-            SelectionManager.getManager(session).addSelection(
-                SelectionManager.SELECTION_METADATA, uuid);
-
-            uuids = selectionManger
-                .getSelection(SelectionManager.SELECTION_METADATA);
-        }
-
-
-        // If provided uuid, export the metadata record only
-        if (uuid != null) {
-            SelectionManager.getManager(session).close(SelectionManager.SELECTION_METADATA);
-
-            SelectionManager.getManager(session).addSelection(
-                SelectionManager.SELECTION_METADATA, uuid);
-
-            uuids = selectionManger
-                .getSelection(SelectionManager.SELECTION_METADATA);
+            selectionManger.addSelection(SelectionManager.SELECTION_METADATA, uuid);
+        } else {
+            // else export requested selection bucket
+            selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA, uuids);
         }
 
         // MEF version 1 only support one metadata record by file.
         // Uuid parameter MUST be set and add to selection manager before
         // export.
         if (version == null) {
-            file = MEFLib.doExport(context, uuid, format, skipUUID, resolveXlink, removeXlinkAttribute);
+            file = MEFLib.doExport(context, uuid, format, skipUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation, approved);
         } else {
             // MEF version 2 support multiple metadata record by file.
 
@@ -175,13 +166,11 @@ public class Export implements Service {
             Log.info(Geonet.MEF, "Building MEF2 file with " + uuids.size()
                 + " records.");
 
-            file = MEFLib.doMEF2Export(context, uuids, format, false, stylePath, resolveXlink, removeXlinkAttribute);
+            file = MEFLib.doMEF2Export(context, uuids, format, false, stylePath, resolveXlink, removeXlinkAttribute, false, addSchemaLocation, approved);
         }
 
         // -- Reset selection manager
-        selectionManger.close();
-        selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA,
-            uuidsBeforeExp);
+        selectionManger.close(SelectionManager.SELECTION_METADATA);
 
         String fname = String.valueOf(Calendar.getInstance().getTimeInMillis());
 

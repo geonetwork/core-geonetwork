@@ -33,7 +33,7 @@
           <xsl:value-of select="$i18n/serviceNotAllowedTitle"/>
         </h1>
         <p class="text-danger">
-          <xsl:variable name="referer" select="if (normalize-space(/root/request/referer) = 'UNKNOWN')
+          <xsl:variable name="referer" select="if (normalize-space(/root/request/referer[1]) = 'UNKNOWN')
                         then '' else /root/request/referer"/>
 
           <xsl:value-of

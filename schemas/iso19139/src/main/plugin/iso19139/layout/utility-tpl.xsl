@@ -37,6 +37,11 @@
       select="count($metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
   </xsl:template>
 
+  <xsl:template name="get-iso19139-title">
+    <xsl:value-of select="$metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title/gco:CharacterString"/>
+  </xsl:template>
+
+
   <xsl:template name="get-iso19139-extents-as-json">[
     <xsl:for-each select="//gmd:geographicElement/gmd:EX_GeographicBoundingBox[
             number(gmd:westBoundLongitude/gco:Decimal)
@@ -69,7 +74,7 @@
         $pattern) and
         normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) != '']">
         <xsl:variable name="protocol"
-                      select="gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString"/>
+                      select="string(gmd:CI_OnlineResource/gmd:protocol)"/>
         <xsl:variable name="fileName">
           <xsl:choose>
             <xsl:when test="matches($protocol, '^DB:.*')">
@@ -78,6 +83,9 @@
             </xsl:when>
             <xsl:when test="matches($protocol, '^FILE:.*')">
               <xsl:value-of select="gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+            </xsl:when>
+            <xsl:when test="matches($protocol, '^OGC:.*') and normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString) != ''">
+              <xsl:value-of select="normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString)"/>
             </xsl:when>
             <xsl:otherwise>
               <xsl:value-of select="substring-after(

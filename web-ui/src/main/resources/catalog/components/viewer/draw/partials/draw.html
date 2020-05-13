@@ -1,6 +1,6 @@
 <div gi-btn-group>
 
-  <div class="btn-group flux">
+  <div class="btn-group flux gn-margin-bottom">
     <div class="btn-group" role="group">
       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
@@ -28,8 +28,12 @@
     </button>
   </div>
 
-  <input class="form-control" ng-show="drawText.active" ng-model="text"
-         title="{{'tipDrawText'|translate}}">
+  <label ng-show="drawText.active" >{{'textInput'|translate}}
+    <input class="form-control" ng-model="text"
+           placeholder="{{'textInput'|translate}}"
+           title="{{'tipDrawText'|translate}}">
+  </label>
+  
   <div gn-style-form="featureStyleCfg" gn-style-type="getActiveDrawType()"></div>
 
   <!--

@@ -125,7 +125,7 @@ public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTes
 
     @Test
     public void testDeleteByMetadataId() {
-        _opAllowRepo.deleteAllByIdAttribute(OperationAllowedId_.metadataId, _md1.getId());
+        _opAllowRepo.deleteAllByMetadataId(_md1.getId());
 
         List<OperationAllowed> opAllowedFound = _opAllowRepo.findAll();
 
@@ -141,7 +141,7 @@ public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTes
 
     @Test
     public void testDeleteByGroupId() {
-        _opAllowRepo.deleteAllByIdAttribute(OperationAllowedId_.groupId, _allGroup.getId());
+        _opAllowRepo.deleteAllByGroupId(_allGroup.getId());
 
         List<OperationAllowed> opAllowedFound = _opAllowRepo.findAll();
 

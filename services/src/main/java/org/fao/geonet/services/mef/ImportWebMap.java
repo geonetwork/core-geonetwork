@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.mef;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,28 +37,32 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 /**
- * TODO: * If only URL provided and no map as string, download context * Create map preview * Save
- * map and attached document to metadata record
+ * TODO:
+ * * If only URL provided and no map as string, download context
+ * * Create map preview
+ * * Save map and attached document to metadata record
  */
 public class ImportWebMap extends NotInReadOnlyModeService {
 
@@ -71,6 +76,7 @@ public class ImportWebMap extends NotInReadOnlyModeService {
 
 
     @Override
+    @Deprecated
     public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
         String mapString = Util.getParam(params, "map_string");
         String mapUrl = Util.getParam(params, "map_url", "");
@@ -79,11 +85,11 @@ public class ImportWebMap extends NotInReadOnlyModeService {
         String mapAbstract = Util.getParam(params, "map_abstract", "");
         String title = Util.getParam(params, "map_title", "");
         String mapFileName = Util.getParam(params, "map_filename", "map-context.ows");
-        if (mapFileName.contains("..")) {
-            throw new BadParameterEx(
-                "Invalid character '..' found in resource name.",
-                mapFileName);
-        }
+        String mapImage = Util.getParam(params, "map_image", "");
+        String mapImageFilename = Util.getParam(params, "map_image_filename", "map.png");
+
+        FilePathChecker.verify(mapFileName);
+
         String topic = Util.getParam(params, "topic", "");
 
 
@@ -131,21 +137,31 @@ public class ImportWebMap extends NotInReadOnlyModeService {
             sm.getSiteName(), null, context, id, date, date, groupId,
             MetadataType.METADATA);
 
+        final Store store = context.getBean("resourceStore", Store.class);
+
         // Save the context if no context-url provided
         if (StringUtils.isEmpty(mapUrl)) {
-            Path dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id.get(0));
-            Files.createDirectories(dataDir);
-            Path outFile = dataDir.resolve(mapFileName);
-            Files.deleteIfExists(outFile);
-            FileUtils.writeStringToFile(outFile.toFile(), Xml.getString(wmcDoc));
+            store.putResource(context, uuid, mapFileName, IOUtils.toInputStream(Xml.getString(wmcDoc)), null,
+                    MetadataResourceVisibility.PUBLIC, true);
 
             // Update the MD
             Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
             onlineSrcParams.put("protocol", "WWW:DOWNLOAD-OGC:OWS-C");
-            onlineSrcParams.put("url", sm.getSiteURL(context) + String.format("/resources.get?uuid=%s&fname=%s&access=public", uuid, mapFileName));
+            onlineSrcParams.put("url", sm.getNodeURL() + String.format("api/records/%s/attachments/%s", uuid, mapFileName));
             onlineSrcParams.put("name", mapFileName);
             onlineSrcParams.put("desc", title);
             Element mdWithOLRes = Xml.transform(transformedMd, schemaMan.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"), onlineSrcParams);
+            dm.updateMetadata(context, id.get(0), mdWithOLRes, false, true, true, context.getLanguage(), null, true);
+        }
+
+        if (StringUtils.isNotEmpty(mapImage) && StringUtils.isNotEmpty(mapImageFilename)) {
+            store.putResource(context, uuid, mapImageFilename, new ByteArrayInputStream(Base64.decodeBase64(mapImage)), null,
+                    MetadataResourceVisibility.PUBLIC, true);
+
+            // Update the MD
+            Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
+            onlineSrcParams.put("thumbnail_url", sm.getNodeURL() + String.format("api/records/%s/attachments/%s", uuid, mapFileName));
+            Element mdWithOLRes = Xml.transform(transformedMd, schemaMan.getSchemaDir("iso19139").resolve("process").resolve("thumbnail-add.xsl"), onlineSrcParams);
             dm.updateMetadata(context, id.get(0), mdWithOLRes, false, true, true, context.getLanguage(), null, true);
         }
 

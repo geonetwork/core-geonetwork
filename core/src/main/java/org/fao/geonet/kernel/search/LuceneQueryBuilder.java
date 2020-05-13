@@ -103,6 +103,10 @@ public class LuceneQueryBuilder {
      * Template = "n" is added if not set in search criteria.
      */
     private boolean templateCriteriaAdded;
+    /**
+     * No draft is shown if not set explicitly in search criteria.
+     */
+    private boolean draftCriteriaAdded;
 
 
     /**
@@ -273,6 +277,11 @@ public class LuceneQueryBuilder {
         //
         Map<String, Set<String>> searchCriteriaOR = new LinkedHashMap<String, Set<String>>();
 
+        spatialCriteriaAdded = false;
+        temporalCriteriaAdded = false;
+        templateCriteriaAdded = false;
+        draftCriteriaAdded = false;
+
         for (Iterator<Entry<String, Set<String>>> i = searchCriteria.entrySet().iterator(); i.hasNext(); ) {
             Entry<String, Set<String>> entry = i.next();
             String fieldName = entry.getKey();
@@ -325,6 +334,18 @@ public class LuceneQueryBuilder {
         }
         query = buildORQuery(searchCriteriaOR, query, similarity);
         query = buildANDQuery(searchCriteria, query, similarity, processedRangeFields);
+
+        // Search only for metadata (no template or sub-templates) if not set by search criteria before
+        if (!templateCriteriaAdded) {
+            BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+            Query q = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
+            query.add(q, occur);
+            templateCriteriaAdded = true;
+        }
+
+        // Search only for non-draft not set by search criteria before
+        draftCriteria(null, query); 
+
         if (StringUtils.isNotEmpty(_language)) {
             if (Log.isDebugEnabled(Geonet.LUCENE))
                 Log.debug(Geonet.LUCENE, "adding locale query for language " + _language);
@@ -369,10 +390,6 @@ public class LuceneQueryBuilder {
      * Builds a query where OR operator is used for each search criteria.
      */
     private BooleanQuery buildORQuery(Map<String, Set<String>> searchCriteria, BooleanQuery query, String similarity) {
-
-        spatialCriteriaAdded = false;
-        temporalCriteriaAdded = false;
-        templateCriteriaAdded = false;
 
         if (searchCriteria.size() == 0) {
             return query;
@@ -431,14 +448,6 @@ public class LuceneQueryBuilder {
         }
         BooleanClause booleanClause = new BooleanClause(booleanQuery, occur);
         query.add(booleanClause);
-
-        // Search only for metadata (no template or sub-templates) if not set by search criteria before
-        if (!templateCriteriaAdded) {
-            occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-            Query q = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
-            query.add(q, occur);
-            templateCriteriaAdded = true;
-        }
         return query;
     }
 
@@ -481,14 +490,6 @@ public class LuceneQueryBuilder {
             Set<String> fieldValues = searchCriterium.getValue();
             addANDCriteria(fieldName, fieldValues, similarity, query, searchCriteria, processedRangeFields);
         }
-
-        // Search only for metadata (no template or sub-templates) if not set by search criteria before
-        if (!templateCriteriaAdded) {
-            BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-            Query q = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
-            query.add(q, occur);
-            templateCriteriaAdded = true;
-        }
         return query;
     }
 
@@ -523,6 +524,10 @@ public class LuceneQueryBuilder {
             else if (LuceneIndexField.IS_TEMPLATE.equals(fieldName) || SearchParameter.TEMPLATE.equals(fieldName)) {
                 templateCriteria(fieldValue, query);
             }
+            // draft
+            else if (LuceneIndexField.DRAFT.equals(fieldName)) {
+                draftCriteria(fieldValue, query);
+            }
             // all -- mapped to same Lucene field as 'any'
             else if ("all".equals(fieldName)) {
                 addRequiredTextField(fieldValue, LuceneIndexField.ANY, similarity, (criteriaIsASet ? bq : query));
@@ -532,8 +537,10 @@ public class LuceneQueryBuilder {
                 addNotRequiredTextField(fieldValue, LuceneIndexField.ANY, similarity, (criteriaIsASet ? bq : query));
             }
             // without
-            else if ("without".equals(fieldName)) {
-                addProhibitedTextField(fieldValue, LuceneIndexField.ANY, (criteriaIsASet ? bq : query));
+            else if (fieldName.startsWith("without")) {
+                addProhibitedTextField(fieldValue,
+                    fieldName.contains("-") ? fieldName.split("-")[1] : LuceneIndexField.ANY,
+                    (criteriaIsASet ? bq : query));
             }
             // phrase
             else if ("phrase".equals(fieldName)) {
@@ -642,6 +649,32 @@ public class LuceneQueryBuilder {
     }
 
     /**
+     * Adds draft to query.
+     */
+    private void draftCriteria(String fieldValue, BooleanQuery query) {
+    	
+        if (!draftCriteriaAdded) {
+            BooleanClause.Occur templateOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+
+            Query templateQ;
+            if (fieldValue != null) {
+                if (fieldValue.contains(OR_SEPARATOR)) {
+                    templateQ = new BooleanQuery();
+                    addSeparatedTextField(fieldValue, OR_SEPARATOR, LuceneIndexField.DRAFT, (BooleanQuery) templateQ);
+                } else {
+                    templateQ = new TermQuery(new Term(LuceneIndexField.DRAFT, fieldValue));
+                }
+            } else {
+                templateQ = new BooleanQuery();
+                addSeparatedTextField("n or e", OR_SEPARATOR, LuceneIndexField.DRAFT, (BooleanQuery) templateQ);
+            }
+            query.add(templateQ, templateOccur);
+
+            draftCriteriaAdded = true;
+        }
+    }
+
+    /**
      * Adds template searchterm to query.
      */
     private void templateCriteria(String fieldValue, BooleanQuery query) {
@@ -653,7 +686,7 @@ public class LuceneQueryBuilder {
                 if (fieldValue.contains(OR_SEPARATOR)) {
                     templateQ = new BooleanQuery();
                     addSeparatedTextField(fieldValue, OR_SEPARATOR, LuceneIndexField.IS_TEMPLATE, (BooleanQuery) templateQ);
-                } else if (fieldValue.equals("y") || fieldValue.equals("s")) {
+                } else if (fieldValue.equals("y") || fieldValue.equals("s") || fieldValue.equals("t")) {
                     templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, fieldValue));
                 } else {
                     templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
@@ -967,26 +1000,35 @@ public class LuceneQueryBuilder {
     private void addPrivilegeQuery(LuceneQueryInput luceneQueryInput, BooleanQuery query) {
         // Set user groups privileges
         Set<String> groups = luceneQueryInput.getGroups();
-        String editable$ = luceneQueryInput.getEditable();
-        boolean editable = BooleanUtils.toBoolean(editable$);
+        Set<String> editableGroups = luceneQueryInput.getEditableGroups();
         BooleanQuery groupsQuery = new BooleanQuery();
         boolean groupsQueryEmpty = true;
         BooleanClause.Occur groupOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
-        if (!CollectionUtils.isEmpty(groups)) {
-            for (String group : groups) {
+
+        if (!CollectionUtils.isEmpty(editableGroups)) {
+        	Log.trace(Geonet.SEARCH_ENGINE, "We have editable groups to add");
+            for (String group : editableGroups) {
                 if (StringUtils.isNotBlank(group)) {
-                    if (!editable) {
-                        // add to view
-                        TermQuery viewQuery = new TermQuery(new Term(LuceneIndexField._OP0, group.trim()));
-                        BooleanClause viewClause = new BooleanClause(viewQuery, groupOccur);
-                        groupsQueryEmpty = false;
-                        groupsQuery.add(viewClause);
-                    }
+                	Log.trace(Geonet.SEARCH_ENGINE, " > Group: " + group);
                     // add to edit
                     TermQuery editQuery = new TermQuery(new Term(LuceneIndexField._OP2, group.trim()));
                     BooleanClause editClause = new BooleanClause(editQuery, groupOccur);
                     groupsQueryEmpty = false;
                     groupsQuery.add(editClause);
+                }
+            }
+        }
+        
+        if (!CollectionUtils.isEmpty(groups)) {
+        	Log.trace(Geonet.SEARCH_ENGINE, "We have viewable groups to add");
+            for (String group : groups) {
+                if (StringUtils.isNotBlank(group)) {
+                	Log.trace(Geonet.SEARCH_ENGINE, " > Group: " + group);
+                    // add to view
+                    TermQuery viewQuery = new TermQuery(new Term(LuceneIndexField._OP0, group.trim()));
+                    BooleanClause viewClause = new BooleanClause(viewQuery, groupOccur);
+                    groupsQueryEmpty = false;
+                    groupsQuery.add(viewClause);
                 }
             }
         }

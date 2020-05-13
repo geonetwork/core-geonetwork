@@ -32,7 +32,7 @@
 
 
 
-
+  goog.require('gn_app_templates');
   goog.require('gn_admin_controller');
   goog.require('gn_module');
 

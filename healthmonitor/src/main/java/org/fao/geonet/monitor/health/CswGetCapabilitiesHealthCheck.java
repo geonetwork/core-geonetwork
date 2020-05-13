@@ -42,7 +42,7 @@ import com.yammer.metrics.core.HealthCheck;
  */
 public class CswGetCapabilitiesHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {
-        return new HealthCheck("Csw GetCapabilities") {
+        return new HealthCheck(this.getClass().getSimpleName()) {
             @Override
             protected Result check() throws Exception {
                 try {

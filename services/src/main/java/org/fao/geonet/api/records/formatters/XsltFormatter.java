@@ -24,15 +24,13 @@
 package org.fao.geonet.api.records.formatters;
 
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.kernel.Schema;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -64,8 +62,27 @@ public class XsltFormatter implements FormatterImpl {
 
         Element root = new Element("root");
 
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+
         root.addContent(new Element("lang").setText(fparams.context.getLanguage()));
         root.addContent(new Element("url").setText(fparams.url));
+        // FIXME: This is a hack to mimic what Jeeves service are doing.
+        // Some XSLT are used by both formatters and Jeeves and Spring MVC services
+        Element translations = new Element("translations");
+        Element gui = new Element("gui");
+        gui.addContent(new Element("url").setText(fparams.url + "../.."));
+        gui.addContent(new Element("nodeUrl").setText(settingManager.getNodeURL()));
+        gui.addContent(new Element("baseUrl").setText(settingManager.getBaseURL()));
+        gui.addContent(new Element("serverUrl").setText(settingManager.getServerURL()));
+        gui.addContent(new Element("language").setText(fparams.context.getLanguage()));
+        gui.addContent(new Element("reqService").setText("md.format.html"));
+        Element env = new Element("systemConfig");
+        env.addContent(settingManager.getAllAsXML(true));
+        gui.addContent(env);
+        root.addContent(gui);
+
+
+
         root.addContent(new Element("locUrl").setText(fparams.getLocUrl()));
 
         root.addContent(new Element("resourceUrl").setText(fparams.getResourceUrl()));
@@ -108,13 +125,18 @@ public class XsltFormatter implements FormatterImpl {
         // an xsl:param should be defined
         // eg. <xsl:param name="view"/>
         Map<String, Object> requestParameters = new HashMap<String, Object>();
-        Iterator<String> iterator = fparams.webRequest.getParameterMap().keySet().iterator();
-        while (iterator.hasNext()) {
-            String key = iterator.next();
-            requestParameters.put(key, fparams.webRequest.getParameterMap().get(key));
+
+        if (fparams.webRequest != null) {
+            Iterator<String> iterator = fparams.webRequest.getParameterMap().keySet().iterator();
+            while (iterator.hasNext()) {
+                String key = iterator.next();
+                requestParameters.put(key, fparams.webRequest.getParameterMap().get(key));
+            }
         }
         Element transformed = Xml.transform(root, fparams.viewFile, requestParameters);
-        return Xml.getString(transformed);
+        return "textResponse".equals(transformed.getName()) ?
+            transformed.getTextNormalize() :
+            Xml.getString(transformed);
     }
 
     /**
@@ -132,7 +154,7 @@ public class XsltFormatter implements FormatterImpl {
         List<Element> elementList = new ArrayList<>(3);
         for (SchemaLocalization schemaLocalization : localization) {
             String currentSchema = schemaLocalization.schema.trim();
-            if ("all".equalsIgnoreCase(schema) || schemasToLoadList.contains(currentSchema.toLowerCase())) {
+            if ("all".equalsIgnoreCase(schema) || schemasToLoadList.stream().anyMatch(currentSchema::equalsIgnoreCase)) {
                 Element schemaEl = new Element(currentSchema);
 
                 Element labels = schemaLocalization.getLabels(language);

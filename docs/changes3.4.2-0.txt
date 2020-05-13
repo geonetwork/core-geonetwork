@@ -1,0 +1,286 @@
+================================================================================
+===
+=== GeoNetwork 3.4.2: List of changes
+===
+================================================================================
+- Fix deadlock threads while indexing (#2740)
+- Update translations from transifex
+- Revert "Fix for create service url using SettingsInfo" due to issues when running servlet container in non-default port.
+- Move the click event handler to the button for Reset map (#2735)
+- Allow to customize gazetteer (#2690)
+- User feedback / Email alert (#2725)
+- Create a new user shows the privileges of the previous user created #2730
+- Don't display GeoNetwork internal settings in the Settings UI #2722
+- Make configurable in the admin settings a list with disabled harvester protocols (#2721)
+- Add dublin core translations for metadata detail page - full view
+- Forgot your password option should not be displayed if the mail server is not setup #2726
+- Add short notice about recaptcha in settings.
+- User Feedback / Add possibility to customize rating criterias (from DB) & other improvements (#2712)
+- Get related, don't add feature catalog element to response if null
+- fix my mistake, sorry
+- Fix for feature catalog null
+- Schema depends on current record.
+- Unesco thesaurus title is not properly extracted #2713
+- Add location in related templates
+- REST API / Swagger path mapping change in 2.8
+- User feedback / Index feedback count and add possibility to search by range query on feedback count or rating. eg. http://localhost:8080/geonetwork/srv/fre/q?_ratingFrom=3&_ratingTo=5&feedbackCountFrom=20&feedbackCountTo=30
+- User feedback / In advanced mode, index average rating to properly sort by rating.
+- REST API / Update swagger ui.
+- Fix for create service url using SettingsInfo
+- Fix for checkboxes in Apply suggestion of metadata editor
+- Xsl utility method to use proxy
+- Check for null in feature catalogs
+- Truncate the name of GeoNetwork
+- Add class to the GeoNetwork name, and add a class to the name when you are logged in.
+- User feedback / Fix invalid migration script.
+- Update to springfox 2.8.0 to properly generate code using codegen. Hide webRequest to API doc.
+- Merge pull request #2707 from cmangeat/groovy_handlers_fixes
+- as type is both used for indirection and recording/conversion, reinit it after each recording/conversion
+- being my father child does not mean i am brother of myself
+- Metadata detail - wrong metadata contact displayed when click the Next button #2705
+-  Restore logo upload as part of group config (#2703)
+- Fix for userfeedback directives (#2696)
+- Fixes postgres database type not supported in ArcSDE harvester. (#2704)
+- Unpublish metadata removes all metadata privileges #2699
+- Merge pull request #2701 from cmangeat/generated_imported_metadata_uuid_reported_2
+- generated imported metadata uuid reported
+- Merge pull request #2698 from cmangeat/csw_gn-replace_ignoring_carriage_return
+- [CSW REPLACE + REFACTOR] do not want last text to override content
+- [CSW REPLACE + REFACTOR] refactor ident
+- [CSW REPLACE + REFACTOR] remove extra loop and indirection
+- [CSW REPLACE + REFACTOR] lower indirection level
+- [CSW REPLACE + REFACTOR] refactor: remove code duplication
+- [CSW REPLACE + REFACTOR] fix skipped test ?
+- [CSW REPLACE + REFACTOR] don't understand it...
+- [CSW REPLACE + REFACTOR] static import and indent
+- [CSW REPLACE + REFACTOR] remove indirection levels
+- [CSW REPLACE + REFACTOR] rewrite debug msg
+- [CSW REPLACE + REFACTOR] refactor
+- [CSW REPLACE + REFACTOR] unify methods
+- [CSW REPLACE + REFACTOR] negate indirection
+- [CSW REPLACE + REFACTOR] remove one indirection level
+- [CSW REPLACE + REFACTOR] unify list accessor
+- [CSW REPLACE + REFACTOR] get rid of vector buffer
+- [CSW REPLACE + REFACTOR] use list accessor instead of getAtIndex
+- [CSW REPLACE + REFACTOR] make nodeConfig parsing simplier
+- [CSW REPLACE + REFACTOR] there is a more general exception to be thrown
+- [CSW REPLACE + REFACTOR] no need to set isUpdated to false in theses cases as if !isCreateMode, isUpdated will be set to true
+- [CSW REPLACE + REFACTOR] iterator can't return null in this case
+- [CSW REPLACE + REFACTOR] refactor
+- [CSW REPLACE + REFACTOR] remove obsolete comment
+- [CSW REPLACE + REFACTOR] change logger for slf4j one, remove 'todo javadoc' and redundant static
+- Set a max height for the content of a dialog body so it fits on small screens.
+- ui - change tt-dropdown-menu to tt-menu
+- Merge pull request #2693 from fgravin/fixMEFImportTest
+- MEF harvesting: set privileges from harvester settings
+- MEF harvesting: secure mef type detection
+- Merge pull request #2692 from fgravin/fixMEFImportTest
+- Fix MEF harvesting if no groupId specified
+- Merge pull request #2687 from MichelGabriel/3.4.x-fix-for-add-resource
+- Merge pull request #2667 from fgravin/mefHarvester
+- Set a max height for the content of a dialog body so it fits on small screens.
+- Merge pull request #2539 from PascalLike/brokenImports
+- Merge pull request #2563 from pvgenuchten/checklinkforhttp
+- Merge pull request #2585 from PascalLike/fixFullViewIso19110
+- Merge pull request #2646 from PascalLike/mapresetbutton
+- Merge pull request #2657 from pvgenuchten/abstract4home
+- Allow 'Accept: */*' header in '/api/records/{uuid}' request (#2676)
+- User-feedback functionality (#2419)
+- Fixes for Associated resources panel - link to dataset and CatalogService.getServiceURL method. Fixes #2624, #2625 (#2626)
+- Update schema-ident.xsd
+- Verify if infoformat is available before requesting it in GFI (#2671)
+- Align schema fields in CSW harvester: Fixes #2608 (#2668)
+- Remove padding in editor: * for table in table • for datepicker
+- Replace class `invisble` with `hidden`. This last class doesn't take any whitespace in the UI.
+- MEF import : Fix groupIdOwner attribution
+- LFS harvester MEF: override metadata on harvesting, add xsl transfo if set
+- Set harvester uuid as source for MEF localfiles harvester
+- LocalFilesHarvester: support MEF files
+- Bumping versions of frontend-maven-plugin, node and npm
+- replace demis wms by an fao source
+- restore getOverviews
+- adds some social media annotations + canonical link to metadata details page to optimise browsing and search experience, resolves #2653
+- add some default text to the non-javascript page, this is used by search engine crawlers, resolves issue #2652
+- decrease page size in sitemap pagination (#2654)
+- Source parameter for dataset-add process (#2618)
+- Add a reset map button to manage layer panel
+- Metadata editor - Dublin Core doesn't have the configuration for validation/online resources panels #2601. (#2627)
+- Remove unused class.
+- XSL processing / Preview mode / Return error report.
+- Fix iso19139 french label typo
+- Search statistics - duplicated field issues in ElasticSearch configuration. Fixes #2641
+- Bug fix: when pathname has dots, language is not recognized
+- ISO19139 / Schematron / Main language is also defined in locale #2639.
+- Merge pull request #2554 from PascalLike/MissingResourcesFix
+- Remove ref to Sextant.
+- Editor / Add permalink
+- Keep formatter folder in .war
+- ISO19139 / Add fieldset on axis dimension for more readability.
+- Typeahead is also used for category widget. Enable show suggestion on focus
+- Fix trailing commas.
+- Search advanced form categories / Display the list of values on focus - #2426
+- Topic category / Display the list of values on focus. Keyword selector / Extend list to the number of items return by the search.
+- Editor / Topic category widget should look like keywords #2426 - Upgrade typeahead/bloodound version, updates to backend service to manage xpath fragments
+- Editor / Topic category widget should look like keywords #2426 - Cleaning.
+- Editor / Topic category widget should look like keywords #2426
+- Editor / Topic category widget should look like keywords #2426
+- Fix spatial search not working with shapefile sometimes (#2516)
+- Metadata file store / Encode file name for URL. (#2587)
+- Return application exception instead of JPA transaction errors when duplicated UUID is created. (#2584)
+- Editor board / Add hot keys. (#2532)
+- Make distinction between user search and internal queries made by the app.
+- Fixes a NPE when override is set in WebDAV harvesters
+- Update from transifex.
+- Check for not supported map projections (#2600)
+- Simplify metadataUuid management in mapService (#2590)
+- Fix for missing Styles on ESRI WMS requests (#2589)
+- Rename inspire validator directive in a generic one (#2507)
+- - Add expandable attribution control, in the bottom left corner of the map viewer and of the mini map
+- Merge pull request #2597 from jahow/fix-maps-manager-init
+- Check for height and width when initializing a map view
+- CSW search statistics - Search are logged before being executed #2566
+- Merge pull request #2580 from fgravin/contextorder
+- Handle owscontext loading on locationChange
+- Clean up depecrated owscontext config
+- Batch editing / Specify insertMode to properly update title.
+- Formatter may be used in third party apps. Ensure URLs are not relative
+- Merge pull request #2588 from jahow/fix-iso19139-ger-protocols
+- fixed protocol definition in iso19139/loc/ger/labels
+- Move url params (wmsurl, layername, owscontext) to angular hash params
+- Fix add WMS metadataUuid
+- Don't create ol layer for background if null
+- Fix for md fullview in ISO19110
+- Metadata detail page - Full view links in operatesOn are wrong #2583
+- Update service SDS template to set serviceType to 'other'
+- Fix background layer input if bg layers have already been set usually when the context is loaded before the directive is initilized
+- Remove default view tricks to get map size ok when changing tabs done in mapsManager
+- Load view map with mapsManager
+- Load localStorage context in mapsManager
+- Send promise when map size is ready for a fit
+- Merge pull request #2573 from jahow/wfs-indexing-dashboard
+- Merge pull request #2555 from cmangeat/bbox_filters
+- Integration tests guidelines
+- Changing also ownership of metadata harvested record when overrided
+- Forcing an update when the metadata gets overrided by another harvester, to make sure transformations, categories and attributes are correctly applied.
+- Reimplemented heatmap to work with ElasticSearch with geohashes
+- improved dashboard style & error handling
+- added a new dashboard for wfs indexing, listing job reports (basic functionalities)
+- do not show text filter for date graphs in wfs
+- fix admin options in WFS filter form not appearing (#2498)
+- Metadata create - Create and publish for group editors option doesn't work #2565
+- restore match on \\ (local path) use regexp
+- if link is no url, don't display as link (and button returns error)
+- activate bbox filters, default for first minimap menu item, as in module.js for second one
+- if working with bounding box, no need for for filter and for jcs cache...
+- ISSUE 2379 - Applying a match filter to RequestCache
+- use slf4j instead of log4j
+- Tests for user creation, group management, creation of metadata, editing of metadata and publish and unpublish metadata.
+- Revert "solves #2379 doesn't use session to store the forward url after login"
+- Fixing typo
+- Merge branch '3.2.x' of github.com:geonetwork/core-geonetwork into 3.4.x
+- Clean backport from develop of the harvesters overriding options when a harvester harvest an already existing record
+- Fix wrong less import
+- Turn off search stats by default (#2502).
+- CSW / added conversion of all elements to their base type in summary & brief output
+- Change local urls for md attachments and thumbnails during import
+- Error when duplicating multilingual metadata #2510
+- IE11 issues with font-awesome #2495
+-   Editor / Related OGC resource / Display desc instead of title (ie. layername)
+- fix error in gnRelated directive
+- Basket / Limit number of items.
+- FIX: Remove custom style
+- Formatter / XSL / Display link to portal only in pure HTML mode. The other mode is embedded in Angular and does not need it.
+- Update from transifex.
+- Style settings change variables names, Remove unused angular module
+- Style settings fix unit test
+- Migrate Utility filters from NGR3 to GN 3.4.x
+- Style settings - Form restyling
+- Style settings - Add quotes automatically to the URL
+- Style Settings - Add a panel in settings to manage style
+- Style settings basic implementation
+- Update Messages.properties
+- solves #2379 doesn't use session to store the forward url after login session incidentally gets overwritten by failed image requests
+- Restoring eng in codeListValue and merge with main trunk
+- Add a margin when a form-group is immediately after a button
+- Added margin to `form-group`s in a well, except for the last one.
+- Changed `nil-reason` button from `btn-link` to `btn-default`. After this the button is better aligned with the other elements in the editor.
+- Remove the `pull-right` class
+- Changed heights for the privileges popup and the table body in this privileges popup.
+- Change for the top position of the dialog to win extra space
+- if ows context has a projection not known to ol, then throw a warning and set projection to epsg:3857, alternative would be to load projection on the fly from epsg.io
+- Fix for API records/{id}/editor/elements when there are no geonet:info
+- ISO19110 - Removing 1 from template
+- Features catalog in metadata: Visualization on Map
+- Support for gmx:Anchor in ISO19110 editor
+- Feature catalogs in metadata: Layout optimization
+- Improving feature catalog integration in metadata
+- Integration Test project structure
+- Update en-admin.json
+- Added extra imports to fix the variable declaration tests
+- Organize imports and format code
+- Fix userMerge order
+- Add tests for MergeUsersByUsernameDatabaseMigration
+- Remove unused operation
+- Fixes wrong interface implementation
+- Delete old users' selections
+- Delete old UserGroup
+- Migration for merging duplicated users
+- Don't allow case sensitive duplicate usernames in old deprecated SelfRegister service
+- Add case check in deprecated legacy user service admin.user.update
+- Don't allow duplicate emails with different case in self register API
+- Don't allow to create more duplicates usernames using the API
+- Fix deprecation warnings in config-security-core.xml
+- Merge pull request #2512 from jahow/fix-wfs-indexing
+- Filter unnecessary files from war build (#2490)
+- fixed WFS filter partial & facets filtering
+- fix geometry field active state in wfs filters
+- fixes to JSONIX mappings & wfs config request
+- Action on selection / Clear selection only after delete (not after validate).
+- Record view / Display description if present
+- Inspire Validation - Check for null test ids
+- Inspire Validation Service - Metadata editor directive and integration
+- API for remote validation
+- Update variable and js librairies for JS API mode (#2455)
+- Save groups it's broken #2491
+- Interactive maps / reduce size of images attached to metadata record (related to #2081).
+- ISO19139 / Add missing string in Chinese to at least make editor usable.
+- Updates from transifex.
+- JSLint.
+- Editor / Add possibility to exclude results from record fragments.
+- ISO19139 / Add russian translation for map.
+- Fix bug on KML importer; load  at directive, not at controller
+- resolves #2470 also useradmin is allowed to assign 'all-group' to records
+- on the stats-admin-dashboard if warninghealthcheck is slow (or timeout) a file undefinedundefined.html is tried to be loaded, this prevents loading of the file, in the end the effect is the same: blank page while loading, would be better to add some spinner while loading
+- Update statistics-content.html
+- handle multilingual values for name & desc in OGC services
+- Filter to add X-Frame-Options header to prevent clickjacking attacks - Add ALLOW-FROM mode for X-Frame-Options and support for Content-Security-Policy frame-ancestors
+- Filter to add X-Frame-Options header to prevent clickjacking attacks - Add file header
+- Filter to add X-Frame-Options header to prevent clickjacking attacks.
+- Export as XML or MEF differences for metadata not having a schemaLocation attribute #2238
+- Merge branch '3.2.x' of github.com:geonetwork/core-geonetwork into 3.4.x
+- Fixes duplicated id on "load service from" in map #2457
+- Added more variables to the variables less file, so they can be manipulated in 1 place: - relocated some padding and margins - ready for background image - renamed variables - variables are now default using the Bootstrap variables - changed the position of the @import rule for the variables less file
+- Switch the order of `@import` rules
+- Include the @import rule with the varaibles.less file.
+- Add and use the new variables less file.
+- Fixing duplicated signin form (duplicated elements with the same id)
+- INSPIRE Strict validation fails the validation if multiple Conformitygroups are added even if 1 has the valid INSPIRE value. Fix rules for multilingual metadata and unit test updates #2439
+- Formatter / XSLT / Add hyperlinks in CharacterString.
+- Update check of isDisplayed condition in form configurator to check the text value instead of checking as boolean, that is not working
+- Migration script / remove duplicated ui/config in 3.3.0 and 3.4.0.
+- INSPIRE Strict validation fails the validation if multiple Conformity groups are added even if 1 has the valid INSPIRE value #2439
+- INSPIRE view improvements - remove extent values in add bbox actions. Fixes #2235, #2236, #2249, #2251
+- INSPIRE view improvements. Fixes #2235, #2236, #2249, #2251
+- Missing underscore-min.map #2406
+- Metadata detail page - code to support Anchor elements lost #2458
+- Merge pull request #2450 from jahow/fix-print-4326
+- Revert "New metadata page / Sort template by title #2434"
+- Fix tpl filter in create metadata page
+- added support for other projs in PrintMapService & Directive
+- #2448: fix git.properties issue (3.2.x)
+- #2411: fix CSW DescribeRecords
+- Fix typo in KVP
+- Fix error when printing WMTS layers using REST
+- Fix error when printing WMTS layers using REST
+- Add migration script to 3.4.2-SNAPSHOT
+- Update version to 3.4.2-SNAPSHOT

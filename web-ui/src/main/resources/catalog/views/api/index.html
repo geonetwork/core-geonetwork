@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GeoNetwork JS API testing page</title>
+  <link href="/geonetwork/static/gn_search_default.css" rel="stylesheet" media="screen">
+</head>
+<body ng-app="gn_search_default" data-ng-controller="GnCatController">
+  <div data-ng-include="'../../catalog/views/default/templates/index.html'" class="gn-full"></div>
+  <script src="/geonetwork/static/lib.js"></script>
+  <script src="/geonetwork/static/gn_search_default.js"></script>
+  <script type="text/javascript">
+    // Parse config from config URL parameter
+    var tokens = /config=([^&]+)/.exec(window.location.search),
+        config = tokens ? tokens[1] : undefined;
+
+    if (config) {
+      try {
+        config = angular.fromJson(decodeURIComponent(config));
+      } catch (e) {
+        console.warn('Invalid configuration: ' + config + '. Using default.');
+        console.warn(e);
+        config = {};
+      }
+    } else {
+      config = {};
+    }
+
+    var cfgModule = angular.module('gn_config', []);
+    cfgModule.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
+      function (gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
+        gnGlobalSettings.init(config, 'http://localhost:8080/geonetwork/srv/', gnViewerSettings, gnSearchSettings);
+      }]);
+  </script>
+</body>
+</html>

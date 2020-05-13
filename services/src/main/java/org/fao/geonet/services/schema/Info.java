@@ -170,7 +170,7 @@ public class Info implements Service {
             return StandardsUtils.buildError(elem, UNKNOWN_SCHEMA);
         }
 
-        Element result = StandardsUtils.getHelp(scm, fileName, schema, name, parent, xpath, isoType, servContext);
+        Element result = StandardsUtils.getHelp(scm, fileName, schema, name, parent, xpath, isoType, null, servContext);
         // if not found then return an error
         if (result == null) {
             return StandardsUtils.buildError(elem, NOT_FOUND);

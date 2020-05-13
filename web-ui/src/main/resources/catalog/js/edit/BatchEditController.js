@@ -32,10 +32,17 @@
              gnMetadataActions, gnGlobalSettings, Metadata) {
       // Search parameters and configuration
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
+      $scope.onlyMyRecord = {
+        is: gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly
+      };
+      $scope.isFilterTagsDisplayed =
+          gnGlobalSettings.gnCfg.mods.editor.isFilterTagsDisplayed;
       $scope.defaultSearchObj = {
         permalink: false,
         sortbyValues: gnSearchSettings.sortbyValues,
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
+        selectionBucket: 'be101',
+        filters: gnSearchSettings.filters,
         params: {
           sortBy: 'changeDate',
           _isTemplate: 'y or n',
@@ -49,9 +56,9 @@
 
 
       // Only my record toggle
-      $scope.onlyMyRecord = false;
-      $scope.toggleOnlyMyRecord = function() {
-        $scope.onlyMyRecord = !$scope.onlyMyRecord;
+      $scope.toggleOnlyMyRecord = function(callback) {
+        $scope.onlyMyRecord.is ? setOwner() : unsetOwner();
+        callback();
       };
       var setOwner = function() {
         $scope.searchObj.params['_owner'] = $scope.user.id;
@@ -59,47 +66,65 @@
       var unsetOwner = function() {
         delete $scope.searchObj.params['_owner'];
       };
-      $scope.$watch('onlyMyRecord', function(value) {
-        if (!$scope.searchObj) {
-          return;
+      $scope.$watch('user.id', function(newId) {
+        if (angular.isDefined(newId) && $scope.onlyMyRecord.is) {
+          setOwner();
         }
-        value ? setOwner() : unsetOwner();
       });
 
 
       // When selection change get the current selection uuids
       // and populate a list of currently selected records to be
       // display on summary pages
-      $scope.isSelectedAMixOfStandards = false;
-      $scope.selectedStandards = [];
       $scope.$watch('searchResults.selectedCount',
           function(newvalue, oldvalue) {
             if (oldvalue != newvalue) {
-              $http.get('../api/selections/metadata').
+              $scope.tooManyRecordInSelForSearch = false;
+              $scope.tooManyRecordInSelForSearch = false;
+              $scope.selectedRecordsCount = 0;
+              $scope.selectedStandards = [];
+              $scope.selectedRecords = [];
+              $http.get('../api/selections/be101').
                   success(function(uuids) {
-                    $http.get('q?_content_type=json&_isTemplate=y or n or s&' +
-                          'fast=index&resultType=manager&' +
-                          '_uuid=' + uuids.join(' or ')).success(
-                        function(data) {
-                          $scope.selectedRecords =
-                            gnSearchManagerService.format(data);
-                          $.each($scope.selectedRecords.dimension,
-                            function(idx, dim) {
-                              if (dim['@label'] == 'standards') {
-                                $scope.selectedStandards = dim.category;
-                                $scope.isSelectedAMixOfStandards =
-                                $scope.selectedStandards &&
-                                $scope.selectedStandards.length > 1;
-                                return false;
-                              }
-                            });
-                          // TODO: If too many records - only list the first 20.
+                    $scope.selectedRecordsCount = uuids.length;
+                    if (uuids.length > 0) {
+                      $http.get('q?_content_type=json&_isTemplate=y or n or s&' +
+                            'fast=index&resultType=manager&' +
+                            '_uuid=' + uuids.join(' or ')).then(
+                          function(r) {
+                            var data = r.data;
+                            $scope.selectedRecords =
+                              gnSearchManagerService.format(data);
+                            $.each($scope.selectedRecords.dimension,
+                              function(idx, dim) {
+                                if (dim['@label'] == 'standards') {
+                                  $scope.selectedStandards = dim.category;
+                                  $scope.isSelectedAMixOfStandards =
+                                  $scope.selectedStandards &&
+                                  $scope.selectedStandards.length > 1;
+                                  return false;
+                                }
+                              });
+                            // TODO: If too many records - only list the first 20.
+                          }, function (r) {
+                            // Could produce too long URLs 414 (URI Too Long)
+                            console.log(r);
+                            if (r.status === 414) {
+                              $scope.tooManyRecordInSelForSearch = true;
+                            } else {
+                              console.warn(r);
+                            }
                         });
+                      }
                   });
             }
           });
       $scope.hasRecordsInStandard = function(standard) {
         var isFound = false;
+        // We can't do this check when too many records in selection.
+        if ($scope.tooManyRecordInSelForSearch) {
+          return true;
+        }
         $.each($scope.selectedStandards, function(idx, facet) {
           if (facet['@value'] == standard) {
             isFound = true;
@@ -112,7 +137,7 @@
       // Get current selection which returns the list of uuids.
       // Then search those records.
       $scope.searchSelection = function(params) {
-        $http.get('../api/selections/metadata').success(function(uuids) {
+        $http.get('../api/selections/be101').success(function(uuids) {
           $scope.searchObj.params = angular.extend({
             _uuid: uuids.join(' or ')
           },
@@ -132,10 +157,11 @@
     '$location',
     '$http',
     '$compile',
+    '$httpParamSerializer',
     'gnSearchSettings',
     'gnCurrentEdit',
     'gnSchemaManagerService',
-    function($scope, $location, $http, $compile,
+    function($scope, $location, $http, $compile, $httpParamSerializer,
         gnSearchSettings, gnCurrentEdit, gnSchemaManagerService) {
 
       // Simple tab handling.
@@ -143,6 +169,7 @@
       $scope.setStep = function(step) {
         $scope.selectedStep = step;
       };
+      $scope.extraParams = {};
       $scope.$watch('selectedStep', function(newValue) {
         if (newValue === 2) {
           // Initialize map size when tab is rendered.
@@ -384,7 +411,12 @@
 
         // TODO: Apply changes to a mix of records is maybe not the best
         // XPath will be applied whatever the standard is.
-        return $http.put('../api/records/batchediting',
+        var url = '../api/records/batchediting?'
+          + $httpParamSerializer({
+            'bucket': 'be101',
+            'updateDateStamp': $scope.extraParams.updateDateStamp
+          });
+        return $http.put(url,
             params
         ).success(function(data) {
           $scope.processReport = data;

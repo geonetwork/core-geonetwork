@@ -48,6 +48,6 @@
 
       var lang = $LOCALE_MAP(location.href.split('/')[5]);
       $translateProvider.preferredLanguage(lang);
-      moment.lang(lang);
+      moment.locale(lang);
     }]);
 })();

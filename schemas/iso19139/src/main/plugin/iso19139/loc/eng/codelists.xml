@@ -1070,7 +1070,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
   </codelist>
   <!-- ==================================================== -->
-  <codelist name="gmd:MD_MaintenanceFrequencyCode">
+  <codelist name="gmd:MD_MaintenanceFrequencyCode" sort="fixed">
     <entry>
       <code>continual</code>
       <label>Continual</label>
@@ -1699,7 +1699,7 @@
         </entry>-->
   </codelist>
   <!-- ==================================================== -->
-  <codelist name="gmd:MD_TopicCategoryCode">
+  <codelist name="gmd:MD_TopicCategoryCode" alias="topicCategory">
     <entry>
       <code>farming</code>
       <label>Farming</label>
@@ -2252,7 +2252,7 @@
     </entry>
     <entry>
       <code>withheld</code>
-      <label>With held</label>
+      <label>Withheld</label>
     </entry>
   </codelist>
 

@@ -25,59 +25,95 @@
   goog.provide('gn_dashboard_controller');
 
 
-
-  goog.require('gn_dashboard_content_stat_controller');
-  goog.require('gn_dashboard_search_stat_controller');
+  goog.require('gn_dashboard_render_controller');
   goog.require('gn_dashboard_status_controller');
+  goog.require('gn_dashboard_record_link_controller');
+  goog.require('gn_dashboard_wfs_indexing_controller');
   goog.require('gn_vcs_controller');
 
   var module = angular.module('gn_dashboard_controller',
       ['gn_dashboard_status_controller',
-       'gn_dashboard_search_stat_controller',
-       'gn_dashboard_content_stat_controller',
+       'gn_dashboard_render_controller',
+       'gn_dashboard_record_link_controller',
        'gn_vcs_controller']);
 
 
   /**
    *
    */
-  module.controller('GnDashboardController', ['$scope', '$http',
-    function($scope, $http) {
+  module.controller('GnDashboardController', [
+    '$scope', '$http', 'gnGlobalSettings',
+    function($scope, $http, gnGlobalSettings) {
+      $scope.pageMenu = {tabs: {}};
+      $scope.info = {};
+      $scope.gnUrl = gnGlobalSettings.gnUrl;
 
+      $scope.pageMenu.tabs = [{
+        type: 'status',
+        label: 'status',
+        icon: 'fa-dashboard',
+        href: '#/dashboard/status'
+      },{
+        type: 'record-links',
+        label: 'record-links',
+        icon: 'fa-link',
+        href: '#/dashboard/record-links'
+      },{
+        type: 'information',
+        label: 'information',
+        icon: 'fa-list-ul',
+        href: '#/dashboard/information'
+      },{
+        type: 'versioning',
+        label: 'versioning',
+        icon: 'fa-rss',
+        href: '#/dashboard/versioning'
+      }];
+
+      var dashboards = [{
+        type: 'statistics',
+        label: 'contentStatistics',
+        icon: 'fa-bar-chart',
+        href: '#/dashboard/statistics?dashboard=' +
+            encodeURIComponent('../../dashboards/s/geonetwork/app/kibana#/dashboard/853fef90-8dce-11e9-9bb7-5db216293bad?_g=(refreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3Anow-15y%2Cto%3Anow))&embed=true')
+      // TODO: The following dashboards need a rework
+      // }, {
+      //   type: 'statistics',
+      //   label: 'validationStatistics',
+      //   icon: 'fa-bar-chart',
+      //   href: '#/dashboard/statistics?dashboard=' +
+      //       encodeURIComponent('../../dashboards/app/kibana#/dashboard/' +
+      //       '915983d0-2c2e-11e7-a889-7bfa00c573d3?embed=true&_g=()')
+      // }, {
+      //   type: 'statistics',
+      //   label: 'searchStatistics',
+      //   icon: 'fa-search',
+      //   href: '#/dashboard/statistics?dashboard=' +
+      //       encodeURIComponent('../../dashboards/app/kibana#/dashboard/' +
+      //       '5b407790-4fa1-11e7-a577-3197d1592a1d?embed=true&_g=()')
+      }];
+
+
+
+      function loadConditionalTabs() {
+        if ($scope.healthCheck.DashboardAppHealthCheck === true) {
+          $scope.pageMenu.tabs = $scope.pageMenu.tabs.concat(dashboards);
+        }
+      }
+
+      loadConditionalTabs();
+
+      $scope.$watch('healthCheck.DashboardAppHealthCheck', function (n, o) {
+        if (n !== o) {
+          loadConditionalTabs();
+        }
+      });
 
       $scope.pageMenu = {
         folder: 'dashboard/',
         defaultTab: 'status',
-        tabs:
-            [{
-              type: 'status',
-              label: 'status',
-              icon: 'fa-dashboard',
-              href: '#/dashboard/status'
-            },{
-              type: 'statistics-search',
-              label: 'searchStatistics',
-              icon: 'fa-search',
-              href: '#/dashboard/statistics-search'
-            },{
-              type: 'statistics-content',
-              label: 'contentStatistics',
-              icon: 'fa-bar-chart',
-              href: '#/dashboard/statistics-content'
-            },{
-              type: 'information',
-              label: 'information',
-              icon: 'fa-list-ul',
-              href: '#/dashboard/information'
-            },{
-              type: 'versioning',
-              label: 'versioning',
-              icon: 'fa-rss',
-              href: '#/dashboard/versioning'
-            }]
+        tabs: $scope.pageMenu.tabs
       };
-
-      $scope.info = {};
 
       $http.get('../api/site/info').
           success(function(data) {

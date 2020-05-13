@@ -41,7 +41,9 @@
               <xsl:value-of select="."/>
             </id>
             <url>
-              <xsl:value-of select="."/>
+              <value lang="{$lang}">
+                <xsl:value-of select="."/>
+              </value>
             </url>
             <title>
               <value lang="{$lang}">

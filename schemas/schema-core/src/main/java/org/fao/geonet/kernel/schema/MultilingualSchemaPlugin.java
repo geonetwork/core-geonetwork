@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.schema;
 
 import org.jdom.Element;
+import org.jdom.JDOMException;
 
 import java.util.List;
 
@@ -40,5 +41,7 @@ public interface MultilingualSchemaPlugin {
     public abstract List<Element> getTranslationForElement(Element element, String languageIdentifier);
 
     public abstract void addTranslationToElement(Element element, String languageIdentifier, String value);
+
+    public abstract  Element removeTranslationFromElement(Element element, List<String> mdLang) throws JDOMException;
 
 }

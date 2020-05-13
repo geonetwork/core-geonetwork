@@ -48,44 +48,6 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
 
-  <!-- Servlet proxy -->
-  <servlet>
-    <servlet-name>HttpProxy</servlet-name>
-    <servlet-class>org.geonetwork.http.proxy.HttpProxyServlet</servlet-class>
-
-    <!-- List of allowed content types -->
-    <init-param>
-      <param-name>AllowedContentTypes</param-name>
-      <param-value>
-        application/xml,text/xml,
-        text/html,
-        text/plain,
-        application/vnd.ogc.se_xml,
-        application/vnd.ogc.se+xml,
-        application/vnd.ogc.success+xml,
-        application/vnd.ogc.wms_xml,
-        application/vnd.ogc.context+xml,
-        application/vnd.ogc.gml,
-        application/vnd.ogc.sld+xml,
-        application/vnd.google-earth.kml+xml,
-        application/json
-      </param-value>
-    </init-param>
-
-    <!-- List of host alloed to be accesed by the proxy: If not specified or empty, any hosts is allowed -->
-    <init-param>
-      <param-name>AllowedHosts</param-name>
-      <param-value/>
-    </init-param>
-
-    <!-- Default proxy url if none is provided -->
-    <init-param>
-      <param-name>DefaultProxyUrl</param-name>
-      <param-value>http://www.openlayers.org</param-value>
-    </init-param>
-
-    <load-on-startup>0</load-on-startup>
-  </servlet>
 
   <!-- Print servlet -->
   <servlet>
@@ -100,11 +62,6 @@
   <servlet-mapping>
     <servlet-name>mapfish.print</servlet-name>
     <url-pattern>/pdf/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>HttpProxy</servlet-name>
-    <url-pattern>/proxy</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

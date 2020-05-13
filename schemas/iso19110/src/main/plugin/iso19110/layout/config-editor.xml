@@ -37,21 +37,40 @@
     <for name="gfc:functionalLanguage" use="data-gn-language-picker"/>
     <for name="gmd:languageCode" use="data-gn-language-picker"/>
 
-    <for name="gfc:producer" addDirective="data-gn-directory-entry-selector"/>
+    <for name="gfc:producer" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-search-action="true"
+        data-popup-action="true"
+        data-template-type="contact"
+        data-insert-modes=""
+        data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+    </for>
   </fields>
 
   <fieldsWithFieldset>
     <name>gfc:producer</name>
+    <name>gfc:featureType</name>
     <name>gfc:carrierOfCharacteristics</name>
     <name>gfc:listedValue</name>
     <name>gfc:constrainedBy</name>
     <name>gfc:inheritsFrom</name>
     <name>gfc:inheritsTo</name>
+    <name>gco:range</name>
   </fieldsWithFieldset>
+
+  <fieldsWithAnchorOption>
+    <name>gfc:code</name>
+  </fieldsWithAnchorOption>
 
   <!-- View configuration -->
   <views>
     <view name="default">
+      <sidePanel>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
       <tab id="default" default="true" mode="flat">
         <section name="gfc:FC_FeatureCatalogue">
           <!-- Preserve gmx:* in editor for backward compatibility. -->
@@ -71,24 +90,34 @@
                  in="/gfc:FC_FeatureCatalogue"/>
           <field xpath="/gfc:FC_FeatureCatalogue/gfc:functionalLanguage" or="functionalLanguage"
                  in="/gfc:FC_FeatureCatalogue"/>
-          <field
-            xpath="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType/gfc:typeName"
-            or="typeName"
-            in="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType"/>
-          <field
-            xpath="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType/gfc:carrierOfCharacteristics"
-            or="carrierOfCharacteristics"
-            in="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType"/>
+          <field xpath="/gfc:FC_FeatureCatalogue/gfc:featureType" or="featureType" in="/gfc:FC_FeatureCatalogue"/>
+
+          <action type="suggest"
+                  process="add-columns-from-csv"/>
         </section>
       </tab>
+      <flatModeExceptions>
+        <for name="gfc:code"/>
+        <for name="gfc:listedValue"/>
+      </flatModeExceptions>
     </view>
     <view name="advanced">
+      <sidePanel>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
       <tab id="advanced">
         <section xpath="/gfc:FC_FeatureType"/>
         <section xpath="/gfc:FC_FeatureCatalogue"/>
       </tab>
     </view>
     <view name="xml">
+      <sidePanel>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
       <tab id="xml" default="true"/>
     </view>
   </views>

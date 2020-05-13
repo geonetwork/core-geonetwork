@@ -23,39 +23,59 @@
 
 package org.fao.geonet.api.users.transfer;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
-import java.util.*;
-
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
+import java.util.stream.Collectors;
 
 @RequestMapping(value = {
-    "/api/users",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/users",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/users"
 })
 @Api(value = "users",
@@ -63,6 +83,19 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasG
     description = "User operations")
 @Controller("usersTransfer")
 public class TransferApi {
+
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    IMetadataUtils metadataRepository;
+    @Autowired
+    UserGroupRepository userGroupRepository;
+    @Autowired
+    OperationAllowedRepository operationAllowedRepository;
+    @Autowired
+    IMetadataManager metadataManager;
+    @Autowired
+    DataManager dataManager;
 
     @ApiOperation(
         value = "Get owners",
@@ -81,19 +114,16 @@ public class TransferApi {
             HttpSession httpSession,
         HttpServletRequest request
     ) throws Exception {
-        UserSession us = ApiUtils.getUserSession(httpSession);
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        List<User> users = applicationContext.getBean(UserRepository.class).findAll();
-        MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
+        List<User> users = userRepository.findAll();
 
         List<OwnerResponse> ownerList = new ArrayList<>();
         for (User u : users) {
-            List<Metadata> userRecords = metadataRepository.findAll(
+            long userRecordsCount = metadataRepository.count(
                 MetadataSpecs.hasOwner(u.getId())
             );
-            if (userRecords.size() > 0) {
+            if (userRecordsCount > 0) {
                 ownerList.add(
-                    new OwnerResponse(u, userRecords.size())
+                    new OwnerResponse(u, userRecordsCount)
                 );
             }
         }
@@ -104,7 +134,7 @@ public class TransferApi {
     @ApiOperation(
         value = "Retrieve all user groups",
         notes = "",
-        nickname = "retrieveUserGroups")
+        nickname = "retrieveAllUserGroups")
     @RequestMapping(
         value = "/groups",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -120,23 +150,33 @@ public class TransferApi {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
 
-
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        final UserRepository userRepository = applicationContext.getBean(UserRepository.class);
-        final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
         List<UserGroupsResponse> list = new ArrayList<>();
         if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin) {
+            // add all admins first
             List<User> allAdmin = userRepository.findAllByProfile(Profile.Administrator);
-            List<UserGroup> userGroups = userGroupRepository.findAll();
+            Group adminGroup = new Group();
+            adminGroup.setName("allAdmins");
+            for (User u : allAdmin) {
+                list.add(
+                    new UserGroupsResponse(u, adminGroup, Profile.Administrator.name())
+                );
+            }
+
+            // add all users
+            List<UserGroup> userGroups;
+
+            if (myProfile == Profile.Administrator) {
+                userGroups = userGroupRepository.findAll();
+            } else {
+                List<Integer> myGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(session.getUserIdAsInt()))
+                        .stream().map(ug -> ug.getGroup().getId()).collect(Collectors.toList());
+                userGroups = userGroupRepository.findAll(UserGroupSpecs.hasGroupIds(myGroups));
+            }
+
             for (UserGroup ug : userGroups) {
                 list.add(
                     new UserGroupsResponse(ug.getUser(), ug.getGroup(), ug.getProfile().name())
                 );
-                for (User u : allAdmin) {
-                    list.add(
-                        new UserGroupsResponse(u, ug.getGroup(), Profile.Administrator.name())
-                    );
-                }
             }
             return list;
         } else {
@@ -147,7 +187,7 @@ public class TransferApi {
     @ApiOperation(
         value = "Transfer privileges",
         notes = "",
-        nickname = "retrieveUserGroups")
+        nickname = "saveOwners")
     @RequestMapping(
         value = "/owners",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -155,7 +195,7 @@ public class TransferApi {
     )
     @PreAuthorize("hasRole('UserAdmin')")
     @ResponseBody
-    public ResponseEntity retrieveAllUserGroups(
+    public ResponseEntity saveOwners(
         @RequestBody
             TransferRequest transfer,
         @ApiIgnore
@@ -164,8 +204,6 @@ public class TransferApi {
     ) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
-        DataManager dm = applicationContext.getBean(DataManager.class);
-        final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
 
         //--- transfer privileges (if case)
 
@@ -175,7 +213,7 @@ public class TransferApi {
             context, null, transfer.getTargetGroup());
 
         //--- a commit just to release some resources
-        dm.flush();
+        dataManager.flush();
 
         int privCount = 0;
 
@@ -195,16 +233,15 @@ public class TransferApi {
                     // 2) the sourceGrp != targetGrp and in that
                     // case, all operations need to be transfered to
                     // the new group if not already defined.
-                    dm.unsetOperation(context, mdId, transfer.getSourceGroup(), opId);
+                    dataManager.unsetOperation(context, mdId, transfer.getSourceGroup(), opId);
 
                     if (!targetPriv.contains(priv)) {
-                        OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
                         OperationAllowedId id = new OperationAllowedId()
                             .setGroupId(transfer.getTargetGroup())
                             .setMetadataId(mdId)
                             .setOperationId(opId);
                         OperationAllowed operationAllowed = new OperationAllowed(id);
-                        repository.save(operationAllowed);
+                        operationAllowedRepository.save(operationAllowed);
                     }
                 }
 
@@ -222,31 +259,30 @@ public class TransferApi {
 
         // Set owner for all records to be modified.
         for (Integer i : metadata) {
-            final Metadata metadata1 = metadataRepository.findOne(i);
+            final AbstractMetadata metadata1 = metadataRepository.findOne(i);
             metadata1.getSourceInfo()
                 .setGroupOwner(transfer.getTargetGroup())
                 .setOwner(transfer.getTargetUser());
-            metadataRepository.save(metadata1);
+            metadataManager.save(metadata1);
         }
 
-        dm.flush();
+        dataManager.flush();
 
         //--- reindex metadata
         List<String> list = new ArrayList<String>();
         for (int mdId : metadata) {
             list.add(Integer.toString(mdId));
         }
-        dm.indexMetadata(list);
+        dataManager.indexMetadata(list);
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
     private Set<String> retrievePrivileges(ServiceContext context, Integer userId, int groupId) throws SQLException {
-        OperationAllowedRepository opAllowedRepo = context.getBean(OperationAllowedRepository.class);
         final List<OperationAllowed> opsAllowed;
         if (userId == null) {
-            opsAllowed = opAllowedRepo.findAllById_GroupId(groupId);
+            opsAllowed = operationAllowedRepository.findAllById_GroupId(groupId);
         } else {
-            opsAllowed = opAllowedRepo.findAllWithOwner(userId, com.google.common.base.Optional.of(hasGroupId(groupId)));
+            opsAllowed = operationAllowedRepository.findAllWithOwner(userId, com.google.common.base.Optional.of(hasGroupId(groupId)));
         }
 
         Set<String> result = new HashSet<String>();

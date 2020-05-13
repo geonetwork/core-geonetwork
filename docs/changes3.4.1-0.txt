@@ -1,0 +1,36 @@
+================================================================================
+===
+=== GeoNetwork 3.4.1: List of changes
+===
+================================================================================
+- Metadata detail page - Metadata dates are displayed empty if several values for the same date type #2364
+- Metadata editor - exclude srv:serviceType from multilingual fields
+- When user click a link to a private record and is not yet authenticated, suggest the user to sign in and redirect to requested record.
+- Merge branch 'fix-add-service-layer' of https://github.com/pvgenuchten/core-geonetwork into 3.4.x
+- New metadata page / Sort template by title #2434
+- typo in fix
+- restore original gnLocalised, seem the fix was not required
+- introduce the wmts protocol on editor pull down
+- Editor / Categories in editor form #2382.
+- Create record from template having categories should copy categories #2389 .
+- problem with group translations #2415.
+- Import record / Some options only applies to some format. Disable them
+- Import / Add option to publish to all #2388.
+- Add to map improvements - gnlocalised sometimes should not use type as a language - add wmts protocol to be added to map
+- problem with group translations #2415.
+- ISO19110 / Add flat mode exception support.
+- Better display for related items (`Download and links`) on small screens
+- Update doc submodule.
+- Add migration script for 3.4.1.
+- Now we only have to update one file because multilingual internationalization
+- Update version to 3.4.1-SNAPSHOT
+- Map / Open link to failing tiles in new tab.
+- Map style / Do not display menu if only one style defined.
+- Fix param name and deps.
+- Map viewer / Improve the add layer to map process #2289
+- Update related.html
+- Expand import list (remove wildcard)
+- Remove Guava Lists.newArrayList that is causing problems with Path objects
+- Fix formatters config override order (#1973)
+- Better control of search query errors
+- To allow search strings like MK%8 it is left untouched if decode fails

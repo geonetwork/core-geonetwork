@@ -23,97 +23,24 @@
 
 package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
-import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Logger;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
-import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.resources.Resources;
-import org.jdom.Element;
 
-import java.io.File;
 import java.sql.SQLException;
-import java.util.UUID;
 
 //=============================================================================
 
-public class OgcWxSHarvester extends AbstractHarvester<HarvestResult> {
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
-
-    private OgcWxSParams params;
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Add
-    //---
-    //---------------------------------------------------------------------------
-
-    protected void doInit(Element node, ServiceContext context) throws BadInputEx {
-        params = new OgcWxSParams(dataMan);
-        super.setParams(params);
-
-        params.create(node);
-    }
-
+public class OgcWxSHarvester extends AbstractHarvester<HarvestResult, OgcWxSParams> {
     //---------------------------------------------------------------------------
     //---
     //--- Update
     //---
     //---------------------------------------------------------------------------
 
-    protected String doAdd(Element node) throws BadInputEx, SQLException {
-        params = new OgcWxSParams(dataMan);
-        super.setParams(params);
-
-        //--- retrieve/initialize information
-        params.create(node);
-
-        //--- force the creation of a new uuid
-        params.setUuid(UUID.randomUUID().toString());
-
-        String id = settingMan.add("harvesting", "node", getType());
-
-        storeNode(params, "id:" + id);
-        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
-        context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
-
-        return id;
-    }
-
-    //---------------------------------------------------------------------------
-
-    protected void doUpdate(String id, Element node)
-        throws BadInputEx, SQLException {
-        OgcWxSParams copy = params.copy();
-
-        //--- update variables
-        copy.update(node);
-
-        String path = "harvesting/id:" + id;
-
-        settingMan.removeChildren(path);
-
-        //--- update database
-        storeNode(copy, path);
-
-        //--- we update a copy first because if there is an exception Params
-        //--- could be half updated and so it could be in an inconsistent state
-
-        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
-        context.getBean(SourceRepository.class).save(source);
-        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.getUuid());
-
-        params = copy;
-        super.setParams(params);
+    @Override
+    protected OgcWxSParams createParams() {
+        return new OgcWxSParams(dataMan);
     }
 
     //---------------------------------------------------------------------------
@@ -122,21 +49,22 @@ public class OgcWxSHarvester extends AbstractHarvester<HarvestResult> {
     //---
     //---------------------------------------------------------------------------
 
-    protected void storeNodeExtra(AbstractParams p, String path,
+    protected void storeNodeExtra(OgcWxSParams params, String path,
                                   String siteId, String optionsId) throws SQLException {
-        OgcWxSParams params = (OgcWxSParams) p;
-        super.setParams(params);
+        setParams(params);
 
-        settingMan.add("id:" + siteId, "url", params.url);
-        settingMan.add("id:" + siteId, "icon", params.icon);
-        settingMan.add("id:" + siteId, "ogctype", params.ogctype);
-        settingMan.add("id:" + optionsId, "lang", params.lang);
-        settingMan.add("id:" + optionsId, "topic", params.topic);
-        settingMan.add("id:" + optionsId, "createThumbnails", params.createThumbnails);
-        settingMan.add("id:" + optionsId, "useLayer", params.useLayer);
-        settingMan.add("id:" + optionsId, "useLayerMd", params.useLayerMd);
-        settingMan.add("id:" + optionsId, "datasetCategory", params.datasetCategory);
-        settingMan.add("id:" + optionsId, "outputSchema", params.outputSchema);
+        harvesterSettingsManager.add("id:" + siteId, "url", params.url);
+        harvesterSettingsManager.add("id:" + siteId, "icon", params.icon);
+        harvesterSettingsManager.add("id:" + siteId, "ogctype", params.ogctype);
+        harvesterSettingsManager.add("id:" + optionsId, "lang", params.lang);
+        harvesterSettingsManager.add("id:" + optionsId, "topic", params.topic);
+        harvesterSettingsManager.add("id:" + optionsId, "createThumbnails", params.createThumbnails);
+        harvesterSettingsManager.add("id:" + optionsId, "useLayer", params.useLayer);
+        harvesterSettingsManager.add("id:" + optionsId, "datasetTemplateUuid", params.datasetTemplateUuid);
+        harvesterSettingsManager.add("id:" + optionsId, "serviceTemplateUuid", params.serviceTemplateUuid);
+        harvesterSettingsManager.add("id:" + optionsId, "useLayerMd", params.useLayerMd);
+        harvesterSettingsManager.add("id:" + optionsId, "datasetCategory", params.datasetCategory);
+        harvesterSettingsManager.add("id:" + optionsId, "outputSchema", params.outputSchema);
     }
 
     //---------------------------------------------------------------------------

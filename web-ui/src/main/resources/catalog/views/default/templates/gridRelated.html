@@ -1,0 +1,20 @@
+<div class="btn-group" ng-if="::relations"  placement="bottom" container="{{container}}">
+  <button type="button"
+          class="btn dropdown-toggle btn-default"
+          data-toggle="dropdown"
+          title="Relations">
+    <span class="fa fa-code-fork"></span>
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu small-dropdown" role="menu">
+    <ul ng-repeat="type in ::types" ng-if="::relations[type]" class="gn-related-list">
+      <li class="gn-related-type">{{type | translate}}</li>
+      <li ng-repeat="r in ::relations[type]" >
+        <a href="{{location.origin}}{{location.pathname}}#/metadata/{{r.id}}"
+           title="{{r.title | gnLocalized: lang}}">
+          {{r.title | gnLocalized: lang}}
+        </a>
+      </li>
+    </ul>
+  </ul>
+</div>

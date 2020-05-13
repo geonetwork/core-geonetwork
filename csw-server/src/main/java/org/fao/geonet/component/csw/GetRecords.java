@@ -51,6 +51,7 @@ import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.CustomElementSetRepository;
 import org.fao.geonet.util.xml.NamespaceUtils;
 import org.fao.geonet.utils.Log;
@@ -65,6 +66,8 @@ import org.springframework.util.CollectionUtils;
 
 import java.nio.file.Path;
 import java.util.*;
+
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_CSW_ENABLEWHENINDEXING;
 
 /**
  * See OGC 07-006 and OGC 07-045.
@@ -130,7 +133,9 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         // Return exception is indexing.
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataManager = gc.getBean(DataManager.class);
-        if (dataManager.isIndexing()) {
+        SettingManager settingsManager = gc.getBean(SettingManager.class);
+        if (!settingsManager.getValueAsBool(SYSTEM_CSW_ENABLEWHENINDEXING) &&
+            dataManager.isIndexing()) {
             throw new RuntimeException("Catalog is indexing records, retry later.");
         }
 
@@ -204,6 +209,8 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             }
         }
 
+
+        // "Constraint Optional" & "Must be specified with QUERYCONSTRAINT parameter"
         Element constr = query.getChild("Constraint", Csw.NAMESPACE_CSW);
         Element filterExpr = getFilterExpression(constr);
         String filterVersion = getFilterVersion(constr);
@@ -340,7 +347,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 try {
                     constr.addContent(Xml.loadString(constraint, false));
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.error(Geonet.CSW_SEARCH, "Constraint is not a valid xml, error:" + e.getMessage(), e);
                     throw new NoApplicableCodeEx("Constraint is not a valid xml");
                 }
             }
@@ -778,7 +785,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 if (elementNames == null) {
                     elementNames = new HashSet<String>();
                 }
-                elementNames.add(element.getText());
+                elementNames.add(element.getTextNormalize());
             }
         }
         // TODO in if(isDebugEnabled) condition. Jeeves LOG doesn't provide that useful function though.

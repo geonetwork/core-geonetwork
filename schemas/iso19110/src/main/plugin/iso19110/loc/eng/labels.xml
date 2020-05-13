@@ -39,6 +39,10 @@
     <label>Name</label>
     <description>Feature catalogue name</description>
   </element>
+  <element name="gco:range">
+    <label>Range</label>
+    <description></description>
+  </element>
   <element name="gfc:scope">
     <label>Scope</label>
     <description>Scope definition</description>
@@ -238,6 +242,10 @@
   </element>
   <element name="gco:CharacterString">
     <label>Text</label>
+    <description></description>
+  </element>
+  <element name="gmx:Anchor">
+    <label>Anchor</label>
     <description></description>
   </element>
   <element name="gmx:FileName">

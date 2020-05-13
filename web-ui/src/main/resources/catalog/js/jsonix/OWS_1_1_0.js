@@ -65,7 +65,7 @@ var OWS_1_1_0_Module_Factory = function() {
         col: true,
         mx: false,
         dom: false,
-        typed: false,
+        typed: true,
         en: 'AbstractReferenceBase',
         ti: '.AbstractReferenceBaseType',
         t: 'er'
@@ -430,7 +430,7 @@ var OWS_1_1_0_Module_Factory = function() {
         col: true,
         mx: false,
         dom: false,
-        typed: false,
+        typed: true,
         en: 'BoundingBox',
         ti: '.BoundingBoxType',
         t: 'er'
@@ -443,7 +443,7 @@ var OWS_1_1_0_Module_Factory = function() {
         col: true,
         mx: false,
         dom: false,
-        typed: false,
+        typed: true,
         en: 'AvailableCRS',
         t: 'er'
       }]
@@ -478,7 +478,7 @@ var OWS_1_1_0_Module_Factory = function() {
         col: true,
         mx: false,
         dom: false,
-        typed: false,
+        typed: true,
         etis: [{
                 en: 'Get',
                 ti: '.RequestMethodType'
@@ -592,7 +592,7 @@ var OWS_1_1_0_Module_Factory = function() {
         col: true,
         mx: false,
         dom: false,
-        typed: false,
+        typed: true,
         en: 'BoundingBox',
         ti: '.BoundingBoxType',
         t: 'er'

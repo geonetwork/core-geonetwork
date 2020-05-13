@@ -25,7 +25,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:sch="http://www.ascc.net/xml/schematron"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
@@ -125,7 +126,8 @@
     <xsl:variable name="rulename" select="string(@geonet:rule)"/>
     <xsl:variable name="errors" select="count(.//svrl:failed-assert)"/>
     <xsl:variable name="successes" select="count(.//svrl:successful-report)"/>
-
+    <xsl:variable name="schematronVerificationError" select="./geonet:schematronVerificationError"/>
+    
     <report>
       <id>
         <xsl:value-of select="$rulename"/>
@@ -150,6 +152,12 @@
           </xsl:otherwise>
         </xsl:choose>
       </label>
+      <!-- If the schematron failed to compile or during the validation it should have a `geonet:schematronVerificationError` element -->
+      <xsl:if test="$schematronVerificationError">
+        <schematronVerificationError>
+          <xsl:value-of select="$schematronVerificationError"/>
+        </schematronVerificationError>
+      </xsl:if>
       <error>
         <xsl:value-of select="$errors"/>
       </error>

@@ -23,32 +23,32 @@
 
 package org.fao.geonet.services.feedback;
 
+import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+
+import org.fao.geonet.Util;
+import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.services.Utils;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.FilePathChecker;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.services.Utils;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 //=============================================================================
 
@@ -102,7 +102,7 @@ public class AddLimitations implements Service {
         Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
 
         //--- get metadata info
-        Metadata info = context.getBean(MetadataRepository.class).findOne(id);
+        AbstractMetadata info = context.getBean(IMetadataUtils.class).findOne(id);
 
         if (info == null)
             throw new IllegalArgumentException("Metadata not found --> " + id);
@@ -114,7 +114,7 @@ public class AddLimitations implements Service {
 
         //--- now add the files chosen from the interface and record in 'downloaded'
         Element downloaded = new Element("downloaded");
-        Path dir = Lib.resource.getDir(context, access, id);
+        final Store store = context.getBean("resourceStore", Store.class);
 
         @SuppressWarnings("unchecked")
         List<Element> files = params.getChildren(Params.FNAME);
@@ -123,26 +123,26 @@ public class AddLimitations implements Service {
 
             String fname = elem.getText();
 
-            if (fname.contains("..")) {
+            try {
+                FilePathChecker.verify(fname);
+            } catch (Exception ex) {
                 continue;    // Avoid unsecured file name
             }
 
-            Path file = dir.resolve(fname);
-
             Element fileInfo = new Element("file");
-
-            BinaryFile bFile = BinaryFile.encode(200, file, false);
-            Element details = bFile.getElement();
-            String remoteURL = details.getAttributeValue("remotepath");
-            if (remoteURL != null) {
-                fileInfo.setAttribute("size", "unknown");
-                fileInfo.setAttribute("datemodified", "unknown");
-                fileInfo.setAttribute("name", remoteURL);
-            } else {
-                fileInfo.setAttribute("size", Files.size(file) + "");
-                fileInfo.setAttribute("name", fname);
-                Date date = new Date(Files.getLastModifiedTime(file).toMillis());
-                fileInfo.setAttribute("datemodified", _dateFormat.format(date));
+            try (Store.ResourceHolder resource = store.getResource(context, info.getUuid(), fname)) {
+                BinaryFile bFile = BinaryFile.encode(200, resource.getPath(), false);
+                Element details = bFile.getElement();
+                String remoteURL = details.getAttributeValue("remotepath");
+                if (remoteURL != null) {
+                    fileInfo.setAttribute("size", "unknown");
+                    fileInfo.setAttribute("datemodified", "unknown");
+                    fileInfo.setAttribute("name", remoteURL);
+                } else {
+                    fileInfo.setAttribute("size", resource.getMetadata().getSize() + "");
+                    fileInfo.setAttribute("name", fname);
+                    fileInfo.setAttribute("datemodified", _dateFormat.format(resource.getMetadata().getLastModification()));
+                }
             }
             downloaded.addContent(fileInfo);
         }

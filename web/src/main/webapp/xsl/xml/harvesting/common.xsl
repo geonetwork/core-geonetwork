@@ -15,6 +15,7 @@
     <xsl:variable name="info" select="children/info/children"/>
     <xsl:variable name="owner" select="children/owner"/>
     <xsl:variable name="ownerGroup" select="children/ownerGroup"/>
+    <xsl:variable name="ownerUser" select="children/ownerUser"/>
 
     <node id="{@id}" type="{value}">
       <owner>
@@ -27,19 +28,16 @@
           <xsl:value-of select="$site/ownerGroup/value"/>
         </id>
       </ownerGroup>
+      <ownerUser>
+        <id>
+          <xsl:value-of select="$site/ownerUser/value"/>
+        </id>
+      </ownerUser>
 
       <site>
         <name>
           <xsl:value-of select="$site/name/value"/>
         </name>
-        <translations>
-          <xsl:for-each select="$site/translations/children/node()">
-            <xsl:element name="{name()}">
-              <xsl:value-of select="."/>
-            </xsl:element>
-          </xsl:for-each>
-        </translations>
-
         <uuid>
           <xsl:value-of select="$site/uuid/value"/>
         </uuid>
@@ -65,6 +63,9 @@
         <importxslt>
           <xsl:value-of select="$con/importxslt/value"/>
         </importxslt>
+        <batchEdits>
+          <xsl:value-of select="$con/batchEdits/value"/>
+        </batchEdits>
       </content>
 
       <options>
@@ -74,6 +75,9 @@
         <oneRunOnly>
           <xsl:value-of select="$opt/oneRunOnly/value"/>
         </oneRunOnly>
+        <overrideUuid>
+          <xsl:value-of select="$opt/overrideUUID/value"/>
+        </overrideUuid>
         <status>
           <xsl:value-of select="$opt/status/value"/>
         </status>
@@ -83,6 +87,9 @@
 
       <xsl:apply-templates select="." mode="searches"/>
       <xsl:apply-templates select="$priv" mode="privileges"/>
+      <ifRecordExistAppendPrivileges>
+        <xsl:value-of select="$opt/ifRecordExistAppendPrivileges/value"/>
+      </ifRecordExistAppendPrivileges>
       <xsl:apply-templates select="$categ" mode="categories"/>
       <xsl:apply-templates select="." mode="other"/>
 

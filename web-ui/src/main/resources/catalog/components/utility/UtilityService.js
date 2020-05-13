@@ -24,7 +24,9 @@
 (function() {
   goog.provide('gn_utility_service');
 
-  var module = angular.module('gn_utility_service', []);
+  goog.require('gn_popup');
+
+  var module = angular.module('gn_utility_service', ['gn_popup']);
 
   module.factory('RecursionHelper', ['$compile', function($compile) {
     return {
@@ -69,96 +71,103 @@
     };
   }]);
 
-  var gnUtilityService = function() {
-    /**
+  module.factory('gnUtilityService',
+      ['gnPopup', '$translate', '$location', '$rootScope', '$timeout',
+        function(gnPopup, $translate, $location, $rootScope, $timeout) {
+        /**
        * Scroll page to element.
        */
-    var scrollTo = function(elementId, offset, duration, easing) {
-      var top = 0;
-      if (elementId !== undefined) {
-        top = offset ?
-            $(elementId).offset().top :
-            $(elementId).position().top;
-      }
-      $('body,html').animate({scrollTop: top},
-          duration, easing);
-    };
+        var scrollTo = function(elementId, offset, duration, easing) {
+          var top = 0, e = $(elementId);
+          if (elementId !== undefined && e.length == 1) {
+            top = offset ?
+             e.offset().top :
+             e.position().top;
+          }
+          $('body,html').animate({scrollTop: top},
+           duration, easing, function() {
+              if (e.length == 1) {
+                e.fadeOut('slow', function() {e.fadeIn()});
+              }
+            });
+          $location.search('scrollTo', elementId);
+        };
 
-    /**
+        /**
      * Return true if element is in browser viewport
      */
-    var isInView = function(elem) {
-      var docViewTop = $(window).scrollTop();
-      var docViewBottom = docViewTop + window.innerHeight;
+        var isInView = function(elem) {
+          var docViewTop = $(window).scrollTop();
+          var docViewBottom = docViewTop + window.innerHeight;
 
-      var elemTop = parseInt($(elem).offset().top, 10);
-      var elemBottom = parseInt(elemTop + $(elem).height(), 10);
+          var elemTop = parseInt($(elem).offset().top, 10);
+          var elemBottom = parseInt(elemTop + $(elem).height(), 10);
 
-      return ( // bottom of element in view
+          return ( // bottom of element in view
               elemBottom < docViewBottom &&
               elemBottom > docViewTop) ||
-          // top of element in view
-          (elemTop > docViewTop && elemTop < docViewBottom) ||
+           // top of element in view
+           (elemTop > docViewTop && elemTop < docViewBottom) ||
               // contains view
               (elemTop < docViewTop && elemBottom > docViewBottom);
-    };
+        };
 
-    /**
+        /**
        * Serialize form including unchecked checkboxes.
        * See http://forum.jquery.com/topic/jquery-serialize-unchecked-checkboxes
        */
-    var serialize = function(formId) {
-      var form = $(formId), uc = [];
-      $(':checkbox:not(:checked)', form).each(function() {
-        uc.push(encodeURIComponent(this.name) + '=false');
-      });
-      return form.serialize().replace(/=on&/g, '=true&').
-          replace(/=on$/, '=true') +
-          (uc.length ? '&' + uc.join('&').replace(/%20/g, '+') : '');
-    };
+        var serialize = function(formId) {
+          var form = $(formId), uc = [];
+          $(':checkbox:not(:checked)', form).each(function() {
+            uc.push(encodeURIComponent(this.name) + '=false');
+          });
+          return form.serialize().replace(/=on&/g, '=true&').
+           replace(/=on$/, '=true') +
+           (uc.length ? '&' + uc.join('&').replace(/%20/g, '+') : '');
+        };
 
 
-    /**
+        /**
        * Parse boolean value in object
        */
-    var parseBoolean = function(object) {
-      angular.forEach(object, function(value, key) {
-        if (typeof value == 'string') {
-          if (value == 'true' || value == 'false') {
-            object[key] = (value == 'true');
-          } else if (value == 'on' || value == 'off') {
-            object[key] = (value == 'on');
-          }
-        } else {
-          parseBoolean(value);
-        }
-      });
-    };
-    /**
+        var parseBoolean = function(object) {
+          angular.forEach(object, function(value, key) {
+            if (typeof value == 'string') {
+              if (value == 'true' || value == 'false') {
+                object[key] = (value == 'true');
+              } else if (value == 'on' || value == 'off') {
+                object[key] = (value == 'on');
+              }
+            } else {
+              parseBoolean(value);
+            }
+          });
+        };
+        /**
        * Converts a value to a string appropriate for entry
        * into a CSV table.  E.g., a string value will be surrounded by quotes.
        * @param {string|number|object} theValue
        * @param {string} sDelimiter The string delimiter.
        *    Defaults to a double quote (") if omitted.
        */
-    function toCsvValue(theValue, sDelimiter) {
-      var t = typeof (theValue), output;
+        function toCsvValue(theValue, sDelimiter) {
+          var t = typeof (theValue), output;
 
-      if (typeof (sDelimiter) === 'undefined' || sDelimiter === null) {
-        sDelimiter = '"';
-      }
+          if (typeof (sDelimiter) === 'undefined' || sDelimiter === null) {
+            sDelimiter = '"';
+          }
 
-      if (t === 'undefined' || t === null) {
-        output = '';
-      } else if (t === 'string') {
-        output = sDelimiter + theValue + sDelimiter;
-      } else {
-        output = String(theValue);
-      }
+          if (t === 'undefined' || t === null) {
+            output = '';
+          } else if (t === 'string') {
+            output = sDelimiter + theValue + sDelimiter;
+          } else {
+            output = String(theValue);
+          }
 
-      return output;
-    }
-    /**
+          return output;
+        }
+        /**
        * https://gist.github.com/JeffJacobson/2770509
        * Converts an array of objects (with identical schemas)
        * into a CSV table.
@@ -171,114 +180,115 @@
        *    Defaults to a comma (,) if omitted.
        * @return {string} The CSV equivalent of objArray.
        */
-    function toCsv(objArray, sDelimiter, cDelimiter) {
-      var i, l, names = [], name, value, obj, row, output = '', n, nl;
+        function toCsv(objArray, sDelimiter, cDelimiter) {
+          var i, l, names = [], name, value, obj, row, output = '', n, nl;
 
-      // Initialize default parameters.
-      if (typeof (sDelimiter) === 'undefined' || sDelimiter === null) {
-        sDelimiter = '"';
-      }
-      if (typeof (cDelimiter) === 'undefined' || cDelimiter === null) {
-        cDelimiter = ',';
-      }
+          // Initialize default parameters.
+          if (typeof (sDelimiter) === 'undefined' || sDelimiter === null) {
+            sDelimiter = '"';
+          }
+          if (typeof (cDelimiter) === 'undefined' || cDelimiter === null) {
+            cDelimiter = ',';
+          }
 
-      for (i = 0, l = objArray.length; i < l; i += 1) {
-        // Get the names of the properties.
-        obj = objArray[i];
-        row = '';
-        if (i === 0) {
-          // Loop through the names
-          for (name in obj) {
-            if (obj.hasOwnProperty(name)) {
-              names.push(name);
-              row += [sDelimiter, name, sDelimiter, cDelimiter].join('');
+          for (i = 0, l = objArray.length; i < l; i += 1) {
+            // Get the names of the properties.
+            obj = objArray[i];
+            row = '';
+            if (i === 0) {
+              // Loop through the names
+              for (name in obj) {
+                if (obj.hasOwnProperty(name)) {
+                  names.push(name);
+                  row += [sDelimiter, name, sDelimiter, cDelimiter].join('');
+                }
+              }
+              row = row.substring(0, row.length - 1);
+              output += row;
             }
-          }
-          row = row.substring(0, row.length - 1);
-          output += row;
-        }
 
-        output += '\n';
-        row = '';
-        for (n = 0, nl = names.length; n < nl; n += 1) {
-          name = names[n];
-          value = obj[name];
-          if (n > 0) {
-            row += ',';
+            output += '\n';
+            row = '';
+            for (n = 0, nl = names.length; n < nl; n += 1) {
+              name = names[n];
+              value = obj[name];
+              if (n > 0) {
+                row += ',';
+              }
+              row += toCsvValue(value, '"');
+            }
+            output += row;
           }
-          row += toCsvValue(value, '"');
-        }
-        output += row;
-      }
 
-      return output;
-    }
-    /**
+          return output;
+        }
+        /**
        * Get a URL parameter
        */
-    var getUrlParameter = function(parameterName) {
-      var parameterValue = null;
-      angular.forEach(window.location
+        var getUrlParameter = function(parameterName) {
+          var parameterValue = null;
+          angular.forEach(window.location
           .search.replace('?', '').split('&'),
-          function(value) {
-            if (value.indexOf(parameterName) === 0) {
-              parameterValue = value.split('=')[1];
-            }
-            // TODO; stop loop when found
-          });
-      return parameterValue;
-    };
+           function(value) {
+             if (value.indexOf(parameterName) === 0) {
+               parameterValue = value.split('=')[1];
+             }
+             // TODO; stop loop when found
+           });
+          return parameterValue != null ?
+          decodeURIComponent(parameterValue) : undefined;
+        };
 
-    var CSVToArray = function(strData, strDelimiter) {
-      strDelimiter = (strDelimiter || ',');
-      var objPattern = new RegExp(
-          (
+        var CSVToArray = function(strData, strDelimiter) {
+          strDelimiter = (strDelimiter || ',');
+          var objPattern = new RegExp(
+           (
               '(\\' + strDelimiter + '|\\r?\\n|\\r|^)' +
               '(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|' +
               '([^\"\\' + strDelimiter + '\\r\\n]*))'
-          ),
-          'gi'
-          );
-      var arrData = [[]];
-      var arrMatches = null;
-      while (arrMatches = objPattern.exec(strData)) {
-        var strMatchedDelimiter = arrMatches[1];
-        if (
-            strMatchedDelimiter.length &&
-            strMatchedDelimiter !== strDelimiter
-        ) {
-          arrData.push([]);
-        }
+           ),
+           'gi'
+           );
+          var arrData = [[]];
+          var arrMatches = null;
+          while (arrMatches = objPattern.exec(strData)) {
+            var strMatchedDelimiter = arrMatches[1];
+            if (
+             strMatchedDelimiter.length &&
+             strMatchedDelimiter !== strDelimiter
+            ) {
+              arrData.push([]);
+            }
 
-        var strMatchedValue;
-        if (arrMatches[2]) {
-          strMatchedValue = arrMatches[2].replace(
-              new RegExp('\"\"', 'g'),
-              '\"');
-        } else {
-          strMatchedValue = arrMatches[3];
-        }
-        arrData[arrData.length - 1].push(strMatchedValue);
-      }
-      return (arrData);
-    };
+            var strMatchedValue;
+            if (arrMatches[2]) {
+              strMatchedValue = arrMatches[2].replace(
+               new RegExp('\"\"', 'g'),
+               '\"');
+            } else {
+              strMatchedValue = arrMatches[3];
+            }
+            arrData[arrData.length - 1].push(strMatchedValue);
+          }
+          return (arrData);
+        };
 
-    /**
+        /**
      * If object property is not an array, make it an array
      * @param {Object} object
      * @param {String} key
      * @param {String|Object} value
      * @param {String} propertyName
      */
-    var formatObjectPropertyAsArray = function(object,
-        key, value,
-        propertyName) {
-      if (key === propertyName && !$.isArray(object[key])) {
-        object[key] = [value];
-      }
-    };
+        var formatObjectPropertyAsArray = function(object,
+         key, value,
+         propertyName) {
+          if (key === propertyName && !$.isArray(object[key])) {
+            object[key] = [value];
+          }
+        };
 
-    /**
+        /**
      * Traverse an object tree
      *
      * @param {Object} o The object
@@ -286,40 +296,74 @@
      * @param {String|Object|Array} args  The argument to pass to the function.
      * @return {Object} the object (optionnaly affected by the function)
      */
-    function traverse(o, func, args) {
-      for (var i in o) {
-        func.apply(this, [o, i, o[i], args]);
-        if (o[i] !== null && typeof(o[i]) == 'object') {
-          //going on step down in the object tree!!
-          traverse(o[i], func, args);
+        function traverse(o, func, args) {
+          for (var i in o) {
+            func.apply(this, [o, i, o[i], args]);
+            if (o[i] !== null && typeof(o[i]) == 'object') {
+              //going on step down in the object tree!!
+              traverse(o[i], func, args);
+            }
+          }
+          return o;
+        };
+
+        function randomUuid() {
+          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+           /[xy]/g,
+           function(c) {
+             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+             return v.toString(16);
+           });
         }
-      }
-      return o;
-    };
 
-    function randomUuid() {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-          /[xy]/g,
-          function(c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
+
+        /**
+     * Get html formatter link for the given md
+     * @param {String} title
+     * @param {String} url
+     */
+        function getPermalink(title, url) {
+          gnPopup.createModal({
+            title: $translate.instant('permalinkTo', {title: title}),
+            content: '<div gn-permalink-input="' + url + '"></div>'
           });
-    }
-    return {
-      scrollTo: scrollTo,
-      isInView: isInView,
-      serialize: serialize,
-      parseBoolean: parseBoolean,
-      traverse: traverse,
-      formatObjectPropertyAsArray: formatObjectPropertyAsArray,
-      toCsv: toCsv,
-      CSVToArray: CSVToArray,
-      getUrlParameter: getUrlParameter,
-      randomUuid: randomUuid
-    };
-  };
+        };
 
-  module.factory('gnUtilityService', gnUtilityService);
+          /**
+           * Open a popup and compile object content.
+           * Bind to an event to close the popup.
+           * @param {Object} o popup config
+           * @param {Object} scope to build content uppon
+           * @param {string} eventName
+           */
+          var openModal = function(o, scope, eventName) {
+            // var popup = gnPopup.create(o, scope);
+            var popup = gnPopup.createModal(o, scope);
+            var myListener = $rootScope.$on(eventName,
+              function(e, o) {
+                $timeout(function() {
+                  popup.modal('hide');
+                }, 0);
+                myListener();
+              });
+          };
+
+        return {
+          scrollTo: scrollTo,
+          isInView: isInView,
+          serialize: serialize,
+          parseBoolean: parseBoolean,
+          traverse: traverse,
+          formatObjectPropertyAsArray: formatObjectPropertyAsArray,
+          toCsv: toCsv,
+          CSVToArray: CSVToArray,
+          getUrlParameter: getUrlParameter,
+          randomUuid: randomUuid,
+          getPermalink: getPermalink,
+          openModal: openModal
+        };
+      }]);
+
 
   module.filter('gnFromNow', function() {
     return function(dateString) {
@@ -330,15 +374,16 @@
   /**
    * Return the object value in requested lang or the first value.
    */
-  module.filter('gnLocalized', function() {
+  module.filter('gnLocalized', ['gnGlobalSettings', function(gnGlobalSettings) {
     return function(obj, lang) {
+    lang = lang || gnGlobalSettings.iso3lang;
       if (angular.isObject(obj)) {
         return obj[lang] ? obj[lang] : (obj[Object.keys(obj)[0]] || '');
       } else {
         return '';
       }
     };
-  });
+  }]);
 
   module.factory('gnRegionService', [
     '$q',
@@ -368,8 +413,9 @@
           var defer = $q.defer();
 
           $http.get('../api/regions', {
-            categoryId: type.id
-          }, {
+            params: {
+              categoryId: type.id
+            },
             cache: true
           }).success(function(response) {
             var data = response.region;
@@ -399,11 +445,14 @@
             listDefer = $q.defer();
             $http.get('../api/regions/types').success(function(data) {
               angular.forEach(data, function(value, key) {
-                if (value.id && value.id.indexOf('#') >= 0) {
+                if (value.id) {
+                  var tokens = value.id.split('#'),
+                      asHash = tokens.length > 0,
+                      name = asHash ? tokens[1] : value.id;
                   regionsList.push({
                     id: value.id,
-                    name: value.id.split('#')[1],
-                    label: value.label || value.id.split('#')[1]
+                    name: name,
+                    label: value.label || name
                   });
                 }
               });
@@ -414,4 +463,128 @@
         }
       };
     }]);
+
+
+  module.service('gnHumanizeTimeService', ['gnGlobalSettings', function(gnGlobalSettings) {
+    return function(date, format, contextAllowToUseFromNow) {
+        function isDateGmlFormat(date) {
+          return date.match('[Zz]$') !== null;
+        }
+        var settingAllowToUseFromNow = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
+        var parsedDate = null;
+        if (isDateGmlFormat(date)) {
+          parsedDate = moment(date, 'YYYY-MM-DDtHH-mm-SSSZ');
+        } else {
+          parsedDate = moment(date);
+        }
+        if (parsedDate.isValid()) {
+          var fromNow = parsedDate.fromNow();
+          if (settingAllowToUseFromNow && contextAllowToUseFromNow) {
+            return {value: fromNow, title: format ? parsedDate.format(format) : parsedDate.toString()};
+          } else {
+            return {title: fromNow, value: format ? parsedDate.format(format) : parsedDate.toString()};
+          }
+        }
+      };
+    }]);
+
+  module.service('getBsTableLang', ['gnLangs', function(gnLangs) {
+    return function() {
+      var iso2 = gnLangs.getIso2Lang(gnLangs.getCurrent());
+      var locales = Object.keys($.fn.bootstrapTable.locales);
+      var lang = 'en';
+      locales.forEach(function (locale) {
+        if (locale.startsWith(iso2)) {
+          lang = locale;
+          return true;
+        }
+      });
+      return lang;
+    };
+  }]);
+
+  module.service('gnTreeFromSlash', [function() {
+    var findChild = function(node, name) {
+      var n;
+      if (node.nodes) {
+        for (var i = 0; i < node.nodes.length; i++) {
+          n = node.nodes[i];
+          if (name == n.name) {
+            return n;
+          }
+        }
+      }
+    };
+    var sortNodeFn = function(a, b) {
+      var aName = a.name;
+      var bName = b.name;
+      if (aName < bName) return -1;
+      if (aName > bName) return 1;
+      return 0;
+    };
+
+    var createNode = function(node, g, index, e) {
+      var group = g[index];
+      if (group) {
+        var newNode = findChild(node, group);
+        if (!newNode) {
+          newNode = {
+            name: group,
+            value: group
+            //selected: themesInSearch.indexOf(t['@name']) >= 0 ? true : false
+          };
+          if (!node.nodes) node.nodes = [];
+          node.nodes.push(newNode);
+          //node.nodes.sort(sortNodeFn);
+        }
+        createNode(newNode, g, index + 1, e);
+      } else {
+        node.key = e.key;
+        node.count = e.doc_count;
+      }
+    };
+
+    this.getTree = function(list) {
+      var tree = {
+        nodes: []
+      };
+      list.forEach(function(e) {
+        var name = e.key;
+        var g = name.split('/');
+        createNode(tree, g, 0, e);
+      });
+      return tree;
+    };
+  }]);
+
+  // taken from ngeo
+  module.factory('gnDebounce', ['$timeout', function($timeout) {
+    return (
+      /**
+       * @param {function(?)} func The function to debounce.
+       * @param {number} wait The wait time in ms.
+       * @param {boolean} invokeApply Whether the call to `func` is wrapped
+       *    into an `$apply` call.
+       * @return {function()} The wrapper function.
+       */
+      function(func, wait, invokeApply) {
+        /**
+         * @type {?angular.$q.Promise}
+         */
+        var timeout = null;
+        return (
+          function() {
+            var context = this;
+            var args = arguments;
+            var later = function() {
+              timeout = null;
+              func.apply(context, args);
+            };
+            if (timeout !== null) {
+              $timeout.cancel(timeout);
+            }
+            timeout = $timeout(later, wait, invokeApply);
+          });
+      });
+  }]);
 })();

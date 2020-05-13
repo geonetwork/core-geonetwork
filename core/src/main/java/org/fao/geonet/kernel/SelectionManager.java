@@ -27,6 +27,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -36,6 +37,7 @@ import org.fao.geonet.kernel.search.MetadataRecordSelector;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.util.*;
@@ -48,6 +50,7 @@ import javax.annotation.Nonnull;
 public class SelectionManager {
 
     public static final String SELECTION_METADATA = "metadata";
+    public static final String SELECTION_BUCKET = "bucket";
     // used to limit select all if get system setting maxrecords fails or contains value we can't parse
     public static final int DEFAULT_MAXHITS = 1000;
     public static final String ADD_ALL_SELECTED = "add-all";
@@ -70,14 +73,16 @@ public class SelectionManager {
      * session</li> <li>set selected false if result element not in session</li> </ul> </p>
      *
      * @param result the result modified<br/>
-     * @see org.fao.geonet.services.main.Result <br/>
      */
     public static void updateMDResult(UserSession session, Element result) {
+        updateMDResult(session, result, SELECTION_METADATA);
+    }
+    public static void updateMDResult(UserSession session, Element result, String bucket) {
         SelectionManager manager = getManager(session);
         @SuppressWarnings("unchecked")
         List<Element> elList = result.getChildren();
 
-        Set<String> selection = manager.getSelection(SELECTION_METADATA);
+        Set<String> selection = manager.getSelection(bucket);
 
         for (Element element : elList) {
             if (element.getName().equals(Geonet.Elem.SUMMARY)) {
@@ -94,8 +99,8 @@ public class SelectionManager {
                     .setText("false"));
             }
         }
-        result.setAttribute(Edit.Info.Elem.SELECTED, Integer
-            .toString(selection.size()));
+        result.setAttribute(Edit.Info.Elem.SELECTED,
+            selection == null ? "0" : Integer.toString(selection.size()));
     }
 
     /**
@@ -215,14 +220,15 @@ public class SelectionManager {
         try {
             maxhits = Integer.parseInt(si.getSelectionMaxRecords());
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK, "Select all - invalid max hits value, error: " + e.getMessage(), e);
         }
 
         if (selection != null)
             selection.clear();
 
-        if (type.equals(SELECTION_METADATA)) {
-            Element request = (Element) session.getProperty(Geonet.Session.SEARCH_REQUEST);
+//        if (type.equals(SELECTION_METADATA)) {
+        if (StringUtils.isNotEmpty(type)) {
+            Element request = (Element) session.getProperty(Geonet.Session.SEARCH_REQUEST + type);
             Object searcher = null;
 
             // Run last search if xml.search or q service is used (ie. last searcher is not stored in current session).
@@ -236,10 +242,10 @@ public class SelectionManager {
                     ServiceConfig sc = new ServiceConfig();
                     ((LuceneSearcher) searcher).search(context, request, sc);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.error(Geonet.GEONETWORK, "Select all error: " + e.getMessage(), e);
                 }
             } else {
-                searcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
+                searcher = session.getProperty(Geonet.Session.SEARCH_RESULT + type);
             }
             if (searcher == null)
                 return;
@@ -256,7 +262,7 @@ public class SelectionManager {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.error(Geonet.GEONETWORK, "Select all error: " + e.getMessage(), e);
             }
         }
     }
@@ -286,6 +292,12 @@ public class SelectionManager {
      * @return Set<String>
      */
     public Set<String> getSelection(String type) {
+        Set<String> sel = selections.get(type);
+        if (sel == null) {
+            Set<String> MDSelection = Collections
+                .synchronizedSet(new HashSet<String>(0));
+            selections.put(type, MDSelection);
+        }
         return selections.get(type);
     }
 

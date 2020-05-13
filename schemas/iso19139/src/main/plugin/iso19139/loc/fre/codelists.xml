@@ -1020,7 +1020,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
   </codelist>
   <!-- ==================================================== -->
-  <codelist name="gmd:MD_MaintenanceFrequencyCode">
+  <codelist name="gmd:MD_MaintenanceFrequencyCode" sort="fixed">
     <entry>
       <code>continual</code>
       <label>Continue</label>
@@ -1351,7 +1351,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>onGoing</code>
-      <label>Mis à jour continue</label>
+      <label>Mise à jour continue</label>
       <description>Ressource continuellement mise à jour</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1629,7 +1629,7 @@
         </entry>-->
   </codelist>
   <!-- ==================================================== -->
-  <codelist name="gmd:MD_TopicCategoryCode">
+  <codelist name="gmd:MD_TopicCategoryCode" alias="topicCategory">
     <entry>
       <code>farming</code>
       <label>Agriculture</label>

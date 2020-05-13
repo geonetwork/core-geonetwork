@@ -43,27 +43,27 @@
             [{
               type: 'report-updated-metadata',
               label: 'reportUpdatedMetadata',
-              icon: 'fa-th',
+              icon: 'fa-check-square-o',
               href: '#/reports/report-updated-metadata'
             },{
               type: 'report-internal-metadata',
               label: 'reportInternalMetadata',
-              icon: 'fa-th',
+              icon: 'fa-sign-in',
               href: '#/reports/report-internal-metadata'
             },{
               type: 'report-fileupload-metadata',
               label: 'reportFileUploadMetadata',
-              icon: 'fa-th',
+              icon: 'fa-upload',
               href: '#/reports/report-fileupload-metadata'
             },{
               type: 'report-filedownload-metadata',
               label: 'reportFileDownloadMetadata',
-              icon: 'fa-th',
+              icon: 'fa-download',
               href: '#/reports/report-filedownload-metadata'
             },{
               type: 'report-users',
               label: 'reportUsers',
-              icon: 'fa-th',
+              icon: 'fa-users',
               href: '#/reports/report-users'
             }]
       };
@@ -140,15 +140,38 @@
             }
           });
 
-      function loadGroups() {
-        $http.get('../api/groups').success(function(data) {
-          $scope.groups = data;
-        }).error(function(data) {
-          // TODO
-        });
-      }
 
-      loadGroups();
+      $scope.$watch('user.id', function(newId) {
+        if (angular.isDefined(newId)) {
+          loadGroups();
+        }
+      });
+
+      function loadGroups() {
+        if ($scope.user.profile == null) return;
+
+        if ($scope.user.profile === 'Administrator') {
+          $http.get('../api/groups').success(function(data) {
+            $scope.groups = data;
+          }).error(function(data) {
+            // TODO
+          });
+        } else {
+          $http.get('../api/users/' + $scope.user.id + '/groups').success(function(data) {
+            // Extract the group property from user groups array
+            var groups = _.map(data, 'group');
+
+            // Get unique groups
+            $scope.groups = _.uniq(groups, function (e) {
+              return e.id;
+            });
+
+          }).error(function(data) {
+            // TODO
+          });
+
+        }
+      }
 
     }]);
 

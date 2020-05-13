@@ -40,6 +40,57 @@
     $scope.enableLegends = true;
 
     /**
+     * Unmanaged layer with custom render method
+     * used to draw the grey rectangle for print extent
+     */
+    var overlayCanvas = document.createElement('canvas');
+    overlayCanvas.style.position = 'absolute';
+    overlayCanvas.style.width = '100%';
+    overlayCanvas.style.height = '100%';
+    var overlayLayer = new ol.layer.Layer({
+      render: function() {
+        // print rectangle might not be ready if config is loading
+        if (!printRectangle) {
+          return;
+        }
+
+        var size = $scope.map.getSize();
+        var height = size[1] * ol.has.DEVICE_PIXEL_RATIO;
+        var width = size[0] * ol.has.DEVICE_PIXEL_RATIO;
+        overlayCanvas.width = width;
+        overlayCanvas.height = height;
+        var ctx = overlayCanvas.getContext('2d');
+        
+
+        var minx, miny, maxx, maxy;
+        minx = printRectangle[0], miny = printRectangle[1],
+          maxx = printRectangle[2], maxy = printRectangle[3];
+
+        ctx.beginPath();
+        // Outside polygon, must be clockwise
+        ctx.moveTo(0, 0);
+        ctx.lineTo(width, 0);
+        ctx.lineTo(width, height);
+        ctx.lineTo(0, height);
+        ctx.lineTo(0, 0);
+        ctx.closePath();
+
+        // Inner polygon,must be counter-clockwise
+        ctx.moveTo(minx, miny);
+        ctx.lineTo(minx, maxy);
+        ctx.lineTo(maxx, maxy);
+        ctx.lineTo(maxx, miny);
+        ctx.lineTo(minx, miny);
+        ctx.closePath();
+
+        ctx.fillStyle = 'rgba(0, 5, 25, 0.75)';
+        ctx.fill();
+
+        return overlayCanvas;
+      }
+    });
+
+    /**
      * Return print configuration from Mapfishprint service
      * @return {*} promise
      */
@@ -62,7 +113,9 @@
           layouts: data.layouts,
           dpi: data.dpis[1],
           scales: data.scales,
-          scale: data.scales[5]
+          scale: data.scales[5],
+          formats: data.outputFormats,
+          format: data.outputFormats[0]
         };
       });
       return http;
@@ -71,9 +124,10 @@
     this.activate = function() {
       var initMapEvents = function() {
         deregister = [
-          $scope.map.on('precompose', handlePreCompose),
-          $scope.map.on('postcompose', handlePostCompose),
           $scope.map.getView().on('change:resolution', function(event) {
+            if ($scope.map.getView().getAnimating()) {
+              return;
+            }
             if ($scope.auto) {
               fitRectangleToView();
               $scope.$apply();
@@ -94,6 +148,8 @@
       } else {
         initMapEvents();
       }
+
+      overlayLayer.setMap($scope.map);
     };
 
     this.deactivate = function() {
@@ -102,58 +158,14 @@
           if (angular.isFunction(deregister[i])) {
             deregister[i]();
           } else {
-            deregister[i].target.unByKey(deregister[i]);
+            // FIXME
+            var src = deregister[i].src || deregister[i].target;
+            ol.Observable.unByKey(deregister[i]);
           }
         }
       }
+      overlayLayer.setMap(null);
       refreshComp();
-    };
-
-
-    /**
-     * Compose the events
-     * @param {Object} evt map.precompose event
-     */
-    var handlePreCompose = function(evt) {
-      var ctx = evt.context;
-      ctx.save();
-    };
-
-    /**
-     * Compose the grey rectangle for print extent
-     * @param {Object} evt map.postcompose event
-     */
-    var handlePostCompose = function(evt) {
-      var ctx = evt.context;
-      var size = $scope.map.getSize();
-      var height = size[1] * ol.has.DEVICE_PIXEL_RATIO;
-      var width = size[0] * ol.has.DEVICE_PIXEL_RATIO;
-
-      var minx, miny, maxx, maxy;
-      minx = printRectangle[0], miny = printRectangle[1],
-      maxx = printRectangle[2], maxy = printRectangle[3];
-
-      ctx.beginPath();
-      // Outside polygon, must be clockwise
-      ctx.moveTo(0, 0);
-      ctx.lineTo(width, 0);
-      ctx.lineTo(width, height);
-      ctx.lineTo(0, height);
-      ctx.lineTo(0, 0);
-      ctx.closePath();
-
-      // Inner polygon,must be counter-clockwise
-      ctx.moveTo(minx, miny);
-      ctx.lineTo(minx, maxy);
-      ctx.lineTo(maxx, maxy);
-      ctx.lineTo(maxx, miny);
-      ctx.lineTo(minx, miny);
-      ctx.closePath();
-
-      ctx.fillStyle = 'rgba(0, 5, 25, 0.75)';
-      ctx.fill();
-
-      ctx.restore();
     };
 
     var updatePrintRectanglePixels = function(scale) {
@@ -168,20 +180,17 @@
     };
     $scope.refreshComp = refreshComp;
 
-    var fitRectangleToView = function() {
+    this.fitRectangleToView = function() {
       $scope.config.scale = gnPrint.getOptimalScale($scope.map,
-          $scope.config.scales,
-          $scope.config.layout);
+        $scope.config.scales,
+        $scope.config.layout);
 
       refreshComp();
     };
+    var fitRectangleToView = this.fitRectangleToView;
 
     $scope.downloadUrl = function(url) {
-      if (8 == 9) {
-        $window.open(url);
-      } else {
-        $window.location = url;
-      }
+      $window.location = url;
     };
 
     $scope.printing = false;
@@ -194,7 +203,7 @@
       // http://mapfish.org/doc/print/protocol.html#print-pdf
       var view = $scope.map.getView();
       var proj = view.getProjection();
-      var lang = $translate.uses();
+      var lang = $translate.use();
       var defaultPage = {
         comment: $scope.mapComment || '',
         title: $scope.mapTitle || ''
@@ -206,7 +215,10 @@
       var layers = $scope.map.getLayers();
       pdfLegendsToDownload = [];
 
-      angular.forEach(layers.getArray(), function(layer) {
+      var sortedZindexLayers = layers.getArray().sort(function(a, b) {
+        return a.getZIndex() > b.getZIndex();
+      });
+      angular.forEach(sortedZindexLayers, function(layer) {
         if (layer.getVisible()) {
           var attribution = layer.attribution;
           if (attribution !== undefined &&
@@ -240,9 +252,13 @@
         rotation: -((view.getRotation() * 180.0) / Math.PI),
         lang: lang,
         dpi: $scope.config.dpi.value,
+        outputFormat: $scope.config.format.name,
         layers: encLayers,
         legends: encLegends,
-        enableLegends: $scope.enableLegends,
+        enableLegends: $scope.enableLegends && encLegends ? true : false,
+        hasTitle: $scope.mapTitle ? true : false,
+        hasNoTitle: $scope.mapTitle ? false : true,
+        hasAttribution: !!attributions.length,
         pages: [
           angular.extend({
             center: gnPrint.getPrintRectangleCenterCoord(
@@ -286,12 +302,9 @@
             resolution >= minResolution) {
           if (src instanceof ol.source.WMTS) {
             encLayer = gnPrint.encoders.layers['WMTS'].call(this,
-                layer, layerConfig);
+                layer, layerConfig, proj);
           } else if (src instanceof ol.source.OSM) {
             encLayer = gnPrint.encoders.layers['OSM'].call(this,
-                layer, layerConfig);
-          } else if (src instanceof ol.source.MapQuest) {
-            encLayer = gnPrint.encoders.layers['MapQuest'].call(this,
                 layer, layerConfig);
           } else if (src instanceof ol.source.BingMaps) {
             encLayer = gnPrint.encoders.layers['Bing'].call(this,
@@ -299,7 +312,10 @@
           } else if (src instanceof ol.source.ImageWMS ||
               src instanceof ol.source.TileWMS) {
             encLayer = gnPrint.encoders.layers['WMS'].call(this,
-                layer, layerConfig);
+                layer, layerConfig, proj);
+          } else if (src instanceof ol.source.XYZ) {
+            encLayer = gnPrint.encoders.layers['XYZ'].call(this,
+                layer, layerConfig, proj);
           } else if (src instanceof ol.source.Vector ||
               src instanceof ol.source.ImageVector) {
             if (src instanceof ol.source.ImageVector) {
@@ -313,7 +329,7 @@
             if (features && features.length > 0) {
               encLayer =
                   gnPrint.encoders.layers['Vector'].call(this,
-                      layer, features);
+                  layer, features);
             }
           }
         }
@@ -354,18 +370,48 @@
 
             scope.defaultLayout = attrs.layout;
             scope.auto = true;
+            scope.activatedOnce = false;
+            
+            scope.layersWithWhiteSpaces = false;
+            
+            scope.$watchCollection(
+                function() {
+                  return scope.map.getLayers().getArray();
+                }, 
+                function(layers) {
+                  scope.layersWithWhiteSpaces = false;
+                  layers.forEach(function(layer) {
+                    if(layer.getSource() 
+                        && layer.getSource() instanceof ol.source.TileWMS
+                        && layer.getSource().getParams()
+                        && layer.getSource().getParams().LAYERS
+                        && layer.getSource().getParams().LAYERS.indexOf(" ") >= 0) {
+                      scope.layersWithWhiteSpaces = true;
+                    }
+                  });
+                }
+            );
 
             // Deactivate only if it has been activated once first
             scope.$watch('printActive', function(isActive, old) {
               if (angular.isDefined(isActive) &&
-                  (angular.isDefined(old) || isActive)) {
+                  (scope.activatedOnce || isActive)) {
                 if (isActive) {
                   ctrl.activate();
+                  scope.activatedOnce = true;
                 } else {
                   ctrl.deactivate();
                 }
               }
             });
+
+            scope.$watch('config.layout', function(newV, oldV) {
+              if (!newV) {
+                return;
+              }
+              ctrl.fitRectangleToView.call(ctrl);
+            });
+
           }
         };
       }]);

@@ -88,7 +88,8 @@ public class Remove extends NotInReadOnlyModeService {
         String fname = elem.getText();
 
         // Remove the file and update the file upload/downloads tables
-        IResourceRemoveHandler removeHook = (IResourceRemoveHandler) context.getApplicationContext().getBean("resourceRemoveHandler");
+        IResourceRemoveHandler removeHook =
+            context.getBean("resourceRemoveHandler",IResourceRemoveHandler.class);
         removeHook.onDelete(context, params, Integer.parseInt(id), fname, access);
 
         // update the metadata

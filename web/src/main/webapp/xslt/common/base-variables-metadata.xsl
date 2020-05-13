@@ -50,6 +50,10 @@
     <saxon:call-template name="{concat('get-', $schema, '-is-service')}"/>
   </xsl:variable>
 
+  <xsl:variable name="metadataTitle">
+    <saxon:call-template name="{concat('get-', $schema, '-title')}"/>
+  </xsl:variable>
+
   <xsl:variable name="metadataLanguage">
     <saxon:call-template name="{concat('get-', $schema, '-language')}"/>
   </xsl:variable>
@@ -76,11 +80,10 @@
   <xsl:variable name="iso19139codelists" select="$iso19139schema/codelists"/>
   <xsl:variable name="iso19139strings" select="$iso19139schema/strings"/>
 
-  <xsl:variable name="isEditing" select="$service = 'md.edit' or $service = 'md.element.add'"/>
-
-  <!-- Display attributes in editor -->
-  <xsl:variable name="isDisplayingAttributes" select="/root/request/displayAttributes = 'true'"/>
-  <xsl:variable name="isDisplayingTooltips" select="/root/request/displayTooltips = 'true'"/>
+  <xsl:variable name="isEditing"
+                select="$service = 'md.edit'
+                or $service = 'embedded'
+                or $service = 'md.element.add'"/>
 
   <xsl:variable name="withInlineEditing" select="false()"/>
 
@@ -103,13 +106,35 @@
                         then /root/gui/currTab
                         else $editorConfig/editor/views/view/tab[@default]/@id"/>
 
-  <xsl:variable name="viewConfig" select="$editorConfig/editor/views/view[tab/@id = $tab]"/>
-  <xsl:variable name="tabConfig" select="$editorConfig/editor/views/view/tab[@id = $tab]"/>
+  <xsl:variable name="viewConfig"
+                select="$editorConfig/editor/views/view[tab/@id = $tab]"/>
+  <xsl:variable name="tabConfig"
+                select="$editorConfig/editor/views/view/tab[@id = $tab]"/>
   <xsl:variable name="thesaurusList"
                 select="$editorConfig/editor/views/view[tab/@id = $tab]/thesaurusList"/>
 
-  <xsl:variable name="isFlatMode" select="if (/root/request/flat) then /root/request/flat = 'true'
+  <xsl:variable name="isFlatMode"
+                select="if (/root/request/flat) then /root/request/flat = 'true'
     else $tabConfig/@mode = 'flat'"/>
+
+  <xsl:variable name="isDisplayingAttributes"
+                select="if (/root/request/displayAttributes)
+                        then /root/request/displayAttributes = 'true'
+                        else if ($viewConfig/@displayAttributes)
+                        then $viewConfig/@displayAttributes = 'true'
+                        else false()"/>
+  <xsl:variable name="isDisplayingTooltips"
+                select="if (/root/request/displayTooltips)
+                        then /root/request/displayTooltips = 'true'
+                        else if ($viewConfig/@displayTooltips)
+                        then $viewConfig/@displayTooltips = 'true'
+                        else false()"/>
+  <xsl:variable name="displayTooltipsMode"
+                select="if (/root/request/displayTooltipsMode)
+                        then /root/request/displayTooltipsMode
+                        else if ($viewConfig/@displayTooltipsMode)
+                        then $viewConfig/@displayTooltipsMode
+                        else ''"/>
 
 
 </xsl:stylesheet>

@@ -24,6 +24,7 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.util.MailUtil;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class SendNotification {
             try {
                 receiver = ah.getOwnerEmail();
             } catch (Exception e1) {
-                e1.printStackTrace();
+                Log.error(Geonet.HARVESTER, e1.getMessage(), e1);
             }
         }
 
@@ -82,18 +83,7 @@ public class SendNotification {
         String htmlMessage = settings
             .getValue(Settings.SYSTEM_HARVESTING_MAIL_TEMPLATE);
 
-        Element lastHarvest = (Element) element.getChildren().get(0);
-
-        @SuppressWarnings("unchecked")
-        List<Element> tmp = lastHarvest.getChildren();
-        Element info = null;
-
-        for (Element e : tmp) {
-            if (e.getName().equalsIgnoreCase("info")) {
-                info = e;
-                break;
-            }
-        }
+        Element info = element.getChild("info");
 
         // We should always get a info report BTW
         if (info != null) {
@@ -127,7 +117,10 @@ public class SendNotification {
 
             } else {
 
-                if (result.getChildren("errors").size() > 0) {
+                Element harvesterErrors = result.getChild("errors");
+
+                if ((harvesterErrors != null) &&
+                    (harvesterErrors.getChildren().size() > 0)) {
                     // Success with warnings, Level 2, let's check it:
                     if (!settings.getValueAsBool(Settings.SYSTEM_HARVESTING_MAIL_LEVEL2)) {
                         return;

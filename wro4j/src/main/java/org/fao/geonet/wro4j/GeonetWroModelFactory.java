@@ -50,6 +50,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
@@ -173,7 +174,6 @@ public class GeonetWroModelFactory implements WroModelFactory {
                 }
             } catch (Exception e) {
                 errors.add(e);
-                e.printStackTrace();
                 Log.error(WRO4J_LOG, "Error while loading wro4j model", e);
             } finally {
                 if (streams != null) {
@@ -456,8 +456,9 @@ public class GeonetWroModelFactory implements WroModelFactory {
                 final String groupId = name.substring(0, name.lastIndexOf('.'));
 
                 if (cssGroups.contains(groupId)) {
-                    throw new IllegalArgumentException("There are at least two css file with the name: " + name + ".  Each css file " +
-                        "must have unique names. Check " + file.getPath() + ".");
+                    Log.warning(WRO4J_LOG, "There are at least two css file with the name: " + name + ". " +
+                        "Only the first one will be used, ignoring: " + file.getPath());
+                    continue;
                 }
 
                 cssGroups.add(groupId);
@@ -544,8 +545,16 @@ public class GeonetWroModelFactory implements WroModelFactory {
         return resource;
     }
 
+    /**
+     * If a JS file ends with {@See TEMPLATE_PATTERN} or is a view template
+     * then check all HTML files which are templates.
+     *
+     * TODO: Add for all views ?
+     */
     private void addTemplateResourceFrom(List<Resource> group, ClosureRequireDependencyManager.Node dep) {
-        if (dep.path.toLowerCase().endsWith(TEMPLATE_PATTERN)) {
+        boolean isViewTemplate = dep.path.startsWith("/catalog/views/default/config.js");
+        if (dep.path.toLowerCase().endsWith(TEMPLATE_PATTERN) ||
+            isViewTemplate) {
             Path dir;
             if (dep.path.startsWith("file:/")) {
                 try {
@@ -559,7 +568,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
             if (dir == null) {
                 throw new RuntimeException("Directory folder is missing!!");
             }
-            Path resolve = dir.resolve("partials");
+            Path resolve = dir;
             String dirPath = resolve.toString().replace('\\', '/');
             String prefix = TemplatesUriLocator.URI_PREFIX + dirPath;
             group.add(getTemplateResource(prefix));
@@ -704,6 +713,14 @@ public class GeonetWroModelFactory implements WroModelFactory {
 
                 @Override
                 public Iterator<File> iterator() {
+                    // More detailed error about 
+                    // Parameter 'directory' is not a directory 
+                    // when a missing lib is not found by wro4j when geonetwork initialized.
+                    // It may happen when submodules are not loaded properly.
+                    if (!root.isDirectory()) {
+                        throw new IllegalArgumentException(
+                            String.format("Directory '%s' is not a directory. It could be a missing library. Check the source if you have all dependency files required.", root));
+                    }
                     return FileUtils.iterateFiles(root, extToCollect, true);
                 }
             };

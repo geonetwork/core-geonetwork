@@ -52,6 +52,16 @@
             </xs:documentation>
           </xs:annotation>
         </xs:element>
+        <xs:element name="btnLabel" type="xs:string" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Optional label to be addded to the add button.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="btnClass" type="xs:string" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Optional CSS class to be added to the add button.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element ref="description" minOccurs="0" maxOccurs="1">
           <xs:annotation>
             <xs:documentation>The definition to be displayed in the help
@@ -147,8 +157,8 @@
       <xs:attribute name="editorMode">
         <xs:annotation>
           <xs:documentation>By default, the list of suggestion is displayed in a
-            combo next to the
-            element. The layout may be customized by setting the editorMode.
+            combo next to the element.
+            The layout may be customized by setting the editorMode attribute.
           </xs:documentation>
         </xs:annotation>
         <xs:simpleType>
@@ -156,6 +166,12 @@
             <xs:enumeration value="radio">
               <xs:annotation>
                 <xs:documentation>Simple radio displayed next to each other.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="suggestion">
+              <xs:annotation>
+                <xs:documentation>Suggestion list. Preserve existing value, but does not allow to type value not provided in the list.
                 </xs:documentation>
               </xs:annotation>
             </xs:enumeration>
@@ -176,27 +192,35 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
-      <xs:attribute name="displayIf" type="xs:string">
-        <xs:annotation>
-          <xs:documentation>
-            <![CDATA[
+      <xs:attribute ref="displayIf"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:attribute name="displayIf" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
           Conditional helpers which may define an xpath expression to evaluate if the xpath match.
 
         The scope of the expression is defined by a variable named "$p1" whitch is the current node.
 
         For example, to match a metadata on dataset:
-        displayIf="$p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/gmd:MD_DataIdentification or
-        $p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']"
+        ```displayIf="$p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/gmd:MD_DataIdentification or
+        $p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']"```
 
         and a metadata on service:
-        displayIf="$p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/srv:SV_ServiceIdentification"
+        ```displayIf="$p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/srv:SV_ServiceIdentification"```
 
+        or to test a value of the node
+        ```displayIf="gco:CharacterString[contains(., 'temporal resolution: ')]"```
+
+        The result of the displayIf XPath should be one or more nodes.
+        It does not expect a boolean. For example, this does not work
+        ```displayIf="gco:CharacterString/contains(., 'temporal resolution: ')"``` which return true or false.
           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-    </xs:complexType>
-  </xs:element>
+      </xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
 
   <xs:element name="option">
     <xs:complexType mixed="true">
@@ -244,20 +268,31 @@
             <xs:sequence maxOccurs="unbounded" minOccurs="0">
               <xs:element name="entry">
                 <xs:complexType>
-                  <xs:sequence>
-                    <xs:element type="xs:string" name="code"/>
-                    <xs:element type="xs:string" name="label"/>
-                    <xs:element type="xs:string" name="description"/>
-                  </xs:sequence>
+                  <xs:choice maxOccurs="unbounded">
+                    <xs:element type="xs:string" name="code" maxOccurs="1" minOccurs="1"/>
+                    <xs:element type="xs:string" name="label" maxOccurs="1" minOccurs="1"/>
+                    <xs:element type="xs:string" name="description" maxOccurs="1" minOccurs="0"/>
+                  </xs:choice>
                   <xs:attribute type="xs:boolean" name="hideInEditMode" use="optional"/>
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="optional"/>
+            <xs:attribute ref="displayIf" use="optional" />
+            <xs:attribute ref="sort" use="optional" />
             <xs:attribute type="xs:string" name="alias" use="optional"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:attribute type="xs:string" name="sort" fixed="fixed">
+    <xs:annotation>
+      <xs:documentation>
+        By default codelist are sorted in alphabetical order.
+        Use this attribute to sort them by the order defined
+        in the codelist definition file.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
 </xs:schema>

@@ -25,9 +25,13 @@
   goog.provide('gn_usergroup_controller');
 
   goog.require('gn_dbtranslation');
+  goog.require('gn_multiselect');
+  goog.require('gn_mdtypewidget');
 
   var module = angular.module('gn_usergroup_controller', [
     'gn_dbtranslation',
+    'gn_multiselect',
+    'gn_mdtypewidget',
     'blueimp.fileupload']);
 
 
@@ -43,7 +47,7 @@
 
       $scope.searchObj = {
         params: {
-          template: 'y or n',
+          template: 'y or n or s or t',
           sortBy: 'title'
         }
       };
@@ -79,6 +83,7 @@
       // On going changes group ...
       $scope.groupUpdated = false;
       $scope.groupSearch = {};
+      $scope.groupusers = null;
 
       // Scope for user
       // List of catalog users
@@ -97,20 +102,34 @@
       $scope.isLoadingUsers = false;
       $scope.isLoadingGroups = false;
 
+
+      // This is to force IE11 NOT to cache json requests
+      if (!$http.defaults.headers.get) {
+        $http.defaults.headers.get = {};
+      }
+      $http.defaults.headers.get['Cache-Control'] = 'no-cache';
+      $http.defaults.headers.get['Pragma'] = 'no-cache';
+
       $http.get('../api/tags').
           success(function(data) {
-            $scope.categories = data;
+            var nullTag = {id: null, name: '', label: {}};
+            nullTag.label[$scope.lang] = '';
+            $scope.categories = [nullTag].concat(data);
           });
 
       function loadGroups() {
         $scope.isLoadingGroups = true;
         // If not send profile, all groups are returned
-        var profile = ($scope.user.profile)?
-            "?profile=" +$scope.user.profile:"";
+        var profile = ($scope.user.profile) ?
+            '?profile=' + $scope.user.profile : '';
+
 
         $http.get('../api/groups' + profile).
             success(function(data) {
               $scope.groups = data;
+              angular.forEach($scope.groups, function(u) {
+                u.langlabel = getLabel(u);
+              });
               $scope.isLoadingGroups = false;
             }).error(function(data) {
               // TODO
@@ -120,16 +139,17 @@
               // in the list and trigger selection.
               // TODO: change route path when selected (issue - controller is
               // reloaded)
-              if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
+              if ($routeParams.userOrGroup) {
                 angular.forEach($scope.groups, function(u) {
                   if (u.name === $routeParams.userOrGroup ||
-                      $routeParams.userOrGroupId === u.id.toString()) {
+                      $routeParams.userOrGroup === u.id.toString()) {
                     $scope.selectGroup(u);
                   }
                 });
               }
             });
       }
+
       function loadUsers() {
         $scope.isLoadingUsers = true;
         $http.get('../api/users').success(function(data) {
@@ -141,11 +161,11 @@
         }).then(function() {
           // Search if requested user in location is
           // in the list and trigger user selection.
-          if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
+          if ($routeParams.userOrGroup) {
             angular.forEach($scope.users, function(u) {
 
               if (u.username === $routeParams.userOrGroup ||
-                  $routeParams.userOrGroupId === u.id.toString()) {
+                  $routeParams.userOrGroup === u.id.toString()) {
                 $scope.selectUser(u);
               }
             });
@@ -153,7 +173,19 @@
         });
       }
 
-
+      /**
+       * Loads the users for a group.
+       *
+       * @param groupId
+       */
+      function loadGroupUsers(groupId) {
+        $http.get('../api/groups/' + groupId + '/users').
+        success(function(data) {
+          $scope.groupusers = data;
+        }).error(function(data) {
+          $scope.groupusers = [];
+        });
+      }
 
       /**
        * Add an new user based on the default
@@ -184,9 +216,12 @@
           organisation: '',
           enabled: true
         };
+
         $scope.userGroups = null;
         $scope.userIsAdmin = false;
         $scope.userIsEnabled = true;
+
+        updateGroupsByProfile($scope.userGroups);
 
         $timeout(function() {
           $scope.setUserProfile();
@@ -240,7 +275,7 @@
 
         // Retrieve records in that group
         $scope.$broadcast('resetSearch', {
-          template: 'y or n',
+          template: 'y or n or s or t',
           _owner: u.id,
           sortBy: 'title'
         });
@@ -268,7 +303,11 @@
         };
 
         $http.post('../api/users/' + $scope.userSelected.id +
-            '/actions/forget-password' , null, {params: params})
+            '/actions/forget-password',
+            $.param(params),
+            {
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            })
             .success(function(data) {
               $scope.resetPassword1 = null;
               $scope.resetPassword2 = null;
@@ -299,6 +338,48 @@
         return false;
       };
 
+      $scope.groupsByProfile = [];
+
+      /**
+       * Returns the list of groups inside "groups" with the selected profile
+       */
+      var getLabel = function(g) {
+        return g.label[$scope.lang] || g.name;
+      };
+
+      var profiles = ['Administrator',
+        'UserAdmin', 'Reviewer',
+        'Editor', 'RegisteredUser',
+        'Guest'];
+
+      var updateGroupsByProfile = function(groups) {
+        var res = [];
+        angular.forEach(profiles, function(profile) {
+          res[profile] = [];
+          if (groups != null) {
+            for (var i = 0; i < groups.length; i++) {
+              if (groups[i].id.profile == profile) {
+                var g = groups[i].group;
+                g.langlabel = getLabel(g);
+                res[profile].push(g);
+              }
+            }
+          }
+        });
+
+        //We need to change the pointer,
+        // not only the value, so ng-options is aware
+        $scope.groupsByProfile = res;
+      };
+
+      $scope.$watch('userGroups', function(groups) {
+        updateGroupsByProfile(groups);
+      });
+
+      $scope.sortByLabel = function(group) {
+        return group.label[$scope.lang];
+      };
+
       /**
        * Compute user profile based on group/profile select
        * list. This is closely related to the template manipulating
@@ -310,9 +391,15 @@
        * group is also selected in the editor profile list.
        */
       $scope.setUserProfile = function(checked) {
+        if (!$scope.userSelected) {
+          return;
+        }
         // Switch the profile (AFA a watch on userIsAdmin does not work).
         if (checked) {
           $scope.userIsAdmin = !$scope.userIsAdmin;
+          angular.forEach(profiles, function(p) {
+            $scope.groupsByProfile[p] = [];
+          });
         }
         $scope.userUpdated = true;
         if ($scope.userIsAdmin) {
@@ -321,26 +408,15 @@
           // Define the highest profile for user
           var newprofile = 'RegisteredUser';
           for (var i = 0; i < $scope.profiles.length; i++) {
-            if ($scope.profiles[i] !== 'Administrator') {
-              var groups = $('#groups_' + $scope.profiles[i])[0];
+            var p = $scope.profiles[i];
+            if (p !== 'Administrator') {
               // If one of the group is selected, main user profile is updated
-              if (groups.selectedIndex > -1 &&
-                  groups.options[groups.selectedIndex].value != '') {
+              if ($scope.groupsByProfile[p].length > 0) {
                 newprofile = $scope.profiles[i];
               }
             }
           }
           $scope.userSelected.profile = newprofile;
-        }
-        // If user is reviewer in one group, he is also editor for that group
-        var editorGroups = $('#groups_Editor')[0];
-        var reviewerGroups = $('#groups_Reviewer')[0];
-        if (reviewerGroups.selectedIndex > -1) {
-          for (var j = 0; j < reviewerGroups.options.length; j++) {
-            if (reviewerGroups.options[j].selected) {
-              editorGroups.options[j].selected = true;
-            }
-          }
         }
       };
 
@@ -349,47 +425,68 @@
       };
 
 
+      function updateProfileRules() {
+        $scope.setUserProfile();
+      };
+
+      $scope.$watchCollection('groupsByProfile.RegisteredUser',
+          updateProfileRules);
+      $scope.$watchCollection('groupsByProfile.Editor', updateProfileRules);
+      $scope.$watchCollection('groupsByProfile.UserAdmin', updateProfileRules);
+      $scope.$watchCollection('groupsByProfile.Reviewer', function(n, o) {
+        if (n !== o) {
+          for (var j = 0; j < n.length; j++) {
+            var g = n[j];
+            var gIsAlsoForEditorProfile = false;
+            for (var i = 0; i < $scope.groupsByProfile['Editor'].length; i++) {
+              var eg = $scope.groupsByProfile['Editor'][i];
+              if (eg.id === g.id) {
+                gIsAlsoForEditorProfile = true;
+                break;
+              }
+            }
+            if (!gIsAlsoForEditorProfile) {
+              $scope.groupsByProfile['Editor'].push(g);
+            }
+          }
+          $scope.setUserProfile();
+        }
+      });
       /**
        * Save a user.
        */
       $scope.saveUser = function(formId) {
 
         var selectedRegisteredUserGroups = [],
-            selectedEditorGroups = [], selectedReviewerGroups = [],
+            selectedEditorGroups = [],
+            selectedReviewerGroups = [],
             selectedUserAdminGroups = [];
 
-        var registeredUserGroups = $('#groups_RegisteredUser')[0];
-        for (var j = 0; j < registeredUserGroups.options.length; j++) {
-          if (registeredUserGroups.options[j].selected) {
+        for (var j = 0;
+             j < $scope.groupsByProfile['RegisteredUser'].length; j++) {
+          if ($scope.groupsByProfile['RegisteredUser'][j]) {
             selectedRegisteredUserGroups.push(
-                registeredUserGroups.options[j].value);
+                $scope.groupsByProfile['RegisteredUser'][j].id);
           }
         }
-
-        var editorGroups = $('#groups_Editor')[0];
-        for (var j = 0; j < editorGroups.options.length; j++) {
-          if (editorGroups.options[j].selected) {
+        for (var j = 0; j < $scope.groupsByProfile['Editor'].length; j++) {
+          if ($scope.groupsByProfile['Editor'][j]) {
             selectedEditorGroups.push(
-                editorGroups.options[j].value);
+                $scope.groupsByProfile['Editor'][j].id);
           }
         }
-
-        var reviewerGroups = $('#groups_Reviewer')[0];
-        for (var j = 0; j < reviewerGroups.options.length; j++) {
-          if (reviewerGroups.options[j].selected) {
+        for (var j = 0; j < $scope.groupsByProfile['Reviewer'].length; j++) {
+          if ($scope.groupsByProfile['Reviewer'][j]) {
             selectedReviewerGroups.push(
-                reviewerGroups.options[j].value);
+                $scope.groupsByProfile['Reviewer'][j].id);
           }
         }
-
-        var userAdminGroups = $('#groups_UserAdmin')[0];
-        for (var j = 0; j < userAdminGroups.options.length; j++) {
-          if (userAdminGroups.options[j].selected) {
+        for (var j = 0; j < $scope.groupsByProfile['UserAdmin'].length; j++) {
+          if ($scope.groupsByProfile['UserAdmin'][j]) {
             selectedUserAdminGroups.push(
-                userAdminGroups.options[j].value);
+                $scope.groupsByProfile['UserAdmin'][j].id);
           }
         }
-
 
         var data = angular.extend({}, $scope.userSelected, {
           groupsRegisteredUser: selectedRegisteredUserGroups,
@@ -418,13 +515,13 @@
               $scope.unselectUser();
               loadUsers();
               $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('userUpdated'),
+                msg: $translate.instant('userUpdated'),
                 timeout: 2,
                 type: 'success'});
             },
             function(r) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('userUpdateError'),
+                title: $translate.instant('userUpdateError'),
                 error: r.data,
                 timeout: 0,
                 type: 'danger'});
@@ -443,7 +540,7 @@
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('userDeleteError'),
+                title: $translate.instant('userDeleteError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});
@@ -460,6 +557,8 @@
 
       $scope.addGroup = function() {
         $scope.unselectGroup();
+        // reset logo upload control
+        $scope.clear($scope.queue);
         $scope.groupSelected = {
           id: -99,
           name: '',
@@ -480,22 +579,57 @@
       };
 
 
-      var uploadImportMdDone = function() {
+      var uploadGroupLogoDone = function(e, data) {
+        $scope.groupSelected.logo= data.files[0].name;
+        $scope.clear(data.files[0]);
+        createOrModifyGroup();
+      };
+      var uploadGroupLogoError = function(event, data) {
+        var req = data.response().jqXHR;
+        var contentType = req.getResponseHeader('Content-Type');
+        var errorText = req.responseText;
+        var errorCode = null;
+        if ('application/json' === contentType) {
+          var parsedError = JSON.parse(req.responseText);
+        }
+        $rootScope.$broadcast('StatusUpdated', {
+          title: $translate.instant('groupUpdateError'),
+          error: parsedError || errorText,
+          timeout: 0,
+          type: 'danger'});
+      };
+
+      var createOrModifyGroupSuccess = function() {
         $scope.unselectGroup();
         loadGroups();
         $rootScope.$broadcast('StatusUpdated', {
-          msg: $translate('groupUpdated'),
+          msg: $translate.instant('groupUpdated'),
           timeout: 2,
           type: 'success'});
-
       };
-      var uploadImportMdError = function(data) {
+
+      var createOrModifyGroupError = function(data) {
         $rootScope.$broadcast('StatusUpdated', {
-          title: $translate('groupUpdateError'),
+          title: $translate.instant('groupUpdateError'),
           error: data,
           timeout: 0,
           type: 'danger'});
       };
+
+      var createOrModifyGroup = function() {
+        if (($scope.groupSelected.defaultCategory) &&
+            ($scope.groupSelected.defaultCategory.id == null)) {
+          $scope.groupSelected.defaultCategory = null;
+        }
+        $http.put('../api/groups' + (
+          $scope.groupSelected.id != -99 ?
+            '/' + $scope.groupSelected.id : ''
+        ), $scope.groupSelected)
+          .success(createOrModifyGroupSuccess)
+          .error(createOrModifyGroupError);
+      };
+
+
 
       $scope.deleteGroupLogo = function() {
         $scope.groupSelected.logo = null;
@@ -503,40 +637,46 @@
       };
 
       // upload directive options
-      $scope.mdImportUploadOptions = {
+      $scope.groupLogoUploadOptions = {
         autoUpload: false,
-        done: uploadImportMdDone,
-        fail: uploadImportMdError
+        url: "../api/logos?_csrf=" + $scope.csrf,
+        dataType: "text",
+        maxNumberOfFiles: 1,
+        done: uploadGroupLogoDone,
+        fail: uploadGroupLogoError
       };
 
+      $scope.$on('fileuploadchange', function(e, data) {
+        // limit fileupload to only one file.
+        angular.forEach($scope.queue, function(item) {
+          $scope.clear(item);
+        });
+      });
+
       $scope.saveGroup = function() {
-        $http.put('../api/groups' + (
-            $scope.groupSelected.id != -99 ?
-            '/' + $scope.groupSelected.id : ''
-            ), $scope.groupSelected)
-            .success(uploadImportMdDone)
-            .error(uploadImportMdError);
+        if($scope.queue.length > 0) {
+          $scope.submit();
+        } else {
+          createOrModifyGroup();
+        }
       };
 
       $scope.deleteGroup = function(formId) {
         $http.delete('../api/groups/' +
-                $scope.groupSelected.id)
+                $scope.groupSelected.id + '?force=true')
             .success(function(data) {
               $scope.unselectGroup();
               loadGroups();
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('groupDeleteError'),
+                title: $translate.instant('groupDeleteError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});
             });
       };
 
-      $scope.sortByLabel = function(group) {
-        return group.label[$scope.lang];
-      };
       $scope.unselectGroup = function() {
         $scope.groupSelected = null;
         $scope.groupUpdated = false;
@@ -544,14 +684,23 @@
       };
 
       $scope.selectGroup = function(g) {
-        $scope.groupSelected = g;
+        // groups list is shared between users and groups management
+        // for users management the groups get a langlabel property
+        // that breaks the group management.
+        // TODO: Use custom controllers for groups and users management
+        $scope.groupSelected = angular.copy(g);
+        $scope.clear($scope.queue);
+        delete $scope.groupSelected.langlabel;
 
         // Retrieve records in that group
         $scope.$broadcast('resetSearch', {
-          template: 'y or n',
+          template: 'y or n or s or t',
           group: g.id,
           sortBy: 'title'
         });
+
+        loadGroupUsers($scope.groupSelected.id);
+
         $scope.groupUpdated = false;
 
         $timeout(function() {
@@ -563,9 +712,37 @@
         $scope.groupUpdated = true;
       };
 
-      loadGroups();
-      loadUsers();
+      var userAndGroupInitialized = false;
+      var unregister = $scope.$watch('user', function(n, o) {
+        if (!userAndGroupInitialized && n && n.profile) {
+          userAndGroupInitialized = true;
+          unregister();
+          loadGroups();
+          loadUsers();
+        }
+      }, true);
     }]);
+
+  module.filter('loggedUserIsUseradminOrMore', function() {
+    var searchGroup = function(g, userAdminGroups) {
+      var found = false;
+      for (var i = 0; i < userAdminGroups.length && !found; i++) {
+        found = userAdminGroups[i]['@id'] == g.id;
+      }
+      return found;
+    };
+
+    return function(groups, userAdminGroups, isAdmin) {
+      var filtered = [];
+      angular.forEach(groups, function(g) {
+        if (isAdmin || searchGroup(g, userAdminGroups)) {
+          filtered.push(g);
+        }
+      });
+
+      return filtered;
+    };
+  });
 
 })();
 

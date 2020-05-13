@@ -28,6 +28,18 @@
 
   var module = angular.module('gn_mdactions_directive', []);
 
+  /**
+   * @ngdoc directive
+   * @name gn_mdactions_directive.directive:gnMetadataStatusUpdater
+   * @restrict A
+   * @requires gnMetadataStatusUpdater
+   *
+   * @description
+   * The `gnMetadataStatusUpdater` directive provides a
+   * form to update the record status. Status can be related
+   * to one of the worflow step and could also be to trigger
+   * a action.
+   */
   module.directive('gnMetadataStatusUpdater', ['$translate', '$http',
     'gnMetadataManager',
     function($translate, $http, gnMetadataManager) {
@@ -38,54 +50,77 @@
         templateUrl: '../../catalog/components/metadataactions/partials/' +
             'statusupdater.html',
         scope: {
-          md: '=gnMetadataStatusUpdater'
+          md: '=gnMetadataStatusUpdater',
+          statusType: '@',
+          task: '=',
+          statusToSelect: '@'
         },
         link: function(scope) {
-          scope.lang = scope.$parent.lang;
           var user = scope.$parent.user;
-          scope.newStatus = {value: '0'};
-
           var metadataId = scope.md.getId();
-          function init() {
-            return $http.get('md.status.list?' +
-                '_content_type=json&id=' + metadataId).
-                success(function(data) {
-                  scope.status =
-                     data !== 'null' ? data.statusvalue : null;
+          var defaultType = 'workflow';
 
-                  angular.forEach(scope.status, function(s) {
-                    if (s.on) {
-                      scope.newStatus.value = s.id;
-                      return;
-                    }
+          scope.statusType = scope.statusType || defaultType;
+          scope.lang = scope.$parent.lang;
+          scope.task = angular.isDefined(scope.task) ? scope.task : scope.$parent.task;
+          scope.newStatus = {status: scope.task ? scope.task.id : 0, owner: null, dueDate: null, changeMessage: ''};
+
+
+          // Retrieve last status to set it in the form
+          function init() {
+            if (scope.statusType === defaultType) {
+              return $http.get('../api/records/' +
+                  metadataId + '/status/' +
+                  scope.statusType + '/last').
+                  success(function(data) {
+                    scope.status =
+                       data !== 'null' ? data.status : null;
+                    scope.newStatus.status = scope.statusToSelect;
+                    scope.lastStatus = data.currentStatus.id.statusId;
                   });
-                });
+            } else {
+              return $http.get('../api/status/' + scope.statusType).
+                  success(function(data) {
+                    scope.status = data;
+                    scope.newStatus = {status: scope.task ? scope.task.id : 0, owner: null, dueDate: null, changeMessage: ''};
+                  });
+            }
           };
 
+
           scope.updateStatus = function() {
+            // Assign task owner id if needed
+            if (scope.newStatus.owner) {
+              scope.newStatus.owner = scope.newStatus.owner.id;
+            }
             return $http.put('../api/records/' + metadataId +
-                '/status?status=' + scope.newStatus.value +
-                '&comment=' + scope.changeMessage
+                '/status', scope.newStatus
             ).then(
-                function(data) {
+                function(response) {
                   gnMetadataManager.updateMdObj(scope.md);
                   scope.$emit('metadataStatusUpdated', true);
                   scope.$emit('StatusUpdated', {
-                    msg: $translate('metadataStatusUpdatedWithNoErrors'),
+                    msg: $translate.instant(
+                       'metadataStatusUpdatedWithNoErrors'),
                     timeout: 2,
                     type: 'success'});
-                }, function(data) {
+                }, function(response) {
                   scope.$emit('metadataStatusUpdated', false);
                   scope.$emit('StatusUpdated', {
-                    title: $translate('metadataStatusUpdatedErrors'),
-                    error: data,
+                    title: $translate.instant('metadataStatusUpdatedErrors'),
+                    error: response.data,
                     timeout: 0,
                     type: 'danger'});
                 });
           };
 
-          scope.cantStatus = function(status) {
-            return ((status == 5 || status == 2 || status == 3) &&
+          var statusApproved = 2;
+          var statusSubmitted = 3;
+          var statusRejected = 5;
+          scope.cantChangeStatus = function(status) {
+            return ((status == statusRejected ||
+                     status == statusApproved ||
+                     status == statusSubmitted) &&
                 !user.isReviewerOrMore());
           };
 
@@ -93,6 +128,7 @@
         }
       };
     }]);
+
   /**
    * @ngdoc directive
    * @name gn_mdactions_directive.directive:gnMetadataCategoryUpdater
@@ -103,10 +139,15 @@
    * The `gnMetadataCategoryUpdater` directive provides a
    * dropdown button which allows to set the metadata
    * categories.
+   *
+   * Don't use this directive more than one time in
+   * the same page.
    */
   module.directive('gnMetadataCategoryUpdater', [
-    'gnMetadataActions', '$translate', '$http', '$rootScope',
-    function(gnMetadataActions, $translate, $http, $rootScope) {
+    'gnMetadataActions', '$translate', '$http',
+    '$rootScope', '$filter', '$timeout',
+    function(gnMetadataActions, $translate, $http,
+             $rootScope, $filter, $timeout) {
 
       return {
         restrict: 'A',
@@ -118,10 +159,15 @@
           metadataUuid: '=',
           groupOwner: '=gnGroupOwner'
         },
-        link: function(scope) {
+        link: function(scope, e, attrs) {
           scope.lang = scope.$parent.lang;
           scope.categories = null;
           scope.ids = [];
+          scope.tid = 'tagsinput' + Math.floor(Math.random() * 10000);
+          scope.mode = attrs['gnMode'] || 'btn';
+
+          var initialCategories = [];
+          var tid = '#' + scope.tid;
 
           scope.updateCategoriesAllowed = function() {
             if (angular.isDefined(scope.groupOwner)) {
@@ -130,7 +176,7 @@
                     scope.enableallowedcategories =
                         data.enableAllowedCategories;
                     scope.allowedcategories = [];
-                    angular.forEach(data.allowedcategories, function(c) {
+                    angular.forEach(data.allowedCategories, function(c) {
                       scope.allowedcategories.push(c.id);
                     });
                   });
@@ -142,45 +188,133 @@
             scope.updateCategoriesAllowed();
           });
 
+          scope.$watch('currentCategories', function(newvalue, oldvalue) {
+            init();
+          });
+
           var init = function() {
             return $http.get('../api/tags', {cache: true}).
                 success(function(data) {
+                  var lang = scope.lang;
                   scope.categories = data;
-                  if (angular.isDefined(scope.currentCategories)) {
-                    angular.forEach(scope.categories, function(c) {
-                      if (scope.currentCategories.indexOf(c.name) !== -1) {
-                        scope.ids.push(c.id);
-                      }
-                    });
+                  angular.forEach(scope.categories, function(c) {
+                    if (angular.isDefined(scope.currentCategories) &&
+                    scope.currentCategories.values.indexOf(c.name) !== -1) {
+                          scope.ids.push(c.id);
+                          initialCategories.push(c);
+                    }
+                    c.langlabel = $filter('gnLocalized')(c.label, lang);
+                  });
+
+                  if (scope.mode === 'autocomplete') {
+                    initTagInput();
                   }
                 });
+          };
+
+          function initTagInput() {
+            $timeout(function() {
+              try {
+                var maxNumberOfItems = 1000;
+
+                // Init tag input
+                $(tid).tagsinput({
+                  itemValue: 'name',
+                  itemText: 'langlabel',
+                  maxTags: maxNumberOfItems
+                });
+                var input = $(tid).tagsinput('input');
+
+                // Init data source
+                var source = new Bloodhound({
+                  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                  queryTokenizer: Bloodhound.tokenizers.whitespace,
+                  local: scope.categories,
+                  limit: maxNumberOfItems
+                });
+                source.initialize();
+
+                function allOrSearchFn(q, sync) {
+                  if (q === '') {
+                    sync(source.all());
+                    // This is the only change needed to get 'ALL'
+                    // items as the defaults
+                  } else {
+                    source.search(q, sync);
+                  }
+                }
+
+                // Init autocomplete
+                $(input).typeahead({
+                  minLength: 0,
+                  highlight: true
+                }, {
+                  name: 'category',
+                  source: allOrSearchFn,
+                  displayKey: 'langlabel',
+                  limit: Infinity
+                }).bind('typeahead:selected',
+                    $.proxy(function(obj, c) {
+                      // Add to tags
+                      this.tagsinput('add', c);
+
+                      scope.assign(c);
+
+                      // Clear typeahead
+                      this.tagsinput('input').typeahead('val', '');
+                    }, $(tid))
+                );
+
+                $(tid).on('itemRemoved', function(e) {
+                  scope.assign(e.item);
+                });
+
+                angular.forEach(initialCategories, function(c) {
+                  $(tid).tagsinput('add', c);
+                });
+              } catch (e) {
+                console.warn('No tagsinput for ' + tid +
+                    ', error: ' + e.message);
+              }
+            });
           };
 
           scope.sortByLabel = function(c) {
             return c.label[scope.lang];
           };
 
-
           // Remove or add category to the set of ids
           scope.assign = function(c, event) {
-            event.stopPropagation();
+            if (event) {
+              event.stopPropagation();
+            }
             var existIndex = scope.ids.indexOf(c.id), method = '';
             if (existIndex === -1) {
-              scope.ids.push(c.id);
               method = 'put';
             } else {
-              scope.ids.splice(existIndex, 1);
               method = 'delete';
             }
             $http[method]('../api/records/' +
                           scope.metadataUuid + '/tags?id=' + c.id)
                 .then(function() {
-                  scope.currentCategories.push(c.name);
+                  if (existIndex === -1) {
+                    scope.ids.push(c.id);
+                    scope.currentCategories.values.push(c.name);
+                  } else {
+                    scope.ids.splice(existIndex, 1);
+
+                    angular.forEach(scope.currentCategories.values,
+                    function(cat, idx) {
+                      if (cat === c.name) {
+                        scope.currentCategories.values.splice(idx, 1);
+                      }
+                    });
+                  }
                 }, function(response) {
                   $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate('assignCategoryError',
+                    title: $translate.instant('assignCategoryError',
                         {category: c.name}),
-                    error: response.error,
+                    error: response.data,
                     timeout: 0,
                     type: 'danger'});
                 });
@@ -236,7 +370,7 @@
                   scope.groupOwner = g.id;
                 }, function(error) {
                   $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate('changeCategoryError'),
+                    title: $translate.instant('changeCategoryError'),
                     error: error,
                     timeout: 0,
                     type: 'danger'});
@@ -286,7 +420,9 @@
    */
   module.directive('gnTransferOwnership', [
     '$translate', '$http', 'gnHttp', '$rootScope',
-    function($translate, $http, gnHttp, $rootScope) {
+    'gnUtilityService',
+    function($translate, $http, gnHttp, $rootScope,
+             gnUtilityService) {
       return {
         restrict: 'A',
         replace: false,
@@ -295,14 +431,18 @@
         link: function(scope, element, attrs) {
           var ownerId = parseInt(attrs['gnTransferMdOwner']);
           var groupOwner = parseInt(attrs['gnTransferMdGroupOwner']);
+          var bucket = attrs['selectionBucket'];
           var mdUuid = attrs['gnTransferOwnership'];
           scope.selectedUserGroup = null;
+          scope.groupsLoaded = false;
+          scope.userGroupDefined = false;
+          scope.userGroups = null;
 
           scope.selectUser = function(user) {
             scope.selectedUser = user;
             scope.editorSelectedId = user.id;
             $http.get('../api/users/' + id + '/groups')
-              .success(function(data) {
+                .success(function(data) {
                   var uniqueGroup = {};
                   angular.forEach(data, function(g) {
                     if (!uniqueGroup[g.group.id]) {
@@ -317,28 +457,61 @@
             scope.selectedGroup = group;
           };
           $http.get('../api/users/groups')
-            .success(function(data) {
+              .success(function(data) {
                 var uniqueUserGroups = {};
                 angular.forEach(data, function(g) {
                   var key = g.groupId + '-' + g.userId;
                   if (!uniqueUserGroups[key]) {
                     uniqueUserGroups[key] = g;
+                    uniqueUserGroups[key].groupNameTranslated = g.groupName === 'allAdmins' ?
+                        $translate.instant(g.groupName) :
+                        $translate.instant('group-' + g.groupId);
                   }
                 });
                 scope.userGroups = uniqueUserGroups;
-              });
+                if (scope.userGroups && Object.keys(scope.userGroups).length > 0) {
+                  scope.userGroupDefined = true;
+                } else {
+                  scope.userGroupDefined = false;
+                }
+              }).finally(function() {
+                scope.groupsLoaded = true;
+          });
 
           scope.save = function() {
-            return $http.put('../api/records/' + mdUuid +
-                '/ownership?userIdentifier=' + scope.selectedUserGroup.userId +
+            if (!scope.selectedUserGroup) {
+              return;
+            }
+            var url = '../api/records/';
+            if (bucket != 'null') {
+              url += 'ownership?bucket=' + bucket + '&';
+            } else {
+              url += mdUuid + '/ownership?';
+            }
+            return $http.put(url +
+                'userIdentifier=' + scope.selectedUserGroup.userId +
                 '&groupIdentifier=' + scope.selectedUserGroup.groupId)
-              .then(function(r) {
-                  $rootScope.$broadcast('StatusUpdated', {
-                    msg: $translate('transfertPrivilegesFinished', {
-                      metadata: r.data.numberOfRecordsProcessed
-                    }),
-                    timeout: 2,
-                    type: 'success'});
+                .then(function(r) {
+                  var msg = $translate.instant('transfertPrivilegesFinished', {
+                    metadata: r.data.numberOfRecordsProcessed
+                  });
+
+                  scope.processReport = r.data;
+
+                  // A report is returned
+                  gnUtilityService.openModal({
+                    title: msg,
+                    content: '<div gn-batch-report="processReport"></div>',
+                    className: 'gn-privileges-popup',
+                    onCloseCallback: function() {
+                      if (bucket != 'null') {
+                        scope.$emit('search', true);
+                        scope.$broadcast('operationOnSelectionStop');
+                      }
+                      scope.$emit('TransferOwnershipDone', true);
+                      scope.processReport = null;
+                    }
+                  }, scope, 'TransferOwnershipDone');
                 });
           };
         }

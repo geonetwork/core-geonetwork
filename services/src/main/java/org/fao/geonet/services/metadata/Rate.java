@@ -23,35 +23,36 @@
 
 package org.fao.geonet.services.metadata;
 
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_LOCALRATING_ENABLE;
+
+import java.net.URL;
+import java.nio.file.Path;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.BadServerResponseEx;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetParams;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import java.net.URL;
-import java.nio.file.Path;
-
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import static org.fao.geonet.kernel.setting.Settings.SYSTEM_LOCALRATING_ENABLE;
 
 /**
  * User rating of metadata. If the metadata was harvested using the 'GeoNetwork' protocol and the
@@ -111,9 +112,9 @@ public class Rate extends NotInReadOnlyModeService {
 
         // look up value of localrating/enable
         SettingManager settingManager = gc.getBean(SettingManager.class);
-        boolean localRating = settingManager.getValueAsBool(SYSTEM_LOCALRATING_ENABLE, false);
+        String localRating = settingManager.getValue(SYSTEM_LOCALRATING_ENABLE);
 
-        if (localRating || harvUuid == null)
+        if (localRating.equals(RatingsSetting.BASIC) || harvUuid == null)
             //--- metadata is local, just rate it
             rating = dm.rateMetadata(Integer.valueOf(id), ip, rating);
         else {
@@ -135,7 +136,7 @@ public class Rate extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
 
     private String getHarvestingUuid(ServiceContext context, String id) throws Exception {
-        final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
+        final AbstractMetadata metadata = context.getBean(IMetadataUtils.class).findOne(id);
 
         //--- if we don't have any metadata, just return
 

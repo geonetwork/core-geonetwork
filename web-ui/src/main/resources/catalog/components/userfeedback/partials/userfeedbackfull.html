@@ -1,0 +1,122 @@
+<div>
+  <button class="btn btn-default btn-sm"
+          data-toggle="modal"
+          data-ng-show="record"
+          data-ng-click="initPopup()"
+          data-target="#gn-userfeedback-allcomments">
+    <i class="fa fa-comments"></i>&nbsp;
+    <span data-translate="">GUFseeAllFeedbacks</span>
+  </button>
+
+
+  <!-- All comments modal -->
+  <div class="modal gn-userfeedback-modal"
+       id="gn-userfeedback-allcomments" tabindex="-1" role="dialog"
+       aria-labelledby="gn-userfeedback-allcomments">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"
+                  aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">
+            <i class="fa fa-comments"></i>&nbsp;
+            <span data-translate="">GUFratingsComments</span>
+            <strong>{{metadataTitle}}</strong>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <p data-translate=""
+                 data-translate-values="{userfeedbackCount:'{{rating.userfeedbackCount}}', date:'{{rating.lastComment | date:'medium'}}'}">
+                GUFcommentsLastCommentOn</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="gn-userfeedback-title">
+                <h3 data-translate=""
+                    data-translate-values="{userfeedbackCount:'{{rating.userfeedbackCount}}'}">GUFcountReviews</h3>
+              </div>
+              <ul class="gn-userfeedback-list">
+
+                <li class="gn-userfeedback-item clearfix"
+                    data-ng-repeat="row in fullCommentsList">
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <span class="gn-userfeedback-score-{{row.ratingAVG}}"
+                            data-ng-show="row.ratingAVG">
+                        {{row.ratingAVG}} / 5&nbsp;
+                        <i class="fa fa-fw fa-star"></i>
+                      </span>
+
+                      <div data-ng-show="row.comment"
+                           class="gn-userfeedback-comment gn-arrow-bottom">
+                        <q>
+                          {{row.comment}}
+                        </q>
+                      </div>
+
+                      <div class="gn-userfeedback-user">
+                        <img class="img-circle"
+                             data-ng-src="//gravatar.com/avatar/{{row.authorEmail}}?s=18"/>&nbsp;
+
+                        <em>{{row.authorName}}</em>
+                        -
+                        <em class="text-muted"
+                            data-gn-humanize-time="{{row.date}}"
+                            data-from-now="">{{row.date}}</em>
+
+                        <div class="gn-userfeedback-reply pull-right"
+                             data-ng-show="loggedIn">
+                          <span data-ng-hide="{{row.published}}">
+                            <a class="btn btn-link btn-warning"
+                               data-ng-click="publish(row.uuid)">
+                              <i class="fa fa-lock"></i>&nbsp;
+                              <span data-translate="">GUFpublishUserFeedback</span>
+                            </a>&nbsp;|&nbsp;
+                          </span>
+                          <a class="btn btn-link btn-danger"
+                             data-ng-click="deleteC(row.uuid)">
+                            <i class="fa fa-times"></i>&nbsp;
+                            <span data-translate="">GUFdeleteUserFeedback</span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+
+                      <ul data-ng-repeat="c in ratingCategories">
+                        <li class="gn-userfeedback-score-{{row.rating[c.id]}}"
+                            data-ng-show="row.rating[c.id] > 0"
+                            title="{{c.label[lang].description}}">
+                          {{row.rating[c.id]}} / 5&nbsp;<i class="fa fa-fw fa-star"/>
+                          <!--<span data-rating=""
+                              data-ng-model="row.rating[c.id]"
+                              data-max="5"
+                              data-state-on="'fa fa-fw fa-star'"
+                              data-state-off="'fa fa-fw fa-star-o'"
+                              data-readonly="true"
+                              class="text-muted"></span>-->
+                          <em>{{c.label[lang].label}}</em>
+                        </li>
+                      </ul>
+
+                    </div>
+                  </div>
+                </li>
+              </ul>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"
+                data-translate="">GUFclose
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

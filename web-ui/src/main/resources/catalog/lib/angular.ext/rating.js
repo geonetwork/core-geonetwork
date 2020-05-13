@@ -87,7 +87,12 @@ angular.module('ui.bootstrap.rating', [])
         onLeave: '&'
       },
       controller: 'RatingController',
-      templateUrl: 'template/rating/rating.html',
+      template:  "<span ng-mouseleave=\"reset()\" ng-keydown=\"onKeydown($event)\" tabindex=\"0\" role=\"slider\" aria-valuemin=\"0\" aria-valuemax=\"{{range.length}}\" aria-valuenow=\"{{value}}\">\n" +
+        "    <i ng-repeat=\"r in range track by $index\" ng-mouseenter=\"enter($index + 1)\" ng-click=\"rate($index + 1)\" class=\"glyphicon\" ng-class=\"$index < value && (r.stateOn || 'glyphicon-star') || (r.stateOff || 'glyphicon-star-empty')\">\n" +
+        "        <span class=\"sr-only\">({{ $index < value ? '*' : ' ' }})</span>\n" +
+        "    </i>\n" +
+        "</span>",
+      // templateUrl: 'template/rating/rating.html',
       replace: true,
       link: function(scope, element, attrs, ctrls) {
         var ratingCtrl = ctrls[0], ngModelCtrl = ctrls[1];

@@ -83,7 +83,7 @@ public class SchematronCriteriaTypeServiceTest extends AbstractServiceIntegratio
 
         // the number 4 can change depending on the definition of the iso19139 criteria definition.
         // It should normally be [the number of criteria in criteria-type.xml] + 2(ALL ways true and XPATH)
-        assertEquals(resultAsString, 4, Xml.selectNumber(schemas, "count(iso19139/criteriaTypes/type)").intValue());
+        assertEquals(resultAsString, 5, Xml.selectNumber(schemas, "count(iso19139/criteriaTypes/type)").intValue());
         assertEqualsText(XPATH.toString(), schemas, "iso19139/criteriaTypes/type[1]/type");
         assertEqualsText("Keyword", schemas, "iso19139/criteriaTypes/type[1]/name");
         assertEquals(resultAsString, 1, Xml.selectNumber(schemas, "count(iso19139/criteriaTypes/type[type = '" +

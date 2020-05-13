@@ -25,7 +25,9 @@
 <!--
 Stylesheet used to add a reference to a related record using aggregation info.
 -->
-<xsl:stylesheet xmlns:geonet="http://www.fao.org/geonetwork" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+<xsl:stylesheet xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="2.0">
@@ -43,7 +45,7 @@ Stylesheet used to add a reference to a related record using aggregation info.
   <xsl:param name="initiativeType" select="''"/>
 
 
-  <xsl:template match="gmd:MD_DataIdentification|*[@gco:isoType='gmd:MD_DataIdentification']">
+  <xsl:template match="gmd:identificationInfo/*">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:apply-templates select="gmd:citation"/>
@@ -72,6 +74,10 @@ Stylesheet used to add a reference to a related record using aggregation info.
       <xsl:apply-templates select="gmd:extent"/>
       <xsl:apply-templates select="gmd:supplementalInformation"/>
 
+      <xsl:apply-templates select="srv:*"/>
+
+      <xsl:apply-templates select="*[namespace-uri()!='http://www.isotc211.org/2005/gmd' and
+                                     namespace-uri()!='http://www.isotc211.org/2005/srv']"/>
     </xsl:copy>
   </xsl:template>
 
@@ -136,13 +142,13 @@ Stylesheet used to add a reference to a related record using aggregation info.
           </gmd:aggregateDataSetIdentifier>
           <gmd:associationType>
             <gmd:DS_AssociationTypeCode
-              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#DS_AssociationTypeCode"
+              codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#DS_AssociationTypeCode"
               codeListValue="{$associationType}"/>
           </gmd:associationType>
           <xsl:if test="$initiativeType != ''">
             <gmd:initiativeType>
               <gmd:DS_InitiativeTypeCode
-                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#DS_InitiativeTypeCode"
+                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#DS_InitiativeTypeCode"
                 codeListValue="{$initiativeType}"/>
             </gmd:initiativeType>
           </xsl:if>

@@ -23,17 +23,26 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -50,12 +59,8 @@ import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFVisitor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -64,11 +69,9 @@ import org.jdom.JDOMException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -76,69 +79,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
+import java.util.SortedSet;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
-//=============================================================================
-
-public class Aligner extends BaseAligner {
-    //--------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //--------------------------------------------------------------------------
+public class Aligner extends BaseAligner<GeonetParams> {
 
     private Logger log;
 
-    //--------------------------------------------------------------------------
     private ServiceContext context;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Alignment method
-    //---
-    //--------------------------------------------------------------------------
     private XmlRequest request;
-    private GeonetParams params;
     private DataManager dataMan;
-
-    //--------------------------------------------------------------------------
+    private IMetadataManager metadataManager;
     private HarvestResult result;
-
-    //--------------------------------------------------------------------------
-    //--- Privileges
-    //--------------------------------------------------------------------------
     private CategoryMapper localCateg;
-
-    //--------------------------------------------------------------------------
     private GroupMapper localGroups;
-
-    //--------------------------------------------------------------------------
     private UUIDMapper localUuids;
-
-    //--------------------------------------------------------------------------
     private String processName;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Private methods : updateMetadata
-    //---
-    //--------------------------------------------------------------------------
     private String preferredSchema;
-
-    //--------------------------------------------------------------------------
     private Map<String, Object> processParams = new HashMap<String, Object>();
-
-
-    //--------------------------------------------------------------------------
-    //--- Public file update methods
-    //--------------------------------------------------------------------------
+    private MetadataRepository metadataRepository;
     private HashMap<String, HashMap<String, String>> hmRemoteGroups = new HashMap<String, HashMap<String, String>>();
-
-    //--------------------------------------------------------------------------
 
     public Aligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, XmlRequest req,
                    GeonetParams params, Element remoteInfo) {
@@ -150,6 +111,8 @@ public class Aligner extends BaseAligner {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         dataMan = gc.getBean(DataManager.class);
+        metadataManager = gc.getBean(IMetadataManager.class);
+        metadataRepository = gc.getBean(MetadataRepository.class);
         result = new HarvestResult();
 
         //--- save remote categories and groups into hashmaps for a fast access
@@ -185,9 +148,7 @@ public class Aligner extends BaseAligner {
         }
     }
 
-    //--------------------------------------------------------------------------
-
-    public HarvestResult align(Set<RecordInfo> records, List<HarvestError> errors) throws Exception {
+    public HarvestResult align(SortedSet<RecordInfo> records, List<HarvestError> errors) throws Exception {
         log.info("Start of alignment for : " + params.getName());
 
         //-----------------------------------------------------------------------
@@ -196,10 +157,9 @@ public class Aligner extends BaseAligner {
 
         localCateg = new CategoryMapper(context);
         localGroups = new GroupMapper(context);
-        localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
+        localUuids = new UUIDMapper(context.getBean(IMetadataUtils.class), params.getUuid());
 
-        Pair<String, Map<String, Object>> filter =
-            HarvesterUtil.parseXSLFilter(params.xslfilter, log);
+        Pair<String, Map<String, Object>> filter = HarvesterUtil.parseXSLFilter(params.xslfilter);
         processName = filter.one();
         processParams = filter.two();
 
@@ -216,7 +176,7 @@ public class Aligner extends BaseAligner {
                     String id = localUuids.getID(uuid);
 
                     if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id:" + id);
-                    dataMan.deleteMetadata(context, id);
+                    metadataManager.deleteMetadata(context, id);
 
                     result.locallyRemoved++;
                 }
@@ -226,9 +186,8 @@ public class Aligner extends BaseAligner {
                 result.unchangedMetadata++;
             }
         }
-        //-----------------------------------------------------------------------
         //--- insert/update new metadata
-// Load preferred schema and set to iso19139 by default
+        // Load preferred schema and set to iso19139 by default
         preferredSchema = context.getBean(ServiceConfig.class).getMandatoryValue("preferredSchema");
         if (preferredSchema == null) {
             preferredSchema = "iso19139";
@@ -256,13 +215,55 @@ public class Aligner extends BaseAligner {
 
                     // look up value of localrating/enable
                     SettingManager settingManager = context.getBean(SettingManager.class);
-                    boolean localRating = settingManager.getValueAsBool(Settings.SYSTEM_LOCALRATING_ENABLE, false);
+                    String localRating = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
                     if (id == null) {
-                        addMetadata(ri, localRating);
+                        //record doesn't exist (so it doesn't belong to this harvester)
+                        log.debug("Adding record with uuid " + ri.uuid);
+                        addMetadata(ri, localRating.equals(RatingsSetting.BASIC), ri.uuid);
+                    } else if (localUuids.getID(ri.uuid) == null) {
+                        //record doesn't belong to this harvester but exists
+                        result.datasetUuidExist++;
+
+                        switch (params.getOverrideUuid()) {
+                            case OVERRIDE:
+                                updateMetadata(ri,
+                                    id,
+                                    localRating.equals(RatingsSetting.BASIC),
+                                    params.useChangeDateForUpdate(),
+                                    localUuids.getChangeDate(ri.uuid), true);
+                                log.info("Overriding record with uuid " + ri.uuid);
+                                result.updatedMetadata++;
+
+                                if (params.isIfRecordExistAppendPrivileges()) {
+                                    addPrivileges(id, params.getPrivileges(), localGroups, context);
+                                    result.privilegesAppendedOnExistingRecord++;
+                                }
+                                break;
+                            case RANDOM:
+                                log.info("Generating random uuid for remote record with uuid " + ri.uuid);
+                                addMetadata(ri, localRating.equals(RatingsSetting.BASIC), UUID.randomUUID().toString());
+                                break;
+                            case SKIP:
+                                log.debug("Skipping record with uuid " + ri.uuid);
+                                result.uuidSkipped++;
+                            default:
+                                break;
+                        }
                     } else {
-                        updateMetadata(ri, id, localRating, params.useChangeDateForUpdate(), localUuids.getChangeDate(ri.uuid));
+                        //record exists and belongs to this harvester
+                        log.debug("Updating record with uuid " + ri.uuid);
+                        updateMetadata(ri, id,
+                            localRating.equals(RatingsSetting.BASIC),
+                            params.useChangeDateForUpdate(),
+                            localUuids.getChangeDate(ri.uuid), false);
+
+                        if (params.isIfRecordExistAppendPrivileges()) {
+                            addPrivileges(id, params.getPrivileges(), localGroups, context);
+                            result.privilegesAppendedOnExistingRecord++;
+                        }
                     }
+
                 }
             } catch (Throwable t) {
                 log.error("Couldn't insert or update metadata with uuid " + ri.uuid);
@@ -278,17 +279,6 @@ public class Aligner extends BaseAligner {
         return result;
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //--------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Private methods : addMetadata
-    //---
-    //--------------------------------------------------------------------------
     private Element extractValidMetadataForImport(DirectoryStream<Path> files, Element info) throws IOException, JDOMException {
         Element metadataValidForImport;
         final String finalPreferredSchema = preferredSchema;
@@ -379,9 +369,7 @@ public class Aligner extends BaseAligner {
         return metadataValidForImport;
     }
 
-    //--------------------------------------------------------------------------
-
-    private void addMetadata(final RecordInfo ri, final boolean localRating) throws Exception {
+    private void addMetadata(final RecordInfo ri, final boolean localRating, String uuid) throws Exception {
         final String id[] = {null};
         final Element md[] = {null};
 
@@ -430,24 +418,24 @@ public class Aligner extends BaseAligner {
                         }
                     }
                     if (info != null) {
-                        id[index] = addMetadata(ri, md[index], info, localRating);
+                        id[index] = addMetadata(ri, md[index], info, localRating, uuid);
                     }
                 }
 
                 //--------------------------------------------------------------------
 
-                public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws IOException {
+                public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws Exception {
+                    handleFile(file, changeDate, is, index, MetadataResourceVisibility.PUBLIC);
+                }
+
+                private void handleFile(String file, String changeDate, InputStream is, int index, MetadataResourceVisibility visibility) throws Exception {
                     if (id[index] == null) return;
-
                     if (log.isDebugEnabled())
-                        log.debug("    - Adding remote public file with name:" + file);
-                    Path pubDir = Lib.resource.getDir(context, "public", id[index]);
-
-                    Path outFile = pubDir.resolve(file);
-                    try (OutputStream os = Files.newOutputStream(outFile)) {
-                        BinaryFile.copy(is, os);
-                        IO.touch(outFile, FileTime.from(new ISODate(changeDate).getTimeInSeconds(), TimeUnit.SECONDS));
-                    }
+                        log.debug("    - Adding remote " + visibility + " file with name: " + file);
+                    final Store store = context.getBean("resourceStore", Store.class);
+                    final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+                    final String metadataUuid = metadataUtils.getMetadataUuid(id[index]);
+                    store.putResource(context, metadataUuid, file, is, new ISODate(changeDate).toDate(), visibility, true);
                 }
 
                 public void handleFeatureCat(Element md, int index)
@@ -456,16 +444,9 @@ public class Aligner extends BaseAligner {
                 }
 
                 public void handlePrivateFile(String file, String changeDate,
-                                              InputStream is, int index) throws IOException {
+                                              InputStream is, int index) throws Exception {
                     if (params.mefFormatFull) {
-                        if (log.isDebugEnabled())
-                            log.debug("    - Adding remote private file with name:" + file + " available for download for user used for harvester.");
-                        Path dir = Lib.resource.getDir(context, "private", id[index]);
-                        Path outFile = dir.resolve(file);
-                        try (OutputStream os = Files.newOutputStream(outFile)) {
-                            BinaryFile.copy(is, os);
-                            IO.touch(outFile, FileTime.from(new ISODate(changeDate).getTimeInSeconds(), TimeUnit.SECONDS));
-                        }
+                        handleFile(file, changeDate, is, index, MetadataResourceVisibility.PRIVATE);
                     }
                 }
             });
@@ -474,7 +455,7 @@ public class Aligner extends BaseAligner {
             if (log.isDebugEnabled())
                 log.debug("  - Skipped unretrievable metadata (maybe has been removed) with uuid:" + ri.uuid);
             result.unretrievable++;
-            e.printStackTrace();
+            log.error(e);
         } finally {
             try {
                 Files.deleteIfExists(mefFile);
@@ -484,13 +465,7 @@ public class Aligner extends BaseAligner {
         }
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //--------------------------------------------------------------------------
-
-    private String addMetadata(RecordInfo ri, Element md, Element info, boolean localRating) throws Exception {
+    private String addMetadata(RecordInfo ri, Element md, Element info, boolean localRating, String uuid) throws Exception {
         Element general = info.getChild("general");
 
         String createDate = general.getChildText("createDate");
@@ -506,21 +481,27 @@ public class Aligner extends BaseAligner {
         if (log.isDebugEnabled()) log.debug("  - Adding metadata with remote uuid:" + ri.uuid);
 
         try {
-            params.getValidate().validate(dataMan, context, md);
+            Integer groupIdVal = null;
+            if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+            }
+
+            params.getValidate().validate(dataMan, context, md, groupIdVal);
         } catch (Exception e) {
-            log.info("Ignoring invalid metadata uuid: " + ri.uuid);
+            log.info("Ignoring invalid metadata uuid: " + uuid);
             result.doesNotValidate++;
             return null;
         }
 
         if (!params.xslfilter.equals("")) {
-            md = HarvesterUtil.processMetadata(dataMan.getSchema(ri.schema),
-                md, processName, processParams, log);
+            md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
+                md, processName, processParams);
         }
         // insert metadata
         // If MEF format is full, private file links needs to be updated
         boolean ufo = params.mefFormatFull;
-        Metadata metadata = new Metadata().setUuid(ri.uuid);
+        AbstractMetadata metadata = new Metadata();
+        metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
@@ -529,14 +510,19 @@ public class Aligner extends BaseAligner {
             setChangeDate(new ISODate(changeDate));
         metadata.getSourceInfo().
             setSourceId(siteId).
-            setOwner(Integer.parseInt(params.getOwnerId()));
+            setOwner(getOwner());
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid());
 
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        try {
+            metadata.getSourceInfo().setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
+        } catch (NumberFormatException e) {
+        }
 
-        metadata = dataMan.insertMetadata(context, metadata, md, true, false, ufo, UpdateDatestamp.NO, false, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
+
+        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, ufo, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
@@ -552,12 +538,6 @@ public class Aligner extends BaseAligner {
         }
 
 
-        Path pubDir = Lib.resource.getDir(context, "public", id);
-        Path priDir = Lib.resource.getDir(context, "private", id);
-
-        Files.createDirectories(pubDir);
-        Files.createDirectories(priDir);
-
         if (params.createRemoteCategory) {
             Element categs = info.getChild("categories");
             if (categs != null) {
@@ -565,13 +545,13 @@ public class Aligner extends BaseAligner {
             }
         }
         if (((ArrayList<Group>) params.getGroupCopyPolicy()).size() == 0) {
-            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+            addPrivileges(id, params.getPrivileges(), localGroups, context);
         } else {
             addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
         }
-        context.getBean(MetadataRepository.class).save(metadata);
+        context.getBean(IMetadataManager.class).save(metadata);
 
-        dataMan.indexMetadata(id, Math.random() < 0.01);
+        dataMan.indexMetadata(id, Math.random() < 0.01, null);
         result.addedMetadata++;
 
         return id;
@@ -676,17 +656,31 @@ public class Aligner extends BaseAligner {
         return id + "";
     }
 
+    /**
+     * Updates the record on the database. The force parameter allows you to force an update even
+     * if the date is not more updated, to make sure transformation and attributes assigned by the
+     * harvester are applied. Also, it changes the ownership of the record so it is assigned to the
+     * new harvester that last updated it.
+     *
+     * @param ri
+     * @param id
+     * @param localRating
+     * @param useChangeDate
+     * @param localChangeDate
+     * @param force
+     * @throws Exception
+     */
     private void updateMetadata(final RecordInfo ri, final String id, final boolean localRating,
-                                final boolean useChangeDate, String localChangeDate) throws Exception {
+                                final boolean useChangeDate, String localChangeDate, Boolean force) throws Exception {
         final Element md[] = {null};
         final Element publicFiles[] = {null};
         final Element privateFiles[] = {null};
 
-        if (localUuids.getID(ri.uuid) == null) {
+        if (localUuids.getID(ri.uuid) == null && !force) {
             if (log.isDebugEnabled())
                 log.debug("  - Skipped metadata managed by another harvesting node. uuid:" + ri.uuid + ", name:" + params.getName());
         } else {
-            if (!useChangeDate || ri.isMoreRecentThan(localChangeDate)) {
+            if (force || !useChangeDate || ri.isMoreRecentThan(localChangeDate)) {
                 Path mefFile = retrieveMEF(ri.uuid);
 
                 try {
@@ -715,15 +709,15 @@ public class Aligner extends BaseAligner {
                         }
 
                         public void handleInfo(Element info, int index) throws Exception {
-                            updateMetadata(ri, id, md[index], info, localRating);
+                            updateMetadata(ri, id, md[index], info, localRating, force);
                             publicFiles[index] = info.getChild("public");
                             privateFiles[index] = info.getChild("private");
                         }
 
                         //-----------------------------------------------------------------
 
-                        public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws IOException {
-                            updateFile(id, file, "public", changeDate, is, publicFiles[index]);
+                        public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws Exception {
+                            handleFile(id, file, MetadataResourceVisibility.PUBLIC, changeDate, is, publicFiles[index]);
                         }
 
                         public void handleFeatureCat(Element md, int index)
@@ -733,8 +727,8 @@ public class Aligner extends BaseAligner {
 
                         public void handlePrivateFile(String file,
                                                       String changeDate, InputStream is, int index)
-                            throws IOException {
-                            updateFile(id, file, "private", changeDate, is, privateFiles[index]);
+                            throws Exception {
+                            handleFile(id, file, MetadataResourceVisibility.PRIVATE, changeDate, is, privateFiles[index]);
                         }
 
                     });
@@ -755,21 +749,27 @@ public class Aligner extends BaseAligner {
         }
     }
 
-    private void updateMetadata(RecordInfo ri, String id, Element md, Element info, boolean localRating) throws Exception {
+    private void updateMetadata(RecordInfo ri, String id, Element md,
+                                Element info, boolean localRating, boolean force) throws Exception {
         String date = localUuids.getChangeDate(ri.uuid);
 
 
         try {
-            params.getValidate().validate(dataMan, context, md);
+            Integer groupIdVal = null;
+            if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+            }
+
+            params.getValidate().validate(dataMan, context, md, groupIdVal);
         } catch (Exception e) {
             log.info("Ignoring invalid metadata uuid: " + ri.uuid);
             result.doesNotValidate++;
             return;
         }
 
-        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        Metadata metadata;
-        if (!ri.isMoreRecentThan(date)) {
+        final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
+        AbstractMetadata metadata;
+        if (!force && !ri.isMoreRecentThan(date)) {
             if (log.isDebugEnabled())
                 log.debug("  - XML not changed for local metadata with uuid:" + ri.uuid);
             result.unchangedMetadata++;
@@ -780,7 +780,7 @@ public class Aligner extends BaseAligner {
         } else {
             if (!params.xslfilter.equals("")) {
                 md = HarvesterUtil.processMetadata(dataMan.getSchema(ri.schema),
-                    md, processName, processParams, log);
+                    md, processName, processParams);
             }
             // update metadata
             if (log.isDebugEnabled())
@@ -791,14 +791,22 @@ public class Aligner extends BaseAligner {
             boolean index = false;
             boolean updateDateStamp = true;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate,
+            metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate,
                 updateDateStamp);
             metadata = metadataRepository.findOne(id);
             result.updatedMetadata++;
+
+            if (force) {
+                //change ownership of metadata to new harvester
+                metadata.getHarvestInfo().setUuid(params.getUuid());
+                metadata.getSourceInfo().setSourceId(params.getUuid());
+
+                metadataManager.save(metadata);
+            }
         }
 
         metadata.getCategories().clear();
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, true);
         metadata = metadataRepository.findOne(id);
 
         Element general = info.getChild("general");
@@ -823,52 +831,41 @@ public class Aligner extends BaseAligner {
             }
         }
 
-        OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-        repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
         if (((ArrayList<Group>) params.getGroupCopyPolicy()).size() == 0) {
-            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        } else {
+            addPrivileges(id, params.getPrivileges(), localGroups, context);
+        } else if (info != null){
             addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
         }
 
-        metadataRepository.save(metadata);
+        metadataManager.save(metadata);
 //        dataMan.flush();
 
-        dataMan.indexMetadata(id, Math.random() < 0.01);
+        dataMan.indexMetadata(id, Math.random() < 0.01, null);
     }
 
-    private void updateFile(String id, String file, String dir, String changeDate,
-                            InputStream is, Element files) throws IOException {
+    private void handleFile(String id, String file, MetadataResourceVisibility visibility, String changeDate,
+                            InputStream is, Element files) throws Exception {
         if (files == null) {
             if (log.isDebugEnabled())
                 log.debug("  - No file found in info.xml. Cannot update file:" + file);
         } else {
-            removeOldFile(id, files, dir);
-            updateChangedFile(id, file, dir, changeDate, is);
+            final Store store = context.getBean("resourceStore", Store.class);
+            final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+            final String metadataUuid = metadataUtils.getMetadataUuid(id);
+            removeOldFile(store, metadataUuid, files, visibility);
+            saveFile(store, metadataUuid, file, visibility, changeDate, is);
         }
     }
 
-    private void removeOldFile(String id, Element infoFiles, String dir) {
-        Path resourcesDir = Lib.resource.getDir(context, dir, id);
-
-        try (DirectoryStream<Path> paths = Files.newDirectoryStream(resourcesDir)) {
-            for (Path file : paths) {
-                if (file != null &&
-                    file.getFileName() != null &&
-                    infoFiles != null &&
-                    !existsFile(file.getFileName().toString(), infoFiles)) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("  - Removing old " + dir + " file with name=" + file.getFileName());
-                    }
-                    try {
-                        Files.delete(file);
-                    } catch (IOException e) {
-                        log.warning("Unable to delete file: " + file);
-                    }
+    private void removeOldFile(Store store, String metadataUuid, Element infoFiles, MetadataResourceVisibility visibility) throws Exception {
+        final List<MetadataResource> resources = store.getResources(context, metadataUuid, visibility, null);
+        for (MetadataResource resource: resources) {
+            if (infoFiles != null && !existsFile(resource.getId(), infoFiles)) {
+                if (log.isDebugEnabled()) {
+                    log.debug("  - Removing old " + metadataUuid + " file with name=" + resource.getFilename());
                 }
+                store.delResource(context, metadataUuid, visibility, resource.getFilename(), true);
             }
-        } catch (IOException e) {
-            log.error("  - Cannot scan directory for " + dir + " files : " + resourcesDir.toAbsolutePath().normalize());
         }
     }
 
@@ -887,26 +884,28 @@ public class Aligner extends BaseAligner {
         return false;
     }
 
-    private void updateChangedFile(String id, String file, String dir,
-                                   String changeDate, InputStream is) throws IOException {
-        Path resourcesDir = Lib.resource.getDir(context, dir, id);
-        Path locFile = resourcesDir.resolve(file);
-
-        ISODate locIsoDate = new ISODate(Files.getLastModifiedTime(locFile).toMillis(), false);
+    private void saveFile(final Store store, String metadataUuid, String file,
+                          MetadataResourceVisibility visibility, String changeDate, InputStream is) throws Exception {
         ISODate remIsoDate = new ISODate(changeDate);
+        boolean saveFile;
 
-        if (!Files.exists(locFile) || remIsoDate.timeDifferenceInSeconds(locIsoDate) > 0) {
+        final MetadataResource description = store.getResourceDescription(context, metadataUuid, visibility, file, true);
+        if (description == null) {
+            saveFile = true;
+        } else {
+            ISODate locIsoDate = new ISODate(description.getLastModification().getTime(), false);
+            saveFile = (remIsoDate.timeDifferenceInSeconds(locIsoDate) > 0);
+        }
+
+        if (saveFile) {
             if (log.isDebugEnabled()) {
-                log.debug("  - Adding remote " + dir + "  file with name:" + file);
+                log.debug("  - Adding remote " + metadataUuid + "  file with name:" + file);
             }
 
-            try (OutputStream os = Files.newOutputStream(locFile)) {
-                BinaryFile.copy(is, os);
-                IO.touch(locFile, FileTime.from(remIsoDate.getTimeInSeconds(), TimeUnit.SECONDS));
-            }
+            store.putResource(context, metadataUuid, file, is, remIsoDate.toDate(), visibility, true);
         } else {
             if (log.isDebugEnabled()) {
-                log.debug("  - Nothing to do in dir " + dir + " for file with name:" + file);
+                log.debug("  - Nothing to do in dir " + metadataUuid + " for file with name:" + file);
             }
         }
     }
@@ -915,12 +914,13 @@ public class Aligner extends BaseAligner {
      * Return true if the uuid is present in the remote node
      */
 
-    private boolean exists(Set<RecordInfo> records, String uuid) {
-        for (RecordInfo ri : records)
-            if (uuid.equals(ri.uuid))
-                return true;
+    private boolean exists(SortedSet<RecordInfo> records, String uuid) {
+        // Records is a TreeSet sorted by uuid attribute.
+        // Method equals of RecordInfo only checks equality using `uuid` attribute.
+        // TreeSet.contains can be used more efficiently instead of doing a loop over all the recordInfo elements.
+        RecordInfo recordToTest = new RecordInfo(uuid, null);
+        return records.contains(recordToTest);
 
-        return false;
     }
 
     private Path retrieveMEF(String uuid) throws IOException {
@@ -934,7 +934,7 @@ public class Aligner extends BaseAligner {
         request.addParam("version", "2");
         request.addParam("relation", "false");
         request.setAddress(params.getServletPath() + "/" + params.getNode()
-            + "/en/" + Geonet.Service.MEF_EXPORT);
+            + "/eng/" + Geonet.Service.MEF_EXPORT);
 
         Path tempFile = Files.createTempFile("temp-", ".dat");
         request.executeLarge(tempFile);

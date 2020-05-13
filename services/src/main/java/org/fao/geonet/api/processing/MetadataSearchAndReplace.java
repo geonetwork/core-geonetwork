@@ -23,22 +23,6 @@
 
 package org.fao.geonet.api.processing;
 
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.api.processing.report.MetadataReplacementProcessingReport;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataDataInfo;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MetadataIndexerProcessor;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -47,6 +31,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.api.processing.report.MetadataReplacementProcessingReport;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.events.history.RecordProcessingChangeEvent;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.MetadataIndexerProcessor;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
+
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 /**
@@ -152,7 +156,8 @@ public class MetadataSearchAndReplace extends MetadataIndexerProcessor {
 
         int iId = Integer.valueOf(id);
 
-        Metadata metadataEntity = context.getBean(MetadataRepository.class).findOne(iId);
+        IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+        AbstractMetadata metadataEntity = metadataRepository.findOne(iId);
         MetadataDataInfo info = metadataEntity.getDataInfo();
 
         // Get metadata title from the index
@@ -228,6 +233,14 @@ public class MetadataSearchAndReplace extends MetadataIndexerProcessor {
                         false, true, true,
                         context.getLanguage(),
                         new ISODate().toString(), true);
+
+                    UserSession userSession = context.getUserSession();
+                    if(userSession != null) {
+                        XMLOutputter outp = new XMLOutputter();
+                        String xmlAfter = outp.outputString(processedMetadata);
+                        String xmlBefore = outp.outputString(md);
+                        new RecordProcessingChangeEvent(Long.parseLong(id), Integer.parseInt(userSession.getUserId()), xmlBefore, xmlAfter, process).publish(ApplicationContextHolder.get());
+                    }
                 }
             } catch (Exception e) {
                 report.addMetadataError(iId, e);

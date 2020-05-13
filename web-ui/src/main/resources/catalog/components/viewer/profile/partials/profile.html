@@ -1,0 +1,13 @@
+<div class="profile-graph gn-viewer-info-pane"
+  ng-if="ctrl.graphData.length">
+  <div class="panel-heading">
+    <button type="button" class="btn btn-default close"
+      ng-click="ctrl.closeProfileGraph()" title="close">
+      ×</button>
+    <h5><span translate>profileGraph</span></h5>
+  </div>
+  <div class="profile"
+    ol-profile="ctrl.graphData"
+    ol-profile-options="ctrl.profileOptions"
+    ol-profile-highlight="ctrl.profileHighlight"/>
+</div>

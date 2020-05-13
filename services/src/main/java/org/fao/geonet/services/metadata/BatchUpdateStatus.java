@@ -23,34 +23,38 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.metadata.StatusActions;
+import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.jdom.Element;
+
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.Util;
-
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.kernel.metadata.StatusActions;
-import org.fao.geonet.kernel.metadata.StatusActionsFactory;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.jdom.Element;
-
-import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 /**
  * Assigns status to metadata.
  */
+@Deprecated
 public class BatchUpdateStatus extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
     //---
@@ -68,61 +72,6 @@ public class BatchUpdateStatus extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
 
     public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        String status = Util.getParam(params, Params.STATUS);
-        String changeMessage = Util.getParam(params, Params.CHANGE_MESSAGE);
-
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
-        DataManager dm = gc.getBean(DataManager.class);
-        AccessManager accessMan = gc.getBean(AccessManager.class);
-        UserSession us = context.getUserSession();
-
-        context.info("Get selected metadata");
-        SelectionManager sm = SelectionManager.getManager(us);
-
-        Set<Integer> metadata = new HashSet<Integer>();
-        Set<Integer> notFound = new HashSet<Integer>();
-        Set<Integer> notOwner = new HashSet<Integer>();
-
-        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        synchronized (sm.getSelection("metadata")) {
-            for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext(); ) {
-                String uuid = (String) iter.next();
-                String id = dm.getMetadataId(uuid);
-
-
-                final Integer iId = Integer.valueOf(id);
-                if (!metadataRepository.exists(iId)) {
-                    notFound.add(iId);
-                } else if (!accessMan.isOwner(context, id)) {
-                    notOwner.add(iId);
-                } else {
-                    metadata.add(iId);
-                }
-            }
-        }
-
-        ISODate changeDate = new ISODate();
-
-        //--- use StatusActionsFactory and StatusActions class to
-        //--- change status and carry out behaviours for status changes
-        StatusActionsFactory saf = new StatusActionsFactory();
-
-        StatusActions sa = saf.createStatusActions(context);
-
-        Set<Integer> noChange = sa.statusChange(status, metadata, changeDate, changeMessage);
-
-        //--- reindex metadata
-        context.info("Re-indexing metadata");
-        BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
-        r.process();
-
-        // -- for the moment just return the sizes - we could return the ids
-        // -- at a later stage for some sort of result display
-        return new Element(Jeeves.Elem.RESPONSE)
-            .addContent(new Element("done").setText(metadata.size() + ""))
-            .addContent(new Element("notOwner").setText(notOwner.size() + ""))
-            .addContent(new Element("notFound").setText(notFound.size() + ""))
-            .addContent(new Element("noChange").setText(noChange.size() + ""));
+        throw new UnsupportedOperationException("Batch update of status is not supported by the user interface.");
     }
 }

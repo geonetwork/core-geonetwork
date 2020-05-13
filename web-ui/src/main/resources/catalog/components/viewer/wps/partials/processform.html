@@ -1,23 +1,34 @@
-<div class="panel-body panel-wps">
-  <button type="button" class="btn btn-default close" data-ng-click="close()">×</button>
+<div>
+  <div class="panel panel-default">
+    <h4 class="panel-heading" ng-if="describeState == 'succeeded' && !hideTitle">
+      {{getLabel() || processDescription.title.value}}
+      <span class="fa fa-info-circle" ng-if="::processDescription._abstract.value"
+        title="{{::processDescription._abstract.value}}"></span>
+      <button type="button" class="btn btn-default close" data-ng-click="close()">
+        &times;
+      </button>
+    </h4>
 
-  <div ng-switch="describeState">
-
-    <div ng-switch-when="sended">
-
-      <h5><i class="fa fa-spinner fa-spin fa-fw margin-bottom"></i>
-        <span translate>wpsLoadingProcessDescription</span></h5>
-
+    <div ng-if="describeState == 'sent'">
+      <h5>
+        <i class="fa fa-spinner fa-spin fa-fw margin-bottom"></i>
+        <span translate>wpsLoadingProcessDescription</span>
+      </h5>
     </div>
 
-    <div ng-switch-when="failed">
-      <h4><span translate>wpsDescribeProcessFailed</span></h4>
-      <div><span translate>wpsErrorCodeReturned</span> {{describeResponse.status}} - {{describeResponse.statusText}}</div>
-      <div>{{describeResponse.data}}</div>
+    <div ng-if="describeState == 'failed'">
+      <div class="alert alert-danger" role="alert" ng-show="error !== null">
+        <strong translate>wpsDescribeProcessFailed</strong><br />
+        <div>
+          <span translate>wpsErrorCodeReturned</span>
+          {{describeResponse.status}} - {{describeResponse.statusText}}
+        </div>
+        <div>{{describeResponse.data}}</div>
+      </div>
     </div>
 
 
-    <div ng-switch-when="succeeded">
+    <div class="panel-body"  ng-if="describeState == 'succeeded'">
 
       <div ng-if="describeResponse.exception">
         <h4><span translate>wpsDescribeProcessFailed</span></h4>
@@ -28,62 +39,153 @@
         </div>
       </div>
 
-      <div ng-if="describeResponse.processDescription">
-        <div ng-repeat="processDescription in describeResponse.processDescription">
+      <div ng-if="processDescription">
+        <div>
           <form novalidate>
-            <h5>{{::processDescription.title.value}}</h5>
 
-            <!-- Inputs -->
-            <div ng-repeat="input in processDescription.dataInputs.input" class="form-group" ng-class="{'gn-required': input.minOccurs}">
-              <label for="{{::input.identifier.value}}">{{::input.title.value}}
-                <span class="fa fa-info-circle" data-ng-if="::input._abstract.value" title="{{::input._abstract.value}}"></span>
+            <!-- Inputs: loop on process description to display all inputs -->
+            <div ng-repeat="input in processDescription.dataInputs.input"
+              ng-if="!isInputHidden(input.identifier.value)"
+              class="form-group">
+
+              <!-- Input label & info -->
+              <label>
+                <span>{{::input.title.value}}&nbsp;</span>
+                <span class="fa fa-info-circle" ng-if="::input._abstract.value"
+                  title="{{::input._abstract.value}}"></span>
+                <small class="text-danger" ng-if="::input.minOccurs">
+                  ({{::'inputValueRequired' | translate}})</small>
+
+                <!-- This input is overloaded by a WFS filter -->
+                <small class="text-muted"
+                  ng-if="inputWfsOverride[input.identifier.value]">
+                  {{::'inputIsOverloaded' | translate}}</small>
               </label>
+
+              <!-- Basic form field (combo box or text field) -->
               <div ng-if="::input.literalData">
-                <div ng-if="::input.literalData.allowedValues">
-                  <select id="{{::input.identifier.value}}" class="form-control input-sm" ng-model="input.value">
-                    <option ng-repeat="value in input.literalData.allowedValues.valueOrRange" value="{{::value.value}}">{{::value.value}}</option>
+                <div class="input-group"
+                  ng-repeat="field in getInputsByName(input.identifier.value)">
+                  <select class="form-control input-sm"
+                    ng-if="::input.literalData.allowedValues && !getIsAllowedValuesRange(input.literalData.allowedValues)"
+                    ng-model="field.value"
+                    ng-required="$index < input.minOccurs"
+                    ng-disabled="inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)">
+                    <option ng-repeat="value in input.literalData.allowedValues.valueOrRange"
+                      value="{{::value.value}}">{{::value.value}}</option>
                   </select>
-                </div>
-                <div ng-if="::input.literalData.allowedValues == undefined">
-                  <input type="{{::input.type}}" id="{{::input.identifier.value}}" data-ng-required="input.minOccurs" class="form-control input-sm" ng-model="input.value"></input>
+                  <input class="form-control input-sm"
+                         ng-if="::!input.literalData.allowedValues || getIsAllowedValuesRange(input.literalData.allowedValues)"
+                         type="{{::getInputType(input.literalData.dataType.value)}}"
+                         min="{{::getMinValueFromAllowedValues(input.literalData.allowedValues) || ''}}"
+                         max="{{::getMaxValueFromAllowedValues(input.literalData.allowedValues) || ''}}"
+                         ng-model="field.value"
+                         ng-required="$index < input.minOccurs"
+                         ng-disabled="inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)"/>
+
+                  <!-- delete button (disabled for mandatory values) -->
+                  <a class="input-group-addon btn btn-default btn-icon"
+                    ng-if="getInputsByName(input.identifier.value).length > input.minOccurs && !inputWfsOverride[input.identifier.value] && !isInputDisabled(input.identifier.value)"
+                    ng-click="removeInputValueByName(input.identifier.value, $index)">
+                    <span class="fa fa-trash-o"></span>
+                  </a>
+                  <a class="input-group-addon btn btn-default btn-icon" disabled
+                    ng-if="getInputsByName(input.identifier.value).length <= input.minOccurs || inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)">
+                    <span class="fa fa-trash-o"></span>
+                  </a>
                 </div>
               </div>
+
+              <!-- Bounding box -->
               <div ng-if="::input.boundingBoxData">
-                <gn-bbox-input id="{{::input.identifier.value}}"
-                    data-crs="input._default.crs"
-                    data-value="input.value"
-                    data-map="map"
-                    data-ng-required="input.minOccurs"
-                />
+                <gn-bbox-input
+                  ng-repeat="field in getInputsByName(input.identifier.value)"
+                  crs="::input._default.crs" value="field.value" map="::map"
+                  read-only="::inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)"
+                  ng-required="$index < input.minOccurs"
+                  watch-value-change="true"/>
               </div>
-              <div ng-if="input.invalid">
-                <p class="text-danger">{{input.invalid}}</p>
+
+              <!-- Complex input (geometry on map) -->
+              <div ng-if="::input.complexData">
+                <gn-geometry-tool
+                  ng-repeat="field in getInputsByName(input.identifier.value)"
+                  allow-reset allow-modify output="field.value"
+                  output-format="{{ input.outputFormat }}"
+                  output-crs="{{ map.getView().getProjection().getCode() }}"
+                  geometry-type="{{ input.geometryType }}"
+                  output-as-features="true" map="map"/>
+              </div>
+
+              <!-- add a new value -->
+              <a ng-if="input.maxOccurs > getInputsByName(input.identifier.value).length && !inputWfsOverride[input.identifier.value]"
+                href ng-click="addInputValueByName(input.identifier.value)">
+                <i class="fa fa-plus"/>
+                {{::'insertNewInputValue'|translate}}
+              </a>
+
+              <!-- show error if not enough occurs of this input -->
+              <div ng-if="input.missingOccursCount > 0">
+                <p class="text-danger" translate>
+                  inputValueRequiredError</p>
               </div>
             </div>
 
             <!-- ResponseDocument -->
-            <div class="form-group popover-parent dropup">
-              <button type="submit" class="btn btn-default" data-ng-click="submit()" >
-                <span class="fa fa-gear" data-ng-class="{'fa-spin' : running}"></span>&nbsp;<span translate>wpsExecute</span>
+            <div class="form-group gn-execute flex-row flex-align-center">
+              <button type="submit" class="btn btn-primary" ng-click="submit()"
+                ng-class="{disabled: running}" ng-show="!hideExecuteButton">
+                <i ng-if="!running" class="fa fa-play"></i>
+                <i ng-if="running" class="fa fa-spinner fa-spin"></i>
+                &nbsp;<span translate>wpsExecute</span>
               </button>
-              <button class="btn btn-default"
-                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="caret"></span>
-              </button>
-              <div class="form-group output-opts dropdown-menu dropu" >
 
-                <div class="form-group" ng-repeat="output in ::processDescription.processOutputs.output">
-                  <input type="radio" value="{{::output.identifier.value}}"
-                         ng-model="selectedOutput.identifier">{{::output.title.value}}
-
-                  <ul ng-if="output.identifier.value == selectedOutput.identifier" class="dropdown-submenu">
-                    <li data-ng-repeat="format in ::output.complexOutput.supported.format">
-                      <input type="radio" value="{{::format.mimeType}}"
-                             ng-model="output.mimeType">{{::format.mimeType}}
-                    </li>
-                  </ul>
-                </div>
+              <div class="output-selection dropup" ng-if="processDescription.processOutputs.output.length > 0">
+                <button class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="caret"></span>
+                  &nbsp;<span translate>wpsSelectOutput</span>
+                </button>
+                <ul class="dropdown-menu pull-right">
+                  <li ng-repeat-start="output in processDescription.processOutputs.output"
+                    class="dropdown-header">
+                    {{::output.title.value}}
+                  </li>
+                  <li ng-repeat-end>
+                    <a href class="dropdown-item"
+                      ng-repeat="format in ::output.complexOutput.supported.format"
+                        ng-click="setOutput(output.identifier.value, format.mimeType)">
+                      <i class="fa fa-dot-circle-o fa-fw"
+                        ng-show="wpsLink.output.identifier == output.identifier.value && wpsLink.output.mimeType == format.mimeType"/>
+                      <i class="fa fa-circle-o fa-fw"
+                        ng-show="wpsLink.output.identifier != output.identifier.value || wpsLink.output.mimeType != format.mimeType"/>
+                      {{::format.mimeType}}
+                    </a>
+                    <li role="separator" class="divider"
+                      ng-if="$index > 0"></li>
+                  </li>
+                </ul>
               </div>
+
+              <div class="flex-spacer flex-grow"></div>
+
+              <!-- show output-related action if process has succeeded -->
+              <div ng-if="executeState == 'finished' && executeResponse.status.processSucceeded && executeResponse.processOutputs.output" class="gn-outputs">
+
+                <div ng-repeat="output in executeResponse.processOutputs.output">
+
+                  <div ng-if="output.reference && output.reference.mimeType!='application/x-ogc-wms'"
+                        ng-class="{'gn-single-output': executeResponse.processOutputs.output.length==1}">
+                    <h4 class="col-sm-6" ng-if="executeResponse.processOutputs.output.length>1">
+                      {{::output.title.value}}
+                    </h4>
+                    <div ng-class="{'col-sm-6': executeResponse.processOutputs.output.length>1}">
+                      <a role="button" class="btn btn-default" target="_blank" href="{{::output.reference.href}}">Download</a>
+                    </div>
+                  </div>
+
+                </div> <!-- /ng-repeat -->
+
+              </div> <!-- executeState == 'finished' && executeResponse.status.processSucceeded" -->
             </div>
 
             <div>
@@ -92,19 +194,19 @@
                 <div ng-class="{'collapse': true, 'in': optionsVisible}">
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox" id="lineage" ng-model="responseDocument.lineage">
+                      <input type="checkbox" id="lineage" ng-model="wpsLink.output.lineage">
                       lineage
                     </label>
                   </div>
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox" id="storeExecuteResponse" ng-model="responseDocument.storeExecuteResponse" ng-disabled="responseDocument.status">
+                      <input type="checkbox" id="storeExecuteResponse" ng-model="wpsLink.output.storeExecuteResponse" ng-disabled="wpsLink.output.status">
                       storeExecuteResponse
                     </label>
                   </div>
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox" id="status" ng-model="responseDocument.status" ng-change="responseDocumentStatusChanged()">
+                      <input type="checkbox" id="status" ng-model="wpsLink.output.status" ng-change="responseDocumentStatusChanged()">
                       status
                     </label>
                   </div>
@@ -114,132 +216,37 @@
 
           </form>
         </div>
-      </div>
 
-      <hr />
+        <!-- show execute response in case of error/status report -->
 
-      <div ng-switch="executeState">
-
-        <div ng-switch-when="sended">
-          <h4><span translate>wpsExecuteSended</span></h4>
-        </div>
-
-        <div ng-switch-when="failed">
+        <div ng-if="executeState == 'failed'" class="row">
           <h4><span translate>wpsExecuteFailed</span></h4>
           <div><span translate>wpsErrorCodeReturned</span> {{executeResponse.status}} - {{executeResponse.statusText}}</div>
           <div>{{executeResponse.data}}</div>
         </div>
 
-        <div ng-switch-when="pending">
-          <div ng-if="executeResponse.status.processAccepted">
-            <h4><span translate>wpsProcessAccepted</span></h4>
+        <div ng-if="executeState == 'finished' && executeResponse.exception" class="row">
+          <h4><span translate>wpsExecuteFailed</span></h4>
+          <div ng-repeat="exception in executeResponse.exception">
+            <div ng-repeat="(key, value) in exception">
+              {{key}}: {{value}}
+            </div>
           </div>
-
-          <div ng-if="executeResponse.status.processStarted">
-            <h4><span translate>wpsProcessStarted</span></h4>
-          </div>
-
-          <div ng-if="executeResponse.status.processPaused">
-            <h4><span translate>wpsProcessPaused</span></h4>
-          </div>
-
-          <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
         </div>
 
-        <div ng-switch-when="cancelled">
-          <h4><span translate>wpsProcessCancelled</span></h4>
-        </div>
-
-        <div ng-switch-when="finished">
-          <!-- <h4><span translate>wpsExecuteSucceeded</span></h4> -->
-
-          <div ng-if="executeResponse.exception">
-            <h4><span translate>wpsExecuteFailed</span></h4>
-            <div ng-repeat="exception in executeResponse.exception">
+        <div ng-if="executeState == 'finished' && executeResponse.status.processFailed" class="row">
+          <h4><span translate>wpsProcessFailed</span></h4>
+          <div ng-if="executeResponse.status.processFailed.exceptionReport">
+            <div ng-repeat="exception in executeResponse.status.processFailed.exceptionReport.exception">
               <div ng-repeat="(key, value) in exception">
                 {{key}}: {{value}}
               </div>
             </div>
           </div>
-
-          <div ng-if="executeResponse.status.processFailed">
-            <h4><span translate>wpsProcessFailed</span></h4>
-            <div ng-if="executeResponse.status.processFailed.exceptionReport">
-              <div ng-repeat="exception in executeResponse.status.processFailed.exceptionReport.exception">
-                <div ng-repeat="(key, value) in exception">
-                  {{key}}: {{value}}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div ng-if="executeResponse.status.processSucceeded">
-            <h4><span translate>wpsProcessSucceeded</span></h4>
-
-            <div ng-if="executeResponse.processOutputs.output">
-              <div class="row" ng-repeat="output in executeResponse.processOutputs.output">
-
-                <div ng-if="::output.data.complexData">
-                  <h4 class="col-sm-6">{{::output.title.value}}</h4>
-                  <div class="col-sm-6">
-                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{{::output.identifier.value}}_modal-dialog">Display</button>
-                  </div>
-                  <div class="modal fade" id="{{::output.identifier.value}}_modal-dialog" tabindex="-1" role="dialog" aria-labelledby="dialog-title" aria-hidden="true">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                          <h4 class="modal-title" id="dialog-title">{{::output.title.value}}</h4>
-                        </div>
-                        <div class="modal-body">
-
-                          <div ng-repeat="content in output.data.complexData.content">
-                            <table class="table table-hover">
-                              <tr ng-repeat="line in content.split('\n') track by $index" ng-if="line.trim() != ''">
-                                <td ng-repeat="text in line.split(',') track by $index">
-                                  {{::text}}
-                                </td>
-                              </tr>
-                            </table>
-                          </div>
-
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div> <!-- ng-if="::output.data.complexData" -->
-
-                <div ng-if="::output.reference">
-                  <h4 class="col-sm-6">{{::output.title.value}}</h4>
-                  <div class="col-sm-6">
-                    <a class="btn btn-default" target="_blank" href="{{::output.reference.href}}">Download</a>
-                  </div>
-                </div>
-
-              </div>
-            </div> <!-- ng-if="executeResponse.processOutputs.output" -->
-
-          </div> <!-- ng-if="executeResponse.status.processSucceeded" -->
-
-        </div> <!-- ng-switch-when="succeeded" -->
-
-        <div ng-switch-default>
-          <p>{{executeState}}</p>
         </div>
 
-      </div> <!-- ng-switch="executeState" -->
+      </div> <!-- describeState == 'succeeded' -->
 
-    </div> <!-- ng-switch-when="succeeded" -->
-
-    <div ng-switch-default>
-      <p>{{describeState}}</p>
-    </div>
-
-  </div> <!-- ng-switch="describeState" -->
+    </div> <!-- .panel-body -->
 
 </div>

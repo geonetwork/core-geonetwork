@@ -23,13 +23,7 @@
 
 package org.fao.geonet.api.tools.i18n;
 
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by francois on 05/02/16.
@@ -72,11 +66,21 @@ public class LanguageUtils {
         Locale l = parseAcceptLanguage(locales);
         return locale2gnCode(l.getISO3Language());
     }
-    private String locale2gnCode (String code) {
+
+    static public String locale2gnCode (String code) {
         if (code.equals("fra")) {
             return "fre";
+        } else if (code.equals("slk")) { // transforms ISO 639-2/T into ISO 639-2/B
+            return "slo";
         } else {
             return code;
         }
+    }
+
+    public Locale parseAcceptLanguage(final Locale locale) {
+        Vector<Locale> locales = new Vector<>();
+        locales.add(locale);
+
+        return parseAcceptLanguage(locales.elements());
     }
 }

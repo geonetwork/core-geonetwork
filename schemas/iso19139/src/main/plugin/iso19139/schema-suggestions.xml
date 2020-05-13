@@ -130,6 +130,7 @@
         ie. less fields than in GeoNetwork default behaviour.-->
   <field name="gmd:CI_ResponsibleParty">
     <suggest name="gmd:organisationName"/>
+    <suggest name="gmd:individualName"/>
     <suggest name="gmd:contactInfo"/>
   </field>
 
@@ -247,9 +248,9 @@
     <suggest name="uuidref"/>
   </field>
 
-  <field name="gmd:featureCatalogueCitation">
+  <!--<field name="gmd:featureCatalogueCitation">
     <suggest name="uuidref"/>
-  </field>
+  </field>-->
 
   <field name="gml:Polygon">
     <suggest name="srsName"/>

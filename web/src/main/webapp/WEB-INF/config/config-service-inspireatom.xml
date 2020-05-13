@@ -41,8 +41,11 @@
     </service>
 
     <!-- Describe -->
-    <service name="atom.describe">
+    <service name="atom.describe" >
       <class name="org.fao.geonet.services.inspireatom.AtomDescribe"/>
+
+      <output sheet="../xslt/services/inspire-atom/describe.xsl"
+              contentType="application/atom+xml"/>
     </service>
 
     <!-- GetData -->
@@ -53,6 +56,13 @@
     <!-- Search -->
     <service name="atom.search">
       <class name="org.fao.geonet.services.inspireatom.AtomSearch"/>
+    </service>
+
+    <!-- Search html -->
+    <service name="atom.search.html">
+      <class name="org.fao.geonet.services.inspireatom.AtomSearch"/>
+
+      <output sheet="../xslt/services/inspire-atom/search-results.xsl" />
     </service>
   </services>
 </geonet>

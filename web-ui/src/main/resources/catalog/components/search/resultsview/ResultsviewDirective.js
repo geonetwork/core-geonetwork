@@ -35,7 +35,7 @@
    * @description
    * The `gnResultsTplSwitcher` directive provides a button group
    * switcher to switch between customized views. The customs views
-   * are defined in the scope variable `scope.tpls`. This config
+   * are defined in the UI admin settings. This config
    * defines a icon for the button, and a link to the html file
    * representing the desired view.
    *
@@ -43,22 +43,20 @@
    * directive that will load the custom view into its root html
    * element.
    */
-  module.directive('gnResultsTplSwitcher', [
-    'gnSearchSettings',
-    function(gnSearchSettings) {
-
+  module.directive('gnResultsTplSwitcher',
+    function() {
       return {
-        restrict: 'A',
         templateUrl: '../../catalog/components/search/resultsview/partials/' +
-            'templateswitcher.html',
-        scope: {
-          'templateUrl': '='
-        },
-        link: function(scope, element, attrs, controller) {
-          scope.tpls = gnSearchSettings.resultViewTpls;
+        'templateswitcher.html',
+        restrict: 'A',
+        link: function($scope) {
+          $scope.setResultTemplate = function (t) {
+            $scope.resultTemplate = t.tplUrl;
+          };
         }
       };
-    }]);
+    }
+  );
 
   /**
    * @ngdoc directive
@@ -76,8 +74,10 @@
     'gnOwsCapabilities',
     'gnSearchSettings',
     'gnMetadataActions',
+    'gnConfig',
+    'gnConfigService',
     function($compile, gnMap, gnOwsCapabilities, gnSearchSettings,
-             gnMetadataActions) {
+             gnMetadataActions, gnConfig, gnConfigService) {
 
       return {
         restrict: 'A',
@@ -115,6 +115,11 @@
             });
           }
 
+          gnConfigService.load().then(function(c) {
+            scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
+            scope.isInspireEnabled = gnConfig['system.inspire.enable'];
+          });
+
           scope.$watchCollection('searchResults.records', function(rec) {
 
             //scroll to top
@@ -141,7 +146,12 @@
                 }
               });
               if (!ol.extent.isEmpty(extent)) {
+                // fit extent in map
                 scope.map.getView().fit(extent, scope.map.getSize());
+
+                // save this extent for later use (for example if the map
+                // is not currently visible)
+                scope.map.set('lastExtent', extent);
               }
             }
           });

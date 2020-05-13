@@ -1,0 +1,149 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>geonetwork-integration-test</groupId>
+  <artifactId>geonetwork-integration-test</artifactId>
+  <version>3.7.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <name>geonetwork-integration-test</name>
+
+  <dependencies>
+    <!-- These are the cucumber dependencies -->
+    <dependency>
+      <groupId>info.cukes</groupId>
+      <artifactId>cucumber-java</artifactId>
+      <version>${cucumber.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- These are the cucumber-junit dependencies -->
+    <dependency>
+      <groupId>info.cukes</groupId>
+      <artifactId>cucumber-junit</artifactId>
+      <version>${cucumber.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- These are the junit dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- These are the selenium-webdriver dependencies -->
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+      <version>3.5.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-server</artifactId>
+      <version>3.5.3</version>
+    </dependency>
+
+    <!-- These are the selenium-cucumber methods dependencies -->
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>23.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.codeborne</groupId>
+      <artifactId>phantomjsdriver</artifactId>
+      <version>1.4.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.8.0-beta2</version>
+    </dependency>
+
+  </dependencies>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <encoding>UTF-8</encoding>
+          <source>1.8</source>
+          <target>1.8</target>
+          <compilerArgument>-Werror</compilerArgument>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <properties>
+    <cucumber.version>1.2.5</cucumber.version>
+    <webdriver.system>linux64</webdriver.system>
+  </properties>
+
+  <profiles>
+    <profile>
+      <id>webdriver-download</id>
+      <activation>
+        <property>
+          <name>webdriver-download</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.googlecode.maven-download-plugin</groupId>
+            <artifactId>download-maven-plugin</artifactId>
+            <version>1.4.2</version>
+            <executions>
+              <execution>
+                <id>download-webdriver</id>
+                <phase>clean</phase>
+                <goals>
+                  <goal>wget</goal>
+                </goals>
+                <configuration>
+                  <url>
+                    https://chromedriver.storage.googleapis.com/2.42/chromedriver_${webdriver.system}.zip
+                  </url>
+                  <unpack>true</unpack>
+                  <outputDirectory>${project.basedir}</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>itest-windows</id>
+      <activation>
+        <os>
+          <family>Windows</family>
+        </os>
+      </activation>
+      <properties>
+        <webdriver.system>win32</webdriver.system>
+      </properties>
+    </profile>
+    <profile>
+      <id>itest-mac</id>
+      <activation>
+        <os>
+          <family>mac</family>
+        </os>
+      </activation>
+      <properties>
+        <webdriver.system>mac64</webdriver.system>
+      </properties>
+    </profile>
+  </profiles>
+</project>

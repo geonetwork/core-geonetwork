@@ -40,6 +40,8 @@
         permalink: false,
         sortbyValues: gnSearchSettings.sortbyValues,
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
+        selectionBucket: 'b101',
+        filters: gnSearchSettings.filters,
         params: {
           sortBy: 'changeDate',
           _isTemplate: 'y or n',
@@ -66,12 +68,12 @@
   module.controller('GnAdminToolsController', [
     '$scope', '$http', '$rootScope', '$translate', '$compile',
     '$q', '$timeout', '$routeParams', '$location',
-    'gnSearchManagerService',
+    'gnSearchManagerService', 'gnConfigService',
     'gnUtilityService', 'gnSearchSettings', 'gnGlobalSettings',
 
     function($scope, $http, $rootScope, $translate, $compile,
              $q, $timeout, $routeParams, $location,
-             gnSearchManagerService,
+             gnSearchManagerService, gnConfigService,
              gnUtilityService, gnSearchSettings, gnGlobalSettings) {
       $scope.modelOptions =
           angular.copy(gnGlobalSettings.modelOptions);
@@ -82,7 +84,7 @@
         tabs:
             [{
               type: 'index',
-              label: 'indexAdmin',
+              label: 'catalogueAdminTools',
               icon: 'fa-search',
               href: '#/tools/index'
             },{
@@ -93,6 +95,7 @@
             },{
               type: 'transferownership',
               label: 'transfertPrivs',
+              icon: 'fa-user',
               href: '#/tools/transferownership'
             }]
       };
@@ -143,12 +146,11 @@
       $scope.batchSearchTemplateY = true;
       $scope.batchSearchTemplateN = true;
       $scope.batchSearchTemplateS = false;
-      $scope.batchSearchGroups = {};
-      $scope.batchSearchUsers = {};
-      $scope.batchSearchCategories = {};
+      $scope.batchSearchGroups = [];
+      $scope.batchSearchUsers = [];
+      $scope.batchSearchCategories = [];
 
-      $scope.editors = {};
-      $scope.groupinfo = {};
+      $scope.editors = [];
       $scope.editorSelectedId = null;
       $scope.editorGroups = {};
 
@@ -185,16 +187,19 @@
 
       function loadEditors() {
         $http.get('../api/users/owners')
-          .success(function(data) {
+            .success(function(data) {
               $scope.editors = data;
             });
         $http.get('../api/users/groups')
-          .success(function(data) {
+            .success(function(data) {
               var uniqueUserGroups = {};
               angular.forEach(data, function(g) {
                 var key = g.groupId + '-' + g.userId;
                 if (!uniqueUserGroups[key]) {
                   uniqueUserGroups[key] = g;
+                  uniqueUserGroups[key].groupNameTranslated = g.groupName === 'allAdmins' ?
+                    $translate.instant(g.groupName) :
+                    $translate.instant('group-' + g.groupId);
                 }
               });
               $scope.userGroups = uniqueUserGroups;
@@ -203,7 +208,7 @@
       $scope.selectUser = function(id) {
         $scope.editorSelectedId = id;
         $http.get('../api/users/' + id + '/groups')
-          .success(function(data) {
+            .success(function(data) {
               var uniqueGroup = {};
               angular.forEach(data, function(g) {
                 if (!uniqueGroup[g.group.id]) {
@@ -219,17 +224,17 @@
         var params = $scope.transfertList[sourceGroup];
 
         params.running = true;
-        $http.put('../api/users/owners', {
+        return $http.put('../api/users/owners', {
           sourceUser: parseInt($scope.editorSelectedId),
           sourceGroup: parseInt(sourceGroup),
           targetUser: params.targetGroup.userId,
           targetGroup: params.targetGroup.groupId
         }).success(function(data) {
           $rootScope.$broadcast('StatusUpdated', {
-            msg: $translate('transfertPrivilegesFinished',
-                            {
-                              privileges: data.privileges,
-                              metadata: data.metadata}),
+            msg: $translate.instant('transfertPrivilegesFinished',
+                {
+                  privileges: data.privileges,
+                  metadata: data.metadata}),
             timeout: 2,
             type: 'success'});
           params.running = false;
@@ -243,8 +248,9 @@
       };
 
       function loadProcessConfig() {
-        $http.get($scope.base + 'config/batch-process-cfg.json')
-          .success(function(data) {
+        $http.get(gnGlobalSettings.gnUrl +
+            '../catalog/config/batch-process-cfg.json')
+            .success(function(data) {
               $scope.batchProcesses = data.config;
 
               $timeout(initProcessByRoute);
@@ -309,6 +315,7 @@
         if (testMode != undefined) {
           formParams += '&isTesting=' + testMode;
         }
+        formParams += '&bucket=b101';
 
         var service = '../api/processes/' +
                       (process != undefined ?
@@ -318,10 +325,10 @@
         $scope.processReport = null;
         $http.post(service + '?' +
                    formParams)
-          .success(function(data) {
+            .success(function(data) {
               $scope.processReport = data;
               $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('processFinished'),
+                msg: $translate.instant('processFinished'),
                 timeout: 2,
                 type: 'success'});
               $scope.processing = false;
@@ -333,9 +340,9 @@
               //   checkLastBatchProcessReport();
               // }
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('processError'),
+                title: $translate.instant('processError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});
@@ -430,12 +437,28 @@
 
       $scope.rebuildIndex = function() {
         return $http.get('admin.index.rebuild?reset=yes')
-          .success(function(data) {
+            .success(function(data) {
               checkIsIndexing();
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('rebuildIndexError'),
+                title: $translate.instant('rebuildIndexError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
+      };
+      $scope.indexInEs = function() {
+        return $http.put('../api/site/index/es')
+            .success(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate.instant('indexInEsDone'),
+                timeout: 2,
+                type: 'success'});
+            })
+            .error(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('indexInEsDoneError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});
@@ -444,16 +467,16 @@
 
       $scope.optimizeIndex = function() {
         return $http.get('admin.index.optimize')
-          .success(function(data) {
+            .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('indexOptimizationInProgress'),
+                msg: $translate.instant('indexOptimizationInProgress'),
                 timeout: 2,
                 type: 'success'});
               // TODO: Does this is asynch and make the search unavailable?
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('rebuildIndexError'),
+                title: $translate.instant('rebuildIndexError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});
@@ -462,15 +485,15 @@
 
       $scope.reloadLuceneConfig = function() {
         return $http.get('admin.index.config.reload')
-          .success(function(data) {
+            .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('luceneConfigReloaded'),
+                msg: $translate.instant('luceneConfigReloaded'),
                 timeout: 2,
                 type: 'success'});
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('rebuildIndexError'),
+                title: $translate.instant('rebuildIndexError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});
@@ -479,16 +502,16 @@
 
       $scope.clearXLinkCache = function() {
         return $http.get('admin.index.rebuildxlinks')
-          .success(function(data) {
+            .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('xlinkCacheCleared'),
+                msg: $translate.instant('xlinkCacheCleared'),
                 timeout: 2,
                 type: 'success'});
               // TODO: Does this is asynch and make the search unavailable?
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('rebuildIndexError'),
+                title: $translate.instant('rebuildIndexError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});
@@ -497,11 +520,11 @@
 
       $scope.clearJsCache = function() {
         return $http.get('../../static/wroAPI/reloadModel')
-          .success(function(data) {
+            .success(function(data) {
               $http.get('../../static/wroAPI/reloadCache')
-                .success(function(data) {
+              .success(function(data) {
                    $rootScope.$broadcast('StatusUpdated', {
-                     msg: $translate('jsCacheCleared'),
+                     msg: $translate.instant('jsCacheCleared'),
                      timeout: 2,
                      type: 'success'});
                  });
@@ -510,24 +533,38 @@
 
       $scope.clearFormatterCache = function() {
         return $http.delete('../api/formatters/cache')
-          .success(function(data) {
+            .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('formatterCacheCleared'),
+                msg: $translate.instant('formatterCacheCleared'),
                 timeout: 2,
                 type: 'success'});
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('formatCacheClearFailure'),
+                title: $translate.instant('formatCacheClearFailure'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});
             });
       };
 
+      gnConfigService.loadPromise.then(function(settings) {
+        $scope.isBackupArchiveEnabled =
+            settings['metadata.backuparchive.enable'];
+      });
 
+      $scope.triggerBackupArchive = function() {
+        return $http({method: 'PUT', url: '../api/records/backups'}).
+            then(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('generatingArchiveBackup'),
+                error: data,
+                timeout: 2,
+                type: 'success'
+              });
+            });
 
-
+      };
 
       $scope.replacer = {};
       $scope.replacer.group = '';
@@ -564,7 +601,7 @@
               angular.fromJson($scope.data.replacementsConfig);
         } catch (e) {
           $rootScope.$broadcast('StatusUpdated', {
-            title: $translate('error'),
+            title: $translate.instant('error'),
             error: e,
             timeout: 0,
             type: 'danger'});
@@ -577,8 +614,8 @@
             JSON.stringify(
                           $scope.replacer.replacements));
         $($event.target).parent('a')
-          .attr('download', 'config.json')
-          .attr('href', content);
+            .attr('download', 'config.json')
+            .attr('href', content);
         $event.stopPropagation();
       };
 

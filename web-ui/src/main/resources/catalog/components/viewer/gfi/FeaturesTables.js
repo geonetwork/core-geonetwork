@@ -31,7 +31,8 @@
     return {
       restrict: 'E',
       scope: {
-        map: '<gnFeaturesTablesMap'
+        map: '<gnFeaturesTablesMap',
+        active: '<gnActive'
       },
       controllerAs: 'ctrl',
       bindToController: true,

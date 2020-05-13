@@ -1,0 +1,23 @@
+<div class="gn-data-view">
+
+  <div>
+    <label translate="">filter</label>
+    <select class="form-control"
+            aria-label="{{'filter' | translate}}"
+            ng-model="layer"
+            ng-options="layer as getLabel(layer) for layer in layers | overlay"
+            ng-change="set()">
+    </select>
+  </div>
+
+  <div class="tab-content" data-ng-show="currentLayer">
+    <div role="tabpanel" class="tab-pane active" id="home">
+
+      <div data-gn-wfs-download="currentLayer" class="clearfix" data-ng-if="currentLayer" data-map="map"></div>
+
+      <div data-gn-wfs-filter-facets="" data-layer="currentLayer" data-boot-mode="index"> </div>
+
+    </div>
+  </div>
+
+</div>

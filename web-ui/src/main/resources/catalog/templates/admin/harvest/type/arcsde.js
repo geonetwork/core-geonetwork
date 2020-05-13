@@ -7,9 +7,9 @@ var gnHarvesterarcsde = {
             "@type": "arcsde",
             "owner": [""],
             "ownerGroup": [""],
+            "ownerUser": [""],
             "site":   {
               "name": "",
-              "translations": {},
               "uuid": "",
               "icon" : "blank.png",
               "account":     {
@@ -21,7 +21,10 @@ var gnHarvesterarcsde = {
               "port": "",
               "username": "",
               "password": "",
-              "database": ""
+              "database": "",
+              "version": "9",
+              "connectionType": "ARCSDE",
+              "databaseType": ""
             },
             "content":   {
               "validate": "NOVALIDATION"
@@ -29,6 +32,7 @@ var gnHarvesterarcsde = {
             "options":   {
               "every": "0 0 0 ? * *",
               "oneRunOnly": false,
+              "overrideUuid": "SKIP",
               "status": ""
             },
             "privileges": [{
@@ -46,34 +50,40 @@ var gnHarvesterarcsde = {
           };
     },
     buildResponse : function(h, $scope) {
-        var body = '<node id="' + h['@id'] + '" ' 
-                + '    type="' + h['@type'] + '">' 
-                + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
-                + '  <site>' 
-                + '    <name>' + h.site.name + '</name>' 
-                + $scope.buildTranslations(h)
+        var body = '<node id="' + h['@id'] + '" '
+                + '    type="' + h['@type'] + '">'
+                + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
+                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>' 
+                + '  <site>'
+                + '    <name>' + h.site.name + '</name>'
                 + '    <server>' + h.site.server + '</server>'
-                + '    <port>' + h.site.port + '</port>' 
-                + '    <icon>' + h.site.icon + '</icon>' 
-                + '    <database>' + h.site.database + '</database>' 
-                + '    <username>' + h.site.account.username + '</username>' 
-                + '    <password>' + h.site.account.password + '</password>' 
+                + '    <port>' + h.site.port + '</port>'
+                + '    <icon>' + h.site.icon + '</icon>'
+                + '    <database>' + h.site.database + '</database>'
+                + '    <username>' + h.site.account.username + '</username>'
+                + '    <password>' + h.site.account.password + '</password>'
+                + '    <version>' + h.site.version + '</version>'
+                + '    <connectionType>' + h.site.connectionType + '</connectionType>'
+                + '    <databaseType>' + h.site.databaseType + '</databaseType>'
                 + '    <account>'
                 + '      <use>' + h.site.account.use + '</use>'
-                + '      <username>' + h.site.account.username + '</username>' 
-                + '      <password>' + h.site.account.password + '</password>' 
+                + '      <username>' + h.site.account.username + '</username>'
+                + '      <password>' + h.site.account.password + '</password>'
                 + '    </account>'
-                + '  </site>' 
-                + '  <options>' 
-                + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
+                + '  </site>'
+                + '  <options>'
+                + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'
+                + '    <overrideUuid>' + h.options.overrideUuid + '</overrideUuid>'
                 + '    <every>' + h.options.every + '</every>'
                 + '    <status>' + h.options.status + '</status>'
-                + '  </options>' 
+                + '  </options>'
                 + '  <content>'
                 + '    <validate>' + h.content.validate + '</validate>'
-                + '  </content>' 
+                + '  </content>'
                 + $scope.buildResponseGroup(h)
                 + $scope.buildResponseCategory(h) + '</node>';
         return body;
     }
+
+
 };

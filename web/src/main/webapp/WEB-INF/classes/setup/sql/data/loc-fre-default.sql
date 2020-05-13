@@ -509,11 +509,11 @@ INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (482,'fre','Pas de co
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (483,'fre','N''ko');
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (484,'fre','Zaza; dimili; dimli; kirdki; kirmanjki');
 
-INSERT INTO OperationsDes  (iddes, langid, label) VALUES (0,'fre','Publier');
+INSERT INTO OperationsDes  (iddes, langid, label) VALUES (0,'fre','Consulter');
 INSERT INTO OperationsDes  (iddes, langid, label) VALUES (1,'fre','Télécharger');
-INSERT INTO OperationsDes  (iddes, langid, label) VALUES (2,'fre','Editer');
+INSERT INTO OperationsDes  (iddes, langid, label) VALUES (2,'fre','Éditer');
 INSERT INTO OperationsDes  (iddes, langid, label) VALUES (3,'fre','Notifier');
-INSERT INTO OperationsDes  (iddes, langid, label) VALUES (5,'fre','Carte interactive');
+INSERT INTO OperationsDes  (iddes, langid, label) VALUES (5,'fre','Visualiser');
 INSERT INTO OperationsDes  (iddes, langid, label) VALUES (6,'fre','Epingler');
 
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (0,'fre','Inconnu');
@@ -522,4 +522,28 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (2,'fre','Validé');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'fre','Retiré');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'fre','A valider');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'fre','Rejeté');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (50,'fre','Fiche créée.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (51,'fre','Fiche mise à jour.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (52,'fre','Document {{h.item1}} ajouté.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (53,'fre','Document {{h.item1}} supprimé.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (54,'fre','Auteur {{h.item1}} remplacé par {{h.item2}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (55,'fre','Groupe {{h.item1}} remplacé par {{h.item2}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (56,'fre','Accès mis à jour.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (57,'fre','Changement de catégorie. Les catégories sont {{h.item1}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (58,'fre','Fiche validée. La validation est maintenant {{h.item1}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (59,'fre','Changement de status de {{h.item1}} à {{h.item2}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (60,'fre','Fiche mise à jour par le processus {{h.item1}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'fre','Fiche supprimée.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'fre','Fiche importée.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'fre','Demande de création de DOI');
 
+
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'fre','Fiches préférées');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'fre','Fiches observées');
+
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (-1,'fre', 'Moyenne');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (0,'fre', 'Complétude#Est-ce que les informations sur cette page sont suffisamment précises pour savoir ce que vous pouvez attendre de cette ressource ?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (1,'fre', 'Découvrabilité#Était-il facile de trouver cette page ?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (2,'fre', 'Lisibilité#Était-il facile de comprendre le contenu de cette page ?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (3,'fre', 'Qualité des données#Est-ce que cette ressource contient les informations attendues ? Les données sont-elles assez précises ? assez récentes ?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (4,'fre', 'Cette données est elle accessible dans un format ou via un service simple à utiliser ?');

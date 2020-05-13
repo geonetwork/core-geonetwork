@@ -182,7 +182,6 @@ var OWC_0_3_1_Module_Factory = function() {
         n: 'boundingBox',
         mx: false,
         dom: false,
-        typed: false,
         en: {
           lp: 'BoundingBox',
           ns: 'http:\/\/www.opengis.net\/ows'
@@ -274,7 +273,7 @@ var OWC_0_3_1_Module_Factory = function() {
       ln: 'ExtensionType',
       ps: [{
         n: 'any',
-        mx: false,
+        mx: true,
         t: 'ae'
       }]
     }, {

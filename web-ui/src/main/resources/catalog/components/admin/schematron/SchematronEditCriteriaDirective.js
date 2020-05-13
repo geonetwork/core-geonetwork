@@ -75,7 +75,7 @@
                scope.criteriaTypes.NEW = {
                  name: 'NEW',
                  type: 'NEW',
-                 label: $translate('NEW')};
+                 label: $translate.instant('NEW')};
                criteriaTypeToValueMap.NEW = '';
              }
              for (i = 0; i < scope.schema.criteriaTypes.type.length; i++) {
@@ -129,15 +129,16 @@
              scope.describeCriteria = function() {
                switch (angular.uppercase(scope.original.uitype)) {
                  case 'ALWAYS_ACCEPT':
-                   return $translate('schematronDescriptionAlwaysAccept');
+                   return $translate.instant(
+                   'schematronDescriptionAlwaysAccept');
                  case 'NEW':
-                   return $translate('NEW');
+                   return $translate.instant('NEW');
                  case 'XPATH':
-                   return $translate('schematronDescriptionXpath',
+                   return $translate.instant('schematronDescriptionXpath',
                    {value: scope.original.uivalue});
                  default:
                    type = scope.criteriaTypes[scope.original.uitype].label;
-                   return $translate('schematronDescriptionGeneric',
+                   return $translate.instant('schematronDescriptionGeneric',
                    {type: type, value: scope.original.uivalue});
                }
              };
@@ -160,7 +161,7 @@
 
              scope.deleteCriteria = function() {
                scope.confirmationDialog.message =
-               $translate('confirmDeleteSchematronCriteria');
+               $translate.instant('confirmDeleteSchematronCriteria');
                scope.confirmationDialog.deleteConfirmed = function() {
                  gnSchematronAdminService.criteria.
                  remove(scope.criteria, scope.group);
@@ -168,7 +169,25 @@
                scope.confirmationDialog.showDialog();
              };
              scope.saveEdit = function() {
+               var criteriaType, rawValue, value, isTypeahead;
+               isTypeahead = false;
                if (scope.isDirty()) {
+                 var input = findValueInput();
+                 // it we are not using an autocompleter
+                 // replace the value with valueUi
+                 input.each(function(index, ele) {
+                   isTypeahead = isTypeahead || $(ele).data('ttTypeahead');
+                 });
+                 if (!isTypeahead) {
+                   criteriaType = scope.criteriaTypes[scope.criteria.uitype];
+                   rawValue = scope.criteria.uivalue;
+                   if (criteriaType.value) {
+                     // Check because ALWAYS_ACCEPT has not value.
+                     value = criteriaType.value.replace(/@@value@@/g, rawValue);
+                     scope.criteria.value = value;
+                   }
+                 }
+
                  if (scope.criteria.id) {
                    // it is an updated
                    gnSchematronAdminService.criteria.

@@ -23,6 +23,7 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -116,7 +117,8 @@ public class ServiceParam extends GeonetEntity {
      *
      * @return the request associated with this entity.
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(referencedColumnName = "id", name = "service")
     public Service getService() {
         return this.service;

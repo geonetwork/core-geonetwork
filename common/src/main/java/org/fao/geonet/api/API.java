@@ -31,4 +31,5 @@ package org.fao.geonet.api;
 public class API {
     public static final String VERSION_0_1 = "0.1";
     public static final String CONTACT_EMAIL = "geonetwork@osgeo.org";
+    public static final String LOG_MODULE_NAME = "geonetwork.api" ;
 }

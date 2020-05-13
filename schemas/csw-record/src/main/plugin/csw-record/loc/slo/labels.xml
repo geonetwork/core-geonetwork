@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ Tento program je slobodný softvér: môžete ho šíriť a upravovať podľa ustanovení Všeobecnej
+  ~ verejnej licencie GNU (GNU General Public Licence), vydávanej nadáciou Free Software Foundation,
+  ~ a to buď podľa 2. verzie tejto Licencie, alebo (podľa vášho uváženia) ktorejkoľvek neskoršej verzie.
+  ~
+  ~ Tento program je šírený v nádeji, že bude užitočný, avšak BEZ AKEJKOĽVEK ZÁRUKY. Neposkytujú
+  ~ sa ani odvodené záruky OBCHODOVATEĽNOSTI alebo VHODNOSTI PRE URČITÝ ÚČEL. Ďalšie
+  ~ podrobnosti hľadajte vo Všeobecnej verejnej licencii GNU.
+  ~
+  ~ Kópiu Všeobecnej verejnej licencie GNU ste mali dostať spolu s týmto programom. Ak sa tak nestalo,
+  ~ napíšte na: Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+  ~ USA.
+  ~
+  ~ Kontakt: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rím - Taliansko. email: geonetwork@osgeo.org
+  -->
+
+<labels xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ows="http://www.opengis.net/ows"
+        xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dct="http://purl.org/dc/terms/">
+  <!-- ==================================================== -->
+  <element name="csw:Record">
+    <label>Metaúdaje</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:title">
+    <label>Názov</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:creator">
+    <label>Autor</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:subject">
+    <label>Predmet a Kľúčové slová</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:description">
+    <label>Popis</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:publisher">
+    <label>Vydavateľ</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:contributor">
+    <label>Prispievateľ</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:date">
+    <label>Dátum</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:type">
+    <label>Typ zdroja</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:format">
+    <label>Formát</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:identifier">
+    <label>Identifikátor zdroja</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:source">
+    <label>Zdroj</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:language">
+    <label>Jazyk</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:relation">
+    <label>Vzťah</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:coverage">
+    <label>Rozsah</label>
+    <description>Príklad: "Sever 90, Juh -90, Východ 180, Západ -180. Svet."</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:rights">
+    <label>Manažment práv</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:modified">
+    <label>Dátum modifikácie</label>
+    <description>Dátum kedy boli metaúdaje modifikované.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:abstract">
+    <label>Abstrakt</label>
+    <description>Charakteristika obsahu zdroja.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:spatial">
+    <label>Priestorová charakteristika</label>
+    <description>Priestorová charakteristika obsahu zdroja.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:audience">
+    <label>Užívateľ</label>
+    <description>Trieda entity, pre ktorú je zdroj určený alebo užitočný.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualMethod">
+    <label>Pridávanie položky</label>
+    <description>Metóda určená na pridávanie položiek do súboru.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualPeriodicity">
+    <label>Periodicita pridávanie</label>
+    <description>Periodicita pridávania položiek do súboru.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualPolicy">
+    <label>Pravidlá pridávania</label>
+    <description>Pravidlá určujúce pridávanie položiek do súboru.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:instructionalMethod">
+    <label>Metóda výučby</label>
+    <description>Procesy, ktoré sa používajú na podporu zdielania skúseností a zručností. 
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:provenance">
+    <label>Originalita</label>
+    <description>Všetky zmeny vyhradené pre pravosť, integritu a interpretáciu vo výhradnom vlastníctve zdroja.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:rightsHolder">
+    <label>Vlastník práv</label>
+    <description>Osoba alebo organizácia, ktorá vlastní alebo spravuje licencie zdroja.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="ows:BoundingBox">
+    <label></label>
+  </element>
+  <element name="ows:UpperCorner">
+    <label>Horný roh</label>
+  </element>
+  <element name="ows:LowerCorner">
+    <label>Dolný roh</label>
+  </element>
+  <element name="crs">
+    <label>CRS</label>
+  </element>
+</labels>

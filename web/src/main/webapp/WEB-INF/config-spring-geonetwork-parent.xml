@@ -32,4 +32,5 @@
   <context:annotation-config/>
   <import resource="classpath*:/config-spring-geonetwork-parent.xml"/>
 
+
 </beans>

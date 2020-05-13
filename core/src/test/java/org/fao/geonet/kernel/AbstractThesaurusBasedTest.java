@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel;
 
+import net.jcip.annotations.NotThreadSafe;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.utils.IO;
@@ -30,16 +31,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
-import org.openrdf.sesame.Sesame;
-import org.openrdf.sesame.config.ConfigurationException;
-import org.openrdf.sesame.config.RepositoryConfig;
-import org.openrdf.sesame.config.SailConfig;
-import org.openrdf.sesame.constants.RDFFormat;
-import org.openrdf.sesame.repository.local.LocalRepository;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@NotThreadSafe  // randomly failing without that
 public abstract class AbstractThesaurusBasedTest {
     protected static final String THESAURUS_KEYWORD_NS = "http://abstract.thesaurus.test#";
     protected static final IsoLanguagesMapper isoLangMapper = new IsoLanguagesMapper() {
@@ -67,11 +63,10 @@ public abstract class AbstractThesaurusBasedTest {
         createTestThesaurus();
 
         if (!readonly) {
-            final String className = getClass().getSimpleName() + ".class";
-            Path template = thesaurusFile;
+            Path template = this.thesaurusFile;
 
             // Now make copy for this test
-            this.thesaurusFile = this.folder.getRoot().toPath().resolve(getClass().getSimpleName() + "TestThesaurus.rdf");
+            this.thesaurusFile = locateThesaurus(getClass().getSimpleName() + "TestThesaurus.rdf");
 
             Files.copy(template, thesaurusFile);
             this.thesaurus = new Thesaurus(isoLangMapper, thesaurusFile.getFileName().toString(), "test", "test",
@@ -79,6 +74,10 @@ public abstract class AbstractThesaurusBasedTest {
         }
         this.thesaurus.initRepository();
     }
+
+	protected Path locateThesaurus(String name) {
+		return this.folder.getRoot().toPath().resolve(name);
+	}
 
     @After
     public void afterTest() throws Exception {
@@ -98,10 +97,6 @@ public abstract class AbstractThesaurusBasedTest {
         this.thesaurus.initRepository();
     }
 
-    private void populateThesaurus() throws Exception {
-        populateThesaurus(this.thesaurus, keywords, THESAURUS_KEYWORD_NS, "testValue", "testNote", languages);
-    }
-
     /**
      * Generate a thesaurus with the provided number of words etc...
      */
@@ -116,7 +111,7 @@ public abstract class AbstractThesaurusBasedTest {
         System.out.print(0);
         for (int i = 0; i < words; i++) {
             float percent = ((float) i) / words * 100;
-            if (System.currentTimeMillis() - lastUpdateTime > 5000) {
+            if (System.currentTimeMillis() - lastUpdateTime > 1000) {
                 System.out.print(Math.round(percent));
                 lastUpdateTime = System.currentTimeMillis();
             }

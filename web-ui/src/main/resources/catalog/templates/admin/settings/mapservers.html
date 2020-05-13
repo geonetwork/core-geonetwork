@@ -20,6 +20,8 @@
         </button>
       </div>
     </div>
+
+    <div data-gn-need-help="administrator-guide/configuring-the-catalog/map-server-configuration.html"></div>
   </div>
 
   <div class="col-lg-8" data-ng-hide="mapserverSelected == null">
@@ -54,6 +56,7 @@
         <form id="gn-mapserver-edit" name="gnMapServerEdit"
               class="form-horizontal"
               data-ng-keypress="updatingMapServer()">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
           <fieldset>
             <legend data-translate="">mapserverDescription</legend>
             <input type="hidden" name="id"
@@ -123,16 +126,17 @@
             <div class="form-group">
               <label class="control-label col-sm-3" data-translate="">workspace</label>
 
-              <div class="col-sm-9 input-group">
-                <input type="text" name="namespaceprefix" class="form-control"
-                       required=""
-                       data-ng-model="mapserverSelected.namespacePrefix"
-                       placeholder=""/>
-                <span class="input-group-addon">:</span>
-                <input type="url" name="namespace" class="form-control"
-                       required=""
-                       data-ng-model="mapserverSelected.namespace" placeholder="http://"/>
-
+              <div class="col-sm-9">
+                <div class="input-group">
+                  <input type="text" name="namespaceprefix" class="form-control"
+                        required=""
+                        data-ng-model="mapserverSelected.namespacePrefix"
+                        placeholder=""/>
+                  <span class="input-group-addon">:</span>
+                  <input type="url" name="namespace" class="form-control"
+                        required=""
+                        data-ng-model="mapserverSelected.namespace" placeholder="http://"/>
+                </div>
               </div>
               <div class="col-sm-9 col-sm-offset-3">
                 <p class="help-block" data-translate="">workspace-help</p>
@@ -208,6 +212,7 @@
         <div class="modal-body">
           <form id="gn-password-reset" class="form-horizontal" name="gnPasswordReset">
             <div class="form-group">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
               <label class="control-label col-sm-3" data-translate="">username</label>
 
               <div class="col-sm-9">

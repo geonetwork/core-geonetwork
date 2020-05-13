@@ -1,15 +1,14 @@
-<div class="cookie-warning"
-     data-ng-show="{{showCookieWarning}}"
-     data-ng-controller="CookieWarningController">
+<div class="cookie-warning ng-cloak"
+     data-ng-show="showCookieWarning()" >
 
-  <p class="{showCookieWarning}"
+  <p class="cookie-warning-header"
      data-translate="">cookieWarning</p>
-  <p>
-    <a href="http://sitebeam.net/cookielaw/" target="cookie_law"
+  <p class="cookie-warning-link ng-cloak" data-ng-if="cookieWarningMoreInfoLink">
+    <a data-ng-href="{{cookieWarningMoreInfoLink}}" target="cookie_law"
        data-translate="">moreOnCookie</a>
   </p>
-  <p>
-    <span data-ng-click="close()" data-translate="">acceptCookie</span>&nbsp;
+  <p class="cookie-warning-actions">
+    <span data-ng-click="acceptCookies()" data-translate="">acceptCookie</span>&nbsp;
     <span data-translate="">or</span>&nbsp;
     <span data-ng-click="goAway()" data-translate="">rejectCookie</span>
   </p>

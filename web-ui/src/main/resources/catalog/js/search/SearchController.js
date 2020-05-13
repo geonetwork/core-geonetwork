@@ -26,11 +26,18 @@
 
   goog.provide('gn_search_controller');
 
+
+  goog.require('gn_catalog_service');
   goog.require('gn_searchsuggestion_service');
+  goog.require('gn_static_pages');
+  goog.require('gn_usersearches');
 
   var module = angular.module('gn_search_controller', [
     'ui.bootstrap.typeahead',
-    'gn_searchsuggestion_service'
+    'gn_searchsuggestion_service',
+    'gn_catalog_service',
+    'gn_static_pages',
+    'gn_usersearches'
   ]);
 
   /**
@@ -44,8 +51,11 @@
     'suggestService',
     'gnAlertService',
     'gnSearchSettings',
-    function($scope, $q, $http, suggestService,
-             gnAlertService, gnSearchSettings) {
+    'gnGlobalSettings',
+    'gnConfig',
+    'orderByFilter',
+    function($scope, $q, $http, suggestService, gnAlertService,
+             gnSearchSettings, gnGlobalSettings, gnConfig, orderByFilter) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
@@ -56,6 +66,19 @@
         hitsperpageValues: gnSearchSettings.hitsperpageValues
       };
 
+      $scope.isUserFeedbackEnabled = false;
+
+      var statusSystemRating = gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
+      if (statusSystemRating == 'advanced') {
+        $scope.isUserFeedbackEnabled = true;
+      }
+
+      $scope.isUserSearchesEnabled = gnGlobalSettings.gnCfg.mods.search.usersearches.enabled;
+      $scope.displayFeaturedSearchesPanel =
+        gnGlobalSettings.gnCfg.mods.search.usersearches.displayFeaturedSearchesPanel;
+
+      $scope.ise  = false;
+
       /** Facets configuration */
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType;
 
@@ -65,6 +88,9 @@
       /* Default result view template */
       $scope.resultTemplate = gnSearchSettings.resultTemplate ||
           gnSearchSettings.resultViewTpls[0].tplUrl;
+      /* Default advanced search form template */
+      $scope.advancedSearchTemplate = gnSearchSettings.advancedSearchTemplate ||
+        '../../catalog/views/default/templates/advancedSearchForm/defaultAdvancedSearchForm.html';
 
       $scope.getAnySuggestions = function(val) {
         return suggestService.getAnySuggestions(val);
@@ -98,9 +124,10 @@
                 for (var i = 0; i < data.length; i++) {
                   res.push({
                     id: data[i].name,
-                    name: data[i].label.eng
+                    name: data[i].label[$scope.lang]
                   });
                 }
+                res = orderByFilter(res,'name',false);
                 defer.resolve(res);
               });
           return defer.promise;
@@ -131,11 +158,5 @@
        * @return {*}
        */
       $scope.getCatScope = function() {return $scope};
-
-      // TODO: see if not redondant with CatController event management
-      $scope.$on('StatusUpdated', function(e, status) {
-        gnAlertService.addAlert(status);
-      });
-
     }]);
 })();

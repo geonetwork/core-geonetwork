@@ -23,27 +23,41 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
+import static org.springframework.data.jpa.domain.Specifications.where;
+
+import java.nio.file.Path;
 
 import org.fao.geonet.GeonetContext;
-
 import org.fao.geonet.Util;
 import org.fao.geonet.api.records.editing.AjaxEditUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
-import org.fao.geonet.utils.Xml;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Document;
 import org.jdom.Element;
 
-import java.nio.file.Path;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 /**
  * For editing : update leaves information. Access is restricted.
@@ -74,6 +88,7 @@ public class Update extends NotInReadOnlyModeService {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
+        IMetadataValidator validator = gc.getBean(IMetadataValidator.class);
         UserSession session = context.getUserSession();
 
         String id = Utils.getIdentifierFromParameters(params, context);
@@ -133,6 +148,53 @@ public class Update extends NotInReadOnlyModeService {
             dataMan.endEditingSession(id, session);
         }
 
+		if (finished && !forget && !commit) {
+			SettingManager sm = gc.getBean(SettingManager.class);
+
+			boolean forceValidationOnMdSave = sm.getValueAsBool("metadata/workflow/forceValidationOnMdSave");
+
+			boolean reindex = false;
+
+			// Save validation if the forceValidationOnMdSave is enabled
+			if (forceValidationOnMdSave && !showValidationErrors.equals("true")) {
+				final IMetadataUtils metadataRepository = gc.getBean(IMetadataUtils.class);
+				AbstractMetadata metadata = metadataRepository.findOne(id);
+
+				validator.doValidate(metadata, context.getLanguage());
+				reindex = true;
+			}
+
+			boolean automaticUnpublishInvalidMd = sm.getValueAsBool("metadata/workflow/automaticUnpublishInvalidMd");
+
+			// Unpublish the metadata automatically if the setting automaticUnpublishInvalidMd is enabled and
+			// the metadata becomes invalid
+			if (automaticUnpublishInvalidMd) {
+				final OperationAllowedRepository operationAllowedRepo = context.getBean(OperationAllowedRepository.class);
+
+				boolean isPublic = (operationAllowedRepo.count(where(hasMetadataId(id)).and(hasOperation(ReservedOperation
+						.view)).and(hasGroupId(ReservedGroup.all.getId()))) > 0);
+
+				if (isPublic) {
+					final MetadataValidationRepository metadataValidationRepository = gc.getBean(MetadataValidationRepository.class);
+
+					boolean isInvalid =
+							(metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(Integer.parseInt(id))) > 0);
+
+					if (isInvalid) {
+						operationAllowedRepo.deleteAll(where(hasMetadataId(id)).and(hasGroupId(ReservedGroup.all.getId())));
+					}
+
+					reindex = true;
+				}
+
+			}
+
+			if (reindex) {
+				dataMan.indexMetadata(id, true, null);
+			}
+
+
+		}
         if (!finished && !forget && commit) {
             dataMan.startEditingSession(context, id);
         }

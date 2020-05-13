@@ -32,13 +32,14 @@
   goog.require('gn_mdactions_directive');
   goog.require('gn_related_directive');
   goog.require('gn_search');
+  goog.require('gn_gridrelated_directive');
   goog.require('gn_search_default_config');
   goog.require('gn_search_default_directive');
 
   var module = angular.module('gn_search_default',
       ['gn_search', 'gn_search_default_config',
        'gn_search_default_directive', 'gn_related_directive',
-       'cookie_warning', 'gn_mdactions_directive']);
+       'cookie_warning', 'gn_mdactions_directive', 'gn_gridrelated_directive']);
 
 
   module.controller('gnsSearchPopularController', [
@@ -46,30 +47,57 @@
     function($scope, gnSearchSettings) {
       $scope.searchObj = {
         permalink: false,
+        internal: true,
+        filters: gnSearchSettings.filters,
         params: {
           sortBy: 'popularity',
           from: 1,
-          to: 9
+          to: 12
         }
       };
     }]);
 
 
   module.controller('gnsSearchLatestController', [
-    '$scope',
-    function($scope) {
+    '$scope', 'gnSearchSettings',
+    function($scope, gnSearchSettings) {
       $scope.searchObj = {
         permalink: false,
+        internal: true,
+        filters: gnSearchSettings.filters,
         params: {
           sortBy: 'changeDate',
           from: 1,
-          to: 9
+          to: 12
         }
       };
     }]);
+
+
+  module.controller('gnsSearchTopEntriesController', [
+    '$scope', 'gnGlobalSettings',
+    function($scope, gnGlobalSettings) {
+      $scope.resultTemplate = '../../catalog/components/' +
+        'search/resultsview/partials/viewtemplates/grid4maps.html';
+      $scope.searchObj = {
+        permalink: false,
+        internal: true,
+        filters: {
+          'type': 'interactiveMap'
+        },
+        params: {
+          sortBy: 'changeDate',
+          from: 1,
+          to: 30
+        }
+      };
+    }]);
+
+
   module.controller('gnsDefault', [
     '$scope',
     '$location',
+    '$filter',
     'suggestService',
     '$http',
     '$translate',
@@ -84,25 +112,36 @@
     'gnOwsContextService',
     'hotkeys',
     'gnGlobalSettings',
-    function($scope, $location, suggestService, $http, $translate,
+    'gnExternalViewer',
+    function($scope, $location, $filter,
+             suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
              gnMap, gnMdView, mdView, gnWmsQueue,
              gnSearchLocation, gnOwsContextService,
-             hotkeys, gnGlobalSettings) {
+             hotkeys, gnGlobalSettings, gnExternalViewer) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
 
 
-
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
       $scope.modelOptionsForm = angular.copy(gnGlobalSettings.modelOptions);
+      $scope.isFilterTagsDisplayedInSearch = gnGlobalSettings.gnCfg.mods.search.isFilterTagsDisplayedInSearch;
       $scope.gnWmsQueue = gnWmsQueue;
       $scope.$location = $location;
       $scope.activeTab = '/home';
+      $scope.formatter = gnGlobalSettings.gnCfg.mods.search.formatter;
+      $scope.listOfResultTemplate = gnGlobalSettings.gnCfg.mods.search.resultViewTpls;
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
+      $scope.advandedSearchTemplate = gnSearchSettings.advancedSearchTemplate;
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType;
+      $scope.facetConfig = gnSearchSettings.facetConfig;
+      $scope.facetTabField = gnSearchSettings.facetTabField;
       $scope.location = gnSearchLocation;
+      $scope.fluidLayout = gnGlobalSettings.gnCfg.mods.home.fluidLayout;
+      $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
+      $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
+      $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
       $scope.toggleMap = function () {
         $(searchMap.getTargetElement()).toggle();
         $('button.gn-minimap-toggle > i').toggleClass('fa-angle-double-left fa-angle-double-right');
@@ -110,13 +149,13 @@
       hotkeys.bindTo($scope)
         .add({
             combo: 'h',
-            description: $translate('hotkeyHome'),
+            description: $translate.instant('hotkeyHome'),
             callback: function(event) {
               $location.path('/home');
             }
           }).add({
             combo: 't',
-            description: $translate('hotkeyFocusToSearch'),
+            description: $translate.instant('hotkeyFocusToSearch'),
             callback: function(event) {
               event.preventDefault();
               var anyField = $('#gn-any-field');
@@ -128,21 +167,21 @@
             }
           }).add({
             combo: 'enter',
-            description: $translate('hotkeySearchTheCatalog'),
+            description: $translate.instant('hotkeySearchTheCatalog'),
             allowIn: 'INPUT',
             callback: function() {
               $location.search('tab=search');
             }
             //}).add({
             //  combo: 'r',
-            //  description: $translate('hotkeyResetSearch'),
+            //  description: $translate.instant('hotkeyResetSearch'),
             //  allowIn: 'INPUT',
             //  callback: function () {
             //    $scope.resetSearch();
             //  }
           }).add({
             combo: 'm',
-            description: $translate('hotkeyMap'),
+            description: $translate.instant('hotkeyMap'),
             callback: function(event) {
               $location.path('/map');
             }
@@ -152,6 +191,8 @@
       // TODO: Previous record should be stored on the client side
       $scope.mdView = mdView;
       gnMdView.initMdView();
+
+
       $scope.goToSearch = function (any) {
         $location.path('/search').search({'any': any});
       };
@@ -163,33 +204,24 @@
         }
         return false;
       };
-      $scope.openRecord = function(index, md, records) {
-        gnMdView.feedMd(index, md, records);
-      };
-
       $scope.closeRecord = function() {
         gnMdView.removeLocationUuid();
       };
-      $scope.nextRecord = function() {
-        var nextRecordId = mdView.current.index + 1;
-        if (nextRecordId === mdView.records.length) {
-          // When last record of page reached, go to next page...
-          // Not the most elegant way to do it, but it will
-          // be easier using Solr search components
-          $scope.$broadcast('nextPage');
-        } else {
-          $scope.openRecord(nextRecordId);
-        }
+      $scope.nextPage = function() {
+        $scope.$broadcast('nextPage');
       };
-      $scope.previousRecord = function() {
-        var prevRecordId = mdView.current.index - 1;
-        if (prevRecordId === -1) {
-          $scope.$broadcast('previousPage');
-        } else {
-          $scope.openRecord(prevRecordId);
-        }
+      $scope.previousPage = function() {
+        $scope.$broadcast('previousPage');
       };
 
+      /**
+       * Toggle the list types on the homepage
+       * @param  {String} type Type of list selected
+       */
+      $scope.toggleListType = function(type) {
+        $scope.type = type;
+      };
+      
       $scope.infoTabs = {
         lastRecords: {
           title: 'lastRecords',
@@ -225,17 +257,50 @@
 
       $scope.resultviewFns = {
         addMdLayerToMap: function (link, md) {
+          var config = {
+            uuid: md ? md.getUuid() : null,
+            type:
+              link.protocol.indexOf('WMTS') > -1 ? 'wmts' :
+              (link.protocol == 'ESRI:REST' ? 'esrirest' : 'wms'),
+            url: $filter('gnLocalized')(link.url) || link.url
+          };
 
-          if (gnMap.isLayerInMap(viewerMap,
-              link.name, link.url)) {
+          var title = link.title;
+          var name = link.name;
+          if (angular.isObject(link.title)) {
+            title = $filter('gnLocalized')(link.title);
+          }
+          if (angular.isObject(link.name)) {
+            name = $filter('gnLocalized')(link.name);
+          }
+
+          if (name && name !== '') {
+            config.name = name;
+            config.group = link.group;
+            // Related service return a property title for the name
+          } else if (title) {
+            config.name = title;
+          }
+
+          // if an external viewer is defined, use it here
+          if (gnExternalViewer.isEnabled()) {
+            gnExternalViewer.viewService({
+              id: md ? md.getId() : null,
+              uuid: config.uuid
+            }, {
+              type: config.type,
+              url: config.url,
+              name: config.name,
+              title: title
+            });
             return;
           }
-          gnMap.addWmsFromScratch(viewerMap, link.url, link.name, false, md).
-          then(function(layer) {
-            if(layer) {
-              gnMap.feedLayerWithRelated(layer, link.group);
-            }
-          });
+
+          // This is probably only a service
+          // Open the add service layer tab
+          $location.path('map').search({
+            add: encodeURIComponent(angular.toJson([config]))});
+          return;
       },
         addAllMdLayersToMap: function (layers, md) {
           angular.forEach(layers, function (layer) {
@@ -247,55 +312,54 @@
         }
       };
 
+      // Share map loading functions
+      gnViewerSettings.resultviewFns = $scope.resultviewFns;
+
+
       // Manage route at start and on $location change
+      // depending on configuration
       if (!$location.path()) {
-        $location.path('/home');
+        var m = gnGlobalSettings.gnCfg.mods;
+        $location.path(
+          m.home.enabled ? '/home' :
+          m.search.enabled ? '/search' :
+          m.map.enabled ? '/map' : 'home'
+        );
       }
-      $scope.activeTab = $location.path().
-          match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
-
-      $scope.$on('$locationChangeSuccess', function(next, current) {
+      var setActiveTab = function() {
         $scope.activeTab = $location.path().
-            match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
+        match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
+      };
 
-        if (gnSearchLocation.isSearch() && (!angular.isArray(
-            searchMap.getSize()) || searchMap.getSize()[0] < 0)) {
-          setTimeout(function() {
-            searchMap.updateSize();
+      setActiveTab();
+      $scope.$on('$locationChangeSuccess', setActiveTab);
 
-            // TODO: load custom context to the search map
-            //gnOwsContextService.loadContextFromUrl(
-            //  gnViewerSettings.defaultContext,
-            //  searchMap);
-
-          }, 0);
-        }
-        if (gnSearchLocation.isMap() && (!angular.isArray(
-            viewerMap.getSize()) || viewerMap.getSize().indexOf(0) >= 0)) {
-          setTimeout(function() {
-            viewerMap.updateSize();
-          }, 0);
-        }
-      });
-
+      var sortConfig = gnSearchSettings.sortBy.split('#');
       angular.extend($scope.searchObj, {
         advancedMode: false,
         from: 1,
         to: 30,
+        selectionBucket: 's101',
         viewerMap: viewerMap,
         searchMap: searchMap,
         mapfieldOption: {
-          relations: ['within']
+          relations: ['within_bbox']
         },
+        hitsperpageValues: gnSearchSettings.hitsperpageValues,
+        filters: gnSearchSettings.filters,
         defaultParams: {
           'facet.q': '',
-          resultType: gnSearchSettings.facetsSummaryType || 'details'
+          resultType: gnSearchSettings.facetsSummaryType || 'details',
+          sortBy: sortConfig[0] || 'relevance',
+          sortOrder: sortConfig[1] || ''
         },
         params: {
-          'facet.q': '',
-          resultType: gnSearchSettings.facetsSummaryType || 'details'
-        }
-      }, gnSearchSettings.sortbyDefault);
-
+          'facet.q': gnSearchSettings.defaultSearchString || '',
+          resultType: gnSearchSettings.facetsSummaryType || 'details',
+          sortBy: sortConfig[0] || 'relevance',
+          sortOrder: sortConfig[1] || ''
+        },
+        sortbyValues: gnSearchSettings.sortbyValues
+      });
     }]);
 })();

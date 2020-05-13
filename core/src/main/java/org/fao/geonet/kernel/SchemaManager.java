@@ -36,6 +36,7 @@ import jeeves.server.overrides.ConfigurationOverrides;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
@@ -50,25 +51,15 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.PrefixUrlRewrite;
-import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.*;
 import org.fao.geonet.utils.nio.NioPathAwareCatalogResolver;
-import org.jdom.Attribute;
-import org.jdom.Content;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.Namespace;
+import org.jdom.*;
 import org.jdom.filter.ElementFilter;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -234,6 +225,9 @@ public class SchemaManager {
                     }
                 }
             }
+
+            checkAppSupported(schemaPluginCatRoot);
+
             checkDependencies(schemaPluginCatRoot);
         }
 
@@ -355,8 +349,7 @@ public class SchemaManager {
                 realDeletePluginSchema(name, doDependencies);
             } catch (Exception e) {
                 String errStr = "Could not update schema " + name + ", remove of outdated schema failed. Exception message if any is " + e.getMessage();
-                Log.error(Geonet.SCHEMA_MANAGER, errStr);
-                e.printStackTrace();
+                Log.error(Geonet.SCHEMA_MANAGER, errStr, e);
                 throw new OperationAbortedEx(errStr, e);
             }
 
@@ -901,7 +894,7 @@ public class SchemaManager {
 
             writeSchemaPluginCatalog(schemaPluginCatRoot);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.SCHEMA_MANAGER, e.getMessage(), e);
             hmSchemas.remove(name);
             IO.deleteFileOrDirectory(schemaDir);
             throw new OperationAbortedEx("Failed to add schema " + name + " : " + e.getMessage(), e);
@@ -978,8 +971,10 @@ public class SchemaManager {
 
         Pair<String, String> idInfo = extractIdInfo(xmlIdFile, schemaName);
 
+        extractMetadata(mds, xmlIdFile);
         mds.setReadwriteUUID(extractReadWriteUuid(xmlIdFile));
         mds.setOperationFilters(extractOperationFilters(xmlIdFile));
+
         Log.debug(Geonet.SCHEMA_MANAGER, "  UUID is read/write mode: " + mds.isReadwriteUUID());
 
         putSchemaInfo(
@@ -1014,6 +1009,19 @@ public class SchemaManager {
         copySchemaXSDsToWebApp(schemaName, path);
 
     }
+
+    /**
+     * Reload a schema.
+     *
+     * Compile validation rules (conversion from SCH to XSL).
+     *
+     * @param schemaIdentifier The schema identifier.
+     */
+    public void reloadSchema(String schemaIdentifier) {
+        MetadataSchema metadataSchema = this.getSchema(schemaIdentifier);
+        metadataSchema.loadSchematronRules(basePath);
+    }
+
 
     /**
      * Read the elements from the schema plugins catalog for use by other methods.
@@ -1114,7 +1122,7 @@ public class SchemaManager {
         try {
             baseNrInt = Integer.parseInt(baseNr);
         } catch (NumberFormatException nfe) {
-            nfe.printStackTrace();
+            Log.error(Geonet.SCHEMA_MANAGER, "Cannot decode blank number from " + baseBlank, nfe);
             throw new IllegalArgumentException("Cannot decode blank number from " + baseBlank);
         }
         return baseNrInt;
@@ -1276,7 +1284,7 @@ public class SchemaManager {
             stage = "reading schema-ident file " + idFile;
             Element root = Xml.loadFile(idFile);
             stage = "validating schema-ident file " + idFile;
-            Xml.validate(new Document(root));
+            Xml.validate(root);
 
             final String schemaName = schemasDir.getFileName().toString();
             if (hmSchemas.containsKey(schemaName)) { // exists so ignore it
@@ -1285,11 +1293,11 @@ public class SchemaManager {
                 stage = "adding the schema information";
                 addSchema(applicationContext, schemasDir, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile,
                     idFile, oasisCatFile, conversionsFile);
+                ResolverWrapper.createResolverForSchema(schemasDir.getFileName().toString(), oasisCatFile);
             }
         } catch (Exception e) {
             String errStr = "Failed whilst " + stage + ". Exception message if any is " + e.getMessage();
-            Log.error(Geonet.SCHEMA_MANAGER, errStr);
-            e.printStackTrace();
+            Log.error(Geonet.SCHEMA_MANAGER, errStr, e);
             throw new OperationAbortedEx(errStr, e);
         }
 
@@ -1320,6 +1328,54 @@ public class SchemaManager {
         }
 
     }
+
+    private void checkAppSupported(Element schemaPluginCatRoot) throws Exception {
+        List<String> removes = new ArrayList<String>();
+
+        final SystemInfo systemInfo = ApplicationContextHolder.get().getBean(SystemInfo.class);
+
+        String version = systemInfo.getVersion();
+        Version appVersion = Version.parseVersionNumber(version);
+
+        // process each schema to see whether its dependencies are present
+        for (String schemaName : hmSchemas.keySet()) {
+            Schema schema = hmSchemas.get(schemaName);
+            String minorAppVersionSupported = schema.getMetadataSchema().getAppMinorVersionSupported();
+
+            Version schemaMinorAppVersion = Version.parseVersionNumber(minorAppVersionSupported);
+
+            if (appVersion.compareTo(schemaMinorAppVersion) < 0) {
+                Log.error(Geonet.SCHEMA_MANAGER, "Schema " + schemaName +
+                    " requires min Geonetwork version: " + minorAppVersionSupported + ", current is: " +
+                    version + ". Skip load schema.");
+                removes.add(schemaName);
+                continue;
+            }
+
+            String majorAppVersionSupported = schema.getMetadataSchema().getAppMajorVersionSupported();
+            if (StringUtils.isNotEmpty(majorAppVersionSupported)) {
+                Version schemaMajorAppVersion = Version.parseVersionNumber(majorAppVersionSupported);
+
+                if (appVersion.compareTo(schemaMajorAppVersion) > 0) {
+                    Log.error(Geonet.SCHEMA_MANAGER, "Schema " + schemaName +
+                        " requires max Geonetwork version: " + majorAppVersionSupported + ", current is: " +
+                        version + ". Skip load schema.");
+                    removes.add(schemaName);
+                    continue;
+                }
+            }
+
+        }
+
+        // now remove any that failed the app version test
+        for (String removeSchema : removes) {
+            hmSchemas.remove(removeSchema);
+            deleteSchemaFromPluginCatalog(removeSchema, schemaPluginCatRoot);
+        }
+
+    }
+
+
 
     /**
      * Get list of schemas that depend on supplied schema name.
@@ -1399,6 +1455,35 @@ public class SchemaManager {
             }
         }
         return false;
+    }
+
+
+    /**
+     * Extract metadata schema informations (eg. title, description, url).
+     */
+    private void extractMetadata(MetadataSchema mds, Path xmlIdFile) throws JDOMException, NoSuchFileException {
+        Element root = Xml.loadFile(xmlIdFile);
+        mds.setStandardUrl(root.getChildText("standardUrl", GEONET_SCHEMA_NS));
+        mds.setTitles(getSchemaIdentMultilingualProperty(root, "title"));
+        mds.setDescriptions(getSchemaIdentMultilingualProperty(root, "description"));
+
+        mds.setAppMinorVersionSupported(root.getChildText("appMinorVersionSupported", GEONET_SCHEMA_NS));
+        mds.setAppMajorVersionSupported(root.getChildText("appMajorVersionSupported", GEONET_SCHEMA_NS));
+        mds.setDependsOn(root.getChildText("depends", GEONET_SCHEMA_NS));
+    }
+
+    private Map<String, String> getSchemaIdentMultilingualProperty(Element root, String propName) {
+        Map<String, String> props = new HashMap<>();
+        root.getChildren(propName, GEONET_SCHEMA_NS).forEach(o -> {
+            if (o instanceof Element) {
+                Element e = (Element) o;
+                String lang = e.getAttributeValue("lang", Namespaces.XML);
+                if (lang != null) {
+                    props.put(lang, e.getTextNormalize());
+                }
+            }
+        });
+        return props;
     }
 
     /**
@@ -1500,7 +1585,7 @@ public class SchemaManager {
         Element schemaLocElem = root.getChild("schemaLocation", GEONET_SCHEMA_NS);
         if (schemaLocElem == null)
             schemaLocElem = root.getChild("schemaLocation", GEONET_SCHEMA_PREFIX_NS);
-        return schemaLocElem.getText();
+        return schemaLocElem.getTextNormalize();
     }
 
     /**

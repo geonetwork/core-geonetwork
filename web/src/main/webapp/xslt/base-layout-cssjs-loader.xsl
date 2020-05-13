@@ -33,7 +33,7 @@
 
   <xsl:variable name="minimizedParam">
     <xsl:choose>
-      <xsl:when test="/root/request/debug">?minimize=false</xsl:when>
+      <xsl:when test="/root/request/debug">minimize=false</xsl:when>
       <xsl:otherwise></xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
@@ -43,19 +43,36 @@
             TODO : less compilation
             <link href="style/app.css" rel="stylesheet" media="screen" />
 -->
+    <link href="{/root/gui/url}/static/gn_fonts.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
+          media="screen"/>
+
+    <link href="{/root/gui/url}/static/{$customFilename}.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
+          media="screen"/>
+
+    <link href="{/root/gui/url}/static/bootstrap-table.min.css?v={$buildNumber}" rel="stylesheet"
+          media="screen"></link>
+
+    <link href="{/root/gui/url}/static/gn_pickers.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
+          media="screen"/>
+
+    <link href="{/root/gui/url}/static/gn_inspire.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
+          media="screen"/>
+
     <xsl:if test="$withD3">
-      <link href="{/root/gui/url}/static/nv.d3.css{$minimizedParam}" rel="stylesheet"
+      <link href="{/root/gui/url}/static/nv.d3.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
             media="screen"/>
     </xsl:if>
 
-    <link href="{/root/gui/url}/static/{$customFilename}.css{$minimizedParam}" rel="stylesheet"
-          media="screen"/>
-
-    <link href="{/root/gui/url}/static/bootstrap-table.min.css" rel="stylesheet"
-          media="screen"></link>
-    <link href="{/root/gui/url}/static/ng-skos.css" rel="stylesheet" media="screen"></link>
-    <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css{$minimizedParam}"
+    <link href="{/root/gui/url}/static/ng-skos.css?v={$buildNumber}" rel="stylesheet" media="screen"></link>
+    <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css?v={$buildNumber}&amp;{$minimizedParam}"
           rel="stylesheet" media="screen"/>
+  </xsl:template>
+
+  <xsl:template name="css-load-nojs">
+    <link href="{/root/gui/url}/static/{$customFilename}.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
+          media="screen"/>
+    <link href="{/root/gui/url}/static/gn_metadata_pdf.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
+          media="print"/>
   </xsl:template>
 
 
@@ -63,70 +80,80 @@
 
 
     <xsl:if test="$is3DModeAllowed">
-      <script>var CESIUM_BASE_URL = '<xsl:value-of select="$uiResourcesPath"/>lib/ol3cesium/Cesium/';
+      <script>var CESIUM_BASE_URL = '<xsl:value-of select="$uiResourcesPath"/>lib/olcesium/Cesium/';
       </script>
+    </xsl:if>
+
+
+    <xsl:if test="$isRecaptchaEnabled and $service = 'new.account'">
+      <script src="https://www.google.com/recaptcha/api.js"></script>
     </xsl:if>
 
     <xsl:choose>
       <xsl:when test="$isDebugMode">
+        <script src="{$uiResourcesPath}lib/modernizr.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/closure/base.js?v={$buildNumber}"></script>
 
-        <script src="{$uiResourcesPath}lib/modernizr.js"></script>
-        <script src="{$uiResourcesPath}lib/closure/base.js"></script>
+        <script src="{$uiResourcesPath}lib/base64.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery-2.2.4.js?v={$buildNumber}"></script>
 
-        <script src="{$uiResourcesPath}lib/base64.js"></script>
-        <script src="{$uiResourcesPath}lib/jquery-2.0.3.js"></script>
+        <script src="{$uiResourcesPath}lib/moment+langs.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/moment-timezone-with-data-10-year-range.min.js?v={$buildNumber}"></script>
 
-        <script src="{$uiResourcesPath}lib/moment+langs.min.js"></script>
-
-        <script src="{$uiResourcesPath}lib/angular/angular.js"></script>
-        <script src="{$uiResourcesPath}lib/angular/angular-resource.js"></script>
-        <script src="{$uiResourcesPath}lib/angular/angular-route.js"></script>
-        <script src="{$uiResourcesPath}lib/angular/angular-sanitize.js"></script>
-        <script src="{$uiResourcesPath}lib/angular/angular-gettext.min.js"/>
-        <script src="{$uiResourcesPath}lib/angular/angular-cookies.js"></script>
-        <script src="{$uiResourcesPath}lib/angular-translate.js"></script>
-        <script src="{$uiResourcesPath}lib/angular-md5.js"></script>
-        <script src="{$uiResourcesPath}lib/angular-filter.min.js"></script>
-        <script src="{$uiResourcesPath}lib/angular.ext/hotkeys/hotkeys.js"></script>
-        <script src="{$uiResourcesPath}lib/angular.ext/datetimepicker.js"></script>
-        <script src="{$uiResourcesPath}lib/angular.ext/buttons.js"></script>
-        <script src="{$uiResourcesPath}lib/angular.ext/rating.js"></script>
-        <script src="{$uiResourcesPath}lib/angular.ext/typeahead.js"></script>
-        <script src="{$uiResourcesPath}lib/angular.ext/position.js"></script>
-        <script src="{$uiResourcesPath}lib/angular.ext/bindHtml.js"></script>
-        <script src="{$uiResourcesPath}lib/angular.ext/tabs.js"></script>
-        <script src="{$uiResourcesPath}lib/angular.ext/slider.js"></script>
+        <script src="{$uiResourcesPath}lib/angular/angular.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular/angular-resource.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular/angular-route.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular/angular-sanitize.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular/angular-gettext.min.js?v={$buildNumber}"/>
+        <script src="{$uiResourcesPath}lib/angular/angular-cookies.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular-translate.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular-md5.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular-filter.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/hotkeys/hotkeys.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/datetimepicker.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/modal.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/buttons.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/rating.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/typeahead.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/position.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/bindHtml.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/tabs.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/slider.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/date.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/angular-floatThead.js?v={$buildNumber}"></script>
         <script
-          src="{$uiResourcesPath}lib/angular.ext/colorpicker/angularjs-color-picker.js"></script>
-        <script src="{$uiResourcesPath}lib/tinycolor.js"></script>
+          src="{$uiResourcesPath}lib/angular.ext/colorpicker/angularjs-color-picker.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/tinycolor.js?v={$buildNumber}"></script>
 
-        <script src="{$uiResourcesPath}lib/style/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js"></script>
-        <script src="{$uiResourcesPath}lib/proj4js-compressed.js"></script>
+        <script src="{$uiResourcesPath}lib/style/bootstrap/dist/js/bootstrap.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/proj4js-compressed.js?v={$buildNumber}"></script>
 
         <xsl:choose>
           <xsl:when test="$is3DModeAllowed">
-            <script src="{$uiResourcesPath}lib/ol3cesium/Cesium/Cesium.js"></script>
-            <script src="{$uiResourcesPath}lib/ol3cesium/ngeool3cesium-debug.js"></script>
+            <script src="{$uiResourcesPath}lib/openlayers/ol.js?v={$buildNumber}"></script>
+            <script src="{$uiResourcesPath}lib/olcesium/Cesium/Cesium.js?v={$buildNumber}"></script>
+            <script src="{$uiResourcesPath}lib/olcesium/olcesium.js?v={$buildNumber}"></script>
           </xsl:when>
           <xsl:otherwise>
-            <script src="{$uiResourcesPath}lib/ngeo/ngeo-debug.js"></script>
+            <script src="{$uiResourcesPath}lib/openlayers/ol.js?v={$buildNumber}"></script>
           </xsl:otherwise>
         </xsl:choose>
 
-        <script src="{$uiResourcesPath}lib/FileSaver/FileSaver.min.js"></script>
-        <script src="{$uiResourcesPath}lib/tableExport/tableExport.min.js"></script>
+        <script src="{$uiResourcesPath}lib/FileSaver/FileSaver.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/tableExport/tableExport.min.js?v={$buildNumber}"></script>
         <xsl:if test="$withD3">
-          <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
-          <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
+          <script src="{$uiResourcesPath}lib/d3.v3.js?v={$buildNumber}"></script>
+          <script src="{$uiResourcesPath}lib/nv.d3.js?v={$buildNumber}"></script>
         </xsl:if>
 
         <xsl:if test="$angularApp = 'gn_search' or
                       $angularApp = 'gn_editor' or
+                      $angularApp = 'gn_formatter_viewer' or
                       $angularApp = 'gn_admin'">
-          <script src="{$uiResourcesPath}lib/zip/zip.js"></script>
+          <script src="{$uiResourcesPath}lib/zip/zip.js?v={$buildNumber}"></script>
           <!-- Jsonix resources (OWS Context) -->
-          <script src="{$uiResourcesPath}lib/jsonix/jsonix/Jsonix-min.js"></script>
+          <script src="{$uiResourcesPath}lib/jsonix/jsonix/Jsonix-all.js?v={$buildNumber}"></script>
           <script type="text/javascript">
             zip.workerScriptsPath = "../../catalog/lib/zip/";
           </script>
@@ -134,21 +161,34 @@
 
 
         <!--<xsl:if test="$isEditing">-->
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.ui.widget.js"></script>
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.iframe-transport.js"></script>
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload.js"></script>
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-process.js"></script>
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-angular.js"></script>
-        <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"></script>
+        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.ui.widget.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.iframe-transport.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-process.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-angular.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.floatThead-slim.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/typeahead.bundle.js?v={$buildNumber}"></script>
         <script
-          src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/handlebars-v2.0.0.js"></script>
-        <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.js"></script>
+          src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/handlebars-v2.0.0.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.js?v={$buildNumber}"></script>
         <script
-          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"></script>
-        <script src="{$uiResourcesPath}/lib/bootstrap-table/dist/bootstrap-table.js"></script>
-        <script src="{$uiResourcesPath}/lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js"></script>
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.js?v={$buildNumber}"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/angular/bootstrap-table-angular.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+
         <!--</xsl:if>-->
 
+        <script src="{$uiResourcesPath}lib/underscore/underscore-min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/recaptcha/angular-recaptcha.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/geohash.js?v={$buildNumber}"></script>
+
+        <script src="{$uiResourcesPath}lib/xml2json/xml2json.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/dom-to-image/dom-to-image.min.js?v={$buildNumber}"></script>
       </xsl:when>
       <xsl:otherwise>
       </xsl:otherwise>
@@ -158,7 +198,7 @@
     <xsl:choose>
       <xsl:when test="/root/request/debug">
         <!-- Use Closure to load the application scripts -->
-        <script src="{/root/gui/url}/static/closure_deps.js"></script>
+        <script src="{/root/gui/url}/static/closure_deps.js?v={$buildNumber}"></script>
         <script>
           goog.require('<xsl:value-of select="$angularModule"/>');
         </script>
@@ -167,76 +207,64 @@
 
         <xsl:choose>
           <xsl:when test="$is3DModeAllowed">
-            <script src="{$uiResourcesPath}lib/ol3cesium/Cesium/Cesium.js"></script>
-            <script src="{/root/gui/url}/static/lib3d.js"></script>
+            <script src="{$uiResourcesPath}lib/olcesium/Cesium/Cesium.js?v={$buildNumber}"></script>
+            <script src="{/root/gui/url}/static/lib3d.js?v={$buildNumber}"></script>
           </xsl:when>
           <xsl:otherwise>
-            <script src="{/root/gui/url}/static/lib.js"></script>
+            <script src="{/root/gui/url}/static/lib.js?v={$buildNumber}"></script>
           </xsl:otherwise>
         </xsl:choose>
-        <script src="{/root/gui/url}/static/{$angularModule}.js{$minimizedParam}"></script>
+        <script src="{/root/gui/url}/static/{$angularModule}.js?v={$buildNumber}&amp;{$minimizedParam}"></script>
       </xsl:otherwise>
     </xsl:choose>
 
-
-    <xsl:variable name="mapConfig"
-                  select="util:getSettingValue('map/config')"/>
-
-    <xsl:variable name="isMapViewerEnabled">
-      <xsl:choose>
-        <xsl:when test="util:getSettingValue('map/isMapViewerEnabled')">
-          <xsl:value-of select="util:getSettingValue('map/isMapViewerEnabled')"/>
-        </xsl:when>
-        <xsl:otherwise>true</xsl:otherwise> <!-- default value -->
-      </xsl:choose>
-
-    </xsl:variable>
+    <xsl:variable name="appConfig"
+                  select="util:getUiConfiguration(/root/request/ui)"/>
 
     <xsl:if test="$angularApp = 'gn_search'">
+      <script src="{$uiResourcesPath}lib/d3_timeseries/d3.min.js?v={$buildNumber}"></script>
+      <script src="{$uiResourcesPath}lib/timeline/timeline-zoomable.js?v={$buildNumber}"></script>
+      <link rel="stylesheet" href="{$uiResourcesPath}lib/timeline/timeline.css"/>
+      <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
       <script type="text/javascript">
         var module = angular.module('gn_search');
-        module.config(['gnViewerSettings', 'gnGlobalSettings',
-        function(gnViewerSettings, gnGlobalSettings) {
-        <xsl:if test="$owsContext">
-          gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
-        </xsl:if>
-        <xsl:if test="$wmsUrl and $layerName">
-          gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
-          gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
-          gnViewerSettings.layerGroup = '<xsl:value-of select="$layerGroup"/>';
-        </xsl:if>
-        gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
-        gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
-        }]);
-      </script>
-    </xsl:if>
-
-    <xsl:if test="$angularApp = 'gn_editor'">
-      <script type="text/javascript">
-        var module = angular.module('gn_editor');
-        module.config(['gnViewerSettings', 'gnGlobalSettings',
-        function(gnViewerSettings, gnGlobalSettings) {
-        <xsl:if test="$owsContext">
-          gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
-        </xsl:if>
-        <xsl:if test="$wmsUrl and $layerName">
-          gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
-          gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
-        </xsl:if>
-        gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
-        gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
-        }]);
-      </script>
-    </xsl:if>
-
-    <xsl:if test="$angularApp = 'gn_admin'">
-      <script type="text/javascript">
-        var module = angular.module('gn_admin');
         module.config(['gnGlobalSettings',
         function(gnGlobalSettings) {
-        gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
+        gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
+        gnGlobalSettings.shibbolethHideLogin = <xsl:value-of select="$shibbolethHideLogin and $shibbolethOn"/>;
         }]);
       </script>
     </xsl:if>
+
+    <xsl:if test="$angularApp = 'gn_login'">
+      <script type="text/javascript">
+        var module = angular.module('gn_login');
+        module.config(['gnGlobalSettings',
+        function(gnGlobalSettings) {
+        gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
+        }]);
+      </script>
+    </xsl:if>
+
+    <!-- XML highlighter JS dependency. -->
+    <xsl:if test="$angularApp = 'gn_editor' or $angularApp = 'gn_admin'">
+      <script type="text/javascript" src="{$uiResourcesPath}lib/ace/ace.js?v={$buildNumber}"></script>
+      <script type="text/javascript" src="{$uiResourcesPath}lib/angular.ext/ui-ace.js?v={$buildNumber}"></script>
+    </xsl:if>
+
+
+    <script type="text/javascript">
+      var module = angular.module('<xsl:value-of select="$angularApp"/>');
+
+      // Init GN config which is a dependency of gn
+      // in order to be initialized quite early
+      var cfgModule = angular.module('gn_config', []);
+      cfgModule.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
+      function(gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
+      gnGlobalSettings.init(
+      <xsl:value-of select="if ($appConfig != '') then $appConfig else '{}'"/>,
+      null, gnViewerSettings, gnSearchSettings);
+      }]);
+    </script>
   </xsl:template>
 </xsl:stylesheet>

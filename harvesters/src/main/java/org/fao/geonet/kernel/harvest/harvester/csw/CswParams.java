@@ -23,15 +23,12 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,32 +36,21 @@ import java.util.List;
  *
  */
 public class CswParams extends AbstractParams {
-    //--------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //--------------------------------------------------------------------------
 
     public String capabUrl;
+
     public String icon;
+
     public String outputSchema;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Other API methods
-    //---
-    //---------------------------------------------------------------------------
-
-    //public Iterable<Element> getSearchElements() { return eltSearches; }
     public boolean rejectDuplicateResource;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
     public String queryScope;
+
+    public String xpathFilter;
+
     public Integer hopCount;
+
     /**
      * The filter is a process (see schema/process folder) which depends on the schema. It could be
      * composed of parameter which will be sent to XSL transformation using the following syntax :
@@ -74,6 +60,12 @@ public class CswParams extends AbstractParams {
      */
     public String xslfilter;
     public List<Element> eltSearches = new ArrayList<Element>();
+
+    @Override
+    public String getIcon() {
+        return icon;
+    }
+
     public CswParams(DataManager dm) {
         super(dm);
     }
@@ -90,18 +82,11 @@ public class CswParams extends AbstractParams {
 
         capabUrl = Util.getParam(site, "capabilitiesUrl", "");
         rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource", false);
-        queryScope = Util.getParam(site, "queryScope", "off");
+        queryScope = Util.getParam(site, "queryScope", "local");
         hopCount = Util.getParam(site, "hopCount", 2);
         xslfilter = Util.getParam(site, "xslfilter", "");
+        xpathFilter = Util.getParam(site, "xpathFilter", "");
         outputSchema = Util.getParam(site, "outputSchema", outputSchema);
-
-        try {
-            capabUrl = URLDecoder.decode(capabUrl, Constants.ENCODING);
-        } catch (UnsupportedEncodingException x) {
-            System.out.println(x.getMessage());
-            x.printStackTrace();
-            // TODO should not swallow
-        }
         icon = Util.getParam(site, "icon", "default.gif");
 
         if (searches != null) {
@@ -128,16 +113,9 @@ public class CswParams extends AbstractParams {
 
         capabUrl = Util.getParam(site, "capabilitiesUrl", capabUrl);
         rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource", rejectDuplicateResource);
-
-        try {
-            capabUrl = URLDecoder.decode(capabUrl, Constants.ENCODING);
-        } catch (UnsupportedEncodingException x) {
-            System.out.println(x.getMessage());
-            x.printStackTrace();
-            // TODO should not swallow
-        }
         queryScope = Util.getParam(site, "queryScope", queryScope);
         hopCount = Util.getParam(site, "hopCount", hopCount);
+        xpathFilter = Util.getParam(site, "xpathFilter", "");
         xslfilter = Util.getParam(site, "xslfilter", "");
         outputSchema = Util.getParam(site, "outputSchema", outputSchema);
 
@@ -169,6 +147,7 @@ public class CswParams extends AbstractParams {
         copy.rejectDuplicateResource = rejectDuplicateResource;
         copy.queryScope = queryScope;
         copy.hopCount = hopCount;
+        copy.xpathFilter = xpathFilter;
         copy.xslfilter = xslfilter;
         copy.outputSchema = outputSchema;
 

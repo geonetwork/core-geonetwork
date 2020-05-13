@@ -53,6 +53,11 @@
               icon: 'fa-archive',
               href: '#/metadata/metadata-and-template'
             },{
+              type: 'standards',
+              label: 'standards',
+              icon: 'fa-puzzle-piece',
+              href: '#/metadata/standards'
+            },{
               type: 'formatter',
               label: 'metadataFormatter',
               icon: 'fa-eye',
@@ -207,7 +212,7 @@
        */
       loadFormatterError = function(e, data) {
         $rootScope.$broadcast('StatusUpdated', {
-          title: $translate('formatterUploadError'),
+          title: $translate.instant('formatterUploadError'),
           error: data.jqXHR.responseJSON,
           timeout: 0,
           type: 'danger'});
@@ -283,7 +288,7 @@
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('formatterRemovalError'),
+                title: $translate.instant('formatterRemovalError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});
@@ -320,13 +325,13 @@
             function(response) {
               if (response.status === 200) {
                 $rootScope.$broadcast('StatusUpdated', {
-                  msg: $translate('formatterFileUpdated',
+                  msg: $translate.instant('formatterFileUpdated',
                       {file: $scope.selectedFile['@name']}),
                   timeout: 2,
                   type: 'success'});
               } else {
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate('formatterFileUpdateError',
+                  title: $translate.instant('formatterFileUpdateError',
                       {file: $scope.selectedFile['@name']}),
                   error: data,
                   timeout: 0,
@@ -337,7 +342,7 @@
 
       $scope.testFormatter = function(mode) {
         var service = 'md.format.' + (mode == 'HTML' ? 'html' : 'xml');
-        var url = service + '?id=' + $scope.metadataId +
+        var url = service + '?uuid=' + $scope.metadataId +
             '&xsl=' + $scope.formatterSelected.id;
         if ($scope.formatterSelected.schema) {
           url += '&schema=' + $scope.formatterSelected.schema;

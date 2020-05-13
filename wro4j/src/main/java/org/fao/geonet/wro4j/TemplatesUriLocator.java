@@ -1,5 +1,6 @@
 package org.fao.geonet.wro4j;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import ro.isdc.wro.config.Context;
@@ -13,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 
 import javax.servlet.ServletContext;
 
@@ -51,44 +54,58 @@ public class TemplatesUriLocator implements UriLocator {
                 return new ByteArrayInputStream(javascript.toString().getBytes("UTF-8"));
             }
 
-            File folder = new File(realPath);
-            File[] files = folder.listFiles();
-            if (files != null) {
-                for (int i = 0; i < files.length; ++i) {
-
-                    if (files[i].isDirectory()) {
-                        break;
-                    }
-                    BufferedReader br = null;
-                    StringBuilder template = null;
-
-                    String sCurrentLine;
-                    template = new StringBuilder();
-                    final Reader reader = new InputStreamReader(new FileInputStream(files[i]), "UTF-8");
-                    try {
-                        br = new BufferedReader(reader);
-                        while ((sCurrentLine = br.readLine()) != null) {
-                            template.append(sCurrentLine);
+            // Recursively walk each folders and add each templates found.
+            Path folderToVisit = Paths.get(realPath);
+            if (Files.exists(folderToVisit)) {
+                Files.walkFileTree(folderToVisit, new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        if (!Files.isDirectory(file) && file.getFileName().toString().endsWith("html")) {
+                            String fileFolder = file.getParent().toUri().toString();
+                            String relativeFileFolderPath = fileFolder.substring(fileFolder.indexOf(path));
+                            addFileToTemplateCache(javascript, "../.." + relativeFileFolderPath + file.getFileName(), file.toFile());
                         }
-
-                        String sTemplate = template.toString();
-                        sTemplate = sTemplate.replaceAll(">\\s*<", "><");
-                        sTemplate = sTemplate.replaceAll("\\s\\s+", " ");
-                        sTemplate = sTemplate.replaceAll("\n", "");
-                        sTemplate = sTemplate.replace("'", "\\'");
-
-                        javascript.append(
-                            String.format("$templateCache.put('%s', '%s');",
-                                "../.." + path.replace('\\', '/') + '/' + files[i].getName(),
-                                sTemplate));
-                    } finally {
-                        IOUtils.closeQuietly(reader);
+                        return FileVisitResult.CONTINUE;
                     }
-                }
-
+                });
             }
         }
         return new ByteArrayInputStream(javascript.toString().getBytes("UTF-8"));
+    }
+
+    private void addFileToTemplateCache(StringBuilder javascript, String s, File file) throws IOException {
+        BufferedReader br = null;
+        StringBuilder template = null;
+
+        String sCurrentLine;
+        template = new StringBuilder();
+        final Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
+        try {
+            
+            br = new BufferedReader(reader);
+            while ((sCurrentLine = br.readLine()) != null) {
+                template.append(sCurrentLine).append("\n");
+            }
+
+            // Build a template in a one line String for the JS templateCache
+            String sTemplate = template.toString();
+            // Remove all empty content between tags but not new lines
+            sTemplate = sTemplate.replaceAll(">[ \\t\\r\\f]*<", "><"); 
+            // Replace all successions of spaces, tabs ... by a single space
+            sTemplate = sTemplate.replaceAll("\\s\\s+", " "); 
+            // The backslash (\) is an escape character in Javascript
+            sTemplate = sTemplate.replace("\\", "\\\\");
+            // Escape new lines
+            sTemplate = sTemplate.replaceAll("\\n", "\\\\n");
+            // Escape quotes
+            sTemplate = sTemplate.replace("'", "\\'");  
+            javascript.append(
+                String.format("$templateCache.put('%s', '%s');",
+                    s,
+                    sTemplate));
+        } finally {
+            IOUtils.closeQuietly(reader);
+        }
     }
 
     private StringBuilder getHeader() {

@@ -1,0 +1,20 @@
+<div class="input-group">
+	<span class="input-group-addon" data-ng-translate="">projection</span>
+	<ul>
+		<li ng-repeat="p in (projections)" 
+				class="form-control "
+				data-ng-click="switchProjection(p.code)"
+				data-ng-class="map.getView().getProjection().getCode() == p.code ? 'active' : ''"
+				data-ng-if="map.getView().getProjection().getCode() == p.code || listOpen">
+			<span	class="clickable">{{p.label}}</span>
+		</li>
+	</ul>
+	<span class="input-group-btn">
+		<button data-ng-click="toggleList()"
+					  type="button"
+						class="btn btn-default">
+			<span class="fa clickable"
+						data-ng-class="listOpen? 'fa-caret-left' : 'fa-caret-down'"></span>
+		</button>
+	</span>
+</div>

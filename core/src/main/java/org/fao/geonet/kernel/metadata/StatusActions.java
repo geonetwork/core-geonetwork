@@ -25,9 +25,11 @@ package org.fao.geonet.kernel.metadata;
 
 import jeeves.server.context.ServiceContext;
 
+import java.util.List;
 import java.util.Set;
 
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataStatus;
 
 public interface StatusActions {
 
@@ -35,6 +37,6 @@ public interface StatusActions {
 
     public void onEdit(int id, boolean minorEdit) throws Exception;
 
-    public Set<Integer> statusChange(String status, Set<Integer> metadataIds, ISODate changeDate, String changeMessage) throws Exception;
+    public Set<Integer> onStatusChange(List<MetadataStatus> status) throws Exception;
 
 }

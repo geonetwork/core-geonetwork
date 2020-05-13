@@ -18,7 +18,7 @@
   </appender>
   <appender name="fileAppender" class="org.apache.log4j.RollingFileAppender">
     <param name="Threshold" value="ALL"/>
-    <param name="File" value="logs/geonetwork.log"/>
+    <param name="File" value="${log_dir}logs/geonetwork.log"/>
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c] - %m%n"/>
     </layout>
@@ -37,7 +37,7 @@
     <level value="WARN"/>
   </logger>
   <logger name="geonetwork.databasemigration">
-    <level value="WARN"/>
+    <level value="INFO"/>
   </logger>
   <logger name="geonetwork.schemamanager" additivity="false">
     <level value="WARN"/>
@@ -70,7 +70,7 @@
     <level value="WARN"/>
   </logger>
   <logger name="geonetwork.harvester" additivity="false">
-    <level value="WARN"/>
+    <level value="INFO"/>
     <appender-ref ref="consoleAppender"/>
     <appender-ref ref="fileAppender"/>
   </logger>

@@ -50,6 +50,11 @@
               };
             }
             element.addClass('gn-popup modal fade');
+
+            // handle close callback
+            if (scope.options.closeCallback) {
+              element.on('hidden.bs.modal', scope.options.closeCallback);
+            }
           }
         };
       }
@@ -82,7 +87,7 @@
 
           // Get the popup options
           scope.options = scope.optionsFunc();
-          scope.titlePrint = $translate('print_action');
+          scope.titlePrint = $translate.instant('print_action');
 
           if (!scope.options) {
             scope.options = {
@@ -100,7 +105,7 @@
             element.css({
               left: scope.options.x ||
                   $(document.body).width() / 2 - element.width() / 2,
-              top: scope.options.y || 89 //89 is the default size of the header
+              top: scope.options.y || 60 // 50 is the default size of the header + extra margin
             });
           };
 

@@ -41,6 +41,8 @@
     <msg id="b" xml:lang="fre">). Si l'erreur persiste, corriger le lien manuellement ou exécuter
       cette action pour le supprimer.
     </msg>
+    <msg id="a" xml:lang="dut"> is niet gevonden (</msg>
+    <msg id="b" xml:lang="dut">). Functie verwijdert de link.</msg>
   </xsl:variable>
 
   <xsl:template name="list-related-metadata-checker">

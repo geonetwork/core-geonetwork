@@ -1,0 +1,99 @@
+<div class="container" id="gn-access-manager-container">
+  <br/>
+  <br/>
+  <br/>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <span data-translate="">accessManagerTitle</span>
+        </div>
+
+        <div class="panel-body" data-ng-controller="GnAccessManagerController">
+
+          <div class="row">
+            <div class="col-md-6">
+              <label class="control-label"
+                     data-translate>searchByTitle</label>
+              <input type="text"
+                     class="form-control"
+                     data-ng-model="params.any"
+                     data-ng-model-options="{debounce: 300}"
+                     placeholder="{{'anyPlaceHolder' | translate}}"
+                     aria-label="{{'anyPlaceHolder' | translate}}">
+
+              <br/>
+              <label class="control-label"
+                     data-translate>_groupPublished</label>
+              <select class="form-control" data-ng-model="params.group">
+                <option value=""></option>
+                <option data-ng-repeat="g in groups | orderBy:'name'"
+                        value="{{g.name}}">
+                  {{g.label[lang]|empty:g.name}}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <h4 data-translate>accessManagerChooseGroups</h4>
+              <ul style="max-height: 200px; overflow: auto;">
+                <li data-ng-repeat="g in groups | orderBy:'name'">
+                  <label>
+                    <input type="checkbox"
+                           data-ng-model="g.selected"
+                           data-ng-change="buildQuery()"/>
+                    <span>{{g.label[lang]|empty:g.name}}</span>
+                  </label>
+                </li>
+              </ul>
+
+              <h4 data-translate>accessManagerChooseOperations</h4>
+              <ul>
+                <li data-ng-repeat="o in operations">
+                  <label>
+                    <input type="checkbox"
+                           data-ng-model="o.selected"
+                           data-ng-change="buildQuery()"/>
+                    <span>{{o.label[lang]|empty:o.name}}</span>
+                  </label>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <table class="table table-striped" data-ng-if="results">
+            <tr>
+              <th></th>
+              <th data-ng-repeat="g in selectedGroups"
+                  colspan="{{nbOperations}}">
+                {{g.label[lang]|empty:g.name}}
+              </th>
+            </tr>
+            <tr>
+              <th>{{size > results.hits.total ? results.hits.total : size}}/{{results.hits.total}}&nbsp;<span data-translate>records</span></th>
+              <th data-ng-repeat="c in columns">
+                {{c.operation.label[lang]|empty:c.operation.name}}
+              </th>
+            </tr>
+            <tr data-ng-repeat="r in results.hits.hits">
+              <td><a data-ng-href="catalog.search#/metadata/{{r._source.uuid}}">{{r._source.resourceTitle}}</a></td>
+              <td data-ng-repeat="c in columns"
+                  class="{{r.fields[c.fieldName][0] == false ? 'danger' : 'success'}}">
+                &nbsp;
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <button class="btn btn-link"
+                        data-ng-click="more()"
+                        data-ng-if="results.hits.total > size"
+                        data-translate>
+                  more
+                </button>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

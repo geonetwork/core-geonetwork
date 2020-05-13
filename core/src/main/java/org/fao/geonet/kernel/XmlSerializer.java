@@ -23,19 +23,21 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.server.context.ServiceContext;
-import jeeves.xlink.Processor;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -43,9 +45,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
 
 /**
  * This class is responsible of reading and writing xml on the database. It works on tables like
@@ -155,26 +156,26 @@ public abstract class XmlSerializer {
      * and the string read is converted into xml.
      *
      * @param isIndexingTask If true, then withheld elements are not removed.
+     * @param applyOperationsFilters If true, then withheld elements are filtered according to user privileges.
      */
-    protected Element internalSelect(String id, boolean isIndexingTask) throws Exception {
-        MetadataRepository _metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
+    protected Element internalSelect(String id, boolean isIndexingTask, boolean applyOperationsFilters) throws Exception {
+        IMetadataUtils _metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
 
-        Metadata metadata = _metadataRepository.findOne(id);
+        AbstractMetadata metadata = _metadataUtils.findOne(Integer.parseInt(id));
 
         if (metadata == null)
             return null;
 
-        return removeHiddenElements(isIndexingTask, metadata);
+        return removeHiddenElements(isIndexingTask, metadata, applyOperationsFilters);
     }
 
-    public Element removeHiddenElements(boolean isIndexingTask, Metadata metadata) throws Exception {
+    public Element removeHiddenElements(boolean isIndexingTask, AbstractMetadata metadata, boolean applyOperationsFilters) throws Exception {
         AccessManager accessManager = ApplicationContextHolder.get().getBean(AccessManager.class);
         DataManager _dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
 
         String id = String.valueOf(metadata.getId());
         Element metadataXml = metadata.getXmlData(false);
-
-        if (!isIndexingTask) {
+        if (!isIndexingTask && applyOperationsFilters) {
             ServiceContext context = ServiceContext.get();
             MetadataSchema mds = _dataManager.getSchema(metadata.getDataInfo().getSchemaId());
 
@@ -221,11 +222,11 @@ public abstract class XmlSerializer {
      * @param context     a service context
      * @return the saved metadata
      */
-    protected Metadata insertDb(final Metadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
+    protected AbstractMetadata insertDb(final AbstractMetadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
         if (resolveXLinks()) Processor.removeXLink(dataXml);
 
         newMetadata.setData(Xml.getString(dataXml));
-        return context.getBean(MetadataRepository.class).save(newMetadata);
+        return context.getBean(IMetadataManager.class).save(newMetadata);
     }
 
     /**
@@ -239,10 +240,11 @@ public abstract class XmlSerializer {
                             final String uuid) throws SQLException {
         if (resolveXLinks()) Processor.removeXLink(xml);
 
-        MetadataRepository _metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
+        IMetadataManager _metadataManager = ApplicationContextHolder.get().getBean(IMetadataManager.class);
+        IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
 
         int metadataId = Integer.valueOf(id);
-        Metadata md = _metadataRepository.findOne(metadataId);
+        AbstractMetadata md = metadataUtils.findOne(metadataId);
 
         md.setDataAndFixCR(xml);
 
@@ -258,19 +260,20 @@ public abstract class XmlSerializer {
             md.setUuid(uuid);
         }
 
-        _metadataRepository.save(md);
+        _metadataManager.save(md);
     }
 
     /**
      * Deletes an xml element given its id.
      */
+
     protected void deleteDb(String id) throws Exception {
-        MetadataRepository _metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
+        IMetadataManager _metadataManager = ApplicationContextHolder.get().getBean(IMetadataManager.class);
 
         // TODO: Ultimately we want to remove any xlinks in this document
         // that aren't already in use from the xlink cache. For now we
         // rely on the admin clearing cache and reindexing regularly
-        _metadataRepository.delete(Integer.valueOf(id));
+        _metadataManager.delete(Integer.valueOf(id));
 
 //        Assert.isTrue(!_metadataRepository.exists(Integer.valueOf(id)), "Metadata should have been deleted");
 
@@ -285,7 +288,7 @@ public abstract class XmlSerializer {
                                 String changeDate, boolean updateDateStamp, String uuid, ServiceContext context)
         throws Exception;
 
-    public abstract Metadata insert(Metadata metadata, Element dataXml, ServiceContext context)
+    public abstract AbstractMetadata insert(AbstractMetadata metadata, Element dataXml, ServiceContext context)
         throws Exception;
 
     /**
@@ -295,7 +298,7 @@ public abstract class XmlSerializer {
      */
     public abstract Element select(ServiceContext context, String id) throws Exception;
 
-    public abstract Element selectNoXLinkResolver(String id, boolean isIndexingTask)
+    public abstract Element selectNoXLinkResolver(String id, boolean isIndexingTask, boolean applyOperationsFilters)
         throws Exception;
 
     public static class ThreadLocalConfiguration {

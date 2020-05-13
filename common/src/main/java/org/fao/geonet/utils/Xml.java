@@ -23,14 +23,22 @@
 
 package org.fao.geonet.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.sf.json.JSON;
 import net.sf.json.xml.XMLSerializer;
 import net.sf.saxon.Configuration;
+import net.sf.saxon.Controller;
 import net.sf.saxon.FeatureKeys;
-
+import org.apache.commons.io.IOUtils;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.xml.resolver.tools.CatalogResolver;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.utils.nio.NioPathAwareEntityResolver;
@@ -52,49 +60,15 @@ import org.jdom.output.XMLOutputter;
 import org.jdom.transform.JDOMResult;
 import org.jdom.transform.JDOMSource;
 import org.jdom.xpath.XPath;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
 import org.mozilla.universalchardet.UniversalDetector;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.DefaultHandler;
-
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.StringReader;
-import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
-import java.nio.file.FileSystemNotFoundException;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.util.JAXBSource;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -107,6 +81,40 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.ValidatorHandler;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.fao.geonet.Constants.ENCODING;
 
@@ -137,8 +145,14 @@ public final class Xml {
     private static SAXBuilder getSAXBuilderWithPathXMLResolver(boolean validate, Path base) {
         SAXBuilder builder = new SAXBuilder(validate);
         builder.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        NioPathHolder.setBase(base);
-        builder.setEntityResolver(Xml.PATH_RESOLVER);
+
+        if (base != null) {
+            NioPathHolder.setBase(base);
+            builder.setEntityResolver(Xml.PATH_RESOLVER);
+        } else {
+            builder.setEntityResolver(new NoOpEntityResolver());
+        }
+
         return builder;
     }
 
@@ -205,8 +219,7 @@ public final class Xml {
 
             result = (Element) jdoc.getRootElement().detach();
         } catch (Exception e) {
-            Log.error(Log.ENGINE, "Error loading URL " + url.getPath() + " .Threw exception " + e);
-            e.printStackTrace();
+            Log.error(Log.ENGINE, "Error loading URL " + url.getPath() + " .Threw exception " + e.getMessage(), e);
         }
         return result;
     }
@@ -383,6 +396,16 @@ public final class Xml {
     public static void transform(Element xml, Path styleSheetPath, OutputStream out) throws Exception {
         StreamResult resStream = new StreamResult(out);
         transform(xml, styleSheetPath, resStream, null);
+        out.flush();
+    }
+
+
+    public static void transformXml(Element xml, Path styleSheetPath, OutputStream out) throws Exception {
+        StreamResult resStream = new StreamResult(out);
+        Map<String, Object> map = new HashMap<>();
+        map.put("geonet-force-xml", "xml");
+        transform(xml, styleSheetPath, resStream, map);
+        out.flush();
     }
 
     //--------------------------------------------------------------------------
@@ -426,8 +449,7 @@ public final class Xml {
             // Add the following to get timing info on xslt transformations
             //transFact.setAttribute(FeatureKeys.TIMING,true);
         } catch (IllegalArgumentException e) {
-            System.out.println("WARNING: transformerfactory doesnt like saxon attributes!");
-            //e.printStackTrace();
+            Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
         } finally {
             Transformer t = transFact.newTransformer(xslt);
             if (xmlParam != null) {
@@ -470,11 +492,11 @@ public final class Xml {
                 transFact.setAttribute(FeatureKeys.LINE_NUMBERING, true);
                 transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION, false);
                 transFact.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
+
                 // Add the following to get timing info on xslt transformations
                 //transFact.setAttribute(FeatureKeys.TIMING,true);
             } catch (IllegalArgumentException e) {
-                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
-                //e.printStackTrace();
+                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
             } finally {
                 transFact.setURIResolver(new JeevesURIResolver());
                 Transformer t = transFact.newTransformer(srcSheet);
@@ -482,6 +504,13 @@ public final class Xml {
                     for (Map.Entry<String, Object> param : params.entrySet()) {
                         t.setParameter(param.getKey(), param.getValue());
                     }
+
+                if (params.containsKey("geonet-force-xml")) {
+                    ((Controller) t).setOutputProperty("indent", "yes");
+                    ((Controller) t).setOutputProperty("method", "xml");
+                    ((Controller) t).setOutputProperty("{http://saxon.sf.net/}indent-spaces", "3");
+                }
+
                 }
                 t.transform(srcXml, result);
             }
@@ -514,7 +543,7 @@ public final class Xml {
 
         // Step 1: Construct a FopFactory
         // (reuse if you plan to render multiple documents!)
-        FopFactory fopFactory = FopFactory.newInstance();
+        FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
 
         // Step 2: Set up output stream.
         // Note: Using BufferedOutputStream for performance reasons
@@ -533,8 +562,7 @@ public final class Xml {
                 factory.setAttribute(FeatureKeys.LINE_NUMBERING, true);
                 factory.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
             } catch (IllegalArgumentException e) {
-                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
-                //e.printStackTrace();
+                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
             } finally {
                 Transformer transformer = factory.newTransformer(xslt);
 
@@ -593,7 +621,46 @@ public final class Xml {
         return Xml.getJSON(Xml.getString(xml));
     }
 
-    //---------------------------------------------------------------------------
+    public static String stripNonValidXMLCharacters(String in) {
+        StringBuffer out = new StringBuffer();
+        char current;
+
+        if (in == null || ("".equals(in))) return "";
+        for (int i = 0; i < in.length(); i++) {
+            current = in.charAt(i);
+            if ((current == 0x9) ||
+                (current == 0xA) ||
+                (current == 0xD) ||
+                ((current >= 0x20) && (current <= 0xD7FF)) ||
+                ((current >= 0xE000) && (current <= 0xFFFD)) ||
+                ((current >= 0x10000) && (current <= 0x10FFFF)))
+                out.append(current);
+        }
+        return out.toString();
+    }
+
+    public static Element getXmlFromJSON(String jsonAsString) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode json = objectMapper.readTree(jsonAsString);
+            String recordAsXml = XML.toString(
+                new JSONObject(
+                    objectMapper.writeValueAsString(json)), "root");
+            recordAsXml = Xml.stripNonValidXMLCharacters(recordAsXml);
+            return Xml.loadString(recordAsXml, false);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (JDOMException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * Converts an xml string to JSON
@@ -837,39 +904,21 @@ public final class Xml {
         return values;
     }
 
-    /**
-     * Validates an XML document using the hints in the DocType (DTD validation) or schemaLocation
-     * attribute hint.
-     */
-    public synchronized static void validate(Document doc) throws Exception {
-        if (doc.getDocType() != null) { // assume DTD validation
-            SAXBuilder builder = getSAXBuilder(true, null);
-            builder.build(new StringReader(getString(doc)));
-        }
-
-        Element xml = doc.getRootElement();
-        if (xml != null) {  // try XSD validation
-            String schemaLoc = xml.getAttributeValue("schemaLocation", xsiNS);
-            if (schemaLoc == null || schemaLoc.equals("")) {
-                throw new IllegalArgumentException("XML document missing/blank schemaLocation hints or DocType dtd - cannot validate");
-            }
-            validate(xml);
-        } else {
-            throw new IllegalArgumentException("XML document is missing root element - cannot validate");
-        }
-    }
     //---------------------------------------------------------------------------
 
     /**
      * Validates an XML document using the hints in the schemaLocation attribute.
      */
     public synchronized static void validate(Element xml) throws Exception {
+        String schemaLoc = xml.getAttributeValue("schemaLocation", xsiNS);
+        if (schemaLoc == null || schemaLoc.equals("")) {
+            throw new IllegalArgumentException("XML document missing/blank schemaLocation hints - cannot validate");
+        }
+        XmlErrorHandler eh = new XmlErrorHandler();
         Schema schema = factory().newSchema();
-        ErrorHandler eh = new ErrorHandler();
-        validateRealGuts(schema, xml, eh);
-        if (eh.errors()) {
-            Element xsdXPaths = eh.getXPaths();
-            throw new XSDValidationErrorEx("XSD Validation error(s):\n" + getString(xsdXPaths), xsdXPaths);
+        Element xsdErrors = validateRealGuts(schema, xml, eh, null);
+        if (xsdErrors != null) {
+            throw new XSDValidationErrorEx("XSD Validation error(s):\n" + getString(xsdErrors), xsdErrors);
         }
     }
 
@@ -879,79 +928,37 @@ public final class Xml {
      * Validates an xml document with respect to an xml schema described by .xsd file path.
      */
     public static void validate(Path schemaPath, Element xml) throws Exception {
-        Element xsdXPaths = validateInfo(schemaPath, xml);
-        if (xsdXPaths != null && xsdXPaths.getContent().size() > 0)
-            throw new XSDValidationErrorEx("XSD Validation error(s):\n" + getString(xsdXPaths), xsdXPaths);
-    }
-
-    //---------------------------------------------------------------------------
-
-    /**
-     * Validates an xml document with respect to schemaLocation hints.
-     */
-    public static Element validateInfo(Element xml) throws Exception {
-        ErrorHandler eh = new ErrorHandler();
-        Schema schema = factory().newSchema();
-        validateRealGuts(schema, xml, eh);
-        if (eh.errors()) {
-            return eh.getXPaths();
-        } else {
-            return null;
+        XmlErrorHandler eh = new XmlErrorHandler();
+        Schema schema = getSchemaFromPath(schemaPath);
+        Element xsdErrors = validateRealGuts(schema, xml, eh, null);
+        if (xsdErrors != null) {
+            throw new XSDValidationErrorEx("XSD Validation error(s):\n" + getString(xsdErrors), xsdErrors);
         }
     }
 
     //---------------------------------------------------------------------------
-
     /**
      * Validates an xml document with respect to schemaLocation hints using supplied error handler.
      */
-    public static Element validateInfo(Element xml, ErrorHandler eh) throws Exception {
+    public static Element validateInfo(Element xml, XmlErrorHandler eh, String schemaName) throws Exception {
         Schema schema = factory().newSchema();
-        validateRealGuts(schema, xml, eh);
-        if (eh.errors()) {
-            return eh.getXPaths();
-        } else {
-            return null;
-        }
+        return validateRealGuts(schema, xml, eh, schemaName);
     }
 
-    //---------------------------------------------------------------------------
-
-    /**
-     * Validates an xml document with respect to an xml schema described by .xsd file path.
-     */
-    public static Element validateInfo(Path schemaPath, Element xml) throws Exception {
-        ErrorHandler eh = new ErrorHandler();
-        validateGuts(schemaPath, xml, eh);
-        if (eh.errors()) {
-            return eh.getXPaths();
-        } else {
-            return null;
-        }
-    }
 
     //---------------------------------------------------------------------------
-
     /**
      * Validates an xml document with respect to an xml schema described by .xsd file path using
      * supplied error handler.
      */
-    public static Element validateInfo(Path schemaPath, Element xml, ErrorHandler eh)
-        throws Exception {
-        validateGuts(schemaPath, xml, eh);
-        if (eh.errors()) {
-            return eh.getXPaths();
-        } else {
-            return null;
-        }
+    public static Element validateInfo(Path schemaPath, Element xml, XmlErrorHandler eh, String schemaName) throws Exception {
+        Schema schema = getSchemaFromPath(schemaPath);
+        return validateRealGuts(schema, xml, eh, schemaName);
     }
 
     //---------------------------------------------------------------------------
 
-    /**
-     * Called by validation methods that supply an xml schema described by .xsd file path.
-     */
-    private static void validateGuts(Path schemaPath, Element xml, ErrorHandler eh) throws Exception {
+    private static Schema getSchemaFromPath(Path schemaPath) throws SAXException {
         PathStreamSource schemaFile = new PathStreamSource(schemaPath);
         schemaFile.setSystemId(schemaPath.toUri().toASCIIString());
 
@@ -959,8 +966,7 @@ public final class Xml {
         NioPathHolder.setBase(schemaPath);
         Resolver resolver = ResolverWrapper.getInstance();
         factory.setResourceResolver(resolver.getXmlResolver());
-        Schema schema = factory.newSchema(schemaFile);
-        validateRealGuts(schema, xml, eh);
+        return factory.newSchema(schemaFile);
     }
 
     //---------------------------------------------------------------------------
@@ -968,8 +974,8 @@ public final class Xml {
     /**
      * Called by all validation methods to do the real guts of the validation job.
      */
-    private static void validateRealGuts(Schema schema, Element xml, ErrorHandler eh) throws Exception {
-        Resolver resolver = ResolverWrapper.getInstance();
+    private static Element validateRealGuts(Schema schema, Element xml, XmlErrorHandler eh, String schemaName) throws JDOMException {
+        Resolver resolver = ResolverWrapper.getInstance(schemaName);
 
         ValidatorHandler vh = schema.newValidatorHandler();
         vh.setResourceResolver(resolver.getXmlResolver());
@@ -979,6 +985,13 @@ public final class Xml {
         eh.setSo(so);
 
         so.output(xml);
+
+        if (eh.errors()) {
+            return eh.getXPaths();
+        } else {
+            return null;
+        }
+
     }
 
     //---------------------------------------------------------------------------
@@ -1094,7 +1107,7 @@ public final class Xml {
     /**
      * return true if the String passed in is something like XML
      *
-     * @param inString a string that might be XML
+     * @param inXMLStr a string that might be XML
      * @return true of the string is XML, false otherwise
      */
     public static boolean isXMLLike(String inXMLStr) {
@@ -1168,8 +1181,7 @@ public final class Xml {
                         s.setSystemId(f.toUri().toASCIIString());
                     }
                 } catch (URISyntaxException e) {
-                    Log.warning(Log.XML_RESOLVER, "URI syntax problem: " + e.getMessage());
-                    e.printStackTrace();
+                    Log.warning(Log.XML_RESOLVER, "URI syntax problem: " + e.getMessage(), e);
                 }
             }
 
@@ -1177,99 +1189,6 @@ public final class Xml {
                 Log.debug(Log.XML_RESOLVER, "Resolved as " + s.getSystemId());
             }
             return s;
-        }
-    }
-
-    /**
-     * Error handler that collects up validation errors.
-     */
-    public static class ErrorHandler extends DefaultHandler {
-
-        private int errorCount = 0;
-        private Element xpaths;
-        private Namespace ns = Namespace.NO_NAMESPACE;
-        private SAXOutputter so;
-
-        public void setSo(SAXOutputter so) {
-            this.so = so;
-        }
-
-        public boolean errors() {
-            return errorCount > 0;
-        }
-
-        public Element getXPaths() {
-            return xpaths;
-        }
-
-        public void addMessage(SAXParseException exception, String typeOfError) {
-            if (errorCount == 0) xpaths = new Element("xsderrors", ns);
-            errorCount++;
-
-            Element elem = (Element) so.getLocator().getNode();
-            Element x = new Element("xpath", ns);
-            try {
-                String xpath = org.fao.geonet.utils.XPath.getXPath(elem);
-                //-- remove the first element to ensure XPath fits XML passed with
-                //-- root element
-                if (xpath.startsWith("/")) {
-                    int ind = xpath.indexOf('/', 1);
-                    if (ind != -1) {
-                        xpath = xpath.substring(ind + 1);
-                    } else {
-                        xpath = "."; // error to be placed on the root element
-                    }
-                }
-                x.setText(xpath);
-            } catch (JDOMException e) {
-                e.printStackTrace();
-                x.setText("nopath");
-            }
-            String message = exception.getMessage() + " (Element: " + elem.getQualifiedName();
-            String parentName;
-            if (!elem.isRootElement()) {
-                Element parent = (Element) elem.getParent();
-                if (parent != null)
-                    parentName = parent.getQualifiedName();
-                else
-                    parentName = "Unknown";
-            } else {
-                parentName = "/";
-            }
-            message += " with parent element: " + parentName + ")";
-
-            Element m = new Element("message", ns).setText(message);
-            Element errorType = new Element("typeOfError", ns).setText(typeOfError);
-            Element errorNumber = new Element("errorNumber", ns).setText(String.valueOf(errorCount));
-            Element e = new Element("error", ns);
-            e.addContent(errorType);
-            e.addContent(errorNumber);
-            e.addContent(m);
-            e.addContent(x);
-            xpaths.addContent(e);
-        }
-
-        public void error(SAXParseException parseException) throws SAXException {
-            addMessage(parseException, "ERROR");
-        }
-
-        public void fatalError(SAXParseException parseException) throws SAXException {
-            addMessage(parseException, "FATAL ERROR");
-        }
-
-        public void warning(SAXParseException parseException) throws SAXException {
-            addMessage(parseException, "WARNING");
-        }
-
-        public Namespace getNs() {
-            return ns;
-        }
-
-        /**
-         * Set namespace to use for report elements
-         */
-        public void setNs(Namespace ns) {
-            this.ns = ns;
         }
     }
 }

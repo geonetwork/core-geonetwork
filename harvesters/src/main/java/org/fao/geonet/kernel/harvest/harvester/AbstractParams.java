@@ -24,10 +24,10 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import com.google.common.collect.Maps;
-
-import com.vividsolutions.jts.util.Assert;
-
+import org.locationtech.jts.util.Assert;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.Logger;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Localized;
@@ -36,6 +36,8 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.MissingParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.HarvestValidationEnum;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.QuartzSchedulerUtils;
@@ -44,9 +46,12 @@ import org.jdom.Element;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 
+import java.time.DateTimeException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import static org.quartz.JobBuilder.newJob;
@@ -54,9 +59,18 @@ import static org.quartz.JobBuilder.newJob;
 /**
  * Params to configure a harvester. It contains things like url, username, password,...
  */
-public abstract class AbstractParams {
+public abstract class AbstractParams implements Cloneable {
     public static final String TRANSLATIONS = "translations";
     private static final long MAX_EVERY = Integer.MAX_VALUE;
+    protected Logger log = Log.createLogger(Geonet.HARVEST_MAN);
+
+    public abstract String getIcon();
+
+    public abstract AbstractParams copy();
+
+    public enum OverrideUuid {
+        SKIP, OVERRIDE, RANDOM
+    }
 
     //---------------------------------------------------------------------------
     //---
@@ -77,24 +91,24 @@ public abstract class AbstractParams {
     private Element node;
     private String ownerId;
     private String ownerIdGroup;
+    private String ownerIdUser;
+    private OverrideUuid overrideUuid;
+
+    /**
+     *  When more than one harvester harvest the same record, then record is usually rejected.
+     *  It can override existing, but the privileges are not preserved. This option
+     *  preserve privileges set in the different harvesters.
+     */
+    private boolean ifRecordExistAppendPrivileges;
+
+    private String batchEdits;
+
     private List<Privileges> alPrivileges = new ArrayList<>();
     private List<String> alCategories = new ArrayList<>();
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //---------------------------------------------------------------------------
 
     public AbstractParams(DataManager dm) {
         this.dm = dm;
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
 
     private static HarvestValidationEnum readValidateFromParams(Element content) {
         String validationString = Util.getParam(content, "validate", HarvestValidationEnum.NOVALIDATION.toString());
@@ -142,6 +156,19 @@ public abstract class AbstractParams {
             Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + getName() + " (" + getUuid() + ")");
         }
 
+        Element ownerIdUserE = site.getChild("ownerUser");
+        if (ownerIdUserE == null) {
+            ownerIdUserE = node.getChild("ownerUser");
+        }
+        if (ownerIdUserE != null) {
+            Element idE = ownerIdUserE.getChild("id");
+            if (idE != null) {
+                setOwnerIdUser(idE.getText());
+            } else if (!ownerIdUserE.getTextTrim().isEmpty()) {
+                setOwnerIdUser(ownerIdUserE.getTextTrim());
+            }
+        }
+
         Element ownerIdGroupE = site.getChild("ownerGroup");
         if (ownerIdGroupE == null) {
             ownerIdGroupE = node.getChild("ownerGroup");
@@ -162,10 +189,16 @@ public abstract class AbstractParams {
         setEvery(Util.getParam(opt, "every", "0 0 0 * * ?"));
 
         setOneRunOnly(Util.getParam(opt, "oneRunOnly", false));
+        setOverrideUuid(
+                OverrideUuid.valueOf(
+                        Util.getParam(opt, "overrideUuid",  OverrideUuid.SKIP.name())));
+
+        setIfRecordExistAppendPrivileges("true".equals(node.getChildTextTrim("ifRecordExistAppendPrivileges")));
 
         getTrigger();
 
         setImportXslt(Util.getParam(content, "importxslt", "none"));
+        setBatchEdits(Util.getParam(content, "batchEdits", ""));
 
         this.setValidate(readValidateFromParams(content));
 
@@ -210,6 +243,16 @@ public abstract class AbstractParams {
             Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + getName() + " (" + getUuid() + ")");
         }
 
+        Element ownerIdUserE = node.getChild("ownerUser");
+        if (ownerIdUserE != null) {
+            Element idE = ownerIdUserE.getChild("id");
+            if (idE != null) {
+                setOwnerIdUser(idE.getText());
+            } else {
+                setOwnerIdUser(ownerIdUserE.getText());
+            }
+        }
+
         Element ownerIdGroupE = node.getChild("ownerGroup");
         if (ownerIdGroupE != null) {
             Element idE = ownerIdGroupE.getChild("id");
@@ -227,9 +270,15 @@ public abstract class AbstractParams {
         setEvery(Util.getParam(opt, "every", getEvery()));
         setOneRunOnly(Util.getParam(opt, "oneRunOnly", isOneRunOnly()));
 
+        setOverrideUuid(
+                OverrideUuid.valueOf(
+                        Util.getParam(opt, "overrideUuid", getOverrideUuid().name())));
+        setIfRecordExistAppendPrivileges("true".equals(node.getChildTextTrim("ifRecordExistAppendPrivileges")));
+
         getTrigger();
 
         setImportXslt(Util.getParam(content, "importxslt", getImportXslt()));
+        setBatchEdits(Util.getParam(content, "batchEdits", getBatchEdits()));
         this.setValidate(readValidateFromParams(content));
 
         if (privil != null) {
@@ -257,11 +306,6 @@ public abstract class AbstractParams {
         return alCategories;
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Protected methods
-    //---
-    //---------------------------------------------------------------------------
 
     /**
      * @param copy
@@ -271,6 +315,7 @@ public abstract class AbstractParams {
         copy.setUuid(getUuid());
         copy.setTranslations(getTranslations());
         copy.setOwnerId(getOwnerId());
+        copy.setOwnerIdUser(getOwnerIdUser());
         copy.setOwnerIdGroup(getOwnerIdGroup());
 
         copy.setUseAccount(isUseAccount());
@@ -279,8 +324,11 @@ public abstract class AbstractParams {
 
         copy.setEvery(getEvery());
         copy.setOneRunOnly(isOneRunOnly());
+        copy.setOverrideUuid(getOverrideUuid());
+        copy.setIfRecordExistAppendPrivileges(isIfRecordExistAppendPrivileges());
 
         copy.setImportXslt(getImportXslt());
+        copy.setBatchEdits(getBatchEdits());
         copy.setValidate(getValidate());
 
         for (Privileges p : alPrivileges) {
@@ -306,7 +354,21 @@ public abstract class AbstractParams {
      * @return
      */
     public Trigger getTrigger() {
-        return QuartzSchedulerUtils.getTrigger(getUuid(), AbstractHarvester.HARVESTER_GROUP_NAME, getEvery(), MAX_EVERY);
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE, true);
+        TimeZone tz = TimeZone.getDefault();
+        if (StringUtils.isNotBlank(timeZoneSetting)) {
+            try {
+                ZoneId zoneId = ZoneId.of(timeZoneSetting);
+                tz = TimeZone.getTimeZone(zoneId);
+                log.debug("Using timezone in settings to set the Trigger timezone: " + zoneId);
+            } catch (DateTimeException e) {
+                log.error(e);
+            }
+
+        }
+
+        return QuartzSchedulerUtils.getTrigger(getUuid(), AbstractHarvester.HARVESTER_GROUP_NAME, getEvery(), MAX_EVERY, tz);
     }
 
     /**
@@ -532,5 +594,41 @@ public abstract class AbstractParams {
 
     public void setOwnerIdGroup(String ownerIdGroup) {
         this.ownerIdGroup = ownerIdGroup;
+    }
+
+    /**
+     * User who should own the harvested records
+     * @return
+     */
+    public String getOwnerIdUser() {
+        return ownerIdUser;
+    }
+
+    public void setOwnerIdUser(String ownerIdUser) {
+        this.ownerIdUser = ownerIdUser;
+    }
+
+    public OverrideUuid getOverrideUuid() {
+        return overrideUuid;
+    }
+
+    public void setOverrideUuid(OverrideUuid overrideUuid) {
+        this.overrideUuid = overrideUuid;
+    }
+
+    public boolean isIfRecordExistAppendPrivileges() {
+        return ifRecordExistAppendPrivileges;
+    }
+
+    public void setIfRecordExistAppendPrivileges(boolean ifRecordExistAppendPrivileges) {
+        this.ifRecordExistAppendPrivileges = ifRecordExistAppendPrivileges;
+    }
+
+    public String getBatchEdits() {
+        return batchEdits;
+    }
+
+    public void setBatchEdits(String batchEdits) {
+        this.batchEdits = batchEdits;
     }
 }

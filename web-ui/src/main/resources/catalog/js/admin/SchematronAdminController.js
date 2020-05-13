@@ -126,7 +126,7 @@
         switch (keyCode) {
           case 13: //ENTER key
             if (dupName) {
-              alert($translate('dupNameWarning'));
+              alert($translate.instant('dupNameWarning'));
             } else {
               $scope.saveGroupEdit();
             }
@@ -138,9 +138,7 @@
             if (dupName) {
               $scope.editGroup.nameInput.addClass('ng-invalid');
               $scope.editGroup.nameInput.removeClass('ng-valid');
-              console.log('invalid');
             } else {
-              console.log('valid');
               $scope.editGroup.nameInput.addClass('ng-valid');
               $scope.editGroup.nameInput.removeClass('ng-invalid');
             }
@@ -169,7 +167,7 @@
         }
       };
       $scope.confirmationDialog = {
-        message: $translate('confirmDeleteSchematronCriteriaGroup'),
+        message: $translate.instant('confirmDeleteSchematronCriteriaGroup'),
         showDialog: function() {
           $('#schematronConfirmationDialog').modal('show');
         },
@@ -180,7 +178,7 @@
       };
       $scope.deleteSchematronGroup = function(group) {
         $scope.confirmationDialog.message =
-            $translate('confirmDeleteSchematronCriteriaGroup');
+            $translate.instant('confirmDeleteSchematronCriteriaGroup');
         $scope.confirmationDialog.deleteConfirmed = function() {
           gnSchematronAdminService.group
               .remove(group, $scope.schematronGroups, function() {
@@ -221,7 +219,7 @@
         if (!newGroup) {
           newGroup = {
             id: {
-              name: $translate('NEW'),
+              name: $translate.instant('NEW'),
               schematronid: $scope.selection.schematron.id
             },
             requirement: $scope.requirements[0]
@@ -258,10 +256,12 @@
           updateGroupCount(group, 1);
           var i, criteria = group.criteria;
           group.criteria = [];
-          for (i = 0; i < criteria.length; i++) {
-            var template = angular.copy(criteria[i]);
-            gnSchematronAdminService.criteria.add(criteria[i],
-                group.criteria[i], group);
+          if (criteria) {
+            for (i = 0; i < criteria.length; i++) {
+              var template = angular.copy(criteria[i]);
+              gnSchematronAdminService.criteria.add(criteria[i],
+                  group.criteria[i], group);
+            }
           }
         });
       };

@@ -1,0 +1,38 @@
+<!--> do_no_compare as ns order seems to change <--> <gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml">
+    <gmd:description>
+        <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco">lapin (malin)</gco:CharacterString>
+    </gmd:description>
+    <gmd:geographicElement>
+        <gmd:EX_GeographicBoundingBox>
+            <gmd:westBoundLongitude>
+                <gco:Decimal xmlns:gco="http://www.isotc211.org/2005/gco">-121.02286902286919</gco:Decimal>
+            </gmd:westBoundLongitude>
+            <gmd:eastBoundLongitude>
+                <gco:Decimal xmlns:gco="http://www.isotc211.org/2005/gco">-35.756756756756914</gco:Decimal>
+            </gmd:eastBoundLongitude>
+            <gmd:southBoundLatitude>
+                <gco:Decimal xmlns:gco="http://www.isotc211.org/2005/gco">-37.37323118503113</gco:Decimal>
+            </gmd:southBoundLatitude>
+            <gmd:northBoundLatitude>
+                <gco:Decimal xmlns:gco="http://www.isotc211.org/2005/gco">40.427184615384675</gco:Decimal>
+            </gmd:northBoundLatitude>
+        </gmd:EX_GeographicBoundingBox>
+    </gmd:geographicElement>
+    <gmd:geographicElement>
+        <gmd:EX_BoundingPolygon>
+            <gmd:polygon>
+<!--> do_no_compare as ns order seems to change <--><gml:MultiSurface xmlns:gn="http://geonetwork-opensource.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wfs="http://www.opengis.net/wfs" xmlns:ogc="http://www.opengis.net/ogc" xmlns:ows="http://www.opengis.net/ows" xmlns:xlink="http://www.w3.org/1999/xlink" srsDimension="2">
+                    <gml:surfaceMember>
+<!--> do_no_compare as random id are added <--><gml:Polygon>
+                            <gml:exterior>
+                                <gml:LinearRing>
+                                    <gml:posList>-1.1241417102498E7 3994927.670902 -3980423.954581 4928215.159164 -5555097.167382 -4491258.875899 -1.3472204153967E7 -1550976.966503 -9185593.741341 388927.687544 -9797966.65743 2365738.409069 -1.1241417102498E7 3994927.670902</gml:posList>
+                                </gml:LinearRing>
+                            </gml:exterior>
+                        </gml:Polygon>
+                    </gml:surfaceMember>
+                </gml:MultiSurface>
+            </gmd:polygon>
+        </gmd:EX_BoundingPolygon>
+    </gmd:geographicElement>
+</gmd:EX_Extent>

@@ -25,19 +25,17 @@ package org.fao.geonet.wro4j;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetMockServletContext;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.junit.Ignore;
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-
 import ro.isdc.wro.config.Context;
 import ro.isdc.wro.manager.WroManager;
 import ro.isdc.wro.manager.factory.standalone.StandaloneContext;
@@ -46,6 +44,7 @@ import ro.isdc.wro.model.group.Group;
 import ro.isdc.wro.model.resource.Resource;
 import ro.isdc.wro.model.resource.ResourceType;
 
+import javax.servlet.FilterConfig;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -53,8 +52,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
-
-import javax.servlet.FilterConfig;
 
 import static org.junit.Assert.assertTrue;
 
@@ -102,6 +99,11 @@ public class Wro4jJsCssCompilationTest {
         wro4jModel = wro4jManager.getModelFactory().create();
     }
 
+    @AfterClass
+    static public void tearDown() {
+        Context.destroy();
+        ApplicationContextHolder.clear();
+    }
 
     @Test
     public void testCssCompilation() throws Exception {
@@ -119,6 +121,16 @@ public class Wro4jJsCssCompilationTest {
     }
 
     private void testResourcesOfType(ResourceType resourceType, Predicate<String> testFilter) throws IOException {
+        Path webDir = AbstractCoreIntegrationTest.getWebappDir(Wro4jJsCssCompilationTest.class);
+        GeonetworkDataDirectory dataDirectory = new GeonetworkDataDirectory();
+        dataDirectory.setSchemaPluginsDir(webDir.resolve("WEB-INF/data/config/schema_plugins"));
+        dataDirectory.setFormatterDir(webDir.resolve("WEB-INF/data/data/formatter"));
+        dataDirectory.setNodeLessFiles(webDir.resolve("WEB-INF/data/node_less_files"));
+        GenericXmlApplicationContext applicationContext = new GenericXmlApplicationContext();
+        applicationContext.refresh();
+        applicationContext.getBeanFactory().registerSingleton("geonetworkDataDirectory", dataDirectory);
+        ApplicationContextHolder.set(applicationContext);
+
         final Collection<Group> groups = wro4jModel.getGroups();
         StringBuilder errors = new StringBuilder();
         for (Group group : groups) {
@@ -126,6 +138,7 @@ public class Wro4jJsCssCompilationTest {
                 continue;
             }
             List<Resource> resources = group.collectResourcesOfType(resourceType).getResources();
+
 
 
             if (!resources.isEmpty()) {
@@ -152,7 +165,9 @@ public class Wro4jJsCssCompilationTest {
                         errors.append("\n        - ").append(resource.getUri()).append("\n");
                     }
                     errors.append("    * Error Message:\n        > ");
-                    errors.append(t.getMessage().replaceAll("(\n|\r)+", "\n        > ")).append("\n");
+                    if(t.getMessage()!=null) {
+                        errors.append(t.getMessage().replaceAll("(\n|\r)+", "\n        > ")).append("\n");
+                    }
                 }
             }
         }

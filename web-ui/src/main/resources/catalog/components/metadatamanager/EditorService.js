@@ -37,15 +37,17 @@
   module.value('gnCurrentEdit', {});
 
   module.factory('gnEditor',
-      ['$q',
-       '$http',
-       '$translate',
-       '$compile',
-       'gnUrlUtils',
-       'gnXmlTemplates',
-       'gnHttp',
-       'gnCurrentEdit',
-       function($q, $http, $translate, $compile,
+      [
+        '$rootScope',
+        '$q',
+        '$http',
+        '$translate',
+        '$compile',
+        'gnUrlUtils',
+        'gnXmlTemplates',
+        'gnHttp',
+        'gnCurrentEdit',
+       function($rootScope, $q, $http, $translate, $compile,
                gnUrlUtils, gnXmlTemplates,
                gnHttp, gnCurrentEdit) {
 
@@ -87,6 +89,21 @@
              }
            }
          };
+         // When adding a new element and the cardinality is 0-1 or 1-1,
+         // then hide the add control.
+         // When an element is removed and the cardinality is 0-1 or 1-1,
+         // then display the add control
+         var checkAddControls = function(element, isRemoved) {
+           var addElement = $(element).next();
+           if (addElement !== undefined) {
+             var addBlock = addElement.get(0);
+             if ($(addBlock).hasClass('gn-add-field') &&
+                 (($(addBlock).attr('data-gn-cardinality') === '0-1') || ($(addBlock).attr('data-gn-cardinality') === '1-1'))) {
+               $(addBlock).toggleClass('hidden', isRemoved ? false : true);
+             }
+           }
+         };
+
          // When adding a new element, the down control
          // of the previous element must be enabled and
          // the up control enabled only if the previous
@@ -110,9 +127,14 @@
            }
          };
          var setStatus = function(status) {
-           gnCurrentEdit.savedStatus = $translate(status.msg);
+           gnCurrentEdit.savedStatus = $translate.instant(status.msg);
            gnCurrentEdit.savedTime = moment();
            gnCurrentEdit.saving = status.saving;
+         };
+
+         // Remove XML header
+         var cleanData = function(data) {
+           return data.replace(/<\?xml version="1.0".*\?>\n/, '');
          };
          return {
            buildEditUrlPrefix: function(service) {
@@ -126,6 +148,26 @@
              gnCurrentEdit.displayAttributes);
              return params.join('');
            },
+           load: function(url) {
+             var defer = $q.defer();
+             var scope = this;
+             $http.get(url,
+             {
+               headers: {'Content-Type':
+                 'application/x-www-form-urlencoded'}
+             }).success(function(data) {
+
+               var snippet = $(cleanData(data));
+               scope.refreshEditorForm(snippet);
+               gnCurrentEdit.working = false;
+               defer.resolve(snippet);
+             }).error(function(error) {
+               setStatus({msg: 'saveMetadataError', saving: false});
+               gnCurrentEdit.working = false;
+               defer.reject(error);
+             });
+             return defer.promise;
+           },
            /**
            * Save the metadata record currently in editing session.
            *
@@ -134,6 +176,20 @@
            * value in the form and trigger save to update the view.
            */
            save: function(refreshForm, silent, terminate) {
+             save(refreshForm, silent, terminate, false, false);
+           },
+           /**
+            * Save the metadata record currently in editing session.
+            *
+            * If refreshForm is true, then will also update the current form.
+            * This is required while switching tab for example. Update the tab
+            * value in the form and trigger save to update the view.
+            * If submit is true and the current user is editor, the metadata
+            * status will be changed to submitted.
+            * If approve is true and the current user is reviewer, the metadata
+            * status will be changed to approved.
+            */
+           save: function(refreshForm, silent, terminate, submit, approve) {
              var defer = $q.defer();
              var scope = this;
              if (gnCurrentEdit.saving) {
@@ -144,17 +200,45 @@
                }
              }
 
+             $('.popover').remove();
+
+             function getFormParameters() {
+               var params = $(gnCurrentEdit.formId).serializeArray();
+               var formParams = {};
+               for (var i = 0; i < params.length; i++) {
+                 // Combine all XML snippet in the same parameters
+                 formParams[params[i].name] =
+                 (formParams[params[i].name] &&
+                     params[i].name.indexOf('_X') === 0) ?
+                     formParams[params[i].name] + '&&&' + params[i].value :
+                     params[i].value;
+               }
+               var serializedParams = '';
+               for (var key in formParams) {
+                 if (formParams.hasOwnProperty(key)) {
+                   serializedParams +=
+                   encodeURIComponent(key) + '=' +
+                   encodeURIComponent(formParams[key]) + '&';
+                 }
+               }
+               return serializedParams;
+             };
+
              gnCurrentEdit.working = true;
-             $http.post('../api/records/' + gnCurrentEdit.id + '/editor?' +
+             $http.post(
+             '../api/records/' + gnCurrentEdit.id + '/editor?' +
+             (gnCurrentEdit.showValidationErrors ? '&withValidationErrors=true' : '') +
              (refreshForm ? '' : '&commit=true') +
-             (terminate ? '&terminate=true' : ''),
-             $(gnCurrentEdit.formId).serialize(),
+             (terminate ? '&terminate=true' : '') +
+             (submit ? '&status=4' : '') +
+             (approve ? '&status=2' : ''),
+             getFormParameters(),
              {
                headers: {'Content-Type':
                  'application/x-www-form-urlencoded'}
              }).success(function(data) {
 
-                var snippet = $(data);
+                var snippet = $(cleanData(data));
                 if (refreshForm) {
                   scope.refreshEditorForm(snippet);
                 }
@@ -167,8 +251,14 @@
                 if (!silent) {
                   setStatus({msg: 'saveMetadataError', saving: false});
                 }
+
                 gnCurrentEdit.working = false;
-                defer.reject(error);
+
+                // Error is returned in XML format, convert it to JSON
+                var x2js = new X2JS();
+                var errorJson = x2js.xml_str2json(error);
+
+                defer.reject(errorJson.apiError);
               });
              return defer.promise;
            },
@@ -213,9 +303,9 @@
                // properly without removing them. There is maybe
                // references to DOM objects in the JS code which
                // make those objects not reachable by GC.
-               $(gnCurrentEdit.formId).find('*').remove();
+               $(gnCurrentEdit.containerId).find('*').remove();
 
-               $(gnCurrentEdit.formId).replaceWith(snippet);
+               $(gnCurrentEdit.containerId).replaceWith(snippet);
 
                if (gnCurrentEdit.compileScope) {
                  // Destroy previous scope
@@ -223,20 +313,26 @@
                    gnCurrentEdit.formScope.$destroy();
                  }
 
+                 // Update form values
+                 scope.onFormLoad();
+
                  // Compile against a new scope
                  gnCurrentEdit.formScope =
                  gnCurrentEdit.compileScope.$new();
                  $compile(snippet)(gnCurrentEdit.formScope);
+               } else {
+                 scope.onFormLoad();
                }
 
-               scope.onFormLoad();
              };
              if (form) {
                refreshForm(form);
              }
              else {
                var params = {id: gnCurrentEdit.id};
-
+               if (gnCurrentEdit.tab) {
+                 params.currTab = gnCurrentEdit.tab;
+               }
                // If a new session, ask the server to save the original
                // record and update session start time
                if (startNewSession) {
@@ -244,7 +340,7 @@
                  gnCurrentEdit.sessionStartTime = moment();
                }
                $http.get('../api/records/' + gnCurrentEdit.id + '/editor',
-               params).then(function(data) {
+                 {params: params}).then(function(data) {
                  refreshForm($(data.data));
                });
              }
@@ -264,26 +360,50 @@
                find('input[id="' + id + '"]').val();
              };
 
+             var extent = [], value = getInputValue('extent');
+             try {
+               extent = angular.fromJson(value);
+             } catch (e) {
+               console.warn(
+               'Failed to parse the following extent as JSON: ' +
+               value);
+             }
              angular.extend(gnCurrentEdit, {
                isService: getInputValue('isService') == 'true',
                isTemplate: getInputValue('template'),
+               mdTitle: getInputValue('title'),
                mdLanguage: getInputValue('language'),
                mdOtherLanguages: getInputValue('otherLanguages'),
                showValidationErrors:
                getInputValue('showvalidationerrors') == 'true',
                uuid: getInputValue('uuid'),
+               displayAttributes:
+               getInputValue('displayAttributes') == 'true',
+               displayTooltips:
+               getInputValue('displayTooltips') == 'true',
+               displayTooltipsMode:
+               getInputValue('displayTooltipsMode') || '',
                schema: getInputValue('schema'),
                version: getInputValue('version'),
                tab: getInputValue('currTab'),
                geoPublisherConfig:
                angular.fromJson(getInputValue('geoPublisherConfig')),
-               extent:
-               angular.fromJson(getInputValue('extent')),
+               extent: extent,
                isMinor: getInputValue('minor') === 'true',
                layerConfig:
                angular.fromJson(getInputValue('layerConfig')),
                saving: false
              });
+
+             gnCurrentEdit.allLanguages = {code2iso: {}, iso2code: {}, iso: []};
+             if (gnCurrentEdit.mdOtherLanguages != '') {
+               angular.forEach(JSON.parse(gnCurrentEdit.mdOtherLanguages), function(code, iso) {
+                 gnCurrentEdit.allLanguages.code2iso[code] = iso;
+                 gnCurrentEdit.allLanguages.iso2code[iso] = code;
+                 gnCurrentEdit.allLanguages.iso.push(iso);
+
+               });
+             }
 
              if (angular.isFunction(gnCurrentEdit.formLoadExtraFn)) {
                gnCurrentEdit.formLoadExtraFn();
@@ -311,11 +431,12 @@
 
              var defer = $q.defer();
              $http.put(this.buildEditUrlPrefix('editor/elements') +
+             '&displayAttributes=' + gnCurrentEdit.displayAttributes +
              '&ref=' + ref + '&name=' + name + attributeAction)
               .success(function(data) {
                // Append HTML snippet after current element - compile Angular
                var target = $('#gn-el-' + insertRef);
-               var snippet = $(data);
+               var snippet = $(cleanData(data));
 
                if (attribute) {
                  target.replaceWith(snippet);
@@ -331,7 +452,8 @@
                  target[position || 'after'](snippet); // Insert
                  snippet.slideDown(duration, function() {});   // Slide
 
-                 // Adapt the move element
+                 // Adapt the add & move element
+                 checkAddControls(snippet);
                  checkMoveControls(snippet);
                }
                $compile(snippet)(gnCurrentEdit.formScope);
@@ -347,12 +469,13 @@
            insertRef, position) {
              var defer = $q.defer();
              $http.put(this.buildEditUrlPrefix('editor/elements') +
+             '&displayAttributes=' + gnCurrentEdit.displayAttributes +
              '&ref=' + ref +
              '&name=' + parent +
              '&child=' + name).success(function(data) {
                // Append HTML snippet after current element - compile Angular
                var target = $('#gn-el-' + insertRef);
-               var snippet = $(data);
+               var snippet = $(cleanData(data));
 
                if (target.hasClass('gn-add-field')) {
                  target.addClass('gn-extra-field');
@@ -361,7 +484,7 @@
                target[position || 'before'](snippet); // Insert
                snippet.slideDown(duration, function() {});   // Slide
 
-               // Adapt the move element
+               checkAddControls(snippet);
                checkMoveControls(snippet);
 
                $compile(snippet)(gnCurrentEdit.formScope);
@@ -376,7 +499,9 @@
              // Call service to remove element from metadata record in session
              var defer = $q.defer();
              $http.delete('../api/records/' + gnCurrentEdit.id +
-             '/editor/elements?ref=' + ref + '&parent=' + parent)
+             '/editor/elements?ref=' + ref +
+             '&displayAttributes=' + gnCurrentEdit.displayAttributes +
+             '&parent=' + parent)
               .success(function(data) {
                // For a fieldset, domref is equal to ref.
                // For an input, it may be different because
@@ -424,7 +549,7 @@
                  }
                };
 
-               // Adapt the move element
+               checkAddControls(target.get(0), true);
                checkMoveControls(target.get(0));
 
                target.slideUp(duration, function() { $(this).remove();});
@@ -440,10 +565,14 @@
              var defer = $q.defer();
              $http.delete('../api/records/' + gnCurrentEdit.id +
              '/editor/attributes?ref=' + ref.replace('COLON', ':'))
-              .success(function(data) {
+              .then(function(data) {
                var target = $('#gn-attr-' + ref);
                target.slideUp(duration, function() { $(this).remove();});
-             });
+               defer.resolve();
+               $rootScope.$broadcast('attributeRemoved', ref);
+             }, function(errorData) {
+                defer.reject(errorData);
+              });
              return defer.promise;
            },
            /**

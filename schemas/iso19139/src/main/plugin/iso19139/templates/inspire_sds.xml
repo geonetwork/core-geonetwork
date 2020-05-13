@@ -253,7 +253,7 @@
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>
       <srv:serviceType>
-        <gco:LocalName codeSpace="www.w3c.org">W3C:HTML:LINK</gco:LocalName>
+        <gco:LocalName codeSpace="www.w3c.org">other</gco:LocalName>
       </srv:serviceType>
       <srv:serviceTypeVersion>
         <gco:CharacterString>1.1.1</gco:CharacterString>
@@ -299,11 +299,13 @@
               codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList"
               codeListValue="XML"/>
           </srv:DCP>
-          <srv:DCP>
-            <srv:DCPList
-              codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList"
-              codeListValue=""/>
-          </srv:DCP>
+          <srv:connectPoint>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage>
+                <gmd:URL></gmd:URL>
+              </gmd:linkage>
+            </gmd:CI_OnlineResource>
+          </srv:connectPoint>
         </srv:SV_OperationMetadata>
       </srv:containsOperations>
     </srv:SV_ServiceIdentification>
@@ -461,9 +463,7 @@
                   <gmd:date>
                     <gmd:CI_Date>
                       <gmd:date>
-                        <gco:Date>
                           <gco:Date>2014-12-11</gco:Date>
-                        </gco:Date>
                       </gmd:date>
                       <gmd:dateType>
                         <gmd:CI_DateTypeCode

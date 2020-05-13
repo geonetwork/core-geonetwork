@@ -33,6 +33,7 @@ import java.util.Calendar;
 
 import static org.apache.lucene.search.BooleanClause.Occur.MUST;
 import static org.apache.lucene.search.BooleanClause.Occur.SHOULD;
+import static org.fao.geonet.kernel.setting.SettingManager.isPortRequired;
 
 //=============================================================================
 public class SettingInfo {
@@ -92,10 +93,10 @@ public class SettingInfo {
 
         sb.append(host);
 
-        if (port != null) {
-            sb.append(":");
-            sb.append(port);
-        }
+		if (isPortRequired(protocol, port + "")) {
+			sb.append(":");
+			sb.append(port);
+		}
 
         return sb.toString();
     }

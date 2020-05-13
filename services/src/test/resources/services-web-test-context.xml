@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc  http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+
+  <bean id="cnManager"
+        class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+    <property name="favorPathExtension" value="false"/>
+    <property name="ignoreAcceptHeader" value="false"/>
+    <property name="favorParameter" value="true"/>
+    <property name="parameterName" value="_content_type"/>
+    <property name="defaultContentType" value="application/xml"/>
+    <property name="useJaf" value="false"/>
+
+    <property name="mediaTypes">
+      <map>
+        <entry key="html" value="text/html"/>
+        <entry key="json" value="application/json"/>
+        <entry key="xml" value="application/xml"/>
+      </map>
+    </property>
+  </bean>
+
+  <mvc:annotation-driven content-negotiation-manager="cnManager">
+    <mvc:message-converters>
+      <bean class = "org.springframework.http.converter.StringHttpMessageConverter">
+        <property name="supportedMediaTypes">
+          <list>
+            <value>text/plain</value>
+            <value>text/html</value>
+            <value>application/json</value>
+          </list>
+        </property>
+      </bean>
+      <bean class="org.fao.geonet.api.DOMElementMessageConverter"/>
+
+      <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="objectMapper">
+          <bean class="org.fao.geonet.util.spring.HibernateAwareObjectMapper" />
+        </property>
+      </bean>
+    </mvc:message-converters>
+
+    <mvc:argument-resolvers>
+      <bean class="org.springframework.data.web.PageableHandlerMethodArgumentResolver"/>
+      <bean class="org.springframework.data.web.SortHandlerMethodArgumentResolver"/>
+    </mvc:argument-resolvers>
+  </mvc:annotation-driven>
+
+</beans>

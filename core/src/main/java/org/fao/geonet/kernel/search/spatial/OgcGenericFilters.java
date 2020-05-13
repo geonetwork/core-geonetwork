@@ -23,19 +23,20 @@
 
 package org.fao.geonet.kernel.search.spatial;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.index.SpatialIndex;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.index.SpatialIndex;
 
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.apache.jcs.access.exception.InvalidArgumentException;
 import org.apache.lucene.search.Query;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.geotools.data.FeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.factory.GeoTools;
+import org.geotools.util.factory.GeoTools;
 import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.filter.spatial.WithinImpl;
@@ -44,7 +45,7 @@ import org.geotools.filter.visitor.DuplicatingFilterVisitor;
 import org.geotools.filter.visitor.ExtractBoundsFilterVisitor;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.geotools.xml.Parser;
+import org.geotools.xsd.Parser;
 import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -116,13 +117,17 @@ public class OgcGenericFilters {
             Log.debug(Geonet.SEARCH_ENGINE, "Parsing filter");
         Object parseResult = parser
             .parse(new StringReader(string));
-        if (parser.getValidationErrors().size() > 0) {
+        
+        if (parser.getValidationErrors().size() > 0 && filterExpr.getContentSize() > 0) {
             Log.error(Geonet.SEARCH_ENGINE, "Errors occurred when trying to parse a filter:");
             Log.error(Geonet.SEARCH_ENGINE, "----------------------------------------------");
+            StringBuilder sb = new StringBuilder(" Errors parsing filter:");
             for (Object error : parser.getValidationErrors()) {
                 Log.error(Geonet.SEARCH_ENGINE, error);
+                sb.append("\n" + error);
             }
-            Log.error(Geonet.SEARCH_ENGINE, "----------------------------------------------");
+            Log.error(Geonet.SEARCH_ENGINE, "----------------------------------------------");                                                                                                             
+            throw new InvalidArgumentException(sb.toString());  
         }
         if (!(parseResult instanceof Filter)) {
             return null;

@@ -25,8 +25,16 @@
 <beans
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://www.springframework.org/schema/beans"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+  xmlns:util="http://www.springframework.org/schema/util"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                      http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
   <bean id="iso19110SchemaPlugin"
-        class="org.fao.geonet.schema.iso19110.ISO19110SchemaPlugin"/>
+        class="org.fao.geonet.schema.iso19110.ISO19110SchemaPlugin">
+    <property name="xpathTitle">
+      <util:list value-type="java.lang.String">
+        <value>gmx:name/gco:CharacterString</value>
+      </util:list>
+    </property>
+  </bean>
 </beans>

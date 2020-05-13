@@ -7,9 +7,9 @@ var gnHarvestergeonetwork = {
       "@type": "geonetwork",
       "owner": [""],
       "ownerGroup": [""],
+      "ownerUser": [""],
       "site":   {
         "name": "",
-        "translations": {},
         "uuid": "",
         "account":     {
           "use": false,
@@ -30,6 +30,7 @@ var gnHarvestergeonetwork = {
       "options":   {
         "every": "0 0 0 ? * *",
         "oneRunOnly": false,
+        "overrideUuid": "SKIP",
         "status": ""
       },
       "searches": [{
@@ -46,6 +47,7 @@ var gnHarvestergeonetwork = {
           "name": []
         }
       }],
+      "ifRecordExistAppendPrivileges": false,
       "privileges": [{
         "@id": "1",
         "operation":     [
@@ -65,9 +67,9 @@ var gnHarvestergeonetwork = {
     var body = '<node id="' + h['@id'] + '" '
       + '    type="' + h['@type'] + '">'
       + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
+      + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>'
       + '  <site>'
       + '    <name>' + h.site.name + '</name>'
-      + $scope.buildTranslations(h)
       + '    <host>' + h.site.host.replace(/&/g, '&amp;') + '</host>'
       + '    <node>' + h.site.node + '</node>'
       + '    <useChangeDateForUpdate>' + h.site.useChangeDateForUpdate + '</useChangeDateForUpdate>'
@@ -101,6 +103,7 @@ var gnHarvestergeonetwork = {
       + '  </searches>'
       + '  <options>'
       + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'
+      + '    <overrideUuid>' + h.options.overrideUuid + '</overrideUuid>'
       + '    <every>' + h.options.every + '</every>'
       + '    <status>' + h.options.status + '</status>'
       + '  </options>'
