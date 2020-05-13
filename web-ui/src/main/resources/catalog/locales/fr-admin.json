@@ -288,6 +288,7 @@
     "cron-0 15 10 * * ?": "à 10:15 tous les jours",
     "cron-0 15 10 15 * ?": "à 10:15 le 15 de chaque mois",
     "cron-0 15 10 ? * MON-FRI": "à 10:15 du lundi au vendredi",
+    "harvesterTimeZoneHelp": "Time in cron expression will be interpreted as in <i>{{timeZoneTransl}} {{zoneOffset}}</i> timezone.",
     "csvExport": "Exporter au format CSV",
     "duplicatedValueFoundHarvesterName": "Un moissonneur avec ce nom existe déjà. Vous devriez en choisir un autre.",
     "duplicatedValueFoundUserName": "Un utilisateur avec ce nom existe déjà. Vous devez en choisir un autre.",
@@ -906,6 +907,8 @@
     "system/server/protocol": "Protocole préféré",
     "system/server/securePort": "Port sécurisé",
     "system/server/log": "Niveau de log",
+    "system/server/timeZone": "Timezone",
+    "system/server/timeZone-help": "<b>Currently used only in the harvesters</b>. Sets the timezone used to interpret the time in cron expression specified in the harvesters Frequency field. If not set the JVM default timezone will be used. GeoNetwork uses the timezone definitions available in the JVM. Time zones definitions can change frequently. Please keep updated your JVM to get the latest timezones definition or use the tzupdater tool available for download from the <a href='http://www.oracle.com/technetwork/java/javase/downloads/index.html' target='_blank'>Java SE Download Page</a>.",
     "system/site": "Catalogue",
     "system/site/name": "Nom du catalogue",
     "system/site/name-help": "Le nom du catalogue est affiché à différents endroits (eg. fils d'actualités).",
@@ -1361,6 +1364,8 @@
     "ui-isLogoInHeader-help": "Affiche le logo au dessus de la barre d'outil. Uniquement pour la page de recherche (pas l'édition ou la console d'admin).",
     "ui-logoInHeaderPosition": "Placement du logo",
     "ui-logoInHeaderPosition-help": "Placement du logo dans l'en-tête",
+    "ui-isHeaderFixed": "Fix the header",
+    "ui-isHeaderFixed-help": "The header is fixed and stays at the top of the page. Attention: when the option [Show the logo in header] is also selected, the header needs a set height. This can be done under [CSS & Style] > [Header] > [Height]",
     "left": "Gauche",
     "center": "Centre",
     "right": "Droite",
@@ -1441,5 +1446,6 @@
     "ui-defaultSearchString": "Recherche par défaut.",
     "ui-defaultSearchString-help": "This configuration lets you define a default filter for the search. The syntax is the one used in the angular facet query array.",
     "ui-autoFitOnLayer": "Zoomer automatiquement sur la couche ajoutée",
-    "ui-autoFitOnLayer-help": "If checked, the map will automatically zoom on data when adding a layer from a record. Otherwise, a message will be shown to let the user zoom on data manually."
+    "ui-autoFitOnLayer-help": "If checked, the map will automatically zoom on data when adding a layer from a record. Otherwise, a message will be shown to let the user zoom on data manually.",
+    "styleVariable-gnHeaderHeight": "Height"
 }
