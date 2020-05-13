@@ -51,9 +51,9 @@ then
 
   echo "Adding schema ${schema} to schemas/pom.xml"
 
-  sed $sedopt -f - schemas/pom.xml << SED_SCRIPT
+  sed $sedopt -f /dev/stdin schemas/pom.xml << SED_SCRIPT
   ${line} a\\
-    <module>${schema}</module>
+\    <module>${schema}</module>
 SED_SCRIPT
 fi
 
@@ -71,13 +71,13 @@ then
 
   echo "Adding schema ${schema} dependency to web/pom.xml"
 
-  sed $sedopt -f - web/pom.xml << SED_SCRIPT
+  sed $sedopt -f /dev/stdin web/pom.xml << SED_SCRIPT
   ${insertLine} a\\
-    <dependency>\\
-      <groupId>${projectGroupId}</groupId>\\
-      <artifactId>schema-${schema}</artifactId>\\
-      <version>${gnSchemasVersion}</version>\\
-    </dependency>
+\    <dependency>\\
+\      <groupId>${projectGroupId}</groupId>\\
+\      <artifactId>schema-${schema}</artifactId>\\
+\      <version>${gnSchemasVersion}</version>\\
+\    </dependency>
 SED_SCRIPT
 fi
 
@@ -95,11 +95,11 @@ then
 
   echo "Adding schema ${schema} resources to web/pom.xml"
 
-  sed $sedopt -f - web/pom.xml << SED_SCRIPT
+  sed $sedopt -f /dev/stdin web/pom.xml << SED_SCRIPT
   ${finalLine} a\\
-                <resource>\\
-                  <directory>${projectBaseDir}/../schemas/${schema}/src/main/plugin</directory>\\
-                  <targetPath>${baseDir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>\\
-                </resource>
+\                <resource>\\
+\                  <directory>${projectBaseDir}/../schemas/${schema}/src/main/plugin</directory>\\
+\                  <targetPath>${baseDir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>\\
+\                </resource>
 SED_SCRIPT
 fi
