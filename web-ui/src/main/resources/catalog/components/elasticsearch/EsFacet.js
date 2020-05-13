@@ -272,6 +272,22 @@
               count: respAgg.buckets[p].doc_count
             });
           }
+        } else if (reqAgg.hasOwnProperty('histogram')) {
+          facetModel.type = 'histogram';
+          facetModel.size = respAgg.buckets.size;
+          for (var p = 0; p < respAgg.buckets.length; p++) {
+            var key = respAgg.buckets[p].key;
+
+            facetModel.items.push({
+              value: key + '-'
+                + (respAgg.buckets[p + 1] ? respAgg.buckets[p + 1].key : '*'),
+              path: [fieldId, p],
+              query_string: {query_string: {query: '' + reqAgg.histogram.field + ':'
+                + '[' + key + ' TO '
+                + (respAgg.buckets[p + 1] ? respAgg.buckets[p + 1].key : '*') + '}'}},
+              count: respAgg.buckets[p].doc_count
+            });
+          }
         }
         listModel.push(facetModel);
       }
