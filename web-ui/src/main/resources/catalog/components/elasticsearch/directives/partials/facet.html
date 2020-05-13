@@ -23,8 +23,10 @@
   <div class="flex-spacer"></div>
   <a href
      class="facet-invert"
+     title="{{::(ctrl.item.inverted ? 'filterWithValue' : 'allValuesExcept') | translate}}"
      ng-click="ctrl.toggleInvert()">
-    <span class="fa" ng-class="ctrl.item.inverted ? 'fa-check' : 'fa-close'"></span>
+    <span class="fa"
+          ng-class="ctrl.item.inverted ? 'fa-check' : 'fa-minus'"></span>
   </a>
 </div>
 <div class="gn-facet-children"
