@@ -578,6 +578,7 @@ goog.require('gn_alert');
         copy.mods.header.languages = {};
         copy.mods.search.grid.related = [];
         copy.mods.search.facetConfig = {};
+        copy.mods.map["map-editor"].layers = [];
         return copy;
       },
       getProxyUrl: function() {

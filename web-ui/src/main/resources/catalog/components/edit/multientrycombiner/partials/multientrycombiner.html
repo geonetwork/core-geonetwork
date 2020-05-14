@@ -1,6 +1,6 @@
 <div>
   <!--- These are the actual values returned to the server -->
-  <input type="hidden" ng-repeat="(lang,text) in config.values"  value="{{text}}" name="_lang_{{lang}}_{{root_id}}" lang="{{lang}}"/>
+  <input type="hidden" ng-repeat="(lang,text) in config.values"  value="{{text}}" name="_{{refs[lang]}}" lang="{{lang}}"/>
 
 
 <div style="padding-left: 15px; padding-right: 15px">

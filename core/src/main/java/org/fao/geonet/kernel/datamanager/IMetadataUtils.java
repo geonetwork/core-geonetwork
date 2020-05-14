@@ -500,4 +500,13 @@ public interface IMetadataUtils {
      * @return a map of metadataId -> SourceInfo
      */
     Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> spec);
+
+    /**
+     * Copy the files from the original metadata to the destination metadata.
+     * Used when creating a draft version.
+     *
+     * @param original
+     * @param dest
+     */
+    void cloneFiles(AbstractMetadata original, AbstractMetadata dest);
 }
