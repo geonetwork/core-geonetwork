@@ -433,7 +433,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         FormatType formatType = FormatType.valueOf(type.toLowerCase());
         final ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
         if (metadata == null) {
-            metadata = getXmlFromUrl(context, lang, url, request);
+            metadata = getXmlFromUrl(lang, url, request);
         }
         Element metadataEl = Xml.loadString(metadata, false);
 
@@ -587,7 +587,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     }
 
 
-    private String getXmlFromUrl(ServiceContext context, String lang, String url, WebRequest request) throws IOException, URISyntaxException {
+    private String getXmlFromUrl(String lang, String url, WebRequest request) throws IOException, URISyntaxException {
         String adjustedUrl = url;
         if (!url.startsWith("http")) {
             adjustedUrl = settingManager.getSiteURL(lang) + url;
