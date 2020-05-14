@@ -290,9 +290,13 @@ public class KeywordsApi {
 
         String thesauriDomainName = null;
 
+        List<String> thesauri=null;
+        if (thesaurus!=null)
+            thesauri=Arrays.asList(thesaurus);
+
         KeywordSearchParamsBuilder builder = parseBuilder(
             lang, q, rows, start,
-            targetLangs, Arrays.asList(thesaurus),
+            targetLangs, thesauri,
             thesauriDomainName, type, uri, languagesMapper);
 
 //            if (checkModified(webRequest, thesaurusMan, builder)) {
