@@ -75,6 +75,15 @@
           ui-autocompleteConfig-help</p>
       </div>
 
+      <div data-ng-switch-when="moreLikeThisConfig">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <gn-json-edit height="300" model="mCfg[key]"></gn-json-edit>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')"
+           translate>
+          ui-moreLikeThisConfig-help</p>
+      </div>
+
       <div data-ng-switch-when="facetConfig">
         <label class="control-label">{{('ui-' + key) | translate}}</label>
         <gn-json-edit height="300" model="mCfg[key]"></gn-json-edit>
