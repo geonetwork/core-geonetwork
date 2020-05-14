@@ -365,8 +365,6 @@ public class ServiceManager {
         context.setMaxUploadSize(maxUploadSize);
         context.setServlet(servlet);
 
-        String ip = request.getRemoteAddr();
-
         // Session is created by ApiInterceptor when needed
         // Save the session here in the ServiceContext (not used in the API package).
         final HttpSession httpSession = request.getSession(false);
