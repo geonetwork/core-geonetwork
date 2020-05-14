@@ -188,16 +188,12 @@ public class GeonetHttpRequestFactory {
 
     public ClientHttpResponse execute(HttpUriRequest request,
                                       Function<HttpClientBuilder, Void> configurator,
-                                      HttpClientContext r) throws IOException {
+                                      HttpClientContext context) throws IOException {
         final HttpClientBuilder clientBuilder = getDefaultHttpClientBuilder();
         configurator.apply(clientBuilder);
         CloseableHttpClient httpClient = clientBuilder.build();
 
-        if (r != null) {
-            return new AdaptingResponse(httpClient, httpClient.execute(request, r));
-        } else {
-            return new AdaptingResponse(httpClient, httpClient.execute(request));
-        }
+        return new AdaptingResponse(httpClient, httpClient.execute(request, context));
     }
 
     public HttpClientBuilder getDefaultHttpClientBuilder() {
