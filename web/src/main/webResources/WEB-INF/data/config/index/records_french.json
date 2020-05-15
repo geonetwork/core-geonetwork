@@ -1398,6 +1398,9 @@
       "standardName": {
         "type": "keyword"
       },
+      "schema": {
+        "type": "keyword"
+      },
       "tagNumber": {
         "type": "short"
       },
