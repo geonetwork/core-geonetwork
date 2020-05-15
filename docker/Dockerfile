@@ -14,9 +14,20 @@ ENV ES_INDEX_RECORDS "gn-records"
 ENV ES_INDEX_FEATURES "gn-features"
 ENV KB_URL http://localhost:5601
 
+ENV LDAP_URL "ldap://ldap.ifremer.fr:389"
+
+ENV CAS_URL "https://cas.ifremer.fr"
+
+ENV PANIER_XML_PATH_LOGGED "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/intranet"
+ENV PANIER_XML_PATH_ANONYMOUS "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/anonymous"
+
 WORKDIR $CATALINA_HOME/webapps
 
 COPY ./geonetwork.war ./geonetwork.war
+
+RUN apt update && \
+      apt install -y augeas-tools && \
+      rm -rf /var/lib/apt/lists/*
 
 RUN  unzip -d geonetwork geonetwork.war && \
      rm geonetwork.war

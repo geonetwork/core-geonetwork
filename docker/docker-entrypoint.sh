@@ -69,6 +69,40 @@ if [ "$1" = 'catalina.sh' ]; then
       sed -i "s#http://localhost:5601#${KB_URL}#g" $CATALINA_HOME/webapps/geonetwork/WEB-INF/web.xml ;
     fi
 
+    # Reconfigure LDAP
+    if [ "$LDAP_URL" != "" ] ; then
+        augtool -r /usr/local/tomcat/webapps/geonetwork/WEB-INF/config-security/ --noautoload --transform "Properties.lns incl /config-security.properties" <<EOF
+            set '/files/config-security.properties/ldap.base.provider.url' "${LDAP_URL}"
+            save
+EOF
+    fi
+
+    # Reconfigure CAS
+    if [ "CAS_URL" != "" ] ; then
+        augtool -r /usr/local/tomcat/webapps/geonetwork/WEB-INF/config-security/ --noautoload --transform "Properties.lns incl /config-security.properties" <<EOF
+            set '/files/config-security.properties/cas.baseURL' "${CAS_URL}"
+            set '/files/config-security.properties/cas.ticket.validator.url' "${CAS_URL}"
+            set '/files/config-security.properties/cas.login.url' "${CAS_URL}/login"
+            set '/files/config-security.properties/cas.logout.url' "${CAS_URL}/logout?url=\${geonetwork.https.url}"
+            save
+EOF
+    fi
+
+    # Reconfigure Panier
+    if [ "$PANIER_XML_PATH_LOGGED" != "" ] ; then
+        augtool -r /usr/local/tomcat/webapps/geonetwork/WEB-INF/ --noautoload --transform "Xml.lns incl /config-spring-geonetwork.xml" <<EOF
+            set '/files/config-spring-geonetwork.xml/beans/bean[#attribute/id="panierXmlPathLogged"]/constructor-arg/#attribute/value' "${PANIER_XML_PATH_LOGGED}"
+            save
+EOF
+    fi
+
+    if [ "$PANIER_XML_PATH_ANONYMOUS" != "" ] ; then
+        augtool -r /usr/local/tomcat/webapps/geonetwork/WEB-INF/ --noautoload --transform "Xml.lns incl /config-spring-geonetwork.xml" <<EOF
+            set '/files/config-spring-geonetwork.xml/beans/bean[#attribute/id="panierXmlPathAnonymous"]/constructor-arg/#attribute/value' "${PANIER_XML_PATH_ANONYMOUS}"
+            save
+EOF
+    fi
+
 fi
 
 exec "$@"

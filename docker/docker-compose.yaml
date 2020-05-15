@@ -22,6 +22,10 @@ services:
       POSTGRES_DB_NAME: sextant
       POSTGRES_DB_USERNAME: sxt
       POSTGRES_DB_PASSWORD: sxt
+      LDAP_URL: "ldap://ldap.ifremer.fr:389"
+      CAS_URL: "https://cas.ifremer.fr"
+      PANIER_XML_PATH_LOGGED: "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/intranet"
+      PANIER_XML_PATH_ANONYMOUS: "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/anonymous"
     volumes:
       - geonetwork:/var/lib/geonetwork_data
     depends_on:
