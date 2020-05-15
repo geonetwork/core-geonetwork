@@ -143,7 +143,15 @@ public class MetadataUtils {
 
             if (listOfAssociatedResources != null) {
                 for (AssociatedResource resource : listOfAssociatedResources) {
+                    // Search in the index to use the portal filter and verify the metadata is available for the portal
+                    Element searchResult = search(resource.getUuid(), RelatedItemType.siblings.value(), context, from, to, fast, null);
+                    // If can't be find, skip the result.
+                    if (!hasResult(searchResult)) {
+                        continue;
+                    }
+
                     Element sibContent = getRecord(resource.getUuid(), context, dm);
+
                     if (sibContent != null) {
                         Element sibling = new Element("sibling");
                         sibling.setAttribute("initiative", resource.getInitiativeType());
@@ -203,6 +211,13 @@ public class MetadataUtils {
                     fcat = new Element("fcats");
 
                     for (String fcat_uuid : listOfUUIDs) {
+                        // Search in the index to use the portal filter and verify the metadata is available for the portal
+                        Element searchResult = search(fcat_uuid, RelatedItemType.fcats.value(), context, from, to, fast, null);
+                        // If can't be find, skip the result.
+                        if (!hasResult(searchResult)) {
+                            continue;
+                        }
+
                         Element metadata = new Element("metadata");
                         Element response = new Element("response");
                         Element current = getRecord(fcat_uuid, context, dm);
@@ -401,5 +416,37 @@ public class MetadataUtils {
             (metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(metadata.getId())) > 0);
 
         return isInvalid;
+    }
+
+
+    /**
+     * Checks if a result for a search query has results.
+     *
+     * Response examples:
+     *
+     * <siblings>
+     *   <response from="1" to="0" />
+     * </siblings>
+     *
+     *
+     * <siblings>
+     *   <response from="1" to="1">
+     *      <metadata>...</metadata>
+     *   </response>
+     * </siblings>
+     *
+     * @param searchResponse
+     * @return True it the response has results, False in other cases.
+     */
+    private static boolean hasResult(Element searchResponse) {
+
+        if (searchResponse.getChildren().size() > 0) {
+            Element containerResults = (Element) searchResponse.getChildren().get(0);
+            if (containerResults.getChildren().size() > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
