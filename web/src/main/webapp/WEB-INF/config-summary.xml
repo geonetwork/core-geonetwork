@@ -180,8 +180,9 @@
     <facet name="cersat-acquisition-pattern" indexKey="thesaurus-local.theme.cersat_acquisition_pattern" label="cersat-acquisition-pattern"/>
     <facet name="cersat-compositing" indexKey="thesaurus-local.theme.cersat_compositing" label="cersat-compositing"/>
     <facet name="cersat-latency" indexKey="thesaurus-local.theme.cersat_latency" label="cersat-latency"/>
-    <facet name="myocean-reference-geographical-area" indexKey="thesaurus-local.reference-geographical-area.myocean.reference-geographical-area" label="myocean-reference-geographical-area"/>
     <facet name="cersat-parameter" indexKey="thesaurus-local.theme.cersat_parameter" label="cersat-parameter"/>
+    <facet name="cersat-sensor" indexKey="thesaurus-local.theme.cersat_sensor" label="cersat-sensor"/>
+    <facet name="myocean-reference-geographical-area" indexKey="thesaurus-local.reference-geographical-area.myocean.reference-geographical-area" label="myocean-reference-geographical-area"/>
     <facet name="theme-GCMDparameter" indexKey="thesaurus-external.theme.GCMDparameter" label="theme-GCMDparameter"/>
 
     <facet name="mdActions" indexKey="_mdActions" label="mdActions"/>
@@ -324,8 +325,9 @@
       <item facet="cersat-acquisition-pattern" max="300"/>      
       <item facet="cersat-compositing" max="300"/>      
       <item facet="cersat-latency" max="300"/>      
-      <item facet="myocean-reference-geographical-area" max="300"/>      
-      <item facet="cersat-parameter" max="300"/>      
+      <item facet="cersat-parameter" max="300"/>
+      <item facet="cersat-sensor" max="300"/>
+      <item facet="myocean-reference-geographical-area" max="300"/>
       <item facet="theme-GCMDparameter" max="300"/>
       
       <item facet="mdActions"/>
