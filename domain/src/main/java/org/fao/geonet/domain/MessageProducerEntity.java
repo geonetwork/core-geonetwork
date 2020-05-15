@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import javax.annotation.Nullable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +17,8 @@ public class MessageProducerEntity {
     private Long id;
 
     private WfsHarvesterParamEntity wfsHarvesterParamEntity;
+
+    @Nullable
     private String cronExpression;
 
     public WfsHarvesterParamEntity getWfsHarvesterParam() {
@@ -30,7 +33,7 @@ public class MessageProducerEntity {
         return cronExpression;
     }
 
-    public void setCronExpression(String cronExpession) {
+    public void setCronExpression(@Nullable String cronExpession) {
         this.cronExpression = cronExpession;
     }
 
