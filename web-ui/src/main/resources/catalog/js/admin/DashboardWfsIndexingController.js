@@ -140,7 +140,7 @@
         $element.find('a[data-delete-key]').click(function(event) {
           var btn = $(event.currentTarget);
           $scope.$apply(function() {
-            $scope.deleteIndexedData(btn.attr('data-delete-key'));
+            $scope.deleteWfsService(btn.attr('data-delete-key'));
           });
           event.preventDefault();
         });
@@ -210,40 +210,34 @@
 
           $scope.loading = false;
           try {
-            indexResults.data.hits.hits.forEach(function (hit) {
-              var source = hit._source;
-
-              var infos = decodeURIComponent(source.id).split('#');
-              $scope.jobs[infos[0] + '#' + infos[1]] = {
-                url: infos[0],
-                featureType: infos[1],
-                featureCount: source.totalRecords_i || 0,
-                status: source.endDate_dt === undefined ? 'ongoing' : source.error_ss ? 'error' : source.status_s,
-                mdUuid: source.parent,
-                error: source.error_ss,
-                endDate: source.endDate_dt,
-                cronScheduleExpression: null,
-                cronScheduleProducerId: null
-              };
-            });
-
             apiResults.data.forEach(function(producer) {
               var url = producer.wfsHarvesterParam.url;
               var featureType = producer.wfsHarvesterParam.typeName;
               var key = url + '#' + featureType;
 
+              $scope.jobs[key] = {
+                url: url,
+                featureType: featureType,
+                status: 'not started',
+                mdUuid: producer.wfsHarvesterParam.metadataUuid,
+                cronScheduleExpression: producer.cronExpression,
+                cronScheduleProducerId: producer.id
+              };
+            });
+
+            indexResults.data.hits.hits.forEach(function (hit) {
+              var source = hit._source;
+
+              var infos = decodeURIComponent(source.id).split('#');
+              var key = infos[0] + '#' + infos[1];
+
               if ($scope.jobs[key]) {
-                $scope.jobs[key].cronScheduleExpression = producer.cronExpression;
-                $scope.jobs[key].cronScheduleProducerId = producer.id;
-              } else {
-                $scope.jobs[key] = {
-                  url: url,
-                  featureType: featureType,
-                  status: 'not started',
-                  mdUuid: producer.wfsHarvesterParam.metadataUuid,
-                  cronScheduleExpression: producer.cronExpression,
-                  cronScheduleProducerId: producer.id
-                };
+                $scope.jobs[key] = angular.merge($scope.jobs[key], {
+                  featureCount: source.totalRecords_i || 0,
+                  status: source.endDate_dt === undefined ? 'ongoing' : source.error_ss ? 'error' : source.status_s,
+                  error: source.error_ss,
+                  endDate: source.endDate_dt
+                });
               }
             });
 
@@ -357,11 +351,9 @@
               title: '',
               formatter: function(value, row, index) {
                 var key = row.url + '#' + row.featureType;
-                var labelAdd = $translate.instant('wfsIndexingAddSchedule');
                 var labelEdit = $translate.instant('wfsIndexingEditSchedule');
                 var labelNow = $translate.instant('wfsIndexingTrigger');
-                var labelDelete = $translate.instant('wfsDeleteIndexedData');
-                var addUpdateLabel = row.cronScheduleProducerId ? labelEdit : labelAdd;
+                var labelDelete = $translate.instant('wfsDeleteWfsIndexing');
 
                 var isLast = index === jobsArray.length - 1 || (index + 1) % pageSize === 0;
                 var dropdownClass = isLast ? 'dropup' : 'dropdown';
@@ -371,7 +363,7 @@
                   '    ' + $translate.instant('wfsHarvesterActions') + '&nbsp;<span class="caret"></span>' +
                   '  </button>' +
                   '  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">' +
-                  '    <li><a href="#" data-job-key="' + key + '">' + addUpdateLabel + '</a></li>' +
+                  '    <li><a href="#" data-job-key="' + key + '">' + labelEdit + '</a></li>' +
                   '    <li><a href="#" data-trigger-job-key="' + key + '">' + labelNow + '</a></li>' +
                   '    <li><a href="#" data-delete-key="' + key + '">' + labelDelete + '</a></li>' +
                   '  </ul>' +
@@ -398,7 +390,6 @@
       $scope.currentJob = null;
       $scope.settingsLoading = false;
       $scope.settingsError = null;
-      $scope.settingsErrorIsDelete = false;
 
       var settingsModal = $('#gn-indexing-schedule');
 
@@ -417,7 +408,7 @@
 
         var payload = {
           wfsHarvesterParam: wfsHarvesterParams,
-          cronExpression: job.cronScheduleExpression
+          cronExpression: job.cronScheduleExpression !== '' ? job.cronScheduleExpression : null
         };
 
         var query = job.cronScheduleProducerId ?
@@ -444,30 +435,8 @@
           $scope.refreshJobList();
         }, function(error) {
           $scope.settingsLoading = false;
-          $scope.settingsErrorIsDelete = false;
           $scope.settingsError = error && error.data && error.data.message;
         });
-      };
-
-      $scope.deleteSchedule = function(job) {
-        if (job.cronScheduleProducerId === null) { return }
-
-        $scope.settingsLoading = true;
-
-        $http.delete($scope.messageProducersApiUrl + '/' + job.cronScheduleProducerId)
-          .then(function() {
-            $scope.settingsLoading = false;
-
-            var key = job.url + '#' + job.featureType;
-            $scope.jobs[key].cronScheduleExpression = null;
-            $scope.jobs[key].cronScheduleProducerId = null;
-
-            settingsModal.modal('hide');
-          }, function(error) {
-            $scope.settingsLoading = false;
-            $scope.settingsErrorIsDelete = true;
-            $scope.settingsError = error && error.data && error.data.message;
-          });
       };
 
       settingsModal.on('hidden.bs.modal', function() {
@@ -515,13 +484,21 @@
         });
       };
 
-      $scope.deleteIndexedData = function(key) {
+      // this will delete both the message producer and the indexed data
+      $scope.deleteWfsService = function(key) {
         var job = $scope.jobs[key];
+
+        if (job.cronScheduleProducerId === null) { return }
+
         var urlParams = '?serviceUrl=' + encodeURIComponent(job.url) +
           '&typeName=' + encodeURIComponent(job.featureType);
-        $http.delete($scope.wfsWorkersApiUrl + urlParams).then(function() {
+
+        $q.all([
+          $http.delete($scope.wfsWorkersApiUrl + urlParams),
+          $http.delete($scope.messageProducersApiUrl + '/' + job.cronScheduleProducerId)
+        ]).then(function() {
           gnAlertService.addAlert({
-            msg: $translate.instant('wfsDeleteIndexedDataSuccess'),
+            msg: $translate.instant('wfsDeleteWfsIndexingSuccess'),
             type: 'success'
           });
           // slight delay to let ES update its response accordingly
@@ -530,7 +507,7 @@
           }, 750);
         }, function() {
           gnAlertService.addAlert({
-            msg: $translate.instant('wfsDeleteIndexedDataError'),
+            msg: $translate.instant('wfsDeleteWfsIndexingError'),
             type: 'danger'
           });
         });
