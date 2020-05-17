@@ -528,5 +528,6 @@
   "dateFrom": "Records updated after",
   "dateTo": "Records updated before",
   "activeFilters": "Active filters",
-  "geometryFilter": "Bounding Box"
+  "geometryFilter": "Bounding Box",
+  "wfsIndexingJobSaved": "WFS indexing job saved successfully."
 }
