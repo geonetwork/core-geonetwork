@@ -1327,6 +1327,7 @@
     "wfsDeleteWfsIndexing": "Delete indexing job",
     "wfsDeleteWfsIndexingSuccess": "The indexing job was successfully deleted.",
     "wfsDeleteWfsIndexingError": "The indexing job could not be deleted",
+    "wfsIndexingScheduled": "Scheduled?",
     "wfsHarvesterActions": "Actions",
     "fromRegistry": "From registry",
     "registry-help": "<a href='http://inspire.ec.europa.eu/registry'>Re3gistry software</a> is a tool to publish registers. Registers provide a means to assign identifiers to items and their labels, definitions and descriptions (in different languages). The INSPIRE registry provides a central access point to a number of centrally managed INSPIRE registers.",

@@ -1327,6 +1327,7 @@
     "wfsDeleteWfsIndexing": "Supprimer l'indexation",
     "wfsDeleteWfsIndexingSuccess": "L'indexation WFS a été supprimée.",
     "wfsDeleteWfsIndexingError": "L'indexation WFS n'a pas pu être supprimée.",
+    "wfsIndexingScheduled": "Planifié ?",
     "wfsHarvesterActions": "Actions",
     "fromRegistry": "Depuis un registre.",
     "registry-help": "Le <a href='http://inspire.ec.europa.eu/registry'>logiciel Re3gistry</a> est un outil de publication de registres. Les registres permettent de gérer des listes (dans différentes langues). Le registre INSPIRE fournit un point d'accès central à un certain nombre de registres INSPIRE gérés de manière centralisée.",

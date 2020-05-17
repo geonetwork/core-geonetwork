@@ -347,6 +347,18 @@
               },
               sortable: true
             }, {
+              field: 'cronScheduleExpression',
+              title: $translate.instant('wfsIndexingScheduled'),
+              formatter: function(value) {
+                if (value !== null) {
+                  var cronLabel = $translate.instant('cron-' + value);
+                  return '<span title="' + (cronLabel || value) + '">' + $translate.instant('yes') + '</span>';
+                } else {
+                  return $translate.instant('no');
+                }
+              },
+              sortable: true
+            }, {
               field: 'cronScheduleProducerId',
               title: '',
               formatter: function(value, row, index) {
