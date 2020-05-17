@@ -247,7 +247,14 @@
 
              var map = gnMapsManager.createMap(gnMapsManager.EDITOR_MAP);
              scope.map = map;
-             map.addLayer(bboxLayer);
+
+             // Add the bboxLayer when the map is fully created. Otherwise
+             // if using a context file for the map, the layer is added
+             // too soon and removed when loaded the context file.
+             map.get('creationPromise').then(function() {
+               map.addLayer(bboxLayer);
+             });
+
              element.data('map', map);
 
              // initialize extent & bbox on map load
