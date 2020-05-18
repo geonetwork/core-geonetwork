@@ -484,7 +484,7 @@
                 function getTypeConfig(link) {
                   for (var i = 0; i < scope.config.types.length; i++) {
                     var c = scope.config.types[i];
-                    if (scope.schema === 'iso19115-3') {
+                    if (scope.schema === 'iso19115-3.2018') {
                       var p = c.fields &&
                               c.fields.protocol &&
                               c.fields.protocol.value || '',
