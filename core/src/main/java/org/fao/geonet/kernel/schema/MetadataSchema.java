@@ -93,6 +93,7 @@ public class MetadataSchema {
     private String schemaName;
     private Path schemaDir;
     private String standardUrl;
+    private String version;
     private String appMinorVersionSupported;
     private String appMajorVersionSupported;
     private Map<String, String> titles = new HashMap<>();
@@ -579,6 +580,14 @@ public class MetadataSchema {
 
     public void setStandardUrl(String standardUrl) {
         this.standardUrl = standardUrl;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public String getAppMinorVersionSupported() {
