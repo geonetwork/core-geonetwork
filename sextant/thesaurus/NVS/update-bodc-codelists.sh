@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
 # Script to download BODC vocabularies.
+UTILITY_PATH=$(pwd)
+cd ../../../web/src/main/webapp/WEB-INF/data/config
+
 
 cd codelist/external/thesauri/feature-type
 wget --output-document=NVS.L02.rdf http://vocab.nerc.ac.uk/collection/L02/current/
 sed -i 's/<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="\/VocabV2\/skosrdf2html\.xsl" type="text\/xsl" media="screen"?>//g' NVS.L02.rdf
 cd ../../../..
-
 
 
 cd codelist/external/thesauri/parameter
@@ -59,6 +61,6 @@ wget --output-document=NVS.L05.rdf http://vocab.nerc.ac.uk/collection/L05/curren
 sed -i 's/<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="\/VocabV2\/skosrdf2html\.xsl" type="text\/xsl" media="screen"?>//g' NVS.L05.rdf
 
 # LO5POS is derived from L05
-xsltproc -o NVS.L05POS.rdf ../../../../L05POSbuilder.xsl NVS.L05.rdf
+xsltproc -o NVS.L05POS.rdf $UTILITY_PATH/L05POSbuilder.xsl NVS.L05.rdf
 
-cd ../../../..
+cd $UTILITY_PATH

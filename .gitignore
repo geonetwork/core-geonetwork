@@ -91,3 +91,5 @@ chromedriver
 node_modules
 package-lock.json
 .project
+sextant/annuaire/EDMO/data
+sextant/annuaire/EDMO/edmo_output.xml
