@@ -10,6 +10,7 @@
 
       <div class="title">
         <a href=""
+           title="{{md.title || md.defaultTitle}}"
            gn-metadata-open="md"
            gn-records="searchResults.records"
            gn-formatter="formatter.defaultUrl">
@@ -19,6 +20,7 @@
 
       <div class="gn-md-thumbnail">
         <a href=""
+           title="{{(md.abstract || md.defaultAbstract) | striptags}}"
            gn-metadata-open="md"
            gn-records="searchResults.records"
            gn-formatter="formatter.defaultUrl">
