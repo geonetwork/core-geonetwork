@@ -362,15 +362,6 @@
                         input.complexData._default.format.mimeType
                         ) || 'gml';
 
-                        // SEXTANT SPECIFIC: use GML by default if supported
-                        input.complexData.supported.format.map(function (formatObj) {
-                          var format = gnGeometryService.getFormatFromMimeType(formatObj.mimeType);
-                          if (format.indexOf('gml') > -1) {
-                            input.outputFormat = format;
-                          }
-                        });
-                        // END SEXTANT SPECIFIC
-
                         // guess geometry type from schema url
                         var url = input.complexData._default.format.schema;
                         var result = /\?.*GEOMETRYNAME=([^&\b]*)/gi.exec(url);

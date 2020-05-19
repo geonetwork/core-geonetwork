@@ -1,0 +1,46 @@
+version: '3.1'
+volumes:
+  geonetwork:
+
+services:
+  geonetwork:
+    build: .
+    image: sextant-geonetwork:elastic
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      DATA_DIR: /var/lib/geonetwork_data
+      ES_HOST: elasticsearch
+      ES_PROTOCOL: http
+      ES_PORT: 9200
+      ES_INDEX_SEARCHLOGS: sxt-searchlogs
+      ES_INDEX_RECORDS: sxt-records
+      ES_INDEX_FEATURES: sxt-features
+      KB_URL: ""
+      POSTGRES_DB_HOST: database
+      POSTGRES_DB_NAME: sextant
+      POSTGRES_DB_USERNAME: sxt
+      POSTGRES_DB_PASSWORD: sxt
+      LDAP_URL: "ldap://ldap.ifremer.fr:389"
+      CAS_URL: "https://cas.ifremer.fr"
+      PANIER_XML_PATH_LOGGED: "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/intranet"
+      PANIER_XML_PATH_ANONYMOUS: "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/anonymous"
+    volumes:
+      - geonetwork:/var/lib/geonetwork_data
+    depends_on:
+      - elasticsearch
+      - database
+
+  elasticsearch:
+    image: elasticsearch:7.6.2
+    environment:
+      discovery.type: single-node
+
+  database:
+    image: mdillon/postgis
+    environment:
+      POSTGRES_USER: sxt
+      POSTGRES_PASSWORD: sxt
+      POSTGRES_DB: sextant
+
