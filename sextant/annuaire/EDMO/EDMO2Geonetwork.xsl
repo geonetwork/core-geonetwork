@@ -10,8 +10,8 @@
 			<xsl:result-document href="{$output}" method="xml">
 
 				<gmd:CI_ResponsibleParty>
-					<xsl:attribute name="uuid" select="concat('http://seadatanet.maris2.nl/v_edmo/print.asp?n_code=',n_code/text())"/>
-					
+					<xsl:attribute name="uuid" select="concat('https://edmo.seadatanet.org/report/',n_code/text())"/>
+
 					<xsl:element name="gmd:organisationName">
 						<xsl:element name="gco:CharacterString">
 							<xsl:value-of select="name/text()"/>
