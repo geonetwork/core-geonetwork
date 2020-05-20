@@ -1235,8 +1235,10 @@
       <url>http://maven.k-int.com/content/repositories/releases/</url>
     </repository-->
 
-    <!-- managed by repo.osgeo.org geonetwork-releass  -->
-    <!-- third party jar upload                        -->
+    <!-- managed by repo.osgeo.org geonetwork-cache     -->
+    <!-- third party jar upload                         -->
+    <!-- TODO: move this content to geonetwork-releases -->
+    <!--
     <repository>
       <snapshots>
         <enabled>false</enabled>
@@ -1248,7 +1250,7 @@
       <name>GeoNetwork remote repository</name>
       <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
     </repository>
-
+    -->
     <!-- managed by repo.osgeo.org seasar-cache       -->
     <!-- /net.arnx.jsonic/jsonic/*                    -->
     <!-- seasar repo, has jsonic - used by langdetect -->
@@ -1259,7 +1261,7 @@
       <url>http://maven.seasar.org/maven2</url>
     </repository>
     -->
-    <!-- managed by repo.osgeo.org geonetwork-releass  -->
+    <!-- managed by repo.osgeo.org geonetwork-releases  -->
     <!-- third party jar upload                        -->
     <!-- org.mapfish.print:print-lib-2.1.6.jar         -->
     <!--
