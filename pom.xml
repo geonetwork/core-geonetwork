@@ -645,13 +645,13 @@
         <version>1.3</version> <!-- TODO check version -->
       </dependency>
       <!-- May be required to register connection unwrappers with
-			     geotools
+           geotools
       <dependency>
         <groupId>org.springframework</groupId>
-        <artifactId>spring-jdbc</artifactId>
+      s  <artifactId>spring-jdbc</artifactId>
         <version>2.5.3</version>
       </dependency>
-			-->
+      -->
       <dependency>
         <groupId>org.eclipse.core</groupId>
         <artifactId>org.eclipse.core.runtime</artifactId>
@@ -680,7 +680,7 @@
         <version>1.0</version>
       </dependency>
 
-      <!-- Geotools and spatial search stuff -->
+      <!-- GeoTools and spatial search stuff -->
       <dependency>
         <groupId>org.geotools.xsd</groupId>
         <artifactId>gt-xsd-gml3</artifactId>
@@ -854,17 +854,16 @@
         <version>1.7.8</version>
       </dependency>
 
-      <!-- Databased stuff -->
-      <dependency>
-        <groupId>com.h2database</groupId>
-        <artifactId>h2</artifactId>
-        <version>1.3.174</version>
-      </dependency>
       <!-- Other stuff -->
       <dependency>
         <groupId>dlib</groupId>  <!--FIXME Handled by local repository -->
         <artifactId>dlib</artifactId>
         <version>1.0</version> <!-- FIXME totally unknown -->
+      </dependency>
+      <dependency>
+        <groupId>org.mapfish.print</groupId>
+        <artifactId>print-lib</artifactId>
+        <version>${print-lib.version}</version>
       </dependency>
 
       <!-- Lib utils -->
@@ -895,6 +894,7 @@
         <artifactId>metrics-log4j</artifactId>
         <version>${metrics.version}</version>
       </dependency>
+
       <!-- Tests -->
       <dependency>
         <groupId>junit</groupId>
@@ -933,7 +933,12 @@
         <scope>test</scope>
       </dependency>
 
-      <!-- db -->
+      <!-- Databased stuff -->
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>1.3.174</version>
+      </dependency>
       <dependency>
         <groupId>org.postgis</groupId>
         <artifactId>postgis-jdbc</artifactId>
@@ -961,7 +966,14 @@
         <artifactId>ojdbc</artifactId>
         <version>14</version>
       </dependency>
-			-->
+      -->
+      <!-- Oracle changed policy, this is from maven central -->
+      <!-- Oracle Free Use Terms and Conditions (FUTC) -->
+      <dependency>
+         <groupId>com.oracle.database.jdbc</groupId>
+         <artifactId>ojdbc8</artifactId>
+         <version>19.6.0.0</version>
+       </dependency>
       <dependency>
         <groupId>org.codehaus.izpack</groupId>
         <artifactId>izpack-standalone-compiler</artifactId>
@@ -1146,11 +1158,13 @@
         <artifactId>elasticsearch</artifactId>
         <version>${es.version}</version>
       </dependency>-->
+
       <!--Require Lucene 5 <dependency>
         <groupId>org.elasticsearch.client</groupId>
         <artifactId>transport</artifactId>
         <version>${es.version}</version>
       </dependency>-->
+
       <dependency>
         <groupId>io.searchbox</groupId>
         <artifactId>jest</artifactId>
@@ -1209,18 +1223,23 @@
       <url>https://repo.osgeo.org/repository/release/</url>
     </repository>
 
-    <repository>
+    <!-- managed by repo.osgeo.org k-int-cache -->
+    <!-- /marcxml/marcxml/*                    -->
+    <!-- /marc4j/marc4j/*                      -->
+    <!--repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
       <id>k-int</id>
       <name>Developer k-int repository</name>
       <url>http://maven.k-int.com/content/repositories/releases/</url>
-    </repository>
+    </repository-->
 
+    <!-- managed by repo.osgeo.org geonetwork-releass  -->
+    <!-- third party jar upload                        -->
     <repository>
       <snapshots>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
       </snapshots>
       <releases>
         <enabled>true</enabled>
@@ -1230,19 +1249,26 @@
       <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
     </repository>
 
+    <!-- managed by repo.osgeo.org seasar-cache       -->
+    <!-- /net.arnx.jsonic/jsonic/*                    -->
     <!-- seasar repo, has jsonic - used by langdetect -->
+    <!--
     <repository>
       <id>maven.seasar.org</id>
       <name>The Seasar Foundation Maven2 Repository</name>
       <url>http://maven.seasar.org/maven2</url>
     </repository>
-
+    -->
+    <!-- managed by repo.osgeo.org geonetwork-releass  -->
+    <!-- third party jar upload                        -->
+    <!-- org.mapfish.print:print-lib-2.1.6.jar         -->
+    <!--
     <repository>
       <id>georchestra-mfprint</id>
       <name>build-releases</name>
       <url>https://packages.georchestra.org/artifactory/mapfish-print</url>
     </repository>
-
+    -->
   </repositories>
 
 
