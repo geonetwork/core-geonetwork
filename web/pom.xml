@@ -322,6 +322,7 @@
           <groupId>commons-httpclient</groupId>
           <artifactId>commons-httpclient</artifactId>
         </exclusion>
+        <!--
         <exclusion>
           <groupId>com.codahale.metrics</groupId>
           <artifactId>metrics-core</artifactId>
@@ -342,6 +343,7 @@
           <groupId>com.codahale.metrics</groupId>
           <artifactId>metrics-httpclient</artifactId>
         </exclusion>
+        -->
         <exclusion>
           <groupId>com.google.guava</groupId>
           <artifactId>guava</artifactId>
