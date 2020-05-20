@@ -30,12 +30,17 @@
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
   <version>3.11.0-SNAPSHOT</version>
+
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
     resources through the web.
   </description>
   <url>http://geonetwork-opensource.org</url>
+  <organization>
+    <name>Open Source Geospatial Foundation</name>
+    <url>https://www.osgeo.org/</url>
+  </organization>
   <scm>
     <connection>
       scm:git:https://github.com/geonetwork/core-geonetwork
@@ -86,19 +91,20 @@
     </mailingList>
   </mailingLists>
 
-  <!-- TODO developer part-->
   <developers>
     <developer>
-      <name/>
-      <id/>
-      <organization/>
-      <organizationUrl/>
-      <email/>
+      <name>Jody Garnett</name>
+      <id>jodygarnett</id>
+      <organization>GeoCat B.V.</organization>
+      <organizationUrl>https://www.geocat.net</organizationUrl>
+      <email>jody.garnett@gmail.com</email>
       <roles>
-        <role/>
+        <role>Java Developer</role>
+        <role>Maven Build</role>
       </roles>
-      <timezone/>
+      <timezone>America/Vancouver</timezone>
     </developer>
+    <!-- TODO developer part-->
   </developers>
 
   <licenses>
@@ -1349,12 +1355,27 @@
   </profiles>
 
   <distributionManagement>
+    <repository>
+      <id>osgeo</id>
+      <name>OSGeo GeoNetwork Release Repository</name>
+      <url>https://repo.osgeo.org/repository/geonetwork-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id> osgeo </id>
+      <name>OSGeo GeoNetwork Snapshot Repository</name>
+      <url>https://repo.osgeo.org/repository/geonetwork-snapshots/</url>
+     </snapshotRepository>
+  </distributionManagement>
+
+  <!--
+  <distributionManagement>
     <snapshotRepository>
       <id>scp-repository.geonetwork-opensource.org</id>
       <name>GeoNetwork opensource repositories</name>
       <url>scpexe://TO DEFINED</url>
     </snapshotRepository>
   </distributionManagement>
+  -->
 
   <properties>
     <db.properties>WEB-INF/config-db/jdbc.properties</db.properties>
