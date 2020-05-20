@@ -364,6 +364,7 @@
           <groupId>org.apache.xmlgraphics</groupId>
           <artifactId>batik-transcoder</artifactId>
         </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- ====================== -->
