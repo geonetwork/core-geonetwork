@@ -654,7 +654,7 @@
            geotools
       <dependency>
         <groupId>org.springframework</groupId>
-      s  <artifactId>spring-jdbc</artifactId>
+        <artifactId>spring-jdbc</artifactId>
         <version>2.5.3</version>
       </dependency>
       -->
