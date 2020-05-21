@@ -9,8 +9,8 @@ sites:
   simm-oi: https://oceans-indien-austral.milieumarinfrance.fr/Acces-aux-Donnees/Catalogue
   simm-sar: https://sar.milieumarinfrance.fr/Nos-rubriques/Referentiels-geographiques
 
-# Sextant host used in the above sites; this should *not* include protocol and port
-live_host: sextant.ifremer.fr
+# Sextant host used in the above sites; this should include a scheme (https:// or http://) or start with //
+live_host: //sextant.ifremer.fr
 
-# Sextant host to be used for the generated test pages; specify protocol and port if needed
-test_host: localhost:8080
+# Sextant host to be used for the generated test pages; this should include a scheme (https:// or http://) or start with //
+test_host: http://localhost:8080

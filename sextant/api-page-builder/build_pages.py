@@ -83,12 +83,10 @@ def _replace_urls(html, site_url, sextant_live_host, sextant_test_host):
             #  here we look only for sextant files
             if script["src"].startswith(".."):
                 script["src"] = _to_absolute_url(script["src"], site_url)
-            if script["src"].find(sextant_live_host) != -1 and not script[
+            if _is_sextant_url(script["src"], sextant_live_host) and not script[
                 "src"
             ].startswith("/"):
-                script["src"] = script["src"].replace(
-                    sextant_live_host, sextant_test_host, 1
-                )
+                script["src"] = _to_test_sextant_url(script["src"], sextant_test_host)
             # do not deal with external scripts
             elif script["src"].startswith("http") or script["src"].startswith(
                 "https"
@@ -100,11 +98,20 @@ def _replace_urls(html, site_url, sextant_live_host, sextant_test_host):
                     script["src"] = script["src"].replace(
                         i, site_host, 1
                     )
-    result = str(soup)
+    result = str(soup.prettify()) + "\n"
     return result
 
 def _to_absolute_url(relative_url, site_url):
     return urljoin(site_url, relative_url)
+
+def _is_sextant_url(live_url, sextant_live_host):
+    return live_url.find(sextant_live_host) != -1
+
+def _to_test_sextant_url(sextant_live_url, sextant_test_host):
+    live_url_parts = urlsplit(sextant_live_url)
+    test_url_parts = urlsplit(sextant_test_host)
+    scheme = test_url_parts.scheme if test_url_parts.scheme != "" else live_url_parts.scheme
+    return "{2}://{1.netloc}{0.path}".format(live_url_parts, test_url_parts, scheme)
 
 def read_yaml(input_file):
     with open(input_file) as f:
