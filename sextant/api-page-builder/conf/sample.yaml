@@ -1,0 +1,16 @@
+# dict of live API sites from which test pages will be built
+sites:
+  sextant: https://sextant.ifremer.fr/Donnees/Catalogue
+  milieumarin: https://sar.milieumarinfrance.fr/Nos-rubriques/Referentiels-geographiques
+  odatis: https://www.odatis-ocean.fr/donnees-et-services/acces-aux-donnees/catalogue-complet
+  emodnet-chemistry: https://www.emodnet-chemistry.eu/products/catalogue
+  emodnet-bathymetry: https://www.emodnet-bathymetry.eu/metadata-amp-data/composite-dtms-catalogue-service
+  seadatanet: https://www.seadatanet.org/Products
+  simm-oi: https://oceans-indien-austral.milieumarinfrance.fr/Acces-aux-Donnees/Catalogue
+  simm-sar: https://sar.milieumarinfrance.fr/Nos-rubriques/Referentiels-geographiques
+
+# Sextant host used in the above sites; this should *not* include protocol and port
+live_host: sextant.ifremer.fr
+
+# Sextant host to be used for the generated test pages; specify protocol and port if needed
+test_host: localhost:8080
