@@ -1,8 +1,7 @@
 #! /usr/bin/env python3
-import yaml
-from api_validator.build_api_from_source_code import ApiPageBuilder
 import argparse
 import os
+from build_pages import build_all_pages, read_yaml
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -26,11 +25,8 @@ if __name__ == "__main__":
     if not os.path.exists(args.output):
         os.mkdir(args.output)
 
-    with open(args.input) as f:
-        conf = yaml.safe_load(f)
-
-    v = ApiPageBuilder(conf.sites, args.output, conf.live_host, conf.test_host)
-    result = v.batch()
+    conf = read_yaml(args.input)
+    result = build_all_pages(conf["sites"], args.output, conf["live_host"], conf["test_host"])
 
     print(
         "Finished with {} error(s), output files are located at {}".format(
