@@ -78,14 +78,10 @@ def _replace_urls(html, site_url, sextant_live_host, sextant_test_host):
                 )
     for script in soup.findAll("script"):
         if script.has_attr("src"):
-            if script["src"].startswith("//") and sextant_live_host != "//":
-                continue
-            #  here we look only for sextant files
             if script["src"].startswith(".."):
                 script["src"] = _to_absolute_url(script["src"], site_url)
-            if _is_sextant_url(script["src"], sextant_live_host) and not script[
-                "src"
-            ].startswith("/"):
+            #  here we look only for sextant files
+            if _is_sextant_url(script["src"], sextant_live_host):
                 script["src"] = _to_test_sextant_url(script["src"], sextant_test_host)
             # do not deal with external scripts
             elif script["src"].startswith("http") or script["src"].startswith(
@@ -105,7 +101,12 @@ def _to_absolute_url(relative_url, site_url):
     return urljoin(site_url, relative_url)
 
 def _is_sextant_url(live_url, sextant_live_host):
-    return live_url.find(sextant_live_host) != -1
+    live_url_parts = urlsplit(live_url)
+    sextant_url_parts = urlsplit(sextant_live_host)
+    same_scheme = True
+    if live_url_parts.scheme != "" and sextant_url_parts.scheme != "":
+        same_scheme = live_url_parts.scheme == sextant_url_parts.scheme
+    return same_scheme and live_url_parts.netloc.find(sextant_url_parts.netloc) != -1
 
 def _to_test_sextant_url(sextant_live_url, sextant_test_host):
     live_url_parts = urlsplit(sextant_live_url)

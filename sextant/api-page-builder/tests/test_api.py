@@ -32,12 +32,17 @@ def test_to_absolute_url():
 def test_is_sextant_url():
     assert True == _is_sextant_url("https://sextant.ifremer.fr/aaa/bbb/sextant.js", "//sextant.ifremer.fr")
     assert True == _is_sextant_url("http://sextant.ifremer.fr:4200/aaa/bbb/sextant.js", "//sextant.ifremer.fr")
+    assert True == _is_sextant_url("//sextant.ifremer.fr:4200/aaa/bbb/sextant.js", "//sextant.ifremer.fr")
+    assert True == _is_sextant_url("//sextant.ifremer.fr:4200/aaa/bbb/sextant.js", "https//sextant.ifremer.fr")
     assert False == _is_sextant_url("https://sextant.ifremer.fr/aaa/bbb/sextant.js", "http://sextant.ifremer.fr")
+    assert False == _is_sextant_url("//sextant-test.ifremer.fr/aaa/bbb/sextant.js", "http://sextant.ifremer.fr")
+    assert False == _is_sextant_url("http://sextant.ifremer.fr/aaa/bbb/sextant.js", "http://sextant.ifremer.fr:8080")
 
 def test_to_test_sextant_url():
     assert "http://localhost:8080/aaa/sextant.js" == _to_test_sextant_url("https://sextant.ifremer.fr/aaa/sextant.js", "http://localhost:8080")
     assert "https://localhost:8080/aaa/sextant.js" == _to_test_sextant_url("https://sextant.ifremer.fr/aaa/sextant.js", "//localhost:8080")
     assert "http://localhost/aaa/sextant.js" == _to_test_sextant_url("https://sextant.ifremer.fr/aaa/sextant.js", "http://localhost")
+    assert "http://localhost/aaa/sextant.js" == _to_test_sextant_url("//sextant.ifremer.fr/aaa/sextant.js", "http://localhost")
 
 def test_replace_urls():
     files = os.listdir(input_dir)
