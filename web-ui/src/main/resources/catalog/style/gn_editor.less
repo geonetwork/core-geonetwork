@@ -431,7 +431,7 @@ form.gn-editor {
       padding-right: 0px;
   }
 
-  .gn-required > div.th-inner:after,
+  .gn-required > div.th-inner:after, legend.gn-required:after,
   label.gn-required:after, .gn-required > label:after,
   label.gn-mandatory:after, .gn-mandatory > label:after {
       content: "*";
@@ -446,7 +446,10 @@ form.gn-editor {
     font-size: 2em;
     margin: -7px 0 0 7px;
   }
-
+  legend.gn-required:after {
+    font-size: 24px;
+    margin: 0px;
+  }
 
   .form-horizontal .form-group {
       margin-left: 0px;
