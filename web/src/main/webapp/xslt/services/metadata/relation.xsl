@@ -217,9 +217,17 @@
               <initiativeType>
                 <xsl:value-of select="../@initiative"/>
               </initiativeType>
+              <origin>
+                <xsl:value-of select="../@origin"/>
+              </origin>
             </xsl:if>
             <xsl:if test="$type = 'associated'">
               <xsl:copy-of select="$metadata/*[starts-with(name(), 'agg_')]"/>
+            </xsl:if>
+            <xsl:if test="$type != 'siblings'">
+              <origin>
+                <xsl:value-of select="@origin"/>
+              </origin>
             </xsl:if>
           </item>
         </xsl:for-each>
