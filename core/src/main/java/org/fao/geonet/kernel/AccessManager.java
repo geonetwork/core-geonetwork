@@ -250,9 +250,20 @@ public class AccessManager {
      * @param id The metadata internal identifier
      */
     public boolean canReview(final ServiceContext context, final String id) throws Exception {
-        return isOwner(context, id) || hasReviewPermission(context, id);
+        if (!isUserAuthenticated(context.getUserSession())) {
+            return false;
+        }
+
+        //--- retrieve metadata info
+        AbstractMetadata info = context.getBean(IMetadataUtils.class).findOne(id);
+
+        if (info == null)
+            return false;
+        final MetadataSourceInfo sourceInfo = info.getSourceInfo();
+
+        return isOwner(context, sourceInfo) || hasReviewPermission(context, info);
     }
-    
+
     /**
      * Returns true if, and only if, at least one of these conditions is satisfied: <ul> <li>the
      * user is owner (@see #isOwner)</li> <li>the user has reviewing rights over owning group of the metadata</li> </ul>
@@ -262,7 +273,7 @@ public class AccessManager {
     public boolean canChangeStatus(final ServiceContext context, final String id) throws Exception {
         return hasOnwershipReviewPermission(context, id) || hasReviewPermission(context, id);
     }
-    
+
     /**
      * Return true if the current user is: <ul> <li>administrator</li> <li>the metadata owner (the
      * user who created the record)</li> <li>reviewer in the group the metadata was created</li>
@@ -299,7 +310,7 @@ public class AccessManager {
     public boolean isOwner(ServiceContext context, MetadataSourceInfo sourceInfo) throws Exception {
 
         UserSession us = context.getUserSession();
-        if (us == null || !us.isAuthenticated()) {
+        if (!isUserAuthenticated(us)) {
             return false;
         }
 
@@ -433,17 +444,50 @@ public class AccessManager {
         return hasEditingPermissionWithProfile(context, id, Profile.Editor);
 
     }
-    
+
     /**
-     * Check if current user can review the metadata according to the groups where the metadata is
-     * editable.
+     * Check if current user can review the metadata if
+     * the user is a reviewer in the metadata owners group.
      *
      * @param id The metadata internal identifier
      */
     public boolean hasReviewPermission(final ServiceContext context, final String id) throws Exception {
-        return hasEditingPermissionWithProfile(context, id, Profile.Reviewer);
+        if (!isUserAuthenticated(context.getUserSession())) {
+            return false;
+        }
+
+        //--- retrieve metadata info
+        AbstractMetadata info = context.getBean(IMetadataUtils.class).findOne(id);
+
+        if (info == null)
+            return false;
+
+        return hasReviewPermission(context, info);
     }
 
+    /**
+     * Check if current user can review the metadata if
+     * the user is a reviewer in the metadata owners group.
+     *
+     * @param context Service context.
+     * @param metadata The metadata info.
+     */
+    public boolean hasReviewPermission(final ServiceContext context, final AbstractMetadata metadata) throws Exception {
+        UserSession us = context.getUserSession();
+        if (!isUserAuthenticated(us)) {
+            return false;
+        }
+
+        // Check if the user is a reviewer in the metadata owners group.
+        Specification<UserGroup> hasUserIdAndGroupAndProfile = where(UserGroupSpecs.hasProfile(Profile.Reviewer))
+            .and(UserGroupSpecs.hasGroupId(metadata.getSourceInfo().getGroupOwner()))
+            .and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
+
+        UserGroupRepository userGroupRepo = context.getBean(UserGroupRepository.class);
+        long count = userGroupRepo.count(hasUserIdAndGroupAndProfile);
+
+        return  (count > 0);
+    }
 
     /**
      * Check if current user has permission for the metadata according to the groups where the metadata is
@@ -453,9 +497,9 @@ public class AccessManager {
      */
     private boolean hasEditingPermissionWithProfile(final ServiceContext context, final String id, Profile profile) throws Exception {
         UserSession us = context.getUserSession();
-        if (us == null || !us.isAuthenticated())
+        if (!isUserAuthenticated(us)) {
             return false;
-
+        }
 
         OperationAllowedRepository opAllowedRepository = context.getBean(OperationAllowedRepository.class);
         UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
@@ -485,19 +529,18 @@ public class AccessManager {
      */
     public boolean hasOnwershipReviewPermission(final ServiceContext context, final String id) throws Exception {
         UserSession us = context.getUserSession();
-        if (us == null || !us.isAuthenticated())
+        if (!isUserAuthenticated(us)) {
             return false;
+        }
 
-
-        OperationAllowedRepository opAllowedRepository = context.getBean(OperationAllowedRepository.class);
         UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
         IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
-        
+
         Specifications spec = where(UserGroupSpecs.hasProfile(Profile.Reviewer)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
 
         List<Integer> opAlloweds = new ArrayList<Integer>();
         opAlloweds.add(metadataUtils.findOne(id).getSourceInfo().getGroupOwner());
-        
+
         spec = spec.and(UserGroupSpecs.hasGroupIds(opAlloweds));
 
         return (!userGroupRepository.findAll(spec).isEmpty());
@@ -593,6 +636,20 @@ public class AccessManager {
             }
             long a4 = Integer.parseInt(st.nextToken());
             return a1 << 24 | a2 << 16 | a3 << 8 | a4;
+        }
+    }
+
+    /**
+     * Checks if the user is authenticated: there's an user session authenticated.
+     *
+     * @param us    User session.
+     * @return      True if there's an uthenticated session, False otherwise.
+     */
+    private boolean isUserAuthenticated(UserSession us) {
+        if (us == null || !us.isAuthenticated()) {
+            return false;
+        } else {
+            return true;
         }
     }
 }
