@@ -36,6 +36,15 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/config/translations</directory>
+        <targetPath>META-INF/catalog/locales</targetPath>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
     <testResources>
       <testResource>
         <directory>src/test/resources/org/fao/geonet</directory>

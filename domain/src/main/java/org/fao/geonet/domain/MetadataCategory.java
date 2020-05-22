@@ -47,7 +47,7 @@ import java.util.Set;
 @EntityListeners(MetadataCategoryEntityListenerManager.class)
 @SequenceGenerator(name = MetadataCategory.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class MetadataCategory extends Localized implements Serializable {
-    private static final Set<String> EXCLUDE_FROM_XML = Sets.newHashSet("records");
+    private static final Set<String> EXCLUDE_FROM_XML = Sets.newHashSet("getRecords");
 
     static final String ID_SEQ_NAME = "metadata_category_id_seq";
     private int _id;
