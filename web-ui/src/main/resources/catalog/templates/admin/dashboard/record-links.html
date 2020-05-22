@@ -21,9 +21,17 @@
 
     <button type="button" class="btn btn-danger"
             data-ng-click="removeAll()"
+            data-ng-disabled="!user.isAdministrator()"
             data-gn-confirm-click="{{'removeAllLinksAndStatusConfirm' | translate}}">
       <i class="fa fa-fw fa-times"/>&nbsp;
       <span data-translate="">removeAllLinksAndStatus</span>
+    </button>
+
+    <button type="button" class="btn btn-default"
+            title="{{'downloadAsCsv-help' | translate}}"
+            data-ng-click="downloadAsCsv()">
+      <i class="fa fa-fw fa-download"/>&nbsp;
+      <span data-translate="">downloadAsCsv</span>
     </button>
   </div>
 
@@ -37,18 +45,38 @@
     </div>
   </div>
 
-  <form name="form">
-    <label>Group id:
-      <input type="text" formControlName="groupId" name="groupId" ng-model="groupId" ng-pattern="/^(\s*|\d+)$/" ng-change="triggerSearch()">
-      <span ng-show="!form.groupId.$valid">Integer input only</span>
-    </label>
-  </form>
+  <div class="row">
+    <div class="form-group col-lg-3">
+      <label class="control-label"
+             for="gn-link-group-owner"
+             data-translate="">_groupOwner</label>
+      <div id="gn-link-group-owner"
+           data-groups-combo=""
+           data-set-default-value="false"
+           data-owner-group="groupOwnerIdFilter"
+           lang="lang"
+           groups="groups"
+           data-exclude-special-groups="true">&nbsp;
+      </div>
+    </div>
+    <div class="form-group col-lg-3">
+      <label class="control-label"
+             for="gn-link-group"
+             data-translate="">_groupPublished</label>
+      <div id="gn-link-group"
+           data-groups-combo=""
+           data-set-default-value="false"
+           data-owner-group="groupIdFilter"
+           lang="lang"
+           groups="groups"
+           data-exclude-special-groups="true">&nbsp;
+      </div>
+    </div>
+  </div>
   <table id="bstable" bs-table-control="bsTableControl" ng-model="tc">
   </table>
 
   <br>
 
   <gn-dashboard-record-links-processes-container/>
-
-
 </div>
