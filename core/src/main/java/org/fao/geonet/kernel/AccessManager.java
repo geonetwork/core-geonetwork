@@ -519,8 +519,8 @@ public class AccessManager {
             return false;
         }
 
-        List<OperationAllowed> allOpAlloweds = operationAllowedRepository.findAll(where(hasMetadataId(id)).and(hasOperation(ReservedOperation
-            .editing)));
+        List<OperationAllowed> allOpAlloweds = operationAllowedRepository.findAll(
+          where(hasMetadataId(id)).and(hasOperation(ReservedOperation.editing)));
 
         if (allOpAlloweds.isEmpty()) {
             return false;

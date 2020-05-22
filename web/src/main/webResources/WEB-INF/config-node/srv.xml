@@ -33,7 +33,9 @@
 
 
   <!-- Uncomment the database configuration you need to use -->
-  <import resource="${db.config.file}"/>
+  <!-- Default using the db.config.file if it exists and if not then derive the db file based on the db_type -->
+  <import resource="@db.config.file@"/>
+  <!--<import resource="../config-db/h2.xml"/> -->
   <!--<import resource="../config-db/jndi-postgres-postgis.xml"/> -->
   <!--<import resource="../config-db/oracle.xml"/>-->
   <!--<import resource="../config-db/mysql.xml"/> -->

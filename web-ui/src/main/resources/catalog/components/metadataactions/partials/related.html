@@ -43,14 +43,14 @@
           <div data-ng-switch-when="WMS">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{(r.title | gnLocalized: lang).replace('\'', '\\\'')}}'}">
                 wmsLinkDetails</span>
             </p>
           </div>
           <div data-ng-switch-when="WMTS">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{(r.title | gnLocalized: lang).replace('\'', '\\\'')}}'}">
                 wmtsLinkDetails</span>
             </p>
           </div>

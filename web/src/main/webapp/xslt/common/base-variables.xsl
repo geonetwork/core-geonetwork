@@ -67,6 +67,9 @@
 
   <xsl:variable name="shibbolethOn"
                 select="util:existsBean('shibbolethConfiguration')"/>
+                
+  <xsl:variable name="shibbolethHideLogin"
+                select="util:shibbolethHideLogin()"/>
 
   <!-- Define which JS module to load using Closure -->
   <xsl:variable name="angularApp" select="

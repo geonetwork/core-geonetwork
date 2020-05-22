@@ -25,7 +25,7 @@ package org.fao.geonet;
 
 import com.google.common.base.Function;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;

@@ -25,10 +25,11 @@
   goog.provide('gn_system_settings_controller');
 
   goog.require('gn_ui_config');
+  goog.require('gn_timezone_selector')
 
 
   var module = angular.module('gn_system_settings_controller',
-      ['gn_ui_config']);
+      ['gn_ui_config', 'gn_timezone_selector']);
 
   module.filter('hideLanguages', function() {
     return function(input) {

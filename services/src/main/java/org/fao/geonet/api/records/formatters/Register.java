@@ -25,7 +25,7 @@ package org.fao.geonet.api.records.formatters;
 
 import com.google.common.io.ByteStreams;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 
 import net.sf.json.JSONObject;
 

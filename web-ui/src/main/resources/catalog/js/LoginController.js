@@ -66,6 +66,7 @@
           $scope.signinFailure = gnUtilityService.getUrlParameter('failure');
           $scope.gnConfig = gnConfig;
           $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
+          $scope.shibbolethHideLogin = gnGlobalSettings.shibbolethHideLogin;
 
           function initForm() {
            if ($window.location.pathname.indexOf('new.password') !== -1) {

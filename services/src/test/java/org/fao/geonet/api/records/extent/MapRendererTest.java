@@ -1,9 +1,9 @@
 package org.fao.geonet.api.records.extent;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.io.WKTWriter;
 import org.fao.geonet.kernel.region.Region;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTReader;
+import org.locationtech.jts.io.WKTWriter;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

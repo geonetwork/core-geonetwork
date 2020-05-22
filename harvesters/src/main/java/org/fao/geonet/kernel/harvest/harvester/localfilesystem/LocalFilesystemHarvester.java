@@ -137,8 +137,9 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
         return result;
     }
 
-    void updateMetadata(Element xml, final String id, GroupMapper localGroups,
-                        final CategoryMapper localCateg, String changeDate, BaseAligner aligner) throws Exception {
+    void updateMetadata(Element xml, final String id, GroupMapper localGroups, final CategoryMapper localCateg,
+        String changeDate, BaseAligner<LocalFilesystemParams> aligner,
+        boolean force) throws Exception {
 
         log.debug("  - Updating metadata with id: " + id);
 
@@ -146,6 +147,15 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
 
         final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, xml, false, false, false, language, changeDate,
             true);
+
+        if (force) {
+            //change ownership of metadata to new harvester (Used in OVERRIDE option)
+            log.debug(String.format("  - Changing source of metadata id %s to '%s' harvester", id, params.getName()));
+
+            metadata.getHarvestInfo().setUuid(params.getUuid());
+            metadata.getSourceInfo().setSourceId(params.getUuid());
+            metadataManager.save(metadata);
+        }
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByMetadataId(Integer.parseInt(id));
@@ -163,9 +173,14 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
                        String createDate, BaseAligner aligner, boolean index) throws Exception {
 
         log.debug("  - Adding metadata with remote uuid: " + uuid);
+        Element md = xml;
 
         AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
+        String xmlUuid = metadataUtils.extractUUID(schema, md);
+        if (!uuid.equals(xmlUuid)) {
+            md = metadataUtils.setUUID(schema, uuid, md);
+        }
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(xml.getQualifiedName()).
@@ -182,7 +197,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
 
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
