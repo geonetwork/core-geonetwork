@@ -869,7 +869,7 @@
       <dependency>
         <groupId>org.mapfish.print</groupId>
         <artifactId>print-lib</artifactId>
-        <version>${print-lib.version}</version>
+        <version>2.1.6</version>
       </dependency>
 
       <!-- Lib utils -->
@@ -1498,7 +1498,6 @@
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <print-lib.version>2.1.6</print-lib.version>
     <jackson.version>2.10.3</jackson.version>
     <flying-saucer>9.0.7</flying-saucer>
     <camel.version>2.14.4</camel.version>
