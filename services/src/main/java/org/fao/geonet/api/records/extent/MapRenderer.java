@@ -29,7 +29,9 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.regions.GeomFormat;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionNotFoundEx;
 import org.fao.geonet.kernel.region.RegionsDAO;
@@ -121,7 +123,7 @@ public class MapRenderer {
     }
 
     public BufferedImage render(String id, String srs, Integer width, Integer height,
-                                String background, String geomParam, String geomType, String geomSrs) throws Exception {
+                                String background, String geomParam, String geomType, String geomSrs, String fillColor, String strokeColor) throws Exception {
         ApplicationContext appContext = context.getApplicationContext();
         Map<String, String> regionGetMapBackgroundLayers = appContext.getBean("regionGetMapBackgroundLayers", Map.class);
         SortedSet<ExpandFactor> regionGetMapExpandFactors = appContext.getBean("regionGetMapExpandFactors", SortedSet.class);
@@ -199,7 +201,10 @@ public class MapRenderer {
                 // Setup the proxy for the request if required
                 URLConnection conn = Lib.net.setupProxy(context, imageUrl);
                 in = conn.getInputStream();
-                image = ImageIO.read(in);
+                BufferedImage original = ImageIO.read(in);
+                image = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2d = image.createGraphics();
+                g2d.drawImage(original, 0, 0, null);
             } catch (IOException e) {
                 image = new BufferedImage(imageDimensions.width, imageDimensions.height, BufferedImage.TYPE_INT_ARGB);
                 error = e;
@@ -219,20 +224,47 @@ public class MapRenderer {
                 graphics.drawString(error.getMessage(), 0, imageDimensions.height / 2);
             }
             ShapeWriter shapeWriter = new ShapeWriter();
+            Color geomFillColor = getColor(fillColor, new Color(0, 0, 0, 50));
+            Color geomStrokeColor = getColor(strokeColor, new Color(0, 0, 0, 255));
             AffineTransform worldToScreenTransform = worldToScreenTransform(bboxOfImage, imageDimensions);
             for (int i = 0; i < geom.getNumGeometries(); i++) {
                 // draw each included geometry separately to ensure they are filled correctly
                 Shape shape = worldToScreenTransform.createTransformedShape(shapeWriter.toShape(geom.getGeometryN(i)));
-                graphics.setColor(Color.yellow);
-                graphics.draw(shape);
-
-                graphics.setColor(new Color(255, 255, 0, 100));
+                graphics.setColor(geomFillColor);
                 graphics.fill(shape);
+
+                graphics.setColor(geomStrokeColor);
+                graphics.setStroke(new BasicStroke(2));
+                graphics.draw(shape);
             }
         } finally {
             graphics.dispose();
         }
         return image;
+    }
+
+    private Color getColor(String color, Color defaultColor) {
+        if (StringUtils.isNotEmpty(color)) {
+            String[] colorsConfig = color.split(",");
+            if (colorsConfig.length == 4) {
+                try {
+                    return new Color(
+                        Integer.parseInt(colorsConfig[0]),
+                        Integer.parseInt(colorsConfig[1]),
+                        Integer.parseInt(colorsConfig[2]),
+                        Integer.parseInt(colorsConfig[3]));
+                } catch (Exception e) {
+                    throw new BadParameterEx(String.format(
+                        "Invalid color configuration '%s'. Error is '%s'. Format must be 'RED,GREEN,BLUE,ALPHA' with integer value from 0 to 255.",
+                        color, e.getMessage()));
+                }
+            } else {
+                throw new BadParameterEx(String.format(
+                    "Invalid color configuration '%s'. Format must be 'RED,GREEN,BLUE,ALPHA' with integer value from 0 to 255.",
+                    color));
+            }
+        }
+        return defaultColor;
     }
 
     private double calculateExpandFactor(SortedSet<ExpandFactor> regionGetMapExpandFactors, Envelope bboxOfImage,

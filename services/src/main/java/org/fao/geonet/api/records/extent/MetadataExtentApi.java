@@ -67,6 +67,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
@@ -136,6 +137,12 @@ public class MetadataExtentApi {
         @RequestParam(value = HEIGHT_PARAM, required = false) Integer height,
         @ApiParam(value = "(optional) URL for loading a background image for regions or a key that references the namedBackgrounds (configured in config-spring-geonetwork.xml). A WMS Getmap request is the typical example. The URL must be parameterized with the following parameters: minx, maxx, miny, maxy, width, height")
         @RequestParam(value = BACKGROUND_PARAM, required = false, defaultValue = "settings") String background,
+        @ApiParam(value = "(optional) Fill color with format RED,GREEN,BLUE,ALPHA")
+        @RequestParam(value = "", required = false, defaultValue = "0,0,0,50")
+        String fillColor,
+        @ApiParam(value = "(optional) Stroke color with format RED,GREEN,BLUE,ALPHA")
+        @RequestParam(value = "", required = false, defaultValue = "0,0,0,255")
+        String strokeColor,
         @ApiIgnore
             NativeWebRequest nativeWebRequest,
         @ApiIgnore
@@ -174,7 +181,11 @@ public class MetadataExtentApi {
             }
         }
         MapRenderer renderer = new MapRenderer(context);
-        BufferedImage image = renderer.render(regionId, srs, width, height, background, null, null, null);
+        BufferedImage image = renderer.render(
+            regionId, srs, width, height, background,
+            null, null, null,
+            fillColor,
+            strokeColor);
 
         if (image == null) return null;
 
