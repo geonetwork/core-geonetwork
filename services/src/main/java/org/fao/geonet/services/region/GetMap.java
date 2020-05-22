@@ -201,7 +201,7 @@ public class GetMap {
         }
 
         MapRenderer renderer = new MapRenderer(context);
-        BufferedImage image = renderer.render(id, srs, width, height, background, geomParam, geomType, geomSrs);
+        BufferedImage image = renderer.render(id, srs, width, height, background, geomParam, geomType, geomSrs, null, null);
 
         if (image == null) return null;
 
