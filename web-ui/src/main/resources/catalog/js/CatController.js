@@ -538,6 +538,7 @@ goog.require('gn_alert');
       gnGlobalSettings.nodeId = $scope.nodeId;
       gnConfig.env = gnConfig.env ||  {};
       gnConfig.env.node = $scope.nodeId;
+      gnConfig.env.defaultNode = defaultNode;
       gnConfig.env.baseURL = detectBaseURL(gnGlobalSettings.gnCfg.baseURLDetector);
 
       $scope.signoutUrl = gnGlobalSettings.gnCfg.mods.signout.appUrl

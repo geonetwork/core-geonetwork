@@ -54,11 +54,12 @@
         'gnWfsService',
         'gnAlertService',
         'gnConfigService',
+        'gnConfig',
         '$filter',
         'gnExternalViewer',
         function(gnMap, gnOwsCapabilities, gnSearchSettings, gnViewerSettings,
-            olDecorateLayer, gnSearchLocation, gnOwsContextService,
-            gnWfsService, gnAlertService, gnConfigService, $filter, gnExternalViewer) {
+            olDecorateLayer, gnSearchLocation, gnOwsContextService, gnWfsService,
+            gnAlertService, gnConfigService, gnConfig, $filter, gnExternalViewer) {
 
           this.configure = function(options) {
             angular.extend(this.map, options);
@@ -166,7 +167,21 @@
             var url = $filter('gnLocalized')(r.url) || r.url;
 
             if (url.indexOf(siteUrl) == 0) {
-              return window.location.hash = '#/metadata/' + r.id;
+              var useCurrentPortal = true;
+
+              if (r && r.origin === 'catalog') {
+                useCurrentPortal = false;
+              }
+
+              if (useCurrentPortal) {
+                return window.location.hash = '#/metadata/' + r.id;
+              } else {
+                // Replace the portal node with the catalog default node
+                var mdUrl = window.location.href;
+                mdUrl = mdUrl.replace('/' + gnConfig.env.node + '/',
+                  '/' + gnConfig.env.defaultNode+ '/');
+                return window.open(mdUrl, '_blank');
+              }
             } else {
               return openLink(r);
             }
