@@ -1405,9 +1405,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 if (owner != null) {
                 	LOGGER.trace("Search using user \"" + owner + "\".");
                     request.addContent(new Element(SearchParameter.OWNER).addContent(owner));
-                    
+
                     //If the user is editor or more, fill the editorGroup
-                    Specification<UserGroup> hasUserIdAndProfile = 
+                    Specification<UserGroup> hasUserIdAndProfile =
                     		where(
                     				where(UserGroupSpecs.hasProfile(Profile.Reviewer))
                     					.or(UserGroupSpecs.hasProfile(Profile.Editor))
@@ -1497,8 +1497,12 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 _query = new LuceneQueryBuilder(_luceneConfig, _tokenizedFieldSet, SearchManager.getAnalyzer(_language.analyzerLanguage, true), _language.presentationLanguage).build(luceneQueryInput);
                 LOGGER.debug("Lucene query: {}", _query);
 
-                _query = appendPortalFilter(_query, _luceneConfig);
-                
+                boolean ignorePortalFilter = Boolean.parseBoolean(config.getValue(Geonet.SearchConfig.SEARCH_IGNORE_PORTAL_FILTER_OPTION, "false"));
+
+                if (!ignorePortalFilter) {
+                    _query = appendPortalFilter(_query, _luceneConfig);
+                }
+
                 try (IndexAndTaxonomy indexReader = _sm.getIndexReader(_language.presentationLanguage, _versionToken)) {
                     // Rewrite the drilldown query to a query that can be used by the search logger
                     _loggerQuery = _query.rewrite(indexReader.indexReader);
@@ -1793,10 +1797,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             this.presentationLanguage = presentationLanguage;
         }
     }
-    
+
     /**
      * <p> Gets the Lucene version token. Can be used as ETag. </p>
-     */    
+     */
     public long getVersionToken() {
     	return _versionToken;
     };
