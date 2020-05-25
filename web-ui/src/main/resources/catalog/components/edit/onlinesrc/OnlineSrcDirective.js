@@ -485,27 +485,21 @@
                 function getTypeConfig(link) {
                   for (var i = 0; i < scope.config.types.length; i++) {
                     var c = scope.config.types[i];
-                    if (scope.schema === 'iso19115-3') {
-                      var p = c.fields &&
-                              c.fields.protocol &&
-                              c.fields.protocol.value || '',
-                          f = c.fields &&
-                          c.fields.function &&
-                          c.fields.function.value || '',
-                          ap = c.fields &&
-                          c.fields.applicationProfile &&
-                          c.fields.applicationProfile.value || '';
-                      if (c.process.indexOf(link.type) === 0 &&
-                          p === (link.protocol || '') &&
-                          f === (link.function || '') &&
-                          ap === (link.applicationProfile || '')
-                      ) {
-                        return c;
-                      }
-                    } else {
-                      if (c.process.indexOf(link.type) === 0) {
-                        return c;
-                      }
+                    var p = c.fields &&
+                            c.fields.protocol &&
+                            c.fields.protocol.value || '',
+                        f = c.fields &&
+                        c.fields.function &&
+                        c.fields.function.value || '',
+                        ap = c.fields &&
+                        c.fields.applicationProfile &&
+                        c.fields.applicationProfile.value || '';
+                    if (c.process.indexOf(link.type) === 0 &&
+                        p === (link.protocol || '') &&
+                        f === (link.function || '') &&
+                        ap === (link.applicationProfile || '')
+                    ) {
+                      return c;
                     }
                   }
                   return scope.config.types[0];
