@@ -38,15 +38,18 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
@@ -59,6 +62,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.services.metadata.Show;
 import org.fao.geonet.services.relations.Get;
@@ -85,6 +89,17 @@ public class MetadataUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.SEARCH_ENGINE);
 
+    /**
+     * Constants for metadata origin:
+     *
+     *  - portal: the metadata is available in the current portal.
+     *  - catalog: the metadata is not available in the current portal, but is available in the local catalog.
+     *  - remote: the metadata is available in a remote resource, used for operatesOn resources.
+     */
+    private static final String ORIGIN_PORTAL = "portal";
+    private static final String ORIGIN_CATALOG = "catalog";
+    private static final String ORIGIN_REMOTE = "remote";
+
     public static Element getRelated(ServiceContext context, int iId, String uuid,
                                      RelatedItemType[] type,
                                      int from_, int to_, boolean fast_)
@@ -96,6 +111,19 @@ public class MetadataUtils {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
         Element relatedRecords = new Element("relations");
+
+        String portalFilter = "";
+
+        NodeInfo node = ApplicationContextHolder.get().getBean(NodeInfo.class);
+        SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
+        if (node != null && !NodeInfo.DEFAULT_NODE.equals(node.getId())) {
+            final Source portal = sourceRepository.findOne(node.getId());
+
+            if (portal != null) {
+                portalFilter = portal.getFilter();
+            }
+        }
+
 
         if(type == null || type.length == 0) {
             type = RelatedItemType.class.getEnumConstants();
@@ -120,7 +148,7 @@ public class MetadataUtils {
         // Search for children of this record
         if (listOfTypes.size() == 0 ||
             listOfTypes.contains(RelatedItemType.children)) {
-            relatedRecords.addContent(search(uuid, "children", context, from, to, fast, null));
+            relatedRecords.addContent(calculateResults(uuid, "children", context, from, to, fast, null, null, portalFilter));
         }
 
         // Get parent record from this record
@@ -129,7 +157,7 @@ public class MetadataUtils {
             Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md);
             if (listOfUUIDs.size() > 0) {
                 String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                relatedRecords.addContent(search(joinedUUIDs, "parent", context, from, to, fast, null));
+                relatedRecords.addContent(calculateResults(joinedUUIDs, "parent", context, from, to, fast, null, null, portalFilter));
             }
         }
 
@@ -139,7 +167,7 @@ public class MetadataUtils {
             Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md);
             if (listOfUUIDs.size() > 0) {
                 String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                relatedRecords.addContent(search(joinedUUIDs, RelatedItemType.brothersAndSisters.value(), context, from, to, fast, uuid));
+                relatedRecords.addContent(calculateResults(joinedUUIDs, RelatedItemType.brothersAndSisters.value(), context, from, to, fast, uuid, null, portalFilter));
             }
         }
 
@@ -152,17 +180,21 @@ public class MetadataUtils {
 
             if (listOfAssociatedResources != null) {
                 for (AssociatedResource resource : listOfAssociatedResources) {
+                    String origin;
                     // Search in the index to use the portal filter and verify the metadata is available for the portal
-                    Element searchResult = search(resource.getUuid(), RelatedItemType.siblings.value(), context, from, to, fast, null);
+                    Element searchResult = search(resource.getUuid(), RelatedItemType.siblings.value(), context, from, to, fast, null, false);
                     // If can't be find, skip the result.
-                    if (!hasResult(searchResult)) {
-                        continue;
+                    if (hasResult(searchResult)) {
+                        origin = ORIGIN_PORTAL;
+                    } else {
+                        origin = ORIGIN_CATALOG;
                     }
 
                     Element sibContent = getRecord(resource.getUuid(), context, dm);
 
                     if (sibContent != null) {
                         Element sibling = new Element("sibling");
+                        sibling.setAttribute("origin", origin);
                         sibling.setAttribute("initiative", resource.getInitiativeType());
                         sibling.setAttribute("association", resource.getAssociationType());
                         response.addContent(sibling.addContent(sibContent));
@@ -175,13 +207,13 @@ public class MetadataUtils {
         // Search for records where an aggregate point to this record
         if (listOfTypes.size() == 0 ||
             listOfTypes.contains(RelatedItemType.associated)) {
-            relatedRecords.addContent(search(uuid, "associated", context, from, to, fast, null));
+            relatedRecords.addContent(calculateResults(uuid, "associated", context, from, to, fast, null, null, portalFilter));
         }
 
         // Search for services
         if (listOfTypes.size() == 0 ||
             listOfTypes.contains(RelatedItemType.services)) {
-            relatedRecords.addContent(search(uuid, "services", context, from, to, fast, null));
+            relatedRecords.addContent(calculateResults(uuid, "services", context, from, to, fast, null, null, portalFilter));
         }
 
         // Related record from uuiref attributes in metadata record
@@ -194,10 +226,61 @@ public class MetadataUtils {
             // Get datasets related to service search
             if (listOfTypes.size() == 0 ||
                 listOfTypes.contains(RelatedItemType.datasets)) {
-                Set<String> listOfUUIDs = schemaPlugin.getAssociatedDatasetUUIDs(md);
+                /*Set<String> listOfUUIDs = schemaPlugin.getAssociatedDatasetUUIDs(md);
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
                     String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
                     relatedRecords.addContent(search(joinedUUIDs, "datasets", context, from, to, fast, null));
+                }*/
+
+                Set<String> listOfUUIDs = new HashSet<>();
+                Set<String> listOfRemoteDatasets = new HashSet<>();
+
+                Element result = search(uuid, "uuid", context, from, to, fast, null, "operatesOn", true);
+                Element response = ((Element) (result.getChildren().get(0)));
+                Element mdResult = ((Element) (response.getChildren().get(0)));
+                List<Element> datasets = mdResult.getChildren("operatesOn");
+
+                for(Element dataset : datasets) {
+                    if (StringUtils.isNotEmpty(dataset.getValue())) {
+                        String[] datasetInfo = dataset.getValue().split("\\|");
+                        String datasetUuid = datasetInfo[0];
+                        String refType = (datasetInfo.length > 1)?datasetInfo[1]:"L";
+
+                        if (!refType.equals("R")) {
+                            listOfUUIDs.add(datasetUuid);
+                        } else {
+                            listOfRemoteDatasets.add(dataset.getValue());
+                        }
+                    }
+                }
+
+                if (!listOfUUIDs.isEmpty()) {
+                    String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
+                    relatedRecords.addContent(calculateResults(joinedUUIDs, "datasets", context, from, to, fast, null, null, portalFilter));
+                }
+
+                if (!listOfRemoteDatasets.isEmpty()) {
+
+                    if (relatedRecords.getChild("datasets") == null) {
+                        relatedRecords.addContent(new Element("datasets").addContent(new Element("response")));
+                    }
+
+                    for(String remoteDataset : listOfRemoteDatasets) {
+                        String[] remoteDatasetInfo = remoteDataset.split("\\|");
+
+                        if(remoteDatasetInfo.length > 4) {
+                            Element metadata = new Element("metadata");
+                            metadata.setAttribute("origin", ORIGIN_REMOTE);
+                            metadata.addContent(new Element("uuid").setText(remoteDatasetInfo[0]));
+                            metadata.addContent(new Element("title").setText(remoteDatasetInfo[2]));
+                            metadata.addContent(new Element("abstract").setText(remoteDatasetInfo[3]));
+                            metadata.addContent(new Element("url").setText(remoteDatasetInfo[4]));
+
+                            relatedRecords.getChild("datasets").getChild("response").addContent(metadata);
+                        } else {
+                            Log.warning(Geonet.SEARCH_ENGINE, "Remote dataset incomplete for uuid : " + uuid + " " + remoteDataset);
+                        }
+                    }
                 }
             }
             // if source, return source datasets defined in the current record
@@ -206,7 +289,7 @@ public class MetadataUtils {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedSourceUUIDs(md);
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
                     String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                    relatedRecords.addContent(search(joinedUUIDs, "sources", context, from, to, fast, null));
+                    relatedRecords.addContent(calculateResults(joinedUUIDs, "sources", context, from, to, fast, null, null, portalFilter));
                 }
             }
             // if fcat
@@ -220,17 +303,21 @@ public class MetadataUtils {
                     fcat = new Element("fcats");
 
                     for (String fcat_uuid : listOfUUIDs) {
+                        String origin;
                         // Search in the index to use the portal filter and verify the metadata is available for the portal
-                        Element searchResult = search(fcat_uuid, RelatedItemType.fcats.value(), context, from, to, fast, null);
+                        Element searchResult = search(fcat_uuid, RelatedItemType.fcats.value(), context, from, to, fast, null, false);
                         // If can't be find, skip the result.
-                        if (!hasResult(searchResult)) {
-                            continue;
+                        if (hasResult(searchResult)) {
+                            origin = ORIGIN_PORTAL;
+                        } else {
+                            origin = ORIGIN_CATALOG;
                         }
 
                         Element metadata = new Element("metadata");
                         Element response = new Element("response");
                         Element current = getRecord(fcat_uuid, context, dm);
                         if (current != null) {
+                            metadata.setAttribute("origin", origin);
                             metadata.addContent(current);
                         } else {
                             LOGGER.error("Feature catalogue with UUID {} referenced in {} was not found.", fcat_uuid, uuid);
@@ -250,7 +337,7 @@ public class MetadataUtils {
         if (listOfTypes.size() == 0 ||
             listOfTypes.contains(RelatedItemType.hassources)) {
             // Return records where this record is a source dataset
-            relatedRecords.addContent(search(uuid, "hassources", context, from, to, fast, null));
+            relatedRecords.addContent(calculateResults(uuid, "hassources", context, from, to, fast, null, null, portalFilter));
         }
 
         // Relation table is preserved for backward compatibility but should not be used anymore.
@@ -259,7 +346,7 @@ public class MetadataUtils {
             // Related records could be feature catalogue defined in relation table
             relatedRecords.addContent(new Element("related").addContent(Get.getRelation(iId, "full", context)));
             // Or feature catalogue define in feature catalogue citation
-            relatedRecords.addContent(search(uuid, "hasfeaturecats", context, from, to, fast, null));
+            relatedRecords.addContent(calculateResults(uuid, "hasfeaturecats", context, from, to, fast, null, null, portalFilter));
         }
 
         // XSL transformation is used on the metadata record to extract
@@ -273,8 +360,13 @@ public class MetadataUtils {
         return relatedRecords;
     }
 
+    private static Element search(String uuid, String type, ServiceContext context, String from, String to,
+                                  String fast, String exclude, boolean ignorePortalFilter) throws Exception {
+        return search(uuid, type, context, from, to, fast, exclude, null, ignorePortalFilter);
+    }
 
-    private static Element search(String uuid, String type, ServiceContext context, String from, String to, String fast, String exclude) throws Exception {
+    private static Element search(String uuid, String type, ServiceContext context, String from, String to,
+                                  String fast, String exclude, String extraDumpFields, boolean ignorePortalFilter) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SearchManager searchMan = gc.getBean(SearchManager.class);
 
@@ -290,7 +382,7 @@ public class MetadataUtils {
             else if ("brothersAndSisters".equals(type)) {
                 parameters.addContent(new Element("parentUuid").setText(uuid));
             } else if ("services".equals(type))
-                parameters.addContent(new Element("operatesOn").setText(uuid));
+                parameters.addContent(new Element("operatesOn").setText(uuid + " or " + uuid + "|*"));
             else if ("hasfeaturecats".equals(type))
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
             else if ("hassources".equals(type))
@@ -301,11 +393,15 @@ public class MetadataUtils {
             }
             else if ("datasets".equals(type) || "fcats".equals(type) ||
                 "sources".equals(type) || "siblings".equals(type) ||
-                "parent".equals(type))
+                "parent".equals(type) || "uuid".equals(type))
                 parameters.addContent(new Element("uuid").setText(uuid));
 
             if (exclude != null) {
                 parameters.addContent(new Element("without__uuid").setText(exclude));
+            }
+
+            if (StringUtils.isNotEmpty(extraDumpFields)) {
+                parameters.addContent(new Element("extraDumpFields").addContent(extraDumpFields));
             }
 
             parameters.addContent(new Element("fast").addContent("index"));
@@ -316,6 +412,7 @@ public class MetadataUtils {
             parameters.addContent(new Element("to").addContent(to));
 
             ServiceConfig config = new ServiceConfig();
+            config.setValue(Geonet.SearchConfig.SEARCH_IGNORE_PORTAL_FILTER_OPTION, ignorePortalFilter + "");
             searcher.search(context, parameters, config);
 
             Element response = new Element(type.equals("brothersAndSisters") ? "siblings" : type);
@@ -473,5 +570,67 @@ public class MetadataUtils {
         }
 
         return false;
+    }
+
+
+    /**
+     * Process search results to add the origin of the metadata:
+     *
+     *  - portal: the metadata is available in the current portal.
+     *  - catalog: the metadata is not available in the current portal, but is available in the local catalog.
+     *
+     * @param uuid
+     * @param type
+     * @param context
+     * @param from
+     * @param to
+     * @param fast
+     * @param exclude
+     * @param extraDumpFields
+     * @param portalFilter
+     * @return
+     * @throws Exception
+     */
+    private static Element calculateResults(String uuid, String type, ServiceContext context, String from, String to,
+                                    String fast, String exclude, String extraDumpFields,
+                                    String portalFilter) throws Exception {
+
+        // Search related resources ignoring portal filter
+        Element results = search(uuid, type, context, from, to, fast, exclude, extraDumpFields, true);
+
+        // Check if the portal has a filter
+        if (StringUtils.isNotEmpty(portalFilter)) {
+            // Search related resources with the portal filter
+            Element resultsForPortal = search(uuid, type, context, from, to, fast, exclude, null, false);
+
+            // Build the set of uuids from portal results
+            HashSet<String> portalResultsUuids = new HashSet<>();
+
+            for(Element r : (List<Element>) resultsForPortal.getChild("response").getChildren()) {
+                String uuidValue = r.getChild("info", Geonet.Namespaces.GEONET).getChildText("uuid");
+                portalResultsUuids.add(uuidValue);
+            }
+
+            // Process the full results to add the origin depending if are available in the portal or not
+            for(Element r : (List<Element>) results.getChild("response").getChildren()) {
+                String origin = ORIGIN_CATALOG;
+
+                String uuidValue = r.getChild("info", Geonet.Namespaces.GEONET).getChildText("uuid");
+
+                // Is the result available in the portal?
+                if (portalResultsUuids.contains(uuidValue)) {
+                    origin = ORIGIN_PORTAL;
+                }
+
+                r.setAttribute("origin", origin);
+            }
+        } else {
+            // No portal filter: set origin to portal
+            for(Element r : (List<Element>) results.getChild("response").getChildren()) {
+                r.setAttribute("origin", ORIGIN_PORTAL);
+            }
+        }
+
+        return results;
     }
 }

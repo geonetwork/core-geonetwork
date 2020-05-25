@@ -194,8 +194,9 @@
    * </ul>
    *
    */
-      .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit', '$filter',
-        function(gnOnlinesrc, gnCurrentEdit, $filter) {
+      .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit',
+        'gnConfigService', '$filter',
+        function(gnOnlinesrc, gnCurrentEdit, gnConfigService, $filter) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -233,6 +234,25 @@
               scope.isCategoryEnable = function(category) {
                 return angular.isUndefined(scope.types) ? true :
                         category.match(scope.types) !== null;
+              };
+
+              /**
+               * Builds metadata url checking if the resource points to internal or external url.
+               *
+               * @param resource
+               * @returns {string|*}
+               */
+              scope.buildMetadataLink = function(resource) {
+                var baseUrl = gnConfigService.getServiceURL();
+
+                var resourceUrl = resource.url[scope.lang] ||
+                  resource.url['eng'];
+
+                if (resourceUrl.indexOf(baseUrl) == 0) {
+                  return '../metadata/' + resource.id;
+                } else {
+                  return resource.url[scope.lang];
+                }
               };
 
               // Reload relations when a directive requires it

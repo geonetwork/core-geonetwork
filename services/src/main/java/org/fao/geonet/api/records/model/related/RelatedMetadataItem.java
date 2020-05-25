@@ -41,7 +41,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "relatedMetadataItem", propOrder = {
     "description",
-    "mdType"
+    "mdType",
+    "origin"
 })
 @XmlSeeAlso({
     RelatedSiblingMetadataItem.class
@@ -54,7 +55,8 @@ public class RelatedMetadataItem
     @XmlElement(required = true)
     protected String[] mdType;
 
-
+    @XmlElement()
+    protected String origin;
     /**
      * Gets the value of the description property.
      *
@@ -89,6 +91,24 @@ public class RelatedMetadataItem
      */
     public void setMdType(String[] value) {
         this.mdType = value;
+    }
+
+    /**
+     * Gets the value of the origin property.
+     *
+     * @return possible object is {@link String }
+     */
+    public String getOrigin() {
+        return origin;
+    }
+
+    /**
+     * Sets the value of the origin property.
+     *
+     * @param value allowed object is {@link String }
+     */
+    public void setOrigin(String value) {
+        this.origin = value;
     }
 
     /**

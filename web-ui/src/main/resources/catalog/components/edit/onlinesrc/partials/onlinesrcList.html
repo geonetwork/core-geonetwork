@@ -216,7 +216,7 @@
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
               <a target="_blank"
-                 data-ng-href="{{'../metadata/' + resource.id}}">
+                 data-ng-href="{{buildMetadataLink(resource)}}">
                 {{resource.title | gnLocalized: lang}}
               </a>
             </div>
