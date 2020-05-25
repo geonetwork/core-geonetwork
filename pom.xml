@@ -752,6 +752,12 @@
         <groupId>org.geotools</groupId>
         <artifactId>gt-wfs-ng</artifactId>
         <version>${geotools.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.xml</groupId>
+            <artifactId>xml-commons-resolver</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
