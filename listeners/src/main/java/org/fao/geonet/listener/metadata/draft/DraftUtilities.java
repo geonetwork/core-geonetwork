@@ -14,6 +14,7 @@ import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
@@ -59,9 +60,9 @@ public class DraftUtilities {
 
     @Autowired
     private MetadataRatingByIpRepository metadataRatingByIpRepository;
-    
+
     @Autowired
-    private DraftMetadataUtils draftMetadataUtils;
+    private IMetadataUtils draftMetadataUtils;
 
     /**
      * Replace the contents of the record with the ones on the draft, if exists, and

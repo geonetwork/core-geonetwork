@@ -99,7 +99,7 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
         String nodeName = element.getNodeName();
         String src = element.getAttribute("src");
         if ("img".equals(nodeName)
-            && (src.startsWith(baseURL + "region.getmap.png") || src.endsWith("/extents.png") || src.endsWith("/geom.png"))
+            && (src.startsWith(baseURL + "region.getmap.png") || src.contains("/extents.png") || src.endsWith("/geom.png"))
             && mapRenderer != null) {
             BufferedImage image = null;
             try {
@@ -115,14 +115,14 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
                 String geomSrs = parameters.get(MetadataExtentApi.GEOM_SRS_PARAM) != null ? parameters.get(MetadataExtentApi.GEOM_SRS_PARAM) : "EPSG:4326";
 
                 image = mapRenderer.render(
-                    id, srs, width, height, background, geomParam, geomType, geomSrs);
+                    id, srs, width, height, background, geomParam, geomType, geomSrs, null, null);
             } catch (Exception e) {
                 Log.warning(Geonet.GEONETWORK, "Error writing metadata to PDF", e);
             }
             float factor = layoutContext.getDotsPerPixel();
             return loadImage(layoutContext, box, userAgentCallback, cssWidth, cssHeight, new BufferedImageLoader(image), factor);
         } else if ("img".equals(nodeName)
-            && (src.startsWith(baseURL + "region.getmap.png") || src.endsWith("/extents.png") || src.endsWith("/geom.png"))) {
+            && (src.startsWith(baseURL + "region.getmap.png") || src.contains("/extents.png") || src.endsWith("/geom.png"))) {
             StringBuilder builder = new StringBuilder(baseURL);
             try {
                 if (StringUtils.startsWith(src, "http")) {
@@ -172,7 +172,7 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
     }
 
     private boolean isSupportedImageFormat(String imgUrl) {
-        String ext = Files.getFileExtension(imgUrl);
+        String ext = Files.getFileExtension(imgUrl.replaceAll("\\?.*", ""));
         return ext.trim().isEmpty() || getSupportedExts().contains(ext);
     }
 

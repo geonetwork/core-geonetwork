@@ -48,6 +48,8 @@ import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -77,10 +79,11 @@ public class MetadataNotifierClient {
 
             // Create a method instance.
             HttpPost method = new HttpPost(notifier.getUrl());
-            final UrlEncodedFormEntity entity = new UrlEncodedFormEntity(data);
+            final UrlEncodedFormEntity entity = new UrlEncodedFormEntity(data, StandardCharsets.UTF_8);
             final RequestConfig.Builder configBuilder = RequestConfig.custom();
             configBuilder.setMaxRedirects(3);
 
+            method.addHeader(org.apache.http.HttpHeaders.ACCEPT_CHARSET, StandardCharsets.UTF_8.name());
             method.setEntity(entity);
 
             final boolean authenticationEnabled = StringUtils.isNotBlank(notifier.getUsername()) && notifier.getPassword() != null &&

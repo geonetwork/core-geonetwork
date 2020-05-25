@@ -63,6 +63,8 @@
   <xsl:variable name="inspire-theme"
                 select="if ($inspire!='false') then $inspire-thesaurus//skos:Concept else ''"/>
 
+  <xsl:variable name="processRemoteDocs" select="true()" />
+
   <!-- If identification creation, publication and revision date
     should be indexed as a temporal extent information (eg. in INSPIRE
     metadata implementing rules, those elements are defined as part
@@ -660,14 +662,7 @@
         <Field name="operation" string="{string(.)}" store="true" index="true"/>
       </xsl:for-each>
 
-      <xsl:for-each select="srv:operatesOn/@uuidref">
-        <Field name="operatesOn" string="{string(.)}" store="true" index="true"/>
-      </xsl:for-each>
-
-      <xsl:for-each select="srv:operatesOn/@xlink:href">
-        <Field name="operatesOn" string="{string(.)}" store="true" index="true"/>
-      </xsl:for-each>
-
+      <xsl:apply-templates mode="index-operates-on" select="." />
 
       <xsl:for-each select="srv:coupledResource">
         <xsl:for-each select="srv:SV_CoupledResource/srv:identifier/gco:CharacterString">
@@ -1100,4 +1095,122 @@
 
   <!-- ========================================================================================= -->
 
+
+  <xsl:template mode="index-operates-on" match="srv:SV_ServiceIdentification">
+    <xsl:for-each select="srv:operatesOn/@uuidref">
+      <Field name="operatesOn" string="{string(.)}" store="true" index="true"/>
+    </xsl:for-each>
+
+    <xsl:choose>
+      <!-- Default to index the @uuidref value for operatesOn: assumes a local metadata with that uuid -->
+      <xsl:when test="not($processRemoteDocs)">
+        <xsl:for-each select="srv:operatesOn/@xlink:href">
+          <Field name="operatesOn" string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+      </xsl:when>
+
+      <!-- Process remote docs:
+              - uses @xlink:href to retrieve the remote metadata and index the relevant information for related service.
+              - if the metadata is found in the catalogue, it's used that information.
+
+              Index field format (Metadata in local catalogue):  uuid|L|uuid||link
+
+              Index field format (Metadata in remote catalogue): uuid|R|title|abstract|link
+      -->
+      <xsl:otherwise>
+        <xsl:for-each select="srv:operatesOn">
+          <!-- The xlink: href attribute can contain a URI to the MD_DataIdentification part of the metadata record of the dataset.
+              Example:
+                 <srv:operatesOn uuidref="c9c62f4f-a8da-438e-a514-5963fb1b047b"
+                     xlink:href="https://server/geonetwork/srv/dut/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;
+                     id=c9c62f4f-a8da-438e-a514-5963fb1b047b#MD_DataIdentification"/>
+
+              Ignore it for indexing.
+         -->
+
+          <xsl:variable name="siteUrl" select="util:getSiteUrl()" />
+          <xsl:variable name="xlinkHref" select="tokenize(@xlink:href, '#')[1]" />
+
+          <xsl:choose>
+            <!-- 1) Is the link referencing an external metadata? -->
+            <xsl:when test="string(normalize-space($xlinkHref)) and not(starts-with(replace($xlinkHref, 'http://', 'https://'), replace($siteUrl, 'http://', 'https://')))">
+
+              <!-- remote url: request the document to index data -->
+              <xsl:variable name="remoteDoc" select="util:getUrlContent(@xlink:href)" />
+
+              <!-- Remote url that uuid is stored also locally: Use local -->
+              <xsl:variable name="datasetUuid" select="$remoteDoc//gmd:fileIdentifier/gco:CharacterString" />
+
+              <xsl:choose>
+                <xsl:when test="count($datasetUuid) = 1 and string($datasetUuid)">
+                  <xsl:variable name="existsLocally" select="not(normalize-space(util:getRecord($datasetUuid)) = '')" />
+
+                  <xsl:choose>
+                    <xsl:when test="not($existsLocally)">
+                      <xsl:variable name="datasetTitle" select="$remoteDoc//*[gmd:MD_DataIdentification or @gco:isoType='gmd:MD_DataIdentification']//gmd:citation//gmd:title/gco:CharacterString" />
+
+                      <xsl:variable name="datasetAbstract" select="$remoteDoc//*[gmd:MD_DataIdentification or @gco:isoType='gmd:MD_DataIdentification']//gmd:abstract/gco:CharacterString" />
+
+                      <Field name="operatesOn" string="{concat($datasetUuid, '|R|', normalize-space($datasetTitle), '|', normalize-space($datasetAbstract), '|', $xlinkHref)}" store="true"
+                             index="true"/>
+                    </xsl:when>
+                    <!-- Do we need this check? maybe in this case use operatesOn instead of operatesOnRemote to use local info? -->
+                    <xsl:otherwise>
+
+                      <xsl:variable name="datasetTitle" select="$remoteDoc//*[gmd:MD_DataIdentification or @gco:isoType='gmd:MD_DataIdentification']//gmd:citation//gmd:title/gco:CharacterString" />
+                      <xsl:variable name="datasetAbstract" select="$remoteDoc//*[gmd:MD_DataIdentification or @gco:isoType='gmd:MD_DataIdentification']//gmd:abstract/gco:CharacterString" />
+
+                      <Field name="operatesOn" string="{concat($datasetUuid, '|R|', normalize-space($datasetTitle), '|', normalize-space($datasetAbstract), '|', $xlinkHref)}" store="true"
+                             index="true"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:when>
+
+                <xsl:otherwise>
+                  <xsl:variable name="uuidFromCsw"  select="tokenize(tokenize(string($xlinkHref),'&amp;id=')[2],'&amp;')[1]" />
+
+                  <xsl:choose>
+                    <!-- Assume is a CSW request and extract the uuid from csw request and add as operatesOnRemote -->
+                    <xsl:when test="string($uuidFromCsw)">
+                      <Field name="operatesOn" string="{concat($uuidFromCsw, '|R|', $uuidFromCsw,'|', '|', $xlinkHref)}" store="true"
+                             index="true"/>
+                    </xsl:when>
+
+                    <!-- If no CSW request, store the link -->
+                    <xsl:otherwise>
+                      <Field name="operatesOn" string="{concat($xlinkHref, '|R|', $xlinkHref, '|', '|', $xlinkHref)}" store="true"
+                             index="true"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:when>
+
+            <!-- 2) Is the link referencing to a metadata in the catalogue? -->
+            <xsl:otherwise>
+              <!-- Extract the uuid from the link, assuming it's a CSW url -->
+              <xsl:variable name="uuidFromCsw"  select="tokenize(tokenize(string($xlinkHref),'&amp;id=')[2],'&amp;')[1]" />
+
+              <xsl:choose>
+                <!-- The uuid could be extracted from the url (CSW url)-->
+                <xsl:when test="string($uuidFromCsw)">
+                  <Field name="operatesOn" string="{concat($uuidFromCsw, '|L|', $uuidFromCsw,'|', '|', $xlinkHref)}" store="true"
+                         index="true"/>
+                </xsl:when>
+
+                <!-- If no CSW url, store the link  with the uuid from uuidref attribute-->
+                <xsl:otherwise>
+                  <Field name="operatesOn" string="{concat(@uuidref, '|L|', @uuidref, '|', '|', $xlinkHref)}" store="true"
+                         index="true"/>
+                </xsl:otherwise>
+              </xsl:choose>
+
+            </xsl:otherwise>
+          </xsl:choose>
+
+        </xsl:for-each>
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </xsl:template>
 </xsl:stylesheet>

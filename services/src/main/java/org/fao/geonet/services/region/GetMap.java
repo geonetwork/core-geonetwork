@@ -24,7 +24,7 @@
 package org.fao.geonet.services.region;
 
 import com.google.common.base.Optional;
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.api.records.extent.MapRenderer;
@@ -201,7 +201,7 @@ public class GetMap {
         }
 
         MapRenderer renderer = new MapRenderer(context);
-        BufferedImage image = renderer.render(id, srs, width, height, background, geomParam, geomType, geomSrs);
+        BufferedImage image = renderer.render(id, srs, width, height, background, geomParam, geomType, geomSrs, null, null);
 
         if (image == null) return null;
 
