@@ -93,6 +93,40 @@
 
   <developers>
     <developer>
+      <name>Christophe Mangeat</name>
+      <id>cmangeat</id>
+      <organization>camptocamp</organization>
+      <organizationUrl>https://camptocamp.com</organizationUrl>
+      <email>christophe.mangeat@camptocamp.com</email>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+      <timezone>Europe/Paris</timezone>
+    </developer>
+    <developer>
+      <name>Florent Gravin</name>
+      <id>fgravin</id>
+      <organization>camptocamp</organization>
+      <organizationUrl>https://camptocamp.com</organizationUrl>
+      <email>florent.gravin@camptocamp.com</email>
+      <roles>
+        <role>Project Steering Committee</role>
+        <role>Java Developer</role>
+      </roles>
+      <timezone>Europe/Paris</timezone>
+    </developer>
+    <developer>
+      <name>Olivier Guyot</name>
+      <id>jahow</id>
+      <organization>camptocamp</organization>
+      <organizationUrl>https://camptocamp.com</organizationUrl>
+      <email>olivier.guyot@camptocamp.com</email>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+      <timezone>Europe/Paris</timezone>
+    </developer>
+    <developer>
       <name>Jody Garnett</name>
       <id>jodygarnett</id>
       <organization>GeoCat B.V.</organization>
@@ -104,7 +138,7 @@
       </roles>
       <timezone>America/Vancouver</timezone>
     </developer>
-    <!-- TODO developer part-->
+    <!-- TODO add developers, alphabetical by user name-->
   </developers>
 
   <licenses>
