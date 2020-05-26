@@ -352,7 +352,6 @@
     <dependency>
       <groupId>org.mapfish.print</groupId>
       <artifactId>print-lib</artifactId>
-      <version>${print-lib.version}</version>
       <exclusions>
         <exclusion>
           <groupId>commons-httpclient</groupId>
