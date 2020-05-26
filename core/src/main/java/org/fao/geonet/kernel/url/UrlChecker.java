@@ -55,7 +55,7 @@ public class UrlChecker {
      public String urlCheckerUserAgent = null;
 
     public String getUserAgent() {
-        if (urlCheckerUserAgent.contains("$"))  // not set in properties file
+        if ((urlCheckerUserAgent == null) || urlCheckerUserAgent.contains("$"))  // not set in properties file
             return userAgentPropertyNameDefault; // use default
         return urlCheckerUserAgent;
     }
