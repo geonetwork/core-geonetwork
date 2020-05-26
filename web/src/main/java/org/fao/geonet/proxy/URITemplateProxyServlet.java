@@ -30,6 +30,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
 
     private static final long serialVersionUID = 4847856943273604410L;
     private static final String P_SECURITY_MODE = "securityMode";
+
     private enum SECURITY_MODE {
         NONE,
         /**
@@ -45,6 +46,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
             return NONE;
         }
     }
+
     protected SECURITY_MODE securityMode;
 
     @Autowired
@@ -57,12 +59,12 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
      */
     static {
         String[] headers = new String[]{
-                "X-XSRF-TOKEN",
-                "Access-Control-Allow-Origin",
-                "Vary",
-                "Access-Control-Allow-Credentials",
-                "Strict-Transport-Security",
-                "Etag"};
+            "X-XSRF-TOKEN",
+            "Access-Control-Allow-Origin",
+            "Vary",
+            "Access-Control-Allow-Credentials",
+            "Strict-Transport-Security",
+            "Etag"};
         for (String header : headers) {
             hopByHopHeaders.addHeader(new BasicHeader(header, null));
         }
@@ -77,7 +79,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
      * Creates the HttpClient used to make the proxied requests.
      * It configures the client to use system properties like
      * <code>http.proxyHost</code> and <code>http.httpPort</code>.
-     *
+     * <p>
      * Called from {@link #init(ServletConfig)}.
      *
      * @param requestConfig the configuration used for the request made by the client.
@@ -100,9 +102,14 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
                 boolean proxyCallAllowed = false;
 
                 // Check if user is authenticated
-                UserSession userSession = ApiUtils.getUserSession(servletRequest.getSession());
-                if (userSession.isAuthenticated()) {
-                    proxyCallAllowed = true;
+                try {
+                    UserSession userSession = ApiUtils.getUserSession(servletRequest.getSession());
+                    if (userSession.isAuthenticated()) {
+                        proxyCallAllowed = true;
+                    }
+                } catch (SecurityException securityException) {
+                    servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN,
+                        securityException.getMessage());
                 }
 
                 // Check if the link requested is in database link list
@@ -123,13 +130,13 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
                                 uri
                             );
                             if (linkRepository.count() == 0) {
-                                throw new NotAllowedException(
+                                servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN,
                                     "The proxy is configured with DB_LINK_CHECK mode " +
                                         "but the MetadataLink table is empty. " +
                                         "Administrator may need to analyze record links from the admin console " +
                                         "in order to register URL allowed by the proxy. " + message);
                             }
-                            throw new NotAllowedException(message);
+                            servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, message);
                         }
                         proxyCallAllowed = linksFound > 0;
                     } catch (URISyntaxException e) {
@@ -140,7 +147,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
                     }
                 }
 
-                if(proxyCallAllowed) {
+                if (proxyCallAllowed) {
                     super.service(servletRequest, servletResponse);
                 }
                 break;
