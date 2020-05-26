@@ -34,6 +34,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.NetLib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.ClientHttpResponse;
 import sun.net.ftp.FtpLoginException;
 import org.fao.geonet.utils.Log;
@@ -49,7 +50,21 @@ public class UrlChecker {
     @Autowired
     SettingManager settingManager;
 
-    private static final Function<HttpClientBuilder, Void> HTTP_CLIENT_CONFIGURATOR = new Function<HttpClientBuilder, Void>() {
+     static String userAgentPropertyNameDefault =  "GeoNetwork URL Link Checker";
+
+     public String urlCheckerUserAgent = null;
+
+    public String getUserAgent() {
+        if (urlCheckerUserAgent.contains("$"))  // not set in properties file
+            return userAgentPropertyNameDefault; // use default
+        return urlCheckerUserAgent;
+    }
+
+    public void setUserAgent(String ua) {
+        urlCheckerUserAgent = ua;
+    }
+
+    private final Function<HttpClientBuilder, Void> HTTP_CLIENT_CONFIGURATOR = new Function<HttpClientBuilder, Void>() {
         @Nullable
         @Override
         public Void apply(@Nullable HttpClientBuilder originalConfig) {
@@ -59,7 +74,7 @@ public class UrlChecker {
                     .setSocketTimeout(10000);
             RequestConfig requestConfig = config.build();
             originalConfig.setDefaultRequestConfig(requestConfig);
-            originalConfig.setUserAgent("GeoNetwork Link Checker");
+            originalConfig.setUserAgent(getUserAgent());
             return null;
         }
     };
@@ -145,7 +160,7 @@ public class UrlChecker {
             return response;
         }
         HttpGet get = new HttpGet(url);
-        return requestFactory.execute(get, HTTP_CLIENT_CONFIGURATOR);
+        return requestFactory.execute(get, HTTP_CLIENT_CONFIGURATOR2);
     }
 
     private boolean shouldTryGetInsteadOfHead(int statusCode) {
