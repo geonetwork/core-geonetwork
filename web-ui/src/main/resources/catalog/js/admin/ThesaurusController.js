@@ -253,7 +253,7 @@
       $scope.computeThesaurusNs = function() {
         $scope.thesaurusSuggestedNs =
             location.origin +
-            '/thesaurus/' + $scope.thesaurusSelected.dname + '/' +
+            '/thesaurus/' + $scope.thesaurusSelected.dname.replace(/[^\d\w]/gi, '') + '/' +
             $scope.thesaurusSelected.filename.replace(/[^\d\w]/gi, '');
       };
 
@@ -271,9 +271,9 @@
       $scope.createThesaurus = function() {
         var xml = '<request>' +
             '<tname>' + $scope.thesaurusSelected.title + '</tname>' +
-            '<fname>' + $scope.thesaurusSelected.filename + '</fname>' +
+            '<fname>' + $scope.thesaurusSelected.filename.replace(/[^\d\w]/gi, '') + '</fname>' +
             '<tns>' + $scope.thesaurusSelected.defaultNamespace + '</tns>' +
-            '<dname>' + $scope.thesaurusSelected.dname + '</dname>' +
+            '<dname>' + $scope.thesaurusSelected.dname.replace(/[^\d\w]/gi, '') + '</dname>' +
             '<type>local</type></request>';
         $http.post('thesaurus.update', xml, {
           headers: {'Content-type': 'application/xml'}
@@ -519,7 +519,7 @@
         });
 
         var xml = '<request><newid>' + keywordObject.uri + '</newid>' +
-            '<refType>' + $scope.thesaurusSelected.dname + '</refType>' +
+            '<refType>' + $scope.thesaurusSelected.dname.replace(/[^\d\w]/gi, '') + '</refType>' +
             '<namespace>' + $scope.thesaurusSelected.defaultNamespace +
                 '</namespace>' +
             '<ref>' + $scope.thesaurusSelected.key + '</ref>' +
