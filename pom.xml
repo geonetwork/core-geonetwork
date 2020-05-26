@@ -30,12 +30,17 @@
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
   <version>3.11.0-SNAPSHOT</version>
+
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
     resources through the web.
   </description>
   <url>http://geonetwork-opensource.org</url>
+  <organization>
+    <name>Open Source Geospatial Foundation</name>
+    <url>https://www.osgeo.org/</url>
+  </organization>
   <scm>
     <connection>
       scm:git:https://github.com/geonetwork/core-geonetwork
@@ -85,21 +90,6 @@
       <archive>http://osgeo-org.1560.x6.nabble.com/GeoNetwork-commit-f3865040.html</archive>
     </mailingList>
   </mailingLists>
-
-  <!-- TODO developer part-->
-  <developers>
-    <developer>
-      <name/>
-      <id/>
-      <organization/>
-      <organizationUrl/>
-      <email/>
-      <roles>
-        <role/>
-      </roles>
-      <timezone/>
-    </developer>
-  </developers>
 
   <licenses>
     <license>
@@ -645,13 +635,13 @@
         <version>1.3</version> <!-- TODO check version -->
       </dependency>
       <!-- May be required to register connection unwrappers with
-			     geotools
+           geotools
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-jdbc</artifactId>
         <version>2.5.3</version>
       </dependency>
-			-->
+      -->
       <dependency>
         <groupId>org.eclipse.core</groupId>
         <artifactId>org.eclipse.core.runtime</artifactId>
@@ -680,7 +670,7 @@
         <version>1.0</version>
       </dependency>
 
-      <!-- Geotools and spatial search stuff -->
+      <!-- GeoTools and spatial search stuff -->
       <dependency>
         <groupId>org.geotools.xsd</groupId>
         <artifactId>gt-xsd-gml3</artifactId>
@@ -860,17 +850,16 @@
         <version>1.7.8</version>
       </dependency>
 
-      <!-- Databased stuff -->
-      <dependency>
-        <groupId>com.h2database</groupId>
-        <artifactId>h2</artifactId>
-        <version>1.3.174</version>
-      </dependency>
       <!-- Other stuff -->
       <dependency>
         <groupId>dlib</groupId>  <!--FIXME Handled by local repository -->
         <artifactId>dlib</artifactId>
         <version>1.0</version> <!-- FIXME totally unknown -->
+      </dependency>
+      <dependency>
+        <groupId>org.mapfish.print</groupId>
+        <artifactId>print-lib</artifactId>
+        <version>2.1.6</version>
       </dependency>
 
       <!-- Lib utils -->
@@ -901,6 +890,7 @@
         <artifactId>metrics-log4j</artifactId>
         <version>${metrics.version}</version>
       </dependency>
+
       <!-- Tests -->
       <dependency>
         <groupId>junit</groupId>
@@ -939,7 +929,12 @@
         <scope>test</scope>
       </dependency>
 
-      <!-- db -->
+      <!-- Databased stuff -->
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>1.3.174</version>
+      </dependency>
       <dependency>
         <groupId>org.postgis</groupId>
         <artifactId>postgis-jdbc</artifactId>
@@ -967,7 +962,14 @@
         <artifactId>ojdbc</artifactId>
         <version>14</version>
       </dependency>
-			-->
+      -->
+      <!-- Oracle changed policy, this is from maven central -->
+      <!-- Oracle Free Use Terms and Conditions (FUTC) -->
+      <dependency>
+         <groupId>com.oracle.database.jdbc</groupId>
+         <artifactId>ojdbc8</artifactId>
+         <version>19.6.0.0</version>
+       </dependency>
       <dependency>
         <groupId>org.codehaus.izpack</groupId>
         <artifactId>izpack-standalone-compiler</artifactId>
@@ -1152,11 +1154,13 @@
         <artifactId>elasticsearch</artifactId>
         <version>${es.version}</version>
       </dependency>-->
+
       <!--Require Lucene 5 <dependency>
         <groupId>org.elasticsearch.client</groupId>
         <artifactId>transport</artifactId>
         <version>${es.version}</version>
       </dependency>-->
+
       <dependency>
         <groupId>io.searchbox</groupId>
         <artifactId>jest</artifactId>
@@ -1215,18 +1219,25 @@
       <url>https://repo.osgeo.org/repository/release/</url>
     </repository>
 
-    <repository>
+    <!-- managed by repo.osgeo.org k-int-cache -->
+    <!-- /marcxml/marcxml/*                    -->
+    <!-- /marc4j/marc4j/*                      -->
+    <!--repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
       <id>k-int</id>
       <name>Developer k-int repository</name>
       <url>http://maven.k-int.com/content/repositories/releases/</url>
-    </repository>
+    </repository-->
 
+    <!-- managed by repo.osgeo.org geonetwork-cache     -->
+    <!-- third party jar upload                         -->
+    <!-- TODO: move this content to geonetwork-releases -->
+    <!--
     <repository>
       <snapshots>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
       </snapshots>
       <releases>
         <enabled>true</enabled>
@@ -1235,20 +1246,27 @@
       <name>GeoNetwork remote repository</name>
       <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
     </repository>
-
+    -->
+    <!-- managed by repo.osgeo.org seasar-cache       -->
+    <!-- /net.arnx.jsonic/jsonic/*                    -->
     <!-- seasar repo, has jsonic - used by langdetect -->
+    <!--
     <repository>
       <id>maven.seasar.org</id>
       <name>The Seasar Foundation Maven2 Repository</name>
       <url>http://maven.seasar.org/maven2</url>
     </repository>
-
+    -->
+    <!-- managed by repo.osgeo.org geonetwork-releases  -->
+    <!-- third party jar upload                        -->
+    <!-- org.mapfish.print:print-lib-2.1.6.jar         -->
+    <!--
     <repository>
       <id>georchestra-mfprint</id>
       <name>build-releases</name>
       <url>https://packages.georchestra.org/artifactory/mapfish-print</url>
     </repository>
-
+    -->
   </repositories>
 
 
@@ -1327,12 +1345,27 @@
   </profiles>
 
   <distributionManagement>
+    <repository>
+      <id>osgeo</id>
+      <name>OSGeo GeoNetwork Release Repository</name>
+      <url>https://repo.osgeo.org/repository/geonetwork-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>osgeo</id>
+      <name>OSGeo GeoNetwork Snapshot Repository</name>
+      <url>https://repo.osgeo.org/repository/geonetwork-snapshots/</url>
+     </snapshotRepository>
+  </distributionManagement>
+
+  <!--
+  <distributionManagement>
     <snapshotRepository>
       <id>scp-repository.geonetwork-opensource.org</id>
       <name>GeoNetwork opensource repositories</name>
       <url>scpexe://TO DEFINED</url>
     </snapshotRepository>
   </distributionManagement>
+  -->
 
   <properties>
     <db.properties>WEB-INF/config-db/jdbc.properties</db.properties>
@@ -1458,7 +1491,6 @@
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <print-lib.version>2.1.6</print-lib.version>
     <jackson.version>2.10.3</jackson.version>
     <flying-saucer>9.0.7</flying-saucer>
     <camel.version>2.14.4</camel.version>
