@@ -66,6 +66,15 @@
       </div>
 
 
+      <div data-ng-switch-when="scoreConfig">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <gn-json-edit height="300" model="mCfg[key]"></gn-json-edit>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')"
+           translate>
+          ui-scoreConfig-help</p>
+      </div>
+
       <div data-ng-switch-when="autocompleteConfig">
         <label class="control-label">{{('ui-' + key) | translate}}</label>
         <gn-json-edit height="300" model="mCfg[key]"></gn-json-edit>

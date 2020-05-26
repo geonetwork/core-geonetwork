@@ -139,6 +139,41 @@ goog.require('gn_alert');
           'paginationInfo': {
             'hitsPerPage': 20
           },
+          // Score query may depend on where we are in the app?
+          'scoreConfig': {
+            // Score experiments:
+            // a)Score down old records
+            // {
+            //   "gauss": {
+            //     "dateStamp": {
+            //       "scale":  "200d"
+            //     }
+            //   }
+            // }
+            // b)Promote grids!
+            // "boost": "5",
+            // "functions": [
+            //   {
+            //     "filter": { "match": { "codelist_spatialRepresentationType": "vector" } },
+            //     "random_score": {},
+            //     "weight": 23
+            //   },
+            //   {
+            //     "filter": { "match": { "codelist_spatialRepresentationType": "grid" } },
+            //     "weight": 42
+            //   }
+            // ],
+            // "max_boost": 42,
+            // "score_mode": "max",
+            // "boost_mode": "multiply",
+            // "min_score" : 42
+            "script_score" : {
+              "script" : {
+                "source": "_score"
+                // "source": "Math.log(2 + doc['rating'].value)"
+              }
+            }
+          },
           'autocompleteConfig': {
             'query': {
               'bool': {
@@ -554,6 +589,7 @@ goog.require('gn_alert');
             }
           }, config).mods.header.languages;
 
+          this.gnCfg.mods.search.scoreConfig = config.mods.search.scoreConfig;
           this.gnCfg.mods.search.facetConfig = config.mods.search.facetConfig;
         }
 
@@ -578,6 +614,7 @@ goog.require('gn_alert');
         copy.mods.header.languages = {};
         copy.mods.search.grid.related = [];
         copy.mods.search.facetConfig = {};
+        copy.mods.search.scoreConfig = {};
         copy.mods.map["map-editor"].layers = [];
         return copy;
       },
