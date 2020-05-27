@@ -374,6 +374,10 @@
       <param-name>http.protocol.handle-redirects</param-name>
       <param-value>true</param-value>
     </init-param>
+    <init-param>
+      <param-name>securityMode</param-name>
+      <param-value>${proxy.securityMode}</param-value>
+    </init-param>
   </servlet>
   <servlet-mapping>
     <servlet-name>HttpProxy</servlet-name>
