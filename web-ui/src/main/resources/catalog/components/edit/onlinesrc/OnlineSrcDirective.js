@@ -554,6 +554,31 @@
                     var typeConfig = linkToEdit ?
                       getTypeConfig(linkToEdit) :
                       getType(linkType);
+
+                    if (gnCurrentEdit.mdOtherLanguages) {
+                       scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
+                       scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
+
+                       // not multilingual {"fre":"#"}
+                       if (Object.keys(scope.mdLangs).length > 1) {
+                         scope.isMdMultilingual = true;
+                         scope.mdLang = gnCurrentEdit.mdLanguage;
+
+                         for (var p in scope.mdLangs) {
+                           var v = scope.mdLangs[p];
+                           if (v.indexOf('#') === 0) {
+                             var l = v.substr(1);
+                             if (!l) {
+                               l = scope.mdLang;
+                             }
+                             scope.mdLangs[p] = l;
+                           }
+                         }
+                       } else {
+                         scope.isMdMultilingual = false;
+                       }
+                    }
+
                     scope.config.multilingualFields = [];
                     angular.forEach(typeConfig.fields, function(f, k) {
                     if (scope.isMdMultilingual &&
@@ -562,29 +587,7 @@
                       }
                     });
 
-                    if (gnCurrentEdit.mdOtherLanguages) {
-                      scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
-                      scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
 
-                      // not multilingual {"fre":"#"}
-                      if (Object.keys(scope.mdLangs).length > 1) {
-                        scope.isMdMultilingual = true;
-                        scope.mdLang = gnCurrentEdit.mdLanguage;
-
-                        for (var p in scope.mdLangs) {
-                          var v = scope.mdLangs[p];
-                          if (v.indexOf('#') === 0) {
-                            var l = v.substr(1);
-                            if (!l) {
-                              l = scope.mdLang;
-                            }
-                            scope.mdLangs[p] = l;
-                          }
-                        }
-                      } else {
-                        scope.isMdMultilingual = false;
-                      }
-                    }
 
                     initThumbnailMaker();
                     resetForm();
@@ -634,9 +637,13 @@
                         if (scope.isFieldMultilingual(field)) {
                           var e = {};
                           $.each(scope.mdLangs, function(key, v) {
-                            e[v] =
-                              (linkToEdit[fields[field]] &&
-                                linkToEdit[fields[field]][key]) || '';
+                          e[v] = ''; // default
+                          // if key is in the values dictionary
+                          if (linkToEdit[fields[field]] && linkToEdit[fields[field]][key])
+                              e[v] = linkToEdit[fields[field]][key];
+                          // otherwise if v is in values dictionary
+                          else if (linkToEdit[fields[field]] && linkToEdit[fields[field]][v])
+                               e[v] = linkToEdit[fields[field]][v];
                           });
                           fields[field] = e;
                         }
