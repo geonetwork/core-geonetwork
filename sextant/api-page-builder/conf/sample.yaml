@@ -11,6 +11,3 @@ sites:
 
 # Sextant host used in the above sites; this should include a scheme (https:// or http://) or start with //
 live_host: //sextant.ifremer.fr
-
-# Sextant host to be used for the generated test pages; this should include a scheme (https:// or http://) or start with //
-test_host: http://localhost:8080

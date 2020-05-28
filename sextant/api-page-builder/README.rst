@@ -18,9 +18,6 @@ A configuration file has to be provided on the following model:
   # Sextant host used in the above sites; this should include a scheme (https:// or http://) or start with //
   live_host: //sextant.ifremer.fr
 
-  # Sextant host to be used for the generated test pages; this should include a scheme (https:// or http://) or start with //
-  test_host: http://localhost:8080
-
 Note that a sample file is available at `conf/sample.yaml`.
 
 Install dependencies
@@ -34,12 +31,15 @@ Install dependencies
 Run
 ---
 
-This will create the destination directory if needed and generate the pages in it.
+This will create the destination directory if needed and generate the pages in it. The Sextant script will be loaded
+from the host provided in the `--host` option (localhost:8080 in this case).
 
 .. code::
 
-  ./run.py --input conf/sample.yaml --output 'dest_dir/'
+  ./run.py --input conf/sample.yaml --output 'dest_dir/' --host 'http://localhost:8080'
 
+
+Note: `--host` option should include a scheme (https:// or http://) or start with //
 
 Test
 -----
@@ -51,3 +51,31 @@ To run the tests:
   python3 -m pytest tests
 
 This requires having the pytest package installed locally.
+
+
+Usage with Docker
+-----------------
+
+Build the docker image:
+
+.. code::
+
+  make build && make test
+
+
+Run tests:
+
+.. code::
+
+  make test
+
+
+Run the process, reading from `/sextant/api-page-builder/conf/myconf.yaml` and outputting to the `/sextant/api-page-builder/output` directory
+
+.. code::
+
+  docker run \
+    -v /sextant/api-page-builder/conf:/app/conf \
+    -v /sextant/api-page-builder/output:/out \
+    sextant:api-page-builder \
+    ./run.py -i /app/conf/myconf.yaml -o /out --host "http://localhost:8080"
