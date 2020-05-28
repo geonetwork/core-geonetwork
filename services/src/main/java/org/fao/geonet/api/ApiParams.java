@@ -44,17 +44,17 @@ public class ApiParams {
     public static final String API_PARAM_PROCESS_ID = "Process identifier";
     public static final String API_OP_NOTE_PROCESS =
         "Process a metadata with an XSL transformation declared in " +
-        "the metadata schema (See the process folder). " +
-        "Parameters sent to the service are forwarded " +
-        "to XSL process.";
+            "the metadata schema (See the process folder). " +
+            "Parameters sent to the service are forwarded " +
+            "to XSL process.";
     public static final String API_OP_NOTE_PROCESS_PREVIEW =
         "Preview result of a process applied to metadata records with an XSL transformation declared in " +
-        "the metadata schema (See the process folder). " +
-        "Parameters sent to the service are forwarded " +
-        "to XSL process. Append mode has 2 limitations. First, it only support a set of records " +
-        "in the same schema. Secondly, it does not propagate URL parameters. This mode is mainly " +
-        "used to create custom reports based on metadata records content." +
-        "If process name ends with '.csv', the XSL process output a text document which is returned.";
+            "the metadata schema (See the process folder). " +
+            "Parameters sent to the service are forwarded " +
+            "to XSL process. Append mode has 2 limitations. First, it only support a set of records " +
+            "in the same schema. Secondly, it does not propagate URL parameters. This mode is mainly " +
+            "used to create custom reports based on metadata records content." +
+            "If process name ends with '.csv', the XSL process output a text document which is returned.";
     public static final String API_PARAM_METADATA_TITLE = "Metadata title";
     public static final String API_PARAM_MAPSERVER_RESOURCE = "Resource name (could be a file or a db connection)";
     public static final String API_PARAM_METADATA_ABSTRACT = "Metadata abstract";

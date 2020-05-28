@@ -23,6 +23,9 @@
 
 package org.fao.geonet.api.users;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
@@ -40,25 +43,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
-
-import javax.servlet.http.HttpServletRequest;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.server.context.ServiceContext;
 
 @EnableWebMvc
 @Service
@@ -67,8 +59,7 @@ import jeeves.server.context.ServiceContext;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/user"
 })
-@Api(value = "users",
-    tags = "users",
+@Tag(name = "users",
     description = "User operations")
 public class PasswordApi {
 
@@ -80,9 +71,8 @@ public class PasswordApi {
     @Autowired
     SettingManager sm;
 
-    @ApiOperation(value = "Update user password",
-        nickname = "updatePassword",
-        notes = "Get a valid changekey by email first and then update your password.")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Update user password",
+        description = "Get a valid changekey by email first and then update your password.")
     @RequestMapping(
         value = "/{username}",
         method = RequestMethod.PATCH,
@@ -90,11 +80,11 @@ public class PasswordApi {
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<String> updatePassword(
-        @ApiParam(value = "The user name",
+        @Parameter(description = "The user name",
             required = true)
         @PathVariable
             String username,
-        @ApiParam(value = "The new password and a valid change key",
+        @Parameter(description = "The new password and a valid change key",
             required = true)
         @RequestBody
             PasswordUpdateParameter passwordAndChangeKey,
@@ -163,9 +153,8 @@ public class PasswordApi {
         ), HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "Send user password reminder by email",
-        nickname = "sendPasswordByEmail",
-        notes = "An email is sent to the requested user with a link to " +
+    @io.swagger.v3.oas.annotations.Operation(summary = "Send user password reminder by email",
+        description = "An email is sent to the requested user with a link to " +
             "reset his password. User MUST have an email to get the link. " +
             "LDAP users will not be able to retrieve their password " +
             "using this service.")
@@ -176,7 +165,7 @@ public class PasswordApi {
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<String> sendPasswordByEmail(
-        @ApiParam(value = "The user name",
+        @Parameter(description = "The user name",
             required = true)
         @PathVariable
             String username,

@@ -32,10 +32,8 @@ package org.fao.geonet.services.metadata;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
@@ -49,7 +47,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -82,7 +79,7 @@ public class ExtractServicesLayers {
         if (paramId == null) {
             synchronized (sm.getSelection("metadata")) {
                 for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext(); ) {
-                    String uuid = (String) iter.next();
+                    String uuid = iter.next();
                     String id = dm.getMetadataId(uuid);
                     lst.add(id);
                 }

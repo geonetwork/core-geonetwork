@@ -59,7 +59,7 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
     private static Set<String> imgFormatExts = null;
     private final ReplacedElementFactory superFactory;
     private final MapRenderer mapRenderer;
-    private String baseURL;
+    private final String baseURL;
 
     public ImageReplacedElementFactory(String baseURL, ReplacedElementFactory superFactory) {
         this.superFactory = superFactory;

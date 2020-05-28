@@ -23,7 +23,7 @@
 
 package org.fao.geonet.api.operations;
 
-import org.fao.geonet.ApplicationContextHolder;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.api.API;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.repository.OperationRepository;
@@ -38,18 +38,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-
 @RequestMapping(value = {
     "/{portal}/api/operations",
     "/{portal}/api/" + API.VERSION_0_1 +
         "/operations"
 })
-@Api(value = "operations",
-    tags = "operations",
+@Tag(name = "operations",
     description = "Privileges operations")
 @Controller("operations")
 public class OperationsApi {
@@ -57,13 +51,12 @@ public class OperationsApi {
     @Autowired
     private OperationRepository operationRepository;
 
-    @ApiOperation(
-        value = "Get operations",
-        notes = "Return the list of operations. Operations are used to define authorization per group. " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get operations",
+        description = "Return the list of operations. Operations are used to define authorization per group. " +
             "Extending the list of default operations (ie. view, dynamic, download, editing, notify, featured) " +
             "might be feasible but is experimental.<br/> " +
-            "Featured is not really used anymore (was used in past version for home page highlights).",
-        nickname = "getOperations")
+            "Featured is not really used anymore (was used in past version for home page highlights).")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)

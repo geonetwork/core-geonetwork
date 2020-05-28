@@ -14,13 +14,7 @@ import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.springframework.data.domain.Sort;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Creates a report for metadata file uploads.
@@ -31,11 +25,11 @@ public class ReportUploads implements IReport {
     /**
      * Report filter.
      */
-    private ReportFilter reportFilter;
+    private final ReportFilter reportFilter;
 
 
     /**
-     *  Creates a report for metadata file uploads instance.
+     * Creates a report for metadata file uploads instance.
      *
      * @param filter report filter.
      */
@@ -48,8 +42,8 @@ public class ReportUploads implements IReport {
      * Creates a metadata file uploads report and streams to a PrintWriter.
      *
      * @param context Service context.
-     * @param writer Writer.
-     * @throws Exception  Exception creating a report.
+     * @param writer  Writer.
+     * @throws Exception Exception creating a report.
      */
     public void create(final ServiceContext context,
                        final PrintWriter writer) throws Exception {
@@ -58,30 +52,30 @@ public class ReportUploads implements IReport {
         try {
             // Initialize CSVPrinter object
             CSVFormat csvFileFormat =
-                    CSVFormat.DEFAULT.withRecordSeparator("\n");
+                CSVFormat.DEFAULT.withRecordSeparator("\n");
             csvFilePrinter = new CSVPrinter(writer, csvFileFormat);
 
             // Retrieve metadata file uploads
             final MetadataFileUploadRepository uploadRepository =
-                    context.getBean(MetadataFileUploadRepository.class);
+                context.getBean(MetadataFileUploadRepository.class);
             final Sort sort = new Sort(Sort.Direction.ASC,
-                    SortUtils.createPath(MetadataFileUpload_.uploadDate));
+                SortUtils.createPath(MetadataFileUpload_.uploadDate));
             final List<MetadataFileUpload> records = uploadRepository.findAll(
-                    MetadataFileUploadSpecs.uploadDateBetweenAndByGroups(
-                            reportFilter.getBeginDate(),
-                            reportFilter.getEndDate(),
-                            reportFilter.getGroups()),
-                    sort);
+                MetadataFileUploadSpecs.uploadDateBetweenAndByGroups(
+                    reportFilter.getBeginDate(),
+                    reportFilter.getEndDate(),
+                    reportFilter.getGroups()),
+                sort);
 
             // Write header
             csvFilePrinter.printRecord("Metadata file uploads");
             csvFilePrinter.println();
 
             String[] entries = ("Metadata ID#Metadata Title#File download#"
-                    + "File download date#Requester name#Requester mail#"
-                    + "Requester organisation#Requester comments#"
-                    + "Username#Surname#Name#Email#Profile#Delete date")
-                    .split("#");
+                + "File download date#Requester name#Requester mail#"
+                + "Requester organisation#Requester comments#"
+                + "Username#Surname#Name#Email#Profile#Delete date")
+                .split("#");
             csvFilePrinter.printRecord(Arrays.asList(entries));
 
             List<User> users = context.getBean(UserRepository.class).findAll();
@@ -96,18 +90,18 @@ public class ReportUploads implements IReport {
                 String requesterMail = "";
 
                 Optional<User> userFilter = users.stream().filter(
-                        u -> u.getUsername().equals(
-                                username)).findFirst();
+                    u -> u.getUsername().equals(
+                        username)).findFirst();
 
                 if (userFilter.isPresent()) {
                     User user = userFilter.get();
 
                     name = Optional.ofNullable(
-                            user.getName()).orElse("");
+                        user.getName()).orElse("");
                     surname = Optional.ofNullable(
-                            user.getSurname()).orElse("");
+                        user.getSurname()).orElse("");
                     email = Optional.ofNullable(
-                            user.getEmail()).orElse("");
+                        user.getEmail()).orElse("");
                     profile = user.getProfile().name();
                 }
 
@@ -115,9 +109,9 @@ public class ReportUploads implements IReport {
 
                 // Get metadata title from index
                 String metadataTitle = ReportUtils.retrieveMetadataTitle(
-                        context, fileUpload.getMetadataId());
+                    context, fileUpload.getMetadataId());
                 String metadataUuid = ReportUtils.retrieveMetadataUuid(
-                        context, fileUpload.getMetadataId());
+                    context, fileUpload.getMetadataId());
 
 
                 // Online resource description from the index ...

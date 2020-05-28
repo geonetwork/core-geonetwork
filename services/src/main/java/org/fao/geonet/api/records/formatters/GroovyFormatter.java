@@ -27,19 +27,13 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Maps;
-
 import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
 import groovy.util.GroovyScriptEngine;
 import groovy.util.ResourceException;
 import groovy.util.ScriptException;
-
 import org.codehaus.groovy.control.CompilationFailedException;
-import org.fao.geonet.api.records.formatters.groovy.Environment;
-import org.fao.geonet.api.records.formatters.groovy.EnvironmentProxy;
-import org.fao.geonet.api.records.formatters.groovy.Functions;
-import org.fao.geonet.api.records.formatters.groovy.Handlers;
-import org.fao.geonet.api.records.formatters.groovy.Transformer;
+import org.fao.geonet.api.records.formatters.groovy.*;
 import org.fao.geonet.api.records.formatters.groovy.template.TemplateCache;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
@@ -50,11 +44,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Iterator;
 import java.util.List;
@@ -80,7 +70,7 @@ public class GroovyFormatter implements FormatterImpl {
     @Autowired
     private TemplateCache templateCache;
     private GroovyClassLoader baseClassLoader;
-    private Map<String, GroovyClassLoader> schemaClassLoaders = Maps.newHashMap();
+    private final Map<String, GroovyClassLoader> schemaClassLoaders = Maps.newHashMap();
 
     @VisibleForTesting
     Transformer findTransformer(final FormatterParams fparams) throws ExecutionException {

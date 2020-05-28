@@ -56,6 +56,7 @@ import java.util.MissingResourceException;
 import java.util.Set;
 
 /**
+ *
  */
 @ControllerAdvice
 public class GlobalExceptionController {
@@ -122,8 +123,6 @@ public class GlobalExceptionController {
     }
 
 
-
-
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler({
@@ -150,15 +149,14 @@ public class GlobalExceptionController {
         ResourceNotFoundException.class})
     public ApiError resourceNotFoundHandler(final HttpServletRequest request, final Exception exception) {
 
-            if (contentTypeNeedsBody(request)) {
-                return new ApiError("resource_not_found", exception.getClass().getSimpleName(), exception.getMessage());
-            } else {
-                return null;
-            }
+        if (contentTypeNeedsBody(request)) {
+            return new ApiError("resource_not_found", exception.getClass().getSimpleName(), exception.getMessage());
+        } else {
+            return null;
+        }
     }
 
     /**
-     *
      * @param request the HTTP request object.
      * @return true if the content type is allowed to have a body when returning an error to the client, false if the
      * response should contain an empty body.
@@ -185,8 +183,7 @@ public class GlobalExceptionController {
             List<MediaType> mediaTypes = MediaType.parseMediaTypes(header);
             MediaType.sortBySpecificityAndQuality(mediaTypes);
             return mediaTypes;
-        }
-        catch (InvalidMediaTypeException ex) {
+        } catch (InvalidMediaTypeException ex) {
             return Collections.emptyList();
         }
     }
@@ -211,7 +208,7 @@ public class GlobalExceptionController {
     @ExceptionHandler({
         UnsatisfiedServletRequestParameterException.class,
         IllegalArgumentException.class,
-        XSDValidationErrorEx.class  ,
+        XSDValidationErrorEx.class,
         JSONException.class,
         MultipartException.class,
         DoiClientException.class

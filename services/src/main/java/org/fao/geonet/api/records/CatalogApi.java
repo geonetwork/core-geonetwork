@@ -24,14 +24,11 @@
 package org.fao.geonet.api.records;
 
 import com.google.common.collect.ImmutableSet;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.ResponseHeader;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.ServletPathFinder;
@@ -63,37 +60,20 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import springfox.documentation.annotations.ApiIgnore;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
@@ -107,46 +87,72 @@ import static org.fao.geonet.kernel.search.IndexFields.SOURCE_CATALOGUE;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
-@Api(value = API_CLASS_RECORD_TAG,
-    tags = API_CLASS_RECORD_TAG,
+@Tag(name = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)
 @Controller("catalogs")
 @ReadWriteController
 public class CatalogApi {
 
+    public static Set<String> FIELDLIST_PDF;
+
+    static {
+        FIELDLIST_PDF = ImmutableSet.<String>builder()
+            .add(Geonet.IndexFieldNames.ID)
+            .add(Geonet.IndexFieldNames.UUID)
+            .add("tag")
+            .add("codelist_spatialRepresentationType_text")
+            .add("codelist_maintenanceAndUpdateFrequency_text")
+            .add("format")
+            .add("overview")
+            .add("link")
+            .add("standardName")
+            .add("schema")
+            .add("geom")
+            .add(SOURCE_CATALOGUE)
+            .add(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)
+            .add("resourceTitleObject.default") // TODOES multilingual
+            .add("resourceAbstractObject.default").build();
+    }
+
     @Autowired
     ThesaurusManager thesaurusManager;
-
+    @Autowired
+    MetadataRepository metadataRepository;
+    @Autowired
+    IMetadataUtils metadataUtils;
+    @Autowired
+    DataManager dataManager;
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
+    @Autowired
+    SettingManager settingManager;
+    @Autowired
+    EsSearchManager searchManager;
+    @Autowired
+    SettingInfo settingInfo;
     @Autowired
     private ServletContext servletContext;
 
-    @Autowired
-    MetadataRepository metadataRepository;
+    /*
+     * <p>Retrieve all parameters (except paging parameters) as a string.</p>
+     */
+    private static String paramsAsString(Map<String, String> requestParams) {
+        String paramNonPaging = "";
+        Iterator<Entry<String, String>> it = requestParams.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, String> pair = it.next();
+            if (!pair.getKey().equals("from") && !pair.getKey().equals("to")) {
+                paramNonPaging = paramNonPaging + (paramNonPaging.equals("") ? "" : "&") + pair.getKey() + "=" + pair.getValue();
+            }
+        }
+        return paramNonPaging;
+    }
 
-    @Autowired
-    IMetadataUtils metadataUtils;
-
-    @Autowired
-    DataManager dataManager;
-
-    @Autowired
-    GeonetworkDataDirectory dataDirectory;
-
-    @Autowired
-    SettingManager settingManager;
-
-    @Autowired
-    EsSearchManager searchManager;
-
-    @Autowired
-    SettingInfo settingInfo;
-
-    @ApiOperation(
-        value = "Get a set of metadata records as ZIP",
-        notes = "Metadata Exchange Format (MEF) is returned. MEF is a ZIP file containing " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get a set of metadata records as ZIP",
+        description = "Metadata Exchange Format (MEF) is returned. MEF is a ZIP file containing " +
             "the metadata as XML and some others files depending on the version requested. " +
-            "See http://geonetwork-opensource.org/manuals/trunk/eng/users/annexes/mef-format.html.",
-        nickname = "getRecordsAsZip")
+            "See http://geonetwork-opensource.org/manuals/trunk/eng/users/annexes/mef-format.html.")
     @RequestMapping(value = "/zip",
         method = RequestMethod.GET,
         consumes = {
@@ -158,46 +164,46 @@ public class CatalogApi {
             MEF_V2_ACCEPT_TYPE
         })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Return requested records as ZIP."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        @ApiResponse(responseCode = "200", description = "Return requested records as ZIP."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
     public void exportAsMef(
-        @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
+        @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
         @RequestParam(required = false)
             String[] uuids,
-        @ApiParam(
-            value = ApiParams.API_PARAM_BUCKET_NAME,
+        @Parameter(
+            description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
             String bucket,
-        @ApiParam(
-            value = "MEF file format.",
+        @Parameter(
+            description = "MEF file format.",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "FULL")
             MEFLib.Format format,
-        @ApiParam(
-            value = "With related records (parent and service).",
+        @Parameter(
+            description = "With related records (parent and service).",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "false")
             boolean withRelated,
-        @ApiParam(
-            value = "Resolve XLinks in the records.",
+        @Parameter(
+            description = "Resolve XLinks in the records.",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "true")
             boolean withXLinksResolved,
-        @ApiParam(
-            value = "Preserve XLink URLs in the records.",
+        @Parameter(
+            description = "Preserve XLink URLs in the records.",
             required = false)
         @RequestParam(
             required = false,
@@ -207,7 +213,7 @@ public class CatalogApi {
             required = false,
             defaultValue = "true")
             boolean addSchemaLocation,
-        @ApiParam(value = "Download the approved version",
+        @Parameter(description = "Download the approved version",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
             boolean approved,
@@ -216,11 +222,11 @@ public class CatalogApi {
             defaultValue = "application/x-gn-mef-2-zip"
         )
             String acceptHeader,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession,
-        @ApiIgnore
-        HttpServletResponse response,
-        @ApiIgnore
+        @Parameter(hidden = true)
+            HttpServletResponse response,
+        @Parameter(hidden = true)
             HttpServletRequest request)
         throws Exception {
 
@@ -251,7 +257,7 @@ public class CatalogApi {
 
                 Set<String> tmpUuid = new HashSet<String>();
                 for (Iterator<String> iter = uuidList.iterator(); iter.hasNext(); ) {
-                    String uuid = (String) iter.next();
+                    String uuid = iter.next();
 
                     // Search for children records
                     // and service record. At some point this might be extended to all type of relations.
@@ -296,32 +302,9 @@ public class CatalogApi {
         }
     }
 
-    public static Set<String> FIELDLIST_PDF;
-
-    static {
-        FIELDLIST_PDF = ImmutableSet.<String>builder()
-            .add(Geonet.IndexFieldNames.ID)
-            .add(Geonet.IndexFieldNames.UUID)
-            .add("tag")
-            .add("codelist_spatialRepresentationType_text")
-            .add("codelist_maintenanceAndUpdateFrequency_text")
-            .add("format")
-            .add("overview")
-            .add("link")
-            .add("standardName")
-            .add("schema")
-            .add("geom")
-            .add(SOURCE_CATALOGUE)
-            .add(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)
-            .add("resourceTitleObject.default") // TODOES multilingual
-            .add("resourceAbstractObject.default").build();
-    }
-
-
-    @ApiOperation(
-        value = "Get a set of metadata records as PDF",
-        notes = "The PDF is a short summary of each records with links to the complete metadata record in different format (ie. landing page on the portal, XML)",
-        nickname = "getRecordsAsPdf")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get a set of metadata records as PDF",
+        description = "The PDF is a short summary of each records with links to the complete metadata record in different format (ie. landing page on the portal, XML)")
     @RequestMapping(value = "/pdf",
         method = RequestMethod.GET,
         consumes = {
@@ -331,32 +314,31 @@ public class CatalogApi {
             "application/pdf"
         })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Return requested records as PDF."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        @ApiResponse(responseCode = "200", description = "Return requested records as PDF."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
     public void exportAsPdf(
-        @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
+        @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
         @RequestParam(required = false)
             String[] uuids,
-        @ApiParam(
-            value = ApiParams.API_PARAM_BUCKET_NAME,
+        @Parameter(
+            description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
             String bucket,
-        @ApiIgnore
-        @ApiParam(hidden = false)
+        @Parameter(hidden = true)
         @RequestParam
             Map<String, String> allRequestParams,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpServletResponse httpResponse,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpServletRequest httpRequest)
         throws Exception {
 
@@ -374,7 +356,7 @@ public class CatalogApi {
 
         Map<String, Object> params = new HashMap<>();
         Element request = new Element("request");
-        allRequestParams.entrySet().forEach(e-> {
+        allRequestParams.entrySet().forEach(e -> {
             Element n = new Element(e.getKey());
             n.setText(e.getValue());
             request.addContent(n);
@@ -439,12 +421,9 @@ public class CatalogApi {
             .asPdf(httpResponse, settingManager.getValue("metadata/pdfReport/pdfName"));
     }
 
-
-
-    @ApiOperation(
-        value = "Get a set of metadata records as CSV",
-        notes = "The CSV is a short summary of each records.",
-        nickname = "getRecordsAsCsv")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get a set of metadata records as CSV",
+        description = "The CSV is a short summary of each records.")
     @RequestMapping(value = "/csv",
         method = RequestMethod.GET,
         consumes = {
@@ -454,32 +433,31 @@ public class CatalogApi {
             "text/csv"
         })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Return requested records as CSV."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        @ApiResponse(responseCode = "200", description = "Return requested records as CSV."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
     public void exportAsCsv(
-        @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
+        @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
         @RequestParam(required = false)
             String[] uuids,
-        @ApiParam(
-            value = ApiParams.API_PARAM_BUCKET_NAME,
+        @Parameter(
+            description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
             String bucket,
-        @ApiIgnore
-        @ApiParam(hidden = false)
+        @Parameter(hidden = true)
         @RequestParam
             Map<String, String> allRequestParams,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpServletResponse httpResponse,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpServletRequest httpRequest)
         throws Exception {
         final UserSession session = ApiUtils.getUserSession(httpSession);
@@ -512,10 +490,9 @@ public class CatalogApi {
         httpResponse.getWriter().write(r.getText());
     }
 
-
-    @ApiOperation(value = "Get catalog content as RDF. This endpoint supports the same Lucene query parameters as for the GUI search.",
-        notes = ".",
-        nickname = "getAsRdf")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get catalog content as RDF. This endpoint supports the same Lucene query parameters as for the GUI search.",
+        description = ".")
     @RequestMapping(
         method = RequestMethod.GET,
         consumes = {
@@ -524,39 +501,47 @@ public class CatalogApi {
         produces = {
             "application/rdf+xml", "*"
         })
-    @ApiImplicitParams({
-        @ApiImplicitParam(name = "from", value = "Indicates the start position in a sorted list of matches that the client wants to use as the beginning of a page result.", required = false, defaultValue = "1", dataType = "int", paramType = "query"),
-        @ApiImplicitParam(name = "hitsPerPage", value = "Indicates the number of hits per page.", required = false, defaultValue = "10", dataType = "int", paramType = "query"),
-        //@ApiImplicitParam(name="to", value = "Indicates the end position in a sorted list of matches that the client wants to use as the ending of a page result", required = false, defaultValue ="10", dataType = "int", paramType = "query"),
-        @ApiImplicitParam(name = "any", value = "Search key", required = false, dataType = "string", paramType = "query"),
-        @ApiImplicitParam(name = "title", value = "A search key for the title.", required = false, dataType = "string", paramType = "query"),
-        @ApiImplicitParam(name = "facet.q", value = "A search facet in the Lucene index. Use the GeoNetwork GUI search to generate the suitable filter values. Example: standard/dcat-ap&createDateYear/2018&sourceCatalog/6d93613e-2b76-4e26-94af-4b4c420a1758 (filter by creation year and source catalog).", required = false, dataType = "string", paramType = "query"),
-        @ApiImplicitParam(name = "sortBy", value = "Lucene sortBy criteria. Relevant values: relevance, title, changeDate.", required = false, dataType = "string", paramType = "query"),
-        @ApiImplicitParam(name = "sortOrder", value = "Sort order. Possible values: reverse.", required = false, dataType = "string", paramType = "query"),
-        @ApiImplicitParam(name = "similarity", value = "Use the Lucene FuzzyQuery. Values range from 0.0 to 1.0 and defaults to 0.8.", required = false, defaultValue = "0.8", dataType = "float", paramType = "query")
+    @Parameters({
+        @Parameter(name = "from", description = "Indicates the start position in a sorted list of matches that the client wants to use as the beginning of a page result.", required = false),
+            //, defaultValue = "1", dataType = "int", paramType = "query"
+        @Parameter(name = "hitsPerPage", description = "Indicates the number of hits per page.", required = false),
+            //dataType = "int", paramType = "query"),
+        //@Parameter(name="to", value = "Indicates the end position in a sorted list of matches that the client wants to use as the ending of a page result", required = false, defaultValue ="10", dataType = "int", paramType = "query"),
+        @Parameter(name = "any", description = "Search key", required = false),
+            //dataType = "string", paramType = "query"),
+        @Parameter(name = "title", description = "A search key for the title.", required = false),
+            //dataType = "string", paramType = "query"),
+        @Parameter(name = "facet.q", description = "A search facet in the Lucene index. Use the GeoNetwork GUI search to generate the suitable filter values. Example: standard/dcat-ap&createDateYear/2018&sourceCatalog/6d93613e-2b76-4e26-94af-4b4c420a1758 (filter by creation year and source catalog).", required = false),
+            //, dataType = "string", paramType = "query"),
+        @Parameter(name = "sortBy", description = "Lucene sortBy criteria. Relevant values: relevance, title, changeDate.", required = false), //, , dataType = "string", paramType = "query"),
+        @Parameter(name = "sortOrder", description = "Sort order. Possible values: reverse.", required = false),
+            //, dataType = "string", paramType = "query"),
+        @Parameter(name = "similarity", description = "Use the Lucene FuzzyQuery. Values range from 0.0 to 1.0 and defaults to 0.8.", required = false)
+            //, defaultValue = "0.8", dataType = "float", paramType = "query")
 
     })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Return the catalog content as RDF.",
-            responseHeaders = {
-                @ResponseHeader(name = "Link", description = " This response header parameter is used to indicate any of the links defined by LDP Paging: first page links, next page links, last page links, previous page links. " +
-                    "First page link: " +
-                    "a link to the first in-sequence page resource P1 (first) of a page sequence. The first page is the one that a LDP Paging server redirects to (303 response) in response to a retrieval request for the paged resource's URI. Syntactically, a HTTP Link <P1>; rel=\"first\" header [RFC5988]. " +
-                    "Next page link: " +
-                    "a link to the next in-sequence page resource of a page sequence. Syntactically, a HTTP Link <Pi>; rel=\"next\" header [RFC5988] where the context URI identifies some Pi=1 (first)...n-1 (next to last) and the target URI identifies Pi+1. " +
-                    "Last page link: " +
-                    "a link to the last in-sequence page resource Pn (last) of a page sequence. The last page is the page that terminates a forward traversal, because it contains no next page link. Syntactically, a HTTP Link <Pn>; rel=\"last\" header [RFC5988]. " +
-                    "Previous page link: " +
-                    "a link to the previous in-sequence page resource of a page sequence Syntactically, a HTTP Link <Pi>; rel=\"prev\" header [RFC5988] where the context URI identifies some Pi=2...n (last) and the target URI identifies Pi-1. "
-                    , response = String.class),
-                @ResponseHeader(name = "ETag", description = "The ETag HTTP response header is an identifier for a specific version of a resource. If the resource at a given URL changes, a new Etag value must be generated. On this API, the ETag value is the version token of the Lucene index. ")
-            }),
-        @ApiResponse(code = 303, message = "Redirect the client to the first in-sequence page resource. This happens when the paging parameters (from, hitsPerPage) are not included in the request.")
+        @ApiResponse(responseCode = "200", description = "Return the catalog content as RDF."
+//            responseHeaders = {
+//                @ResponseHeader(name = "Link", description = " This response header parameter is used to indicate any of the links defined by LDP Paging: first page links, next page links, last page links, previous page links. " +
+//                    "First page link: " +
+//                    "a link to the first in-sequence page resource P1 (first) of a page sequence. The first page is the one that a LDP Paging server redirects to (303 response) in response to a retrieval request for the paged resource's URI. Syntactically, a HTTP Link <P1>; rel=\"first\" header [RFC5988]. " +
+//                    "Next page link: " +
+//                    "a link to the next in-sequence page resource of a page sequence. Syntactically, a HTTP Link <Pi>; rel=\"next\" header [RFC5988] where the context URI identifies some Pi=1 (first)...n-1 (next to last) and the target URI identifies Pi+1. " +
+//                    "Last page link: " +
+//                    "a link to the last in-sequence page resource Pn (last) of a page sequence. The last page is the page that terminates a forward traversal, because it contains no next page link. Syntactically, a HTTP Link <Pn>; rel=\"last\" header [RFC5988]. " +
+//                    "Previous page link: " +
+//                    "a link to the previous in-sequence page resource of a page sequence Syntactically, a HTTP Link <Pi>; rel=\"prev\" header [RFC5988] where the context URI identifies some Pi=2...n (last) and the target URI identifies Pi-1. "
+//                    , response = String.class),
+//                @ResponseHeader(name = "ETag", description = "The ETag HTTP response header is an identifier for a specific version of a resource. If the resource at a given URL changes, a new Etag value must be generated. On this API, the ETag value is the version token of the Lucene index. ")
+//            }
+        ),
+        @ApiResponse(responseCode = "303", description = "Redirect the client to the first in-sequence page resource. This happens when the paging parameters (from, hitsPerPage) are not included in the request.")
     })
     public
     @ResponseBody
     void getAsRdf(
-        @ApiParam(hidden = true)
+        @Parameter(hidden = true)
         @RequestParam
             Map<String, String> allRequestParams,
         HttpServletResponse response,
@@ -576,14 +561,12 @@ public class CatalogApi {
                 hitsPerPage = 10;
                 allRequestParams.put("hitsPerPage", Integer.toString(hitsPerPage));
             }
-            ;
             if (from <= 0) {
                 from = 1;
                 allRequestParams.put("from", Integer.toString(from));
             }
-            ;
             response.setStatus(303);
-            response.setHeader("Location", hostURL + request.getRequestURI() + "?" + paramsAsString(allRequestParams) + "&from=1&to=" + Integer.toString(hitsPerPage));
+            response.setHeader("Location", hostURL + request.getRequestURI() + "?" + paramsAsString(allRequestParams) + "&from=1&to=" + hitsPerPage);
             return;
         }
 
@@ -630,8 +613,8 @@ public class CatalogApi {
         int lastPageFrom = 0 < (numberMatched % hitsPerPage) ? numberMatched - (numberMatched % hitsPerPage) + 1 : (numberMatched - hitsPerPage + 1 > 0 ? numberMatched - hitsPerPage + 1 : numberMatched);
         long versionTokenETag = rdfSearcher.getVersionToken();
         String canonicalURL = hostURL + request.getRequestURI();
-        String currentPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + Integer.toString(from) + "&to=" + Integer.toString(to);
-        String lastPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + Integer.toString(lastPageFrom) + "&to=" + Integer.toString(numberMatched);
+        String currentPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + from + "&to=" + to;
+        String lastPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + lastPageFrom + "&to=" + numberMatched;
         String firstPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + firstPageFrom + "&to=" + firstPageTo;
         String previousPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + prevFrom + "&to=" + prevTo;
         String nextPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + nextFrom + "&to=" + nextTo;
@@ -640,18 +623,18 @@ public class CatalogApi {
         String hydraPagedCollection = "<hydra:PagedCollection xmlns:hydra=\"http://www.w3.org/ns/hydra/core#\" rdf:about=\"" + currentPage.replaceAll("&", "&amp;") + "\">\n" +
             "<rdf:type rdf:resource=\"hydra:PartialCollectionView\"/>" +
             "<hydra:lastPage>" + lastPage.replaceAll("&", "&amp;") + "</hydra:lastPage>\n" +
-            "<hydra:totalItems rdf:datatype=\"http://www.w3.org/2001/XMLSchema#integer\">" + Integer.toString(numberMatched) + "</hydra:totalItems>\n" +
+            "<hydra:totalItems rdf:datatype=\"http://www.w3.org/2001/XMLSchema#integer\">" + numberMatched + "</hydra:totalItems>\n" +
             ((prevFrom <= prevTo && prevFrom < from && prevTo < to) ? "<hydra:previousPage>" + previousPage.replaceAll("&", "&amp;") + "</hydra:previousPage>\n" : "") +
             ((nextFrom <= nextTo && from < nextFrom && to < nextTo) ? "<hydra:nextPage>" + nextPage.replaceAll("&", "&amp;") + "</hydra:nextPage>\n" : "") +
             "<hydra:firstPage>" + firstPage.replaceAll("&", "&amp;") + "</hydra:firstPage>\n" +
-            "<hydra:itemsPerPage rdf:datatype=\"http://www.w3.org/2001/XMLSchema#integer\">" + Integer.toString(hitsPerPage) + "</hydra:itemsPerPage>\n" +
+            "<hydra:itemsPerPage rdf:datatype=\"http://www.w3.org/2001/XMLSchema#integer\">" + hitsPerPage + "</hydra:itemsPerPage>\n" +
             "</hydra:PagedCollection>";
         // Construct the RDF output
         File rdfFile = manager.createRdfFile(context, results, 1, hydraPagedCollection);
 
         try (
             ServletOutputStream out = response.getOutputStream();
-            InputStream in = new FileInputStream(rdfFile);
+            InputStream in = new FileInputStream(rdfFile)
         ) {
             byte[] bytes = new byte[1024];
             int bytesRead;
@@ -662,7 +645,7 @@ public class CatalogApi {
             response.addHeader("ETag", Long.toString(versionTokenETag));
             //Include the response header "link" parameters as suggested by the W3C Linked Data Platform paging specification (see also: https://www.w3.org/2012/ldp/hg/ldp-paging.html).
             response.addHeader("Link", "<http://www.w3.org/ns/ldp#Page>; rel=\"type\"");
-            response.addHeader("Link", canonicalURL + "; rel=\"canonical\"; etag=" + Long.toString(versionTokenETag));
+            response.addHeader("Link", canonicalURL + "; rel=\"canonical\"; etag=" + versionTokenETag);
 
             response.addHeader("Link", "<" + firstPage + "> ; rel=\"first\"");
             if (nextFrom <= nextTo && from < nextFrom && to < nextTo) {
@@ -682,21 +665,6 @@ public class CatalogApi {
         } catch (IOException e) {
             Log.error(API.LOG_MODULE_NAME, "Get catalog content as RDF. Error: " + e.getMessage(), e);
         }
-    }
-
-    /*
-     * <p>Retrieve all parameters (except paging parameters) as a string.</p>
-     */
-    private static String paramsAsString(Map<String, String> requestParams) {
-        String paramNonPaging = "";
-        Iterator<Entry<String, String>> it = requestParams.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, String> pair = (Map.Entry<String, String>) it.next();
-            if (!pair.getKey().equals("from") && !pair.getKey().equals("to")) {
-                paramNonPaging = paramNonPaging + (paramNonPaging.equals("") ? "" : "&") + pair.getKey() + "=" + pair.getValue();
-            }
-        }
-        return paramNonPaging;
     }
 
     /*

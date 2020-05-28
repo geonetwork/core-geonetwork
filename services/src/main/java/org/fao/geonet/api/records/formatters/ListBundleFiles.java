@@ -23,6 +23,8 @@
 
 package org.fao.geonet.api.records.formatters;
 
+import jeeves.interfaces.Service;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
@@ -35,9 +37,6 @@ import java.net.URLEncoder;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import jeeves.interfaces.Service;
-import jeeves.server.context.ServiceContext;
 
 /**
  * Allows a user to set the xsl used for displaying metadata.
@@ -95,7 +94,7 @@ public class ListBundleFiles extends AbstractFormatService implements Service {
             if (fileName.endsWith("." + ext)) return true;
         }
 
-        return fileName.toString().equalsIgnoreCase("README");
+        return fileName.equalsIgnoreCase("README");
     }
 
     private boolean legalFile(Path f) throws IOException {

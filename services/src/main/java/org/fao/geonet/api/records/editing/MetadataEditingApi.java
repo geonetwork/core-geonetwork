@@ -23,26 +23,14 @@
 
 package org.fao.geonet.api.records.editing;
 
-import static jeeves.guiservices.session.Get.getSessionAsXML;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
-import static org.springframework.data.jpa.domain.Specifications.where;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.sql.SQLException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlFile;
+import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -54,18 +42,9 @@ import org.fao.geonet.api.records.model.Direction;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.events.history.RecordUpdatedEvent;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.EditLib;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataStatus;
@@ -87,26 +66,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.guiservices.XmlFile;
-import jeeves.services.ReadWriteController;
-import springfox.documentation.annotations.ApiIgnore;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
-@RequestMapping(value = { "/{portal}/api/records", "/{portal}/api/" + API.VERSION_0_1 + "/records" })
-@Api(value = API_CLASS_RECORD_TAG, tags = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
+import static jeeves.guiservices.session.Get.getSessionAsXML;
+import static org.fao.geonet.api.ApiParams.*;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.*;
+import static org.springframework.data.jpa.domain.Specifications.where;
+
+@RequestMapping(value = {"/{portal}/api/records", "/{portal}/api/" + API.VERSION_0_1 + "/records"})
+@Tag(name = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
 @Controller("recordEditing")
 @PreAuthorize("hasRole('Editor')")
 @ReadWriteController
@@ -114,21 +92,23 @@ public class MetadataEditingApi {
 
     @Autowired
     LanguageUtils languageUtils;
+    @Autowired
+    SchemaManager schemaManager;
 
-    @ApiOperation(value = "Edit a record", notes = "Return HTML form for editing.", nickname = "editor")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Edit a record", description = "Return HTML form for editing.")
     @RequestMapping(value = "/{metadataUuid}/editor", method = RequestMethod.GET, consumes = {
-            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE })
+        MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.OK)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "The editor form."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "The editor form."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     public void startEditing(
-            @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
-            @ApiParam(value = "Tab") @RequestParam(defaultValue = "simple") String currTab,
-            @RequestParam(defaultValue = "false") boolean withAttributes,
-            @ApiIgnore @ApiParam(hidden = true) HttpSession session,
-            @ApiIgnore @ApiParam(hidden = true) @RequestParam Map<String, String> allRequestParams,
-            HttpServletRequest request, HttpServletResponse response) throws Exception {
+        @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+        @Parameter(description = "Tab") @RequestParam(defaultValue = "simple") String currTab,
+        @RequestParam(defaultValue = "false") boolean withAttributes,
+        @Parameter(hidden = true) HttpSession session,
+        @Parameter(hidden = true) @RequestParam Map<String, String> allRequestParams,
+        HttpServletRequest request, HttpServletResponse response) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         boolean showValidationErrors = false;
@@ -172,32 +152,32 @@ public class MetadataEditingApi {
         // End of start editing session
 
         Element elMd = new AjaxEditUtils(context).getMetadataEmbedded(context, String.valueOf(metadata.getId()), true,
-                showValidationErrors);
+            showValidationErrors);
         buildEditorForm(currTab, session, allRequestParams, request, elMd, metadata.getDataInfo().getSchemaId(),
-                context, applicationContext, false, false, response);
+            context, applicationContext, false, false, response);
     }
 
-    @ApiOperation(value = "Save edits", notes = "Save the HTML form content.", nickname = "saveEdits")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Save edits", description = "Save the HTML form content.")
     @RequestMapping(value = "/{metadataUuid}/editor", method = RequestMethod.POST, consumes = {
-            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE })
+        MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "The editor form."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+        @ApiResponse(responseCode = "200", description = "The editor form."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @ResponseBody
     public void saveEdits(
-        @ApiParam(value = API_PARAM_RECORD_UUID,
+        @Parameter(description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
-        @ApiParam(
-            value = "Tab"
+        @Parameter(
+            description = "Tab"
         )
-            @RequestParam(
-                defaultValue = "simple"
-            )
+        @RequestParam(
+            defaultValue = "simple"
+        )
             String tab,
         @RequestParam(
             defaultValue = "false"
@@ -211,41 +191,39 @@ public class MetadataEditingApi {
             defaultValue = "false"
         )
             boolean minor,
-        @ApiParam(
-            value = "Submit for review directly after save.")
+        @Parameter(
+            description = "Submit for review directly after save.")
         @RequestParam(defaultValue = StatusValue.Status.DRAFT)
             String status,
-        @ApiParam(
-            value = "Save current edits."
+        @Parameter(
+            description = "Save current edits."
         )
         @RequestParam(
             defaultValue = "false"
         )
             boolean commit,
-        @ApiParam(
-            value = "Save and terminate session."
+        @Parameter(
+            description = "Save and terminate session."
         )
         @RequestParam(
             defaultValue = "false"
         )
             boolean terminate,
-        @ApiParam(
-            value = "Record as XML. TODO: rename xml"
+        @Parameter(
+            description = "Record as XML. TODO: rename xml"
         )
         @RequestParam(
             defaultValue = ""
         )
             String data,
-        @ApiIgnore
-        @ApiParam(hidden = true)
+        @Parameter(hidden = true)
         @RequestParam
-            Map<String,String> allRequestParams,
+            Map<String, String> allRequestParams,
         HttpServletRequest request,
         HttpServletResponse response,
-        @ApiIgnore
-        @ApiParam(hidden = true)
+        @Parameter(hidden = true)
             HttpSession httpSession
-        ) throws Exception {
+    ) throws Exception {
 
         Log.trace(Geonet.DATA_MANAGER, "Saving metadata editing with UUID " + metadataUuid);
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
@@ -269,7 +247,6 @@ public class MetadataEditingApi {
         boolean isEditor = session.getProfile().equals(Profile.Editor);
         boolean isReviewer = session.getProfile().equals(Profile.Reviewer);
         boolean isAdmin = session.getProfile().equals(Profile.Administrator);
-        ;
 
         // Checks when workflow enabled if the user is allowed
         boolean isEnabledWorkflow = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
@@ -375,7 +352,7 @@ public class MetadataEditingApi {
                     if (isEditor || isAdmin) {
                         Integer changeToStatus = Integer.parseInt(StatusValue.Status.SUBMITTED);
                         statusRepository.changeCurrentStatus(session.getUserIdAsInt(), metadata.getId(),
-                                changeToStatus);
+                            changeToStatus);
                     } else {
                         throw new SecurityException(String.format("Only users with editor profile can submit."));
                     }
@@ -385,7 +362,7 @@ public class MetadataEditingApi {
                     if (isReviewer || isAdmin) {
                         Integer changeToStatus = Integer.parseInt(StatusValue.Status.APPROVED);
                         statusRepository.changeCurrentStatus(session.getUserIdAsInt(), metadata.getId(),
-                                changeToStatus);
+                            changeToStatus);
                     } else {
                         throw new SecurityException(String.format("Only users with review profile can approve."));
                     }
@@ -400,22 +377,22 @@ public class MetadataEditingApi {
             // the metadata becomes invalid
             if (automaticUnpublishInvalidMd) {
                 final OperationAllowedRepository operationAllowedRepo = context
-                        .getBean(OperationAllowedRepository.class);
+                    .getBean(OperationAllowedRepository.class);
 
                 boolean isPublic = (operationAllowedRepo.count(where(hasMetadataId(id))
-                        .and(hasOperation(ReservedOperation.view)).and(hasGroupId(ReservedGroup.all.getId()))) > 0);
+                    .and(hasOperation(ReservedOperation.view)).and(hasGroupId(ReservedGroup.all.getId()))) > 0);
 
                 if (isPublic) {
                     final MetadataValidationRepository metadataValidationRepository = context
-                            .getBean(MetadataValidationRepository.class);
+                        .getBean(MetadataValidationRepository.class);
 
                     boolean isInvalid = (metadataValidationRepository
-                            .count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(Integer.parseInt(id))) > 0);
+                        .count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(Integer.parseInt(id))) > 0);
 
                     if (isInvalid) {
                         isUnpublished = true;
                         operationAllowedRepo
-                                .deleteAll(where(hasMetadataId(id)).and(hasGroupId(ReservedGroup.all.getId())));
+                            .deleteAll(where(hasMetadataId(id)).and(hasGroupId(ReservedGroup.all.getId())));
                     }
 
                     reindex = true;
@@ -432,7 +409,7 @@ public class MetadataEditingApi {
             dataMan.endEditingSession(id, session);
             if (isUnpublished) {
                 throw new IllegalStateException(String.format("Record saved but as it was invalid at the end of "
-                        + "the editing session. The public record '%s' was unpublished.", metadata.getUuid()));
+                    + "the editing session. The public record '%s' was unpublished.", metadata.getUuid()));
             } else {
                 return;
             }
@@ -441,25 +418,25 @@ public class MetadataEditingApi {
         // if (!finished && !forget && commit) {
         // dataMan.startEditingSession(context, id);
         // }
-        Element elMd = new AjaxEditUtils(context).getMetadataEmbedded(context, String.valueOf(id), true,
-                withValidationErrors);
+        Element elMd = new AjaxEditUtils(context).getMetadataEmbedded(context, id, true,
+            withValidationErrors);
 
         buildEditorForm(tab, httpSession, forwardedParams, request, elMd, metadata.getDataInfo().getSchemaId(), context,
-                applicationContext, false, false, response);
+            applicationContext, false, false, response);
 
     }
 
-    @ApiOperation(value = "Cancel edits", notes = "Cancel current editing session.", nickname = "cancelEdits")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Cancel edits", description = "Cancel current editing session.")
     @RequestMapping(value = "/{metadataUuid}/editor", method = RequestMethod.DELETE, consumes = {
-            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE })
+        MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiResponses(value = { @ApiResponse(code = 204, message = "Editing session cancelled."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Editing session cancelled."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseBody
-    public void cancelEdits(@ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
-            @ApiIgnore @ApiParam(hidden = true) @RequestParam Map<String, String> allRequestParams,
-            HttpServletRequest request, @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession) throws Exception {
+    public void cancelEdits(@Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+                            @Parameter(hidden = true) @RequestParam Map<String, String> allRequestParams,
+                            HttpServletRequest request, @Parameter(hidden = true) HttpSession httpSession) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
@@ -468,21 +445,21 @@ public class MetadataEditingApi {
         dataMan.cancelEditingSession(context, String.valueOf(metadata.getId()));
     }
 
-    @ApiOperation(value = "Add element", notes = "", nickname = "addElement")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Add element", description = "")
     @RequestMapping(value = "/{metadataUuid}/editor/elements", method = RequestMethod.PUT, consumes = {
-            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE })
+        MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.OK)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Element added."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
-    public void addElement(@ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
-            @ApiParam(value = "Reference of the insertion point.", required = true) @RequestParam String ref,
-            @ApiParam(value = "Name of the element to add (with prefix)", required = true) @RequestParam String name,
-            @ApiParam(value = "Use geonet:attribute for attributes or child name.", required = false) @RequestParam(required = false) String child,
-            @ApiParam(value = "Should attributes be shown on the editor snippet?", required = false) @RequestParam(defaultValue = "false") boolean displayAttributes,
-            @ApiIgnore @ApiParam(hidden = true) @RequestParam Map<String, String> allRequestParams,
-            HttpServletRequest request, HttpServletResponse response,
-            @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession) throws Exception {
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Element added."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
+    public void addElement(@Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+                           @Parameter(description = "Reference of the insertion point.", required = true) @RequestParam String ref,
+                           @Parameter(description = "Name of the element to add (with prefix)", required = true) @RequestParam String name,
+                           @Parameter(description = "Use geonet:attribute for attributes or child name.", required = false) @RequestParam(required = false) String child,
+                           @Parameter(description = "Should attributes be shown on the editor snippet?", required = false) @RequestParam(defaultValue = "false") boolean displayAttributes,
+                           @Parameter(hidden = true) @RequestParam Map<String, String> allRequestParams,
+                           HttpServletRequest request, HttpServletResponse response,
+                           @Parameter(hidden = true) HttpSession httpSession) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
@@ -501,50 +478,50 @@ public class MetadataEditingApi {
         // -- only applies the templating to the added element, not to
         // -- the entire metadata so performance should not be a big issue
         Element elResp = new AjaxEditUtils(context).addElementEmbedded(ApiUtils.getUserSession(httpSession),
-                String.valueOf(metadata.getId()), ref, name, child);
+            String.valueOf(metadata.getId()), ref, name, child);
         EditLib.tagForDisplay(elResp);
         Element md = (Element) findRoot(elResp).clone();
         EditLib.removeDisplayTag(elResp);
 
         buildEditorForm(allRequestParams.get("currTab"), httpSession, allRequestParams, request, md,
-                metadata.getDataInfo().getSchemaId(), context, applicationContext, true, true, response);
+            metadata.getDataInfo().getSchemaId(), context, applicationContext, true, true, response);
     }
 
-    @ApiOperation(value = "Reorder element", notes = "", nickname = "reorderElement")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Reorder element", description = "")
     @RequestMapping(value = "/{metadataUuid}/editor/elements/{direction}", method = RequestMethod.PUT, consumes = {
-            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE })
+        MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiResponses(value = { @ApiResponse(code = 201, message = "Element reordered."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Element reordered."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseBody
-    public void addElement(@ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
-            @ApiParam(value = "Reference of the element to move.", required = true) @RequestParam String ref,
-            @ApiParam(value = "Direction", required = true) @PathVariable Direction direction,
-            @ApiParam(value = "Should attributes be shown on the editor snippet?", required = false) @RequestParam(defaultValue = "false") boolean displayAttributes,
-            @ApiIgnore @ApiParam(hidden = true) @RequestParam Map<String, String> allRequestParams,
-            HttpServletRequest request, @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession) throws Exception {
+    public void addElement(@Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+                           @Parameter(description = "Reference of the element to move.", required = true) @RequestParam String ref,
+                           @Parameter(description = "Direction", required = true) @PathVariable Direction direction,
+                           @Parameter(description = "Should attributes be shown on the editor snippet?", required = false) @RequestParam(defaultValue = "false") boolean displayAttributes,
+                           @Parameter(hidden = true) @RequestParam Map<String, String> allRequestParams,
+                           HttpServletRequest request, @Parameter(hidden = true) HttpSession httpSession) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         new AjaxEditUtils(context).swapElementEmbedded(ApiUtils.getUserSession(httpSession),
-                String.valueOf(metadata.getId()), ref, direction == Direction.down);
+            String.valueOf(metadata.getId()), ref, direction == Direction.down);
     }
 
-    @ApiOperation(value = "Delete element", notes = "", nickname = "deleteElement")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Delete element", description = "")
     @RequestMapping(value = "/{metadataUuid}/editor/elements", method = RequestMethod.DELETE, consumes = {
-            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE })
+        MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiResponses(value = { @ApiResponse(code = 204, message = "Element removed."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Element removed."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseBody
     public void deleteElement(
-            @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
-            @ApiParam(value = "Reference of the element to remove.", required = true) @RequestParam String[] ref,
-            @ApiParam(value = "Name of the parent.", required = true) @RequestParam String parent,
-            @ApiParam(value = "Should attributes be shown on the editor snippet?", required = false) @RequestParam(defaultValue = "false") boolean displayAttributes,
-            HttpServletRequest request, @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession) throws Exception {
+        @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+        @Parameter(description = "Reference of the element to remove.", required = true) @RequestParam String[] ref,
+        @Parameter(description = "Name of the parent.", required = true) @RequestParam String parent,
+        @Parameter(description = "Should attributes be shown on the editor snippet?", required = false) @RequestParam(defaultValue = "false") boolean displayAttributes,
+        HttpServletRequest request, @Parameter(hidden = true) HttpSession httpSession) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
 
@@ -555,24 +532,24 @@ public class MetadataEditingApi {
         }
     }
 
-    @ApiOperation(value = "Delete attribute", notes = "", nickname = "deleteAttribute")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Delete attribute", description = "")
     @RequestMapping(value = "/{metadataUuid}/editor/attributes", method = RequestMethod.DELETE, consumes = {
-            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE })
+        MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiResponses(value = { @ApiResponse(code = 204, message = "Attribute removed."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attribute removed."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseBody
     public void deleteAttribute(
-            @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
-            @ApiParam(value = "Reference of the attribute to remove.", required = true) @RequestParam String ref,
-            @ApiParam(value = "Should attributes be shown on the editor snippet?", required = false) @RequestParam(defaultValue = "false") boolean displayAttributes,
-            HttpServletRequest request, @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession) throws Exception {
+        @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+        @Parameter(description = "Reference of the attribute to remove.", required = true) @RequestParam String ref,
+        @Parameter(description = "Should attributes be shown on the editor snippet?", required = false) @RequestParam(defaultValue = "false") boolean displayAttributes,
+        HttpServletRequest request, @Parameter(hidden = true) HttpSession httpSession) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         new AjaxEditUtils(context).deleteAttributeEmbedded(ApiUtils.getUserSession(httpSession),
-                String.valueOf(metadata.getId()), ref);
+            String.valueOf(metadata.getId()), ref);
     }
 
     private Element findRoot(Element element) {
@@ -586,9 +563,9 @@ public class MetadataEditingApi {
      * XSLT. Only element required for the editor are created.
      */
     private void buildEditorForm(String tab, HttpSession session, Map<String, String> allRequestParams,
-            HttpServletRequest request, Element xml, String schema, ServiceContext context,
-            ApplicationContext applicationContext, boolean isEmbedded, boolean embedded, HttpServletResponse response)
-            throws Exception {
+                                 HttpServletRequest request, Element xml, String schema, ServiceContext context,
+                                 ApplicationContext applicationContext, boolean isEmbedded, boolean embedded, HttpServletResponse response)
+        throws Exception {
 
         UserSession userSession = ApiUtils.getUserSession(session);
         Element root = buildResourceDocument(applicationContext, context, userSession);
@@ -609,12 +586,12 @@ public class MetadataEditingApi {
 
         GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
         Path xslt = dataDirectory.getWebappDir()
-                .resolve(isEmbedded ? "xslt/ui-metadata/edit/edit-embedded.xsl" : "xslt/ui-metadata/edit/edit.xsl");
+            .resolve(isEmbedded ? "xslt/ui-metadata/edit/edit-embedded.xsl" : "xslt/ui-metadata/edit/edit.xsl");
         Xml.transformXml(root, xslt, response.getOutputStream());
     }
 
     private Element buildResourceDocument(ApplicationContext applicationContext, ServiceContext context,
-            UserSession userSession) throws JDOMException, SQLException, IOException {
+                                          UserSession userSession) throws JDOMException, SQLException, IOException {
         // <gui>
         // Unused now
         // <xml name="strings" file="xml/strings.xml"/>
@@ -651,16 +628,13 @@ public class MetadataEditingApi {
         return root;
     }
 
-    @Autowired
-    SchemaManager schemaManager;
-
     public Element getSchemaStrings(String schemaToLoad, ServiceContext context) throws Exception {
         Element schemas = new Element("schemas");
 
         for (String schema : schemaManager.getSchemas()) {
             // Load schema and schema dependency localization files
             if (schema.equals(schemaToLoad) || schemaToLoad.startsWith(schema)
-                    || schemaManager.getDependencies(schemaToLoad).contains(schema)) {
+                || schemaManager.getDependencies(schemaToLoad).contains(schema)) {
                 try {
                     Map<String, XmlFile> schemaInfo = schemaManager.getSchemaInfo(schema);
 

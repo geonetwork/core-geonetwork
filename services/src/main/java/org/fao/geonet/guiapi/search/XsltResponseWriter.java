@@ -26,13 +26,11 @@
 package org.fao.geonet.guiapi.search;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -40,8 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -56,11 +52,13 @@ import java.util.Map;
  */
 @Component
 public class XsltResponseWriter {
+    public static final String TRANSLATIONS = "translations";
     @Autowired
     GeonetworkDataDirectory dataDirectory;
-
-    public static final String TRANSLATIONS = "translations";
     Element xml;
+    Path xsl;
+    Map<String, Object> xslParams = new HashMap<>();
+
     public XsltResponseWriter(String envTagName) {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
         String url = settingManager.getBaseURL();
@@ -83,15 +81,15 @@ public class XsltResponseWriter {
         Element translations = new Element(TRANSLATIONS);
 
         this.xml = new Element("root")
-                        .addContent(gui)
-                        .addContent(translations);
+            .addContent(gui)
+            .addContent(translations);
     }
 
     public XsltResponseWriter withXml(Element xml) {
         this.xml.addContent(xml);
         return this;
     }
-    Path xsl;
+
     public XsltResponseWriter withXsl(String xsl) {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
@@ -99,21 +97,25 @@ public class XsltResponseWriter {
         this.xsl = xslt;
         return this;
     }
-    Map<String, Object> xslParams = new HashMap<>();
+
     public XsltResponseWriter withParam(String k, Object v) {
         this.xslParams.put(k, v);
         return this;
     }
+
     public XsltResponseWriter withParams(Map<String, Object> params) {
         this.xslParams.putAll(params);
         return this;
     }
+
     public Element asElement() throws Exception {
         return Xml.transform(xml, xsl, xslParams);
     }
+
     public String asHtml() throws Exception {
         return Xml.getString(asElement());
     }
+
     public void asPdf(HttpServletResponse response, String documentName) throws Exception {
         GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
         Path file = Xml.transformFOP(dataDirectory.getUploadDir(), xml, xsl.toString());

@@ -23,11 +23,10 @@
 package org.fao.geonet.api.records.editing;
 
 import com.google.common.collect.Sets;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
@@ -38,15 +37,9 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.IProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
-import org.fao.geonet.kernel.BatchEditParameter;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.events.history.RecordUpdatedEvent;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.AddElemValue;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.EditLib;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -62,12 +55,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -80,8 +68,7 @@ import java.util.Set;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
-@Api(value = "records",
-    tags = "records",
+@Tag(name = "records",
     description = "Metadata record editing operations")
 @Controller("records/edit")
 @ReadWriteController
@@ -98,37 +85,35 @@ public class BatchEditsApi implements ApplicationContextAware {
     /**
      * The service edits to the current selection or a set of uuids.
      */
-    @ApiOperation(value = "Edit a set of records by XPath expressions. This operations applies the update-fixed-info.xsl "
-        + "transformation for the metadata schema and updates the change date if the parameter updateDateStamp is set to true.",
-        nickname = "batchEdit")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Edit a set of records by XPath expressions. This operations applies the update-fixed-info.xsl "
+        + "transformation for the metadata schema and updates the change date if the parameter updateDateStamp is set to true.")
     @RequestMapping(value = "/batchediting",
         method = RequestMethod.PUT,
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Return a report of what has been done."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+        @ApiResponse(responseCode = "201", description = "Return a report of what has been done."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public IProcessingReport batchEdit(
-        @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
+        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "iso19139")
         @RequestParam(required = false) String[] uuids,
-        @ApiParam(
-            value = ApiParams.API_PARAM_BUCKET_NAME,
+        @Parameter(
+            description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
             String bucket,
-        @ApiParam(
-            value = ApiParams.API_PARAM_UPDATE_DATESTAMP,
-            required = false,
-            defaultValue = "false"
+        @Parameter(
+            description = ApiParams.API_PARAM_UPDATE_DATESTAMP,
+            required = false
         )
         @RequestParam(
             required = false,
@@ -204,7 +189,7 @@ public class BatchEditsApi implements ApplicationContextAware {
                         boolean applyEdit = true;
                         if (StringUtils.isNotEmpty(batchEditParameter.getCondition())) {
                             final Object node = Xml.selectSingle(metadata, batchEditParameter.getCondition(), metadataSchema.getNamespaces());
-                            applyEdit = (node != null) || (node instanceof Boolean && (Boolean)node != false);
+                            applyEdit = (node != null) || (node instanceof Boolean && (Boolean) node != false);
                         }
                         if (applyEdit) {
                             metadataChanged = editLib.addElementOrFragmentFromXpath(

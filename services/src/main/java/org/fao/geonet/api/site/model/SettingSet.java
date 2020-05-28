@@ -37,13 +37,9 @@ public enum SettingSet {
     }),
     USER_GROUP_ONLY(
         new String[]{Settings.SYSTEM_METADATAPRIVS_USERGROUPONLY}),
-    AUTH,READ_ONLY,INDEX,SYSTEMINFO,STAGING_PROFILE,TYPE;
+    AUTH, READ_ONLY, INDEX, SYSTEMINFO, STAGING_PROFILE, TYPE;
 
     private String[] listOfSettings;
-
-    public String[] getListOfSettings() {
-        return listOfSettings;
-    }
 
     SettingSet() {
     }
@@ -59,5 +55,9 @@ public enum SettingSet {
             }
         }
         return false;
+    }
+
+    public String[] getListOfSettings() {
+        return listOfSettings;
     }
 }

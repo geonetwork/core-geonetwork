@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 /**
  * Represents how much zoom should be given around a geometry so that there is enough context to see
  * where the geometry is.
- *
+ * <p>
  * This is configured in web/webapp/WEB-INF/config-spring-geonetwork.xml in the
  * regionGetMapExpandFactors bean.
  *
@@ -67,9 +67,7 @@ public final class ExpandFactor implements Comparable<ExpandFactor> {
         ExpandFactor that = (ExpandFactor) o;
 
         if (Double.compare(that.factor, factor) != 0) return false;
-        if (Double.compare(that.proportion, proportion) != 0) return false;
-
-        return true;
+        return Double.compare(that.proportion, proportion) == 0;
     }
 
     @Override

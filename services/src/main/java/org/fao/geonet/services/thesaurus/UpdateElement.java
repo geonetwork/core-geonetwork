@@ -24,15 +24,12 @@
 package org.fao.geonet.services.thesaurus;
 
 
-import static org.fao.geonet.services.thesaurus.AddElement.*;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Pair;
@@ -44,6 +41,8 @@ import org.jdom.Element;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
+
+import static org.fao.geonet.services.thesaurus.AddElement.*;
 
 //=============================================================================
 

@@ -50,11 +50,11 @@ public class Link {
     }
 
     public String getHref() {
-        return href == null ? null : href;
+        return href;
     }
 
     public String getText() {
-        return text == null ? null : text;
+        return text;
     }
 
     public String getTip() {
@@ -73,9 +73,7 @@ public class Link {
         Link link = (Link) o;
 
         if (href != null ? !href.equals(link.href) : link.href != null) return false;
-        if (text != null ? !text.equals(link.text) : link.text != null) return false;
-
-        return true;
+        return text != null ? text.equals(link.text) : link.text == null;
     }
 
     @Override

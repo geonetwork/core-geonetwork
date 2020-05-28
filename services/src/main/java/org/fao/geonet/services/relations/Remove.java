@@ -26,7 +26,6 @@ package org.fao.geonet.services.relations;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.MetadataRelationId;
 import org.fao.geonet.repository.MetadataRelationRepository;

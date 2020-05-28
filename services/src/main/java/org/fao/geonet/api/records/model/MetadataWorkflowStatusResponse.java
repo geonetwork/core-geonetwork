@@ -36,7 +36,9 @@ public class MetadataWorkflowStatusResponse {
     private List<User> reviewers;
     private boolean hasEditPermission;
     private List<StatusValue> status;
-    public MetadataWorkflowStatusResponse() {};
+
+    public MetadataWorkflowStatusResponse() {
+    }
 
     public MetadataWorkflowStatusResponse(MetadataStatus currentStatus,
                                           List<User> reviewers,

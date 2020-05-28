@@ -39,14 +39,11 @@ import java.util.Objects;
 
 /**
  * DTO class for user link information {@link link}.
- *
  */
 public class LinkDto implements Serializable {
 
-    private static final long serialVersionUID = -2111281874868436021L;
-
     public static final SimpleDateFormat ISO_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
-
+    private static final long serialVersionUID = -2111281874868436021L;
     private int id;
     private String url;
     private String featuredType = "";
@@ -55,6 +52,25 @@ public class LinkDto implements Serializable {
     private String creator;
     private String logo;
     private Map<String, String> names = new HashMap<>();
+
+    public static LinkDto from(UserSearch userSearch) {
+        LinkDto dto = new LinkDto();
+
+        dto.setId(userSearch.getId());
+        dto.setUrl(userSearch.getUrl());
+        dto.setLogo(userSearch.getLogo());
+        if (userSearch.getFeaturedType() != null) {
+            dto.setFeaturedType(userSearch.getFeaturedType().asString());
+        }
+        dto.setCreatorId(userSearch.getCreator().getId());
+        dto.setCreator(userSearch.getCreator().getUsername());
+
+        dto.setCreationDate(ISO_DATE_FORMAT.format(userSearch.getCreationDate()));
+
+        userSearch.getLabelTranslations().forEach((key, value) -> dto.addName(key, value));
+
+        return dto;
+    }
 
     public int getId() {
         return id;
@@ -112,7 +128,6 @@ public class LinkDto implements Serializable {
         this.logo = logo;
     }
 
-
     public Map<String, String> getNames() {
         return names;
     }
@@ -135,7 +150,7 @@ public class LinkDto implements Serializable {
         try {
             if (StringUtils.isNotEmpty(this.getFeaturedType()) &&
                 (this.getFeaturedType().length() == 1))
-            userSearch.setFeaturedType(UserSearchFeaturedType.byChar(this.getFeaturedType().charAt(0)));
+                userSearch.setFeaturedType(UserSearchFeaturedType.byChar(this.getFeaturedType().charAt(0)));
         } catch (IllegalArgumentException ex) {
             // Ignore
         }
@@ -156,27 +171,6 @@ public class LinkDto implements Serializable {
 
         return userSearch;
     }
-
-
-    public static LinkDto from(UserSearch userSearch) {
-        LinkDto dto = new LinkDto();
-
-        dto.setId(userSearch.getId());
-        dto.setUrl(userSearch.getUrl());
-        dto.setLogo(userSearch.getLogo());
-        if (userSearch.getFeaturedType() != null) {
-            dto.setFeaturedType(userSearch.getFeaturedType().asString());
-        }
-        dto.setCreatorId(userSearch.getCreator().getId());
-        dto.setCreator(userSearch.getCreator().getUsername());
-
-        dto.setCreationDate(ISO_DATE_FORMAT.format(userSearch.getCreationDate()));
-
-        userSearch.getLabelTranslations().forEach((key, value) -> dto.addName(key, value));
-
-        return dto;
-    }
-
 
     @Override
     public boolean equals(Object o) {

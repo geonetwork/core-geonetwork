@@ -44,8 +44,9 @@ import java.util.List;
  */
 public class RdfSearcher {
     private MetaSearcher searcher;
-    private Element searchRequest;
-    private long _versionToken = -1;
+    private final Element searchRequest;
+    private final long _versionToken = -1;
+    private int numberMatched;
 
     public RdfSearcher(Element params, ServiceContext context) {
         searchRequest = SearchDefaults.getDefaultSearch(context, params);
@@ -85,16 +86,16 @@ public class RdfSearcher {
             // Ignore exception
         }
     }
-    
-    private int numberMatched;
+
     public int getSize() {
         return numberMatched;
     }
-    
+
     /**
      * <p> Gets the Lucene version token. Can be used as ETag. </p>
-     */      
-    public long getVersionToken(){
-    	return _versionToken;
-    };    
+     */
+    public long getVersionToken() {
+        return _versionToken;
+    }
+
 }

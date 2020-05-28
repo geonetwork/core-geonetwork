@@ -23,20 +23,18 @@
 
 package org.fao.geonet.api.regions;
 
-import java.util.Collection;
-import java.util.Collections;
-
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.regions.metadata.MetadataRegionSearchRequest;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.util.GMLParsers;
 import org.geotools.xsd.Parser;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-import jeeves.server.context.ServiceContext;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * A Regions DAO that fetches geometries from a metadata.  The geometry ids are structured as

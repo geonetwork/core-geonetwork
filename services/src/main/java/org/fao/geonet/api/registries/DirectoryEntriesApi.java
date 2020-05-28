@@ -23,15 +23,13 @@
 
 package org.fao.geonet.api.registries;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -53,24 +51,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.server.context.ServiceContext;
-import springfox.documentation.annotations.ApiIgnore;
+import javax.servlet.http.HttpServletRequest;
+import java.nio.file.Path;
+import java.util.*;
 
 @EnableWebMvc
 @Service
@@ -79,25 +65,20 @@ import springfox.documentation.annotations.ApiIgnore;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/registries/entries"
 })
-@Api(value = ApiParams.API_CLASS_REGISTRIES_TAG,
-    tags = ApiParams.API_CLASS_REGISTRIES_TAG,
+@Tag(name = ApiParams.API_CLASS_REGISTRIES_TAG,
     description = ApiParams.API_CLASS_REGISTRIES_OPS)
 public class DirectoryEntriesApi {
 
+    private static final char SEPARATOR = '~';
     @Autowired
     SchemaManager schemaManager;
-
     @Autowired
     IMetadataUtils metadataRepository;
-
     @Autowired
     GeonetworkDataDirectory dataDirectory;
 
-    private static final char SEPARATOR = '~';
-
-    @ApiOperation(value = "Get a directory entry",
-        nickname = "getEntry",
-        notes = "Directory entry (AKA subtemplates) are XML fragments that can be " +
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get a directory entry",
+        description = "Directory entry (AKA subtemplates) are XML fragments that can be " +
             "inserted in metadata records using XLinks. XLinks can be remote or " +
             "local.")
     @RequestMapping(
@@ -108,52 +89,52 @@ public class DirectoryEntriesApi {
         })
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Directory entry."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        @ApiResponse(responseCode = "200", description = "Directory entry."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
     public Element getEntry(
-        @ApiParam(
-            value = "Directory entry UUID.",
+        @Parameter(
+            description = "Directory entry UUID.",
             required = true)
         @PathVariable
             String uuid,
-        @ApiParam(
-            value = "Process",
+        @Parameter(
+            description = "Process",
             required = false
         )
         @RequestParam(
             required = false
         )
             String[] process,
-        @ApiParam(
-            value = "Transformation",
+        @Parameter(
+            description = "Transformation",
             required = false
         )
         @RequestParam(
             required = false
         )
             String transformation,
-        @ApiParam(
-            value = "lang",
+        @Parameter(
+            description = "lang",
             required = false
         )
         @RequestParam(
             name = "lang",
             required = false
         )
-            String [] langs,
-        @ApiParam(
-            value = "schema",
+            String[] langs,
+        @Parameter(
+            description = "schema",
             required = false
         )
         @RequestParam(
             required = false, defaultValue = "iso19139"
         )
             String schema,
-        @ApiIgnore
-                HttpServletRequest request
-        )
+        @Parameter(hidden = true)
+            HttpServletRequest request
+    )
         throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         final AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
@@ -171,7 +152,7 @@ public class DirectoryEntriesApi {
         }
 
         ServiceContext context = ApiUtils.createServiceContext(request);
-        if(langs == null) {
+        if (langs == null) {
             langs = context.getLanguage().split(",");
         }
 
@@ -180,7 +161,7 @@ public class DirectoryEntriesApi {
         // Processing parameters process=xpath~value.
         // xpath must point to an Element or an Attribute.
         if (process != null) {
-            List<String> replaceList = Arrays.asList(process);
+            String[] replaceList = process;
             for (String parameters : replaceList) {
                 int endIndex = parameters.indexOf(SEPARATOR);
                 if (endIndex == -1) {
@@ -215,10 +196,10 @@ public class DirectoryEntriesApi {
         // Multilingual record: Remove all localizedString from the subtemplate for langs that are not in the metadata and set the gco:CharacterString
         // Monolingual record: Remove all localized strings and extract main gco:CharacterString
         List<String> twoCharLangs = new ArrayList<String>();
-        for(String l : langs) {
+        for (String l : langs) {
             twoCharLangs.add("#" + XslUtil.twoCharLangCode(l).toUpperCase());
         }
-        MultilingualSchemaPlugin plugin = (MultilingualSchemaPlugin)schemaManager.getSchema(schema).getSchemaPlugin();
+        MultilingualSchemaPlugin plugin = (MultilingualSchemaPlugin) schemaManager.getSchema(schema).getSchemaPlugin();
         if (plugin != null) {
             plugin.removeTranslationFromElement(tpl, twoCharLangs);
         }

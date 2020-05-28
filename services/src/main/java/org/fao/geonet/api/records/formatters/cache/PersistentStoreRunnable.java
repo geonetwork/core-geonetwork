@@ -24,7 +24,6 @@
 package org.fao.geonet.api.records.formatters.cache;
 
 import com.google.common.annotations.VisibleForTesting;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.utils.Log;

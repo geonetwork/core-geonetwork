@@ -23,20 +23,10 @@
 
 package org.fao.geonet.services.resources;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.ZipUtil;
@@ -44,12 +34,7 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.MetadataResourceVisibility;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
@@ -66,10 +51,19 @@ import org.fao.geonet.util.MailSender;
 import org.fao.geonet.utils.*;
 import org.jdom.Element;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
 
 //=============================================================================
 
@@ -78,7 +72,7 @@ import jeeves.server.context.ServiceContext;
  */
 
 public class DownloadArchive implements Service {
-    private static String FS = File.separator;
+    private static final String FS = File.separator;
     private Path stylePath;
 
     //----------------------------------------------------------------------------
@@ -129,7 +123,7 @@ public class DownloadArchive implements Service {
             try (Store.ResourceHolder resource = store.getResource(context, uuid, MetadataResourceVisibility.PUBLIC, fname, true)) {
                 return BinaryFile.encode(200, resource.getPath(), false).getElement();
             }
-		}
+        }
 
         //--- from here on resource required is private datafile(s)
 
@@ -191,7 +185,7 @@ public class DownloadArchive implements Service {
                 }
 
                 try (Store.ResourceHolder resource = store.getResource(context, uuid, MetadataResourceVisibility.parse(access), fname,
-                                                                       true)) {
+                    true)) {
                     Element fileInfo = new Element("file");
 
                     BinaryFile details = BinaryFile.encode(200, resource.getPath(), false);
@@ -203,7 +197,7 @@ public class DownloadArchive implements Service {
                         fileInfo.setAttribute("datemodified", "unknown");
                         fileInfo.setAttribute("name", remoteURL);
                         notifyAndLog(doNotify, id, info.getUuid(), access, username,
-                                remoteURL + " (local config: " + resource.getPath() + ")", context);
+                            remoteURL + " (local config: " + resource.getPath() + ")", context);
                         fname = details.getElement().getAttributeValue("remotefile");
                     } else {
                         if (context.isDebugEnabled())
@@ -280,8 +274,7 @@ public class DownloadArchive implements Service {
     //----------------------------------------------------------------------------
 
     private void includeLicenseFiles(ServiceContext context,
-                                     FileSystem zipFs, Element root) throws Exception,
-        MalformedURLException, FileNotFoundException, IOException {
+                                     FileSystem zipFs, Element root) throws Exception {
         Element license = Xml.selectElement(root, "metadata/*/licenseLink");
         if (license != null) {
             String licenseURL = license.getText();

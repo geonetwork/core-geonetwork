@@ -23,16 +23,15 @@
 
 package org.fao.geonet.api.users;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.users.model.UserRegisterDto;
 import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
@@ -45,23 +44,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
-
-import javax.servlet.http.HttpServletRequest;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.server.context.ServiceContext;
 
 @EnableWebMvc
 @Service
@@ -70,17 +59,15 @@ import jeeves.server.context.ServiceContext;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/user"
 })
-@Api(value = "users",
-    tags = "users",
+@Tag(name = "users",
     description = "User operations")
 public class RegisterApi {
 
     @Autowired
     LanguageUtils languageUtils;
 
-    @ApiOperation(value = "Create user account",
-        nickname = "registerUser",
-        notes = "User is created with a registered user profile. username field is ignored and the email is used as " +
+    @io.swagger.v3.oas.annotations.Operation(summary = "Create user account",
+        description = "User is created with a registered user profile. username field is ignored and the email is used as " +
             "username. Password is sent by email. Catalog administrator is also notified.")
     @RequestMapping(
         value = "/actions/register",
@@ -89,7 +76,7 @@ public class RegisterApi {
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<String> registerUser(
-        @ApiParam(value = "User details",
+        @Parameter(description = "User details",
             required = true)
         @RequestBody
             UserRegisterDto userRegisterDto,

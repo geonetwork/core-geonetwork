@@ -23,21 +23,7 @@
 
 package org.fao.geonet.api.records.formatters;
 
-import static org.fao.geonet.api.records.formatters.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Set;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
+import com.google.common.collect.Lists;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
@@ -50,7 +36,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.common.collect.Lists;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.IOException;
+import java.io.Serializable;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Set;
+
+import static org.fao.geonet.api.records.formatters.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
 
 /**
  * List all formatters
@@ -150,7 +148,7 @@ public class ListFormatters extends AbstractFormatService {
         private static final long serialVersionUID = 8674269207113596010L;
 
         @XmlElement(name = "formatter")
-        private List<FormatterData> formatters = Lists.newArrayList();
+        private final List<FormatterData> formatters = Lists.newArrayList();
 
         public void add(FormatterData formatterData) {
             this.formatters.add(formatterData);

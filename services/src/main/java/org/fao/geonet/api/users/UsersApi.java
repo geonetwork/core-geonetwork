@@ -23,14 +23,11 @@
 
 package org.fao.geonet.api.users;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Authorization;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -42,19 +39,12 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.UserSavedSelectionRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.util.PasswordUtil;
-import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
@@ -63,10 +53,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -79,8 +67,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/users"
 })
-@Api(value = "users",
-    tags = "users",
+@Tag(name = "users",
     description = "User operations")
 @Controller("users")
 public class UsersApi {
@@ -101,10 +88,9 @@ public class UsersApi {
     DataManager dataManager;
 
 
-    @ApiOperation(
-        value = "Get users",
-        notes = "",
-        nickname = "getUsers")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get users",
+        description = "")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
@@ -112,7 +98,7 @@ public class UsersApi {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public List<User> getUsers(
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
         UserSession session = ApiUtils.getUserSession(httpSession);
@@ -143,10 +129,9 @@ public class UsersApi {
     }
 
 
-    @ApiOperation(
-        value = "Get user",
-        notes = "",
-        nickname = "getUser")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get user",
+        description = "")
     @RequestMapping(
         value = "/{userIdentifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -155,12 +140,12 @@ public class UsersApi {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public User getUser(
-        @ApiParam(
-            value = "User identifier."
+        @Parameter(
+            description = "User identifier."
         )
         @PathVariable
             Integer userIdentifier,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession
 
     ) throws Exception {
@@ -194,10 +179,9 @@ public class UsersApi {
 
     }
 
-    @ApiOperation(
-        value = "Delete a user",
-        notes = "Deletes a catalog user by identifier.",
-        nickname = "deleteUser")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Delete a user",
+        description = "Deletes a catalog user by identifier.")
     @RequestMapping(value = "/{userIdentifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.DELETE)
@@ -205,14 +189,14 @@ public class UsersApi {
     @PreAuthorize("hasRole('UserAdmin') or hasRole('Administrator')")
     @ResponseBody
     public ResponseEntity<String> deleteUser(
-        @ApiParam(
-            value = "User identifier."
+        @Parameter(
+            description = "User identifier."
         )
         @PathVariable
             Integer userIdentifier,
-        @ApiIgnore
+        @Parameter(hidden = true)
             ServletRequest request,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
         UserSession session = ApiUtils.getUserSession(httpSession);
@@ -244,7 +228,7 @@ public class UsersApi {
         // this is the case
         if (dataManager.isUserMetadataOwner(userIdentifier)) {
             IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
-            final long numUserRecords =  metadataRepository.count(MetadataSpecs.isOwnedByUser(userIdentifier));
+            final long numUserRecords = metadataRepository.count(MetadataSpecs.isOwnedByUser(userIdentifier));
             throw new IllegalArgumentException(
                 String.format(
                     "Cannot delete a user that is also metadata owner of %d record(s) (can be records, templates, subtemplates). Change owner of those records or remove them first.",
@@ -270,13 +254,13 @@ public class UsersApi {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @ApiOperation(
-        value = "Check if a user property already exist",
-        notes = "",
-        authorizations = {
-            @Authorization(value = "basicAuth")
-        },
-        nickname = "checkUserPropertyExist")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Check if a user property already exist",
+        description = ""
+        //       authorizations = {
+        //           @Authorization(value = "basicAuth")
+        //      })
+    )
     @RequestMapping(
         value = "/properties/{property}",
         method = RequestMethod.GET
@@ -284,18 +268,18 @@ public class UsersApi {
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasRole('UserAdmin')")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Property does not exist."),
-        @ApiResponse(code = 404, message = "A property with that value already exist."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "200", description = "Property does not exist."),
+        @ApiResponse(responseCode = "404", description = "A property with that value already exist."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     public ResponseEntity<HttpStatus> checkUserPropertyExist(
-        @ApiParam(
-            value = "The user property to check"
+        @Parameter(
+            description = "The user property to check"
         )
         @PathVariable
             String property,
-        @ApiParam(
-            value = "The value to search"
+        @Parameter(
+            description = "The value to search"
         )
         @RequestParam
             String exist) {
@@ -314,10 +298,9 @@ public class UsersApi {
     }
 
 
-    @ApiOperation(
-        value = "Creates a user",
-        notes = "Creates a catalog user.",
-        nickname = "createUser")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Creates a user",
+        description = "Creates a catalog user.")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT)
@@ -325,14 +308,14 @@ public class UsersApi {
     @PreAuthorize("hasRole('UserAdmin') or hasRole('Administrator')")
     @ResponseBody
     public ResponseEntity<String> createUser(
-        @ApiParam(
+        @Parameter(
             name = "user"
         )
         @RequestBody
             UserDto userDto,
-        @ApiIgnore
+        @Parameter(hidden = true)
             ServletRequest request,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
         Profile profile = Profile.findProfileIgnoreCase(userDto.getProfile());
@@ -383,10 +366,9 @@ public class UsersApi {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @ApiOperation(
-        value = "Update a user",
-        notes = "Updates a catalog user.",
-        nickname = "updateUser")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Update a user",
+        description = "Updates a catalog user.")
     @RequestMapping(value = "/{userIdentifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT)
@@ -394,19 +376,19 @@ public class UsersApi {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public ResponseEntity<String> updateUser(
-        @ApiParam(
-            value = "User identifier."
+        @Parameter(
+            description = "User identifier."
         )
         @PathVariable
             Integer userIdentifier,
-        @ApiParam(
+        @Parameter(
             name = "user"
         )
         @RequestBody
             UserDto userDto,
-        @ApiIgnore
+        @Parameter(hidden = true)
             ServletRequest request,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
 
@@ -484,10 +466,9 @@ public class UsersApi {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @ApiOperation(
-        value = "Resets user password",
-        notes = "Resets the user password.",
-        nickname = "resetUserPassword")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Resets user password",
+        description = "Resets the user password.")
     @RequestMapping(value = "/{userIdentifier}/actions/forget-password",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.POST)
@@ -495,22 +476,22 @@ public class UsersApi {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public ResponseEntity<String> resetUserPassword(
-        @ApiParam(
-            value = "User identifier."
+        @Parameter(
+            description = "User identifier."
         )
         @PathVariable
             Integer userIdentifier,
-        @ApiParam(
-            value = "Password to change."
+        @Parameter(
+            description = "Password to change."
         )
         @RequestParam(value = Params.PASSWORD) String password,
-        @ApiParam(
-            value = "Password to change (repeat)."
+        @Parameter(
+            description = "Password to change (repeat)."
         )
         @RequestParam(value = Params.PASSWORD + "2") String password2,
-        @ApiIgnore
+        @Parameter(hidden = true)
             ServletRequest request,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
 
@@ -540,10 +521,9 @@ public class UsersApi {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @ApiOperation(
-        value = "Retrieve user groups",
-        notes = "Retrieve the user groups.",
-        nickname = "retrieveUserGroups")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Retrieve user groups",
+        description = "Retrieve the user groups.")
     @RequestMapping(value = "/{userIdentifier}/groups",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET
@@ -552,14 +532,14 @@ public class UsersApi {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public List<UserGroup> retrieveUserGroups(
-        @ApiParam(
-            value = "User identifier."
+        @Parameter(
+            description = "User identifier."
         )
         @PathVariable
             Integer userIdentifier,
-        @ApiIgnore
+        @Parameter(hidden = true)
             ServletRequest request,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
         UserSession session = ApiUtils.getUserSession(httpSession);
@@ -622,7 +602,7 @@ public class UsersApi {
     }
 
     private List<Integer> getGroupIds(int userId) {
-        return  userGroupRepository.findGroupIds(hasUserId(userId));
+        return userGroupRepository.findGroupIds(hasUserId(userId));
     }
 
     private void setUserGroups(final User user, List<GroupElem> userGroups)
@@ -635,9 +615,7 @@ public class UsersApi {
         Set<String> listOfAddedProfiles = new HashSet<String>();
         for (UserGroup ug : all) {
             String key = ug.getProfile().name() + ug.getGroup().getId();
-            if (!listOfAddedProfiles.contains(key)) {
-                listOfAddedProfiles.add(key);
-            }
+            listOfAddedProfiles.add(key);
         }
 
         // We start removing all old usergroup objects. We will remove the
@@ -793,8 +771,8 @@ public class UsersApi {
 
 class GroupElem {
 
-    private String profile;
-    private Integer id;
+    private final String profile;
+    private final Integer id;
 
     public GroupElem(String profile, Integer id) {
         this.id = id;

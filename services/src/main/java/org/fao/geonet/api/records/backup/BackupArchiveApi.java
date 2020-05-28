@@ -23,10 +23,9 @@
 
 package org.fao.geonet.api.records.backup;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.ApplicationContextHolder;
@@ -48,7 +47,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -59,13 +61,12 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.quartz.TriggerBuilder.newTrigger;
 
 @RequestMapping(value = {
-        "/{portal}/api/records/backups",
-        "/{portal}/api/" + API.VERSION_0_1 +
-                "/records/backups"
+    "/{portal}/api/records/backups",
+    "/{portal}/api/" + API.VERSION_0_1 +
+        "/records/backups"
 })
-@Api(value = API_CLASS_RECORD_TAG,
-        tags = API_CLASS_RECORD_TAG,
-        description = API_CLASS_RECORD_OPS)
+@Tag(name = API_CLASS_RECORD_TAG,
+    description = API_CLASS_RECORD_OPS)
 
 @Controller
 public class BackupArchiveApi {
@@ -73,16 +74,15 @@ public class BackupArchiveApi {
     @Autowired
     ArchiveAllMetadataJob archiveAllMetadataJob;
 
-    @ApiOperation(value = "Download MEF backup archive",
-            notes = "The backup contains all metadata not harvested including templates.",
-            nickname = "downloadBackup")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Download MEF backup archive",
+        description = "The backup contains all metadata not harvested including templates.")
     @PreAuthorize("hasRole('Administrator')")
     @RequestMapping(
-            value="/latest",
-            method = RequestMethod.GET,
-            produces = "application/zip")
+        value = "/latest",
+        method = RequestMethod.GET,
+        produces = "application/zip")
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "Resource not found.")
+        @ApiResponse(responseCode = "404", description = "Resource not found.")
     })
     @ResponseBody
     public ResponseEntity<FileSystemResource> exec(HttpServletRequest request) throws Exception {
@@ -93,7 +93,7 @@ public class BackupArchiveApi {
         ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
 
         Log.info(ArchiveAllMetadataJob.BACKUP_LOG, "User " + context.getUserSession().getUsername() + " from IP: " + context
-                .getIpAddress() + " has started to download backup archive");
+            .getIpAddress() + " has started to download backup archive");
 
         File backupDir = dataDirectory.getBackupDir().resolve(ArchiveAllMetadataJob.BACKUP_DIR).toFile();
         if (!backupDir.exists()) {
@@ -117,17 +117,16 @@ public class BackupArchiveApi {
         return response;
     }
 
-    @ApiOperation(value = "Trigger MEF backup archive",
-            notes = "The backup contains all metadata not harvested including templates.",
-            nickname = "triggerBackup")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Trigger MEF backup archive",
+        description = "The backup contains all metadata not harvested including templates.")
     @RequestMapping(
-            method = RequestMethod.PUT,
-            produces = MediaType.APPLICATION_JSON_VALUE
+        method = RequestMethod.PUT,
+        produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PreAuthorize("hasRole('Administrator')")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Return succeed message.")
+        @ApiResponse(responseCode = "200", description = "Return succeed message.")
     })
     @ResponseBody
     public String trigger(HttpServletRequest request) throws Exception {

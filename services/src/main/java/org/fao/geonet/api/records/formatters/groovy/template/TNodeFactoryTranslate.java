@@ -31,11 +31,11 @@ import java.io.IOException;
 
 /**
  * Creates fmt-translate nodes.
- *
+ * <p>
  * A translate node take the text content element and find a translation.  depending on the value of
  * the fmt-translate attribute the translation is resolved using the {@link
  * org.fao.geonet.api.records.formatters.groovy.Functions} translate methods.
- *
+ * <p>
  * Examples:
  * <pre><code>
  * &lt;div fmt-translate="">testString&lt;/div>

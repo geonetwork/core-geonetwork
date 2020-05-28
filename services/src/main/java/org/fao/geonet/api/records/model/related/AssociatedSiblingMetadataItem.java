@@ -10,7 +10,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "associatedSiblingMetadataItem")
 public class AssociatedSiblingMetadataItem
-        extends RelatedMetadataItem {
+    extends RelatedMetadataItem {
 
     @XmlElement(required = false)
     protected List<String> agg_isTemporalStatOf;

@@ -25,12 +25,10 @@ package org.fao.geonet.api.groups;
 
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Authorization;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
@@ -45,22 +43,9 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.attachments.AttachmentsApi;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Group_;
-import org.fao.geonet.domain.Language;
-import org.fao.geonet.domain.OperationAllowedId_;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.domain.UserGroupId_;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.LanguageRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -77,15 +62,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -96,12 +74,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.springframework.data.jpa.domain.Specifications.where;
 
@@ -110,11 +83,17 @@ import static org.springframework.data.jpa.domain.Specifications.where;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/groups"
 })
-@Api(value = "groups",
-    tags = "groups",
+@Tag(name = "groups",
     description = "Groups operations")
 @Controller("groups")
 public class GroupsApi {
+    /**
+     * Logger name.
+     */
+    public static final String LOGGER = Geonet.GEONETWORK + ".api.groups";
+    public static final String API_PARAM_GROUP_DETAILS = "Group details";
+    public static final String API_PARAM_GROUP_IDENTIFIER = "Group identifier";
+    public static final String MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND = "Group with identifier '%d' not found";
     /**
      * API logo note.
      */
@@ -123,11 +102,6 @@ public class GroupsApi {
         + "the header date. If it hasn't been modified returns an empty 304 Not"
         + " Modified response. If modified returns the image. If the group has "
         + "no logo then returns a transparent 1x1 px PNG image.";
-
-    /**
-     * Logger name.
-     */
-    public static final String LOGGER = Geonet.GEONETWORK + ".api.groups";
     /**
      * Six hours in seconds.
      */
@@ -141,12 +115,6 @@ public class GroupsApi {
      * Transparent 1x1 px PNG.
      */
     private static final byte[] TRANSPARENT_1_X_1_PNG = org.apache.commons.codec.binary.Base64.decodeBase64(TRANSPARENT_1_X_1_PNG_BASE64);
-
-
-    public static final String API_PARAM_GROUP_DETAILS = "Group details";
-    public static final String API_PARAM_GROUP_IDENTIFIER = "Group identifier";
-    public static final String MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND = "Group with identifier '%d' not found";
-
     /**
      * Message source.
      */
@@ -168,6 +136,26 @@ public class GroupsApi {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private OperationAllowedRepository operationAllowedRepo;
+    @Autowired
+    private UserGroupRepository userGroupRepository;
+    @Autowired
+    private DataManager dm;
+
+    private static Resources.ResourceHolder getImage(Resources resources, ServiceContext serviceContext, Group group) throws IOException {
+        final Path logosDir = resources.locateLogosDir(serviceContext);
+        final Path harvesterLogosDir = resources.locateHarvesterLogosDir(serviceContext);
+        final String logoUUID = group.getLogo();
+        Resources.ResourceHolder image = null;
+        if (StringUtils.isNotBlank(logoUUID) && !logoUUID.startsWith("http://") && !logoUUID.startsWith("https//")) {
+            image = resources.getImage(serviceContext, logoUUID, logosDir);
+            if (image == null) {
+                image = resources.getImage(serviceContext, logoUUID, harvesterLogosDir);
+            }
+        }
+        return image;
+    }
 
     /**
      * Writes the group logo image to the response. If no image is found it
@@ -181,14 +169,13 @@ public class GroupsApi {
      * @param response   the servlet response.
      * @throws ResourceNotFoundException if no group exists with groupId.
      */
-    @ApiOperation(value = "Get the group logo image.",
-        nickname = "get",
-        notes = API_GET_LOGO_NOTE
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get the group logo image.",
+        description = API_GET_LOGO_NOTE
     )
     @RequestMapping(value = "/{groupId}/logo", method = RequestMethod.GET)
     public void getGroupLogo(
-        @ApiParam(value = "Group identifier", required = true) @PathVariable(value = "groupId") final Integer groupId,
-        @ApiIgnore final WebRequest webRequest,
+        @Parameter(description = "Group identifier", required = true) @PathVariable(value = "groupId") final Integer groupId,
+        @Parameter(hidden = true) final WebRequest webRequest,
         HttpServletRequest request,
         HttpServletResponse response) throws ResourceNotFoundException {
 
@@ -209,7 +196,7 @@ public class GroupsApi {
             final Resources resources = context.getBean(Resources.class);
             final String logoUUID = group.getLogo();
             if (StringUtils.isNotBlank(logoUUID) && !logoUUID.startsWith("http://") && !logoUUID.startsWith("https//")) {
-                try (Resources.ResourceHolder image = getImage(resources, serviceContext, group)){
+                try (Resources.ResourceHolder image = getImage(resources, serviceContext, group)) {
                     if (image != null) {
                         FileTime lastModifiedTime = image.getLastModifiedTime();
                         response.setDateHeader("Expires", System.currentTimeMillis() + SIX_HOURS * 1000L);
@@ -243,52 +230,37 @@ public class GroupsApi {
         }
     }
 
-    private static Resources.ResourceHolder getImage(Resources resources, ServiceContext serviceContext, Group group) throws IOException {
-        final Path logosDir = resources.locateLogosDir(serviceContext);
-        final Path harvesterLogosDir = resources.locateHarvesterLogosDir(serviceContext);
-        final String logoUUID = group.getLogo();
-        Resources.ResourceHolder image = null;
-        if (StringUtils.isNotBlank(logoUUID) && !logoUUID.startsWith("http://") && !logoUUID.startsWith("https//")) {
-            image = resources.getImage(serviceContext, logoUUID, logosDir);
-            if (image == null) {
-                image = resources.getImage(serviceContext, logoUUID, harvesterLogosDir);
-            }
-        }
-        return image;
-    }
-
-    @ApiOperation(
-        value = "Get groups",
-        notes = "The catalog contains one or more groups. By default, there is 3 reserved groups " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get groups",
+        description = "The catalog contains one or more groups. By default, there is 3 reserved groups " +
             "(Internet, Intranet, Guest) and a sample group.<br/>" +
             "This service returns all catalog groups when not authenticated or " +
             "when current is user is an administrator. The list can contains or not " +
             "reserved groups depending on the parameters.<br/>" +
             "When authenticated, return user groups " +
-            "optionally filtered on a specific user profile.",
-        nickname = "getGroups")
+            "optionally filtered on a specific user profile.")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<Group> getGroups(
-        @ApiParam(
-            value = "Including Internet, Intranet, Guest groups or not"
+        @Parameter(
+            description = "Including Internet, Intranet, Guest groups or not"
         )
         @RequestParam(
             required = false,
             defaultValue = "false"
         )
             boolean withReservedGroup,
-        @ApiParam(
-            value = "For a specific profile"
+        @Parameter(
+            description = "For a specific profile"
         )
         @RequestParam(
             required = false
         )
             String profile,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
         UserSession session = ApiUtils.getUserSession(httpSession);
@@ -307,13 +279,13 @@ public class GroupsApi {
         }
     }
 
-    @ApiOperation(
-        value = "Add a group",
-        notes = "Return the identifier of the group created.",
-        authorizations = {
-            @Authorization(value = "basicAuth")
-        },
-        nickname = "addGroup")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Add a group",
+        description = "Return the identifier of the group created."
+        //       authorizations = {
+        //           @Authorization(value = "basicAuth")
+        //      })
+    )
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT
@@ -321,14 +293,14 @@ public class GroupsApi {
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasRole('UserAdmin')")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Group created."),
-        @ApiResponse(code = 400, message = "Group with that id or name already exist."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "201", description = "Group created."),
+        @ApiResponse(responseCode = "400", description = "Group with that id or name already exist."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody
     public ResponseEntity<Integer> addGroup(
-        @ApiParam(
-            value = API_PARAM_GROUP_DETAILS
+        @Parameter(
+            description = API_PARAM_GROUP_DETAILS
         )
         @RequestBody
             Group group
@@ -371,23 +343,21 @@ public class GroupsApi {
         return new ResponseEntity<>(group.getId(), HttpStatus.CREATED);
     }
 
-
-    @ApiOperation(
-        value = "Get group",
-        notes = "Return the requested group details.",
-        nickname = "getGroup")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get group",
+        description = "Return the requested group details.")
     @RequestMapping(
         value = "/{groupIdentifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
     @ResponseBody
     public Group getGroup(
-        @ApiParam(
-            value = API_PARAM_GROUP_IDENTIFIER
+        @Parameter(
+            description = API_PARAM_GROUP_IDENTIFIER
         )
         @PathVariable
             Integer groupIdentifier
@@ -402,14 +372,13 @@ public class GroupsApi {
         return group;
     }
 
-
-    @ApiOperation(
-        value = "Get group users",
-        notes = "",
-        authorizations = {
-            @Authorization(value = "basicAuth")
-        },
-        nickname = "getGroupUsers")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get group users",
+        description = ""
+        //       authorizations = {
+        //           @Authorization(value = "basicAuth")
+        //      })
+    )
     @RequestMapping(
         value = "/{groupIdentifier}/users",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -417,14 +386,14 @@ public class GroupsApi {
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasRole('UserAdmin')")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "List of users in that group."),
-        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "200", description = "List of users in that group."),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody
     public List<User> getGroupUsers(
-        @ApiParam(
-            value = API_PARAM_GROUP_IDENTIFIER
+        @Parameter(
+            description = API_PARAM_GROUP_IDENTIFIER
         )
         @PathVariable
             Integer groupIdentifier
@@ -440,14 +409,13 @@ public class GroupsApi {
             UserGroupSpecs.hasGroupId(groupIdentifier));
     }
 
-
-    @ApiOperation(
-        value = "Update a group",
-        notes = "",
-        authorizations = {
-            @Authorization(value = "basicAuth")
-        },
-        nickname = "updateGroup")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Update a group",
+        description = ""
+        //       authorizations = {
+        //           @Authorization(value = "basicAuth")
+        //      })
+    )
     @RequestMapping(
         value = "/{groupIdentifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -456,19 +424,19 @@ public class GroupsApi {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('UserAdmin')")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Group updated."),
-        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "204", description = "Group updated."),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody
     public void updateGroup(
-        @ApiParam(
-            value = API_PARAM_GROUP_IDENTIFIER
+        @Parameter(
+            description = API_PARAM_GROUP_IDENTIFIER
         )
         @PathVariable
             Integer groupIdentifier,
-        @ApiParam(
-            value = API_PARAM_GROUP_DETAILS
+        @Parameter(
+            description = API_PARAM_GROUP_DETAILS
         )
         @RequestBody
             Group group
@@ -488,46 +456,37 @@ public class GroupsApi {
         }
     }
 
-    @Autowired
-    private OperationAllowedRepository operationAllowedRepo;
-
-    @Autowired
-    private UserGroupRepository userGroupRepository;
-
-    @Autowired
-    private DataManager dm;
-
-    @ApiOperation(
-        value = "Remove a group",
-        notes = "Remove a group by first removing sharing settings, link to users and " +
-            "finally reindex all affected records.",
-        authorizations = {
-            @Authorization(value = "basicAuth")
-        },
-        nickname = "deleteGroup")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Remove a group",
+        description = "Remove a group by first removing sharing settings, link to users and " +
+            "finally reindex all affected records."
+        //       authorizations = {
+        //           @Authorization(value = "basicAuth")
+        //      })
+    )
     @RequestMapping(value = "/{groupIdentifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('Administrator')")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Group removed."),
-        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "204", description = "Group removed."),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody
     public void deleteGroup(
-        @ApiParam(
-            value = "Group identifier."
+        @Parameter(
+            description = "Group identifier."
         )
         @PathVariable
             Integer groupIdentifier,
-        @ApiParam(
-            value = "Force removal even if records are assigned to that group."
+        @Parameter(
+            description = "Force removal even if records are assigned to that group."
         )
         @RequestParam(defaultValue = "false")
             boolean force,
-        @ApiIgnore
+        @Parameter(hidden = true)
             ServletRequest request
     ) throws Exception {
         Group group = groupRepository.findOne(groupIdentifier);

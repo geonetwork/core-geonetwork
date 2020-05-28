@@ -23,12 +23,10 @@
 
 package org.fao.geonet.api.site;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Authorization;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -49,19 +47,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -72,13 +64,16 @@ import java.util.stream.Collectors;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/logos"
 })
-@Api(value = "logos",
-    tags = "logos",
+@Tag(name = "logos",
     description = "Logos operations")
 @Controller("siteLogos")
 public class LogosApi {
-    private static final String iconExt[] = {".gif", ".png", ".jpg", ".jpeg"};
-    private DirectoryStream.Filter<Path> iconFilter = new DirectoryStream.Filter<Path>() {
+    private static final String[] iconExt = {".gif", ".png", ".jpg", ".jpeg"};
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
+    @Autowired
+    GroupRepository groupRepository;
+    private final DirectoryStream.Filter<Path> iconFilter = new DirectoryStream.Filter<Path>() {
         @Override
         public boolean accept(Path file) {
             if (file == null || (Files.exists(file) && !Files.isRegularFile(file)))
@@ -93,9 +88,9 @@ public class LogosApi {
         }
     };
 
-    @ApiOperation(
-        value = "Get all logos",
-        notes = "Logos are used for the catalog, the groups logos, and harvester icons. " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get all logos",
+        description = "Logos are used for the catalog, the groups logos, and harvester icons. " +
             "Logos are stored in the data directory in " +
             "<dataDirectory>/resources/images/harvesting.<br/> " +
             "Records are attached to a source. A source can be the local catalog " +
@@ -103,8 +98,7 @@ public class LogosApi {
             "in the images/logos folder with the source UUID as filename. For some " +
             "sources the logo can be automatically retrieved (eg. when harvesting GeoNetwork " +
             "catalogs). For others, the logo is usually manually defined when configuring the " +
-            "harvester.",
-        nickname = "getLogos")
+            "harvester.")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
@@ -125,29 +119,29 @@ public class LogosApi {
         return iconsList;
     }
 
-    @ApiOperation(
-        value = "Add a logo",
-        notes = "",
-        authorizations = {
-            @Authorization(value = "basicAuth")
-        },
-        nickname = "addLogo")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Add a logo",
+        description = ""
+        //       authorizations = {
+        //           @Authorization(value = "basicAuth")
+        //      })
+    )
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.POST)
     @PreAuthorize("hasRole('UserAdmin')")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Logo added."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "201", description = "Logo added."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity addLogo(
-        @ApiParam(value = "The logo image to upload")
+        @Parameter(description = "The logo image to upload")
         @RequestParam("file")
             MultipartFile[] file,
-        @ApiParam(
-            value = "Overwrite if exists",
+        @Parameter(
+            description = "Overwrite if exists",
             required = false
         )
         @RequestParam(
@@ -155,7 +149,7 @@ public class LogosApi {
             required = false
         )
             boolean overwrite,
-            HttpServletRequest request
+        HttpServletRequest request
     ) throws Exception {
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final Resources resources = appContext.getBean(Resources.class);
@@ -186,19 +180,13 @@ public class LogosApi {
         }
     }
 
-    @Autowired
-    GeonetworkDataDirectory dataDirectory;
-
-    @Autowired
-    GroupRepository groupRepository;
-
-    @ApiOperation(
-        value = "Remove a logo",
-        notes = "",
-        authorizations = {
-            @Authorization(value = "basicAuth")
-        },
-        nickname = "deleteLogo")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Remove a logo",
+        description = ""
+        //       authorizations = {
+        //           @Authorization(value = "basicAuth")
+        //      })
+    )
     @RequestMapping(
         path = "/{file:.+}",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -206,15 +194,15 @@ public class LogosApi {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('UserAdmin')")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Logo removed."),
-        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "204", description = "Logo removed."),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody
     public void deleteLogo(
-        @ApiParam(value = "The logo filename to delete")
+        @Parameter(description = "The logo filename to delete")
         @PathVariable
-        String file,
+            String file,
         HttpServletRequest request
     ) throws Exception {
         checkFileName(file);
@@ -225,7 +213,7 @@ public class LogosApi {
         final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         final Path nodeLogoDirectory = resources.locateHarvesterLogosDirSMVC(appContext);
 
-        try (Resources.ResourceHolder image = resources.getImage(serviceContext, file, nodeLogoDirectory)){
+        try (Resources.ResourceHolder image = resources.getImage(serviceContext, file, nodeLogoDirectory)) {
             if (image != null) {
                 final List<Group> groups = groupRepository.findByLogo(file);
                 if (groups != null && groups.size() > 0) {

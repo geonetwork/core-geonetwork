@@ -66,9 +66,8 @@ import static java.lang.Math.sqrt;
 
 public class MapRenderer {
 
-    private final ServiceContext context;
-
     private static final double WGS_DIAG = sqrt(pow(360, 2) + pow(180, 2));
+    private final ServiceContext context;
 
     public MapRenderer(ServiceContext context) {
         this.context = context;

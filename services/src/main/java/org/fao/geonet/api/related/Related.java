@@ -23,14 +23,12 @@
 
 package org.fao.geonet.api.related;
 
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -50,27 +48,21 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
+import javax.servlet.http.HttpServletRequest;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 @RequestMapping(value = {
     "/{portal}/api/related",
     "/{portal}/api/" + API.VERSION_0_1 +
         "/related"
 })
-@Api(value = "related",
-    tags = "related",
+@Tag(name = "related",
     description = "Related records")
 @Controller("related")
 @ReadWriteController
@@ -78,20 +70,17 @@ public class Related implements ApplicationContextAware {
 
     @Autowired
     LanguageUtils languageUtils;
-
-    private ApplicationContext context;
-
     @Autowired
     GeonetworkDataDirectory dataDirectory;
+    private ApplicationContext context;
 
     public synchronized void setApplicationContext(ApplicationContext context) {
         this.context = context;
     }
 
-    @ApiOperation(
-        value = "Get record related resources for all requested metadatas",
-        nickname = "getAssociated",
-        notes = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get record related resources for all requested metadatas",
+        description = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
             "to all requested records.<br/>" +
             "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
     @RequestMapping(value = "",
@@ -102,20 +91,20 @@ public class Related implements ApplicationContextAware {
         })
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Return the associated resources."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        @ApiResponse(responseCode = "200", description = "Return the associated resources."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
     public Map<String, RelatedResponse> getRelated(
-        @ApiParam(value = "Type of related resource. If none, all resources are returned.",
+        @Parameter(description = "Type of related resource. If none, all resources are returned.",
             required = false
         )
-        @RequestParam(defaultValue = "", name="type")
+        @RequestParam(defaultValue = "", name = "type")
             RelatedItemType[] types,
-        @ApiParam(value = "Uuids of the metadatas you request the relations from.",
+        @Parameter(description = "Uuids of the metadatas you request the relations from.",
             required = false
         )
-        @RequestParam(defaultValue = "",name="uuid")
+        @RequestParam(defaultValue = "", name = "uuid")
             String[] uuids,
         HttpServletRequest request) throws Exception {
 
@@ -126,8 +115,8 @@ public class Related implements ApplicationContextAware {
         AbstractMetadata md;
         Map<String, RelatedResponse> res = new HashMap<String, RelatedResponse>();
 
-        for(String uuid : uuids) {
-            try{
+        for (String uuid : uuids) {
+            try {
                 md = ApiUtils.canViewRecord(uuid, request);
                 Element raw = new Element("root").addContent(Arrays.asList(
                     new Element("gui").addContent(Arrays.asList(

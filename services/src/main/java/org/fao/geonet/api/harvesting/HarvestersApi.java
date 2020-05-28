@@ -23,20 +23,18 @@
 
 package org.fao.geonet.api.harvesting;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NoResultsFoundException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.DataManager;
@@ -50,63 +48,48 @@ import org.jdom.Element;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Authorization;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequestMapping(value = {
     "/{portal}/api/harvesters",
     "/{portal}/api/" + API.VERSION_0_1 +
         "/harvesters"
 })
-@Api(value = "harvesters",
-    tags = "harvesters",
+@Tag(name = "harvesters",
     description = "Harvester operations")
 @Controller("harvesters")
 public class HarvestersApi {
 
     @Autowired
+    HarvestHistoryRepository historyRepository;
+    @Autowired
     private HarvestManager harvestManager;
-
     @Autowired
     private SourceRepository sourceRepository;
-
     @Autowired
     private IMetadataUtils metadataRepository;
-
     @Autowired
     private IMetadataManager metadataManager;
-
     @Autowired
     private DataManager dataManager;
 
-    @Autowired
-    HarvestHistoryRepository historyRepository;
-
-    @ApiOperation(
-        value = "Assign harvester records to a new source",
-        notes = "",
-        authorizations = {
-            @Authorization(value = "basicAuth")
-        },
-        nickname = "assignHarvestedRecordToSource")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Assign harvester records to a new source",
+        description = ""
+//        authorizations = {
+//            @Authorization(value = "basicAuth")
+//        })
+    )
     @RequestMapping(
         value = "/{harvesterUuid}/assign",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -115,19 +98,19 @@ public class HarvestersApi {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('UserAdmin')")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Harvester records transfered to new source."),
-        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "204", description = "Harvester records transfered to new source."),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody
     public HttpEntity<HttpStatus> assignHarvestedRecordToSource(
-        @ApiParam(
-            value = "The harvester UUID"
+        @Parameter(
+            description = "The harvester UUID"
         )
         @PathVariable
             String harvesterUuid,
-        @ApiParam(
-            value = "The target source UUID"
+        @Parameter(
+            description = "The target source UUID"
         )
         @RequestParam
             String source) throws Exception {
@@ -189,14 +172,13 @@ public class HarvestersApi {
     }
 
 
-
-    @ApiOperation(
-        value = "Check if a harvester name or host already exist",
-        notes = "",
-        authorizations = {
-            @Authorization(value = "basicAuth")
-        },
-        nickname = "checkHarvesterPropertyExist")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Check if a harvester name or host already exist",
+        description = ""
+        //       authorizations = {
+        //           @Authorization(value = "basicAuth")
+        //      })
+    )
     @RequestMapping(
         value = "/properties/{property}",
         method = RequestMethod.GET
@@ -204,18 +186,18 @@ public class HarvestersApi {
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasRole('UserAdmin')")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Property does not exist."),
-        @ApiResponse(code = 404, message = "A property with that value already exist."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "200", description = "Property does not exist."),
+        @ApiResponse(responseCode = "404", description = "A property with that value already exist."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     public ResponseEntity<HttpStatus> checkHarvesterPropertyExist(
-        @ApiParam(
-            value = "The harvester property to check"
+        @Parameter(
+            description = "The harvester property to check"
         )
         @PathVariable
             String property,
-        @ApiParam(
-            value = "The value to search"
+        @Parameter(
+            description = "The value to search"
         )
         @RequestParam
             String exist,
@@ -223,9 +205,9 @@ public class HarvestersApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         final Element list = harvestManager.get(null, context, "site[1]/name[1]");
         if (list.getChildren().stream()
-                .filter(h -> h instanceof Element)
-                    .map(h -> ((Element) h).getChild("site").getChild(property).getTextTrim())
-                    .anyMatch(name -> ((String) name).equalsIgnoreCase(exist))) {
+            .filter(h -> h instanceof Element)
+            .map(h -> ((Element) h).getChild("site").getChild(property).getTextTrim())
+            .anyMatch(name -> ((String) name).equalsIgnoreCase(exist))) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
 

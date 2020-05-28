@@ -23,49 +23,38 @@
 
 package org.fao.geonet.api.categories;
 
-import java.util.List;
-import java.util.Map;
-
-import org.fao.geonet.ApplicationContextHolder;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import java.util.List;
+import java.util.Map;
 
 @RequestMapping(value = {
     "/{portal}/api/tags",
     "/{portal}/api/" + API.VERSION_0_1 +
         "/tags"
 })
-@Api(value = "tags",
-    tags = "tags",
+@Tag(name = "tags",
     description = "Tags operations")
 @Controller("tags")
 public class TagsApi {
@@ -79,16 +68,15 @@ public class TagsApi {
     @Autowired
     private MetadataRepository metadataRepository;
 
-    @ApiOperation(
-        value = "Get tags",
-        notes = "",
-        nickname = "getTags")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get tags",
+        description = "")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "List of tags.")
+        @ApiResponse(responseCode = "200", description = "List of tags.")
     })
     @ResponseBody
     public List<org.fao.geonet.domain.MetadataCategory> getTags(
@@ -97,11 +85,10 @@ public class TagsApi {
     }
 
 
-    @ApiOperation(
-        value = "Create a tag",
-        notes = "If labels are not defined, a default label is created " +
-            "with the category name for all languages.",
-        nickname = "putTag")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Create a tag",
+        description = "If labels are not defined, a default label is created " +
+            "with the category name for all languages.")
     @RequestMapping(
         method = RequestMethod.PUT,
         consumes = {
@@ -110,12 +97,12 @@ public class TagsApi {
     )
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Tag created. Return the new tag identifier."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "201", description = "Tag created. Return the new tag identifier."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @PreAuthorize("hasRole('UserAdmin')")
     public ResponseEntity<Integer> putTag(
-        @ApiParam(
+        @Parameter(
             name = "category"
         )
         @RequestBody
@@ -141,10 +128,9 @@ public class TagsApi {
         }
     }
 
-    @ApiOperation(
-        value = "Get a tag",
-        notes = "",
-        nickname = "getTag")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get a tag",
+        description = "")
     @RequestMapping(
         value = "/{tagIdentifier}",
         produces = {
@@ -153,12 +139,12 @@ public class TagsApi {
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Tag details.")
+        @ApiResponse(responseCode = "200", description = "Tag details.")
     })
     @ResponseBody
     public org.fao.geonet.domain.MetadataCategory getTag(
-        @ApiParam(
-            value = "Tag identifier",
+        @Parameter(
+            description = "Tag identifier",
             required = true
         )
         @PathVariable
@@ -171,28 +157,27 @@ public class TagsApi {
         return category;
     }
 
-    @ApiOperation(
-        value = "Update a tag",
-        notes = "",
-        nickname = "updateTag")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Update a tag",
+        description = "")
     @RequestMapping(
         value = "/{tagIdentifier}",
         method = RequestMethod.PUT)
     @PreAuthorize("hasRole('UserAdmin')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Tag updated."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "204", description = "Tag updated."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody
     public ResponseEntity updateTag(
-        @ApiParam(
-            value = "Tag identifier",
+        @Parameter(
+            description = "Tag identifier",
             required = true
         )
         @PathVariable
             int tagIdentifier,
-        @ApiParam(
+        @Parameter(
             name = "category"
         )
         @RequestBody
@@ -224,22 +209,21 @@ public class TagsApi {
     }
 
 
-    @ApiOperation(
-        value = "Remove a tag",
-        notes = "",
-        nickname = "deleteTag")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Remove a tag",
+        description = "")
     @RequestMapping(
         value = "/{tagIdentifier}",
         method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Tag removed."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "204", description = "Tag removed."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @PreAuthorize("hasRole('UserAdmin')")
     public ResponseEntity deleteTag(
-        @ApiParam(
-            value = "Tag identifier",
+        @Parameter(
+            description = "Tag identifier",
             required = true
         )
         @PathVariable
@@ -247,7 +231,7 @@ public class TagsApi {
     ) throws Exception {
         MetadataCategory category = categoryRepository.findOne(tagIdentifier);
         if (category != null) {
-            long recordsCount = metadataRepository.count((Specification<Metadata>)MetadataSpecs.hasCategory(category));
+            long recordsCount = metadataRepository.count((Specification<Metadata>) MetadataSpecs.hasCategory(category));
             if (recordsCount > 0l) {
                 throw new IllegalArgumentException(String.format(
                     "Tag '%s' is assigned to %d records. Update records first in order to remove that tag.",

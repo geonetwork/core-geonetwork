@@ -29,5 +29,5 @@ package org.fao.geonet.api.records.formatters;
  * @author Jesse on 10/23/2014.
  */
 public interface FormatterImpl {
-    public String format(FormatterParams fparams) throws Exception;
+    String format(FormatterParams fparams) throws Exception;
 }

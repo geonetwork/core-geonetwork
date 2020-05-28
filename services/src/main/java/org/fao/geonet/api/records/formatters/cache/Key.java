@@ -70,9 +70,7 @@ public class Key {
         if (formatType != key.formatType) return false;
         if (width != key.width) return false;
         if (!formatterId.equals(key.formatterId)) return false;
-        if (!lang.equals(key.lang)) return false;
-
-        return true;
+        return lang.equals(key.lang);
     }
 
     @Override

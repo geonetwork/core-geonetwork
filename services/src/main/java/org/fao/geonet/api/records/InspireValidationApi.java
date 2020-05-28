@@ -23,15 +23,12 @@
 
 package org.fao.geonet.api.records;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
-import jeeves.transaction.TransactionManager;
-import jeeves.transaction.TransactionTask;
 import org.apache.http.HttpStatus;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -45,7 +42,7 @@ import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.fao.geonet.api.records.formatters.cache.Key;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.events.history.RecordValidationTriggeredEvent;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
@@ -65,14 +62,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -87,8 +78,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import static jeeves.transaction.TransactionManager.CommitBehavior.ALWAYS_COMMIT;
-import static jeeves.transaction.TransactionManager.TransactionRequirement.CREATE_NEW;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
@@ -97,8 +86,7 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
-@Api(value = API_CLASS_RECORD_TAG,
-    tags = API_CLASS_RECORD_TAG)
+@Tag(name = API_CLASS_RECORD_TAG)
 @Controller("inspire")
 @PreAuthorize("hasRole('Editor')")
 @ReadWriteController
@@ -118,10 +106,9 @@ public class InspireValidationApi {
     @Autowired
     private ThreadPool threadPool;
 
-    @ApiOperation(
-        value = "Get test suites available.",
-        notes = "TG13, TG2, ...",
-        nickname = "getTestSuites")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get test suites available.",
+        description = "TG13, TG2, ...")
     @RequestMapping(value = "/{metadataUuid}/validate/inspire/testsuites",
         method = RequestMethod.GET,
         produces = {
@@ -129,14 +116,14 @@ public class InspireValidationApi {
         })
     @PreAuthorize("hasRole('Editor')")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "List of testsuites available."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+        @ApiResponse(responseCode = "200", description = "List of testsuites available."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     public
     @ResponseBody
     Map<String, String[]> getTestSuites(
-        @ApiParam(
-            value = API_PARAM_RECORD_UUID,
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid) {
@@ -144,13 +131,12 @@ public class InspireValidationApi {
         return inspireValidatorUtils.getTestsuites();
     }
 
-    @ApiOperation(
-        value = "Submit a record to the INSPIRE service for validation.",
-        notes = "User MUST be able to edit the record to validate it. "
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Submit a record to the INSPIRE service for validation.",
+        description = "User MUST be able to edit the record to validate it. "
             + "An INSPIRE endpoint must be configured in Settings. "
             + "This activates an asyncronous process, this method does not return any report. "
-            + "This method returns an id to be used to get the report.",
-        nickname = "submitValidate")
+            + "This method returns an id to be used to get the report.")
     @RequestMapping(value = "/{metadataUuid}/validate/inspire",
         method = RequestMethod.PUT,
         produces = {
@@ -158,32 +144,29 @@ public class InspireValidationApi {
         })
     @PreAuthorize("hasRole('Editor')")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Check status of the report."),
-        @ApiResponse(code = 404, message = "Metadata not found."),
-        @ApiResponse(code = 500, message = "Service unavailable."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+        @ApiResponse(responseCode = "201", description = "Check status of the report."),
+        @ApiResponse(responseCode = "404", description = "Metadata not found."),
+        @ApiResponse(responseCode = "500", description = "Service unavailable."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     public
     @ResponseBody
     String validateRecord(
-        @ApiParam(
-            value = API_PARAM_RECORD_UUID,
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
-        @ApiParam(
-            value = "Test suite to run",
+        @Parameter(
+            description = "Test suite to run",
             required = false)
         @RequestParam
             String testsuite,
         HttpServletResponse response,
-        @ApiParam(hidden = true)
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpServletRequest request,
-        @ApiParam(hidden = true)
-        @ApiIgnore final NativeWebRequest nativeRequest,
-        @ApiParam(hidden = true)
-        @ApiIgnore
+        @Parameter(hidden = true) final NativeWebRequest nativeRequest,
+        @Parameter(hidden = true)
             HttpSession session
     ) throws Exception {
 
@@ -281,12 +264,11 @@ public class InspireValidationApi {
         return new ByteArrayInputStream(outputStream.toByteArray());
     }
 
-    @ApiOperation(
-        value = "Check the status of validation with the INSPIRE service.",
-        notes = "User MUST be able to edit the record to validate it. "
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Check the status of validation with the INSPIRE service.",
+        description = "User MUST be able to edit the record to validate it. "
             + "An INSPIRE endpoint must be configured in Settings. "
-            + "If the process is complete an object with status is returned. ",
-        nickname = "checkValidateStatus")
+            + "If the process is complete an object with status is returned. ")
     @RequestMapping(value = "/{testId}/validate/inspire",
         method = RequestMethod.GET,
         produces = {
@@ -295,25 +277,23 @@ public class InspireValidationApi {
     )
     @PreAuthorize("hasRole('Editor')")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Report ready."),
-        @ApiResponse(code = 201, message = "Report not ready."),
-        @ApiResponse(code = 404, message = "Report id not found."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+        @ApiResponse(responseCode = "200", description = "Report ready."),
+        @ApiResponse(responseCode = "201", description = "Report not ready."),
+        @ApiResponse(responseCode = "404", description = "Report id not found."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     public
     @ResponseBody
     Map<String, String> checkValidation(
-        @ApiParam(
-            value = "Test identifier",
+        @Parameter(
+            description = "Test identifier",
             required = true)
         @PathVariable
             String testId,
         HttpServletRequest request,
-        @ApiParam(hidden = true)
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpServletResponse response,
-        @ApiParam(hidden = true)
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession session
     ) throws Exception {
 

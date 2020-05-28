@@ -23,16 +23,15 @@
 
 package org.fao.geonet.api.site;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.site.model.ListLogFilesResponse;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.api.site.model.ListLogFilesResponse;
 import org.fao.geonet.util.FileUtil;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +44,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -65,21 +67,21 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/site/logging"
 })
-@Api(value = API_CLASS_CATALOG_TAG,
-    tags = API_CLASS_CATALOG_TAG,
+@Tag(name = API_CLASS_CATALOG_TAG,
     description = API_CLASS_CATALOG_OPS)
 @Controller("logging")
 @PreAuthorize("hasRole('Administrator')")
 public class LoggingApi {
+    private static final String fileAppenderName = "fileAppender";
+    private static final int maxLines = 20000;
     private final String regexp = "log4j(-(.*?))?\\.xml";
-
     @Autowired
     GeonetworkDataDirectory dataDirectory;
+    private FileAppender fileAppender = null;
 
-    @ApiOperation(
-        value = "Get log files",
-        notes = "",
-        nickname = "getLogFiles")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get log files",
+        description = "")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET
@@ -116,11 +118,9 @@ public class LoggingApi {
         return logFileList;
     }
 
-
-    @ApiOperation(
-        value = "Get last activity",
-        notes = "",
-        nickname = "getLastActivity")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get last activity",
+        description = "")
     @RequestMapping(
         value = "/activity",
         method = RequestMethod.GET,
@@ -129,8 +129,8 @@ public class LoggingApi {
         })
     @ResponseBody
     public String getLastActivity(
-        @ApiParam(
-            value = "Number of lines to return",
+        @Parameter(
+            description = "Number of lines to return",
             required = false
         )
         @RequestParam(
@@ -149,10 +149,9 @@ public class LoggingApi {
         return lastActivity;
     }
 
-    @ApiOperation(
-        value = "Get last activity in a ZIP",
-        notes = "",
-        nickname = "getLastActivityInAZip")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get last activity in a ZIP",
+        description = "")
     @RequestMapping(
         value = "/activity/zip",
         method = RequestMethod.GET,
@@ -202,10 +201,6 @@ public class LoggingApi {
             );
         }
     }
-
-    private static final String fileAppenderName = "fileAppender";
-    private static final int maxLines = 20000;
-    private FileAppender fileAppender = null;
 
     private boolean isAppenderLogFileLoaded() {
         if (fileAppender == null || fileAppender.getFile() == null) {

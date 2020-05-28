@@ -24,7 +24,6 @@
 package org.fao.geonet.api.records.rdf;
 
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -42,13 +41,14 @@ import org.springframework.context.ApplicationContext;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.List;
 
 
 /**
  * Class to create the rdf output for the public metadata in the catalog.
- *
+ * <p>
  * Process the results in pages to avoid memory issues and writes the ouput to a file.
  *
  * @author Jose García
@@ -56,7 +56,7 @@ import java.util.List;
 public class RdfOutputManager {
     private int PAGE_SIZE = 10;
 
-    private Element thesaurusEl;
+    private final Element thesaurusEl;
 
     public RdfOutputManager(Element thesaurusEl) {
         this.thesaurusEl = thesaurusEl;
@@ -65,9 +65,9 @@ public class RdfOutputManager {
     public RdfOutputManager(Element thesaurusEl, int pageSize) {
         this.thesaurusEl = thesaurusEl;
         PAGE_SIZE = pageSize;
-    	
+
     }
-    
+
     /**
      * Creates an rdf file with all the public metadata from the catalogue that fits the search
      * criteria.
@@ -75,14 +75,13 @@ public class RdfOutputManager {
      * @return Name of the temporal file
      */
     public File createRdfFile(ServiceContext context, RdfSearcher searcher) throws Exception {
-    	try {
-        List<Element> results = searcher.search(context);
-    	return createRdfFile(context,results,1,"");
-    	}
-    	 finally {
-             searcher.close();
-         }
-    }    
+        try {
+            List<Element> results = searcher.search(context);
+            return createRdfFile(context, results, 1, "");
+        } finally {
+            searcher.close();
+        }
+    }
 
     /**
      * Creates an rdf file with all the public metadata from the catalogue that fits the search
@@ -115,11 +114,11 @@ public class RdfOutputManager {
             try {
                 recordsFile = File.createTempFile("records-", ".rdf");
                 outputRecordsFile = new BufferedWriter(
-                    new OutputStreamWriter(new FileOutputStream(recordsFile), Charset.forName("UTF-8")));
+                    new OutputStreamWriter(new FileOutputStream(recordsFile), StandardCharsets.UTF_8));
 
                 catalogFile = File.createTempFile("catalog-", ".rdf");
                 outputCatalogFile = new BufferedWriter(
-                    new OutputStreamWriter(new FileOutputStream(catalogFile), Charset.forName("UTF-8")));
+                    new OutputStreamWriter(new FileOutputStream(catalogFile), StandardCharsets.UTF_8));
 
                 Path xslPath = context.getAppPath().resolve(Geonet.Path.XSLT_FOLDER).
                     resolve("services").resolve("dcat").resolve("rdf.xsl");
@@ -177,7 +176,7 @@ public class RdfOutputManager {
             try {
                 rdfFile = File.createTempFile("rdf-", ".rdf");
                 outputRdfFile = new BufferedWriter(
-                    new OutputStreamWriter(new FileOutputStream(rdfFile), Charset.forName("UTF-8")));
+                    new OutputStreamWriter(new FileOutputStream(rdfFile), StandardCharsets.UTF_8));
 
 
                 // File header
@@ -185,21 +184,21 @@ public class RdfOutputManager {
                 writeFileHeader(outputRdfFile);
 
                 // Append catalog records
-                reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(catalogFile), Charset.forName("UTF-8")));
+                reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(catalogFile), StandardCharsets.UTF_8));
                 IOUtils.copy(reader1, outputRdfFile);
 
                 // Append records file
                 Log.info(Geonet.GEONETWORK, "DCAT - ... Writing catalog records");
-                reader2 = new BufferedReader(new InputStreamReader(new FileInputStream(recordsFile), Charset.forName("UTF-8")));
+                reader2 = new BufferedReader(new InputStreamReader(new FileInputStream(recordsFile), StandardCharsets.UTF_8));
                 IOUtils.copy(reader2, outputRdfFile);
-                
+
                 // Close dcat:Catalog
                 outputRdfFile.write("</dcat:Catalog>");
                 outputRdfFile.write("\n");
 
                 // File footer
                 Log.info(Geonet.GEONETWORK, "DCAT - ... Writing file footer");
-                writeFileFooter(outputRdfFile);                                
+                writeFileFooter(outputRdfFile);
             } finally {
                 IOUtils.closeQuietly(outputRdfFile);
                 IOUtils.closeQuietly(reader1);
@@ -243,7 +242,7 @@ public class RdfOutputManager {
             }
 
         } else {
-        	output.write(pagingInformation);
+            output.write(pagingInformation);
             Namespace nsDcat = Namespace.getNamespace("dcat", "http://www.w3.org/ns/dcat#");
             output.write("\n");
             Element mdDcatCatalog = rdf.getChild("Catalog", nsDcat);
@@ -271,7 +270,7 @@ public class RdfOutputManager {
             if (page == 1) {
                 // For first results page, write also the Organisation section that is between Catalog
                 // and CatalogRecords sections (same in all pages)
-            	output.write("<dcat:dataset>");
+                output.write("<dcat:dataset>");
                 output.write("\n");
                 String result = Xml.getString(mdDcat);
                 output.write(removeNamespaces(result));

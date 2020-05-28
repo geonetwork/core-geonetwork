@@ -23,12 +23,11 @@
 
 package org.fao.geonet.api.languages;
 
-import org.fao.geonet.ApplicationContextHolder;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.api.API;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -39,17 +38,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import jeeves.server.context.ServiceContext;
-
 @RequestMapping(value = {
     "/{portal}/api/isolanguages",
     "/{portal}/api/" + API.VERSION_0_1 +
         "/isolanguages"
 })
-@Api(value = "languages",
-    tags = "languages",
+@Tag(name = "languages",
     description = "Languages operations")
 @Controller("isolanguages")
 public class IsoLanguagesApi {
@@ -57,10 +51,9 @@ public class IsoLanguagesApi {
     @Autowired
     private IsoLanguageRepository isoLanguageRepository;
 
-    @ApiOperation(
-        value = "Get ISO languages",
-        notes = "ISO languages provides a list of all languages (eg. used for autocompletion in metadata editor).",
-        nickname = "getIsoLanguages")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get ISO languages",
+        description = "ISO languages provides a list of all languages (eg. used for autocompletion in metadata editor).")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)

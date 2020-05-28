@@ -25,7 +25,6 @@ package org.fao.geonet.api.records.formatters.groovy.util;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.groovy.Environment;
@@ -145,7 +144,7 @@ public class Summary {
         final Store store = env.getBean("resourceStore", Store.class);
         try {
             return store.getResourceDescription(env.getContext(), env.getMetadataUUID(), MetadataResourceVisibility.PUBLIC,
-                                                imgFile, true) != null;
+                imgFile, true) != null;
         } catch (Exception e) {
             return false;
         }

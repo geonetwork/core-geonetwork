@@ -5,12 +5,14 @@
     <operational>true</operational>
     <params>{gurl:{type:'string', defaultValue:'http://localhost:8080/geonetwork/srv/eng/'},
       lang:{type:'string', defaultValue:'eng'},
-      replace:{type:'boolean', defaultValue:'0'}}</params>
+      replace:{type:'boolean', defaultValue:'0'}}
+    </params>
   </suggestion>
   <suggestion process="add-resource-id" id="d2138e15" category="identification" target="identification">
     <name>Current record does not contain resource identifier. Add the
       following identifier:
-      http://localhost:8080/geonetwork/srv/metadata/8f089c32-d0ca-4af1-a56a-4cbf34ddcc75.</name>
+      http://localhost:8080/geonetwork/srv/metadata/8f089c32-d0ca-4af1-a56a-4cbf34ddcc75.
+    </name>
     <operational>true</operational>
   </suggestion>
 </suggestions>

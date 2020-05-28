@@ -23,17 +23,14 @@
 
 package org.fao.geonet.api.records;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.constants.Jeeves;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.entity.StringEntity;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -64,24 +61,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
@@ -92,8 +78,7 @@ import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_T
     "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
-@Api(value = API_CLASS_RECORD_TAG,
-    tags = API_CLASS_RECORD_TAG,
+@Tag(name = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)
 @Controller("records")
 @ReadWriteController
@@ -124,11 +109,10 @@ public class MetadataApi {
     }
 
 
-    @ApiOperation(value = "Get a metadata record",
-        notes = "Depending on the accept header the appropriate formatter is used. " +
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata record",
+        description = "Depending on the accept header the appropriate formatter is used. " +
             "When requesting a ZIP, a MEF version 2 file is returned. " +
-            "When requesting HTML, the default formatter is used.",
-        nickname = "getRecord")
+            "When requesting HTML, the default formatter is used.")
     @RequestMapping(value = "/{metadataUuid:.+}",
         method = RequestMethod.GET,
         consumes = {
@@ -146,16 +130,16 @@ public class MetadataApi {
             MediaType.ALL_VALUE
         })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Return the record."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW),
-        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
+        @ApiResponse(responseCode = "200", description = "Return the record."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
     public String getRecord(
-        @ApiParam(value = API_PARAM_RECORD_UUID,
+        @Parameter(description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
-        @ApiParam(value = "Accept header should indicate which is the appropriate format " +
+        @Parameter(description = "Accept header should indicate which is the appropriate format " +
             "to return. It could be text/html, application/xml, application/zip, ..." +
             "If no appropriate Accept header found, the XML format is returned.",
             required = true)
@@ -198,9 +182,8 @@ public class MetadataApi {
     }
 
 
-    @ApiOperation(value = "Get a metadata record as XML or JSON",
-        notes = "",
-        nickname = "getRecordAsXmlOrJSON")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata record as XML or JSON",
+        description = "")
     @RequestMapping(value =
         {
             "/{metadataUuid}/formatters/xml",
@@ -212,36 +195,36 @@ public class MetadataApi {
             MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8"
         })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Return the record."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        @ApiResponse(responseCode = "200", description = "Return the record."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     public
     @ResponseBody
     Object getRecordAsXML(
-        @ApiParam(
-            value = API_PARAM_RECORD_UUID,
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
-        @ApiParam(value = "Add XSD schema location based on standard configuration " +
+        @Parameter(description = "Add XSD schema location based on standard configuration " +
             "(see schema-ident.xml).",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
             boolean addSchemaLocation,
-        @ApiParam(value = "Increase record popularity",
+        @Parameter(description = "Increase record popularity",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
             boolean increasePopularity,
-        @ApiParam(value = "Add geonet:info details",
+        @Parameter(description = "Add geonet:info details",
             required = false)
         @RequestParam(required = false, defaultValue = "false")
             boolean withInfo,
-        @ApiParam(value = "Download as a file",
+        @Parameter(description = "Download as a file",
             required = false)
         @RequestParam(required = false, defaultValue = "false")
             boolean attachment,
-        @ApiParam(value = "Download the approved version",
-            required = false, defaultValue = "true")
+        @Parameter(description = "Download the approved version",
+            required = false)
         @RequestParam(required = false, defaultValue = "true")
             boolean approved,
         @RequestHeader(
@@ -325,12 +308,11 @@ public class MetadataApi {
         //return xml;
     }
 
-    @ApiOperation(
-        value = "Get a metadata record as ZIP",
-        notes = "Metadata Exchange Format (MEF) is returned. MEF is a ZIP file containing " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get a metadata record as ZIP",
+        description = "Metadata Exchange Format (MEF) is returned. MEF is a ZIP file containing " +
             "the metadata as XML and some others files depending on the version requested. " +
-            "See http://geonetwork-opensource.org/manuals/trunk/eng/users/annexes/mef-format.html.",
-        nickname = "getRecordAsZip")
+            "See http://geonetwork-opensource.org/manuals/trunk/eng/users/annexes/mef-format.html.")
     @RequestMapping(value = "/{metadataUuid}/formatters/zip",
         method = RequestMethod.GET,
         consumes = {
@@ -342,40 +324,40 @@ public class MetadataApi {
             MEF_V2_ACCEPT_TYPE
         })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Return the record."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        @ApiResponse(responseCode = "200", description = "Return the record."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     public
     @ResponseBody
     void getRecordAsZip(
-        @ApiParam(
-            value = API_PARAM_RECORD_UUID,
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
-        @ApiParam(
-            value = "MEF file format.",
+        @Parameter(
+            description = "MEF file format.",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "FULL")
             MEFLib.Format format,
-        @ApiParam(
-            value = "With related records (parent and service).",
+        @Parameter(
+            description = "With related records (parent and service).",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "true")
             boolean withRelated,
-        @ApiParam(
-            value = "Resolve XLinks in the records.",
+        @Parameter(
+            description = "Resolve XLinks in the records.",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "true")
             boolean withXLinksResolved,
-        @ApiParam(
-            value = "Preserve XLink URLs in the records.",
+        @Parameter(
+            description = "Preserve XLink URLs in the records.",
             required = false)
         @RequestParam(
             required = false,
@@ -385,7 +367,7 @@ public class MetadataApi {
             required = false,
             defaultValue = "true")
             boolean addSchemaLocation,
-        @ApiParam(value = "Download the approved version",
+        @Parameter(description = "Download the approved version",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
             boolean approved,
@@ -463,22 +445,21 @@ public class MetadataApi {
     }
 
 
-    @ApiOperation(value = "Increase record popularity",
-        notes = "Used when a view is based on the search results content and does not really access the record. Record is then added to the indexing queue and popularity will be updated soon.",
-        nickname = "increaseRecordPopularity")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Increase record popularity",
+        description = "Used when a view is based on the search results content and does not really access the record. Record is then added to the indexing queue and popularity will be updated soon.")
     @RequestMapping(value = "/{metadataUuid:.+}/popularity",
         method = RequestMethod.POST,
         consumes = {
             MediaType.ALL_VALUE
         })
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Popularity updated."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW),
-        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
+        @ApiResponse(responseCode = "201", description = "Popularity updated."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
     @ResponseStatus(HttpStatus.CREATED)
     public void getRecord(
-        @ApiParam(value = API_PARAM_RECORD_UUID,
+        @Parameter(description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
@@ -501,10 +482,9 @@ public class MetadataApi {
     }
 
 
-    @ApiOperation(
-        value = "Get record related resources",
-        nickname = "getAssociated",
-        notes = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get record related resources",
+        description = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
             "to this records.<br/>" +
             "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
     @RequestMapping(value = "/{metadataUuid:.+}/related",
@@ -515,27 +495,27 @@ public class MetadataApi {
         })
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Return the associated resources."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        @ApiResponse(responseCode = "200", description = "Return the associated resources."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
     public RelatedResponse getRelated(
-        @ApiParam(
-            value = API_PARAM_RECORD_UUID,
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
-        @ApiParam(value = "Type of related resource. If none, all resources are returned.",
+        @Parameter(description = "Type of related resource. If none, all resources are returned.",
             required = false
         )
         @RequestParam(defaultValue = "")
             RelatedItemType[] type,
-        @ApiParam(value = "Start offset for paging. Default 1. Only applies to related metadata records (ie. not for thumbnails).",
+        @Parameter(description = "Start offset for paging. Default 1. Only applies to related metadata records (ie. not for thumbnails).",
             required = false
         )
         @RequestParam(defaultValue = "0")
             int start,
-        @ApiParam(value = "Number of rows returned. Default 100.")
+        @Parameter(description = "Number of rows returned. Default 100.")
         @RequestParam(defaultValue = "100")
             int rows,
         HttpServletRequest request) throws Exception {
@@ -567,10 +547,9 @@ public class MetadataApi {
         return response;
     }
 
-    @ApiOperation(
-        value = "Returns a map to decode attributes in a dataset (from the associated feature catalog)",
-        nickname = "getFeatureCatalog",
-        notes = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Returns a map to decode attributes in a dataset (from the associated feature catalog)",
+        description = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
             "to this records.<br/>" +
             "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
     @RequestMapping(value = "/{metadataUuid}/featureCatalog",
@@ -581,13 +560,13 @@ public class MetadataApi {
         })
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Return the associated resources."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        @ApiResponse(responseCode = "200", description = "Return the associated resources."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
     public FeatureResponse getFeatureCatalog(
-        @ApiParam(
-            value = API_PARAM_RECORD_UUID,
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,

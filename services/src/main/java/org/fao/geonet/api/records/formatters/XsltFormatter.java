@@ -31,12 +31,7 @@ import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.fao.geonet.api.records.formatters.SchemaLocalizations.loadSchemaLocalizations;
 
@@ -55,6 +50,42 @@ import static org.fao.geonet.api.records.formatters.SchemaLocalizations.loadSche
  */
 @Component
 public class XsltFormatter implements FormatterImpl {
+
+    /**
+     * @param schema            Use all to return all schemas translations
+     * @param schemasToLoadList
+     */
+    public static List<Element> getSchemaLocalization(final String schema, List<String> schemasToLoadList, final String language) throws Exception {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        Collection<SchemaLocalization> localization =
+            loadSchemaLocalizations(
+                applicationContext,
+                applicationContext.getBean(SchemaManager.class)).values();
+
+        List<Element> elementList = new ArrayList<>(3);
+        for (SchemaLocalization schemaLocalization : localization) {
+            String currentSchema = schemaLocalization.schema.trim();
+            if ("all".equalsIgnoreCase(schema) || schemasToLoadList.stream().anyMatch(currentSchema::equalsIgnoreCase)) {
+                Element schemaEl = new Element(currentSchema);
+
+                Element labels = schemaLocalization.getLabels(language);
+                schemaEl.addContent((Element) labels.setName("labels").clone());
+                Element strings = schemaLocalization.getStrings(language);
+                schemaEl.addContent((Element) strings.setName("strings").clone());
+                Element codelists = schemaLocalization.getCodelists(language);
+                schemaEl.addContent((Element) codelists.setName("codelists").clone());
+
+                elementList.add(schemaEl);
+            }
+        }
+        return elementList;
+    }
+
+    public static List<Element> getSchemaLocalization(final String schema, final String language) throws Exception {
+        List<String> schemaToLoad = new ArrayList<>();
+        schemaToLoad.add(schema);
+        return getSchemaLocalization(null, schemaToLoad, language);
+    }
 
     public String format(FormatterParams fparams) throws Exception {
 
@@ -80,7 +111,6 @@ public class XsltFormatter implements FormatterImpl {
         env.addContent(settingManager.getAllAsXML(true));
         gui.addContent(env);
         root.addContent(gui);
-
 
 
         root.addContent(new Element("locUrl").setText(fparams.getLocUrl()));
@@ -137,42 +167,5 @@ public class XsltFormatter implements FormatterImpl {
         return "textResponse".equals(transformed.getName()) ?
             transformed.getTextNormalize() :
             Xml.getString(transformed);
-    }
-
-    /**
-     *
-     * @param schema Use all to return all schemas translations
-     * @param schemasToLoadList
-     */
-    public static List<Element> getSchemaLocalization(final String schema, List<String> schemasToLoadList, final String language) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        Collection<SchemaLocalization> localization =
-            loadSchemaLocalizations(
-                applicationContext,
-                applicationContext.getBean(SchemaManager.class)).values();
-
-        List<Element> elementList = new ArrayList<>(3);
-        for (SchemaLocalization schemaLocalization : localization) {
-            String currentSchema = schemaLocalization.schema.trim();
-            if ("all".equalsIgnoreCase(schema) || schemasToLoadList.stream().anyMatch(currentSchema::equalsIgnoreCase)) {
-                Element schemaEl = new Element(currentSchema);
-
-                Element labels = schemaLocalization.getLabels(language);
-                schemaEl.addContent((Element) labels.setName("labels").clone());
-                Element strings = schemaLocalization.getStrings(language);
-                schemaEl.addContent((Element) strings.setName("strings").clone());
-                Element codelists = schemaLocalization.getCodelists(language);
-                schemaEl.addContent((Element) codelists.setName("codelists").clone());
-
-                elementList.add(schemaEl);
-            }
-        }
-        return elementList;
-    }
-
-    public static List<Element> getSchemaLocalization(final String schema, final String language) throws Exception {
-        List<String> schemaToLoad = new ArrayList<>();
-        schemaToLoad.add(schema);
-        return getSchemaLocalization(null, schemaToLoad, language);
     }
 }

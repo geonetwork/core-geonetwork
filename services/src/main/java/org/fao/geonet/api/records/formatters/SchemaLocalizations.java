@@ -25,17 +25,10 @@ package org.fao.geonet.api.records.formatters;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableTable;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-
-import org.locationtech.jts.util.Assert;
-
+import com.google.common.collect.*;
 import groovy.util.slurpersupport.GPathResult;
-
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.records.formatters.groovy.CurrentLanguageHolder;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -46,26 +39,15 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.locationtech.jts.util.Assert;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-
-import jeeves.server.dispatchers.guiservices.XmlFile;
-import jeeves.server.sources.ServiceRequestFactory;
-
-import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicationContextFromServletContext;
+import java.util.*;
 
 /**
  * Contains methods for efficiently accessing the translations in a schema's labels and codelists
@@ -364,7 +346,7 @@ public class SchemaLocalizations {
     /**
      * Translate a string in the schema's strings.xml file.  Each element in the key array is one
      * level deep in the xml tree.
-     *
+     * <p>
      * If there are two elements with the same name the second element will be ignored.
      *
      * @param key the lookup key of the codelist

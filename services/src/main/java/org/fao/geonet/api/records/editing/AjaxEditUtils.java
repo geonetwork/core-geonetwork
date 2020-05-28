@@ -24,36 +24,29 @@
 package org.fao.geonet.api.records.editing;
 
 import com.google.common.base.Optional;
-
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import jeeves.xlink.Processor;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.kernel.AddElemValue;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.UpdateDatestamp;
-import org.fao.geonet.kernel.schema.SchemaPlugin;
-import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.EditLib;
-import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.AddElemValue;
+import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
+import org.fao.geonet.utils.Log;
 import org.jdom.*;
 import org.jdom.filter.ElementFilter;
 import org.jdom.filter.Filter;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
- *
  * Embedded Metadata Update API for AJAX Editor support
  */
 public class AjaxEditUtils extends EditUtils {
@@ -83,7 +76,7 @@ public class AjaxEditUtils extends EditUtils {
      *
      * <p> The changes are a list of KVP. A key contains at least the element identifier from the
      * meta-document. A key starting with an "X" should contain an XML fragment for the value. </p>
-     *
+     * <p>
      * The following KVP combinations are allowed:
      *   <ul>
      *     <li>ElementId=ElementValue </li>
@@ -94,7 +87,7 @@ public class AjaxEditUtils extends EditUtils {
      *     <li>XElementId_ElementName_replace=ElementValue</li>
      *     <li>P{key}=xpath with P{key}_xml=XML snippet</li>
      *   </ul>
-     *
+     * <p>
      * ElementName MUST contain "{@value EditLib#COLON_SEPARATOR}" instead of ":" for prefixed
      * elements.
      *
@@ -146,7 +139,7 @@ public class AjaxEditUtils extends EditUtils {
         LinkedHashMap<String, AddElemValue> xmlAndXpathInputs = new LinkedHashMap<String, AddElemValue>();
 
         // Preprocess
-        for (Map.Entry<String, String> entry: changes.entrySet()) {
+        for (Map.Entry<String, String> entry : changes.entrySet()) {
             String originalRef = entry.getKey().trim();
             String ref = null;
             String value = entry.getValue().trim();
@@ -277,6 +270,7 @@ public class AjaxEditUtils extends EditUtils {
 
     /**
      * Reads a ref and extract the ID part from it.
+     *
      * @param ref the ref to check.
      * @return the ID part.
      */
@@ -291,6 +285,7 @@ public class AjaxEditUtils extends EditUtils {
 
     /**
      * Reads a ref and extract the attribute part from it.
+     *
      * @param ref the ref to check.
      * @return the attribute part or null if ref doesn't contain an attribute name.
      */
@@ -305,6 +300,7 @@ public class AjaxEditUtils extends EditUtils {
 
     /**
      * Checks if a ref name represents an attribute. This kind of ref is like <code>ID_ATTRIBUTENAME</code>.
+     *
      * @param ref a ref element.
      * @return true ref is an attribute, false in other case.
      */
@@ -362,7 +358,7 @@ public class AjaxEditUtils extends EditUtils {
         Element refEl = (Element) (el.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE)).clone();
         Element info = null;
 
-        if(md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE) != null) {
+        if (md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE) != null) {
             info = (Element) (md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE)).clone();
             md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
         }
@@ -424,7 +420,7 @@ public class AjaxEditUtils extends EditUtils {
             editLib.expandTree(mds, el);
 
         }
-        if(info != null) {
+        if (info != null) {
             //--- attach the info element to the child
             child.addContent(info);
         }
@@ -452,7 +448,7 @@ public class AjaxEditUtils extends EditUtils {
             }
         }
 
-        if(info != null) {
+        if (info != null) {
             //--- attach the info element to the metadata root)
             md.addContent((Element) info.clone());
         }
@@ -632,8 +628,8 @@ public class AjaxEditUtils extends EditUtils {
         if (iSwapIndex == -1)
             throw new IllegalStateException("Index not found for element --> " + elSwap);
 
-        if (down) swapElements(elSwap, (Element) list.get(iSwapIndex + 1));
-        else swapElements(elSwap, (Element) list.get(iSwapIndex - 1));
+        if (down) swapElements(elSwap, list.get(iSwapIndex + 1));
+        else swapElements(elSwap, list.get(iSwapIndex - 1));
 
         //--- store the metadata in the session again
         setMetadataIntoSession(session, (Element) md.clone(), id);

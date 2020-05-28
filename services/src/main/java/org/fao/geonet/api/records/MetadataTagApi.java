@@ -23,17 +23,12 @@
 
 package org.fao.geonet.api.records;
 
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.UserSession;
+import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -48,7 +43,6 @@ import org.fao.geonet.events.history.RecordCategoryChangeEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,29 +51,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.server.UserSession;
-import jeeves.services.ReadWriteController;
-import springfox.documentation.annotations.ApiIgnore;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import static org.fao.geonet.api.ApiParams.*;
 
 @RequestMapping(value = {
     "/{portal}/api/records",
     "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
-@Api(value = API_CLASS_RECORD_TAG,
-    tags = API_CLASS_RECORD_TAG,
+@Tag(name = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)
 @Controller("tagRecords")
 @ReadWriteController
@@ -96,11 +83,10 @@ public class MetadataTagApi {
     @Autowired
     IMetadataManager metadataManager;
 
-    @ApiOperation(
-        value = "Get record tags",
-        notes = "Tags are used to classify information.<br/>" +
-            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/tag-information/tagging-with-categories.html'>More info</a>",
-        nickname = "getRecordTags")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get record tags",
+        description = "Tags are used to classify information.<br/>" +
+            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/tag-information/tagging-with-categories.html'>More info</a>")
     @RequestMapping(
         value = "/{metadataUuid}/tags",
         produces = {
@@ -109,13 +95,13 @@ public class MetadataTagApi {
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Record tags."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        @ApiResponse(responseCode = "200", description = "Record tags."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
     public Set<MetadataCategory> getTags(
-        @ApiParam(
-            value = API_PARAM_RECORD_UUID,
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
@@ -126,34 +112,33 @@ public class MetadataTagApi {
     }
 
 
-    @ApiOperation(
-        value = "Add tags to a record",
-        notes = "",
-        nickname = "addTagsToRecord")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Add tags to a record",
+        description = "")
     @RequestMapping(
         value = "/{metadataUuid}/tags",
         method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Record tags added."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+        @ApiResponse(responseCode = "201", description = "Record tags added."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public void updateTags(
-        @ApiParam(
-            value = API_PARAM_RECORD_UUID,
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
-        @ApiParam(
-            value = API_PARAM_TAG_IDENTIFIER,
+        @Parameter(
+            description = API_PARAM_TAG_IDENTIFIER,
             required = true
         )
         @RequestParam
             Integer[] id,
-        @ApiParam(
-            value = ApiParams.API_PARAM_CLEAR_ALL_BEFORE_INSERT,
+        @Parameter(
+            description = ApiParams.API_PARAM_CLEAR_ALL_BEFORE_INSERT,
             required = false
         )
         @RequestParam(
@@ -190,32 +175,31 @@ public class MetadataTagApi {
         metadata = ApiUtils.canEditRecord(metadataUuid, request);
         Set<MetadataCategory> after = metadata.getCategories();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
-        new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);;
+        new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);
 
     }
 
-    @ApiOperation(
-        value = "Delete tags of a record",
-        notes = "",
-        nickname = "deleteRecordTags")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Delete tags of a record",
+        description = "")
     @RequestMapping(
         value = "/{metadataUuid}/tags",
         method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Record tags removed."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+        @ApiResponse(responseCode = "204", description = "Record tags removed."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public void deleteTags(
-        @ApiParam(
-            value = API_PARAM_RECORD_UUID,
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
-        @ApiParam(
-            value = "Tag identifier. If none, all tags are removed.",
+        @Parameter(
+            description = "Tag identifier. If none, all tags are removed.",
             required = false
         )
         @RequestParam(required = false)
@@ -244,15 +228,14 @@ public class MetadataTagApi {
         metadata = ApiUtils.canEditRecord(metadataUuid, request);
         Set<MetadataCategory> after = metadata.getCategories();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
-        new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);;
+        new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);
 
     }
 
 
-    @ApiOperation(
-        value = "Add tags to one or more records",
-        notes = "",
-        nickname = "addTagsToRecords")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Add tags to one or more records",
+        description = "")
     @RequestMapping(
         value = "/tags",
         produces = {
@@ -261,31 +244,31 @@ public class MetadataTagApi {
         method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Report about updated records."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+        @ApiResponse(responseCode = "201", description = "Report about updated records."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public MetadataProcessingReport updateTags(
-        @ApiParam(
-            value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
+        @Parameter(
+            description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false)
         @RequestParam(required = false) String[] uuids,
-        @ApiParam(
-            value = ApiParams.API_PARAM_BUCKET_NAME,
+        @Parameter(
+            description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
             String bucket,
-        @ApiParam(
-            value = API_PARAM_TAG_IDENTIFIER,
+        @Parameter(
+            description = API_PARAM_TAG_IDENTIFIER,
             required = true
         )
         @RequestParam
             Integer[] id,
-        @ApiParam(
-            value = ApiParams.API_PARAM_CLEAR_ALL_BEFORE_INSERT,
+        @Parameter(
+            description = ApiParams.API_PARAM_CLEAR_ALL_BEFORE_INSERT,
             required = false
         )
         @RequestParam(
@@ -294,7 +277,7 @@ public class MetadataTagApi {
         )
             boolean clear,
         HttpServletRequest request,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession session
     ) throws Exception {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
@@ -343,7 +326,7 @@ public class MetadataTagApi {
                 info = metadataRepository.findOneByUuid(uuid);
                 Set<MetadataCategory> after = info.getCategories();
                 UserSession userSession = ApiUtils.getUserSession(request.getSession());
-                new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);;
+                new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);
 
             }
             dataManager.flush();
@@ -358,10 +341,9 @@ public class MetadataTagApi {
         return report;
     }
 
-    @ApiOperation(
-        value = "Delete tags to one or more records",
-        notes = "",
-        nickname = "deleteRecordsTags")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Delete tags to one or more records",
+        description = "")
     @RequestMapping(
         value = "/tags",
         produces = {
@@ -370,29 +352,29 @@ public class MetadataTagApi {
         method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Report about removed records."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+        @ApiResponse(responseCode = "201", description = "Report about removed records."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public MetadataProcessingReport updateTags(
-        @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
+        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false)
         @RequestParam(required = false) String[] uuids,
-        @ApiParam(
-            value = ApiParams.API_PARAM_BUCKET_NAME,
+        @Parameter(
+            description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
             String bucket,
-        @ApiParam(
-            value = API_PARAM_TAG_IDENTIFIER
+        @Parameter(
+            description = API_PARAM_TAG_IDENTIFIER
         )
         @RequestParam
             Integer[] id,
         HttpServletRequest request,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession session
     ) throws Exception {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
@@ -424,7 +406,7 @@ public class MetadataTagApi {
                 info = metadataRepository.findOneByUuid(uuid);
                 Set<MetadataCategory> after = info.getCategories();
                 UserSession userSession = ApiUtils.getUserSession(request.getSession());
-                new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);;
+                new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);
             }
             dataManager.flush();
             dataManager.indexMetadata(listOfUpdatedRecords);

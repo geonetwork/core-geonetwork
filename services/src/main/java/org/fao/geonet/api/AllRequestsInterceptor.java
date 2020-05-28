@@ -37,6 +37,7 @@ import javax.servlet.http.HttpSession;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 /**
  * In charge of creating a new {@link UserSession} if not existing.
  * Avoid to create any sessions for crawlers.
@@ -62,6 +63,7 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
         }
         regex = Pattern.compile(botRegexpFilter, Pattern.CASE_INSENSITIVE);
     }
+
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

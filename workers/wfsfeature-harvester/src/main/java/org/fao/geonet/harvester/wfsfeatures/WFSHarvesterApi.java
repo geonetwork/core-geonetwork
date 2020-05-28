@@ -23,8 +23,8 @@
 
 package org.fao.geonet.harvester.wfsfeatures;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.sf.json.JSONObject;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -40,13 +40,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
@@ -59,15 +53,13 @@ import java.util.HashMap;
         "/{portal}/api/workers/data/wfs/actions",
         "/{portal}/api/" + API.VERSION_0_1 + "/workers/data/wfs/actions"
 })
-@Api(value = "workers",
-        tags= "workers",
+@Tag(name = "workers",
         description = "Workers related operations")
 public class WFSHarvesterApi {
     @Autowired
     private JMSMessager jmsMessager;
 
-    @ApiOperation(value = "Index a WFS feature type",
-            nickname = "indexWfsFeatureType")
+    @Operation(summary = "Index a WFS feature type")
     @RequestMapping(value = "start",
                     consumes = MediaType.APPLICATION_JSON_VALUE,
                     produces = MediaType.APPLICATION_JSON_VALUE,
@@ -89,8 +81,7 @@ public class WFSHarvesterApi {
     @Autowired
     EsRestClient client;
 
-    @ApiOperation(value = "Delete a WFS feature type",
-        nickname = "deleteWfsFeatureType")
+    @Operation(summary = "Delete a WFS feature type")
     @RequestMapping(
 //    @RequestMapping(value = "/{serviceUrl:.*}/{typeName:.*}",
         consumes = MediaType.ALL_VALUE,

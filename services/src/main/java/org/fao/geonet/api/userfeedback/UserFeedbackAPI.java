@@ -23,11 +23,10 @@
 
 package org.fao.geonet.api.userfeedback;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.fao.geonet.ApplicationContextHolder;
@@ -38,7 +37,6 @@ import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.userfeedback.UserFeedbackUtils.RatingAverage;
 import org.fao.geonet.api.userfeedback.service.IUserFeedbackService;
 import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.userfeedback.RatingCriteria;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
@@ -56,14 +54,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import springfox.documentation.annotations.ApiIgnore;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -84,8 +75,8 @@ import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_NAME_PATH;
 /**
  * User Feedback REST API.
  */
-@RequestMapping(value = { "/{portal}/api", "/{portal}/api/" + API.VERSION_0_1 })
-@Api(value = "userfeedback", tags = "userfeedback",
+@RequestMapping(value = {"/{portal}/api", "/{portal}/api/" + API.VERSION_0_1})
+@Tag(name = "userfeedback",
     description = "User feedback")
 @Controller("userfeedback")
 public class UserFeedbackAPI {
@@ -109,9 +100,8 @@ public class UserFeedbackAPI {
      * @return the list of rating criteria
      * @throws Exception the exception
      */
-    @ApiOperation(
-        value = "Get list of rating criteria",
-        nickname = "getRatingCriteria")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get list of rating criteria")
     @RequestMapping(
         value = "/userfeedback/ratingcriteria",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -119,7 +109,7 @@ public class UserFeedbackAPI {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<RatingCriteria> getRatingCriteria(
-        @ApiIgnore final HttpServletResponse response
+        @Parameter(hidden = true) final HttpServletResponse response
     ) {
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
@@ -139,22 +129,23 @@ public class UserFeedbackAPI {
      * @throws Exception the exception
      */
     // DELETE
-    @ApiOperation(value = "Removes a user feedback", notes = "Removes a user feedback", nickname = "deleteUserFeedback")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Removes a user feedback",
+        description = "Removes a user feedback")
     @RequestMapping(value = "/userfeedback/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('Reviewer')")
-    @ApiResponses(value = { @ApiResponse(code = 204, message = "User feedback removed."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER) })
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "User feedback removed."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)})
     @ResponseBody
     public ResponseEntity deleteUserFeedback(
-        @ApiParam(
-            value = "User feedback UUID.",
+        @Parameter(
+            description = "User feedback UUID.",
             required = true
         )
-        @PathVariable(value = "uuid")
-    final String uuid,
-    final HttpServletRequest request)
-            throws Exception {
+        @PathVariable(value = "uuid") final String uuid,
+        final HttpServletRequest request)
+        throws Exception {
 
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
@@ -175,26 +166,25 @@ public class UserFeedbackAPI {
      * Gets the metadata rating.
      *
      * @param metadataUuid the metadata uuid
-     * @param request the request
-     * @param response the response
-     * @param httpSession the http session
+     * @param request      the request
+     * @param response     the response
+     * @param httpSession  the http session
      * @return the metadata rating
      * @throws Exception the exception
      */
-    @ApiOperation(value = "Provides an average rating for a metadata record", nickname = "getMetadataUserComments")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Provides an average rating for a metadata record")
     @RequestMapping(value = "/records/{metadataUuid}/userfeedbackrating", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public RatingAverage getMetadataRating(
-        @ApiParam(
-            value = "Metadata record UUID.",
+        @Parameter(
+            description = "Metadata record UUID.",
             required = true
         )
-        @PathVariable(value = "metadataUuid")
-        final String metadataUuid,
-        @ApiIgnore final HttpServletRequest request,
-        @ApiIgnore final HttpServletResponse response,
-        @ApiIgnore final HttpSession httpSession) {
+        @PathVariable(value = "metadataUuid") final String metadataUuid,
+        @Parameter(hidden = true) final HttpServletRequest request,
+        @Parameter(hidden = true) final HttpServletResponse response,
+        @Parameter(hidden = true) final HttpSession httpSession) {
 
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
@@ -237,28 +227,27 @@ public class UserFeedbackAPI {
     /**
      * Gets the user comment.
      *
-     * @param uuid the uuid
-     * @param request the request
-     * @param response the response
+     * @param uuid        the uuid
+     * @param request     the request
+     * @param response    the response
      * @param httpSession the http session
      * @return the user comment
      * @throws Exception the exception
      */
-    @ApiOperation(value = "Finds a specific user feedback", nickname = "getUserFeedback")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Finds a specific user feedback")
     @RequestMapping(value = "/userfeedback/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public UserFeedbackDTO getUserComment(
-          @ApiParam(
-              value = "User feedback UUID.",
-              required = true
-          )
-          @PathVariable(value = "uuid")
-          final String uuid,
-          @ApiIgnore final HttpServletRequest request,
-          @ApiIgnore final HttpServletResponse response,
-          @ApiIgnore final HttpSession httpSession)
-            throws Exception {
+        @Parameter(
+            description = "User feedback UUID.",
+            required = true
+        )
+        @PathVariable(value = "uuid") final String uuid,
+        @Parameter(hidden = true) final HttpServletRequest request,
+        @Parameter(hidden = true) final HttpServletResponse response,
+        @Parameter(hidden = true) final HttpSession httpSession)
+        throws Exception {
 
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
@@ -270,7 +259,7 @@ public class UserFeedbackAPI {
         Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getUserComment");
 
         final IUserFeedbackService userFeedbackService = (IUserFeedbackService) ApplicationContextHolder.get()
-                .getBean("userFeedbackService");
+            .getBean("userFeedbackService");
 
         final UserSession session = ApiUtils.getUserSession(httpSession);
 
@@ -303,15 +292,15 @@ public class UserFeedbackAPI {
     /**
      * Gets the user comments for one record.
      *
-     * @param response the response
+     * @param response    the response
      * @param httpSession the http session
      * @return the user comments
      * @throws Exception the exception
      */
     // GET
-    @ApiOperation(value = "Finds a list of user feedback for a specific records. ",
-        notes = " This list will include also the draft user feedback if the client is logged as reviewer."
-        , nickname = "getUserCommentsOnARecord")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Finds a list of user feedback for a specific records. ",
+        description = " This list will include also the draft user feedback if the client is logged as reviewer."
+    )
     @RequestMapping(
         value = "/records/{metadataUuid}/userfeedback",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -319,23 +308,23 @@ public class UserFeedbackAPI {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<UserFeedbackDTO> getUserCommentsOnARecord(
-        @ApiParam(
-            value = "Metadata record UUID.",
+        @Parameter(
+            description = "Metadata record UUID.",
             required = true
         )
         @PathVariable
-        String metadataUuid,
-        @ApiParam(
-            value = "Maximum number of feedback to return.",
+            String metadataUuid,
+        @Parameter(
+            description = "Maximum number of feedback to return.",
             required = false
         )
         @RequestParam(
             defaultValue = "-1",
             required = false
         )
-        int size,
-        @ApiIgnore final HttpServletResponse response,
-        @ApiIgnore final HttpSession httpSession) throws Exception {
+            int size,
+        @Parameter(hidden = true) final HttpServletResponse response,
+        @Parameter(hidden = true) final HttpSession httpSession) throws Exception {
 
         return getUserFeedback(metadataUuid, size, response, httpSession);
     }
@@ -343,15 +332,15 @@ public class UserFeedbackAPI {
     /**
      * Gets the user comments.
      *
-     * @param response the response
+     * @param response    the response
      * @param httpSession the http session
      * @return the user comments
      * @throws Exception the exception
      */
     // GET
-    @ApiOperation(value = "Finds a list of user feedback records. ",
-            notes = " This list will include also the draft user feedback if the client is logged as reviewer."
-            , nickname = "getUserComments")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Finds a list of user feedback records. ",
+        description = " This list will include also the draft user feedback if the client is logged as reviewer."
+    )
     @RequestMapping(
         value = "/userfeedback",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -359,26 +348,26 @@ public class UserFeedbackAPI {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<UserFeedbackDTO> getUserComments(
-        @ApiParam(
-            value = "Metadata record UUID.",
+        @Parameter(
+            description = "Metadata record UUID.",
             required = false
         )
         @RequestParam(
             defaultValue = "",
             required = false
         )
-        String metadataUuid,
-        @ApiParam(
-            value = "Maximum number of feedback to return.",
+            String metadataUuid,
+        @Parameter(
+            description = "Maximum number of feedback to return.",
             required = false
         )
         @RequestParam(
             defaultValue = "-1",
             required = false
         )
-        int size,
-        @ApiIgnore final HttpServletResponse response,
-        @ApiIgnore final HttpSession httpSession) throws Exception {
+            int size,
+        @Parameter(hidden = true) final HttpServletResponse response,
+        @Parameter(hidden = true) final HttpSession httpSession) throws Exception {
 
         return getUserFeedback(metadataUuid, size, response, httpSession);
     }
@@ -440,21 +429,20 @@ public class UserFeedbackAPI {
      * New user feedback.
      *
      * @param userFeedbackDto the user feedback dto
-     * @param httpSession the http session
+     * @param httpSession     the http session
      * @return the response entity
      * @throws Exception the exception
      */
-    @ApiOperation(
-        value = "Creates a user feedback",
-        notes = "Creates a user feedback in draft status if the user is not logged in.",
-        nickname = "newUserFeedback")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Creates a user feedback",
+        description = "Creates a user feedback in draft status if the user is not logged in.")
     @RequestMapping(value = "/userfeedback", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity newUserFeedback(
-        @ApiParam(name = "uf") @RequestBody UserFeedbackDTO userFeedbackDto,
-        @ApiIgnore final HttpSession httpSession,
-        @ApiIgnore final HttpServletRequest request) throws Exception {
+        @Parameter(name = "uf") @RequestBody UserFeedbackDTO userFeedbackDto,
+        @Parameter(hidden = true) final HttpSession httpSession,
+        @Parameter(hidden = true) final HttpServletRequest request) throws Exception {
 
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
@@ -485,8 +473,8 @@ public class UserFeedbackAPI {
             }
 
             userFeedbackService
-                    .saveUserFeedback(UserFeedbackUtils.convertFromDto(userFeedbackDto, session != null ? session.getPrincipal() : null),
-                    		request.getRemoteAddr());
+                .saveUserFeedback(UserFeedbackUtils.convertFromDto(userFeedbackDto, session != null ? session.getPrincipal() : null),
+                    request.getRemoteAddr());
 
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (final Exception e) {
@@ -495,10 +483,9 @@ public class UserFeedbackAPI {
         }
     }
 
-    @ApiOperation(
-        value = "Send an email to catalogue administrator or record's contact",
-        notes = "",
-        nickname = "sendEmailToContact")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Send an email to catalogue administrator or record's contact",
+        description = "")
     @RequestMapping(
         value = "/records/{metadataUuid}/alert",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -506,79 +493,67 @@ public class UserFeedbackAPI {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity sendEmailToContact(
-        @ApiParam(
-            value = "Metadata record UUID.",
+        @Parameter(
+            description = "Metadata record UUID.",
             required = true
         )
-        @PathVariable(value = "metadataUuid")
-        final String metadataUuid,
-        @ApiParam(
-            value = "Recaptcha validation key.",
+        @PathVariable(value = "metadataUuid") final String metadataUuid,
+        @Parameter(
+            description = "Recaptcha validation key.",
             required = false
         )
-        @RequestParam(required = false, defaultValue = "")
-        final String recaptcha,
-        @ApiParam(
-            value = "User name.",
+        @RequestParam(required = false, defaultValue = "") final String recaptcha,
+        @Parameter(
+            description = "User name.",
             required = true
         )
-        @RequestParam
-        final String name,
-        @ApiParam(
-            value = "User organisation.",
+        @RequestParam final String name,
+        @Parameter(
+            description = "User organisation.",
             required = true
         )
-        @RequestParam
-        final String org,
-        @ApiParam(
-            value = "User email address.",
+        @RequestParam final String org,
+        @Parameter(
+            description = "User email address.",
             required = true
         )
-        @RequestParam
-        final String email,
-        @ApiParam(
-            value = "A comment or question.",
+        @RequestParam final String email,
+        @Parameter(
+            description = "A comment or question.",
             required = true
         )
-        @RequestParam
-        final String comments,
-        @ApiParam(
-            value = "User phone number.",
+        @RequestParam final String comments,
+        @Parameter(
+            description = "User phone number.",
             required = false
         )
-        @RequestParam(required = false, defaultValue = "")
-        final String phone,
-        @ApiParam(
-            value = "Email subject.",
+        @RequestParam(required = false, defaultValue = "") final String phone,
+        @Parameter(
+            description = "Email subject.",
             required = false
         )
-        @RequestParam(required = false, defaultValue = "User feedback")
-        final String subject,
-        @ApiParam(
-            value = "User function.",
+        @RequestParam(required = false, defaultValue = "User feedback") final String subject,
+        @Parameter(
+            description = "User function.",
             required = false
         )
-        @RequestParam(required = false, defaultValue = "-")
-        final String function,
-        @ApiParam(
-            value = "Comment type.",
+        @RequestParam(required = false, defaultValue = "-") final String function,
+        @Parameter(
+            description = "Comment type.",
             required = false
         )
-        @RequestParam(required = false, defaultValue = "-")
-        final String type,
-        @ApiParam(
-            value = "Comment category.",
+        @RequestParam(required = false, defaultValue = "-") final String type,
+        @Parameter(
+            description = "Comment category.",
             required = false
         )
-        @RequestParam(required = false, defaultValue = "-")
-        final String category,
-        @ApiParam(
-            value = "List of record's contact to send this email.",
+        @RequestParam(required = false, defaultValue = "-") final String category,
+        @Parameter(
+            description = "List of record's contact to send this email.",
             required = false
         )
-        @RequestParam(required = false, defaultValue = "")
-        final String metadataEmail,
-        @ApiIgnore final HttpServletRequest request
+        @RequestParam(required = false, defaultValue = "") final String metadataEmail,
+        @Parameter(hidden = true) final HttpServletRequest request
     ) throws IOException {
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
@@ -596,7 +571,6 @@ public class UserFeedbackAPI {
         }
 
 
-
         String to = settingManager.getValue(SYSTEM_FEEDBACK_EMAIL);
         String catalogueName = settingManager.getValue(SYSTEM_SITE_NAME_PATH);
 
@@ -605,7 +579,7 @@ public class UserFeedbackAPI {
         if (isNotBlank(metadataEmail)) {
             //Check metadata email belongs to metadata security!!
             AbstractMetadata md = metadataRepository.findOneByUuid(metadataUuid);
-            if(md.getData().indexOf(metadataEmail) > 0) {
+            if (md.getData().indexOf(metadataEmail) > 0) {
                 toAddress.add(metadataEmail);
             }
         }
@@ -629,8 +603,8 @@ public class UserFeedbackAPI {
      * Prints the output message.
      *
      * @param response the response
-     * @param code the code
-     * @param message the message
+     * @param code     the code
+     * @param message  the message
      * @throws IOException Signals that an I/O exception has occurred.
      */
     private void printOutputMessage(final HttpServletResponse response, final HttpStatus code, final String message) throws IOException {
@@ -644,28 +618,29 @@ public class UserFeedbackAPI {
     /**
      * Publish.
      *
-     * @param uuid the uuid
+     * @param uuid        the uuid
      * @param httpSession the http session
      * @return the response entity
      * @throws Exception the exception
      */
-    @ApiOperation(value = "Publishes a feedback", notes = "For reviewers", nickname = "publishFeedback")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Publishes a feedback",
+        description = "For reviewers")
     @RequestMapping(value = "/userfeedback/{uuid}/publish", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('Reviewer')")
-    @ApiResponses(value = { @ApiResponse(code = 204, message = "User feedback published."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER),
-            @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)})
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "User feedback published."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)})
     @ResponseBody
     public ResponseEntity publish(
-        @ApiParam(
-            value = "User feedback UUID.",
+        @Parameter(
+            description = "User feedback UUID.",
             required = true
         )
-        @PathVariable(value = "uuid")
-        final String uuid,
-        @ApiIgnore final HttpSession httpSession)
-            throws Exception {
+        @PathVariable(value = "uuid") final String uuid,
+        @Parameter(hidden = true) final HttpSession httpSession)
+        throws Exception {
 
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 

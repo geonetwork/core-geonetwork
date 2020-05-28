@@ -23,7 +23,10 @@
 
 package org.fao.geonet.api.registries;
 
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -31,15 +34,8 @@ import org.fao.geonet.api.registries.model.Crs;
 import org.fao.geonet.api.registries.model.CrsType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Arrays;
@@ -52,8 +48,7 @@ import java.util.List;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/registries"
 })
-@Api(value = ApiParams.API_CLASS_REGISTRIES_TAG,
-    tags = ApiParams.API_CLASS_REGISTRIES_TAG,
+@Tag(name = ApiParams.API_CLASS_REGISTRIES_TAG,
     description = ApiParams.API_CLASS_REGISTRIES_OPS)
 public class CrsApi {
 
@@ -62,9 +57,8 @@ public class CrsApi {
     /**
      * Get list of CRS type.
      */
-    @ApiOperation(value = "Get list of CRS type",
-        nickname = "getCrsType",
-        notes = "")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get list of CRS type",
+        description = "")
     @RequestMapping(
         value = "/crs/types",
         method = RequestMethod.GET,
@@ -73,7 +67,7 @@ public class CrsApi {
         })
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "List of CRS types.")
+        @ApiResponse(responseCode = "200", description = "List of CRS types.")
     })
     @ResponseBody
     public List<CrsType> getCrsTypes()
@@ -85,10 +79,9 @@ public class CrsApi {
     /**
      * Search coordinate reference system.
      */
-    @ApiOperation(
-        value = "Search coordinate reference system (CRS)",
-        nickname = "searchCrs",
-        notes = "Based on GeoTools EPSG database. If phrase query, each words " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Search coordinate reference system (CRS)",
+        description = "Based on GeoTools EPSG database. If phrase query, each words " +
             "are searched separately.")
     @RequestMapping(
         value = "/crs",
@@ -98,30 +91,27 @@ public class CrsApi {
         })
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "List of CRS.")
+        @ApiResponse(responseCode = "200", description = "List of CRS.")
     })
     @ResponseBody
     public List<Crs> getCrs(
-        @ApiParam(
-            value = "Search value",
+        @Parameter(
+            description = "Search value",
             required = false)
         @RequestParam(
             required = false,
-            defaultValue = "")
-        final String q,
-        @ApiParam(
-            value = "Type of CRS",
+            defaultValue = "") final String q,
+        @Parameter(
+            description = "Type of CRS",
             required = false)
         @RequestParam(
-            required = false)
-        final CrsType type,
-        @ApiParam(
-            value = "Number of results. Default is: " + DEFAULT_PARAMS_ROWS,
+            required = false) final CrsType type,
+        @Parameter(
+            description = "Number of results. Default is: " + DEFAULT_PARAMS_ROWS,
             required = false)
         @RequestParam(
             required = false,
-            defaultValue = DEFAULT_PARAMS_ROWS)
-        final int rows)
+            defaultValue = DEFAULT_PARAMS_ROWS) final int rows)
         throws Exception {
         List<Crs> crsList = CrsUtils.search(q.split(" "), type, rows);
         return crsList;
@@ -131,10 +121,9 @@ public class CrsApi {
     /**
      * Get coordinate reference system.
      */
-    @ApiOperation(
-        value = "Get CRS",
-        nickname = "getCrsById",
-        notes = "")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get CRS",
+        description = "")
     @RequestMapping(
         value = "/crs/{id}",
         method = RequestMethod.GET,
@@ -144,16 +133,15 @@ public class CrsApi {
         })
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "CRS details."),
-        @ApiResponse(code = 404, message = "CRS not found.")
+        @ApiResponse(responseCode = "200", description = "CRS details."),
+        @ApiResponse(responseCode = "404", description = "CRS not found.")
     })
     @ResponseBody
     public Crs getCrs(
-        @ApiParam(
-            value = "CRS identifier",
+        @Parameter(
+            description = "CRS identifier",
             required = true)
-        @PathVariable
-        final String id)
+        @PathVariable final String id)
         throws Exception {
         Crs crs = CrsUtils.getById(id);
         if (crs != null) {

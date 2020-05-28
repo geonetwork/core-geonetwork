@@ -1,9 +1,7 @@
 package org.fao.geonet.api.sld;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import org.fao.geonet.ApplicationContextHolder;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
@@ -22,7 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.opengis.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -45,14 +42,17 @@ import java.util.List;
     "/{portal}/api/tools/ogc",
     "/{portal}/api/" + API.VERSION_0_1 + "/tools/ogc"
 })
-@Api(value = "tools",
-    tags = "tools",
+@Tag(name = "tools",
     description = "Utility operations")
 public class SldApi {
 
     public static final String LOGGER = Geonet.GEONETWORK + ".api.sld";
+    @Autowired
+    TextFileRepository fileRepository;
+    @Autowired
+    SettingManager settingManager;
 
-    @ApiOperation(value = "Test form", hidden = true)
+    @io.swagger.v3.oas.annotations.Operation(summary = "Test form", hidden = true)
     @RequestMapping(value = "/sldform",
         method = RequestMethod.GET)
     @ResponseBody
@@ -125,14 +125,7 @@ public class SldApi {
             "</body></html>";
     }
 
-
-    @Autowired
-    TextFileRepository fileRepository;
-
-    @Autowired
-    SettingManager settingManager;
-
-    @ApiOperation(value = "Get the list of SLD available")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get the list of SLD available")
     @RequestMapping(value = "/sld",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
@@ -150,8 +143,8 @@ public class SldApi {
 
     }
 
-    @ApiOperation(value = "Remove all SLD files",
-        notes = "Clean all SLD generated previously")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Remove all SLD files",
+        description = "Clean all SLD generated previously")
     @RequestMapping(value = "/sld",
         method = RequestMethod.DELETE,
         produces = MediaType.APPLICATION_JSON_VALUE)
@@ -162,9 +155,8 @@ public class SldApi {
     }
 
 
-    @ApiOperation(value = "Generate a SLD with a new filter",
-        nickname = "buildSLD",
-        notes = "Get the currend SLD for the requested layers, add new filters in, save the SLD and return the new SLD URL.")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Generate a SLD with a new filter",
+        description = "Get the currend SLD for the requested layers, add new filters in, save the SLD and return the new SLD URL.")
     @RequestMapping(value = "/sld",
         method = RequestMethod.POST,
         consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
@@ -173,13 +165,13 @@ public class SldApi {
     public
     @ResponseBody
     String buildSLD(
-        @ApiParam(value = "The WMS server URL",
+        @Parameter(description = "The WMS server URL",
             required = true)
         @RequestParam("url") String serverURL,
-        @ApiParam(value = "The layers",
+        @Parameter(description = "The layers",
             required = true)
         @RequestParam("layers") String layers,
-        @ApiParam(value = "The filters in JSON",
+        @Parameter(description = "The filters in JSON",
             required = true)
         @RequestParam("filters") String filters,
         HttpServletRequest request) throws ServiceException, TransformerException, JSONException, ParseException, IOException, JDOMException, URISyntaxException {
@@ -189,7 +181,7 @@ public class SldApi {
 
             Element root = Xml.loadString(hash.get("content"), false);
 
-            if(root.getName().equals("ServiceExceptionReport")) {
+            if (root.getName().equals("ServiceExceptionReport")) {
                 throw new ServiceException("The WMS GetStyle request failed.");
             }
             Filter customFilter = SLDUtil.generateCustomFilter(new JSONObject(filters));
@@ -218,15 +210,14 @@ public class SldApi {
         }
     }
 
-    @ApiOperation(value = "Download a SLD",
-        nickname = "downloadSLD",
-        notes = "")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Download a SLD",
+        description = "")
     @RequestMapping(value = "/sld/{id:\\d+}.{extension}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public void downloadSLD(
-        @ApiParam(value = "The SLD identifier",
+        @Parameter(description = "The SLD identifier",
             required = true)
         @PathVariable("id") int id,
         HttpServletResponse response) throws ResourceNotFoundException {

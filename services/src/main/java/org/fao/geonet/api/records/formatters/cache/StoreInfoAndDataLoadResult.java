@@ -25,9 +25,8 @@ package org.fao.geonet.api.records.formatters.cache;
 
 import org.fao.geonet.Constants;
 
-import java.util.concurrent.Callable;
-
 import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 
 /**
  * Encapsulates the information when a formatter is executed.

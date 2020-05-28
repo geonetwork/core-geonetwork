@@ -24,11 +24,10 @@
 package org.fao.geonet.api.records.formatters;
 
 import com.google.common.io.ByteStreams;
-
-import org.locationtech.jts.util.Assert;
-
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+import jeeves.services.ReadWriteController;
 import net.sf.json.JSONObject;
-
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.ZipUtil;
@@ -38,6 +37,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.fao.oaipmh.exceptions.BadArgumentException;
+import org.locationtech.jts.util.Assert;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +46,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.DirectoryStream;
@@ -54,18 +55,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 
-import javax.servlet.http.HttpServletRequest;
-
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
-import jeeves.services.ReadWriteController;
-
 import static org.fao.geonet.api.records.formatters.FormatterConstants.VIEW_XSL_FILENAME;
 
 /**
  * Upload a formatter bundle.  Uploaded file can be a single xsl or a zip file containing resources
  * as well as the xsl file.  If a zip the zip must contain view.xsl which is the root xsl file.
- *
+ * <p>
  * The  zip file can be flat or contain a single directory.
  *
  * @author jeichar
@@ -204,10 +199,10 @@ public class Register extends AbstractFormatService {
             try (PrintStream out = new PrintStream(Files.newOutputStream(locDir.resolve("README")), true, Constants.ENCODING)) {
                 out.println("If a formatter requires localization that cannot be found in strings or schema ");
                 out.println("localization the format bundle can have a loc subfolder containing translations.");
-                out.println("");
+                out.println();
                 out.println("The xml document created will have the xml files from loc/<currentLoc>/ added to");
                 out.println("xml documentation under the /root/resources tag.");
-                out.println("");
+                out.println();
                 out.println("If a localization folder is not found then the default language will be used.  ");
                 out.println("if the default language also does not exist then the first localization will be used");
                 out.println("but it is recommended to always have the default language localization");

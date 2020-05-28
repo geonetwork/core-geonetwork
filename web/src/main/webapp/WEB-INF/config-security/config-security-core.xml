@@ -40,6 +40,8 @@
       <list>
         <sec:filter-chain pattern="/srv/swagger-resources/**" filters=""/>
         <sec:filter-chain pattern="/srv/v2/**" filters=""/>
+        <sec:filter-chain pattern="/srv/v3/**" filters=""/>
+        <sec:filter-chain pattern="/v3/**" filters=""/>
 
         <!-- TODO: This needs to be secured to not access private info -->
         <sec:filter-chain pattern="/index/**" filters=""/>

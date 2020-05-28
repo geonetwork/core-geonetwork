@@ -28,9 +28,8 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.KeywordBean;
@@ -148,7 +147,7 @@ public class EditElement implements Service {
         }
 
         String thesaType = ref;
-        thesaType = thesaType.substring(thesaType.indexOf('.') + 1, thesaType.length());
+        thesaType = thesaType.substring(thesaType.indexOf('.') + 1);
         thesaType = thesaType.substring(0, thesaType.indexOf('.'));
 
         elResp.addContent(new Element("thesaType").setText(thesaType));

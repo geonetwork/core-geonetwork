@@ -23,11 +23,10 @@
 
 package org.fao.geonet.api.site;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.component.ProfileManager;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.server.JeevesProxyInfo;
@@ -46,13 +45,7 @@ import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.doi.client.DoiManager;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataSourceInfo_;
-import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.Setting;
-import org.fao.geonet.domain.SettingDataType;
-import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.index.Status;
 import org.fao.geonet.index.es.EsServerStatusChecker;
@@ -80,13 +73,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import springfox.documentation.annotations.ApiIgnore;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import javax.persistence.criteria.Root;
@@ -99,13 +86,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static org.apache.commons.fileupload.util.Streams.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
@@ -119,8 +100,7 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/site"
 })
-@Api(value = API_CLASS_CATALOG_TAG,
-    tags = API_CLASS_CATALOG_TAG,
+@Tag(name = API_CLASS_CATALOG_TAG,
     description = ApiParams.API_CLASS_CATALOG_OPS)
 @Controller("site")
 public class SiteApi {
@@ -136,6 +116,8 @@ public class SiteApi {
 
     @Autowired
     LanguageUtils languageUtils;
+    @Autowired
+    private SystemInfo info;
 
     public static void reloadServices(ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -173,21 +155,20 @@ public class SiteApi {
         harvestManager.rescheduleActiveHarvesters();
     }
 
-    @ApiOperation(
-        value = "Get site (or portal) description",
-        notes = "",
-        nickname = "getDescription")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get site (or portal) description",
+        description = "")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Site description.")
+        @ApiResponse(responseCode = "200", description = "Site description.")
     })
     @ResponseBody
     public SettingsListResponse get(
-        @ApiIgnore
-        HttpServletRequest request
+        @Parameter(hidden = true)
+            HttpServletRequest request
     ) throws Exception {
         SettingsListResponse response = new SettingsListResponse();
         response.setSettings(settingManager.getSettings(new String[]{
@@ -216,39 +197,36 @@ public class SiteApi {
         return response;
     }
 
-    @ApiOperation(
-        value = "Get settings",
-        notes = "Return public settings for anonymous users, internals are allowed for authenticated.",
-        nickname = "getSettings")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get settings",
+        description = "Return public settings for anonymous users, internals are allowed for authenticated.")
     @RequestMapping(
         path = "/settings",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Settings.")
+        @ApiResponse(responseCode = "200", description = "Settings.")
     })
     @ResponseBody
     public SettingsListResponse getSettingsSet(
-        @ApiParam(
-            value = "Setting set. A common set of settings to retrieve.",
+        @Parameter(
+            description = "Setting set. A common set of settings to retrieve.",
             required = false
         )
         @RequestParam(
             required = false
         )
             SettingSet[] set,
-        @ApiParam(
-            value = "Setting key",
+        @Parameter(
+            description = "Setting key",
             required = false
         )
         @RequestParam(
             required = false
         )
             String[] key,
-        HttpServletRequest request,
-        @ApiIgnore
-        @ApiParam(
+        @Parameter(
             hidden = true
         )
             HttpSession httpSession
@@ -305,42 +283,37 @@ public class SiteApi {
         }
     }
 
-    @ApiOperation(
-        value = "Get settings with details",
-        notes = "Provides also setting properties.",
-        nickname = "getSettingsDetails")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get settings with details",
+        description = "Provides also setting properties.")
     @RequestMapping(
         path = "/settings/details",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Settings with details.")
+        @ApiResponse(responseCode = "200", description = "Settings with details.")
     })
     @ResponseBody
     @PreAuthorize("hasRole('Administrator')")
     public List<Setting> getSettingsDetails(
-        @ApiParam(
-            value = "Setting set. A common set of settings to retrieve.",
+        @Parameter(
+            description = "Setting set. A common set of settings to retrieve.",
             required = false
         )
         @RequestParam(
             required = false
         )
             SettingSet[] set,
-        @ApiParam(
-            value = "Setting key",
+        @Parameter(
+            description = "Setting key",
             required = false
         )
         @RequestParam(
             required = false
         )
             String[] key,
-        HttpServletRequest request,
-        @ApiIgnore
-        @ApiParam(
-            hidden = true
-        )
+        @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
@@ -378,10 +351,9 @@ public class SiteApi {
         }
     }
 
-    @ApiOperation(
-        value = "Save settings",
-        notes = "",
-        nickname = "saveSettingsDetails")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Save settings",
+        description = "")
     @RequestMapping(
         path = "/settings",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -390,20 +362,14 @@ public class SiteApi {
     @PreAuthorize("hasRole('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Settings saved."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+        @ApiResponse(responseCode = "204", description = "Settings saved."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     public void saveSettings(
-        @ApiIgnore
-        @ApiParam(hidden = false)
+        @Parameter(hidden = false)
         @RequestParam
             Map<String, String> allRequestParams,
-        HttpServletRequest request,
-        @ApiIgnore
-        @ApiParam(
-            hidden = true
-        )
-            HttpSession httpSession
+        HttpServletRequest request
     ) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         SettingManager sm = applicationContext.getBean(SettingManager.class);
@@ -459,17 +425,16 @@ public class SiteApi {
         reloadServices(context);
     }
 
-    @ApiOperation(
-        value = "Get site informations",
-        notes = "",
-        nickname = "getInformation")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get site informations",
+        description = "")
     @RequestMapping(
         path = "/info",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Site information.")
+        @ApiResponse(responseCode = "200", description = "Site information.")
     })
     @ResponseBody
     public SiteInformation getInformation(HttpServletRequest request
@@ -479,11 +444,9 @@ public class SiteApi {
             .getHandlerContext(Geonet.CONTEXT_NAME));
     }
 
-
-    @ApiOperation(
-        value = "Is CAS enabled?",
-        notes = "",
-        nickname = "isCasEnabled")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Is CAS enabled?",
+        description = "")
     @RequestMapping(
         path = "/info/isCasEnabled",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -499,21 +462,17 @@ public class SiteApi {
         return ProfileManager.isCasEnabled();
     }
 
-    @Autowired
-    private SystemInfo info;
-
-    @ApiOperation(
-        value = "Update staging profile",
-        notes = "TODO: Needs doc",
-        nickname = "updateStagingProfile")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Update staging profile",
+        description = "TODO: Needs doc")
     @RequestMapping(
         path = "/info/staging/{profile}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Staging profile saved."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+        @ApiResponse(responseCode = "204", description = "Staging profile saved."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     @PreAuthorize("hasRole('Administrator')")
     public void updateStagingProfile(
@@ -522,10 +481,9 @@ public class SiteApi {
         this.info.setStagingProfile(profile.toString());
     }
 
-    @ApiOperation(
-        value = "Is in read-only mode?",
-        notes = "",
-        nickname = "isReadOnly")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Is in read-only mode?",
+        description = "")
     @RequestMapping(
         path = "/info/readonly",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -538,10 +496,9 @@ public class SiteApi {
     }
 
 
-    @ApiOperation(
-        value = "Is indexing?",
-        notes = "",
-        nickname = "isIndexing")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Is indexing?",
+        description = "")
     @RequestMapping(
         path = "/indexing",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -555,10 +512,9 @@ public class SiteApi {
         return ApplicationContextHolder.get().getBean(DataManager.class).isIndexing();
     }
 
-    @ApiOperation(
-        value = "Index",
-        notes = "",
-        nickname = "index")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Index",
+        description = "")
     @RequestMapping(
         path = "/index",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -566,31 +522,31 @@ public class SiteApi {
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public HttpEntity index(
-        @ApiParam(value = "Drop and recreate index",
+        @Parameter(description = "Drop and recreate index",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
-        boolean reset,
-        @ApiParam(value = "Records having only XLinks",
+            boolean reset,
+        @Parameter(description = "Records having only XLinks",
             required = false)
         @RequestParam(required = false, defaultValue = "false")
             boolean havingXlinkOnly,
-        @ApiParam(value = "Index. By default only remove record index.",
+        @Parameter(description = "Index. By default only remove record index.",
             required = false)
         @RequestParam(required = false, defaultValue = "records")
-        String[] indices,
-        @ApiParam(
-            value = ApiParams.API_PARAM_BUCKET_NAME,
+            String[] indices,
+        @Parameter(
+            description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
-        String bucket,
+            String bucket,
         HttpServletRequest request
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
 
-        if(reset) {
+        if (reset) {
             searchMan.init(true, Optional.of(Arrays.asList(indices)));
         }
         searchMan.rebuildIndex(context, havingXlinkOnly, false, bucket);
@@ -598,10 +554,9 @@ public class SiteApi {
         return new HttpEntity<>(HttpStatus.CREATED);
     }
 
-    @ApiOperation(
-        value = "Index status",
-        notes = "",
-        nickname = "indexes")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Index status",
+        description = "")
     @RequestMapping(
         path = "/index/status",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -614,17 +569,16 @@ public class SiteApi {
         return serverStatusChecker.getStatus();
     }
 
-    @ApiOperation(
-        value = "Get build details",
-        notes = "To know when and how this version of the application was built.",
-        nickname = "getSystemInfo")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get build details",
+        description = "To know when and how this version of the application was built.")
     @RequestMapping(
         path = "/info/build",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Build info.")
+        @ApiResponse(responseCode = "200", description = "Build info.")
     })
     @ResponseBody
     public SystemInfo getSystemInfo(
@@ -633,13 +587,12 @@ public class SiteApi {
     }
 
 
-    @ApiOperation(
-        value = "Set catalog logo",
-        notes = "Logos are stored in the data directory " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Set catalog logo",
+        description = "Logos are stored in the data directory " +
             "resources/images/harvesting as PNG or GIF images. " +
             "When a logo is assigned to the catalog, a new " +
-            "image is created in images/logos/<catalogUuid>.png.",
-        nickname = "setLogo")
+            "image is created in images/logos/<catalogUuid>.png.")
     @RequestMapping(
         path = "/logo",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -647,15 +600,15 @@ public class SiteApi {
     @PreAuthorize("hasRole('UserAdmin')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Logo set."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "204", description = "Logo set."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     public void setLogo(
-        @ApiParam(value = "Logo to use for the catalog")
+        @Parameter(description = "Logo to use for the catalog")
         @RequestParam("file")
             String file,
-        @ApiParam(
-            value = "Create favicon too",
+        @Parameter(
+            description = "Create favicon too",
             required = false
         )
         @RequestParam(
@@ -690,21 +643,21 @@ public class SiteApi {
                 if (asFavicon) {
                     try (Resources.ResourceHolder favicon =
                              resources.getWritableImage(serviceContext, "images/logos/favicon.png",
-                                                        resourcesDir)) {
+                                 resourcesDir)) {
                         ApiUtils.createFavicon(source, favicon.getPath());
                     }
                 } else {
                     try (Resources.ResourceHolder logo =
                              resources.getWritableImage(serviceContext,
-                                                        "images/logos/" + nodeUuid + ".png",
-                                                        resourcesDir);
+                                 "images/logos/" + nodeUuid + ".png",
+                                 resourcesDir);
                          Resources.ResourceHolder defaultLogo =
                              resources.getWritableImage(serviceContext,
-                                                        "images/logo.png", resourcesDir)) {
+                                 "images/logo.png", resourcesDir)) {
                         if (!file.endsWith(".png")) {
                             try (
                                 OutputStream logoOut = Files.newOutputStream(logo.getPath());
-                                OutputStream defLogoOut = Files.newOutputStream(defaultLogo.getPath());
+                                OutputStream defLogoOut = Files.newOutputStream(defaultLogo.getPath())
                             ) {
                                 ImageIO.write(source, "png", logoOut);
                                 ImageIO.write(source, "png", defLogoOut);
@@ -712,7 +665,7 @@ public class SiteApi {
                         } else {
                             Files.copy(holder.getPath(), logo.getPath(), StandardCopyOption.REPLACE_EXISTING);
                             Files.copy(holder.getPath(), defaultLogo.getPath(),
-                                       StandardCopyOption.REPLACE_EXISTING);
+                                StandardCopyOption.REPLACE_EXISTING);
                         }
                     }
                 }
@@ -726,17 +679,16 @@ public class SiteApi {
     }
 
 
-    @ApiOperation(
-        value = "Get XSL tranformations available",
-        notes = "XSL transformations may be applied while importing or harvesting records.",
-        nickname = "getXslTransformations")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get XSL tranformations available",
+        description = "XSL transformations may be applied while importing or harvesting records.")
     @RequestMapping(
         path = "/info/transforms",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "XSLT available.")
+        @ApiResponse(responseCode = "200", description = "XSLT available.")
     })
     @ResponseBody
     public List<String> getXslTransformations(

@@ -23,16 +23,14 @@
 
 package org.fao.geonet.api.status;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.repository.MetadataStatusRepository;
@@ -42,19 +40,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
-
-@RequestMapping(value = { "/{portal}/api/status", "/{portal}/api/" + API.VERSION_0_1 + "/status" })
-@Api(value = "status", tags = "status", description = "Workflow status operations")
+@RequestMapping(value = {"/{portal}/api/status", "/{portal}/api/" + API.VERSION_0_1 + "/status"})
+@Tag(name = "status", description = "Workflow status operations")
 @Controller("status")
 public class StatusApi {
 
@@ -64,7 +56,7 @@ public class StatusApi {
     @Autowired
     MetadataStatusRepository metadataStatusRepository;
 
-    @ApiOperation(value = "Get status", notes = "", nickname = "getStatus")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get status", description = "")
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
@@ -74,23 +66,23 @@ public class StatusApi {
     }
 
 
-    @ApiOperation(value = "Get status by type", notes = "", nickname = "getStatusByType")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get status by type", description = "")
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, path = "/{type}")
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<StatusValue> getStatusByType(
-            @ApiParam(value = "Type", required = true) @PathVariable StatusValueType type, HttpServletRequest request)
-            throws Exception {
+        @Parameter(description = "Type", required = true) @PathVariable StatusValueType type, HttpServletRequest request)
+        throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         return statusValueRepository.findAllByType(type);
     }
 
-    @ApiOperation(value = "Delete all record history and status", notes = "", nickname = "deleteAllHistoryAndStatus")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Delete all record history and status", description = "")
     @RequestMapping(method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('Administrator')")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Status removed."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+        @ApiResponse(responseCode = "204", description = "Status removed."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAllHistoryAndStatus(

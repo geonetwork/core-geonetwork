@@ -23,20 +23,13 @@
 
 package org.fao.geonet.api.records;
 
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_OP_NOTE_PROCESS;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.transform.TransformerConfigurationException;
-
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -64,48 +57,43 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.transform.TransformerConfigurationException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-@RequestMapping(value = { "/{portal}/api/records", "/{portal}/api/" + API.VERSION_0_1 + "/records" })
-@Api(value = API_CLASS_RECORD_TAG, tags = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
+import static org.fao.geonet.api.ApiParams.*;
+
+@RequestMapping(value = {"/{portal}/api/records", "/{portal}/api/" + API.VERSION_0_1 + "/records"})
+@Tag(name = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
 @Controller("recordProcessing")
 @ReadWriteController
 public class MetadataProcessApi {
 
+    public static final String XSL_SUGGEST_FILE = "suggest.xsl";
     @Autowired
     LanguageUtils languageUtils;
-
     @Autowired
     DataManager dm;
-
     @Autowired
     SettingManager sm;
 
-    public static final String XSL_SUGGEST_FILE = "suggest.xsl";
-
-    @ApiOperation(value = "Get suggestions", notes = "Analyze the record an suggest processes to improve the quality of the record.<br/>"
-            + "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/workflow/batchupdate-xsl.html'>More info</a>", nickname = "getSuggestions")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get suggestions", description ="Analyze the record an suggest processes to improve the quality of the record.<br/>"
+        + "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/workflow/batchupdate-xsl.html'>More info</a>")
     @RequestMapping(value = "/{metadataUuid}/processes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.OK)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Record suggestions."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
-    public @ResponseBody List<SuggestionType> getSuggestions(
-            @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
-            HttpServletRequest request) throws Exception {
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Record suggestions."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
+    public @ResponseBody
+    List<SuggestionType> getSuggestions(
+        @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+        HttpServletRequest request) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -125,36 +113,37 @@ public class MetadataProcessApi {
             // URL if needed.
             boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
             Element md = dm.getMetadata(context, String.valueOf(metadata.getId()), forEditing, withValidationErrors,
-                    keepXlinkAttributes);
+                keepXlinkAttributes);
 
             Element xmlSuggestions;
             try {
                 xmlSuggestions = Xml.transform(md, xslProcessing, xslParameter);
             } catch (TransformerConfigurationException e) {
                 throw new WebApplicationException(String.format("Error while retrieving suggestion for record '%s'. "
-                        + "Check your suggest.xsl process (and all its imports).", metadataUuid, xslProcessing), e);
+                    + "Check your suggest.xsl process (and all its imports).", metadataUuid, xslProcessing), e);
             }
             SuggestionsType suggestions = (SuggestionsType) Xml.unmarshall(xmlSuggestions, SuggestionsType.class);
 
             return suggestions.getSuggestion();
         } else {
             throw new ResourceNotFoundException(
-                    String.format("No %s files available in schema '%s'. No suggestion to provides.", XSL_SUGGEST_FILE,
-                            metadata.getDataInfo().getSchemaId()));
+                String.format("No %s files available in schema '%s'. No suggestion to provides.", XSL_SUGGEST_FILE,
+                    metadata.getDataInfo().getSchemaId()));
         }
     }
 
-    @ApiOperation(value = "Preview process result", notes = API_OP_NOTE_PROCESS, nickname = "processRecordPreview")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Preview process result", description =API_OP_NOTE_PROCESS)
     @RequestMapping(value = "/{metadataUuid}/processes/{process}", method = {
-            RequestMethod.GET }, produces = MediaType.APPLICATION_XML_VALUE)
+        RequestMethod.GET}, produces = MediaType.APPLICATION_XML_VALUE)
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.OK)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "A preview of the processed record."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
-    public @ResponseBody ResponseEntity<Element> processRecordPreview(
-            @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
-            @ApiParam(value = ApiParams.API_PARAM_PROCESS_ID) @PathVariable String process, HttpServletRequest request)
-            throws Exception {
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "A preview of the processed record."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
+    public @ResponseBody
+    ResponseEntity<Element> processRecordPreview(
+        @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+        @Parameter(description = ApiParams.API_PARAM_PROCESS_ID) @PathVariable String process, HttpServletRequest request)
+        throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         boolean save = request.getMethod().equals("POST");
 
@@ -168,17 +157,18 @@ public class MetadataProcessApi {
         return new ResponseEntity<>(processedMetadata, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Apply a process", notes = API_OP_NOTE_PROCESS, nickname = "processRecord")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Apply a process", description =API_OP_NOTE_PROCESS)
     @RequestMapping(value = "/{metadataUuid}/processes/{process}", method = {
-            RequestMethod.POST, }, produces = MediaType.APPLICATION_XML_VALUE)
+        RequestMethod.POST,}, produces = MediaType.APPLICATION_XML_VALUE)
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.OK)
-    @ApiResponses(value = { @ApiResponse(code = 204, message = "Record processed and saved."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
-    public @ResponseBody ResponseEntity processRecord(
-            @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
-            @ApiParam(value = ApiParams.API_PARAM_PROCESS_ID) @PathVariable String process, HttpServletRequest request)
-            throws Exception {
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Record processed and saved."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
+    public @ResponseBody
+    ResponseEntity processRecord(
+        @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+        @Parameter(description = ApiParams.API_PARAM_PROCESS_ID) @PathVariable String process, HttpServletRequest request)
+        throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         boolean save = true;
 
@@ -192,8 +182,8 @@ public class MetadataProcessApi {
     }
 
     private Element process(ApplicationContext applicationContext, String process, HttpServletRequest request,
-            AbstractMetadata metadata, boolean save, ServiceContext context, SettingManager sm,
-            XsltMetadataProcessingReport report) throws Exception {
+                            AbstractMetadata metadata, boolean save, ServiceContext context, SettingManager sm,
+                            XsltMetadataProcessingReport report) throws Exception {
 
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
         Element processedMetadata;
@@ -204,9 +194,9 @@ public class MetadataProcessApi {
                 true, report, siteURL, request.getParameterMap());
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed",
-                        "Not found:" + report.getNumberOfRecordNotFound() + ", Not owner:"
-                                + report.getNumberOfRecordsNotEditable() + ", No process found:"
-                                + report.getNoProcessFoundCount() + ".");
+                    "Not found:" + report.getNumberOfRecordNotFound() + ", Not owner:"
+                        + report.getNumberOfRecordsNotEditable() + ", No process found:"
+                        + report.getNoProcessFoundCount() + ".");
             } else {
                 UserSession userSession = context.getUserSession();
                 if (userSession != null) {
@@ -214,7 +204,7 @@ public class MetadataProcessApi {
                     String xmlAfter = outp.outputString(processedMetadata);
                     String xmlBefore = outp.outputString(beforeMetadata);
                     new RecordProcessingChangeEvent(metadata.getId(), Integer.parseInt(userSession.getUserId()),
-                            xmlBefore, xmlAfter, process).publish(ApplicationContextHolder.get());
+                        xmlBefore, xmlAfter, process).publish(ApplicationContextHolder.get());
                 }
             }
         } catch (Exception e) {

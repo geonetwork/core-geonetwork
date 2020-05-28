@@ -30,25 +30,19 @@ import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-
 import org.fao.geonet.domain.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
+import javax.annotation.Nullable;
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import javax.annotation.Nullable;
-import javax.annotation.PreDestroy;
 
 /**
  * Caches Formatter html files in memory (keeping the most recent or most accessed X formatters) and
@@ -75,7 +69,7 @@ public class FormatterCache {
     private final ExecutorService executor;
     private final BlockingQueue<Pair<Key, StoreInfoAndDataLoadResult>> storeRequests;
     @Autowired
-    private CacheConfig cacheConfig;
+    private final CacheConfig cacheConfig;
 
     public FormatterCache(PersistentStore persistentStore, int memoryCacheSize, int maxStoreRequests) {
         this(persistentStore, memoryCacheSize, maxStoreRequests, new ConfigurableCacheConfig());
@@ -84,7 +78,7 @@ public class FormatterCache {
     public FormatterCache(PersistentStore persistentStore, int memoryCacheSize, int maxStoreRequests,
                           CacheConfig cacheConfig, ExecutorService executor) {
         this.persistentStore = persistentStore;
-        this.memoryCache = CacheBuilder.<Key, StoreInfoAndData>newBuilder().
+        this.memoryCache = CacheBuilder.newBuilder().
             removalListener(new RemoveFromIndexListener()).
             maximumSize(memoryCacheSize).build();
         this.cacheConfig = cacheConfig;
@@ -189,7 +183,7 @@ public class FormatterCache {
             writeLock.lock();
 
             this.memoryCache.put(key, cached);
-            this.mdIdIndex.put(key.mdId, Pair.read(key, (StoreInfoAndData) cached));
+            this.mdIdIndex.put(key.mdId, Pair.read(key, cached));
             if (writeToStoreInCurrentThread) {
                 createPersistentStoreRunnable(storeRequests, persistentStore).processStoreRequest(Pair.read(key, cached));
             } else {

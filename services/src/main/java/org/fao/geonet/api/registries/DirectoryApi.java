@@ -23,29 +23,12 @@
 
 package org.fao.geonet.api.registries;
 
-import static org.fao.geonet.api.records.MetadataInsertDeleteApi.API_PARAM_RECORD_UUID_PROCESSING;
-import static org.fao.geonet.api.records.MetadataInsertDeleteApi.API_PARAM_RECORD_GROUP;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.ZipUtil;
@@ -65,10 +48,8 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.metadata.BatchOpsMetadataReindexer;
 import org.fao.geonet.utils.Xml;
-import org.geotools.wfs.GML;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DataUtilities;
@@ -76,13 +57,16 @@ import org.geotools.data.Query;
 import org.geotools.data.collection.ListFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureSource;
-import org.geotools.util.factory.Hints;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
+import org.geotools.util.factory.Hints;
+import org.geotools.wfs.GML;
 import org.jdom.Element;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
@@ -99,27 +83,27 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import org.locationtech.jts.geom.Envelope;
-import org.locationtech.jts.geom.Geometry;
+import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Authorization;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import springfox.documentation.annotations.ApiIgnore;
+import static org.fao.geonet.api.records.MetadataInsertDeleteApi.API_PARAM_RECORD_GROUP;
+import static org.fao.geonet.api.records.MetadataInsertDeleteApi.API_PARAM_RECORD_UUID_PROCESSING;
 
 @EnableWebMvc
 @Service
@@ -128,8 +112,7 @@ import springfox.documentation.annotations.ApiIgnore;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/registries/actions/entries"
 })
-@Api(value = "registries",
-    tags = "registries",
+@Tag(name = "registries",
     description = "Registries related operations")
 public class DirectoryApi {
     public static final String LOGGER = Geonet.GEONETWORK + ".registries.directory";
@@ -179,9 +162,8 @@ public class DirectoryApi {
     AccessManager accessManager;
 
 
-    @ApiOperation(value = "Preview directory entries extracted from records",
-        nickname = "previewExtractedEntries",
-        notes = API_COLLECT_ENTRIES_NOTE)
+    @io.swagger.v3.oas.annotations.Operation(summary = "Preview directory entries extracted from records",
+        description = API_COLLECT_ENTRIES_NOTE)
     @RequestMapping(
         value = APIURL_ACTIONS_ENTRIES_COLLECT,
         method = RequestMethod.GET,
@@ -189,24 +171,24 @@ public class DirectoryApi {
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasRole('Reviewer')")
     public ResponseEntity<Object> previewExtractedEntries(
-        @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
+        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
         @RequestParam(required = false)
             String[] uuids,
-        @ApiParam(
-            value = ApiParams.API_PARAM_BUCKET_NAME,
+        @Parameter(
+            description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
             String bucket,
-        @ApiParam(value = APIPARAM_XPATH,
+        @Parameter(description = APIPARAM_XPATH,
             required = true,
             example = ".//gmd:CI_ResponsibleParty")
         @RequestParam(required = true)
             String xpath,
-        @ApiParam(value = APIPARAM_IDENTIFIER_XPATH,
+        @Parameter(description = APIPARAM_IDENTIFIER_XPATH,
             required = false,
             example = "@uuid")
         @RequestParam(required = false)
@@ -219,12 +201,11 @@ public class DirectoryApi {
     }
 
 
-    @ApiOperation(value = "Extracts directory entries from records",
-        nickname = "extractEntries",
-        authorizations = {
-            @Authorization(value = "basicAuth")
-        },
-        notes = API_COLLECT_ENTRIES_NOTE)
+    @io.swagger.v3.oas.annotations.Operation(summary = "Extracts directory entries from records",
+//        authorizations = {
+//            @Authorization(value = "basicAuth")
+//        },
+        description = API_COLLECT_ENTRIES_NOTE)
     @RequestMapping(
         value = APIURL_ACTIONS_ENTRIES_COLLECT,
         method = RequestMethod.PUT,
@@ -232,24 +213,24 @@ public class DirectoryApi {
     @PreAuthorize("hasRole('Reviewer')")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Object> extractEntries(
-        @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
+        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
         @RequestParam(required = false)
             String[] uuids,
-        @ApiParam(
-            value = ApiParams.API_PARAM_BUCKET_NAME,
+        @Parameter(
+            description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
             String bucket,
-        @ApiParam(value = APIPARAM_XPATH,
+        @Parameter(description = APIPARAM_XPATH,
             required = true,
             example = ".//gmd:CI_ResponsibleParty")
         @RequestParam(required = true)
             String xpath,
-        @ApiParam(value = APIPARAM_IDENTIFIER_XPATH,
+        @Parameter(description = APIPARAM_IDENTIFIER_XPATH,
             required = false,
             example = "@uuid")
         @RequestParam(required = false)
@@ -330,20 +311,19 @@ public class DirectoryApi {
             BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, listOfEntriesInternalId);
             r.process();
             report.close();
-            return new ResponseEntity<>((Object) report, HttpStatus.CREATED);
+            return new ResponseEntity<>(report, HttpStatus.CREATED);
         } else {
             Element response = new Element("entries");
             for (Element e : listOfEntries) {
                 response.addContent(e);
             }
-            return new ResponseEntity<>((Object) response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
 
-    @ApiOperation(value = "Preview updated matching entries in records",
-        nickname = "previewUpdatedRecordEntries",
-        notes = API_SYNCHRONIZE_ENTRIES_NOTE)
+    @io.swagger.v3.oas.annotations.Operation(summary = "Preview updated matching entries in records",
+        description = API_SYNCHRONIZE_ENTRIES_NOTE)
     @RequestMapping(
         value = APIURL_ACTIONS_ENTRIES_SYNCHRONIZE,
         method = RequestMethod.GET,
@@ -351,39 +331,39 @@ public class DirectoryApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<Object> previewUpdatedRecordEntries(
-        @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
+        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
         @RequestParam(required = false)
             String[] uuids,
-        @ApiParam(
-            value = ApiParams.API_PARAM_BUCKET_NAME,
+        @Parameter(
+            description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
             String bucket,
-        @ApiParam(value = APIPARAM_XPATH,
+        @Parameter(description = APIPARAM_XPATH,
             required = true,
             example = ".//gmd:CI_ResponsibleParty")
         @RequestParam(required = true)
             String xpath,
-        @ApiParam(value = APIPARAM_IDENTIFIER_XPATH,
+        @Parameter(description = APIPARAM_IDENTIFIER_XPATH,
             required = false,
             example = "@uuid or .//gmd:electronicMailAddress/gco:CharacterString/text()")
         @RequestParam(required = false)
             String identifierXpath,
-        @ApiParam(value = APIPARAM_PROPERTIESTOCOPY,
+        @Parameter(description = APIPARAM_PROPERTIESTOCOPY,
             required = false,
             example = "./gmd:role/*/@codeListValue")
         @RequestParam(required = false)
             List<String> propertiesToCopy,
-        @ApiParam(value = APIPARAM_REPLACEWITHXLINK,
+        @Parameter(description = APIPARAM_REPLACEWITHXLINK,
             required = false,
             example = "@uuid")
         @RequestParam(required = false, defaultValue = "false")
             boolean substituteAsXLink,
-        @ApiParam(value = APIPARAM_DIRECTORYFILTERQUERY,
+        @Parameter(description = APIPARAM_DIRECTORYFILTERQUERY,
             required = false,
             example = "groupPublished:IFREMER")
         @RequestParam(required = false)
@@ -396,9 +376,8 @@ public class DirectoryApi {
     }
 
 
-    @ApiOperation(value = "Update matching entries in records",
-        nickname = "updateRecordEntries",
-        notes = API_SYNCHRONIZE_ENTRIES_NOTE)
+    @io.swagger.v3.oas.annotations.Operation(summary = "Update matching entries in records",
+        description = API_SYNCHRONIZE_ENTRIES_NOTE)
     @RequestMapping(
         value = APIURL_ACTIONS_ENTRIES_SYNCHRONIZE,
         method = RequestMethod.PUT,
@@ -407,38 +386,38 @@ public class DirectoryApi {
     @PreAuthorize("hasRole('Reviewer')")
     @ResponseBody
     public ResponseEntity<Object> updateRecordEntries(
-        @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
+        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
         @RequestParam(required = false)
             String[] uuids,
-        @ApiParam(
-            value = ApiParams.API_PARAM_BUCKET_NAME,
+        @Parameter(
+            description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
             String bucket,
-        @ApiParam(value = APIPARAM_XPATH,
+        @Parameter(description = APIPARAM_XPATH,
             required = true,
             example = ".//gmd:CI_ResponsibleParty")
         @RequestParam(required = true)
             String xpath,
-        @ApiParam(value = APIPARAM_IDENTIFIER_XPATH,
+        @Parameter(description = APIPARAM_IDENTIFIER_XPATH,
             required = false,
             example = "@uuid")
         @RequestParam(required = false)
             String identifierXpath,
-        @ApiParam(value = APIPARAM_PROPERTIESTOCOPY,
+        @Parameter(description = APIPARAM_PROPERTIESTOCOPY,
             required = false,
             example = "./gmd:role/*/@codeListValue")
         @RequestParam(required = false)
             List<String> propertiesToCopy,
-        @ApiParam(value = APIPARAM_REPLACEWITHXLINK,
+        @Parameter(description = APIPARAM_REPLACEWITHXLINK,
             required = false)
         @RequestParam(required = false, defaultValue = "false")
             boolean substituteAsXLink,
-        @ApiParam(value = APIPARAM_DIRECTORYFILTERQUERY,
+        @Parameter(description = APIPARAM_DIRECTORYFILTERQUERY,
             required = false,
             example = "groupPublished:IFREMER")
         @RequestParam(required = false)
@@ -467,7 +446,7 @@ public class DirectoryApi {
         // Check which records to analyse
         final Set<String> setOfUuidsToEdit = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
 
-       // List of identifier to check for duplicates
+        // List of identifier to check for duplicates
         Set<Element> listOfUpdatedRecord = new HashSet<>();
         Set<Integer> listOfRecordInternalId = new HashSet<>();
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
@@ -521,7 +500,7 @@ public class DirectoryApi {
                 new BatchOpsMetadataReindexer(dataManager, listOfRecordInternalId);
             r.process();
             report.close();
-            return new ResponseEntity<>((Object) report, HttpStatus.CREATED);
+            return new ResponseEntity<>(report, HttpStatus.CREATED);
         } else {
             // TODO: Limite size of large response ?
             Element response = new Element("records");
@@ -529,15 +508,13 @@ public class DirectoryApi {
                 response.addContent(e);
             }
             report.close();
-            return new ResponseEntity<>((Object) response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
 
-
-    @ApiOperation(value = "Import spatial directory entries",
-        nickname = "importSpatialEntries",
-        notes = "Directory entry (AKA subtemplates) are XML fragments that can be " +
+    @io.swagger.v3.oas.annotations.Operation(summary = "Import spatial directory entries",
+        description = "Directory entry (AKA subtemplates) are XML fragments that can be " +
             "inserted in metadata records. Use this service to import geographic extent entries " +
             "from an ESRI Shapefile format.")
     @RequestMapping(
@@ -551,103 +528,96 @@ public class DirectoryApi {
         })
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Directory entries imported."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
+        @ApiResponse(responseCode = "201", description = "Directory entries imported."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
     })
     @PreAuthorize("hasRole('Reviewer')")
     @ResponseBody
     public SimpleMetadataProcessingReport importSpatialEntries(
-        @ApiParam(
-            value = "The ZIP file to upload containing the Shapefile.",
+        @Parameter(
+            description = "The ZIP file to upload containing the Shapefile.",
             required = true
         )
         @RequestParam("file")
             MultipartFile file,
-        @ApiParam(
-            value = "Attribute to use for UUID. If none, random UUID are generated.",
+        @Parameter(
+            description = "Attribute to use for UUID. If none, random UUID are generated.",
             required = false)
         @RequestParam(
             required = false
         )
             String uuidAttribute,
-        @ApiParam(
-            value = "Pattern to build UUID from. Default is '{{uuid}}'.",
+        @Parameter(
+            description = "Pattern to build UUID from. Default is '{{uuid}}'.",
             required = false)
         @RequestParam(
             defaultValue = "{{uuid}}",
             required = false
         )
             String uuidPattern,
-        @ApiParam(
-            value = "Attribute to use for extent description. " +
+        @Parameter(
+            description = "Attribute to use for extent description. " +
                 "If none, no extent description defined. TODO: Add per language desc ?",
             required = false)
         @RequestParam(
             required = false
         )
             String descriptionAttribute,
-        @ApiParam(
-            value = "geomProjectionTo",
-            defaultValue = "",
+        @Parameter(
+            description = "geomProjectionTo",
             required = false
         )
         @RequestParam(
             required = false
         )
             String geomProjectionTo,
-        @ApiParam(
-            value = "lenient",
-            defaultValue = "false",
+        @Parameter(
+            description = "lenient",
             required = false
         )
         @RequestParam(
             required = false
         )
             boolean lenient,
-        @ApiParam(
-            value = "Create only bounding box for each spatial objects.",
+        @Parameter(
+            description = "Create only bounding box for each spatial objects.",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "true")
             boolean onlyBoundingBox,
-        @ApiParam(
-            value = "Process",
-            defaultValue = "build-extent-subtemplate",
+        @Parameter(
+            description = "Process",
             required = false
         )
         @RequestParam(
             required = false
         )
             String process,
-        @ApiParam(
-            value = "Schema identifier",
-            defaultValue = "iso19139",
+        @Parameter(
+            description = "Schema identifier",
             required = false
         )
         @RequestParam(
             required = false
         )
             String schema,
-        @ApiParam(
-            value = API_PARAM_RECORD_UUID_PROCESSING,
-            required = false,
-            defaultValue = "NOTHING"
+        @Parameter(
+            description = API_PARAM_RECORD_UUID_PROCESSING,
+            required = false
         )
         @RequestParam(
             required = false,
             defaultValue = "NOTHING"
-        )
-        final MEFLib.UuidAction uuidProcessing,
-        @ApiParam(
-            value = API_PARAM_RECORD_GROUP,
+        ) final MEFLib.UuidAction uuidProcessing,
+        @Parameter(
+            description = API_PARAM_RECORD_GROUP,
             required = false
         )
         @RequestParam(
             required = false
-        )
-        final Integer group,
-        @ApiIgnore
+        ) final Integer group,
+        @Parameter(hidden = true)
             MultipartHttpServletRequest request)
         throws Exception {
 
@@ -698,7 +668,7 @@ public class DirectoryApi {
             }
 
             report.addInfos(String.format(
-                    "%d entries extracted from shapefile '%s'.",
+                "%d entries extracted from shapefile '%s'.",
                 collection.size(),
                 shapeFile.getName()
             ));
@@ -740,7 +710,7 @@ public class DirectoryApi {
             r.process();
 
             errors.forEach((k, v) ->
-                    report.addError(v)
+                report.addError(v)
             );
 
             report.close();
@@ -753,7 +723,7 @@ public class DirectoryApi {
     }
 
     private Geometry reprojGeom(String geomProjectionTo, boolean lenient, SimpleFeature feature)
-            throws FactoryException, ResourceNotFoundException, TransformException {
+        throws FactoryException, ResourceNotFoundException, TransformException {
         CoordinateReferenceSystem fromCrs = feature.getDefaultGeometryProperty().getDescriptor().getCoordinateReferenceSystem();
         CoordinateReferenceSystem toCrs = null;
         if (StringUtils.isNotEmpty(geomProjectionTo)) {
@@ -762,7 +732,7 @@ public class DirectoryApi {
 
             } catch (NoSuchAuthorityCodeException ex) {
                 throw new ResourceNotFoundException(String.format("Projection '%s' to convert geometry to not foundin EPSG database",
-                        geomProjectionTo));
+                    geomProjectionTo));
             }
         }
 
@@ -775,19 +745,19 @@ public class DirectoryApi {
     }
 
     private String geometryToXml(Object geometry, SimpleFeatureType simpleFeatureType)
-            throws IOException, SchemaException {
+        throws IOException, SchemaException {
         GML gmlEncoder = new GML(GML.Version.WFS1_1);
         gmlEncoder.setNamespace("gn", "http://geonetwork-opensource.org");
         gmlEncoder.setBaseURL(new URL("http://geonetwork-opensource.org"));
-        gmlEncoder.setEncoding(Charset.forName("UTF-8"));
+        gmlEncoder.setEncoding(StandardCharsets.UTF_8);
 
         List<SimpleFeature> c = new LinkedList<SimpleFeature>();
         SimpleFeatureType TYPE = DataUtilities.createType(
-                "http://geonetwork-opensource.org",
-                "the_geom",
-                "geom:Geometry");
+            "http://geonetwork-opensource.org",
+            "the_geom",
+            "geom:Geometry");
         TYPE.getUserData().put("prefix", "gn");
-        c.add(SimpleFeatureBuilder.build(TYPE, new Object[] {geometry }, null));
+        c.add(SimpleFeatureBuilder.build(TYPE, new Object[]{geometry}, null));
         ByteArrayOutputStream outXml = new ByteArrayOutputStream();
         gmlEncoder.encode(outXml, new ListFeatureCollection(simpleFeatureType, c));
         outXml.close();
@@ -831,17 +801,17 @@ public class DirectoryApi {
         String typeName = dataStore.getTypeNames()[0];
         SimpleFeatureSource source = dataStore.getFeatureSource(typeName);
         Query query = new Query(typeName, Filter.INCLUDE);
-        query.setHints( new Hints(Hints.FEATURE_2D, true));
+        query.setHints(new Hints(Hints.FEATURE_2D, true));
         return source.getFeatures(query);
     }
 
     private File[] unzipAndFilterShp(MultipartFile file) throws IOException, URISyntaxException {
         Path toDirectory = Files.createTempDirectory("gn-imported-entries-");
         toDirectory.toFile().deleteOnExit();
-        File zipFile = new File(Paths.get(toDirectory.toString(), file.getOriginalFilename()).toString());;
+        File zipFile = new File(Paths.get(toDirectory.toString(), file.getOriginalFilename()).toString());
         file.transferTo(zipFile);
         ZipUtil.extract(zipFile.toPath(), toDirectory);
-        File [] shapefiles = toDirectory.toFile().listFiles(new FilenameFilter() {
+        File[] shapefiles = toDirectory.toFile().listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
                 return name.toLowerCase().endsWith(".shp");

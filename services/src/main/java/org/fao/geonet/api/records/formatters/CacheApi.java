@@ -23,18 +23,18 @@
 
 package org.fao.geonet.api.records.formatters;
 
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.records.formatters.cache.FormatterCache;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import jeeves.services.ReadWriteController;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RequestMapping(value = {
@@ -42,24 +42,23 @@ import org.springframework.web.bind.annotation.ResponseStatus;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/formatters"
 })
-@Api(value = "formatters",
-    tags = "formatters",
+@Tag(name = "formatters",
     description = "Formatter operations")
 @Controller("formatters")
 @ReadWriteController
 public class CacheApi {
 
 
-    @ApiOperation(
-        value = "Clear formatter cache",
-        notes = "Formatters are used to render records in various format (HTML, PDF, ...). " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Clear formatter cache",
+        description = "Formatters are used to render records in various format (HTML, PDF, ...). " +
             "When a record is rendered a cache is populated for better performance. " +
             "By default the cache is an H2 database with files on the filesystems " +
-            "(See <dataDirectory>/resources/htmlcache/formatter-cache folder).",
-        authorizations = {
-            @Authorization(value = "basicAuth")
-        },
-        nickname = "clearFormatterCache")
+            "(See <dataDirectory>/resources/htmlcache/formatter-cache folder)."
+        //       authorizations = {
+        //           @Authorization(value = "basicAuth")
+        //      })
+    )
     @RequestMapping(
         value = "/cache",
         method = RequestMethod.DELETE
@@ -67,8 +66,8 @@ public class CacheApi {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('Administrator')")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Cache cleared."),
-        @ApiResponse(code = 403, message = "Operation not allowed. Only Administrator can access it.")
+        @ApiResponse(responseCode = "204", description = "Cache cleared."),
+        @ApiResponse(responseCode = "403", description = "Operation not allowed. Only Administrator can access it.")
     })
     public void clearFormatterCache() throws Exception {
         FormatterCache formatterCache = ApplicationContextHolder.get().getBean(FormatterCache.class);

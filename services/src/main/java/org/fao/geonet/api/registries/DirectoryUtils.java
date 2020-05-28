@@ -5,11 +5,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.XLink;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataDataInfo;
-import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -18,24 +14,16 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.jdom.Attribute;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
-import org.jdom.Text;
+import org.jdom.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by francois on 11/03/16.
  */
 public class DirectoryUtils {
-    private static final String LOGGER = DirectoryApi.LOGGER;
     public static final char SEPARATOR = '~';
+    private static final String LOGGER = DirectoryApi.LOGGER;
 
     /**
      * Save entries and metadata
@@ -80,7 +68,7 @@ public class DirectoryUtils {
                         context,
                         subtemplate,
                         (Element) entry.clone(),
-                            index, ufo,
+                        index, ufo,
                         UpdateDatestamp.NO,
                         publicForGroup, refreshReaders);
 
@@ -378,7 +366,7 @@ public class DirectoryUtils {
     /**
      * Build process URL parameters containing XPath of values to be replaced in the target
      * subtemplate.
-     *
+     * <p>
      * xlink:href="local://eng/subtemplate?uuid=0c18725d-7884-4a09-8492-8b0626d958f2&amp;process=gmd:role/gmd:CI_RoleCode/@codeListValue~resourceProvider&amp;
      */
     private static String getPropertiesAsParameters(Element source,

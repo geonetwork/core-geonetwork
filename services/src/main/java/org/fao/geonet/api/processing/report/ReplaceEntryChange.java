@@ -30,10 +30,10 @@ package org.fao.geonet.api.processing.report;
  */
 public class ReplaceEntryChange {
 
-    private String originalVal;
-    private String changedVal;
+    private final String originalVal;
+    private final String changedVal;
 
-    private String fieldId;
+    private final String fieldId;
 
     public ReplaceEntryChange(String fieldId, String originalVal, String changedVal) {
         this.fieldId = fieldId;

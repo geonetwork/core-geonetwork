@@ -24,11 +24,10 @@
 package org.fao.geonet.api.records;
 
 import com.google.common.collect.Lists;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
@@ -58,12 +57,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import springfox.documentation.annotations.ApiIgnore;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -80,8 +74,7 @@ import static org.fao.geonet.api.ApiParams.*;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
-@Api(value = API_CLASS_RECORD_TAG,
-    tags = API_CLASS_RECORD_TAG,
+@Tag(name = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)
 @Controller("samplesAndTemplates")
 @ReadWriteController
@@ -100,25 +93,24 @@ public class MetadataSampleApi {
     SchemaManager schemaManager;
 
 
-    @ApiOperation(
-        value = "Add samples",
-        notes = "Add sample records for one or more schemas. " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Add samples",
+        description = "Add sample records for one or more schemas. " +
             "Samples are defined for each standard in the samples folder " +
-            "as MEF files.",
-        nickname = "addSamples")
+            "as MEF files.")
     @RequestMapping(value = "/samples",
         method = RequestMethod.PUT
     )
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Return a report of what has been done."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+        @ApiResponse(responseCode = "201", description = "Return a report of what has been done."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     @PreAuthorize("hasRole('Administrator')")
     @ResponseStatus(HttpStatus.CREATED)
     public
     @ResponseBody
     SimpleMetadataProcessingReport addSamples(
-        @ApiParam(value = API_PARAM_SCHEMA_IDENTIFIERS,
+        @Parameter(description = API_PARAM_SCHEMA_IDENTIFIERS,
             required = true,
             example = "iso19139")
         @RequestParam(required = false)
@@ -164,13 +156,13 @@ public class MetadataSampleApi {
                     }
                     List<String> importedMdIds = MEFLib.doImport(params, context, file, null);
 
-                    if(importedMdIds!=null && importedMdIds.size()>0) {
+                    if (importedMdIds != null && importedMdIds.size() > 0) {
                         schemaCount += importedMdIds.size();
                         for (String mdId : importedMdIds) {
                             AbstractMetadata metadata = ApiUtils.getRecord(mdId);
                             new RecordImportedEvent(Integer.parseInt(mdId), userSession.getUserIdAsInt(),
-                                    ObjectJSONUtils.convertObjectInJsonObject(userSession.getPrincipal(), RecordImportedEvent.FIELD),
-                                    metadata.getData()).publish(applicationContext);
+                                ObjectJSONUtils.convertObjectInJsonObject(userSession.getPrincipal(), RecordImportedEvent.FIELD),
+                                metadata.getData()).publish(applicationContext);
                         }
                     }
                 } catch (Exception e) {
@@ -192,31 +184,29 @@ public class MetadataSampleApi {
         return report;
     }
 
-    @ApiOperation(
-        value = "Add templates",
-        notes = "Add template records for one or more schemas. " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Add templates",
+        description = "Add template records for one or more schemas. " +
             "Templates are defined for each standard in the template folder " +
-            "as XML files. Template may also contains subtemplates.",
-        nickname = "addTemplates")
+            "as XML files. Template may also contains subtemplates.")
     @RequestMapping(value = "/templates",
         method = RequestMethod.PUT
     )
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Return a report of what has been done."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+        @ApiResponse(responseCode = "201", description = "Return a report of what has been done."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     @PreAuthorize("hasRole('Administrator')")
     @ResponseStatus(HttpStatus.CREATED)
     public
     @ResponseBody
     SimpleMetadataProcessingReport addSamples(
-        @ApiParam(value = API_PARAM_SCHEMA_IDENTIFIERS,
+        @Parameter(description = API_PARAM_SCHEMA_IDENTIFIERS,
             required = true,
             example = "iso19139")
         @RequestParam(required = false)
             String[] schema,
-        @ApiIgnore
-        @ApiParam(hidden = true)
+        @Parameter(hidden = true)
             HttpSession session,
         HttpServletRequest request
     )
@@ -279,9 +269,9 @@ public class MetadataSampleApi {
                             String upid = dataManager.getMetadataId(uuid);
                             dataManager.updateMetadata(context, upid, xml, false, true, false, context.getLanguage(), null, true);
                             report.addMetadataInfos(Integer.parseInt(upid),
-                            String.format(
-                            "Template for schema '%s' with UUID '%s' updated.",
-                            schemaName, uuid));
+                                String.format(
+                                    "Template for schema '%s' with UUID '%s' updated.",
+                                    schemaName, uuid));
                         } else {
                             //
                             // insert metadata
@@ -298,9 +288,9 @@ public class MetadataSampleApi {
                                 setGroupOwner(1);
                             dataManager.insertMetadata(context, metadata, xml, true, true, UpdateDatestamp.NO, false, true);
                             report.addMetadataInfos(metadata.getId(),
-                            String.format(
-                            "Template for schema '%s' with UUID '%s' added.",
-                            schemaName, metadata.getUuid()));
+                                String.format(
+                                    "Template for schema '%s' with UUID '%s' added.",
+                                    schemaName, metadata.getUuid()));
                         }
 
                         schemaCount++;

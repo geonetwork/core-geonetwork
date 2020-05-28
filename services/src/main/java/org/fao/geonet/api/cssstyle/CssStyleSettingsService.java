@@ -22,28 +22,8 @@
  */
 package org.fao.geonet.api.cssstyle;
 
-import static com.google.common.base.CaseFormat.LOWER_CAMEL;
-import static com.google.common.base.CaseFormat.LOWER_HYPHEN;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -60,22 +40,26 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import springfox.documentation.annotations.ApiIgnore;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.google.common.base.CaseFormat.LOWER_CAMEL;
+import static com.google.common.base.CaseFormat.LOWER_HYPHEN;
 
 /**
  * The Class CssStyleSettingsService.
  */
-@RequestMapping(value = { "/{portal}/api/customstyle", "/{portal}/api/" + API.VERSION_0_1 + "/customstyle" })
-@Api(value = "customstyle", tags = "customstyle", description = "Functionalities for custom styling")
+@RequestMapping(value = {"/{portal}/api/customstyle", "/{portal}/api/" + API.VERSION_0_1 + "/customstyle"})
+@Tag(name = "customstyle", description = "Functionalities for custom styling")
 @Controller("stylesheet")
 public class CssStyleSettingsService {
 
@@ -85,19 +69,20 @@ public class CssStyleSettingsService {
     /**
      * Save css style.
      *
-     * @param request the request
-     * @param response the response
+     * @param request       the request
+     * @param response      the response
      * @param jsonVariables the json variables
      * @return the response entity
      * @throws Exception the exception
      */
-    @ApiOperation(value = "Saves custom style variables.", notes = "Saves custom style variables.", nickname = "saveCustomStyle")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Saves custom style variables.",
+        description = "Saves custom style variables.")
     @RequestMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     @PreAuthorize("hasRole('Administrator')")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity<String> saveCssStyle(@ApiIgnore HttpServletRequest request, @ApiIgnore HttpServletResponse response,
-            @ApiParam(name = "gnCssStyle") @RequestBody String jsonVariables) throws Exception {
+    public ResponseEntity<String> saveCssStyle(@Parameter(hidden = true) HttpServletRequest request, @Parameter(hidden = true) HttpServletResponse response,
+                                               @Parameter(name = "gnCssStyle") @RequestBody String jsonVariables) throws Exception {
 
         try {
             checkJSONFile(jsonVariables);
@@ -115,20 +100,20 @@ public class CssStyleSettingsService {
     /**
      * Gets the css style.
      *
-     * @param request the request
+     * @param request  the request
      * @param response the response
      * @return the css style
      * @throws Exception the exception
      */
-    @ApiOperation(value = "Get CssStyleSettings", notes = "This returns a map with all Less variables.", nickname = "getCssStyle")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get CssStyleSettings", description = "This returns a map with all Less variables.")
     @RequestMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public Map<String, String> getCssStyle(@ApiIgnore HttpServletRequest request, @ApiIgnore HttpServletResponse response)
-            throws Exception {
+    public Map<String, String> getCssStyle(@Parameter(hidden = true) HttpServletRequest request, @Parameter(hidden = true) HttpServletResponse response)
+        throws Exception {
 
         final ICssStyleSettingService cssStyleSettingService = (ICssStyleSettingService) ApplicationContextHolder.get()
-                .getBean("cssStyleSettingService");
+            .getBean("cssStyleSettingService");
 
         final List<CssStyleSetting> currentCssStyleSettings = cssStyleSettingService.getCustomCssSettings();
 
@@ -152,8 +137,8 @@ public class CssStyleSettingsService {
 
         for (final CssStyleSetting cssStyleSetting : currentCssStyleSettings) {
             // Checking the url variable (removing quotes)
-            if(cssStyleSetting.getVariable().equals("gn-background-image") && cssStyleSetting.getValue()!=null && cssStyleSetting.getValue().startsWith("'")) {
-                map.put(fromDashToCamel(cssStyleSetting.getVariable()), cssStyleSetting.getValue().substring(1, cssStyleSetting.getValue().length()-1));
+            if (cssStyleSetting.getVariable().equals("gn-background-image") && cssStyleSetting.getValue() != null && cssStyleSetting.getValue().startsWith("'")) {
+                map.put(fromDashToCamel(cssStyleSetting.getVariable()), cssStyleSetting.getValue().substring(1, cssStyleSetting.getValue().length() - 1));
             } else {
                 map.put(fromDashToCamel(cssStyleSetting.getVariable()), cssStyleSetting.getValue());
             }
@@ -231,7 +216,7 @@ public class CssStyleSettingsService {
 
     private void storeListOnDB(List<CssStyleSetting> cssVariables) {
         final ICssStyleSettingService cssStyleSettingService = (ICssStyleSettingService) ApplicationContextHolder.get()
-                .getBean("cssStyleSettingService");
+            .getBean("cssStyleSettingService");
         cssStyleSettingService.saveSettings(cssVariables);
     }
 
@@ -274,7 +259,7 @@ public class CssStyleSettingsService {
             if (input.getString(key) != null) {
 
                 // For the url is necessary to add quotes
-                if(key.equals("gnBackgroundImage") && input.getString(key) != null && !input.getString(key).startsWith("'")) {
+                if (key.equals("gnBackgroundImage") && input.getString(key) != null && !input.getString(key).startsWith("'")) {
                     output.put(fromCamelToDash(key), "'" + input.getString(key) + "'");
                 } else {
                     output.put(fromCamelToDash(key), input.getString(key));
@@ -289,7 +274,7 @@ public class CssStyleSettingsService {
      *
      * @param jsonLessVariables the json less variables
      * @return true if the file is a valid JSON
-     *  and the properties are correct
+     * and the properties are correct
      * @throws JSONException the JSON exception
      */
     private void checkJSONFile(String jsonLessVariables) throws JSONException {
@@ -300,19 +285,19 @@ public class CssStyleSettingsService {
             final String key = iter.next();
             if (input.getString(key) != null) {
 
-                if(!key.equals("gnBackgroundImage") && !key.equals("gnHeaderHeight") && !StringUtils.isEmpty(input.getString(key))) {
+                if (!key.equals("gnBackgroundImage") && !key.equals("gnHeaderHeight") && !StringUtils.isEmpty(input.getString(key))) {
                     Pattern pattern = Pattern.compile("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
                     Matcher matcher = pattern.matcher(input.getString(key));
                     if (!matcher.matches()) {
                         throw new JSONException("Invalid color value. It must be in the format #RRGGBB.");
                     }
-                } else if(key.equals("gnHeaderHeight") && !StringUtils.isEmpty(input.getString(key))) {
+                } else if (key.equals("gnHeaderHeight") && !StringUtils.isEmpty(input.getString(key))) {
                     Pattern pattern = Pattern.compile("^([0-9])+(px)$");
                     Matcher matcher = pattern.matcher(input.getString(key));
                     if (!matcher.matches()) {
                         throw new JSONException("Invalid pixel value. It must be in the format 100px.");
                     }
-                } else if(key.equals("gnBackgroundImage") && !StringUtils.isEmpty(input.getString(key))) {
+                } else if (key.equals("gnBackgroundImage") && !StringUtils.isEmpty(input.getString(key))) {
                     Pattern pattern = Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
                     Matcher matcher = pattern.matcher(input.getString(key));
                     if (!matcher.matches()) {

@@ -25,7 +25,11 @@
 
 package org.fao.geonet.api.records.attachments;
 
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -43,30 +47,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import java.nio.file.Path;
-
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
 
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
 @EnableWebMvc
 @Controller
 @Service
-@Api(value = "records",
-    tags = "records",
+@Tag(name = "records",
     description = "Metadata record operations")
 public class AttachmentsActionsApi {
     private final ApplicationContext appContext = ApplicationContextHolder.get();
-    private Store store;
-
     @Autowired
     DataManager dataMan;
-
     @Autowired
     ThumbnailMaker thumbnailMaker;
+    private Store store;
 
     public AttachmentsActionsApi() {
     }
@@ -92,33 +90,33 @@ public class AttachmentsActionsApi {
     }
 
 
-    @ApiOperation(
-        value = "Create an overview using the map print module",
-        notes = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/linking-thumbnail.html#generating-a-thumbnail-using-wms-layers'>More info</a>",
-        response = MetadataResource.class,
-        nickname = "createMetadataOverview")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Create an overview using the map print module",
+        description = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/linking-thumbnail.html#generating-a-thumbnail-using-wms-layers'>More info</a>"
+        //response = MetadataResource.class)
+    )
     @RequestMapping(
         value = "/{portal}/api/" + API.VERSION_0_1 +
-        "/records/{metadataUuid}/attachments/print-thumbnail",
+            "/records/{metadataUuid}/attachments/print-thumbnail",
         method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Thumbnail created."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+        @ApiResponse(responseCode = "201", description = "Thumbnail created."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @ResponseBody
     public MetadataResource saveThumbnail(
-        @ApiParam(
-            value = API_PARAM_RECORD_UUID,
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
             required = true
         )
         @PathVariable
             String metadataUuid,
-        @ApiParam(value = "The mapprint module JSON configuration",
+        @Parameter(description = "The mapprint module JSON configuration",
             required = true)
         @RequestParam()
             String jsonConfig,
-        @ApiParam(value = "The rotation angle of the map")
+        @Parameter(description = "The rotation angle of the map")
         @RequestParam(required = false, defaultValue = "0") int rotationAngle,
         HttpServletRequest request
     )

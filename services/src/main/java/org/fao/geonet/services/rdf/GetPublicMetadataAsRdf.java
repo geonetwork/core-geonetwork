@@ -26,7 +26,6 @@ package org.fao.geonet.services.rdf;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.api.records.rdf.RdfOutputManager;
 import org.fao.geonet.api.records.rdf.RdfSearcher;
 import org.fao.geonet.services.thesaurus.GetList;
@@ -40,6 +39,7 @@ import java.nio.file.Path;
 public class GetPublicMetadataAsRdf implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
+
     public Element exec(Element params, ServiceContext context) throws Exception {
         Element thesaurusEl = new GetList().exec(params, context);
 

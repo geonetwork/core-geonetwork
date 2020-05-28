@@ -132,6 +132,10 @@
       <artifactId>xbean-spring</artifactId>
       <version>${xbean.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-common</artifactId>
+    </dependency>
 
     <!--Geotools-->
     <dependency>

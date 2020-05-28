@@ -24,7 +24,6 @@
 package org.fao.geonet.api.records.formatters.groovy.template;
 
 import com.google.common.collect.Sets;
-
 import org.apache.xalan.xsltc.runtime.AttributeList;
 import org.xml.sax.Attributes;
 

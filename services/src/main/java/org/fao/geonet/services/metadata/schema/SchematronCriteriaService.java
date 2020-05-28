@@ -25,7 +25,6 @@ package org.fao.geonet.services.metadata.schema;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
@@ -39,13 +38,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import javax.annotation.Nonnull;
-
 import java.io.IOException;
 import java.util.List;
 
 /**
  * Load, edit, delete {@link org.fao.geonet.domain.SchematronCriteria} entities.
- *
+ * <p>
  * Created by Jesse on 2/7/14.
  */
 public class SchematronCriteriaService extends AbstractSchematronService {
@@ -136,8 +134,7 @@ public class SchematronCriteriaService extends AbstractSchematronService {
             element = new Element(Jeeves.Elem.RESPONSE).addContent(criteria.asXml());
         }
 
-        @SuppressWarnings("unchecked")
-        final List<Element> criteriaRecords = element.getChildren();
+        @SuppressWarnings("unchecked") final List<Element> criteriaRecords = element.getChildren();
         if (!includeGroup) {
             for (Element criteriaRecord : criteriaRecords) {
                 final Element groupEl = criteriaRecord.getChild("group");

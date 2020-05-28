@@ -31,7 +31,8 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
-import java.io.*;
+
+import java.io.IOException;
 
 
 /**
@@ -42,21 +43,21 @@ import java.io.*;
 public class RecaptchaChecker {
 
     private final static String RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify";
-	private final static String USER_AGENT = "Mozilla/5.0";
+    private final static String USER_AGENT = "Mozilla/5.0";
 
     /**
      * Verifies the recaptcha response.
      *
      * @param recaptchaResponse Recaptcha response.
-     * @param secret Secret key for Google Recaptcha.
+     * @param secret            Secret key for Google Recaptcha.
      * @return
      * @throws IOException
      */
-	public static boolean verify(final String recaptchaResponse,
+    public static boolean verify(final String recaptchaResponse,
                                  final String secret) throws IOException {
-		if (StringUtils.isEmpty(recaptchaResponse)) {
-			return false;
-		}
+        if (StringUtils.isEmpty(recaptchaResponse)) {
+            return false;
+        }
 
         final GeonetHttpRequestFactory requestFactory =
             ApplicationContextHolder.get().getBean(GeonetHttpRequestFactory.class);
@@ -77,7 +78,7 @@ public class RecaptchaChecker {
                 String responseText = IOUtils.toString(httpResponse.getBody());
 
                 //parse JSON response and return 'success' value
-                JSONObject jsonObject =  (JSONObject) JSONSerializer.toJSON(responseText);
+                JSONObject jsonObject = (JSONObject) JSONSerializer.toJSON(responseText);
 
                 return jsonObject.getBoolean("success");
             } else {
@@ -88,5 +89,5 @@ public class RecaptchaChecker {
         } finally {
             IOUtils.closeQuietly(httpResponse);
         }
-	}
+    }
 }

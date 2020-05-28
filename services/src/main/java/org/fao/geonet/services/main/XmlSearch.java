@@ -56,7 +56,7 @@ public class XmlSearch implements Service {
      * combinations) can generate a response document reaching several MB (80k
      * MDs gives 400MB of JSON, which is not really parseable in the UI anyway,
      * and can DoS the webapp).
-     *
+     * <p>
      * This method may modify the object params passed as argument. In this
      * case, it returns true.
      *
@@ -103,7 +103,6 @@ public class XmlSearch implements Service {
 
     /**
      * Run a search and return results as XML.
-     *
      */
     public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

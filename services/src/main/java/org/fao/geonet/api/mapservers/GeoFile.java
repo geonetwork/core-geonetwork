@@ -28,6 +28,7 @@ import org.fao.geonet.ZipUtil;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -69,8 +70,8 @@ public class GeoFile implements Closeable {
     }
 
     private static String getExtension(String fileName) {
-        return fileName.substring(fileName.lastIndexOf(".") + 1,
-            fileName.length());
+        return fileName.substring(fileName.lastIndexOf(".") + 1
+        );
     }
 
     public static Boolean fileIsGeotif(String fileName) {
@@ -184,7 +185,7 @@ public class GeoFile implements Closeable {
             if (_containsSld) {
                 ZipFile zf = new ZipFile(new File(this.file.toString()));
                 InputStream is = zf.getInputStream(zf.getEntry(_sldBody));
-                BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+                BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
                 String line;
                 _sldBody = "";
                 while ((line = br.readLine()) != null) {
@@ -254,4 +255,4 @@ public class GeoFile implements Closeable {
     public void close() throws IOException {
         zipFile.close();
     }
-};
+}

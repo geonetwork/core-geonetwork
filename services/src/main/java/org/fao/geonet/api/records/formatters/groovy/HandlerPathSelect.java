@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 
 /**
  * A Handler that is applied when the path of the element matches the path pattern of this handler.
- *
+ * <p>
  * The path is separated by > characters
  *
  * @author Jesse on 10/15/2014.

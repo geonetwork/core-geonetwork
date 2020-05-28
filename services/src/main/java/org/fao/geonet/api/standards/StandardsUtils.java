@@ -44,7 +44,7 @@ public class StandardsUtils {
                                       String isoType, ServiceContext context, String displayIf)
         throws Exception {
         return getCodelistOrLabel(codelist, schemaManager, schema,
-                                    parent, xpath, isoType, context, displayIf, "codelists.xml");
+            parent, xpath, isoType, context, displayIf, "codelists.xml");
     }
 
     public static Element getLabel(String element, SchemaManager schemaManager,
@@ -53,7 +53,7 @@ public class StandardsUtils {
                                    String isoType, String displayIf, ServiceContext context)
         throws Exception {
         return getCodelistOrLabel(element, schemaManager, schema,
-                                    parent, xpath, isoType, context, displayIf, "labels.xml");
+            parent, xpath, isoType, context, displayIf, "labels.xml");
     }
 
     private static Element getCodelistOrLabel(String element, SchemaManager schemaManager,
@@ -156,7 +156,7 @@ public class StandardsUtils {
 
                 if (
                     (context != null && context.equals(currContext)) ||
-                    (isoType != null && isoType.equals(currContext))) {
+                        (isoType != null && isoType.equals(currContext))) {
                     return (Element) currElem.clone();
                 }
             } else if (displayIf != null && displayIf.equals(displayIfAttribute)) {
@@ -166,7 +166,8 @@ public class StandardsUtils {
                 //           displayIf="ancestor::node()[name()='gmd:MD_Metadata' and contains(gmd:metadataStandardName/gco:CharacterString, 'ISO 19139, MyOcean profile')]">
 
                 return (Element) currElem.clone();
-            } if (!requireContextMatch && displayIfAttribute == null) {
+            }
+            if (!requireContextMatch && displayIfAttribute == null) {
                 // Return an element not matching any context attribute
                 // or displayIf condition. Usually the default value of the standard.
                 return (Element) currElem.clone();

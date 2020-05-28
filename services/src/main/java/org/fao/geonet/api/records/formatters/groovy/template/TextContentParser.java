@@ -26,7 +26,6 @@ package org.fao.geonet.api.records.formatters.groovy.template;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -76,7 +75,7 @@ public class TextContentParser {
             start = matcher.end();
         }
 
-        textBlock.add(new TextContentStatic(text.substring(start, text.length())));
+        textBlock.add(new TextContentStatic(text.substring(start)));
 
         return textBlock;
     }

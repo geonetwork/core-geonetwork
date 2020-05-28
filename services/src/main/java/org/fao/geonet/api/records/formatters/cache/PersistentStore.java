@@ -23,11 +23,10 @@
 
 package org.fao.geonet.api.records.formatters.cache;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * The strategy used by {@link PersistentStore} for storing each record in a persistent fashion.

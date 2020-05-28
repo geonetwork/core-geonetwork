@@ -23,15 +23,9 @@
 
 package org.fao.geonet.api.records;
 
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
-
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.services.ReadWriteController;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -48,26 +42,20 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.services.ReadWriteController;
-import springfox.documentation.annotations.ApiIgnore;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Set;
+
+import static org.fao.geonet.api.ApiParams.*;
 
 @RequestMapping(value = {
     "/{portal}/api/records",
     "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
-@Api(value = API_CLASS_RECORD_TAG,
-    tags = API_CLASS_RECORD_TAG,
+@Tag(name = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)
 @Controller("recordVersionning")
 @ReadWriteController
@@ -82,10 +70,9 @@ public class MetadataVersionningApi {
     @Autowired
     IMetadataUtils metadataRepository;
 
-    @ApiOperation(
-        value = "(Experimental) Enable version control",
-        notes = "",
-        nickname = "enableVersionControl")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "(Experimental) Enable version control",
+        description = "")
     @RequestMapping(
         value = "/{metadataUuid}/versions",
         method = RequestMethod.PUT)
@@ -93,8 +80,8 @@ public class MetadataVersionningApi {
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public ResponseEntity enableVersionControl(
-        @ApiParam(
-            value = API_PARAM_RECORD_UUID,
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
@@ -109,12 +96,9 @@ public class MetadataVersionningApi {
     }
 
 
-
-
-    @ApiOperation(
-        value = "(Experimental) Enable version control for one or more records",
-        notes = "",
-        nickname = "enableVersionControlForRecords")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "(Experimental) Enable version control for one or more records",
+        description = "")
     @RequestMapping(
         value = "/versions",
         produces = {
@@ -125,19 +109,19 @@ public class MetadataVersionningApi {
     @PreAuthorize("hasRole('Editor')")
     @ResponseBody
     public MetadataProcessingReport enableVersionControlForRecords(
-        @ApiParam(
-            value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
+        @Parameter(
+            description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false)
         @RequestParam(required = false) String[] uuids,
-        @ApiParam(
-            value = ApiParams.API_PARAM_BUCKET_NAME,
+        @Parameter(
+            description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
             String bucket,
         HttpServletRequest request,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession session
     ) throws Exception {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
@@ -147,20 +131,20 @@ public class MetadataVersionningApi {
             report.setTotalRecords(records.size());
 
             for (String uuid : records) {
-            	if(!metadataRepository.existsMetadataUuid(uuid)) {
-                    report.incrementNullRecords();            		
-            	} else {
-	                for(AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
-		                if (!accessMan.canEdit(
-		                    ApiUtils.createServiceContext(request), String.valueOf(metadata.getId()))) {
-		                    report.addNotEditableMetadataId(metadata.getId());
-		                } else {
-		                    dataManager.versionMetadata(ApiUtils.createServiceContext(request),
-		                        String.valueOf(metadata.getId()), metadata.getXmlData(false));
-		                    report.incrementProcessedRecords();
-		                }
-	                }
-            	}
+                if (!metadataRepository.existsMetadataUuid(uuid)) {
+                    report.incrementNullRecords();
+                } else {
+                    for (AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
+                        if (!accessMan.canEdit(
+                            ApiUtils.createServiceContext(request), String.valueOf(metadata.getId()))) {
+                            report.addNotEditableMetadataId(metadata.getId());
+                        } else {
+                            dataManager.versionMetadata(ApiUtils.createServiceContext(request),
+                                String.valueOf(metadata.getId()), metadata.getXmlData(false));
+                            report.incrementProcessedRecords();
+                        }
+                    }
+                }
             }
         } catch (Exception exception) {
             report.addError(exception);

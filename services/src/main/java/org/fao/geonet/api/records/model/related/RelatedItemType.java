@@ -1,8 +1,6 @@
 package org.fao.geonet.api.records.model.related;
 
 
-import java.util.Arrays;
-
 public enum RelatedItemType {
 
     children,

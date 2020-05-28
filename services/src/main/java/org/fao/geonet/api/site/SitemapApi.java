@@ -23,21 +23,14 @@
 
 package org.fao.geonet.api.site;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataDataInfo_;
-import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId_;
-import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.SitemapDocumentNotFoundEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -56,12 +49,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import springfox.documentation.annotations.ApiIgnore;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Path;
@@ -77,8 +65,7 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
     "/{portal}/api",
     "/{portal}/api/" + API.VERSION_0_1
 })
-@Api(value = API_CLASS_CATALOG_TAG,
-    tags = API_CLASS_CATALOG_TAG,
+@Tag(name = API_CLASS_CATALOG_TAG,
     description = ApiParams.API_CLASS_CATALOG_OPS)
 @Controller("sitemap")
 public class SitemapApi {
@@ -104,17 +91,16 @@ public class SitemapApi {
     GeonetworkDataDirectory dataDirectory;
 
 
-    @ApiOperation(
-        value = "robots.txt",
-        notes = "",
-        nickname = "getRobotsText")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "robots.txt",
+        description = "")
     @RequestMapping(
         path = "/robots.txt",
         produces = MediaType.TEXT_PLAIN_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "robots.txt file for SEO.")
+        @ApiResponse(responseCode = "200", description = "robots.txt file for SEO.")
     })
     @ResponseBody
     public String getRobotsText() throws Exception {
@@ -124,22 +110,21 @@ public class SitemapApi {
         return response.toString();
     }
 
-    @ApiOperation(
-        value = "Get sitemap",
-        notes = "",
-        nickname = "getSitemap")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get sitemap",
+        description = "")
     @RequestMapping(
         path = "/sitemap",
         produces = MediaType.APPLICATION_XML_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Site map.")
+        @ApiResponse(responseCode = "200", description = "Site map.")
     })
     public @ResponseBody
     ResponseEntity<Element> getSitemap(
-        @ApiParam(
-            value = "Format (xml or html).",
+        @Parameter(
+            description = "Format (xml or html).",
             required = false
         )
         @RequestParam(
@@ -147,8 +132,8 @@ public class SitemapApi {
             defaultValue = FORMAT_HTML
         )
             String format,
-        @ApiParam(
-            value = "page.",
+        @Parameter(
+            description = "page.",
             required = false
         )
         @RequestParam(
@@ -156,7 +141,7 @@ public class SitemapApi {
             defaultValue = "0"
         )
             Integer doc,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpServletRequest request
     ) throws Exception {
         if (!(format.equalsIgnoreCase(FORMAT_HTML) ||

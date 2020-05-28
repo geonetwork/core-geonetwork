@@ -23,28 +23,14 @@
 
 package org.fao.geonet.api.users.transfer;
 
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -60,26 +46,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import springfox.documentation.annotations.ApiIgnore;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.sql.SQLException;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
 
 @RequestMapping(value = {
     "/{portal}/api/users",
     "/{portal}/api/" + API.VERSION_0_1 +
         "/users"
 })
-@Api(value = "users",
-    tags = "users",
+@Tag(name = "users",
     description = "User operations")
 @Controller("usersTransfer")
 public class TransferApi {
@@ -97,10 +79,9 @@ public class TransferApi {
     @Autowired
     DataManager dataManager;
 
-    @ApiOperation(
-        value = "Get owners",
-        notes = "Return users who actually owns one or more records.",
-        nickname = "getOwners")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get owners",
+        description = "Return users who actually owns one or more records.")
     @RequestMapping(
         path = "owners",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -110,7 +91,7 @@ public class TransferApi {
     @PreAuthorize("hasRole('UserAdmin')")
     @ResponseBody
     public List<OwnerResponse> getUsers(
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession,
         HttpServletRequest request
     ) throws Exception {
@@ -131,10 +112,9 @@ public class TransferApi {
     }
 
 
-    @ApiOperation(
-        value = "Retrieve all user groups",
-        notes = "",
-        nickname = "retrieveAllUserGroups")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Retrieve all user groups",
+        description = "")
     @RequestMapping(
         value = "/groups",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -144,7 +124,7 @@ public class TransferApi {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public List<UserGroupsResponse> retrieveAllUserGroups(
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
         UserSession session = ApiUtils.getUserSession(httpSession);
@@ -169,7 +149,7 @@ public class TransferApi {
                 userGroups = userGroupRepository.findAll();
             } else {
                 List<Integer> myGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(session.getUserIdAsInt()))
-                        .stream().map(ug -> ug.getGroup().getId()).collect(Collectors.toList());
+                    .stream().map(ug -> ug.getGroup().getId()).collect(Collectors.toList());
                 userGroups = userGroupRepository.findAll(UserGroupSpecs.hasGroupIds(myGroups));
             }
 
@@ -184,10 +164,9 @@ public class TransferApi {
         }
     }
 
-    @ApiOperation(
-        value = "Transfer privileges",
-        notes = "",
-        nickname = "saveOwners")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Transfer privileges",
+        description = "")
     @RequestMapping(
         value = "/owners",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -198,7 +177,7 @@ public class TransferApi {
     public ResponseEntity saveOwners(
         @RequestBody
             TransferRequest transfer,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession,
         HttpServletRequest request
     ) throws Exception {

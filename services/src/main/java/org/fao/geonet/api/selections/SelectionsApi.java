@@ -22,6 +22,9 @@
  */
 package org.fao.geonet.api.selections;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.UserSession;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -30,24 +33,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-import java.util.Arrays;
-import java.util.Set;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.server.UserSession;
-import springfox.documentation.annotations.ApiIgnore;
+import java.util.Arrays;
+import java.util.Set;
 
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
 
@@ -59,14 +50,12 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/selections"
 })
-@Api(value = "selections",
-    tags = "selections",
+@Tag(name = "selections",
     description = "Selection related operations")
 @Controller("selections")
 public class SelectionsApi {
 
-    @ApiOperation(value = "Get current selection",
-        nickname = "getSelection")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get current selection")
     @RequestMapping(
         method = RequestMethod.GET,
         value = "/{bucket}",
@@ -77,13 +66,13 @@ public class SelectionsApi {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     Set<String> get(
-        @ApiParam(value = "Bucket name",
+        @Parameter(description = "Bucket name",
             required = true,
             example = "metadata")
         @PathVariable
             String bucket,
-        @ApiIgnore
-        HttpSession httpSession
+        @Parameter(hidden = true)
+            HttpSession httpSession
     )
         throws Exception {
         SelectionManager selectionManager =
@@ -95,8 +84,7 @@ public class SelectionsApi {
     }
 
 
-    @ApiOperation(value = "Select one or more items",
-        nickname = "addToSelection")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Select one or more items")
     @RequestMapping(
         method = RequestMethod.PUT,
         value = "/{bucket}",
@@ -106,19 +94,19 @@ public class SelectionsApi {
     public
     @ResponseBody
     ResponseEntity<Integer> add(
-        @ApiParam(value = "Bucket name",
+        @Parameter(description = "Bucket name",
             required = true,
             example = "metadata")
         @PathVariable
             String bucket,
-        @ApiParam(value = "One or more record UUIDs. If null, select all in current search if bucket name is 'metadata' (TODO: remove this limitation?).",
+        @Parameter(description = "One or more record UUIDs. If null, select all in current search if bucket name is 'metadata' (TODO: remove this limitation?).",
             required = false)
         @RequestParam(required = false)
             String[] uuid,
-        @ApiIgnore
-        HttpSession httpSession,
-        @ApiIgnore
-        HttpServletRequest request
+        @Parameter(hidden = true)
+            HttpSession httpSession,
+        @Parameter(hidden = true)
+            HttpServletRequest request
     )
         throws Exception {
         UserSession session = ApiUtils.getUserSession(httpSession);
@@ -135,8 +123,7 @@ public class SelectionsApi {
     }
 
 
-    @ApiOperation(value = "Clear selection or remove items",
-        nickname = "clearSelection")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Clear selection or remove items")
     @RequestMapping(
         method = RequestMethod.DELETE,
         value = "/{bucket}",
@@ -146,20 +133,20 @@ public class SelectionsApi {
     public
     @ResponseBody
     ResponseEntity<Integer> clear(
-        @ApiParam(value = ApiParams.API_PARAM_BUCKET_NAME,
+        @Parameter(description = ApiParams.API_PARAM_BUCKET_NAME,
             required = true,
             example = "metadata")
         @PathVariable
             String bucket,
-        @ApiParam(
-            value = API_PARAM_RECORD_UUIDS,
+        @Parameter(
+            description = API_PARAM_RECORD_UUIDS,
             required = false)
         @RequestParam(required = false)
             String[] uuid,
-        @ApiIgnore
-        HttpSession httpSession,
-        @ApiIgnore
-        HttpServletRequest request
+        @Parameter(hidden = true)
+            HttpSession httpSession,
+        @Parameter(hidden = true)
+            HttpServletRequest request
     )
         throws Exception {
 

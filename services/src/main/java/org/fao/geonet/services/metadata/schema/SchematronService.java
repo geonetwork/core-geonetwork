@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata.schema;
 
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Schematron;
@@ -39,7 +38,7 @@ import javax.annotation.Nonnull;
 
 /**
  * Load, edit, delete {@link org.fao.geonet.domain.Schematron} entities.
- *
+ * <p>
  * Created by Jesse on 2/7/14.
  */
 public class SchematronService extends AbstractSchematronService {

@@ -23,15 +23,12 @@
 
 package org.fao.geonet.api.records;
 
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
-import static org.fao.geonet.kernel.setting.Settings.SYSTEM_LOCALRATING_ENABLE;
-
-import java.net.URL;
-
-import javax.servlet.http.HttpServletRequest;
-
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -57,28 +54,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
+import javax.servlet.http.HttpServletRequest;
+import java.net.URL;
+
+import static org.fao.geonet.api.ApiParams.*;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_LOCALRATING_ENABLE;
 
 @RequestMapping(value = {
     "/{portal}/api/records",
     "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
-@Api(value = API_CLASS_RECORD_TAG,
-    tags = API_CLASS_RECORD_TAG,
+@Tag(name = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)
 @Controller("recordSocial")
 @ReadWriteController
@@ -88,35 +77,34 @@ public class MetadataSocialApi {
     LanguageUtils languageUtils;
 
 
-    @ApiOperation(
-        value = "Rate a record",
-        notes = "User rating of metadata. If the metadata was harvested using the 'GeoNetwork' protocol and the " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Rate a record",
+        description = "User rating of metadata. If the metadata was harvested using the 'GeoNetwork' protocol and the " +
             "system setting localrating/enable is false (the default), the user's rating is shared between " +
             "GN nodes in this harvesting network. If the metadata was not harvested or if " +
             "localrating/enable is true then 'local rating' is applied, counting only rating from users of " +
             "this node.<br/>" +
             "When a remote rating is applied, the local rating is not updated. It will be updated on the next " +
-            "harvest run (FIXME ?).",
-        nickname = "rate")
+            "harvest run (FIXME ?).")
     @RequestMapping(
         value = "/{metadataUuid}/rate",
         method = RequestMethod.PUT
     )
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "New rating value."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        @ApiResponse(responseCode = "201", description = "New rating value."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     public
     @ResponseBody
     Integer rateRecord(
-        @ApiParam(
-            value = API_PARAM_RECORD_UUID,
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
-        @ApiParam(
-            value = "Rating",
+        @Parameter(
+            description = "Rating",
             required = true
         )
         @RequestBody(

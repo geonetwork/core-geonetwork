@@ -23,23 +23,13 @@
 
 package org.fao.geonet.api.records;
 
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
-import static org.fao.geonet.api.records.formatters.XsltFormatter.getSchemaLocalization;
-
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import com.google.common.collect.Lists;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -49,13 +39,7 @@ import org.fao.geonet.api.records.model.validation.Report;
 import org.fao.geonet.api.records.model.validation.Reports;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.MetadataValidation;
-import org.fao.geonet.domain.MetadataValidationId;
-import org.fao.geonet.domain.MetadataValidationStatus;
-import org.fao.geonet.domain.Schematron;
-import org.fao.geonet.domain.utils.ObjectJSONUtils;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.events.history.RecordValidationTriggeredEvent;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
@@ -75,49 +59,110 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
-import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
-import springfox.documentation.annotations.ApiIgnore;
+import static org.fao.geonet.api.ApiParams.*;
+import static org.fao.geonet.api.records.formatters.XsltFormatter.getSchemaLocalization;
 
-@RequestMapping(value = { "/{portal}/api/records", "/{portal}/api/" + API.VERSION_0_1 + "/records" })
-@Api(value = API_CLASS_RECORD_TAG, tags = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
+@RequestMapping(value = {"/{portal}/api/records", "/{portal}/api/" + API.VERSION_0_1 + "/records"})
+@Tag(name = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
 @Controller("recordValidate")
 @PreAuthorize("hasRole('Editor')")
 @ReadWriteController
 public class MetadataValidateApi {
 
+    public static final String EL_ACTIVE_PATTERN = "active-pattern";
+    public static final String EL_FIRED_RULE = "fired-rule";
+    public static final String EL_FAILED_ASSERT = "failed-assert";
+    public static final String EL_SUCCESS_REPORT = "successful-report";
+    public static final String ATT_CONTEXT = "context";
+    public static final String DEFAULT_CONTEXT = "??";
     @Autowired
     LanguageUtils languageUtils;
-
     @Autowired
     MetadataValidationRepository metadataValidationRepository;
 
-    @ApiOperation(value = "Validate a record", notes = "User MUST be able to edit the record to validate it. "
-            + "FIXME : id MUST be the id of the current metadata record in session ?", nickname = "validate")
+    /**
+     * Schematron report has an odd structure:
+     *
+     * <pre>
+     * <code>
+     * &lt;svrl:active-pattern  ... />
+     * &lt;svrl:fired-rule  ... />
+     * &lt;svrl:failed-assert ... />
+     * &lt;svrl:successful-report ... />
+     * </code>
+     * </pre>
+     * <p/>
+     * This method restructures the xml to be:
+     *
+     * <pre>
+     * <code>
+     * &lt;svrl:active-pattern  ... >
+     *     &lt;svrl:fired-rule  ... >
+     *         &lt;svrl:failed-assert ... />
+     *         &lt;svrl:successful-report ... />
+     *     &lt;svrl:fired-rule  ... >
+     * &lt;svrl:active-pattern>
+     * </code>
+     * </pre>
+     */
+    public static void restructureReportToHavePatternRuleHierarchy(Element errorReport) {
+        final Iterator patternFilter = errorReport
+            .getDescendants(new ElementFilter(EL_ACTIVE_PATTERN, Geonet.Namespaces.SVRL));
+        @SuppressWarnings("unchecked")
+        List<Element> patterns = Lists.newArrayList(patternFilter);
+        for (Element pattern : patterns) {
+            final Element parentElement = pattern.getParentElement();
+            Element currentRule = null;
+            @SuppressWarnings("unchecked") final List<Element> children = parentElement.getChildren();
+
+            int index = children.indexOf(pattern) + 1;
+            while (index < children.size() && !children.get(index).getName().equals(EL_ACTIVE_PATTERN)) {
+                Element next = children.get(index);
+                if (EL_FIRED_RULE.equals(next.getName())) {
+                    currentRule = next;
+                    next.detach();
+                    pattern.addContent(next);
+                } else {
+                    if (currentRule == null) {
+                        // odd but could happen I suppose
+                        currentRule = new Element(EL_FIRED_RULE, Geonet.Namespaces.SVRL).setAttribute(ATT_CONTEXT,
+                            DEFAULT_CONTEXT);
+                        pattern.addContent(currentRule);
+                    }
+
+                    next.detach();
+                    currentRule.addContent(next);
+
+                }
+            }
+            if (pattern.getChildren().isEmpty()) {
+                pattern.detach();
+            }
+        }
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Validate a record", description = "User MUST be able to edit the record to validate it. "
+        + "FIXME : id MUST be the id of the current metadata record in session ?")
     @RequestMapping(value = "/{metadataUuid}/validate/internal", method = RequestMethod.PUT, produces = {
-            MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+        MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('Editor')")
-    @ApiResponses(value = { @ApiResponse(code = 201, message = "Validation report."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
-    public @ResponseBody Reports validateRecord(
-            @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
-            @ApiParam(value = "Validation status. Should be provided only in case of SUBTEMPLATE validation. If provided for another type, throw a BadParameter Exception", required = false) @RequestParam(required = false) Boolean isvalid,
-            HttpServletRequest request, @ApiParam(hidden = true) @ApiIgnore HttpSession session) throws Exception {
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Validation report."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
+    public @ResponseBody
+    Reports validateRecord(
+        @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+        @Parameter(description = "Validation status. Should be provided only in case of SUBTEMPLATE validation. If provided for another type, throw a BadParameter Exception", required = false) @RequestParam(required = false) Boolean isvalid,
+        HttpServletRequest request,  @Parameter(hidden = true) HttpSession session) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -132,21 +177,21 @@ public class MetadataValidateApi {
         boolean validSet = (isvalid != null);
         if (!isSubtemplate && validSet) {
             throw new BadParameterEx(
-                    "Parameter isvalid can't be set if it is not a Subtemplate. You cannot force validation of a metadata or a template.");
+                "Parameter isvalid can't be set if it is not a Subtemplate. You cannot force validation of a metadata or a template.");
         }
         if (isSubtemplate && !validSet) {
             throw new BadParameterEx("Parameter isvalid MUST be set for subtemplate.");
         }
         if (isSubtemplate) {
             MetadataValidation metadataValidation = new MetadataValidation()
-                    .setId(new MetadataValidationId(metadata.getId(), "subtemplate"))
-                    .setStatus(isvalid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID)
-                    .setRequired(true).setNumTests(0).setNumFailures(0);
+                .setId(new MetadataValidationId(metadata.getId(), "subtemplate"))
+                .setStatus(isvalid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID)
+                .setRequired(true).setNumTests(0).setNumFailures(0);
             this.metadataValidationRepository.save(metadataValidation);
             dataManager.indexMetadata(("" + metadata.getId()), true);
             new RecordValidationTriggeredEvent(metadata.getId(),
-                    ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
-                    metadataValidation.getStatus().getCode()).publish(appContext);
+                ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
+                metadataValidation.getStatus().getCode()).publish(appContext);
             return new Reports();
         }
 
@@ -154,11 +199,11 @@ public class MetadataValidateApi {
         Element errorReport;
         try {
             errorReport = new AjaxEditUtils(context).validateMetadataEmbedded(ApiUtils.getUserSession(session), id,
-                    locale.getISO3Language());
+                locale.getISO3Language());
         } catch (NullPointerException e) {
             // TODO: Improve NPE catching exception
             throw new BadParameterEx(String.format("To validate a record, the record MUST be in edition."),
-                    metadataUuid);
+                metadataUuid);
         }
 
         restructureReportToHavePatternRuleHierarchy(errorReport);
@@ -206,7 +251,7 @@ public class MetadataValidateApi {
         Map<String, Object> params = new HashMap<>();
         params.put("rootTag", "reports");
         List<Element> elementList = getSchemaLocalization(metadata.getDataInfo().getSchemaId(),
-                locale.getISO3Language());
+            locale.getISO3Language());
         for (Element e : elementList) {
             elResp.addContent(e);
         }
@@ -224,78 +269,9 @@ public class MetadataValidateApi {
                 }
             }
             new RecordValidationTriggeredEvent(metadata.getId(),
-                    ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), Integer.toString(value))
-                            .publish(appContext);
+                ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), Integer.toString(value))
+                .publish(appContext);
         }
         return response;
-    }
-
-    public static final String EL_ACTIVE_PATTERN = "active-pattern";
-    public static final String EL_FIRED_RULE = "fired-rule";
-    public static final String EL_FAILED_ASSERT = "failed-assert";
-    public static final String EL_SUCCESS_REPORT = "successful-report";
-    public static final String ATT_CONTEXT = "context";
-    public static final String DEFAULT_CONTEXT = "??";
-
-    /**
-     * Schematron report has an odd structure:
-     * 
-     * <pre>
-     * <code>
-     * &lt;svrl:active-pattern  ... />
-     * &lt;svrl:fired-rule  ... />
-     * &lt;svrl:failed-assert ... />
-     * &lt;svrl:successful-report ... />
-     * </code>
-     * </pre>
-     * <p/>
-     * This method restructures the xml to be:
-     * 
-     * <pre>
-     * <code>
-     * &lt;svrl:active-pattern  ... >
-     *     &lt;svrl:fired-rule  ... >
-     *         &lt;svrl:failed-assert ... />
-     *         &lt;svrl:successful-report ... />
-     *     &lt;svrl:fired-rule  ... >
-     * &lt;svrl:active-pattern>
-     * </code>
-     * </pre>
-     */
-    public static void restructureReportToHavePatternRuleHierarchy(Element errorReport) {
-        final Iterator patternFilter = errorReport
-                .getDescendants(new ElementFilter(EL_ACTIVE_PATTERN, Geonet.Namespaces.SVRL));
-        @SuppressWarnings("unchecked")
-        List<Element> patterns = Lists.newArrayList(patternFilter);
-        for (Element pattern : patterns) {
-            final Element parentElement = pattern.getParentElement();
-            Element currentRule = null;
-            @SuppressWarnings("unchecked")
-            final List<Element> children = parentElement.getChildren();
-
-            int index = children.indexOf(pattern) + 1;
-            while (index < children.size() && !children.get(index).getName().equals(EL_ACTIVE_PATTERN)) {
-                Element next = children.get(index);
-                if (EL_FIRED_RULE.equals(next.getName())) {
-                    currentRule = next;
-                    next.detach();
-                    pattern.addContent(next);
-                } else {
-                    if (currentRule == null) {
-                        // odd but could happen I suppose
-                        currentRule = new Element(EL_FIRED_RULE, Geonet.Namespaces.SVRL).setAttribute(ATT_CONTEXT,
-                                DEFAULT_CONTEXT);
-                        pattern.addContent(currentRule);
-                    }
-
-                    next.detach();
-                    currentRule.addContent(next);
-
-                }
-            }
-            if (pattern.getChildren().isEmpty()) {
-                pattern.detach();
-            }
-        }
     }
 }

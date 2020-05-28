@@ -23,7 +23,10 @@
 
 package org.fao.geonet.api.records;
 
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -57,8 +60,7 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
     "/{portal}/api/records/{metadataUuid}",
     "/{portal}/api/" + API.VERSION_0_1 + "/records/{metadataUuid}"
 })
-@Api(value = API_CLASS_RECORD_TAG,
-    tags = API_CLASS_RECORD_TAG,
+@Tag(name = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)
 public class MetadataSavedQueryApi {
     private static final String LOG_MODULE = "MetadataApi";
@@ -67,20 +69,19 @@ public class MetadataSavedQueryApi {
     private SchemaManager schemaManager;
 
 
-    @ApiOperation(value = "List saved queries for this metadata",
-        nickname = "getMetadataSavedQueries")
+    @io.swagger.v3.oas.annotations.Operation(summary = "List saved queries for this metadata")
     @RequestMapping(value = "/query",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Saved query available."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        @ApiResponse(responseCode = "200", description = "Saved query available."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     public List<SavedQuery> getSavedQueries(
-        @ApiParam(
-            value = ApiParams.API_PARAM_RECORD_UUID,
+        @Parameter(
+            description = ApiParams.API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable final String metadataUuid,
         HttpServletRequest request
@@ -101,10 +102,9 @@ public class MetadataSavedQueryApi {
 
 
     // TODO: Api is query xpath
-    @ApiOperation(
-        value = "Apply a saved query for this metadata",
-        nickname = "applyQuery",
-        notes = "All parameters will be substituted to the XPath query. " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Apply a saved query for this metadata",
+        description = "All parameters will be substituted to the XPath query. " +
             "eg. {{protocol}} in the XPath expression will be replaced by " +
             "the protocol parameter provided in the request body.")
     @RequestMapping(
@@ -116,21 +116,21 @@ public class MetadataSavedQueryApi {
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "List of matching elements. " +
+        @ApiResponse(responseCode = "200", description = "List of matching elements. " +
             "If element are nodes, then they are returned as string."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     public Map<String, String> applyQuery(
-        @ApiParam(value = "The metadata UUID",
+        @Parameter(description = "The metadata UUID",
             required = true,
             example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
         @PathVariable final String metadataUuid,
-        @ApiParam(value = "The saved query to apply",
+        @Parameter(description = "The saved query to apply",
             required = true,
             example = "wfs-indexing-config")
         @PathVariable final String savedQuery,
         HttpServletRequest request,
-        @ApiParam(value = "The query parameters")
+        @Parameter(description = "The query parameters")
         @RequestBody(required = false) final HashMap<String, String> parameters) throws Exception {
 
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);

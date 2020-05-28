@@ -28,7 +28,6 @@ import java.util.List;
 /**
  * Response object for paginated results of links
  * in the format required by 'bootstrap-table' component.
- *
  */
 public class PaginatedLinksResponse {
     private long total;

@@ -376,7 +376,7 @@ public class MetadataUtils {
         }
 
         final SearchResponse result = searchMan.query(
-            String.format("+%s:(%s)%s", relatedIndexFields.get(type), uuid, excludeQuery), portalFilter, FIELDLIST_CORE, fromValue, (toValue -fromValue));
+            String.format("+%s:(%s)%s", relatedIndexFields.get(type), uuid, excludeQuery), portalFilter, FIELDLIST_CORE, fromValue, (toValue - fromValue));
 
         Element typeResponse = new Element(type);
         if (result.getHits().getTotalHits().value > 0) {
@@ -385,8 +385,8 @@ public class MetadataUtils {
             Arrays.asList(result.getHits().getHits()).forEach(e -> {
                 Element record = new Element("metadata");
                 final Map<String, Object> source = e.getSourceAsMap();
-                record.addContent(new Element("id").setText((String)source.get(Geonet.IndexFieldNames.ID)));
-                record.addContent(new Element("uuid").setText((String)source.get(Geonet.IndexFieldNames.UUID)));
+                record.addContent(new Element("id").setText((String) source.get(Geonet.IndexFieldNames.ID)));
+                record.addContent(new Element("uuid").setText((String) source.get(Geonet.IndexFieldNames.UUID)));
 
                 setFieldFromIndexDocument(record, source, Geonet.IndexFieldNames.RESOURCETITLE, "title");
                 setFieldFromIndexDocument(record, source, Geonet.IndexFieldNames.RESOURCEABSTRACT, "abstract");
@@ -401,7 +401,7 @@ public class MetadataUtils {
         // TODOES : multilingual records
         Object titleNode = source.get(fieldName + "Object");
         if (titleNode instanceof Map) {
-            record.addContent(new Element(elementName).setText((String)((Map) titleNode).get("default")));
+            record.addContent(new Element(elementName).setText((String) ((Map) titleNode).get("default")));
         } else if (titleNode instanceof String) {
             record.addContent(new Element(elementName).setText((String) titleNode));
         } else {
@@ -478,7 +478,7 @@ public class MetadataUtils {
                 BinaryFile.copy(is, os);
             }
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK,"Backup record. Error: " + e.getMessage(), e);
+            Log.error(Geonet.GEONETWORK, "Backup record. Error: " + e.getMessage(), e);
         } finally {
             if (file == null) {
                 IO.deleteFile(file, false, Geonet.MEF);
@@ -516,18 +516,18 @@ public class MetadataUtils {
 
     /**
      * Checks if a result for a search query has results.
-     *
+     * <p>
      * Response examples:
      *
      * <siblings>
-     *   <response from="1" to="0" />
+     * <response from="1" to="0" />
      * </siblings>
      *
      *
      * <siblings>
-     *   <response from="1" to="1">
-     *      <metadata>...</metadata>
-     *   </response>
+     * <response from="1" to="1">
+     * <metadata>...</metadata>
+     * </response>
      * </siblings>
      *
      * @param searchResponse
@@ -537,9 +537,7 @@ public class MetadataUtils {
 
         if (searchResponse.getChildren().size() > 0) {
             Element containerResults = (Element) searchResponse.getChildren().get(0);
-            if (containerResults.getChildren().size() > 0) {
-                return true;
-            }
+            return containerResults.getChildren().size() > 0;
         }
 
         return false;

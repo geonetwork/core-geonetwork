@@ -23,25 +23,22 @@
 
 package org.fao.geonet.api.sources;
 
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.GeonetEntity;
-import org.fao.geonet.domain.Language;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.SourceType;
-import org.fao.geonet.domain.Source_;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.guiapi.search.XsltResponseWriter;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,35 +46,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import jeeves.server.context.ServiceContext;
-import springfox.documentation.annotations.ApiIgnore;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 
 @RequestMapping(value = {
     "/{portal}/api/sources",
     "/{portal}/api/" + API.VERSION_0_1 +
         "/sources"
 })
-@Api(value = "sources",
-    tags = "sources",
+@Tag(name = "sources",
     description = "Source catalogue operations")
 @Controller("sources")
 public class SourcesApi {
@@ -88,26 +72,25 @@ public class SourcesApi {
     @Autowired
     LanguageRepository langRepository;
 
-    @ApiOperation(
-        value = "Get all sources",
-        notes = "Sources are the local catalogue, subportal, external catalogue (when importing MEF files) or harvesters.",
-        nickname = "getSources")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get all sources",
+        description = "Sources are the local catalogue, subportal, external catalogue (when importing MEF files) or harvesters.")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "List of source catalogues.")
+        @ApiResponse(responseCode = "200", description = "List of source catalogues.")
     })
     @ResponseBody
     public List<Source> getSources(
-        @ApiParam(
-            value = "Group owner of the source (only applies to subportal)."
+        @Parameter(
+            description = "Group owner of the source (only applies to subportal)."
         )
         @RequestParam(
             value = "group",
             required = false)
-        Integer group
+            Integer group
     ) throws Exception {
         if (group != null) {
             return sourceRepository.findByGroupOwner(group);
@@ -116,20 +99,19 @@ public class SourcesApi {
         }
     }
 
-    @ApiOperation(
-        value = "Get portal list",
-        notes = "List all subportal available.",
-        nickname = "getSubPortal")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get portal list",
+        description = "List all subportal available.")
     @RequestMapping(
         produces = MediaType.TEXT_HTML_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "List of portals.")
+        @ApiResponse(responseCode = "200", description = "List of portals.")
     })
     @ResponseBody
     public void getSubPortal(
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpServletResponse response
     ) throws Exception {
         final List<Source> sources = sourceRepository.findAll(SortUtils.createSort(Source_.name));
@@ -147,10 +129,9 @@ public class SourcesApi {
     }
 
 
-    @ApiOperation(
-        value = "Get all sources by type",
-        notes = "Sources are the local catalogue, subportal, external catalogue (when importing MEF files) or harvesters.",
-        nickname = "getSourcesByType")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get all sources by type",
+        description = "Sources are the local catalogue, subportal, external catalogue (when importing MEF files) or harvesters.")
     @RequestMapping(
         value = "/{type}",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -160,29 +141,28 @@ public class SourcesApi {
         return sourceRepository.findByType(type, SortUtils.createSort(Source_.name));
     }
 
-    @ApiOperation(
-        value = "Add a source",
-        notes = "",
-        nickname = "addSource")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Add a source",
+        description = "")
     @RequestMapping(
         method = RequestMethod.PUT,
         produces = {
-                MediaType.TEXT_PLAIN_VALUE
+            MediaType.TEXT_PLAIN_VALUE
         })
     @PreAuthorize("hasRole('Administrator')")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Source created."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+        @ApiResponse(responseCode = "201", description = "Source created."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     public ResponseEntity addSource(
-        @ApiParam(
+        @Parameter(
             name = "source"
         )
         @RequestBody
             Source source,
-        @ApiIgnore
-        HttpServletRequest request) {
+        @Parameter(hidden = true)
+            HttpServletRequest request) {
         Source existing = sourceRepository.findOne(source.getUuid());
         if (existing != null) {
             throw new IllegalArgumentException(String.format(
@@ -215,38 +195,37 @@ public class SourcesApi {
         if (source.getLogo() != null) {
             ServiceContext context = ApiUtils.createServiceContext(request);
             context.getBean(Resources.class).copyLogo(context, "images" + File.separator + "harvesting" + File.separator + source.getLogo(),
-                                                      source.getUuid());
+                source.getUuid());
         }
     }
 
-    @ApiOperation(
-        value = "Update a source",
-        notes = "",
-        nickname = "updateSource")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Update a source",
+        description = "")
     @RequestMapping(
         value = "/{sourceIdentifier}",
         method = RequestMethod.PUT)
     @PreAuthorize("hasRole('UserAdmin')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Source updated."),
-        @ApiResponse(code = 404, message = "Source not found."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "204", description = "Source updated."),
+        @ApiResponse(responseCode = "404", description = "Source not found."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     public ResponseEntity updateSource(
-        @ApiParam(
-            value = "Source identifier",
+        @Parameter(
+            description = "Source identifier",
             required = true
         )
         @PathVariable
             String sourceIdentifier,
-        @ApiParam(
+        @Parameter(
             name = "source"
         )
         @RequestBody
             Source source,
-        @ApiIgnore
-        HttpServletRequest request) throws Exception {
+        @Parameter(hidden = true)
+            HttpServletRequest request) throws Exception {
         Source existingSource = sourceRepository.findOne(sourceIdentifier);
         if (existingSource != null) {
             updateSource(sourceIdentifier, source, sourceRepository);
@@ -261,10 +240,9 @@ public class SourcesApi {
     }
 
 
-    @ApiOperation(
-        value = "Remove a source",
-        notes = "",
-        nickname = "deleteSource")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Remove a source",
+        description = "")
     @RequestMapping(
         value = "/{sourceIdentifier}",
         method = RequestMethod.DELETE
@@ -272,17 +250,17 @@ public class SourcesApi {
     @PreAuthorize("hasRole('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Source deleted."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+        @ApiResponse(responseCode = "201", description = "Source deleted."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     public ResponseEntity deleteSource(
-        @ApiParam(
-            value = "Source identifier",
+        @Parameter(
+            description = "Source identifier",
             required = true
         )
         @PathVariable
             String sourceIdentifier,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpServletRequest request
     ) throws ResourceNotFoundException {
         Source existingSource = sourceRepository.findOne(sourceIdentifier);
@@ -293,8 +271,8 @@ public class SourcesApi {
                 final Path logoDir = resources.locateLogosDir(context);
                 try {
                     resources.deleteImageIfExists(existingSource.getUuid() + "." +
-                                                          FilenameUtils.getExtension(existingSource.getLogo()),
-                                                  logoDir);
+                            FilenameUtils.getExtension(existingSource.getLogo()),
+                        logoDir);
                 } catch (IOException ignored) {
                 }
             }

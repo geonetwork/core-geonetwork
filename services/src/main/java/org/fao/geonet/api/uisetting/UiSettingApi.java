@@ -23,14 +23,12 @@
 
 package org.fao.geonet.api.uisetting;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -51,13 +49,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import springfox.documentation.annotations.ApiIgnore;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashSet;
@@ -69,8 +61,7 @@ import java.util.Set;
     "/{portal}/api/" + API.VERSION_0_1 +
         "/ui"
 })
-@Api(value = "ui",
-    tags = "ui",
+@Tag(name = "ui",
     description = "User interface configuration operations")
 @Controller("ui")
 public class UiSettingApi {
@@ -84,16 +75,15 @@ public class UiSettingApi {
     @Autowired
     UserGroupRepository userGroupRepository;
 
-    @ApiOperation(
-        value = "Get UI configuration",
-        notes = "",
-        nickname = "getUiConfigurations")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get UI configuration",
+        description = "")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "List of configuration.")
+        @ApiResponse(responseCode = "200", description = "List of configuration.")
     })
     @ResponseBody
     public List<UiSetting> getUiConfigurations(
@@ -102,10 +92,9 @@ public class UiSettingApi {
     }
 
 
-    @ApiOperation(
-        value = "Create a UI configuration",
-        notes = "",
-        nickname = "putUiConfiguration")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Create a UI configuration",
+        description = "")
     @RequestMapping(
         method = RequestMethod.PUT,
         consumes = {
@@ -117,12 +106,12 @@ public class UiSettingApi {
     )
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "UI configuration created. Return the new UI configuration identifier."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "201", description = "UI configuration created. Return the new UI configuration identifier."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @PreAuthorize("hasRole('UserAdmin')")
     public ResponseEntity<String> putUiConfiguration(
-        @ApiParam(
+        @Parameter(
             name = "uiConfiguration"
         )
         @RequestBody
@@ -148,10 +137,9 @@ public class UiSettingApi {
     }
 
 
-    @ApiOperation(
-        value = "Get a UI configuration",
-        notes = "",
-        nickname = "getUiConfiguration")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get a UI configuration",
+        description = "")
     @RequestMapping(
         value = "/{uiIdentifier}",
         produces = {
@@ -160,12 +148,12 @@ public class UiSettingApi {
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "UI configuration.")
+        @ApiResponse(responseCode = "200", description = "UI configuration.")
     })
     @ResponseBody
     public UiSetting getUiConfiguration(
-        @ApiParam(
-            value = "UI identifier",
+        @Parameter(
+            description = "UI identifier",
             required = true
         )
         @PathVariable
@@ -182,33 +170,32 @@ public class UiSettingApi {
     }
 
 
-    @ApiOperation(
-        value = "Update a UI configuration",
-        notes = "",
-        nickname = "updateUiConfiguration")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Update a UI configuration",
+        description = "")
     @RequestMapping(
         value = "/{uiIdentifier}",
         method = RequestMethod.PUT)
     @PreAuthorize("hasRole('UserAdmin')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "UI configuration updated."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "204", description = "UI configuration updated."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody
     public ResponseEntity updateUiConfiguration(
-        @ApiParam(
-            value = "UI configuration identifier",
+        @Parameter(
+            description = "UI configuration identifier",
             required = true
         )
         @PathVariable
             String uiIdentifier,
-        @ApiParam(
+        @Parameter(
             name = "UI configuration"
         )
         @RequestBody
-        UiSetting uiConfiguration,
-        @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession
+            UiSetting uiConfiguration,
+        @Parameter(hidden = true) HttpSession httpSession
     ) throws Exception {
         UiSetting one = uiSettingsRepository.findOne(uiIdentifier);
         if (one != null) {
@@ -224,7 +211,7 @@ public class UiSettingApi {
 
                 final List<Source> sources = sourceRepository.findByGroupOwnerIn(ids);
                 boolean isUiConfigForOneOfUserPortal = false;
-                for(Source s : sources) {
+                for (Source s : sources) {
                     if (uiIdentifier.equals(s.getUiConfig())) {
                         uiSettingsRepository.save(uiConfiguration);
                         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -247,28 +234,26 @@ public class UiSettingApi {
     }
 
 
-
-    @ApiOperation(
-        value = "Remove a UI Configuration",
-        notes = "",
-        nickname = "deleteUiConfiguration")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Remove a UI Configuration",
+        description = "")
     @RequestMapping(
         value = "/{uiIdentifier}",
         method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "UI Configuration removed."),
-        @ApiResponse(code = 404, message = "UI Configuration not found."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "204", description = "UI Configuration removed."),
+        @ApiResponse(responseCode = "404", description = "UI Configuration not found."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @PreAuthorize("hasRole('UserAdmin')")
     public ResponseEntity deleteUiConfiguration(
-        @ApiParam(
-            value = "UI configuration identifier",
+        @Parameter(
+            description = "UI configuration identifier",
             required = true
         )
         @PathVariable
-        String uiIdentifier
+            String uiIdentifier
     ) throws Exception {
         UiSetting one = uiSettingsRepository.findOne(uiIdentifier);
         if (one != null) {
