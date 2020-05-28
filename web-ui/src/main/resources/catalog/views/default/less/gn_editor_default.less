@@ -364,6 +364,22 @@
         padding-right: 0;
       }
     }
+    // multilingual
+    .gn-multilingual-field {
+      .form-control {
+        margin-bottom: 5px;
+      }
+    }
+    // ----- only show first help icon
+    [data-gn-multilingual-field] + .gn-control {
+      // > .field-tooltip {
+      //   // display: none;
+      //   background-color: red;
+      // }
+      > .field-tooltip ~ .field-tooltip {
+        display: none;
+      }
+    }
   }
   // sidebar in the editor
   .gn-editor-tools-container {
