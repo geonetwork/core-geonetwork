@@ -177,7 +177,8 @@
                 return window.location.hash = '#/metadata/' + r.id;
               } else {
                 // Replace the portal node with the catalog default node
-                var mdUrl = window.location.href;
+                var mdUrl = window.location.origin + window.location.pathname +
+                            window.location.search + '#/metadata/' + r.id;
                 mdUrl = mdUrl.replace('/' + gnConfig.env.node + '/',
                   '/' + gnConfig.env.defaultNode+ '/');
                 return window.open(mdUrl, '_blank');
