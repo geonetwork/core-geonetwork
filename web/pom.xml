@@ -583,7 +583,6 @@
   <build>
 
     <plugins>
-
       <!-- Generate a properties file with the commit hash to be displayed on the admin.console -->
 	    <plugin>
 	        <groupId>pl.project13.maven</groupId>

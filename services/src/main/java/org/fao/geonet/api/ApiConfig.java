@@ -29,9 +29,12 @@ import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.WebApplicationInitializer;
@@ -52,18 +55,20 @@ import javax.servlet.ServletRegistration;
 //    "org.fao.geonet.api",
 //    "org.fao.geonet.monitor.service"
 //})
-@EnableWebMvc
-public class ApiConfig implements WebApplicationInitializer {
-//    public OpenAPI ApiConfig() {
-//        return new OpenAPI()
-//            .info(new Info().title("GeoNetwork Api Documentation (beta)")
-//                .description("Learn how to access the catalog using the GeoNetwork REST API.")
-//                .version(API.VERSION_0_1)
-//                .license(new License().name("GPL 2.0").url("http://www.gnu.org/licenses/old-licenses/gpl-2.0.html")))
-//            .externalDocs(new ExternalDocumentation()
-//                .description("Learn how to access the catalog using the GeoNetwork REST API.")
-//                .url("https://localhost:8080/docs"));
-//    }
+// https://springdoc.org/faq.html#how-to-integrate-open-api-3-with-spring-project-not-spring-boot
+// https://springdoc.org/migrating-from-springfox.html
+@Configuration
+public class ApiConfig implements ServletContextInitializer {
+    public OpenAPI ApiConfig() {
+        return new OpenAPI()
+            .info(new Info().title("GeoNetwork Api Documentation (beta)")
+                .description("Learn how to access the catalog using the GeoNetwork REST API.")
+                .version(API.VERSION_0_1)
+                .license(new License().name("GPL 2.0").url("http://www.gnu.org/licenses/old-licenses/gpl-2.0.html")))
+            .externalDocs(new ExternalDocumentation()
+                .description("Learn how to access the catalog using the GeoNetwork REST API.")
+                .url("https://localhost:8080/docs"));
+    }
 
 
     @Override
