@@ -37,7 +37,7 @@ def _load_page_html(url):
     try:
         r = requests.get(url)
     except Exception as error:
-        print("Site {url} nt accessible: {error}".format(url=url, error=error))
+        print("Site {url} not accessible: {error}".format(url=url, error=error))
         return None
     return r.text
 

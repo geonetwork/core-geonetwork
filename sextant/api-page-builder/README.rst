@@ -5,7 +5,7 @@ This simple utility fetches live pages using Sextant in API mode,
 and process their HTML so that they can be used locally to check
 for CSS/JS conflicts with the HTML surrounding Sextant.
 
-A configuration file has to be provided on the following model:
+A configuration file has to be provided using the following model:
 
 .. code:: yaml
 
@@ -60,7 +60,7 @@ Build the docker image:
 
 .. code::
 
-  make build && make test
+  make build
 
 
 Run tests:
