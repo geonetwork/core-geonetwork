@@ -564,7 +564,10 @@
       <version>3.0.1</version>
       <scope>provided</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.mitre.dsmiley.httpproxy</groupId>
       <artifactId>smiley-http-proxy-servlet</artifactId>
@@ -884,6 +887,10 @@
             <systemProperty>
               <name>org.eclipse.jetty.server.Request.maxFormContentSize</name>
               <value>5000000</value>
+            </systemProperty>
+            <systemProperty>
+              <name>org.eclipse.jetty.classInheritanceMap</name>
+              <value>true</value>
             </systemProperty>
           </systemProperties>
           <httpConnector>

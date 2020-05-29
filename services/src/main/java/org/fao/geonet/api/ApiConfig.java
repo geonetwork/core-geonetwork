@@ -29,14 +29,8 @@ import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.ServletContextInitializer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
@@ -57,8 +51,9 @@ import javax.servlet.ServletRegistration;
 //})
 // https://springdoc.org/faq.html#how-to-integrate-open-api-3-with-spring-project-not-spring-boot
 // https://springdoc.org/migrating-from-springfox.html
-@Configuration
-public class ApiConfig implements ServletContextInitializer {
+@EnableWebMvc
+public class ApiConfig implements WebApplicationInitializer {
+    @Autowired
     public OpenAPI ApiConfig() {
         return new OpenAPI()
             .info(new Info().title("GeoNetwork Api Documentation (beta)")
@@ -78,18 +73,18 @@ public class ApiConfig implements ServletContextInitializer {
         ServletRegistration.Dynamic dispatcher =
             servletContext.addServlet("OpenApiServlet",
             new DispatcherServlet(context));
-        dispatcher.setLoadOnStartup(1);
+//        dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/v3/*");
     }
 
     private AnnotationConfigWebApplicationContext getContext() {
         AnnotationConfigWebApplicationContext context =
             new AnnotationConfigWebApplicationContext();
-        context.scan("org.fao.geonet.api");
+        context.scan("rest");
         context.register(this.getClass(),
 //            org.springdoc.ui.SwaggerConfig.class,
-            org.springdoc.core.SwaggerUiConfigProperties.class,
-            org.springdoc.core.SwaggerUiOAuthProperties.class,
+//            org.springdoc.core.SwaggerUiConfigProperties.class,
+//            org.springdoc.core.SwaggerUiOAuthProperties.class,
             org.springdoc.webmvc.core.SpringDocWebMvcConfiguration.class,
             org.springdoc.webmvc.core.MultipleOpenApiSupportConfiguration.class,
             org.springdoc.core.SpringDocConfiguration.class,
