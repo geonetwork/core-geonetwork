@@ -1,0 +1,4 @@
+sites:
+    test: './test.html'
+live_host: sextant.ifremer.fr
+test_host: localhost:8080

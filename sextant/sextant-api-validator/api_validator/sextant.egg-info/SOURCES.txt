@@ -1,9 +1,0 @@
-setup.py
-api_validator/__init__.py
-api_validator/build_api_from_source_code.py
-sextant.egg-info/PKG-INFO
-sextant.egg-info/SOURCES.txt
-sextant.egg-info/dependency_links.txt
-sextant.egg-info/top_level.txt
-tests/__init__.py
-tests/test_api.py
