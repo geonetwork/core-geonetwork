@@ -279,7 +279,6 @@
       };
       $scope.refreshJobList();
 
-      var pageNumber = 0;
       var pageSize = 10;
 
       $scope.refreshBsTable = function(jobsArray) {
@@ -367,14 +366,11 @@
                 var labelNow = $translate.instant('wfsIndexingTrigger');
                 var labelDelete = $translate.instant('wfsDeleteWfsIndexing');
 
-                var isLast = index === jobsArray.length - 1 || (index + 1) % pageSize === 0;
-                var dropdownClass = isLast ? 'dropup' : 'dropdown';
-
-                return '<div class="' + dropdownClass + '">' +
+                return '<div class="dropdown">' +
                   '  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">' +
                   '    ' + $translate.instant('wfsHarvesterActions') + '&nbsp;<span class="caret"></span>' +
                   '  </button>' +
-                  '  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">' +
+                  '  <ul class="dropdown-menu dropdown-menu-right">' +
                   '    <li><a href="#" data-job-key="' + key + '">' + labelEdit + '</a></li>' +
                   '    <li><a href="#" data-trigger-job-key="' + key + '">' + labelNow + '</a></li>' +
                   '    <li><a href="#" data-delete-key="' + key + '">' + labelDelete + '</a></li>' +
@@ -382,11 +378,7 @@
                   '</div>';
               }
             }],
-            locale: getBsTableLang(),
-            onPageChange: function(number, size) {
-              pageNumber = number;
-              pageSize = size;
-            }
+            locale: getBsTableLang()
           }
         };
       }
