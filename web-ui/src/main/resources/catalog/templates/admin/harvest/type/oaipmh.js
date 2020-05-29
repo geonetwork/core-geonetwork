@@ -20,6 +20,9 @@ var gnHarvesteroaipmh = {
               "url": "",
               "icon" : "blank.png"
             },
+            "content":   {
+              "validate": "NOVALIDATION",
+            },
             "options":   {
               "every": "0 0 0 ? * *",
               "oneRunOnly": false,
@@ -79,6 +82,7 @@ var gnHarvesteroaipmh = {
                 + '    <status>' + h.options.status + '</status>'
                 + '  </options>'
                 + '  <content>'
+                + '    <validate>' + h.content.validate + '</validate>'
                 + '  </content>'
                 + $scope.buildResponseGroup(h)
                 + $scope.buildResponseCategory(h) + '</node>';
