@@ -189,6 +189,9 @@
 
       $scope.wfsFilterValue = null;
 
+      // dummy promise to make sure translations are available
+      var langPromise = $translate('yes');
+
       $scope.refreshJobList = function() {
         $scope.jobs = {};
         $scope.error = null;
@@ -204,7 +207,7 @@
         });
         var apiQuery = $http.get($scope.messageProducersApiUrl);
 
-        $q.all([indexQuery, apiQuery]).then(function(results) {
+        $q.all([indexQuery, apiQuery, langPromise]).then(function(results) {
           var indexResults = results[0];
           var apiResults = results[1];
 
