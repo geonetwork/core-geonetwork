@@ -19,6 +19,8 @@ public class MessageProducerFactory {
     @Autowired
     protected QuartzComponent quartzComponent;
 
+    private static final String NEVER = "59 59 23 31 12 ? 2099";
+
     @PostConstruct
     public void init() throws Exception {
         quartzComponent.start();
@@ -33,7 +35,10 @@ public class MessageProducerFactory {
     public void reschedule(MessageProducer messageProducer) throws Exception {
         QuartzEndpoint toReschedule = (QuartzEndpoint) routeBuilder.getContext().getEndpoints().stream()
                 .filter(x -> x.getEndpointKey().compareTo("quartz2://" + messageProducer.getId()) == 0).findFirst().get();
-        CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(toReschedule.getTriggerKey()).withSchedule(CronScheduleBuilder.cronSchedule(messageProducer.getCronExpession())).build();
+
+        String msgCronExpression = messageProducer.getCronExpession() == null ? NEVER : messageProducer.getCronExpession();
+        CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(toReschedule.getTriggerKey()).withSchedule(CronScheduleBuilder.cronSchedule(msgCronExpression)).build();
+
         quartzComponent.getScheduler().rescheduleJob(toReschedule.getTriggerKey(), trigger);
         routeBuilder.getContext().startRoute(findRoute(messageProducer.getId()).getId());
     }

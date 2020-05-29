@@ -2,9 +2,11 @@ package org.fao.geonet.camelPeriodicProducer;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.component.quartz2.QuartzComponent;
+import org.apache.camel.component.quartz2.QuartzEndpoint;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.quartz.CronTrigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -30,6 +32,7 @@ public class MessageProducerTest {
     private static final String EVERY_SIX_SECOND = "/6 * * ? * * *";
     private static final String EVERY_THREE_SECOND = "/3 * * ? * * *";
     private static final String EVERY_SECOND = "* * * ? * * *";
+    private static final String NEVER = "59 59 23 31 12 ? 2099";
 
     @Autowired
     private TestCamelNetwork testCamelNetwork;
@@ -96,6 +99,36 @@ public class MessageProducerTest {
         testCamelNetwork.getMessageConsumer().reset();
         Thread.sleep(2000);
         assertEquals(0, testCamelNetwork.getMessageConsumer().receivedContent.size());
+    }
+
+    @Test
+    public void registerAndStartWithoutCronExpression() throws Exception {
+        testCamelNetwork.getContext().start();
+        MessageProducerFactory toTest = new MessageProducerFactory();
+        toTest.routeBuilder = testCamelNetwork;
+        toTest.quartzComponent = quartzComponent;
+
+        TestMessage testMessage = new TestMessage("testMsg1");
+        MessageProducer<TestMessage> messageProducer = new MessageProducer<>();
+        messageProducer.setId(1L);
+        messageProducer.setTarget(testCamelNetwork.getMessageConsumer().getUri());
+        messageProducer.setMessage(testMessage);
+        messageProducer.setCronExpession(null);
+        toTest.registerAndStart(messageProducer);
+
+        QuartzEndpoint endpoint = (QuartzEndpoint) toTest.routeBuilder.getContext().getEndpoints().stream()
+            .filter(x -> x.getEndpointKey().compareTo("quartz2://" + messageProducer.getId()) == 0).findFirst().get();
+
+        CronTrigger trigger = (CronTrigger) quartzComponent.getScheduler().getTrigger(endpoint.getTriggerKey());
+        assertEquals(NEVER, trigger.getCronExpression());
+
+        messageProducer.setCronExpession(EVERY_SECOND);
+        toTest.changeMessageAndReschedule(messageProducer);
+
+        trigger = (CronTrigger) quartzComponent.getScheduler().getTrigger(endpoint.getTriggerKey());
+        assertEquals(EVERY_SECOND, trigger.getCronExpression());
+
+        toTest.destroy(1L);
     }
 
 

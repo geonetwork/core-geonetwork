@@ -110,14 +110,18 @@
     'wfsFilterService',
     '$q',
     '$rootScope',
+    '$translate',
     'gnIndexRequestManager',
     'gnIndexService',
     'gnGlobalSettings',
     'gnSearchSettings',
     'gnFeaturesTableManager',
-        function($http, wfsFilterService, $q, $rootScope,
+    'gnHttp',
+    'gnAlertService',
+        function($http, wfsFilterService, $q, $rootScope, $translate,
              gnIndexRequestManager, gnIndexService, gnGlobalSettings,
-             gnSearchSettings, gnFeaturesTableManager) {
+             gnSearchSettings, gnFeaturesTableManager, gnHttp,
+             gnAlertService) {
       return {
         restrict: 'A',
         replace: true,
@@ -861,6 +865,9 @@
                 applicationProfile ? applicationProfile.treeFields : null,
                 uuid,
                 version);
+
+            // save WFS indexing job if not done already
+            scope.saveWfsIndexingJob();
           };
 
           // Init the directive
@@ -991,6 +998,37 @@
             });
             newItems = checkedItems.concat(newItems);
             return newItems;
+          }
+
+          // check whether the WFS service is already in the database
+          scope.messageProducersApiUrl = gnHttp.getService('wfsMessageProducers');
+          var wfsIndexJobSavedPromise = $http.get(
+            scope.messageProducersApiUrl + '/find?url=' + scope.wfsUrl + '&featureType=' + scope.featureTypeName
+          )
+            .then(function() {
+              return true
+            }, function() {
+              return false
+            });
+
+          scope.saveWfsIndexingJob = function() {
+            wfsIndexJobSavedPromise.then(function(saved) {
+              if (saved) return;
+              var payload = {
+                wfsHarvesterParam: {
+                  url: scope.wfsUrl,
+                  typeName: scope.featureTypeName,
+                  metadataUuid: scope.md && scope.md.getUuid()
+                },
+                cronExpression: null
+              };
+              $http.post(scope.messageProducersApiUrl, payload).then(function () {
+                gnAlertService.addAlert({
+                  msg: $translate.instant('wfsIndexingJobSaved'),
+                  type: 'success'
+                });
+              });
+            })
           }
         }
       };

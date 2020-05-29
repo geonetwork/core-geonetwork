@@ -520,5 +520,6 @@
     "dateFrom": "Fiches mises à jour après",
     "dateTo": "Fiches mises à jour avant",
     "activeFilters": "Filtres",
-    "geometryFilter": "Emprise"
+    "geometryFilter": "Emprise",
+    "wfsIndexingJobSaved": "Le service WFS a été sauvegardé."
 }
