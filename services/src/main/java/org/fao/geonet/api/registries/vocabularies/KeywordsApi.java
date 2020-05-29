@@ -428,6 +428,8 @@ public class KeywordsApi {
                 List<KeywordBean> kbList = new ArrayList<>();
                 for (String currentUri : url) {
                     kb = searcher.searchById(currentUri, sThesaurusName, langs);
+                    if (kb == null)
+                        kb = searcher.searchById(fixUri(currentUri), sThesaurusName, langs);
                     if (kb != null) {
                         kbList.add(kb);
                     }
@@ -470,6 +472,14 @@ public class KeywordsApi {
         return transform;
     }
 
+    // fixes common problems in uri
+    private String fixUri(String uri) throws URISyntaxException {
+        // We could be smarter about this.
+        // ie. by breaking string at "#" and then urlencode the left part.
+        //     However, the rdf files could be inconsistent with
+        //     other characters like ":" (i.e. should not be url encoded)
+        return uri.replace(" ","%20");
+    }
 
     /**
      * Gets the thesaurus.
