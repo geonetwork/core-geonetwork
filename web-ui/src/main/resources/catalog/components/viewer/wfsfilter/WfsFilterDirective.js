@@ -1002,16 +1002,14 @@
 
           // check whether the WFS service is already in the database
           scope.messageProducersApiUrl = gnHttp.getService('wfsMessageProducers');
-          var wfsIndexJobSavedPromise = $http.get(scope.messageProducersApiUrl).then(function(response) {
-            var producers = response.data;
-            for (var i = 0; i < producers.length; i++) {
-              var wfsParams = producers[i].wfsHarvesterParam;
-              if (wfsParams.url === scope.wfsUrl && wfsParams.typeName === scope.featureTypeName) {
-                return true;
-              }
-            }
-            return false;
-          });
+          var wfsIndexJobSavedPromise = $http.get(
+            scope.messageProducersApiUrl + '/find?url=' + scope.wfsUrl + '&featureType=' + scope.featureTypeName
+          )
+            .then(function() {
+              return true
+            }, function() {
+              return false
+            });
 
           scope.saveWfsIndexingJob = function() {
             wfsIndexJobSavedPromise.then(function(saved) {

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
@@ -75,6 +76,17 @@ public class MessageProducerController {
     public ResponseEntity<MessageProducerEntity> findById(@PathVariable long id) {
         if (msgProducerRepository.exists(id)) {
             return (ResponseEntity.ok().body(msgProducerRepository.findOne(id)));
+        } else {
+            return (new ResponseEntity(HttpStatus.NOT_FOUND));
+        }
+    }
+
+    @PreAuthorize("hasRole('Administrator')")
+    @GetMapping(path = "/find")
+    public ResponseEntity<MessageProducerEntity> findByUrlAndFeatureType(@RequestParam String url, @RequestParam String featureType) {
+        MessageProducerEntity msg = msgProducerRepository.findOneByUrlAndFeatureType(url, featureType);
+        if (msg != null) {
+            return (ResponseEntity.ok().body(msg));
         } else {
             return (new ResponseEntity(HttpStatus.NOT_FOUND));
         }
