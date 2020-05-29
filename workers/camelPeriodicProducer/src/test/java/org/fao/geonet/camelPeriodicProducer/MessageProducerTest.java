@@ -109,30 +109,26 @@ public class MessageProducerTest {
         toTest.quartzComponent = quartzComponent;
 
         TestMessage testMessage = new TestMessage("testMsg1");
-        MessageProducer<TestMessage> messageProducer1 = new MessageProducer<>();
-        messageProducer1.setId(1L);
-        messageProducer1.setTarget(testCamelNetwork.getMessageConsumer().getUri());
-        messageProducer1.setMessage(testMessage);
-        messageProducer1.setCronExpession(null);
-        toTest.registerAndStart(messageProducer1);
+        MessageProducer<TestMessage> messageProducer = new MessageProducer<>();
+        messageProducer.setId(1L);
+        messageProducer.setTarget(testCamelNetwork.getMessageConsumer().getUri());
+        messageProducer.setMessage(testMessage);
+        messageProducer.setCronExpession(null);
+        toTest.registerAndStart(messageProducer);
 
         QuartzEndpoint endpoint = (QuartzEndpoint) toTest.routeBuilder.getContext().getEndpoints().stream()
-            .filter(x -> x.getEndpointKey().compareTo("quartz2://" + messageProducer1.getId()) == 0).findFirst().get();
+            .filter(x -> x.getEndpointKey().compareTo("quartz2://" + messageProducer.getId()) == 0).findFirst().get();
 
         CronTrigger trigger = (CronTrigger) quartzComponent.getScheduler().getTrigger(endpoint.getTriggerKey());
         assertEquals(NEVER, trigger.getCronExpression());
 
-        messageProducer1.setCronExpession(EVERY_SECOND);
-        toTest.changeMessageAndReschedule(messageProducer1);
+        messageProducer.setCronExpession(EVERY_SECOND);
+        toTest.changeMessageAndReschedule(messageProducer);
 
         trigger = (CronTrigger) quartzComponent.getScheduler().getTrigger(endpoint.getTriggerKey());
         assertEquals(EVERY_SECOND, trigger.getCronExpression());
 
         toTest.destroy(1L);
-
-        testCamelNetwork.getMessageConsumer().reset();
-        Thread.sleep(2000);
-        assertEquals(0, testCamelNetwork.getMessageConsumer().receivedContent.size());
     }
 
 

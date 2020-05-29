@@ -1,12 +1,10 @@
 package org.fao.geonet.camelPeriodicProducer;
 
-import javax.annotation.Nullable;
-
 public class MessageProducer <M> {
 
     private Long id;
     private M message;
-    @Nullable private String cronExpession;
+    private String cronExpession;
     private String targetUri;
 
     public MessageProducer<M> setMessage(M message) {
@@ -14,7 +12,7 @@ public class MessageProducer <M> {
         return this;
     }
 
-    public MessageProducer<M> setCronExpession(@Nullable String cronExpession) {
+    public MessageProducer<M> setCronExpession(String cronExpession) {
         this.cronExpession = cronExpession;
         return this;
     }
