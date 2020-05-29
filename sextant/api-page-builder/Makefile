@@ -15,7 +15,7 @@ help: ## This help.
 
 # DOCKER TASKS
 build: ## Build the image
-	docker build . -t sextant:api-page-builder
+	docker build . -t sextant/api-page-builder
 
 test: ## Run the tests in the docker image
-	docker run sextant:api-page-builder pytest /app/tests
+	docker run sextant/api-page-builder pytest /app/tests

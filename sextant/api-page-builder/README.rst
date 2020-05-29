@@ -77,5 +77,5 @@ Run the process, reading from `/sextant/api-page-builder/conf/myconf.yaml` and o
   docker run \
     -v /sextant/api-page-builder/conf:/app/conf \
     -v /sextant/api-page-builder/output:/out \
-    sextant:api-page-builder \
+    sextant/api-page-builder \
     ./run.py -i /app/conf/myconf.yaml -o /out --host "http://localhost:8080"
