@@ -58,7 +58,9 @@
   <bean id="translatorFactory" class="org.fao.geonet.kernel.search.TranslatorFactory"/>
 
   <bean id="urlAnalyzer" class="org.fao.geonet.kernel.url.UrlAnalyzer" lazy-init="true"/>
-  <bean id="urlChecker" class="org.fao.geonet.kernel.url.UrlChecker" lazy-init="true"/>
+  <bean id="urlChecker" class="org.fao.geonet.kernel.url.UrlChecker" lazy-init="true">
+    <property name="UserAgent" value="${urlChecker.UserAgent}"/>
+  </bean>
   <bean id="SearchManager" class="org.fao.geonet.kernel.search.SearchManager" lazy-init="true"/>
   <bean id="SearchLogger" class="org.fao.geonet.kernel.search.log.SearcherLogger" lazy-init="true"/>
   <bean id="EsSearchManager" class="org.fao.geonet.kernel.search.EsSearchManager" lazy-init="true"/>
