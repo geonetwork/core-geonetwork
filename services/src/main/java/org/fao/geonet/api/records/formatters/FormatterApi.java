@@ -109,6 +109,7 @@ import org.jdom.Namespace;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Lazy;
@@ -196,6 +197,10 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
     @Autowired
     private IsoLanguagesMapper isoLanguagesMapper;
+
+    @Autowired
+    @Qualifier("formatterRemoteFormatAllowedHosts")
+    private Set allowedRemoteHosts;
 
     /**
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter
@@ -592,7 +597,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             adjustedUrl = settingManager.getSiteURL(lang) + url;
         } else {
             final URI uri = new URI(url);
-            Set allowedRemoteHosts = context.getBean("formatterRemoteFormatAllowedHosts", Set.class);
             Assert.isTrue(allowedRemoteHosts.contains(uri.getHost()), "xml.format is not allowed to make requests to " + uri.getHost());
         }
 
