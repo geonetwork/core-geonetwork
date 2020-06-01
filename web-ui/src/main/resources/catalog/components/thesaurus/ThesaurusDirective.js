@@ -404,6 +404,31 @@
                        this.tagsinput('input').typeahead('val', '');
                      }, $(id))
                      );
+                     // UX improvement
+                     // When the user presses "enter", allow the item to be selected
+                      field.bind("keydown keypress", function(event){
+                          if (event.keyCode ==13) { // pressed "enter"
+                              if (element.find(".tt-selectable").length <1)
+                                return; // should be an element (keyword choice) visible
+                              var val = element.find(".tt-selectable").first().text(); //first one
+                              if ( (!val) || (val == ''))
+                                return; // no value, nothing to do
+                              event.stopPropagation(); // we are handling the event...
+                              event.preventDefault();
+                              //get full keyword info from server
+                              gnThesaurusService.getKeywords(val,
+                                    scope.thesaurusKey, gnLangs.current, 1, 'MATCH')
+                                    .then(function(listOfKeywords) {
+                                        if (listOfKeywords.length == 1) { // should be one match
+                                            field.typeahead().trigger("typeahead:selected", listOfKeywords[0],listOfKeywords[0]);
+                                            field.typeahead('close');
+                                            field.focus(); //allow to type again
+                                        }
+                                    }
+                              );
+
+                          }
+                      });
 
                      $(id).on('itemRemoved', function() {
                        angular.copy($(this)
