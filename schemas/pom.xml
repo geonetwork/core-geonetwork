@@ -31,7 +31,7 @@
     <version>3.11.0-SNAPSHOT</version>
   </parent>
 
-  <version>3.7</version>
+  <version>3.10-SNAPSHOT</version> <!-- reflects target for constained schemas -->
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>schemas</artifactId>
@@ -51,8 +51,29 @@
     <module>dublin-core</module>
     <module>iso19110</module>
     <module>iso19139</module>
-    <module>iso19115-3.2018</module>
   </modules>
+
+  <profiles>
+    <profile>
+      <id>schema-iso19115-3-2018</id>
+      <activation>
+        <file><exists>iso19115-3.2018</exists></file>
+      </activation>
+      <modules>
+        <module>iso19115-3.2018</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>hnap</id>
+      <activation>
+        <file><exists>iso19139.ca.HNAP</exists></file>
+      </activation>
+      <modules>
+        <module>iso19139.ca.HNAP</module>
+      </modules>
+    </profile>
+  </profiles>
+
   <properties>
     <rootProjectDir>../..</rootProjectDir>
     <gn.project.version>3.11.0-SNAPSHOT</gn.project.version>

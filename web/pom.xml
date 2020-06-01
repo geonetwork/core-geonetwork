@@ -551,34 +551,6 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Add dependencies to schema plugin
-    having a custom Bean to be loaded. -->
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19139</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>schema-csw-record</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19110</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>schema-dublin-core</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19115-3.2018</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>wfsfeature-harvester</artifactId>
@@ -622,6 +594,29 @@
       <artifactId>autolink</artifactId>
       <version>0.6.0</version>
     </dependency>
+
+    <!-- Add dependencies to built-in schema plugin having a custom bean to be loaded. -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>schema-iso19139</artifactId>
+      <version>${gn.schemas.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>schema-csw-record</artifactId>
+      <version>${gn.schemas.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>schema-iso19110</artifactId>
+      <version>${gn.schemas.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>schema-dublin-core</artifactId>
+      <version>${gn.schemas.version}</version>
+    </dependency>
+
   </dependencies>
 
 
@@ -773,7 +768,7 @@
             </configuration>
           </execution>
           <execution>
-            <id>copy-schemas</id>
+            <id>copy-documentation</id>
             <phase>process-resources</phase>
             <goals>
               <goal>copy-resources</goal>
@@ -783,35 +778,6 @@
               <overwrite>true</overwrite>
               <outputDirectory>${build.webapp.resources}</outputDirectory>
               <resources>
-                <!-- Copy the schema folder to the webapp folder source directory
-                in order to be loaded by the application when running mvn jetty:run.
-                -->
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19139/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
-                  </targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19110/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
-                  </targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/dublin-core/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
-                  </targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/csw-record/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
-                  </targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19115-3.2018/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
-                  </targetPath>
-                </resource>
-                <!-- Copy the documentation in the webapp. -->
                 <resource>
                   <directory>${project.basedir}/../docs/manuals/target/doc</directory>
                   <targetPath>${basedir}/src/main/webapp/doc</targetPath>
@@ -922,10 +888,219 @@
     </plugins>
   </build>
 
-  <!-- Define profiles for running configuration using -Denv=profile.id parameter
-    Profiles configuration is defined in src/main/filters.
-    -->
   <profiles>
+
+    <!-- Schema management profiles. -->
+    <profile>
+      <id>schema-iso19115-3-2018</id>
+      <activation>
+        <property><name>schemasCopy</name><value>!true</value></property>
+        <file><exists>../schemas/iso19115-3.2018</exists></file>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>schema-iso19115-3.2018</artifactId>
+          <version>${gn.schemas.version}</version>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>iso19115-3.2018-resources</id>
+                <phase>process-resources</phase>
+                <goals><goal>unpack</goal></goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>${project.groupId}</groupId>
+                      <artifactId>schema-iso19115-3.2018</artifactId>
+                      <type>jar</type>
+                      <overWrite>false</overWrite>
+                      <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</outputDirectory>
+                      <includes>plugin/**</includes>
+                      <fileMappers>
+                        <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
+                          <pattern>^plugin/</pattern><replacement>./</replacement>
+                        </fileMapper>
+                      </fileMappers>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Unpack schema resources from maven artifacts -->
+    <profile>
+      <id>schemas-unpack</id>
+      <activation>
+        <property><name>schemasCopy</name><value>!true</value></property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>unpack-schemas</id>
+                <phase>process-resources</phase>
+                <goals><goal>unpack</goal></goals>
+                <configuration>
+                  <encoding>UTF-8</encoding>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>${project.groupId}</groupId>
+                      <artifactId>schema-iso19139</artifactId>
+                      <version>${gn.schemas.version}</version>
+                      <type>jar</type>
+                      <overWrite>false</overWrite>
+                      <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</outputDirectory>
+                      <includes>plugin/**</includes>
+                      <fileMappers>
+                        <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
+                          <pattern>^plugin/</pattern><replacement>./</replacement>
+                        </fileMapper>
+                      </fileMappers>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>${project.groupId}</groupId>
+                      <artifactId>schema-csw-record</artifactId>
+                      <version>${gn.schemas.version}</version>
+                      <type>jar</type>
+                      <overWrite>false</overWrite>
+                      <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</outputDirectory>
+                      <includes>plugin/**</includes>
+                      <fileMappers>
+                        <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
+                          <pattern>^plugin/</pattern><replacement>./</replacement>
+                        </fileMapper>
+                      </fileMappers>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>${project.groupId}</groupId>
+                      <artifactId>schema-iso19110</artifactId>
+                      <version>${gn.schemas.version}</version>
+                      <type>jar</type>
+                      <overWrite>false</overWrite>
+                      <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</outputDirectory>
+                      <includes>plugin/**</includes>
+                      <fileMappers>
+                        <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
+                          <pattern>^plugin/</pattern><replacement>./</replacement>
+                        </fileMapper>
+                      </fileMappers>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>${project.groupId}</groupId>
+                      <artifactId>schema-dublin-core</artifactId>
+                      <version>${gn.schemas.version}</version>
+                      <type>jar</type>
+                      <overWrite>false</overWrite>
+                      <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</outputDirectory>
+                      <includes>plugin/**</includes>
+                      <fileMappers>
+                        <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
+                          <pattern>^plugin/</pattern><replacement>./</replacement>
+                        </fileMapper>
+                      </fileMappers>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Copy schema resources using relative paths -->
+    <profile>
+      <id>schemas-copy</id>
+      <activation> <!-- use -DcopySchemas=true to activate       -->
+        <property><name>schemasCopy</name><value>true</value></property>
+      </activation>
+      <!-- Add dependencies to schema plugin having a custom Bean to be loaded. -->
+      <dependencies>
+        <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>schema-iso19115-3.2018</artifactId>
+          <version>${gn.schemas.version}</version>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-schemas-ant</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                    <!-- Copy all the src/main/plugin folders in schemas to the webapp folder
+                    in order to be loaded by the application when running mvn jetty:run.
+                    -->
+                  <target description="copy from schemas to schema_plugins folder">
+                    <copy todir="${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins">
+                      <fileset dir="${basedir}/../schemas/">
+                        <include name="**/src/main/plugin/**"/>
+                      </fileset>
+                      <regexpmapper handledirsep="yes"
+                        from="^[-_a-zA-Z0-9]+/src/main/plugin/(.*)"
+                          to="\1" />
+                    </copy>
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <!-- copy schema resources using relative paths -->
+            <executions>
+              <execution>
+                <id>copy-schemas</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <includeEmptyDirs>true</includeEmptyDirs>
+                  <overwrite>true</overwrite>
+                  <outputDirectory>${build.webapp.resources}</outputDirectory>
+                  <resources>
+                    <!-- Copy src/main/plugin folder to webapp folder source directory
+                    in order to be loaded by the application when running mvn jetty:run.
+                    -->
+                    <!--
+                    <resource>
+                      <directory>metadata101/iso19139.xyz/src/main/plugin</directory>
+                      <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
+                      </targetPath>
+                    </resource>
+                    -->
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
     <profile>
       <id>run-static-analysis</id>
       <activation>
@@ -942,10 +1117,15 @@
         </plugins>
       </build>
     </profile>
+
+    <!--
+    Define profiles for running configuration using -Denv=profile.id parameter
+    Profiles configuration is defined in src/main/filters.
+    -->
     <profile>
       <id>no-env-specified</id>
       <activation>
-        <property>
+        <property> <!-- default -->
           <name>!env</name>
         </property>
       </activation>
@@ -955,7 +1135,7 @@
     </profile>
     <profile>
       <id>env-prod</id>
-      <activation>
+      <activation> <!-- -Denv=prod -->
         <property>
           <name>env</name>
           <value>prod</value>
@@ -968,7 +1148,7 @@
     <profile>
       <id>env-dev</id>
       <activation>
-        <property>
+        <property> <!-- -Denv=dev -->
           <name>env</name>
           <value>dev</value>
         </property>
@@ -980,7 +1160,7 @@
     </profile>
     <profile>
       <id>env-inspire</id>
-      <activation>
+      <activation> <!-- -Denv=inspire -->
         <property>
           <name>env</name>
           <value>inspire</value>
@@ -990,6 +1170,7 @@
         <env>inspire</env>
       </properties>
     </profile>
+
     <profile>
       <id>es</id>
       <properties>

@@ -562,6 +562,7 @@
   </build>
 
   <profiles>
+
     <profile>
       <id>run-static-analysis</id>
       <activation>
@@ -578,7 +579,9 @@
         </plugins>
       </build>
     </profile>
+
   </profiles>
+
   <properties>
     <rootProjectDir>${basedir}/..</rootProjectDir>
   </properties>

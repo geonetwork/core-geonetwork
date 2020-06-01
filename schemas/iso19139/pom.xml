@@ -5,12 +5,13 @@
   <parent>
     <artifactId>schemas</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.7</version>
+    <version>3.10-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>schema-iso19139</artifactId>
   <name>GeoNetwork schema plugin for ISO19139/119 standards</name>
+  <packaging>jar</packaging>
 
   <dependencies>
     <dependency>
@@ -43,6 +44,10 @@
       </resource>
       <resource>
         <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>src/main/plugin</directory>
+        <targetPath>plugin</targetPath>
       </resource>
     </resources>
     <testResources>
