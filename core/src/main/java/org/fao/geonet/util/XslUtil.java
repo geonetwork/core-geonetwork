@@ -931,6 +931,7 @@ public final class XslUtil {
                 try {
                     return (Integer.parseInt(getUrlStatus(urlString)) / 100 == 2);
                 } catch (Exception e) {
+                    Log.info(Geonet.GEONETWORK,"validateURL: exception - ",e);
                     return false;
                 }
             }
