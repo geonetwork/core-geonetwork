@@ -402,19 +402,27 @@
 
                        // Clear typeahead
                        this.tagsinput('input').typeahead('val', '');
+                       field.blur();
+                       field.triggerHandler('input'); // force angular to see changes
                      }, $(id))
                      );
                      // UX improvement
                      // When the user presses "enter", allow the item to be selected
                       field.bind("keydown keypress", function(event){
+                          if (event.isDefaultPrevented()) {
+                              event.stopPropagation(); // need to prevent this from bubbling - or something might action it
+                              field.focus(); //allow to type again
+                              return false;   //this event has already been handled by tt-typeahead, dont do it twice!
+                          }
                           if (event.keyCode ==13) { // pressed "enter"
+                              event.stopPropagation(); // we are handling the event...
+                              event.preventDefault();
                               if (element.find(".tt-selectable").length <1)
                                 return; // should be an element (keyword choice) visible
                               var val = element.find(".tt-selectable").first().text(); //first one
                               if ( (!val) || (val == ''))
                                 return; // no value, nothing to do
-                              event.stopPropagation(); // we are handling the event...
-                              event.preventDefault();
+
                               //get full keyword info from server
                               gnThesaurusService.getKeywords(val,
                                     scope.thesaurusKey, gnLangs.current, 1, 'MATCH')
@@ -423,6 +431,7 @@
                                             field.typeahead().trigger("typeahead:selected", listOfKeywords[0],listOfKeywords[0]);
                                             field.typeahead('close');
                                             field.focus(); //allow to type again
+                                            field.triggerHandler('input'); // force angular to see changes
                                         }
                                     }
                               );
