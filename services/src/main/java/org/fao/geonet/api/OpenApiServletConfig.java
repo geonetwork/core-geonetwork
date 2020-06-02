@@ -25,11 +25,6 @@
 
 package org.fao.geonet.api;
 
-import io.swagger.v3.oas.models.ExternalDocumentation;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.info.License;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
@@ -42,49 +37,31 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
-//
 @PropertySource("classpath:springdoc.properties")
-//@Configuration
-//@ComponentScan(basePackages = {
-//    "org.fao.geonet.api",
-//    "org.fao.geonet.monitor.service"
-//})
 // https://springdoc.org/faq.html#how-to-integrate-open-api-3-with-spring-project-not-spring-boot
 // https://springdoc.org/migrating-from-springfox.html
 @EnableWebMvc
-public class ApiConfig implements WebApplicationInitializer {
-    @Autowired
-    public OpenAPI ApiConfig() {
-        return new OpenAPI()
-            .info(new Info().title("GeoNetwork Api Documentation (beta)")
-                .description("Learn how to access the catalog using the GeoNetwork REST API.")
-                .version(API.VERSION_0_1)
-                .license(new License().name("GPL 2.0").url("http://www.gnu.org/licenses/old-licenses/gpl-2.0.html")))
-            .externalDocs(new ExternalDocumentation()
-                .description("Learn how to access the catalog using the GeoNetwork REST API.")
-                .url("https://localhost:8080/docs"));
-    }
-
-
+public class OpenApiServletConfig implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         WebApplicationContext context = getContext();
         servletContext.addListener(new ContextLoaderListener(context));
         ServletRegistration.Dynamic dispatcher =
             servletContext.addServlet("OpenApiServlet",
-            new DispatcherServlet(context));
-//        dispatcher.setLoadOnStartup(1);
+                new DispatcherServlet(context));
+        dispatcher.setLoadOnStartup(10);
         dispatcher.addMapping("/v3/*");
     }
 
     private AnnotationConfigWebApplicationContext getContext() {
         AnnotationConfigWebApplicationContext context =
             new AnnotationConfigWebApplicationContext();
-        context.scan("rest");
+//        context.scan("rest");
         context.register(this.getClass(),
 //            org.springdoc.ui.SwaggerConfig.class,
 //            org.springdoc.core.SwaggerUiConfigProperties.class,
 //            org.springdoc.core.SwaggerUiOAuthProperties.class,
+            OpenApiConfig.class,
             org.springdoc.webmvc.core.SpringDocWebMvcConfiguration.class,
             org.springdoc.webmvc.core.MultipleOpenApiSupportConfiguration.class,
             org.springdoc.core.SpringDocConfiguration.class,
@@ -94,48 +71,3 @@ public class ApiConfig implements WebApplicationInitializer {
         return context;
     }
 }
-//
-//public class ApiConfig {
-////    @Bean
-////    public GroupedOpenApi api() {
-////        this.doc = GroupedOpenApi.builder()
-////            .setGroup("public")
-////            .pathsToMatch("/**/api/**")
-////            .build();
-//////            .apiInfo(new ApiInfo(
-//////                "GeoNetwork Api Documentation (beta)",
-//////                "Learn how to access the catalog using the GeoNetwork REST API.",
-//////                API.VERSION_0_1,
-//////                "urn:tos",
-//////                API.CONTACT_EMAIL,
-//////                "GPL 2.0",
-//////                "http://www.gnu.org/licenses/old-licenses/gpl-2.0.html"))
-//////            .select()
-//////            .apis(RequestHandlerSelectors.any())
-//////            .paths(paths())
-//////            .build()
-//////            .pathMapping("/")
-//////            .directModelSubstitute(LocalDate.class, String.class)
-//////            .directModelSubstitute(UserSecurity.class, Object.class)
-//////            .directModelSubstitute(Element.class, Object.class)
-//////            .genericModelSubstitutes(ResponseEntity.class)
-//////            .alternateTypeRules(
-//////                newRule(typeResolver.resolve(DeferredResult.class,
-//////                    typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
-//////                    typeResolver.resolve(WildcardType.class)))
-//////            .useDefaultResponseMessages(false)
-//////            .securitySchemes(newArrayList(new BasicAuth("basicAuth")));
-////        return this.doc;
-//    }
-//
-////    @Autowired
-////    private TypeResolver typeResolver;
-//
-////    private GroupedOpenApi doc;
-//
-////    private Predicate<String> paths() {
-////        return or(
-////            regex("/.*/api/" + API.VERSION_0_1 + "/.*")
-////        );
-////    }
-//}
