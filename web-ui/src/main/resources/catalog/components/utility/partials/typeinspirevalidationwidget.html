@@ -1,0 +1,20 @@
+<div class="valid-inspire-status{{metadata.validInspire}} md-type-{{metadata.isTemplate}}"
+     data-ng-if="metadata.validInspire != '3' && metadata.validInspire != undefined"
+     title="{{('isTemplate' + metadata.isTemplate) | translate}} ({{('validInspireStatus-' + metadata.validInspire) | translate}}) - {{metadata.inspireValidationDate}}"
+  ng-switch="metadata.isTemplate">
+  <a href="{{metadata.inspireReportUrl}}" target="_blank"
+     data-ng-if="metadata.validInspire != '-1'">
+    <i class="fa fa-fw fa-file fa-inspire" ng-switch-when="y" />
+    <i class="fa fa-fw fa-file-text fa-inspire" ng-switch-when="n" />
+    <i class="fa fa-fw fa-bookmark fa-inspire" ng-switch-when="s" />
+    <i class="fa fa-fw fa-bookmark-o fa-inspire" ng-switch-when="t" />
+    <i class="fa fa-fw fa-question fa-inspire" ng-switch-default />
+  </a>
+  <span data-ng-if="metadata.validInspire == '-1'">
+    <i class="fa fa-fw fa-file fa-inspire" ng-switch-when="y" />
+    <i class="fa fa-fw fa-file-text fa-inspire" ng-switch-when="n" />
+    <i class="fa fa-fw fa-bookmark fa-inspire" ng-switch-when="s" />
+    <i class="fa fa-fw fa-bookmark-o fa-inspire" ng-switch-when="t" />
+    <i class="fa fa-fw fa-question fa-inspire" ng-switch-default />
+  </span>
+</div>

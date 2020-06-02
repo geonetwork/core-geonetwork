@@ -338,6 +338,9 @@
     .gn-field {
       label {
         font-size: 12px;
+        &:after {
+          font-size: 24px;
+        }
       }
       .gn-field {
         padding-top: 0;
@@ -361,7 +364,22 @@
         padding-right: 0;
       }
     }
-
+    // multilingual
+    .gn-multilingual-field {
+      .form-control {
+        margin-bottom: 5px;
+      }
+    }
+    // ----- only show first help icon
+    [data-gn-multilingual-field] + .gn-control {
+      // > .field-tooltip {
+      //   // display: none;
+      //   background-color: red;
+      // }
+      > .field-tooltip ~ .field-tooltip {
+        display: none;
+      }
+    }
   }
   // sidebar in the editor
   .gn-editor-tools-container {
@@ -382,6 +400,26 @@
         }
       }
     }
+  }
+}
+// map for Editor and Batch Editor
+.gn-drawmap-panel {
+  .gn-editor-map {
+    padding: 15px;
+    position: relative;
+    margin-top: 30px;
+    [ol-map] {
+      .ol-attribution {
+        .gn-attribution();
+      }
+    }
+  }
+}
+// online resource panel
+.add-onlinesrc {
+  // attribution on the 'make thumbnail' map
+  .ol-attribution {
+    .gn-attribution();
   }
 }
 
@@ -539,5 +577,20 @@ form.gn-editor.gn-indent-bluescale {
         }
       }
     }
+  }
+}
+
+// inspire
+// md type widget (used only in editor for now)
+.fa-inspire {
+  background: url('../catalog/views/default/images/inspire.png');
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  width: 16px;
+  height: 16px;
+  margin-top: 3px;
+  &:before {
+    content: "";
+
   }
 }

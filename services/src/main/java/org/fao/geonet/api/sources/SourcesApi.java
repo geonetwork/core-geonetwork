@@ -200,7 +200,8 @@ public class SourcesApi {
     private void copySourceLogo(Source source, HttpServletRequest request) {
         if (source.getLogo() != null) {
             ServiceContext context = ApiUtils.createServiceContext(request);
-            Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + source.getLogo(), source.getUuid());
+            context.getBean(Resources.class).copyLogo(context, "images" + File.separator + "harvesting" + File.separator + source.getLogo(),
+                                                      source.getUuid());
         }
     }
 
@@ -274,12 +275,13 @@ public class SourcesApi {
         if (existingSource != null) {
             if (existingSource.getLogo() != null) {
                 ServiceContext context = ApiUtils.createServiceContext(request);
-                Path icon = Resources.locateLogosDir(context)
-                    .resolve(existingSource.getUuid() + "." +
-                        FilenameUtils.getExtension(existingSource.getLogo()));
+                final Resources resources = context.getBean(Resources.class);
+                final Path logoDir = resources.locateLogosDir(context);
                 try {
-                    Files.deleteIfExists(icon);
-                } catch (IOException e) {
+                    resources.deleteImageIfExists(existingSource.getUuid() + "." +
+                                                          FilenameUtils.getExtension(existingSource.getLogo()),
+                                                  logoDir);
+                } catch (IOException ignored) {
                 }
             }
             sourceRepository.delete(existingSource);
@@ -302,6 +304,7 @@ public class SourcesApi {
             entity.setType(source.getType());
             entity.setFilter(source.getFilter());
             entity.setGroupOwner(source.getGroupOwner());
+            entity.setServiceRecord(source.getServiceRecord());
             entity.setUiConfig(source.getUiConfig());
             entity.setLogo(source.getLogo());
             Map<String, String> labelTranslations = source.getLabelTranslations();

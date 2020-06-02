@@ -69,7 +69,7 @@
 
     <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
     <xsl:variable name="flatModeException"
-                  select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name)"/>
+                  select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name,  name(..))"/>
 
 
     <xsl:if test="$name = 'gmd:descriptiveKeywords' and count(../gmd:descriptiveKeywords) = 0">
@@ -394,7 +394,7 @@
             </xsl:element>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:copy-of select="gn-fn-metadata:getFieldDirective($editorConfig, name(), $xpath)"/>
+            <xsl:copy-of select="gn-fn-metadata:getFieldDirective($editorConfig, name(), name($theElement), $xpath)"/>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:with-param>

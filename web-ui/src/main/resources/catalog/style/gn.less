@@ -7,7 +7,7 @@
 @import "gn_icons.less";
 @import "ellipsis.less";
 
-@fa-version: '4.3.0';
+@fa-version: '4.4.0';
 @fa-font-path: '../catalog/lib/style/font-awesome/fonts';
 
 
@@ -85,11 +85,12 @@ div[gn-transfer-ownership] * .list-group {
   Display button label in top tool bar using inline mode.
  */
 .gn-top-bar {
-    border-radius: 0px;
-    padding: 0 20px;
-    .navbar-collapse {
- //       padding-right: 5px;
-    }
+  border-radius: 0px;
+  padding: 0 20px;
+  .navbar-collapse {
+    padding-left: 0;
+    padding-right: 0;
+  }
   .visible-lg {
     display: none !important;
   }
@@ -745,13 +746,13 @@ button, .btn, .btn:active, a {
   }
 }
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   background-color: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: gray;
-  border-radius: 4px;
+  background-color: #9e9e9e;
+  border-radius: 0;
 }
 
 .gn-bbox-input {
@@ -762,7 +763,7 @@ button, .btn, .btn:active, a {
   [class^='col-'] {
     text-align: center;
   }
-  [ngeo-btn-group] {
+  [gn-btn-group] {
     padding:0;
   }
   .form-group {
@@ -884,7 +885,7 @@ input.ng-invalid {
 
 
 // md type widget (used only in editor for now)
-gn-md-type-widget {
+gn-md-type-widget, gn-md-type-inspire-validation-widget {
   display: inline-block;
   & > div {
     border-radius: 1000px;
@@ -900,13 +901,13 @@ gn-md-type-widget {
     background-color: @gray-light;
     overflow: hidden;
 
-    &.valid-status-1 {
+    &.valid-status-1, &.valid-inspire-status-1 {
       background-color: @gray-light;
     }
-    &.valid-status0 {
+    &.valid-status0, &.valid-inspire-status0 {
       background-color: @btn-danger-bg;
     }
-    &.valid-status1 {
+    &.valid-status1, &.valid-inspire-status1 {
       background-color: @btn-success-bg;
     }
     &.md-type-t {
@@ -967,6 +968,13 @@ gn-md-type-widget {
     padding-left: 3px;
     margin: -6px 0px;
     line-height: 1em;
+    .gn-user-name {
+      max-width: 200px;
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     .gn-user-role {
       text-transform: uppercase;
       opacity: 0.9;
@@ -1015,7 +1023,7 @@ gn-md-type-widget {
     padding: 15px;
     position: relative;
     margin-top: 30px;
-    [ngeo-map] {
+    [ol-map] {
       border: 1px solid @input-border;
       border-radius: @border-radius-base;
     }
@@ -1168,6 +1176,9 @@ gn-indexing-task-status {
 .flex-align-end { align-items: flex-end; }
 .flex-align-start { align-items: flex-start; }
 .flex-align-stretch { align-items: stretch; }
+.flex-nowrap, .flex-no-wrap { flex-wrap: nowrap; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-wrap-r { flex-wrap: wrap-reverse; }
 .text-wrap { white-space: normal; }
 .text-nowrap, .text-no-wrap { white-space: nowrap; }
 .text-ellipsis { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }

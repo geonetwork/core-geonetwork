@@ -75,6 +75,12 @@ public class OgcWxSParams extends AbstractParams {
     public String serviceTemplateUuid;
     public String datasetTemplateUuid;
     public String outputSchema;
+
+    @Override
+    public String getIcon() {
+        return icon;
+    }
+
     public OgcWxSParams(DataManager dm) {
         super(dm);
     }

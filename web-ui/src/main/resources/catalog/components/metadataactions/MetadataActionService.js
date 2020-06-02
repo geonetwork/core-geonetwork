@@ -60,8 +60,8 @@
       var windowName = 'geonetwork';
       var windowOption = '';
       var translations = null;
-      $translate(['metadataPublished', 'metadataUnpublished',
-        'metadataPublishedError', 'metadataUnpublishedError']).then(function(t) {
+      $translate(['metadataPublished', 'metadataUnpublished', 'metadataLinksValidated',
+        'metadataPublishedError', 'metadataUnpublishedError', 'metadataValidated']).then(function(t) {
         translations = t;
       });
       var alertResult = function(msg) {
@@ -128,10 +128,10 @@
        */
       this.metadataRDF = function(uuid, approved) {
         var url = gnHttp.getService('mdGetRDF') + '?uuid=' + uuid;
-        
+
         url += angular.isDefined(approved) ?
             '&approved=' + approved : '';
-        
+
         location.replace(url);
       };
 
@@ -141,7 +141,7 @@
        * @param {string} uuid
        */
       this.metadataMEF = function(uuid, bucket, approved) {
-        
+
         var url = gnHttp.getService('mdGetMEF') + '?version=2';
         url += angular.isDefined(uuid) ?
             '&uuid=' + uuid : '&format=full';
@@ -157,6 +157,27 @@
         window.open(gnHttp.getService('csv') +
             '?bucket=' + bucket, windowName, windowOption);
       };
+      this.validateMdLinks = function(bucket) {
+        $rootScope.$broadcast('operationOnSelectionStart');
+        return gnHttp.callService('../api/records/links?' +
+          'bucket=' + bucket, null, {
+          method: 'POST'
+        }).then(function(data) {
+          $rootScope.processReport = data.data;
+
+          // A report is returned
+          gnUtilityService.openModal({
+            title: translations.metadataLinksValidated,
+            content: '<div gn-batch-report="processReport"></div>',
+            className: 'gn-validation-popup',
+            onCloseCallback: function () {
+              $rootScope.$broadcast('operationOnSelectionStop');
+              $rootScope.$broadcast('search');
+              $rootScope.processReport = null;
+            }
+          }, $rootScope, 'metadataLinksValidated');
+        });
+      };
       this.validateMd = function(md, bucket) {
 
         $rootScope.$broadcast('operationOnSelectionStart');
@@ -170,9 +191,19 @@
               'bucket=' + bucket, null, {
                     method: 'PUT'
                   }).then(function(data) {
-            alertResult(data.data);
-            $rootScope.$broadcast('operationOnSelectionStop');
-            $rootScope.$broadcast('search');
+            $rootScope.processReport = data.data;
+
+            // A report is returned
+            gnUtilityService.openModal({
+              title: translations.metadataValidated,
+              content: '<div gn-batch-report="processReport"></div>',
+              className: 'gn-validation-popup',
+              onCloseCallback: function () {
+                $rootScope.$broadcast('operationOnSelectionStop');
+                $rootScope.$broadcast('search');
+                $rootScope.processReport = null;
+              }
+            }, $rootScope, 'metadataValidationUpdated');
           });
         }
       };
@@ -306,14 +337,14 @@
 
         scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
 
-        //Warn about possible workflow changes on batch changes 
-        // or when record is not approved 
+        //Warn about possible workflow changes on batch changes
+        // or when record is not approved
         if((!md || md.mdStatus != 2) && flag === 'on' && scope.isMdWorkflowEnable) {
           if(!confirm($translate.instant('warnPublishDraft'))){
             return;
           }
         }
-        
+
         scope.$broadcast('operationOnSelectionStart');
         var onOrOff = flag === 'on';
 
@@ -434,6 +465,26 @@
             type: 'danger'
           });
         });
+      };
+
+      /**
+       * Validates the current selection of metadata records.
+       * @param {String} bucket
+       */
+      this.validateMdInspire = function(bucket) {
+
+        $rootScope.$broadcast('operationOnSelectionStart');
+        $rootScope.$broadcast('inspireMdValidationStart');
+
+        return gnHttp.callService('../api/records/validate/inspire?' +
+          'bucket=' + bucket, null, {
+          method: 'PUT'
+        }).then(function(data) {
+          $rootScope.$broadcast('inspireMdValidationStop');
+          $rootScope.$broadcast('operationOnSelectionStop');
+          $rootScope.$broadcast('search');
+        });
+
       };
 
       /**

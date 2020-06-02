@@ -94,7 +94,7 @@
              } else {
                var isDateTime = scope.value.indexOf('T') !== -1;
                var tokens = scope.value.split('T');
-               scope.date = new Date(isDateTime ? tokens[0] : scope.value);
+               scope.date = new Date(moment(isDateTime ? tokens[0] : scope.value).utc().format());
                scope.time = isDateTime ?
                moment(tokens[1], 'HH:mm:ss').toDate() :
                undefined;

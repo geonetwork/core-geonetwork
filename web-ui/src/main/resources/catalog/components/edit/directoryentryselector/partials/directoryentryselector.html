@@ -56,14 +56,14 @@
           </div>
 
           <!--Add contact as Xlink with dynamic variable -->
-          <div ngeo-popover class="pull-right"
-                ngeo-popover-dismiss=".content"
+          <div gn-popover class="pull-right"
+                gn-popover-dismiss=".content"
                 data-ng-if="::gnConfig[gnConfig.key.isXLinkEnabled] && insertAsXlink  && hasDynamicVariable"
                 title="{{'addContactAsLink-help' | translate}}">
-              <button ngeo-popover-anchor type="button" class="btn btn-default btn-sm">
+              <button gn-popover-anchor type="button" class="btn btn-default btn-sm">
               <i class="fa fa-link"></i>&nbsp;<span class="caret"></span>
             </button>
-            <div ngeo-popover-content>
+            <div gn-popover-content>
               <ul>
                 <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
                   <a href="" data-ng-click="addEntry(r, role.code, true)" title="{{role.description}}">
@@ -75,15 +75,15 @@
           </div>
 
           <!-- Add contact as text block with dynamic variable -->
-          <div ngeo-popover class="pull-right"
-                ngeo-popover-dismiss=".content"
+          <div gn-popover class="pull-right"
+                gn-popover-dismiss=".content"
                 data-ng-if="isContact && hasDynamicVariable && insertAsText"
                 title="{{'addContactAsText-help' | translate}}">
-              <button ngeo-popover-anchor type="button"
+              <button gn-popover-anchor type="button"
                       class="btn btn-default btn-sm">
               <i class="fa fa-plus"></i>&nbsp;<span class="caret"></span>
             </button>
-            <div ngeo-popover-content>
+            <div gn-popover-content>
               <ul>
                 <li data-ng-repeat="role in roles"
                     data-ng-hide="role['@hideInEditMode']">

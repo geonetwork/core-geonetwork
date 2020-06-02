@@ -28,6 +28,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -376,7 +377,12 @@ public class Aligner extends AbstractAligner<GeonetParams> {
                 info.detach();
 
             try {
-                params.getValidate().validate(dataMan, context, md);
+                Integer groupIdVal = null;
+                if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                    groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                }
+
+                params.getValidate().validate(dataMan, context, md, groupIdVal);
                 return (Element) md.detach();
             } catch (Exception e) {
                 log.info("Ignoring invalid metadata: " + id);

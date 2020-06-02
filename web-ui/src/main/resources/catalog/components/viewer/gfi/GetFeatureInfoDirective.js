@@ -35,7 +35,7 @@
   module.value('gfiTemplateURL', gfiTemplateURL);
 
   module.directive('gnVectorFeatureToolTip',
-      ['ngeoDebounce', function(ngeoDebounce) {
+      ['gnDebounce', function(gnDebounce) {
         return {
           restrict: 'A',
           scope: {
@@ -65,10 +65,10 @@
                  if (layer && layer.get('featureTooltip')) {
                    return feature;
                  }
-               }, undefined, function(layer) {
-                return layer instanceof ol.layer.Vector;
-
-              });
+               }.bind(this), {
+                layerFilter: function(layer) {
+                  return layer instanceof ol.layer.Vector;
+              }});
               if (feature) {
                 var props = feature.getProperties();
                 var tooltipContent = '<ul>';
@@ -86,7 +86,7 @@
               }
             };
 
-            scope.map.on('pointermove', ngeoDebounce(function(evt) {
+            scope.map.on('pointermove', gnDebounce(function(evt) {
               if (evt.dragging) {
                 //info.hide();
                 info.popover('hide');

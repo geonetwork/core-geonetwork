@@ -357,11 +357,6 @@ public class Thesaurus {
         // Define namespace
         String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
         String namespaceGml = "http://www.opengis.net/gml#";
-        String namespace = keyword.getNameSpaceCode();
-
-        if (namespace.equals("#")) {
-            namespace = this.defaultNamespace;
-        }
 
         // Create subject
         URI mySubject = myFactory.createURI(keyword.getUriCode());
@@ -722,8 +717,8 @@ public class Thesaurus {
             Element title = Xml.selectElement(thesaurusEl,
                 "skos:ConceptScheme/dc:title|skos:ConceptScheme/dcterms:title|" +
                     "skos:Collection/dc:title|skos:Collection/dcterms:title|" +
-                    "rdf:Description/dc:title", theNSs);
-            
+                    "rdf:Description/dc:title|rdf:Description/dcterms:title", theNSs);
+
             if (title != null) {
                 this.title = title.getValue();
                 this.defaultNamespace = title.getParentElement().getAttributeValue("about", rdfNamespace);
@@ -736,10 +731,6 @@ public class Thesaurus {
                 new java.net.URI(this.defaultNamespace);
             } catch (Exception e) {
                 this.defaultNamespace = DEFAULT_THESAURUS_NAMESPACE;
-            }
-
-            if (!this.defaultNamespace.endsWith("#")) {
-                this.defaultNamespace += "#";
             }
 
             Element dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued|skos:Collection/dc:date", theNSs);

@@ -30,6 +30,9 @@
   display: none;
 }
 
+.popover {
+  max-width: 350px;
+}
 .jumbotron {
   h1 {
     font-size: 36px;
@@ -62,7 +65,7 @@
   }
 }
 .gn-source-logo {
-  max-width: 60px;
+  max-width: 100%;
   max-height: 60px;
 }
 
@@ -142,7 +145,6 @@
 
 // advanced search
 .gn-search-filter {
-  padding: 5px;
   .nav-pills li {
     display: block;
   }
@@ -169,9 +171,6 @@
     .tagsinput-trigger {
       top: 34px;
       right: 25px;
-      @media (max-width: @screen-sm-max) {
-        top: 38px;
-      }
     }
     .tagsinput-clear {
       right: 20px;

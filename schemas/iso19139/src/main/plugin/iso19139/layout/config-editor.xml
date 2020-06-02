@@ -95,6 +95,33 @@
     <for name="gco:Real" use="number"/>
     <for name="gco:Boolean" use="checkbox"/>
 
+    <!-- Use data-gn-checkbox-with-nilreason for INSPIRE conformity, using xpath attribute.Similar configuration can be
+         applied to other boolean fields that require to handle nilreason value.
+
+         And additional change is required in inflate-metadata.xsl, for the elements to handle with this directive to add gco:Boolean
+         when missing due to nilreason attribute and work nicely with the metadata editor.
+
+         Example with gmd:pass:
+
+           <xsl:template match="gmd:pass[@gco:nilReason and not(gco:Boolean)]">
+            <xsl:copy>
+              <xsl:copy-of select="@*" />
+
+              <gco:Boolean></gco:Boolean>
+            </xsl:copy>
+          </xsl:template>
+
+          Update-fixed-info.xsl already removes gco:Boolean when empty due to nilreason attribute, to avoid xsd errors. No need to change it.
+    -->
+    <!--<for name="gco:Boolean"
+         xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass"
+         use="data-gn-checkbox-with-nilreason">
+      <directiveAttributes
+        data-tag-name="gmd:pass"
+        data-nilreason="eval#@gco:nilReason"
+        data-labels='{"true": "conformant", "false": "notConformant", "unknown": "notEvaluated"}'/>
+    </for>-->
+
 
     <for name="gco:Date" use="data-gn-date-picker"/>
     <for name="gco:DateTime" use="data-gn-date-picker"/>
@@ -1204,7 +1231,7 @@
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
             gmd:descriptiveKeywords
-            [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE themes')]"/>
+            [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/*[name() = 'gco:CharacterString' or name() = 'gmx:Anchor']/text(), 'INSPIRE themes')]"/>
           <!-- FIXME: MUST be provided in template and thesaurus available in the catalog, to be displayed properly -->
           <action type="add" btnLabel="inspireTheme"
                   name="inspireTheme"
@@ -1213,14 +1240,14 @@
                   if="count(gmd:MD_Metadata/gmd:identificationInfo/*/
                         gmd:descriptiveKeywords[
                           contains(gmd:MD_Keywords/gmd:thesaurusName/
-                                      gmd:CI_Citation/gmd:title/gco:CharacterString,
+                                      gmd:CI_Citation/gmd:title/*[name() = 'gco:CharacterString' or name() = 'gmx:Anchor']/text(),
                                    'INSPIRE themes')]) = 0">
             <template>
               <snippet>
                 <gmd:descriptiveKeywords>
                   <gmd:MD_Keywords>
                     <gmd:keyword>
-                      <gco:CharacterString></gco:CharacterString>
+                      <gmx:Anchor xlink:href=""></gmx:Anchor>
                     </gmd:keyword>
                     <gmd:type>
                       <gmd:MD_KeywordTypeCode
@@ -1230,8 +1257,7 @@
                     <gmd:thesaurusName>
                       <gmd:CI_Citation>
                         <gmd:title>
-                          <gco:CharacterString>GEMET - INSPIRE themes, version 1.0
-                          </gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/theme">GEMET - INSPIRE themes, version 1.0</gmx:Anchor>
                         </gmd:title>
                         <gmd:date>
                           <gmd:CI_Date>
@@ -1267,7 +1293,7 @@
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
             gmd:descriptiveKeywords
-            [count(gmd:MD_Keywords/gmd:thesaurusName) > 0 and not(contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE themes'))]"/>
+            [count(gmd:MD_Keywords/gmd:thesaurusName) > 0 and not(contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/*[name() = 'gco:CharacterString' or name() = 'gmx:Anchor']/text(), 'INSPIRE themes'))]"/>
 
           <section name="freeTextKeywords">
             <!-- Keywords without thesaurus information of type theme -->
@@ -3141,7 +3167,7 @@
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
-        
+
         <directive data-gn-suggestion-list=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
@@ -3153,7 +3179,7 @@
         <section xpath="/gmd:MD_Metadata/gmd:distributionInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:dataQualityInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:contentInfo"/>
-        <section name="gmd:MD_Metadata">
+        <section>
           <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
           <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
           <field xpath="/gmd:MD_Metadata/gmd:characterSet"/>
@@ -3178,6 +3204,11 @@
       </tab>
 
       <!-- Elements that should not use the "flat" mode -->
+      <!-- Use excludeFrom attribute to don't apply flat mode exception if the element parent is in that list. For example:
+            <for name="gmd:contact" excludeFrom="gmd:MD_MaintenanceInformation"/>
+
+            Applies flat mode exceptions for all gmd:contact, except for the ones in gmd:MD_MaintenanceInformation.
+      -->
       <flatModeExceptions>
         <for name="gmd:descriptiveKeywords"/>
         <for name="gmd:keyword"/>

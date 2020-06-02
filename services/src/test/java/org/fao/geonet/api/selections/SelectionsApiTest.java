@@ -22,7 +22,7 @@
  */
 package org.fao.geonet.api.selections;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.ApiUtils;
@@ -86,7 +86,7 @@ public class SelectionsApiTest  extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$", hasSize(selected)));
     }
 
@@ -99,7 +99,7 @@ public class SelectionsApiTest  extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(201))
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(content().string("3"));
 
         // Check also the SelectionManager
@@ -117,7 +117,7 @@ public class SelectionsApiTest  extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(content().string("0"));
 
         // Check also the SelectionManager
@@ -136,7 +136,7 @@ public class SelectionsApiTest  extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(content().string("1"));
 
         // Check also the SelectionManager

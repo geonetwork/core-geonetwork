@@ -255,8 +255,12 @@
                * }
                  *
                  */
+                scope.orgWebsite = {};
                 scope.mdContactsByOrgRole = _.groupBy(scope.mdContacts,
                   function(contact) {
+                    if (contact.website !== '') {
+                     scope.orgWebsite[contact.org] = contact.website;
+                    }
                     return contact.org;
                   });
 

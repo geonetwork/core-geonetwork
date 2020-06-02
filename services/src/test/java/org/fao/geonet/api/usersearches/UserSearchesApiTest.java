@@ -80,7 +80,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(3)))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
     @Test
@@ -91,7 +91,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
     @Test
@@ -132,7 +132,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
 
         MvcResult result = this.mockMvc.perform(put("/srv/api/usersearches")
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(201))
@@ -164,7 +164,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(put("/srv/api/usersearches/" + userSearchId)
             .content(json)
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));

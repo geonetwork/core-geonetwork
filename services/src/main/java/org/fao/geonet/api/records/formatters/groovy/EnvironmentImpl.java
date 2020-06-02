@@ -224,9 +224,18 @@ public class EnvironmentImpl implements Environment {
         return Collections.unmodifiableMap(this.indexInfo.asMap());
     }
 
+    @Override public ServiceContext getContext() {
+        return this.serviceContext;
+    }
+
     @Override
     public <T> T getBean(Class<T> clazz) {
         return this.serviceContext.getBean(clazz);
+    }
+
+    @Override
+    public <T> T getBean(String name, Class<T> clazz) {
+        return this.serviceContext.getBean(name, clazz);
     }
 
     @Override

@@ -25,8 +25,8 @@ package org.fao.geonet.kernel.datamanager.draft;
 
 import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.io.RuntimeIOException;
+import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
@@ -55,6 +55,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataDraftRepository;
@@ -172,7 +173,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     }
 
     /**
-     * @param id
+     * @param idString
      * @param displayOrder
      * @throws Exception
      */
@@ -433,13 +434,15 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         if (md == null) {
             throw new EntityNotFoundException("We couldn't find the metadata to edit");
         }
+        boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
 
         // Do we have a metadata draft already?
         if (metadataDraftRepository.findOneByUuid(md.getUuid()) != null) {
             id = Integer.toString(metadataDraftRepository.findOneByUuid(md.getUuid()).getId());
 
             Log.trace(Geonet.DATA_MANAGER, "Editing draft with id " + id);
-        } else if ((context.getBean(IMetadataManager.class) instanceof DraftMetadataManager)
+        } else if (isMdWorkflowEnable
+            && (context.getBean(IMetadataManager.class) instanceof DraftMetadataManager)
             && metadataStatus.getCurrentStatus(Integer.valueOf(id)).equals(StatusValue.Status.APPROVED)) {
             id = createDraft(context, id, md);
 
@@ -580,24 +583,10 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         return templateId;
     }
 
+    @Override
     public void cloneFiles(AbstractMetadata original, AbstractMetadata dest) {
         try {
-            Consumer<Path> duplicate = new Consumer<Path>() {
-                @Override
-                public void accept(Path t) {
-                    try {
-                        Path des = Lib.resource.getDir(context, "public", dest.getId());
-                        FileUtils.copyFile(t.toFile(), des.resolve(t.getFileName()).toFile());
-                    } catch (IOException e) {
-                        Log.error(Geonet.RESOURCES, "Failed copy of resources: " + e.getMessage(), e);
-                    }
-                }
-            };
-
-            Path original_dir = Lib.resource.getDir(context, "public", original.getId());
-            if (Files.exists(original_dir)) {
-                Files.newDirectoryStream(original_dir).forEach(duplicate);
-            }
+            StoreUtils.copyDataDir(context, original.getUuid(), dest.getUuid(), true);
             cloneStoreFileUploadRequests(original, dest);
 
         } catch (Exception ex) {

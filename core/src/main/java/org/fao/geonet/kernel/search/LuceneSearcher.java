@@ -26,8 +26,8 @@ package org.fao.geonet.kernel.search;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTReader;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -1405,9 +1405,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 if (owner != null) {
                 	LOGGER.trace("Search using user \"" + owner + "\".");
                     request.addContent(new Element(SearchParameter.OWNER).addContent(owner));
-                    
+
                     //If the user is editor or more, fill the editorGroup
-                    Specification<UserGroup> hasUserIdAndProfile = 
+                    Specification<UserGroup> hasUserIdAndProfile =
                     		where(
                     				where(UserGroupSpecs.hasProfile(Profile.Reviewer))
                     					.or(UserGroupSpecs.hasProfile(Profile.Editor))
@@ -1497,13 +1497,15 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 _query = new LuceneQueryBuilder(_luceneConfig, _tokenizedFieldSet, SearchManager.getAnalyzer(_language.analyzerLanguage, true), _language.presentationLanguage).build(luceneQueryInput);
                 LOGGER.debug("Lucene query: {}", _query);
 
+                boolean ignorePortalFilter = Boolean.parseBoolean(config.getValue(Geonet.SearchConfig.SEARCH_IGNORE_PORTAL_FILTER_OPTION, "false"));
 
-                _query = appendPortalFilter(_query, _luceneConfig);
+                if (!ignorePortalFilter) {
+                    _query = appendPortalFilter(_query, _luceneConfig);
+                }
 
-
-                try {
+                try (IndexAndTaxonomy indexReader = _sm.getIndexReader(_language.presentationLanguage, _versionToken)) {
                     // Rewrite the drilldown query to a query that can be used by the search logger
-                    _loggerQuery = _query.rewrite(_sm.getIndexReader(_language.presentationLanguage, _versionToken).indexReader);
+                    _loggerQuery = _query.rewrite(indexReader.indexReader);
                     //if(LOGGER.isDebugEnabled()) LOGGER.debug("Rewritten Lucene query: {}", _loggerQuery);
                     //System.out.println("** rewritten:\n"+ rw);
                 } catch (Throwable x) {
@@ -1682,7 +1684,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      *
      * @throws IllegalArgumentException if the geometry param is prefixed by <code>region:</code> but the region is not
      * found in the available sources.
-     * @throws com.vividsolutions.jts.io.ParseException if geometry is not a valid WKT string and it doesn't start by
+     * @throws org.locationtech.jts.io.ParseException if geometry is not a valid WKT string and it doesn't start by
      * <code>region:</code>
      * @return a collection of {@link Geometry} obtained of the {@link Geonet.SearchResult#GEOMETRY} parameter or null if the
      * parameter is not present in the request.
@@ -1795,10 +1797,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             this.presentationLanguage = presentationLanguage;
         }
     }
-    
+
     /**
      * <p> Gets the Lucene version token. Can be used as ETag. </p>
-     */    
+     */
     public long getVersionToken() {
     	return _versionToken;
     };

@@ -1817,5 +1817,6 @@
   <onTheWeb>More online information</onTheWeb>
   <spatialRepresentationType>Data type</spatialRepresentationType>
   <updateFrequency>Update frequency</updateFrequency>
+  <constraints>Access and use constraints</constraints>
   <lastUpdate>Record updated</lastUpdate>
 </strings>

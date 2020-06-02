@@ -41,7 +41,7 @@
           }
         }
       }
-    } 
+    }
   }
   .gn-related-item {
     margin-top: -1px;
@@ -67,6 +67,9 @@
     }
     h3 {
       margin-top: 0;
+      color: #333;
+      padding-left: 0;
+      margin-bottom: 10px;
     }
     .table-striped td {
       padding-left: 8px;
@@ -79,7 +82,11 @@
   .gn-md-side {
     .gn-img-thumbnail,
     .gn-img-extent {
-      width: 100%;
+      max-width: 100%;
+    }
+    .gn-img-thumbnail {
+      border: 1px solid #ccc;
+      padding: 4px;
     }
     section {
       margin-bottom: 20px;
@@ -92,11 +99,84 @@
     border-bottom: 2px solid #e5e5e5;
   }
   .entry {
-    margin-left: 1em;
-    border-left: 2px solid #eeeeee;
-    padding-left: 5px;
+    margin-left: 8px;
+    border-left: 2px solid #ddd;
+    padding-left: 8px;
+    h2 {
+      margin-left: -16px;
+      margin-top: 10px;
+      margin-bottom: 0px;
+      background-color: #fff;
+      padding: 5px 0;
+    }
     dl {
       padding-bottom: 5px;
+      dt {
+        margin-left: -5px;
+        display: table;
+        white-space: nowrap;
+        &:before {
+          border-top: 2px solid #ddd;
+          content: '';
+          display: table-cell;
+          position: relative;
+          top: 0.6em;
+          width: 15px;
+        }
+        &:before { right: 5px; }
+      }
+      dd {
+        margin-left: 10px;
+        ul {
+          padding-left: 1.5em;
+          margin: 0;
+        }
+      }
+    }
+    address {
+      margin-bottom: 0;
+    }
+    .entry {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      h2 {
+        margin-left: -5px;
+        display: table;
+        white-space: nowrap;
+        margin-bottom: 5px;
+        &:before {
+          border-top: 2px solid #ddd;
+          content: '';
+          display: table-cell;
+          position: relative;
+          top: 0.5em;
+          width: 15px;
+        }
+        &:before { right: 5px; }
+      }
+      .target {
+        margin-left: 12px;
+        margin-bottom: 5px;
+        dl {
+          margin-left: 10px;
+        }
+        .entry {
+          h2 {
+            margin-left: 5px;
+          }
+          dl {
+            margin-left: 20px;
+          }
+        }
+      }
+    }
+    .gn-contact {
+      margin-left: 10px;
+      address {
+        padding: 5px 0 10px 0;
+        line-height: 1.7em;
+      }
     }
   }
   input[readonly] {
@@ -166,7 +246,7 @@
         border-radius: 4px;
         transition: all 0.2s ease-in-out 0s;
       }
-    } 
+    }
     h2 {
       font-size: 18px;
     }
@@ -214,14 +294,12 @@
       display: inline-block;
       position: relative;
       margin: 2em 0px 0px 90px;
-      display: inline-block;
-      position: relative;
-      margin: 2em 0px 0px 90px;
       border-width: 1px;
       border-style: solid;
       border-color: rgb(204, 204, 204);
       border-image: initial;
     }
+
     // tabs
     .nav-tabs {
       border: 0;
@@ -231,7 +309,7 @@
           border-radius: @border-radius-base;
           margin: 0 5px 5px 0;
         }
-      } 
+      }
     }
     .tab-content {
       #gn-tab-default {

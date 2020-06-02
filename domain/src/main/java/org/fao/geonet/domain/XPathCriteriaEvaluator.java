@@ -23,7 +23,7 @@
 
 package org.fao.geonet.domain;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -160,6 +160,12 @@ public class XPathCriteriaEvaluator implements SchematronCriteriaEvaluator {
         }
 
         return orAccepts;
+
+    }
+
+    @Override
+    public boolean accepts(ApplicationContext applicationContext, String value, Element metadata, List<Namespace> metadataNamespaces, Integer groupOwnerId) {
+        return  accepts(applicationContext, value, -1, metadata, metadataNamespaces);
 
     }
 

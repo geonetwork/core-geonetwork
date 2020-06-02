@@ -52,6 +52,7 @@ public class Settings {
     public static final String SYSTEM_XLINKRESOLVER_ENABLE = "system/xlinkResolver/enable";
     public static final String SYSTEM_XLINK_ALLOW_REFERENCED_DELETION = "system/xlinkResolver/referencedDeletionAllowed";
     public static final String SYSTEM_SERVER_LOG = "system/server/log";
+    public static final String SYSTEM_SERVER_TIMEZONE = "system/server/timeZone";
     public static final String SYSTEM_INSPIRE_ENABLE = "system/inspire/enable";
     public static final String SYSTEM_INSPIRE_ATOM = "system/inspire/atom";
     public static final String SYSTEM_INSPIRE_ATOM_SCHEDULE = "system/inspire/atomSchedule";
@@ -82,7 +83,7 @@ public class Settings {
     public static final String SYSTEM_SELECTIONMANAGER_MAXRECORDS = "system/selectionmanager/maxrecords";
     public static final String SYSTEM_CSW_ENABLE = "system/csw/enable";
     public static final String SYSTEM_CSW_ENABLEWHENINDEXING = "system/csw/enabledWhenIndexing";
-    public static final String SYSTEM_CSW_CONTACT_ID = "system/csw/contactId";
+    public static final String SYSTEM_CSW_CAPABILITY_RECORD_UUID = "system/csw/capabilityRecordUuid";
     public static final String SYSTEM_CSW_METADATA_PUBLIC = "system/csw/metadataPublic";
     public static final String SYSTEM_USERSELFREGISTRATION_ENABLE = "system/userSelfRegistration/enable";
     public static final String SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE = "system/userSelfRegistration/recaptcha/enable";

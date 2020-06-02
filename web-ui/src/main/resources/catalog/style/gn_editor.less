@@ -431,7 +431,7 @@ form.gn-editor {
       padding-right: 0px;
   }
 
-  .gn-required > div.th-inner:after,
+  .gn-required > div.th-inner:after, legend.gn-required:after,
   label.gn-required:after, .gn-required > label:after,
   label.gn-mandatory:after, .gn-mandatory > label:after {
       content: "*";
@@ -446,7 +446,10 @@ form.gn-editor {
     font-size: 2em;
     margin: -7px 0 0 7px;
   }
-
+  legend.gn-required:after {
+    font-size: 24px;
+    margin: 0px;
+  }
 
   .form-horizontal .form-group {
       margin-left: 0px;
@@ -643,7 +646,7 @@ table.gn-data-store {
 }
 
 .open > .dropdown-menu {
-  max-height: 25em;
+  max-height: 30em;
   overflow-y: auto;
 }
 
@@ -834,7 +837,7 @@ gn-directory-associated-md {
 }
 
 // md type widget (used only in editor for now)
-gn-md-type-widget {
+gn-md-type-widget, gn-md-type-inspire-validation-widget {
   display: inline-block;
   & > div {
     border-radius: 1000px;
@@ -850,19 +853,24 @@ gn-md-type-widget {
     background-color: @gray-light;
     overflow: hidden;
 
-    &.valid-status-1 {
+    &.valid-status-1, &.valid-inspire-status-1 {
       background-color: @gray-light;
     }
-    &.valid-status0 {
+    &.valid-status0, &.valid-inspire-status0 {
       background-color: @btn-danger-bg;
     }
-    &.valid-status1 {
+    &.valid-status1, &.valid-inspire-status1 {
       background-color: @btn-success-bg;
     }
     &.md-type-t {
       background-color: @btn-primary-bg;
     }
-
+    a {
+      color: #fff;
+      &:hover {
+        color: #fff;
+      }
+    }
     &::after {
       content: '';
       background-color: rgba(255, 255, 255, 0.25);
@@ -920,7 +928,7 @@ gn-draft-validation-widget {
 
 .gn-editor-board {
   .table.gn-results-editor td {
-    gn-md-type-widget {
+    gn-md-type-widget, gn-md-type-inspire-validation-widget {
       margin-top: 5px;
     }
   }
@@ -931,14 +939,6 @@ gn-draft-validation-widget {
   padding-bottom: 150px;
 }
 @media (min-width: @screen-md-min) {
-  .scrollbar-white() {
-    &::-webkit-scrollbar-track, &::-webkit-scrollbar-thumb {
-      -webkit-box-shadow: inset 0 0 6px #fff;
-    }
-    &::-webkit-scrollbar-thumb:window-inactive {
-      background: #fff;
-    }
-  }
   .gn-editor-sidebar {
     margin-top: 0;
     position: fixed;
@@ -946,7 +946,6 @@ gn-draft-validation-widget {
     overflow: auto;
     max-height: 100%;
     padding-bottom: 110px;
-    .scrollbar-white();
   }
 }
 

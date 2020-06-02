@@ -38,4 +38,5 @@ import org.springframework.test.context.web.WebAppConfiguration;
     locations = {"classpath:services-repository-test-context.xml", "classpath:services-web-test-context.xml"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class AbstractServiceIntegrationTest extends AbstractCoreIntegrationTest {
+    public static final String API_JSON_EXPECTED_ENCODING = "application/json;charset=UTF-8";
 }

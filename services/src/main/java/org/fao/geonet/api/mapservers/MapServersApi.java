@@ -32,12 +32,14 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.mapservers.model.AnonymousMapserver;
 import org.fao.geonet.api.records.attachments.FilesystemStore;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.MapServer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MapServerRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -79,7 +81,8 @@ public class MapServersApi {
     MapServerRepository mapServerRepository;
 
     @Autowired
-    FilesystemStore store;
+    @Qualifier("resourceStore")
+    Store store;
 
     @Autowired
     SettingManager settingManager;
@@ -529,7 +532,6 @@ public class MapServersApi {
 
 
         ServiceContext context = ApiUtils.createServiceContext(request);
-        context.setAsThreadLocal();
 
         String baseUrl = settingManager.getSiteURL(context);
         GeoServerRest gs = new GeoServerRest(requestFactory, g.getUrl(),
@@ -567,10 +569,11 @@ public class MapServersApi {
                     metadataUuid, metadataTitle, metadataAbstract);
             } else {
                 // Get ZIP file from data directory
-                Path f = store.getResource(context, metadataUuid, resource);
-                return addZipFile(action, gs,
-                    f, resource,
-                    metadataUuid, metadataTitle, metadataAbstract);
+                try (Store.ResourceHolder f = store.getResource(context, metadataUuid, resource)) {
+                    return addZipFile(action, gs,
+                                      f.getPath(), resource,
+                                      metadataUuid, metadataTitle, metadataAbstract);
+                }
             }
         }
     }

@@ -151,16 +151,17 @@ public class LinkStatus extends GeonetEntity implements Comparable<LinkStatus> {
      *
      * @return The moment that the check completed.
      */
+
     @AttributeOverride(name = "dateAndTime",
         column = @Column(name = "checkDate", length = 30))
-    public ISODate getcheckDate() {
+    public ISODate getCheckDate() {
         return checkDate;
     }
 
     /**
      * @return this entity object
      */
-    public LinkStatus setcheckDate(ISODate checkDate) {
+    public LinkStatus setCheckDate(ISODate checkDate) {
         this.checkDate = checkDate;
         return this;
 
@@ -196,7 +197,7 @@ public class LinkStatus extends GeonetEntity implements Comparable<LinkStatus> {
      */
     @Column(nullable = true)
     public String getBatchKey() {
-        return statusInfo;
+        return batchKey;
     }
 
     public void setBatchKey(String batchKey) {
@@ -206,7 +207,7 @@ public class LinkStatus extends GeonetEntity implements Comparable<LinkStatus> {
     @Override
     public String toString() {
         return "LinkStatus{" + id +
-            ", link=" + link.getId() +
+            ", link=" + (link == null? "null" : link.getId()) +  // null protection
             ", isFailing=" + isFailing +
             ", checkDate=" + checkDate +
             ", statusValue=" + statusValue +

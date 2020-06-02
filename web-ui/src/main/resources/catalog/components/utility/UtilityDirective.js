@@ -63,41 +63,44 @@
         restrict: 'A',
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
-          $http.get('../api/regions?categoryId=' +
+          element.on('focus', function() {
+            $http.get('../api/regions?categoryId=' +
               'http%3A%2F%2Fwww.naturalearthdata.com%2Fne_admin%23Country',
               {}, {
                 cache: true
               }).success(function(response) {
-            var data = response.region;
+              var data = response.region;
 
-            // Compute default name and add a
-            // tokens element which is used for filter
-            angular.forEach(data, function(country) {
-              country.tokens = [];
-              angular.forEach(country.label, function(label) {
-                country.tokens.push(label);
+              // Compute default name and add a
+              // tokens element which is used for filter
+              angular.forEach(data, function(country) {
+                country.tokens = [];
+                angular.forEach(country.label, function(label) {
+                  country.tokens.push(label);
+                });
+                country.name = country.label[scope.lang];
               });
-              country.name = country.label[scope.lang];
+              var source = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: data,
+                limit: 30
+              });
+              source.initialize();
+              $(element).typeahead({
+                minLength: 0,
+                highlight: true
+              }, {
+                name: 'countries',
+                displayKey: 'name',
+                source: source.ttAdapter()
+              }).on('typeahead:selected', function(event, datum) {
+                if (angular.isFunction(scope.onRegionSelect)) {
+                  scope.onRegionSelect(datum);
+                }
+              });
             });
-            var source = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-              queryTokenizer: Bloodhound.tokenizers.whitespace,
-              local: data,
-              limit: 30
-            });
-            source.initialize();
-            $(element).typeahead({
-              minLength: 0,
-              highlight: true
-            }, {
-              name: 'countries',
-              displayKey: 'name',
-              source: source.ttAdapter()
-            }).on('typeahead:selected', function(event, datum) {
-              if (angular.isFunction(scope.onRegionSelect)) {
-                scope.onRegionSelect(datum);
-              }
-            });
+            element.unbind("focus")
           });
         }
       };
@@ -453,43 +456,46 @@
         restrict: 'A',
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
-          $http.get('../api/isolanguages', {}, {
-            cache: true
-          }).success(function(data) {
-            // Compute default name and add a
-            // tokens element which is used for filter
-            angular.forEach(data, function(lang) {
-              var defaultName = lang.label['eng'];
-              lang.name = lang.label[scope.lang] || defaultName;
-              lang.tokens = [lang.name, lang.code, defaultName];
-            });
-            var source = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-              queryTokenizer: Bloodhound.tokenizers.whitespace,
-              local: data,
-              limit: 30
-            });
-            source.initialize();
-            $(element).typeahead({
-              minLength: 0,
-              highlight: true
-            }, {
-              name: 'isoLanguages',
-              displayKey: 'code',
-              source: source.ttAdapter(),
-              templates: {
-                suggestion: function(datum) {
-                  return '<p>' + datum.name + ' (' + datum.code + ')</p>';
+          element.on('focus', function() {
+            $http.get('../api/isolanguages', {}, {
+              cache: true
+            }).success(function(data) {
+              // Compute default name and add a
+              // tokens element which is used for filter
+              angular.forEach(data, function(lang) {
+                var defaultName = lang.label['eng'];
+                lang.name = lang.label[scope.lang] || defaultName;
+                lang.tokens = [lang.name, lang.code, defaultName];
+              });
+              var source = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: data,
+                limit: 30
+              });
+              source.initialize();
+              $(element).typeahead({
+                minLength: 0,
+                highlight: true
+              }, {
+                name: 'isoLanguages',
+                displayKey: 'code',
+                source: source.ttAdapter(),
+                templates: {
+                  suggestion: function(datum) {
+                    return '<p>' + datum.name + ' (' + datum.code + ')</p>';
+                  }
                 }
-              }
+              });
             });
-          });
+            element.unbind("focus")
+          })
         }
       };
     }]);
 
-  module.directive('gnHumanizeTime', ['gnGlobalSettings',
-    function(gnGlobalSettings) {
+  module.directive('gnHumanizeTime', ['gnGlobalSettings', 'gnHumanizeTimeService',
+    function(gnGlobalSettings, gnHumanizeTimeService) {
       return {
         restrict: 'A',
         template: '<span title="{{title}}">{{value}}</span>',
@@ -502,25 +508,10 @@
           var useFromNowSetting = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
           scope.$watch('date', function(originalDate) {
             if (originalDate) {
-              // Moment will properly parse YYYY, YYYY-MM,
-              // YYYY-MM-DDTHH:mm:ss which are the formats
-              // used in the common metadata standards.
-              // By the way check Z which may be used in GML times
-              var date = null;
-              if (originalDate.match('[Zz]$') !== null) {
-                date = moment(originalDate, 'YYYY-MM-DDtHH-mm-SSSZ');
-              } else {
-                date = moment(originalDate);
-              }
-              if (date.isValid()) {
-                var fromNow = date.fromNow();
-                var formattedDate = scope.format ?
-                    date.format(scope.format) :
-                    date.toString();
-                scope.value = scope.fromNow !== undefined && useFromNowSetting ?
-                    fromNow : formattedDate;
-                scope.title = scope.fromNow !== undefined && useFromNowSetting ?
-                    formattedDate : fromNow;
+              var attempt = gnHumanizeTimeService(originalDate, scope.format, scope.fromNow !== undefined)
+              if (attempt !== undefined) {
+                scope.value = attempt.value;
+                scope.title = attempt.title;
               }
             }
           });

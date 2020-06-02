@@ -27,8 +27,8 @@ package org.fao.geonet.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.MultiPolygon;
 import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -37,6 +37,10 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
@@ -52,6 +56,8 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
+import org.fao.geonet.kernel.security.shibboleth.ShibbolethUserConfiguration;
+import org.fao.geonet.kernel.security.shibboleth.ShibbolethUserUtils;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.url.UrlChecker;
@@ -68,14 +74,16 @@ import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.geotools.xml.Parser;
+import org.geotools.xsd.Parser;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.output.DOMOutputter;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.context.ApplicationContext;
 import org.w3c.dom.Node;
 
@@ -86,6 +94,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -100,6 +109,7 @@ import java.util.regex.Pattern;
 
 import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.parseGml;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_ORGANIZATION;
+import static org.fao.geonet.utils.Xml.getXmlFromJSON;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All params are objects because
@@ -186,12 +196,16 @@ public final class XslUtil {
      * @return Return the JSON config as string or an empty object.
      */
     public static String getUiConfiguration(String key) {
-        final String defaultUiConfiguration = NodeInfo.DEFAULT_NODE;
-        NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
+        String nodeId = org.fao.geonet.NodeInfo.DEFAULT_NODE;
+        try {
+            org.fao.geonet.NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(org.fao.geonet.NodeInfo.class);
+            nodeId = nodeInfo.getId();
+        } catch (BeanCreationException e) {
+        }
         SourceRepository sourceRepository= ApplicationContextHolder.get().getBean(SourceRepository.class);
         UiSettingsRepository uiSettingsRepository = ApplicationContextHolder.get().getBean(UiSettingsRepository.class);
 
-        Source portal = sourceRepository.findOne(nodeInfo.getId());
+        org.fao.geonet.domain.Source portal = sourceRepository.findOne(nodeId);
 
         if (uiSettingsRepository != null) {
             UiSetting one = null;
@@ -202,7 +216,7 @@ public final class XslUtil {
                 one = uiSettingsRepository.findOne(key);
             }
             else if (one == null) {
-                one = uiSettingsRepository.findOne(defaultUiConfiguration);
+                one = uiSettingsRepository.findOne(org.fao.geonet.NodeInfo.DEFAULT_NODE);
             }
 
             if (one != null) {
@@ -320,6 +334,23 @@ public final class XslUtil {
     }
 
 
+    public static Node downloadJsonAsXML(String url) {
+        HttpGet httpGet = new HttpGet(url);
+        HttpClient client = new DefaultHttpClient();
+        try {
+            final HttpResponse httpResponse = client.execute(httpGet);
+            final String jsonResponse = IOUtils.toString(
+                httpResponse.getEntity().getContent(),
+                String.valueOf(StandardCharsets.UTF_8)).trim();
+            Element element = getXmlFromJSON(jsonResponse);
+            DOMOutputter outputter = new DOMOutputter();
+            return outputter.output(new Document(element));
+        } catch (IOException | JDOMException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * Check if bean is defined in the context
      *
@@ -328,6 +359,21 @@ public final class XslUtil {
     public static boolean existsBean(String beanId) {
         return ProfileManager.existsBean(beanId);
     }
+
+	/**
+	 * Check if Shibboleth should show login
+	 *
+	 * @param beanId
+	 *            id of the bean to look up
+	 */
+	public static boolean shibbolethHideLogin() {
+		if (existsBean("shibbolethConfiguration")) {
+			ServiceContext serviceContext = ServiceContext.get();
+			ShibbolethUserConfiguration shib = serviceContext.getBean(ShibbolethUserConfiguration.class);
+			return shib.getHideLogin();
+		}
+		return false;
+	}
 
     /**
      * Optimistically check if user can access a given url.  If not possible to determine then the
@@ -885,6 +931,7 @@ public final class XslUtil {
                 try {
                     return (Integer.parseInt(getUrlStatus(urlString)) / 100 == 2);
                 } catch (Exception e) {
+                    Log.info(Geonet.GEONETWORK,"validateURL: exception - ",e);
                     return false;
                 }
             }

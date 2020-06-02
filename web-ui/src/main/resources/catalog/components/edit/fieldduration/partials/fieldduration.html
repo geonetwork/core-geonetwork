@@ -5,32 +5,32 @@
     <input type="hidden" class="form-control" name="{{ref}}" value="{{value}}"/>
 
     <!-- Each components of a duration type -->
-    <input id="{{ref}}_neg" type="checkbox" data-ng-model="sign"/>
+    <input id="{{ref}}_neg" type="checkbox" data-ng-model="sign" data-ng-disabled="isDisabled"/>
     <label for="{{ref}}_neg" data-translate="">negative</label>
     <div class="row">
       <div class="col-xs-2">
         <label for="{{ref}}_years" data-translate="">years</label>
-        <input id="{{ref}}_years" type="number" class="form-control" data-ng-model="years"/>
+        <input id="{{ref}}_years" type="{{isDisabled ? 'text' : 'number'}}" class="form-control" data-ng-model="years" data-ng-disabled="isDisabled"/>
       </div>
       <div class="col-xs-2">
         <label for="{{ref}}_monthes" data-translate="">months</label>
-        <input id="{{ref}}_monthes" type="number" class="form-control" data-ng-model="monthes"/>
+        <input id="{{ref}}_monthes" type="{{isDisabled ? 'text' : 'number'}}" class="form-control" data-ng-model="monthes" data-ng-disabled="isDisabled"/>
       </div>
       <div class="col-xs-2">
         <label for="{{ref}}_days" data-translate="">days</label>
-        <input id="{{ref}}_days" type="number" class="form-control" data-ng-model="days"/>
+        <input id="{{ref}}_days" type="{{isDisabled ? 'text' : 'number'}}" class="form-control" data-ng-model="days" data-ng-disabled="isDisabled"/>
       </div>
       <div class="col-xs-2">
         <label for="{{ref}}_hours" data-translate="">hours</label>
-        <input id="{{ref}}_hours" type="number" class="form-control" data-ng-model="hours"/>
+        <input id="{{ref}}_hours" type="{{isDisabled ? 'text' : 'number'}}" class="form-control" data-ng-model="hours" data-ng-disabled="isDisabled"/>
       </div>
       <div class="col-xs-2">
         <label for="{{ref}}_minutes" data-translate="">minutes</label>
-        <input id="{{ref}}_minutes" type="number" class="form-control" data-ng-model="minutes"/>
+        <input id="{{ref}}_minutes" type="{{isDisabled ? 'text' : 'number'}}" class="form-control" data-ng-model="minutes" data-ng-disabled="isDisabled"/>
       </div>
       <div class="col-xs-2">
         <label for="{{ref}}_secondes" data-translate="">seconds</label>
-        <input id="{{ref}}_secondes" type="number" class="form-control" data-ng-model="secondes"/>
+        <input id="{{ref}}_secondes" type="{{isDisabled ? 'text' : 'number'}}" class="form-control" data-ng-model="secondes" data-ng-disabled="isDisabled"/>
       </div>
     </div>
   </div>

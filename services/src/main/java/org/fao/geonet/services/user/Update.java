@@ -23,7 +23,7 @@
 
 package org.fao.geonet.services.user;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 import jeeves.server.UserSession;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.services.ReadWriteController;

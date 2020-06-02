@@ -23,7 +23,7 @@
 
 package org.fao.geonet.services.system;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.domain.responses.OkResponse;

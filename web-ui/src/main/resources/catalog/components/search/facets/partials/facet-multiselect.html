@@ -2,7 +2,8 @@
   <h5 gn-collapsible="contentCollapsed">
     <span class="fa fa-arrow-circle-right"
           ng-class="{'fa-rotate-90': !contentCollapsed, 'gn-field-empty': isFacetsCollapse(facetConfig.key)}"></span>
-    {{:: title || (facetConfig.label | translate)}}
+      <span ng-if="::title">{{::title}}</span>
+      <span ng-if="::!title" translate>{{::facetConfig.label}}</span>
   </h5>
   <div class="list-group" ng-class="{'collapse': contentCollapsed}">
 

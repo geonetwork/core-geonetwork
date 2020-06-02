@@ -1,6 +1,5 @@
 //==============================================================================
 //===
-
 //=== DataManager
 //===
 //=============================================================================
@@ -41,7 +40,6 @@ import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
@@ -58,7 +56,6 @@ import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.repository.UserGroupRepository;
-import org.jdom.Document;
 import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,15 +128,15 @@ public class DataManager {
     }
 
     @Deprecated
-    public static void validateMetadata(String schema, Element xml, ServiceContext context) throws Exception {
+    public static void validateExternalMetadata(String schema, Element xml, ServiceContext context, Integer groupOwner) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        gc.getBean(IMetadataValidator.class).validateMetadata(schema, xml, context, " ");
+        gc.getBean(IMetadataValidator.class).validateExternalMetadata(schema, xml, context, " ", groupOwner);
     }
 
     @Deprecated
-    public static void validateMetadata(String schema, Element xml, ServiceContext context, String fileName) throws Exception {
+    public static void validateExternalMetadata(String schema, Element xml, ServiceContext context, String fileName, Integer groupOwner) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        gc.getBean(IMetadataValidator.class).validateMetadata(schema, xml, context, fileName);
+        gc.getBean(IMetadataValidator.class).validateExternalMetadata(schema, xml, context, fileName, groupOwner);
     }
 
     @Deprecated
@@ -214,8 +211,8 @@ public class DataManager {
     }
 
     @Deprecated
-    public Element doSchemaTronForEditor(String schema, Element md, String lang) throws Exception {
-        return metadataValidator.doSchemaTronForEditor(schema, md, lang);
+    public Element doSchemaTronForEditor(String schema, Element md, String lang, Integer groupOwner) throws Exception {
+        return metadataValidator.doSchemaTronForEditor(schema, md, lang, groupOwner);
     }
 
     @Deprecated
@@ -396,7 +393,7 @@ public class DataManager {
     @Deprecated
     public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors,
             boolean keepXlinkAttributes) throws Exception {
-        return metadataManager.getMetadata(srvContext, id, forEditing, withEditorValidationErrors, keepXlinkAttributes);
+        return metadataManager.getMetadata(srvContext, id, forEditing, !forEditing, withEditorValidationErrors, keepXlinkAttributes);
     }
 
     @Deprecated

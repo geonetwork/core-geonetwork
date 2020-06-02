@@ -326,7 +326,7 @@ public class GeonetWroModelFactoryTest {
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testTwoCssSameName() throws Exception {
         FileUtils.write(new File(tmpDir.getRoot(), "cssA.css"), "// cssA.css");
         File subdir = new File(tmpDir.getRoot(), "subdir");

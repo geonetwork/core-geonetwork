@@ -28,14 +28,16 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import javassist.NotFoundException;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 import org.apache.http.HttpStatus;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.editing.InspireValidatorUtils;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterApi;
@@ -43,13 +45,15 @@ import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.fao.geonet.api.records.formatters.cache.Key;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.events.history.RecordValidationTriggeredEvent;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -61,6 +65,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -82,6 +87,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import static jeeves.transaction.TransactionManager.CommitBehavior.ALWAYS_COMMIT;
+import static jeeves.transaction.TransactionManager.TransactionRequirement.CREATE_NEW;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
@@ -106,6 +113,10 @@ public class InspireValidationApi {
     String supportedSchemaRegex = "(iso19139|iso19115-3).*";
     @Autowired
     private SchemaManager schemaManager;
+    @Autowired
+    private MetadataValidationRepository metadataValidationRepository;
+    @Autowired
+    private ThreadPool threadPool;
 
     @ApiOperation(
         value = "Get test suites available.",
@@ -170,8 +181,7 @@ public class InspireValidationApi {
         @ApiIgnore
             HttpServletRequest request,
         @ApiParam(hidden = true)
-        @ApiIgnore
-        final NativeWebRequest nativeRequest,
+        @ApiIgnore final NativeWebRequest nativeRequest,
         @ApiParam(hidden = true)
         @ApiIgnore
             HttpSession session
@@ -250,6 +260,8 @@ public class InspireValidationApi {
 
             String testId = inspireValidatorUtils.submitFile(context, URL, metadataToTest, testsuite, metadata.getUuid());
 
+            threadPool.runTask(new InspireValidationRunnable(context, URL, testId, metadata.getId()));
+
             return testId;
         } catch (Exception e) {
             response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
@@ -318,7 +330,7 @@ public class InspireValidationApi {
 
                 return values;
             }
-        } catch (NotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             response.setStatus(HttpStatus.SC_NOT_FOUND);
             return new HashMap<>();
         } catch (Exception e) {

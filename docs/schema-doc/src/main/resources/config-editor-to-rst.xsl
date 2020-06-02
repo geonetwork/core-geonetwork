@@ -92,7 +92,8 @@
     <xsl:value-of select="gndoc:writeln(concat($schemaTitle, ' (', $schema, ')'), '#')"/>
 
     <xsl:value-of select="gndoc:nl(2)"/>
-    <xsl:value-of select="gndoc:writeln($schemaDesc)"/>
+    <xsl:copy-of select="$schemaDesc"/>
+<!--    <xsl:value-of select="gndoc:writeln($schemaDesc)"/>-->
     <xsl:value-of select="gndoc:nl(2)"/>
     <xsl:value-of select="gndoc:writeln(concat($t/schema-url, $schemaUrl))"/>
     <xsl:value-of select="gndoc:nl(2)"/>

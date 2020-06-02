@@ -21,12 +21,13 @@ var gnHarvestercsw = {
         "xpathFilter" : "",
         "rejectDuplicateResource" : false,
         "xslfilter": [],
-        "outputSchema": "",
+        "outputSchema": "http://www.isotc211.org/2005/gmd",
         "queryScope": "local",
         "hopCount": 2
       },
       "content" : {
-        "validate" : "NOVALIDATION"
+        "validate" : "NOVALIDATION",
+        "batchEdits" : ""
       },
       "options" : {
         "every" : "0 0 0 ? * *",
@@ -62,7 +63,9 @@ var gnHarvestercsw = {
           // happen and then search criteria name which is the tag name
           // will be lost.
           //                if (value) {
-          body += '<' + tag + '>' + value + '</' + tag + '>';
+          body += '<' + tag + '>' +
+            ((tag.indexOf('bbox-') === 0 && isNaN(value)) || value === null ? '' : value) +
+            '</' + tag + '>';
           //            }
         }
       }
@@ -99,6 +102,7 @@ var gnHarvestercsw = {
       + '  </options>'
       + '  <content>'
       + '    <validate>' + h.content.validate + '</validate>'
+      + '    <batchEdits><![CDATA[' + (h.content.batchEdits == '' ? '[]' : h.content.batchEdits) + ']]></batchEdits>'
       + '  </content>'
       + $scope.buildResponseGroup(h)
       + $scope.buildResponseCategory(h) + '</node>';

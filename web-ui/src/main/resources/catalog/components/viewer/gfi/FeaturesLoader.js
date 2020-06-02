@@ -132,7 +132,7 @@
       layer.infoFormat = infoFormat;
     }
 
-    var uri = layer.getSource().getGetFeatureInfoUrl(
+    var uri = layer.getSource().getFeatureInfoUrl(
         coordinates,
         map.getView().getResolution(),
         map.getView().getProjection(),
@@ -147,16 +147,18 @@
       }
     }).then(function(response) {
 
-      if(infoFormat.toLowerCase().localeCompare('application/json') == 0 ||
-          infoFormat.toLowerCase().localeCompare('application/geojson') == 0 ) {
+      if(infoFormat &&
+        (infoFormat.toLowerCase().localeCompare('application/json') == 0 ||
+          infoFormat.toLowerCase().localeCompare('application/geojson') == 0 )) {
         var jsonf = new ol.format.GeoJSON();
         var features = [];
         response.data.features.forEach(function(f) {
           features.push(jsonf.readFeature(f));
         });
         this.features = features;
-      } else if(infoFormat.toLowerCase().localeCompare('text/xml') == 0
-        || infoFormat.toLowerCase().localeCompare('application/vnd.ogc.gml') == 0 ) {
+      } else if(infoFormat &&
+        (infoFormat.toLowerCase().localeCompare('text/xml') == 0
+        || infoFormat.toLowerCase().localeCompare('application/vnd.ogc.gml') == 0 )) {
         var format = new ol.format.WMSGetFeatureInfo();
         this.features = format.readFeatures(response.data, {
           featureProjection: map.getView().getProjection()

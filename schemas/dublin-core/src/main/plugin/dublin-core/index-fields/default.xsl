@@ -54,7 +54,9 @@
       <Field name="_docLocale" string="{$langCode}" store="true" index="true"/>
 
       <!-- For multilingual docs it is good to have a title in the default locale.  In this type of metadata we don't have one but in the general case we do so we need to add it to all -->
-      <Field name="_defaultTitle" string="{string(/simpledc/dc:title)}" store="true" index="true"/>
+      <xsl:if test="count(/simpledc/dc:title) > 0">
+        <Field name="_defaultTitle" string="{/simpledc/dc:title[string(.)][1]}" store="true" index="true"/>
+      </xsl:if>
 
       <xsl:for-each select="/simpledc/dc:language">
         <Field name="mdLanguage" string="{string(.)}" store="true" index="true"/>

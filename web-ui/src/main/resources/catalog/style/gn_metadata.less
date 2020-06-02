@@ -140,6 +140,12 @@ header div.gn-abstract {
     margin: 2em 0 0 90px;
     border: 1px solid #ccc;
   }
+  .gn-md-side-extent > .extent {
+    margin: 0 0 0 0;
+    .coord {
+      display: none;
+    }
+  }
   .coord {
     @coord-half-width: 75px;
     @coord-half-height: 1.25em;
@@ -243,6 +249,15 @@ header div.gn-abstract {
     margin-left: 1em;
   }
 
+  .gn-field-template div.target {
+    margin-bottom: 2em;
+    dl:not(:first-child) {
+      dt:before {
+        border: none;
+      }
+    }
+  }
+
   .img-thumbnail {
     margin-bottom: 1em;
   }
@@ -340,6 +355,9 @@ header div.gn-abstract {
   }
   p {
     word-wrap: break-word;
+  }
+  .btn {
+    white-space: normal;
   }
 }
 
@@ -489,6 +507,8 @@ ul.container-list {
 
 [data-gn-metadata-contacts], [gn-metadata-contacts] {
   .gn-contact {
-    margin-left: -1.7em;
+    address {
+      line-height: 1.7em;
+    }
   }
 }

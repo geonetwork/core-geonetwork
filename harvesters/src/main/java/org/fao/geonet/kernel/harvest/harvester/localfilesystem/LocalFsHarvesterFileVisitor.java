@@ -23,9 +23,12 @@
 
 package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
+import static org.fao.geonet.kernel.HarvestValidationEnum.NOVALIDATION;
+
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -69,7 +72,7 @@ import static org.fao.geonet.kernel.HarvestValidationEnum.NOVALIDATION;
  * @author Jesse on 11/6/2014.
  */
 class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.HARVESTER);
+    private Logger LOGGER = LoggerFactory.getLogger(Geonet.HARVESTER);
 
     private final LocalFilesystemParams params;
     private final DataManager dataMan;
@@ -107,6 +110,9 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         this.harvester = harvester;
         this.repo = context.getBean(IMetadataUtils.class);
         this.startTime = System.currentTimeMillis();
+
+        String harvesterName = params.getName().replaceAll("\\W+", "_");
+        LOGGER =  LoggerFactory.getLogger(harvesterName);
         LOGGER.debug("Start visiting files at {}.", this.startTime);
     }
 
@@ -188,7 +194,12 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         }
 
         try {
-            params.getValidate().validate(dataMan, context, xml);
+            Integer groupIdVal = null;
+            if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+            }
+
+            params.getValidate().validate(dataMan, context, xml, groupIdVal);
         } catch (Exception e) {
             LOGGER.debug("Cannot validate XML from file {}, ignoring. Error was: {}", filePath, e.getMessage());
             result.doesNotValidate++;
@@ -203,65 +214,104 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
         String id = dataMan.getMetadataId(uuid);
         if (id == null) {
-            // For new record change date will be the time of metadata xml date change or the date when
-            // the record was harvested (if can't be obtained the metadata xml date change)
-            String createDate;
-            // or the last modified date of the file
-            if (params.checkFileLastModifiedForUpdate) {
-                createDate = new ISODate(Files.getLastModifiedTime(file).toMillis(), false).getDateAndTime();
-            } else {
-                try {
-                    createDate = dataMan.extractDateModified(schema, xml);
-                } catch (Exception ex) {
-                    LOGGER.error("LocalFilesystemHarvester - addMetadata - can't get metadata modified date for metadata uuid= {} " +
-                            "using current date for modified date", uuid);
-                    createDate = new ISODate().toString();
-                }
-            }
+            String createDate = getCreateDate(file, xml, schema, uuid);
 
             id = addMetadata(xml, schema, uuid, createDate);
         } else {
-            // Check last modified date of the file with the record change date
-            // to check if an update is required
-            if (params.checkFileLastModifiedForUpdate) {
-                Date fileDate = new Date(Files.getLastModifiedTime(file).toMillis());
+            final AbstractMetadata metadata = repo.findOne(id);
+            if (!params.getUuid().equals(metadata.getHarvestInfo().getUuid())) {
+                // Metadata exists and belongs to another source (local node or other harvester)
+                switch (params.getOverrideUuid()) {
+                case OVERRIDE:
+                    updateMetadata(file, filePath, xml, schema, id, metadata, true);
+                    break;
+                case RANDOM:
+                    LOGGER.debug("Generating random uuid for remote record with uuid " + metadata.getUuid());
+                    String createDate = getCreateDate(file, xml, schema, uuid);
+                    String newUuid = UUID.randomUUID().toString();
+                    id = addMetadata(xml, schema, newUuid, createDate);
 
-                final AbstractMetadata metadata = repo.findOne(id);
-                ISODate modified = new ISODate();
-                if (metadata != null && metadata.getDataInfo() != null) {
-                    modified = metadata.getDataInfo().getChangeDate();
-                }
-
-                Date recordDate = modified.toDate();
-
-                String changeDate = new ISODate(fileDate.getTime(), false).getDateAndTime();
-
-                LOGGER.debug(" File date is: {} / record date is: {}", filePath, modified);
-
-                if (DateUtils.truncate(recordDate, Calendar.SECOND)
-                    .before(DateUtils.truncate(fileDate, Calendar.SECOND))) {
-                    LOGGER.debug("  Db record is older than file. Updating record with id: {}", id);
-                    updateMedata(xml, id, changeDate);
-                } else {
-                    LOGGER.debug("  Db record is not older than last modified date of file. No need for update.");
+                    break;
+                case SKIP:
+                    LOGGER.debug("Skipping record with uuid " + metadata.getUuid());
+                    result.uuidSkipped++;
                     result.unchangedMetadata++;
+
+                    break;
+                default:
+                    // Do nothing
+                    break;
                 }
             } else {
-                LOGGER.debug("  updating existing metadata, id is: " + id);
-
-                String changeDate;
-
-                try {
-                    changeDate = dataMan.extractDateModified(schema, xml);
-                } catch (Exception ex) {
-                    LOGGER.error("LocalFilesystemHarvester - updateMetadata - can't get metadata modified date for " +
-                            "metadata id= {}, using current date for modified date", id);
-                    changeDate = new ISODate().toString();
-                }
-                updateMedata(xml, id, changeDate);
+                //record exists and belongs to this harvester
+                updateMetadata(file, filePath, xml, schema, id, metadata, false);
             }
+
         }
         listOfRecords.add(Integer.valueOf(id));
+    }
+
+    private String getCreateDate(Path file, Element xml, String schema, String uuid) throws IOException {
+        // For new record change date will be the time of metadata xml date change or the date when
+        // the record was harvested (if can't be obtained the metadata xml date change)
+        String createDate;
+        // or the last modified date of the file
+        if (params.checkFileLastModifiedForUpdate) {
+            createDate = new ISODate(Files.getLastModifiedTime(file).toMillis(), false).getDateAndTime();
+        } else {
+            try {
+                createDate = dataMan.extractDateModified(schema, xml);
+            } catch (Exception ex) {
+                LOGGER.error("LocalFilesystemHarvester - addMetadata - can't get metadata modified date for metadata uuid= {} " +
+                        "using current date for modified date", uuid);
+                createDate = new ISODate().toString();
+            }
+        }
+        return createDate;
+    }
+
+    private void updateMetadata(Path file, Path filePath, Element xml, String schema, String id,
+        AbstractMetadata metadata, boolean force)
+        throws Exception {
+        // Check last modified date of the file with the record change date
+        // to check if an update is required
+        if (params.checkFileLastModifiedForUpdate) {
+            Date fileDate = new Date(Files.getLastModifiedTime(file).toMillis());
+
+            ISODate modified = new ISODate();
+            if (metadata.getDataInfo() != null) {
+                modified = metadata.getDataInfo().getChangeDate();
+            }
+
+            Date recordDate = modified.toDate();
+
+            String changeDate = new ISODate(fileDate.getTime(), false).getDateAndTime();
+
+            LOGGER.debug(" File date is: {} / record date is: {}", filePath, modified);
+
+            if (DateUtils.truncate(recordDate, Calendar.SECOND)
+                .before(DateUtils.truncate(fileDate, Calendar.SECOND))) {
+                LOGGER.debug("  Db record is older than file. Updating record with id: {}", id);
+                updateMedata(xml, id, changeDate, force);
+            } else {
+                LOGGER.debug("  Db record is not older than last modified date of file. No need for update.");
+                result.unchangedMetadata++;
+            }
+        } else {
+            LOGGER.debug("  updating existing metadata, id is: " + id);
+
+            String changeDate;
+
+            try {
+                changeDate = dataMan.extractDateModified(schema, xml);
+            } catch (Exception ex) {
+                LOGGER.error("LocalFilesystemHarvester - updateMetadata - can't get metadata modified date for " +
+                    "metadata id= {}, using current date for modified date", id);
+                changeDate = new ISODate().toString();
+            }
+
+            updateMedata(xml, id, changeDate, force);
+        }
     }
 
     private void processMef(Path file) {
@@ -272,12 +322,26 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
             String xsl = params.getImportXslt();
             MEFLib.Version version = MEFLib.getMEFVersion(file);
             String fileType = version == MEFLib.Version.V1 ? "mef" : "mef2";
-            String style = (xsl.equals("none") || xsl == null) ? "_none_" : xsl;
+            String style = (xsl == null || xsl.equals("none")) ? "_none_" : xsl;
             MetadataType isTemplate = MetadataType.lookup(params.recordType);
+
+            MEFLib.UuidAction uuidAction;
+            switch (params.getOverrideUuid()) {
+            case SKIP:
+                uuidAction = MEFLib.UuidAction.NOTHING;
+                break;
+            case RANDOM:
+                uuidAction = MEFLib.UuidAction.GENERATEUUID;
+                break;
+            case OVERRIDE:
+            default:
+                uuidAction = MEFLib.UuidAction.OVERWRITE;
+            }
+
 
             List<String> ids = MEFLib.doImport(
                     fileType,
-                    MEFLib.UuidAction.OVERWRITE,
+                    uuidAction,
                     style,
                     params.getUuid(),
                     isTemplate,
@@ -301,7 +365,8 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                 result.addedMetadata++;
             }
         } catch (Exception e) {
-            LOGGER.debug("Error retrieving MEF from file {}, ignoring", filePath);
+            LOGGER.error("Error retrieving MEF from file {}, ignoring", filePath);
+            LOGGER.error("Error: ",  e);
             result.unretrievable++;
         }
     }
@@ -337,8 +402,8 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         return id;
     }
 
-    private void updateMedata(Element xml, String id, String changeDate) throws Exception {
-        harvester.updateMetadata(xml, id, localGroups, localCateg, changeDate, aligner);
+    private void updateMedata(Element xml, String id, String changeDate, boolean force) throws Exception {
+        harvester.updateMetadata(xml, id, localGroups, localCateg, changeDate, aligner, force);
         listOfRecordsToIndex.add(Integer.valueOf(id));
         result.updatedMetadata++;
     }

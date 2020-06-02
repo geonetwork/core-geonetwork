@@ -23,9 +23,11 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gco="http://www.isotc211.org/2005/gco"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gfc="http://www.isotc211.org/2005/gfc"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                exclude-result-prefixes="gco gfc gmx"
                 version="1.0">
 
   <!-- ============================================================================================ -->

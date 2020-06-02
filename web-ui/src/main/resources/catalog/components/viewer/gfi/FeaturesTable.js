@@ -24,10 +24,10 @@
 (function() {
   goog.provide('gn_featurestable_directive');
 
-  var module = angular.module('gn_featurestable_directive', []);
+  var module = angular.module('gn_featurestable_directive', ['gn_utility_service']);
 
-  module.directive('gnFeaturesTable', ['$http', 'gfiTemplateURL', 'gnLangs',
-    function($http, gfiTemplateURL, gnLangs) {
+  module.directive('gnFeaturesTable', ['$http', 'gfiTemplateURL', 'getBsTableLang',
+    function($http, gfiTemplateURL, getBsTableLang) {
 
       return {
         restrict: 'E',
@@ -46,7 +46,7 @@
         templateUrl: '../../catalog/components/viewer/gfi/partials/' +
             'featurestable.html',
         link: function(scope, element, attrs, ctrls) {
-          ctrls.ctrl.initTable(element.find('table'), scope, gnLangs);
+          ctrls.ctrl.initTable(element.find('table'), scope, getBsTableLang);
         }
       };
     }]);
@@ -55,21 +55,30 @@
     this.promise = this.loader.loadAll();
   };
 
-  GnFeaturesTableController.prototype.initTable = function(element, scope, gnLangs) {
+  GnFeaturesTableController.prototype.initTable = function(element, scope, getBsTableLang) {
+    
+    // See http://stackoverflow.com/a/13382873/29655
+    function getScrollbarWidth() {
+      var outer = document.createElement('div');
+      outer.style.visibility = 'hidden';
+      outer.style.width = '100px';
+      outer.style.msOverflowStyle = 'scrollbar';
+      document.body.appendChild(outer);
+      var widthNoScroll = outer.offsetWidth;
+      outer.style.overflow = 'scroll';
+      var inner = document.createElement('div');
+      inner.style.width = '100%';
+      outer.appendChild(inner);
+      var widthWithScroll = inner.offsetWidth;
+      outer.parentNode.removeChild(outer);
+      return widthNoScroll - widthWithScroll;
+    }
 
-    // this returns a valid xx_XX language code based on available locales in bootstrap-table
-    // if none found, return 'en'
-    function getBsTableLang() {
-      var iso2 = gnLangs.getIso2Lang(gnLangs.getCurrent());
-      var locales = Object.keys($.fn.bootstrapTable.locales);
-      var lang = 'en';
-      locales.forEach(function (locale) {
-        if (locale.startsWith(iso2)) {
-          lang = locale;
-          return true;
-        }
-      });
-      return lang;
+    // Force the table to resetWidth on window resize
+    // this enables the header and the rows to be aligned
+    function resizeBsTable() {
+      element.bootstrapTable('resetWidth');
+      element.bootstrapTable('resetView');
     }
 
     this.loader.getBsTableConfig().then(function(bstConfig) {
@@ -104,6 +113,9 @@
               element.parents('gn-features-table').find('.clearfix')
               .addClass('sxt-clearfix')
               .removeClass('clearfix');
+
+              // trigger an async digest loop to make the table appear
+              setTimeout(function() { scope.$apply(); });
             }.bind(this),
             onPostHeader: function() { // avoid resizing issue on page change
               if (!once) { return; }
@@ -116,18 +128,12 @@
               }
               var feature = this.loader.getFeatureFromRow(row);
               if (feature && feature.getGeometry()) {
-                var pan = ol.animation.pan({
-                  duration: 500,
-                  source: this.map.getView().getCenter()
-                });
-                this.map.beforeRender(pan);
                 this.map.getView().fit(
                     feature.getGeometry(),
                     this.map.getSize(),
-                    { minResolution: 40 }
+                    { minResolution: 40, duration: 500 }
                 );
               }
-
             }.bind(this),
             showExport: true,
             exportTypes: ['csv'],
@@ -139,9 +145,6 @@
         element.bootstrapTable('resetWidth');
         element.bootstrapTable('resetView');
       });
-
-      // trigger an async digest loop to make the table appear
-      setTimeout(function() { scope.$apply(); });
     }.bind(this));
   };
 

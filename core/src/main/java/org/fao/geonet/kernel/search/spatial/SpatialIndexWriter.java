@@ -23,14 +23,13 @@
 
 package org.fao.geonet.kernel.search.spatial;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.index.SpatialIndex;
-import com.vividsolutions.jts.index.strtree.STRtree;
-
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.index.SpatialIndex;
+import org.locationtech.jts.index.strtree.STRtree;
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
@@ -43,14 +42,14 @@ import org.geotools.data.FeatureStore;
 import org.geotools.data.Transaction;
 import org.geotools.data.memory.MemoryFeatureCollection;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.factory.GeoTools;
+import org.geotools.util.factory.GeoTools;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.geotools.xml.Parser;
+import org.geotools.xsd.Parser;
 import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -63,6 +62,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Path;
@@ -74,8 +74,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.logging.Level;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * This class is responsible for extracting geographic information from metadata and writing that
@@ -135,7 +133,11 @@ public class SpatialIndexWriter implements FeatureListener {
      */
     static MultiPolygon extractGeometriesFrom(Path schemaDir,
                                               Element metadata, Parser[] parsers, Map<String, String> errorMessage) throws Exception {
-        org.geotools.util.logging.Logging.getLogger("org.geotools.xml")
+        return getSpatialExtent(schemaDir, metadata, parsers, new SpatialIndexingErrorHandler(errorMessage));
+    }
+
+    public static MultiPolygon getSpatialExtent(Path schemaDir, Element metadata, Parser[] parsers, ErrorHandler errorHandler) throws Exception {
+        org.geotools.util.logging.Logging.getLogger("org.geotools.xsd")
             .setLevel(Level.SEVERE);
         Path sSheet = schemaDir.resolve("extract-gml.xsl").toAbsolutePath();
         Element transform = Xml.transform(metadata, sSheet);
@@ -168,8 +170,7 @@ public class SpatialIndexWriter implements FeatureListener {
                     allPolygons.add((Polygon) jts.getGeometryN(i));
                 }
             } catch (Exception e) {
-                errorMessage.put("PARSE", gml + ". Error is:" + e.getMessage());
-                Log.error(Geonet.INDEX_ENGINE, "Failed to convert gml to jts object: " + gml + "\n\t" + e.getMessage(), e);
+                errorHandler.handleParseException(e, gml);
                 // continue
             }
         }
@@ -184,11 +185,30 @@ public class SpatialIndexWriter implements FeatureListener {
 
 
             } catch (Exception e) {
-                errorMessage.put("BUILD", allPolygons + ". Error is:" + e.getMessage());
-                Log.error(Geonet.INDEX_ENGINE, "Failed to create a MultiPolygon from: " + allPolygons, e);
+                errorHandler.handleBuildException(e, allPolygons);
                 // continue
                 return null;
             }
+        }
+    }
+
+    static private class SpatialIndexingErrorHandler implements ErrorHandler {
+        private final Map<String, String> errorMessage;
+
+        public SpatialIndexingErrorHandler(Map<String, String> errorMessage) {
+            this.errorMessage = errorMessage;
+        }
+
+        @Override
+        public void handleParseException(Exception e, String gml) {
+            errorMessage.put("PARSE", gml + ". Error is:" + e.getMessage());
+            Log.error(Geonet.INDEX_ENGINE, "Failed to convert gml to jts object: " + gml + "\n\t" + e.getMessage(), e);
+        }
+
+        @Override
+        public void handleBuildException(Exception e, List<Polygon> allPolygons) {
+            errorMessage.put("BUILD", allPolygons + ". Error is:" + e.getMessage());
+            Log.error(Geonet.INDEX_ENGINE, "Failed to create a MultiPolygon from: " + allPolygons, e);
         }
     }
 
@@ -505,7 +525,7 @@ public class SpatialIndexWriter implements FeatureListener {
         } else if (geometry instanceof MultiPolygon) {
             return (MultiPolygon) geometry;
         }
-        String message = geometry.getClass() + " cannot be converted to a polygon. Check Metadata";
+        String message = geometry.getClass() + " cannot be converted to a polygon. Check metadata";
         Log.error(Geonet.INDEX_ENGINE, message);
         throw new IllegalArgumentException(message);
     }

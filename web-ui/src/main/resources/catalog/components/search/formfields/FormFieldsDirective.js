@@ -128,6 +128,7 @@
               }, config)).on('typeahead:selected', function(event, datum) {
                 field.typeahead('val', '');
                 $(element).tagsinput('add', datum);
+                field.data('ttTypeahead').input.trigger('queryChanged');
               });
 
               function allOrSearchFn(q, sync) {
@@ -164,6 +165,16 @@
                   scope.$apply();
                 }
                 refreshDatum();
+              });
+
+              scope.$on('beforeSearchReset', function(){
+                field.typeahead('val', '');
+                stringValues= [];
+                for (i = 0; i < prev.length; i++) {
+                  $(element).tagsinput('remove', prev[i]);
+                }
+                prev = [];
+                field.data('ttTypeahead').input.trigger('queryChanged');
               });
 
               // model -> ui
@@ -712,14 +723,14 @@
    * @name gn_formfields.directive:gnBboxInput
    * @restrict A
    * @requires gnMap
-   * @requires ngeoDecorateInteraction
+   * @requires olDecorateInteraction
    *
    * @description
    * The `gnBboxInput` directive provides an input widget for bounding boxes.
    */
       .directive('gnBboxInput', [
         'gnMap',
-        'ngeoDecorateInteraction',
+        'olDecorateInteraction',
         function(gnMap, goDecoI) {
 
           var extentFromValue = function(str) {

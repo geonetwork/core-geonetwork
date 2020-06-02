@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.9.0-SNAPSHOT</version>
+    <version>3.11.0-SNAPSHOT</version>
   </parent>
 
 
@@ -149,10 +149,6 @@
 
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.geotools</groupId>
       <artifactId>gt-xml</artifactId>
     </dependency>
     <dependency>
@@ -189,8 +185,8 @@
     </dependency>
 
     <dependency>
-      <groupId>com.vividsolutions</groupId>
-      <artifactId>jts</artifactId>
+      <groupId>org.locationtech.jts</groupId>
+      <artifactId>jts-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.lucene</groupId>
@@ -227,10 +223,6 @@
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpcore</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-net</groupId>
@@ -325,7 +317,54 @@
     <dependency>
       <groupId>org.mapfish.print</groupId>
       <artifactId>print-lib</artifactId>
-      <version>${print-lib.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-httpclient</groupId>
+          <artifactId>commons-httpclient</artifactId>
+        </exclusion>
+        <!--
+        <exclusion>
+          <groupId>com.codahale.metrics</groupId>
+          <artifactId>metrics-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.codahale.metrics</groupId>
+          <artifactId>metrics-log4j</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.codahale.metrics</groupId>
+          <artifactId>metrics-servlet</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.codahale.metrics</groupId>
+          <artifactId>metrics-servlets</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.codahale.metrics</groupId>
+          <artifactId>metrics-httpclient</artifactId>
+        </exclusion>
+        -->
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-context</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-web</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xalan</groupId>
+          <artifactId>xalan</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.xmlgraphics</groupId>
+          <artifactId>batik-transcoder</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- ====================== -->
@@ -517,6 +556,11 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19139</artifactId>
+      <version>${gn.schemas.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>schema-csw-record</artifactId>
       <version>${gn.schemas.version}</version>
     </dependency>
     <dependency>

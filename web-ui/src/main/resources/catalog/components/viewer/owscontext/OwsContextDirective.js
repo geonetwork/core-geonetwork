@@ -106,25 +106,36 @@
                 '-c' + scope.map.getView().getCenter().join('-');
           };
 
+          /**
+           * @type {HTMLAnchorElement}
+           */
+          var downloadEl = element.find('.download-element')[0];
+
           function getMapAsImage($event, scaleFactor) {
             var defer = $q.defer();
             if (scope.isExportMapAsImageEnabled) {
               scope.mapFileName = getMapFileName();
 
-              scope.map.once('postcompose', function(event) {
-                var canvas = event.context.canvas;
+              scope.map.once('postrender', function(event) {
+                domtoimage.toPng(scope.map.getTargetElement()).then(function(data) {
+                  // resize if necessary
+                  var finalData = data;
 
-                var resizedCanvas = document.createElement('canvas');
-                var resizedContext = resizedCanvas.getContext('2d');
-                scaleFactor = scaleFactor || 1;
-                resizedCanvas.height = canvas.height * scaleFactor;
-                resizedCanvas.width = canvas.width * scaleFactor;
+                  if (scaleFactor !== undefined) {
+                    var img = new Image();
+                    img.src = data;
+                    img.onload = function() {
+                      var canvas = document.createElement('canvas');
+                      var size = scope.map.getSize();
+                      canvas.width = size[0];
+                      canvas.height = size[1];
+                      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                      finalData = canvas.toDataURL('image/png');
+                    };
+                  }
 
-                resizedContext.drawImage(canvas, 0, 0,
-                    resizedCanvas.width, resizedCanvas.height);
-
-                var data = resizedCanvas.toDataURL('image/png');
-                defer.resolve(data);
+                  defer.resolve(finalData);
+                });
               });
               scope.map.renderSync();
             } else {
@@ -133,15 +144,13 @@
             return defer.promise;
           };
 
-          function openContent($event, data) {
-            var el = $($event.target);
-            if (!el.is('a')) {
-              el = el.parent();
-            }
-            if (el.is('a')) {
-              el.attr('href', data);
-
-            }
+          function openContent(data, fileName) {
+            // execute logic after current loop to avoid angular "digest in progress" error
+            setTimeout(function() {
+              downloadEl.href = data;
+              downloadEl.download = fileName;
+              downloadEl.click();
+            });
           };
 
           scope.save = function($event) {
@@ -151,12 +160,12 @@
             var str = new XMLSerializer().serializeToString(xml);
             var base64 = base64EncArr(strToUTF8Arr(str));
 
-            openContent($event, 'data:text/xml;base64,' + base64);
+            openContent('data:text/xml;charset=utf-8;base64,' + base64, getMapFileName() + '.xml');
           };
 
           scope.saveMapAsImage = function($event) {
             getMapAsImage($event).then(function(data) {
-              openContent($event, data);
+              openContent(data, getMapFileName() + '.png');
             });
           };
 

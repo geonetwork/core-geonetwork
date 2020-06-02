@@ -86,7 +86,7 @@
           <ul class="dropdown-menu" role="menu">
             <li role="menuitem"
                 data-ng-repeat="f in formatter.list"
-                data-ng-class="f === currentFormatter ? 'disabled' : ''">
+                data-ng-class="currentFormatter === f.url ? 'disabled' : ''">
               <a href=""
                  gn-metadata-open="mdView.current.record"
                  gn-records="mdView.records"
@@ -105,9 +105,9 @@
             data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
             data-gn-click-and-spin="deleteRecord(mdView.current.record)"
             data-gn-confirm-click="{{(mdView.current.record.draft != 'y') ? 'deleteRecordConfirm' : 'deleteWorkingCopyRecordConfirm' | translate:mdView.current.record}}"
-            title="{{(mdView.current.record.draft != 'y') ? 'delete' : 'canceWorkingCopy' | translate}}">
+            title="{{(mdView.current.record.draft != 'y') ? 'delete' : 'cancelWorkingCopy' | translate}}">
             <i class="fa fa-fw fa-times"></i>
-            <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft == 'y'">canceWorkingCopy</span>
+            <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft == 'y'">cancelWorkingCopy</span>
             <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft != 'y'">delete</span>
           </a>
         </div>
@@ -161,7 +161,7 @@
 
             <div data-gn-related="mdView.current.record"
                 data-user="user"
-                data-types="parent|children|services|datasets"
+                data-types="parent|children|brothersAndSisters|services|datasets"
                 data-title="{{'associatedResources' | translate}}">
             </div>
           </div>
@@ -366,7 +366,7 @@
             </table>
           </div>
 
-          <table class="table table-striped t">
+          <table class="table table-striped">
             <tbody>
             <tr data-ng-if="mdView.current.record.updateFrequency">
               <th data-translate="">updateFrequency</th>
@@ -374,7 +374,11 @@
             </tr>
             <tr data-ng-if="mdView.current.record.spatialRepresentationType_text">
               <th data-translate="">spatialRepresentationType</th>
-              <td>{{mdView.current.record.spatialRepresentationType_text}}</td>
+              <td>
+                <ul data-ng-repeat="t in mdView.current.record.spatialRepresentationType_text">
+                  <li>{{t}}</li>
+                </ul>
+              </td>
             </tr>
             <tr data-ng-if="mdView.current.record.denominator">
               <th data-translate="">scale</th>
@@ -487,7 +491,6 @@
               </div>
             </div>
           </section>
-          </br>
 
           <div data-gn-userfeedback='mdView.current.record'
               data-gn-user={{user.username}}
@@ -508,7 +511,7 @@
           </div>
           <div data-gn-md-feedback="mdView.current.record"></div>
 
-          <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geoBox.length > 0">
+          <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geoBox || mdView.current.record.boundingPolygon">
             <h2>
               <i class="fa fa-fw fa-map-marker"></i>
               <span data-translate="">extent</span>
@@ -519,11 +522,11 @@
             </ul>
             </p>
             <!-- TODO: use map config -->
-            <p data-ng-repeat="bbox in mdView.current.record.geoBox">
+            <p data-ng-if="mdView.current.record.geoBox || mdView.current.record.boundingPolygon">
               <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
                   alt="{{'extent' | translate}}"
                   aria-label="{{'extent' | translate}}"
-                  data-ng-src="{{gnUrl}}{{lang}}/region.getmap.png?mapsrs=EPSG:3857&width=250&background=settings&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon($index)}}"/>
+                  data-ng-src="../api/records/{{mdView.current.record.getUuid()}}/extents.png"/>
             </p>
 
           </section>

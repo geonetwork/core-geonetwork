@@ -3064,4 +3064,8 @@
   <element name="gmx:MX_ScopeCode">
     <label>Codi</label>
   </element>
+  <element name="xlink:type">
+    <label>Link</label>
+    <description>Link type</description>
+  </element>
 </labels>

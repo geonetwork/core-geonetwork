@@ -122,8 +122,10 @@ public class UrlAnalyzer {
     }
 
     public void deleteAll() {
-        linkRepository.deleteAll();
-        entityManager.flush();
+        metadataLinkRepository.deleteAllInBatch();
+        linkStatusRepository.deleteAllInBatch();
+        linkRepository.deleteAllInBatch();
+        entityManager.clear();
     }
 
     public void testLink(Link link) {

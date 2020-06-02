@@ -39,7 +39,7 @@
   </bean>
 
   <bean id="jdbcURL" class="java.lang.String">
-    <constructor-arg value="jdbc:postgresql://${jdbc.host}:${jdbc.port}/${jdbc.database}"/>
+    <constructor-arg value="jdbc:postgresql://${jdbc.host}:${jdbc.port:5432}/${jdbc.database}?${jdbc.connectionProperties}"/>
   </bean>
 
 </beans>

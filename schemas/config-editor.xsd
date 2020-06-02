@@ -375,8 +375,12 @@ Table column.
       <xs:sequence>
         <xs:element minOccurs="1" maxOccurs="unbounded" name="col">
           <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="directiveAttributes"/>
+            </xs:sequence>
             <xs:attribute name="xpath" type="xs:string" use="optional"/>
             <xs:attribute name="del" type="xs:string" use="optional"/>
+            <xs:attribute name="use" type="xs:string" use="optional"/>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="1" ref="section"/>
@@ -490,6 +494,17 @@ relevant to have parent defined to have more control over the list.
       <xs:attribute ref="use"/>
       <xs:attribute ref="addDirective"/>
       <xs:attribute name="xpath" type="xs:string" use="optional"/>
+      <xs:attribute name="excludeFrom" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[
+        Used in for elements in flatModeException to exclude them from this mode if the parent of the element is listed in this attribute.
+
+        For example, apply flatModeExceptions to all gmd:contact, except for the ones in gmd:MD_MaintenanceInformation.
+        ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
 
@@ -691,7 +706,7 @@ A good default config with all directives is:
       </sidePanel>
 
 
-For the online source panel, the list of choices can be overridden with a "config-id" attribute 
+For the online source panel, the list of choices can be overridden with a "config-id" attribute
 pointing to a JSON configuration file in config/associated-panel. This file allows to customize
 the list of type of link user can set by defining for each type the list of fields to display and
 default values for fields (eg. protocol, function, application profile).
@@ -951,7 +966,7 @@ Adding a section to a tab
 A section is a group of fields. If a name attribute is provided,
 then it will create an HTML fieldset which is collapsible.
 If no name attribute is provided, then it just render the inner elements.
-For example, if you need a tab without a root fieldset, juste create 
+For example, if you need a tab without a root fieldset, juste create
 the mandatory section with no name and then the inner elements.
 
 
@@ -1736,6 +1751,36 @@ An autocompletion list based on a thesaurus.
                 ]]></xs:documentation>
               </xs:annotation>
             </xs:enumeration>
+            <xs:enumeration value="data-gn-anchor-switcher">
+              <xs:annotation>
+                <xs:documentation>Facilitates easy conversion between Characterstring and Anchor.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-logo-selector">
+              <xs:annotation>
+                <xs:documentation>Users can upload a file into the file storage of a record. The link to the file will be stored as Anchor.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-checkbox-with-nilreason">
+              <xs:annotation>
+                <xs:documentation>Boolean field with explicit true, false and nill options</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-field-upload-div">
+              <xs:annotation>
+                <xs:documentation>Option to upload a document, link and title are stored in an Anchor element.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-codelist-picker">
+              <xs:annotation>
+                <xs:documentation>Select a value from an ISO codelist</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-draw-bbox">
+              <xs:annotation>
+                <xs:documentation>Interactive map facilitating to draw a bounds element</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
           </xs:restriction>
         </xs:simpleType>
       </xs:union>
@@ -1759,8 +1804,23 @@ An autocompletion list based on a thesaurus.
             <xs:enumeration value="data-gn-directory-entry-selector">
               <xs:annotation>
                 <xs:documentation><![CDATA[
-                  A classic add control with a popup to choose from contact directory and an autocompletion list to search in the contact directory and add a contact.
-                  ]]></xs:documentation>
+This field facilitates users in selecting a `subtemplate` (also known as xml-snippet) from the catalogue. Subtemplates are mostly used to store contact details,
+but can also be used to store snippets of xml having Quality reports, Access constraints, CRS definitions, etc.
+
+.. code-block:: xml
+
+    <for name="gmd:report"
+      addDirective="data-gn-directory-entry-selector"
+      xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-search-action="true"
+        data-popup-action="false"
+        data-filter='{"_root": "gmd:DQ_DomainConsistency"}'
+        data-template-type="report"
+        data-insert-modes="text" />
+    </for>
+                ]]></xs:documentation>
               </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="data-gn-thesaurus-selector">

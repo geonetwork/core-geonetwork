@@ -22,14 +22,13 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<beans xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
        default-lazy-init="true"
-       xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="
-		http://www.springframework.org/schema/beans
+       xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-3.2.xsd
-    ">
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
   <context:property-placeholder location="${app.properties}"
                                 file-encoding="UTF-8"
@@ -48,13 +47,40 @@
     <constructor-arg index="1" ref="defaultLanguage"/>
   </bean>
 
-  <bean id="RegionsDAO" class="org.fao.geonet.services.region.ThesaurusBasedRegionsDAO">
+  <!--
+   Configure here what the publish/unpublish action does.
+   By default, it set view, download and dynamic operation
+   to Internet and Intranet group.
+   -->
+  <util:map id="publicationConfig"
+            key-type="java.lang.String"
+            value-type="java.lang.String[]">
+    <!-- INTERNET GROUP -->
+    <entry key="1">
+      <array>
+        <!-- View, download, dynamic -->
+        <value>view</value>
+        <value>download</value>
+        <value>dynamic</value>
+      </array>
+    </entry>
+    <!-- INTRANET GROUP -->
+    <entry key="0">
+      <array>
+        <value>view</value>
+        <value>download</value>
+        <value>dynamic</value>
+      </array>
+    </entry>
+  </util:map>
+
+  <bean id="RegionsDAO" class="org.fao.geonet.api.regions.ThesaurusBasedRegionsDAO">
     <constructor-arg ref="languages"/>
     <property name="cacheAllRegionsInMemory" value="true"/>
     <property name="thesaurusName" value="external.place.regions"/>
   </bean>
 
-  <bean id="MetadataRegionsDAO" class="org.fao.geonet.services.region.MetadataRegionDAO">
+  <bean id="MetadataRegionsDAO" class="org.fao.geonet.api.regions.MetadataRegionDAO">
     <property name="cacheAllRegionsInMemory" value="false"/>
   </bean>
 
@@ -67,6 +93,7 @@
           <array>
             <value>Conformance class: INSPIRE Profile based on EN ISO 19115 and EN ISO 19119</value>
             <value>Conformance class: XML encoding of ISO 19115/19119 metadata</value>
+            <value>Conformance class: Conformance class: Metadata for interoperability</value>
           </array>
         </entry>
         <entry key="TG version 2.0 - Data sets and series">
@@ -76,21 +103,47 @@
             <value>Conformance Class 2: INSPIRE data sets and data set series interoperability metadata.</value>
           </array>
         </entry>
-        <entry key="TG version 2.0 - Spatial data service">
+        <entry key="TG version 2.0 - Network services">
           <array>
             <value>Common Requirements for ISO/TC 19139:2007 based INSPIRE metadata records.</value>
-            <value>Conformance Class 1: INSPIRE data sets and data set series baseline metadata.</value>
-            <value>Conformance Class 2: INSPIRE data sets and data set series interoperability metadata.</value>
+            <!--<value>Conformance Class 1: INSPIRE data sets and data set series baseline metadata.</value>
+            <value>Conformance Class 2: INSPIRE data sets and data set series interoperability metadata.</value>-->
             <value>Conformance Class 3: INSPIRE Spatial Data Service baseline metadata.</value>
-            <!--<value>Conformance Class 4: INSPIRE Network Services metadata.</value>
-            <value>Conformance Class 5: INSPIRE Invocable Spatial Data Services metadata.</value>
+            <value>Conformance Class 4: INSPIRE Network Services metadata.</value>
+            <!--<value>Conformance Class 5: INSPIRE Invocable Spatial Data Services metadata.</value>
             <value>Conformance Class 6: INSPIRE Interoperable Spatial Data Services metadata.</value>
             <value>Conformance Class 7: INSPIRE Harmonised Spatial Data Services metadata.</value>-->
           </array>
         </entry>
       </map>
     </property>
+    <!--
+      key format:
+
+      SCHEMAID::TG_RULE_NAME
+
+      If a metadata schema doesn't match, the schema dependency hierarchy
+      is checked to verify if any parent schema matches any rules.
+    -->
+    <property name="testsuitesConditions">
+      <map>
+        <entry key="iso19139::TG version 2.0 - Data sets and series" value="gmd:hierarchyLevel[*/@codeListValue = 'dataset' or */@codeListValue = 'series']" />
+        <entry key="iso19139::TG version 2.0 - Network services" value=".//srv:SV_ServiceIdentification" />
+        <entry key="iso19115-3.2018::TG version 2.0 - Data sets and series" value="mdb:metadataScope[*/mdb:resourceScope/*/@codeListValue = 'dataset' or */mdb:resourceScope/*/@codeListValue = 'series']" />
+        <entry key="iso19115-3.2018::TG version 2.0 - Network services" value=".//srv:SV_ServiceIdentification" />
+      </map>
+    </property>
     <property name="defaultTestSuite" value="TG version 1.3"/>
+    <!-- ETF validator provides a service to check if a validation task has finished.
+         The following parameters allow to configure:
+
+          - Max. number of checks to do before throwing an Exception, to avoid waiting forever
+            if any issue with the ETF validator returning the task as pending while any error happened.
+
+          - Interval to wait until do a new check, in milliseconds.
+    -->
+    <property name="maxNumberOfEtfChecks" value="20"/>
+    <property name="intervalBetweenEtfChecks" value="5000"/>
   </bean>
 
   <bean id="resourceUploadHandler"
@@ -104,7 +157,7 @@
 
   <bean id="multipartResolver"
         class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-    <property name="maxUploadSize" value="100000000"/>
+    <property name="maxUploadSize" value="\${api.params.maxUploadSize}"/>
   </bean>
 
   <bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
@@ -116,12 +169,6 @@
                value="org.fao.geonet.api.records.attachments.SortConverter"/>
       </map>
     </property>
-  </bean>
-  <bean id="filesystemStore"
-        class="org.fao.geonet.api.records.attachments.FilesystemStore"/>
-  <bean id="resourceStore"
-        class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">
-    <constructor-arg index="0" ref="filesystemStore"/>
   </bean>
   <!--<bean id="resourcesApi"
         class="org.fao.geonet.api.metadata.resources.ResourcesApi"/>-->
@@ -164,7 +211,7 @@
   <bean id="SpringLocalServiceInvoker" class="org.fao.geonet.kernel.SpringLocalServiceInvoker"
         init-method="init">
   </bean>
-  
+
   <bean id="cssStyleSettingService" class="org.fao.geonet.api.cssstyle.service.CssStyleSettingDatabaseService">
   </bean>
 

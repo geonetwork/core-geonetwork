@@ -58,6 +58,7 @@
           <i class="fa fa-check"></i>&nbsp;<span translate>viewSelectionOnly</span>
         </a>
       </li>
+
       <li class="divider" data-ng-if="user.isConnected()"></li>
       <li  data-ng-show="!excludePattern.test('updatePrivileges')"
            data-ng-if="user.isEditorOrMore()">
@@ -90,19 +91,8 @@
           <i class="fa fa-user"></i>&nbsp;<span translate>transferOwnership</span>
         </a>
       </li>
-      <li  data-ng-show="!excludePattern.test('index')"
-           data-ng-if="user.isUserAdminOrMore()">
-        <a href="" data-ng-click="mdService.indexSelection(searchResults.selectionBucket)">
-          <i class="fa fa-cogs"></i>&nbsp;<span translate>index</span>
-        </a>
-      </li>
+
       <li class="divider" data-ng-if="user.isConnected()"></li>
-      <li  data-ng-show="!excludePattern.test('updateCategories')"
-           data-ng-if="user.isEditorOrMore()">
-        <a href="" data-ng-click="mdService.openCategoriesBatchPanel(searchResults.selectionBucket, getCatScope())">
-          <i class="fa fa-tags"></i>&nbsp;<span translate>updateCategories</span>
-        </a>
-      </li>
       <li  data-ng-show="!excludePattern.test('validate')"
            data-ng-if="user.isEditorOrMore()">
         <a href="" data-ng-click="mdService.validateMd(undefined, searchResults.selectionBucket)"
@@ -110,11 +100,39 @@
           <i class="fa fa-check"></i>&nbsp;<span translate>validate</span>
         </a>
       </li>
+      <li  data-ng-show="!excludePattern.test('validate')"
+           data-ng-if="user.isEditorOrMore()">
+        <a href="" data-ng-click="mdService.validateMdLinks(undefined, searchResults.selectionBucket)"
+           data-gn-confirm-click="{{'validateLinksSelectedRecordConfirm' | translate:searchResults}}">
+          <i class="fa fa-link"></i>&nbsp;<span translate>validateLinks</span>
+        </a>
+      </li>
+      <li  data-ng-show="!excludePattern.test('validate')"
+           data-ng-if="user.isEditorOrMore() && isInspireValidationEnabled">
+        <a href="" data-ng-click="mdService.validateMdInspire(searchResults.selectionBucket)"
+                   data-gn-confirm-click="{{'validateSelectedRecordINSPIREConfirm' | translate:searchResults}}">
+          <i class="fa fa-check"></i>&nbsp;<span translate>validateInspire</span>
+        </a>
+      </li>
+
+      <li class="divider" data-ng-if="user.isConnected()"></li>
+      <li  data-ng-show="!excludePattern.test('updateCategories')"
+           data-ng-if="user.isEditorOrMore()">
+        <a href="" data-ng-click="mdService.openCategoriesBatchPanel(searchResults.selectionBucket, getCatScope())">
+          <i class="fa fa-tags"></i>&nbsp;<span translate>updateCategories</span>
+        </a>
+      </li>
       <li  data-ng-show="!excludePattern.test('delete')"
            data-ng-if="user.isEditorOrMore()">
         <a href="" data-ng-click="mdService.deleteMd(undefined, searchResults.selectionBucket)"
            data-gn-confirm-click="{{'deleteSelectedRecordConfirm' | translate:searchResults}}">
           <i class="fa fa-times"></i>&nbsp;<span translate>delete</span>
+        </a>
+      </li>
+      <li  data-ng-show="!excludePattern.test('index')"
+           data-ng-if="user.isUserAdminOrMore()">
+        <a href="" data-ng-click="mdService.indexSelection(searchResults.selectionBucket)">
+          <i class="fa fa-cogs"></i>&nbsp;<span translate>indexRecords</span>
         </a>
       </li>
 
@@ -128,4 +146,6 @@
 
     </ul>
   </div>
+
+
 </div>

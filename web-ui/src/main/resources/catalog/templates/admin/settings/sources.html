@@ -1,181 +1,249 @@
-<div class="row" data-ng-controller="GnSourcesController">
-  <div class="col-lg-4">
-    <div class="panel panel-default">
-      <div class="panel-heading" data-translate="">manageSources</div>
-      <div class="panel-body">
-        <div class="list-group">
-          <ul class="list-group">
-            <input class="form-control"
-                   data-ng-show="sources.length > 1"
-                   data-ng-model="sourcesSearch.$" autofocus=""
-                   placeholder="{{'filter' | translate}}"/>
-            <a class="list-group-item"
-               data-ng-class="s.uuid === source.uuid ? 'active' : ''"
-               title="{{::('source-' + s.type) | translate}}"
-               data-ng-click="selectSource(s)"
-               data-ng-repeat="s in sources | filter:sourcesSearch | orderBy:'name'">
-              <i class="fa fa-fw"
-                 data-ng-class="{'fa-home': s.type === 'portal',
-                 'fa-folder': s.type === 'subportal',
-                 'fa-cloud': s.type === 'externalportal',
-                 'fa-cloud-download': s.type === 'harvester'}"></i>
-              {{::s.name}}
-              <img class="gn-source-logo"
-                   data-ng-src="{{'../../images/' + (s.type === 'subportal' ? 'harvesting/' +  s.logo : 'logos/' +  s.uuid + '.png')}}"/>
+<div data-ng-controller="GnSearchController">
+  <div class="row"
+     data-ng-controller="GnSourcesController">
+    <div class="col-lg-4">
+      <div class="panel panel-default">
+        <div class="panel-heading" data-translate="">manageSources</div>
+        <div class="panel-body">
+          <div class="list-group">
+            <ul class="list-group">
+              <input class="form-control"
+                     data-ng-show="sources.length > 1"
+                     data-ng-model="sourcesSearch.$" autofocus=""
+                     placeholder="{{'filter' | translate}}"/>
 
-            </a>
-          </ul>
+              <div class="row">
+                <div class="col-md-3"
+                     data-ng-repeat="(k, v) in filter.types">
+                  <label title="{{::('source-' + k) | translate}}">
+                    <input type="checkbox" autocomplete="off" data-ng-model="filter.types[k]"/>
+                    <i class="fa fa-fw"
+                       title="{{::('source-' + k) | translate}}"
+                       data-ng-class="{'fa-home': k === 'portal',
+                                       'fa-folder': k === 'subportal',
+                                       'fa-cloud': k === 'externalportal',
+                                       'fa-cloud-download': k === 'harvester'}"></i>
+                  </label>
+                </div>
+              </div>
+
+              <a class="list-group-item"
+                 data-ng-class="s.uuid === source.uuid ? 'active' : ''"
+                 title="{{::('source-' + s.type) | translate}}"
+                 data-ng-click="selectSource(s)"
+                 data-ng-repeat="s in filteredSources | filter:sourcesSearch | orderBy:'name'">
+                <i class="fa fa-fw"
+                   data-ng-class="{'fa-home': s.type === 'portal',
+                                   'fa-folder': s.type === 'subportal',
+                                   'fa-cloud': s.type === 'externalportal',
+                                   'fa-cloud-download': s.type === 'harvester'}"></i>
+                {{::s.name}}
+                <img class="gn-source-logo"
+                     data-ng-src="{{'../../images/' + (s.type === 'subportal' ? 'harvesting/' +  s.logo : 'logos/' +  s.uuid + '.png')}}"/>
+
+              </a>
+            </ul>
+          </div>
+
+
+          <button type="button" class="btn btn-primary btn-block" id="gn-btn-source-add"
+                  data-ng-click="addSubPortal()"
+                  data-ng-show="user.isAdministrator()">
+            <i class="fa fa-plus"/>
+            <span data-translate="">addSubPortal</span>
+          </button>
+
+          <br/>
+          <div class="well" data-translate="">sources-help</div>
         </div>
-
-
-        <button type="button" class="btn btn-primary btn-block" id="gn-btn-source-add"
-                data-ng-click="addSubPortal()"
-                data-ng-show="user.isAdministrator()">
-          <i class="fa fa-plus"/>
-          <span data-translate="">addSubPortal</span>
-        </button>
-
-        <br/>
-        <div class="well" data-translate="">sources-help</div>
       </div>
+
+      <div data-gn-need-help="administrator-guide/configuring-the-catalog/portal-configuration.html"></div>
     </div>
-  </div>
 
-  <div class="col-lg-8" data-ng-if="source">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        {{source.name}} ({{('source-' + source.type) | translate}})
-        <div class="btn-toolbar">
-          <button type="button" class="btn btn-primary pull-right"
-                  data-ng-disabled="source.type === 'subportal' && !gnSourceForm.$valid"
-                  data-ng-click="updateSource()">
-            <i class="fa fa-floppy-o"></i>&nbsp;
-            <span data-translate="">save</span>
-          </button>
-          <button type="button" class="btn btn-danger pull-right"
-                  data-ng-disabled="source.type !== 'subportal' || (source.type === 'subportal' && !user.isAdministrator())"
-                  data-gn-click-and-spin="removeSource()">
-            <i class="fa fa-times"></i>&nbsp;
-            <span data-translate="">removeSource</span>
-          </button>
+    <div class="col-lg-8" data-ng-if="source">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          {{source.name}} ({{('source-' + source.type) | translate}})
+          <div class="btn-toolbar">
+            <button type="button" class="btn btn-primary pull-right"
+                    data-ng-disabled="source.type === 'subportal' && !gnSourceForm.$valid"
+                    data-ng-click="updateSource()">
+              <i class="fa fa-floppy-o"></i>&nbsp;
+              <span data-translate="">save</span>
+            </button>
+            <button type="button" class="btn btn-danger pull-right"
+                    data-ng-disabled="source.type !== 'subportal' || (source.type === 'subportal' && !user.isAdministrator())"
+                    data-gn-click-and-spin="removeSource()">
+              <i class="fa fa-times"></i>&nbsp;
+              <span data-translate="">removeSource</span>
+            </button>
+          </div>
         </div>
-      </div>
-      <div class="panel-body">
+        <div class="panel-body">
 
-        <div data-ng-show="source.type === 'subportal'">
-          <form name="gnSourceForm">
-            <label data-translate="" class="gn-required">sourceUuid</label>
-            <input type="text"
-                   class="form-control"
-                   data-ng-disabled="::!user.isAdministrator()"
-                   data-ng-pattern="/^[A-Za-z0-9\-_]+$/"
-                   data-ng-model="source.uuid"/>
-            <p class="help-block" data-translate="">sourceUuid-help</p>
+          <div data-ng-show="source.type === 'subportal'">
+            <form name="gnSourceForm">
+              <label data-translate="" class="gn-required">sourceUuid</label>
+              <input type="text"
+                     class="form-control"
+                     data-ng-disabled="::!user.isAdministrator()"
+                     data-ng-pattern="/^[A-Za-z0-9\-_]+$/"
+                     data-ng-model="source.uuid"/>
+              <p class="help-block" data-translate="">sourceUuid-help</p>
 
-            <label data-translate="">sourceName</label>
-            <input type="text"
-                   class="form-control"
-                   data-ng-pattern="/^[A-Za-z0-9\-_]+$/"
-                   data-ng-model="source.name"/>
-            <p class="help-block" data-translate="">sourceName-help</p>
+              <p class="alert alert-info"
+                 data-ng-if="source.uuid != ''"
+                 data-translate=""
+                 data-translate-values="{'uuid': source.uuid, 'lang': lang}">sourceUrlInfo
+              </p>
+              <label data-translate="">sourceName</label>
+              <input type="text"
+                     class="form-control"
+                     data-ng-pattern="/^[A-Za-z0-9\-_]+$/"
+                     data-ng-model="source.name"/>
+              <p class="help-block" data-translate="">sourceName-help</p>
 
 
-            <label data-translate="">sourceFilter</label>
-            <input type="text"
-                   class="form-control"
-                   data-ng-model="source.filter"/>
-            <p class="help-block" data-translate="">sourceFilter-help</p>
-          </form>
+              <label data-translate="">sourceFilter</label>
+              <input type="text"
+                     class="form-control"
+                     data-ng-model="source.filter"/>
+              <p class="help-block" data-translate="">sourceFilter-help</p>
+            </form>
 
-          <div>
-            <label data-translate="">sourceLogo</label>
+            <div>
+              <label data-translate="">sourceLogo</label>
 
-            <div class="row" data-ng-show="source.logo">
-              <div class="col-md-12">
-                <img data-ng-show="source.logo"
-                     src="../../images/harvesting/{{ source.logo }}"
-                     class="img-thumbnail form-group" data-ng-attr-title="{{ source.logo }}">
-                <a href="" data-ng-click="deleteSourceLogo()"
-                   class="text-danger">
-                  <i data-ng-show="source.logo"
-                     class="fa fa-times delete"></i>
-                </a>
+              <div class="row" data-ng-show="source.logo">
+                <div class="col-md-12">
+                  <img data-ng-show="source.logo"
+                       src="../../images/harvesting/{{ source.logo }}"
+                       class="img-thumbnail form-group" data-ng-attr-title="{{ source.logo }}">
+                  <a href="" data-ng-click="deleteSourceLogo()"
+                     class="text-danger">
+                    <i data-ng-show="source.logo"
+                       class="fa fa-times delete"></i>
+                  </a>
+                </div>
               </div>
-            </div>
 
-            <!--Display logo picker from harvester logos-->
-            <div class="row" data-ng-show="queue.length == 0">
-              <div class="col-md-5 media-middle" translate>selectExistingLogo</div>
-              <div class="col-md-3">
-                <div class="form-group" gn-logo-picker="source.logo"></div>
+              <!--Display logo picker from harvester logos-->
+              <div class="row" data-ng-show="queue.length == 0">
+                <div class="col-md-5 media-middle" translate>selectExistingLogo</div>
+                <div class="col-md-3">
+                  <div class="form-group" gn-logo-picker="source.logo"></div>
+                </div>
               </div>
-            </div>
 
-            <!--Display logo upload input-->
-            <form id="gn-group-edit" name="gnGroupEdit"
-                  method="POST"
-                  data-file-upload="logoUploadOptions" role="form">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
-              <div class="row" data-ng-show="!source.logo" id="group-logo-upload">
-                <div class="col-md-5" translate>addNewLogo</div>
-                <div class="col-md-7" >
-                  <div class="panel panel-default">
-                    <div class="panel-heading" data-translate="">upload</div>
-                    <div class="panel-body">
-                          <span class="btn btn-success btn-block fileinput-button">
-                              <i class="fa fa-plus fa-white"></i>
-                              <span data-translate="">chooseLogos</span>
-                              <input type="file" id="source-logo" name="file">
-                          </span>
-                      <ul style="list-style: none">
-                        <li data-ng-repeat="file in queue">
-                          <div class="preview" data-file-upload-preview="file"></div>
-                          {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
-                          <i class="fa fa-trash-o" data-ng-click="clear(file)"></i>
-                        </li>
-                      </ul>
+              <!--Display logo upload input-->
+              <form id="gn-group-edit" name="gnGroupEdit"
+                    method="POST"
+                    data-file-upload="logoUploadOptions" role="form">
+                <input type="hidden" name="_csrf" value="{{csrf}}"/>
+                <div class="row" data-ng-show="!source.logo" id="group-logo-upload">
+                  <div class="col-md-5" translate>addNewLogo</div>
+                  <div class="col-md-7" >
+                    <div class="panel panel-default">
+                      <div class="panel-heading" data-translate="">upload</div>
+                      <div class="panel-body">
+                            <span class="btn btn-success btn-block fileinput-button">
+                                <i class="fa fa-plus fa-white"></i>
+                                <span data-translate="">chooseLogos</span>
+                                <input type="file" id="source-logo" name="file">
+                            </span>
+                        <ul style="list-style: none">
+                          <li data-ng-repeat="file in queue">
+                            <div class="preview" data-file-upload-preview="file"></div>
+                            {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
+                            <i class="fa fa-trash-o" data-ng-click="clear(file)"></i>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </div>
+              </form>
+
+              <p class="help-block" data-translate="">sourceLogo-help</p>
+            </div>
+
+
+            <label data-translate="">sourceUiConfig</label>
+            <select id="uiConfigurationList"
+                    class="form-control"
+                    data-ng-options="c.id as c.id for (key, c) in uiConfigurations | orderBy: 'id'"
+                    data-ng-model="source.uiConfig"></select>
+            <p class="help-block" data-translate="">sourceUiConfig-help</p>
+
+            <div data-ng-search-form=""
+                 data-ng-controller="GnCSWSearchServiceRecordController">
+              <label for="serviceList">{{'system/csw/capabilityRecordUuid' | translate}}</label>
+
+              <div class="input-group dropdown"
+                   id="serviceList">
+                <input class="form-control"
+                       data-ng-model="source.serviceRecord"
+                       name="source.serviceRecord"/>
+                <span class="input-group-addon">
+                  {{cswServiceRecord.title || cswServiceRecord.defaultTitle}}
+                </span>
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-default dropdown-toggle"
+                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                          data-ng-click="updateParams();triggerSearch();" type="text">
+                    <i class="fa fa-search"/>
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-right">
+                    <li>
+                      <input class="form-control"
+                             onClick="window.event.stopPropagation()"
+                             data-ng-change="updateParams();triggerSearch();" type="text"
+                             data-toggle="dropdown"
+                             data-ng-model="searchObj.any"
+                             data-ng-model-options="{debounce: 200}"
+                             placeholder="{{'search' | translate}}"/>
+                    </li>
+                    <li data-ng-repeat="md in searchResults.records">
+                      <a href=""
+                         data-ng-click="source.serviceRecord = md.getUuid()">
+                        {{md.title || md.defaultTitle}}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </form>
 
-            <p class="help-block" data-translate="">sourceLogo-help</p>
+              <p class="help-block">{{'system/csw/capabilityRecordUuid-help' | translate}}</p>
+            </div>
+
+
+            <div data-ng-show="groups.length">
+              <label class="control-label" data-translate="">subPortalGroupOwner</label>
+              <div data-groups-combo=""
+                   data-owner-group="source.groupOwner"
+                   data-set-default-value="false"
+                   data-optional="{{::$parent.user.isAdministrator()}}"
+                   lang="lang"
+                   groups="groups"
+                   data-exclude-special-groups="true" />
+
+              <p class="help-block" data-translate="">subPortalGroupOwnerHelp</p>
+            </div>
           </div>
 
-
-          <label data-translate="">sourceUiConfig</label>
-          <select id="uiConfigurationList"
-                  class="form-control"
-                  data-ng-options="c.id as c.id for (key, c) in uiConfigurations | orderBy: 'id'"
-                  data-ng-model="source.uiConfig"></select>
-          <p class="help-block" data-translate="">sourceUiConfig-help</p>
-
-
-          <div data-ng-show="groups.length">
-            <label class="control-label" data-translate="">subPortalGroupOwner</label>
-            <div data-groups-combo=""
-                 data-owner-group="source.groupOwner"
-                 data-set-default-value="false"
-                 data-optional="{{::$parent.user.isAdministrator()}}"
-                 lang="lang"
-                 groups="groups"
-                 data-exclude-special-groups="true" />
-
-            <p class="help-block" data-translate="">subPortalGroupOwnerHelp</p>
-          </div>
+          <table class="table table-striped">
+            <tr
+              data-ng-repeat="(key, value) in source.label">
+              <td>{{key | translate}}</td>
+              <td><input type="text" class="form-control"
+                         value="{{value}}"
+                         data-ng-model="source.label[key]"
+              /></td>
+            </tr>
+          </table>
         </div>
-
-        <table class="table table-striped">
-          <tr
-            data-ng-repeat="(key, value) in source.label">
-            <td>{{key | translate}}</td>
-            <td><input type="text" class="form-control"
-                       value="{{value}}"
-                       data-ng-model="source.label[key]"
-            /></td>
-          </tr>
-        </table>
       </div>
     </div>
   </div>

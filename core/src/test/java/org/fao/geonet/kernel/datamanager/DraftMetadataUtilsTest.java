@@ -39,6 +39,8 @@ import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.kernel.XmlSerializerIntegrationTest;
 import org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager;
 import org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -53,7 +55,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -118,9 +119,12 @@ public class DraftMetadataUtilsTest extends AbstractCoreIntegrationTest {
         assertTrue(metadataUtils instanceof DraftMetadataUtils);
     }
 
+    @Autowired
+    private SettingManager settingManager;
+
     @Test
     public void testEditing() throws Exception {
-
+        settingManager.setValue(Settings.METADATA_WORKFLOW_ENABLE, "true");
         ServiceContext context = createServiceContext();
         loginAs(user);
 
@@ -197,7 +201,7 @@ public class DraftMetadataUtilsTest extends AbstractCoreIntegrationTest {
 
     @After
     public void cleanup() throws Exception {
-        
+
         while(metadataUtils.existsMetadataUuid(UUID)) {
             AbstractMetadata md = metadataUtils.findOneByUuid(UUID);
             metadataManager.delete(md.getId());

@@ -28,8 +28,7 @@
 
 
   var module = angular.module('gn_maps_manager', [
-    'gn_ows',
-    'ngeo'
+    'gn_ows'
   ]);
 
   var configProjections = function(projectionConfig) {
@@ -40,6 +39,7 @@
           try {
             // definition and set it's extent.
             proj4.defs(p.code, p.def);
+            ol.proj.proj4.register(proj4);
           } catch (e) {
             console.error("Trying to use incorrectly defined projection '" + p.code +
               "'. Please update definitions on Admin > Settings.");
@@ -247,14 +247,16 @@
                 ol.extent.getHeight(config.extent)) {
               if (type !== this.SEARCH_MAP) {
                 // Because search map is fit by result md bbox
-                map.get('sizePromise').then(function() {
-                  map.getView().fit(config.extent, map.getSize(), { nearest: true });
+                var newPromise = map.get('sizePromise').then(function () {
+                  map.getView().fit(config.extent, map.getSize(), {nearest: true});
                 });
+
+                map.set('sizePromise', newPromise);
               }
             }
 
-            // layers
-            if (config.layers && config.layers.length) {
+            // layers: if defined a context file ignore layers
+            if (!config.context && config.layers && config.layers.length) {
               config.layers.forEach(function(layerInfo) {
                 gnMap.createLayerFromProperties(layerInfo, map)
                     .then(function(layer) {

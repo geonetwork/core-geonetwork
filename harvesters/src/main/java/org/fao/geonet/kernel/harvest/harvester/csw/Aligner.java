@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
@@ -38,7 +39,11 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.kernel.AddElemValue;
+import org.fao.geonet.kernel.BatchEditParameter;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -51,8 +56,10 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.HarvesterUtil;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -64,15 +71,18 @@ import javax.transaction.Transactional.TxType;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS;
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.GET;
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
 
@@ -185,7 +195,6 @@ public class Aligner extends BaseAligner<CswParams> {
             if (cancelMonitor.get()) {
                 return;
             }
-
             try {
                 String id = metadataUtils.getMetadataId(ri.uuid);
 
@@ -201,7 +210,6 @@ public class Aligner extends BaseAligner<CswParams> {
                         case OVERRIDE:
                             updateMetadata(ri, Integer.toString(metadataUtils.findOneByUuid(ri.uuid).getId()), true);
                             log.debug("Overriding record with uuid " + ri.uuid);
-                            result.updatedMetadata++;
 
                             if (params.isIfRecordExistAppendPrivileges()) {
                                 addPrivileges(id, params.getPrivileges(), localGroups, context);
@@ -309,11 +317,55 @@ public class Aligner extends BaseAligner<CswParams> {
             }
         }
 
+        if (StringUtils.isNotEmpty(params.getBatchEdits())) {
+            SchemaManager _schemaManager = context.getBean(SchemaManager.class);
+            EditLib editLib = new EditLib(_schemaManager);
+            ObjectMapper mapper = new ObjectMapper();
+
+            BatchEditParameter[] listOfUpdates = mapper.readValue(params.getBatchEdits(), BatchEditParameter[].class);
+            if (listOfUpdates.length > 0) {
+                boolean metadataChanged = false;
+                boolean createXpathNodeIfNotExists =
+                    context.getBean(SettingManager.class).getValueAsBool(SYSTEM_CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS);
+                MetadataSchema metadataSchema = _schemaManager.getSchema(schema);
+
+                Iterator<BatchEditParameter> listOfUpdatesIterator =
+                    Arrays.asList(listOfUpdates).iterator();
+                while (listOfUpdatesIterator.hasNext()) {
+                    BatchEditParameter batchEditParameter =
+                        listOfUpdatesIterator.next();
+
+                    AddElemValue propertyValue =
+                        new AddElemValue(batchEditParameter.getValue());
+
+                    boolean applyEdit = true;
+                    if (StringUtils.isNotEmpty(batchEditParameter.getCondition())) {
+                        final Object node = Xml.selectSingle(md, batchEditParameter.getCondition(), metadataSchema.getNamespaces());
+                        applyEdit = (node != null) || (node instanceof Boolean && (Boolean)node != false);
+                    }
+                    if (applyEdit) {
+                        metadataChanged = editLib.addElementOrFragmentFromXpath(
+                            md,
+                            metadataSchema,
+                            batchEditParameter.getXpath(),
+                            propertyValue,
+                            createXpathNodeIfNotExists
+                        ) || metadataChanged;
+                    }
+                }
+                if (metadataChanged) {
+                    log.debug("  - Record updated by batch edit configuration:" + ri.uuid);
+                }
+            }
+        }
         //
         // insert metadata
         //
         AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
+        if (!uuid.equals(ri.uuid)) {
+            md = metadataUtils.setUUID(schema, uuid, md);
+        }
         Integer ownerId = getOwner();
         metadata.getDataInfo().
             setSchemaId(schema).
@@ -389,11 +441,8 @@ public class Aligner extends BaseAligner<CswParams> {
             metadata.getHarvestInfo().setUuid(params.getUuid());
             metadata.getSourceInfo().setSourceId(params.getUuid());
 
-            metadataManager.save((Metadata) metadata);
+            metadataManager.save(metadata);
         }
-
-        OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-        repository.deleteAllByMetadataId(Integer.parseInt(id));
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
@@ -436,7 +485,12 @@ public class Aligner extends BaseAligner<CswParams> {
 
 
             try {
-                params.getValidate().validate(context.getBean(DataManager.class), context, response);
+                Integer groupIdVal = null;
+                if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                    groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                }
+
+                params.getValidate().validate(dataMan, context, response, groupIdVal);
             } catch (Exception e) {
                 log.debug("Ignoring invalid metadata with uuid " + uuid);
                 result.doesNotValidate++;

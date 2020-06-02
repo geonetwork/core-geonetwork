@@ -209,13 +209,22 @@
 
     <xsl:template mode="index" match="gmd:MD_Format[count(ancestor::node()) =  1]">
         <Field name="_title"
-               string="{if ($title != '') then $title else gmd:name/gco:CharacterString}"
+               string="{if ($title != '') then $title else gmd:name/*/text()}"
                store="true" index="true"/>
 
         <xsl:call-template name="subtemplate-common-fields"/>
     </xsl:template>
 
+	<xsl:template mode="index" match="gmd:resourceConstraints[count(ancestor::node()) =  1]">
+        <Field name="_title"
+            string="{if ($title != '') then $title
+                     else concat(  
+                        string-join(gmd:MD_LegalConstraints/*/gmd:MD_RestrictionCode/@codeListValue[@codeListValue!='otherConstraints'], ', '), 
+                        ' ', string-join(gmd:MD_LegalConstraints/gmd:otherConstraints/*/text(), ', '))}"
+            store="true" index="true"/>
 
+        <xsl:call-template name="subtemplate-common-fields"/>
+    </xsl:template>
 
     <xsl:template name="subtemplate-common-fields">
         <Field name="any" string="{normalize-space(string(.))}" store="false" index="true"/>

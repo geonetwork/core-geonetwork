@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -79,7 +79,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.gml2.GMLConfiguration;
-import org.geotools.xml.Encoder;
+import org.geotools.xsd.Encoder;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -550,9 +550,9 @@ public class CatalogSearcher implements MetadataRecordSelector {
             Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
         }
 
-        try {
-            // Rewrite the drilldown query to a query that can be used by the search logger
-            Query loggerQuery = _query.rewrite(sm.getIndexReader(_lang.presentationLanguage, _searchToken).indexReader);
+        try (IndexAndTaxonomy indexReader = sm.getIndexReader(_lang.presentationLanguage, _searchToken)) {
+            // Rewrite the drilldown query to a query that can be used by the search logger;
+            Query loggerQuery = _query.rewrite(indexReader.indexReader);
             LuceneSearcher.logSearch(context, config, loggerQuery, numHits, _sort, geomWkt, sm);
         } catch (Throwable x) {
             Log.warning(Geonet.SEARCH_ENGINE, "Error rewriting Lucene query: " + _query);

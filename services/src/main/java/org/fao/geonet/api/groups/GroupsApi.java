@@ -25,11 +25,17 @@ package org.fao.geonet.api.groups;
 
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -39,9 +45,22 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.attachments.AttachmentsApi;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Group_;
+import org.fao.geonet.domain.Language;
+import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -58,7 +77,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -71,7 +96,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import static org.springframework.data.jpa.domain.Specifications.where;
 
@@ -176,50 +206,55 @@ public class GroupsApi {
                 Object[]{groupId}, locale));
         }
         try {
-            final Path logosDir = Resources.locateLogosDir(serviceContext);
-            final Path harvesterLogosDir = Resources.locateHarvesterLogosDir(serviceContext);
+            final Resources resources = context.getBean(Resources.class);
             final String logoUUID = group.getLogo();
-            Path imagePath = null;
-            FileTime lastModifiedTime = null;
             if (StringUtils.isNotBlank(logoUUID) && !logoUUID.startsWith("http://") && !logoUUID.startsWith("https//")) {
-                imagePath = Resources.findImagePath(logoUUID,
-                    logosDir);
-                if (imagePath == null) {
-                    imagePath = Resources.findImagePath(logoUUID, harvesterLogosDir);
-                }
-                if (imagePath != null) {
-                    lastModifiedTime = Files.getLastModifiedTime(imagePath);
-                    if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
-                        // webRequest.checkNotModified sets the right HTTP headers
+                try (Resources.ResourceHolder image = getImage(resources, serviceContext, group)){
+                    if (image != null) {
+                        FileTime lastModifiedTime = image.getLastModifiedTime();
                         response.setDateHeader("Expires", System.currentTimeMillis() + SIX_HOURS * 1000L);
-
+                        if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
+                            // webRequest.checkNotModified sets the right HTTP headers
+                            return;
+                        }
+                        response.setContentType(AttachmentsApi.getFileContentType(image.getPath()));
+                        response.setContentLength((int) Files.size(image.getPath()));
+                        response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
+                        FileUtils.copyFile(image.getPath().toFile(), response.getOutputStream());
                         return;
                     }
-                    response.setContentType(AttachmentsApi.getFileContentType(imagePath));
-                    response.setContentLength((int) Files.size(imagePath));
-                    response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
-                    response.setDateHeader("Expires", System.currentTimeMillis() + SIX_HOURS * 1000L);
-                    FileUtils.copyFile(imagePath.toFile(), response.getOutputStream());
                 }
             }
 
-            if (imagePath == null) {
-                // no logo image found. Return a transparent 1x1 png
-                lastModifiedTime = FileTime.fromMillis(0);
-                if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
-                    return;
-                }
-                response.setContentType("image/png");
-                response.setContentLength(TRANSPARENT_1_X_1_PNG.length);
-                response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
-                response.getOutputStream().write(TRANSPARENT_1_X_1_PNG);
+            // no logo image found. Return a transparent 1x1 png
+            FileTime lastModifiedTime = FileTime.fromMillis(0);
+            if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
+                return;
             }
+            response.setContentType("image/png");
+            response.setContentLength(TRANSPARENT_1_X_1_PNG.length);
+            response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
+            response.getOutputStream().write(TRANSPARENT_1_X_1_PNG);
 
         } catch (IOException e) {
             Log.error(LOGGER, String.format("There was an error accessing the logo of the group with id '%d'",
                 groupId));
             throw new RuntimeException(e);
         }
+    }
+
+    private static Resources.ResourceHolder getImage(Resources resources, ServiceContext serviceContext, Group group) throws IOException {
+        final Path logosDir = resources.locateLogosDir(serviceContext);
+        final Path harvesterLogosDir = resources.locateHarvesterLogosDir(serviceContext);
+        final String logoUUID = group.getLogo();
+        Resources.ResourceHolder image = null;
+        if (StringUtils.isNotBlank(logoUUID) && !logoUUID.startsWith("http://") && !logoUUID.startsWith("https//")) {
+            image = resources.getImage(serviceContext, logoUUID, logosDir);
+            if (image == null) {
+                image = resources.getImage(serviceContext, logoUUID, harvesterLogosDir);
+            }
+        }
+        return image;
     }
 
     @ApiOperation(
@@ -325,7 +360,13 @@ public class GroupsApi {
             group.getLabelTranslations().put(l.getId(),
                 label == null ? group.getName() : label);
         }
-        group = groupRepository.save(group);
+
+        try {
+            group = groupRepository.saveAndFlush(group);
+        } catch (Exception ex) {
+            Log.error(API.LOG_MODULE_NAME, ExceptionUtils.getStackTrace(ex));
+            throw new RuntimeException(ex.getMessage());
+        }
 
         return new ResponseEntity<>(group.getId(), HttpStatus.CREATED);
     }
@@ -438,7 +479,12 @@ public class GroupsApi {
                 MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
             ));
         } else {
-            groupRepository.save(group);
+            try {
+                groupRepository.saveAndFlush(group);
+            } catch (Exception ex) {
+                Log.error(API.LOG_MODULE_NAME, ExceptionUtils.getStackTrace(ex));
+                throw new RuntimeException(ex.getMessage());
+            }
         }
     }
 

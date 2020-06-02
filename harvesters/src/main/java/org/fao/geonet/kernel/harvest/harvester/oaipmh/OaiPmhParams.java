@@ -159,6 +159,11 @@ public class OaiPmhParams extends AbstractParams {
             alSearches.add(new Search(search));
         }
     }
+
+    @Override
+    public String getIcon() {
+        return icon;
+    }
 }
 
 //=============================================================================

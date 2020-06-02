@@ -412,7 +412,7 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     /**
-     * @param context    
+     * @param context
      * @param metadataId
      * @throws Exception
      */
@@ -454,17 +454,21 @@ public class BaseMetadataManager implements IMetadataManager {
 
         String schema = templateMetadata.getDataInfo().getSchemaId();
         String data = templateMetadata.getData();
+        data = updateMetadataUuidReferences(data, templateMetadata.getUuid(), uuid);
+
         Element xml = Xml.loadString(data, false);
+
         boolean isMetadata = templateMetadata.getDataInfo().getType() == MetadataType.METADATA;
         setMetadataTitle(schema, xml, context.getLanguage(), !isMetadata);
         if (isMetadata) {
             xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO,
                 context);
         }
+
         final Metadata newMetadata = new Metadata();
         newMetadata.setUuid(uuid);
         newMetadata.getDataInfo().setChangeDate(new ISODate()).setCreateDate(new ISODate()).setSchemaId(schema)
-            .setType(MetadataType.lookup(isTemplate));
+            .setType(MetadataType.lookup(isTemplate)).setRoot(xml.getQualifiedName());
         newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner)).setOwner(owner).setSourceId(source);
 
         // If there is a default category for the group, use it:
@@ -486,6 +490,16 @@ public class BaseMetadataManager implements IMetadataManager {
             fullRightsForGroup, true).getId();
 
         return String.valueOf(finalId);
+    }
+
+    /**
+     * Replace oldUuid references by newUuid.
+     * This will update metadata identifier, but also other usages
+     * which may be in graphicOverview URLs, resources identifier,
+     * metadata point of truth URL, ...
+     */
+    private String updateMetadataUuidReferences(String data, String oldUuid, String newUuid) {
+        return data.replace(oldUuid, newUuid);
     }
 
     /**
@@ -642,14 +656,19 @@ public class BaseMetadataManager implements IMetadataManager {
      *
      * @param forEditing          Add extra element to build metadocument
      *                            {@link EditLib#expandElements(String, Element)}
+     * @param applyOperationsFilters Filter elements based on operation filters
+     *                              eg. Remove WMS if not dynamic. For example, when processing
+     *                              a record, the complete records need to be processed and saved (not a filtered version). If editing, set it to false.
+     *                            {@link EditLib#expandElements(String, Element)}
      * @param keepXlinkAttributes When XLinks are resolved in non edit mode, do not remove XLink
      *                            attributes.
      */
     @Override
-    public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing,
+    public Element getMetadata(ServiceContext srvContext, String id,
+                               boolean forEditing, boolean applyOperationsFilters,
                                boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
         boolean doXLinks = getXmlSerializer().resolveXLinks();
-        Element metadataXml = getXmlSerializer().selectNoXLinkResolver(id, false, forEditing);
+        Element metadataXml = getXmlSerializer().selectNoXLinkResolver(id, false, applyOperationsFilters);
         if (metadataXml == null)
             return null;
 
@@ -713,7 +732,7 @@ public class BaseMetadataManager implements IMetadataManager {
      */
     @Override
     public Element getMetadata(String id) throws Exception {
-        Element md = getXmlSerializer().selectNoXLinkResolver(id, false, false);
+        Element md = getXmlSerializer().selectNoXLinkResolver(id, false, true);
         if (md == null)
             return null;
         md.detach();
@@ -970,8 +989,7 @@ public class BaseMetadataManager implements IMetadataManager {
                 env.addContent(new Element("parentUuid").setText(parentUuid));
             }
             if (metadataId.isPresent()) {
-                String metadataIdString = String.valueOf(metadataId.get());
-                final Path resourceDir = Lib.resource.getDir(context, Params.Access.PRIVATE, metadataIdString);
+                final Path resourceDir = Lib.resource.getDir(context, Params.Access.PRIVATE, metadataId.get());
                 env.addContent(new Element("datadir").setText(resourceDir.toString()));
             }
 
@@ -1043,7 +1061,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
         // --- get parent metadata in read/only mode
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-        Element parent = getMetadata(srvContext, parentId, forEditing, withValidationErrors, keepXlinkAttributes);
+        Element parent = getMetadata(srvContext, parentId, forEditing, false, withValidationErrors, keepXlinkAttributes);
 
         Element env = new Element("update");
         env.addContent(new Element("parentUuid").setText(parentUuid));
@@ -1063,7 +1081,7 @@ public class BaseMetadataManager implements IMetadataManager {
                 continue;
             }
 
-            Element child = getMetadata(srvContext, childId, forEditing, withValidationErrors, keepXlinkAttributes);
+            Element child = getMetadata(srvContext, childId, forEditing, false, withValidationErrors, keepXlinkAttributes);
 
             String childSchema = child.getChild(Edit.RootChild.INFO, Edit.NAMESPACE)
                 .getChildText(Edit.Info.Elem.SCHEMA);

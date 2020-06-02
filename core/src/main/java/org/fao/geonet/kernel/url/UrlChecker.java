@@ -28,17 +28,43 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.LinkStatus;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.NetLib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.ClientHttpResponse;
+import sun.net.ftp.FtpLoginException;
+import org.fao.geonet.utils.Log;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class UrlChecker {
 
-    private static final Function<HttpClientBuilder, Void> HTTP_CLIENT_CONFIGURATOR = new Function<HttpClientBuilder, Void>() {
+    @Autowired
+    SettingManager settingManager;
+
+     static String userAgentPropertyNameDefault =  "GeoNetwork URL Link Checker";
+
+     public String urlCheckerUserAgent = null;
+
+    public String getUserAgent() {
+        if ((urlCheckerUserAgent == null) || urlCheckerUserAgent.contains("$"))  // not set in properties file
+            return userAgentPropertyNameDefault; // use default
+        return urlCheckerUserAgent;
+    }
+
+    public void setUserAgent(String ua) {
+        urlCheckerUserAgent = ua;
+    }
+
+    private final Function<HttpClientBuilder, Void> HTTP_CLIENT_CONFIGURATOR = new Function<HttpClientBuilder, Void>() {
         @Nullable
         @Override
         public Void apply(@Nullable HttpClientBuilder originalConfig) {
@@ -48,19 +74,48 @@ public class UrlChecker {
                     .setSocketTimeout(10000);
             RequestConfig requestConfig = config.build();
             originalConfig.setDefaultRequestConfig(requestConfig);
-            originalConfig.setUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/73.0.3683.86 Chrome/73.0.3683.86 Safari/537.36");
+            originalConfig.setUserAgent(getUserAgent());
             return null;
         }
     };
+
+
 
     @Autowired
     protected GeonetHttpRequestFactory requestFactory;
 
     public LinkStatus getUrlStatus(String url) {
-        return getUrlStatus(url, 5);
+        try {
+            if (url.startsWith("ftp")) {
+                return getFTPStatus(url);
+            }
+            LinkStatus status =  getUrlStatus(url, 5);
+            Log.info(Geonet.GEONETWORK,"getUrlStatus for: "+url);
+            Log.info(Geonet.GEONETWORK,"result: "+status);
+            return status;
+        } catch (Exception e) {
+            return buildExceptionStatus(e);
+        }
     }
 
-    private LinkStatus getUrlStatus(String url, int tryNumber) {
+    private LinkStatus getFTPStatus(String url) throws IOException {
+        LinkStatus linkStatus = new LinkStatus();
+        linkStatus.setFailing(false);
+        try {
+            URLConnection con = new URL(url).openConnection();
+            con.setConnectTimeout(10000);
+            con.setReadTimeout(10000);
+            con.getInputStream().close();
+            linkStatus.setStatusValue("OK");
+            linkStatus.setStatusInfo("new URL(url).openStream() success.");
+        } catch (FtpLoginException e) {
+            linkStatus.setStatusValue("Need username/password");
+            linkStatus.setStatusInfo("new URL(url).openStream() need username/password.");
+        }
+        return linkStatus;
+    }
+
+    private LinkStatus getUrlStatus(String url, int tryNumber) throws IOException {
         if (tryNumber < 1) {
             return buildTooManyRedirectStatus();
         }
@@ -72,20 +127,40 @@ public class UrlChecker {
                 return getUrlStatus(response.getHeaders().getFirst("Location"), tryNumber - 1);
             }
             return buildStatus(response, !statusCode.is2xxSuccessful());
-        } catch (IOException e) {
-            return buildIOExceptionStatus(e);
         }
     }
 
 
     private ClientHttpResponse getResponseFromServer(String url) throws IOException {
         HttpHead head = new HttpHead(url);
-        ClientHttpResponse response = requestFactory.execute(head, HTTP_CLIENT_CONFIGURATOR);
+
+        Function<HttpClientBuilder, Void> HTTP_CLIENT_CONFIGURATOR2 = new Function<HttpClientBuilder, Void>() {
+
+            @Nullable
+            @Override
+            public Void apply(@Nullable HttpClientBuilder originalConfig) {
+                HTTP_CLIENT_CONFIGURATOR.apply(originalConfig); // call the base one
+                //given a URL, find its host name
+                String hostname = "";
+                try {
+                    URL _url = new URL(url);
+                    hostname = _url.getHost();
+                } catch (MalformedURLException e) {
+                    Log.info(Geonet.GEONETWORK,"UrlChecker: cannot determine hostname from url: "+url);
+                 }
+                //now we have hostname, we can configure proxy
+                NetLib netLib = new NetLib();
+                netLib.setupProxy(settingManager, originalConfig, hostname);
+                return null;
+            }
+        };
+
+        ClientHttpResponse response = requestFactory.execute(head, HTTP_CLIENT_CONFIGURATOR2);
         if (!shouldTryGetInsteadOfHead(response.getRawStatusCode())) {
             return response;
         }
         HttpGet get = new HttpGet(url);
-        return requestFactory.execute(get);
+        return requestFactory.execute(get, HTTP_CLIENT_CONFIGURATOR2);
     }
 
     private boolean shouldTryGetInsteadOfHead(int statusCode) {
@@ -103,7 +178,7 @@ public class UrlChecker {
         return linkStatus;
     }
 
-    private LinkStatus buildIOExceptionStatus(IOException e) {
+    private LinkStatus buildExceptionStatus(Exception e) {
         LinkStatus linkStatus = new LinkStatus();
         linkStatus.setStatusValue("4XX");
         linkStatus.setStatusInfo(e.getMessage());

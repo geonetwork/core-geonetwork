@@ -102,6 +102,14 @@
           </xsd:restriction>
         </xsd:simpleType>
       </xsd:attribute>
+      <xsd:attribute name="pageSize">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="1"/>
+            <xsd:maxInclusive value="1000"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:attribute>
       <xsd:attribute name="depth">
         <xsd:simpleType>
           <xsd:restriction base="xsd:integer">

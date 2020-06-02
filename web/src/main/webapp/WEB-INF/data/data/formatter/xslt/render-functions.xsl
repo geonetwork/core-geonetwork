@@ -28,11 +28,11 @@
 
     <xsl:variable name="boxGeometry"
                   select="concat('POLYGON((',
-                  $east, ' ', $south, ',',
-                  $east, ' ', $north, ',',
-                  $west, ' ', $north, ',',
-                  $west, ' ', $south, ',',
-                  $east, ' ', $south, '))')"/>
+                  $east, '%20', $south, ',',
+                  $east, '%20', $north, ',',
+                  $west, '%20', $north, ',',
+                  $west, '%20', $south, ',',
+                  $east, '%20', $south, '))')"/>
     <xsl:variable name="numberFormat" select="'0.00'"/>
 
     <div class="thumbnail extent">
@@ -71,22 +71,20 @@
 
     <!-- TODO get system config -->
     <xsl:if test="$geometry">
-      <xsl:variable name="background"
-                    select="util:getSettingValue('region/getmap/background')"/>
-      <xsl:variable name="width"
-                    select="util:getSettingValue('region/getmap/width')"/>
-      <xsl:variable name="mapproj"
-                    select="util:getSettingValue('region/getmap/mapproj')"/>
-
       <img class="gn-img-extent"
            alt="{$schemaStrings/thumbnail}"
-           src="{$nodeUrl}eng/region.getmap.png?mapsrs={if ($mapproj != '')
-                                         then $mapproj
-                                         else 'EPSG:3857'}&amp;width={
-                                         if ($width != '')
-                                         then $width
-                                         else '600'
-                                         }&amp;background=settings&amp;geomsrs=EPSG:4326&amp;geom={$geometry}"/>
+           src="{$nodeUrl}api/regions/geom.png?geomsrs=EPSG:4326&amp;geom={$geometry}"/>
+    </xsl:if>
+
+  </xsl:function>
+
+  <!-- Use region API to display metadata extent -->
+  <xsl:function name="gn-fn-render:extent">
+    <xsl:param name="uuid" as="xs:string"/>
+    <xsl:if test="$uuid">
+      <img class="gn-img-extent"
+           alt="{$schemaStrings/thumbnail}"
+           src="{$nodeUrl}api/records/{$uuid}/extents.png"/>
     </xsl:if>
 
   </xsl:function>

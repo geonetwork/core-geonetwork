@@ -50,6 +50,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.api.records.attachments.FilesystemStore;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
@@ -257,6 +258,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         dataMan.batchIndexInThreadPool(context, ids);
 
         result.totalMetadata = result.addedMetadata + result.updatedMetadata;
+        Store store = context.getBean("resourceStore", Store.class);
 
         //-----------------------------------------------------------------------
         //--- remove old metadata
@@ -273,7 +275,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                     log.debug("  - Removing old metadata before update with id: " + id);
 
                 //--- remove the metadata directory including the public and private directories.
-                IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), id));
+                store.delResources(context, uuid);
 
                 // Remove metadata
                 metadataManager.deleteMetadata(context, id);
@@ -906,7 +908,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             Path filename = getMapThumbnail(layer);
 
             // Add downloaded file to metadata store
-            FilesystemStore store = new FilesystemStore();
+            Store store = context.getBean(FilesystemStore.class);
             try {
                 store.delResource(context, layer.uuid, filename.getFileName().toString());
             } catch (Exception e) {}
