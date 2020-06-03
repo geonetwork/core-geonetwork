@@ -25,6 +25,8 @@
 
 package org.fao.geonet.api;
 
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
@@ -41,22 +43,23 @@ import javax.servlet.ServletRegistration;
 // https://springdoc.org/faq.html#how-to-integrate-open-api-3-with-spring-project-not-spring-boot
 // https://springdoc.org/migrating-from-springfox.html
 @EnableWebMvc
-public class OpenApiServletConfig implements WebApplicationInitializer {
-    @Override
+//public class OpenApiServletConfig implements WebApplicationInitializer {
+public class OpenApiServletConfig {
+//    @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-        WebApplicationContext context = getContext();
-        servletContext.addListener(new ContextLoaderListener(context));
-        ServletRegistration.Dynamic dispatcher =
-            servletContext.addServlet("OpenApiServlet",
-                new DispatcherServlet(context));
-        dispatcher.setLoadOnStartup(10);
-        dispatcher.addMapping("/v3/*");
+//        WebApplicationContext context = getContext();
+//        servletContext.addListener(new ContextLoaderListener(context));
+//        ServletRegistration.Dynamic dispatcher =
+//            servletContext.addServlet("OpenApiServlet",
+//                new DispatcherServlet(context));
+//        dispatcher.setLoadOnStartup(10);
+//        dispatcher.addMapping("/v3/*");
     }
 
     private AnnotationConfigWebApplicationContext getContext() {
         AnnotationConfigWebApplicationContext context =
             new AnnotationConfigWebApplicationContext();
-//        context.scan("rest");
+//        context.scan("org.fao.geonet");
         context.register(this.getClass(),
 //            org.springdoc.ui.SwaggerConfig.class,
 //            org.springdoc.core.SwaggerUiConfigProperties.class,

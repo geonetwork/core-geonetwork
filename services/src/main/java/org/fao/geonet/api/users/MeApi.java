@@ -38,13 +38,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
 import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 @RequestMapping(value = {
     "/{portal}/api/me",
@@ -53,7 +52,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 })
 @Tag(name = "me",
     description = "Me operations")
-@Controller("me")
+@RestController
 public class MeApi {
 
     @Autowired
@@ -65,13 +64,12 @@ public class MeApi {
             "else return basic user information. This operation is usually used to " +
             "know if current user is authenticated or not." +
             "It returns also info about groups and profiles.")
-    @RequestMapping(
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.GET)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Authenticated. Return user details."),
         @ApiResponse(responseCode = "204", description = "Not authenticated.")
     })
+    @ResponseStatus(OK)
     @ResponseBody
     public ResponseEntity<MeResponse> getMe(
         @Parameter(hidden = true)

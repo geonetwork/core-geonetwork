@@ -33,6 +33,10 @@
   <context:property-placeholder location="${app.properties}"
                                 file-encoding="UTF-8"
                                 ignore-unresolvable="true" />
+
+  <context:component-scan base-package="org.springdoc.webmvc"/>
+  <context:component-scan base-package="org.springdoc.core"/>
+
   <context:component-scan base-package="org.fao.geonet.api"/>
   <context:component-scan base-package="org.fao.geonet.guiapi"/>
   <context:component-scan base-package="org.fao.geonet.guiservices"/>
