@@ -92,6 +92,11 @@
                }
              }
 
+             //if true, pressing the "add new keywords" button will always
+             //create a new section.  Otherwise, its will do the standard behaviour;
+             // a) if there isn't a freekeyword section, create it
+             // b) if there is a freekeyword section, just add another keyword to it
+             scope.alwaysCreateNewFreekeywordSection = (attrs.alwaysCreateNewFreekeywordSection == 'true');
 
              scope.allowFreeTextKeywords =
              (attrs.allowFreeTextKeywords === undefined) ||
@@ -115,12 +120,24 @@
              });
 
              scope.add = function() {
-               return gnEditor.add(gnCurrentEdit.id,
-                   scope.freekeywordElementRef || scope.elementRef,
-                 scope.freekeywordElementName || scope.elementName,
-                        scope.domId, 'before').then(function() {
-                 gnEditor.save(gnCurrentEdit.id, true);
-               });
+                 var metadataId =gnCurrentEdit.id;
+
+                 //if there is a freekeywordElementRef, then we're just adding a keyword (otherwise, whole section)
+                 var ref = scope.freekeywordElementRef || scope.elementRef;
+                 var name = scope.freekeywordElementName || scope.elementName;
+
+                 //override to always create a new freekeyword section
+                 if (scope.alwaysCreateNewFreekeywordSection) {
+                    ref = scope.elementRef;
+                    name = scope.elementName;
+                 }
+
+                 var insertRef = scope.domId;
+                 var position = 'before';
+                 return gnEditor.add(metadataId,ref,name,insertRef,position)
+                      .then(function() {
+                          gnEditor.save(gnCurrentEdit.id, true);
+                       });
              };
 
              scope.addThesaurus = function(thesaurusIdentifier) {
