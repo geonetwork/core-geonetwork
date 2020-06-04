@@ -439,6 +439,7 @@ public class MetadataWorkflowApi {
         }
 
         Map<Integer, String> titles = new HashMap<>();
+        Map<Integer, String> uuids = new HashMap<>();
 
         // Add all user info and record title to response
         for (MetadataStatus s : listOfStatus) {
@@ -472,6 +473,17 @@ public class MetadataWorkflowApi {
                 }
             }
             status.setTitle(title);
+
+            String uuid = uuids.get(s.getId().getMetadataId());
+            if (uuid == null) {
+                try {
+                    // Collect metadata uuid. For now we use Lucene
+                    uuid = LuceneSearcher.getMetadataFromIndexById(language, s.getId().getMetadataId() + "", "_uuid");
+                    uuids.put(s.getId().getMetadataId(), uuid);
+                } catch (Exception e1) {
+                }
+            }
+            status.setUuid(uuid);
 
             response.add(status);
         }
