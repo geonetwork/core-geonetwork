@@ -616,6 +616,28 @@
               return e.name === scope.lastClickedField;
             })[0];
             scope.fields = resp.facets.map(function(e) {
+              // SEXTANT SPECIFIC
+              // keep active facets even when they don't have results anymore
+              var previous = {};
+              for(var i = 0; i < scope.fields.length; i++) {
+                if (scope.fields[i].name === e.name) {
+                  previous = scope.fields[i];
+                }
+              }
+              angular.forEach(previous.values, function(value) {
+                if (!scope.isFacetSelected(e.name, value.value)) { return; }
+                for (var i = 0; i < e.values.length; i++) {
+                  if (e.values[i].value === value.value) {
+                    return;
+                  }
+                }
+                e.values.push({
+                  value: value.value,
+                  count: 0
+                })
+              });
+              // END SEXTANT SPECIFIC
+
               if (lastClickedFacet && lastClickedFacet.name === e.name) {
                 var history = filterInputUpdate && textInputsHistory[lastClickedFacet.name];
 
