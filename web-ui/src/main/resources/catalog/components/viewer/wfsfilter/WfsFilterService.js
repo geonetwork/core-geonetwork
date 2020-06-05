@@ -193,6 +193,38 @@
           });
         }
 
+        // histogram
+        else if (type == 'histogram') {
+          var filter = [];
+
+          angular.forEach(value, function(v, k) {
+            if (k.startsWith('> ')) {
+              var greaterThan = k.substring(2);
+              filter.push({
+                filter_type: 'PropertyIsGreaterThan',
+                params: [greaterThan]
+              });
+            } else if (k.startsWith('< ')) {
+              var lowerThan = k.substring(2);
+              filter.push({
+                filter_type: 'PropertyIsLessThan',
+                params: [lowerThan]
+              });
+            } else {
+              var parts = k.split(' - ');
+              filter.push({
+                filter_type: 'PropertyIsBetween',
+                params: parts
+              });
+            }
+          });
+
+          filterFields.push({
+            field_name: name,
+            filter: filter
+          });
+        }
+
         return filterFields;
       };
 
