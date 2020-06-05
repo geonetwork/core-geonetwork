@@ -418,12 +418,9 @@
         scope: {
           collection: '='
         },
-        template: "<ul class='gn-layer-tree'><li data-ng-show='collection.length > 10' >" +
-            "<div class='input-group input-group-sm'><span class='input-group-addon'><i class='fa fa-filter'></i></span>" +
-            "<input class='form-control' data-ng-model-options='{debounce: 200}' data-ng-model='layerSearchText'/></div>" +
-            "</li>" +
-            '<gn-cap-tree-elt ng-repeat="member in collection | filter:layerSearchText | orderBy: \'Title\'" member="member">' +
-            '</gn-cap-tree-elt></ul>'
+        template: "<ul class='list-group'><gn-cap-tree-elt " +
+          "ng-repeat='member in collection' member='member'>" +
+          '</gn-cap-tree-elt></ul>'
       };
     }]);
 
