@@ -214,6 +214,24 @@
                           // END SEXTANT SPECIFIC
 
                           var facets = v[scope.facetConfig.label];
+
+                          // SEXTANT SPECIFIC
+                          // keep active facets even when they don't have results anymore
+                          angular.forEach(scope.facetObj, function(item) {
+                            if (!scope.isInSearch(item['@name'])) { return; }
+                            for (var i = 0; i < facets.length; i++) {
+                              if (facets[i]['@name'] === item['@name']) {
+                                return;
+                              }
+                            }
+                            facets.push({
+                              '@name': item['@name'],
+                              '@label': item['@label'],
+                              '@count': 0
+                            })
+                          });
+                          // END SEXTANT SPECIFIC
+
                           if (scope.facetConfig.label == 'publishedForGroup') {
                             updateLabelFromInfo(facets, groups, scope.lang);
                             facets = $filter('orderBy')(facets, 'name');
