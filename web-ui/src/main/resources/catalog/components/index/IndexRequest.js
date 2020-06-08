@@ -1035,9 +1035,15 @@
         // ignore undefined values
         if (field.values[p] === undefined) { continue; }
 
-        if (field.type == 'histogram' || field.type == 'range') {
-          valuesQ.push(fieldName +
-              ':[' + p.replace(FACET_RANGE_DELIMITER, ' TO ') + '}');
+        if ((field.type == 'histogram' || field.type == 'range')) {
+          var value;
+          if (p.indexOf(FACET_RANGE_DELIMITER) > 0) {
+            value = fieldName +
+              ':[' + p.replace(FACET_RANGE_DELIMITER, ' TO ') + '}';
+          }
+          else {
+            value = fieldName + ':' + p.replace(/ /g, '');
+          }
         }
         else {
           valuesQ.push(fieldName + ':"' + p + '"');
