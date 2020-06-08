@@ -198,10 +198,10 @@
           var filter = [];
 
           angular.forEach(value, function(v, k) {
-            if (k.startsWith('> ')) {
+            if (k.startsWith('>= ')) {
               var greaterThan = k.substring(2);
               filter.push({
-                filter_type: 'PropertyIsGreaterThan',
+                filter_type: 'PropertyIsGreaterThanOrEqualTo',
                 params: [greaterThan]
               });
             } else if (k.startsWith('< ')) {
@@ -215,6 +215,9 @@
               filter.push({
                 filter_type: 'PropertyIsBetween',
                 params: parts
+              }, {
+                filter_type: 'PropertyIsEqualTo',
+                params: [parts[0]]
               });
             }
           });
