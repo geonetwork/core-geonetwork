@@ -756,6 +756,11 @@
         .map(function(key) { return parseInt(key); })
         .sort(function(a, b) { return Math.sign(a - b); });
 
+      // no available dates: do not add an empty filter
+      if (!groupedDates.length) {
+        return;
+      }
+
       groupedDates.forEach(function(date, i, array) {
         var rangeSpec = {
           bool: {
