@@ -66,7 +66,13 @@
         if(p.any || luceneQueryString) {
           var queryStringParams = [];
           if (p.any) {
-            queryStringParams.push(escapeSpecialCharacters(p.any));
+            var queryExpression = p.any.match(/^q\((.*)\)$/);
+            if (queryExpression == null) {
+              queryStringParams.push(escapeSpecialCharacters(p.any));
+            } else {
+              queryStringParams.push(queryExpression[1]);
+            }
+
           }
           if (luceneQueryString) {
             queryStringParams.push(luceneQueryString);
@@ -206,43 +212,20 @@
         //   }
         // };
         // var queryHook = query.bool;
-
-        var query = {
-          "function_score": {
-            "query": {
-              bool: {
-                must: []
-              }
-            },
-            // Score experiments:
-            // a)Score down old records
-            // "gauss": {
-            //   "dateStamp": {
-            //     "scale":  "200d"
-            //   }
-            // }
-            // b)Promote grids!
-            // "boost": "5",
-            // "functions": [
-            //   {
-            //     "filter": { "match": { "codelist_spatialRepresentationType": "vector" } },
-            //     "random_score": {},
-            //     "weight": 23
-            //   },
-            //   {
-            //     "filter": { "match": { "codelist_spatialRepresentationType": "grid" } },
-            //     "weight": 42
-            //   }
-            // ],
-            // "max_boost": 42,
-            // "score_mode": "max",
-            // "boost_mode": "multiply",
-            // "min_score" : 42
-            "script_score" : {
-              "script" : {
-                "source": "Math.log(2 + doc['rating'].value)"
-              }
+        var query = {}, defaultScore = {
+          "script_score" : {
+            "script" : {
+              "source": "_score"
             }
+          }
+        };
+        angular.copy({
+          "function_score": gnGlobalSettings.gnCfg.mods.search.scoreConfig ?
+            gnGlobalSettings.gnCfg.mods.search.scoreConfig : defaultScore
+        }, query);
+        query.function_score['query'] = {
+          bool: {
+            must: []
           }
         };
 

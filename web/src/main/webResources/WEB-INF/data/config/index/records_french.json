@@ -994,6 +994,41 @@
   "mappings": {
     "dynamic_templates": [
       {
+        "textField": {
+          "match": "*Object",
+          "mapping": {
+            "type": "object",
+            "properties": {
+              "default": {
+                "type": "text",
+                "analyzer": "french_light",
+                "copy_to": [
+                  "any",
+                  "anytext"
+                ],
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  },
+                  "trigram": {
+                    "type": "text",
+                    "analyzer": "trigram"
+                  },
+                  "reverse": {
+                    "type": "text",
+                    "analyzer": "reverse"
+                  }
+                }
+              },
+              "link": {
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      {
         "codelist": {
           "match": "codelist_*",
           "mapping": {
@@ -1046,6 +1081,23 @@
                 "type": "keyword"
               }
             }
+          }
+        }
+      },
+      {
+        "integerRange": {
+          "match": "*IntegerRange",
+          "mapping": {
+            "type": "integer_range"
+          }
+        }
+      },
+      {
+        "dateRange": {
+          "match": "*DateRange",
+          "mapping": {
+            "type": "date_range",
+            "format": "date_optional_time||yyyy-MM-dd||yyyy-MM||yyyy||epoch_millis"
           }
         }
       },
@@ -1199,6 +1251,9 @@
       "hasInspireTheme": {
         "type": "boolean"
       },
+      "hasBoundingPolygon": {
+        "type": "boolean"
+      },
       "hasOverview": {
         "type": "boolean"
       },
@@ -1319,63 +1374,8 @@
       "resolutionDistance": {
         "type": "keyword"
       },
-      "resourceAbstract": {
-        "type": "text",
-        "copy_to": "any",
-        "fields": {
-          "keyword": {
-            "type": "keyword",
-            "ignore_above": 256
-          }
-        }
-      },
-      "resourceAltTitle": {
-        "type": "text",
-        "copy_to": [
-          "any",
-          "anytext"
-        ],
-        "fields": {
-          "keyword": {
-            "type": "keyword",
-            "ignore_above": 256
-          }
-        }
-      },
-      "resourceCredit": {
-        "type": "text",
-        "copy_to": "any",
-        "fields": {
-          "keyword": {
-            "type": "keyword",
-            "ignore_above": 256
-          }
-        }
-      },
       "resourceLanguage": {
         "type": "keyword"
-      },
-      "resourceTitle": {
-        "type": "text",
-        "analyzer": "french_light",
-        "copy_to": [
-          "any",
-          "anytext"
-        ],
-        "fields": {
-          "keyword": {
-            "type": "keyword",
-            "ignore_above": 256
-          },
-          "trigram": {
-            "type": "text",
-            "analyzer": "trigram"
-          },
-          "reverse": {
-            "type": "text",
-            "analyzer": "reverse"
-          }
-        }
       },
       "resourceType": {
         "type": "keyword"
@@ -1396,6 +1396,9 @@
         "type": "keyword"
       },
       "standardName": {
+        "type": "keyword"
+      },
+      "schema": {
         "type": "keyword"
       },
       "tagNumber": {
@@ -1423,6 +1426,13 @@
       },
       "scope": {
         "type": "keyword"
+      },
+      "topic_text": {
+        "type": "keyword",
+        "copy_to": [
+          "any",
+          "anytext"
+        ]
       },
       "topic": {
         "type": "keyword",

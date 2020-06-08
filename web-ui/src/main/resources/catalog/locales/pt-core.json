@@ -508,5 +508,6 @@
     "warnPublishDraft": "Ao publicar um registro com o fluxo de trabalho habilitado, o status vai automaticamente ser alterado para Aprovado. Tem certeza que deseja continuar?",
     "cancelWorkingCopy": "Cancelar Cópia de Trabalho",
     "deleteWorkingCopyRecordConfirm": "Você realmente deseja remover a Cópia de Trabalho '{{title}}'?",
-    "workingCopy": "Cópia de Trabalho"
+    "workingCopy": "Cópia de Trabalho",
+    "metadataValidated": "Metadata validated."
 }

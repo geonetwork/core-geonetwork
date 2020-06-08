@@ -14,7 +14,7 @@
 
   <div ng-if="!isTabMode"
        ng-repeat="facet in ctrl.list track by facet.key"
-       ng-show="facet.items.length > 0"
+       ng-show="facet.items.length > 0 || (facet.dates && facet.dates.length >0)"
        class="gn-facet">
     <a href
        title="::{{facet.key | translate}}"
@@ -27,7 +27,6 @@
     </a>
     <div class="gn-facet-root-container"
          ng-class="{'collapse': ctrl.fLvlCollapse[facet.key]}">
-
       <div class="gn-facet-container"
            es-facet="::facet"
            es-facet-item="::item"

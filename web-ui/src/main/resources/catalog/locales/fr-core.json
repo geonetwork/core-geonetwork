@@ -1,18 +1,4 @@
 {
-    "resourceType": "Types de ressource",
-    "codelist_status": "Status",
-    "codelist_spatialRepresentationType": "Types de représentation",
-    "thesaurus_geonetworkthesauruslocalthemeinfraSIG": "Infra SIG",
-    "resolutionScaleDenominator": "Échelle",
-    "serviceType": "Types de service",
-    "creationYearForResource": "Années",
-    "resourceTitleObject.default.keyword": "titre",
-    "dateStamp": "date de mise à jour",
-    "topic": "Thèmes",
-    "thesaurus_geonetworkthesaurusexternalthemegemet_tree": "Mots clés GEMET",
-    "thesaurus_geonetworkthesaurusexternalthemeThemesgeoportailwallon": "Thèmes Géoportail",
-    "thesaurus_geonetworkthesaurusexternalthemehttpinspireeceuropaeuthemetheme": "Thèmes INSPIRE",
-    "moreLikeThis": "Similaire à ...",
     "all": "Tout sélectionner",
     "allInPage": "Tout sélectionner dans la page",
     "addToSelection": "Ajouter à ...",
@@ -507,7 +493,7 @@
     "mdStatusTitle-12": "Approuver directement la fiche",
     "mdStatusTitle-33": "Retirer la fiche",
     "mdStatusTitle-14": "Soumettre pour révision",
-    "mdStatusTitle-411": "Rejeté la fiche",
+    "mdStatusTitle-411": "Rejeter la fiche",
     "mdStatusButton-1": "Modifier en brouillon",
     "mdStatusButton-2": "Approuver",
     "mdStatusButton-3": "Retirer",
@@ -522,5 +508,6 @@
     "warnPublishDraft": "Lors de la publication d'une fiche ayant un statut brouillon, le statut passera à approuvé. Voulez-vous continuer ?",
     "cancelWorkingCopy": "Annuler la copie de travail",
     "deleteWorkingCopyRecordConfirm": "Voulez-vous vraiment supprimer la copie de travail ?",
-    "workingCopy": "Brouillon"
+    "workingCopy": "Brouillon",
+    "metadataValidated": "Metadata validated."
 }

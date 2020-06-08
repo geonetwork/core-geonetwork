@@ -135,8 +135,8 @@
      * @param {boolean} resetPagination If true, then
      * don't reset pagination info.
      */
-    this.triggerSearchFn = function(keepPagination) {
 
+    this.triggerSearchFn = function(keepPagination) {
       $scope.searching++;
       $scope.searchObj.params = angular.extend({},
           $scope.searchObj.defaultParams || defaultParams,
@@ -424,8 +424,9 @@
       var head = keys[0];
       var tail = keys.slice(1);
       for (var prop in obj) {
-        obj.hasOwnProperty(prop) && (head === prop && tail.length === 0 ?
-          delete obj[prop] : 'object' === typeof (obj[prop]) && (removeKey(obj[prop], tail),
+        obj.hasOwnProperty(prop) && (head.toString() === prop && tail.length === 0 ?
+          delete obj[prop] :
+          'object' === typeof (obj[prop]) && (removeKey(obj[prop], tail),
         0 === Object.keys(obj[prop]).length && delete obj[prop]))
       }
     }

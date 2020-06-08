@@ -508,5 +508,6 @@
     "warnPublishDraft": "Při publikování záznamů s povoleným pracovním postupem se stav změní na 'Schválit'. Jste si jistý, že chcete pokračovat?",
     "cancelWorkingCopy": "Zrušit pracovní kopii",
     "deleteWorkingCopyRecordConfirm": "Opravdu chcete odstranit pracovní kopii '{{title}}'?",
-    "workingCopy": "Pracovní kopie"
+    "workingCopy": "Pracovní kopie",
+    "metadataValidated": "Metadata byla ověřena."
 }

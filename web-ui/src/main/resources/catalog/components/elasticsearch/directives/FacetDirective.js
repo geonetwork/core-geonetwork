@@ -150,7 +150,7 @@
     if (this.facet.type === 'tree') {
       this.item.path = [this.facet.key, this.item.key];
       this.item.collapsed = !this.searchCtrl.hasChildInSearch(this.item.path);
-    } else if (this.facet.type === 'filters') {
+    } else if (this.facet.type === 'filters'|| this.facet.type === 'histogram') {
       this.item.inverted= this.searchCtrl.isNegativeSearch(this.item.path);
     }
   }
@@ -161,7 +161,7 @@
       if (!item.isNested) {
         this.facetsCtrl.lastUpdatedFacet = facet;
       }
-    } else if (facet.type === 'filters') {
+    } else if (facet.type === 'filters' || facet.type === 'histogram') {
       value = item.query_string.query_string.query;
       if(item.inverted) {
         value = '-('+value+')';

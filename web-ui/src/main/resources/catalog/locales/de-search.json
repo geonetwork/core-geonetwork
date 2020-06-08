@@ -519,6 +519,6 @@
     "changeDateTo": "Resources changed before",
     "dateFrom": "Records updated after",
     "dateTo": "Records updated before",
-    "activeFilters": "Active filters",
+    "activeFilters": "Filter",
     "geometryFilter": "Bounding Box"
 }

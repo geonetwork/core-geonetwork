@@ -272,6 +272,35 @@
               count: respAgg.buckets[p].doc_count
             });
           }
+        } else if (reqAgg.hasOwnProperty('histogram')) {
+          // https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-histogram-aggregation.html
+          facetModel.type = 'histogram';
+          facetModel.size = respAgg.buckets.size;
+          if (angular.isDefined(reqAgg.histogram.keyed)) {
+            var entries = Object.entries(respAgg.buckets);
+            for (var p = 0; p < entries.length; p++) {
+              var lowerBound = entries[p][1].key,
+                  onlyOneBucket = entries.length === 1,
+                  upperBound = onlyOneBucket ?
+                    lowerBound + Number(reqAgg.histogram.interval)
+                    : (entries[p + 1] ? entries[p + 1][1].key : '*');
+
+              facetModel.items.push({
+                value: lowerBound + '-' + upperBound,
+                path: [fieldId, lowerBound],
+                query_string: {query_string: {query: '' + reqAgg.histogram.field + ':'
+                  + '[' + lowerBound + ' TO ' + upperBound + '}'}},
+                count: entries[p][1].doc_count
+              });
+            }
+          } else {
+            console.warn('Facet configuration error. Histogram are only supported with keyed mode.',
+              "eg. creationYearForResource: {histogram: { " +
+              "field: 'creationYearForResource'," +
+              "interval: 5," +
+              "keyed: true," +
+              "min_doc_count: 1}}");
+          }
         }
         listModel.push(facetModel);
       }

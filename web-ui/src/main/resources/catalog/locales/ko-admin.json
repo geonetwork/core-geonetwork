@@ -288,6 +288,7 @@
     "cron-0 15 10 * * ?": "매일 10:15am에 실행",
     "cron-0 15 10 15 * ?": "매월 15일 10:15am에 실행",
     "cron-0 15 10 ? * MON-FRI": "매 월,화,수,목 그리고 금요일 10:15am 실행",
+    "harvesterTimeZoneHelp": "Time in cron expression will be interpreted as in <i>{{timeZoneTransl}} {{zoneOffset}}</i> timezone.",
     "csvExport": "CSV로 내보내기",
     "duplicatedValueFoundHarvesterName": "An harvester with that name already exists. Choose another one.",
     "duplicatedValueFoundUserName": "A user with that name already exists. Choose another one.",
@@ -906,6 +907,8 @@
     "system/server/protocol": "선호하는 프로토콜",
     "system/server/securePort": "안정된 포트",
     "system/server/log": "로그 수준",
+    "system/server/timeZone": "Timezone",
+    "system/server/timeZone-help": "<b>Currently used only in the harvesters</b>. Sets the timezone used to interpret the time in cron expression specified in the harvesters Frequency field. If not set the JVM default timezone will be used. GeoNetwork uses the timezone definitions available in the JVM. Time zones definitions can change frequently. Please keep updated your JVM to get the latest timezones definition or use the tzupdater tool available for download from the <a href='http://www.oracle.com/technetwork/java/javase/downloads/index.html' target='_blank'>Java SE Download Page</a>.",
     "system/site": "카탈로그 설명",
     "system/site/name": "카탈로그 이름",
     "system/site/name-help": "다른장소에 표시되는 이름입니다.(예. 뉴스 피드)",
@@ -1361,6 +1364,8 @@
     "ui-isLogoInHeader-help": "Show the logo in the header, above the navigation bar. The logo in the navigation bar will be removed. Only for the public pages (not the editor or admin).",
     "ui-logoInHeaderPosition": "로고 위치",
     "ui-logoInHeaderPosition-help": "머리글에서 로고의 위치",
+    "ui-isHeaderFixed": "Fix the header",
+    "ui-isHeaderFixed-help": "The header is fixed and stays at the top of the page. Attention: when the option [Show the logo in header] is also selected, the header needs a set height. This can be done under [CSS & Style] > [Header] > [Height]",
     "left": "왼쪽",
     "center": "중심",
     "right": "오른족",
@@ -1441,5 +1446,6 @@
     "ui-defaultSearchString": "기본 검색",
     "ui-defaultSearchString-help": "This configuration lets you define a default filter for the search. The syntax is the one used in the angular facet query array.",
     "ui-autoFitOnLayer": "Always zoom on data",
-    "ui-autoFitOnLayer-help": "If checked, the map will automatically zoom on data when adding a layer from a record. Otherwise, a message will be shown to let the user zoom on data manually."
+    "ui-autoFitOnLayer-help": "If checked, the map will automatically zoom on data when adding a layer from a record. Otherwise, a message will be shown to let the user zoom on data manually.",
+    "styleVariable-gnHeaderHeight": "Height"
 }

@@ -84,7 +84,7 @@
    * https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-mlt-query.html
    */
   module.directive('gnMoreLikeThis', [
-    '$http', 'gnSearchSettings', function($http, gnSearchSettings) {
+    '$http', 'gnGlobalSettings', function($http, gnGlobalSettings) {
       return {
         scope: {
           md: '=gnMoreLikeThis'
@@ -95,30 +95,31 @@
             'morelikethis.html';
         },
         link: function(scope, element, attrs, controller) {
+          scope.similarDocuments = [];
+          var moreLikeThisQuery = {};
+          angular.copy(gnGlobalSettings.gnCfg.mods.search.moreLikeThisConfig, moreLikeThisQuery);
+          var query = {
+            "query": {
+              "bool": {
+                "must": [
+                  moreLikeThisQuery,
+                  {"terms": {"isTemplate": ["n"]}}, // TODO: We may want to use it for subtemplate
+                  {"terms": {"draft": ["n", "e"]}}
+                ]}
+            }
+          };
 
           function loadMore() {
             if (scope.md == null) {
               return;
             }
-            $http.post('../api/search/records/_search', {
-              "query": {
-                "bool": {
-                  "must": [
-                    {"more_like_this" : {
-                      "fields" : ["resourceTitleObject.default", "resourceAbstractObject.default", "tag.raw"],
-                      "like" : scope.md.resourceTitleObject.default,
-                      "min_term_freq" : 1,
-                      "max_query_terms" : 12
-                    }},
-                    {"terms": {"isTemplate": ["n"]}}, // TODO: We may want to use it for subtemplate
-                    {"terms": {"draft": ["n", "e"]}}
-                ]}
-              }
-            }).then(function (r) {
+            query.query.bool.must[0].more_like_this.like = scope.md.resourceTitleObject.default;
+            $http.post('../api/search/records/_search', query).then(function (r) {
               scope.similarDocuments = r.data.hits;
             })
           }
           scope.$watch('md', function() {
+            scope.similarDocuments = [];
             loadMore();
           });
 
