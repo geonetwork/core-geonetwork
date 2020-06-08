@@ -118,10 +118,11 @@
     'gnFeaturesTableManager',
     'gnHttp',
     'gnAlertService',
+    'gnTreeFromSlash',
         function($http, wfsFilterService, $q, $rootScope, $translate,
              gnIndexRequestManager, gnIndexService, gnGlobalSettings,
              gnSearchSettings, gnFeaturesTableManager, gnHttp,
-             gnAlertService) {
+             gnAlertService, gnTreeFromSlash) {
       return {
         restrict: 'A',
         replace: true,
@@ -626,18 +627,40 @@
                   previous = scope.fields[i];
                 }
               }
-              angular.forEach(previous.values, function(value) {
-                if (!scope.isFacetSelected(e.name, value.value)) { return; }
-                for (var i = 0; i < e.values.length; i++) {
-                  if (e.values[i].value === value.value) {
-                    return;
+              if (previous.tree) {
+                var existingKeys = [];
+                function addKey(node) {
+                  if (node.key && scope.isFacetSelected(e.name, node.key)) { existingKeys.push(node.key); }
+                  if (node.nodes) {
+                    for (var i = 0; i < node.nodes.length; i++) {
+                      addKey(node.nodes[i]);
+                    }
                   }
                 }
-                e.values.push({
-                  value: value.value,
-                  count: 0
-                })
-              });
+                addKey(previous.tree);
+                var previousTree = gnTreeFromSlash.getTree(existingKeys.map(function (key) {
+                  return {
+                    key: key,
+                    doc_count: 0
+                  };
+                }));
+                e.tree = angular.merge(e.tree, previousTree);
+              } else {
+                angular.forEach(previous.values, function (value) {
+                  if (!scope.isFacetSelected(e.name, value.value)) {
+                    return;
+                  }
+                  for (var i = 0; i < e.values.length; i++) {
+                    if (e.values[i].value === value.value) {
+                      return;
+                    }
+                  }
+                  e.values.push({
+                    value: value.value,
+                    count: 0
+                  });
+                });
+              }
               // END SEXTANT SPECIFIC
 
               if (lastClickedFacet && lastClickedFacet.name === e.name) {
@@ -670,41 +693,6 @@
             resp.indexData.aggregations &&
             setFeatureExtent(resp.indexData.aggregations);
           };
-
-          /**
-           * Each aggregations are sorted based as defined in the application profil config
-           * and the query is ordered based on this config.
-           *
-           * The values of each aggregations are sorted, checked first.
-           */
-          scope.sortAggregation = function() {
-            // Disable sorting of aggregations by alpha order and based on expansion
-            // Order comes from application profile
-            // scope.fields.sort(function (a, b) {
-            //   var aChecked = !!scope.output[a.name];
-            //   var bChecked = !!scope.output[b.name];
-            //   var aLabel = a.label;
-            //   var bLabel = b.label;
-            //   if ((aChecked && bChecked) || (!aChecked && !bChecked)) {
-            //     return aLabel.localeCompare(bLabel);
-            //   }
-            //   return (aChecked === bChecked) ? 0 : aChecked ? -1 : 1;
-            // });
-
-            scope.fields.forEach(function (facette) {
-              facette.values.sort(function (a, b) {
-                var aChecked = scope.isFacetSelected(facette.name, a.value);
-                var bChecked = scope.isFacetSelected(facette.name, b.value);
-                if ((aChecked && bChecked) || (!aChecked && !bChecked)) {
-                  if (gnSearchSettings.facetOrdering === 'alphabetical') {
-                    return a.value.localeCompare(b.value);
-                  }
-                  return b.count - a.count;
-                }
-                return (aChecked === bChecked) ? 0 : aChecked ? -1 : 1;
-              })
-            })
-          }
 
           /**
            * Each aggregations are sorted based as defined in the application profil config
