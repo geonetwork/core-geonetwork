@@ -388,6 +388,8 @@
           // the callback is called when the date range is updated, with
           // 'from' and 'to' properties as arguments
           scope.onUpdateDateRange = function(field, dateFrom, dateTo) {
+            scope.lastClickedField = null;
+
             scope.output[field.name] = {
               type: field.type || 'date',
               values: {
@@ -910,6 +912,8 @@
           }, function(geom, old) {
             extentFilter = undefined;
             scope.filterGeometry = undefined;
+            scope.lastClickedField = null;
+
             if (geom !== '') {
               extentFilter = geom.split(',').map(function(val) {
                 return parseFloat(val);
