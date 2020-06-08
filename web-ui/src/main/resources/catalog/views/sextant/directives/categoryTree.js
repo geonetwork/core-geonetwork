@@ -140,6 +140,28 @@
                   }
                   var facets = v[facetKey];
 
+                  // keep active facets even when they don't have results anymore
+                  function alreadyHasValue(key) {
+                    for (var i = 0; i < facets.length; i++) {
+                      if (facets[i]['@name'] === key) return true;
+                    }
+                    return false;
+                  }
+                  function addActiveValue(node) {
+                    if (node.nodes) {
+                      for (var i = 0; i < node.nodes.length; i++) {
+                        addActiveValue(node.nodes[i]);
+                      }
+                    } else if (node.selected && node.key && !alreadyHasValue(node.key)) {
+                      facets.push({
+                        '@name': node.key,
+                        '@label': node.key,
+                        '@count': 0
+                      })
+                    }
+                  }
+                  scope.member && addActiveValue(scope.member);
+
                   var promise = sxtGlobals.keywords[facetName + 'Promise'];
                   if(promise) {
                     promise.then(function(keywords) {
