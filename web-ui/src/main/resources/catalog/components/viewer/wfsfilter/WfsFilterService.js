@@ -199,7 +199,7 @@
 
           angular.forEach(value, function(v, k) {
             if (k.startsWith('>= ')) {
-              var greaterThan = k.substring(2);
+              var greaterThan = k.substring(3);
               filter.push({
                 filter_type: 'PropertyIsGreaterThanOrEqualTo',
                 params: [greaterThan]
@@ -438,7 +438,22 @@
             }
             return;
           }
+
           angular.forEach(values, function(v, k) {
+            if (config.isRange) {
+              if (k.startsWith('>= ')) {
+                var greaterThan = k.substring(3);
+                clause.push('(' + paramName + ' >= ' + greaterThan + ')');
+              } else if (k.startsWith('< ')) {
+                var lowerThan = k.substring(2);
+                clause.push('(' + paramName + ' < ' + lowerThan + ')');
+              } else {
+                var parts = k.split(' - ');
+                clause.push('(' + paramName + ' >= ' + parts[0] + ' AND ' + paramName + ' < ' + parts[1] + ')');
+              }
+              return;
+            }
+
             var escaped = k.replace(/'/g, '\\\'');
             clause.push(
                 (config.isTokenized) ?
