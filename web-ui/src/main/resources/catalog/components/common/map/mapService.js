@@ -1004,6 +1004,9 @@
               //add the capabilities info, having available formats
               layer.set('capRequest', getCapLayer.capRequest||null);
 
+              // SEXTANT SPECIFIC
+              layer.set('isLeaf', !getCapLayer.Layer);
+
               return layer;
             }
 

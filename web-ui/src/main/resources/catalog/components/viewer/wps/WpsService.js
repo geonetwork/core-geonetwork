@@ -449,7 +449,7 @@
           then(function(layers) {
             layers.forEach(function(l) {
               // only add layer that is identified
-              if (l.get('name') === identifier) {
+              if (l.get('isLeaf')) {
                 l.set('fromWps', true);
                 l.set('wpsParent', parentLayer);
                 map.addLayer(l);
