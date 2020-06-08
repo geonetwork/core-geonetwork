@@ -660,4 +660,8 @@ public final class Geonet {
         public static final String INSPIRE_REPORT_URL = "_inspireReportUrl";
         public static final String INSPIRE_VALIDATION_DATE = "_inspireValidationDate";
     }
+
+    public static class SearchConfig {
+        public static final String SEARCH_IGNORE_PORTAL_FILTER_OPTION = "ignorePortalFilter";
+    }
 }

@@ -130,6 +130,7 @@ public class EsSearchManager implements ISearchManager {
             .put("fcats", "uuid")
             .put("sources", "uuid")
             .put("parent", "uuid")
+            .put("uuid", "uuid")
             .build();
 
         FIELDLIST_CORE = ImmutableSet.<String>builder()

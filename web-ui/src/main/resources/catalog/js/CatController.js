@@ -578,6 +578,7 @@ goog.require('gn_alert');
         copy.mods.header.languages = {};
         copy.mods.search.grid.related = [];
         copy.mods.search.facetConfig = {};
+        copy.mods.map["map-editor"].layers = [];
         return copy;
       },
       getProxyUrl: function() {
@@ -754,6 +755,7 @@ goog.require('gn_alert');
       gnGlobalSettings.nodeId = $scope.nodeId;
       gnConfig.env = gnConfig.env ||  {};
       gnConfig.env.node = $scope.nodeId;
+      gnConfig.env.defaultNode = defaultNode;
       gnConfig.env.baseURL = detectBaseURL(gnGlobalSettings.gnCfg.baseURLDetector);
 
       $scope.signoutUrl = gnGlobalSettings.gnCfg.mods.signout.appUrl

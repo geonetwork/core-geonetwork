@@ -596,7 +596,7 @@
       };
 
       $scope.$watchCollection('extent', function(n, o) {
-        if (n !== o && $scope.harvesterSelected
+        if (n !== o && n.md != null && $scope.harvesterSelected
           && $scope.harvesterSelected.searches
           && $scope.harvesterSelected.searches[0]
           && $scope.harvesterSelected.searches[0]['bbox-xmin']

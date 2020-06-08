@@ -3086,4 +3086,8 @@
     <label>Field of application</label>
     <description>Field of application</description>
   </element>
+  <element name="xlink:type">
+    <label>Link</label>
+    <description>Link type</description>
+  </element>
 </labels>

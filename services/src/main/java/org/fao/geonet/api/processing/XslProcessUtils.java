@@ -124,13 +124,7 @@ public class XslProcessUtils {
                 boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
                 Element md = metadataManager.getMetadata(context, id, forEditing, false, withValidationErrors, keepXlinkAttributes);
 
-                Map<String, Object> xslParameter = new HashMap<>();
-
-                xslParameter.put("guiLang", context.getLanguage());
-                xslParameter.put("baseUrl", context.getBaseUrl());
-                xslParameter.put("nodeUrl", settingsMan.getNodeURL());
-                xslParameter.put("catalogUrl", settingsMan.getSiteURL(context));
-                xslParameter.put("nodeId", context.getNodeId());
+                Map<String, Object> xslParameter = getDefaultXslParameters(context, settingsMan);
 
                 for (Map.Entry<String, String[]> parameter : params.entrySet()) {
                     String value = parameter.getValue()[0].trim();
@@ -202,6 +196,18 @@ public class XslProcessUtils {
         return null;
     }
 
+    private static Map<String, Object> getDefaultXslParameters(ServiceContext context, SettingManager settingsMan) {
+        Map<String, Object> xslParameter = new HashMap<>();
+
+        xslParameter.put("guiLang", context.getLanguage());
+        xslParameter.put("baseUrl", context.getBaseUrl());
+        xslParameter.put("nodeUrl", settingsMan.getNodeURL());
+        xslParameter.put("catalogUrl", settingsMan.getSiteURL(context));
+        xslParameter.put("nodeId", context.getNodeId());
+        xslParameter.put("thesauriDir", context.getApplicationContext().getBean(GeonetworkDataDirectory.class).getThesauriDir().toAbsolutePath().toString());
+        return xslParameter;
+    }
+
     public static String processAsText(ServiceContext context, String id, String process, boolean save,
                                   XsltMetadataProcessingReport report,
                                   String siteUrl,
@@ -250,14 +256,7 @@ public class XslProcessUtils {
                 boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
                 Element md = dataMan.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
-                Map<String, Object> xslParameter = new HashMap<>();
-
-                xslParameter.put("guiLang", context.getLanguage());
-                xslParameter.put("baseUrl", context.getBaseUrl());
-                xslParameter.put("nodeUrl", settingsMan.getNodeURL());
-                xslParameter.put("catalogUrl", settingsMan.getSiteURL(context));
-                xslParameter.put("nodeId", context.getNodeId());
-                xslParameter.put("thesauriDir", context.getApplicationContext().getBean(GeonetworkDataDirectory.class).getThesauriDir().toAbsolutePath().toString());
+                Map<String, Object> xslParameter = getDefaultXslParameters(context, settingsMan);
 
                 for (Map.Entry<String, String[]> parameter : params.entrySet()) {
                     String value = parameter.getValue()[0].trim();

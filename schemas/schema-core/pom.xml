@@ -39,6 +39,17 @@
     <dependency>
       <groupId>org.jdom</groupId>
       <artifactId>jdom</artifactId>
+      <exclusions>
+         <!-- this is a workaround for a mistake in packaging -->
+         <exclusion>
+           <groupId>maven-plugins</groupId>
+           <artifactId>maven-cobertura-plugin</artifactId>
+         </exclusion>
+         <exclusion>
+           <groupId>maven-plugins</groupId>
+           <artifactId>maven-findbugs-plugin</artifactId>
+         </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>

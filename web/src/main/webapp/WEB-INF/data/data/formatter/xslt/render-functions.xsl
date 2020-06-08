@@ -28,11 +28,11 @@
 
     <xsl:variable name="boxGeometry"
                   select="concat('POLYGON((',
-                  $east, ' ', $south, ',',
-                  $east, ' ', $north, ',',
-                  $west, ' ', $north, ',',
-                  $west, ' ', $south, ',',
-                  $east, ' ', $south, '))')"/>
+                  $east, '%20', $south, ',',
+                  $east, '%20', $north, ',',
+                  $west, '%20', $north, ',',
+                  $west, '%20', $south, ',',
+                  $east, '%20', $south, '))')"/>
     <xsl:variable name="numberFormat" select="'0.00'"/>
 
     <div class="thumbnail extent">
