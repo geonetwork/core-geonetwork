@@ -537,7 +537,7 @@
                 respAgg.buckets[i + 1].key.toFixed(2);
           }
           else {
-            label = '> ' + b.key.toFixed(2);
+            label = '>= ' + b.key.toFixed(2);
           }
           facetField.values.push({
             value: label,
