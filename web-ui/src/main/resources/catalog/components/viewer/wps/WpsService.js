@@ -448,7 +448,7 @@
           gnMap.addWmsAllLayersFromCap(map, ref.href, true).
           then(function(layers) {
             layers.forEach(function(l) {
-              // only add layer that is identified
+              // only add layer that has no children
               if (l.get('isLeaf')) {
                 l.set('fromWps', true);
                 l.set('wpsParent', parentLayer);
