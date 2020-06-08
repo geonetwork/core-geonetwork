@@ -367,7 +367,7 @@
         addMdLayerToPanier: function(link, md, $event) {
           // special case for Emodnet Chemistry (Matomo stat tracking)
           if (sxtEmodnetDownload.requiresDownloadForm(link)) {
-            sxtEmodnetDownload.openDownloadForm([link.url]);
+            sxtEmodnetDownload.openDownloadForm([link.url], md.getUuid());
             return;
           }
 
@@ -419,7 +419,7 @@
 
           if (layersToForm.length) {
             var urls = layersToForm.map(function(layer) { return layer.url; });
-            sxtEmodnetDownload.openDownloadForm(urls);
+            sxtEmodnetDownload.openDownloadForm(urls, md.getUuid());
           }
 
           angular.forEach(otherLayers, function (layer) {
