@@ -7,11 +7,11 @@
 -->
 
 <Configure class="org.eclipse.jetty.webapp.WebAppContext">
-  <!--<Call name="setAttribute">
+  <Call name="setAttribute">
     <Arg>org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern</Arg>
     <Arg>nomatches</Arg>
   </Call>
-  <Call name="setAttribute">
+  <!--<Call name="setAttribute">
   <Arg>org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern</Arg>
   <Arg>.*/foo-[^/]*\.jar$|.*/bar-[^/]*\.jar$|.*/bin/.*|.*/classes/.*|.*/target/.</Arg>
 </Call>

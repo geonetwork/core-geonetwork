@@ -25,15 +25,18 @@
 
 package org.fao.geonet.api;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.PatchMapping;
 
 @Configuration
+@OpenAPIDefinition
 public class OpenApiConfig {
     @Bean
     public OpenAPI OpenApiConfig() {
@@ -49,5 +52,12 @@ public class OpenApiConfig {
             .externalDocs(new ExternalDocumentation()
                 .description("Learn how to access the catalog using the GeoNetwork REST API.")
                 .url("https://localhost:8080/docs"));
+    }
+
+    @Bean
+    public GroupedOpenApi userOpenApi() {
+        String packagesToscan[] = {"org.fao.geonet.api"};
+        return GroupedOpenApi.builder().setGroup("geonetwork").packagesToScan(packagesToscan)
+            .build();
     }
 }
