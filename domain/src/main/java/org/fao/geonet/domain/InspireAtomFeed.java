@@ -149,7 +149,7 @@ public class InspireAtomFeed extends GeonetEntity implements Serializable {
 
     @Column
     @Lob
-    @Type(type = "org.hibernate.type.StringClobType")
+    @Type(type = "org.hibernate.type.TextType")
     public String getAtom() {
         return _atom;
     }

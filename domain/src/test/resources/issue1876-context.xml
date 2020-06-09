@@ -38,7 +38,7 @@
 		<constructor-arg value="true" />
 	</bean>
 	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
 		<property name="packagesToScan">
 			<list>
 				<value>org.fao.geonet.repository.*</value>
@@ -81,4 +81,4 @@
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
-</beans>  
+</beans>
