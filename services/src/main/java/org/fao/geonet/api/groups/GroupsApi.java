@@ -544,7 +544,7 @@ public class GroupsApi {
 
         if (all || !session.isAuthenticated() || Profile.Administrator == session.getProfile()) {
             if (includingSystemGroups) {
-                return groupRepository.findAll(null, sort);
+                return groupRepository.findAll(sort);
             } else {
                 return groupRepository.findAll(Specifications.not(GroupSpecs.isReserved()), sort);
             }
@@ -567,7 +567,7 @@ public class GroupsApi {
 
             // retrieve all groups and filter to only user one
             List<Group> groups = groupRepository
-                .findAll(null, sort);
+                .findAll(sort);
             groups.removeIf(g -> !ids.contains(g.getId()));
             return groups;
         }

@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
@@ -54,7 +55,7 @@ import com.google.common.collect.Lists;
  * This class is not a typical *Impl because it needs to override the delete methods in {@link
  * org.springframework.data.jpa.repository.support.SimpleJpaRepository}.  In order to do this you
  * have to create a subclass of {@link org.springframework.data.jpa.repository.support.SimpleJpaRepository}
- * (or {@link GeonetRepositoryImpl} which is subclass) and have {@link GeonetRepositoryFactoryBean}
+ * (or {@link GeonetRepositoryImpl} which is subclass)
  * return the custom implementation.
  * <p/>
  * An alternative would be to use aspectJ and the around cut-point to modify the behaviour of the
@@ -67,11 +68,20 @@ import com.google.common.collect.Lists;
  * <p/>
  * User: Jesse Date: 10/25/13 Time: 7:53 AM
  */
-public class HarvesterSettingRepositoryOverridesImpl extends GeonetRepositoryImpl<HarvesterSetting,
-    Integer> implements HarvesterSettingRepositoryCustom {
-    protected HarvesterSettingRepositoryOverridesImpl(Class<HarvesterSetting> domainClass, EntityManager entityManager) {
-        super(domainClass, entityManager);
-    }
+public class HarvesterSettingRepositoryImpl
+//    extends GeonetRepositoryImpl<HarvesterSetting, Integer>
+    implements HarvesterSettingRepositoryCustom {
+
+    @PersistenceContext
+    private EntityManager _entityManager;
+
+//    public HarvesterSettingRepositoryImpl(Class<HarvesterSetting> domainClass, EntityManager entityManager) {
+//        super(domainClass, entityManager);
+//    }
+//
+//    protected HarvesterSettingRepositoryImpl(Class<HarvesterSetting> domainClass, EntityManager entityManager) {
+//        super(domainClass, entityManager);
+//    }
 
 
     /**
