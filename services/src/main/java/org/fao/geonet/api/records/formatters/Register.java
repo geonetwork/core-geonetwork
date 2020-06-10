@@ -24,6 +24,7 @@
 package org.fao.geonet.api.records.formatters;
 
 import com.google.common.io.ByteStreams;
+import io.swagger.v3.oas.annotations.Operation;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
@@ -69,7 +70,7 @@ import static org.fao.geonet.api.records.formatters.FormatterConstants.VIEW_XSL_
 @ReadWriteController
 public class Register extends AbstractFormatService {
 
-
+    @Operation(hidden = true)
     @RequestMapping(value = {"/{portal}/{lang}/md.formatter.register"}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public JSONObject serviceSpecificExec(HttpServletRequest request,

@@ -28,36 +28,68 @@ package org.fao.geonet.api;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Paths;
+import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.servers.Server;
+import io.swagger.v3.oas.models.servers.ServerVariable;
+import io.swagger.v3.oas.models.servers.ServerVariables;
+import org.fao.geonet.NodeInfo;
 import org.springdoc.core.GroupedOpenApi;
+import org.springdoc.core.SpringDocUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.PatchMapping;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @OpenAPIDefinition
 public class OpenApiConfig {
     @Bean
     public OpenAPI OpenApiConfig() {
-        String packagesToscan[] = {"org.fao.geonet.api", "org.fao.geonet.monitor.service"};
+        List<Server> servers = new ArrayList<>();
+
+        String localhostUrl = "http://localhost:8080/geonetwork";
+        ServerVariable catalogVariable = new ServerVariable()
+            .description("The GeoNetwork catalog to contact")
+            .addEnumItem(localhostUrl)
+            .addEnumItem("../..")
+            .addEnumItem("https://vanilla.geocat.net/geonetwork");
+        catalogVariable.setDefault(localhostUrl);
+
+        ServerVariable portalVariable = new ServerVariable()
+            .description("The thematic portal")
+            .addEnumItem(NodeInfo.DEFAULT_NODE);
+        portalVariable.setDefault(NodeInfo.DEFAULT_NODE);
+
+        servers.add(new Server()
+            .description("My GeoNetwork")
+            .url("{catalog}/{portal}/api")
+            .variables(new ServerVariables()
+                .addServerVariable("catalog", catalogVariable)
+                .addServerVariable("portal", portalVariable)
+            )
+        );
 
         return new OpenAPI()
-            .info(new Info().title("GeoNetwork OpenApi Documentation (beta)")
-                .description("Learn how to access the catalog using the GeoNetwork REST API.")
+            .info(new Info()
+                .title("GeoNetwork OpenAPI Documentation (beta)")
+                .description("This is the description of the GeoNetwork OpenAPI. Use this API to manage your catalog.")
+                .contact(new Contact()
+                    .email("geonetwork-users@lists.sourceforge.net")
+                    .name("GeoNetwork user mailing list")
+                    .url("https://sourceforge.net/p/geonetwork/mailman/geonetwork-users/")
+                )
                 .version(API.VERSION_0_1)
                 .license(new License()
                     .name("GPL 2.0")
                     .url("http://www.gnu.org/licenses/old-licenses/gpl-2.0.html")))
             .externalDocs(new ExternalDocumentation()
                 .description("Learn how to access the catalog using the GeoNetwork REST API.")
-                .url("https://localhost:8080/docs"));
-    }
-
-    @Bean
-    public GroupedOpenApi userOpenApi() {
-        String packagesToscan[] = {"org.fao.geonet.api"};
-        return GroupedOpenApi.builder().setGroup("geonetwork").packagesToScan(packagesToscan)
-            .build();
+                .url("https://localhost:8080/geonetwork/doc/api"))
+            .servers(servers);
     }
 }

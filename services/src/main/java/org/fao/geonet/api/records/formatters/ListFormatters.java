@@ -24,6 +24,7 @@
 package org.fao.geonet.api.records.formatters;
 
 import com.google.common.collect.Lists;
+import io.swagger.v3.oas.annotations.Operation;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
@@ -101,6 +102,7 @@ public class ListFormatters extends AbstractFormatService {
         }
     }
 
+    @Operation(hidden = true)
     @RequestMapping(value = "/{portal}/{lang}/md.formatter.list", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody

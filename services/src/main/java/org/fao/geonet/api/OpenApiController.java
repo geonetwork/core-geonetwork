@@ -26,32 +26,59 @@ import io.swagger.v3.core.util.PathUtils;
 import io.swagger.v3.core.util.Yaml;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.models.OpenAPI;
+import org.fao.geonet.ApplicationContextHolder;
 import org.springdoc.api.AbstractOpenApiResource;
 import org.springdoc.core.*;
 import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springdoc.core.customizers.OperationCustomizer;
+import org.springdoc.core.visitor.AbstractRouterFunctionVisitor;
 import org.springdoc.webmvc.api.ActuatorProvider;
 import org.springdoc.webmvc.api.RouterFunctionProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.MediaType;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 import static org.springdoc.core.Constants.*;
 import static org.springframework.util.AntPathMatcher.DEFAULT_PATH_SEPARATOR;
 
+/**
+ * see https://springdoc.org/faq.html#how-to-integrate-open-api-3-with-spring-project-not-spring-boot
+ * see https://springdoc.org/migrating-from-springfox.html
+ *
+ * TODO: Would be better to load properties from
+ * @PropertySource("classpath:springdoc.properties")
+ * springdoc.packagesToScan=org.fao.geonet.api,org.fao.geonet.monitor.service
+ * springdoc.paths-to-match=/api/**
+ * springdoc.paths-to-exclude=/api/0.1/**
+ * springdoc.api-docs.enabled=true
+ * springdoc.api-docs.path=/api/doc
+ * springdoc.cache.disabled=true
+ */
 @RestController
 public class OpenApiController extends AbstractOpenApiResource {
 
@@ -74,6 +101,12 @@ public class OpenApiController extends AbstractOpenApiResource {
                            Optional<SecurityOAuth2Provider> springSecurityOAuth2Provider,
                            Optional<RouterFunctionProvider> routerFunctionProvider) {
         super(DEFAULT_GROUP_NAME, openAPIBuilder, requestBuilder, responseBuilder, operationParser, operationCustomizers, openApiCustomisers, springDocConfigProperties);
+
+//        springDocConfigProperties.setPathsToMatch(Arrays.asList(new String[]{"api/**"}));
+        springDocConfigProperties.setPathsToExclude(Arrays.asList(new String[]{"/0.1/**"}));
+        springDocConfigProperties.setPackagesToScan(Arrays.asList(new String[]{
+            "org.fao.geonet.api",
+            "org.fao.geonet.monitor.service"}));
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
         this.servletContextProvider = servletContextProvider;
         this.springSecurityOAuth2Provider = springSecurityOAuth2Provider;
@@ -126,7 +159,8 @@ public class OpenApiController extends AbstractOpenApiResource {
             Set<String> patterns = patternsRequestCondition.getPatterns();
             Map<String, String> regexMap = new LinkedHashMap<>();
             for (String pattern : patterns) {
-                String operationPath = PathUtils.parsePath(pattern, regexMap);
+                String operationPath = PathUtils.parsePath(pattern, regexMap)
+                    .replace("/{portal}/api", "");
                 if (((actuatorProvider.isPresent() && actuatorProvider.get().isRestController(operationPath))
                     || isRestController(restControllers, handlerMethod, operationPath))
                     && isPackageToScan(handlerMethod.getBeanType().getPackage())
@@ -139,11 +173,9 @@ public class OpenApiController extends AbstractOpenApiResource {
                 }
             }
         }
-        // This looks to depend on spring 5
-//        routerFunctionProvider.ifPresent(routerFunctions -> routerFunctionProvider.getWebMvcRouterFunctionPaths()
+//        routerFunctionProvider.ifPresent(routerFunctions -> routerFunctions.getWebMvcRouterFunctionPaths()
 //            .ifPresent(routerBeans -> routerBeans.forEach(this::getRouterFunctionPaths)));
     }
-
 
     protected boolean isRestController(Map<String, Object> restControllers, HandlerMethod handlerMethod,
                                        String operationPath) {
@@ -161,19 +193,4 @@ public class OpenApiController extends AbstractOpenApiResource {
         String calculatedUrl = requestUrl.substring(0, requestUrl.length() - apiDocsUrl.length());
         openAPIBuilder.setServerBaseUrl(calculatedUrl);
     }
-
-//    protected Optional<Map<String, AbstractRouterFunctionVisitor>> getWebMvcRouterFunctionPaths() {
-//        Map<String, RouterFunction> routerBeans = ApplicationContextHolder.get().getBeansOfType(RouterFunction.class);
-//        if (CollectionUtils.isEmpty(routerBeans))
-//            return Optional.empty();
-//        Map<String, AbstractRouterFunctionVisitor> routerFunctionVisitorMap = new HashMap<>();
-//        for (Map.Entry<String, RouterFunction> entry : routerBeans.entrySet()) {
-//            RouterFunction routerFunction = entry.getValue();
-//            RouterFunctionProvider.RouterFunctionVisitor routerFunctionVisitor = new RouterFunctionProvider.RouterFunctionVisitor();
-//            routerFunction.accept(routerFunctionVisitor);
-//            routerFunctionVisitorMap.put(entry.getKey(), routerFunctionVisitor);
-//        }
-//        return Optional.of(routerFunctionVisitorMap);
-//    }
-
 }
