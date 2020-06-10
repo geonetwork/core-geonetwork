@@ -36,6 +36,9 @@
   <logger name="geonetwork.search" additivity="true">
     <level value="WARN" />
   </logger>
+  <logger name="geonetwork.domain">
+    <level value="ERROR"/>
+  </logger>
   <logger name="geonetwork.databasemigration">
     <level value="WARN" />
   </logger>
