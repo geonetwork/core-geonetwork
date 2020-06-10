@@ -585,6 +585,22 @@
       <artifactId>powermock-module-junit4</artifactId>
       <scope>test</scope>
     </dependency>
+    <!--
+    Required for DB migration test
+    like AdvancedSearchFormMigrationTest
+    <dependency>
+      <groupId>net.bytebuddy</groupId>
+      <artifactId>byte-buddy</artifactId>
+      <version>0.6.14</version>
+      <scope>test</scope>
+    </dependency>-->
+    <!--
+    Required by domain
+    Invocation of init method failed; nested exception is
+    java.lang.NoClassDefFoundError: net/bytebuddy/TypeCache
+    org.springframework.beans.factory.BeanCreationException:
+    Error creating bean with name 'entityManagerFactory' defined in URL
+    -->
     <dependency>
       <groupId>net.bytebuddy</groupId>
       <artifactId>byte-buddy</artifactId>
