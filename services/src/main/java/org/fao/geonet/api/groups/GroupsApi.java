@@ -291,7 +291,7 @@ public class GroupsApi {
         method = RequestMethod.PUT
     )
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Group created."),
         @ApiResponse(responseCode = "400", description = "Group with that id or name already exist."),
@@ -384,7 +384,7 @@ public class GroupsApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "List of users in that group."),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
@@ -422,7 +422,7 @@ public class GroupsApi {
         method = RequestMethod.PUT
     )
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Group updated."),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
@@ -468,7 +468,7 @@ public class GroupsApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Group removed."),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),

@@ -86,7 +86,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 @RequestMapping(value = {"/{portal}/api/records", "/{portal}/api/" + API.VERSION_0_1 + "/records"})
 @Tag(name = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
 @Controller("recordEditing")
-@PreAuthorize("hasRole('Editor')")
+@PreAuthorize("hasAuthority('Editor')")
 @ReadWriteController
 public class MetadataEditingApi {
 
@@ -98,7 +98,7 @@ public class MetadataEditingApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Edit a record", description = "Return HTML form for editing.")
     @RequestMapping(value = "/{metadataUuid}/editor", method = RequestMethod.GET, consumes = {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "The editor form."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
@@ -160,7 +160,7 @@ public class MetadataEditingApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Save edits", description = "Save the HTML form content.")
     @RequestMapping(value = "/{metadataUuid}/editor", method = RequestMethod.POST, consumes = {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "The editor form."),
@@ -429,7 +429,7 @@ public class MetadataEditingApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Cancel edits", description = "Cancel current editing session.")
     @RequestMapping(value = "/{metadataUuid}/editor", method = RequestMethod.DELETE, consumes = {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Editing session cancelled."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
@@ -448,7 +448,7 @@ public class MetadataEditingApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Add element", description = "")
     @RequestMapping(value = "/{metadataUuid}/editor/elements", method = RequestMethod.PUT, consumes = {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Element added."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
@@ -490,7 +490,7 @@ public class MetadataEditingApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Reorder element", description = "")
     @RequestMapping(value = "/{metadataUuid}/editor/elements/{direction}", method = RequestMethod.PUT, consumes = {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Element reordered."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
@@ -511,7 +511,7 @@ public class MetadataEditingApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete element", description = "")
     @RequestMapping(value = "/{metadataUuid}/editor/elements", method = RequestMethod.DELETE, consumes = {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Element removed."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
@@ -535,7 +535,7 @@ public class MetadataEditingApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete attribute", description = "")
     @RequestMapping(value = "/{metadataUuid}/editor/attributes", method = RequestMethod.DELETE, consumes = {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attribute removed."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})

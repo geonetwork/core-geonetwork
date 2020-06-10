@@ -169,7 +169,7 @@ public class DirectoryApi {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('Reviewer')")
+    @PreAuthorize("hasAuthority('Reviewer')")
     public ResponseEntity<Object> previewExtractedEntries(
         @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
@@ -210,7 +210,7 @@ public class DirectoryApi {
         value = APIURL_ACTIONS_ENTRIES_COLLECT,
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('Reviewer')")
+    @PreAuthorize("hasAuthority('Reviewer')")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Object> extractEntries(
         @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
@@ -383,7 +383,7 @@ public class DirectoryApi {
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
-    @PreAuthorize("hasRole('Reviewer')")
+    @PreAuthorize("hasAuthority('Reviewer')")
     @ResponseBody
     public ResponseEntity<Object> updateRecordEntries(
         @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
@@ -531,7 +531,7 @@ public class DirectoryApi {
         @ApiResponse(responseCode = "201", description = "Directory entries imported."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
     })
-    @PreAuthorize("hasRole('Reviewer')")
+    @PreAuthorize("hasAuthority('Reviewer')")
     @ResponseBody
     public SimpleMetadataProcessingReport importSpatialEntries(
         @Parameter(

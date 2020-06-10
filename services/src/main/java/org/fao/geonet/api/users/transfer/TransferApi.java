@@ -88,7 +88,7 @@ public class TransferApi {
         method = RequestMethod.GET
     )
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ResponseBody
     public List<OwnerResponse> getUsers(
         @Parameter(hidden = true)
@@ -172,7 +172,7 @@ public class TransferApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT
     )
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ResponseBody
     public ResponseEntity saveOwners(
         @RequestBody

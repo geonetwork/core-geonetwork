@@ -98,7 +98,7 @@ public class LanguagesApi {
         value = "/{langCode}",
         method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Language translations added."),
         @ApiResponse(responseCode = "404", description = "Resource not found. eg. No SQL file available for that langugae."),
@@ -155,7 +155,7 @@ public class LanguagesApi {
     @RequestMapping(
         value = "/{langCode}",
         method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Language translations removed."),

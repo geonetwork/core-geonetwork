@@ -83,7 +83,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 })
 @Tag(name = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)
-@PreAuthorize("hasRole('Editor')")
+@PreAuthorize("hasAuthority('Editor')")
 @Controller("recordSharing")
 @ReadWriteController
 public class MetadataSharingApi {
@@ -171,7 +171,7 @@ public class MetadataSharingApi {
         @ApiResponse(responseCode = "204", description = "Settings updated."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
-    @PreAuthorize("hasRole('Reviewer')")
+    @PreAuthorize("hasAuthority('Reviewer')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void publish(
         @Parameter(
@@ -197,7 +197,7 @@ public class MetadataSharingApi {
         @ApiResponse(responseCode = "204", description = "Settings updated."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
-    @PreAuthorize("hasRole('Reviewer')")
+    @PreAuthorize("hasAuthority('Reviewer')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void unpublish(
         @Parameter(
@@ -232,7 +232,7 @@ public class MetadataSharingApi {
         @ApiResponse(responseCode = "204", description = "Settings updated."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void share(
         @Parameter(
@@ -292,7 +292,7 @@ public class MetadataSharingApi {
         @ApiResponse(responseCode = "201", description = "Report about updated privileges."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
     public
     @ResponseBody
@@ -323,7 +323,7 @@ public class MetadataSharingApi {
         @ApiResponse(responseCode = "201", description = "Report about updated privileges."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
     public
     @ResponseBody
@@ -354,7 +354,7 @@ public class MetadataSharingApi {
         @ApiResponse(responseCode = "201", description = "Report about updated privileges."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
     public
     @ResponseBody
@@ -456,7 +456,7 @@ public class MetadataSharingApi {
         @ApiResponse(responseCode = "200", description = "The record sharing settings."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public SharingResponse getRecordSharingSettings(
@@ -551,7 +551,7 @@ public class MetadataSharingApi {
         @ApiResponse(responseCode = "204", description = "Record group updated."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
     public void setRecordGroup(
@@ -610,7 +610,7 @@ public class MetadataSharingApi {
                 "that can be used to set record sharing properties."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
     public SharingResponse getSharingSettings(
         @Parameter(hidden = true)
@@ -663,7 +663,7 @@ public class MetadataSharingApi {
         @ApiResponse(responseCode = "201", description = "Records group and owner updated"),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     public
     @ResponseBody
     MetadataProcessingReport setGroupAndOwner(
@@ -741,7 +741,7 @@ public class MetadataSharingApi {
         @ApiResponse(responseCode = "201", description = "Record group and owner updated"),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     public
     @ResponseBody
     MetadataProcessingReport setRecordOwnership(

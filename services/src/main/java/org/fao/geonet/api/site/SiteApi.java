@@ -295,7 +295,7 @@ public class SiteApi {
         @ApiResponse(responseCode = "200", description = "Settings with details.")
     })
     @ResponseBody
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     public List<Setting> getSettingsDetails(
         @Parameter(
             description = "Setting set. A common set of settings to retrieve.",
@@ -359,7 +359,7 @@ public class SiteApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.POST
     )
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Settings saved."),
@@ -474,7 +474,7 @@ public class SiteApi {
         @ApiResponse(responseCode = "204", description = "Staging profile saved."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     public void updateStagingProfile(
         @PathVariable
             SystemInfo.Staging profile) {
@@ -519,7 +519,7 @@ public class SiteApi {
         path = "/index",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT)
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
     public HttpEntity index(
         @Parameter(description = "Drop and recreate index",
@@ -597,7 +597,7 @@ public class SiteApi {
         path = "/logo",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT)
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Logo set."),

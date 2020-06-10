@@ -96,7 +96,7 @@ public class HarvestersApi {
         method = RequestMethod.POST
     )
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Harvester records transfered to new source."),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
@@ -184,7 +184,7 @@ public class HarvestersApi {
         method = RequestMethod.GET
     )
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Property does not exist."),
         @ApiResponse(responseCode = "404", description = "A property with that value already exist."),

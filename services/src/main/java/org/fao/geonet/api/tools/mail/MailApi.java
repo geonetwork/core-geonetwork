@@ -92,7 +92,7 @@ public class MailApi {
         produces = MediaType.TEXT_PLAIN_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.CREATED)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     public ResponseEntity<String> testMailConfiguration(ServletRequest request) throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);

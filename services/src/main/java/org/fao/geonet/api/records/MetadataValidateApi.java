@@ -74,7 +74,7 @@ import static org.fao.geonet.api.records.formatters.XsltFormatter.getSchemaLocal
 @RequestMapping(value = {"/{portal}/api/records", "/{portal}/api/" + API.VERSION_0_1 + "/records"})
 @Tag(name = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
 @Controller("recordValidate")
-@PreAuthorize("hasRole('Editor')")
+@PreAuthorize("hasAuthority('Editor')")
 @ReadWriteController
 public class MetadataValidateApi {
 
@@ -155,7 +155,7 @@ public class MetadataValidateApi {
     @RequestMapping(value = "/{metadataUuid}/validate/internal", method = RequestMethod.PUT, produces = {
         MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Validation report."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     public @ResponseBody

@@ -73,7 +73,7 @@ public class MetadataIndexApi {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Record indexed."),

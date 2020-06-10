@@ -129,7 +129,7 @@ public class LogosApi {
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.POST)
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Logo added."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
@@ -192,7 +192,7 @@ public class LogosApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Logo removed."),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),

@@ -105,7 +105,7 @@ public class MetadataSampleApi {
         @ApiResponse(responseCode = "201", description = "Return a report of what has been done."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.CREATED)
     public
     @ResponseBody
@@ -196,7 +196,7 @@ public class MetadataSampleApi {
         @ApiResponse(responseCode = "201", description = "Return a report of what has been done."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.CREATED)
     public
     @ResponseBody

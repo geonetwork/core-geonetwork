@@ -77,7 +77,7 @@ public class MetadataVersionningApi {
         value = "/{metadataUuid}/versions",
         method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
     public ResponseEntity enableVersionControl(
         @Parameter(
@@ -106,7 +106,7 @@ public class MetadataVersionningApi {
         },
         method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
     public MetadataProcessingReport enableVersionControlForRecords(
         @Parameter(

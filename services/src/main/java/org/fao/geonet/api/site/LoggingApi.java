@@ -70,7 +70,7 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
 @Tag(name = API_CLASS_CATALOG_TAG,
     description = API_CLASS_CATALOG_OPS)
 @Controller("logging")
-@PreAuthorize("hasRole('Administrator')")
+@PreAuthorize("hasAuthority('Administrator')")
 public class LoggingApi {
     private static final String fileAppenderName = "fileAppender";
     private static final int maxLines = 20000;

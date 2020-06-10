@@ -76,7 +76,7 @@ public class BackupArchiveApi {
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Download MEF backup archive",
         description = "The backup contains all metadata not harvested including templates.")
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @RequestMapping(
         value = "/latest",
         method = RequestMethod.GET,
@@ -123,7 +123,7 @@ public class BackupArchiveApi {
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Return succeed message.")

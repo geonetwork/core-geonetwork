@@ -103,7 +103,7 @@ public class UserSelectionsApi {
         @ApiResponse(responseCode = "400", description = "A selection with that id or name already exist."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ResponseBody
     public ResponseEntity createPersistentSelectionType(
         @Parameter(
@@ -152,7 +152,7 @@ public class UserSelectionsApi {
         @ApiResponse(responseCode = "404", description = "Selection not found."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     public ResponseEntity updateUserSelection(
         @Parameter(
             description = "Selection identifier",
@@ -201,7 +201,7 @@ public class UserSelectionsApi {
         @ApiResponse(responseCode = "404", description = "Selection not found."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     public ResponseEntity deleteUserSelection(
         @Parameter(
             description = "Selection identifier",
@@ -231,7 +231,7 @@ public class UserSelectionsApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @PreAuthorize("hasRole('Guest')")
+    @PreAuthorize("hasAuthority('Guest')")
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
@@ -278,7 +278,7 @@ public class UserSelectionsApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @PreAuthorize("hasRole('Guest')")
+    @PreAuthorize("hasAuthority('Guest')")
     public
     @ResponseBody
     @ApiResponses(value = {
@@ -343,7 +343,7 @@ public class UserSelectionsApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @PreAuthorize("hasRole('Guest')")
+    @PreAuthorize("hasAuthority('Guest')")
     public
     @ResponseBody
     @ApiResponses(value = {

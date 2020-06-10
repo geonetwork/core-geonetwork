@@ -149,7 +149,7 @@ public class SourcesApi {
         produces = {
             MediaType.TEXT_PLAIN_VALUE
         })
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Source created."),
@@ -205,7 +205,7 @@ public class SourcesApi {
     @RequestMapping(
         value = "/{sourceIdentifier}",
         method = RequestMethod.PUT)
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Source updated."),
@@ -247,7 +247,7 @@ public class SourcesApi {
         value = "/{sourceIdentifier}",
         method = RequestMethod.DELETE
     )
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Source deleted."),

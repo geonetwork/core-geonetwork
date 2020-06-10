@@ -79,7 +79,7 @@ public class StatusApi {
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete all record history and status", description = "")
     @RequestMapping(method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Status removed."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)

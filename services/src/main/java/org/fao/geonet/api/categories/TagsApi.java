@@ -100,7 +100,7 @@ public class TagsApi {
         @ApiResponse(responseCode = "201", description = "Tag created. Return the new tag identifier."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     public ResponseEntity<Integer> putTag(
         @Parameter(
             name = "category"
@@ -163,7 +163,7 @@ public class TagsApi {
     @RequestMapping(
         value = "/{tagIdentifier}",
         method = RequestMethod.PUT)
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Tag updated."),
@@ -220,7 +220,7 @@ public class TagsApi {
         @ApiResponse(responseCode = "204", description = "Tag removed."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     public ResponseEntity deleteTag(
         @Parameter(
             description = "Tag identifier",

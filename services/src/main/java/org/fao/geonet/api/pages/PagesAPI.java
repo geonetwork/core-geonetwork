@@ -83,7 +83,7 @@ public class PagesAPI {
         @ApiResponse(responseCode = "409", description = PAGE_DUPLICATE),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT),
         @ApiResponse(responseCode = "500", description = ERROR_FILE)})
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     public void addPage(
         @RequestParam(value = "language", required = true) final String language,
         @RequestParam(value = "pageId", required = true) final String pageId,
@@ -118,7 +118,7 @@ public class PagesAPI {
     @RequestMapping(value = "/{language}/{pageId}", method = RequestMethod.POST)
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_UPDATED),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     public void editPage(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,
@@ -147,7 +147,7 @@ public class PagesAPI {
     @RequestMapping(value = "/{language}/{pageId}", method = RequestMethod.PUT)
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_UPDATED),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     public void editPageName(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,
@@ -189,7 +189,7 @@ public class PagesAPI {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_DELETED),
         @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     public void deletePage(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,
@@ -260,7 +260,7 @@ public class PagesAPI {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_UPDATED),
         @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     public void addPageToSection(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,
@@ -290,7 +290,7 @@ public class PagesAPI {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_UPDATED),
         @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     public void removePageFromSection(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,
@@ -318,7 +318,7 @@ public class PagesAPI {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_UPDATED),
         @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     public void changePageStatus(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,

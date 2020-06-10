@@ -257,7 +257,7 @@ public class LinksApi {
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.POST)
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public SimpleMetadataProcessingReport analyzeRecordLinks(
@@ -354,7 +354,7 @@ public class LinksApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     public ResponseEntity purgeAll() throws IOException, JDOMException {
         urlAnalyser.deleteAll();

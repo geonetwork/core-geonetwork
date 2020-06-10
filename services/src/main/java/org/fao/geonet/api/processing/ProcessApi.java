@@ -128,7 +128,7 @@ public class ProcessApi {
     )
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Replacements applied."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)

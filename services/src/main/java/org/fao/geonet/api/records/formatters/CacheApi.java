@@ -64,7 +64,7 @@ public class CacheApi {
         method = RequestMethod.DELETE
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Cache cleared."),
         @ApiResponse(responseCode = "403", description = "Operation not allowed. Only Administrator can access it.")

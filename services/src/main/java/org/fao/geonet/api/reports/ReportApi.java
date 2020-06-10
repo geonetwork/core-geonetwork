@@ -58,7 +58,7 @@ public class ReportApi {
         @ApiResponse(responseCode = HttpURLConnection.HTTP_OK + "",
             description = "List of metadata file downloads.")
     })
-    @PreAuthorize("hasRole('UserAdmin') or hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('UserAdmin') or hasRole('Administrator')")
     @ResponseBody
     public void getReportDataDownloads(
         @Parameter(
@@ -108,7 +108,7 @@ public class ReportApi {
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
     })
-    @PreAuthorize("hasRole('UserAdmin') or hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('UserAdmin') or hasRole('Administrator')")
     @ResponseBody
     public void getReportDataUploads(
         @Parameter(
@@ -160,7 +160,7 @@ public class ReportApi {
         @ApiResponse(responseCode = HttpURLConnection.HTTP_OK + "",
             description = "List of users \"active\" during a time period.")
     })
-    @PreAuthorize("hasRole('UserAdmin') or hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('UserAdmin') or hasRole('Administrator')")
     @ResponseBody
     public void getActiveUsers(
         @Parameter(
@@ -211,7 +211,7 @@ public class ReportApi {
         @ApiResponse(responseCode = HttpURLConnection.HTTP_OK + "",
             description = "Metadata not published during a period.")
     })
-    @PreAuthorize("hasRole('UserAdmin') or hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('UserAdmin') or hasRole('Administrator')")
     @ResponseBody
     public void getReportInternalMetadata(
         @Parameter(
@@ -262,7 +262,7 @@ public class ReportApi {
         @ApiResponse(responseCode = HttpURLConnection.HTTP_OK + "",
             description = "Updated metadata during a period.")
     })
-    @PreAuthorize("hasRole('UserAdmin') or hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('UserAdmin') or hasRole('Administrator')")
     @ResponseBody
     public void getReportUpdatedMetadata(
         @Parameter(

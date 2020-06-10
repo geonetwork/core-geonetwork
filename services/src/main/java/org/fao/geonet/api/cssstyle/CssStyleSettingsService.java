@@ -78,7 +78,7 @@ public class CssStyleSettingsService {
     @io.swagger.v3.oas.annotations.Operation(summary = "Saves custom style variables.",
         description = "Saves custom style variables.")
     @RequestMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<String> saveCssStyle(@Parameter(hidden = true) HttpServletRequest request, @Parameter(hidden = true) HttpServletResponse response,

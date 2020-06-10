@@ -109,7 +109,7 @@ public class MapServersApi {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
@@ -132,7 +132,7 @@ public class MapServersApi {
             MediaType.APPLICATION_JSON_VALUE
         })
     @ResponseBody
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
@@ -167,7 +167,7 @@ public class MapServersApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @PreAuthorize("hasRole('Reviewer')")
+    @PreAuthorize("hasAuthority('Reviewer')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Mapserver created."),
         @ApiResponse(responseCode = "400", description = "Bad parameters."),
@@ -208,7 +208,7 @@ public class MapServersApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @PreAuthorize("hasRole('Reviewer')")
+    @PreAuthorize("hasAuthority('Reviewer')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Mapserver updated."),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
@@ -252,7 +252,7 @@ public class MapServersApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @PreAuthorize("hasRole('Reviewer')")
+    @PreAuthorize("hasAuthority('Reviewer')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Mapserver updated."),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
@@ -322,7 +322,7 @@ public class MapServersApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @PreAuthorize("hasRole('Reviewer')")
+    @PreAuthorize("hasAuthority('Reviewer')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Mapserver removed."),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
@@ -359,7 +359,7 @@ public class MapServersApi {
             MediaType.TEXT_PLAIN_VALUE
         })
     @ResponseBody
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
@@ -412,7 +412,7 @@ public class MapServersApi {
         produces = {
             MediaType.TEXT_PLAIN_VALUE
         })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
@@ -467,7 +467,7 @@ public class MapServersApi {
         produces = {
             MediaType.TEXT_PLAIN_VALUE
         })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })

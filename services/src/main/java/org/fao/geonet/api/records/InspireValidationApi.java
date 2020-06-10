@@ -88,7 +88,7 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 })
 @Tag(name = API_CLASS_RECORD_TAG)
 @Controller("inspire")
-@PreAuthorize("hasRole('Editor')")
+@PreAuthorize("hasAuthority('Editor')")
 @ReadWriteController
 public class InspireValidationApi {
 
@@ -114,7 +114,7 @@ public class InspireValidationApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "List of testsuites available."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
@@ -142,7 +142,7 @@ public class InspireValidationApi {
         produces = {
             MediaType.TEXT_PLAIN_VALUE
         })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Check status of the report."),
         @ApiResponse(responseCode = "404", description = "Metadata not found."),
@@ -275,7 +275,7 @@ public class InspireValidationApi {
             MediaType.APPLICATION_JSON_VALUE
         }
     )
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Report ready."),
         @ApiResponse(responseCode = "201", description = "Report not ready."),

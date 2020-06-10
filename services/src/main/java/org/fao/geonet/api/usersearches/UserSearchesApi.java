@@ -138,7 +138,7 @@ public class UserSearchesApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     public List<UserSearchDto> getAllUserCustomSearches(
         @Parameter(
@@ -168,7 +168,7 @@ public class UserSearchesApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     public PaginatedUserSearchResponse getAllUserCustomSearchesPage(
         @Parameter(
@@ -353,7 +353,7 @@ public class UserSearchesApi {
         method = RequestMethod.PUT
     )
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "User search  updated."),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)

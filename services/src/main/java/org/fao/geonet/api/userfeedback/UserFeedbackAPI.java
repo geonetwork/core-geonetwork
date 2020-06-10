@@ -134,7 +134,7 @@ public class UserFeedbackAPI {
         description = "Removes a user feedback")
     @RequestMapping(value = "/userfeedback/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('Reviewer')")
+    @PreAuthorize("hasAuthority('Reviewer')")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "User feedback removed."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)})
     @ResponseBody
@@ -628,7 +628,7 @@ public class UserFeedbackAPI {
         description = "For reviewers")
     @RequestMapping(value = "/userfeedback/{uuid}/publish", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('Reviewer')")
+    @PreAuthorize("hasAuthority('Reviewer')")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "User feedback published."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)})

@@ -186,7 +186,7 @@ public class UsersApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('UserAdmin') or hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('UserAdmin') or hasRole('Administrator')")
     @ResponseBody
     public ResponseEntity<String> deleteUser(
         @Parameter(
@@ -266,7 +266,7 @@ public class UsersApi {
         method = RequestMethod.GET
     )
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Property does not exist."),
         @ApiResponse(responseCode = "404", description = "A property with that value already exist."),
@@ -305,7 +305,7 @@ public class UsersApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('UserAdmin') or hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('UserAdmin') or hasRole('Administrator')")
     @ResponseBody
     public ResponseEntity<String> createUser(
         @Parameter(

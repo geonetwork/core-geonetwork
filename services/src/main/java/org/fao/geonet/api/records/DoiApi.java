@@ -61,7 +61,7 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 })
 @Tag(name = API_CLASS_RECORD_TAG)
 @Controller("doi")
-@PreAuthorize("hasRole('Editor')")
+@PreAuthorize("hasAuthority('Editor')")
 @ReadWriteController
 public class DoiApi {
 
@@ -77,7 +77,7 @@ public class DoiApi {
             MediaType.APPLICATION_JSON_VALUE
         }
     )
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Record can be proposed to DataCite."),
         @ApiResponse(responseCode = "404", description = "Metadata not found."),
@@ -112,7 +112,7 @@ public class DoiApi {
             MediaType.APPLICATION_JSON_VALUE
         }
     )
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Check status of the report."),
         @ApiResponse(responseCode = "404", description = "Metadata not found."),
@@ -148,7 +148,7 @@ public class DoiApi {
             MediaType.APPLICATION_JSON_VALUE
         }
     )
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "DOI unregistered."),
         @ApiResponse(responseCode = "404", description = "Metadata or DOI not found."),

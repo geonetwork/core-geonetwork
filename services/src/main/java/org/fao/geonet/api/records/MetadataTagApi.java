@@ -123,7 +123,7 @@ public class MetadataTagApi {
         @ApiResponse(responseCode = "201", description = "Record tags added."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
     public void updateTags(
         @Parameter(
@@ -190,7 +190,7 @@ public class MetadataTagApi {
         @ApiResponse(responseCode = "204", description = "Record tags removed."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
     public void deleteTags(
         @Parameter(
@@ -247,7 +247,7 @@ public class MetadataTagApi {
         @ApiResponse(responseCode = "201", description = "Report about updated records."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
     public MetadataProcessingReport updateTags(
         @Parameter(
@@ -355,7 +355,7 @@ public class MetadataTagApi {
         @ApiResponse(responseCode = "201", description = "Report about removed records."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
     public MetadataProcessingReport updateTags(
         @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,

@@ -102,7 +102,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 @RequestMapping(value = {"/{portal}/api/records", "/{portal}/api/" + API.VERSION_0_1 + "/records"})
 @Tag(name = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
 @Controller("recordInsertOrDelete")
-@PreAuthorize("hasRole('Editor')")
+@PreAuthorize("hasAuthority('Editor')")
 @ReadWriteController
 public class MetadataInsertDeleteApi {
 
@@ -181,7 +181,7 @@ public class MetadataInsertDeleteApi {
     )
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Report about deleted records."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)})
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public SimpleMetadataProcessingReport deleteRecords(
@@ -232,7 +232,7 @@ public class MetadataInsertDeleteApi {
         MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = API_PARAM_REPORT_ABOUT_IMPORTED_RECORDS),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)})
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
     SimpleMetadataProcessingReport insert(
@@ -371,7 +371,7 @@ public class MetadataInsertDeleteApi {
         MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Return the internal id of the newly created record."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)})
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
     String create(
@@ -479,7 +479,7 @@ public class MetadataInsertDeleteApi {
     @RequestMapping(method = {RequestMethod.POST,}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = API_PARAM_REPORT_ABOUT_IMPORTED_RECORDS),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)})
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public SimpleMetadataProcessingReport insertFile(
@@ -555,7 +555,7 @@ public class MetadataInsertDeleteApi {
         MediaType.APPLICATION_JSON_VALUE})
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = API_PARAM_REPORT_ABOUT_IMPORTED_RECORDS),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)})
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public SimpleMetadataProcessingReport insertOgcMapContextFile(

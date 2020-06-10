@@ -58,7 +58,7 @@ public class MigrationApi {
         produces = MediaType.TEXT_PLAIN_VALUE,
         method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.CREATED)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     public ResponseEntity<String> callStep(
         @Parameter(description = "Class name to execute corresponding to a migration step. See DatabaseMigrationTask.",
             example = "org.fao.geonet.api.records.attachments.MetadataResourceDatabaseMigration",

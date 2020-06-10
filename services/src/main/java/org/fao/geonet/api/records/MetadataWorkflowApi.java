@@ -159,7 +159,7 @@ public class MetadataWorkflowApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Get last workflow status for a record", description = "")
     @RequestMapping(value = "/{metadataUuid}/status/workflow/last", method = RequestMethod.GET, produces = {
         MediaType.APPLICATION_JSON_VALUE})
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Record status."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseStatus(HttpStatus.OK)
@@ -198,7 +198,7 @@ public class MetadataWorkflowApi {
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Set the record status", description = "")
     @RequestMapping(value = "/{metadataUuid}/status", method = RequestMethod.PUT)
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Status updated."),
         @ApiResponse(responseCode = "400", description = "Metadata workflow not enabled."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
@@ -258,7 +258,7 @@ public class MetadataWorkflowApi {
         value = "/{metadataUuid}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}/close",
         method = RequestMethod.PUT
     )
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Task closed."),
         @ApiResponse(responseCode = "404", description = "Status not found."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
@@ -286,7 +286,7 @@ public class MetadataWorkflowApi {
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete a record status", description = "")
     @RequestMapping(value = "/{metadataUuid}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}", method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Status removed."),
         @ApiResponse(responseCode = "404", description = "Status not found."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)})
@@ -314,7 +314,7 @@ public class MetadataWorkflowApi {
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete all record status", description = "")
     @RequestMapping(value = "/{metadataUuid}/status", method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Status removed."),
         @ApiResponse(responseCode = "404", description = "Status not found."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)})

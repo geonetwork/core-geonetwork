@@ -125,7 +125,7 @@ public class ValidateApi {
             MediaType.APPLICATION_JSON_VALUE
         }
     )
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Records validated."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
@@ -203,7 +203,7 @@ public class ValidateApi {
             MediaType.APPLICATION_JSON_VALUE
         }
     )
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Records validated."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)

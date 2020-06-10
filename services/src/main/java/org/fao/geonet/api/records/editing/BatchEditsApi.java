@@ -96,7 +96,7 @@ public class BatchEditsApi implements ApplicationContextAware {
         @ApiResponse(responseCode = "201", description = "Return a report of what has been done."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public IProcessingReport batchEdit(

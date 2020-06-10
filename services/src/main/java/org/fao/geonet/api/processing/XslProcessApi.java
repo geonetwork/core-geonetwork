@@ -112,7 +112,7 @@ public class XslProcessApi {
         })
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Processed records."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
@@ -243,7 +243,7 @@ public class XslProcessApi {
         })
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Report about processed records."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)

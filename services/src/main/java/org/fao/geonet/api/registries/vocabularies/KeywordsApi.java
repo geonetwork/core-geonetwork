@@ -524,7 +524,7 @@ public class KeywordsApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public void deleteThesaurus(
@@ -589,7 +589,7 @@ public class KeywordsApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
     })
 
-    @PreAuthorize("hasRole('Reviewer')")
+    @PreAuthorize("hasAuthority('Reviewer')")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.CREATED)
     public String uploadThesaurus(
@@ -711,7 +711,7 @@ public class KeywordsApi {
         @ApiResponse(responseCode = "201", description = "Thesaurus uploaded in SKOS format."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
     })
-    @PreAuthorize("hasRole('Reviewer')")
+    @PreAuthorize("hasAuthority('Reviewer')")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.CREATED)
     public String uploadThesaurusFromUrl(

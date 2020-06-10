@@ -50,7 +50,7 @@ import java.util.List;
 @Tag(name = "identifiers",
     description = "Identifiers operations")
 @Controller("identifiers")
-@PreAuthorize("hasRole('Editor')")
+@PreAuthorize("hasAuthority('Editor')")
 public class IdentifiersApi {
 
     public static final String MSG_NO_METADATA_IDENTIFIER_FOUND_WITH_ID = "No metadata identifier found with id '%d'.";
@@ -77,7 +77,7 @@ public class IdentifiersApi {
         @ApiResponse(responseCode = "200", description = "List of identifier templates."),
         @ApiResponse(responseCode = "403", description = "Operation not allowed. Only Editor can access it.")
     })
-    @PreAuthorize("hasRole('Editor') or hasRole('Reviewer') or hasRole('UserAdmin') or hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Editor') or hasRole('Reviewer') or hasRole('UserAdmin') or hasRole('Administrator')")
     @ResponseBody
     public List<MetadataIdentifierTemplate> getIdentifiers(
         @Parameter(
@@ -115,7 +115,7 @@ public class IdentifiersApi {
         @ApiResponse(responseCode = "201", description = "Identifier template created."),
         @ApiResponse(responseCode = "403", description = "Operation not allowed. Only Editor can access it.")
     })
-    @PreAuthorize("hasRole('Editor') or hasRole('Reviewer') or hasRole('UserAdmin') or hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Editor') or hasRole('Reviewer') or hasRole('UserAdmin') or hasRole('Administrator')")
     @ResponseBody
     public ResponseEntity<Integer> addIdentifier(
         @Parameter(
@@ -158,7 +158,7 @@ public class IdentifiersApi {
         @ApiResponse(responseCode = "404", description = "Resource not found."),
         @ApiResponse(responseCode = "403", description = "Operation not allowed. Only Editor can access it.")
     })
-    @PreAuthorize("hasRole('Editor') or hasRole('Reviewer') or hasRole('UserAdmin') or hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Editor') or hasRole('Reviewer') or hasRole('UserAdmin') or hasRole('Administrator')")
     @ResponseBody
     public void updateIdentifier(
         @Parameter(
@@ -203,7 +203,7 @@ public class IdentifiersApi {
         @ApiResponse(responseCode = "404", description = "Resource not found."),
         @ApiResponse(responseCode = "403", description = "Operation not allowed. Only Editor can access it.")
     })
-    @PreAuthorize("hasRole('Editor') or hasRole('Reviewer') or hasRole('UserAdmin') or hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Editor') or hasRole('Reviewer') or hasRole('UserAdmin') or hasRole('Administrator')")
     public void deleteIdentifier(
         @Parameter(
             description = API_PARAM_IDENTIFIER,
