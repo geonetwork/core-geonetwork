@@ -38,6 +38,7 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -73,7 +74,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
-import org.fao.geonet.kernel.mef.Importer;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -86,8 +87,6 @@ import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
@@ -153,6 +152,9 @@ public class MetadataWorkflowApi {
 
     @Autowired
     StatusActionsFactory statusActionFactory;
+
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     @ApiOperation(value = "Get record status history", notes = "", nickname = "getRecordStatusHistory")
     @RequestMapping(value = "/{metadataUuid}/status", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
@@ -309,7 +311,7 @@ public class MetadataWorkflowApi {
             @ApiParam(value = "User identifier", required = true) @PathVariable int userId,
             @ApiParam(value = "Change date", required = true) @PathVariable String changeDate,
             @ApiParam(value = "Close date", required = true) @RequestParam String closeDate, HttpServletRequest request)
-                    throws Exception {
+            throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         MetadataStatus metadataStatus = metadataStatusRepository
@@ -393,9 +395,9 @@ public class MetadataWorkflowApi {
                 || (owner != null && owner.length > 0) || (record != null && record.length > 0)) {
             metadataStatuses = metadataStatusRepository.searchStatus(
                     type != null && type.length > 0 ? Arrays.asList(type) : null,
-                            author != null && author.length > 0 ? Arrays.asList(author) : null,
-                                    owner != null && owner.length > 0 ? Arrays.asList(owner) : null,
-                                            record != null && record.length > 0 ? Arrays.asList(record) : null, dateFrom, dateTo, pageRequest);
+                    author != null && author.length > 0 ? Arrays.asList(author) : null,
+                    owner != null && owner.length > 0 ? Arrays.asList(owner) : null,
+                    record != null && record.length > 0 ? Arrays.asList(record) : null, dateFrom, dateTo, pageRequest);
         } else {
             metadataStatuses = metadataStatusRepository.findAll(pageRequest).getContent();
         }
@@ -439,11 +441,11 @@ public class MetadataWorkflowApi {
             Integer.parseInt(StatusValue.Events.RECORDRESTORED)};
 
     @ApiOperation(
-            value = "Get saved content from the status record",
+            value = "Get saved content from the status record before changes",
             notes = "",
             nickname = "showStatusBefore")
     @RequestMapping(
-            value = "/status/{serializedId}/before",
+            value = "/{metadataUuid}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}/before",
             method = RequestMethod.GET,
             produces = {
                     MediaType.APPLICATION_XML_VALUE
@@ -451,50 +453,105 @@ public class MetadataWorkflowApi {
 
     @PreAuthorize("hasRole('Editor')")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Record found."),
+            @ApiResponse(code = 200, message = "Previous version of the record."),
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public String showStatusBefore(
-            @ApiParam(
-                    value = "Record status id",
-                    required = true)
-            @PathVariable
-            String serializedId,
+            @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+            @ApiParam(value = "Status identifier", required = true) @PathVariable int statusId,
+            @ApiParam(value = "User identifier", required = true) @PathVariable int userId,
+            @ApiParam(value = "Change date", required = true) @PathVariable String changeDate,
             HttpServletRequest request
-            )
-                    throws Exception {
-        MetadataStatusId metadataStatusId = MetadataStatusResponse.convertSerializedStringInMetadataStatusId(serializedId);
+    )
+            throws Exception {
 
-        MetadataStatusRepository metadataStatusRepository =
-                ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
-
-        MetadataStatus status = metadataStatusRepository.findOne(metadataStatusId);
-
-        if(!StatusValueType.event.equals(status.getStatusValue().getType()) || !ArrayUtils.contains(supportedStatuses, metadataStatusId.getStatusId())) {
-            throw new NotAllowedException("The recover for this element is not supported");
-        }
-
-        String metadataId = metadataStatusId.getMetadataId() + "";
+        AbstractMetadata metadata = null;
 
         try {
-            ApiUtils.canViewRecord(metadataId, request);
+            metadata = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
-        return status.getPreviousState();
+        MetadataStatus metadataStatus = metadataStatusRepository
+                .findOne(new MetadataStatusId().setMetadataId(metadata.getId()).setStatusId(statusId).setUserId(userId)
+                        .setChangeDate(new ISODate(changeDate)));
+        if (metadataStatus == null) {
+            throw new ResourceNotFoundException(
+                    String.format("Can't find metadata status for record '%d', user '%s' at date '%s'", metadataUuid,
+                            userId, changeDate));
+        }
+
+        if(!StatusValueType.event.equals(metadataStatus.getStatusValue().getType()) || !ArrayUtils.contains(supportedStatuses, statusId)) {
+            if(!StatusValueType.event.equals(metadataStatus.getStatusValue().getType()) || !ArrayUtils.contains(supportedStatuses, statusId)) {
+                throw new NotAllowedException("Unsupported action on status type '" + metadataStatus.getStatusValue().getType() + "' for metadata '" + metadata.getUuid() + "'. Supports status type '" +
+                        StatusValueType.event + "' with the status id '" + Arrays.toString(supportedStatuses) + "'.");
+            }
+        }
+
+        return metadataStatus.getPreviousState();
     }
 
+    @ApiOperation(
+            value = "Get saved content from the status record after changes",
+            notes = "",
+            nickname = "showStatusAfter")
+    @RequestMapping(value = "/{metadataUuid}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}/after",
+            method = RequestMethod.GET,
+            produces = {
+                    MediaType.APPLICATION_XML_VALUE
+            })
+
+    @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Version of the record after changes."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String showStatusAfter(
+            @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+            @ApiParam(value = "Status identifier", required = true) @PathVariable int statusId,
+            @ApiParam(value = "User identifier", required = true) @PathVariable int userId,
+            @ApiParam(value = "Change date", required = true) @PathVariable String changeDate,
+            HttpServletRequest request
+    )
+            throws Exception {
+        AbstractMetadata metadata = null;
+
+        try {
+            metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
+
+        MetadataStatus metadataStatus = metadataStatusRepository
+                .findOne(new MetadataStatusId().setMetadataId(metadata.getId()).setStatusId(statusId).setUserId(userId)
+                        .setChangeDate(new ISODate(changeDate)));
+        if (metadataStatus == null) {
+            throw new ResourceNotFoundException(
+                    String.format("Can't find metadata status for record '%d', user '%s' at date '%s'", metadataUuid,
+                            userId, changeDate));
+        }
+
+        if(!StatusValueType.event.equals(metadataStatus.getStatusValue().getType()) || !ArrayUtils.contains(supportedStatuses, statusId)) {
+            throw new NotAllowedException("Unsupported action on status type '" + metadataStatus.getStatusValue().getType() + "' for metadata '" + metadata.getUuid() + "'. Supports status type '" +
+                    StatusValueType.event + "' with the status id '" + Arrays.toString(supportedStatuses) + "'.");
+        }
+
+        return metadataStatus.getCurrentState();
+    }
 
     @ApiOperation(
             value = "Restore saved content from a status record",
             notes = "",
             nickname = "restoreAtStatusSave")
     @RequestMapping(
-            value = "/status/{serializedId}/restore",
+            value = "/{metadataUuid}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}/restore",
             method = RequestMethod.POST
             )
     @PreAuthorize("hasRole('Editor')")
@@ -505,36 +562,38 @@ public class MetadataWorkflowApi {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public void restoreAtStatusSave(
-            @ApiParam(
-                    value = "Record status id",
-                    required = true)
-            @PathVariable
-            String serializedId,
+            @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+            @ApiParam(value = "Status identifier", required = true) @PathVariable int statusId,
+            @ApiParam(value = "User identifier", required = true) @PathVariable int userId,
+            @ApiParam(value = "Change date", required = true) @PathVariable String changeDate,
             HttpServletRequest request
             )
                     throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        MetadataStatusId metadataStatusId = MetadataStatusResponse.convertSerializedStringInMetadataStatusId(serializedId);
-        IMetadataManager dataMan = applicationContext.getBean(IMetadataManager.class);
-
-        MetadataStatusRepository metadataStatusRepository =
-                ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
-
-        MetadataStatus status = metadataStatusRepository.findOne(metadataStatusId);
-
-        if(!StatusValueType.event.equals(status.getStatusValue().getType()) || !ArrayUtils.contains(supportedStatuses, metadataStatusId.getStatusId())) {
-            throw new NotAllowedException("The recover for this element is not supported");
-        }
-
-        int metadataId = metadataStatusId.getMetadataId();
 
         AbstractMetadata metadata = null;
+
         try {
-            metadata = ApiUtils.canEditRecord(Integer.toString(metadataId), request);
+            metadata = ApiUtils.canEditRecord(metadataUuid, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
         }
+
+        MetadataStatus metadataStatus = metadataStatusRepository
+                .findOne(new MetadataStatusId().setMetadataId(metadata.getId()).setStatusId(statusId).setUserId(userId)
+                        .setChangeDate(new ISODate(changeDate)));
+        if (metadataStatus == null) {
+            throw new ResourceNotFoundException(
+                    String.format("Can't find metadata status for record '%d', user '%s' at date '%s'", metadataUuid,
+                            userId, changeDate));
+        }
+
+        if(!StatusValueType.event.equals(metadataStatus.getStatusValue().getType()) || !ArrayUtils.contains(supportedStatuses, statusId)) {
+            throw new NotAllowedException("The recover for this element is not supported. Supports status type '" + 
+                 StatusValueType.event + "' with the status id '" + Arrays.toString(supportedStatuses) + 
+                 "'. Received status type '" + metadataStatus.getStatusValue().getType() + "' with status id '" + statusId + "'");
+        }
+
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
 
@@ -542,37 +601,39 @@ public class MetadataWorkflowApi {
 
         MetadataDraft draft = metadatadraftRepository.findOneByUuid(metadata.getUuid());
         // If there is a draft record, the restore is made over the Draft record and not the approved one.
-        if(draft != null) {
+        if (draft != null) {
             context.getBean(IMetadataManager.class).update(draft.getId(), new Updater<MetadataDraft>() {
                 @Override
                 public void apply(@Nonnull MetadataDraft metadata) {
-                    metadata.setData(status.getPreviousState());
+                    metadata.setData(metadataStatus.getPreviousState());
                 }
             });
         } else {
-            context.getBean(IMetadataManager.class).update(metadataId, new Updater<Metadata>() {
+            context.getBean(IMetadataManager.class).update(metadata.getId(), new Updater<Metadata>() {
                 @Override
                 public void apply(@Nonnull Metadata metadata) {
-                    metadata.setData(status.getPreviousState());
+                    metadata.setData(metadataStatus.getPreviousState());
                 }
             });
         }
 
-        if(metadataStatusId.getStatusId() != Integer.parseInt(StatusValue.Events.RECORDRESTORED)) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+
+        UserSession session = ApiUtils.getUserSession(request.getSession());
+        if (session != null) {
             // Create a new event
-            String xmlAfter = status.getPreviousState();
-            UserSession session = ApiUtils.getUserSession(request.getSession());
-            new RecordRestoredEvent(metadataId, session.getUserIdAsInt(), xmlBefore, xmlAfter).publish(applicationContext);
-        } else {
-            // Remove restore event
-            metadataStatusRepository.delete(status);
+            String xmlAfter = metadataStatus.getPreviousState();
+            if (!xmlAfter.equals(xmlBefore)) {
+                new RecordRestoredEvent(metadata.getId(), session.getUserIdAsInt(), xmlBefore, xmlAfter).publish(applicationContext);
+            } else {
+                throw new NotAllowedException("Error recovering metadata id " + metadata.getUuid() + ". Cannot recover record which are identical. Possibly already recovered.");
+            }
         }
     }
 
     /**
      * Build a list of status with additional information about users (author and
      * owner of the status change).
-     *
      */
     @NotNull
     private List<MetadataStatusResponse> buildMetadataStatusResponses(List<MetadataStatus> listOfStatus,
@@ -593,6 +654,7 @@ public class MetadataWorkflowApi {
         }
 
         Map<Integer, String> titles = new HashMap<>();
+        Map<Integer, String> uuids = new HashMap<>();
 
         // Add all user info and record title to response
         for (MetadataStatus s : listOfStatus) {
@@ -627,6 +689,17 @@ public class MetadataWorkflowApi {
             }
             status.setTitle(title);
 
+            String uuid = uuids.get(s.getId().getMetadataId());
+            if (uuid == null) {
+                try {
+                    // Collect metadata uuid.
+                    uuid=metadataUtils.getMetadataUuid(Integer.toString(s.getId().getMetadataId()));
+                    uuids.put(s.getId().getMetadataId(), uuid);
+                } catch (Exception e1) {
+                }
+            }
+            status.setUuid(uuid);
+
             response.add(status);
         }
 
@@ -635,40 +708,40 @@ public class MetadataWorkflowApi {
 
     private String extractCurrentStatus(MetadataStatus s) {
         switch (Integer.toString(s.getStatusValue().getId())) {
-        case StatusValue.Events.ATTACHMENTADDED:
-            return s.getCurrentState();
-        case StatusValue.Events.RECORDOWNERCHANGE:
-            return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "owner", "name");
-        case StatusValue.Events.RECORDGROUPOWNERCHANGE:
-            return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "owner", "name");
-        case StatusValue.Events.RECORDPROCESSINGCHANGE:
-            return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "process");
-        case StatusValue.Events.RECORDCATEGORYCHANGE:
-            List<String> categories = ObjectJSONUtils.extractListOfFieldFromJSONString(s.getCurrentState(), "category",
-                    "name");
-            StringBuffer categoriesAsString = new StringBuffer("[ ");
-            for (String categoryName : categories) {
-                categoriesAsString.append(categoryName + " ");
-            }
-            categoriesAsString.append("]");
-            return categoriesAsString.toString();
-        case StatusValue.Events.RECORDVALIDATIONTRIGGERED:
-            return s.getCurrentState().equals("1") ? "OK" : "KO";
-        default:
-            return "";
+            case StatusValue.Events.ATTACHMENTADDED:
+                return s.getCurrentState();
+            case StatusValue.Events.RECORDOWNERCHANGE:
+                return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "owner", "name");
+            case StatusValue.Events.RECORDGROUPOWNERCHANGE:
+                return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "owner", "name");
+            case StatusValue.Events.RECORDPROCESSINGCHANGE:
+                return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "process");
+            case StatusValue.Events.RECORDCATEGORYCHANGE:
+                List<String> categories = ObjectJSONUtils.extractListOfFieldFromJSONString(s.getCurrentState(), "category",
+                        "name");
+                StringBuffer categoriesAsString = new StringBuffer("[ ");
+                for (String categoryName : categories) {
+                    categoriesAsString.append(categoryName + " ");
+                }
+                categoriesAsString.append("]");
+                return categoriesAsString.toString();
+            case StatusValue.Events.RECORDVALIDATIONTRIGGERED:
+                return s.getCurrentState().equals("1") ? "OK" : "KO";
+            default:
+                return "";
         }
     }
 
     private String extractPreviousStatus(MetadataStatus s) {
         switch (Integer.toString(s.getStatusValue().getId())) {
-        case StatusValue.Events.ATTACHMENTDELETED:
-            return s.getPreviousState();
-        case StatusValue.Events.RECORDOWNERCHANGE:
-            return ObjectJSONUtils.extractFieldFromJSONString(s.getPreviousState(), "owner", "name");
-        case StatusValue.Events.RECORDGROUPOWNERCHANGE:
-            return ObjectJSONUtils.extractFieldFromJSONString(s.getPreviousState(), "owner", "name");
-        default:
-            return "";
+            case StatusValue.Events.ATTACHMENTDELETED:
+                return s.getPreviousState();
+            case StatusValue.Events.RECORDOWNERCHANGE:
+                return ObjectJSONUtils.extractFieldFromJSONString(s.getPreviousState(), "owner", "name");
+            case StatusValue.Events.RECORDGROUPOWNERCHANGE:
+                return ObjectJSONUtils.extractFieldFromJSONString(s.getPreviousState(), "owner", "name");
+            default:
+                return "";
         }
     }
 

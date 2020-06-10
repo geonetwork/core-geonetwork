@@ -46,8 +46,10 @@
             '/close?closeDate=' + (optionalDateOrNow || moment().format('YYYY-MM-DDTHH:mm:ss')));
         };
 
-        this.restoreHistoryElement = function(statusId) {
-          return $http.post('../api/records/status/' + statusId + '/restore');
+        this.restoreHistoryElement = function(step) {
+          return $http.post('../api/records/' + step.id.metadataId + '/status/' +
+              step.id.statusId + '.' + step.id.userId + '.' +
+              step.id.changeDate.dateAndTime + '/restore');
         };
 
         function buildFilter(filter) {

@@ -41,6 +41,7 @@ public class MetadataStatusResponse extends MetadataStatus {
     String ownerProfile;
 
     String title;
+    String uuid;
     String currentStatus;
     String previousStatus;
 
@@ -150,31 +151,20 @@ public class MetadataStatusResponse extends MetadataStatus {
         return title;
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
     public MetadataStatusResponse setTitle(String title) {
         this.title = title;
         return this;
     }
 
-    private static String SEPARATOR = "@";
-
-    public String getIdSerialized() {
-        MetadataStatusId id = metadataStatusObject.getId();
-        return id.getChangeDate().toString() + SEPARATOR + id.getMetadataId() + SEPARATOR + id.getStatusId() + SEPARATOR + id.getUserId();
+    public MetadataStatusResponse setUuid(String uuid) {
+        this.uuid = uuid;
+        return this;
     }
-
-    public static MetadataStatusId convertSerializedStringInMetadataStatusId(String serializedString) {
-        if(serializedString == null) return null;
-        String[] values = serializedString.split(SEPARATOR);
-
-        MetadataStatusId key = new MetadataStatusId();
-        key.setChangeDate(new ISODate(values[0]));
-        key.setMetadataId(Integer.parseInt(values[1]));
-        key.setStatusId(Integer.parseInt(values[2]));
-        key.setUserId(Integer.parseInt(values[3]));
-
-        return key;
-    }
-
+    
     public MetadataStatusId getId() {
         return metadataStatusObject.getId();
     }

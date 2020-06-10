@@ -147,7 +147,7 @@
               scope.restoreHistoryElement = function(statusId) {
                 confirmMessage = $translate.instant('confirmRestore');
                 if($window.confirm(confirmMessage)) {
-                    gnRecordHistoryService.restoreHistoryElement(statusId).then(function(r) {
+                    return gnRecordHistoryService.restoreHistoryElement(statusId).then(function(r) {
                           message = $translate.instant('recordRestored');
                           scope.$emit('StatusUpdated', {
                               msg: message,
