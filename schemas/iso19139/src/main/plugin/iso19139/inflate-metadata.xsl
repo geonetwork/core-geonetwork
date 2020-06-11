@@ -7,7 +7,7 @@
   <xsl:output method="xml" indent="yes"/>
 
   <xsl:template match="/root">
-    <xsl:apply-templates select="gmd:MD_Metadata"/>
+    <xsl:apply-templates select="*[1]"/>
   </xsl:template>
 
   <!-- Add gco:Boolean to gmd:pass with nilReason to work nicely in the editor,
