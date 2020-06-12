@@ -43,13 +43,16 @@
         restrict: 'A',
         scope: {
           'selected': '=gnMultiselect',
-          'choices': '='
+          'choices': '=',
+          'readonlyMode': '='
         },
         templateUrl: '../../catalog/components/common/multiselect/partials/' +
             'multiselect.html',
         link: function(scope, element, attrs) {
 
           var sortOnSelection = true;
+
+          scope.readonlyMode = scope.readonlyMode || false;
 
           //
           scope.currentSelectionLeft = [];
