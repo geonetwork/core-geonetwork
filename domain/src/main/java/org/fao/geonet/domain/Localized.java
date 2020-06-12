@@ -48,7 +48,7 @@ import java.util.Map;
  * @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
  * @CollectionTable(joinColumns = @JoinColumn(name = "iddes"), name = "groupsdes")
  * @MapKeyColumn(name = "langid", length = 5)
- * @Column(name = "label", nullable = false, length = 96)
+ * @Column(name = "label", nullable = false, length = 255)
  * public Map<String, String> getLabelTranslations() {
  * return super.getLabelTranslations();
  * }
