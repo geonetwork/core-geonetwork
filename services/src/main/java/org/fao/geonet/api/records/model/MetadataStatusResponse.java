@@ -41,6 +41,7 @@ public class MetadataStatusResponse extends MetadataStatus {
     String ownerProfile;
 
     String title;
+    String uuid;
     String currentStatus;
     String previousStatus;
 
@@ -150,8 +151,17 @@ public class MetadataStatusResponse extends MetadataStatus {
         return title;
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
     public MetadataStatusResponse setTitle(String title) {
         this.title = title;
+        return this;
+    }
+
+    public MetadataStatusResponse setUuid(String uuid) {
+        this.uuid = uuid;
         return this;
     }
 
