@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Specifications for querying {@link org.fao.geonet.repository.UserRepository}.
+ * Specification for querying {@link org.fao.geonet.repository.UserRepository}.
  *
  * @author Jesse
  */

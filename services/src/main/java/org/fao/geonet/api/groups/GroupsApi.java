@@ -56,7 +56,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -76,7 +76,7 @@ import java.nio.file.attribute.FileTime;
 import java.sql.SQLException;
 import java.util.*;
 
-import static org.springframework.data.jpa.domain.Specifications.where;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @RequestMapping(value = {
     "/{portal}/api/groups",
@@ -187,7 +187,7 @@ public class GroupsApi {
             throw new RuntimeException("ServiceContext not available");
         }
 
-        Group group = groupRepository.findOne(groupId);
+        Group group = groupRepository.findById(groupId).get();
         if (group == null) {
             throw new ResourceNotFoundException(messages.getMessage("api.groups.group_not_found", new
                 Object[]{groupId}, locale));
@@ -305,10 +305,7 @@ public class GroupsApi {
         @RequestBody
             Group group
     ) throws Exception {
-        final Group existingId = groupRepository
-            .findOne(group.getId());
-
-        if (existingId != null) {
+        if (groupRepository.findById(group.getId()).isPresent()) {
             throw new IllegalArgumentException(String.format(
                 "A group with id '%d' already exist.",
                 group.getId()
@@ -362,7 +359,7 @@ public class GroupsApi {
         @PathVariable
             Integer groupIdentifier
     ) throws Exception {
-        final Group group = groupRepository.findOne(groupIdentifier);
+        final Group group = groupRepository.findById(groupIdentifier).get();
 
         if (group == null) {
             throw new ResourceNotFoundException(String.format(
@@ -398,7 +395,7 @@ public class GroupsApi {
         @PathVariable
             Integer groupIdentifier
     ) throws Exception {
-        final Group group = groupRepository.findOne(groupIdentifier);
+        final Group group = groupRepository.findById(groupIdentifier).get();
 
         if (group == null) {
             throw new ResourceNotFoundException(String.format(
@@ -441,7 +438,7 @@ public class GroupsApi {
         @RequestBody
             Group group
     ) throws Exception {
-        final Group existing = groupRepository.findOne(groupIdentifier);
+        final Group existing = groupRepository.findById(groupIdentifier).get();
         if (existing == null) {
             throw new ResourceNotFoundException(String.format(
                 MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
@@ -489,7 +486,7 @@ public class GroupsApi {
         @Parameter(hidden = true)
             ServletRequest request
     ) throws Exception {
-        Group group = groupRepository.findOne(groupIdentifier);
+        Group group = groupRepository.findById(groupIdentifier).get();
 
         if (group != null) {
             List<Integer> reindex = operationAllowedRepo.findAllIds(OperationAllowedSpecs.hasGroupId(groupIdentifier),
@@ -517,7 +514,7 @@ public class GroupsApi {
                 ));
             }
 
-            groupRepository.delete(groupIdentifier);
+            groupRepository.deleteById(groupIdentifier);
 
         } else {
             throw new ResourceNotFoundException(String.format(
@@ -546,10 +543,10 @@ public class GroupsApi {
             if (includingSystemGroups) {
                 return groupRepository.findAll(sort);
             } else {
-                return groupRepository.findAll(Specifications.not(GroupSpecs.isReserved()), sort);
+                return groupRepository.findAll(Specification.not(GroupSpecs.isReserved()), sort);
             }
         } else {
-            Specifications<UserGroup> spec = Specifications.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
+            Specification<UserGroup> spec = Specification.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
             // you're no Administrator
             // retrieve your groups
             if (profile != null) {

@@ -160,7 +160,7 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void updateNonExistingMapServer() throws Exception {
-        MapServer mapServerToUpdate = mapServerRepo.findOne(222);
+        MapServer mapServerToUpdate = mapServerRepo.findById(222).get();
         Assert.assertNull(mapServerToUpdate);
 
         mapServerToUpdate = new MapServer();
@@ -201,13 +201,13 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
 
-        mapServerToDelete = mapServerRepo.findOne(mapServerId);
+        mapServerToDelete = mapServerRepo.findById(mapServerId).get();
         Assert.assertNull(mapServerToDelete);
     }
 
     @Test
     public void deleteNonExistingMapserver() throws Exception {
-        MapServer mapServerToDelete = mapServerRepo.findOne(222);
+        MapServer mapServerToDelete = mapServerRepo.findById(222).get();
         Assert.assertNull(mapServerToDelete);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();

@@ -94,7 +94,7 @@ import java.util.concurrent.Callable;
 import static com.google.common.io.Files.getNameWithoutExtension;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 import static org.fao.geonet.api.records.formatters.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 /**
  * Allows a user to display a metadata with a particular formatters
@@ -792,7 +792,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             long changeDate = fparams.metadataInfo.getDataInfo().getChangeDate().toDate().getTime();
             final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
             final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(key.mdId);
-            final OperationAllowed one = serviceContext.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished));
+            final OperationAllowed one = serviceContext.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished)).get();
             final boolean isPublishedMd = one != null;
 
             Key withheldKey = null;

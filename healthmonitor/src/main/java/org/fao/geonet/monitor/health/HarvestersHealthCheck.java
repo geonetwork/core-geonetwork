@@ -67,7 +67,7 @@ public class HarvestersHealthCheck implements HealthCheckFactory {
                     final AbstractHarvester harvester = harvestManager.getHarvester(harvestUuid);
                     if (harvester.getStatus() == Common.Status.ACTIVE) {
                         Specification<HarvestHistory> spec = HarvestHistorySpecs.hasHarvesterUuid(harvestUuid);
-                        final PageRequest pageRequest = new PageRequest(0, 1, Sort.Direction.DESC, HarvestHistory_.harvestDate.getName());
+                        final PageRequest pageRequest = PageRequest.of(0, 1, Sort.Direction.DESC, HarvestHistory_.harvestDate.getName());
                         final Page<HarvestHistory> historyPage = historyRepository.findAll(spec, pageRequest);
                         if (!historyPage.getContent().isEmpty()) {
                             final HarvestHistory harvestHistory = historyPage.getContent().get(0);

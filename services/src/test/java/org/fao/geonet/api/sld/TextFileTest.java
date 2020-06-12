@@ -32,7 +32,7 @@ public class TextFileTest extends AbstractServiceIntegrationTest {
         int id = sld.getId();
         assertTrue(id > 0);
 
-        TextFile file = textFileRepository.findOne(id);
+        TextFile file = textFileRepository.findById(id).get();
         file.getContent();
 
         assertEquals(this.getRessourceAsString("test-sld-merged.xml"),file.getContent());

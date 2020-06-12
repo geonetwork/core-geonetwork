@@ -63,8 +63,8 @@ public class CswCapabilitiesInfoFieldRepositoryTest extends AbstractSpringDataTe
         CswCapabilitiesInfoField info2 = newCswServerCapabilitiesInfo();
         info2 = _repo.save(info2);
 
-        assertEquals(info2, _repo.findOne(info2.getId()));
-        assertEquals(info1, _repo.findOne(info1.getId()));
+        assertEquals(info2, _repo.findById(info2.getId()).get());
+        assertEquals(info1, _repo.findById(info1.getId()).get());
     }
 
     @Test

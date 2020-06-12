@@ -181,7 +181,7 @@ public class PasswordUtil {
     public static User updatePasswordWithNew(boolean matchOldPassword, String oldPassword,
                                              String newPassword, Integer iUserId, ApplicationContext appContext) throws SQLException, UserNotFoundEx {
         UserRepository repo = appContext.getBean(UserRepository.class);
-        User user = repo.findOne(iUserId);
+        User user = repo.findById(iUserId).get();
         if (user == null) {
             throw new UserNotFoundEx("" + iUserId);
         }

@@ -196,6 +196,6 @@ public class RegisterApi {
 
     Group getGroup(ServiceContext context) throws SQLException {
         final GroupRepository bean = context.getBean(GroupRepository.class);
-        return bean.findOne(ReservedGroup.guest.getId());
+        return bean.findById(ReservedGroup.guest.getId()).get();
     }
 }

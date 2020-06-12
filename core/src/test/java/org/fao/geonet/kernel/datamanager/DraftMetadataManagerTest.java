@@ -98,10 +98,10 @@ public class DraftMetadataManagerTest extends AbstractCoreIntegrationTest {
 
         Metadata record = createMetadata();
         record = (Metadata) metadataManager.save(record);
-        
+
         assertNotNull(record);
         assertNotNull(record.getId());
-        
+
         md = metadataManager.save(createMetadataDraft(record));
 
         assertNotNull(md);
@@ -115,11 +115,11 @@ public class DraftMetadataManagerTest extends AbstractCoreIntegrationTest {
         assertNull(metadataUtils.findOne(md.getId()));
         assertFalse(metadataUtils.exists(md.getId()));
         assertFalse(metadataUtils.existsMetadata(md.getId()));
-        
+
         assertTrue(metadataUtils.existsMetadataUuid(md.getUuid()));
         metadataManager.delete(record.getId());
         assertFalse(metadataUtils.existsMetadataUuid(md.getUuid()));
-      
+
     }
 
     /**
@@ -162,7 +162,7 @@ public class DraftMetadataManagerTest extends AbstractCoreIntegrationTest {
     }
 
     @Test
-    public void testSpecifications() throws Exception {
+    public void testSpecification() throws Exception {
 
         assertTrue(metadataUtils.findAll(MetadataSpecs.hasType(MetadataType.TEMPLATE)).isEmpty());
 

@@ -153,7 +153,7 @@ public class DraftUtilities {
     public void removeDraft(MetadataDraft draft) {
 
         Integer id = draft.getId();
-        if (!metadataDraftRepository.exists(id)) {
+        if (!metadataDraftRepository.existsById(id)) {
             // We are being called after removing everything related to this record.
             // Nothing to do here
             return;

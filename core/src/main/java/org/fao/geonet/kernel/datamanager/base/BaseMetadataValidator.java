@@ -514,10 +514,10 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      * @param validations the validation reports for each type of validation and schematron validation
      */
     @Transactional
-    private void saveValidationStatus(int id, List<MetadataValidation> validations) {
+    void saveValidationStatus(int id, List<MetadataValidation> validations) {
         try {
             validationRepository.deleteAllInternalValidationById_MetadataId(id);
-            validationRepository.save(validations);
+            validationRepository.saveAll(validations);
         } catch (Exception e) {
             LOGGER.error("Could not save validation status on metadata {}.", id);
             LOGGER.error("Could not save validation status on metadata, exception: ", e);

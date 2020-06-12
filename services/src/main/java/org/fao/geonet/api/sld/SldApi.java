@@ -222,7 +222,7 @@ public class SldApi {
         @PathVariable("id") int id,
         HttpServletResponse response) throws ResourceNotFoundException {
         try {
-            TextFile file = fileRepository.findOne(id);
+            TextFile file = fileRepository.findById(id).get();
             response.setContentType(file.getMimeType() + "; charset=utf-8");
             PrintWriter writer = response.getWriter();
             writer.write(file.getContent());

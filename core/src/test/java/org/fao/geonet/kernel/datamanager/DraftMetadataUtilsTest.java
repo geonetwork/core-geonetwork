@@ -207,8 +207,8 @@ public class DraftMetadataUtilsTest extends AbstractCoreIntegrationTest {
             metadataManager.delete(md.getId());
         }
 
-        userRepository.delete(user.getId());
-        groupRepository.delete(group.getId());
+        userRepository.deleteById(user.getId());
+        groupRepository.deleteById(group.getId());
     }
 
 }

@@ -365,7 +365,7 @@ public class Geonetwork implements ApplicationHandler {
                 }
 
 
-                final Page<Metadata> metadatas = _applicationContext.getBean(MetadataRepository.class).findAll(new PageRequest(0, 1));
+                final Page<Metadata> metadatas = _applicationContext.getBean(MetadataRepository.class).findAll(PageRequest.of(0, 1));
                 if (metadatas.getNumberOfElements() > 0) {
                     Integer mdId = metadatas.getContent().get(0).getId();
                     context.getUserSession().loginAs(new User().setName("admin").setProfile(Profile.Administrator).setUsername("admin"));

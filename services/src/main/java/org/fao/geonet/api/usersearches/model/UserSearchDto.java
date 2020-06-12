@@ -176,7 +176,7 @@ public class UserSearchDto implements Serializable {
         }
 
         UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
-        User user = userRepository.findOne(this.getCreatorId());
+        User user = userRepository.findById(this.getCreatorId()).get();
         if (user != null) {
             userSearch.setCreator(user);
         }
@@ -187,7 +187,7 @@ public class UserSearchDto implements Serializable {
         Set<Group> groups = new HashSet<>();
         getGroups().forEach(groupId -> {
             if (groupId != null) {
-                Group g = groupRepository.findOne(groupId);
+                Group g = groupRepository.findById(groupId).get();
 
                 if (g != null) {
                     groups.add(g);

@@ -108,7 +108,7 @@ public class TagsApi {
         @RequestBody
             MetadataCategory category
     ) throws Exception {
-        MetadataCategory existingCategory = categoryRepository.findOne(category.getId());
+        MetadataCategory existingCategory = categoryRepository.findById(category.getId()).get();
         if (existingCategory != null) {
             throw new IllegalArgumentException(String.format(
                 "A tag with id '%d' already exist", category.getId()
@@ -150,7 +150,7 @@ public class TagsApi {
         @PathVariable
             Integer tagIdentifier
     ) throws Exception {
-        org.fao.geonet.domain.MetadataCategory category = categoryRepository.findOne(tagIdentifier);
+        org.fao.geonet.domain.MetadataCategory category = categoryRepository.findById(tagIdentifier).get();
         if (category == null) {
             throw new ResourceNotFoundException("Category not found");
         }
@@ -183,7 +183,7 @@ public class TagsApi {
         @RequestBody
             MetadataCategory category
     ) throws Exception {
-        MetadataCategory existingCategory = categoryRepository.findOne(tagIdentifier);
+        MetadataCategory existingCategory = categoryRepository.findById(tagIdentifier).get();
         if (existingCategory != null) {
             updateCategory(tagIdentifier, category);
         } else {
@@ -229,7 +229,7 @@ public class TagsApi {
         @PathVariable
             Integer tagIdentifier
     ) throws Exception {
-        MetadataCategory category = categoryRepository.findOne(tagIdentifier);
+        MetadataCategory category = categoryRepository.findById(tagIdentifier).get();
         if (category != null) {
             long recordsCount = metadataRepository.count((Specification<Metadata>) MetadataSpecs.hasCategory(category));
             if (recordsCount > 0l) {
@@ -239,7 +239,7 @@ public class TagsApi {
                     recordsCount
                 ));
             } else {
-                categoryRepository.delete(tagIdentifier);
+                categoryRepository.deleteById(tagIdentifier);
             }
         } else {
             throw new ResourceNotFoundException(String.format(

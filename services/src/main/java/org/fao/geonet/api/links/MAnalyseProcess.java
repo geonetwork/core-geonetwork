@@ -119,7 +119,7 @@ public class MAnalyseProcess implements SelfNaming {
         analyseMdDate = System.currentTimeMillis();
         for (int i : ids) {
             try {
-                Metadata metadata = metadataRepository.findOne(i);
+                Metadata metadata = metadataRepository.findById(i).get();
                 Element xmlData = metadata.getXmlData(false);
                 runInNewTransaction("manalyseprocess-process-metadata", new TransactionTask<Object>() {
                     @Override

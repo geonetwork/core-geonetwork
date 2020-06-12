@@ -190,7 +190,7 @@ public class IdentifiersApiTest  extends AbstractServiceIntegrationTest {
     @Test
     public void updateNonExistingIdentifier() throws Exception {
         MetadataIdentifierTemplate metadataIdentifierTemplateToUpdate =
-            metadataIdentifierTemplateRepo.findOne(222);
+            metadataIdentifierTemplateRepo.findById(222).get();
         Assert.assertNull(metadataIdentifierTemplateToUpdate);
 
         metadataIdentifierTemplateToUpdate = new MetadataIdentifierTemplate();
@@ -240,7 +240,7 @@ public class IdentifiersApiTest  extends AbstractServiceIntegrationTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
         MetadataIdentifierTemplate identifierTemplateToDelete =
-            metadataIdentifierTemplateRepo.findOne(222);
+            metadataIdentifierTemplateRepo.findById(222).get();
         Assert.assertNull(identifierTemplateToDelete);
 
         this.mockHttpSession = loginAsAdmin();

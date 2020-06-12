@@ -95,7 +95,7 @@ public class ShibbolethUserUtilsTest extends AbstractCoreIntegrationTest {
     @After
     public void cleanUp() {
         User user = userRepo.findOneByUsername(username);
-        userRepo.delete(user.getId());
+        userRepo.deleteById(user.getId());
 
         for (int i = 1; i < 5; i++) {
             Group group = groupRepo.findByName(groupname + i);

@@ -135,7 +135,7 @@ public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTes
         assertFalse(opAllowedFound.contains(_opAllowed3));
         assertFalse(opAllowedFound.contains(_opAllowed4));
 
-        assertNull(_opAllowRepo.findOne(_opAllowed1.getId()));
+        assertNull(_opAllowRepo.findById(_opAllowed1.getId()).get());
     }
 
 
@@ -151,7 +151,7 @@ public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTes
         assertTrue(opAllowedFound.contains(_opAllowed3));
         assertTrue(opAllowedFound.contains(_opAllowed4));
 
-        assertNull(_opAllowRepo.findOne(_opAllowed1.getId()));
+        assertNull(_opAllowRepo.findById(_opAllowed1.getId()).get());
     }
 
     @Test

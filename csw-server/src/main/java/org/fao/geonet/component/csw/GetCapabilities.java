@@ -106,7 +106,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
         String recordUuidToUseForCapability = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID);
         if (!NodeInfo.DEFAULT_NODE.equals(context.getNodeId())) {
-            final Source source = sourceRepository.findOne(nodeinfo.getId());
+            final Source source = sourceRepository.findById(nodeinfo.getId()).get();
             if(source.getServiceRecord() != null) {
                 recordUuidToUseForCapability = source.getServiceRecord().toString();
             }
@@ -345,7 +345,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
         boolean isTitleDefined = false;
         String sourceUuid = NodeInfo.DEFAULT_NODE.equals(nodeinfo.getId()) ? sm.getSiteId() : nodeinfo.getId();
-        final Source source = sourceRepository.findOne(sourceUuid);
+        final Source source = sourceRepository.findById(sourceUuid).get();
         if (source != null) {
             vars.put("$TITLE", source.getLabelTranslations().get(langId));
             isTitleDefined = true;

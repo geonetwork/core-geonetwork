@@ -463,7 +463,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
 
             if (owner != null) {
-                User user = userRepository.findOne(fullMd.getSourceInfo().getOwner());
+                User user = userRepository.findById(fullMd.getSourceInfo().getOwner()).get();
                 if (user != null) {
                     fields.put(Geonet.IndexFieldNames.USERINFO, user.getUsername() + "|" + user.getSurname() + "|" + user
                         .getName() + "|" + user.getProfile());
@@ -473,7 +473,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
             String logoUUID = null;
             if (groupOwner != null) {
-                final Group group = groupRepository.findOne(groupOwner);
+                final Group group = groupRepository.findById(groupOwner).get();
                 if (group != null) {
                     fields.put(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner));
                     final boolean preferGroup = settingManager.getValueAsBool(Settings.SYSTEM_PREFER_GROUP_LOGO, true);
@@ -518,7 +518,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
 
             // get status
-            Sort statusSort = new Sort(Sort.Direction.DESC,
+            Sort statusSort = Sort.by(Sort.Direction.DESC,
                 MetadataStatus_.id.getName() + "." + MetadataStatusId_.changeDate.getName());
             List<MetadataStatus> statuses = statusRepository.findAllByIdAndByType(id$, StatusValueType.workflow, statusSort);
             if (!statuses.isEmpty()) {
@@ -605,7 +605,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
             privilegesFields.put(Geonet.IndexFieldNames.OP_PREFIX + operationId, String.valueOf(groupId));
             if (operationId == ReservedOperation.view.getId()) {
-                Group g = groupRepository.findOne(groupId);
+                Group g = groupRepository.findById(groupId).get();
                 if (g != null) {
                     privilegesFields.put(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.getName());
 

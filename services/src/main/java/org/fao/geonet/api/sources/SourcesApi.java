@@ -163,7 +163,7 @@ public class SourcesApi {
             Source source,
         @Parameter(hidden = true)
             HttpServletRequest request) {
-        Source existing = sourceRepository.findOne(source.getUuid());
+        Source existing = sourceRepository.findById(source.getUuid()).get();
         if (existing != null) {
             throw new IllegalArgumentException(String.format(
                 "A source with uuid '%s' already exist", source.getUuid()
@@ -226,7 +226,7 @@ public class SourcesApi {
             Source source,
         @Parameter(hidden = true)
             HttpServletRequest request) throws Exception {
-        Source existingSource = sourceRepository.findOne(sourceIdentifier);
+        Source existingSource = sourceRepository.findById(sourceIdentifier).get();
         if (existingSource != null) {
             updateSource(sourceIdentifier, source, sourceRepository);
             copySourceLogo(source, request);
@@ -263,7 +263,7 @@ public class SourcesApi {
         @Parameter(hidden = true)
             HttpServletRequest request
     ) throws ResourceNotFoundException {
-        Source existingSource = sourceRepository.findOne(sourceIdentifier);
+        Source existingSource = sourceRepository.findById(sourceIdentifier).get();
         if (existingSource != null) {
             if (existingSource.getLogo() != null) {
                 ServiceContext context = ApiUtils.createServiceContext(request);

@@ -368,7 +368,7 @@ public class MetadataUtils {
             SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
             NodeInfo node = ApplicationContextHolder.get().getBean(NodeInfo.class);
             if (node != null && !NodeInfo.DEFAULT_NODE.equals(node.getId())) {
-                final Source portal = sourceRepository.findOne(node.getId());
+                final Source portal = sourceRepository.findById(node.getId()).get();
                 if (StringUtils.isNotEmpty(portal.getFilter())) {
                     portalFilter = portal.getFilter();
                 }

@@ -64,7 +64,7 @@ public class ReportDownloads implements IReport {
             final MetadataFileDownloadRepository downloadRepository =
                 context.getBean(MetadataFileDownloadRepository.class);
 
-            final Sort sort = new Sort(Sort.Direction.ASC,
+            final Sort sort = Sort.by(Sort.Direction.ASC,
                 SortUtils.createPath(MetadataFileDownload_.downloadDate));
             final List<MetadataFileDownload> records =
                 downloadRepository.findAll(
@@ -96,7 +96,7 @@ public class ReportDownloads implements IReport {
                 int fileUploadId = fileDownload.getFileUploadId();
                 MetadataFileUpload metadataFileUpload =
                     uploadRepo.findOne(
-                        MetadataFileUploadSpecs.hasId(fileUploadId));
+                        MetadataFileUploadSpecs.hasId(fileUploadId)).get();
 
                 String username = metadataFileUpload.getUserName();
                 String name = "";

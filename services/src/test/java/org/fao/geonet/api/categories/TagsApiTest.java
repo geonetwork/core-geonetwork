@@ -77,7 +77,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getTag() throws Exception {
-        MetadataCategory category = _categoriesRepo.findOne(1);
+        MetadataCategory category = _categoriesRepo.findById(1).get();
         Assert.assertNotNull(category);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -91,7 +91,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getNonExistingTag() throws Exception {
-        MetadataCategory category = _categoriesRepo.findOne(222);
+        MetadataCategory category = _categoriesRepo.findById(222).get();
         Assert.assertNull(category);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -104,7 +104,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void deleteTag() throws Exception {
-        MetadataCategory category = _categoriesRepo.findOne(1);
+        MetadataCategory category = _categoriesRepo.findById(1).get();
         Assert.assertNotNull(category);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -116,7 +116,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void deleteNonExistingTag() throws Exception {
-        MetadataCategory category = _categoriesRepo.findOne(222);
+        MetadataCategory category = _categoriesRepo.findById(222).get();
         Assert.assertNull(category);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -160,7 +160,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
     public void updateTag() throws Exception {
         // TODO test with update and creation with an anonymous user
 
-        MetadataCategory category = _categoriesRepo.findOne(1);
+        MetadataCategory category = _categoriesRepo.findById(1).get();
         Assert.assertNotNull(category);
 
         category.setName(category.getName() + "-2");
@@ -183,7 +183,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void updateNonExistingTag() throws Exception {
-        MetadataCategory category = _categoriesRepo.findOne(222);
+        MetadataCategory category = _categoriesRepo.findById(222).get();
         Assert.assertNull(category);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();

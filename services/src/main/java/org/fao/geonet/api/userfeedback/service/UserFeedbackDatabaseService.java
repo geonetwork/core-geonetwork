@@ -137,7 +137,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
             Pageable pageSize = null;
 
             if (maxSize > 0) {
-                pageSize = new PageRequest(0, maxSize);
+                pageSize = PageRequest.of(0, maxSize);
             }
 
             result = userFeedbackRepository.findByStatusOrderByCreationDateDesc(UserRatingStatus.PUBLISHED, pageSize);
@@ -146,7 +146,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
             Pageable pageSize = null;
 
             if (maxSize > 0) {
-                pageSize = new PageRequest(0, maxSize);
+                pageSize = PageRequest.of(0, maxSize);
             }
 
             result = userFeedbackRepository.findByOrderByCreationDateDesc(pageSize);
@@ -184,7 +184,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
             Pageable pageSize = null;
 
             if (maxSize > 0) {
-                pageSize = new PageRequest(0, maxSize);
+                pageSize = PageRequest.of(0, maxSize);
             }
             result = userFeedbackRepository.findByMetadata_UuidAndStatusOrderByCreationDateDesc(metadataUuid,
                 UserRatingStatus.PUBLISHED, pageSize);
@@ -192,7 +192,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
             Pageable pageSize = null;
 
             if (maxSize > 0) {
-                pageSize = new PageRequest(0, maxSize);
+                pageSize = PageRequest.of(0, maxSize);
             }
             result = userFeedbackRepository.findByMetadata_UuidOrderByCreationDateDesc(metadataUuid, pageSize);
         }

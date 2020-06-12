@@ -54,7 +54,7 @@ public class SchematronService extends AbstractSchematronService {
         if (id == null) {
             result = repository.findAllAsXml(SortUtils.createSort(Schematron_.displayPriority));
         } else {
-            final Schematron one = repository.findOne(Integer.parseInt(id));
+            final Schematron one = repository.findById(Integer.parseInt(id)).get();
             if (one == null) {
                 throw new BadParameterEx(Params.ID, id);
             }
@@ -68,7 +68,7 @@ public class SchematronService extends AbstractSchematronService {
     @Override
     protected boolean exists(Element params, ServiceContext context) throws Exception {
         String id = Util.getParam(params, Params.ID);
-        return context.getBean(SchematronRepository.class).exists(Integer.parseInt(id));
+        return context.getBean(SchematronRepository.class).existsById(Integer.parseInt(id));
     }
 
     @Override

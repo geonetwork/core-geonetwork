@@ -175,7 +175,7 @@ public class SettingManager {
             Log.debug(Geonet.SETTINGS, "Requested setting with name: " + path);
         }
 
-        Setting se = repo.findOne(path);
+        Setting se = repo.findById(path).get();
         if (se == null) {
             // TODO : When a settings is not available in the settings table
             // we end here. It could be relevant to add a list of default
@@ -200,7 +200,7 @@ public class SettingManager {
         List<Setting> settings = new ArrayList<>();
         for (int i = 0; i < keys.length; i++) {
             String key = keys[i];
-            Setting se = repo.findOne(key);
+            Setting se = repo.findById(key).get();
             if (se == null) {
                 Log.warning(Geonet.SETTINGS, "  Requested setting with name: " + key + " not found. Add it to the settings table.");
             } else {
@@ -219,7 +219,7 @@ public class SettingManager {
         Element env = new Element("settings");
         for (int i = 0; i < keys.length; i++) {
             String key = keys[i];
-            Setting se = repo.findOne(key);
+            Setting se = repo.findById(key).get();
             if (se == null) {
                 Log.error(Geonet.SETTINGS, "  Requested setting with name: " + key + " not found. Add it to the settings table.");
             } else {
@@ -288,7 +288,7 @@ public class SettingManager {
             Log.debug(Geonet.SETTINGS, "Setting with name: " + key + ", value: " + value);
         }
 
-        Setting setting = repo.findOne(key);
+        Setting setting = repo.findById(key).get();
 
         if (setting == null) {
             throw new NoSuchElementException("There is no existing setting element with the key: " + key);

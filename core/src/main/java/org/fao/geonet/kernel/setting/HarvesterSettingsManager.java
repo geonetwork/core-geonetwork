@@ -207,7 +207,7 @@ public class HarvesterSettingsManager {
             }
         }
 
-        settingsRepo.save(toSave);
+        settingsRepo.saveAll(toSave);
 
         return success;
     }
@@ -248,7 +248,7 @@ public class HarvesterSettingsManager {
         HarvesterSetting s = settingsRepo.findOneByPath(path);
         if (s == null)
             return false;
-        
+
         //First we have to remove all children
         removeChildren(s.getId());
 

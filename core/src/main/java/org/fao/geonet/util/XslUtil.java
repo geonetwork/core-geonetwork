@@ -255,18 +255,18 @@ public final class XslUtil {
         SourceRepository sourceRepository= ApplicationContextHolder.get().getBean(SourceRepository.class);
         UiSettingsRepository uiSettingsRepository = ApplicationContextHolder.get().getBean(UiSettingsRepository.class);
 
-        org.fao.geonet.domain.Source portal = sourceRepository.findOne(nodeId);
+        org.fao.geonet.domain.Source portal = sourceRepository.findById(nodeId).get();
 
         if (uiSettingsRepository != null) {
             UiSetting one = null;
             if (portal != null && StringUtils.isNotEmpty(portal.getUiConfig())) {
-                one = uiSettingsRepository.findOne(portal.getUiConfig());
+                one = uiSettingsRepository.findById(portal.getUiConfig()).get();
             }
             else if (StringUtils.isNotEmpty(key)) {
-                one = uiSettingsRepository.findOne(key);
+                one = uiSettingsRepository.findById(key).get();
             }
             else if (one == null) {
-                one = uiSettingsRepository.findOne(org.fao.geonet.NodeInfo.DEFAULT_NODE);
+                one = uiSettingsRepository.findById(org.fao.geonet.NodeInfo.DEFAULT_NODE).get();
             }
 
             if (one != null) {
@@ -346,7 +346,7 @@ public final class XslUtil {
             key = settingsMan.getSiteId();
         }
         SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
-        Source source = sourceRepository.findOne(key);
+        Source source = sourceRepository.findById(key).get();
 
         return source != null ? source.getLabel(lang) : settingsMan.getSiteName()
             + (withOrganization ? " - " + settingsMan.getValue(SYSTEM_SITE_ORGANIZATION) : "");
@@ -721,7 +721,7 @@ public final class XslUtil {
         String contactDetails = "";
         int contactId = Integer.parseInt((String) contactIdentifier);
 
-        User user = ApplicationContextHolder.get().getBean(UserRepository.class).findOne(contactId);
+        User user = ApplicationContextHolder.get().getBean(UserRepository.class).findById(contactId).get();
         if (user != null) {
             contactDetails = Xml.getString(user.asXml());
         }

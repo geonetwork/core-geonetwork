@@ -112,10 +112,10 @@ public class SchematronCriteriaGroupRepositoryTest extends AbstractSpringDataTes
         final SchematronCriteriaGroup g1 = criteriaGroupRepository.save(newGroup(_inc, schematronRepository));
         final SchematronCriteriaGroup g2 = criteriaGroupRepository.save(newGroup(_inc, schematronRepository));
 
-        final SchematronCriteriaGroup found1 = criteriaGroupRepository.findOne(g1.getId());
+        final SchematronCriteriaGroup found1 = criteriaGroupRepository.findById(g1.getId()).get();
         assertSameContents(g1, found1);
         assertCorrectNumberOfCriteria(found1);
-        final SchematronCriteriaGroup found2 = criteriaGroupRepository.findOne(g2.getId());
+        final SchematronCriteriaGroup found2 = criteriaGroupRepository.findById(g2.getId()).get();
         assertSameContents(g2, found2);
         assertCorrectNumberOfCriteria(found2);
 

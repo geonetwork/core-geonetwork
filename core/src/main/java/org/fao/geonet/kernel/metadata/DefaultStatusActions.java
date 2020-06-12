@@ -277,7 +277,7 @@ public class DefaultStatusActions implements StatusActions {
         }
 
         UserRepository userRepository = context.getBean(UserRepository.class);
-        User owner = userRepository.findOne(status.getOwner());
+        User owner = userRepository.findById(status.getOwner()).get();
 
         String message = MessageFormat.format(textTemplate, replyToDescr, // Author of the change
                 status.getChangeMessage(), translatedStatusName, status.getId().getChangeDate(), status.getDueDate(),
@@ -314,7 +314,7 @@ public class DefaultStatusActions implements StatusActions {
 
         if (notificationLevel != null) {
             if (notificationLevel == StatusValueNotificationLevel.statusUserOwner) {
-                User owner = userRepository.findOne(status.getOwner());
+                User owner = userRepository.findById(status.getOwner()).get();
                 users.add(owner);
             } else if (notificationLevel == StatusValueNotificationLevel.recordProfileReviewer) {
                 List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(listOfId,
@@ -324,9 +324,9 @@ public class DefaultStatusActions implements StatusActions {
                 }
                 ;
             } else if (notificationLevel == StatusValueNotificationLevel.recordUserAuthor) {
-                Iterable<Metadata> records = this.context.getBean(MetadataRepository.class).findAll(listOfId);
+                Iterable<Metadata> records = this.context.getBean(MetadataRepository.class).findAllById(listOfId);
                 for (Metadata r : records) {
-                    users.add(userRepository.findOne(r.getSourceInfo().getOwner()));
+                    users.add(userRepository.findById(r.getSourceInfo().getOwner()).get());
                 }
                 ;
             } else if (notificationLevel.name().startsWith("catalogueProfile")) {

@@ -64,7 +64,7 @@ import javax.persistence.criteria.Root;
  * @author Jesse
  */
 @NoRepositoryBean
-public class MetadataDraftRepositoryImpl implements MetadataRepositoryCustom<MetadataDraft> {
+public class MetadataDraftRepositoryCustomImpl implements MetadataDraftRepositoryCustom<MetadataDraft> {
 
     @PersistenceContext
     EntityManager _entityManager;
@@ -104,7 +104,7 @@ public class MetadataDraftRepositoryImpl implements MetadataRepositoryCustom<Met
 
         TypedQuery<Tuple> query = _entityManager.createQuery(cbQuery);
         if (pageable != null) {
-            query.setFirstResult(pageable.getOffset());
+            query.setFirstResult(Math.toIntExact(pageable.getOffset()));
             query.setMaxResults(pageable.getPageSize());
         }
 
@@ -173,7 +173,7 @@ public class MetadataDraftRepositoryImpl implements MetadataRepositoryCustom<Met
 
         return query.getResultList();
     }
-    
+
 
     @Override
     public Element findAllUuidsAndChangeDatesAndSchemaId(List<Integer> ids, @Nonnull Pageable pageable) {
@@ -194,7 +194,7 @@ public class MetadataDraftRepositoryImpl implements MetadataRepositoryCustom<Met
 
         TypedQuery<Tuple> query = _entityManager.createQuery(cbQuery);
         if (pageable != null) {
-            query.setFirstResult(pageable.getOffset());
+            query.setFirstResult(Math.toIntExact(pageable.getOffset()));
             query.setMaxResults(pageable.getPageSize());
         }
 
@@ -206,7 +206,7 @@ public class MetadataDraftRepositoryImpl implements MetadataRepositoryCustom<Met
             Element schemaid = new Element("schemaid");
             Element changedate = new Element("changedate");
 
-            uuid.addContent((String) tuple.get(0));                    
+            uuid.addContent((String) tuple.get(0));
             changedate.addContent(((ISODate) tuple.get(1)).toString());
             schemaid.addContent((String) tuple.get(2));
 
@@ -219,13 +219,13 @@ public class MetadataDraftRepositoryImpl implements MetadataRepositoryCustom<Met
         }
         return result;
     }
-    
+
     @Override
     public Element findAllUuidsAndChangeDatesAndSchemaId(List<Integer> ids) {
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
         Root<MetadataDraft> root = cbQuery.from(MetadataDraft.class);
-        
+
         cbQuery.multiselect(root.get(MetadataDraft_.uuid), root.get(MetadataDraft_.dataInfo).get(MetadataDataInfo_.changeDate), root.get(MetadataDraft_.dataInfo).get(MetadataDataInfo_.schemaId));
 
         cbQuery.where(root.get(MetadataDraft_.id).in(ids), cb.equal(root.get(MetadataDraft_.dataInfo).get(MetadataDataInfo_.type_JPAWorkaround), 'n'));
@@ -240,7 +240,7 @@ public class MetadataDraftRepositoryImpl implements MetadataRepositoryCustom<Met
             Element schemaid = new Element("schemaid");
             Element changedate = new Element("changedate");
 
-            uuid.addContent((String) tuple.get(0));                    
+            uuid.addContent((String) tuple.get(0));
             changedate.addContent(((ISODate) tuple.get(1)).toString());
             schemaid.addContent((String) tuple.get(2));
 

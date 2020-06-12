@@ -97,7 +97,7 @@ public class Set implements Service {
             toSave.addAll(cswCapInfo.getFields());
         }
 
-        capabilitiesInfoFieldRepository.save(toSave);
+        capabilitiesInfoFieldRepository.saveAll(toSave);
     }
 
     private String getValue(Element params, String paramId) {

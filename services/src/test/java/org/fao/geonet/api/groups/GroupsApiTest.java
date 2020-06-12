@@ -130,7 +130,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getGroupUsersNonExistingGroup() throws Exception {
-        Group nonExistingGroup = _groupRepo.findOne(222);
+        Group nonExistingGroup = _groupRepo.findById(222).get();
         Assert.assertNull(nonExistingGroup);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -176,7 +176,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
     public void deleteNonExistingGroup() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        Group groupToDelete = _groupRepo.findOne(222);
+        Group groupToDelete = _groupRepo.findById(222).get();
         Assert.assertNull(groupToDelete);
 
         this.mockHttpSession = loginAsAdmin();
@@ -218,7 +218,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void updateNonExistingGroup() throws Exception {
-        Group groupToUpdate = _groupRepo.findOne(222);
+        Group groupToUpdate = _groupRepo.findById(222).get();
         Assert.assertNull(groupToUpdate);
 
         groupToUpdate = new Group();

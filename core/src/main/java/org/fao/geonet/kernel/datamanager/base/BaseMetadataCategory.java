@@ -62,11 +62,11 @@ public class BaseMetadataCategory implements IMetadataCategory {
     @Override
     public boolean setCategory(ServiceContext context, String mdId, String categId) throws Exception {
 
-        if (!getMetadataRepository().exists(Integer.valueOf(mdId))) {
+        if (!getMetadataRepository().existsById(Integer.valueOf(mdId))) {
             return false;
         }
 
-        final MetadataCategory newCategory = metadataCategoryRepository.findOne(Integer.valueOf(categId));
+        final MetadataCategory newCategory = metadataCategoryRepository.findById(Integer.valueOf(categId)).get();
         final boolean[] changed = new boolean[1];
         getMetadataRepository().update(Integer.valueOf(mdId), new Updater<Metadata>() {
             @Override

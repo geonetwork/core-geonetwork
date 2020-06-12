@@ -47,7 +47,7 @@ public class LogUtils {
     public static void refreshLogConfiguration() {
         SettingRepository repository =
             ApplicationContextHolder.get().getBean(SettingRepository.class);
-        Setting setting = repository.findOne(Settings.SYSTEM_SERVER_LOG);
+        Setting setting = repository.findById(Settings.SYSTEM_SERVER_LOG).get();
 
         // get log config from db settings
         String log4jProp = setting != null ? setting.getValue() : DEFAULT_LOG_FILE;

@@ -61,8 +61,8 @@ public class MetadataRelationRepositoryTest extends AbstractSpringDataTest {
         MetadataRelation relation1 = newMetadataRelation();
         relation1 = _repo.save(relation1);
 
-        assertEquals(relation1, _repo.findOne(relation1.getId()));
-        assertEquals(relation, _repo.findOne(relation.getId()));
+        assertEquals(relation1, _repo.findById(relation1.getId()).get());
+        assertEquals(relation, _repo.findById(relation.getId()).get());
     }
 
     @Test

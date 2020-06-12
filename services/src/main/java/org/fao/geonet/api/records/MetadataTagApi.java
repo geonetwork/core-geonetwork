@@ -158,7 +158,7 @@ public class MetadataTagApi {
         }
 
         for (int c : id) {
-            final MetadataCategory category = categoryRepository.findOne(c);
+            final MetadataCategory category = categoryRepository.findById(c).get();
             if (category != null) {
                 dataManager.setCategory(
                     ApiUtils.createServiceContext(request),
@@ -307,7 +307,7 @@ public class MetadataTagApi {
 
                     if (id != null) {
                         for (int c : id) {
-                            final MetadataCategory category = categoryRepository.findOne(c);
+                            final MetadataCategory category = categoryRepository.findById(c).get();
                             if (category != null) {
                                 info.getCategories().add(category);
                                 listOfUpdatedRecords.add(String.valueOf(info.getId()));

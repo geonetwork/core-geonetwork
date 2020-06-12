@@ -113,7 +113,7 @@ public class LanguagesApi {
             HttpServletRequest request
     ) throws IOException, ResourceNotFoundException {
 
-        Language lang = languageRepository.findOne(langCode);
+        Language lang = languageRepository.findById(langCode).get();
         if (lang == null) {
             String languageDataFile = "loc-" + langCode + "-default.sql";
             Path templateFile = dataDirectory.getWebappDir().resolve("WEB-INF")
@@ -170,7 +170,7 @@ public class LanguagesApi {
             String langCode,
         HttpServletRequest request
     ) throws IOException, ResourceNotFoundException {
-        Language lang = languageRepository.findOne(langCode);
+        Language lang = languageRepository.findById(langCode).get();
         if (lang == null) {
             throw new ResourceNotFoundException(String.format(
                 "Language '%s' not found.", langCode

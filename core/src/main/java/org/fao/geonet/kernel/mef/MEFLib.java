@@ -440,14 +440,14 @@ public class MEFLib {
 
         for (OperationAllowed operationAllowed : opsAllowed) {
             int grpId = operationAllowed.getId().getGroupId();
-            Group group = groupRepository.findOne(grpId);
+            Group group = groupRepository.findById(grpId).get();
             String grpName = group.getName();
 
             if (!userGroups.contains(grpId)) {
                 continue;
             }
 
-            Operation operation = operationRepository.findOne(operationAllowed.getId().getOperationId());
+            Operation operation = operationRepository.findById(operationAllowed.getId().getOperationId()).get();
             String operName = operation.getName();
 
             if (grpOwnerId != null && grpOwnerId == grpId) {

@@ -23,12 +23,6 @@
 
 package org.fao.geonet.repository;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataSourceInfo;
@@ -40,13 +34,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.repository.NoRepositoryBean;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Custom (Non spring-data) Query methods for {@link Metadata} entities.
  *
  * @author Jesse
  */
 @NoRepositoryBean
-public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
+public interface MetadataDraftRepositoryCustom<T extends AbstractMetadata> {
 
     /**
      * Return an object that contains functions for calculating several different statistical

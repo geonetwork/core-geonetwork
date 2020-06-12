@@ -79,7 +79,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -630,11 +630,11 @@ public class EsSearchManager implements ISearchManager {
                 dataMan.indexMetadata(id + "", false);
             }
         } else {
-            final Specifications<Metadata> metadataSpec =
-                Specifications.where((Specification<Metadata>) MetadataSpecs.isType(MetadataType.METADATA))
+            final Specification<Metadata> metadataSpec =
+                Specification.where((Specification<Metadata>) MetadataSpecs.isType(MetadataType.METADATA))
                     .or((Specification<Metadata>) MetadataSpecs.isType(MetadataType.TEMPLATE));
             final List<Integer> metadataIds = metadataRepository.findAllIdsBy(
-                Specifications.where(metadataSpec)
+                Specification.where(metadataSpec)
             );
             for (Integer id : metadataIds) {
                 dataMan.indexMetadata(id + "", false);

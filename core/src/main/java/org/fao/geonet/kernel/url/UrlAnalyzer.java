@@ -153,7 +153,7 @@ public class UrlAnalyzer {
     }
 
     private boolean isReferencingAnUnknownMetadata(MetadataLink metadatalink) {
-        return isNull(metadataRepository.findOne(metadatalink.getMetadataId()));
+        return isNull(metadataRepository.findById(metadatalink.getMetadataId()).get());
     }
 
 

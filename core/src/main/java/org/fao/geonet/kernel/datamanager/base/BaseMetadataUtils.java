@@ -472,7 +472,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
         if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
             int iId = Integer.parseInt(id);
             metadataRepository.incrementPopularity(iId);
-            final Metadata metadata = metadataRepository.findOne(iId);
+            final Metadata metadata = metadataRepository.findById(iId).get();
             searchManager.updateFieldAsynch(
                 metadata.getUuid(),
                 Geonet.IndexFieldNames.POPULARITY,
@@ -734,7 +734,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Override
     public AbstractMetadata findOne(int id) {
-        return metadataRepository.findOne(id);
+        return metadataRepository.findById(id).get();
     }
 
     @Override
@@ -758,7 +758,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public AbstractMetadata findOne(Specification<? extends AbstractMetadata> spec) {
         try {
-            return metadataRepository.findOne((Specification<Metadata>) spec);
+            return metadataRepository.findOne((Specification<Metadata>) spec).get();
         } catch (ClassCastException t) {
             throw new ClassCastException("Unknown AbstractMetadata subtype: " + spec.getClass().getName());
         }
@@ -766,7 +766,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Override
     public AbstractMetadata findOne(String id) {
-        return metadataRepository.findOne(id);
+        java.util.Optional<Metadata> metadata = metadataRepository.findById(Integer.parseInt(id));
+        return metadata.isPresent() ? metadata.get() : null;
     }
 
     @Override
@@ -776,7 +777,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Override
     public Iterable<? extends AbstractMetadata> findAll(Set<Integer> keySet) {
-        return metadataRepository.findAll(keySet);
+        return metadataRepository.findAllById(keySet);
     }
 
     @Override
@@ -801,7 +802,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Override
     public boolean exists(Integer iId) {
-        return metadataRepository.exists(iId);
+        return metadataRepository.existsById(iId);
     }
 
     @Override

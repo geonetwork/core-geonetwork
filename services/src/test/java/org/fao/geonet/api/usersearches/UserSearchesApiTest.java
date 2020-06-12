@@ -108,7 +108,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
 
-        userSearchToDelete = userSearchRepository.findOne(userSearchToDelete.getId());
+        userSearchToDelete = userSearchRepository.findById(userSearchToDelete.getId()).get();
         Assert.assertNull(userSearchToDelete);
     }
 
@@ -139,7 +139,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
             .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        UserSearch userSearchCreated = userSearchRepository.findOne(Integer.parseInt(content));
+        UserSearch userSearchCreated = userSearchRepository.findById(Integer.parseInt(content)).get();
         Assert.assertNotNull(userSearchCreated);
         Assert.assertEquals(true, userSearchCreated.isFeatured());
     }
@@ -169,7 +169,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
 
-        UserSearch userSearchUpdated = userSearchRepository.findOne(userSearchId);
+        UserSearch userSearchUpdated = userSearchRepository.findById(userSearchId).get();
         Assert.assertNotNull(userSearchUpdated);
 
         Assert.assertEquals("http://urlupdated", userSearchUpdated.getUrl());

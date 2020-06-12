@@ -57,7 +57,7 @@ public class SchematronRepositoryTest extends AbstractSpringDataTest {
     public void testFindOne() throws Exception {
         final Schematron schematron = _repo.save(newSchematron(_inc));
 
-        final Schematron found = _repo.findOne(schematron.getId());
+        final Schematron found = _repo.findById(schematron.getId()).get();
 
         assertSameContents(schematron, found);
     }

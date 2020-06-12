@@ -43,7 +43,7 @@ import org.fao.geonet.repository.UiSettingsRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -123,7 +123,7 @@ public class UiSettingApi {
             ));
         }
 
-        UiSetting one = uiSettingsRepository.findOne(uiConfiguration.getId());
+        UiSetting one = uiSettingsRepository.findById(uiConfiguration.getId()).get();
         if (one != null) {
             throw new IllegalArgumentException(String.format(
                 "A UI configuration with id '%d' already exist", uiConfiguration.getId()
@@ -159,7 +159,7 @@ public class UiSettingApi {
         @PathVariable
             String uiIdentifier
     ) throws Exception {
-        UiSetting uiConfiguration = uiSettingsRepository.findOne(uiIdentifier);
+        UiSetting uiConfiguration = uiSettingsRepository.findById(uiIdentifier).get();
         if (uiConfiguration == null) {
             throw new ResourceNotFoundException(String.format(
                 "UI configuration with id '%s' does not exist.",
@@ -197,14 +197,14 @@ public class UiSettingApi {
             UiSetting uiConfiguration,
         @Parameter(hidden = true) HttpSession httpSession
     ) throws Exception {
-        UiSetting one = uiSettingsRepository.findOne(uiIdentifier);
+        UiSetting one = uiSettingsRepository.findById(uiIdentifier).get();
         if (one != null) {
             // For user admin, check that the UI is used by a portal managed by the user.
             UserSession session = ApiUtils.getUserSession(httpSession);
             boolean isUserAdmin = session.getProfile().equals(Profile.UserAdmin);
             if (isUserAdmin) {
-                Specifications<UserGroup> spec =
-                    Specifications.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
+                Specification<UserGroup> spec =
+                    Specification.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
                 spec = spec.and(UserGroupSpecs.hasProfile(Profile.UserAdmin));
 
                 Set<Integer> ids = new HashSet<Integer>(userGroupRepository.findGroupIds(spec));
@@ -255,9 +255,9 @@ public class UiSettingApi {
         @PathVariable
             String uiIdentifier
     ) throws Exception {
-        UiSetting one = uiSettingsRepository.findOne(uiIdentifier);
+        UiSetting one = uiSettingsRepository.findById(uiIdentifier).get();
         if (one != null) {
-            uiSettingsRepository.delete(uiIdentifier);
+            uiSettingsRepository.deleteById(uiIdentifier);
         } else {
             throw new ResourceNotFoundException(String.format(
                 "UI Configuration with id '%s' does not exist.",

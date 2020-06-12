@@ -190,7 +190,7 @@ public class WatchListNotifier extends QuartzJobBean {
         if (updatedRecords.size() > 0) {
             // Check if user exists and has an email
             // TODO: We should send email depending on user language
-            User user = userRepository.findOne(userId);
+            User user = userRepository.findById(userId).get();
             if (StringUtils.isNotEmpty(user.getEmail())) {
 
                 // Build message

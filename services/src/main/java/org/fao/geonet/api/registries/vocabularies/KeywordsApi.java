@@ -554,8 +554,8 @@ public class KeywordsApi {
 
             // Delete thesaurus record in the database
             String thesaurusId = thesaurusObject.getFname();
-            if (thesaurusActivationRepository.exists(thesaurusId)) {
-                thesaurusActivationRepository.delete(thesaurusId);
+            if (thesaurusActivationRepository.existsById(thesaurusId)) {
+                thesaurusActivationRepository.deleteById(thesaurusId);
             }
         } else {
             throw new IllegalArgumentException(String.format(

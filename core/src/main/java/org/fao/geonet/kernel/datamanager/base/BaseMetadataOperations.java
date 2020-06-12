@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
-import static org.springframework.data.jpa.domain.Specifications.where;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 import java.util.Collection;
 import java.util.List;
@@ -245,7 +245,7 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
                     if (userGroupsOnly.equals("true")) {
                         // If user is member of the group, user can set operation
 
-                        if (userGroupRepo.exists(new UserGroupId().setGroupId(grpId).setUserId(userId))) {
+                        if (userGroupRepo.existsById(new UserGroupId().setGroupId(grpId).setUserId(userId))) {
                             throw new ServiceNotAllowedEx(
                                 "User can't set operation for group " + grpId + " because the user in not" + " member of this group.");
                         }
@@ -303,8 +303,8 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
     @Override
     public void forceUnsetOperation(ServiceContext context, int mdId, int groupId, int operId) throws Exception {
         OperationAllowedId id = new OperationAllowedId().setGroupId(groupId).setMetadataId(mdId).setOperationId(operId);
-        if (opAllowedRepo.exists(id)) {
-            opAllowedRepo.delete(id);
+        if (opAllowedRepo.existsById(id)) {
+            opAllowedRepo.deleteById(id);
             if (svnManager != null) {
                 svnManager.setHistory(mdId + "", context);
             }

@@ -110,7 +110,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
     @Override
     public void setTemplateExt(final int id, final MetadataType metadataType) throws Exception {
-        if (metadataDraftRepository.exists(id)) {
+        if (metadataDraftRepository.existsById(id)) {
             metadataDraftRepository.update(id, new Updater<MetadataDraft>() {
                 @Override
                 public void apply(@Nonnull MetadataDraft metadata) {
@@ -133,7 +133,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
      */
     @Override
     public void setSubtemplateTypeAndTitleExt(final int id, String title) throws Exception {
-        if (metadataDraftRepository.exists(id)) {
+        if (metadataDraftRepository.existsById(id)) {
             metadataDraftRepository.update(id, new Updater<MetadataDraft>() {
                 @Override
                 public void apply(@Nonnull MetadataDraft metadata) {
@@ -153,7 +153,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     @Override
     public void setHarvestedExt(final int id, final String harvestUuid, final Optional<String> harvestUri)
         throws Exception {
-        if (metadataDraftRepository.exists(id)) {
+        if (metadataDraftRepository.existsById(id)) {
             metadataDraftRepository.update(id, new Updater<MetadataDraft>() {
                 @Override
                 public void apply(MetadataDraft metadata) {
@@ -176,7 +176,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     @Override
     public void updateDisplayOrder(final String idString, final String displayOrder) throws Exception {
         Integer id = Integer.valueOf(idString);
-        if (metadataDraftRepository.exists(id)) {
+        if (metadataDraftRepository.existsById(id)) {
             metadataDraftRepository.update(id, new Updater<MetadataDraft>() {
                 @Override
                 public void apply(MetadataDraft entity) {
@@ -206,7 +206,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
         final int newRating = ratingByIpRepository.averageRating(metadataId);
 
-        if (metadataDraftRepository.exists(metadataId)) {
+        if (metadataDraftRepository.existsById(metadataId)) {
             metadataDraftRepository.update(metadataId, new Updater<MetadataDraft>() {
                 @Override
                 public void apply(MetadataDraft entity) {
@@ -246,7 +246,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         if (super.exists(id)) {
             return super.findOne(id);
         }
-        return metadataDraftRepository.findOne(id);
+        return metadataDraftRepository.findById(id).get();
     }
 
     @Override
@@ -299,7 +299,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
         if (md == null) {
             try {
-                md = metadataDraftRepository.findOne((Specification<MetadataDraft>) spec);
+                md = metadataDraftRepository.findOne((Specification<MetadataDraft>) spec).get();
             } catch (ClassCastException t) {
                 throw new ClassCastException("Unknown AbstractMetadata subtype: " + spec.getClass().getName());
             }
@@ -312,7 +312,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     public AbstractMetadata findOne(String id) {
         AbstractMetadata md = super.findOne(id);
         if (md == null) {
-            md = metadataDraftRepository.findOne(id);
+            java.util.Optional<MetadataDraft> draft = metadataDraftRepository.findById(Integer.parseInt(id));
+            return draft.isPresent() ? draft.get() : null;
         }
         return md;
     }
@@ -331,7 +332,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         for (AbstractMetadata md : super.findAll(keySet)) {
             list.add(md);
         }
-        list.addAll(metadataDraftRepository.findAll(keySet));
+        list.addAll(metadataDraftRepository.findAllById(keySet));
         return list;
     }
 
@@ -360,7 +361,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
     @Override
     public boolean exists(Integer iId) {
-        return super.exists(iId) || metadataDraftRepository.exists(iId);
+        return super.exists(iId) || metadataDraftRepository.existsById(iId);
     }
 
     @Override
@@ -509,7 +510,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         }
         // If there is a default category for the group, use it:
         if (groupOwner != null) {
-            Group group = groupRepository.findOne(Integer.valueOf(groupOwner));
+            Group group = groupRepository.findById(Integer.valueOf(groupOwner)).get();
             if (group.getDefaultCategory() != null) {
                 newMetadata.getCategories().add(group.getDefaultCategory());
             }
@@ -556,7 +557,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
             int author = context.getUserSession().getUserIdAsInt();
             Integer status = Integer.valueOf(StatusValue.Status.DRAFT);
-            StatusValue statusValue = statusValueRepository.findOne(status);
+            StatusValue statusValue = statusValueRepository.findById(status).get();
 
             for (Integer mdId : metadataIds) {
                 MetadataStatus metadataStatus = new MetadataStatus();

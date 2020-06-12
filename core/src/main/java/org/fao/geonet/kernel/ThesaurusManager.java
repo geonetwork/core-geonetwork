@@ -450,7 +450,7 @@ public class ThesaurusManager implements ThesaurusFinder {
             // By default thesaurus are enabled (if nothing defined in db)
             char activated = Constants.YN_TRUE;
             final ThesaurusActivationRepository activationRepository = context.getBean(ThesaurusActivationRepository.class);
-            final ThesaurusActivation activation = activationRepository.findOne(currentTh.getKey());
+            final ThesaurusActivation activation = activationRepository.findById(currentTh.getKey()).get();
             if (activation != null && !activation.isActivated()) {
                 activated = Constants.YN_FALSE;
             }

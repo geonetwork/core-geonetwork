@@ -48,7 +48,7 @@ import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
 import java.nio.file.Path;
@@ -358,7 +358,7 @@ public class Info implements Service {
 
         UserSession session = context.getUserSession();
         if (all || !session.isAuthenticated()) {
-            return groupRepository.findAllAsXml(Specifications.not(GroupSpecs.isReserved()), sort);
+            return groupRepository.findAllAsXml(Specification.not(GroupSpecs.isReserved()), sort);
         }
 
         Element result;
@@ -368,10 +368,10 @@ public class Info implements Service {
             if (includingSystemGroups) {
                 result = groupRepository.findAllAsXml(null, sort);
             } else {
-                return groupRepository.findAllAsXml(Specifications.not(GroupSpecs.isReserved()), sort);
+                return groupRepository.findAllAsXml(Specification.not(GroupSpecs.isReserved()), sort);
             }
         } else {
-            Specifications<UserGroup> spec = Specifications.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
+            Specification<UserGroup> spec = Specification.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
             // you're no Administrator
             // retrieve your groups
             if (profile != null) {

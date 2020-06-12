@@ -226,7 +226,7 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
 
 
         // Check in DB
-        assertFalse(selectionRepository.exists(createdSelection.getId()));
+        assertFalse(selectionRepository.existsById(createdSelection.getId()));
         ;
     }
 

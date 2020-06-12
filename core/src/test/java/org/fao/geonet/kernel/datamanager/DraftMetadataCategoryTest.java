@@ -71,7 +71,7 @@ public class DraftMetadataCategoryTest extends AbstractCoreIntegrationTest {
     	record = new Metadata();
     	populate(record);
     	metadataRepository.save(record);
-    	
+
         md = new MetadataDraft();
         populate(md);
         md.setApprovedVersion(record);
@@ -86,7 +86,7 @@ public class DraftMetadataCategoryTest extends AbstractCoreIntegrationTest {
     @Test
     public void test() throws Exception {
 
-        assertTrue(metadataDraftRepository.exists(md.getId()));
+        assertTrue(metadataDraftRepository.existsById(md.getId()));
 
         assertTrue(metadataCategory.getCategories(String.valueOf(md.getId())).isEmpty());
 

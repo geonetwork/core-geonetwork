@@ -33,14 +33,14 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
  * Data Access object for the {@link MetadataDraft} entities.
- * 
+ *
  * The use of this class is discouraged, you should use IMetadataUtils or IMetadataManager instead.
  *
  * @author Jesse
  */
 public interface MetadataDraftRepository
-        extends GeonetRepository<MetadataDraft, Integer>, 
-        MetadataRepositoryCustom<MetadataDraft>, 
+        extends GeonetRepository<MetadataDraft, Integer>,
+        MetadataDraftRepositoryCustom<MetadataDraft>,
         JpaSpecificationExecutor<MetadataDraft> {
     /**
      * Find one metadata by the metadata's uuid.
@@ -50,7 +50,7 @@ public interface MetadataDraftRepository
      */
     @Nullable
     MetadataDraft findOneByUuid(@Nonnull String uuid);
-    
+
     /**
      * Find all metadata by the metadata's uuid.
      *

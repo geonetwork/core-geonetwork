@@ -180,7 +180,7 @@ public class LocaleRedirects {
             // This is the default node
             return true;
         }
-        final Source one = sourceRepository.findOne(portal);
+        final Source one = sourceRepository.findById(portal).get();
         if (one == null) {
             List<String> portalList = new ArrayList<>();
             portalList.add(NodeInfo.DEFAULT_NODE);

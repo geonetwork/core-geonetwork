@@ -82,7 +82,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
     public MetadataStatus getStatus(int metadataId) throws Exception {
         String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
         List<MetadataStatus> status = metadataStatusRepository.findAllByIdAndByType(metadataId,
-                StatusValueType.workflow, new Sort(Sort.Direction.DESC, sortField));
+                StatusValueType.workflow, Sort.by(Sort.Direction.DESC, sortField));
         if (status.isEmpty()) {
             return null;
         } else {
@@ -97,7 +97,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
     public List<MetadataStatus> getAllStatus(int metadataId) throws Exception {
         String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
         List<MetadataStatus> status = metadataStatusRepository.findAllById_MetadataId(metadataId,
-                new Sort(Sort.Direction.DESC, sortField));
+                Sort.by(Sort.Direction.DESC, sortField));
         if (status.isEmpty()) {
             return null;
         } else {
@@ -156,7 +156,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
 
         MetadataStatus metatatStatus = new MetadataStatus();
         metatatStatus.setChangeMessage(changeMessage);
-        metatatStatus.setStatusValue(statusValueRepository.findOne(status));
+        metatatStatus.setStatusValue(statusValueRepository.findById(status).get());
         int userId = context.getUserSession().getUserIdAsInt();
         MetadataStatusId mdStatusId = new MetadataStatusId().setStatusId(status).setMetadataId(id)
                 .setChangeDate(changeDate).setUserId(userId);
@@ -178,7 +178,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
             return;
         }
 
-        final Group group = groupRepository.findOne(Integer.valueOf(groupOwner));
+        final Group group = groupRepository.findById(Integer.valueOf(groupOwner)).get();
         String groupName = "";
         if (group != null) {
             groupName = group.getName();
@@ -207,7 +207,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
 
         MetadataStatus metatatStatus = new MetadataStatus();
         metatatStatus.setChangeMessage("");
-        metatatStatus.setStatusValue(statusValueRepository.findOne(newStatus));
+        metatatStatus.setStatusValue(statusValueRepository.findById(newStatus).get());
 
         MetadataStatusId mdStatusId = new MetadataStatusId().setStatusId(newStatus).setMetadataId(metadataId)
                 .setChangeDate(new ISODate(System.currentTimeMillis())).setUserId(userId);

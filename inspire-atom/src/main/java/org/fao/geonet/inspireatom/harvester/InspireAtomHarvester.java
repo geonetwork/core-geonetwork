@@ -45,7 +45,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -92,7 +92,7 @@ public class InspireAtomHarvester {
         // If retrieved from database retrieves all iso19139 metadata and should apply for each result an xslt process
         // to identify if a service or dataset (slow process)
         List<AbstractMetadata> iso19139Metadata = InspireAtomUtil.searchMetadataByType(ServiceContext.get(), searchManager, "service");
-        //List<Metadata> iso19139Metadata = metadataRepository.findAll(Specifications.where(MetadataSpecs.isType(MetadataType.METADATA)).and(MetadataSpecs.isIso19139Schema()));
+        //List<Metadata> iso19139Metadata = metadataRepository.findAll(Specification.where(MetadataSpecs.isType(MetadataType.METADATA)).and(MetadataSpecs.isIso19139Schema()));
 
         Element result = new Element("response");
 
@@ -152,7 +152,7 @@ public class InspireAtomHarvester {
 
         final IMetadataUtils metadataUtils = gc.getBean(IMetadataUtils.class);
         AbstractMetadata iso19139Metadata = metadataUtils.findOne(
-        		Specifications.where((Specification<Metadata>) MetadataSpecs.isType(MetadataType.METADATA))
+        		Specification.where((Specification<Metadata>) MetadataSpecs.isType(MetadataType.METADATA))
         			.and((Specification<Metadata>) MetadataSpecs.isIso19139Schema()));
 
 
@@ -287,7 +287,7 @@ public class InspireAtomHarvester {
 
         List<AbstractMetadata> iso19139Metadata = InspireAtomUtil.searchMetadataByType(ServiceContext.get(), gc.getBean(EsSearchManager.class), "dataset");
 
-        //List<Metadata> iso19139Metadata = metadataRepository.findAll(Specifications.where(MetadataSpecs.isType(MetadataType.METADATA)).and(MetadataSpecs.isIso19139Schema()));
+        //List<Metadata> iso19139Metadata = metadataRepository.findAll(Specification.where(MetadataSpecs.isType(MetadataType.METADATA)).and(MetadataSpecs.isIso19139Schema()));
 
         Map<String, String> metadataWithAtomFeeds =
             InspireAtomUtil.retrieveDatasetMetadataWithAtomFeeds(dataMan, iso19139Metadata, atomProtocol);

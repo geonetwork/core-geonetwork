@@ -695,7 +695,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
         Set<Integer> ids = new HashSet<Integer>();
         ids.add(Integer.valueOf(id));
         AbstractMetadata metadata = this.context.getBean(IMetadataUtils.class).findOne(id);
-        User user = this.context.getBean(UserRepository.class).findOne(metadata.getSourceInfo().getOwner());
+        User user = this.context.getBean(UserRepository.class).findById(metadata.getSourceInfo().getOwner()).get();
         // Backwards compatibility.  Format the metadata as XML in same format as previous versions.
         Element xml = new Element("results").addContent(
             new Element("record")
@@ -750,9 +750,9 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             Element record = new Element("record");
             final OperationAllowedId operationAllowedId = operationAllowed.getId();
             record.addContent(new Element("group_id").setText(Integer.toString(operationAllowedId.getGroupId())));
-            final Group group = groupRepository.findOne(operationAllowedId.getGroupId());
+            final Group group = groupRepository.findById(operationAllowedId.getGroupId()).get();
             record.addContent(new Element("group_name").setText(group.getName()));
-            final Operation operation = operationRepository.findOne(operationAllowedId.getOperationId());
+            final Operation operation = operationRepository.findById(operationAllowedId.getOperationId()).get();
             record.addContent(new Element("operation_id").setText(Integer.toString(operationAllowedId.getOperationId())));
             record.addContent(new Element("operation_name").setText(operation.getName()));
             privs.addContent(record);

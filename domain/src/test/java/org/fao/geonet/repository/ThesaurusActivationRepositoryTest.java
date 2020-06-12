@@ -51,6 +51,6 @@ public class ThesaurusActivationRepositoryTest extends AbstractSpringDataTest {
     @Test
     public void testFindOne() throws Exception {
         final ThesaurusActivation activation = _repo.save(newThesaurusActivation(_inc));
-        assertEquals(activation, _repo.findOne(activation.getId()));
+        assertEquals(activation, _repo.findById(activation.getId()).get());
     }
 }

@@ -162,7 +162,7 @@ public class LinkDto implements Serializable {
         }
 
         UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
-        User user = userRepository.findOne(this.getCreatorId());
+        User user = userRepository.findById(this.getCreatorId()).get();
         if (user != null) {
             userSearch.setCreator(user);
         }

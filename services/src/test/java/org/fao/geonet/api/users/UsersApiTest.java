@@ -153,7 +153,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void deleteNonExistingUser() throws Exception {
-        User userToDelete = _userRepo.findOne(222);
+        User userToDelete = _userRepo.findById(222).get();
         Assert.assertNull(userToDelete);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();

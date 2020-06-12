@@ -328,7 +328,7 @@ class Harvester implements IHarvester<HarvestResult> {
             int matchedCount = getSearchResultAttribute(results, ATTRIB_SEARCHRESULT_MATCHED);
             int returnedCount = getSearchResultAttribute(results, ATTRIB_SEARCHRESULT_RETURNED);
 
-            // nextRecord *is* required by CSW specifications, but some servers (e.g. terra catalog) are not returning this attribute
+            // nextRecord *is* required by CSW Specification, but some servers (e.g. terra catalog) are not returning this attribute
             // See https://github.com/geonetwork/core-geonetwork/issues/1429
             Integer nextRecord = getOptionalSearchResultAttribute(results, ATTRIB_SEARCHRESULT_NEXT);
 

@@ -67,7 +67,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
 
         group.setId(savedGroup.getId());
         assertEquals(1, _repo.count());
-        assertSameContents(group, _repo.findOne(group.getId()));
+        assertSameContents(group, _repo.findById(group.getId()).get());
 
         _repo.deleteAll();
 
@@ -92,7 +92,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
         group.setId(savedGroup.getId());
 
         assertEquals(1, _repo.count());
-        assertSameContents(group, _repo.findOne(group.getId()));
+        assertSameContents(group, _repo.findById(group.getId()).get());
 
         group.setName("New Name");
         Group savedGroup2 = _repo.save(group);
@@ -104,7 +104,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
         assertSameContents(savedGroup, savedGroup2);
 
         assertEquals(1, _repo.count());
-        assertSameContents(group, _repo.findOne(group.getId()));
+        assertSameContents(group, _repo.findById(group.getId()).get());
     }
 
     @Test

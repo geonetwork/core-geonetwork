@@ -125,7 +125,7 @@ public class IdentifiersApi {
             MetadataIdentifierTemplate metadataIdentifierTemplate
     ) throws Exception {
         final MetadataIdentifierTemplate existingId = metadataIdentifierTemplateRepository
-            .findOne(metadataIdentifierTemplate.getId());
+            .findById(metadataIdentifierTemplate.getId()).get();
 
         if (existingId != null) {
             throw new IllegalArgumentException(String.format(
@@ -173,7 +173,7 @@ public class IdentifiersApi {
             MetadataIdentifierTemplate metadataIdentifierTemplate
     ) throws Exception {
         MetadataIdentifierTemplate existing =
-            metadataIdentifierTemplateRepository.findOne(identifier);
+            metadataIdentifierTemplateRepository.findById(identifier).get();
         if (existing == null) {
             throw new ResourceNotFoundException(String.format(
                 MSG_NO_METADATA_IDENTIFIER_FOUND_WITH_ID,
@@ -213,14 +213,14 @@ public class IdentifiersApi {
             int identifier
     ) throws Exception {
         MetadataIdentifierTemplate existing =
-            metadataIdentifierTemplateRepository.findOne(identifier);
+            metadataIdentifierTemplateRepository.findById(identifier).get();
         if (existing == null) {
             throw new ResourceNotFoundException(String.format(
                 MSG_NO_METADATA_IDENTIFIER_FOUND_WITH_ID,
                 identifier
             ));
         } else {
-            metadataIdentifierTemplateRepository.delete(identifier);
+            metadataIdentifierTemplateRepository.deleteById(identifier);
         }
     }
 }

@@ -43,7 +43,7 @@ public abstract class AbstractDataManagerIntegrationTest extends AbstractCoreInt
         ServiceContext serviceContext = createContextAndLogAsAdmin();
         int metadataId = importMetadata(serviceContext);
 
-        AbstractMetadata metadata = metadataRepository.findOne(metadataId);
+        AbstractMetadata metadata = metadataRepository.findById(metadataId).get();
 
         assertNull(metadata.getHarvestInfo().getUuid());
         assertNull(metadata.getHarvestInfo().getUri());
@@ -51,7 +51,7 @@ public abstract class AbstractDataManagerIntegrationTest extends AbstractCoreInt
 
         String harvesterUuid = "harvesterUuid";
         dataManager.setHarvestedExt(metadataId, harvesterUuid);
-        metadata = metadataRepository.findOne(metadataId);
+        metadata = metadataRepository.findById(metadataId).get();
         assertEquals(harvesterUuid, metadata.getHarvestInfo().getUuid());
         assertTrue(metadata.getHarvestInfo().isHarvested());
         assertNull(metadata.getHarvestInfo().getUri());
@@ -75,13 +75,13 @@ public abstract class AbstractDataManagerIntegrationTest extends AbstractCoreInt
         String harvesterUuid2 = "harvesterUuid2";
         String harvesterUri = "harvesterUri";
         dataManager.setHarvestedExt(metadataId, harvesterUuid2, Optional.of(harvesterUri));
-        metadata = metadataRepository.findOne(metadataId);
+        metadata = metadataRepository.findById(metadataId).get();
         assertEquals(harvesterUuid2, metadata.getHarvestInfo().getUuid());
         assertTrue(metadata.getHarvestInfo().isHarvested());
         assertEquals(harvesterUri, metadata.getHarvestInfo().getUri());
 
         dataManager.setHarvestedExt(metadataId, null);
-        metadata = metadataRepository.findOne(metadataId);
+        metadata = metadataRepository.findById(metadataId).get();
         assertNull(metadata.getHarvestInfo().getUuid());
         assertNull(metadata.getHarvestInfo().getUri());
         assertFalse(metadata.getHarvestInfo().isHarvested());

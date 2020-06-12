@@ -91,9 +91,9 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         assertEquals(1, _repository.findAll((Specification<Metadata>)hasType(MetadataType.SUB_TEMPLATE)).size());
         assertEquals(1, _repository.findAll((Specification<Metadata>)hasType(MetadataType.TEMPLATE)).size());
 
-        assertEquals(md1.getId(), _repository.findOne((Specification<Metadata>)hasType(MetadataType.METADATA)).getId());
-        assertEquals(md2.getId(), _repository.findOne((Specification<Metadata>)hasType(MetadataType.SUB_TEMPLATE)).getId());
-        assertEquals(md3.getId(), _repository.findOne((Specification<Metadata>)hasType(MetadataType.TEMPLATE)).getId());
+        assertEquals(md1.getId(), _repository.findOne((Specification<Metadata>)hasType(MetadataType.METADATA)).get().getId());
+        assertEquals(md2.getId(), _repository.findOne((Specification<Metadata>)hasType(MetadataType.SUB_TEMPLATE)).get().getId());
+        assertEquals(md3.getId(), _repository.findOne((Specification<Metadata>)hasType(MetadataType.TEMPLATE)).get().getId());
     }
 
     @Test
@@ -112,8 +112,8 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         assertEquals(1, _repository.findAll((Specification<Metadata>)hasSchemaId(schemaId2)).size());
         assertEquals(0, _repository.findAll((Specification<Metadata>)hasSchemaId("other")).size());
 
-        assertEquals(md1.getId(), _repository.findOne((Specification<Metadata>)hasSchemaId(schemaId1)).getId());
-        assertEquals(md2.getId(), _repository.findOne((Specification<Metadata>)hasSchemaId(schemaId2)).getId());
+        assertEquals(md1.getId(), _repository.findOne((Specification<Metadata>)hasSchemaId(schemaId1)).get().getId());
+        assertEquals(md2.getId(), _repository.findOne((Specification<Metadata>)hasSchemaId(schemaId2)).get().getId());
     }
 
     @Test

@@ -56,8 +56,8 @@ public class StatusValueRepositoryTest extends AbstractSpringDataTest {
         StatusValue status1 = newStatusValue();
         status1 = _repo.save(status1);
 
-        assertEquals(status1, _repo.findOne(status1.getId()));
-        assertEquals(status, _repo.findOne(status.getId()));
+        assertEquals(status1, _repo.findById(status1.getId()).get());
+        assertEquals(status, _repo.findById(status.getId()).get());
     }
 
     @Test

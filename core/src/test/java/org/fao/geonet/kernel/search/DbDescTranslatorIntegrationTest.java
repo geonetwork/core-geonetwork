@@ -63,7 +63,7 @@ public class DbDescTranslatorIntegrationTest extends AbstractCoreIntegrationTest
         JpaRepository<Object, T> repo = mock(JpaRepository.class);
         ValueObject value = new ValueObject();
 
-        when(repo.findOne(key)).thenReturn(value);
+        when(repo.findById(key).get()).thenReturn(value);
         final String beanName = "testRepo";
         StaticApplicationContext appContext = new StaticApplicationContext(_appContext);
         appContext.getBeanFactory().registerSingleton(beanName, repo);

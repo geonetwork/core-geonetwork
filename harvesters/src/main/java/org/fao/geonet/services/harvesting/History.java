@@ -45,21 +45,9 @@ import static org.fao.geonet.repository.specification.HarvestHistorySpecs.hasHar
 
 
 public class History implements Service {
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
-
     public void init(Path appPath, ServiceConfig config) throws Exception {
 
     }
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //--------------------------------------------------------------------------
 
     public Element exec(Element params, ServiceContext context) throws Exception {
         int page = org.fao.geonet.Util.getParam(params, "page", 0);
@@ -74,17 +62,17 @@ public class History implements Service {
 
         final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
 
-        final Sort.Order harvestDateOrder = new Sort.Order(Sort.Direction.DESC, createPath(HarvestHistory_.harvestDate));
-        final Sort.Order harvesterUuidOrder = new Sort.Order(createPath(HarvestHistory_.harvesterUuid));
-        final Sort.Order harvesterTypeSort = new Sort.Order(createPath(HarvestHistory_.harvesterType));
+        final Sort.Order harvestDateOrder = Sort.Order.desc(createPath(HarvestHistory_.harvestDate));
+        final Sort.Order harvesterUuidOrder = Sort.Order.by(createPath(HarvestHistory_.harvesterUuid));
+        final Sort.Order harvesterTypeSort = Sort.Order.by(createPath(HarvestHistory_.harvesterType));
 
         Sort springSort;
         if (sortCriteria.equals("date")) {
-            springSort = new Sort(harvestDateOrder, harvesterUuidOrder);
+            springSort = Sort.by(harvestDateOrder, harvesterUuidOrder);
         } else {
-            springSort = new Sort(harvesterTypeSort, harvestDateOrder, harvesterUuidOrder);
+            springSort = Sort.by(harvesterTypeSort, harvestDateOrder, harvesterUuidOrder);
         }
-        PageRequest pageRequest = new PageRequest(page, pageSize, springSort);
+        PageRequest pageRequest = PageRequest.of(page, pageSize, springSort);
 
         Element result;
         long totalRecords;

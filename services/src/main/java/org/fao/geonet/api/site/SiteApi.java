@@ -179,7 +179,7 @@ public class SiteApi {
             Settings.SYSTEM_PLATFORM_SUBVERSION
         }));
         if (!NodeInfo.DEFAULT_NODE.equals(node.getId())) {
-            Source source = sourceRepository.findOne(node.getId());
+            Source source = sourceRepository.findById(node.getId()).get();
             if (source != null) {
                 String iso3langCode = languageUtils.getIso3langCode(request.getLocales());
                 final List<Setting> settings = response.getSettings();
@@ -384,7 +384,7 @@ public class SiteApi {
         // Update site source name/translations if the site name is updated
         if (!oldSiteName.equals(newSiteName)) {
             SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
-            Source siteSource = sourceRepository.findOne(currentUuid);
+            Source siteSource = sourceRepository.findById(currentUuid).get();
 
             if (siteSource != null) {
                 siteSource.setName(newSiteName);
@@ -401,7 +401,7 @@ public class SiteApi {
         if (newUuid != null && !currentUuid.equals(newUuid)) {
             final IMetadataManager metadataRepository = applicationContext.getBean(IMetadataManager.class);
             final SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
-            final Source source = sourceRepository.findOne(currentUuid);
+            final Source source = sourceRepository.findById(currentUuid).get();
             Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.getType());
             sourceRepository.save(newSource);
 

@@ -77,7 +77,7 @@ import org.jdom.input.JDOMParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -96,7 +96,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
 import static org.fao.geonet.api.ApiParams.*;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 
 @RequestMapping(value = {"/{portal}/api/records", "/{portal}/api/" + API.VERSION_0_1 + "/records"})
@@ -413,7 +413,7 @@ public class MetadataInsertDeleteApi {
         // TODO : Check user can create a metadata in that group
         UserSession user = ApiUtils.getUserSession(httpSession);
         if (user.getProfile() != Profile.Administrator) {
-            final Specifications<UserGroup> spec = where(UserGroupSpecs.hasProfile(Profile.Editor))
+            final Specification<UserGroup> spec = where(UserGroupSpecs.hasProfile(Profile.Editor))
                 .and(UserGroupSpecs.hasUserId(user.getUserIdAsInt()))
                 .and(UserGroupSpecs.hasGroupId(Integer.valueOf(group)));
 

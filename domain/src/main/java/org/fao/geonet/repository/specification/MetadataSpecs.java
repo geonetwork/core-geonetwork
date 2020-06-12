@@ -38,7 +38,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 /**
- * Specifications for querying {@link org.fao.geonet.repository.UserRepository}.
+ * Specification for querying {@link org.fao.geonet.repository.UserRepository}.
  *
  * @author Jesse
  */
