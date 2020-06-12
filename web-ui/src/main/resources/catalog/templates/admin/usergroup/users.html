@@ -247,20 +247,21 @@
               <div
                 data-ng-show="userSelected.profile != 'Administrator'">
                 <h3 data-translate="">RegisteredUser</h3>
+                <div
                 <div data-gn-multiselect="groupsByProfile['RegisteredUser']"
-                     data-ng-disabled="!user.isUserAdminOrMore()"
+                     data-readonly-mode="!user.isUserAdminOrMore()"
                      data-choices="groups"></div>
 
 
                 <h3 data-translate="">Editor</h3>
                 <div data-gn-multiselect="groupsByProfile['Editor']"
-                     data-ng-disabled="!user.isUserAdminOrMore()"
+                     data-readonly-mode="!user.isUserAdminOrMore()"
                      data-choices="groups"></div>
 
 
                 <h3 data-translate="">Reviewer</h3>
                 <div data-gn-multiselect="groupsByProfile['Reviewer']"
-                     data-ng-disabled="!user.isUserAdminOrMore()"
+                     data-readonly-mode="!user.isUserAdminOrMore()"
                      data-choices="groups"></div>
 
                 <p class="help-block"
@@ -269,7 +270,7 @@
 
                 <h3 data-translate="">UserAdmin</h3>
                 <div data-gn-multiselect="groupsByProfile['UserAdmin']"
-                     data-ng-disabled="!user.isUserAdminOrMore()"
+                     data-readonly-mode="!user.isUserAdminOrMore()"
                      data-choices="groups"></div>
 
                 <p class="help-block"
