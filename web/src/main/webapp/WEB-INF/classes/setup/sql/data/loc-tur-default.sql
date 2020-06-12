@@ -1,12 +1,6 @@
 INSERT INTO Languages (id, name, isinspire, isdefault) VALUES ('tur','Türkçe', 'n', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (57, 'tur', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (58, 'tur', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (59, 'tur', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (60, 'tur', 'accessConstraints', '');
-
-
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'tur','Haritalar & grafikler');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'tur','Verisetleri');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'tur','Interaktif kaynaklar');

@@ -475,8 +475,6 @@
 
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.csw!?.*"
                            access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.csw.save!?.*"
-                           access="hasRole('Administrator')"/>
         <sec:intercept-url
           pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.csw.customelementset!?.*"
           access="hasRole('Administrator')"/>

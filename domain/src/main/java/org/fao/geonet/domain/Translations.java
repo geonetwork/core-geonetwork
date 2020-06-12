@@ -25,7 +25,7 @@ package org.fao.geonet.domain;
 
 import java.io.Serializable;
 
-import org.fao.geonet.entitylistener.CswCapabilitiesInfoFieldEntityListenerManager;
+import org.fao.geonet.entitylistener.TranslationsEntityListenerManager;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -40,10 +40,17 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "CswServerCapabilitiesInfo")
-@EntityListeners(CswCapabilitiesInfoFieldEntityListenerManager.class)
-@SequenceGenerator(name = CswCapabilitiesInfoField.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
-public class CswCapabilitiesInfoField extends GeonetEntity implements Serializable {
+@Table(
+    name = "Translations",
+    indexes = {
+        @Index(name = "idx_translations_lang", columnList = "langid")
+    },
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames={"field", "langid"})
+    })
+@EntityListeners(TranslationsEntityListenerManager.class)
+@SequenceGenerator(name = Translations.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+public class Translations extends GeonetEntity implements Serializable {
 
     static final String ID_SEQ_NAME = "csw_server_capabilities_info_id_seq";
     private static final long serialVersionUID = -2893765878557173596L;
@@ -73,7 +80,7 @@ public class CswCapabilitiesInfoField extends GeonetEntity implements Serializab
      * @param id the id.
      * @return this object
      */
-    public CswCapabilitiesInfoField setId(final int id) {
+    public Translations setId(final int id) {
         this._id = id;
         return this;
     }
@@ -96,7 +103,7 @@ public class CswCapabilitiesInfoField extends GeonetEntity implements Serializab
      * @param langid the iso 3 language code (eng, fre, ger)
      * @return this object
      */
-    public CswCapabilitiesInfoField setLangId(final String langid) {
+    public Translations setLangId(final String langid) {
         this._langId = langid;
         return this;
     }
@@ -121,7 +128,7 @@ public class CswCapabilitiesInfoField extends GeonetEntity implements Serializab
      * @param fieldName the field name.
      * @return this object
      */
-    public CswCapabilitiesInfoField setFieldName(final String fieldName) {
+    public Translations setFieldName(final String fieldName) {
         this._fieldName = fieldName;
         return this;
     }
@@ -145,7 +152,7 @@ public class CswCapabilitiesInfoField extends GeonetEntity implements Serializab
      * @param newValue the translated label.
      * @return this object
      */
-    public CswCapabilitiesInfoField setValue(final String newValue) {
+    public Translations setValue(final String newValue) {
         this._value = newValue;
         return this;
     }

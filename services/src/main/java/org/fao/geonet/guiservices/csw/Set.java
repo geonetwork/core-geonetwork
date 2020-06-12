@@ -26,22 +26,14 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.CswCapabilitiesInfoField;
-import org.fao.geonet.domain.Language;
-import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.CswCapabilitiesInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
-import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.kernel.setting.Settings;
 import org.jdom.Element;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class Set implements Service {
@@ -54,9 +46,6 @@ public class Set implements Service {
 
         // Save values in settings
         saveCswServerConfig(params, gc.getBean(SettingManager.class));
-
-        // Process parameters and save capabilities information in database
-        saveCswCapabilitiesInfo(params, context);
 
         // Build response
         return new Element(Jeeves.Elem.RESPONSE).setText("ok");
@@ -75,30 +64,6 @@ public class Set implements Service {
         // Save contact
         String capabilityRecordId = Util.getParam(params, "csw.capabilityRecordId", "-1");
         settingManager.setValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID, capabilityRecordId);
-    }
-
-    @Deprecated
-    private void saveCswCapabilitiesInfo(Element params, ServiceContext serviceContext)
-        throws Exception {
-
-        List<Language> languages = serviceContext.getBean(LanguageRepository.class).findAll();
-
-        List<CswCapabilitiesInfoField> toSave = new ArrayList<CswCapabilitiesInfoField>();
-
-        final CswCapabilitiesInfoFieldRepository capabilitiesInfoFieldRepository = serviceContext.getBean(CswCapabilitiesInfoFieldRepository.class);
-        for (Language language : languages) {
-            CswCapabilitiesInfo cswCapInfo = capabilitiesInfoFieldRepository.findCswCapabilitiesInfo(language.getId());
-
-            final String langId = language.getId();
-            cswCapInfo.setTitle(getValue(params, "csw.title_" + langId));
-            cswCapInfo.setAbstract(getValue(params, "csw.abstract_" + langId));
-            cswCapInfo.setFees(getValue(params, "csw.fees_" + langId));
-            cswCapInfo.setAccessConstraints(getValue(params, "csw.accessConstraints_" + langId));
-
-            toSave.addAll(cswCapInfo.getFields());
-        }
-
-        capabilitiesInfoFieldRepository.save(toSave);
     }
 
     private String getValue(Element params, String paramId) {

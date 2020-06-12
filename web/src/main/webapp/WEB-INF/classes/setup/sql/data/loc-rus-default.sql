@@ -1,11 +1,6 @@
 INSERT INTO Languages (id, name, isinspire, isdefault) VALUES ('rus','русский язык', 'n', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (29, 'rus', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (30, 'rus', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (31, 'rus', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (32, 'rus', 'accessConstraints', '');
-
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'rus','Карты и графика');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'rus','Наборы данных');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'rus','Интерактивные ресурсы');
