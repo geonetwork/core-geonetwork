@@ -164,7 +164,7 @@ public class MetadataStatusResponse extends MetadataStatus {
         this.uuid = uuid;
         return this;
     }
-    
+
     public MetadataStatusId getId() {
         return metadataStatusObject.getId();
     }
