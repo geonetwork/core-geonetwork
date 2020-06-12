@@ -39,9 +39,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.List;
 
 @RequestMapping(value = {
-    "/{portal}/api/isolanguages",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/isolanguages"
+    "/{portal}/api/isolanguages"
 })
 @Tag(name = "languages",
     description = "Languages operations")

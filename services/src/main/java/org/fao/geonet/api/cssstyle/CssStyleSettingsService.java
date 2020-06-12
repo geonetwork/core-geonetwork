@@ -58,7 +58,7 @@ import static com.google.common.base.CaseFormat.LOWER_HYPHEN;
 /**
  * The Class CssStyleSettingsService.
  */
-@RequestMapping(value = {"/{portal}/api/customstyle", "/{portal}/api/" + API.VERSION_0_1 + "/customstyle"})
+@RequestMapping(value = {"/{portal}/api/customstyle"})
 @Tag(name = "customstyle", description = "Functionalities for custom styling")
 @Controller("stylesheet")
 public class CssStyleSettingsService {

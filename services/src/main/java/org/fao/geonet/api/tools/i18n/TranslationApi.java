@@ -48,9 +48,7 @@ import java.util.*;
  */
 
 @RequestMapping(value = {
-    "/{portal}/api/tools/i18n",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/tools/i18n"
+    "/{portal}/api/tools/i18n"
 })
 @Tag(name = "tools")
 @Controller("translation")

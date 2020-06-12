@@ -74,8 +74,7 @@ import java.util.zip.GZIPOutputStream;
 
 
 @RequestMapping(value = {
-    "/{portal}/api",
-    "/{portal}/api/" + API.VERSION_0_1
+    "/{portal}/api"
 })
 @Tag(name = "search",
     description = "Proxy for ElasticSearch catalog search operations")

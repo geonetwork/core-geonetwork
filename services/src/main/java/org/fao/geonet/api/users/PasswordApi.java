@@ -55,9 +55,7 @@ import java.util.ResourceBundle;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-    "/{portal}/api/user",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/user"
+    "/{portal}/api/user"
 })
 @Tag(name = "users",
     description = "User operations")

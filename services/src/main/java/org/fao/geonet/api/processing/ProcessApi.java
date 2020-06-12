@@ -51,9 +51,7 @@ import java.util.Set;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 
 @RequestMapping(value = {
-    "/{portal}/api/processes",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/processes"
+    "/{portal}/api/processes"
 })
 @Tag(name = "processes",
     description = "Processing operations")

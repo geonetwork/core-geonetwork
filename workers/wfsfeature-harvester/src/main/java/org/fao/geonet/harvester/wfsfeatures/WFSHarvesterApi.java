@@ -50,8 +50,7 @@ import java.util.HashMap;
  */
 @Controller
 @RequestMapping(value = {
-        "/{portal}/api/workers/data/wfs/actions",
-        "/{portal}/api/" + API.VERSION_0_1 + "/workers/data/wfs/actions"
+        "/{portal}/api/workers/data/wfs/actions"
 })
 @Tag(name = "workers",
         description = "Workers related operations")

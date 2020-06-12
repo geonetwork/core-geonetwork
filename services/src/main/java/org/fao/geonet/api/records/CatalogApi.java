@@ -83,9 +83,7 @@ import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
 import static org.fao.geonet.kernel.search.IndexFields.SOURCE_CATALOGUE;
 
 @RequestMapping(value = {
-    "/{portal}/api/records",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/records"
+    "/{portal}/api/records"
 })
 @Tag(name = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)

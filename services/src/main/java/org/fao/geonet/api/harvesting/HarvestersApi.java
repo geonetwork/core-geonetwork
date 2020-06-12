@@ -61,9 +61,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping(value = {
-    "/{portal}/api/harvesters",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/harvesters"
+    "/{portal}/api/harvesters"
 })
 @Tag(name = "harvesters",
     description = "Harvester operations")

@@ -81,9 +81,7 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 @Service
 @RestController
 @RequestMapping(value = {
-    "/{portal}/api/records/links",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/records/links"
+    "/{portal}/api/records/links"
 })
 @Tag(name = "links",
     description = "Record link operations")

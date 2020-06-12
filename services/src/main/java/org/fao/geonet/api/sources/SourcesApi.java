@@ -57,9 +57,7 @@ import java.util.List;
 import java.util.Map;
 
 @RequestMapping(value = {
-    "/{portal}/api/sources",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/sources"
+    "/{portal}/api/sources"
 })
 @Tag(name = "sources",
     description = "Source catalogue operations")

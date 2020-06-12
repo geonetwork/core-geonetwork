@@ -94,9 +94,7 @@ import java.util.Map;
 @Service
 @RequestMapping(
     value = {
-        "/{portal}/api/registries/vocabularies",
-        "/{portal}/api/" + API.VERSION_0_1 +
-            "/registries/vocabularies"
+        "/{portal}/api/registries/vocabularies"
     })
 @Tag(
     name = ApiParams.API_CLASS_REGISTRIES_TAG,

@@ -68,9 +68,7 @@ import static org.fao.geonet.api.records.extent.MetadataExtentApi.*;
  */
 
 @RequestMapping(value = {
-    "/{portal}/api/regions",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/regions"
+    "/{portal}/api/regions"
 })
 @Tag(name = "regions",
     description = "Regions operations")

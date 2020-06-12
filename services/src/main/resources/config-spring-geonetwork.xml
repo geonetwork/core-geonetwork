@@ -42,7 +42,6 @@
   <context:component-scan base-package="org.fao.geonet.guiservices"/>
   <context:component-scan base-package="org.fao.geonet.services"/>
 
-
   <bean id="defaultLanguage" class="java.lang.String">
     <constructor-arg index="0" value="\${language.default}"/>
   </bean>

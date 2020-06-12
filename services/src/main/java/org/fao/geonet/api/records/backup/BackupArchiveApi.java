@@ -61,9 +61,7 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.quartz.TriggerBuilder.newTrigger;
 
 @RequestMapping(value = {
-    "/{portal}/api/records/backups",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/records/backups"
+    "/{portal}/api/records/backups"
 })
 @Tag(name = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)

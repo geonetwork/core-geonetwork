@@ -68,9 +68,7 @@ import java.util.Set;
 import static org.fao.geonet.api.ApiParams.*;
 
 @RequestMapping(value = {
-    "/{portal}/api/records",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/records"
+    "/{portal}/api/records"
 })
 @Tag(
     name = API_CLASS_RECORD_TAG,

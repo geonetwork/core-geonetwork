@@ -46,9 +46,7 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
  * Select a list of elements stored in session.
  */
 @RequestMapping(value = {
-    "/{portal}/api/selections",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/selections"
+    "/{portal}/api/selections"
 })
 @Tag(name = "selections",
     description = "Selection related operations")

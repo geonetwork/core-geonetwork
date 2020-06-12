@@ -57,9 +57,7 @@ import java.util.List;
 import java.util.Set;
 
 @RequestMapping(value = {
-    "/{portal}/api/ui",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/ui"
+    "/{portal}/api/ui"
 })
 @Tag(name = "ui",
     description = "User interface configuration operations")

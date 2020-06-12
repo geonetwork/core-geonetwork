@@ -39,8 +39,7 @@ import java.util.List;
 
 @Service
 @RequestMapping(value = {
-    "/{portal}/api/tools/ogc",
-    "/{portal}/api/" + API.VERSION_0_1 + "/tools/ogc"
+    "/{portal}/api/tools/ogc"
 })
 @Tag(name = "tools",
     description = "Utility operations")

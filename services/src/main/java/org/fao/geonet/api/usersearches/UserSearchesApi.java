@@ -66,9 +66,7 @@ import java.util.Set;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-    "/{portal}/api/usersearches",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/usersearches"
+    "/{portal}/api/usersearches"
 })
 @Tag(name = "usersearches",
     description = "User custom searches operations")

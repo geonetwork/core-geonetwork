@@ -75,7 +75,7 @@ import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_NAME_PATH;
 /**
  * User Feedback REST API.
  */
-@RequestMapping(value = {"/{portal}/api", "/{portal}/api/" + API.VERSION_0_1})
+@RequestMapping(value = {"/{portal}/api"})
 @Tag(name = "userfeedback",
     description = "User feedback")
 @Controller("userfeedback")

@@ -63,9 +63,7 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
 
 
 @RequestMapping(value = {
-    "/{portal}/api/site/logging",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/site/logging"
+    "/{portal}/api/site/logging"
 })
 @Tag(name = API_CLASS_CATALOG_TAG,
     description = API_CLASS_CATALOG_OPS)

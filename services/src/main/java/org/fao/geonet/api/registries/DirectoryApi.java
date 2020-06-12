@@ -108,9 +108,7 @@ import static org.fao.geonet.api.records.MetadataInsertDeleteApi.API_PARAM_RECOR
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-    "/{portal}/api/registries/actions/entries",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/registries/actions/entries"
+    "/{portal}/api/registries/actions/entries"
 })
 @Tag(name = "registries",
     description = "Registries related operations")
