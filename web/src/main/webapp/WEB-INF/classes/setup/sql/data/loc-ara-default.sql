@@ -1,11 +1,6 @@
 INSERT INTO Languages (id, name, isinspire, isdefault) VALUES ('ara','العربية', 'n', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (41, 'ara', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (42, 'ara', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (43, 'ara', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (44, 'ara', 'accessConstraints', '');
-
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'ara','Maps & graphics');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'ara','Datasets');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'ara','Interactive resources');
