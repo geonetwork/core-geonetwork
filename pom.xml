@@ -1367,6 +1367,8 @@
          </os>
        </activation>
        <properties>
+         <es.version.sha512>1a5b98f4e2045f6353d1d18360a017d8f04565d23b4dde56b6c647c22b061dd7df7b323b4bd295303d841998c9d0d0f289ef1469db65ef28bc86348acf83e5ce</es.version.sha512>
+         <es.platform>windows-x86_64</es.platform>
          <kb.executable>kibana.bat</kb.executable>
          <kb.platform>windows-x86</kb.platform>
          <kb.installer.extension>zip</kb.installer.extension>
