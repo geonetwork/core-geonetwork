@@ -32,8 +32,8 @@
   module
       .directive(
           'gnMdFeedback', [
-            '$http', 'gnConfig', 'vcRecaptchaService', '$translate',
-          function($http, gnConfig, vcRecaptchaService, $translate) {
+            '$http', 'gnConfig', 'vcRecaptchaService', '$translate', 'gnConfigService',
+          function($http, gnConfig, vcRecaptchaService, $translate, gnConfigService) {
             return {
               restrict: 'A',
               replace: true,
@@ -46,10 +46,15 @@
 
                 scope.showLabel = attrs.showLabel;
 
-                var statusSystemRating = gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
-                if (statusSystemRating == 'advanced') {
-                  scope.isUserFeedbackEnabled = true;
-                }
+                scope.isUserFeedbackEnabled = false;
+
+                gnConfigService.load().then(function(c) {
+                  var statusSystemRating =
+                    gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
+                  if (statusSystemRating == 'advanced') {
+                    scope.isUserFeedbackEnabled = true;
+                  }
+                });
 
                 scope.recaptchaEnabled =
                   gnConfig['system.userSelfRegistration.recaptcha.enable'];
