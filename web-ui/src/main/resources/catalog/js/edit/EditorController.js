@@ -288,6 +288,13 @@
                     // and all directives to be rendered which
                     // may affect element positions.
                   }
+                }).catch(function(data) {
+                  //an api-error is returned as xml
+                  $rootScope.$broadcast('StatusUpdated', {
+                    title: $translate.instant('runServiceError'),
+                    error: $(data).find('description').text(),
+                    timeout: 0,
+                    type: 'danger'});
                 });
 
                 window.onbeforeunload = function() {

@@ -1,0 +1,39 @@
+@import "../../../style/gn_search.less";
+@import "gn_layout_default.less";
+@import "gn_navbar_default.less";
+@import "gn_footer_default.less";
+@import "gn_infolist_default.less";
+@import "gn_variables_default.less"; // must be last
+
+
+div.gn-full > div.container {
+  width: 100%;
+  padding: 0px;
+  background-color: #9e9e9e;
+
+  .gn-background {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    h1, h2 {
+      //color: white;
+    }
+    h1 {
+      font-weight: bold;
+    }
+  }
+  .title {
+    color: white;
+    h1 {
+      font-size: 20px;
+      font-weight: bold;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+    p {
+      display: block;
+    }
+  }
+}

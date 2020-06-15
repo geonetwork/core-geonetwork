@@ -816,28 +816,29 @@
             "1089/2010" is maybe too fuzzy but could work for translated citation like "Règlement n°1089/2010, Annexe II-6" TODO improved
         -->
         <xsl:if test="(
-                                contains(gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString, '1089/2010') or
-                                contains(gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE Data Specification') or
-                                contains(gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE Specification'))">
+                                contains(gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmx:Anchor), '1089/2010') or
+                                contains(gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmx:Anchor), 'INSPIRE Data Specification') or
+                                contains(gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmx:Anchor), 'INSPIRE Specification'))">
           <Field name="inspirerelated" string="on" store="false" index="true"/>
         </xsl:if>
       </xsl:if>
 
-      <xsl:for-each select="//gmd:pass/gco:Boolean">
+      <xsl:for-each select="./*/gmd:pass/gco:Boolean">
         <Field name="degree" string="{string(.)}" store="true" index="true"/>
       </xsl:for-each>
 
-      <xsl:for-each select="//gmd:specification/*/gmd:title/gco:CharacterString">
+      <xsl:for-each select="./*/gmd:specification/*/gmd:title/(gco:CharacterString|gmx:Anchor)">
+
         <Field name="specificationTitle" string="{string(.)}" store="true" index="true"/>
       </xsl:for-each>
 
-      <xsl:for-each select="//gmd:specification/*/gmd:date/*/gmd:date">
+      <xsl:for-each select="./*/gmd:specification/*/gmd:date/*/gmd:date">
         <Field name="specificationDate" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}"
                store="true" index="true"/>
       </xsl:for-each>
 
       <xsl:for-each
-        select="//gmd:specification/*/gmd:date/*/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue">
+        select="./*/gmd:specification/*/gmd:date/*/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue">
         <Field name="specificationDateType" string="{string(.)}" store="true" index="true"/>
       </xsl:for-each>
     </xsl:for-each>
