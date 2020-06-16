@@ -407,19 +407,24 @@ public class KeywordsApi {
 
             KeywordBean kb;
             String[] url;
-            if (!uri.contains(SEPARATOR))
-                url = new String[] {uri};
-            else
+            if (!uri.contains(SEPARATOR)) {
+                url = new String[]{uri};
+            }
+            else {
                 url = uri.split(SEPARATOR);
+            }
             List<KeywordBean> kbList = new ArrayList<>();
             for (String currentUri : url) {
                 kb = searcher.searchById(currentUri, sThesaurusName, iso3langCodes);
-                if (kb == null)
+                if (kb == null) {
                     kb = searcher.searchById(currentUri, sThesaurusName, langs);
-                if (kb == null)
-                    kb = searcher.searchById(fixUri(currentUri), sThesaurusName, iso3langCodes);
-                if (kb == null)
-                    kb = searcher.searchById(fixUri(currentUri), sThesaurusName, langs);
+                }
+                if (kb == null) {
+                    kb = searcher.searchById(ApiUtils.fixURIFragment(currentUri), sThesaurusName, iso3langCodes);
+                }
+                if (kb == null) {
+                    kb = searcher.searchById(ApiUtils.fixURIFragment(currentUri), sThesaurusName, langs);
+                }
                 if (kb != null) {
                     kbList.add(kb);
                 }
@@ -462,16 +467,6 @@ public class KeywordsApi {
         return transform;
     }
 
-    // fixes common problems in uri
-    private String fixUri(String uri) throws   UnsupportedEncodingException {
-        String[] parts = uri.split("#");
-        if (parts.length >1) {
-            parts[parts.length - 1] = URLEncoder.encode(parts[parts.length - 1], "UTF-8");
-            parts[parts.length - 1] = parts[parts.length - 1].replace("+", "%20");
-            parts[parts.length - 1] = parts[parts.length - 1].replace("%3A", ":");
-        }
-        return String.join("#",parts);
-    }
 
     /**
      * Gets the thesaurus.
