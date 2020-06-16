@@ -23,18 +23,8 @@
 
 package org.fao.geonet.api.registries.vocabularies;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
+import java.io.*;
+import java.net.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -402,7 +392,7 @@ public class KeywordsApi {
         String[] iso3langCodes = Arrays.copyOf(langs, langs.length);
         for (int i = 0; i < langs.length; i++) {
             if (StringUtils.isNotEmpty(langs[i])) {
-                langs[i] = mapper.iso639_2_to_iso639_1(langs[i], langs[i].substring(2));
+                langs[i] = mapper.iso639_2_to_iso639_1(langs[i], langs[i].substring(0,2));  //default: fra -> fr
             }
         }
 
@@ -416,30 +406,30 @@ public class KeywordsApi {
             KeywordsSearcher searcher = new KeywordsSearcher(context, thesaurusManager);
 
             KeywordBean kb;
-            if (!uri.contains(SEPARATOR)) {
-                kb = searcher.searchById(uri, sThesaurusName, langs);
-                if (kb == null) {
-                    descKeys = new Element("descKeys");
-                } else {
-                    descKeys = KeywordsSearcher.toRawElement(new Element("descKeys"), kb);
-                }
-            } else {
-                String[] url = uri.split(SEPARATOR);
-                List<KeywordBean> kbList = new ArrayList<>();
-                for (String currentUri : url) {
+            String[] url;
+            if (!uri.contains(SEPARATOR))
+                url = new String[] {uri};
+            else
+                url = uri.split(SEPARATOR);
+            List<KeywordBean> kbList = new ArrayList<>();
+            for (String currentUri : url) {
+                kb = searcher.searchById(currentUri, sThesaurusName, iso3langCodes);
+                if (kb == null)
                     kb = searcher.searchById(currentUri, sThesaurusName, langs);
-                    if (kb == null)
-                        kb = searcher.searchById(fixUri(currentUri), sThesaurusName, langs);
-                    if (kb != null) {
-                        kbList.add(kb);
-                    }
-                }
-                descKeys = new Element("descKeys");
-                for (KeywordBean keywordBean : kbList) {
-                    KeywordsSearcher.toRawElement(descKeys, keywordBean);
+                if (kb == null)
+                    kb = searcher.searchById(fixUri(currentUri), sThesaurusName, iso3langCodes);
+                if (kb == null)
+                    kb = searcher.searchById(fixUri(currentUri), sThesaurusName, langs);
+                if (kb != null) {
+                    kbList.add(kb);
                 }
             }
+            descKeys = new Element("descKeys");
+            for (KeywordBean keywordBean : kbList) {
+                KeywordsSearcher.toRawElement(descKeys, keywordBean);
+            }
         }
+
 
         Path convertXsl = dataDirectory.getWebappDir().resolve("xslt/services/thesaurus/convert.xsl");
 
@@ -473,12 +463,14 @@ public class KeywordsApi {
     }
 
     // fixes common problems in uri
-    private String fixUri(String uri) throws URISyntaxException {
-        // We could be smarter about this.
-        // ie. by breaking string at "#" and then urlencode the left part.
-        //     However, the rdf files could be inconsistent with
-        //     other characters like ":" (i.e. should not be url encoded)
-        return uri.replace(" ","%20");
+    private String fixUri(String uri) throws   UnsupportedEncodingException {
+        String[] parts = uri.split("#");
+        if (parts.length >1) {
+            parts[parts.length - 1] = URLEncoder.encode(parts[parts.length - 1], "UTF-8");
+            parts[parts.length - 1] = parts[parts.length - 1].replace("+", "%20");
+            parts[parts.length - 1] = parts[parts.length - 1].replace("%3A", ":");
+        }
+        return String.join("#",parts);
     }
 
     /**

@@ -27,7 +27,9 @@
   var module = angular.module('gn_thesaurus_service', []);
 
   module.factory('Keyword', function() {
-    function Keyword(k) {
+    function Keyword(k,currentUILang,currentUILang2) {
+      this.currentUILang = currentUILang;
+      this.currentUILang2 = currentUILang2;
       this.props = $.extend(true, {}, k);
       this.label = this.getLabel();
       this.tagClass = 'label label-info gn-line-height';
@@ -37,6 +39,14 @@
         return this.props.uri;
       },
       getLabel: function() {
+        if ( (this.props.values) ){
+            var currentUILang= this.currentUILang;
+            var currentUILang2= this.currentUILang2;
+            if (this.props.values[currentUILang])
+              return this.props.values[currentUILang];
+            if (this.props.values[currentUILang2])
+              return this.props.values[currentUILang2];
+        }
         return this.props.value['#text'] || this.props.value;
       }
     };
@@ -45,7 +55,10 @@
   });
 
   module.factory('Thesaurus', function() {
-    function Thesaurus(k) {
+    function Thesaurus(k, currentUILang,currentUILang2) {
+      this.currentUILang = currentUILang;
+      this.currentUILang2 = currentUILang2;
+
       this.props = $.extend(true, {}, k);
     };
     Thesaurus.prototype = {
@@ -53,7 +66,18 @@
         return this.props.key;
       },
       getTitle: function() {
-        return this.props.title;
+        var title = this.props.title;
+        //there are multilingual
+        if (this.props.multilingualTitles && this.props.multilingualTitles.length>0) {
+          var currentUILang= this.currentUILang;
+          var currentUILang2= this.currentUILang2;
+          var title_multilingual=_.find(this.props.multilingualTitles,function(l) {
+                return (l.lang == currentUILang) || (l.lang == currentUILang2);
+              });
+          if (title_multilingual)
+            title=title_multilingual.title;
+        }
+        return title;
       },
       get: function() {
         return this.props;
@@ -72,7 +96,10 @@
           'gnUrlUtils',
           'Keyword',
           'Thesaurus',
-          function($q, $rootScope, $http, gnUrlUtils, Keyword, Thesaurus) {
+          'gnCurrentEdit',
+          'gnLangs',
+          'gnGlobalSettings',
+          function($q, $rootScope, $http, gnUrlUtils, Keyword, Thesaurus,gnCurrentEdit,gnLangs,gnGlobalSettings) {
             var getKeywordsSearchUrl = function(filter,
                 thesaurus, lang, max, typeSearch, outputLang) {
               var parameters = {
@@ -94,9 +121,15 @@
 
             var parseKeywordsResponse = function(data, dataToExclude) {
               var listOfKeywords = [];
+              var currentUILang = gnLangs.detectLang(
+                                  gnGlobalSettings.gnCfg.langDetector,
+                                  gnGlobalSettings
+                                );
+              var currentUILang2 = gnCurrentEdit.allLanguages.iso2code[currentUILang].replace("#","");
+
               angular.forEach(data, function(k) {
                 if (k.value) {
-                  listOfKeywords.push(new Keyword(k));
+                  listOfKeywords.push(new Keyword(k,currentUILang,currentUILang2));
                 }
               });
 
@@ -268,8 +301,15 @@
                     (schema || 'iso19139'), { cache: true }).
                     success(function(data, status) {
                       var listOfThesaurus = [];
+                      //converted and non-converted value
+                      // i.e. fra and fre
+                      var currentUILang = gnLangs.detectLang(
+                                            gnGlobalSettings.gnCfg.langDetector,
+                                            gnGlobalSettings
+                                          );
+                      var currentUILang2 = gnCurrentEdit.allLanguages.iso2code[currentUILang].replace("#","");
                       angular.forEach(data[0], function(k) {
-                        listOfThesaurus.push(new Thesaurus(k));
+                        listOfThesaurus.push(new Thesaurus(k,currentUILang,currentUILang,currentUILang2));
                       });
                       defer.resolve(listOfThesaurus);
                     }).
@@ -288,8 +328,11 @@
               parseKeywordsResponse: parseKeywordsResponse,
               getKeywords: function(filter, thesaurus, lang, max, typeSearch) {
                 var defer = $q.defer();
+                var allLangs = _.map(Object.keys(gnCurrentEdit.allLanguages.code2iso),function(k){
+                                 return k.replace("#","");
+                             }).join(',')
                 var url = getKeywordsSearchUrl(filter,
-                    thesaurus, lang, max, typeSearch);
+                    thesaurus, lang, max, typeSearch,allLangs);
                 $http.get(url, { cache: true }).
                     success(function(data, status) {
                       defer.resolve(parseKeywordsResponse(data));

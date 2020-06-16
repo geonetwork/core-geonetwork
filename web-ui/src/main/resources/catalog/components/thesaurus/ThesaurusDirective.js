@@ -146,9 +146,12 @@
                  thesaurusIdentifier;
                } else {
                  gnCurrentEdit.working = true;
+                 var langs = _.map(Object.keys(gnCurrentEdit.allLanguages.code2iso),function(k){
+                          return k.replace("#","");
+                      }).join(',');
                  return gnThesaurusService
                   .getXML(thesaurusIdentifier, null,
-                 attrs.transformation).then(
+                 attrs.transformation,langs).then(
                  function(data) {
                    // Add the fragment to the form
                    scope.snippet = data;
@@ -265,9 +268,10 @@
 
              //Get langs of metadata
              var langs = [];
-             for (var p in JSON.parse(scope.lang)) {
-               langs.push(p);
-             }
+             _.each(JSON.parse(scope.lang),function(l){
+                  langs.push(l.replace("#",""));
+             });
+
              scope.mainLang = langs[0];
              scope.langs = langs.join(',');
 

@@ -67,14 +67,8 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.Nonnull;
@@ -103,6 +97,8 @@ public class Thesaurus {
     private String keywordUrl;
 
     private IsoLanguagesMapper isoLanguageMapper;
+
+    private Map<String, String> multilingualTitles = new Hashtable<String,String>();
 
 /*    @SuppressWarnings("unused")
     private String version;
@@ -172,6 +168,10 @@ public class Thesaurus {
             name = name.substring(0, fname.indexOf(".rdf"));
         }
         return type + "." + dname + "." + name;
+    }
+
+    public Map<String, String> getMultilingualTitles() {
+        return Collections.unmodifiableMap(this.multilingualTitles);
     }
 
     /**
@@ -693,6 +693,47 @@ public class Thesaurus {
         repository.addGraph(myGraph);
     }
 
+    //    <rdf:RDF>
+    //    <skos:ConceptScheme rdf:about="http://www.thesaurus.gc.ca/#CoreSubjectThesaurus">
+    //          <dc:title>Main GN Title</dc:title>
+    //          <dc:title xml:lang="en">English Version (en)</dc:title>
+    //          <dc:title xml:lang="fr">French Version (fr)</dc:title>
+    //          <dc:description></dc:description>
+    //     </skos:ConceptScheme>
+    //
+    // This will setup;
+    //  {
+    //      "en": "English Version (en)",
+    //      "fr": "French Version (fr)"
+    //      "eng": "English Version (en)",
+    //      "fre": "French Version (fr)"
+    //  }
+    private void retrieveMultiLingualTitles(Element thesaurusEl) {
+        List<Namespace> theNSs = new ArrayList<Namespace>();
+        theNSs.add(Namespace.getNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"));
+        theNSs.add(Namespace.getNamespace("skos", "http://www.w3.org/2004/02/skos/core#"));
+        theNSs.add(Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/"));
+        theNSs.add(Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/"));
+
+        Namespace xmlNS = Namespace.getNamespace("xml","http://www.w3.org/XML/1998/namespace");
+
+        try {
+            List<Element> multiLingualTitles = (List<Element>) Xml.selectNodes(thesaurusEl,
+                "skos:ConceptScheme/dc:title[@xml:lang]|skos:ConceptScheme/dcterms:title[@xml:lang]", theNSs);
+            multilingualTitles.clear();
+            for (Element el: multiLingualTitles) {
+                    //use both forms of the lang name
+                     String lang = isoLanguageMapper.iso639_2_to_iso639_1(el.getAttribute("lang", xmlNS).getValue());
+                     String lang2 = isoLanguageMapper.iso639_1_to_iso639_2(el.getAttribute("lang", xmlNS).getValue());
+                     String title = el.getTextTrim();
+                     multilingualTitles.put(lang,title);
+                     multilingualTitles.put(lang2,title);
+            }
+        } catch (Exception e) {
+            Log.warning(Geonet.THESAURUS,"error extracting multilingual titles from thesaurus",e);
+        }
+    }
+
     /**
      * Retrieves the thesaurus title from rdf file.
      *
@@ -714,6 +755,8 @@ public class Thesaurus {
             theNSs.add(Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/"));
 
             this.defaultNamespace = null;
+            retrieveMultiLingualTitles(thesaurusEl);
+
             Element title = Xml.selectElement(thesaurusEl,
                 "skos:ConceptScheme/dc:title|skos:ConceptScheme/dcterms:title|" +
                     "skos:Collection/dc:title|skos:Collection/dcterms:title|" +
