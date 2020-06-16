@@ -81,13 +81,6 @@
         <h4>
           <span data-translate="">browseBy</span>
           <span>
-            <label data-ng-show="searchInfo.aggregations.inspireThemeUri
-                              && searchInfo.aggregations.inspireThemeUri.buckets.length > 0">
-              <input type="radio" name="homeFacet"
-                     data-ng-model="homeFacet.key"
-                     data-ng-value="k"/>
-              <span data-translate="">inspireThemes</span>&nbsp;
-            </label>
             <label data-ng-repeat="facetKey in homeFacet.list"
                    data-ng-init="agg = searchInfo.aggregations[facetKey]"
                    data-ng-show="agg.buckets.length > 0 && facetKey != homeFacet.lastKey">
@@ -99,7 +92,7 @@
           </span>
         </h4>
         <div class="row">
-          <span data-ng-show="homeFacet.key !== 'inspire'"
+          <span data-ng-show="homeFacet.key !== 'inspireThemeUri'"
                 data-ng-repeat="facet in searchInfo.aggregations[homeFacet.key].buckets"
                 class="col-xs-12 col-sm-6 col-md-4 chips-card">
             <div class="badge-result badge-result-topic clearfix">
@@ -123,7 +116,7 @@
           </span>
           <!-- TODOES Sort alpha -->
           <span data-ng-repeat="(key, facet) in searchInfo.aggregations.inspireThemeUri.buckets"
-                data-ng-show="homeFacet.key === 'inspire'"
+                data-ng-show="homeFacet.key === 'inspireThemeUri'"
                 data-ng-init="code = facet.key.slice(facet.key.lastIndexOf('/')+1)"
                 class="col-xs-12 col-sm-6 col-md-4 chips-card">
             <div class="badge-result badge-result-inspire clearfix">
