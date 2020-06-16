@@ -12,7 +12,7 @@ GeoNetwork uses a wide range of technologies:
 * [Elasticsearch](https://www.elastic.co/elasticsearch/) to manage usage statistics and reporting
 * [GeoTools](https://geotools.org/) Java GIS toolkit used to provide a spatial index
 * [OpenLayers](http://openlayers.org) web mapping framework
-* [Saxxon](http://www.saxonica.com/) XSLT engine used extensively to process XML documents
+* [Saxon](http://www.saxonica.com/) XSLT engine used extensively to process XML documents
 * [Spring framework](https://spring.io/) Java web application framework used to "wire" components together
 
 GeoNetwork is Java Web Application, requiring an application server to operate:
