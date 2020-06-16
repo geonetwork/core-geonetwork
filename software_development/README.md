@@ -11,7 +11,7 @@ This manual is for software developers customizing or developing GeoNetwork:
   * [Building](BUILDING.md)
   * [Testing](TESTING.md)
   * [Eclipse IDE](ECLIPSE.md)
-  * [IntelliJ IDE](INTELIJ.md).
+  * [IntelliJ IDE](INTELLIJ.md).
   
   See [Installing from source code](https://geonetwork-opensource.org/manuals/trunk/en/maintainer-guide/installing/installing-from-source-code.html) (Maintainer Guide)
 
