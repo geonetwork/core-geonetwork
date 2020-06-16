@@ -58,7 +58,7 @@ import javax.persistence.Table;
 @Access(AccessType.PROPERTY)
 @Table(name = "Services")
 @EntityListeners(ServiceEntityListenerManager.class)
-@SequenceGenerator(name = Service.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = Service.ID_SEQ_NAME, sequenceName = Service.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class Service extends GeonetEntity {
     static final String ID_SEQ_NAME = "service_id_seq";
     private int _id;

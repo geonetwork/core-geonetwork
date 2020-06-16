@@ -49,7 +49,7 @@ import javax.persistence.Table;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "ServiceParameters")
-@SequenceGenerator(name = ServiceParam.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = ServiceParam.ID_SEQ_NAME, sequenceName = ServiceParam.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class ServiceParam extends GeonetEntity {
     static final String ID_SEQ_NAME = "serviceparameters_id_seq";
     private static final List<Character> LEGALVALUES = Lists.newArrayList('+', '-', ' ', null);

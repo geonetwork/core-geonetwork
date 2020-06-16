@@ -82,7 +82,7 @@ public abstract class AbstractMetadata extends GeonetEntity {
      * @return the id of the metadata
      */
     @Id
-    @SequenceGenerator(name=AbstractMetadata.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+    @SequenceGenerator(name=AbstractMetadata.ID_SEQ_NAME, sequenceName = AbstractMetadata.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(nullable = false)
     public int getId() {

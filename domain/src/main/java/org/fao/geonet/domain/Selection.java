@@ -56,7 +56,7 @@ import java.util.Map;
 @Cacheable
 @Table(name = "Selections")
 @EntityListeners(SelectionEntityListenerManager.class)
-@SequenceGenerator(name = Selection.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = Selection.ID_SEQ_NAME, sequenceName = Selection.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class Selection extends Localized implements Serializable {
     static final String ID_SEQ_NAME = "selection_id_seq";
     private int _id;

@@ -40,7 +40,7 @@ import javax.persistence.Table;
  */
 @Entity(name = "GUF_Rating")
 @Table(name = "GUF_Rating")
-@SequenceGenerator(name = Rating.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = Rating.ID_SEQ_NAME, sequenceName = Rating.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class Rating implements Serializable {
 
     /** Sequence name */
@@ -56,7 +56,7 @@ public class Rating implements Serializable {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Rating.ID_SEQ_NAME)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public long getId() {
         return id;
     }

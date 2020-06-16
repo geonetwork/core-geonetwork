@@ -42,7 +42,7 @@ import java.util.List;
 @Table(name = "SchematronCriteria")
 @Cacheable
 @Access(AccessType.PROPERTY)
-@SequenceGenerator(name = SchematronCriteria.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = SchematronCriteria.ID_SEQ_NAME, sequenceName = SchematronCriteria.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class SchematronCriteria extends GeonetEntity {
     static final String ID_SEQ_NAME = "schematron_criteria_id_seq";
     static final String EL_UI_TYPE = "uitype";
