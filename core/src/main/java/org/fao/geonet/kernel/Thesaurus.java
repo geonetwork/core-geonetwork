@@ -727,7 +727,9 @@ public class Thesaurus {
                      String lang2 = isoLanguageMapper.iso639_1_to_iso639_2(el.getAttribute("lang", xmlNS).getValue());
                      String title = el.getTextTrim();
                      multilingualTitles.put(lang,title);
-                     multilingualTitles.put(lang2,title);
+                     if (!multilingualTitles.containsKey(lang2)) { // don't overwrite if its already explicitly given
+                         multilingualTitles.put(lang2, title);
+                     }
             }
         } catch (Exception e) {
             Log.warning(Geonet.THESAURUS,"error extracting multilingual titles from thesaurus",e);
