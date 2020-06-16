@@ -1324,6 +1324,40 @@
         <module>jmeter</module>
       </modules>
     </profile>
+    <profile>
+      <id>macOS</id>
+      <activation>
+        <os>
+          <family>mac</family>
+          <arch>x86_64</arch>
+        </os>
+      </activation>
+      <properties>
+          <es.version.sha512>1e6a707190c274f76f0ebe05400c39a2b923cc1a261ab2e97b3ffe825ad6a73282a31d98284336e4b4f633cc400af47ac8dfad814d636abd497589c8853ec951</es.version.sha512>
+          <es.platform>darwin-x86_64</es.platform>
+          <kb.executable>kibana.sh</kb.executable>
+          <kb.platform>darwin-x86</kb.platform>
+          <kb.installer.extension>tar.gz</kb.installer.extension>
+          <kb.version.sha512>d5eddedc0a945fd085442241fde1652811cd020de62cee630d91e6f6f69089b8c70bcee869dad551beb14a24fa6aee3ac87d1c0e1e0c3d4abd83a65bdcc69823</kb.version.sha512>
+      </properties>
+    </profile>
+     <profile>
+       <id>windows</id>
+       <activation>
+         <os>
+           <family>Windows</family>
+         </os>
+       </activation>
+       <properties>
+         <es.version.sha512>1a5b98f4e2045f6353d1d18360a017d8f04565d23b4dde56b6c647c22b061dd7df7b323b4bd295303d841998c9d0d0f289ef1469db65ef28bc86348acf83e5ce</es.version.sha512>
+         <es.platform>windows-x86_64</es.platform>
+         <es.installer.extension>zip</es.installer.extension>
+         <kb.executable>kibana.bat</kb.executable>
+         <kb.platform>windows-x86</kb.platform>
+         <kb.installer.extension>zip</kb.installer.extension>
+         <kb.version.sha512>d9ed16170f9ef88a2dc4f0d300c52157674d1fe902cd1da3e9472d0830c0810b9417d9d3af6116dcdb328dea038998f9b4c695e0284d6094f43777b6598a7bf4</kb.version.sha512>
+       </properties>
+     </profile>
   </profiles>
 
   <distributionManagement>
