@@ -37,7 +37,7 @@ import java.util.*;
 @Table(name = "UserSearch")
 @Access(AccessType.PROPERTY)
 @EntityListeners(UserSearchEntityListenerManager.class)
-@SequenceGenerator(name = UserSearch.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = UserSearch.ID_SEQ_NAME, sequenceName = UserSearch.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class UserSearch extends Localized implements Serializable {
     static final String ID_SEQ_NAME = "user_search_id_seq";
 

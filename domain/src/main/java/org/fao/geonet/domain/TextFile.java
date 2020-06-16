@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "files")
-@SequenceGenerator(name= TextFile.ID_SEQ_NAME, initialValue=1, allocationSize=1)
+@SequenceGenerator(name= TextFile.ID_SEQ_NAME, sequenceName = TextFile.ID_SEQ_NAME, initialValue=1, allocationSize=1)
 public class TextFile extends GeonetEntity {
 
     static final String ID_SEQ_NAME = "files_id_seq";
@@ -19,7 +19,7 @@ public class TextFile extends GeonetEntity {
     private String _mimeType;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = TextFile.ID_SEQ_NAME)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(nullable = false)
     public int getId() {
         return this._id;

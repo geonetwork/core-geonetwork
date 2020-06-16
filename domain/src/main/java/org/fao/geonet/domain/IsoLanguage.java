@@ -57,7 +57,7 @@ import javax.persistence.Table;
 @Table(name = "IsoLanguages")
 @EntityListeners(IsoLanguageEntityListenerManager.class)
 @Cacheable
-@SequenceGenerator(name = IsoLanguage.ID_SEQ_NAME, initialValue = 10000, allocationSize = 1)
+@SequenceGenerator(name = IsoLanguage.ID_SEQ_NAME, sequenceName = IsoLanguage.ID_SEQ_NAME, initialValue = 10000, allocationSize = 1)
 public class IsoLanguage extends Localized {
     static final String ID_SEQ_NAME = "iso_language_id_seq";
     private int id;

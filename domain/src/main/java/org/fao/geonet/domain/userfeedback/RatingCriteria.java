@@ -23,6 +23,7 @@
 
 package org.fao.geonet.domain.userfeedback;
 
+import org.fao.geonet.domain.CswCapabilitiesInfoField;
 import org.fao.geonet.domain.Localized;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.converter.BooleanToYNConverter;
@@ -57,7 +58,7 @@ import java.util.Map;
 @Cacheable
 @Access(AccessType.PROPERTY)
 @EntityListeners(RatingCriteriaEntityListenerManager.class)
-@SequenceGenerator(name = RatingCriteria.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = RatingCriteria.ID_SEQ_NAME, sequenceName = RatingCriteria.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class RatingCriteria extends Localized implements Serializable {
     static final String ID_SEQ_NAME = "rating_criteria_id_seq";
 

@@ -38,7 +38,7 @@ import javax.persistence.*;
 @Cacheable
 @Access(AccessType.PROPERTY)
 @EntityListeners(MetadataIdentifierTemplateListenerManager.class)
-@SequenceGenerator(name = MetadataIdentifierTemplate.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = MetadataIdentifierTemplate.ID_SEQ_NAME, sequenceName = MetadataIdentifierTemplate.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class MetadataIdentifierTemplate extends GeonetEntity {
     static final String ID_SEQ_NAME = "metadata_identifier_template_id_seq";
 

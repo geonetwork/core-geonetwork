@@ -43,6 +43,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import org.apache.lucene.document.Document;
+import org.fao.geonet.domain.userfeedback.Rating;
 import org.fao.geonet.utils.Xml;
 import org.hibernate.annotations.Type;
 import org.jdom.Element;
@@ -82,7 +83,7 @@ public abstract class AbstractMetadata extends GeonetEntity {
      * @return the id of the metadata
      */
     @Id
-    @SequenceGenerator(name=AbstractMetadata.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+    @SequenceGenerator(name=AbstractMetadata.ID_SEQ_NAME, sequenceName = AbstractMetadata.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(nullable = false)
     public int getId() {

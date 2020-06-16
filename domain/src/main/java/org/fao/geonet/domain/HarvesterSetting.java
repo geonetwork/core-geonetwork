@@ -73,7 +73,7 @@ import com.google.common.collect.Sets;
 @Table(name = "HarvesterSettings")
 @Access(AccessType.PROPERTY)
 @EntityListeners(HarvesterSettingEntityListenerManager.class)
-@SequenceGenerator(name = HarvesterSetting.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = HarvesterSetting.ID_SEQ_NAME, sequenceName = HarvesterSetting.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class HarvesterSetting extends GeonetEntity {
     static final String ID_SEQ_NAME = "harvester_setting_id_seq";
     private static final HashSet<String> EXCLUDE_FROM_XML = Sets.newHashSet("valueAsBool", "valueAsInt");

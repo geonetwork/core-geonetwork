@@ -41,7 +41,7 @@ import java.util.Map;
 @Cacheable
 @Access(AccessType.PROPERTY)
 @EntityListeners(OperationEntityListenerManager.class)
-@SequenceGenerator(name = Operation.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = Operation.ID_SEQ_NAME, sequenceName = Operation.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class Operation extends Localized {
     static final String ID_SEQ_NAME = "operation_id_seq";
     private int _id;

@@ -37,7 +37,7 @@ import javax.persistence.*;
 @Access(AccessType.PROPERTY)
 @Table(name = "MetadataFileUploads",
     indexes = { @Index(name = "idx_metadatafileuploads_metadataid", columnList = "metadataid") })
-@SequenceGenerator(name = MetadataFileUpload.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = MetadataFileUpload.ID_SEQ_NAME, sequenceName = MetadataFileUpload.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class MetadataFileUpload extends GeonetEntity {
     static final String ID_SEQ_NAME = "metadata_fileupload_id_seq";
     private int _id;
