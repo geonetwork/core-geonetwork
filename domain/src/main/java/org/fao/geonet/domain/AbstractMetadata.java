@@ -66,7 +66,7 @@ import org.locationtech.jts.util.Assert;
  */
 @MappedSuperclass
 public abstract class AbstractMetadata extends GeonetEntity {
-    static final String ID_SEQ_NAME = "metadata_id_seq";
+    static public final String ID_SEQ_NAME = "metadata_id_seq";
     public static final String METADATA_CATEG_JOIN_TABLE_CATEGORY_ID = "categoryId";
     private int _id;
     private String _uuid;
