@@ -27,9 +27,8 @@
   var module = angular.module('gn_thesaurus_service', []);
 
   module.factory('Keyword', function() {
-    function Keyword(k,currentUILang,currentUILang2) {
-      this.currentUILang = currentUILang;
-      this.currentUILang2 = currentUILang2;
+    function Keyword(k,UILangs) {
+      this.UILangs = UILangs;
       this.props = $.extend(true, {}, k);
       this.label = this.getLabel();
       this.tagClass = 'label label-info gn-line-height';
@@ -40,12 +39,13 @@
       },
       getLabel: function() {
         if ( (this.props.values) ){
-            var currentUILang= this.currentUILang;
-            var currentUILang2= this.currentUILang2;
-            if (this.props.values[currentUILang])
-              return this.props.values[currentUILang];
-            if (this.props.values[currentUILang2])
-              return this.props.values[currentUILang2];
+            var UILangs= this.UILangs;
+            var props = this.props;
+            var foundLang = _.find(UILangs,function(l){
+                  return props.values[l] !== undefined;
+            });
+            if (foundLang)
+              return props.values[foundLang];
         }
         return this.props.value['#text'] || this.props.value;
       }
@@ -55,10 +55,8 @@
   });
 
   module.factory('Thesaurus', function() {
-    function Thesaurus(k, currentUILang,currentUILang2) {
-      this.currentUILang = currentUILang;
-      this.currentUILang2 = currentUILang2;
-
+    function Thesaurus(k, UILangs) {
+      this.UILangs = UILangs;
       this.props = $.extend(true, {}, k);
     };
     Thesaurus.prototype = {
@@ -69,13 +67,20 @@
         var title = this.props.title;
         //there are multilingual
         if (this.props.multilingualTitles && this.props.multilingualTitles.length>0) {
-          var currentUILang= this.currentUILang;
-          var currentUILang2= this.currentUILang2;
-          var title_multilingual=_.find(this.props.multilingualTitles,function(l) {
-                return (l.lang == currentUILang) || (l.lang == currentUILang2);
-              });
-          if (title_multilingual)
-            title=title_multilingual.title;
+          var UILangs= this.UILangs;
+          var props = this.props;
+
+          var foundLang = _.find(UILangs,function(l) {
+                  return _.find(props.multilingualTitles,function(ml) {
+                          return ml["lang"]==l;
+                  });
+          });
+          if (foundLang) {
+            var r = _.find(props.multilingualTitles,function(ml) {
+                              return ml["lang"]==foundLang;
+                    });
+            return r["title"];
+          }
         }
         return title;
       },
@@ -118,18 +123,36 @@
               );
             };
 
+            var getUILangs = function() {
+                  var currentUILang_3char = gnLangs.detectLang(
+                                              gnGlobalSettings.gnCfg.langDetector,
+                                              gnGlobalSettings
+                                            );
+                  var currentUILang2_3char = gnCurrentEdit.allLanguages.iso2code[currentUILang_3char].replace("#","");
+                  var result = [currentUILang_3char];
+                  if (!_.contains(result,currentUILang2_3char))
+                      result.push(currentUILang2_3char);
+                  if (gnLangs.langs[currentUILang_3char]) {
+                      v = gnLangs.langs[currentUILang_3char];
+                       if (!_.contains(result,v))
+                         result.push(v);
+                  }
+                  if (gnLangs.langs[currentUILang2_3char]) {
+                      v = gnLangs.langs[currentUILang2_3char];
+                       if (!_.contains(result,v))
+                         result.push(v);
+                  }
+                  return result;
+            };
+
 
             var parseKeywordsResponse = function(data, dataToExclude) {
               var listOfKeywords = [];
-              var currentUILang = gnLangs.detectLang(
-                                  gnGlobalSettings.gnCfg.langDetector,
-                                  gnGlobalSettings
-                                );
-              var currentUILang2 = gnCurrentEdit.allLanguages.iso2code[currentUILang].replace("#","");
 
+              var uiLangs = getUILangs();
               angular.forEach(data, function(k) {
                 if (k.value) {
-                  listOfKeywords.push(new Keyword(k,currentUILang,currentUILang2));
+                  listOfKeywords.push(new Keyword(k,uiLangs));
                 }
               });
 
@@ -303,13 +326,9 @@
                       var listOfThesaurus = [];
                       //converted and non-converted value
                       // i.e. fra and fre
-                      var currentUILang = gnLangs.detectLang(
-                                            gnGlobalSettings.gnCfg.langDetector,
-                                            gnGlobalSettings
-                                          );
-                      var currentUILang2 = gnCurrentEdit.allLanguages.iso2code[currentUILang].replace("#","");
+                       var uiLangs = getUILangs()
                       angular.forEach(data[0], function(k) {
-                        listOfThesaurus.push(new Thesaurus(k,currentUILang,currentUILang,currentUILang2));
+                        listOfThesaurus.push(new Thesaurus(k,uiLangs));
                       });
                       defer.resolve(listOfThesaurus);
                     }).

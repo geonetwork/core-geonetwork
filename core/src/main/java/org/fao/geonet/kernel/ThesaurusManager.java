@@ -431,9 +431,7 @@ public class ThesaurusManager implements ThesaurusFinder {
             //add multilingual titles in to response
             //      "multilingualTitles":     [
             //            { "lang": "fr","title": "ECCC Data Usage Scope FR"},
-            //            {"lang": "en","title": "ECCC Data Usage Scope EN"},
-            //            {"lang": "fre","title": "ECCC Data Usage Scope FR"},
-            //            {"lang": "eng","title": "ECCC Data Usage Scope EN"}
+            //            {"lang": "en","title": "ECCC Data Usage Scope EN"}
             //      ],
             Element elMultilingualTitles = new Element("multilingualTitles");
             for (Map.Entry<String, String> entry : currentTh.getMultilingualTitles().entrySet()) {

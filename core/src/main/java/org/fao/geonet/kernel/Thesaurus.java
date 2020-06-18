@@ -705,8 +705,6 @@ public class Thesaurus {
     //  {
     //      "en": "English Version (en)",
     //      "fr": "French Version (fr)"
-    //      "eng": "English Version (en)",
-    //      "fre": "French Version (fr)"
     //  }
     private void retrieveMultiLingualTitles(Element thesaurusEl) {
         List<Namespace> theNSs = new ArrayList<Namespace>();
@@ -724,12 +722,8 @@ public class Thesaurus {
             for (Element el: multiLingualTitles) {
                     //use both forms of the lang name
                      String lang = isoLanguageMapper.iso639_2_to_iso639_1(el.getAttribute("lang", xmlNS).getValue());
-                     String lang2 = isoLanguageMapper.iso639_1_to_iso639_2(el.getAttribute("lang", xmlNS).getValue());
                      String title = el.getTextTrim();
                      multilingualTitles.put(lang,title);
-                     if (!multilingualTitles.containsKey(lang2)) { // don't overwrite if its already explicitly given
-                         multilingualTitles.put(lang2, title);
-                     }
             }
         } catch (Exception e) {
             Log.warning(Geonet.THESAURUS,"error extracting multilingual titles from thesaurus",e);
