@@ -1,3 +1,0 @@
-DROP INDEX idx_metadatafiledownloads_metadataid;
-DROP INDEX idx_metadatafileuploads_metadataid;
-DROP INDEX idx_operationallowed_metadataid;
