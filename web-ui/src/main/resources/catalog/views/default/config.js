@@ -111,7 +111,8 @@
               'OGC:WMS-1.1.1-http-get-map',
               'OGC:WMS-1.3.0-http-get-map',
               'OGC:WFS',
-              'ESRI:REST'
+              'ESRI:REST',
+              'ESRI REST: Map Server'
               ],
             services: [
               'OGC:WMS-1.3.0-http-get-capabilities',
