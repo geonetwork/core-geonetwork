@@ -240,7 +240,17 @@ public class SLDUtil {
         } else if(filterType.equals("PropertyIsBetween")) {
             if (parameters.size() != 2) throw new JSONException("Invalid parameter count");
             return ff2.between(ff2.property(fieldName), ff2.literal(parameters.get(0)), ff2.literal(parameters.get(1)));
-        } else {
+        }
+        // SPECIFIC SEXTANT
+        else if(filterType.equals("PropertyIsBetweenExclusive")) {
+            if (parameters.size() != 2) throw new JSONException("Invalid parameter count");
+            return ff2.and(
+                ff2.greater(ff2.property(fieldName), ff2.literal(parameters.get(0))),
+                ff2.less(ff2.property(fieldName), ff2.literal(parameters.get(1)))
+            );
+        }
+        // END SPECIFIC SEXTANT
+        else {
             // Currently, no implementation of topological or distance operators
             throw new JSONException("No implementation for filter type : " + filterType);
         }

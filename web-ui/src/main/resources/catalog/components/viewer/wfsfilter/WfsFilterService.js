@@ -213,7 +213,7 @@
             } else {
               var parts = k.split(' - ');
               filter.push({
-                filter_type: 'PropertyIsBetween',
+                filter_type: 'PropertyIsBetweenExclusive',
                 params: parts
               }, {
                 filter_type: 'PropertyIsEqualTo',
