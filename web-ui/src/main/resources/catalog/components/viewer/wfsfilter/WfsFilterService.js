@@ -204,10 +204,10 @@
                 filter_type: 'PropertyIsGreaterThanOrEqualTo',
                 params: [greaterThan]
               });
-            } else if (k.substring(0, 3) === '<= ') {
-              var lowerThan = k.substring(3);
+            } else if (k.substring(0, 2) === '< ') {
+              var lowerThan = k.substring(2);
               filter.push({
-                filter_type: 'PropertyIsLessThanOrEqualTo',
+                filter_type: 'PropertyIsLessThan',
                 params: [lowerThan]
               });
             } else {
@@ -215,6 +215,9 @@
               filter.push({
                 filter_type: 'PropertyIsBetween',
                 params: parts
+              }, {
+                filter_type: 'PropertyIsEqualTo',
+                params: [parts[0]]
               });
             }
           });
@@ -441,12 +444,12 @@
               if (k.substring(0, 3) === '>= ') {
                 var greaterThan = k.substring(3);
                 clause.push('(' + paramName + ' >= ' + greaterThan + ')');
-              } else if (k.substring(0, 3) === '<= ') {
-                var lowerThan = k.substring(3);
-                clause.push('(' + paramName + ' <= ' + lowerThan + ')');
+              } else if (k.substring(0, 2) === '< ') {
+                var lowerThan = k.substring(2);
+                clause.push('(' + paramName + ' < ' + lowerThan + ')');
               } else {
                 var parts = k.split(' - ');
-                clause.push('(' + paramName + ' >= ' + parts[0] + ' AND ' + paramName + ' <= ' + parts[1] + ')');
+                clause.push('(' + paramName + ' >= ' + parts[0] + ' AND ' + paramName + ' < ' + parts[1] + ')');
               }
               return;
             }

@@ -530,7 +530,7 @@
         respAgg.buckets.forEach(function(b, i) {
           var label = '';
           if (i == 0 && respAgg.buckets.length > 1) {
-            label = '<= ' + respAgg.buckets[i + 1].key.toFixed(2);
+            label = '< ' + respAgg.buckets[i + 1].key.toFixed(2);
           }
           else if (i < respAgg.buckets.length - 1) {
             label = b.key.toFixed(2) + FACET_RANGE_DELIMITER +
