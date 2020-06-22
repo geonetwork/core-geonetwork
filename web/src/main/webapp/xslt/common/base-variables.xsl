@@ -67,7 +67,7 @@
 
   <xsl:variable name="shibbolethOn"
                 select="util:existsBean('shibbolethConfiguration')"/>
-                
+
   <xsl:variable name="shibbolethHideLogin"
                 select="util:shibbolethHideLogin()"/>
 
@@ -87,6 +87,7 @@
       or $service = 'search'
       or $service = 'md.format.html') then 'gn_search'
     else if ($service = 'display') then 'gn_formatter_viewer'
+    else if ($service = 'portal') then 'gn_portal'
     else 'gn'"/>
 
   <xsl:variable name="customFilename" select="concat($angularApp, '_', $searchView)"></xsl:variable>

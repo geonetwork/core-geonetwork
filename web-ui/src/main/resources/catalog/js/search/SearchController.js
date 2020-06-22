@@ -57,9 +57,9 @@
     'gnESClient',
     'gnESService',
     'orderByFilter',
-    function($scope, $q, $http, suggestService,
-             gnAlertService, gnSearchSettings, gnGlobalSettings, gnConfig,
-             gnConfigService, gnESClient,gnESService, orderByFilter) {
+    'gnConfigService',
+    function($scope, $q, $http, suggestService, gnAlertService,
+             gnSearchSettings, gnGlobalSettings, gnConfig, orderByFilter, gnConfigService) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
@@ -73,10 +73,12 @@
       $scope.isUserFeedbackEnabled = false;
       $scope.isInspireEnabled = false;
 
-      gnConfigService.loadPromise.then(function(settings) {
-        $scope.isUserFeedbackEnabled =
-          (settings[gnConfig.key.isRatingUserFeedbackEnabled] == 'advanced');
-
+      gnConfigService.load().then(function(c) {
+        var statusSystemRating =
+          gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
+        if (statusSystemRating == 'advanced') {
+          $scope.isUserFeedbackEnabled = true;
+        }
         $scope.isInspireEnabled =
           (settings[gnConfig.key.isInspireEnabled] == true);
       });

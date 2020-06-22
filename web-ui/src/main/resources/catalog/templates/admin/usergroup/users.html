@@ -231,7 +231,32 @@
             </fieldset>
 
 
-            <fieldset>
+            <fieldset data-ng-if="!user.isUserAdminOrMore()">
+              <legend data-translate="profile"></legend>
+
+              <div data-ng-if="groupsByProfile['RegisteredUser'].length > 0">
+                <h4 data-translate="">RegisteredUser</h4>
+                <ul>
+                  <li data-ng-repeat="g in groupsByProfile['RegisteredUser']">{{g.langlabel}}</li>
+                </ul>
+              </div>
+
+              <div data-ng-if="groupsByProfile['Editor'].length > 0">
+                <h4 data-translate="">Editor</h4>
+                <ul>
+                  <li data-ng-repeat="g in groupsByProfile['Editor']">{{g.langlabel}}</li>
+                </ul>
+              </div>
+
+              <div data-ng-if="groupsByProfile['Reviewer'].length > 0">
+                <h4 data-translate="">Reviewer</h4>
+                <ul>
+                  <li data-ng-repeat="g in groupsByProfile['Reviewer']">{{g.langlabel}}</li>
+                </ul>
+              </div>
+            </fieldset>
+
+            <fieldset data-ng-if="user.isUserAdminOrMore()">
               <legend data-translate="">defineUserGroupsPerProfile</legend>
               <input type="hidden" name="profile" data-ng-model="userSelected.profile"
                      value="{{userSelected.profile}}"/>
@@ -247,20 +272,18 @@
               <div
                 data-ng-show="userSelected.profile != 'Administrator'">
                 <h3 data-translate="">RegisteredUser</h3>
+
                 <div data-gn-multiselect="groupsByProfile['RegisteredUser']"
-                     data-ng-disabled="!user.isUserAdminOrMore()"
                      data-choices="groups"></div>
 
 
                 <h3 data-translate="">Editor</h3>
                 <div data-gn-multiselect="groupsByProfile['Editor']"
-                     data-ng-disabled="!user.isUserAdminOrMore()"
                      data-choices="groups"></div>
 
 
                 <h3 data-translate="">Reviewer</h3>
                 <div data-gn-multiselect="groupsByProfile['Reviewer']"
-                     data-ng-disabled="!user.isUserAdminOrMore()"
                      data-choices="groups"></div>
 
                 <p class="help-block"
@@ -269,7 +292,6 @@
 
                 <h3 data-translate="">UserAdmin</h3>
                 <div data-gn-multiselect="groupsByProfile['UserAdmin']"
-                     data-ng-disabled="!user.isUserAdminOrMore()"
                      data-choices="groups"></div>
 
                 <p class="help-block"

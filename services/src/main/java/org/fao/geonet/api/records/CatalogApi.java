@@ -430,7 +430,7 @@ public class CatalogApi {
             response.addContent(r);
         });
 
-        new XsltResponseWriter("env")
+        new XsltResponseWriter("env", "search")
             .withJson("catalog/locales/en-core.json")
             .withJson("catalog/locales/en-search.json")
             .withXml(response)
@@ -505,7 +505,7 @@ public class CatalogApi {
             }
         });
 
-        Element r = new XsltResponseWriter("")
+        Element r = new XsltResponseWriter(null,"search")
             .withXml(response)
             .withXsl("xslt/services/csv/csv-search.xsl")
             .asElement();

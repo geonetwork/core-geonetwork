@@ -18,12 +18,12 @@ html, body {
 }
 
 // background image and color
-[ng-app^="gn_search_"] body, [ng-app="gn_login"] body {
+[ng-app^="gn_search_"] body, [ng-app="gn_login"] body, .gn-background {
   background-color: @gn-background-color;
   background-position: center top;
   background-size: cover;
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  //background-attachment: fixed;
   &.gn-header-fixed {
     padding-top: @gn-menubar-height;
     &.gn-logo-in-header {
@@ -44,6 +44,9 @@ html, body {
 // if the background image is an empty string it will be substitued with the name of the css file,
 // see: https://stackoverflow.com/questions/20727262/css-file-considered-as-being-an-image-resource
 [ng-app^="gn_search_"] body when (isstring(@gn-background-image)) {
+  background-image: url(@gn-background-image);
+}
+.gn-background when (isstring(@gn-background-image)) {
   background-image: url(@gn-background-image);
 }
 [ng-app^="gn_login"] body when (isstring(@gn-background-image)) {

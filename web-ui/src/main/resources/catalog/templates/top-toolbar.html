@@ -38,7 +38,8 @@
            data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
           <span class="gn-name"
                 data-ng-class="authenticated && user.isEditorOrMore() ? 'gn-truncate' : ''"
-                title="{{info['system/site/name']}}">{{info['node/name'] || info['system/site/name']}}</span>
+                title="{{info['node/name'] || info['system/site/name']}}">
+            {{info['node/name'].split('|')[0] || info['system/site/name']}}</span>
         </a>
       </li>
       <li class="gn-menuitem-xs" data-ng-if="gnCfg.mods.search.enabled">
