@@ -85,7 +85,7 @@
                     msg: $translate.instant('layerAdded',
                         {layer: layer.get('label'), extent: layer.get('cextent').toString()}),
                     type: 'success'
-                  });
+                  },4);
               gnMap.feedLayerMd(layer);
               return layer;
             } else if ($scope.format == 'wfs') {
