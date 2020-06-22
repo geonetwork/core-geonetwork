@@ -136,7 +136,9 @@
         commonLayer.setZIndex(100);
 
         // add our layer to the map
-        map.addLayer(commonLayer);
+        map.get('creationPromise').then(function() {
+          map.addLayer(commonLayer);
+        });
 
         return commonLayer;
       };
