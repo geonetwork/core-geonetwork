@@ -32,7 +32,7 @@
 
     <xsl:variable name="infoSeparator" select="'|'"/>
 
-    <div class="row gn-portal gn-row-main"
+    <div class="row gn-portal"
          id="{/root/gui/systemConfig/system/site/siteId}"
          itemscope="itemscope"
          itemtype="http://schema.org/DataCatalog">
@@ -63,7 +63,7 @@
         </div>
       </div>
     </div>
-    <div class="gn-info-list-blocks">
+    <div class="container gn-info-list-blocks">
       <ul class="row gn-info-list">
         <xsl:for-each select=".//sources/record[type = 'subportal']">
           <xsl:sort select="label/*[name() = $lang]"/>
@@ -82,7 +82,12 @@
                                   else ''"/>
             <a href="../../{uuid}"
                title="{$portalInfo}">
-              <section class="resultcard clearfix hasThumbnail hasThumbnail">
+              <section class="resultcard clearfix hasThumbnail">
+                <div class="gn-md-thumbnail">
+                  <div class="gn-img-thumbnail"
+                        style="background-image: url(../../images/harvesting/{if (logo != '') then logo else 'blank.png'})">
+                  </div>
+                </div>
                 <div class="title">
                   <h1>
                     <xsl:value-of select="$portalTitle"/>
@@ -90,18 +95,6 @@
                   <p>
                     <xsl:value-of select="$portalDescription"/>
                   </p>
-                </div>
-                <div class="gn-md-thumbnail">
-                  <a href="../../{uuid}">
-                    <div class="gn-img-thumbnail"
-                         style="background-image: url(../../images/harvesting/{if (logo != '') then logo else 'blank.png'})">
-                      <br/>
-                    </div>
-                  </a>
-                </div>
-                <div class="content">
-                  <div class="abstract">
-                  </div>
                 </div>
               </section>
             </a>
