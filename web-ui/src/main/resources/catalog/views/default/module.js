@@ -261,7 +261,7 @@
             uuid: md ? md.getUuid() : null,
             type:
               link.protocol.indexOf('WMTS') > -1 ? 'wmts' :
-                ((link.protocol == 'ESRI:REST') || (link.protocol == 'ESRI REST: Map Server') ? 'esrirest' : 'wms'),
+                ((link.protocol == 'ESRI:REST') || (link.protocol.startsWith('ESRI REST')) ? 'esrirest' : 'wms'),
             url: $filter('gnLocalized')(link.url) || link.url
           };
 
