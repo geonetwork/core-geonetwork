@@ -274,6 +274,8 @@
   <!-- Fix srsName attribute generate CRS:84 (EPSG:4326 with long/lat
          ordering) by default -->
 
+  <xsl:template match="gml:LinearRing/@srsName"/>
+
   <xsl:template match="@srsName">
     <xsl:choose>
       <xsl:when test="normalize-space(.)=''">
@@ -288,10 +290,10 @@
   </xsl:template>
 
   <!-- Add required gml attributes if missing -->
-  <xsl:template match="gml:Polygon[not(@gml:id) and not(@srsName)]|
-                       gml:MultiSurface[not(@gml:id) and not(@srsName)]|
-                       gml:LineString[not(@gml:id) and not(@srsName)]|
-                       gml320:Polygon[not(@gml320:id) and not(@srsName)]">
+  <xsl:template match="gml:Polygon[not(@gml:id) or not(@srsName)]|
+                       gml:MultiSurface[not(@gml:id) or not(@srsName)]|
+                       gml:LineString[not(@gml:id) or not(@srsName)]|
+                       gml320:Polygon[not(@gml320:id) or not(@srsName)]">
     <xsl:copy copy-namespaces="no">
       <xsl:choose>
         <xsl:when test="$isUsing2005Schema and not($isUsing2007Schema)">
@@ -479,10 +481,10 @@
 
       <xsl:if test="normalize-space(./text()) != '' and string(@codeListValue)">
         <xsl:value-of select="java:getIsoLanguageLabel(@codeListValue, $mainLanguage)" />
-        <!-- 
+        <!--
              If wanting to get strings from codelists then add gmd:LanguageCode codelist in loc/{lang}/codelists.xml
              and use getCodelistTranslation instead of getIsoLanguageLabel. This will allow for custom values such as "eng; USA"
-             i.e. 
+             i.e.
              <xsl:value-of select="java:getCodelistTranslation(name(), string(@codeListValue), string($mainLanguage))"/>
         -->
       </xsl:if>
