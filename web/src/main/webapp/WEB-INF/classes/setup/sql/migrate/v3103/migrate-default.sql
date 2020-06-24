@@ -1,5 +1,5 @@
 UPDATE Settings SET value='3.10.3' WHERE name='system/platform/version';
-UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
+UPDATE Settings SET value='0' WHERE name='system/platform/subVersion';
 
 ALTER TABLE groupsdes ALTER COLUMN label TYPE varchar(255);
 ALTER TABLE sourcesdes ALTER COLUMN label TYPE varchar(255);

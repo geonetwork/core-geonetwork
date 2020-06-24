@@ -1,0 +1,112 @@
+================================================================================
+===
+=== GeoNetwork 3.10.3: List of changes
+===
+================================================================================
+- Fix missing variable - related to pull request #4794 (#4796)
+- Avoid duplicated thesaurus label in the metadata editor for iso19139 metadata multilingual metadata (#4794)
+- Improve code to handle error responses in thesaurus upload via file or url
+- Update iso19139 multilingual template language codes to match database language codes. Related to #4786 (#4788)
+- present message as html (#4787)
+- add notification if layer was added
+- Map editor / use map promise to add the vector layer (#4785)
+- Update sql migrate scripts for version 3.10.x for oracle / mysql
+- shorten index names for oracle 30 char limit (#4776)
+- xml-cache-manager - Fix double logging trace
+- Improved styling for the portals (#4771)
+- User profile - display group/profiles as text for non useradmin and administrators profiles
+- Update multiselect directive to support readonly mode. User profile page uses this directive for group/profiles, but should not allow to change that information to non admin users.
+- New thesaurus form - enable the Create button if the form is filled, display errors in missing fields (#4762)
+- Add macOS profile to download elastic search (#4761)
+- Fix typos in development documentation (#4767)
+- Update software instructions, standard license and contributing files (#4697)
+- UX keyword chooser - enter key (#4735)
+- Portal page improvement
+- Harvester / When log file is missing, log message at debug level. (#4748)
+- Improved way of declaring the `isUserFeedbackEnabled` variable (#4754)
+- Index iso19139 specification title with gmx:Anchor
+- Fixed bug with history link to the metadata. (#4738)
+- Group management updates for User Administrators to allow saving the changes and make the group name field readonly
+- add priority dataset to predefined dates
+- Update inflate mechanism to work with subtemplates in iso19139
+- fix the display of some error messages on alerts add a notification if editor fails to open fix notification if create metadata fails
+- Fix related to PR https://github.com/geonetwork/core-geonetwork/pull/3569 to send the element name as as directive parameter
+- Fix facet definitions for topic categories and GeoNetwork categories, should not be tagged as localized. Fixes #4637
+- allow multiple freekeyword sections (#4737)
+- Improved way of displaying unknown related type
+- add proxy for UrlChecker and change UserAgent (#4709)
+- fix spaces-in-url keyword encoding (#4733)
+- Add validation option to OAI-PMH harvester UI (#4729)
+- Fix indexing errors with multiple titles
+- Display only the first help icon in a multilingual field in the Editor
+- INSPIRE / Do not drop INSPIRE validation when validating record when closing editor. (#4731)
+- Fix opening of metadata related resource, related to PR #4662 (#4730)
+- fix online resources
+- Process / Fix missing thesaurusDir variable required by some processes. (#4718)
+- Update iso19115-3.2018 schema reference
+- Allow to use gn-checkbox-with-nilreason directive for specific boolean fields. Related to #2437 (#3569)
+- Proxy / Limit to URL host registered in records. (#4712)
+- Shift to new maven repositories (OSGeo) (#4700)
+- Update INSPIRE validator url to use https
+- Landing page / Display link to the portal by default. (#4666)
+- add-schema.sh : Update formatting of the lines being added to the pom.xml file (#4614)
+- More uniform view by adding more Bootstrap classes
+- Fix error with bootstrap.less not found when displaying error page. (#4707)
+- Fix dependency issue #4661.  xml-commons-resolver (1.2) conflicts with xml-resolver-patched (1.2.1) - same jar different version. (#4706)
+- Editor / Associated panel / Edit link / Init type selector (#4696)
+- Bot session exclusion / Move hard coded list to config. (#4656)
+- Add missing translation xlink:type
+- Restructured search boxes: - same width on `Home` and `Search` page - same width for advanced panel - improved responsiveness - removed/cleanup CSS
+- CSW harvester - javascript error related to map filter when filling the server url #4685
+- Associated resources / Support remote datasets for operatesOn and associated records origin (#4608)
+- Link analysis improvement (#4607)
+- Metadata batch validation show validation summary instead of a message with '[Object object]' text
+-  Extent API / Add color parameters (#4704)
+- Update review permissions check to verify if the user is reviewer in the metadata groups owner, instead of checking the edit privilege. Fixes #4589
+- Don't add '#' to thesaurus url. Related to #3918
+- Display metadata schemas versions
+- Home page / Add tooltip on title and overview
+- Support mandatory flag in editor sections. Initially supported for BoundingBox (#4605)
+- jdom transitive dependency excludes (due to ill-advised jaxen pom) (#4690)
+- Map editor - use map promise to add the bbox layer (#4673)
+- Fix null pointer exception in thesaurus API when no thesaurus was supplied. (#4689)
+- Update labels.xml (#4680)
+- Add method to support HttpClientContext for HttpUriRequest requests in GeonetHttpRequestFactory (#4671)
+- Metadata editor - map loads OSM layers even if a context file is configured #4655
+- Draft beans fixes to work fine when disabled: - Use IMetadataUtils interface in DraftUtilities - Improve the documentation for the beans that require disabling / enabling.
+- Set encoding to UTF-8 in metadata notifier requests (#4669)
+- Fix regression bug from #4644 Was not able to set db_type to connect to other databases due to ${db.type} not being passed correctly. (#4670)
+- Update iso19115-3.2018 schema reference
+- allow schemas to present their own settings titles translations (#4631)
+- Editor / Overview / Add JPEG format in file filter. (#4646)
+- Remove non required filter related to PR #4662 causing a test failure
+- Use portal filter to retrieve associated resources: some relations use a query in Lucene that already uses the portal filter, but other relations were retrieving directly the metadata without that filter, so could be retrieved metadata not available in a portal
+- 4481: fix memory leak due to incorrect ref count handling
+- use more precise references for setting element values on server (#4664)
+- Updated db connections so that it can be specified as env variables. (#4644)
+- Added missing i18n file for por language
+- Fixed two classes in database migration with wrong package names
+- [BP] minor layout changes to multi entry combiner (#4652) (#4659)
+- Updated connection settings from so that it supports supplying the port and connectionProperties parameter. (#4625)
+- Fix serialization exclusion in MetadataCategory (#4639)
+- Fix login form display caused by https://github.com/geonetwork/core-geonetwork/pull/4633 (#4640)
+- Shibboleth improvements (#4633)
+- Transfer owner / NPE when history is ON and group owner is null (which is allowed in the DB) (#4635)
+- Angular view / Associated resource / Layer name may contain quote (#4611)
+- Fix ImportWebMapTest due to changes in 20693c711a6404d49208364adc2a63202d1ec6ad (#4634)
+- improvements to Multi Entry Combiner (#4615)
+- UUID collision options for Directory type harvester (#4519)
+- JNDI support improvements (#4599)
+- Multi portal mode / getNodeId may be triggered outside a request scope (eg. formatter in background process) (#4613)
+- add multientrycombiner directive (#4597)
+- allow keyword picker to be used inside another component (#4596)
+- Don't run the change status until we get a harvesterID back (#4606)
+- Metadata creation / Update UUID references (#4584)
+- Harvester timezone setting (#4576)
+- Angular view / Related resource / Add description if any on links.
+- Angular view / Related resources / Fix word wrap on long label button
+- Formatter / Template field / Add bottom margin to make distinction of each matching elements. (#4594)
+- Fixes for the menu on smaller screens
+- Styling and settings for the fixed header
+- Update repositories used by build (#4595)
+- Update version to 3.10.3-SNAPSHOT
