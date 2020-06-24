@@ -160,6 +160,8 @@
     <xsl:variable name="thesaurusIdentifier"
                   select="normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text())"/>
 
+    <xsl:variable name="langId" select="gn-fn-iso19139:getLangId(., $lang)"/>
+
     <xsl:variable name="thesaurusTitle">
       <xsl:for-each select="gmd:thesaurusName/gmd:CI_Citation/gmd:title">
         <xsl:call-template name="localised">
