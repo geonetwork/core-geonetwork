@@ -314,7 +314,7 @@
       <xsl:attribute name="srsName">
         <xsl:value-of select="if (@srsName != '') then @srsName else 'urn:ogc:def:crs:EPSG:6.6:4326'"/>
       </xsl:attribute>
-      <xsl:copy-of select="@*"/>
+      <xsl:copy-of select="@*[name() != 'srsName' and local-name() != 'id' and name() != 'xmlns']"/>
       <xsl:apply-templates select="*"/>
     </xsl:copy>
   </xsl:template>
