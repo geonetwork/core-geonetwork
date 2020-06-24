@@ -261,5 +261,10 @@
         <value>WEB-INF/classes/setup/sql/migrate/v3103/migrate-</value>
       </list>
     </entry>
+    <entry key="3.10.4">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v3104/migrate-</value>
+      </list>
+    </entry>
   </util:map>
 </beans>
