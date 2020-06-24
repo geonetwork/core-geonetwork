@@ -305,10 +305,14 @@
       </xsl:choose>
       <xsl:attribute name="{if ($isUsing2005Schema and not($isUsing2007Schema))
                             then 'gml320' else 'gml'}:id">
-        <xsl:value-of select="generate-id(.)"/>
+        <xsl:value-of select="if (@gml:id != '')
+                              then @gml:id
+                              else if (@gml320:id != '')
+                              then @gml320:id
+                              else generate-id(.)"/>
       </xsl:attribute>
       <xsl:attribute name="srsName">
-        <xsl:text>urn:ogc:def:crs:EPSG:6.6:4326</xsl:text>
+        <xsl:value-of select="if (@srsName != '') then @srsName else 'urn:ogc:def:crs:EPSG:6.6:4326'"/>
       </xsl:attribute>
       <xsl:copy-of select="@*"/>
       <xsl:apply-templates select="*"/>
