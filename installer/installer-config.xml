@@ -31,11 +31,9 @@
     <appname>geonetwork</appname>
     <appversion>@version@ @subVersion@</appversion>
     <authors>
-      <author name="OSGeo" email="geonetwork@osgeo.org"/>
-      <author name="FAO GeoNetwork Team" email="GeoNetwork@fao.org"/>
-      <author name="VAM WFP" email="vamsie@wfp.org"/>
-      <author name="UNEP.net" email="info@unep.net"/>
-      <author name="OCHA" email="ochageodata@un.org"/>
+      <author name="Camptocamp" email="info@camptocamp.com"/>
+      <author name="GeoCat" email="info@geocat.net"/>
+      <author name="Titellus" email="fx.prunayre@titellus.net"/>
     </authors>
     <url>http://geonetwork-opensource.org/</url>
     <javaversion>@javaVersion@</javaversion>
