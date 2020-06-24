@@ -266,11 +266,21 @@
              scope.transformations.split(',') : [scope.transformations];
              scope.maxTagsLabel = scope.maxTags || '∞';
 
-             //Get langs of metadata
-             var langs = [];
-             _.each(JSON.parse(scope.lang),function(l){
-                  langs.push(l.replace("#",""));
+
+             //examples;
+             //hnap:{"eng":"#eng","fre":"#fra"}
+             //iso19139:{"eng":"#EN","fre":"#FR","ger":"#DE","chi":"#ZH","ara":"#AR","spa":"#ES","rus":"#RU"}
+             scope.langConversion=JSON.parse(scope.lang); //dictionary, as above
+
+             // ["eng","fra"]   OR ["EN","FR","DE","ZH","AR","ES", "RU"]
+             scope.langAchors = _.map(scope.langConversion,function(l){
+                   return l.replace("#","");
              });
+             // ["eng","fre"]   OR ["eng","fre","ger","chi","ara","spa", "rus"]
+             scope.baseLangs = _.keys(scope.langConversion);
+
+             //Get langs of metadata
+             var langs = scope.baseLangs;  // ["eng","fre"]   OR ["eng","fre","ger","chi","ara","spa", "rus"]
 
              scope.mainLang = langs[0];
              scope.langs = langs.join(',');
@@ -528,7 +538,7 @@
                gnThesaurusService
                 .getXML(scope.thesaurusKey,
                getKeywordIds(), scope.currentTransformation, scope.langs,
-                   scope.textgroupOnly).then(
+                   scope.textgroupOnly,scope.langConversion).then(
                function(data) {
                  scope.snippet = data;
                });

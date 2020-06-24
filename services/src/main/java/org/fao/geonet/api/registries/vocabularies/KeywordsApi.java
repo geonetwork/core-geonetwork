@@ -29,16 +29,14 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.sf.json.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -101,6 +99,8 @@ import io.swagger.annotations.ApiResponses;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
+
+import net.sf.json.JSON;
 
 
 /**
@@ -377,6 +377,11 @@ public class KeywordsApi {
             required = false)
         @RequestParam (required = false)
             String transformation,
+        @ApiParam(
+            value = "langMap, that converts the values in the 'lang' parameter to how they will be actually represented in the record. {'fre':'fra'} or {'fre':'fr'}.  Missing/empty means to convert to iso 2 letter.",
+            required = false)
+        @RequestParam (name = "langMap", required = false)
+            String  langMapJson,
         @ApiIgnore
         @RequestParam
             Map<String,String> allRequestParams,
@@ -435,6 +440,21 @@ public class KeywordsApi {
             }
         }
 
+       Element langConversion = null;
+        if ( (langMapJson != null) && (!langMapJson.isEmpty()) ){
+            JSONObject obj = JSONObject.fromObject(langMapJson);
+            langConversion = new Element("languageConversions");
+            for(Object entry : obj.entrySet()) {
+                String key = ((Map.Entry) entry).getKey().toString();
+                String value = ((Map.Entry) entry).getValue().toString();
+                Element conv = new Element("conversion");
+                conv.setAttribute("from",key.toString());
+                conv.setAttribute("to",value.toString().replace("#",""));
+                langConversion.addContent(conv);
+            }
+
+        }
+
 
         Path convertXsl = dataDirectory.getWebappDir().resolve("xslt/services/thesaurus/convert.xsl");
 
@@ -455,6 +475,9 @@ public class KeywordsApi {
             } else {
                 requestParams.addContent(new Element(e.getKey()).setText(e.getValue()));
             }
+        }
+        if (langConversion != null) {
+            requestParams.addContent(langConversion);
         }
 
         root.addContent(requestParams);
