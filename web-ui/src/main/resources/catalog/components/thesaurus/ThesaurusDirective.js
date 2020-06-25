@@ -272,10 +272,6 @@
              //iso19139:{"eng":"#EN","fre":"#FR","ger":"#DE","chi":"#ZH","ara":"#AR","spa":"#ES","rus":"#RU"}
              scope.langConversion=JSON.parse(scope.lang); //dictionary, as above
 
-             // ["eng","fra"]   OR ["EN","FR","DE","ZH","AR","ES", "RU"]
-             scope.langAchors = _.map(scope.langConversion,function(l){
-                   return l.replace("#","");
-             });
              // ["eng","fre"]   OR ["eng","fre","ger","chi","ara","spa", "rus"]
              scope.baseLangs = _.keys(scope.langConversion);
 
