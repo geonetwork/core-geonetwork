@@ -61,7 +61,7 @@ public class SextantExtractor {
     }
 
     @RequestMapping(
-        value = "/{lang}/extractor.doExtract",
+        value = "/{portal}/{lang}/extractor.doExtract",
         method = RequestMethod.POST,
         produces = APPLICATION_JSON_VALUE
     )
