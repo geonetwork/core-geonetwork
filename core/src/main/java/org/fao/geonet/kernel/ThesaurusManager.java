@@ -428,6 +428,24 @@ public class ThesaurusManager implements ThesaurusFinder {
             }
             elTitle.addContent(title);
 
+            //add multilingual titles in to response
+            //      "multilingualTitles":     [
+            //            { "lang": "fr","title": "ECCC Data Usage Scope FR"},
+            //            {"lang": "en","title": "ECCC Data Usage Scope EN"}
+            //      ],
+            Element elMultilingualTitles = new Element("multilingualTitles");
+            for (Map.Entry<String, String> entry : currentTh.getMultilingualTitles().entrySet()) {
+                Element elMultilingualTitle = new Element("multilingualTitle");
+                Element elMultilingualTitl_lang = new Element("lang");
+                elMultilingualTitl_lang.setText(entry.getKey());
+                Element elMultilingualTitle_title = new Element("title");
+                elMultilingualTitle_title.setText(entry.getValue());
+                elMultilingualTitle.addContent(elMultilingualTitl_lang);
+                elMultilingualTitle.addContent(elMultilingualTitle_title);
+
+                elMultilingualTitles.addContent(elMultilingualTitle);
+            }
+
             Element elType = new Element("type");
             String type = currentTh.getType();
             elType.addContent(type);
@@ -460,6 +478,7 @@ public class ThesaurusManager implements ThesaurusFinder {
             elLoop.addContent(elDname);
             elLoop.addContent(elFname);
             elLoop.addContent(elTitle);
+            elLoop.addContent(elMultilingualTitles);
             elLoop.addContent(elDate);
             elLoop.addContent(elUrl);
             elLoop.addContent(elDefaultURI);
