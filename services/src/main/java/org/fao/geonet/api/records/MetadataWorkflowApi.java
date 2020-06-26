@@ -45,6 +45,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -105,6 +106,9 @@ public class MetadataWorkflowApi {
 
     @Autowired
     StatusActionsFactory statusActionFactory;
+
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get record status history", description = "")
     @RequestMapping(value = "/{metadataUuid}/status", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
@@ -442,6 +446,7 @@ public class MetadataWorkflowApi {
         }
 
         Map<Integer, String> titles = new HashMap<>();
+        Map<Integer, String> uuids = new HashMap<>();
 
         // Add all user info and record title to response
         for (MetadataStatus s : listOfStatus) {
@@ -477,6 +482,17 @@ public class MetadataWorkflowApi {
                 }
             }
             status.setTitle(title);
+
+            String uuid = uuids.get(s.getId().getMetadataId());
+            if (uuid == null) {
+                try {
+                    // Collect metadata uuid.
+                    uuid=metadataUtils.getMetadataUuid(Integer.toString(s.getId().getMetadataId()));
+                    uuids.put(s.getId().getMetadataId(), uuid);
+                } catch (Exception e1) {
+                }
+            }
+            status.setUuid(uuid);
 
             response.add(status);
         }

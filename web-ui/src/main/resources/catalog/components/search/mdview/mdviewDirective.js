@@ -164,8 +164,8 @@
     }]);
 
   module.directive('gnMetadataRate', [
-    '$http', 'gnConfig',
-    function($http, gnConfig) {
+    '$http', 'gnConfig', 'gnConfigService',
+    function($http, gnConfig, gnConfigService) {
       return {
         templateUrl: '../../catalog/components/search/mdview/partials/' +
             'rate.html',
@@ -177,15 +177,17 @@
 
         link: function(scope, element, attrs, controller) {
           scope.isRatingEnabled = false;
-
-          var statusSystemRating =
-            gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
-          if (statusSystemRating == 'advanced') {
-            scope.isUserFeedbackEnabled = true;
-          }
-          if (statusSystemRating == 'basic') {
-            scope.isRatingEnabled = true;
-          }
+          
+          gnConfigService.load().then(function(c) {
+            var statusSystemRating =
+              gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
+            if (statusSystemRating == 'advanced') {
+              scope.isUserFeedbackEnabled = true;
+            }
+            if (statusSystemRating == 'basic') {
+              scope.isRatingEnabled = true;
+            }
+          });
 
           scope.$watch('md', function() {
             scope.rate = scope.md ? scope.md.rating : null;

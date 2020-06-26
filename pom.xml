@@ -1287,6 +1287,36 @@
         <module>jmeter</module>
       </modules>
     </profile>
+    <profile>
+      <id>macOS</id>
+      <activation>
+        <os>
+          <family>mac</family>
+          <arch>x86_64</arch>
+        </os>
+      </activation>
+      <properties>
+          <es.platform>darwin-x86_64</es.platform>
+          <kb.executable>kibana.sh</kb.executable>
+          <kb.platform>darwin-x86</kb.platform>
+          <kb.installer.extension>tar.gz</kb.installer.extension>
+      </properties>
+    </profile>
+     <profile>
+       <id>windows</id>
+       <activation>
+         <os>
+           <family>Windows</family>
+         </os>
+       </activation>
+       <properties>
+         <es.platform>windows-x86_64</es.platform>
+         <es.installer.extension>zip</es.installer.extension>
+         <kb.executable>kibana.bat</kb.executable>
+         <kb.platform>windows-x86</kb.platform>
+         <kb.installer.extension>zip</kb.installer.extension>
+       </properties>
+     </profile>
   </profiles>
 
   <distributionManagement>

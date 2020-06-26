@@ -84,6 +84,9 @@
     <title thesaurus="Spatial scope"
            register="Spatial scope"
            date="2019-05-22"/>
+    <title thesaurus="INSPIRE priority data set"
+           register="INSPIRE priority data set"
+           date="2018-04-04"/>
   </xsl:variable>
 
   <xsl:variable name="isInspireThemes"

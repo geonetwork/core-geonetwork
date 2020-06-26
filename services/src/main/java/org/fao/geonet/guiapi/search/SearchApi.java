@@ -102,7 +102,7 @@ public class SearchApi {
             response.getWriter().write(Xml.getJSON(results));
         } else {
             response.getWriter().write(
-                new XsltResponseWriter(null)
+                new XsltResponseWriter(null, "search")
                     .withJson("catalog/locales/en-core.json")
                     .withJson("catalog/locales/en-search.json")
                     .withXml(results)
