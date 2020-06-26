@@ -298,7 +298,10 @@
   </xsl:template>
 
 
-  <xsl:template mode="getMetadataCitation" match="gmd:MD_Metadata">
+  <xsl:template mode="getMetadataCitation"
+                match="gmd:MD_Metadata"/>
+  <xsl:template mode="getMetadataCitation"
+                match="gmd:MD_Metadata[$view = 'sextant']">
     <xsl:variable name="displayCitation"
                   select="count(.//gmd:protocol[* = ('WWW:LINK-1.0-http--metadata-URL', 'DOI')]) > 0"/>
     <xsl:variable name="doiUrl"

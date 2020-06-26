@@ -33,6 +33,8 @@
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
+  <xsl:variable name="dateFormatRegex"
+                select="'(0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-([12]\d{3})'"/>
 
   <xsl:template mode="getLicense" match="gmd:MD_Metadata[$view = 'sextant']">
     <xsl:apply-templates mode="render-value"
@@ -84,7 +86,7 @@
                     <xsl:apply-templates mode="render-value" select="gmd:dateType/*/@codeListValue"/>
                   </dt>
                   <dd>
-                    <xsl:value-of select="format-date(xs:date(tokenize(gmd:date/*, 'T')[1]), '[D01]-[M01]-[Y0001]')"/>
+                    <xsl:value-of select="if (matches(gmd:date/*, $dateFormatRegex)) then format-date(xs:date(tokenize(gmd:date/*, 'T')[1]), '[D01]-[M01]-[Y0001]') else gmd:date/*"/>
 <!--                    <xsl:apply-templates mode="render-value" select="gmd:date/*"/>-->
                   </dd>
                 </dl>
@@ -100,7 +102,7 @@
 
                   <xsl:if test="gml:beginPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
                     <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ')"/>
-                    <xsl:value-of select="format-date(xs:date(tokenize(gml:beginPosition, 'T')[1]), '[D01]-[M01]-[Y0001]')"/>
+                    <xsl:value-of select="if (matches(gml:beginPosition, $dateFormatRegex)) then format-date(xs:date(tokenize(gml:beginPosition, 'T')[1]), '[D01]-[M01]-[Y0001]') else gml:beginPosition"/>
                     <!--                    <xsl:apply-templates mode="render-value" select="gml:beginPosition"/>-->
                     <i class="fa fa-fw fa-arrow-right">&#160;</i>
                   </xsl:if>
@@ -111,7 +113,7 @@
                   </xsl:variable>
                   <xsl:if test="gml:endPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
                     <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-to)[1], ' ')"/>
-                    <xsl:value-of select="format-date(xs:date(tokenize(gml:endPosition, 'T')[1]), '[D01]-[M01]-[Y0001]')"/>
+                    <xsl:value-of select="if (matches(gml:endPosition, $dateFormatRegex)) then format-date(xs:date(tokenize(gml:endPosition, 'T')[1]), '[D01]-[M01]-[Y0001]') else gml:endPosition"/>
 <!--                    <xsl:apply-templates mode="render-value" select="gml:endPosition"/>-->
                   </xsl:if>
 
