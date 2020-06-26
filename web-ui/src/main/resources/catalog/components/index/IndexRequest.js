@@ -999,13 +999,13 @@
       if (field.type == 'date' || field.type == 'rangeDate') {
         return;
       }
+      var value;
       for (var p in field.values) {
         // ignore undefined values
         if (field.values[p] === undefined) { continue; }
 
         if (field.type == 'histogram' || field.type == 'range') {
-          var value;
-          if (p.indexOf(FACET_RANGE_DELIMITER) > 0) {
+          if (p.indexOf(FACET_RANGE_DELIMITER) > -1) {
             value = fieldName +
                 ':[' + p.replace(FACET_RANGE_DELIMITER, ' TO ') + '}';
           }
@@ -1031,12 +1031,12 @@
       if (field.type == 'date' || field.type == 'rangeDate') {
         return;
       }
+      var value;
       for (var p in field.values) {
         // ignore undefined values
         if (field.values[p] === undefined) { continue; }
 
         if ((field.type == 'histogram' || field.type == 'range')) {
-          var value;
           if (p.indexOf(FACET_RANGE_DELIMITER) > 0) {
             value = fieldName +
               ':[' + p.replace(FACET_RANGE_DELIMITER, ' TO ') + '}';
@@ -1045,9 +1045,13 @@
             value = fieldName + ':' + p.replace(/ /g, '');
           }
         }
-        else {
-          valuesQ.push(fieldName + ':"' + p + '"');
+        else if (field.type == 'filters') {
+          value = field.query;
         }
+        else {
+          value = fieldName + ':"' + p + '"';
+        }
+        valuesQ.push(value);
       }
       if (valuesQ.length) {
         fieldsQ.push('+(' + valuesQ.join(' ') + ')');

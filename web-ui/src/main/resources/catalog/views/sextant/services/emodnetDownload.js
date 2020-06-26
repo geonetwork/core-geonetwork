@@ -66,10 +66,11 @@
          * to download files
          * Note: The API setting sxtSettings.useEmodnetDownloadForm must be set to true
          * @param {Array.<string>} urls
+         * @param {string} mdUuid
          * @return a $q.defer object that resolves when the submission to the
          * analytics service is done
          */
-        openDownloadForm: function(urls) {
+        openDownloadForm: function(urls, mdUuid) {
           this.importLibrary();
 
           var scope = $rootScope.$new(true);
@@ -81,6 +82,7 @@
             // hardcoded tracking values
             values['DownloadForm-sender_id'] = 'sextant';
             values['DownloadForm-data_url'] = url;
+            values['DownloadForm-UUID'] = mdUuid;
 
             Object.keys(values).forEach(function(key) {
               if (values[key]) {

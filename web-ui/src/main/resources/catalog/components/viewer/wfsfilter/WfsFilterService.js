@@ -198,13 +198,13 @@
           var filter = [];
 
           angular.forEach(value, function(v, k) {
-            if (k.startsWith('>= ')) {
+            if (k.substring(0, 3) === '>= ') {
               var greaterThan = k.substring(3);
               filter.push({
                 filter_type: 'PropertyIsGreaterThanOrEqualTo',
                 params: [greaterThan]
               });
-            } else if (k.startsWith('< ')) {
+            } else if (k.substring(0, 2) === '< ') {
               var lowerThan = k.substring(2);
               filter.push({
                 filter_type: 'PropertyIsLessThan',
@@ -213,7 +213,7 @@
             } else {
               var parts = k.split(' - ');
               filter.push({
-                filter_type: 'PropertyIsBetween',
+                filter_type: 'PropertyIsBetweenExclusive',
                 params: parts
               }, {
                 filter_type: 'PropertyIsEqualTo',
@@ -441,10 +441,10 @@
 
           angular.forEach(values, function(v, k) {
             if (config.isRange) {
-              if (k.startsWith('>= ')) {
+              if (k.substring(0, 3) === '>= ') {
                 var greaterThan = k.substring(3);
                 clause.push('(' + paramName + ' >= ' + greaterThan + ')');
-              } else if (k.startsWith('< ')) {
+              } else if (k.substring(0, 2) === '< ') {
                 var lowerThan = k.substring(2);
                 clause.push('(' + paramName + ' < ' + lowerThan + ')');
               } else {
@@ -455,11 +455,17 @@
             }
 
             var escaped = k.replace(/'/g, '\\\'');
-            clause.push(
-                (config.isTokenized) ?
-                '(' + paramName + " LIKE '%" + escaped + "%')" :
-                '(' + paramName + " = '" + escaped + "')"
-            );
+            if (config.isTokenized) {
+              var sep = config.tokenSeparator;
+              clause.push(
+                '(' + paramName + " = '" + escaped + "')",
+                '(' + paramName + " LIKE '%" + sep + escaped + sep + "%')",
+                '(' + paramName + " LIKE '%" + sep + escaped + "')",
+                '(' + paramName + " LIKE '" + escaped + sep + "%')"
+              );
+            } else {
+              clause.push('(' + paramName + " = '" + escaped + "')");
+            }
           });
           if (clause.length == 0) return;
           where.push('(' + clause.join(' OR ') + ')');
