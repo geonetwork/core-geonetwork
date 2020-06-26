@@ -28,8 +28,10 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -131,6 +133,26 @@ public class ApiUtils {
                 uuidOrInternalId));
         }
         return id;
+    }
+
+    //fixes the uri fragment portion (that the part after the "#")
+    // so it is properly encoded
+    //http://www.thesaurus.gc.ca/concept/#Offshore area        -->   http://www.thesaurus.gc.ca/concept/#Offshore%20area
+    //http://www.thesaurus.gc.ca/concept/#AIDS (disease)       -->   http://www.thesaurus.gc.ca/concept/#AIDS%20%28disease%29
+    //http://www.thesaurus.gc.ca/concept/#Alzheimer's disease  -->   http://www.thesaurus.gc.ca/concept/#Alzheimer%27s%20disease
+    //
+    //Includes some special case handling for spaces and ":"
+    //
+    //TODO: there could be other special handling for special cases in the future
+    public static String fixURIFragment(String uri) throws UnsupportedEncodingException {
+        String[] parts = uri.split("#");
+        if (parts.length >1) {
+            parts[parts.length - 1] = parts[parts.length - 1].replace("+", " ");
+            parts[parts.length - 1] = URLEncoder.encode(parts[parts.length - 1], "UTF-8");
+            parts[parts.length - 1] = parts[parts.length - 1].replace("+", "%20");
+            parts[parts.length - 1] = parts[parts.length - 1].replace("%3A", ":");
+        }
+        return String.join("#",parts);
     }
 
 
