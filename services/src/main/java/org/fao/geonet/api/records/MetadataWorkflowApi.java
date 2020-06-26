@@ -23,16 +23,14 @@
 
 package org.fao.geonet.api.records;
 
-import com.sun.istack.NotNull;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.FeatureNotEnabledException;
@@ -69,6 +67,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 import static org.fao.geonet.api.ApiParams.*;
+
 
 
 @RequestMapping(value = {"/{portal}/api/records"})
@@ -425,7 +424,6 @@ public class MetadataWorkflowApi {
      * Build a list of status with additional information about users
      * (author and owner of the status change).
      */
-    @NotNull
     private List<MetadataStatusResponse> buildMetadataStatusResponses(List<MetadataStatus> listOfStatus,
                                                                       boolean details, String language) {
         List<MetadataStatusResponse> response = new ArrayList<>();
