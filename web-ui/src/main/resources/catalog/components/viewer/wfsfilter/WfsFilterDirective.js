@@ -464,13 +464,19 @@
                     include: '.*' + filter + '.*'
                   }
                 };
+              } else if (facetName.match(/^ft_.*_ti$/)) {
+                aggs[facetName] = {
+                  terms: {
+                    include: [parseInt(filter, 10)]
+                  }
+                };
+              }
 
-                // apply a text search on all possible values of the facets
-                // for this, remove current facet checkbox filters
-                if(facetName === scope.lastClickedField && filterInputUpdate) {
-                  facetsState = angular.copy(facetsState);
-                  delete facetsState[facetName];
-                }
+              // apply a text search on all possible values of the facets
+              // for this, remove current facet checkbox filters
+              if(facetName === scope.lastClickedField && filterInputUpdate) {
+                facetsState = angular.copy(facetsState);
+                delete facetsState[facetName];
               }
             });
 
