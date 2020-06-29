@@ -449,7 +449,7 @@
             'partials/layer-sextant.html',
         link: function(scope, element, attrs, controller) {
           var el = element;
-
+          var isFirst = angular.isDefined(scope.member.Abstract);
           var select = function() {
             controller.addLayer(scope.member);
             gnAlertService.addAlert({
@@ -459,10 +459,9 @@
               type: 'success'
             });
           };
-
-          scope.toggleNode = function(evt) {
-            el.find('.fa').first().toggleClass('fa-folder-o')
-                .toggleClass('fa-folder-open-o');
+          scope.toggleNode = function(evt, index) {
+            var first_fa = el.find('.fa').first();
+            first_fa.toggleClass('fa-folder-o').toggleClass('fa-folder-open-o')
             el.children('ul').toggle();
           };
 
@@ -484,9 +483,23 @@
           // Add all subchildren
           if (angular.isArray(scope.member.Layer)) {
             element.append("<gn-cap-tree-col " +
-                "collection='member.Layer'></gn-cap-tree-col>");
+                "collection='member.Layer'</gn-cap-tree-col>");
             $compile(element.find('gn-cap-tree-col'))(scope);
           }
+
+          if (scope.isParentNode && !isFirst) {
+            el.children('ul').toggle();
+          }
+
+          scope.getClass = function() {
+            if (scope.isParentNode && isFirst) {
+              return 'fa-folder-open-o';
+            }
+            else if (scope.isParentNode) {
+              return 'fa-folder-o';
+            }
+            return 'fa-plus-square-o';
+          };
         }
       };
     }]);
