@@ -190,7 +190,7 @@ public class MetadataApi {
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_XML_VALUE,
-            MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8"
+            MediaType.APPLICATION_JSON_VALUE
         })
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Return the record."),
