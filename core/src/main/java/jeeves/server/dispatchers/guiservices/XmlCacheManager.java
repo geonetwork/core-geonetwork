@@ -103,7 +103,6 @@ public class XmlCacheManager {
                 return xmlCache.get();
             }
         } catch (Exception e) {
-            Log.error(Log.RESOURCES, "Error cloning the cached data.  Attempted to get: " + xmlFilePath + " but failed so falling back to default language");
             Log.debug(Log.RESOURCES, "Error cloning the cached data.  Attempted to get: " + xmlFilePath + " but failed so falling back to default language", e);
             Path xmlDefaultLangFilePath = rootPath.resolve(defaultLang).resolve(file);
             xmlCache = new XmlFileCacher(xmlDefaultLangFilePath, servletContext, appPath);

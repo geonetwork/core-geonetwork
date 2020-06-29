@@ -1,3 +1,8 @@
+
+ALTER TABLE groupsdes ALTER COLUMN label TYPE varchar(255);
+ALTER TABLE sourcesdes ALTER COLUMN label TYPE varchar(255);
+ALTER TABLE schematrondes ALTER COLUMN label TYPE varchar(255);
+
 UPDATE Settings SET value='3.11.0' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 
@@ -26,3 +31,7 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'spa','Record res
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'tur','Record restored.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'vie','Record restored.');
 
+-- keep these at the bottom of the file!
+DROP INDEX idx_metadatafiledownloads_metadataid;
+DROP INDEX idx_metadatafileuploads_metadataid;
+DROP INDEX idx_operationallowed_metadataid;
