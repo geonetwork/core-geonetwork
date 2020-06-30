@@ -179,20 +179,35 @@
                 }
 
                 // general case
-                scope.currentFilters.push({
-                  key: filterKey,
-                  value: value
-                });
+                if (filterKey==="query_string"){
+                  angular.forEach(JSON.parse(value), function(facetValues, facetKey) {
+                    console.log(facetValues)
+                    console.log(facetKey)
+                    scope.currentFilters.push({
+                      key: facetKey,
+                      value: facetValues
+                    })
+                  });
+                }
+                else {
+                }
               }
             }, true);
 
             scope.removeFilter = function(filter) {
-              if (filter.isFacet) {
+              removeFacetElement=[]
+              removeFacetElement.push(filter.key)
+              if (Object.keys(filter.value)[0] != 0)
+                removeFacetElement.push(Object.keys(filter.value)[0])
+              else
+                removeFacetElement.push(filter.value)
+              ngSearchFormCtrl.updateState(removeFacetElement, true);
+              /*if (filter.isFacet) {
                 var facetQuery = removeFacet(filter.facetKey, getSearchParams()['facet.q']);
                 setSearchParameter('facet.q', facetQuery);
               } else {
                 setSearchParameter(filter.key, null);
-              }
+              }*/
             };
 
             scope.removeAll = function() {
@@ -207,7 +222,17 @@
   module.filter('translatearray', ['$translate', function($translate) {
 
     var filterFunc = function(input, separator) {
-      var sep = separator;
+      var result;
+      if (angular.isString(input) && input.startsWith("+dateStamp:")) {
+        result = input.split(/\[(.*?)\]/)[1]
+      } else {
+        angular.forEach(input, function(value, key) {
+          result=key
+        })
+      }
+      return result;
+
+      /*var sep = separator;
       if (!separator) {
         sep = ' or ';
       }
@@ -227,7 +252,7 @@
         }
       });
 
-      return result;
+      return result;*/
     };
 
     return filterFunc;

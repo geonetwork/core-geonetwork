@@ -14,9 +14,9 @@
              data-ng-if="isUserSearchesEnabled && user.isConnected()"></div>
 
         <div data-search-filter-tags
-             data-dimensions="searchResults.dimension"
+             data-dimensions="searchResults.facets"
              data-use-location-parameters="true"
-             ng-if="isFilterTagsDisplayedInSearch && searchResults.dimension">
+             ng-if="isFilterTagsDisplayedInSearch && searchResults.facets">
         </div>
 
         <div class="panel panel-default"
