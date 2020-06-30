@@ -597,24 +597,24 @@
 
     <!-- Add dependencies to built-in schema plugin having a custom bean to be loaded. -->
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>schema-iso19139</artifactId>
-      <version>${gn.schemas.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>schema-csw-record</artifactId>
-      <version>${gn.schemas.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>schema-iso19110</artifactId>
-      <version>${gn.schemas.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>schema-dublin-core</artifactId>
-      <version>${gn.schemas.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
   </dependencies>
@@ -899,9 +899,9 @@
       </activation>
       <dependencies>
         <dependency>
-          <groupId>${project.groupId}</groupId>
+          <groupId>org.geonetwork-opensource.schemas</groupId>
           <artifactId>schema-iso19115-3.2018</artifactId>
-          <version>${gn.schemas.version}</version>
+          <version>${project.version}</version>
         </dependency>
       </dependencies>
       <build>
@@ -917,7 +917,7 @@
                 <configuration>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>${project.groupId}</groupId>
+                      <groupId>org.geonetwork-opensource.schemas</groupId>
                       <artifactId>schema-iso19115-3.2018</artifactId>
                       <type>jar</type>
                       <overWrite>false</overWrite>
@@ -958,9 +958,9 @@
                   <encoding>UTF-8</encoding>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>${project.groupId}</groupId>
+                      <groupId>org.geonetwork-opensource.schemas</groupId>
                       <artifactId>schema-iso19139</artifactId>
-                      <version>${gn.schemas.version}</version>
+                      <version>${project.version}</version>
                       <type>jar</type>
                       <overWrite>false</overWrite>
                       <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</outputDirectory>
@@ -972,9 +972,9 @@
                       </fileMappers>
                     </artifactItem>
                     <artifactItem>
-                      <groupId>${project.groupId}</groupId>
+                      <groupId>org.geonetwork-opensource.schemas</groupId>
                       <artifactId>schema-csw-record</artifactId>
-                      <version>${gn.schemas.version}</version>
+                      <version>${project.version}</version>
                       <type>jar</type>
                       <overWrite>false</overWrite>
                       <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</outputDirectory>
@@ -986,9 +986,9 @@
                       </fileMappers>
                     </artifactItem>
                     <artifactItem>
-                      <groupId>${project.groupId}</groupId>
+                      <groupId>org.geonetwork-opensource.schemas</groupId>
                       <artifactId>schema-iso19110</artifactId>
-                      <version>${gn.schemas.version}</version>
+                      <version>${project.version}</version>
                       <type>jar</type>
                       <overWrite>false</overWrite>
                       <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</outputDirectory>
@@ -1000,9 +1000,9 @@
                       </fileMappers>
                     </artifactItem>
                     <artifactItem>
-                      <groupId>${project.groupId}</groupId>
+                      <groupId>org.geonetwork-opensource.schemas</groupId>
                       <artifactId>schema-dublin-core</artifactId>
-                      <version>${gn.schemas.version}</version>
+                      <version>${project.version}</version>
                       <type>jar</type>
                       <overWrite>false</overWrite>
                       <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</outputDirectory>
@@ -1031,9 +1031,9 @@
       <!-- Add dependencies to schema plugin having a custom Bean to be loaded. -->
       <dependencies>
         <dependency>
-          <groupId>${project.groupId}</groupId>
+          <groupId>org.geonetwork-opensource.schemas</groupId>
           <artifactId>schema-iso19115-3.2018</artifactId>
-          <version>${gn.schemas.version}</version>
+          <version>${project.version}</version>
         </dependency>
       </dependencies>
       <build>
