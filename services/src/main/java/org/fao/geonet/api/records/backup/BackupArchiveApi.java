@@ -83,7 +83,7 @@ public class BackupArchiveApi {
         @ApiResponse(responseCode = "404", description = "Resource not found.")
     })
     @ResponseBody
-    public ResponseEntity<FileSystemResource> exec(HttpServletRequest request) throws Exception {
+    public ResponseEntity<FileSystemResource> downloadBackup(HttpServletRequest request) throws Exception {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
         ApplicationContext appContext = ApplicationContextHolder.get();

@@ -198,7 +198,7 @@ public class MetadataApi {
     })
     public
     @ResponseBody
-    Object getRecordAsXML(
+    Object getRecord(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
             required = true)
