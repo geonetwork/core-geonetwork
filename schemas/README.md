@@ -40,7 +40,7 @@
    
 4. Using a `src/assembly/schema-plugin.xml` assembly:
    
-   ```
+   ```xml
    <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">

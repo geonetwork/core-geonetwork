@@ -7,7 +7,7 @@ function showUsage
   echo -e "Usage: ./`basename $0 $1` schema_name git_schema_repository git_schema_branch"
   echo
   echo -e "Example:"
-  echo -e "\t./`basename $0 $1` iso19115-3 https://github.com/metadata101/iso19115-3 3.4.x"
+  echo -e "\t./`basename $0 $1` iso19115-3 https://github.com/metadata101/iso19115-3 3.11.x"
   echo
 }
 
@@ -72,8 +72,7 @@ line=$(grep -n "schema-${schema}" web/pom.xml | cut -d: -f1)
 
 if [ ! -n "$line" ]
 then
-  projectGroupId='${project.groupId}'
-  gnSchemasVersion='${gn.schemas.version}'
+  gnSchemasVersion='${project.version}'
   basedir='${basedir}'
 
   echo "Adding schema ${schema} dependency to web/pom.xml for schemaCopy"
@@ -83,7 +82,7 @@ then
   sed $sedopt -f /dev/stdin web/pom.xml << SED_SCRIPT
   ${insertLine} a\\
 \        <dependency>\\
-\          <groupId>${projectGroupId}</groupId>\\
+\          <groupId>org.geonetwork-opensource.schemas</groupId>\\
 \          <artifactId>schema-${schema}</artifactId>\\
 \          <version>${gnSchemasVersion}</version>\\
 \        </dependency>
@@ -104,7 +103,7 @@ SED_SCRIPT
 \      </activation>\\
 \      <dependencies>\\
 \        <dependency>\\
-\          <groupId>${projectGroupId}</groupId>\\
+\          <groupId>org.geonetwork-opensource.schemas</groupId>
 \          <artifactId>schema-${schema}</artifactId>\\
 \          <version>${gnSchemasVersion}</version>\\
 \        </dependency>\\
@@ -121,19 +120,13 @@ SED_SCRIPT
 \                <goals><goal>unpack</goal></goals>\\
 \                <configuration>\\
 \                  <artifactItems>\\
-\                    <artifactItem>\\
-\                      <groupId>${projectGroupId}</groupId>\\
+\                    <artifactItem>
+\                      <groupId>org.geonetwork-opensource.schemas</groupId>
 \                      <artifactId>schema-${schema}</artifactId>\\
-\                      <type>jar</type>\\
-\                      <overWrite>false</overWrite>\\
-\                      <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</outputDirectory>\\
-\                      <includes>plugin/**</includes>\\
-\                      <fileMappers>\\
-\                        <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">\\
-\                          <pattern>^plugin/</pattern><replacement>./</replacement>\\
-\                        </fileMapper>\\
-\                      </fileMappers>\\
-\                    </artifactItem>\\
+\                      <type>zip</type>
+\                      <overWrite>false</overWrite>
+\                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
+\                    </artifactItem>
 \                  </artifactItems>\\
 \                </configuration>\\
 \              </execution>\\
@@ -145,26 +138,3 @@ SED_SCRIPT
 SED_SCRIPT
 fi
 
-
-# Add schema resources in web/pom.xml
-line=$(grep -n "schemas/${schema}/src/main/plugin</directory>" web/pom.xml | cut -d: -f1)
-
-if [ ! $line ]
-then
-  profileLine=$(grep -n '<id>schemas-copy</id>' web/pom.xml | cut -d: -f1)
-  lineOffset=$(tail -n +$profileLine web/pom.xml | grep -n '<resources>' | cut -d: -f1 | head -1)
-  finalLine=$(($profileLine + $lineOffset -1))
-
-  projectBaseDir='${project.basedir}'
-  baseDir='${basedir}'
-
-  echo "Adding schema ${schema} resources to web/pom.xml for schemaCopy"
-
-  sed $sedopt -f /dev/stdin web/pom.xml << SED_SCRIPT
-  ${finalLine} a\\
-\                    <resource>\\
-\                      <directory>${projectBaseDir}/../schemas/${schema}/src/main/plugin</directory>\\
-\                      <targetPath>${baseDir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>\\
-\                    </resource>
-SED_SCRIPT
-fi

@@ -710,7 +710,7 @@
         <configuration>
           <filesets>
             <fileset>
-              <directory>src/main/webapp/WEB-INF/data/config/schema_plugins</directory>
+              <directory>${schema-plugins.dir}</directory>
               <includes>
                 <include>**/*</include>
               </includes>
@@ -1026,7 +1026,7 @@
                     in order to be loaded by the application when running mvn jetty:run.
                     -->
                   <target description="copy from schemas to schema_plugins folder">
-                    <copy todir="${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins">
+                    <copy todir="${schema-plugins.dir}">
                       <fileset dir="${basedir}/../schemas/">
                         <include name="**/src/main/plugin/**"/>
                       </fileset>
@@ -1061,8 +1061,7 @@
                     <!--
                     <resource>
                       <directory>metadata101/iso19139.xyz/src/main/plugin</directory>
-                      <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
-                      </targetPath>
+                      <targetPath>${schema-plugins.dir}</targetPath>
                     </resource>
                     -->
                   </resources>
