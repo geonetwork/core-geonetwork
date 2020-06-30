@@ -45,7 +45,6 @@ import static org.junit.Assert.assertEquals;
  * Test SchematronCriteriaGroupServiceIntegration. Created by Jesse on 2/12/14.
  */
 // TODOES
-@Ignore
 public class SchematronCriteriaGroupServiceIntegrationTest extends AbstractSchematronServiceIntegrationTest {
 
     @Test
