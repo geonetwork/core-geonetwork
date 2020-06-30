@@ -113,7 +113,7 @@
                           }
 
                           var mapsConfig = {
-                            projection : newProj,
+                            projection : newProj
                           };
 
                           if (projectionConfig.resolutions
