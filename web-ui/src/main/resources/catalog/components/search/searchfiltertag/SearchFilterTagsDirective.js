@@ -181,13 +181,23 @@
                 // general case
                 if (filterKey==="query_string"){
                   angular.forEach(JSON.parse(value), function(facetValues, facetKey) {
-                    console.log(facetValues)
-                    console.log(facetKey)
-                    scope.currentFilters.push({
-                      key: facetKey,
-                      value: facetValues
-                    })
-                  });
+                    if (typeof facetValues === 'object') {
+                      angular.forEach(facetValues, function (values, facetValuesKey) {
+                        let elem = {};
+                        elem[facetValuesKey]=values;
+                        scope.currentFilters.push({
+                          key: facetKey,
+                          value: elem
+                        })
+                      })
+                    }
+                    else {
+                      scope.currentFilters.push({
+                        key: facetKey,
+                        value: facetValues
+                      })
+                    }
+                  })
                 }
                 else {
                 }
