@@ -1003,15 +1003,9 @@
                       <groupId>org.geonetwork-opensource.schemas</groupId>
                       <artifactId>schema-dublin-core</artifactId>
                       <version>${project.version}</version>
-                      <type>jar</type>
+                      <type>zip</type>
                       <overWrite>false</overWrite>
-                      <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</outputDirectory>
-                      <includes>plugin/**</includes>
-                      <fileMappers>
-                        <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
-                          <pattern>^plugin/</pattern><replacement>./</replacement>
-                        </fileMapper>
-                      </fileMappers>
+                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
                     </artifactItem>
                   </artifactItems>
                 </configuration>
@@ -1209,8 +1203,8 @@
     <geonetwork.subversion>SNAPSHOT</geonetwork.subversion>
     <geonetwork.webapp.dir>${basedir}/src/main/webapp</geonetwork.webapp.dir>
     <geonetwork.webapp.js.dir>${geonetwork.webapp.dir}/scripts</geonetwork.webapp.js.dir>
-    <geonetwork.build.dir>${project.build.directory}/${project.build.finalName}
-    </geonetwork.build.dir>
+    <geonetwork.build.dir>${project.build.directory}/${project.build.finalName}</geonetwork.build.dir>
+    <schema-plugins.dir>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</schema-plugins.dir>
     <geonetwork.webapp.css.dir>${geonetwork.webapp.dir}</geonetwork.webapp.css.dir>
     <minify.verbose>false</minify.verbose>
     <build.webapp.resources>${project.build.directory}/webapp</build.webapp.resources>

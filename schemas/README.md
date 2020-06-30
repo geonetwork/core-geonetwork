@@ -15,43 +15,71 @@
   * Optional: SchemaPlugin bean
   * Optional: ApplicationListener<ServerStartup> to auto install plugin
 
-3. Schema plugin `pom.xml` must include `src/main/plugin` in resources section:
+3. Schema plugin `pom.xml` are asked to bundle their `src/main/plugin` into a `zip`:
    
    ```xml
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>src/main/plugin</directory>
-        <targetPath>plugin</targetPath>
-      </resource>
-    </resources>
+      <!-- package up plugin folder as a zip -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>plugin-assembly</id>
+            <phase>package</phase>
+            <goals><goal>single</goal></goals>
+            <inherited>false</inherited>
+            <configuration>
+             <appendAssemblyId>false</appendAssemblyId>
+             <descriptors>
+              <descriptor>src/assembly/schema-plugin.xml</descriptor>
+             </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+   ```
+   
+4. Using a `src/assembly/schema-plugin.xml` assembly:
+   
+   ```
+   <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
+     <id>plugin</id>
+     <includeBaseDirectory>false</includeBaseDirectory>
+     <formats>
+       <format>zip</format>
+     </formats>
+     <fileSets>
+       <fileSet>
+         <directory>src/main/plugin/</directory>
+         <outputDirectory></outputDirectory>
+         <useDefaultExcludes>true</useDefaultExcludes>
+       </fileSet>
+     </fileSets>
+   </assembly>
    ```
 
-4. If you need to depend on any modules please make use of:
-  
-   * `gn.project.version` property for geonetwork modules:
+4. If you need to depend on any geonetwork modules please make use of `project.version` property:
    
-      ```xml
-     <dependency>
-       <groupId>${project.groupId}</groupId>
-       <artifactId>common</artifactId>
-       <version>${gn.project.version}</version>
-     </dependency>
-      ```
-   
-   * `project.version` property for other schemas (or schema-core):
-     
-     ```
+   ```xml
+  <dependency>
+    <groupId>org.geonetwork-opensource</groupId>
+    <artifactId>common</artifactId>
+    <version>${project.version}</version>
+  </dependency>
+   ```
+
+5. The use of `project.version` is also required for schemas modules:
+
+     ```xml
      <dependencies>
        <dependency>
-         <groupId>${project.groupId}</groupId>
+         <groupId>org.geonetwork-opensource.schemas</groupId>
          <artifactId>schema-core</artifactId>
          <version>${project.version}</version>
        </dependency>
        <dependency>
-         <groupId>${project.groupId}</groupId>
+         <groupId>org.geonetwork-opensource.schemas</groupId>
          <artifactId>schema-iso19139</artifactId>
          <version>${project.version}</version>
        </dependency>
@@ -60,7 +88,7 @@
    
 5. Use `mvn install` to install your schema plugin in your local repository.
 
-## Add a plugin to the build
+## Optional: Add a plugin to the build
 
 While schema plugins can be built independently, they can be conditionally included in the build:
 
