@@ -919,15 +919,9 @@
                     <artifactItem>
                       <groupId>org.geonetwork-opensource.schemas</groupId>
                       <artifactId>schema-iso19115-3.2018</artifactId>
-                      <type>jar</type>
+                      <type>zip</type>
                       <overWrite>false</overWrite>
-                      <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</outputDirectory>
-                      <includes>plugin/**</includes>
-                      <fileMappers>
-                        <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
-                          <pattern>^plugin/</pattern><replacement>./</replacement>
-                        </fileMapper>
-                      </fileMappers>
+                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
                     </artifactItem>
                   </artifactItems>
                 </configuration>
@@ -957,47 +951,31 @@
                 <configuration>
                   <encoding>UTF-8</encoding>
                   <artifactItems>
+                    <!-- unpack built-in schema plugins into schema-plugins directory -->
                     <artifactItem>
                       <groupId>org.geonetwork-opensource.schemas</groupId>
                       <artifactId>schema-iso19139</artifactId>
                       <version>${project.version}</version>
-                      <type>jar</type>
+                      <type>zip</type>
                       <overWrite>false</overWrite>
-                      <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</outputDirectory>
-                      <includes>plugin/**</includes>
-                      <fileMappers>
-                        <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
-                          <pattern>^plugin/</pattern><replacement>./</replacement>
-                        </fileMapper>
-                      </fileMappers>
+                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
                     </artifactItem>
                     <artifactItem>
                       <groupId>org.geonetwork-opensource.schemas</groupId>
                       <artifactId>schema-csw-record</artifactId>
                       <version>${project.version}</version>
-                      <type>jar</type>
+                      <version>${project.version}</version>
+                      <type>zip</type>
                       <overWrite>false</overWrite>
-                      <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</outputDirectory>
-                      <includes>plugin/**</includes>
-                      <fileMappers>
-                        <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
-                          <pattern>^plugin/</pattern><replacement>./</replacement>
-                        </fileMapper>
-                      </fileMappers>
+                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
                     </artifactItem>
                     <artifactItem>
                       <groupId>org.geonetwork-opensource.schemas</groupId>
                       <artifactId>schema-iso19110</artifactId>
                       <version>${project.version}</version>
-                      <type>jar</type>
+                      <type>zip</type>
                       <overWrite>false</overWrite>
-                      <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</outputDirectory>
-                      <includes>plugin/**</includes>
-                      <fileMappers>
-                        <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
-                          <pattern>^plugin/</pattern><replacement>./</replacement>
-                        </fileMapper>
-                      </fileMappers>
+                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
                     </artifactItem>
                     <artifactItem>
                       <groupId>org.geonetwork-opensource.schemas</groupId>
@@ -1007,6 +985,7 @@
                       <overWrite>false</overWrite>
                       <outputDirectory>${schema-plugins.dir}</outputDirectory>
                     </artifactItem>
+
                   </artifactItems>
                 </configuration>
               </execution>

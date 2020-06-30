@@ -88,16 +88,16 @@ To include your schema plugin in `web/pom.xml`:
    
    ```xml
     <profile>
-      <id>schema-iso19115-3-2018</id>
+      <id>schema-iso19115-xyz</id>
       <activation>
         <property><name>schemasCopy</name><value>!true</value></property>
         <file><exists>../schemas/iso19115-3.2018</exists></file>
       </activation>
       <dependencies>
         <dependency>
-          <groupId>${project.groupId}</groupId>
-          <artifactId>schema-iso19115-3.2018</artifactId>
-          <version>${gn.schemas.version}</version>
+          <groupId>org.geonetwork-opensource.schemas</groupId>
+          <artifactId>schema-iso19139.xyz</artifactId>
+          <version>${project.version}</version>
         </dependency>
       </dependencies>
       <build>
@@ -107,25 +107,20 @@ To include your schema plugin in `web/pom.xml`:
             <artifactId>maven-dependency-plugin</artifactId>
             <executions>
               <execution>
-                <id>iso19115-3.2018-resources</id>
+                <id>iso19115-xyz-resources</id>
                 <phase>process-resources</phase>
                 <goals><goal>unpack</goal></goals>
                 <configuration>
                   <encoding>UTF-8</encoding>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>${project.groupId}</groupId>
-                      <artifactId>schema-iso19115-3.2018</artifactId>
-                      <type>jar</type>
+                      <groupId>org.geonetwork-opensource.schemas</groupId>
+                      <artifactId>schema-iso19115-xyz</artifactId>
+                      <type>zip</type>
                       <overWrite>false</overWrite>
-                      <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</outputDirectory>
-                      <includes>plugin/**</includes>
-                      <fileMappers>
-                        <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
-                          <pattern>^plugin/</pattern><replacement>./</replacement>
-                        </fileMapper>
-                      </fileMappers>
+                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
                     </artifactItem>
+                  </artifactItems>
                   </artifactItems>
                 </configuration>
               </execution>
@@ -138,7 +133,7 @@ To include your schema plugin in `web/pom.xml`:
 
 2. This profile example has several interesting features:
    
-   * Activates automatically if the `schemas/iso19115-3.2018` folder is present
+   * Activates automatically if the `schemas/iso19115-xyz` folder is present
    * Disabled if `-DschemasCopy=true` property is set
    * Adds a dependency so that the schema plugin jar is included on the classpath
    * Unpacks a `plugin` folder into the webapp `schema_plugins` folder
@@ -160,9 +155,9 @@ To add your schema plugin to the `schemas-copy` profile:
 
    ```xml
    <dependency>
-     <groupId>${project.groupId}</groupId>
+     <groupId>org.geonetwork-opensource.schemas</groupId>
      <artifactId>schema-iso19139.xyz</artifactId>
-     <version>${gn.schemas.version}</version>
+     <version>${project.version}</version>
    </dependency>
    ```
    
@@ -173,8 +168,7 @@ To add your schema plugin to the `schemas-copy` profile:
    ```xml
    <resource>
      <directory>${metadata101}/iso19139.xyz/src/main/plugin</directory>
-     <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
-     </targetPath>
+     <targetPath>${schema-plugins.dir}</targetPath>
    </resource>
    ```
 

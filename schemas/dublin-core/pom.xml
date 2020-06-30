@@ -21,6 +21,7 @@
   </dependencies>
 
   <build>
+
     <resources>
       <resource>
         <directory>src/main/config/translations</directory>
@@ -30,7 +31,9 @@
         <directory>src/main/resources</directory>
       </resource>
     </resources>
+
     <plugins>
+
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <executions>
@@ -44,6 +47,24 @@
       </plugin>
 
       <!-- package up plugin folder as a zip -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>plugin-assembly</id>
+            <phase>package</phase>
+            <goals><goal>single</goal></goals>
+            <inherited>false</inherited>
+            <configuration>
+             <appendAssemblyId>false</appendAssemblyId>
+             <descriptors>
+              <descriptor>src/assembly/schema-plugin.xml</descriptor>
+             </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>

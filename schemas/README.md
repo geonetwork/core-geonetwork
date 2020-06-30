@@ -62,11 +62,11 @@
 4. If you need to depend on any geonetwork modules please make use of `project.version` property:
    
    ```xml
-  <dependency>
-    <groupId>org.geonetwork-opensource</groupId>
-    <artifactId>common</artifactId>
-    <version>${project.version}</version>
-  </dependency>
+   <dependency>
+     <groupId>org.geonetwork-opensource</groupId>
+     <artifactId>common</artifactId>
+     <version>${project.version}</version>
+   </dependency>
    ```
 
 5. The use of `project.version` is also required for schemas modules:
@@ -94,8 +94,12 @@ While schema plugins can be built independently, they can be conditionally inclu
 
 1. Add schema plugin:
 
-   * As a folder, using `.gitignore` to avoid accidentally commiting.
-   
+   * As a folder, using `.gitignore` to avoid accidentally committing:
+     
+     ```
+     iso19139.xyz
+     ```
+     
    * As a git submodule if you are making a fork
 `
 2. Use a profile (activated by your schema plugin folder being present) to include your schema plugin to the list of modules in `pom.xml`.
