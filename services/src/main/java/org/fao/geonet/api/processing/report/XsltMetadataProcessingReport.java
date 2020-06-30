@@ -23,14 +23,13 @@
 
 package org.fao.geonet.api.processing.report;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlAttribute;
-
 /**
  * A report about XSLT processing.
- *
+ * <p>
  * This report also advertised the XSL used (based on process identifier), and the records in a
  * standard not providing the process.
  */

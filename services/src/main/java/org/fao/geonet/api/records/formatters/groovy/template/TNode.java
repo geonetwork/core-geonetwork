@@ -25,7 +25,6 @@ package org.fao.geonet.api.records.formatters.groovy.template;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-
 import org.apache.xalan.xsltc.runtime.AttributeList;
 import org.fao.geonet.SystemInfo;
 import org.xml.sax.Attributes;
@@ -46,7 +45,7 @@ public abstract class TNode {
     protected final String qName;
     protected final SystemInfo info;
     protected final TextContentParser textContentParser;
-    private List<TNode> children = Lists.newArrayList();
+    private final List<TNode> children = Lists.newArrayList();
     private long unparsedSize;
 
     public TNode(SystemInfo info, TextContentParser textContentParser, String qName, Attributes attributes) throws IOException {

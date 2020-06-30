@@ -62,7 +62,7 @@ public class MetadataRegionSearchRequest extends Request {
     ServiceContext context;
     private String id;
     private String label;
-    private GeometryFactory factory;
+    private final GeometryFactory factory;
 
     public MetadataRegionSearchRequest(ServiceContext context, Parser[] parsers, GeometryFactory factory) {
         this.context = context;
@@ -127,18 +127,6 @@ public class MetadataRegionSearchRequest extends Request {
                 new SpatialExtentErrorHandler());
             MetadataRegion region = new MetadataRegion(id, null, geom);
             regions.add(region);
-        }
-    }
-
-    private class SpatialExtentErrorHandler implements ErrorHandler {
-        @Override
-        public void handleParseException(Exception e, String gml) {
-            Log.error(Geonet.SPATIAL, "Failed to convert gml to jts object: " + gml + "\n\t" + e.getMessage(), e);
-        }
-
-        @Override
-        public void handleBuildException(Exception e, List<Polygon> polygons) {
-            Log.error(Geonet.SPATIAL, "Failed to create a MultiPolygon from: " + polygons, e);
         }
     }
 
@@ -235,7 +223,7 @@ public class MetadataRegionSearchRequest extends Request {
     public static abstract class Id {
 
         protected String id;
-        private String prefix;
+        private final String prefix;
 
         public Id(String prefix, String id) {
             this.id = id;
@@ -261,7 +249,6 @@ public class MetadataRegionSearchRequest extends Request {
         }
     }
 
-
     public static class MdId extends Id {
 
         private static final String PREFIX = "@id";
@@ -284,7 +271,7 @@ public class MetadataRegionSearchRequest extends Request {
 
     private static final class FindByNodeName implements Filter {
         private static final long serialVersionUID = 1L;
-        private String[] names;
+        private final String[] names;
 
         public FindByNodeName(String... names) {
             this.names = names;
@@ -301,6 +288,18 @@ public class MetadataRegionSearchRequest extends Request {
                 }
             }
             return false;
+        }
+    }
+
+    private class SpatialExtentErrorHandler implements ErrorHandler {
+        @Override
+        public void handleParseException(Exception e, String gml) {
+            Log.error(Geonet.SPATIAL, "Failed to convert gml to jts object: " + gml + "\n\t" + e.getMessage(), e);
+        }
+
+        @Override
+        public void handleBuildException(Exception e, List<Polygon> polygons) {
+            Log.error(Geonet.SPATIAL, "Failed to create a MultiPolygon from: " + polygons, e);
         }
     }
 }

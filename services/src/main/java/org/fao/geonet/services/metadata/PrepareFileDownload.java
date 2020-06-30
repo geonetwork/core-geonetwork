@@ -26,7 +26,6 @@ package org.fao.geonet.services.metadata;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
@@ -152,7 +151,7 @@ public class PrepareFileDownload implements Service {
                 long size = 0;
                 String dateModified = "";
 
-                String linkPieces[] = href.split("\\&");
+                String[] linkPieces = href.split("\\&");
 
                 // local file (possibly)
                 if (linkPieces.length > 0) {
@@ -167,7 +166,7 @@ public class PrepareFileDownload implements Service {
                         }
 
                         final MetadataResource description =
-                                store.getResourceDescription(context, uuid, MetadataResourceVisibility.parse(access), id, true);
+                            store.getResourceDescription(context, uuid, MetadataResourceVisibility.parse(access), id, true);
                         if (description != null) {
                             size = description.getSize();
                             Date date = description.getLastModification();

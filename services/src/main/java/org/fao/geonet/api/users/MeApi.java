@@ -23,75 +23,55 @@
 
 package org.fao.geonet.api.users;
 
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-
-import java.sql.SQLException;
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
-import org.fao.geonet.ApplicationContextHolder;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.UserSession;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.users.model.MeResponse;
 import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.server.UserSession;
-import springfox.documentation.annotations.ApiIgnore;
+import javax.servlet.http.HttpSession;
+
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 @RequestMapping(value = {
-    "/{portal}/api/me",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/me"
+    "/{portal}/api/me"
 })
-@Api(value = "me",
-    tags = "me",
+@Tag(name = "me",
     description = "Me operations")
-@Controller("me")
+@RestController
 public class MeApi {
 
     @Autowired
     AccessManager accessManager;
 
-    @ApiOperation(
-        value = "Get information about me",
-        notes = "If not authenticated, return status 204 (NO_CONTENT), " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get information about me",
+        description = "If not authenticated, return status 204 (NO_CONTENT), " +
             "else return basic user information. This operation is usually used to " +
             "know if current user is authenticated or not." +
-            "It returns also info about groups and profiles.",
-        nickname = "getMe")
-    @RequestMapping(
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.GET)
+            "It returns also info about groups and profiles.")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Authenticated. Return user details."),
-        @ApiResponse(code = 204, message = "Not authenticated.")
+        @ApiResponse(responseCode = "200", description = "Authenticated. Return user details."),
+        @ApiResponse(responseCode = "204", description = "Not authenticated.")
     })
+    @ResponseStatus(OK)
     @ResponseBody
     public ResponseEntity<MeResponse> getMe(
-        @ApiIgnore
-        @ApiParam(
-            hidden = true
-        )
+        @Parameter(hidden = true)
             HttpSession session
     ) throws Exception {
 

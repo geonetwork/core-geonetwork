@@ -23,21 +23,14 @@
 
 package org.fao.geonet.api.site.model;
 
-import java.util.Collection;
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Lists;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import com.google.common.collect.Lists;
+import javax.xml.bind.annotation.*;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Jesse on 4/9/2015.
@@ -47,7 +40,7 @@ import com.google.common.collect.Lists;
 public class ListLogFilesResponse {
     @XmlElement
     @JsonProperty
-    private Collection<LogFileResponse> logFile = Lists.newArrayList();
+    private final Collection<LogFileResponse> logFile = Lists.newArrayList();
 
 
     public ListLogFilesResponse() {

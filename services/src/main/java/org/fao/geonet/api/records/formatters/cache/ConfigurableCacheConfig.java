@@ -24,14 +24,12 @@
 package org.fao.geonet.api.records.formatters.cache;
 
 import com.google.common.collect.Sets;
-
 import org.fao.geonet.api.records.formatters.FormatType;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Jesse on 3/6/2015.
@@ -78,11 +76,7 @@ public class ConfigurableCacheConfig extends AbstractCacheConfig {
         if (key.hideWithheld && !cacheHideWithheld) {
             return false;
         }
-        if (!key.hideWithheld && !cacheFullMetadata) {
-            return false;
-        }
-
-        return true;
+        return key.hideWithheld || cacheFullMetadata;
     }
 
     /**
@@ -97,7 +91,7 @@ public class ConfigurableCacheConfig extends AbstractCacheConfig {
 
     /**
      * The languages to cache.  If null then all languages will be cached.
-     *
+     * <p>
      * By default all languages will be cached.
      */
     public void setAllowedLanguages(@Nullable Set<String> allowedLanguages) {
@@ -106,7 +100,7 @@ public class ConfigurableCacheConfig extends AbstractCacheConfig {
 
     /**
      * The formatters to cache.  If null then all formatters will be cached.
-     *
+     * <p>
      * By default all formatters will be cached.
      */
     public void setFormatterIds(@Nullable Set<String> formatterIds) {

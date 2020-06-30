@@ -21,10 +21,6 @@
  */
 package org.fao.geonet.api.userfeedback.service;
 
-import static org.fao.geonet.domain.userfeedback.RatingCriteria.AVERAGE_ID;
-
-import java.util.List;
-
 import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.fao.geonet.api.userfeedback.UserFeedbackUtils;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -43,6 +39,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static org.fao.geonet.domain.userfeedback.RatingCriteria.AVERAGE_ID;
 
 /**
  * User feedback provider that uses database persistence.
@@ -77,7 +77,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
     public void publishUserFeedback(String feedbackUuid, User user) throws ObjectNotFoundException {
         final UserFeedback userFeedback = userFeedbackRepository.findByUuid(feedbackUuid);
 
-        if(userFeedback != null) {
+        if (userFeedback != null) {
             userFeedback.setStatus(UserRatingStatus.PUBLISHED);
             userFeedback.setApprover(user);
 
@@ -103,9 +103,9 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
         // Then update global metadata rating
         List<UserFeedback> listFeedbacks = retrieveUserFeedbackForMetadata(metadata.getUuid(), -1, true);
         Integer average = 0;
-        if(listFeedbacks.size()>0) {
+        if (listFeedbacks.size() > 0) {
             UserFeedbackUtils.RatingAverage averageRating = new UserFeedbackUtils()
-                    .getAverage(listFeedbacks);
+                .getAverage(listFeedbacks);
             average = averageRating.getRatingAverages().get(AVERAGE_ID);
         }
         dataManager.rateMetadata(metadata.getId(), ip, average);
@@ -187,7 +187,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
                 pageSize = new PageRequest(0, maxSize);
             }
             result = userFeedbackRepository.findByMetadata_UuidAndStatusOrderByCreationDateDesc(metadataUuid,
-                    UserRatingStatus.PUBLISHED, pageSize);
+                UserRatingStatus.PUBLISHED, pageSize);
         } else {
             Pageable pageSize = null;
 
@@ -217,7 +217,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
             userFeedback.setApprover(approver);
         }
         final AbstractMetadata metadata = metadataRepository.findOneByUuid(userFeedback.getMetadata().getUuid());
-        userFeedback.setMetadata((Metadata)metadata);
+        userFeedback.setMetadata((Metadata) metadata);
 
         if (userFeedback.getCreationDate() == null) {
             userFeedback.setCreationDate(new ISODate(System.currentTimeMillis()).toDate());
@@ -228,7 +228,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
         // Then update global metadata rating
         UserFeedbackUtils.RatingAverage averageRating = new UserFeedbackUtils()
             .getAverage(retrieveUserFeedbackForMetadata(metadata.getUuid(), -1, true));
-        Integer average =  averageRating.getRatingAverages().get(AVERAGE_ID);
+        Integer average = averageRating.getRatingAverages().get(AVERAGE_ID);
         // May be null if first comment not yet published
         if (average != null) {
             dataManager.rateMetadata(metadata.getId(), ip, averageRating.getRatingAverages().get(AVERAGE_ID));

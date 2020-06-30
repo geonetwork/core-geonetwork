@@ -22,13 +22,6 @@
  */
 package org.fao.geonet.api.userfeedback;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -39,8 +32,8 @@ import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.domain.userfeedback.UserFeedback.UserRatingStatus;
 import org.fao.geonet.repository.userfeedback.RatingCriteriaRepository;
 import org.fao.geonet.util.XslUtil;
-import org.jdom.Element;
-import org.jdom.xpath.XPath;
+
+import java.util.*;
 
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.fao.geonet.domain.userfeedback.RatingCriteria.AVERAGE_ID;
@@ -52,102 +45,10 @@ import static org.fao.geonet.util.XslUtil.md5Hex;
 public class UserFeedbackUtils {
 
     /**
-     * The Class RatingAverage.
-     */
-    public class RatingAverage {
-
-        private int ratingCount;
-
-        /** The rating average. */
-        private Map<Integer, Integer> ratingAverages = new HashMap<>();
-
-        /** The userfeedback count. */
-        private int userfeedbackCount;
-
-        /** The last comment. */
-        private String lastComment;
-
-        /**
-         * Instantiates a new rating average.
-         * @param ratingAverages the average for all rating categories
-         * @param userfeedbackCount the userfeedback count
-         * @param lastComment the last comment
-         */
-        public RatingAverage(Map<Integer, Integer> ratingAverages, int userfeedbackCount, String lastComment, int ratingCount) {
-            this.ratingAverages = ratingAverages;
-            this.userfeedbackCount = userfeedbackCount;
-            this.lastComment = lastComment;
-            this.ratingCount = ratingCount;
-        }
-
-        /**
-         * Gets the last comment.
-         *
-         * @return the last comment
-         */
-        public String getLastComment() {
-            return lastComment;
-        }
-
-        /**
-         * Gets the rating average.
-         *
-         * @return the rating average
-         */
-        public Map<Integer, Integer> getRatingAverages() {
-            return ratingAverages;
-        }
-
-        /**
-         * Gets the userfeedback count.
-         *
-         * @return the userfeedback count
-         */
-        public int getUserfeedbackCount() {
-            return userfeedbackCount;
-        }
-
-        /**
-         * Sets the last comment.
-         *
-         * @param lastComment the new last comment
-         */
-        public void setLastComment(String lastComment) {
-            this.lastComment = lastComment;
-        }
-
-        /**
-         * Sets the rating average.
-         *
-         * @param ratingAverages the new rating average
-         */
-        public void setRatingAverages(Map<Integer, Integer> ratingAverages) {
-            this.ratingAverages = ratingAverages;
-        }
-
-        /**
-         * Sets the userfeedback count.
-         *
-         * @param userfeedbackCount the new userfeedback count
-         */
-        public void setUserfeedbackCount(int userfeedbackCount) {
-            this.userfeedbackCount = userfeedbackCount;
-        }
-
-        public int getRatingCount() {
-            return ratingCount;
-        }
-
-        public void setRatingCount(int ratingCount) {
-            this.ratingCount = ratingCount;
-        }
-    }
-
-    /**
      * Convert from dto.
      *
      * @param inputDto the input dto
-     * @param author the author
+     * @param author   the author
      * @return the user feedback
      */
     // Convert from DTO to an entity object
@@ -342,7 +243,7 @@ public class UserFeedbackUtils {
                             ratingAverages.put(criteriaId, (ratingAverages.get(criteriaId) + value) / 2);
                         }
                         if (criteriaId == AVERAGE_ID) {
-                            ratingCount ++;
+                            ratingCount++;
                         }
                     }
 
@@ -356,6 +257,105 @@ public class UserFeedbackUtils {
         }
 
         return v;
+    }
+
+    /**
+     * The Class RatingAverage.
+     */
+    public class RatingAverage {
+
+        private int ratingCount;
+
+        /**
+         * The rating average.
+         */
+        private Map<Integer, Integer> ratingAverages = new HashMap<>();
+
+        /**
+         * The userfeedback count.
+         */
+        private int userfeedbackCount;
+
+        /**
+         * The last comment.
+         */
+        private String lastComment;
+
+        /**
+         * Instantiates a new rating average.
+         *
+         * @param ratingAverages    the average for all rating categories
+         * @param userfeedbackCount the userfeedback count
+         * @param lastComment       the last comment
+         */
+        public RatingAverage(Map<Integer, Integer> ratingAverages, int userfeedbackCount, String lastComment, int ratingCount) {
+            this.ratingAverages = ratingAverages;
+            this.userfeedbackCount = userfeedbackCount;
+            this.lastComment = lastComment;
+            this.ratingCount = ratingCount;
+        }
+
+        /**
+         * Gets the last comment.
+         *
+         * @return the last comment
+         */
+        public String getLastComment() {
+            return lastComment;
+        }
+
+        /**
+         * Sets the last comment.
+         *
+         * @param lastComment the new last comment
+         */
+        public void setLastComment(String lastComment) {
+            this.lastComment = lastComment;
+        }
+
+        /**
+         * Gets the rating average.
+         *
+         * @return the rating average
+         */
+        public Map<Integer, Integer> getRatingAverages() {
+            return ratingAverages;
+        }
+
+        /**
+         * Sets the rating average.
+         *
+         * @param ratingAverages the new rating average
+         */
+        public void setRatingAverages(Map<Integer, Integer> ratingAverages) {
+            this.ratingAverages = ratingAverages;
+        }
+
+        /**
+         * Gets the userfeedback count.
+         *
+         * @return the userfeedback count
+         */
+        public int getUserfeedbackCount() {
+            return userfeedbackCount;
+        }
+
+        /**
+         * Sets the userfeedback count.
+         *
+         * @param userfeedbackCount the new userfeedback count
+         */
+        public void setUserfeedbackCount(int userfeedbackCount) {
+            this.userfeedbackCount = userfeedbackCount;
+        }
+
+        public int getRatingCount() {
+            return ratingCount;
+        }
+
+        public void setRatingCount(int ratingCount) {
+            this.ratingCount = ratingCount;
+        }
     }
 
 }

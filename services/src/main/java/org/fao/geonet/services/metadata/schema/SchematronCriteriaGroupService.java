@@ -23,16 +23,9 @@
 
 package org.fao.geonet.services.metadata.schema;
 
-import com.google.common.collect.Lists;
-
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -45,13 +38,11 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.domain.Specifications;
 
 import javax.annotation.Nonnull;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Load, edit, delete {@link org.fao.geonet.domain.SchematronCriteriaGroup} entities.
- *
+ * <p>
  * Created by Jesse on 2/7/14.
  */
 public class SchematronCriteriaGroupService extends AbstractSchematronService {
@@ -125,13 +116,11 @@ public class SchematronCriteriaGroupService extends AbstractSchematronService {
 
         Element groups = repository.findAllAsXml(spec);
 
-        @SuppressWarnings("unchecked")
-        final List<Element> records = groups.getChildren(GeonetEntity.RECORD_EL_NAME);
+        @SuppressWarnings("unchecked") final List<Element> records = groups.getChildren(GeonetEntity.RECORD_EL_NAME);
         if (!includeCriteria || !includeSchematron) {
             for (Element child : records) {
                 if (!includeCriteria) {
-                    @SuppressWarnings("unchecked")
-                    final List<Element> criteria = child.getChild("criteria").getChildren();
+                    @SuppressWarnings("unchecked") final List<Element> criteria = child.getChild("criteria").getChildren();
                     for (Element element : criteria) {
                         element.setContent(element.getChild("id"));
                     }

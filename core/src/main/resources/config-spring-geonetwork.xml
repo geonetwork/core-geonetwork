@@ -46,6 +46,7 @@
         lazy-init="true"/>
   <bean id="ServiceInfo" class="jeeves.server.dispatchers.ServiceInfo" scope="prototype"/>
 
+  <bean id="archiveAllMetadataJob" class="org.fao.geonet.kernel.backup.ArchiveAllMetadataJob" lazy-init="true"/>
 
   <bean id="AccessManager" class="org.fao.geonet.kernel.AccessManager" lazy-init="true"/>
   <bean id="DataManager" class="org.fao.geonet.kernel.DataManager" lazy-init="true"/>

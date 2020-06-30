@@ -23,23 +23,9 @@
 
 package org.fao.geonet.guiservices.versioning;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
@@ -54,6 +40,14 @@ import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 //=============================================================================
 
@@ -277,9 +271,9 @@ public class Get implements Service {
 
     private String getTitle(final OutputStream out) throws JDOMException, IOException {
         final String xml = out.toString();
-        final byte[] xmlBytes = xml.getBytes(Charset.forName("UTF-8"));
+        final byte[] xmlBytes = xml.getBytes(StandardCharsets.UTF_8);
         InputStream is = new ByteArrayInputStream(xmlBytes);
-        InputStreamReader isr = new InputStreamReader(is, "UTF-8");
+        InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
         SAXBuilder sb = new SAXBuilder();
         Document doc;
         doc = sb.build(isr);

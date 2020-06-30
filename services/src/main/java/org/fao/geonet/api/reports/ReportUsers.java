@@ -29,7 +29,7 @@ public class ReportUsers implements IReport {
     /**
      * Report filter.
      */
-    private ReportFilter reportFilter;
+    private final ReportFilter reportFilter;
 
 
     /**
@@ -46,8 +46,8 @@ public class ReportUsers implements IReport {
      * Creates the users report and streams to a PrintWriter.
      *
      * @param context Service context.
-     * @param writer Writer.
-     * @throws Exception  Exception creating a report.
+     * @param writer  Writer.
+     * @throws Exception Exception creating a report.
      */
     public void create(final ServiceContext context,
                        final PrintWriter writer) throws Exception {
@@ -56,52 +56,52 @@ public class ReportUsers implements IReport {
         try {
             // Initialize CSVPrinter object
             CSVFormat csvFileFormat =
-                    CSVFormat.DEFAULT.withRecordSeparator("\n");
+                CSVFormat.DEFAULT.withRecordSeparator("\n");
             csvFilePrinter = new CSVPrinter(writer, csvFileFormat);
 
             // Retrieve users
             final UserRepository userRepository =
-                    context.getBean(UserRepository.class);
+                context.getBean(UserRepository.class);
             final Sort sort = new Sort(Sort.Direction.ASC,
-                    SortUtils.createPath(User_.lastLoginDate));
+                SortUtils.createPath(User_.lastLoginDate));
             final List<User> records = userRepository.findAll(
-                    UserSpecs.loginDateBetweenAndByGroups(
-                            reportFilter.getBeginDate(),
-                            reportFilter.getEndDate(),
-                            reportFilter.getGroups()),
-                    sort);
+                UserSpecs.loginDateBetweenAndByGroups(
+                    reportFilter.getBeginDate(),
+                    reportFilter.getEndDate(),
+                    reportFilter.getGroups()),
+                sort);
 
             // Write header
             csvFilePrinter.printRecord("Users");
             csvFilePrinter.println();
 
             String[] entries = ("Username#Surname#Name#"
-                    + "Email#User groups#Last login date").split("#");
+                + "Email#User groups#Last login date").split("#");
             csvFilePrinter.printRecord(Arrays.asList(entries));
 
             final UserGroupRepository userGroupRepository =
-                    context.getBean(UserGroupRepository.class);
+                context.getBean(UserGroupRepository.class);
 
             for (User user : records) {
                 String username = user.getUsername();
                 String name = Optional.ofNullable(
-                        user.getName()).orElse("");
+                    user.getName()).orElse("");
                 String surname = Optional.ofNullable(
-                        user.getSurname()).orElse("");
+                    user.getSurname()).orElse("");
                 String email = Optional.ofNullable(
-                        user.getEmail()).orElse("");
+                    user.getEmail()).orElse("");
                 String lastLoginDate = user.getLastLoginDate();
                 StringBuilder userGroupsList = new StringBuilder();
 
                 // Retrieve user groups
                 List<UserGroup> userGroups = userGroupRepository.
-                        findAll(UserGroupSpecs.hasUserId(user.getId()));
+                    findAll(UserGroupSpecs.hasUserId(user.getId()));
 
                 int i = 0;
                 for (UserGroup ug : userGroups) {
                     Group g = ug.getGroup();
                     String groupName = g.getLabelTranslations().get(
-                            context.getLanguage());
+                        context.getLanguage());
                     if (groupName == null) {
                         groupName = g.getName();
                     }

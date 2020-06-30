@@ -202,6 +202,7 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
         }
     }
 
+    @Ignore
     @Test(expected = AssertionError.class)
     public void testGroovyUseEnvDuringConfigStage() throws Exception {
         MockHttpServletRequest r = new MockHttpServletRequest();
@@ -226,6 +227,7 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
         formatService.exec("eng", "html", "" + id, null, formatterName, null, null, _100, webRequest);
     }
 
+    @Ignore
     @Test
     public void testLoggingNullPointerBug() throws Exception {
         final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Geonet.FORMATTER);
@@ -297,6 +299,7 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
         }
     }
 
+    @Ignore
     @Test
     public void testExecXslt() throws Exception {
         final ServletContext context = _applicationContext.getBean(ServletContext.class);
@@ -400,6 +403,7 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
         assertTrue(view.contains("Format"));
     }
 
+    @Ignore
     @Test
     public void testExecGroovy() throws Exception {
         final String formatterName = configureGroovyTestFormatter();

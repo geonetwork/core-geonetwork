@@ -22,13 +22,13 @@
  */
 package org.fao.geonet.api.cssstyle.service;
 
-import java.util.List;
-
 import org.fao.geonet.domain.CssStyleSetting;
+
+import java.util.List;
 
 public interface ICssStyleSettingService {
 
-    public void saveSettings(List<CssStyleSetting> cssStyleSettings);
+    void saveSettings(List<CssStyleSetting> cssStyleSettings);
 
-    public List<CssStyleSetting> getCustomCssSettings();
+    List<CssStyleSetting> getCustomCssSettings();
 }

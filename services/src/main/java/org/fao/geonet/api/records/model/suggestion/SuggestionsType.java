@@ -1,12 +1,11 @@
-
 package org.fao.geonet.api.records.model.suggestion;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -25,14 +24,12 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "suggestionsType", propOrder = {
     "suggestion"
 })
-@XmlRootElement(name="suggestions")
+@XmlRootElement(name = "suggestions")
 public class SuggestionsType {
 
     protected List<SuggestionType> suggestion;
@@ -56,8 +53,6 @@ public class SuggestionsType {
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link SuggestionType }
-     *
-     *
      */
     public List<SuggestionType> getSuggestion() {
         if (suggestion == null) {

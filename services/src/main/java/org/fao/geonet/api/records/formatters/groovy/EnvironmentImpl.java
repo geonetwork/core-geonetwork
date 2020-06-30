@@ -65,7 +65,7 @@ public class EnvironmentImpl implements Environment {
     private final ServiceContext serviceContext;
     private final WebRequest webRequest;
     private final FormatterWidth width;
-    private Multimap<String, String> indexInfo = null;
+    private final Multimap<String, String> indexInfo = null;
 
     public EnvironmentImpl(FormatterParams fparams, IsoLanguagesMapper mapper) {
         jdomMetadata = fparams.metadata;
@@ -214,7 +214,8 @@ public class EnvironmentImpl implements Environment {
         return Collections.unmodifiableMap(this.indexInfo.asMap());
     }
 
-    @Override public ServiceContext getContext() {
+    @Override
+    public ServiceContext getContext() {
         return this.serviceContext;
     }
 

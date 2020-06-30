@@ -132,7 +132,10 @@
       <artifactId>spring-test</artifactId>
       <scope>compile</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-webmvc-core</artifactId>
+    </dependency>
     <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.dspace</groupId>
@@ -561,7 +564,10 @@
       <version>3.0.1</version>
       <scope>provided</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.mitre.dsmiley.httpproxy</groupId>
       <artifactId>smiley-http-proxy-servlet</artifactId>
@@ -574,13 +580,38 @@
       <artifactId>autolink</artifactId>
       <version>0.6.0</version>
     </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!--
+    Required for DB migration test
+    like AdvancedSearchFormMigrationTest
+    <dependency>
+      <groupId>net.bytebuddy</groupId>
+      <artifactId>byte-buddy</artifactId>
+      <version>0.6.14</version>
+      <scope>test</scope>
+    </dependency>-->
+    <!--
+    Required by domain
+    Invocation of init method failed; nested exception is
+    java.lang.NoClassDefFoundError: net/bytebuddy/TypeCache
+    org.springframework.beans.factory.BeanCreationException:
+    Error creating bean with name 'entityManagerFactory' defined in URL
+    -->
+    <dependency>
+      <groupId>net.bytebuddy</groupId>
+      <artifactId>byte-buddy</artifactId>
+      <version>1.10.10</version>
+    </dependency>
   </dependencies>
 
 
   <build>
 
     <plugins>
-
       <!-- Generate a properties file with the commit hash to be displayed on the admin.console -->
 	    <plugin>
 	        <groupId>pl.project13.maven</groupId>
@@ -882,6 +913,10 @@
             <systemProperty>
               <name>org.eclipse.jetty.server.Request.maxFormContentSize</name>
               <value>5000000</value>
+            </systemProperty>
+            <systemProperty>
+              <name>org.eclipse.jetty.classInheritanceMap</name>
+              <value>true</value>
             </systemProperty>
           </systemProperties>
           <httpConnector>

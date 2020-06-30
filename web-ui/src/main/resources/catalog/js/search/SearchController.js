@@ -53,13 +53,13 @@
     'gnSearchSettings',
     'gnGlobalSettings',
     'gnConfig',
-    'gnConfigService',
     'gnESClient',
     'gnESService',
     'orderByFilter',
     'gnConfigService',
     function($scope, $q, $http, suggestService, gnAlertService,
-             gnSearchSettings, gnGlobalSettings, gnConfig, orderByFilter, gnConfigService) {
+             gnSearchSettings, gnGlobalSettings, gnConfig, gnESClient,
+             gnESService, orderByFilter, gnConfigService) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {

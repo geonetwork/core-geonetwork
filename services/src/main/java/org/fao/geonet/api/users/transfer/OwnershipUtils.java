@@ -25,11 +25,8 @@ package org.fao.geonet.api.users.transfer;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
@@ -41,7 +38,6 @@ import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specifications;
 
 import javax.annotation.Nonnull;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;

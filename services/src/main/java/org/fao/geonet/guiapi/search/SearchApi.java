@@ -23,8 +23,9 @@
 
 package org.fao.geonet.guiapi.search;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.ApplicationContextHolder;
@@ -36,12 +37,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import springfox.documentation.annotations.ApiIgnore;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,18 +46,16 @@ import java.util.Map;
 @RequestMapping(value = {
     "/{portal}/search"
 })
-@Api(value = "search",
-    tags = "search",
+@Tag(name = "search",
     description = "Search operations")
 @Controller("search")
 public class SearchApi {
     public static final String APPLICATION_RDF_XML = "application/rdf+xml";
 
-    @ApiOperation(
-        value = "Get statistics about a field",
-        notes = "(experimental) This return facet info for the requested field and " +
-            "provide a list of values.",
-        nickname = "getRecords")
+    @Operation(
+        summary = "Get statistics about a field",
+        description = "(experimental) This return facet info for the requested field and " +
+            "provide a list of values.")
     @RequestMapping(
         produces = {
             MediaType.TEXT_HTML_VALUE,
@@ -73,19 +67,19 @@ public class SearchApi {
     )
     @ResponseStatus(value = HttpStatus.OK)
     public void getFieldInfo(
-        @ApiIgnore
-        HttpServletRequest request,
-        @ApiIgnore
+        @Parameter(hidden = true)
+            HttpServletRequest request,
+        @Parameter(hidden = true)
             HttpServletResponse response,
-        @ApiIgnore
+        @Parameter(hidden = true)
         @RequestHeader(
             value = "Accept",
             defaultValue = MediaType.TEXT_HTML_VALUE
         )
             String accept,
-        @ApiIgnore
+        @Parameter(hidden = true)
         @RequestParam
-            Map<String,String> allRequestParams
+            Map<String, String> allRequestParams
     ) throws Exception {
         boolean isRdf = APPLICATION_RDF_XML.equals(accept);
         boolean isXml = MediaType.APPLICATION_XML_VALUE.equals(accept);
@@ -99,7 +93,7 @@ public class SearchApi {
         allRequestParams.put("fast", isRdf ? "false" : "index");
 
 
-        response.setHeader("Content-type", (isRdf || isXml || isJson ? accept : "text/html")+ ";charset=utf-8");
+        response.setHeader("Content-type", (isRdf || isXml || isJson ? accept : "text/html") + ";charset=utf-8");
 
         Element results = query(allRequestParams, request);
         if (isXml) {
@@ -126,9 +120,7 @@ public class SearchApi {
     }
 
 
-
-
-    private Element query(Map<String, String> queryFields, HttpServletRequest request){
+    private Element query(Map<String, String> queryFields, HttpServletRequest request) {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
         ServiceContext context = ApiUtils.createServiceContext(request);

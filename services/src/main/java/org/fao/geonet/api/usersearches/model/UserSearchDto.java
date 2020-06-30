@@ -38,14 +38,11 @@ import java.util.*;
 
 /**
  * DTO class for user custom search information {@link org.fao.geonet.domain.UserSearch}.
- *
  */
 public class UserSearchDto implements Serializable {
 
-    private static final long serialVersionUID = -2111281874868436021L;
-
     public static final SimpleDateFormat ISO_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
-
+    private static final long serialVersionUID = -2111281874868436021L;
     private int id;
     private String url;
     private String featuredType = "";
@@ -55,6 +52,27 @@ public class UserSearchDto implements Serializable {
     private String logo;
     private Map<String, String> names = new HashMap<>();
     private List<Integer> groups = new ArrayList<>();
+
+    public static UserSearchDto from(UserSearch userSearch) {
+        UserSearchDto dto = new UserSearchDto();
+
+        dto.setId(userSearch.getId());
+        dto.setUrl(userSearch.getUrl());
+        dto.setLogo(userSearch.getLogo());
+        if (userSearch.getFeaturedType() != null) {
+            dto.setFeaturedType(userSearch.getFeaturedType().asString());
+        }
+        dto.setCreatorId(userSearch.getCreator().getId());
+        dto.setCreator(userSearch.getCreator().getUsername());
+
+        dto.setCreationDate(ISO_DATE_FORMAT.format(userSearch.getCreationDate()));
+
+        userSearch.getLabelTranslations().forEach((key, value) -> dto.addName(key, value));
+
+        userSearch.getGroups().forEach(group -> dto.addGroup(group.getId()));
+
+        return dto;
+    }
 
     public int getId() {
         return id;
@@ -112,7 +130,6 @@ public class UserSearchDto implements Serializable {
         this.logo = logo;
     }
 
-
     public Map<String, String> getNames() {
         return names;
     }
@@ -137,7 +154,6 @@ public class UserSearchDto implements Serializable {
         this.groups.add(groupId);
     }
 
-
     public UserSearch asUserSearch() {
         UserSearch userSearch = new UserSearch();
 
@@ -148,7 +164,7 @@ public class UserSearchDto implements Serializable {
         try {
             if (StringUtils.isNotEmpty(this.getFeaturedType()) &&
                 (this.getFeaturedType().length() == 1))
-            userSearch.setFeaturedType(UserSearchFeaturedType.byChar(this.getFeaturedType().charAt(0)));
+                userSearch.setFeaturedType(UserSearchFeaturedType.byChar(this.getFeaturedType().charAt(0)));
         } catch (IllegalArgumentException ex) {
             // Ignore
         }
@@ -181,28 +197,6 @@ public class UserSearchDto implements Serializable {
         userSearch.setGroups(groups);
 
         return userSearch;
-    }
-
-
-    public static UserSearchDto from(UserSearch userSearch) {
-        UserSearchDto dto = new UserSearchDto();
-
-        dto.setId(userSearch.getId());
-        dto.setUrl(userSearch.getUrl());
-        dto.setLogo(userSearch.getLogo());
-        if (userSearch.getFeaturedType() != null) {
-            dto.setFeaturedType(userSearch.getFeaturedType().asString());
-        }
-        dto.setCreatorId(userSearch.getCreator().getId());
-        dto.setCreator(userSearch.getCreator().getUsername());
-
-        dto.setCreationDate(ISO_DATE_FORMAT.format(userSearch.getCreationDate()));
-
-        userSearch.getLabelTranslations().forEach((key, value) -> dto.addName(key, value));
-
-        userSearch.getGroups().forEach(group -> dto.addGroup(group.getId()));
-
-        return dto;
     }
 
     @Override

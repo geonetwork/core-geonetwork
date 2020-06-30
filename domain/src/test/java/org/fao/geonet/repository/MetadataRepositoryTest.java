@@ -197,16 +197,16 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         assertEquals(0, firstPage.getNumber());
         assertEquals(2, firstPage.getTotalPages());
         assertEquals(3, firstPage.getTotalElements());
-        assertTrue(firstPage.isFirstPage());
-        assertFalse(firstPage.isLastPage());
+        assertTrue(firstPage.isFirst());
+        assertFalse(firstPage.isLast());
         assertTrue(firstPage.hasContent());
 
         assertEquals(1, secondPage.getNumberOfElements());
         assertEquals(1, secondPage.getNumber());
         assertEquals(2, secondPage.getTotalPages());
         assertEquals(3, secondPage.getTotalElements());
-        assertFalse(secondPage.isFirstPage());
-        assertTrue(secondPage.isLastPage());
+        assertFalse(secondPage.isFirst());
+        assertTrue(secondPage.isLast());
         assertTrue(secondPage.hasContent());
 
         assertEquals((Integer) metadata3.getId(), firstPage.getContent().get(0).one());

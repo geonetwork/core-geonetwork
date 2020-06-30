@@ -49,6 +49,29 @@ import java.util.Properties;
  */
 public class SiteInformation {
     final Properties properties = System.getProperties();
+    private HashMap<String, String> catProperties = new HashMap<String, String>();
+    private HashMap<String, String> indexProperties = new HashMap<String, String>();
+    private HashMap<String, String> systemProperties = new HashMap<String, String>();
+    private HashMap<String, String> databaseProperties = new HashMap<String, String>();
+    private HashMap<String, String> versionProperties = new HashMap<String, String>();
+
+    public SiteInformation(final ServiceContext context, final GeonetContext gc) {
+        if (context.getUserSession().isAuthenticated()) {
+            loadCatalogueInfo(gc);
+            try {
+                loadDatabaseInfo(context);
+            } catch (SQLException e) {
+                Log.error(Geonet.GEONETWORK, e.getMessage(), e);
+            }
+            try {
+                loadIndexInfo(context);
+            } catch (IOException e) {
+                Log.error(Geonet.GEONETWORK, e.getMessage(), e);
+            }
+            loadVersionInfo(context);
+            loadSystemInfo();
+        }
+    }
 
     @JsonProperty(value = "catalogue")
     public HashMap<String, String> getCatProperties() {
@@ -95,38 +118,14 @@ public class SiteInformation {
         this.versionProperties = versionProperties;
     }
 
-    private HashMap<String, String> catProperties = new HashMap<String, String>();
-    private HashMap<String, String> indexProperties = new HashMap<String, String>();
-    private HashMap<String, String> systemProperties = new HashMap<String, String>();
-    private HashMap<String, String> databaseProperties = new HashMap<String, String>();
-    private HashMap<String, String> versionProperties = new HashMap<String, String>();
-
-    public SiteInformation(final ServiceContext context, final GeonetContext gc) {
-        if(context.getUserSession().isAuthenticated()) {
-            loadCatalogueInfo(gc);
-            try {
-                loadDatabaseInfo(context);
-            } catch (SQLException e) {
-                Log.error(Geonet.GEONETWORK, e.getMessage(), e);
-            }
-            try {
-                loadIndexInfo(context);
-            } catch (IOException e) {
-                Log.error(Geonet.GEONETWORK, e.getMessage(), e);
-            }
-            loadVersionInfo(context);
-            loadSystemInfo();
-        }
-    }
-
     /**
      * Load catalogue properties.
      */
     private void loadCatalogueInfo(final GeonetContext gc) {
         ServiceConfig sc = gc.getBean(ServiceConfig.class);
 
-        String[] props = { Geonet.Config.DATA_DIR, Geonet.Config.CODELIST_DIR, Geonet.Config.CONFIG_DIR, Geonet.Config.SCHEMAPLUGINS_DIR,
-                Geonet.Config.SUBVERSION_PATH, Geonet.Config.RESOURCES_DIR, Geonet.Config.FORMATTER_PATH, Geonet.Config.BACKUP_DIR };
+        String[] props = {Geonet.Config.DATA_DIR, Geonet.Config.CODELIST_DIR, Geonet.Config.CONFIG_DIR, Geonet.Config.SCHEMAPLUGINS_DIR,
+            Geonet.Config.SUBVERSION_PATH, Geonet.Config.RESOURCES_DIR, Geonet.Config.FORMATTER_PATH, Geonet.Config.BACKUP_DIR};
 
         for (String prop : props) {
             catProperties.put("data." + prop, sc.getValue(prop));
@@ -191,7 +190,7 @@ public class SiteInformation {
 
         } catch (Exception e) {
             databaseProperties.put("db.openattempt",
-                    "Failed to open database connection, Check config.xml db file configuration. Error" + " is: " + e.getMessage());
+                "Failed to open database connection, Check config.xml db file configuration. Error" + " is: " + e.getMessage());
         } finally {
             if (connection != null) {
                 connection.close();

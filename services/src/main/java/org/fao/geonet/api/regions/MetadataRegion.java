@@ -23,14 +23,13 @@
 
 package org.fao.geonet.api.regions;
 
-import org.locationtech.jts.geom.Geometry;
-
-import org.fao.geonet.kernel.region.Region;
-import org.fao.geonet.api.regions.metadata.MetadataRegionSearchRequest.Id;
 import org.fao.geonet.api.records.extent.MapRenderer;
+import org.fao.geonet.api.regions.metadata.MetadataRegionSearchRequest.Id;
+import org.fao.geonet.kernel.region.Region;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
+import org.locationtech.jts.geom.Geometry;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 
@@ -41,8 +40,8 @@ public class MetadataRegion extends Region {
     private Geometry geometry;
 
     public MetadataRegion(Id mdId, String id, Geometry geometry) {
-        super("metadata" + mdId.getIdentifiedId() + ":" + id, Collections.<String, String>emptyMap(), MetadataRegionDAO.CATEGORY_NAME,
-            Collections.<String, String>emptyMap(), true,
+        super("metadata" + mdId.getIdentifiedId() + ":" + id, Collections.emptyMap(), MetadataRegionDAO.CATEGORY_NAME,
+            Collections.emptyMap(), true,
             new ReferencedEnvelope(geometry.getEnvelopeInternal(), WGS84));
         this.geometry = geometry;
     }

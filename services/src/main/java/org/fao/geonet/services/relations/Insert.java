@@ -23,14 +23,9 @@
 
 package org.fao.geonet.services.relations;
 
-import static org.fao.geonet.repository.specification.MetadataRelationSpecs.hasMetadataId;
-import static org.fao.geonet.repository.specification.MetadataRelationSpecs.hasRelatedId;
-import static org.springframework.data.jpa.domain.Specifications.where;
-
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.MetadataRelation;
 import org.fao.geonet.domain.MetadataRelationId;
@@ -42,11 +37,15 @@ import org.springframework.data.jpa.domain.Specifications;
 
 import java.nio.file.Path;
 
+import static org.fao.geonet.repository.specification.MetadataRelationSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.MetadataRelationSpecs.hasRelatedId;
+import static org.springframework.data.jpa.domain.Specifications.where;
+
 //=============================================================================
 
 /**
  * Insert the relation between two metadata records. Input parameters could be UUID or internal id.
- *
+ * <p>
  * TODO : Should we add a relation type to store different kind of relation. For the time being,
  * relation table is used to store link between iso19139 and iso19110 metadata records.
  */

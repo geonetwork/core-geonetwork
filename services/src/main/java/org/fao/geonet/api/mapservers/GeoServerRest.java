@@ -62,17 +62,17 @@ public class GeoServerRest {
     public final static String METHOD_DELETE = "DELETE";
     public final static String LOGGER_NAME = "geonetwork.GeoServerRest";
 
-    private String password;
-    private String username;
-    private String restUrl;
-    private String baseCatalogueUrl;
-    private String nodeUrl;
-    private String defaultWorkspace;
+    private final String password;
+    private final String username;
+    private final String restUrl;
+    private final String baseCatalogueUrl;
+    private final String nodeUrl;
+    private final String defaultWorkspace;
     private String response = "";
-    private boolean pushStyleInWorkspace;
+    private final boolean pushStyleInWorkspace;
     private int status;
 
-    private GeonetHttpRequestFactory factory;
+    private final GeonetHttpRequestFactory factory;
     private String report = "";
     private String errorCode;
 
@@ -336,7 +336,7 @@ public class GeoServerRest {
 
     public boolean createDatastore(String ws, String ds, String file) throws IOException {
         String type = "";
-        String extension = file.substring(file.lastIndexOf('.'), file.length());
+        String extension = file.substring(file.lastIndexOf('.'));
         if (file.startsWith("http://")) {
             type = "url";
         } else if (file.startsWith("file://")) {
@@ -436,7 +436,7 @@ public class GeoServerRest {
             String body, url;
             int status;
 
-			/* first check if the style exists in geoserver */
+            /* first check if the style exists in geoserver */
             url = "/styles/";
             if (pushStyleInWorkspace)
                 url += ws + ":";
@@ -669,7 +669,6 @@ public class GeoServerRest {
         } catch (AuthenticationException a) {
             Log.warning(LOGGER_NAME, "Failed to add the authentication Header, error is: " + a.getMessage());
         }
-        ;
 
         final ClientHttpResponse httpResponse = factory.execute(m, new UsernamePasswordCredentials(username, password), AuthScope.ANY);
 

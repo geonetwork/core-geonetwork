@@ -23,13 +23,9 @@
 
 package org.fao.geonet.services.thesaurus;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -40,7 +36,6 @@ import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.kernel.search.keyword.KeywordSort;
 import org.fao.geonet.kernel.search.keyword.SortDirection;
-
 import org.jdom.Element;
 
 import java.nio.file.Path;

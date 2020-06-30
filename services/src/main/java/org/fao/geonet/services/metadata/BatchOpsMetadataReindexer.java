@@ -64,7 +64,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-
 /**
  * Class that extends MetadataIndexerProcessor to reindex the metadata changed in any of the Batch
  * operation services
@@ -72,20 +71,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 @ManagedResource()
 public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implements Runnable {
 
-    private static JmxRemovalListener removalListener = new JmxRemovalListener();
-    private static Cache<ObjectName, ObjectName> PROBE_CACHE = CacheBuilder.newBuilder()
-            .expireAfterWrite(1,TimeUnit.MINUTES)
-            .removalListener(removalListener)
-            .build();
+    private static final JmxRemovalListener removalListener = new JmxRemovalListener();
+    private static final Cache<ObjectName, ObjectName> PROBE_CACHE = CacheBuilder.newBuilder()
+        .expireAfterWrite(1, TimeUnit.MINUTES)
+        .removalListener(removalListener)
+        .build();
 
-    private Set<Integer> metadata;
+    private final Set<Integer> metadata;
     private ExecutorService executor = null;
     private ObjectName probeName;
-    private int toProcessCount;
-    private AtomicInteger processed = new AtomicInteger();
-    private AtomicInteger inError = new AtomicInteger();
+    private final int toProcessCount;
+    private final AtomicInteger processed = new AtomicInteger();
+    private final AtomicInteger inError = new AtomicInteger();
     private CompletableFuture<Void> allCompleted;
-    private MBeanExporter exporter;
+    private final MBeanExporter exporter;
 
     public BatchOpsMetadataReindexer(DataManager dm, Set<Integer> metadata) {
         super(dm);
@@ -128,40 +127,40 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
     private String processAsync(boolean runInCurrentThread) throws Exception {
         int threadCount = ThreadUtils.getNumberOfThreads();
 
-            if (runInCurrentThread) {
-                executor = MoreExecutors.sameThreadExecutor();
-            } else {
-                executor = Executors.newFixedThreadPool(threadCount);
-            }
+        if (runInCurrentThread) {
+            executor = MoreExecutors.sameThreadExecutor();
+        } else {
+            executor = Executors.newFixedThreadPool(threadCount);
+        }
 
-            int[] ids = metadata.stream().mapToInt(i -> i).toArray();
+        int[] ids = metadata.stream().mapToInt(i -> i).toArray();
 
-            int perThread;
-            if (ids.length < threadCount) perThread = ids.length;
-            else perThread = ids.length / threadCount;
+        int perThread;
+        if (ids.length < threadCount) perThread = ids.length;
+        else perThread = ids.length / threadCount;
 
-            int index = 0;
+        int index = 0;
 
-            List<BatchOpsCallable> jobs = Lists.newArrayList();
-            while (index < ids.length) {
-                int start = index;
-                int count = Math.min(perThread, ids.length - start);
-                // create threads to process this chunk of ids
-                BatchOpsCallable task = new BatchOpsCallable(ids, start, count);
-                jobs.add(task);
+        List<BatchOpsCallable> jobs = Lists.newArrayList();
+        while (index < ids.length) {
+            int start = index;
+            int count = Math.min(perThread, ids.length - start);
+            // create threads to process this chunk of ids
+            BatchOpsCallable task = new BatchOpsCallable(ids, start, count);
+            jobs.add(task);
 
-                index += count;
-            }
+            index += count;
+        }
 
-            List<CompletableFuture> submitList = Lists.newArrayList();
-            for (BatchOpsCallable job : jobs) {
-                CompletableFuture completed = CompletableFuture.runAsync(job, executor);
-                submitList.add(completed);
-            }
+        List<CompletableFuture> submitList = Lists.newArrayList();
+        for (BatchOpsCallable job : jobs) {
+            CompletableFuture completed = CompletableFuture.runAsync(job, executor);
+            submitList.add(completed);
+        }
 
-            allCompleted = CompletableFuture.allOf(submitList.toArray(new CompletableFuture[submitList.size()]));
-            allCompleted.thenRun(this);
-            return probeName.toString();
+        allCompleted = CompletableFuture.allOf(submitList.toArray(new CompletableFuture[submitList.size()]));
+        allCompleted.thenRun(this);
+        return probeName.toString();
     }
 
     @Override
@@ -171,8 +170,21 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
         PROBE_CACHE.put(probeName, probeName);
     }
 
+    private static class JmxRemovalListener implements com.google.common.cache.RemovalListener<ObjectName, ObjectName> {
+        private MBeanExporter exporter;
+
+        @Override
+        public void onRemoval(RemovalNotification<ObjectName, ObjectName> removalNotification) {
+            exporter.unregisterManagedResource(removalNotification.getValue());
+        }
+
+        public void setExporter(MBeanExporter exporter) {
+            this.exporter = exporter;
+        }
+    }
+
     private final class BatchOpsCallable implements Runnable {
-        private final int ids[];
+        private final int[] ids;
         private final int beginIndex, count;
 
         BatchOpsCallable(int[] ids, int beginIndex, int count) {
@@ -192,19 +204,6 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
                     inError.incrementAndGet();
                 }
             }
-        }
-    }
-
-    private static class JmxRemovalListener implements com.google.common.cache.RemovalListener<ObjectName, ObjectName> {
-        private MBeanExporter exporter;
-
-        @Override
-        public void onRemoval(RemovalNotification<ObjectName, ObjectName> removalNotification) {
-            exporter.unregisterManagedResource(removalNotification.getValue());
-        }
-
-        public void setExporter(MBeanExporter exporter) {
-            this.exporter = exporter;
         }
     }
 }

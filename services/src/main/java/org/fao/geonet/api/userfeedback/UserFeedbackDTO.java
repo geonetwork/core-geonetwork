@@ -22,74 +22,108 @@
  */
 package org.fao.geonet.api.userfeedback;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.fao.geonet.domain.ISODate;
 
 /**
  * A DTO to represent a user feedback entity optimized for GUI and front end use.
  */
 public class UserFeedbackDTO implements Serializable {
 
-    /** The Constant serialVersionUID. */
+    /**
+     * The Constant serialVersionUID.
+     */
     private static final long serialVersionUID = -5923736997554126836L;
 
-    /** The uuid. */
+    /**
+     * The uuid.
+     */
     private String uuid;
 
-    /** The comment. */
+    /**
+     * The comment.
+     */
     private String comment;
 
-    /** All ratings **/
+    /**
+     * All ratings
+     **/
     private Map<Integer, Integer> rating = new HashMap<>();
 
-    /** The rating AVG. */
+    /**
+     * The rating AVG.
+     */
     private Integer ratingAVG;
 
-    /** The metadata UUID. */
+    /**
+     * The metadata UUID.
+     */
     private String metadataUUID;
 
-    /** The metadata title. */
+    /**
+     * The metadata title.
+     */
     private String metadataTitle;
 
-    /** The author user id. */
+    /**
+     * The author user id.
+     */
     private Integer authorUserId;
 
-    /** The author name. */
+    /**
+     * The author name.
+     */
     private String authorName;
 
-    /** The author email. */
+    /**
+     * The author email.
+     */
     private String authorEmail;
 
-    /** The author organization. */
+    /**
+     * The author organization.
+     */
     private String authorOrganization;
 
-    /** The approver name. */
+    /**
+     * The approver name.
+     */
     private String approverName;
 
-    /** The option privacy. */
+    /**
+     * The option privacy.
+     */
     private boolean optionPrivacy;
 
-    /** The published. */
+    /**
+     * The published.
+     */
     private boolean published;
 
-    /** The parent uuid. */
+    /**
+     * The parent uuid.
+     */
     private String parentUuid;
 
     private String captcha;
 
-    /** The date. */
+    /**
+     * The date.
+     */
     private String date;
-    /** The keywords. */
+    /**
+     * The keywords.
+     */
     @JsonProperty("keywords")
     private List<String> keywords;
 
-    /** The show approve button. */
+    /**
+     * The show approve button.
+     */
     private boolean showApproveButton;
 
     /**
@@ -102,138 +136,21 @@ public class UserFeedbackDTO implements Serializable {
     }
 
     /**
-     * Gets the author email.
-     *
-     * @return the author email
-     */
-    public String getAuthorEmail() {
-        return authorEmail;
-    }
-
-    /**
-     * Gets the author name.
-     *
-     * @return the author name
-     */
-    public String getAuthorName() {
-        return authorName;
-    }
-
-    /**
-     * Gets the author organization.
-     *
-     * @return the author organization
-     */
-    public String getAuthorOrganization() {
-        return authorOrganization;
-    }
-
-    /**
-     * Gets the author user id.
-     *
-     * @return the author user id
-     */
-    public Integer getAuthorUserId() {
-        return authorUserId;
-    }
-
-    /**
-     * Gets the comment.
-     *
-     * @return the comment
-     */
-    public String getComment() {
-        return comment;
-    }
-
-    /**
-     * Gets the date.
-     *
-     * @return the date
-     */
-    public String getDate() {
-        return date;
-    }
-
-    /**
-     * Gets the keywords.
-     *
-     * @return the keywords
-     */
-    public List<String> getKeywords() {
-        return keywords;
-    }
-
-    /**
-     * Gets the metadata UUID.
-     *
-     * @return the metadata UUID
-     */
-    public String getMetadataUUID() {
-        return metadataUUID;
-    }
-
-    /**
-     * Gets the parent uuid.
-     *
-     * @return the parent uuid
-     */
-    public String getParentUuid() {
-        return parentUuid;
-    }
-
-    /**
-     * Gets the rating AVG.
-     *
-     * @return the rating AVG
-     */
-    public Integer getRatingAVG() {
-        return ratingAVG;
-    }
-
-    /**
-     * Gets the uuid.
-     *
-     * @return the uuid
-     */
-    public String getUuid() {
-        return uuid;
-    }
-
-    /**
-     * Checks if is option privacy.
-     *
-     * @return true, if is option privacy
-     */
-    public boolean isOptionPrivacy() {
-        return optionPrivacy;
-    }
-
-    /**
-     * Checks if is published.
-     *
-     * @return true, if is published
-     */
-    public boolean isPublished() {
-        return published;
-    }
-
-    /**
-     * Checks if is show approve button.
-     *
-     * @return true, if is show approve button
-     */
-    public boolean isShowApproveButton() {
-        return showApproveButton;
-    }
-
-    /**
      * Sets the approver name.
      *
      * @param approverName the new approver name
      */
     public void setApproverName(String approverName) {
         this.approverName = approverName;
+    }
+
+    /**
+     * Gets the author email.
+     *
+     * @return the author email
+     */
+    public String getAuthorEmail() {
+        return authorEmail;
     }
 
     /**
@@ -246,12 +163,30 @@ public class UserFeedbackDTO implements Serializable {
     }
 
     /**
+     * Gets the author name.
+     *
+     * @return the author name
+     */
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    /**
      * Sets the author name.
      *
      * @param authorName the new author name
      */
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
+    }
+
+    /**
+     * Gets the author organization.
+     *
+     * @return the author organization
+     */
+    public String getAuthorOrganization() {
+        return authorOrganization;
     }
 
     /**
@@ -264,12 +199,30 @@ public class UserFeedbackDTO implements Serializable {
     }
 
     /**
+     * Gets the author user id.
+     *
+     * @return the author user id
+     */
+    public Integer getAuthorUserId() {
+        return authorUserId;
+    }
+
+    /**
      * Sets the author user id.
      *
      * @param authorUserId the new author user id
      */
     public void setAuthorUserId(Integer authorUserId) {
         this.authorUserId = authorUserId;
+    }
+
+    /**
+     * Gets the comment.
+     *
+     * @return the comment
+     */
+    public String getComment() {
+        return comment;
     }
 
     /**
@@ -282,12 +235,30 @@ public class UserFeedbackDTO implements Serializable {
     }
 
     /**
+     * Gets the date.
+     *
+     * @return the date
+     */
+    public String getDate() {
+        return date;
+    }
+
+    /**
      * Sets the date.
      *
      * @param date the new date
      */
     public void setDate(String date) {
         this.date = date;
+    }
+
+    /**
+     * Gets the keywords.
+     *
+     * @return the keywords
+     */
+    public List<String> getKeywords() {
+        return keywords;
     }
 
     /**
@@ -300,6 +271,15 @@ public class UserFeedbackDTO implements Serializable {
     }
 
     /**
+     * Gets the metadata UUID.
+     *
+     * @return the metadata UUID
+     */
+    public String getMetadataUUID() {
+        return metadataUUID;
+    }
+
+    /**
      * Sets the metadata UUID.
      *
      * @param metadataUUID the new metadata UUID
@@ -309,12 +289,12 @@ public class UserFeedbackDTO implements Serializable {
     }
 
     /**
-     * Sets the option privacy.
+     * Gets the parent uuid.
      *
-     * @param optionPrivacy the new option privacy
+     * @return the parent uuid
      */
-    public void setOptionPrivacy(boolean optionPrivacy) {
-        this.optionPrivacy = optionPrivacy;
+    public String getParentUuid() {
+        return parentUuid;
     }
 
     /**
@@ -327,12 +307,12 @@ public class UserFeedbackDTO implements Serializable {
     }
 
     /**
-     * Sets the published.
+     * Gets the rating AVG.
      *
-     * @param published the new published
+     * @return the rating AVG
      */
-    public void setPublished(boolean published) {
-        this.published = published;
+    public Integer getRatingAVG() {
+        return ratingAVG;
     }
 
     /**
@@ -345,12 +325,12 @@ public class UserFeedbackDTO implements Serializable {
     }
 
     /**
-     * Sets the show approve button.
+     * Gets the uuid.
      *
-     * @param showApproveButton the new show approve button
+     * @return the uuid
      */
-    public void setShowApproveButton(boolean showApproveButton) {
-        this.showApproveButton = showApproveButton;
+    public String getUuid() {
+        return uuid;
     }
 
     /**
@@ -360,6 +340,60 @@ public class UserFeedbackDTO implements Serializable {
      */
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    /**
+     * Checks if is option privacy.
+     *
+     * @return true, if is option privacy
+     */
+    public boolean isOptionPrivacy() {
+        return optionPrivacy;
+    }
+
+    /**
+     * Sets the option privacy.
+     *
+     * @param optionPrivacy the new option privacy
+     */
+    public void setOptionPrivacy(boolean optionPrivacy) {
+        this.optionPrivacy = optionPrivacy;
+    }
+
+    /**
+     * Checks if is published.
+     *
+     * @return true, if is published
+     */
+    public boolean isPublished() {
+        return published;
+    }
+
+    /**
+     * Sets the published.
+     *
+     * @param published the new published
+     */
+    public void setPublished(boolean published) {
+        this.published = published;
+    }
+
+    /**
+     * Checks if is show approve button.
+     *
+     * @return true, if is show approve button
+     */
+    public boolean isShowApproveButton() {
+        return showApproveButton;
+    }
+
+    /**
+     * Sets the show approve button.
+     *
+     * @param showApproveButton the new show approve button
+     */
+    public void setShowApproveButton(boolean showApproveButton) {
+        this.showApproveButton = showApproveButton;
     }
 
     public Map<Integer, Integer> getRating() {

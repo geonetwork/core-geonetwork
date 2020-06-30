@@ -28,15 +28,8 @@ import org.jdom.transform.JDOMSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.converter.xml.AbstractXmlHttpMessageConverter;
 
+import javax.xml.transform.*;
 import java.io.IOException;
-
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 
 /**
  * Convert a JDOM Element to response

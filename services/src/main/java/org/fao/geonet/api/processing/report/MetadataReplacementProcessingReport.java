@@ -23,15 +23,14 @@
 
 package org.fao.geonet.api.processing.report;
 
+import javax.xml.bind.annotation.XmlElement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.annotation.XmlElement;
-
 /**
  * Report for search and replace processing.
- *
+ * <p>
  * The report also advertised the list of changes for each records.
  */
 public class MetadataReplacementProcessingReport extends XsltMetadataProcessingReport {

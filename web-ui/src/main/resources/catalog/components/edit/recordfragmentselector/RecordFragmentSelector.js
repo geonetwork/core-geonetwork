@@ -117,7 +117,7 @@
                  scope.getFragments = function() {
                    scope.fragments = [];
                    $http.post(
-                    '../api/0.1/records/' + scope.sourceRecord +
+                    '../api/records/' + scope.sourceRecord +
                     '/query/' + scope.query, {}).then(function(r) {
                      if (r.status === 200) {
                        scope.fragments = {};

@@ -26,15 +26,14 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.CswCapabilitiesInfoField;
 import org.fao.geonet.domain.Language;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.CswCapabilitiesInfo;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
 import org.fao.geonet.repository.LanguageRepository;
 import org.jdom.Element;

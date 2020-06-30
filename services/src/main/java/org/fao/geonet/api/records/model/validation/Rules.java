@@ -1,12 +1,11 @@
-
 package org.fao.geonet.api.records.model.validation;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -26,8 +25,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -36,18 +33,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "rules")
 public class Rules {
     protected List<Rule> rule;
-
-    /**
-     * Sets the value of the report property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Report }
-     *
-     */
-    public void setRule(List<Rule> value) {
-        this.rule = value;
-    }
 
     /**
      * Gets the value of the rule property.
@@ -68,14 +53,22 @@ public class Rules {
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link Rule }
-     *
-     *
      */
     public List<Rule> getRule() {
         if (rule == null) {
             rule = new ArrayList<Rule>();
         }
         return this.rule;
+    }
+
+    /**
+     * Sets the value of the report property.
+     *
+     * @param value allowed object is
+     *              {@link Report }
+     */
+    public void setRule(List<Rule> value) {
+        this.rule = value;
     }
 
 }

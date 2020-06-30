@@ -29,5 +29,5 @@ package org.fao.geonet.api.records.formatters.groovy.template;
  * @author Jesse on 11/29/2014.
  */
 public interface TextContent {
-    public String text(TRenderContext content);
+    String text(TRenderContext content);
 }

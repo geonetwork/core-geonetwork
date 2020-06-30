@@ -25,10 +25,8 @@ package org.fao.geonet.api.records.formatters.groovy;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
-
 import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -79,8 +77,7 @@ public class Transformer {
             processRoot(context, namespaceUriToPrefix, xmlSlurper, resultantXml, metadata);
         }
         for (String rootXpath : rootXpaths) {
-            @SuppressWarnings("unchecked")
-            final List<Content> roots = (List<Content>) Xml.selectNodes(metadata, rootXpath, namespaces);
+            @SuppressWarnings("unchecked") final List<Content> roots = (List<Content>) Xml.selectNodes(metadata, rootXpath, namespaces);
             for (Content root : roots) {
                 processRoot(context, namespaceUriToPrefix, xmlSlurper, resultantXml, root);
             }

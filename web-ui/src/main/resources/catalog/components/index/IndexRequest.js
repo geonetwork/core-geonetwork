@@ -88,7 +88,7 @@
      * and document identifier fq param.
      *
      * ex:
-     * "../api/0.1/search/query?wt=json&
+     * "../api/search/query?wt=json&
      *    fq=featureTypeId:http://server/wfs/#LAYER"
      */
     this.baseUrl;

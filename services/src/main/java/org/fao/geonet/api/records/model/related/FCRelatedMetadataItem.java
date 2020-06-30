@@ -23,20 +23,15 @@
 
 package org.fao.geonet.api.records.model.related;
 
+import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.XmlValue;
-
 /**
  * <p>Java class for anonymous complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * <complexType>
  *   <complexContent>
@@ -80,12 +75,10 @@ import javax.xml.bind.annotation.XmlValue;
  *   </complexContent>
  * </complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "featureType"
+    "featureType"
 })
 public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
@@ -93,14 +86,11 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
     protected FCRelatedMetadataItem.FeatureType featureType;
 
 
-
     /**
      * Gets the LocalizedString of the featureType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link FCRelatedMetadataItem.FeatureType }
-     *     
+     *
+     * @return possible object is
+     * {@link FCRelatedMetadataItem.FeatureType }
      */
     public FCRelatedMetadataItem.FeatureType getFeatureType() {
         return featureType;
@@ -108,24 +98,20 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
     /**
      * Sets the LocalizedString of the featureType property.
-     * 
-     * @param LocalizedString
-     *     allowed object is
-     *     {@link FCRelatedMetadataItem.FeatureType }
-     *     
+     *
+     * @param LocalizedString allowed object is
+     *                        {@link FCRelatedMetadataItem.FeatureType }
      */
     public void setFeatureType(FCRelatedMetadataItem.FeatureType LocalizedString) {
         this.featureType = LocalizedString;
     }
 
 
-
-
     /**
      * <p>Java class for anonymous complex type.
-     * 
+     *
      * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     *
      * <pre>
      * <complexType>
      *   <complexContent>
@@ -192,12 +178,10 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
      *   </complexContent>
      * </complexType>
      * </pre>
-     * 
-     * 
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
-            "attributeTable"
+        "attributeTable"
     })
     public static class FeatureType {
 
@@ -205,37 +189,35 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
         /**
          * Gets the value of the attributeTable property.
-         * 
+         *
          * <p>
          * This accessor method returns a reference to the live list,
          * not a snapshot. Therefore any modification you make to the
          * returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the attributeTable property.
-         * 
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getAttributeTable().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
          * Objects of the following type(s) are allowed in the list
          * {@link AttributeTable }
-         * 
-         * 
          */
         public AttributeTable getAttributeTable() {
-            
+
             return this.attributeTable;
         }
 
 
         /**
          * <p>Java class for anonymous complex type.
-         * 
+         *
          * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
+         *
          * <pre>
          * <complexType>
          *   <complexContent>
@@ -295,12 +277,10 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
          *   </complexContent>
          * </complexType>
          * </pre>
-         * 
-         * 
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
-                "element"
+            "element"
         })
         public static class AttributeTable {
 
@@ -308,25 +288,23 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
             /**
              * Gets the value of the element property.
-             * 
+             *
              * <p>
              * This accessor method returns a reference to the live list,
              * not a snapshot. Therefore any modification you make to the
              * returned list will be present inside the JAXB object.
              * This is why there is not a <CODE>set</CODE> method for the element property.
-             * 
+             *
              * <p>
              * For example, to add a new item, do as follows:
              * <pre>
              *    getElement().add(newItem);
              * </pre>
-             * 
-             * 
+             *
+             *
              * <p>
              * Objects of the following type(s) are allowed in the list
              * {@link AttributeTable.Element }
-             * 
-             * 
              */
             public List<AttributeTable.Element> getElement() {
                 if (element == null) {
@@ -338,9 +316,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
             /**
              * <p>Java class for anonymous complex type.
-             * 
+             *
              * <p>The following schema fragment specifies the expected content contained within this class.
-             * 
+             *
              * <pre>
              * <complexType>
              *   <complexContent>
@@ -390,17 +368,15 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
              *   </complexContent>
              * </complexType>
              * </pre>
-             * 
-             * 
              */
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "", propOrder = {
-                    "name",
-                    "definition",
-                    "code",
-                    "link",
-                    "type",
-                    "values"
+                "name",
+                "definition",
+                "code",
+                "link",
+                "type",
+                "values"
             })
             public static class Element {
 
@@ -418,11 +394,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                 /**
                  * Gets the value of the name property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is
+                 * {@link String }
                  */
                 public String getName() {
                     return name;
@@ -430,11 +404,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                 /**
                  * Sets the value of the name property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is
+                 *              {@link String }
                  */
                 public void setName(String value) {
                     this.name = value;
@@ -442,11 +414,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                 /**
                  * Gets the value of the definition property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is
+                 * {@link String }
                  */
                 public String getDefinition() {
                     return definition;
@@ -454,11 +424,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                 /**
                  * Sets the value of the definition property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is
+                 *              {@link String }
                  */
                 public void setDefinition(String value) {
                     this.definition = value;
@@ -466,11 +434,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                 /**
                  * Gets the value of the code property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is
+                 * {@link String }
                  */
                 public String getCode() {
                     return code;
@@ -478,11 +444,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                 /**
                  * Sets the value of the code property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is
+                 *              {@link String }
                  */
                 public void setCode(String value) {
                     this.code = value;
@@ -490,11 +454,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                 /**
                  * Gets the value of the link property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is
+                 * {@link String }
                  */
                 public String getLink() {
                     return link;
@@ -502,11 +464,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                 /**
                  * Sets the value of the link property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is
+                 *              {@link String }
                  */
                 public void setLink(String value) {
                     this.link = value;
@@ -514,11 +474,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                 /**
                  * Gets the value of the type property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is
+                 * {@link String }
                  */
                 public String getType() {
                     return type;
@@ -526,11 +484,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                 /**
                  * Sets the value of the type property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is
+                 *              {@link String }
                  */
                 public void setType(String value) {
                     this.type = value;
@@ -538,28 +494,26 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                 /**
                  * Gets the value of the values property.
-                 * 
+                 *
                  * <p>
                  * This accessor method returns a reference to the live list,
                  * not a snapshot. Therefore any modification you make to the
                  * returned list will be present inside the JAXB object.
                  * This is why there is not a <CODE>set</CODE> method for the values property.
-                 * 
+                 *
                  * <p>
                  * For example, to add a new item, do as follows:
                  * <pre>
                  *    getValues().add(newItem);
                  * </pre>
-                 * 
-                 * 
+                 *
+                 *
                  * <p>
                  * Objects of the following type(s) are allowed in the list
                  * {@link AttributeTable.Element.Values }
-                 * 
-                 * 
                  */
                 public List<AttributeTable.Element.Values> getValues() {
-                    if (values == null || values.size()==0) {
+                    if (values == null || values.size() == 0) {
                         values = null;
                     }
                     return this.values;
@@ -568,9 +522,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                 /**
                  * <p>Java class for anonymous complex type.
-                 * 
+                 *
                  * <p>The following schema fragment specifies the expected content contained within this class.
-                 * 
+                 *
                  * <pre>
                  * <complexType>
                  *   <complexContent>
@@ -605,14 +559,12 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
                  *   </complexContent>
                  * </complexType>
                  * </pre>
-                 * 
-                 * 
                  */
                 @XmlAccessorType(XmlAccessType.FIELD)
                 @XmlType(name = "", propOrder = {
-                        "label",
-                        "code",
-                        "definition"
+                    "label",
+                    "code",
+                    "definition"
                 })
                 public static class Values {
 
@@ -625,25 +577,23 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                     /**
                      * Gets the value of the label property.
-                     * 
+                     *
                      * <p>
                      * This accessor method returns a reference to the live list,
                      * not a snapshot. Therefore any modification you make to the
                      * returned list will be present inside the JAXB object.
                      * This is why there is not a <CODE>set</CODE> method for the label property.
-                     * 
+                     *
                      * <p>
                      * For example, to add a new item, do as follows:
                      * <pre>
                      *    getLabel().add(newItem);
                      * </pre>
-                     * 
-                     * 
+                     *
+                     *
                      * <p>
                      * Objects of the following type(s) are allowed in the list
                      * {@link AttributeTable.Element.Values.Label }
-                     * 
-                     * 
                      */
                     public String getLabel() {
                         return this.label;
@@ -651,25 +601,23 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                     /**
                      * Gets the value of the code property.
-                     * 
+                     *
                      * <p>
                      * This accessor method returns a reference to the live list,
                      * not a snapshot. Therefore any modification you make to the
                      * returned list will be present inside the JAXB object.
                      * This is why there is not a <CODE>set</CODE> method for the code property.
-                     * 
+                     *
                      * <p>
                      * For example, to add a new item, do as follows:
                      * <pre>
                      *    getCode().add(newItem);
                      * </pre>
-                     * 
-                     * 
+                     *
+                     *
                      * <p>
                      * Objects of the following type(s) are allowed in the list
                      * {@link AttributeTable.Element.Values.Code }
-                     * 
-                     * 
                      */
                     public String getCode() {
                         return this.code;
@@ -677,36 +625,34 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                     /**
                      * Gets the value of the definition property.
-                     * 
+                     *
                      * <p>
                      * This accessor method returns a reference to the live list,
                      * not a snapshot. Therefore any modification you make to the
                      * returned list will be present inside the JAXB object.
                      * This is why there is not a <CODE>set</CODE> method for the definition property.
-                     * 
+                     *
                      * <p>
                      * For example, to add a new item, do as follows:
                      * <pre>
                      *    getDefinition().add(newItem);
                      * </pre>
-                     * 
-                     * 
+                     *
+                     *
                      * <p>
                      * Objects of the following type(s) are allowed in the list
                      * {@link AttributeTable.Element.Values.Definition }
-                     * 
-                     * 
                      */
                     public String getDefinition() {
-                       return this.definition;
+                        return this.definition;
                     }
 
 
                     /**
                      * <p>Java class for anonymous complex type.
-                     * 
+                     *
                      * <p>The following schema fragment specifies the expected content contained within this class.
-                     * 
+                     *
                      * <pre>
                      * <complexType>
                      *   <simpleContent>
@@ -715,12 +661,10 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
                      *   </simpleContent>
                      * </complexType>
                      * </pre>
-                     * 
-                     * 
                      */
                     @XmlAccessorType(XmlAccessType.FIELD)
                     @XmlType(name = "", propOrder = {
-                            "value"
+                        "value"
                     })
                     public static class Code {
 
@@ -729,11 +673,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                         /**
                          * Gets the value of the value property.
-                         * 
-                         * @return
-                         *     possible object is
-                         *     {@link String }
-                         *     
+                         *
+                         * @return possible object is
+                         * {@link String }
                          */
                         public String getValue() {
                             return value;
@@ -741,11 +683,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                         /**
                          * Sets the value of the value property.
-                         * 
-                         * @param value
-                         *     allowed object is
-                         *     {@link String }
-                         *     
+                         *
+                         * @param value allowed object is
+                         *              {@link String }
                          */
                         public void setValue(String value) {
                             this.value = value;
@@ -756,9 +696,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                     /**
                      * <p>Java class for anonymous complex type.
-                     * 
+                     *
                      * <p>The following schema fragment specifies the expected content contained within this class.
-                     * 
+                     *
                      * <pre>
                      * <complexType>
                      *   <complexContent>
@@ -767,8 +707,6 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
                      *   </complexContent>
                      * </complexType>
                      * </pre>
-                     * 
-                     * 
                      */
                     @XmlAccessorType(XmlAccessType.FIELD)
                     @XmlType(name = "")
@@ -780,9 +718,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                     /**
                      * <p>Java class for anonymous complex type.
-                     * 
+                     *
                      * <p>The following schema fragment specifies the expected content contained within this class.
-                     * 
+                     *
                      * <pre>
                      * <complexType>
                      *   <simpleContent>
@@ -791,12 +729,10 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
                      *   </simpleContent>
                      * </complexType>
                      * </pre>
-                     * 
-                     * 
                      */
                     @XmlAccessorType(XmlAccessType.FIELD)
                     @XmlType(name = "", propOrder = {
-                            "value"
+                        "value"
                     })
                     public static class Label {
 
@@ -805,11 +741,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                         /**
                          * Gets the value of the value property.
-                         * 
-                         * @return
-                         *     possible object is
-                         *     {@link String }
-                         *     
+                         *
+                         * @return possible object is
+                         * {@link String }
                          */
                         public String getValue() {
                             return value;
@@ -817,11 +751,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
                         /**
                          * Sets the value of the value property.
-                         * 
-                         * @param value
-                         *     allowed object is
-                         *     {@link String }
-                         *     
+                         *
+                         * @param value allowed object is
+                         *              {@link String }
                          */
                         public void setValue(String value) {
                             this.value = value;
@@ -840,9 +772,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
     /**
      * <p>Java class for anonymous complex type.
-     * 
+     *
      * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     *
      * <pre>
      * <complexType>
      *   <complexContent>
@@ -854,12 +786,10 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
      *   </complexContent>
      * </complexType>
      * </pre>
-     * 
-     * 
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
-            "value"
+        "value"
     })
     public static class Title {
 
@@ -868,25 +798,23 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
         /**
          * Gets the value of the value property.
-         * 
+         *
          * <p>
          * This accessor method returns a reference to the live list,
          * not a snapshot. Therefore any modification you make to the
          * returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the value property.
-         * 
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getValue().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
          * Objects of the following type(s) are allowed in the list
          * {@link Value }
-         * 
-         * 
          */
         public List<LocalizedString> getValue() {
             if (value == null) {
@@ -900,9 +828,9 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
     /**
      * <p>Java class for anonymous complex type.
-     * 
+     *
      * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     *
      * <pre>
      * <complexType>
      *   <complexContent>
@@ -914,12 +842,10 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
      *   </complexContent>
      * </complexType>
      * </pre>
-     * 
-     * 
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
-            "value"
+        "value"
     })
     public static class Url {
 
@@ -928,25 +854,23 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
 
         /**
          * Gets the value of the value property.
-         * 
+         *
          * <p>
          * This accessor method returns a reference to the live list,
          * not a snapshot. Therefore any modification you make to the
          * returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the value property.
-         * 
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getValue().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
          * Objects of the following type(s) are allowed in the list
          * {@link Value }
-         * 
-         * 
          */
         public List<LocalizedString> getValue() {
             if (value == null) {

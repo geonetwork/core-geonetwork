@@ -45,7 +45,7 @@ package org.fao.geonet.api.tools.mail;
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-import org.fao.geonet.ApplicationContextHolder;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -53,7 +53,6 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -63,25 +62,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.servlet.ServletRequest;
 import java.util.Locale;
 import java.util.ResourceBundle;
-
-import javax.servlet.ServletRequest;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 /**
  *
  */
 
 @RequestMapping(value = {
-    "/{portal}/api/tools/mail",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/tools/mail"
+    "/{portal}/api/tools/mail"
 })
-@Api(value = "tools",
-    tags = "tools",
+@Tag(name = "tools",
     description = "Utility operations")
 @Controller("mail")
 public class MailApi {
@@ -92,14 +84,13 @@ public class MailApi {
     @Autowired
     SettingManager settingManager;
 
-    @ApiOperation(value = "Test mail configuration",
-        notes = "Send an email to the catalog feedback email.",
-        nickname = "testMailConfiguration")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Test mail configuration",
+        description = "Send an email to the catalog feedback email.")
     @RequestMapping(value = "/test",
         produces = MediaType.TEXT_PLAIN_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.CREATED)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     public ResponseEntity<String> testMailConfiguration(ServletRequest request) throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);

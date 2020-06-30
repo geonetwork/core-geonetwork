@@ -24,7 +24,6 @@
 package org.fao.geonet.api.records.formatters.groovy.template;
 
 import com.google.common.annotations.VisibleForTesting;
-
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,16 +33,15 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Stack;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 /**
  * This class parses a XML Template file into a tree data structure representing the template.

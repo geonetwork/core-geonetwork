@@ -22,14 +22,13 @@
 //==============================================================================
 package org.fao.geonet.api.registries;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.jdom.Element;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -43,7 +42,7 @@ public class CollectResults {
      * Table composed of the entry identifier (extracted from the Element),
      * the UUID and the XML element.
      */
-    private Table<String, String, Element> entries =
+    private final Table<String, String, Element> entries =
         HashBasedTable.create();
     /**
      * Map of UUID and db identifiers if the entry is saved in the database

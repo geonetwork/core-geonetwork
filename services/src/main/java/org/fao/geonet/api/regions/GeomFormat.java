@@ -23,16 +23,15 @@
 
 package org.fao.geonet.api.regions;
 
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.io.WKTReader;
-import org.locationtech.jts.io.WKTWriter;
-
 import org.fao.geonet.Constants;
 import org.fao.geonet.csw.common.util.Xml;
 import org.geotools.gml2.GMLConfiguration;
 import org.geotools.xsd.Encoder;
 import org.geotools.xsd.Parser;
 import org.jdom.Element;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTReader;
+import org.locationtech.jts.io.WKTWriter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;

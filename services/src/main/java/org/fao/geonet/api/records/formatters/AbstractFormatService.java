@@ -23,15 +23,7 @@
 
 package org.fao.geonet.api.records.formatters;
 
-import static org.fao.geonet.api.records.formatters.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
-import static org.fao.geonet.api.records.formatters.FormatterConstants.VIEW_GROOVY_FILENAME;
-import static org.fao.geonet.api.records.formatters.FormatterConstants.VIEW_XSL_FILENAME;
-
-import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
+import jeeves.server.ServiceConfig;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -42,7 +34,12 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.utils.FilePathChecker;
 
-import jeeves.server.ServiceConfig;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import static org.fao.geonet.api.records.formatters.FormatterConstants.*;
 
 /**
  * Common constants and methods for Metadata formatter classes
@@ -145,7 +142,7 @@ abstract class AbstractFormatService {
      * resolution check that the record exist and is accessible to the user.</li> <li>check is done
      * on uuid first.</li> </ul> If id is provided, there is no check that the metadata record is
      * available in the catalogue.
-     *
+     * <p>
      * Resolving by id will be faster.
      *
      * @param id   the internal identifier

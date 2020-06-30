@@ -33,11 +33,7 @@ import java.io.PrintStream;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class ConfigFile {
     private static final String CONFIG_PROPERTIES_FILENAME = "config.properties";
@@ -48,7 +44,7 @@ public class ConfigFile {
     private static final String DEPENDS_ON = "dependsOn";
     private static final String PUBLISHED = "published";
 
-    private Properties config;
+    private final Properties config;
 
     /**
      * Create a new Config file reading the config.properties file from the specific formatter dir, general formatter
@@ -59,7 +55,6 @@ public class ConfigFile {
      * @param searchParentDir {@code true} if config.properties in the parent folders must be included.
      * @param schemaDir       the schema root folder.
      * @throws IOException thrown if there are problems reading the config files.
-     *
      * @see ConfigFile#CONFIG_PROPERTIES_FILENAME
      */
     public ConfigFile(Path bundleDir, boolean searchParentDir, Path schemaDir) throws IOException {
@@ -102,7 +97,7 @@ public class ConfigFile {
                 out.println("# Generated as part of download");
                 out.println("# This file is an example of a metadata formatter configuration file");
                 out.println("# Uncomment lines of interest");
-                out.println("");
+                out.println();
                 out.println("# " + FIXED_LANG_CONFIG_PROP + " sets the language of the strings to the fixed language, " +
                     "this ensures that the formatter will always use the same language for its labels, strings, " +
                     "etc... no matter what language code is in the url.");
@@ -111,17 +106,17 @@ public class ConfigFile {
                     "document before view.xsl is applied.  The default is true so if this parameter is not present then the " +
                     "strings will be loaded");
                 out.println(LOAD_STRINGS_PROP + "=true");
-                out.println("");
+                out.println();
                 out.println("# " + APPLICABLE_SCHEMAS + " - defines which metadata schemas this bundle applies to.  ");
                 out.println("# For example one can specify only iso19139 or a comma separated list of schemas (or all)");
                 out.println("# " + APPLICABLE_SCHEMAS + "=iso19115,fgdc-std,iso19139,csw-record,iso19110");
                 out.println(APPLICABLE_SCHEMAS + "=all");
-                out.println("");
+                out.println();
                 out.println("# " + DEPENDS_ON + " - defines which schema plugin's formatter folder is required to run the  ");
                 out.println("# current formatter.  For example iso19139.che depends on iso19139.  This means that the");
                 out.println("# files in iso19139 are accessible by iso19139.che formatter.");
                 out.println("# " + DEPENDS_ON + "=iso19139");
-                out.println("");
+                out.println();
                 out.println("# " + PUBLISHED + " (true/false) - declares if the formatter should be part of public listing of the formatter.");
                 out.println(PUBLISHED + "=true");
             }

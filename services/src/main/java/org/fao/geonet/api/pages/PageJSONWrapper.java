@@ -1,19 +1,19 @@
 package org.fao.geonet.api.pages;
 
-import java.io.Serializable;
-import java.util.List;
-
 import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.domain.page.Page.PageFormat;
 import org.fao.geonet.domain.page.Page.PageSection;
 import org.fao.geonet.domain.page.Page.PageStatus;
+
+import java.io.Serializable;
+import java.util.List;
 
 // Wrapper to filter the fields shown on JSON
 public class PageJSONWrapper implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Page page;
+    private final Page page;
 
     public PageJSONWrapper(Page p) {
         page = p;

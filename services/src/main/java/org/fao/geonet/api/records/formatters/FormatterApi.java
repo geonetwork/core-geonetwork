@@ -27,9 +27,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.xlink.Processor;
@@ -41,28 +40,13 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.records.formatters.cache.CacheConfig;
-import org.fao.geonet.api.records.formatters.cache.ChangeDateValidator;
-import org.fao.geonet.api.records.formatters.cache.FormatterCache;
-import org.fao.geonet.api.records.formatters.cache.Key;
-import org.fao.geonet.api.records.formatters.cache.NoCacheValidator;
-import org.fao.geonet.api.records.formatters.cache.StoreInfoAndDataLoadResult;
-import org.fao.geonet.api.records.formatters.cache.Validator;
+import org.fao.geonet.api.records.extent.MapRenderer;
+import org.fao.geonet.api.records.formatters.cache.*;
 import org.fao.geonet.api.records.formatters.groovy.ParamValue;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -71,7 +55,6 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
-import org.fao.geonet.api.records.extent.MapRenderer;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.IO;
@@ -93,34 +76,19 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.xhtmlrenderer.pdf.ITextRenderer;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 import static com.google.common.io.Files.getNameWithoutExtension;
@@ -133,8 +101,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  *
  * @author jeichar
  */
-@Api(value = "records",
-    tags = "records",
+@Tag(name = "records",
     description = "Metadata record operations")
 @Controller("recordFormatter")
 @Lazy
@@ -148,8 +115,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter
      * bundle's loc directory)
      */
-    private WeakHashMap<String, Element> pluginLocs = new WeakHashMap<>();
-    private Map<Path, Boolean> isFormatterInSchemaPluginMap = Maps.newHashMap();
+    private final WeakHashMap<String, Element> pluginLocs = new WeakHashMap<>();
+    private final Map<Path, Boolean> isFormatterInSchemaPluginMap = Maps.newHashMap();
 
     /**
      * We will copy all formatter files to the data directory so that the formatters should always
@@ -199,9 +166,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     }
 
     @RequestMapping(value = {
-        "/{portal}/api/records/{metadataUuid}/formatters/{formatterId}",
-        "/{portal}/api/" + API.VERSION_0_1 +
-            "/records/{metadataUuid}/formatters/{formatterId}"
+        "/{portal}/api/records/{metadataUuid}/formatters/{formatterId}"
     },
         method = RequestMethod.GET,
         produces = {
@@ -211,14 +176,13 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             MediaType.ALL_VALUE
             // TODO: PDF
         })
-    @ApiOperation(
-        value = "Get a formatted metadata record",
-        nickname = "getRecordFormattedBy"
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get a formatted metadata record"
     )
     @ResponseBody
     public void getRecordFormattedBy(
-        @ApiParam(
-            value = "Formatter type to use."
+        @Parameter(
+            description = "Formatter type to use."
         )
         @RequestHeader(
             value = HttpHeaders.ACCEPT,
@@ -227,10 +191,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             String acceptHeader,
         @PathVariable(
             value = "formatterId"
-        )
-        final String formatterId,
-        @ApiParam(
-            value = API_PARAM_RECORD_UUID,
+        ) final String formatterId,
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
@@ -240,8 +203,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         @RequestParam(
             value = "mdpath",
             required = false) final String mdPath,
-        @ApiParam(
-            value = "Optional language ISO 3 letters code to override HTTP Accept-language header.",
+        @Parameter(
+            description = "Optional language ISO 3 letters code to override HTTP Accept-language header.",
             required = false
         )
         @RequestParam(
@@ -251,11 +214,11 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             value = "output",
             required = false)
             FormatType formatType,
-        @ApiParam(value = "Download the approved version",
-            required = false, defaultValue = "true")
+        @Parameter(description = "Download the approved version",
+            required = false)
         @RequestParam(required = false, defaultValue = "true")
             boolean approved,
-        @ApiIgnore final NativeWebRequest request,
+        @Parameter(hidden = true) final NativeWebRequest request,
         final HttpServletRequest servletRequest) throws Exception {
 
         Locale locale = languageUtils.parseAcceptLanguage(servletRequest.getLocales());
@@ -285,8 +248,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
 
-        if(approved) {
-        	metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOneByUuid(metadataUuid);
+        if (approved) {
+            metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOneByUuid(metadataUuid);
         }
 
 
@@ -362,6 +325,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     @RequestMapping(value = "/{portal}/{lang}/xml.format.{type}")
     @ResponseBody
     @Deprecated
+    @io.swagger.v3.oas.annotations.Operation(hidden = true)
     public void execXml(
         @PathVariable final String lang,
         @PathVariable final String type,
@@ -407,7 +371,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     /**
      * This service will read directly from the cache and return the value.  If it is not in the
      * cache then a 404 will be returned.
-     *
+     * <p>
      * This is a service to use if there is process to keep the cache at least periodically
      * up-to-date and if maximum performance is required.
      */
@@ -449,6 +413,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      */
     @RequestMapping(value = "/{portal}/{lang}/md.format.{type}")
     @ResponseBody
+    @io.swagger.v3.oas.annotations.Operation(hidden = true)
     public void exec(
         @PathVariable final String lang,
         @PathVariable final String type,
@@ -672,7 +637,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     }
 
     public Pair<Element, AbstractMetadata> getMetadata(ServiceContext context, int id,
-                                               Boolean hide_withheld) throws Exception {
+                                                       Boolean hide_withheld) throws Exception {
 
         AbstractMetadata md = loadMetadata(context.getBean(IMetadataUtils.class), id);
         XmlSerializer serializer = context.getBean(XmlSerializer.class);

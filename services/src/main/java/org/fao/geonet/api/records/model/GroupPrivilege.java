@@ -25,7 +25,6 @@ package org.fao.geonet.api.records.model;
 import org.fao.geonet.domain.Profile;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by francois on 16/06/16.

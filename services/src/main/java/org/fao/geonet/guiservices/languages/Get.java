@@ -26,7 +26,6 @@ package org.fao.geonet.guiservices.languages;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.repository.LanguageRepository;
 import org.jdom.Element;
 

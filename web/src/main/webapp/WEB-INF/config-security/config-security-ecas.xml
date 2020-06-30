@@ -43,7 +43,7 @@ geonetwork.https.url=https://ec.europa.eu:8443/geonetwork
 <beans
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans
-          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+          http://www.springframework.org/schema/beans/spring-beans.xsd"
   xmlns="http://www.springframework.org/schema/beans">
 
   <!-- requires that config-security imports a config file that has the casUserService
