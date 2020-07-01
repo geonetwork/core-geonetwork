@@ -23,24 +23,30 @@
 
 package org.fao.geonet.events.history;
 
+import org.fao.geonet.domain.MetadataStatus;
 import org.springframework.context.ApplicationContext;
 
 public class RecordRestoredEvent extends AbstractHistoryEvent {
 
     private static final long serialVersionUID = 1110999025730522535L;
 
-    private String xmlRecordBefore, xmlRecordAfter;
+    private String xmlRecordBefore, xmlRecordAfter, uuid;
+    MetadataStatus relatedMetadataStatus;
 
-    public RecordRestoredEvent(Integer mdId, Integer userId, String xmlRecordBefore, String xmlRecordAfter) {
+    public RecordRestoredEvent(Integer mdId, String uuid, Integer userId, String xmlRecordBefore, String xmlRecordAfter, MetadataStatus relatedMetadataStatus) {
         super(mdId, userId);
+        this.uuid = uuid;
         this.xmlRecordBefore = xmlRecordBefore;
         this.xmlRecordAfter = xmlRecordAfter;
+        this.relatedMetadataStatus = relatedMetadataStatus;
     }
 
-    public RecordRestoredEvent(Long mdId, Integer userId, String xmlRecordBefore, String xmlRecordAfter) {
+    public RecordRestoredEvent(Long mdId, String uuid, Integer userId, String xmlRecordBefore, String xmlRecordAfter, MetadataStatus relatedMetadataStatus) {
         super(mdId, userId);
+        this.uuid = uuid;
         this.xmlRecordBefore = xmlRecordBefore;
         this.xmlRecordAfter = xmlRecordAfter;
+        this.relatedMetadataStatus = relatedMetadataStatus;
     }
 
     @Override
@@ -51,6 +57,16 @@ public class RecordRestoredEvent extends AbstractHistoryEvent {
     @Override
     public String getPreviousState() {
         return xmlRecordBefore;
+    }
+
+    @Override
+    public String getUuid() {
+        return uuid;
+    }
+
+    @Override
+    public MetadataStatus getRelatedMetadataStatus() {
+        return relatedMetadataStatus;
     }
 
     @Override

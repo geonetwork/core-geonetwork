@@ -120,6 +120,13 @@ public interface IMetadataUtils {
     String extractDefaultLanguage(String schema, Element md) throws Exception;
 
     /**
+     * Extract Multilinugal titles from the metadata record using the schema XSL for title extraction)
+     */
+    Map<String, String> extractTitles(String schema, Element md) throws Exception;
+
+    Map<String, String> extractTitles(@Nonnull String id) throws Exception;
+
+    /**
      * Extract the last editing date from the record
      *
      * @param schema
@@ -252,6 +259,11 @@ public interface IMetadataUtils {
      * Retrieves a metadata (in xml) given its id with no geonet:info.
      */
     Element getMetadataNoInfo(ServiceContext srvContext, String id) throws Exception;
+
+    /**
+     * remove the geonet:info element from the supplied metadata.
+     */
+    Element removeMetadataInfo(Element md) throws Exception;
 
     /**
      * Retrieves a metadata element given it's ref.

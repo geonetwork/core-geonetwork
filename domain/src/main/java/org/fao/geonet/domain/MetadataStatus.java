@@ -23,10 +23,14 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
 import org.jdom.Element;
 
+import javax.annotation.Nonnull;
 import javax.persistence.*;
+import java.util.Map;
 
 /**
  * An entity that represents a status change of a metadata.
@@ -42,6 +46,7 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "MetadataStatus",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"metadataid", "statusid", "userid", "changedate"}),
     indexes = {
         @Index(name="idx_metadatastatus_metadataid", columnList = "metadataid"),
         @Index(name="idx_metadatastatus_statusid", columnList = "statusid"),
@@ -51,11 +56,18 @@ import javax.persistence.*;
     }
 )
 @EntityListeners(MetadataStatus.EntityListener.class)
+@SequenceGenerator(name = MetadataStatus.ID_SEQ_NAME, sequenceName = MetadataStatus.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+
 public class MetadataStatus extends GeonetEntity {
+    public static final String ID_SEQ_NAME = "metadataStatus_id_seq";
     /**
      * The Root element of the xml returned by {@link #getAsXml}.
      */
     public static final String EL_METADATA_STATUS = "metadataStatus";
+    /**
+     * One of the child elements of the xml returned by {@link #getAsXml}.
+     */
+    public static final String EL_ID = "id";
     /**
      * One of the child elements of the xml returned by {@link #getAsXml}.
      */
@@ -76,7 +88,11 @@ public class MetadataStatus extends GeonetEntity {
      * One of the child elements of the xml returned by {@link #getAsXml}.
      */
     public static final String EL_NAME = "name";
-    private MetadataStatusId id = new MetadataStatusId();
+    private int id;
+    private ISODate _changedate;
+    private int metadataId;
+    private int statusId;
+    private int userId;
     private String changeMessage;
     private StatusValue statusValue;
     private int _owner;
@@ -84,24 +100,109 @@ public class MetadataStatus extends GeonetEntity {
     private ISODate _closedate;
     private String previousState;
     private String currentState;
+    private MetadataStatus relatedMetadataStatus;
+    private String uuid;
+    private String titles;
 
     /**
-     * Get the id object of this metadata status object.
+     * The id of the metadata status. This is a generated value and not controlled by the developer.
      *
-     * @return the id object of this metadata status object.
+     * @return the id
      */
-    @EmbeddedId
-    public MetadataStatusId getId() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    public int getId() {
         return id;
     }
 
     /**
-     * Set the id object of this metadata status object.
+     * Set the id of the metadata status. This is typically set by the JPA entity manager and should only
+     * be set by the developer when they want to merge new data with an existing entity or want to
+     * perform query by example. But even then it is not generally recommended.
      *
-     * @param id the id object of this metadata status object.
+     * @param id the id.
      */
-    public void setId(MetadataStatusId id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+  /**
+     * Get the date of the status change in string form.
+     *
+     * @return the date of the status change in string form.
+     */
+    @AttributeOverride(name = "dateAndTime", column = @Column(name = "changeDate", nullable = false, length = 30))
+    public ISODate getChangeDate() {
+        return _changedate;
+    }
+
+    /**
+     * Set the date of the status change in string form.
+     *
+     * @param changedate the date of the status change in string form.
+     */
+    public void setChangeDate(ISODate changedate) {
+        this._changedate = changedate;
+    }
+
+    /**
+     * Get the id of the metadata the status is related to.
+     *
+     * @return the id of the metadata the status is related to.
+     */
+    @Column(nullable = false)
+    public int getMetadataId() {
+        return metadataId;
+    }
+
+    /**
+     * Set the id of the metadata the status is related to.
+     *
+     * @param metadataId the id of the metadata the status is related to.
+     * @return this id object
+     */
+    public void setMetadataId(int metadataId) {
+        this.metadataId = metadataId;
+    }
+
+    /**
+     * Get the id of the new status.
+     *
+     * @return the id of the new status.
+     */
+    @Column(nullable = false)
+    public int getStatusId() {
+        return statusId;
+    }
+
+    /**
+     * Set the id of the new status.
+     *
+     * @param statusId the id of the new status.
+     * @return this id object
+     */
+    public void setStatusId(int statusId) {
+        this.statusId = statusId;
+    }
+
+    /**
+     * Get the user who is responsible for changing the status.
+     *
+     * @return the user who is responsible for changing the status.
+     */
+    @Column(nullable = false)
+    public int getUserId() {
+        return userId;
+    }
+
+    /**
+     * Set the user who changed the status.
+     *
+     * @param userId the user who changed the status.
+     * @return this id object
+     */
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     /**
@@ -136,7 +237,7 @@ public class MetadataStatus extends GeonetEntity {
      * type is {@link StatusValueType#task}.
      *
      *
-     * Note the author of the status is set in {@link #setId(MetadataStatusId)}.
+     * Note the author of the status is set in {@link #setId(Id)}.
      *
      * @return the user responsible for this task.
      */
@@ -144,6 +245,7 @@ public class MetadataStatus extends GeonetEntity {
     // @MapsId("ownerId")
     // @ManyToOne(fetch = FetchType.LAZY)
     // @JoinColumn(name = "ownerId", referencedColumnName = "id")
+    @Column(nullable = false)
     public Integer getOwner() {
         return _owner;
     }
@@ -214,7 +316,71 @@ public class MetadataStatus extends GeonetEntity {
 
     public void setStatusValue(StatusValue statusValue) {
         this.statusValue = statusValue;
-        this.getId().setStatusId(statusValue.getId());
+        this.statusId=statusValue.getId();
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "relatedMetadataStatusId", columnDefinition="integer", nullable = true, referencedColumnName = "id")
+    public MetadataStatus getRelatedMetadataStatus() {
+        return relatedMetadataStatus;
+    }
+
+    public void setRelatedMetadataStatus(MetadataStatus relatedMetadataStatus) {
+        this.relatedMetadataStatus = relatedMetadataStatus;
+    }
+
+    /**
+     * Get the uuid of the metadata..
+     *
+     * @return the uuid of the metadata.
+     */
+    @Column(nullable = false)
+    public String getUuid() {
+        return uuid;
+    }
+
+    /**
+     * Set the metadata uuid.
+     *
+     * @param uuid the new uuid of the metadata
+     */
+    public void setUuid(@Nonnull String uuid) {
+        this.uuid = uuid;
+    }
+
+    /**
+     * Get the multilingual titles of the metadata as a json string..
+     *
+     * @return the multilingual titles of the metadata.
+     */
+    @Column
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    public String getTitles() {
+        return titles;
+    }
+
+    /**
+     * Set the metadata multilingual titles as json string.
+     *
+     * @param titles the new titles related to the metadata record at the time the status was created.
+     */
+    public void setTitles(@Nonnull String titles) {
+        this.titles = titles;
+    }
+
+    /**
+     * Set the metadata multilingual titles as json string.
+     *
+     * @param titles the new titles related to the metadata record at the time the status was created.
+     */
+    public void setTitles(@Nonnull Map<String, String> titles) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            this.titles = objectMapper.writeValueAsString(titles);
+        } catch (JsonProcessingException e) {
+            this.titles = titles.toString();
+        }
     }
 
     @Column
@@ -242,9 +408,10 @@ public class MetadataStatus extends GeonetEntity {
     @Transient
     public Element getAsXml() {
         return new Element(EL_METADATA_STATUS)
-                .addContent(new Element(EL_STATUS_ID).setText(String.valueOf(getId().getStatusId())))
-                .addContent(new Element(EL_USER_ID).setText(String.valueOf(getId().getUserId())))
-                .addContent(new Element(EL_CHANGE_DATE).setText(getId().getChangeDate().getDateAndTime()))
+                .addContent(new Element(EL_ID).setText(String.valueOf(getId())))
+                .addContent(new Element(EL_STATUS_ID).setText(String.valueOf(getStatusId())))
+                .addContent(new Element(EL_USER_ID).setText(String.valueOf(getUserId())))
+                .addContent(new Element(EL_CHANGE_DATE).setText(getChangeDate().getDateAndTime()))
                 .addContent(new Element(EL_CHANGE_MESSAGE).setText(getChangeMessage()))
                 .addContent(new Element(EL_NAME).setText(getStatusValue().getName()));
     }
@@ -254,12 +421,20 @@ public class MetadataStatus extends GeonetEntity {
 
 	@Override
 	public String toString() {
-		return "MetadataStatus [" + (id != null ? "id=" + id + ", " : "")
+		return "MetadataStatus [" + "id=" + id + ", "
+                + "_metadataId=" + metadataId + ", "
+                + "_statusId=" + statusId + ", "
+                + "_userId=" + userId + ", "
+                + (_changedate != null ? "changeDate=" + getChangeDate().getDateAndTime() + ", " : "")
+                + (uuid != null ? "uuid=" + uuid + ", " : "")
 				+ (changeMessage != null ? "changeMessage=" + changeMessage + ", " : "")
-				+ (statusValue != null ? "statusValue=" + statusValue + ", " : "") + "_owner=" + _owner + ", "
+				+ (statusValue != null ? "statusValue=" + statusValue + ", " : "")
+                + "_owner=" + _owner + ", "
 				+ (_duedate != null ? "_duedate=" + _duedate + ", " : "")
 				+ (_closedate != null ? "_closedate=" + _closedate + ", " : "")
 				+ (previousState != null ? "previousState=" + previousState + ", " : "")
-				+ (currentState != null ? "currentState=" + currentState : "") + "]";
+				+ (currentState != null ? "currentState=" + currentState : "")
+                + (relatedMetadataStatus != null ? "relatedMetadataStatusId=" + relatedMetadataStatus.getId() : "")
+                + "]";
 	}
 }

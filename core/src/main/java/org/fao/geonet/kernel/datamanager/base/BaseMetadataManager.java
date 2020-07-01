@@ -346,7 +346,6 @@ public class BaseMetadataManager implements IMetadataManager {
         int intId = Integer.parseInt(id);
         metadataRatingByIpRepository.deleteAllById_MetadataId(intId);
         metadataValidationRepository.deleteAllById_MetadataId(intId);
-        metadataStatusRepository.deleteAllById_MetadataId(intId);
         userSavedSelectionRepository.deleteAllByUuid(metadataUtils.getMetadataUuid(id));
 
         // Logical delete for metadata file uploads
@@ -860,6 +859,7 @@ public class BaseMetadataManager implements IMetadataManager {
         String popularity = "" + dataInfo.getPopularity();
         String rating = "" + dataInfo.getRating();
         String owner = "" + metadata.getSourceInfo().getOwner();
+        String groupOwner = "" + metadata.getSourceInfo().getGroupOwner();
         String displayOrder = "" + dataInfo.getDisplayOrder();
 
         Element info = new Element(Edit.RootChild.INFO, Edit.NAMESPACE);
@@ -895,6 +895,13 @@ public class BaseMetadataManager implements IMetadataManager {
         if (user != null) {
             String ownerName = user.getName();
             addElement(info, Edit.Info.Elem.OWNERNAME, ownerName);
+        }
+
+        // add groupowner name
+        Group group = groupRepository.findOne(groupOwner);
+        if (group != null) {
+            String groupOwnerName = group.getName();
+            addElement(info, Edit.Info.Elem.GROUPOWNERNAME, groupOwnerName);
         }
 
         for (MetadataCategory category : metadata.getCategories()) {

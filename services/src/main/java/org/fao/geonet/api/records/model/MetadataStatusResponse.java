@@ -25,7 +25,6 @@ package org.fao.geonet.api.records.model;
 
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.StatusValue;
 
 public class MetadataStatusResponse extends MetadataStatus {
@@ -41,7 +40,6 @@ public class MetadataStatusResponse extends MetadataStatus {
     String ownerProfile;
 
     String title;
-    String uuid;
     String currentStatus;
     String previousStatus;
 
@@ -53,11 +51,7 @@ public class MetadataStatusResponse extends MetadataStatus {
 
     public MetadataStatusResponse(MetadataStatus s, boolean loadFull) {
         this.metadataStatusObject = s;
-        if(loadFull) {
-            this.loadFull = true;
-            this.metadataStatusObject.getCurrentState();
-            this.metadataStatusObject.getPreviousState();
-        }
+        this.loadFull = loadFull;
     }
 
     public String getAuthorEmail() {
@@ -118,6 +112,23 @@ public class MetadataStatusResponse extends MetadataStatus {
         return currentStatus;
     }
 
+    public boolean isCurrentStatusEmpty() {
+        if (this.metadataStatusObject.getCurrentState() == null || this.metadataStatusObject.getCurrentState().length() == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isPreviousStatusEmpty() {
+        if (this.metadataStatusObject.getPreviousState() == null || this.metadataStatusObject.getPreviousState().length() == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
     public String getCurrentStatusDetails() {
         if(loadFull) {
             return metadataStatusObject.getCurrentState();
@@ -152,7 +163,7 @@ public class MetadataStatusResponse extends MetadataStatus {
     }
 
     public String getUuid() {
-        return uuid;
+        return metadataStatusObject.getUuid();
     }
 
     public MetadataStatusResponse setTitle(String title) {
@@ -160,13 +171,20 @@ public class MetadataStatusResponse extends MetadataStatus {
         return this;
     }
 
-    public MetadataStatusResponse setUuid(String uuid) {
-        this.uuid = uuid;
-        return this;
+    public int getMetadataId() {
+        return metadataStatusObject.getMetadataId();
     }
 
-    public MetadataStatusId getId() {
-        return metadataStatusObject.getId();
+    public int getStatusId() {
+        return metadataStatusObject.getStatusId();
+    }
+
+    public int getUserId() {
+        return metadataStatusObject.getUserId();
+    }
+
+    public ISODate getChangeDate() {
+        return metadataStatusObject.getChangeDate();
     }
 
     public String getChangeMessage() {

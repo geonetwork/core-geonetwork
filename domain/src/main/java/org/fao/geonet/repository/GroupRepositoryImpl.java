@@ -47,6 +47,15 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
     private EntityManager _entityManager;
 
     @Override
+    public Group findOne(final String groupId) {
+        if (groupId.matches("\\d+")) {
+            return _entityManager.find(Group.class, Integer.valueOf(groupId));
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     @Nonnull
     public Group findReservedGroup(@Nonnull ReservedGroup group) {
         return _entityManager.find(Group.class, group.getId());

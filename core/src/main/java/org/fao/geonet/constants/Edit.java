@@ -75,6 +75,7 @@ public final class Edit {
             public static final String IS_HARVESTED = "isHarvested";
             public static final String HARVEST_INFO = "harvestInfo";
             public static final String OWNERNAME = "ownername";
+            public static final String GROUPOWNERNAME = "groupOwnerName";
             public static final String POPULARITY = "popularity";
             public static final String RATING = "rating";
             public static final String SELECTED = "selected";

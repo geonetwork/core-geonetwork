@@ -26,20 +26,17 @@ package org.fao.geonet.api.records;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -53,20 +50,8 @@ import org.fao.geonet.api.records.model.MetadataStatusParameter;
 import org.fao.geonet.api.records.model.MetadataStatusResponse;
 import org.fao.geonet.api.records.model.MetadataWorkflowStatusResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataDraft;
-import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId;
-import org.fao.geonet.domain.MetadataStatusId_;
-import org.fao.geonet.domain.MetadataStatus_;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.domain.StatusValueType;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.User_;
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordRestoredEvent;
 import org.fao.geonet.kernel.AccessManager;
@@ -80,17 +65,18 @@ import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.MetadataDraftRepository;
-import org.fao.geonet.repository.MetadataStatusRepository;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.StatusValueRepository;
-import org.fao.geonet.repository.Updater;
-import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.input.JDOMParseException;
+import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -113,6 +99,7 @@ import io.swagger.annotations.ApiResponses;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RequestMapping(value = { "/{portal}/api/records", "/{portal}/api/" + API.VERSION_0_1 + "/records" })
 @Api(value = API_CLASS_RECORD_TAG, tags = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
@@ -136,6 +123,9 @@ public class MetadataWorkflowApi {
     UserRepository userRepository;
 
     @Autowired
+    GroupRepository groupRepository;
+
+    @Autowired
     IMetadataStatus metadataStatus;
 
     @Autowired
@@ -156,6 +146,22 @@ public class MetadataWorkflowApi {
     @Autowired
     IMetadataUtils metadataUtils;
 
+    @Autowired
+    private UserGroupRepository userGroupRepository;
+
+    @Autowired
+    private MetadataRepository metadataRepository;
+
+    @Autowired
+    private MetadataCategoryRepository metadataCategoryRepository;
+
+    // The restore function currently supports these states
+    static final Integer[] supportedRestoreStatuses = {
+            Integer.parseInt(StatusValue.Events.RECORDUPDATED),
+            Integer.parseInt(StatusValue.Events.RECORDPROCESSINGCHANGE),
+            Integer.parseInt(StatusValue.Events.RECORDDELETED),
+            Integer.parseInt(StatusValue.Events.RECORDRESTORED)};
+
     @ApiOperation(value = "Get record status history", notes = "", nickname = "getRecordStatusHistory")
     @RequestMapping(value = "/{metadataUuid}/status", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
@@ -168,9 +174,9 @@ public class MetadataWorkflowApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
 
-        String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
+        String sortField = SortUtils.createPath(MetadataStatus_.changeDate);
 
-        List<MetadataStatus> listOfStatus = metadataStatusRepository.findAllById_MetadataId(metadata.getId(),
+        List<MetadataStatus> listOfStatus = metadataStatusRepository.findAllByMetadataId(metadata.getId(),
                 new Sort(sortOrder, sortField));
 
         List<MetadataStatusResponse> response = buildMetadataStatusResponses(listOfStatus, details,
@@ -193,9 +199,9 @@ public class MetadataWorkflowApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
 
-        String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
+        String sortField = SortUtils.createPath(MetadataStatus_.changeDate);
 
-        List<MetadataStatus> listOfStatus = metadataStatusRepository.findAllByIdAndByType(metadata.getId(), type,
+        List<MetadataStatus> listOfStatus = metadataStatusRepository.findAllByMetadataIdAndByType(metadata.getId(), type,
                 new Sort(sortOrder, sortField));
 
         List<MetadataStatusResponse> response = buildMetadataStatusResponses(listOfStatus, details,
@@ -207,10 +213,10 @@ public class MetadataWorkflowApi {
 
     @ApiOperation(value = "Get last workflow status for a record", notes = "", nickname = "getStatus")
     @RequestMapping(value = "/{metadataUuid}/status/workflow/last", method = RequestMethod.GET, produces = {
-            MediaType.APPLICATION_JSON_VALUE })
+            MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasRole('Editor')")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Record status."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Record status."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public MetadataWorkflowStatusResponse getStatus(
@@ -248,9 +254,9 @@ public class MetadataWorkflowApi {
     @ApiOperation(value = "Set the record status", notes = "", nickname = "setStatus")
     @RequestMapping(value = "/{metadataUuid}/status", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('Editor')")
-    @ApiResponses(value = { @ApiResponse(code = 204, message = "Status updated."),
+    @ApiResponses(value = {@ApiResponse(code = 204, message = "Status updated."),
             @ApiResponse(code = 400, message = "Metadata workflow not enabled."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void setStatus(@ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
             @ApiParam(value = "Metadata status", required = true) @RequestBody(required = true) MetadataStatusParameter status,
@@ -290,7 +296,7 @@ public class MetadataWorkflowApi {
         StatusActions sa = statusActionFactory.createStatusActions(context);
 
         int author = context.getUserSession().getUserIdAsInt();
-        MetadataStatus metadataStatus = convertParameter(metadata.getId(), status, author);
+        MetadataStatus metadataStatus = convertParameter(metadata.getId(), metadata.getUuid(), status, author);
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
         listOfStatusChange.add(metadataStatus);
         sa.onStatusChange(listOfStatusChange);
@@ -302,9 +308,9 @@ public class MetadataWorkflowApi {
     @ApiOperation(value = "Close a record task", notes = "", nickname = "closeTask")
     @RequestMapping(value = "/{metadataUuid}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}/close", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('Editor')")
-    @ApiResponses(value = { @ApiResponse(code = 204, message = "Task closed."),
+    @ApiResponses(value = {@ApiResponse(code = 204, message = "Task closed."),
             @ApiResponse(code = 404, message = "Status not found."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void closeTask(@ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
             @ApiParam(value = "Status identifier", required = true) @PathVariable int statusId,
@@ -315,8 +321,8 @@ public class MetadataWorkflowApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         MetadataStatus metadataStatus = metadataStatusRepository
-                .findOne(new MetadataStatusId().setMetadataId(metadata.getId()).setStatusId(statusId).setUserId(userId)
-                        .setChangeDate(new ISODate(changeDate)));
+                .findOneByMetadataIdAndStatusIdAndUserIdAndChangeDate(metadata.getId(), statusId, userId, new ISODate(changeDate));
+
         if (metadataStatus != null) {
             metadataStatusRepository.update(metadataStatus.getId(),
                     entity -> entity.setCloseDate(new ISODate(closeDate)));
@@ -330,9 +336,9 @@ public class MetadataWorkflowApi {
     @ApiOperation(value = "Delete a record status", notes = "", nickname = "deleteStatus")
     @RequestMapping(value = "/{metadataUuid}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}", method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('Administrator')")
-    @ApiResponses(value = { @ApiResponse(code = 204, message = "Status removed."),
+    @ApiResponses(value = {@ApiResponse(code = 204, message = "Status removed."),
             @ApiResponse(code = 404, message = "Status not found."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN) })
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRecordStatus(
             @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
@@ -343,8 +349,7 @@ public class MetadataWorkflowApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         MetadataStatus metadataStatus = metadataStatusRepository
-                .findOne(new MetadataStatusId().setMetadataId(metadata.getId()).setStatusId(statusId).setUserId(userId)
-                        .setChangeDate(new ISODate(changeDate)));
+                .findOneByMetadataIdAndStatusIdAndUserIdAndChangeDate(metadata.getId(), statusId, userId, new ISODate(changeDate));
         if (metadataStatus != null) {
             metadataStatusRepository.delete(metadataStatus);
             // TODO: Reindex record ?
@@ -358,15 +363,15 @@ public class MetadataWorkflowApi {
     @ApiOperation(value = "Delete all record status", notes = "", nickname = "deleteAllRecordStatus")
     @RequestMapping(value = "/{metadataUuid}/status", method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('Administrator')")
-    @ApiResponses(value = { @ApiResponse(code = 204, message = "Status removed."),
-        @ApiResponse(code = 404, message = "Status not found."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN) })
+    @ApiResponses(value = {@ApiResponse(code = 204, message = "Status removed."),
+            @ApiResponse(code = 404, message = "Status not found."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAllRecordStatus(
-        @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
-        HttpServletRequest request) throws Exception {
+            @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+            HttpServletRequest request) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        metadataStatusRepository.deleteAllById_MetadataId(metadata.getId());
+        metadataStatusRepository.deleteAllByMetadataId(metadata.getId());
     }
 
     @ApiOperation(value = "Search status", notes = "", nickname = "searchStatusByType")
@@ -386,8 +391,7 @@ public class MetadataWorkflowApi {
             HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        Sort sortByStatusChangeDate = SortUtils.createSort(Sort.Direction.DESC, MetadataStatus_.id,
-                MetadataStatusId_.changeDate);
+        Sort sortByStatusChangeDate = SortUtils.createSort(Sort.Direction.DESC, MetadataStatus_.changeDate).and(SortUtils.createSort(Sort.Direction.DESC, MetadataStatus_.id));
         final PageRequest pageRequest = new PageRequest(from, size, sortByStatusChangeDate);
 
         List<MetadataStatus> metadataStatuses;
@@ -408,15 +412,16 @@ public class MetadataWorkflowApi {
     /**
      * Convert request parameter to a metadata status.
      */
-    public MetadataStatus convertParameter(int id, MetadataStatusParameter parameter, int author) throws Exception {
+    private MetadataStatus convertParameter(int id, String uuid, MetadataStatusParameter parameter, int author) throws Exception {
         StatusValue statusValue = statusValueRepository.findOne(parameter.getStatus());
 
         MetadataStatus metadataStatus = new MetadataStatus();
 
-        MetadataStatusId mdStatusId = new MetadataStatusId().setStatusId(parameter.getStatus()).setMetadataId(id)
-                .setChangeDate(new ISODate()).setUserId(author);
-
-        metadataStatus.setId(mdStatusId);
+        metadataStatus.setStatusId(parameter.getStatus());
+        metadataStatus.setMetadataId(id);
+        metadataStatus.setUuid(uuid);
+        metadataStatus.setChangeDate(new ISODate());
+        metadataStatus.setUserId(author);
         metadataStatus.setStatusValue(statusValue);
 
         if (parameter.getChangeMessage() != null) {
@@ -433,12 +438,6 @@ public class MetadataWorkflowApi {
         }
         return metadataStatus;
     }
-
-    // The restore function currently supports these states
-    static final Integer[] supportedStatuses = {
-            Integer.parseInt(StatusValue.Events.RECORDUPDATED),
-            Integer.parseInt(StatusValue.Events.RECORDPROCESSINGCHANGE),
-            Integer.parseInt(StatusValue.Events.RECORDRESTORED)};
 
     @ApiOperation(
             value = "Get saved content from the status record before changes",
@@ -463,36 +462,47 @@ public class MetadataWorkflowApi {
             @ApiParam(value = "Status identifier", required = true) @PathVariable int statusId,
             @ApiParam(value = "User identifier", required = true) @PathVariable int userId,
             @ApiParam(value = "Change date", required = true) @PathVariable String changeDate,
-            HttpServletRequest request
+            @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession, HttpServletRequest request
     )
             throws Exception {
 
-        AbstractMetadata metadata = null;
+        MetadataStatus metadataStatus;
 
-        try {
-            metadata = ApiUtils.canViewRecord(metadataUuid, request);
-        } catch (SecurityException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
-        }
+        metadataStatus = metadataStatusRepository
+                .findOneByUuidAndStatusIdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
 
-        MetadataStatus metadataStatus = metadataStatusRepository
-                .findOne(new MetadataStatusId().setMetadataId(metadata.getId()).setStatusId(statusId).setUserId(userId)
-                        .setChangeDate(new ISODate(changeDate)));
         if (metadataStatus == null) {
             throw new ResourceNotFoundException(
-                    String.format("Can't find metadata status for record '%d', user '%s' at date '%s'", metadataUuid,
+                    String.format("Can't find metadata status for record '%d', user '%s' at date '%s'. Previous state cannot be viewed", metadataUuid,
                             userId, changeDate));
         }
 
-        if(!StatusValueType.event.equals(metadataStatus.getStatusValue().getType()) || !ArrayUtils.contains(supportedStatuses, statusId)) {
-            if(!StatusValueType.event.equals(metadataStatus.getStatusValue().getType()) || !ArrayUtils.contains(supportedStatuses, statusId)) {
-                throw new NotAllowedException("Unsupported action on status type '" + metadataStatus.getStatusValue().getType() + "' for metadata '" + metadata.getUuid() + "'. Supports status type '" +
-                        StatusValueType.event + "' with the status id '" + Arrays.toString(supportedStatuses) + "'.");
-            }
+        if (!StatusValueType.event.equals(metadataStatus.getStatusValue().getType()) || !ArrayUtils.contains(supportedRestoreStatuses, statusId)) {
+            throw new NotAllowedException("Unsupported action on status type '" + metadataStatus.getStatusValue().getType() + "' for metadata '" + metadataStatus.getUuid() + "'. Supports status type '" +
+                    StatusValueType.event + "' with the status id '" + Arrays.toString(supportedRestoreStatuses) + "'.");
         }
 
-        return metadataStatus.getPreviousState();
+        if (metadataStatus.getPreviousState() == null) {
+            throw new ResourceNotFoundException(
+                    String.format("No data exists for previous state on metadata record '%d', user '%s' at date '%s'. Previous state cannot be viewed", metadataUuid,
+                            userId, changeDate));
+        }
+
+        String fullMetadataText = metadataStatus.getPreviousState();
+
+        // If record exists then check if user has access.
+        try {
+            ApiUtils.canEditRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        } catch (ResourceNotFoundException e) {
+            // If metadata record does not exists then it was deleted so
+            // we will only allow the administrator, owner to view the contents
+            checkCanViewStatus(fullMetadataText, metadataStatus, httpSession, request);
+        }
+
+        return fullMetadataText;
     }
 
     @ApiOperation(
@@ -517,33 +527,46 @@ public class MetadataWorkflowApi {
             @ApiParam(value = "Status identifier", required = true) @PathVariable int statusId,
             @ApiParam(value = "User identifier", required = true) @PathVariable int userId,
             @ApiParam(value = "Change date", required = true) @PathVariable String changeDate,
-            HttpServletRequest request
+            @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession, HttpServletRequest request
     )
             throws Exception {
-        AbstractMetadata metadata = null;
+        MetadataStatus metadataStatus;
 
-        try {
-            metadata = ApiUtils.canViewRecord(metadataUuid, request);
-        } catch (SecurityException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
-        }
+        metadataStatus = metadataStatusRepository
+                .findOneByUuidAndStatusIdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
 
-        MetadataStatus metadataStatus = metadataStatusRepository
-                .findOne(new MetadataStatusId().setMetadataId(metadata.getId()).setStatusId(statusId).setUserId(userId)
-                        .setChangeDate(new ISODate(changeDate)));
         if (metadataStatus == null) {
             throw new ResourceNotFoundException(
-                    String.format("Can't find metadata status for record '%d', user '%s' at date '%s'", metadataUuid,
+                    String.format("Can't find metadata status for record '%d', user '%s' at date '%s'. Changes cannot be viewed", metadataUuid,
                             userId, changeDate));
         }
 
-        if(!StatusValueType.event.equals(metadataStatus.getStatusValue().getType()) || !ArrayUtils.contains(supportedStatuses, statusId)) {
-            throw new NotAllowedException("Unsupported action on status type '" + metadataStatus.getStatusValue().getType() + "' for metadata '" + metadata.getUuid() + "'. Supports status type '" +
-                    StatusValueType.event + "' with the status id '" + Arrays.toString(supportedStatuses) + "'.");
+        if (!StatusValueType.event.equals(metadataStatus.getStatusValue().getType()) || !ArrayUtils.contains(supportedRestoreStatuses, statusId)) {
+            throw new NotAllowedException("Unsupported action on status type '" + metadataStatus.getStatusValue().getType() + "' for metadata '" + metadataStatus.getUuid() + "'. Supports status type '" +
+                    StatusValueType.event + "' with the status id '" + Arrays.toString(supportedRestoreStatuses) + "'.");
         }
 
-        return metadataStatus.getCurrentState();
+        if (metadataStatus.getCurrentState() == null) {
+            throw new ResourceNotFoundException(
+                    String.format("No data exists for metadata record '%d', user '%s' at date '%s'. Changes state cannot be viewed", metadataUuid,
+                            userId, changeDate));
+        }
+
+        String fullMetadataText = metadataStatus.getCurrentState();
+
+        // If record exists then check if user has access.
+        try {
+            ApiUtils.canEditRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        } catch (ResourceNotFoundException e) {
+            // If metadata record does not exists then it was deleted so
+            // we will only allow the administrator, owner to view the contents
+            checkCanViewStatus(fullMetadataText, metadataStatus, httpSession, request);
+        }
+
+        return fullMetadataText;
     }
 
     @ApiOperation(
@@ -566,68 +589,99 @@ public class MetadataWorkflowApi {
             @ApiParam(value = "Status identifier", required = true) @PathVariable int statusId,
             @ApiParam(value = "User identifier", required = true) @PathVariable int userId,
             @ApiParam(value = "Change date", required = true) @PathVariable String changeDate,
-            HttpServletRequest request
+            @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession, HttpServletRequest request
             )
                     throws Exception {
 
-        AbstractMetadata metadata = null;
-
-        try {
-            metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        } catch (SecurityException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
-        }
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        DataManager dataMan = applicationContext.getBean(DataManager.class);
 
         MetadataStatus metadataStatus = metadataStatusRepository
-                .findOne(new MetadataStatusId().setMetadataId(metadata.getId()).setStatusId(statusId).setUserId(userId)
-                        .setChangeDate(new ISODate(changeDate)));
+                .findOneByUuidAndStatusIdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
+
         if (metadataStatus == null) {
             throw new ResourceNotFoundException(
-                    String.format("Can't find metadata status for record '%d', user '%s' at date '%s'", metadataUuid,
+                    String.format("Can't find metadata status for record '%d', user '%s' at date '%s'. Record cannot be restored", metadataUuid,
                             userId, changeDate));
         }
 
-        if(!StatusValueType.event.equals(metadataStatus.getStatusValue().getType()) || !ArrayUtils.contains(supportedStatuses, statusId)) {
-            throw new NotAllowedException("The recover for this element is not supported. Supports status type '" + 
-                 StatusValueType.event + "' with the status id '" + Arrays.toString(supportedStatuses) + 
-                 "'. Received status type '" + metadataStatus.getStatusValue().getType() + "' with status id '" + statusId + "'");
+        if (!StatusValueType.event.equals(metadataStatus.getStatusValue().getType()) || !ArrayUtils.contains(supportedRestoreStatuses, statusId)) {
+            throw new NotAllowedException("The recover for this element is not supported. Supports status type '" +
+                    StatusValueType.event + "' with the status id '" + Arrays.toString(supportedRestoreStatuses) +
+                    "'. Received status type '" + metadataStatus.getStatusValue().getType() + "' with status id '" + statusId + "'");
         }
+
+        if (metadataStatus.getPreviousState() == null) {
+            throw new ResourceNotFoundException(
+                    String.format("No data exists for previous state on metadata record '%d', user '%s' at date '%s'. Record cannot be restrored", metadataUuid,
+                            userId, changeDate));
+        }
+
+        AbstractMetadata metadata = null;
+        // If record exists then check if user has access.
+        try {
+            metadata = ApiUtils.canEditRecord(metadataStatus.getUuid(), request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+        } catch (ResourceNotFoundException e) {
+            // If metadata record does not exists then it was deleted so 
+            // lets check if the user can vew the record. There will be other checks later
+            // to ensure they have access to insert the data.
+            checkCanViewStatus(metadataStatus.getPreviousState(), metadataStatus, httpSession, request);
+        }
+
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
 
-        String xmlBefore = metadata.getData();
+        // If not a recovery from delete then get the before state
+        Element beforeMetadata = null;
+        String xmlBefore = null;
+        if (metadata != null) {
+            beforeMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
 
-        MetadataDraft draft = metadatadraftRepository.findOneByUuid(metadata.getUuid());
-        // If there is a draft record, the restore is made over the Draft record and not the approved one.
-        if (draft != null) {
-            context.getBean(IMetadataManager.class).update(draft.getId(), new Updater<MetadataDraft>() {
-                @Override
-                public void apply(@Nonnull MetadataDraft metadata) {
-                    metadata.setData(metadataStatus.getPreviousState());
-                }
-            });
-        } else {
-            context.getBean(IMetadataManager.class).update(metadata.getId(), new Updater<Metadata>() {
-                @Override
-                public void apply(@Nonnull Metadata metadata) {
-                    metadata.setData(metadataStatus.getPreviousState());
-                }
-            });
+            XMLOutputter outp = new XMLOutputter();
+            if (beforeMetadata!=null) {
+                xmlBefore = outp.outputString(beforeMetadata);
+            }
+
+            if (xmlBefore.equals(metadataStatus.getPreviousState())) {
+                throw new NotAllowedException("Error recovering metadata id " + metadataUuid + ". Cannot recover record which are identical. Possibly already recovered.");
+            }
         }
 
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        // Now begin the recovery
+        IMetadataManager iMetadataManager = context.getBean(IMetadataManager.class);
+        Integer recoveredMetadataId = null;
+        if (metadata != null) {
+            Element md = Xml.loadString(metadataStatus.getPreviousState(), false);
+            Element mdNoGeonetInfo = metadataUtils.removeMetadataInfo(md);
+
+            iMetadataManager.updateMetadata(context, String.valueOf(metadata.getId()), mdNoGeonetInfo, false, true, true, context.getLanguage(),
+                    null, false);
+            recoveredMetadataId = metadata.getId();
+        } else {
+            // Recover from delete
+            Element element = null;
+            try {
+                element = Xml.loadString(metadataStatus.getPreviousState(), false);
+            } catch (JDOMParseException ex) {
+                throw new IllegalArgumentException(
+                        String.format("XML fragment is invalid. Error is %s", ex.getMessage()));
+            }
+            recoveredMetadataId = reloadRecord(metadataStatus, element, iMetadataManager, httpSession, request);
+        }
+
+        dataManager.indexMetadata(String.valueOf(recoveredMetadataId), true, null);
 
         UserSession session = ApiUtils.getUserSession(request.getSession());
         if (session != null) {
             // Create a new event
-            String xmlAfter = metadataStatus.getPreviousState();
-            if (!xmlAfter.equals(xmlBefore)) {
-                new RecordRestoredEvent(metadata.getId(), session.getUserIdAsInt(), xmlBefore, xmlAfter).publish(applicationContext);
-            } else {
-                throw new NotAllowedException("Error recovering metadata id " + metadata.getUuid() + ". Cannot recover record which are identical. Possibly already recovered.");
-            }
+            Element afterMetadata = dataMan.getMetadata(context, String.valueOf(recoveredMetadataId), false, false, false);
+            XMLOutputter outp = new XMLOutputter();
+            String xmlAfter = outp.outputString(afterMetadata);
+            new RecordRestoredEvent(recoveredMetadataId, metadataStatus.getUuid(), session.getUserIdAsInt(), xmlBefore, xmlAfter, metadataStatus).publish(applicationContext);
         }
     }
 
@@ -637,7 +691,7 @@ public class MetadataWorkflowApi {
      */
     @NotNull
     private List<MetadataStatusResponse> buildMetadataStatusResponses(List<MetadataStatus> listOfStatus,
-            boolean details, String language) {
+                                                                      boolean details, String language) {
         List<MetadataStatusResponse> response = new ArrayList<>();
 
         // Add all user info in response
@@ -645,8 +699,8 @@ public class MetadataWorkflowApi {
 
         // Collect all user info
         for (MetadataStatus s : listOfStatus) {
-            if (listOfUsers.get(s.getId().getUserId()) == null) {
-                listOfUsers.put(s.getId().getUserId(), userRepository.findOne(s.getId().getUserId()));
+            if (listOfUsers.get(s.getUserId()) == null) {
+                listOfUsers.put(s.getUserId(), userRepository.findOne(s.getUserId()));
             }
             if (s.getOwner() != null && listOfUsers.get(s.getOwner()) == null) {
                 listOfUsers.put(s.getOwner(), userRepository.findOne(s.getOwner()));
@@ -660,7 +714,7 @@ public class MetadataWorkflowApi {
         for (MetadataStatus s : listOfStatus) {
             MetadataStatusResponse status = new MetadataStatusResponse(s, details);
 
-            User author = listOfUsers.get(status.getId().getUserId());
+            User author = listOfUsers.get(status.getUserId());
             if (author != null) {
                 status.setAuthorName(author.getName() + " " + author.getSurname());
                 status.setAuthorEmail(author.getEmail());
@@ -678,27 +732,40 @@ public class MetadataWorkflowApi {
                 status.setPreviousStatus(extractPreviousStatus(s));
             }
 
-            String title = titles.get(s.getId().getMetadataId());
-            if (title == null) {
-                try {
-                    // Collect metadata titles. For now we use Lucene
-                    title = LuceneSearcher.getMetadataFromIndexById(language, s.getId().getMetadataId() + "", "title");
-                    titles.put(s.getId().getMetadataId(), title);
-                } catch (Exception e1) {
-                }
-            }
-            status.setTitle(title);
 
-            String uuid = uuids.get(s.getId().getMetadataId());
-            if (uuid == null) {
+            if (s.getTitles() != null && s.getTitles().length() > 0) {
+                LinkedHashMap<String, String> titlesMap = null;
+                ObjectMapper mapper = new ObjectMapper();
                 try {
-                    // Collect metadata uuid.
-                    uuid=metadataUtils.getMetadataUuid(Integer.toString(s.getId().getMetadataId()));
-                    uuids.put(s.getId().getMetadataId(), uuid);
-                } catch (Exception e1) {
+                    titlesMap = mapper.readValue(s.getTitles(), LinkedHashMap.class);
+                } catch (JsonProcessingException e) {
+                    titlesMap = null;
+                }
+                if (titlesMap != null && titlesMap.size() > 0) {
+                    // Locate language title based on language which is a 3 char code
+                    // First look for exact match. otherwise look for 2 char code and if still not found then default to first occurrence
+                    status.setTitle(
+                            titlesMap.getOrDefault(language,
+                                    titlesMap.getOrDefault(language.substring(0,2),
+                                    titlesMap.entrySet().iterator().next().getValue())));
                 }
             }
-            status.setUuid(uuid);
+            // If title was not stored in database then try to get it from the index.
+            // Titles may be missing in database if it is older data or if the extract-titles.xsl does not exists/fails for schema plugin
+            if (status.getTitle() == null || status.getTitle().length() == 0) {
+                String title = titles.get(s.getMetadataId());
+                if (title == null) {
+                    try {
+                        // Collect metadata titles. For now we use Lucene
+                        title = LuceneSearcher.getMetadataFromIndexById(language, s.getMetadataId() + "", "title");
+                        titles.put(s.getMetadataId(), title);
+                    } catch (Exception e1) {
+                    }
+                }
+                status.setTitle(title);
+            }
+
+            status.setUuid(s.getUuid());
 
             response.add(status);
         }
@@ -745,4 +812,130 @@ public class MetadataWorkflowApi {
         }
     }
 
+    private void checkCanViewStatus(String metadata, MetadataStatus metadataStatus, HttpSession httpSession, HttpServletRequest request) throws Exception {
+        Element xmlElement = null;
+        try {
+            xmlElement = Xml.loadString(metadata, false);
+        } catch (JDOMParseException ex) {
+            throw new IllegalArgumentException(
+                    String.format("XML fragment is invalid. Error is %s", ex.getMessage()));
+        }
+
+        Element info = xmlElement.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+        if (info == null) {
+            throw new IllegalArgumentException("Can't locate required geonet:info which is required for the recovery. May need to manually re-import the data");
+        }
+
+        String groupOwnerName = info.getChildText(Edit.Info.Elem.GROUPOWNERNAME);
+
+        String groupId = null;
+        if (groupOwnerName != null) {
+            Group groupEntity = groupRepository.findByName(groupOwnerName);
+            if (groupEntity != null) {
+                groupId = String.valueOf(groupEntity.getId());
+            }
+        }
+
+        UserSession user = ApiUtils.getUserSession(httpSession);
+        if (user.getProfile() != Profile.Administrator) {
+            if (groupId != null) {
+                final Specifications<UserGroup> spec = where(UserGroupSpecs.hasProfile(Profile.Editor))
+                        .and(UserGroupSpecs.hasUserId(user.getUserIdAsInt()))
+                        .and(UserGroupSpecs.hasGroupId(Integer.valueOf(groupId)));
+
+                final List<UserGroup> userGroups = userGroupRepository.findAll(spec);
+
+                if (userGroups.size() == 0) {
+                    throw new SecurityException(
+                            String.format("You can't view history from this group (" + groupOwnerName + "). User MUST be an Editor in that group"));
+                }
+            } else {
+                throw new SecurityException(
+                        String.format("Error identify group where this metadata belong to. Only administrator can restore this record"));
+            }
+        }
+    }
+
+    private int reloadRecord(MetadataStatus metadataStatus, Element md, IMetadataManager iMetadataManager, HttpSession httpSession, HttpServletRequest request) throws Exception {
+
+        Element info = md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+        if (info == null) {
+            throw new IllegalArgumentException("Can't location geonet:info which is required for the recovery. May need to manually re-import the data");
+        }
+
+        md = metadataUtils.removeMetadataInfo(md);
+
+        String groupOwnerName = info.getChildText(Edit.Info.Elem.GROUPOWNERNAME);
+
+        String groupId = null;
+        if (groupOwnerName != null) {
+            Group groupEntity = groupRepository.findByName(groupOwnerName);
+            if (groupEntity != null) {
+                groupId = String.valueOf(groupEntity.getId());
+            }
+        }
+
+        UserSession user = ApiUtils.getUserSession(httpSession);
+        if (user.getProfile() != Profile.Administrator) {
+            if (groupId != null) {
+                final Specifications<UserGroup> spec = where(UserGroupSpecs.hasProfile(Profile.Editor))
+                        .and(UserGroupSpecs.hasUserId(user.getUserIdAsInt()))
+                        .and(UserGroupSpecs.hasGroupId(Integer.valueOf(groupId)));
+
+                final List<UserGroup> userGroups = userGroupRepository.findAll(spec);
+
+                if (userGroups.size() == 0) {
+                    throw new SecurityException(
+                            String.format("You can't create a record in this group (" + groupOwnerName + "). User MUST be an Editor in that group"));
+                }
+            }
+        }
+
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
+        String schema = info.getChildText(Edit.Info.Elem.SCHEMA);
+        if (schema == null) {
+            schema = dataManager.autodetectSchema(md);
+            throw new IllegalArgumentException("Can't detect schema for metadata automatically. "
+                    + "You could try to force the schema with the schema parameter.");
+        }
+
+        String uuid = info.getChildText(Edit.Info.Elem.UUID);
+        if (uuid == null) {
+            // --- if the uuid does not exist we generate it for metadata and templates
+            uuid = dataManager.extractUUID(schema, md);
+            if (uuid.length() == 0) {
+                throw new IllegalArgumentException("Could not locate the UUID for the document being restored.");
+            }
+        }
+
+        if (metadataRepository.findOneByUuid(uuid) != null) {
+            throw new IllegalArgumentException(
+                    String.format("A record with UUID '%s' already exist", uuid));
+        }
+
+        String date = new ISODate().toString();
+
+        // insert record
+        boolean ufo = false, indexImmediate = false;
+        String metadataId = iMetadataManager.insertMetadata(context, schema, md, uuid,
+                context.getUserSession().getUserIdAsInt(), groupId, settingManager.getSiteId(), MetadataType.METADATA.codeString
+                , null, null, date, date, ufo, indexImmediate);
+
+        int id = Integer.parseInt(metadataId);
+
+        List<Element> categoryList = info.getChildren(Edit.Info.Elem.CATEGORY);
+        if (categoryList != null && categoryList.size() > 0) {
+            final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
+            for (Element cat : categoryList) {
+                String catName = cat.getText();
+                final MetadataCategory metadataCategory = categoryRepository.findOneByName(catName);
+                if (metadataCategory != null) {
+                    dataManager.setCategory(context, metadataId, String.valueOf(metadataCategory.getId()));
+                }
+            }
+        }
+
+        return id;
+    }
 }

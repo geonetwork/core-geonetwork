@@ -109,6 +109,8 @@
             scope: {
               h: '=gnRecordHistoryStep',
               noTitle: '@noTitle',
+              noSourceViewOption: '@noTitle',
+              noRecoverOption: '@noTitle',
               allowRemoval: '=allowRemoval'
             },
             templateUrl:

@@ -29,7 +29,6 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo_;
 import org.fao.geonet.domain.MetadataSourceInfo_;
 import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId_;
 import org.fao.geonet.domain.MetadataStatus_;
 import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.domain.StatusValueType;
@@ -56,7 +55,7 @@ public final class MetadataStatusSpecs {
         return new Specification<MetadataStatus>() {
             @Override
             public Predicate toPredicate(Root<MetadataStatus> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Integer> metadataIdAttributePath = root.get(MetadataStatus_.id).get(MetadataStatusId_.metadataId);
+                Path<Integer> metadataIdAttributePath = root.get(MetadataStatus_.metadataId);
                 Predicate idEqualPredicate = cb.equal(metadataIdAttributePath, cb.literal(metadataId));
                 return idEqualPredicate;
             }
@@ -67,7 +66,7 @@ public final class MetadataStatusSpecs {
         return new Specification<MetadataStatus>() {
             @Override
             public Predicate toPredicate(Root<MetadataStatus> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Integer> userIdAttributePath = root.get(MetadataStatus_.id).get(MetadataStatusId_.userId);
+                Path<Integer> userIdAttributePath = root.get(MetadataStatus_.userId);
                 Predicate uuidEqualPredicate = cb.equal(userIdAttributePath, cb.literal(userId));
                 return uuidEqualPredicate;
             }
@@ -75,14 +74,14 @@ public final class MetadataStatusSpecs {
     }
 
 
-    public static Specification<MetadataStatus> hasUserIdMetadataIdAndStatusId(final int userId, final int metadataId,
-                                                                               final int statusId) {
+    public static Specification<MetadataStatus> hasUserIdAndMetadataIdAndStatusId(final int userId, final int metadataId,
+                                                                                  final int statusId) {
         return new Specification<MetadataStatus>() {
             @Override
             public Predicate toPredicate(Root<MetadataStatus> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Integer> userIdAttributePath = root.get(MetadataStatus_.id).get(MetadataStatusId_.userId);
-                Path<Integer> metadataIdAttributePath = root.get(MetadataStatus_.id).get(MetadataStatusId_.metadataId);
-                Path<Integer> statusIdAttributePath = root.get(MetadataStatus_.id).get(MetadataStatusId_.statusId);
+                Path<Integer> userIdAttributePath = root.get(MetadataStatus_.userId);
+                Path<Integer> metadataIdAttributePath = root.get(MetadataStatus_.metadataId);
+                Path<Integer> statusIdAttributePath = root.get(MetadataStatus_.statusId);
                 Predicate idEqualPredicate = cb.equal(metadataIdAttributePath, cb.literal(metadataId));
                 Predicate uuidEqualPredicate = cb.equal(userIdAttributePath, cb.literal(userId));
                 Predicate statusIdEqual = cb.equal(statusIdAttributePath, cb.literal(statusId));
