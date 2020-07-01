@@ -24,7 +24,7 @@ package org.fao.geonet.kernel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.eclipse.jetty.util.URIUtil;
+import org.apache.commons.httpclient.URIException;
 import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.exceptions.LabelNotFoundException;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -101,7 +101,7 @@ public class KeywordBean {
      * @return a complex iso19139 representation of the keyword
      */
     @JsonIgnore
-    public static Element getComplexIso19139Elt(List<KeywordBean> kbList) {
+    public static Element getComplexIso19139Elt(List<KeywordBean> kbList) throws URIException {
         Element root = new Element("MD_Keywords", Namespaces.GMD);
 
         Element cs = new Element("CharacterString", Namespaces.GCO);
@@ -116,7 +116,7 @@ public class KeywordBean {
             Element keyword = new Element("keyword", Namespaces.GMD);
             if (kb.getUriCode() != null && kb.getUriCode().length() != 0) {
                 an.setText(kb.getDefaultValue());
-                an.setAttribute("href", URIUtil.encodePath(kb.keywordUrl + kb.getUriCode()), Namespaces.XLINK);
+                an.setAttribute("href", org.apache.commons.httpclient.util.URIUtil.encodePath(kb.keywordUrl + kb.getUriCode()), Namespaces.XLINK);
                 keyword.addContent((Content) an.clone());
             } else {
                 cs.setText(kb.getDefaultValue());
@@ -527,14 +527,14 @@ public class KeywordBean {
      * @return an iso19139 representation of the keyword
      */
     @JsonIgnore
-    public Element getIso19139() {
+    public Element getIso19139() throws URIException {
         Element ele = new Element("MD_Keywords", Namespaces.GMD);
         Element el = new Element("keyword", Namespaces.GMD);
         Element an = new Element("Anchor", Namespaces.GMX);
         Element cs = new Element("CharacterString", Namespaces.GCO);
         if (getUriCode() != null && getUriCode().length() != 0) {
             an.setText(getDefaultValue());
-            an.setAttribute("href", URIUtil.encodePath(keywordUrl + getUriCode()), Namespaces.XLINK);
+            an.setAttribute("href", org.apache.commons.httpclient.util.URIUtil.encodePath(keywordUrl + getUriCode()), Namespaces.XLINK);
             el.addContent(an);
         } else {
             cs.setText(getDefaultValue());

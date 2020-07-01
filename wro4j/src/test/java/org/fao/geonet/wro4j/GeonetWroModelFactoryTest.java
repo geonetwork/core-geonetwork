@@ -33,8 +33,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.http.client.utils.URIUtils;
-import org.eclipse.jetty.util.URIUtil;
 
 import static org.fao.geonet.wro4j.ClosureDependencyUriLocator.PATH_TO_WEBAPP_BASE_FROM_CLOSURE_BASE_JS_FILE;
 import static org.fao.geonet.wro4j.GeonetWroModelFactory.CLASSPATH_PREFIX;
@@ -134,7 +132,7 @@ public class GeonetWroModelFactoryTest {
             jsTestBaseDirAsPath = jsTestBaseDirAsPath.substring(1);
 
             // let's encode the filesystem path as it should be encoded by wro
-            jsTestBaseDirAsPath = URIUtil.encodePath(jsTestBaseDirAsPath);
+            jsTestBaseDirAsPath = org.apache.commons.httpclient.util.URIUtil.encodePath(jsTestBaseDirAsPath);
 
         }
 

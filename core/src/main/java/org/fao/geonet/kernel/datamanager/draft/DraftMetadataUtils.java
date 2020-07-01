@@ -25,7 +25,6 @@ package org.fao.geonet.kernel.datamanager.draft;
 
 import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
-import org.eclipse.jetty.io.RuntimeIOException;
 import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -591,7 +590,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
         } catch (Exception ex) {
             Log.error(Geonet.RESOURCES, "Failed copy of resources: " + ex.getMessage(), ex);
-            throw new RuntimeIOException(ex);
+            throw new RuntimeException(ex);
         }
     }
 

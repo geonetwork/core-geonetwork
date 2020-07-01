@@ -44,10 +44,7 @@
       <groupId>org.tuckey</groupId>
       <artifactId>urlrewritefilter</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-servlet</artifactId>
-    </dependency>
+
     <dependency>
       <groupId>xalan</groupId>
       <artifactId>xalan</artifactId>

@@ -44,7 +44,6 @@ import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jetty.io.EofException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
@@ -71,6 +70,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
@@ -844,7 +844,7 @@ public class ServiceManager {
                                 } finally {
                                     timerContext.stop();
                                 }
-                                
+
                                 if (outPage.getContentType() != null
                                     && outPage.getContentType().startsWith("text/plain")) {
                                     req.beginStream(outPage.getContentType(), -1, "attachment;", cache);
@@ -854,7 +854,7 @@ public class ServiceManager {
                                 req.getOutputStream().write(baos.toByteArray());
                                 req.endStream();
                             }
-                        } catch (EofException e) {
+                        } catch (EOFException e) {
                             // ignore this.
                             // it happens because the stream closes by client.
                         } catch (Exception e) {
@@ -922,7 +922,7 @@ public class ServiceManager {
                 req.beginStream(outPage.getContentType(), cache);
                 Xml.transform(rootElem, styleSheet, req.getOutputStream());
                 req.endStream();
-            } catch (EofException e) {
+            } catch (EOFException e) {
                 // ignore this.
                 // it happens because the stream closes by client.
             } catch (Exception e) {

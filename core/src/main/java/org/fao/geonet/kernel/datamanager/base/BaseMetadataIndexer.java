@@ -27,7 +27,6 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -96,6 +95,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -168,7 +168,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
     Set<String> waitForIndexing = new HashSet<String>();
     Set<String> indexing = new HashSet<String>();
-    Set<IndexMetadataTask> batchIndex = new ConcurrentHashSet<IndexMetadataTask>();
+
+    Set<IndexMetadataTask> batchIndex = (new ConcurrentHashMap<>()).newKeySet(); //replaces ConcurrentHashSet
 
     @Override
     public void forceIndexChanges() throws IOException {
@@ -203,7 +204,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 metadataManager.deleteMetadata(ServiceContext.get(), String.valueOf(md.getId()));
             } catch (Exception e) {
                 Log.warning(Geonet.DATA_MANAGER, String.format(
-                    
+
                     "Error during removal of metadata %s part of batch delete operation. " +
                     "This error may create a ghost record (ie. not in the index " +
                     "but still present in the database). " +
