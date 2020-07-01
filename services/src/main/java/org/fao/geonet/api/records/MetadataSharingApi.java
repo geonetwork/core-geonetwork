@@ -1018,7 +1018,7 @@ public class MetadataSharingApi {
         //--- and are not sent to the server. So we cannot remove them
         UserSession us = ApiUtils.getUserSession(session);
         boolean isAdmin = Profile.Administrator == us.getProfile();
-        if (!isAdmin && !accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
+        if (!accessManager.getReviewerGroups(us).contains(metadata.getSourceInfo().getGroupOwner()) && !isAdmin && !accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
             throw new Exception("User not allowed to publish the metadata " + metadataUuid);
 
         }
