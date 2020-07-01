@@ -70,7 +70,7 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
         Predicate metadataIdEqualsPredicate = cb
                 .equal(metadataStatusRoot.get(MetadataStatus_.metadataId), metadataId);
 
-        Predicate mdIdEquals = cb.equal(metadataStatusRoot.get(MetadataStatus_.statusId),
+        Predicate mdIdEquals = cb.equal(metadataStatusRoot.get(MetadataStatus_.statusValue),
                 statusValueRoot.get(StatusValue_.id));
 
         Predicate statusTypePredicate = cb.equal(statusValueRoot.get(StatusValue_.type), type);
@@ -109,7 +109,7 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
         final Root<MetadataStatus> metadataStatusRoot = cbQuery.from(MetadataStatus.class);
         final Root<StatusValue> statusValueRoot = cbQuery.from(StatusValue.class);
 
-        final Path<Integer> statusIdInMetadataPath = metadataStatusRoot.get(MetadataStatus_.statusId);
+        final Path<StatusValue> statusIdInMetadataPath = metadataStatusRoot.get(MetadataStatus_.statusValue);
         final Path<ISODate> statusIdDatePath = metadataStatusRoot.get(MetadataStatus_.changeDate);
         final Path<Integer> statusIdPath = statusValueRoot.get(StatusValue_.id);
         final Path<StatusValueType> statusTypePath = statusValueRoot.get(StatusValue_.type);

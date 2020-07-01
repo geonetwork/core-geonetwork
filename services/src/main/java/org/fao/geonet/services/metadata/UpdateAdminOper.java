@@ -223,7 +223,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 		{
 			MetadataStatus metadataStatus = metadataStatusRepository.getStatus(mdId);
 
-			String statusId = metadataStatus.getStatusId() + "";
+			String statusId = metadataStatus.getStatusValue().getId() + "";
 			canPublish = statusId.equals(StatusValue.Status.APPROVED);
 		}
 		return canPublish;

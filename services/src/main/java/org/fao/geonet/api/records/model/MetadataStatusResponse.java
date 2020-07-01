@@ -176,7 +176,7 @@ public class MetadataStatusResponse extends MetadataStatus {
     }
 
     public int getStatusId() {
-        return metadataStatusObject.getStatusId();
+        return metadataStatusObject.getStatusValue().getId();
     }
 
     public int getUserId() {

@@ -30,13 +30,11 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.util.*;
 
-import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Maps;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -321,7 +319,7 @@ public class MetadataWorkflowApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         MetadataStatus metadataStatus = metadataStatusRepository
-                .findOneByMetadataIdAndStatusIdAndUserIdAndChangeDate(metadata.getId(), statusId, userId, new ISODate(changeDate));
+                .findOneByMetadataIdAndStatusValue_IdAndUserIdAndChangeDate(metadata.getId(), statusId, userId, new ISODate(changeDate));
 
         if (metadataStatus != null) {
             metadataStatusRepository.update(metadataStatus.getId(),
@@ -349,7 +347,7 @@ public class MetadataWorkflowApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         MetadataStatus metadataStatus = metadataStatusRepository
-                .findOneByMetadataIdAndStatusIdAndUserIdAndChangeDate(metadata.getId(), statusId, userId, new ISODate(changeDate));
+                .findOneByMetadataIdAndStatusValue_IdAndUserIdAndChangeDate(metadata.getId(), statusId, userId, new ISODate(changeDate));
         if (metadataStatus != null) {
             metadataStatusRepository.delete(metadataStatus);
             // TODO: Reindex record ?
@@ -417,7 +415,6 @@ public class MetadataWorkflowApi {
 
         MetadataStatus metadataStatus = new MetadataStatus();
 
-        metadataStatus.setStatusId(parameter.getStatus());
         metadataStatus.setMetadataId(id);
         metadataStatus.setUuid(uuid);
         metadataStatus.setChangeDate(new ISODate());
@@ -469,7 +466,7 @@ public class MetadataWorkflowApi {
         MetadataStatus metadataStatus;
 
         metadataStatus = metadataStatusRepository
-                .findOneByUuidAndStatusIdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
+                .findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
 
         if (metadataStatus == null) {
             throw new ResourceNotFoundException(
@@ -533,7 +530,7 @@ public class MetadataWorkflowApi {
         MetadataStatus metadataStatus;
 
         metadataStatus = metadataStatusRepository
-                .findOneByUuidAndStatusIdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
+                .findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
 
         if (metadataStatus == null) {
             throw new ResourceNotFoundException(
@@ -597,7 +594,7 @@ public class MetadataWorkflowApi {
         DataManager dataMan = applicationContext.getBean(DataManager.class);
 
         MetadataStatus metadataStatus = metadataStatusRepository
-                .findOneByUuidAndStatusIdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
+                .findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
 
         if (metadataStatus == null) {
             throw new ResourceNotFoundException(

@@ -113,7 +113,6 @@ public class DraftUtilities {
             st.setPreviousState(old.getPreviousState());
             st.setStatusValue(old.getStatusValue());
             st.setChangeDate(old.getChangeDate());
-            st.setStatusId(old.getStatusId());
             st.setUserId(old.getUserId());
             st.setMetadataId(md.getId());
             st.setUuid(md.getUuid());

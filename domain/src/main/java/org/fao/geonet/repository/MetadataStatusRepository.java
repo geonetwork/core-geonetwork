@@ -63,7 +63,7 @@ public interface MetadataStatusRepository extends GeonetRepository<MetadataStatu
      * @return all the MetadataStatus objects by the associated metadata id.
      */
     @Nonnull
-    MetadataStatus findOneByMetadataIdAndStatusIdAndUserIdAndChangeDate(int metadataId, int statusId, int userId,  ISODate changeDate);
+    MetadataStatus findOneByMetadataIdAndStatusValue_IdAndUserIdAndChangeDate(int metadataId, int statusId, int userId, ISODate changeDate);
 
     /**
      * Find the MetadataStatus objects by the associated metadata id, status id, user id and change date.
@@ -75,7 +75,7 @@ public interface MetadataStatusRepository extends GeonetRepository<MetadataStatu
      * @return all the MetadataStatus objects by the associated metadata id.
      */
     @Nonnull
-    MetadataStatus findOneByUuidAndStatusIdAndUserIdAndChangeDate(String uuid, int statusId, int userId,  ISODate changeDate);
+    MetadataStatus findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(String uuid, int statusId, int userId, ISODate changeDate);
 
     /**
      * Find the MetadataStatus objects by the associated status id, user id and change date.
@@ -86,7 +86,7 @@ public interface MetadataStatusRepository extends GeonetRepository<MetadataStatu
      * @return all the MetadataStatus objects by the associated metadata id.
      */
     @Nonnull
-    MetadataStatus findOneByStatusIdAndUserIdAndChangeDate(int statusId, int userId,  ISODate changeDate);
+    MetadataStatus findOneByStatusValue_IdAndUserIdAndChangeDate(int statusId, int userId, ISODate changeDate);
 
     /**
      * Delete all the entities that are related to the indicated metadata.

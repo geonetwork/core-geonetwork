@@ -137,7 +137,7 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
                 newMetadataStatus.setUuid(metadataStatus.getUuid());
                 newMetadataStatus.setTitles(metadataStatus.getTitles());
                 newMetadataStatus.setChangeDate(metadataStatus.getChangeDate());
-                newMetadataStatus.setStatusId(metadataStatus.getStatusId());
+                newMetadataStatus.setStatusValue(metadataStatus.getStatusValue());
                 newMetadataStatus.setChangeMessage(metadataStatus.getChangeMessage());
                 newMetadataStatus.setStatusValue(metadataStatus.getStatusValue());
                 metadataStatusRepository.save(newMetadataStatus);

@@ -554,7 +554,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             List<MetadataStatus> statuses = statusRepository.findAllByMetadataIdAndByType(id$, StatusValueType.workflow, statusSort);
             if (!statuses.isEmpty()) {
                 MetadataStatus stat = statuses.get(0);
-                String status = String.valueOf(stat.getStatusId());
+                String status = String.valueOf(stat.getStatusValue().getId());
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.STATUS, status, true, true));
                 String statusChangeDate = stat.getChangeDate().getDateAndTime();
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.STATUS_CHANGE_DATE, statusChangeDate,

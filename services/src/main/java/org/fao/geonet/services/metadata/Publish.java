@@ -184,7 +184,7 @@ public class Publish {
                 if (!allowPublishNonApprovedMd) {
                     MetadataStatus metadataStatus = metadataStatusRepository.getStatus(metadata.getId());
 
-                    String statusId = metadataStatus.getStatusId() + "";
+                    String statusId = metadataStatus.getStatusValue().getId() + "";
                     if (!statusId.equals(StatusValue.Status.APPROVED)) {
                         report.incNoApproved();
                         continue;

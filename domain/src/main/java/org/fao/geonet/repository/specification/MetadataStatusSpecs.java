@@ -23,18 +23,7 @@
 
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataDataInfo_;
-import org.fao.geonet.domain.MetadataSourceInfo_;
-import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatus_;
-import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.domain.StatusValueType;
-import org.fao.geonet.domain.StatusValue_;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.User_;
+import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
@@ -81,7 +70,7 @@ public final class MetadataStatusSpecs {
             public Predicate toPredicate(Root<MetadataStatus> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Path<Integer> userIdAttributePath = root.get(MetadataStatus_.userId);
                 Path<Integer> metadataIdAttributePath = root.get(MetadataStatus_.metadataId);
-                Path<Integer> statusIdAttributePath = root.get(MetadataStatus_.statusId);
+                Path<StatusValue> statusIdAttributePath = root.get(MetadataStatus_.statusValue);
                 Predicate idEqualPredicate = cb.equal(metadataIdAttributePath, cb.literal(metadataId));
                 Predicate uuidEqualPredicate = cb.equal(userIdAttributePath, cb.literal(userId));
                 Predicate statusIdEqual = cb.equal(statusIdAttributePath, cb.literal(statusId));

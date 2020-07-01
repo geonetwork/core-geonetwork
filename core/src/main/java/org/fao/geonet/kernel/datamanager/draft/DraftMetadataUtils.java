@@ -566,8 +566,6 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
             for (Integer mdId : metadataIds) {
                 MetadataStatus metadataStatus = new MetadataStatus();
-
-                metadataStatus.setStatusId(status);
                 metadataStatus.setMetadataId(mdId);
                 metadataStatus.setUuid(uuid);
                 metadataStatus.setChangeDate(new ISODate());

@@ -243,7 +243,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(changeMessage, loadedStatus.getChangeMessage());
         assertEquals(0, loadedStatus.getStatusValue().getId());
         assertEquals(metadataId, loadedStatus.getMetadataId());
-        assertEquals(0, loadedStatus.getStatusId());
+        assertEquals(0, loadedStatus.getStatusValue().getId());
         assertEquals(serviceContext.getUserSession().getUserIdAsInt(), loadedStatus.getUserId());
     }
 

@@ -91,7 +91,6 @@ public class MetadataStatus extends GeonetEntity {
     private int id;
     private ISODate _changedate;
     private int metadataId;
-    private int statusId;
     private int userId;
     private String changeMessage;
     private StatusValue statusValue;
@@ -163,26 +162,6 @@ public class MetadataStatus extends GeonetEntity {
      */
     public void setMetadataId(int metadataId) {
         this.metadataId = metadataId;
-    }
-
-    /**
-     * Get the id of the new status.
-     *
-     * @return the id of the new status.
-     */
-    @Column(nullable = false)
-    public int getStatusId() {
-        return statusId;
-    }
-
-    /**
-     * Set the id of the new status.
-     *
-     * @param statusId the id of the new status.
-     * @return this id object
-     */
-    public void setStatusId(int statusId) {
-        this.statusId = statusId;
     }
 
     /**
@@ -307,16 +286,14 @@ public class MetadataStatus extends GeonetEntity {
         return this;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "statusId", nullable = false, insertable = false, updatable = false)
-    @MapsId("statusId")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "statusId", columnDefinition="integer", nullable = false, referencedColumnName = "id")
     public StatusValue getStatusValue() {
         return statusValue;
     }
 
     public void setStatusValue(StatusValue statusValue) {
         this.statusValue = statusValue;
-        this.statusId=statusValue.getId();
     }
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
@@ -409,7 +386,7 @@ public class MetadataStatus extends GeonetEntity {
     public Element getAsXml() {
         return new Element(EL_METADATA_STATUS)
                 .addContent(new Element(EL_ID).setText(String.valueOf(getId())))
-                .addContent(new Element(EL_STATUS_ID).setText(String.valueOf(getStatusId())))
+                .addContent(new Element(EL_STATUS_ID).setText(String.valueOf(getStatusValue().getId())))
                 .addContent(new Element(EL_USER_ID).setText(String.valueOf(getUserId())))
                 .addContent(new Element(EL_CHANGE_DATE).setText(getChangeDate().getDateAndTime()))
                 .addContent(new Element(EL_CHANGE_MESSAGE).setText(getChangeMessage()))
@@ -423,7 +400,7 @@ public class MetadataStatus extends GeonetEntity {
 	public String toString() {
 		return "MetadataStatus [" + "id=" + id + ", "
                 + "_metadataId=" + metadataId + ", "
-                + "_statusId=" + statusId + ", "
+                + "_statusId=" + statusValue.getId() + ", "
                 + "_userId=" + userId + ", "
                 + (_changedate != null ? "changeDate=" + getChangeDate().getDateAndTime() + ", " : "")
                 + (uuid != null ? "uuid=" + uuid + ", " : "")

@@ -138,8 +138,6 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
             MetadataStatus status = new MetadataStatus();
             status.setChangeMessage(event.getMessage());
             status.setStatusValue(event.getStatus());
-
-            status.setStatusId(event.getStatus().getId());
             status.setMetadataId(md.getId());
             status.setUuid(md.getUuid());
             status.setTitles(metadataUtils.extractTitles(Integer.toString(md.getId())));

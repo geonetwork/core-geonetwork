@@ -166,10 +166,10 @@ public class DefaultStatusActions implements StatusActions {
         for (MetadataStatus status : listOfStatus) {
             MetadataStatus currentStatus = dm.getStatus(status.getMetadataId());
             String currentStatusId = (currentStatus != null)?
-                String.valueOf(currentStatus.getStatusId()):"";
+                String.valueOf(currentStatus.getStatusValue().getId()):"";
 
 
-            String statusId = status.getStatusId() + "";
+            String statusId = status.getStatusValue().getId() + "";
             Set<Integer> listOfId = new HashSet<>(1);
             listOfId.add(status.getMetadataId());
 
@@ -180,7 +180,7 @@ public class DefaultStatusActions implements StatusActions {
                (statusId).equals(currentStatusId)) {
                 if (context.isDebugEnabled())
                     context.debug(String.format("Metadata %s already has status %s ",
-                        status.getMetadataId(), status.getStatusId()));
+                        status.getMetadataId(), status.getStatusValue().getId()));
                 unchanged.add(status.getMetadataId());
                 continue;
             }
@@ -194,7 +194,7 @@ public class DefaultStatusActions implements StatusActions {
             } catch (Exception e) {
                 context.warning(String.format(
                     "Failed to send notification on status change for metadata %s with status %s. Error is: %s",
-                    status.getMetadataId(), status.getStatusId(), e.getMessage()));
+                    status.getMetadataId(), status.getStatusValue().getId(), e.getMessage()));
             }
 
             //Throw events
@@ -226,7 +226,7 @@ public class DefaultStatusActions implements StatusActions {
      * @throws Exception
      */
     private void applyRulesForStatusChange(MetadataStatus status) throws Exception {
-        String statusId = status.getStatusId() + "";
+        String statusId = status.getStatusValue().getId() + "";
         if (statusId.equals(StatusValue.Status.APPROVED)) {
             // setAllOperations(mid); - this is a short cut that could be enabled
             AccessManager accessManager = context.getBean(AccessManager.class);
@@ -252,7 +252,7 @@ public class DefaultStatusActions implements StatusActions {
     private void notify(List<User> userToNotify, MetadataStatus status) throws Exception {
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
 
-        String translatedStatusName = getTranslatedStatusName(status.getStatusId());
+        String translatedStatusName = getTranslatedStatusName(status.getStatusValue().getId());
         // TODO: Refactor to allow custom messages based on the type of status
         String subjectTemplate = "";
         try {

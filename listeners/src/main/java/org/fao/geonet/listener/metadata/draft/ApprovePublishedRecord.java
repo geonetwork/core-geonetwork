@@ -81,7 +81,7 @@ public class ApprovePublishedRecord implements ApplicationListener<MetadataPubli
             MetadataStatus previousStatus = metadataStatus.getStatus(event.getMd().getId());
             if (previousStatus != null) {
                 draftUtilities.replaceMetadataWithDraft(event.getMd());
-                if (!Integer.valueOf(StatusValue.Status.APPROVED).equals(previousStatus.getStatusId())) {
+                if (!Integer.valueOf(StatusValue.Status.APPROVED).equals(previousStatus.getStatusValue().getId())) {
                     changeToApproved(event.getMd(), previousStatus);
                 }
             }
@@ -97,7 +97,6 @@ public class ApprovePublishedRecord implements ApplicationListener<MetadataPubli
         status.setChangeMessage("Record published.");
         status.setPreviousState(previousStatus.getCurrentState());
         status.setStatusValue(statusValueRepository.findOne(Integer.valueOf(StatusValue.Status.APPROVED)));
-        status.setStatusId(Integer.valueOf(StatusValue.Status.APPROVED));
         status.setMetadataId(md.getId());
         status.setUuid(md.getUuid());
         status.setTitles(metadataUtils.extractTitles(Integer.toString(md.getId())));

@@ -79,7 +79,6 @@ public abstract class GenericMetadataEventListener {
             if (status != null) {
                 MetadataStatus metadataStatus = new MetadataStatus();
                 metadataStatus.setMetadataId(metadataid);
-                metadataStatus.setStatusId(Integer.parseInt(getEventType()));
                 metadataStatus.setUserId(event.getUserId());
                 metadataStatus.setChangeDate(new ISODate(System.currentTimeMillis()));
                 metadataStatus.setStatusValue(status);
