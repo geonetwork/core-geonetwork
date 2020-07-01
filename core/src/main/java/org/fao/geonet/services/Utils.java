@@ -34,7 +34,6 @@ import org.fao.geonet.exceptions.MissingParameterEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.repository.MetadataDraftRepository;
 import org.jdom.Element;
 
 import java.io.IOException;
@@ -67,21 +66,21 @@ public class Utils {
                 String uuid = Util.getParam(params, uuidParamName);
                 // lookup ID by UUID
                 id = dm.getMetadataId(uuid);
-                
+
                 //Do we want the draft version?
                 Boolean approved = Util.getParam(params, "approved", true);
                 if(!approved) {
                     //Is the user editor for this metadata?
                     AccessManager am = context.getBean(AccessManager.class);
                     if(am.canEdit(context, id)) {
-                        AbstractMetadata draft = gc.getBean(MetadataDraftRepository.class).findOneByUuid(uuid);
+                        AbstractMetadata draft = null; //gc.getBean(MetadataDraftRepository.class).findOneByUuid(uuid);
                         if(draft != null) {
                             id = String.valueOf(draft.getId());
                         }
                     }
                 }
-                
-                
+
+
             } catch (MissingParameterEx x) {
                 // request does not contain UUID; use ID from request
                 try {

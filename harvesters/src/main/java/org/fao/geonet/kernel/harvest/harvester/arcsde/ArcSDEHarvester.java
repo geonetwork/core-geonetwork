@@ -298,7 +298,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
         // not in this harvesting result
         //
         Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
-        List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findAllIdsBy((Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(params.getUuid()));
+        List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findIdsBy((Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(params.getUuid()));
         for (Integer existingId : existingMetadata) {
 
             if (cancelMonitor.get()) {

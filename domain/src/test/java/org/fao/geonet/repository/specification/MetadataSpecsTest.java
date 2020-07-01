@@ -269,7 +269,7 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         if (addNewMetadata) {
             _repository.save(newMetadata(_inc));
         }
-        List<Integer> found = _repository.findAllIdsBy(spec);
+        List<Integer> found = _repository.findIdsBy(spec);
         assertEquals(1, found.size());
         assertEquals(md1.getId(), found.get(0).intValue());
     }

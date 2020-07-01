@@ -358,7 +358,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public List<Integer> findAllIdsBy(Specification<? extends AbstractMetadata> specs) {
         try {
-            return metadataRepository.findAllIdsBy((Specification<Metadata>) specs);
+            return metadataRepository.findIdsBy((Specification<Metadata>) specs);
         } catch (ClassCastException t) {
             // Maybe it is not a Specification<Metadata>
         }
@@ -797,7 +797,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Override
     public List<SimpleMetadata> findAllSimple(String harvestUuid) {
-        return metadataRepository.findAllSimple(harvestUuid);
+        return metadataRepository.findSimple(harvestUuid);
     }
 
     @Override
@@ -855,13 +855,13 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Override
     public Page<Pair<Integer, ISODate>> findAllIdsAndChangeDates(Pageable pageable) {
-        return metadataRepository.findAllIdsAndChangeDates(pageable);
+        return metadataRepository.findIdsAndChangeDates(pageable);
     }
 
     @Override
     public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> spec) {
         try {
-            return metadataRepository.findAllSourceInfo((Specification<Metadata>) spec);
+            return metadataRepository.findSourceInfo((Specification<Metadata>) spec);
         } catch (Throwable t) {
             // Maybe it is not a Specification<Metadata>
         }

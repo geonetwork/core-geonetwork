@@ -43,7 +43,7 @@ import javax.persistence.criteria.Root;
  * <p/>
  * User: Jesse Date: 9/9/13 Time: 8:00 PM
  */
-public class MetadataCategoryRepositoryImpl implements MetadataCategoryRepositoryCustom {
+public class MetadataCategoryRepositoryCustomImpl implements MetadataCategoryRepositoryCustom {
 
     @PersistenceContext
     private EntityManager _entityManager;

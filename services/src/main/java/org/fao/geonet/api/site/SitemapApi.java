@@ -44,7 +44,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -172,7 +171,7 @@ public class SitemapApi {
             // Requesting a sitemap specific document
             if (doc <= pages) {
                 final PageRequest pageRequest = PageRequest.of(doc - 1, MAX_ITEMS_PER_PAGE, sortByChangeDateDesc);
-                result = metadataRepository.findAllUuidsAndChangeDatesAndSchemaId(list, pageRequest);
+                result = metadataRepository.findUuidsAndChangeDatesAndSchemaId(list, pageRequest);
 
                 Element formatEl = new Element("format");
                 formatEl.setText(format.toLowerCase());
@@ -184,7 +183,7 @@ public class SitemapApi {
             // Request the sitemap (no specific document)
             if (metadatataCount <= MAX_ITEMS_PER_PAGE) {
                 // Request the full sitemap
-                result = metadataRepository.findAllUuidsAndChangeDatesAndSchemaId(list);
+                result = metadataRepository.findUuidsAndChangeDatesAndSchemaId(list);
 
                 Element formatEl = new Element("format");
                 formatEl.setText(format.toLowerCase());

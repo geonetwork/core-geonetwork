@@ -35,6 +35,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -54,9 +55,9 @@ public class FormatterCachePublishListener implements ApplicationListener<Metada
         final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
         final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(metadataId);
         final ConfigurableApplicationContext context = ApplicationContextHolder.get();
-        final OperationAllowed one = context.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished)).get();
+        final Optional<OperationAllowed> one = context.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished));
         try {
-            formatterCache.setPublished(metadataId, one != null);
+            formatterCache.setPublished(metadataId, one.isPresent());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

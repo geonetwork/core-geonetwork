@@ -53,7 +53,7 @@ import org.springframework.data.domain.Sort;
  *
  * @author Jesse
  */
-public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCustom {
+public class MetadataStatusRepositoryCustomImpl implements MetadataStatusRepositoryCustom {
 
     @PersistenceContext
     EntityManager _entityManager;

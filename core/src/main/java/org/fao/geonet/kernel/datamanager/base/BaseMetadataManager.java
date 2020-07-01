@@ -280,7 +280,7 @@ public class BaseMetadataManager implements IMetadataManager {
             }
 
             currentPage++;
-            results = metadataRepository.findAllIdsAndChangeDates(
+            results = metadataRepository.findIdsAndChangeDates(
                 PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
         }
 
@@ -1299,7 +1299,7 @@ public class BaseMetadataManager implements IMetadataManager {
     @Override
     public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> specs) {
         try {
-            return metadataRepository.findAllSourceInfo((Specification<Metadata>) specs);
+            return metadataRepository.findSourceInfo((Specification<Metadata>) specs);
         } catch (ClassCastException t) {
             throw new ClassCastException("Unknown AbstractMetadata subtype: " + specs.getClass().getName());
         }

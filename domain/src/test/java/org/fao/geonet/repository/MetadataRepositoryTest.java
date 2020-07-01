@@ -48,11 +48,9 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specification;
 
 public class MetadataRepositoryTest extends AbstractSpringDataTest {
@@ -119,7 +117,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(3, _repo.count());
 
-        List<Integer> ids = _repo.findAllIdsBy((Specification<Metadata>)MetadataSpecs.hasMetadataUuid(metadata.getUuid()));
+        List<Integer> ids = _repo.findIdsBy((Specification<Metadata>)MetadataSpecs.hasMetadataUuid(metadata.getUuid()));
 
         assertArrayEquals(new Integer[]{metadata.getId()}, ids.toArray(new Integer[1]));
     }
@@ -175,7 +173,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(2, _repo.count());
 
-        AbstractMetadata found = _repo.findOneOldestByChangeDate();
+        AbstractMetadata found = _repo.findOldestByChangeDate();
         assertNotNull(found);
         assertSameContents(metadata1, found);
     }
@@ -190,8 +188,8 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         final Sort sortByIdAsc = Sort.by(Sort.Direction.DESC, Metadata_.id.getName());
         PageRequest page1 = PageRequest.of(0, 2, sortByIdAsc);
         PageRequest page2 = PageRequest.of(1, 2, sortByIdAsc);
-        Page<Pair<Integer, ISODate>> firstPage = _repo.findAllIdsAndChangeDates(page1);
-        Page<Pair<Integer, ISODate>> secondPage = _repo.findAllIdsAndChangeDates(page2);
+        Page<Pair<Integer, ISODate>> firstPage = _repo.findIdsAndChangeDates(page1);
+        Page<Pair<Integer, ISODate>> secondPage = _repo.findIdsAndChangeDates(page2);
 
         assertEquals(2, firstPage.getNumberOfElements());
         assertEquals(0, firstPage.getNumber());
@@ -220,8 +218,8 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         final Sort sortByChangeDate = SortUtils.createSort(Metadata_.dataInfo, MetadataDataInfo_.changeDate);
         page1 = PageRequest.of(0, 1, sortByChangeDate);
         page2 = PageRequest.of(0, 3, sortByChangeDate);
-        firstPage = _repo.findAllIdsAndChangeDates(page1);
-        secondPage = _repo.findAllIdsAndChangeDates(page2);
+        firstPage = _repo.findIdsAndChangeDates(page1);
+        secondPage = _repo.findIdsAndChangeDates(page2);
 
         assertEquals(1, firstPage.getNumberOfElements());
         assertEquals(3, secondPage.getNumberOfElements());
@@ -244,7 +242,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         Metadata metadata3 = _repo.save(newMetadata());
 
         final Specification<Metadata> spec = (Specification<Metadata>)MetadataSpecs.hasMetadataIdIn(Arrays.asList(metadata.getId(), metadata3.getId()));
-        final Map<Integer, MetadataSourceInfo> allSourceInfo = _repo.findAllSourceInfo(Specification.where(spec));
+        final Map<Integer, MetadataSourceInfo> allSourceInfo = _repo.findSourceInfo(Specification.where(spec));
 
         assertEquals(2, allSourceInfo.size());
         assertTrue(allSourceInfo.containsKey(metadata.getId()));

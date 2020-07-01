@@ -29,5 +29,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 /**
  * Data Access object for the {@link LinkStatus} entities.
  */
-public interface LinkStatusRepository extends GeonetRepository<LinkStatus, Integer>, LinkRepositoryCustom, JpaSpecificationExecutor<LinkStatus> {
+public interface LinkStatusRepository extends GeonetRepository<LinkStatus, Integer>, JpaSpecificationExecutor<LinkStatus> {
 }

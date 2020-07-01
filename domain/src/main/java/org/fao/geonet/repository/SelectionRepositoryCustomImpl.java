@@ -23,25 +23,36 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.MapServer;
+import org.fao.geonet.domain.Selection;
+import org.fao.geonet.domain.Selection_;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Root;
 
 /**
- * Data Access object for accessing {@link org.fao.geonet.domain.MapServer} entities.
- *
- * @author Francois
+ * Implementation for custom selection methods.
  */
-
-public class MapServerRepositoryImpl implements MapServerRepositoryCustom {
+public class SelectionRepositoryCustomImpl implements SelectionRepositoryCustom {
 
     @PersistenceContext
     private EntityManager _entityManager;
 
-    @Override
-    public MapServer findOneById(final String id) {
-        return _entityManager.find(MapServer.class, Integer.valueOf(id));
-    }
 
+    @Nullable
+    @Override
+    public Selection findOneByNameIgnoreCase(@Nonnull String name) {
+        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Selection> cbQuery = cb.createQuery(Selection.class);
+        final Root<Selection> root = cbQuery.from(Selection.class);
+        final Expression<String> lowerName = cb.lower(root.get(Selection_.name));
+        final Expression<String> lowerRequiredName = cb.lower(cb.literal(name));
+        cbQuery.where(cb.equal(lowerName, lowerRequiredName));
+        return _entityManager.createQuery(cbQuery).getSingleResult();
+    }
 }

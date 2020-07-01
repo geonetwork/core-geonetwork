@@ -33,7 +33,6 @@ import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.events.md.MetadataStatusChanged;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
-import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +51,8 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Component
 public class ApproveRecord implements ApplicationListener<MetadataStatusChanged> {
 
-    @Autowired
-    private MetadataDraftRepository metadataDraftRepository;
+    //@Autowired
+    //private MetadataDraftRepository metadataDraftRepository;
 
     @Autowired
     private MetadataRepository metadataRepository;
@@ -115,7 +114,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
     private void removeDraft(AbstractMetadata md) throws Exception {
 
         if (!(md instanceof MetadataDraft)) {
-            md = metadataDraftRepository.findOneByUuid(md.getUuid());
+            //md = metadataDraftRepository.findOneByUuid(md.getUuid());
         }
 
         if (md != null) {
@@ -146,7 +145,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
             metadataStatus.setStatusExt(status);
 
         } else if (md instanceof Metadata) {
-            draft = metadataDraftRepository.findOneByUuid(md.getUuid());
+            draft = null; //metadataDraftRepository.findOneByUuid(md.getUuid());
         }
 
         if (draft != null) {

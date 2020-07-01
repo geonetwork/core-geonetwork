@@ -29,14 +29,12 @@ package org.fao.geonet.domain;
 import java.util.Arrays;
 import java.util.List;
 
-import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -69,8 +67,10 @@ public enum SchematronCriteriaType {
             final Specification<Metadata> correctOwner = (Specification<Metadata>)MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(ids));
             final Specification<Metadata> correctId = (Specification<Metadata>)MetadataSpecs.hasMetadataId(metadataId);
             final Specification<Metadata> finalSpec = Specification.where(correctId).and(correctOwner);
-            return applicationContext.getBean(MetadataRepository.class).count(finalSpec)
-                    + applicationContext.getBean(MetadataDraftRepository.class).count(finalSpecDraft) > 0;
+            return applicationContext.getBean(MetadataRepository.class).count(finalSpec) > 0;
+
+            //return applicationContext.getBean(MetadataRepository.class).count(finalSpec)
+            //    + applicationContext.getBean(MetadataDraftRepository.class).count(finalSpecDraft) > 0;
         }
 
         @Override

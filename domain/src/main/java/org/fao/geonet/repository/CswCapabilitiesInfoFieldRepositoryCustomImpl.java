@@ -41,7 +41,7 @@ import java.util.List;
  * <p/>
  * User: Jesse Date: 9/20/13 Time: 10:36 AM
  */
-public class CswCapabilitiesInfoFieldRepositoryImpl implements CswCapabilitiesInfoFieldRepositoryCustom {
+public class CswCapabilitiesInfoFieldRepositoryCustomImpl implements CswCapabilitiesInfoFieldRepositoryCustom {
     @PersistenceContext
     private EntityManager _EntityManager;
 

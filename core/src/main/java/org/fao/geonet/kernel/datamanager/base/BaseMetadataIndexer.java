@@ -60,7 +60,6 @@ import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -635,9 +634,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         // If we are not using draft utils, mark all as "no draft"
         // needed to be compatible with UI searches that check draft existence
         Multimap<String, Object> extraFields = ArrayListMultimap.create();
-        if (!DraftMetadataIndexer.class.isInstance(this)) {
+        //if (!DraftMetadataIndexer.class.isInstance(this)) {
             extraFields.put(Geonet.IndexFieldNames.DRAFT, "n");
-        }
+        //}
         return extraFields;
     }
 

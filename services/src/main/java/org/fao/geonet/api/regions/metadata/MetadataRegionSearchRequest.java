@@ -209,7 +209,7 @@ public class MetadataRegionSearchRequest extends Request {
             final String mdId = MetadataRegionSearchRequest.Id.create(idParts[0]).getMdId();
 
             if (mdId != null) {
-                Metadata metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOne(mdId);
+                Metadata metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOneById(Integer.valueOf(mdId));
 
                 final ISODate docChangeDate = metadata.getDataInfo().getChangeDate();
                 if (docChangeDate != null) {

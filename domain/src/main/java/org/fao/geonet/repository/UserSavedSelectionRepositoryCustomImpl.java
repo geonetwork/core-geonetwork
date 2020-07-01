@@ -46,7 +46,7 @@ import java.util.List;
 /**
  * Implementation object for methods in {@link UserSavedSelectionRepositoryCustom}.
  */
-public class UserSavedSelectionRepositoryImpl
+public class UserSavedSelectionRepositoryCustomImpl
     implements UserSavedSelectionRepositoryCustom {
 
     @PersistenceContext

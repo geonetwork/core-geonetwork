@@ -255,22 +255,27 @@ public final class XslUtil {
         SourceRepository sourceRepository= ApplicationContextHolder.get().getBean(SourceRepository.class);
         UiSettingsRepository uiSettingsRepository = ApplicationContextHolder.get().getBean(UiSettingsRepository.class);
 
-        org.fao.geonet.domain.Source portal = sourceRepository.findById(nodeId).get();
+        Optional<org.fao.geonet.domain.Source> portalOpt = sourceRepository.findById(nodeId);
+        org.fao.geonet.domain.Source portal = null;
+        if (portalOpt.isPresent()) {
+            portal = portalOpt.get();
+        }
 
         if (uiSettingsRepository != null) {
+            Optional<UiSetting> oneOpt = null;
             UiSetting one = null;
             if (portal != null && StringUtils.isNotEmpty(portal.getUiConfig())) {
-                one = uiSettingsRepository.findById(portal.getUiConfig()).get();
+                oneOpt = uiSettingsRepository.findById(portal.getUiConfig());
             }
             else if (StringUtils.isNotEmpty(key)) {
-                one = uiSettingsRepository.findById(key).get();
+                oneOpt = uiSettingsRepository.findById(key);
             }
-            else if (one == null) {
-                one = uiSettingsRepository.findById(org.fao.geonet.NodeInfo.DEFAULT_NODE).get();
+            else if (oneOpt == null) {
+                oneOpt = uiSettingsRepository.findById(org.fao.geonet.NodeInfo.DEFAULT_NODE);
             }
 
-            if (one != null) {
-                return one.getConfiguration();
+            if (oneOpt.isPresent()) {
+                return oneOpt.get().getConfiguration();
             } else {
                 return "{}";
             }
@@ -346,9 +351,9 @@ public final class XslUtil {
             key = settingsMan.getSiteId();
         }
         SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
-        Source source = sourceRepository.findById(key).get();
+        Optional<Source> source = sourceRepository.findById(key);
 
-        return source != null ? source.getLabel(lang) : settingsMan.getSiteName()
+        return source.isPresent() ? source.get().getLabel(lang) : settingsMan.getSiteName()
             + (withOrganization ? " - " + settingsMan.getValue(SYSTEM_SITE_ORGANIZATION) : "");
     }
 
@@ -721,7 +726,13 @@ public final class XslUtil {
         String contactDetails = "";
         int contactId = Integer.parseInt((String) contactIdentifier);
 
-        User user = ApplicationContextHolder.get().getBean(UserRepository.class).findById(contactId).get();
+        Optional<User> userOpt = ApplicationContextHolder.get().getBean(UserRepository.class).findById(contactId);
+        User user = null;
+
+        if (userOpt.isPresent()) {
+            user = userOpt.get();
+        }
+
         if (user != null) {
             contactDetails = Xml.getString(user.asXml());
         }

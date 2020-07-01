@@ -37,7 +37,6 @@ import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -67,8 +66,8 @@ public class UpdateOperations implements ApplicationListener<MetadataShare> {
     @Autowired
     private GroupRepository groupRepository;
 
-    @Autowired
-    private MetadataDraftRepository metadataDraftRepository;
+    //@Autowired
+    //private MetadataDraftRepository metadataDraftRepository;
 
     @Override
     public void onApplicationEvent(MetadataShare event) {
@@ -92,7 +91,7 @@ public class UpdateOperations implements ApplicationListener<MetadataShare> {
             if (md instanceof MetadataDraft) {
                 Log.trace(Geonet.DATA_MANAGER, "Draft privileges are handled on approved record: " + event.getOp());
             } else {
-                MetadataDraft draft = metadataDraftRepository.findOneByUuid(md.getUuid());
+                MetadataDraft draft = null; //metadataDraftRepository.findOneByUuid(md.getUuid());
 
                 if (draft != null) {
                     // Copy privileges from original metadata
