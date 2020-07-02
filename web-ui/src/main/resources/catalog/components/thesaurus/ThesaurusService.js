@@ -27,7 +27,8 @@
   var module = angular.module('gn_thesaurus_service', []);
 
   module.factory('Keyword', function() {
-    function Keyword(k) {
+    function Keyword(k,UILangs) {
+      this.UILangs = UILangs;
       this.props = $.extend(true, {}, k);
       this.label = this.getLabel();
       this.tagClass = 'label label-info gn-line-height';
@@ -37,6 +38,15 @@
         return this.props.uri;
       },
       getLabel: function() {
+        if ( (this.props.values) ){
+            var UILangs= this.UILangs;
+            var props = this.props;
+            var foundLang = _.find(UILangs,function(l){
+                  return props.values[l] !== undefined;
+            });
+            if (foundLang)
+              return props.values[foundLang];
+        }
         return this.props.value['#text'] || this.props.value;
       }
     };
@@ -45,7 +55,8 @@
   });
 
   module.factory('Thesaurus', function() {
-    function Thesaurus(k) {
+    function Thesaurus(k, UILangs) {
+      this.UILangs = UILangs;
       this.props = $.extend(true, {}, k);
     };
     Thesaurus.prototype = {
@@ -53,7 +64,25 @@
         return this.props.key;
       },
       getTitle: function() {
-        return this.props.title;
+        var title = this.props.title;
+        //there are multilingual
+        if (this.props.multilingualTitles && this.props.multilingualTitles.length>0) {
+          var UILangs= this.UILangs;
+          var props = this.props;
+
+          var foundLang = _.find(UILangs,function(l) {
+                  return _.find(props.multilingualTitles,function(ml) {
+                          return ml["lang"]==l;
+                  });
+          });
+          if (foundLang) {
+            var r = _.find(props.multilingualTitles,function(ml) {
+                              return ml["lang"]==foundLang;
+                    });
+            return r["title"];
+          }
+        }
+        return title;
       },
       get: function() {
         return this.props;
@@ -72,7 +101,10 @@
           'gnUrlUtils',
           'Keyword',
           'Thesaurus',
-          function($q, $rootScope, $http, gnUrlUtils, Keyword, Thesaurus) {
+          'gnCurrentEdit',
+          'gnLangs',
+          'gnGlobalSettings',
+          function($q, $rootScope, $http, gnUrlUtils, Keyword, Thesaurus,gnCurrentEdit,gnLangs,gnGlobalSettings) {
             var getKeywordsSearchUrl = function(filter,
                 thesaurus, lang, max, typeSearch, outputLang) {
               var parameters = {
@@ -91,12 +123,36 @@
               );
             };
 
+            var getUILangs = function() {
+                  var currentUILang_3char = gnLangs.detectLang(
+                                              gnGlobalSettings.gnCfg.langDetector,
+                                              gnGlobalSettings
+                                            );
+                  var currentUILang2_3char = gnCurrentEdit.allLanguages.iso2code[currentUILang_3char].replace("#","");
+                  var result = [currentUILang_3char];
+                  if (!_.contains(result,currentUILang2_3char))
+                      result.push(currentUILang2_3char);
+                  if (gnLangs.langs[currentUILang_3char]) {
+                      v = gnLangs.langs[currentUILang_3char];
+                       if (!_.contains(result,v))
+                         result.push(v);
+                  }
+                  if (gnLangs.langs[currentUILang2_3char]) {
+                      v = gnLangs.langs[currentUILang2_3char];
+                       if (!_.contains(result,v))
+                         result.push(v);
+                  }
+                  return result;
+            };
+
 
             var parseKeywordsResponse = function(data, dataToExclude) {
               var listOfKeywords = [];
+
+              var uiLangs = getUILangs();
               angular.forEach(data, function(k) {
                 if (k.value) {
-                  listOfKeywords.push(new Keyword(k));
+                  listOfKeywords.push(new Keyword(k,uiLangs));
                 }
               });
 
@@ -224,7 +280,7 @@
                * eg. to-iso19139-keyword for default form.
                */
               getXML: function(thesaurus,
-                  keywordUris, transformation, lang, textgroupOnly) {
+                  keywordUris, transformation, lang, textgroupOnly,langConversion) {
                 // http://localhost:8080/geonetwork/srv/eng/
                 // xml.keyword.get?thesaurus=external.place.regions&id=&
                 // multiple=false&transformation=to-iso19139-keyword&
@@ -235,6 +291,9 @@
                       keywordUris.join(',') : keywordUris || '',
                   transformation: transformation || 'to-iso19139-keyword'
                 };
+                if (langConversion) {
+                  params.langMap = JSON.stringify(langConversion);
+                }
                 if (lang) {
                   params.lang = lang;
                 }
@@ -268,8 +327,11 @@
                     (schema || 'iso19139'), { cache: true }).
                     success(function(data, status) {
                       var listOfThesaurus = [];
+                      //converted and non-converted value
+                      // i.e. fra and fre
+                       var uiLangs = getUILangs()
                       angular.forEach(data[0], function(k) {
-                        listOfThesaurus.push(new Thesaurus(k));
+                        listOfThesaurus.push(new Thesaurus(k,uiLangs));
                       });
                       defer.resolve(listOfThesaurus);
                     }).
@@ -288,8 +350,11 @@
               parseKeywordsResponse: parseKeywordsResponse,
               getKeywords: function(filter, thesaurus, lang, max, typeSearch) {
                 var defer = $q.defer();
+                var allLangs = _.map(Object.keys(gnCurrentEdit.allLanguages.code2iso),function(k){
+                                 return k.replace("#","");
+                             }).join(',')
                 var url = getKeywordsSearchUrl(filter,
-                    thesaurus, lang, max, typeSearch);
+                    thesaurus, lang, max, typeSearch,allLangs);
                 $http.get(url, { cache: true }).
                     success(function(data, status) {
                       defer.resolve(parseKeywordsResponse(data));
