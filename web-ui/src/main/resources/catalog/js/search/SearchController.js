@@ -80,7 +80,7 @@
           $scope.isUserFeedbackEnabled = true;
         }
         $scope.isInspireEnabled =
-          (settings[gnConfig.key.isInspireEnabled] == true);
+          (gnConfig[gnConfig.key.isInspireEnabled] == true);
       });
 
       $scope.isUserSearchesEnabled = gnGlobalSettings.gnCfg.mods.search.usersearches.enabled;
