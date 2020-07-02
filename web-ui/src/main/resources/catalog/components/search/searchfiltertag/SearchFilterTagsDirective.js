@@ -212,12 +212,6 @@
               else
                 removeFacetElement.push(filter.value)
               ngSearchFormCtrl.updateState(removeFacetElement, true);
-              /*if (filter.isFacet) {
-                var facetQuery = removeFacet(filter.facetKey, getSearchParams()['facet.q']);
-                setSearchParameter('facet.q', facetQuery);
-              } else {
-                setSearchParameter(filter.key, null);
-              }*/
             };
 
             scope.removeAll = function() {
@@ -241,28 +235,6 @@
         })
       }
       return result;
-
-      /*var sep = separator;
-      if (!separator) {
-        sep = ' or ';
-      }
-
-      if (!input || !angular.isString(input)) {
-        return input;
-      }
-
-      var tokens = input.split(sep);
-
-      var result = '';
-      angular.forEach(tokens, function(token, index) {
-        result += $translate.instant(token.trim());
-        if (index != tokens.length - 1) {
-          var sepTranslated = $translate.instant(sep.trim());
-          result += ' ' + sepTranslated + ' ';
-        }
-      });
-
-      return result;*/
     };
 
     return filterFunc;
