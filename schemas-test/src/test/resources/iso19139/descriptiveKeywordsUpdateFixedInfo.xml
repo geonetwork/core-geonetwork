@@ -95,7 +95,7 @@
                 <gmd:MD_Identifier>
                   <gmd:code>
                     <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                                xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.place.regions">
+                                xlink:href="http://localhost:8080/geonetwork/srv/api/registries/vocabularies/external.place.regions">
                       geonetwork.thesaurus.external.place.regions
                     </gmx:Anchor>
                   </gmd:code>
@@ -144,7 +144,7 @@
                 <gmd:MD_Identifier>
                   <gmd:code>
                     <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                                xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.place.regions">
+                                xlink:href="http://localhost:8080/geonetwork/srv/api/registries/vocabularies/external.place.regions">
                       geonetwork.thesaurus.external.theme.gemet-theme
                     </gmx:Anchor>
                   </gmd:code>

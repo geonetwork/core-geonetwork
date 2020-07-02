@@ -240,7 +240,7 @@ public class Thesaurus {
         if (type.equals(Geonet.CodeList.REGISTER)) {
             return siteUrl + "?uuid=" + fname.substring(0, fname.indexOf(".rdf"));
         } else {
-            return siteUrl + "thesaurus.download?ref=" + Thesaurus.buildThesaurusKey(fname, type, dname);
+            return siteUrl.substring(0, siteUrl.length() - 4) + "api/registries/vocabularies/" + Thesaurus.buildThesaurusKey(fname, type, dname);
         }
     }
 
