@@ -183,7 +183,7 @@
                   angular.forEach(JSON.parse(value), function(facetValues, facetKey) {
                     if (typeof facetValues === 'object') {
                       angular.forEach(facetValues, function (values, facetValuesKey) {
-                        let elem = {};
+                        var elem = {};
                         elem[facetValuesKey]=values;
                         scope.currentFilters.push({
                           key: facetKey,
