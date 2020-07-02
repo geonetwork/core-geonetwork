@@ -109,9 +109,7 @@
           /**
            * @type {HTMLAnchorElement}
            */
-          //Specific sxt
-          var downloadEl = element.find('.context').children()[0];
-          //End sxt
+          var downloadEl = element.find('.download-element')[0];
           function getMapAsImage($event, scaleFactor) {
             var defer = $q.defer();
             if (scope.isExportMapAsImageEnabled) {
