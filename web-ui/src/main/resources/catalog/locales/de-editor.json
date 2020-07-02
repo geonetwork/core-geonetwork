@@ -1,6 +1,6 @@
 {
     "add-extent-from-geokeywords": "Ausdehnung anhand der Schlagwörter berechnen",
-    "add-extent-from-geokeywords-help": "Search all keywords from thesaurus of type 'place' and add matching extents.",
+    "add-extent-from-geokeywords-help": "Alle Schlagwörter vom Typ \"Ort\" im Thesaurus suchen und entsprechenden Extent anfügen.",
     "addCRS-help": "neues Projektionssystem hinzufügen",
     "contactId": "Kontaktidentifikator",
     "contactSetForMetadata": "Metadatenkontakt",

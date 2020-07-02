@@ -43,6 +43,7 @@
     "_groupOwner": "Groep",
     "_groupPublished": "Gepubliceerd in die groep",
     "_indexingError": "Indexeringsfout",
+    "indexRecords": "Index records",
     "_source": "Catalogus",
     "previousKeywords": "Vorige",
     "previousPage": "Vorige pagina",
@@ -88,7 +89,10 @@
     "moreInfoOnRecord": "meer ...",
     "comments": "Opmerking",
     "country": "Land",
+    "validateLinks": "Validate record links",
+    "metadataLinksValidated": "Link validation started.",
     "validateSelectedRecordConfirm": "Wilt u inderdaad {{selectedCount}} geselecteerde records valideren?",
+    "validateLinksSelectedRecordConfirm": "Do you really want to validate links of the {{selectedCount}} selected record(s)?",
     "validateSelectedRecordINSPIREConfirm": "wilt u {{selectedCount}} geselecteerde record(s) tegen de INSPIRE regels valideren?",
     "regions": "Regio's",
     "gemetKeywords": "GEMET trefwoorden",
@@ -509,5 +513,6 @@
     "cancelWorkingCopy": "Annuleer werk kopie",
     "deleteWorkingCopyRecordConfirm": "Weet je zeker dat je werk kopie '{{title}}' wilt verwijderen?",
     "workingCopy": "Werk kopie",
-    "metadataValidated": "Metadata validated."
+    "metadataValidated": "Metadata validated.",
+    "wmtsLayerNoUsableMatrixSet": "The WMTS layer could not be added. This may be because none of the projections advertised in the service matches any of the known projections of the application."
 }

@@ -43,6 +43,7 @@
     "_groupOwner": "Hópur",
     "_groupPublished": "Birta í þessum hóp",
     "_indexingError": "Villa í atriðaskrá",
+    "indexRecords": "Index records",
     "_source": "Efnisskrá",
     "previousKeywords": "Fyrra",
     "previousPage": "Fyrri síða",
@@ -88,7 +89,10 @@
     "moreInfoOnRecord": "meira...",
     "comments": "Athugasemd",
     "country": "Land",
+    "validateLinks": "Validate record links",
+    "metadataLinksValidated": "Link validation started.",
     "validateSelectedRecordConfirm": "Viltu sannprófa  {{selectedCount}} valdar færslur?",
+    "validateLinksSelectedRecordConfirm": "Do you really want to validate links of the {{selectedCount}} selected record(s)?",
     "validateSelectedRecordINSPIREConfirm": "Do you really want to validate in INSPIRE validator the {{selectedCount}} selected record(s)?",
     "regions": "Svæði",
     "gemetKeywords": "GEMET lykilorð",
@@ -509,5 +513,6 @@
     "cancelWorkingCopy": "Hætta við vinnuafrit",
     "deleteWorkingCopyRecordConfirm": "Ertu viss um að þú viljir fjarlægja vinnuafritið '{{titill}}'?",
     "workingCopy": "Vinnuafrit",
-    "metadataValidated": "Metadata validated."
+    "metadataValidated": "Metadata validated.",
+    "wmtsLayerNoUsableMatrixSet": "The WMTS layer could not be added. This may be because none of the projections advertised in the service matches any of the known projections of the application."
 }
