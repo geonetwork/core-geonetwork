@@ -289,6 +289,7 @@
     </xsl:choose>
   </xsl:template>
 
+
   <!-- Add required gml attributes if missing -->
   <xsl:template match="gml:Polygon[not(@gml:id) or not(@srsName)]|
                        gml:MultiSurface[not(@gml:id) or not(@srsName)]|
@@ -314,8 +315,22 @@
       <xsl:attribute name="srsName">
         <xsl:value-of select="if (@srsName != '') then @srsName else 'urn:ogc:def:crs:EPSG:6.6:4326'"/>
       </xsl:attribute>
-      <xsl:copy-of select="@*[name() != 'srsName' and local-name() != 'id' and name() != 'xmlns']"/>
+      <xsl:copy-of select="@*[name() != 'srsName' and local-name() != 'id']"/>
       <xsl:apply-templates select="*"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="gml:*|gml320:*">
+    <xsl:copy copy-namespaces="no">
+      <xsl:choose>
+        <xsl:when test="$isUsing2005Schema and not($isUsing2007Schema)">
+          <xsl:namespace name="gml320" select="'http://www.opengis.net/gml'"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:namespace name="gml" select="'http://www.opengis.net/gml/3.2'"/>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="@*|*"/>
     </xsl:copy>
   </xsl:template>
 
