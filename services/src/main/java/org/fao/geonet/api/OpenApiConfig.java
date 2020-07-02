@@ -60,8 +60,7 @@ public class OpenApiConfig  {
         ServerVariable catalogVariable = new ServerVariable()
             .description("The GeoNetwork catalog to contact")
             .addEnumItem(hostUrl)
-            .addEnumItem("../..")
-            .addEnumItem("https://vanilla.geocat.net/geonetwork");
+            .addEnumItem("../..");
         catalogVariable.setDefault(hostUrl);
 
         ServerVariable portalVariable = new ServerVariable()
