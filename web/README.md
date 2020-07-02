@@ -1,6 +1,6 @@
 # GeoNetwork Web application
 
-The web module contains the static resources and configuration file for building the final web application WAR.
+The web module gathers the static resources and configuration files for building the final web application WAR.
 
 1. Run embedded Jetty server:
    
@@ -36,6 +36,156 @@ The web module contains the static resources and configuration file for building
      ```
      mvn process-resources -DschemasCopy=true
      ```
+
+# Web Application Definition
+
+The `web` module has quite a complex build chain.
+
+### src folders
+
+The `war` packaging for the module defines several `src` folders:
+
+* `src/main/java`
+   
+   Define Geonetwork and other classes (compiled into `target/classes`)
+   
+* `src/main/resources`
+
+   Define resources (compiled into `target/classes`)
+
+* `src/webapp`
+   
+   Static outline of war contents.
+   
+   * `conversion`
+   * `doc`
+   * `htmlCache`
+   * `images`
+   * `loc` - translations
+   * `resources`
+   * `WEB-INF`
+      
+      * `web.xml`
+      
+   * `xml`
+   * `xsl`
+   * `xslt`
+   * `geonetwork.css`
+   * `modalbox.css`
+
+The build `generate `
+
+* `src/main/filters`
+
+   Used to process `webResources` into `target/webapp`
+
+* `src/webResources`
+   
+   * `WEB-INF`
+   
+   Content processed into `target/webapp`
+
+The `generate-sources` registers two additional src folders:
+
+* `src/main/java` - add-src folder containing `Geonetwork` class
+* `src/webapp/main/webapp/WEB-INF/classes/setup/sql/migrate` - add-src folder for sql migration
+
+### process-resources
+
+The `process-resources` stages content into:
+
+* `src/main/webapp/WEB-INF/data/config/schema_plugins`
+   
+   Collected from schema `plugin` content
+   
+* `src/webapp/doc` - from documentation manuals
+
+* `target/webapp`
+  
+   Copy filter `src/main/webResource` based on env configuration
+
+
+### compile 
+
+The `compile` stage builds:
+
+* `target/classes` - from `java` and `resources`
+
+
+### package
+
+The `maven-war-plugin` generates `jar`:
+
+* `target/geonetwork/WEB-INF/lib/web-app-3.11.0-SNAPSHOT.jar`
+  
+  Containing:
+  
+  * `src/main/java` compiled classes
+  * `src/main/resources` contents
+  * `src/webapp/main/webapp/WEB-INF/classes/setup/sql/migrate` compiled classes
+  
+     This is unusual having java source code in `src/webapp`!
+  
+The `maven-war-plugin` generates `war` structure into `target/geonetwork`:
+
+* `catalog`
+* `conversion`
+* `doc`
+* `htmlCache`
+* `images`
+* `loc`
+* `META-INF`
+* `resources`
+* `WEB-INF`
+* `xml`
+* `xsl`
+* `xslt`
+* `modalbox.css`
+* `geonetwork.css`
+
+Where content is collected from:
+
+* `target/geonetwork`: `src/main/webapp` files
+* `target/geonetwork`: `target/webapp` files that have been processed
+* `target/geonetwork`: `../web-ui/src/main/resources` files
+* `target/geonetwork/WEB-INF/data/config/schema_plugins`: `../schemas` files from each `plugin` folder
+* `target/geonetwork/WEB-INF/lib/`: maven dependencies
+
+* with many excludes ...
+
+  * `xml/schemas/`
+  * `WEB-INF/data/*.db`
+  * `WEB-INF/data/index/**`
+  * ...
+  
+  These appear to be a safety measure to avoid including files produced when `src/main/webapp`
+  is used as a live directory by `jetty` below.
+
+### jetty
+
+The `jetty-maven-plugin` defines web application using:
+
+* maven dependencies
+* `target/geonetwork`
+* `src/main/webapp`
+* `../web-ui/src/main/resources/`
+* `target/webapp`
+* `jett-context.xml`: used to prevent jetty scanning jars during startup
+
+Observations:
+
+* This configuration has been setup to use the "live" `src/main/webapp` location and pick up any changes each time `mvn process-resources` is called above.
+
+* schemas plugin folders are included twice:
+  
+  * in `target/geonetwork` via war definition 
+  * in `src/main/webapp/` via process-resource copy
+  
+* jars are included twice:
+  
+  * `target/geonetwork` libs folder
+  * as maven dependency
+
 
 # Managing Schema Plugins
 
