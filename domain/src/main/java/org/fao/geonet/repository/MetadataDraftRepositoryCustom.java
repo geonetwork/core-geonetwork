@@ -23,13 +23,10 @@
 
 package org.fao.geonet.repository;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataSourceInfo;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
 import org.jdom.Element;
 import org.springframework.data.domain.Page;
@@ -37,12 +34,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.repository.NoRepositoryBean;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Custom (Non spring-data) Query methods for {@link Metadata} entities.
  *
  * @author Jesse
  */
-public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
+public interface MetadataDraftRepositoryCustom<T extends AbstractMetadata> {
 
     /**
      * Return an object that contains functions for calculating several different statistical
@@ -51,17 +53,6 @@ public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
      * @return an object for performing statistic calculation queries.
      */
     MetadataReportsQueries getMetadataReports();
-
-    /**
-     * Permit finding a metadata by its ids as a string.
-     * <p/>
-     * The id needs to be convertable to an integer
-     * <p/>
-     * This is just short for repository.findById(Integer.parseInt(id)).get()
-     *
-     * @param id the id in string form instead of integer.
-     */
-
 
     /**
      * Find the list of Metadata Ids and changes dates for the metadata. <p> When constructing sort
@@ -83,14 +74,6 @@ public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
      */
     @Nonnull
     List<Integer> findIdsBy(@Nonnull Specification<T> specs);
-
-    /**
-     * Find the metadata that has the oldest change date.
-     *
-     * @return the metadata with the oldest change date
-     */
-    @Nullable
-    Metadata findOldestByChangeDate();
 
     /**
      * Load the source info objects for all the metadata selected by the spec.

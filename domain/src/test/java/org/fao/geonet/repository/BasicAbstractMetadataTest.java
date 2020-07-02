@@ -42,8 +42,8 @@ public class BasicAbstractMetadataTest extends AbstractSpringDataTest {
     @Autowired
     MetadataRepository _metadatarepo;
 
-    //@Autowired
-    //MetadataDraftRepository _metadatadraftrepo;
+    @Autowired
+    MetadataDraftRepository _metadatadraftrepo;
 
     @Autowired
     MetadataCategoryRepository _categoryRepo;

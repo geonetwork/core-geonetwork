@@ -28,6 +28,7 @@ import java.util.List;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.events.md.MetadataRemove;
+import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +49,8 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Component
 public class DraftCleanup {
 
-    //@Autowired
-    //private MetadataDraftRepository metadataDraftRepository;
+    @Autowired
+    private MetadataDraftRepository metadataDraftRepository;
 
     @Autowired
     private DraftUtilities draftUtilities;
@@ -60,8 +61,8 @@ public class DraftCleanup {
         Log.trace(Geonet.DATA_MANAGER,
             "A metadata has been removed. Cleanup associated drafts of " + event.getSource());
         try {
-            List<MetadataDraft> toRemove = null; //metadataDraftRepository
-                //.findAll((Specification<MetadataDraft>) MetadataSpecs.hasMetadataUuid(event.getMd().getUuid()));
+            List<MetadataDraft> toRemove = metadataDraftRepository
+                .findAll((Specification<MetadataDraft>) MetadataSpecs.hasMetadataUuid(event.getMd().getUuid()));
 
             for (MetadataDraft md : toRemove) {
                 draftUtilities.removeDraft(md);

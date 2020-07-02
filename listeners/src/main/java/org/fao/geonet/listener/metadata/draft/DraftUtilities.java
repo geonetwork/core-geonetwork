@@ -15,11 +15,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.repository.MetadataFileUploadRepository;
-import org.fao.geonet.repository.MetadataRatingByIpRepository;
-import org.fao.geonet.repository.MetadataStatusRepository;
-import org.fao.geonet.repository.MetadataValidationRepository;
-import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
@@ -52,8 +48,8 @@ public class DraftUtilities {
     @Autowired
     private MetadataStatusRepository metadataStatusRepository;
 
-    //@Autowired
-    //private MetadataDraftRepository metadataDraftRepository;
+    @Autowired
+    private MetadataDraftRepository metadataDraftRepository;
 
     @Autowired
     private MetadataRatingByIpRepository metadataRatingByIpRepository;
@@ -69,7 +65,7 @@ public class DraftUtilities {
      * @return
      */
     public AbstractMetadata replaceMetadataWithDraft(AbstractMetadata md) {
-        AbstractMetadata draft = null; //metadataDraftRepository.findOneByUuid(md.getUuid());
+        AbstractMetadata draft = metadataDraftRepository.findOneByUuid(md.getUuid());
 
         if (draft != null) {
             return replaceMetadataWithDraft(md, draft);
@@ -151,11 +147,11 @@ public class DraftUtilities {
     public void removeDraft(MetadataDraft draft) {
 
         Integer id = draft.getId();
-        /*if (!metadataDraftRepository.existsById(id)) {
+        if (!metadataDraftRepository.existsById(id)) {
             // We are being called after removing everything related to this record.
             // Nothing to do here
             return;
-        }*/
+        }
 
         Log.trace(Geonet.DATA_MANAGER, "Removing draft " + draft);
 
