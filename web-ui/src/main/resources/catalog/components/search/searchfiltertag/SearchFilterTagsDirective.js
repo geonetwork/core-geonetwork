@@ -199,7 +199,11 @@
                     }
                   })
                 }
-                else {
+                if (filterKey==="any") {
+                  scope.currentFilters.push({
+                    key: filterKey,
+                    value: value
+                  })
                 }
               }
             }, true);
@@ -229,7 +233,11 @@
       var result;
       if (angular.isString(input) && input.startsWith("+dateStamp:")) {
         result = input.split(/\[(.*?)\]/)[1]
-      } else {
+      }
+      else if (angular.isString(input)){
+        result=input;
+      }
+      else {
         angular.forEach(input, function(value, key) {
           result=key
         })

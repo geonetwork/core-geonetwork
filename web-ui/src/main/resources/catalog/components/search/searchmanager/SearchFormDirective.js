@@ -432,22 +432,26 @@
     }
 
     this.updateState = function(path, value, doNotRemove) {
-      var filters = $scope.searchObj.state.filters;
-      var getter = parse(path.join('^^^'));
-      var existingValue = getter(filters);
-      if(angular.isUndefined(existingValue) || doNotRemove) {
-        var setter = getter.assign;
-        setter(filters, value)
+      if(path[0] === 'any') {
+        delete $scope.searchObj.params.any;
       } else {
-        if(existingValue !== value) {
+        var filters = $scope.searchObj.state.filters;
+        var getter = parse(path.join('^^^'));
+        var existingValue = getter(filters);
+        if(angular.isUndefined(existingValue) || doNotRemove) {
           var setter = getter.assign;
           setter(filters, value)
         } else {
-          removeKey(filters, path)
+          if(existingValue !== value) {
+            var setter = getter.assign;
+            setter(filters, value)
+          } else {
+            removeKey(filters, path)
+          }
         }
       }
       this.triggerSearch();
-    }
+    };
 
     this.isInSearch = function(path) {
       if(!path) return;
