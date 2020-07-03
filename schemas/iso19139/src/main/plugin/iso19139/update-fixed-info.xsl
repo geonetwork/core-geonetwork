@@ -259,8 +259,10 @@
   <xsl:template match="@gml:id|@gml320:id">
     <xsl:choose>
       <xsl:when test="normalize-space(.)=''">
-        <xsl:attribute name="{if ($isUsing2005Schema and not($isUsing2007Schema))
-                              then 'gml320' else 'gml'}:id">
+        <xsl:attribute name="gml:id"
+                       namespace="{if($isUsing2005Schema)
+                                 then 'http://www.opengis.net/gml'
+                                 else 'http://www.opengis.net/gml/3.2'}">
           <xsl:value-of select="generate-id(.)"/>
         </xsl:attribute>
       </xsl:when>
