@@ -12,7 +12,10 @@
        ng-repeat="filter in currentFilters"
        ng-click="removeFilter(filter)">
       <span class="fa fa-times text-danger delete-icon"></span>
-      <strong class="text-no-wrap text-uppercase" translate>{{filter.key}}</strong>
+      <strong class="text-no-wrap text-uppercase">
+        <span ng-if="filter.key!='any'" translate>{{('facet-' + filter.key)}}</span>
+        <span ng-if="filter.key==='any'">{{filter.key}}</span>
+      </strong>
       <div class="flex-spacer"></div>
       <span translate>{{filter.value | translatearray}}</span>
     </a>
