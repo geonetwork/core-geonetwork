@@ -24,7 +24,6 @@
 package org.fao.geonet.guiservices.csw;
 
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.jdom.Element;
@@ -41,8 +40,6 @@ import static org.junit.Assert.assertEquals;
  */
 public class SetTest extends AbstractServiceIntegrationTest {
 
-    @Autowired
-    CswCapabilitiesInfoFieldRepository _infoRepository;
     @Autowired
     SettingRepository _settingsRepository;
 
