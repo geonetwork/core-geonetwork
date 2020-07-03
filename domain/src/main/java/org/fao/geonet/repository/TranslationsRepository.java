@@ -23,31 +23,31 @@
 
 package org.fao.geonet.repository;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.fao.geonet.domain.Translations;
 
-import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
- * Non spring-data-jpa query methods required for accessing CswServerInfo objects. User: Jesse Date:
- * 9/20/13 Time: 9:24 AM
+ * Data Access object for accessing {@link Translations}
+ * entities.
+ *
+ * @author Jesse
  */
-public interface CswCapabilitiesInfoFieldRepositoryCustom {
+public interface TranslationsRepository extends GeonetRepository<Translations, Integer>{
     /**
-     * Load all fields in the given language and construct a CswCapabilitiesInfo object from the
-     * fields.
+     * Find all the Capabilities Info objects for the given field.
      *
-     * @param languageCode the language of the info object to load.
-     * @return all fields in the given language and construct a CswCapabilitiesInfo object from the
-     * fields.
+     * @param fieldName the name of the field to find.
      */
-    @Nonnull
-    CswCapabilitiesInfo findCswCapabilitiesInfo(@Nonnull String languageCode);
+    List<Translations> findAllByFieldName(String fieldName);
 
     /**
-     * Save the info object as individual fields.
+     * Find all the info for the given language.
      *
-     * @param info the info object to persist.
+     * @param langId the 3 letter language identifier
+     * @return all the info for the given language.
      */
-    @Transactional
-    void save(@Nonnull CswCapabilitiesInfo info);
+    List<Translations> findAllByLangId(String langId);
+
+    Translations findOneByLangIdAndFieldName(String langId, String fieldName);
 }

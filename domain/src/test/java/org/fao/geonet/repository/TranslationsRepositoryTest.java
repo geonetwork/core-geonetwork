@@ -24,7 +24,7 @@
 package org.fao.geonet.repository;
 
 
-import org.fao.geonet.domain.CswCapabilitiesInfoField;
+import org.fao.geonet.domain.Translations;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,17 +36,17 @@ import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class CswCapabilitiesInfoFieldRepositoryTest extends AbstractSpringDataTest {
+public class TranslationsRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
-    CswCapabilitiesInfoFieldRepository _repo;
+    TranslationsRepository _repo;
 
-    public static CswCapabilitiesInfoField newCswServerCapabilitiesInfo(AtomicInteger inc) {
+    public static Translations newTranslations(AtomicInteger inc) {
         int val = inc.incrementAndGet();
-        CswCapabilitiesInfoField CswCapabilitiesInfoField = new CswCapabilitiesInfoField().setFieldName("field" + val).setValue("lang"
+        Translations Translations = new Translations().setFieldName("field" + val).setValue("lang"
             + val)
             .setLangId("l_" + val);
-        return CswCapabilitiesInfoField;
+        return Translations;
     }
 
     @Before
@@ -57,10 +57,10 @@ public class CswCapabilitiesInfoFieldRepositoryTest extends AbstractSpringDataTe
 
     @Test
     public void testFindOne() {
-        CswCapabilitiesInfoField info1 = newCswServerCapabilitiesInfo();
+        Translations info1 = newTranslations();
         info1 = _repo.save(info1);
 
-        CswCapabilitiesInfoField info2 = newCswServerCapabilitiesInfo();
+        Translations info2 = newTranslations();
         info2 = _repo.save(info2);
 
         assertEquals(info2, _repo.findOne(info2.getId()));
@@ -69,13 +69,13 @@ public class CswCapabilitiesInfoFieldRepositoryTest extends AbstractSpringDataTe
 
     @Test
     public void testFindAllByField() {
-        CswCapabilitiesInfoField info1 = newCswServerCapabilitiesInfo();
+        Translations info1 = newTranslations();
         info1 = _repo.save(info1);
 
-        CswCapabilitiesInfoField info2 = newCswServerCapabilitiesInfo();
+        Translations info2 = newTranslations();
         info2 = _repo.save(info2);
 
-        List<CswCapabilitiesInfoField> infos = _repo.findAllByFieldName(info1.getFieldName());
+        List<Translations> infos = _repo.findAllByFieldName(info1.getFieldName());
 
         assertEquals(1, infos.size());
         assertEquals(info1.getFieldName(), infos.get(0).getFieldName());
@@ -88,13 +88,13 @@ public class CswCapabilitiesInfoFieldRepositoryTest extends AbstractSpringDataTe
 
     @Test
     public void testFindAllByLangId() {
-        CswCapabilitiesInfoField info1 = newCswServerCapabilitiesInfo();
+        Translations info1 = newTranslations();
         info1 = _repo.save(info1);
 
-        CswCapabilitiesInfoField info2 = newCswServerCapabilitiesInfo();
+        Translations info2 = newTranslations();
         info2 = _repo.save(info2);
 
-        List<CswCapabilitiesInfoField> infos = _repo.findAllByLangId(info1.getLangId());
+        List<Translations> infos = _repo.findAllByLangId(info1.getLangId());
 
         assertEquals(1, infos.size());
         assertEquals(info1.getLangId(), infos.get(0).getLangId());
@@ -105,47 +105,8 @@ public class CswCapabilitiesInfoFieldRepositoryTest extends AbstractSpringDataTe
         assertEquals(info2.getLangId(), infos.get(0).getLangId());
     }
 
-    @Test
-    public void testFindAndSaveCswServerCapabilitiesInfo() {
-        CswCapabilitiesInfo info = _repo.findCswCapabilitiesInfo("eng");
-
-        assertNotNull(info);
-
-        assertNull(info.getTitle());
-        assertNull(info.getAbstract());
-        assertNull(info.getAccessConstraints());
-        assertNull(info.getFees());
-        assertEquals("eng", info.getLangId());
-
-        info.setAbstract("abstract");
-        info.setAccessConstraints("accessConstraints");
-        info.setFees("fees");
-        info.setTitle("title");
-
-        _repo.save(info);
-
-        CswCapabilitiesInfo info2 = _repo.findCswCapabilitiesInfo("fre");
-        info2.setAbstract("abstract2");
-        info2.setAccessConstraints("accessConstraints2");
-        info2.setFees("fees2");
-        info2.setTitle("title2");
-
-        _repo.save(info2);
-
-        final CswCapabilitiesInfo engFound = _repo.findCswCapabilitiesInfo("eng");
-
-        assertEquals(info.getLangId(), engFound.getLangId());
-        assertEquals(info.getAbstract(), engFound.getAbstract());
-
-        final CswCapabilitiesInfo freFound = _repo.findCswCapabilitiesInfo("fre");
-
-        assertEquals(info2.getLangId(), freFound.getLangId());
-        assertEquals(info2.getAbstract(), freFound.getAbstract());
-
-    }
-
-    private CswCapabilitiesInfoField newCswServerCapabilitiesInfo() {
-        return newCswServerCapabilitiesInfo(_inc);
+    private Translations newTranslations() {
+        return newTranslations(_inc);
     }
 
 }
