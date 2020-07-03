@@ -451,7 +451,7 @@
         }
       }
       this.triggerSearch();
-    };
+    }
 
     this.isInSearch = function(path) {
       if(!path) return;
