@@ -45,7 +45,7 @@ import java.util.Map;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "MetadataStatus",
+@Table(name = MetadataStatus.TABLE_NAME,
     uniqueConstraints = @UniqueConstraint(columnNames = {"metadataid", "statusid", "userid", "changedate"}),
     indexes = {
         @Index(name="idx_metadatastatus_metadataid", columnList = "metadataid"),
@@ -60,6 +60,8 @@ import java.util.Map;
 
 public class MetadataStatus extends GeonetEntity {
     public static final String ID_SEQ_NAME = "metadataStatus_id_seq";
+
+    public static final String TABLE_NAME = "MetadataStatus";
     /**
      * The Root element of the xml returned by {@link #getAsXml}.
      */

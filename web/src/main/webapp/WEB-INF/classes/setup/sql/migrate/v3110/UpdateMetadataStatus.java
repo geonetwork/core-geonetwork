@@ -24,147 +24,93 @@
 package v3110;
 
 import org.fao.geonet.DatabaseMigrationTask;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatus_;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.GeonetEntity;
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.utils.Log;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.engine.jdbc.dialect.internal.StandardDialectResolver;
 import org.hibernate.engine.jdbc.dialect.spi.DatabaseMetaDataDialectResolutionInfoAdapter;
 import org.hibernate.engine.jdbc.dialect.spi.DialectResolutionInfo;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
-import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
- * Class to be executed during the migration which will update all the sequences
- * to be greater than the max id for the table.
+ * Class to be executed during the migration which will update some new not null columns
+ * on the metadataStatus table.
  *
- * This works be locating all the @SequenceGenerator annotation and determining the name
- * of the sequence, table and column id from the class.  It will use this information
- * to get the max value of the id for the table and then update the sequence.
+ * Note: After this step is complete most of the changes should be in place however their may still be
+ * some missing JPA settings that would initially fail due to these NOT NULL columns.
+ *
+ * It is recommended that after the initial startup and migration execution that the system be stopped and
+ * restarted to ensure that all JPA settings are applied correclty.
  */
 public class UpdateMetadataStatus extends DatabaseMigrationTask {
 
-    @Embeddable
-    @Access(AccessType.PROPERTY)
-    class MetadataStatusId implements Serializable {
-        private static final long serialVersionUID = -4395314364468537427L;
-        private ISODate _changedate;
-        private int _metadataId;
-        private int _statusId;
-        private int _userId;
-
-        @AttributeOverride(name = "dateAndTime", column = @Column(name = "changeDate", nullable = false, length = 30))
-        public ISODate getChangeDate() {
-            return _changedate;
-        }
-
-        public void setChangeDate(ISODate changedate) {
-            this._changedate = changedate;
-        }
-
-        public int getMetadataId() {
-            return _metadataId;
-        }
-
-        public void setMetadataId(int metadataId) {
-            this._metadataId = metadataId;
-        }
-
-        public int getStatusId() {
-            return _statusId;
-        }
-
-        public void setStatusId(int statusId) {
-            this._statusId = statusId;
-        }
-
-        public int getUserId() {
-            return _userId;
-        }
-
-        public void setUserId(int userId) {
-            this._userId = userId;
-        }
-
-    }
-
-    @Entity
-    @Access(AccessType.PROPERTY)
-    @Table(name = MetadataStatus.MetadataStatusTableName,
-            indexes = {
-                    @Index(name="idx_metadatastatus_metadataid", columnList = "metadataid"),
-                    @Index(name="idx_metadatastatus_statusid", columnList = "statusid"),
-                    @Index(name="idx_metadatastatus_userid", columnList = "userid"),
-                    @Index(name="idx_metadatastatus_changedate", columnList = "changedate")
-            }
-    )
-    class MetadataStatus extends GeonetEntity {
-        public final static String MetadataStatusTableName = "MetadataStatus";
-        public final static String MetadataStatusSequenceName = "metadataStatus_id_seq";
-        public final static String MetadataStatusNewIdName = "id";
-        public final static String MetadataStatusNewUUIDName = "uuid";
-
-
-        private MetadataStatusId oldId = new MetadataStatusId();
-        private long id;
-        private String uuid;
-
-        @EmbeddedId
-        public MetadataStatusId getOldId() {
-            return oldId;
-        }
-
-        public void setOldId(MetadataStatusId oldId) {
-            this.oldId = oldId;
-        }
-
-        public long getId() {
-            return id;
-        }
-
-        public void setId(long id) {
-            this.id = id;
-        }
-
-        public String getUuid() {
-            return uuid;
-        }
-
-        public void setUuid(String uuid) {
-            this.uuid = uuid;
-        }
-    }
-    @Autowired
-    private MetadataStatusRepository statusRepository;
-
-    @Autowired
+    private MetadataStatusRepository metadataStatusRepository;
+    //private LanguageRepository languageRepository;
     private IMetadataUtils metadataUtils;
 
+    /**
+     * Override the setContext so do the autowire of the other fields.
+     * @param applicationContext
+     */
     @Override
+    public void setContext(ApplicationContext applicationContext)  {
+        super.setContext(applicationContext);
+        metadataUtils = applicationContext.getBean(IMetadataUtils.class);
+        metadataStatusRepository = applicationContext.getBean(MetadataStatusRepository.class);
+        //languageRepository = applicationContext.getBean(LanguageRepository.class);
+    }
+
+    /**
+     * Maing flow for the updating of the ID. UUID and TITLES fields
+     * @param connection
+     * @throws SQLException
+     */
+        @Override
     public void update(Connection connection) throws SQLException {
+
         final MetadataStatus metadataStatusObject = new MetadataStatus();
 
-        Log.debug(Geonet.DB, "UpdateMetadataStatus");
+            DialectResolutionInfo dialectResolutionInfo = new DatabaseMetaDataDialectResolutionInfoAdapter(connection.getMetaData());
+            Dialect dialect = new StandardDialectResolver().resolveDialect(dialectResolutionInfo);
 
-        // First add the id and uuid as nullable.
+            Log.debug(Geonet.DB, "UpdateMetadataStatus");
+
+            // First add the id and uuid as nullable.
+            addMissingColumn(connection, dialect);
+
+            // Now update the id to sequence values so that all id's are not null.
+            updatePKValue(connection, dialect);
+
+            // Now update uuid and titles for the existing records
+            updateOtherNewFields();
+            // commit the changes
+            connection.commit();
+    }
+
+    /**
+     *  JPA will not be able to create the ID and UUID because they are not null
+     *  So we need to add them as nullable initialy until we update all the data in the tables.
+     *
+     * @param connection
+     * @param dialect - specific to each database - i.e. oracke, h2, postgresl...
+     * @throws SQLException
+     */
+    private void addMissingColumn(final Connection connection, Dialect dialect ) throws SQLException {
         try (Statement statement = connection.createStatement()) {
-            statement.execute("ALTER TABLE " + metadataStatusObject.MetadataStatusTableName + " ADD COLUMN " + metadataStatusObject.MetadataStatusNewIdName + " INTEGER NULL");
+            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " " + dialect.getAddColumnString() + "  " + MetadataStatus_.id.getName() + " INTEGER NULL");
         } catch (Exception e) {
             // If there was an erro then we will log the error and continue.
             // Most likely cause is that the column already exists which should be fine.
@@ -173,141 +119,177 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
             Log.debug(Geonet.DB, e);
         }
         try (Statement statement = connection.createStatement()) {
-            statement.execute("ALTER TABLE " + metadataStatusObject.MetadataStatusTableName + " ADD COLUMN " + metadataStatusObject.MetadataStatusNewUUIDName + " VARCHAR(255) NULL");
+            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " " + dialect.getAddColumnString() + "  " + MetadataStatus_.uuid.getName() + " VARCHAR(255) NULL");
         } catch (Exception e) {
             // If there was an erro then we will log the error and continue.
             // Most likely cause is that the column already exists which should be fine.
             Log.error(Geonet.DB, "  Exception while adding new ID column to metadataStatus. " +
                     "Error is: " + e.getMessage());
             Log.debug(Geonet.DB, e);
-        }
-
-        // Now update the id to sequence values so that all id are not null.
-        updateTableNullValues(connection, metadataStatusObject);
-
-        // finally lets set the column to not null.
-        try (Statement statement = connection.createStatement()) {
-            statement.execute("ALTER TABLE " + metadataStatusObject.MetadataStatusTableName + "  MODIFY COLUMN  ID NOT NULL;");
-        } catch (Exception e) {
-            Log.debug(Geonet.DB, "  Exception while modifying ID column for metadataStatus to NOT NULL. " +
-                    "Error is: " + e.getMessage());
-            Log.error(Geonet.DB, e, e);
         }
     }
 
-    private void updateTableNullValues(final Connection connection, final MetadataStatus metadataStatusObject) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            final String tableCountNullSQL = "SELECT count(*) as NB FROM " + metadataStatusObject.MetadataStatusTableName + " where " + metadataStatusObject.MetadataStatusNewIdName + " is NULL";
+    /**
+     * Update the ID (primary key field) for the database to be equal to the sequence values.
+     * @param connection
+     * @param dialect - specific to each database - i.e. oracke, h2, postgresl...
+     * @throws SQLException
+     */
 
-            ResultSet tableCountNullResultSet = statement.executeQuery(tableCountNullSQL);
-            long countNull = 0;
-            try {
-                if (tableCountNullResultSet.next()) {
-                    countNull = tableCountNullResultSet.getLong(1);
-                }
+    private void updatePKValue(final Connection connection, Dialect dialect) throws SQLException {
 
-                if (countNull == 0L) {
-                    Log.debug(Geonet.DB, "  Table " + metadataStatusObject.MetadataStatusTableName  + " does not have any data. Skipping");
-                    return;
-                }
-
-                Log.debug(Geonet.DB, "  table " + metadataStatusObject.MetadataStatusTableName  + " contains " + countNull + " records to be updated");
-            } finally {
-                tableCountNullResultSet.close();
+        Statement statement = null;
+        Integer rowcount=null;
+        try {
+            statement = connection.createStatement();
+            rowcount = statement.executeUpdate("update " + MetadataStatus.TABLE_NAME +
+                    " set " + MetadataStatus_.id.getName()  + " = " + dialect.getSelectSequenceNextValString(MetadataStatus.ID_SEQ_NAME) +
+                    " where " + MetadataStatus_.id.getName()  + " IS NULL");
+        } finally {
+            if (statement != null) {
+                statement.close();
             }
+        }
 
-            int processedCount=0;
-            int BATCHSIZE=100;
-            int pageNumber=0;
+        // Need to commit changes or they it will not be available to JPA calls.
+        connection.commit();
 
-            EntityManagerFactory emf=Persistence.createEntityManagerFactory("Migration");
-            EntityManager em=emf.createEntityManager();
+        Log.info(Geonet.DB, "Migration: Updated " + rowcount + " primary key values for '" +  MetadataStatus.TABLE_NAME + "'");
+    }
 
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<MetadataStatus> cq = cb.createQuery(MetadataStatus.class);
-            Root<MetadataStatus> rootEntry = cq.from(MetadataStatus.class);
-            CriteriaQuery<MetadataStatus> all = cq.where().select(rootEntry);
-            TypedQuery<MetadataStatus> allQuery = em.createQuery(all);
+    /**
+     * Update the new UUID and Titles field based on existing data.
+     * @throws SQLException
+     */
+    private void updateOtherNewFields() throws SQLException {
 
+        Pageable pageRequest = new PageRequest(0, 1000, new Sort("id"));
+        int totalRowCount = 0;
+        int updateRowCount = 0;
+        int uuidRowCount = 0;
+        int titleRowCount = 0;
+        Map<Integer, Map<String, String>> titlesMap = new HashMap<>();
+        Map<Integer, String> uuidMap = new HashMap<>();
+        //List<Language> languages = languageRepository.findAll();
+        Page<MetadataStatus> page;
+        do {
+            page = metadataStatusRepository.findAll(pageRequest);
+            if (page != null && page.hasContent()) {
+                for (MetadataStatus metadataStatus : page.getContent()) {
+                    totalRowCount++;
+                    if (metadataStatus.getUuid() == null || metadataStatus.getUuid().length() == 0 ||
+                            metadataStatus.getTitles() == null || metadataStatus.getTitles().length() == 0) {
 
-            while (processedCount < countNull) {
-                List<Long> batchList;
-                if ((countNull-processedCount) > BATCHSIZE) {
-                    batchList = getSequenceValue(connection, metadataStatusObject.MetadataStatusSequenceName, BATCHSIZE);
-                } else {
-                    batchList = getSequenceValue(connection, metadataStatusObject.MetadataStatusSequenceName, (int)(countNull-processedCount));
-                }
+                        boolean changeflag = false;
+                        if (metadataStatus.getUuid() == null || metadataStatus.getUuid().length() == 0) {
+                            String uuid = uuidMap.get(metadataStatus.getMetadataId());
+                            if (uuid == null) {
+                                try {
+                                    uuid = metadataUtils.getMetadataUuid(Integer.toString(metadataStatus.getMetadataId()));
+                                    if (uuid != null) {
+                                        uuidMap.put(metadataStatus.getMetadataId(), uuid);
+                                    }
+                                } catch (Exception e) {
+                                    Log.error(Geonet.DATA_MANAGER, String.format(
+                                            "Error locating uuid for metadata id: %d", +metadataStatus.getMetadataId()), e);
+                                }
+                                if (uuid == null || uuid.length() == 0) {
+                                    Log.error(Geonet.DATA_MANAGER, String.format(
+                                            "Could not located uuid for metadata id: %d", + metadataStatus.getMetadataId()));
+                                }
+                            }
+                            if (uuid != null && uuid.length() > 0) {
+                                metadataStatus.setUuid(uuid);
+                                uuidRowCount++;
+                                changeflag = true;
+                            }
+                        }
+                        if (metadataStatus.getTitles() == null || metadataStatus.getTitles().length() == 0) {
+                            Map<String, String> titles = titlesMap.get(metadataStatus.getMetadataId());
+                            // Try to get the titles from the schema.
+                            // Note: Schemas are not registered at this point so this is not possible.
+                            //      Generated errors similar to the following
+                            //             Schema not registered : dublin-core
+                            // This would be the preferred option but not work so commenting this option for now.
+                        /*if (titles == null) {
+                            try {
+                                titles = metadataUtils.extractTitles(Integer.toString(metadataStatus.getMetadataId()));
+                                titlesMap.put(metadataStatus.getMetadataId(), titles);
+                            } catch (Exception e) {
+                                Log.error(Geonet.DATA_MANAGER, String.format(
+                                        "Error locating titles for metadata id: %d", +metadataStatus.getMetadataId()), e);
+                            }
+                        }*/
 
-                allQuery.setFirstResult(pageNumber);
-                allQuery.setMaxResults(BATCHSIZE);
-                List<MetadataStatus> metadataStatusList = allQuery.getResultList();
-                allQuery.getSingleResult();
+                            // Try to get the titles from the index.
+                            // Getting the following errors
+                            //        There needs to be a ServiceContext in the thread local for this thread
+                            // So skipping this one as well as it does not seem like the index are ready to be used at this point.
+                        /*if (titles == null) {
+                            Map<String, String> indexTitles = new LinkedHashMap<>();
+                            try {
+                                try {
+                                    String title = LuceneSearcher.getMetadataFromIndexById(Geonet.DEFAULT_LANGUAGE, metadataStatus.getMetadataId() + "", "title");
+                                    if (title != null) {
+                                        indexTitles.put(Geonet.DEFAULT_LANGUAGE, title);
+                                    }
+                                } catch (Exception e) {
+                                    Log.debug(Geonet.DATA_MANAGER, "Error getting title from index for metadata id '" + metadataStatus.getMetadataId() + "' for default language '" + Geonet.DEFAULT_LANGUAGE + "'", e);
+                                }
+                                for (Language lang : languages) {
+                                    if (!Geonet.DEFAULT_LANGUAGE.equals(lang.getId())) {
+                                        try {
+                                            String title = LuceneSearcher.getMetadataFromIndexById(lang.getId(), metadataStatus.getMetadataId() + "", "title");
+                                            if (title != null) {
+                                                indexTitles.put(lang.getId(), title);
+                                            }
+                                        } catch (Exception e) {
+                                            Log.debug(Geonet.DATA_MANAGER, "Error getting title from index for metadata id '" + metadataStatus.getMetadataId() + "' for language '" + lang.getId() + "'", e);
+                                        }
+                                    }
+                                }
+                                if (indexTitles.size() > 0) {
+                                    titles = indexTitles;
+                                    titlesMap.put(metadataStatus.getMetadataId(), titles);
+                                }
+                            } catch (Exception e) {
+                                Log.error(Geonet.DATA_MANAGER, String.format(
+                                        "Error locating titles for metadata id: %d", +metadataStatus.getMetadataId()), e);
+                            }
+                        }*/
 
-                int x=0;
-                em.getTransaction().begin();
-                for (MetadataStatus metadataStatus : metadataStatusList) {
-                    metadataStatus.id = batchList.get(x);
-                    // set metadata uuid.
-                    try {
-                    metadataStatus.setUuid(metadataUtils.getMetadataUuid(Integer.toString(metadataStatus.getOldId().getMetadataId())));
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
+                            // Last option - just use the metadata title field
+                            // but I believe this is being depreciated as they all seem to be null
+                            if (titles == null) {
+                                Map<String, String> indexTitles = new LinkedHashMap<>();
+                                try {
+                                    String title = metadataUtils.getMetadataTitle(Integer.toString(metadataStatus.getMetadataId()));
+                                    if (title != null) {
+                                        indexTitles.put(Geonet.DEFAULT_LANGUAGE, title);
+                                    }
+                                } catch (Exception e) {
+                                    Log.error(Geonet.DATA_MANAGER, String.format(
+                                            "Error locating titles for metadata id: %d", +metadataStatus.getMetadataId()), e);
+                                }
+                            }
+
+                            if (titles != null && titles.size() > 0) {
+                                metadataStatus.setTitles(titles);
+                                titleRowCount++;
+                                changeflag = true;
+                            }
+                        }
+                        if (changeflag = true) {
+                            updateRowCount++;
+                            metadataStatusRepository.save(metadataStatus);
+                            changeflag=false;
+                        }
                     }
                 }
-                em.getTransaction().commit();
             }
-
-        }
+            pageRequest=page.nextPageable();
+        } while (pageRequest != null && page.hasContent());
+        Log.info(Geonet.DB, "Migration: Updated " + updateRowCount + " records from a total of " + totalRowCount + " for talbe '" + MetadataStatus.TABLE_NAME +
+                "'. (uuid:" + uuidRowCount + ", Titles:" + titleRowCount + ")");
     }
-
-    private List<Long> getSequenceValue(final Connection connection, final String sequenceName, int numSeq) throws SQLException {
-        DialectResolutionInfo dialectResolutionInfo = new DatabaseMetaDataDialectResolutionInfoAdapter(connection.getMetaData());
-        Dialect dialect = new StandardDialectResolver().resolveDialect(dialectResolutionInfo);
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        List<Long> sequenceList = new ArrayList<>();
-        try {
-            preparedStatement = connection.prepareStatement(dialect.getSequenceNextValString(sequenceName));
-            for (int x=0; x < numSeq; x++) {
-                resultSet = preparedStatement.executeQuery();
-                if (resultSet.next()) {
-                    sequenceList.add(resultSet.getLong(1));
-                } else {
-                    break;
-                }
-                resultSet.close();
-                resultSet = null;
-            }
-        } finally {
-            if (preparedStatement != null) {
-                preparedStatement.close();
-            }
-            if (resultSet != null) {
-                resultSet.close();
-            }
-        }
-
-        Log.debug(Geonet.DB, "  Retrieved " + sequenceList.size() + " sequence values from  " + sequenceName);
-
-        return sequenceList;
-    }
-
-    public static String getFieldName(Method method) {
-        try {
-            Class<?> clazz = method.getDeclaringClass();
-            BeanInfo info = Introspector.getBeanInfo(clazz);
-            PropertyDescriptor[] props = info.getPropertyDescriptors();
-            for (PropertyDescriptor pd : props) {
-                if (method.equals(pd.getWriteMethod()) || method.equals(pd.getReadMethod())) {
-                    return pd.getName();
-                }
-            }
-        } catch (IntrospectionException e) {
-            throw new RuntimeException(e);
-        }
-
-        return null;
-    }
-
-
 }
