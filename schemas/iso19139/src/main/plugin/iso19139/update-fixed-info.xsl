@@ -77,10 +77,10 @@
 
   <!-- The default language is also added as gmd:locale
   for multilingual metadata records. -->
- <xsl:variable name="mainLanguage">
-      <xsl:call-template name="langId_from_gmdlanguage19139">
-          <xsl:with-param name="gmdlanguage" select="/root/*/gmd:language"/>
-      </xsl:call-template>
+  <xsl:variable name="mainLanguage">
+    <xsl:call-template name="langId_from_gmdlanguage19139">
+      <xsl:with-param name="gmdlanguage" select="/root/*/gmd:language"/>
+    </xsl:call-template>
   </xsl:variable>
 
   <xsl:variable name="isMultilingual"
@@ -274,7 +274,7 @@
   <!-- Fix srsName attribute generate CRS:84 (EPSG:4326 with long/lat
          ordering) by default -->
 
-  <xsl:template match="gml:LinearRing/@srsName"/>
+  <xsl:template match="gml:LinearRing/@srsName|gml320:LinearRing/@srsName"/>
 
   <xsl:template match="@srsName">
     <xsl:choose>
@@ -294,18 +294,18 @@
   <xsl:template match="gml:Polygon[not(@gml:id) or not(@srsName)]|
                        gml:MultiSurface[not(@gml:id) or not(@srsName)]|
                        gml:LineString[not(@gml:id) or not(@srsName)]|
-                       gml320:Polygon[not(@gml320:id) or not(@srsName)]">
-    <xsl:copy copy-namespaces="no">
-      <xsl:choose>
-        <xsl:when test="$isUsing2005Schema and not($isUsing2007Schema)">
-          <xsl:namespace name="gml320" select="'http://www.opengis.net/gml'"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:namespace name="gml" select="'http://www.opengis.net/gml/3.2'"/>
-        </xsl:otherwise>
-      </xsl:choose>
-      <xsl:attribute name="{if ($isUsing2005Schema and not($isUsing2007Schema))
-                            then 'gml320' else 'gml'}:id">
+                       gml320:Polygon[not(@gml320:id) or not(@srsName)]|
+                       gml320:MultiSurface[not(@gml:id) or not(@srsName)]|
+                       gml320:LineString[not(@gml:id) or not(@srsName)]">
+    <xsl:element name="gml:{local-name()}"
+                 namespace="{if($isUsing2005Schema)
+                             then 'http://www.opengis.net/gml'
+                             else 'http://www.opengis.net/gml/3.2'}">
+
+      <xsl:attribute name="gml:id"
+                     namespace="{if($isUsing2005Schema)
+                                 then 'http://www.opengis.net/gml'
+                                 else 'http://www.opengis.net/gml/3.2'}">
         <xsl:value-of select="if (@gml:id != '')
                               then @gml:id
                               else if (@gml320:id != '')
@@ -317,21 +317,16 @@
       </xsl:attribute>
       <xsl:copy-of select="@*[name() != 'srsName' and local-name() != 'id']"/>
       <xsl:apply-templates select="*"/>
-    </xsl:copy>
+    </xsl:element>
   </xsl:template>
 
   <xsl:template match="gml:*|gml320:*">
-    <xsl:copy copy-namespaces="no">
-      <xsl:choose>
-        <xsl:when test="$isUsing2005Schema and not($isUsing2007Schema)">
-          <xsl:namespace name="gml320" select="'http://www.opengis.net/gml'"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:namespace name="gml" select="'http://www.opengis.net/gml/3.2'"/>
-        </xsl:otherwise>
-      </xsl:choose>
+    <xsl:element name="gml:{local-name()}"
+                 namespace="{if($isUsing2005Schema)
+                             then 'http://www.opengis.net/gml'
+                             else 'http://www.opengis.net/gml/3.2'}">
       <xsl:apply-templates select="@*|*"/>
-    </xsl:copy>
+    </xsl:element>
   </xsl:template>
 
   <!-- INSPIRE / TG2 / Require nilReason attribute to be
@@ -446,19 +441,19 @@
 
               <!-- Populate PT_FreeText for default language if not existing and it is not null. -->
               <xsl:apply-templates select="gco:CharacterString|gmx:Anchor"/>
-                <!-- only put this in if there's stuff to put in, otherwise we get a <gmd:PT_FreeText/> in output -->
-                <xsl:if test="(normalize-space(gco:CharacterString|gmx:Anchor) != '') or gmd:PT_FreeText">
-                  <gmd:PT_FreeText>
-                    <xsl:if test="normalize-space(gco:CharacterString|gmx:Anchor) != ''"> <!-- default lang-->
-                      <gmd:textGroup>
-                        <gmd:LocalisedCharacterString locale="#{$mainLanguageId}">
-                          <xsl:value-of select="gco:CharacterString|gmx:Anchor"/>
-                        </gmd:LocalisedCharacterString>
-                      </gmd:textGroup>
-                    </xsl:if>
-                    <xsl:call-template name="populate-free-text"/> <!-- other langs -->
-                  </gmd:PT_FreeText>
-                </xsl:if>
+              <!-- only put this in if there's stuff to put in, otherwise we get a <gmd:PT_FreeText/> in output -->
+              <xsl:if test="(normalize-space(gco:CharacterString|gmx:Anchor) != '') or gmd:PT_FreeText">
+                <gmd:PT_FreeText>
+                  <xsl:if test="normalize-space(gco:CharacterString|gmx:Anchor) != ''"> <!-- default lang-->
+                    <gmd:textGroup>
+                      <gmd:LocalisedCharacterString locale="#{$mainLanguageId}">
+                        <xsl:value-of select="gco:CharacterString|gmx:Anchor"/>
+                      </gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                  </xsl:if>
+                  <xsl:call-template name="populate-free-text"/> <!-- other langs -->
+                </gmd:PT_FreeText>
+              </xsl:if>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:otherwise>
@@ -666,6 +661,26 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="correct_ns_prefix_with_namespace">
+    <xsl:param name="element"/>
+    <xsl:param name="prefix"/>
+    <xsl:param name="namespace"/>
+
+    <xsl:choose>
+      <xsl:when test="local-name($element)=name($element) and $prefix != '' ">
+        <xsl:element name="{$prefix}:{local-name($element)}" namespace="{$namespace}">
+          <xsl:apply-templates select="@*|node()"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy>
+          <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+
   <xsl:template match="gmd:*">
     <xsl:call-template name="correct_ns_prefix">
       <xsl:with-param name="element" select="."/>
@@ -682,20 +697,21 @@
 
   <!-- Move to GML 3.2.1 when using 2007 version. -->
   <xsl:template match="gml320:*[$isUsing2007Schema]">
-    <xsl:element name="gml:{local-name()}">
+    <xsl:element name="gml:{local-name()}" namespace="http://www.opengis.net/gml/3.2">
       <xsl:apply-templates select="@*|node()"/>
     </xsl:element>
   </xsl:template>
   <xsl:template match="@gml320:*[$isUsing2007Schema]">
-    <xsl:attribute name="gml:{local-name()}" select="."/>
+    <xsl:attribute name="gml:{local-name()}" namespace="http://www.opengis.net/gml/3.2" select="."/>
   </xsl:template>
 
   <xsl:template match="gml:*|gml320:*">
-    <xsl:call-template name="correct_ns_prefix">
+    <xsl:call-template name="correct_ns_prefix_with_namespace">
       <xsl:with-param name="element" select="."/>
       <xsl:with-param name="prefix"
-                      select="if ($isUsing2005Schema and not($isUsing2007Schema))
-                              then 'gml320' else 'gml'"/>
+                      select="'gml'"/>
+      <xsl:with-param name="namespace"
+                      select="if($isUsing2005Schema) then 'http://www.opengis.net/gml' else 'http://www.opengis.net/gml/3.2'"/>
     </xsl:call-template>
   </xsl:template>
 
