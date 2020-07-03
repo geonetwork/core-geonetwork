@@ -23,6 +23,9 @@
 
 package org.fao.geonet.api.tools.i18n;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -44,15 +47,17 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.ServletRequest;
 import java.util.*;
 
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
+
 /**
  *
  */
-
 @RequestMapping(value = {
     "/{portal}/api/tools/i18n"
 })
 @Tag(name = "tools")
-@Controller("translation")
+@RestController
 public class TranslationApi implements ApplicationContextAware {
 
     private static final List<String> TRANSLATION_TABLES = Arrays.asList(new String[]{
@@ -89,15 +94,18 @@ public class TranslationApi implements ApplicationContextAware {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Add or update database translations.")
-    @RequestMapping(value = "/db/translations/{key}",
-        method = RequestMethod.PUT,
+    @PutMapping(value = "/db/translations/{key}",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseStatus(CREATED)
     public ResponseEntity addTranslations(
         @PathVariable
         final String key,
+        @Parameter(
+            name = "values"
+        )
         @RequestBody(required = true)
         final Map<String, String> values,
         @RequestParam(required = false)
@@ -131,12 +139,12 @@ public class TranslationApi implements ApplicationContextAware {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Delete database translations.")
-    @RequestMapping(value = "/db/translations/{key}",
-        method = RequestMethod.DELETE,
+    @DeleteMapping(value = "/db/translations/{key}",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseStatus(OK)
     public void deleteTranslations(
         @PathVariable
         final String key,
@@ -158,8 +166,7 @@ public class TranslationApi implements ApplicationContextAware {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "List database translations (used to overrides client application translations).")
-    @RequestMapping(value = "/db/translations",
-        method = RequestMethod.GET,
+    @GetMapping(value = "/db/translations",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
