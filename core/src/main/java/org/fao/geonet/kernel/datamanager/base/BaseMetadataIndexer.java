@@ -33,22 +33,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.InspireAtomFeed;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId_;
-import org.fao.geonet.domain.MetadataStatus_;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.MetadataValidation;
-import org.fao.geonet.domain.MetadataValidationStatus;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.StatusValueType;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -60,6 +45,7 @@ import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -563,7 +549,11 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
             fields.putAll(addExtraFields(fullMd));
 
-            searchManager.index(schemaManager.getSchemaDir(schema), md, uuid, fields, metadataType, root, forceRefreshReaders);
+            String indexKey = uuid;
+            if (fullMd instanceof MetadataDraft) {
+                indexKey += "-draft";
+            }
+            searchManager.index(schemaManager.getSchemaDir(schema), md, indexKey, fields, metadataType, root, forceRefreshReaders);
 
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId
@@ -634,9 +624,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         // If we are not using draft utils, mark all as "no draft"
         // needed to be compatible with UI searches that check draft existence
         Multimap<String, Object> extraFields = ArrayListMultimap.create();
-        //if (!DraftMetadataIndexer.class.isInstance(this)) {
+        if (!DraftMetadataIndexer.class.isInstance(this)) {
             extraFields.put(Geonet.IndexFieldNames.DRAFT, "n");
-        //}
+        }
         return extraFields;
     }
 

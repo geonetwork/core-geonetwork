@@ -58,17 +58,17 @@ import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.MetadataDraftRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
@@ -618,7 +618,12 @@ public class EsSearchManager implements ISearchManager {
                      iter.hasNext(); ) {
                     String uuid = (String) iter.next();
                     for (AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
-                        listOfIdsToIndex.add(metadata.getId() + "");
+                        String indexKey = uuid;
+                        if (metadata instanceof MetadataDraft) {
+                            indexKey += "-draft";
+                        }
+
+                        listOfIdsToIndex.add(indexKey);
                     }
 
                     if (!metadataRepository.existsMetadataUuid(uuid)) {

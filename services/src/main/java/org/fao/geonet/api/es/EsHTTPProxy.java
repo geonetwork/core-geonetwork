@@ -334,6 +334,7 @@ public class EsHTTPProxy {
         } else if (type.equalsIgnoreCase("subtemplate")) {
             query.append(" AND (isTemplate:s)");
         }
+        query.append(" AND (draft:n OR draft:e)");
 
         final String portalFilter = buildPortalFilter();
         if (!"".equals(portalFilter)) {
@@ -606,7 +607,8 @@ public class EsHTTPProxy {
 
             // copy every header except host
             if (!"host".equalsIgnoreCase(headerName) &&
-                !"X-XSRF-TOKEN".equalsIgnoreCase(headerName)) {
+                !"X-XSRF-TOKEN".equalsIgnoreCase(headerName) &&
+                !"Cookie".equalsIgnoreCase(headerName)) {
                 uc.setRequestProperty(headerName, headerValue);
             }
         }
