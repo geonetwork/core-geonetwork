@@ -40,9 +40,10 @@
             templateUrl: '../../catalog/components/edit/validationreport/' +
                 'partials/validationreport.html',
             scope: {},
-            link: function(scope) {
-              scope.showErrors = false;
-              scope.showSuccess = false;
+            link: function(scope, element, attrs) {
+              scope.showErrors = attrs.initialShowErrors == 'true';
+              scope.showSuccess = attrs.initialShowSuccesses == 'true';
+              scope.initialSectionsClosed = (attrs.initialSectionStates == "closed") ? "true":"false";
               scope.alwaysOnTop = false;
               scope.gnCurrentEdit = gnCurrentEdit;
               scope.loading = false;
