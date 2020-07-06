@@ -325,7 +325,7 @@
             <p>
               <!-- Custodians -->
               <xsl:for-each-group select="gmd:identificationInfo/*/gmd:pointOfContact/
-                                *[gmd:role/*/@codeListValue = ('custodian', 'author')]"
+                                *[gmd:role/*/@codeListValue = ('author')]"
                             group-by="gmd:individualName/gco:CharacterString">
                 <xsl:variable name="name"
                               select="normalize-space(current-grouping-key())"/>
