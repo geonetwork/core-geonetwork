@@ -157,7 +157,7 @@ public class DirectoryEntriesApi {
         throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
 
-        final AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
+        final AbstractMetadata metadata = ApiUtils.getRecord(uuid);
 
         if (metadata == null) {
             throw new ResourceNotFoundException(String.format(
