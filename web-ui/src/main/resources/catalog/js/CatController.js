@@ -128,7 +128,7 @@ goog.require('gn_alert');
             // }}
           ],
           'filters': {
-            'type': 'dataset or series or publication or nonGeographicDataset or feature or featureCatalog or map'
+            'type': 'dataset or series or publication or nonGeographicDataset or map'
           },
           'sortbyValues': [{
             'sortBy': 'popularity',
