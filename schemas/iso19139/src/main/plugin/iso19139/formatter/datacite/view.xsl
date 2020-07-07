@@ -335,13 +335,13 @@
     property.
    -->
   <xsl:variable name="creatorRoles"
-                select="'pointOfContact', 'custodian'"/>
+                select="('author')"/>
   <xsl:template mode="toDatacite"
                 match="gmd:MD_Metadata/gmd:identificationInfo/*/
                           gmd:pointOfContact[1]">
     <datacite:creators>
       <!-- [gmd:role/*/@codeListValue = $roles] TODO: Restrict on roles ?-->
-      <xsl:for-each select="../gmd:pointOfContact/*">
+      <xsl:for-each select="../gmd:pointOfContact/*[gmd:role/*/@codeListValue = $creatorRoles]">
         <datacite:creator>
           <!-- The full name of the creator. -->
           <datacite:creatorName nameType="Personal">
