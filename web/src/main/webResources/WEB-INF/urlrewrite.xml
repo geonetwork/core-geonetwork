@@ -132,7 +132,10 @@
     <to type="permanent-redirect">%{context-path}/#/page/$2?page=$2</to>
   </rule>
 
-
+  <rule>
+    <from>^/srv/en/(.*)$</from>
+    <to type="permanent-redirect" last="true">%{context-path}/srv/eng/$1</to>
+  </rule>
 
   <rule>
     <note>
