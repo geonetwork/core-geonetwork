@@ -478,9 +478,9 @@ public class BaseMetadataManager implements IMetadataManager {
         newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner)).setOwner(owner).setSourceId(source);
 
         // If there is a default category for the group, use it:
-        Group group = groupRepository.findById(Integer.valueOf(groupOwner)).get();
-        if (group.getDefaultCategory() != null) {
-            newMetadata.getMetadataCategories().add(group.getDefaultCategory());
+        java.util.Optional<Group> group = groupRepository.findById(Integer.valueOf(groupOwner));
+        if (group.isPresent() && (group.get().getDefaultCategory() != null)) {
+            newMetadata.getMetadataCategories().add(group.get().getDefaultCategory());
         }
         Collection<MetadataCategory> filteredCategories = Collections2.filter(templateMetadata.getCategories(),
             new Predicate<MetadataCategory>() {
@@ -590,9 +590,9 @@ public class BaseMetadataManager implements IMetadataManager {
             newMetadata.getMetadataCategories().add(metadataCategory);
         } else if (StringUtils.isNotEmpty(groupOwner)) {
             // If the group has a default category, use it
-            Group group = groupRepository.findById(Integer.valueOf(groupOwner)).get();
-            if (group.getDefaultCategory() != null) {
-                newMetadata.getMetadataCategories().add(group.getDefaultCategory());
+            java.util.Optional<Group> group = groupRepository.findById(Integer.valueOf(groupOwner));
+            if (group.isPresent() && (group.get().getDefaultCategory() != null)) {
+                newMetadata.getMetadataCategories().add(group.get().getDefaultCategory());
             }
         }
 
@@ -886,9 +886,9 @@ public class BaseMetadataManager implements IMetadataManager {
         buildPrivilegesMetadataInfo(context, map);
 
         // add owner name
-        User user = userRepository.findById(Integer.parseInt(owner)).get();
-        if (user != null) {
-            String ownerName = user.getName();
+        java.util.Optional<User> user = userRepository.findById(Integer.parseInt(owner));
+        if (user.isPresent()) {
+            String ownerName = user.get().getName();
             addElement(info, Edit.Info.Elem.OWNERNAME, ownerName);
         }
 

@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.ArrayListMultimap;
 import jeeves.server.UserSession;
@@ -73,22 +72,13 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
 
 
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
@@ -448,8 +438,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
 
             if (owner != null) {
-                User user = userRepository.findById(fullMd.getSourceInfo().getOwner()).get();
-                if (user != null) {
+                Optional<User> userOpt = userRepository.findById(fullMd.getSourceInfo().getOwner());
+                if (userOpt.isPresent()) {
+                    User user = userOpt.get();
                     fields.put(Geonet.IndexFieldNames.USERINFO, user.getUsername() + "|" + user.getSurname() + "|" + user
                         .getName() + "|" + user.getProfile());
                     fields.put(Geonet.IndexFieldNames.OWNERNAME, user.getName() + " " + user.getSurname());
@@ -458,8 +449,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
             String logoUUID = null;
             if (groupOwner != null) {
-                final Group group = groupRepository.findById(groupOwner).get();
-                if (group != null) {
+                final Optional<Group> groupOpt = groupRepository.findById(groupOwner);
+                if (groupOpt.isPresent()) {
+                    Group group = groupOpt.get();
                     fields.put(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner));
                     final boolean preferGroup = settingManager.getValueAsBool(Settings.SYSTEM_PREFER_GROUP_LOGO, true);
                     if (group.getWebsite() != null && !group.getWebsite().isEmpty() && preferGroup) {
@@ -594,11 +586,11 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
             privilegesFields.put(Geonet.IndexFieldNames.OP_PREFIX + operationId, String.valueOf(groupId));
             if (operationId == ReservedOperation.view.getId()) {
-                Group g = groupRepository.findById(groupId).get();
-                if (g != null) {
-                    privilegesFields.put(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.getName());
+                Optional<Group> g = groupRepository.findById(groupId);
+                if (g.isPresent()) {
+                    privilegesFields.put(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.get().getName());
 
-                    if (g.getId() == ReservedGroup.all.getId()) {
+                    if (g.get().getId() == ReservedGroup.all.getId()) {
                         isPublishedToAll = true;
                     }
                 }

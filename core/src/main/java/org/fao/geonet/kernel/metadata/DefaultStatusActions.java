@@ -59,13 +59,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -314,21 +308,26 @@ public class DefaultStatusActions implements StatusActions {
 
         if (notificationLevel != null) {
             if (notificationLevel == StatusValueNotificationLevel.statusUserOwner) {
-                User owner = userRepository.findById(status.getOwner()).get();
-                users.add(owner);
+                Optional<User> owner = userRepository.findById(status.getOwner());
+
+                if (owner.isPresent()) {
+                    users.add(owner.get());
+                }
             } else if (notificationLevel == StatusValueNotificationLevel.recordProfileReviewer) {
                 List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(listOfId,
                         Profile.Reviewer, SortUtils.createSort(User_.name));
                 for (Pair<Integer, User> p : results) {
                     users.add(p.two());
                 }
-                ;
             } else if (notificationLevel == StatusValueNotificationLevel.recordUserAuthor) {
                 Iterable<Metadata> records = this.context.getBean(MetadataRepository.class).findAllById(listOfId);
                 for (Metadata r : records) {
-                    users.add(userRepository.findById(r.getSourceInfo().getOwner()).get());
+                    Optional<User> owner = userRepository.findById(r.getSourceInfo().getOwner());
+
+                    if (owner.isPresent()) {
+                        users.add(owner.get());
+                    }
                 }
-                ;
             } else if (notificationLevel.name().startsWith("catalogueProfile")) {
                 String profileId = notificationLevel.name().replace("catalogueProfile", "");
                 Profile profile = Profile.findProfileIgnoreCase(profileId);

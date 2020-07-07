@@ -28,12 +28,7 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasO
 import static org.springframework.data.jpa.domain.Specification.where;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -236,19 +231,19 @@ public class AccessManager {
     public Set<Integer> getVisibleGroups(final int userId) throws Exception {
         Set<Integer> hs = new HashSet<Integer>();
 
-        User user = userRepository.findById(userId).get();
+        Optional<User> user = userRepository.findById(userId);
 
-        if (user == null) {
+        if (!user.isPresent()) {
             return hs;
         }
 
-        Profile profile = user.getProfile();
+        Profile profile = user.get().getProfile();
 
         List<Integer> groupIds;
         if (profile == Profile.Administrator) {
             groupIds = groupRepository.findIds();
         } else {
-            groupIds = userGroupRepository.findGroupIds(UserGroupSpecs.hasUserId(user.getId()));
+            groupIds = userGroupRepository.findGroupIds(UserGroupSpecs.hasUserId(user.get().getId()));
         }
 
         hs.addAll(groupIds);
@@ -575,7 +570,9 @@ public class AccessManager {
     }
 
     public String getPrivilegeName(int id) {
-        return operationRepository.findById(id).get().getName();
+        Optional<Operation> operation =  operationRepository.findById(id);
+
+        return operation.isPresent()?operation.get().getName():"";
     }
 
     public boolean isIntranet(String ip) {
@@ -595,14 +592,14 @@ public class AccessManager {
         }
 
         // IPv4
-        Setting network = settingRepository.findById(Settings.SYSTEM_INTRANET_NETWORK).get();
-        Setting netmask = settingRepository.findById(Settings.SYSTEM_INTRANET_NETMASK).get();
+        Optional<Setting> network = settingRepository.findById(Settings.SYSTEM_INTRANET_NETWORK);
+        Optional<Setting> netmask = settingRepository.findById(Settings.SYSTEM_INTRANET_NETMASK);
 
         try {
-            if (network != null && netmask != null &&
-                StringUtils.isNotEmpty(network.getValue()) && StringUtils.isNotEmpty(netmask.getValue())) {
-                long lIntranetNet = getAddress(network.getValue());
-                long lIntranetMask = getAddress(netmask.getValue());
+            if (network.isPresent() && netmask.isPresent() &&
+                StringUtils.isNotEmpty(network.get().getValue()) && StringUtils.isNotEmpty(netmask.get().getValue())) {
+                long lIntranetNet = getAddress(network.get().getValue());
+                long lIntranetMask = getAddress(netmask.get().getValue());
                 long lAddress = getAddress(ip.split(",")[0]);
                 return (lAddress & lIntranetMask) == (lIntranetNet & lIntranetMask);
             }

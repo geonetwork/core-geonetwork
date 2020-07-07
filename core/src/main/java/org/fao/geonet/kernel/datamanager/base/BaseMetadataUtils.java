@@ -472,11 +472,15 @@ public class BaseMetadataUtils implements IMetadataUtils {
         if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
             int iId = Integer.parseInt(id);
             metadataRepository.incrementPopularity(iId);
-            final Metadata metadata = metadataRepository.findById(iId).get();
-            searchManager.updateFieldAsynch(
-                metadata.getUuid(),
-                Geonet.IndexFieldNames.POPULARITY,
-                metadata.getDataInfo().getPopularity());
+            final java.util.Optional<Metadata> metadata = metadataRepository.findById(iId);
+
+            if (metadata.isPresent()) {
+                searchManager.updateFieldAsynch(
+                    metadata.get().getUuid(),
+                    Geonet.IndexFieldNames.POPULARITY,
+                    metadata.get().getDataInfo().getPopularity());
+
+            }
 //            // And register the metadata to be indexed in the near future
 //            final IndexingList list = srvContext.getBean(IndexingList.class);
 //            list.add(iId);
@@ -734,7 +738,9 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Override
     public AbstractMetadata findOne(int id) {
-        return metadataRepository.findById(id).get();
+        java.util.Optional<Metadata> metadata = metadataRepository.findById(id);
+
+        return metadata.isPresent()?metadata.get():null;
     }
 
     @Override
@@ -758,7 +764,9 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public AbstractMetadata findOne(Specification<? extends AbstractMetadata> spec) {
         try {
-            return metadataRepository.findOne((Specification<Metadata>) spec).get();
+            java.util.Optional<Metadata> metadata = metadataRepository.findOne((Specification<Metadata>) spec);
+
+            return metadata.isPresent()?metadata.get():null;
         } catch (ClassCastException t) {
             throw new ClassCastException("Unknown AbstractMetadata subtype: " + spec.getClass().getName());
         }

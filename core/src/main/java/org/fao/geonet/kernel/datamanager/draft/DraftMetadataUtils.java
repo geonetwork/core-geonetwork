@@ -246,7 +246,10 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         if (super.exists(id)) {
             return super.findOne(id);
         }
-        return metadataDraftRepository.findById(id).get();
+
+        java.util.Optional<MetadataDraft> md = metadataDraftRepository.findById(id);
+
+        return md.isPresent()?md.get():null;
     }
 
     @Override
@@ -299,7 +302,11 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
         if (md == null) {
             try {
-                md = metadataDraftRepository.findOne((Specification<MetadataDraft>) spec).get();
+                java.util.Optional<MetadataDraft> mdDraft = metadataDraftRepository.findOne((Specification<MetadataDraft>) spec);
+
+                if (mdDraft.isPresent()) {
+                    md = mdDraft.get();
+                }
             } catch (ClassCastException t) {
                 throw new ClassCastException("Unknown AbstractMetadata subtype: " + spec.getClass().getName());
             }
@@ -511,9 +518,10 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         }
         // If there is a default category for the group, use it:
         if (groupOwner != null) {
-            Group group = groupRepository.findById(Integer.valueOf(groupOwner)).get();
-            if (group.getDefaultCategory() != null) {
-                newMetadata.getCategories().add(group.getDefaultCategory());
+            java.util.Optional<Group> group = groupRepository.findById(Integer.valueOf(groupOwner));
+
+            if (group.isPresent() && (group.get().getDefaultCategory() != null)) {
+                newMetadata.getCategories().add(group.get().getDefaultCategory());
             }
         }
 
@@ -558,22 +566,25 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
             int author = context.getUserSession().getUserIdAsInt();
             Integer status = Integer.valueOf(StatusValue.Status.DRAFT);
-            StatusValue statusValue = statusValueRepository.findById(status).get();
+            java.util.Optional<StatusValue> statusValue = statusValueRepository.findById(status);
 
-            for (Integer mdId : metadataIds) {
-                MetadataStatus metadataStatus = new MetadataStatus();
+            if (statusValue.isPresent()) {
+                for (Integer mdId : metadataIds) {
+                    MetadataStatus metadataStatus = new MetadataStatus();
 
-                MetadataStatusId mdStatusId = new MetadataStatusId().setStatusId(status).setMetadataId(mdId)
-                    .setChangeDate(new ISODate()).setUserId(author);
+                    MetadataStatusId mdStatusId = new MetadataStatusId().setStatusId(status).setMetadataId(mdId)
+                        .setChangeDate(new ISODate()).setUserId(author);
 
-                metadataStatus.setId(mdStatusId);
-                metadataStatus.setStatusValue(statusValue);
-                metadataStatus.setChangeMessage("Editing instance created");
+                    metadataStatus.setId(mdStatusId);
+                    metadataStatus.setStatusValue(statusValue.get());
+                    metadataStatus.setChangeMessage("Editing instance created");
 
-                List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
-                listOfStatusChange.add(metadataStatus);
-                sa.onStatusChange(listOfStatusChange);
+                    List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
+                    listOfStatusChange.add(metadataStatus);
+                    sa.onStatusChange(listOfStatusChange);
+                }
             }
+
             return String.valueOf(finalId);
         } catch (Throwable t) {
             Log.error(Geonet.DATA_MANAGER, "Editing instance creation failed", t);
