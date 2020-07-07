@@ -50,9 +50,7 @@ import java.util.List;
 import java.util.Map;
 
 @RequestMapping(value = {
-    "/{portal}/api/tags",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/tags"
+    "/{portal}/api/tags"
 })
 @Tag(name = "tags",
     description = "Tags operations")

@@ -44,9 +44,9 @@
         <span data-ng-hide="groupSelected.id == ''" data-translate="">updateGroup</span>
         <span data-ng-hide="groupSelected.id != ''" data-translate="">newGroup</span>
         <span><strong>{{groupSelected.name}}</strong></span>
-        <div class="btn-toolbar"
-             data-ng-show="user.isAdministratorOrMore()">
+        <div class="btn-toolbar">
           <button type="button" class="btn btn-primary pull-right"
+                  data-ng-hide="!user.isUserAdminOrMore()"
                   data-ng-disabled="!gnGroupEdit.$valid && !gnGroupEdit.dirty"
                   data-ng-click="saveGroup('#gn-group-edit', '#group-logo-upload')"
                   id="gn-btn-group-save">
@@ -54,6 +54,7 @@
             <span data-translate="">saveGroup</span>
           </button>
           <button type="button" class="btn pull-right btn-danger"
+                  data-ng-hide="!user.isAdministratorOrMore()"
                   data-ng-disabled="searchResults.count > 0"
                   data-ng-hide="!groupSelected.id || groupSelected.id<0"
                   data-gn-confirm-click="{{'groupDeleteConfirm' | translate}}"
@@ -76,6 +77,7 @@
             <div data-ng-class="gnGroupEdit.name.$error.required || gnGroupEdit.name.$error.maxlength ? 'has-error' : ''">
               <label class="control-label" data-translate="">groupName</label>
               <input type="text" id="groupname" name="name" class="form-control"
+                     data-ng-disabled="!user.isAdministratorOrMore()"
                      data-ng-model="groupSelected.name"
                      data-ng-maxlength="32"
                      data-ng-required="true"/>

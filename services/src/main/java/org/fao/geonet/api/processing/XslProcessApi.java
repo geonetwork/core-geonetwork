@@ -80,9 +80,7 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
  * @author fxprunayre
  */
 @RequestMapping(value = {
-    "/{portal}/api/processes",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/processes"
+    "/{portal}/api/processes"
 })
 @Tag(name = "processes",
     description = "Processing operations")

@@ -61,9 +61,7 @@ import java.util.*;
  */
 
 @RequestMapping(value = {
-    "/{portal}/api/standards",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/standards"
+    "/{portal}/api/standards"
 })
 @Tag(name = "standards",
     description = "Standard related operations")

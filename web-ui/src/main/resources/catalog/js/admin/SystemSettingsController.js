@@ -429,7 +429,7 @@
       };
 
       $scope.testMailConfiguration = function() {
-        $http.get('../api/0.1/tools/mail/test')
+        $http.get('../api/tools/mail/test')
             .then(function(response) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: response.data});

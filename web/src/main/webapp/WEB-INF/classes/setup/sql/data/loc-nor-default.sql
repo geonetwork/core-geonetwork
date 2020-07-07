@@ -1,11 +1,6 @@
 INSERT INTO Languages (id, name, isinspire, isdefault) VALUES ('nor','norsk', 'n', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (33, 'nor', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (34, 'nor', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (35, 'nor', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (36, 'nor', 'accessConstraints', '');
-
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'nor','Kart og grafikk');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'nor','Datasett');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'nor','Interakive ressurser');

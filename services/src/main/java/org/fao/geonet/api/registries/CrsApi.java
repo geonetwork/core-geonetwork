@@ -44,9 +44,7 @@ import java.util.List;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-    "/{portal}/api/registries",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/registries"
+    "/{portal}/api/registries"
 })
 @Tag(name = ApiParams.API_CLASS_REGISTRIES_TAG,
     description = ApiParams.API_CLASS_REGISTRIES_OPS)

@@ -62,9 +62,7 @@ import static org.fao.geonet.api.mapservers.MapServersUtils.*;
  */
 
 @RequestMapping(value = {
-    "/{portal}/api/mapservers",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/mapservers"
+    "/{portal}/api/mapservers"
 })
 @Tag(name = "mapservers",
     description = "Mapservers related operations")

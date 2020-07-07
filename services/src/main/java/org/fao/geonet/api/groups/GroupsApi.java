@@ -79,9 +79,7 @@ import java.util.*;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @RequestMapping(value = {
-    "/{portal}/api/groups",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/groups"
+    "/{portal}/api/groups"
 })
 @Tag(name = "groups",
     description = "Groups operations")

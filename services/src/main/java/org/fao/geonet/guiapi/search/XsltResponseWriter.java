@@ -59,7 +59,7 @@ public class XsltResponseWriter {
     Path xsl;
     Map<String, Object> xslParams = new HashMap<>();
 
-    public XsltResponseWriter(String envTagName) {
+    public XsltResponseWriter(String envTagName, String serviceName) {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
         String url = settingManager.getBaseURL();
         Element gui = new Element("gui");
@@ -76,7 +76,7 @@ public class XsltResponseWriter {
         Element settings = settingManager.getAllAsXML(true);
         settings.setName(StringUtils.isNotEmpty(envTagName) ? envTagName : "systemConfig");
         gui.addContent(settings);
-        gui.addContent(new Element("reqService").setText("search"));
+        gui.addContent(new Element("reqService").setText(serviceName));
 
         Element translations = new Element(TRANSLATIONS);
 

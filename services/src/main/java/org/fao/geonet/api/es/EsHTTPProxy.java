@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -74,8 +75,7 @@ import java.util.zip.GZIPOutputStream;
 
 
 @RequestMapping(value = {
-    "/{portal}/api",
-    "/{portal}/api/" + API.VERSION_0_1
+    "/{portal}/api"
 })
 @Tag(name = "search",
     description = "Proxy for ElasticSearch catalog search operations")
@@ -222,21 +222,24 @@ public class EsHTTPProxy {
         method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public void handlePOSTMetadata(
+    public void call(
         @RequestParam(defaultValue = SelectionManager.SELECTION_METADATA)
             String bucket,
+        @Parameter(description = "'_search' for search service.")
         @PathVariable String endPoint,
         @Parameter(hidden = true)
             HttpSession httpSession,
         @Parameter(hidden = true)
             HttpServletRequest request,
         @Parameter(hidden = true)
-            HttpServletResponse response) throws Exception {
+            HttpServletResponse response,
+        @RequestBody(description = "JSON request based on Elasticsearch API.")
+        String body) throws Exception {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         // Retrieve request body with ElasticSearch query and parse JSON
-        String body = IOUtils.toString(request.getReader());
+        body = IOUtils.toString(request.getReader());
         call(context, httpSession, request, response, endPoint, body, bucket);
     }
 

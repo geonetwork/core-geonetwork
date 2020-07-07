@@ -45,7 +45,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-@RequestMapping(value = {"/{portal}/api/status", "/{portal}/api/" + API.VERSION_0_1 + "/status"})
+@RequestMapping(value = {"/{portal}/api/status"})
 @Tag(name = "status", description = "Workflow status operations")
 @Controller("status")
 public class StatusApi {

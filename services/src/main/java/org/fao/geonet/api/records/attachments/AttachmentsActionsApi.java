@@ -96,8 +96,7 @@ public class AttachmentsActionsApi {
         //response = MetadataResource.class)
     )
     @RequestMapping(
-        value = "/{portal}/api/" + API.VERSION_0_1 +
-            "/records/{metadataUuid}/attachments/print-thumbnail",
+        value = "/{portal}/api/records/{metadataUuid}/attachments/print-thumbnail",
         method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {

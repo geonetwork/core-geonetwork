@@ -63,9 +63,7 @@ import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @RequestMapping(value = {
-    "/{portal}/api/users",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/users"
+    "/{portal}/api/users"
 })
 @Tag(name = "users",
     description = "User operations")

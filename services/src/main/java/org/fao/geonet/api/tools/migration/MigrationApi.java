@@ -44,9 +44,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 
 @RequestMapping(value = {
-    "/{portal}/api/tools/migration",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/tools/migration"
+    "/{portal}/api/tools/migration"
 })
 @Tag(name = "tools")
 @Controller("migration")

@@ -28,7 +28,6 @@ package org.fao.geonet.api;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
@@ -36,29 +35,33 @@ import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.servers.ServerVariable;
 import io.swagger.v3.oas.models.servers.ServerVariables;
 import org.fao.geonet.NodeInfo;
-import org.springdoc.core.GroupedOpenApi;
-import org.springdoc.core.SpringDocUtils;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.bind.annotation.PatchMapping;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_PLATFORM_VERSION;
+
 @Configuration
 @OpenAPIDefinition
-public class OpenApiConfig {
+public class OpenApiConfig  {
+
     @Bean
-    public OpenAPI OpenApiConfig() {
+    @Autowired
+    public OpenAPI OpenApiConfig(SettingManager settingManager) {
         List<Server> servers = new ArrayList<>();
 
-        String localhostUrl = "http://localhost:8080/geonetwork";
+        String version = settingManager.getValue(SYSTEM_PLATFORM_VERSION);
+        String hostUrl = settingManager.getBaseURL().replaceAll("/+$", "");
+
         ServerVariable catalogVariable = new ServerVariable()
             .description("The GeoNetwork catalog to contact")
-            .addEnumItem(localhostUrl)
-            .addEnumItem("../..")
-            .addEnumItem("https://vanilla.geocat.net/geonetwork");
-        catalogVariable.setDefault(localhostUrl);
+            .addEnumItem(hostUrl)
+            .addEnumItem("../..");
+        catalogVariable.setDefault(hostUrl);
 
         ServerVariable portalVariable = new ServerVariable()
             .description("The thematic portal")
@@ -74,22 +77,23 @@ public class OpenApiConfig {
             )
         );
 
-        return new OpenAPI()
-            .info(new Info()
-                .title("GeoNetwork OpenAPI Documentation (beta)")
+        return new OpenAPI().info(new Info()
+                .title(String.format(
+                    "GeoNetwork %s OpenAPI Documentation",
+                    version))
                 .description("This is the description of the GeoNetwork OpenAPI. Use this API to manage your catalog.")
                 .contact(new Contact()
                     .email("geonetwork-users@lists.sourceforge.net")
                     .name("GeoNetwork user mailing list")
                     .url("https://sourceforge.net/p/geonetwork/mailman/geonetwork-users/")
                 )
-                .version(API.VERSION_0_1)
+                .version(version)
                 .license(new License()
                     .name("GPL 2.0")
                     .url("http://www.gnu.org/licenses/old-licenses/gpl-2.0.html")))
             .externalDocs(new ExternalDocumentation()
                 .description("Learn how to access the catalog using the GeoNetwork REST API.")
-                .url("https://localhost:8080/geonetwork/doc/api"))
+                .url(String.format("%s/doc/api", hostUrl)))
             .servers(servers);
     }
 }

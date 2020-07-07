@@ -55,9 +55,7 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
  * Handle DOI creation.
  */
 @RequestMapping(value = {
-    "/{portal}/api/records",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/records"
+    "/{portal}/api/records"
 })
 @Tag(name = API_CLASS_RECORD_TAG)
 @Controller("doi")

@@ -38,9 +38,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RequestMapping(value = {
-    "/{portal}/api/formatters",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/formatters"
+    "/{portal}/api/formatters"
 })
 @Tag(name = "formatters",
     description = "Formatter operations")

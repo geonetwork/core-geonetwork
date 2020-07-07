@@ -71,9 +71,7 @@ import java.util.ResourceBundle;
  */
 
 @RequestMapping(value = {
-    "/{portal}/api/tools/mail",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/tools/mail"
+    "/{portal}/api/tools/mail"
 })
 @Tag(name = "tools",
     description = "Utility operations")

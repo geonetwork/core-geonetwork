@@ -61,9 +61,7 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.quartz.TriggerBuilder.newTrigger;
 
 @RequestMapping(value = {
-    "/{portal}/api/records/backups",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/records/backups"
+    "/{portal}/api/records/backups"
 })
 @Tag(name = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)
@@ -85,7 +83,7 @@ public class BackupArchiveApi {
         @ApiResponse(responseCode = "404", description = "Resource not found.")
     })
     @ResponseBody
-    public ResponseEntity<FileSystemResource> exec(HttpServletRequest request) throws Exception {
+    public ResponseEntity<FileSystemResource> downloadBackup(HttpServletRequest request) throws Exception {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
         ApplicationContext appContext = ApplicationContextHolder.get();

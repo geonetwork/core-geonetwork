@@ -24,6 +24,8 @@
 package org.fao.geonet.api;
 
 import com.google.common.collect.Sets;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.fao.geonet.api.exception.*;
 import org.fao.geonet.doi.client.DoiClientException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
@@ -55,6 +57,8 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.Set;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 /**
  *
  */
@@ -63,6 +67,7 @@ public class GlobalExceptionController {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         NotAllowedException.class
     })
@@ -76,6 +81,7 @@ public class GlobalExceptionController {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         ServiceNotAllowedEx.class
     })
@@ -85,6 +91,7 @@ public class GlobalExceptionController {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         SecurityException.class,
         AccessDeniedException.class
@@ -95,6 +102,7 @@ public class GlobalExceptionController {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         MaxUploadSizeExceededException.class
     })
@@ -104,6 +112,7 @@ public class GlobalExceptionController {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         HttpMessageNotReadableException.class,
         Exception.class,
@@ -115,6 +124,7 @@ public class GlobalExceptionController {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         FeatureNotEnabledException.class
     })
@@ -125,6 +135,7 @@ public class GlobalExceptionController {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         WebApplicationException.class
     })
@@ -134,6 +145,7 @@ public class GlobalExceptionController {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         FileNotFoundException.class,
         GeoPublisherException.class,
@@ -144,6 +156,7 @@ public class GlobalExceptionController {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         UserNotFoundEx.class,
         ResourceNotFoundException.class})
@@ -190,6 +203,7 @@ public class GlobalExceptionController {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         ResourceAlreadyExistException.class})
     public ApiError resourceAlreadyExistHandler(final Exception exception) {
@@ -198,6 +212,7 @@ public class GlobalExceptionController {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ApiError missingParameterHandler(final Exception exception) {
         return new ApiError("required_parameter_missing", exception.getClass().getSimpleName(), exception.getMessage());
@@ -205,6 +220,7 @@ public class GlobalExceptionController {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         UnsatisfiedServletRequestParameterException.class,
         IllegalArgumentException.class,
@@ -220,6 +236,7 @@ public class GlobalExceptionController {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         MissingResourceException.class
     })

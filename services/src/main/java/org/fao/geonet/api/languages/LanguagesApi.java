@@ -54,9 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping(value = {
-    "/{portal}/api/languages",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/languages"
+    "/{portal}/api/languages"
 })
 @Tag(name = "languages",
     description = "Languages operations")

@@ -58,7 +58,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequestMapping(value = {"/{portal}/api/pages", "/{portal}/api/" + API.VERSION_0_1 + "/pages"})
+@RequestMapping(value = {"/{portal}/api/pages"})
 @Tag(name = "pages", description = "Static pages inside GeoNetwork")
 @Controller("pages")
 public class PagesAPI {

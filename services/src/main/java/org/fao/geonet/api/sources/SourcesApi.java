@@ -29,7 +29,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FilenameUtils;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -56,10 +55,9 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
+
 @RequestMapping(value = {
-    "/{portal}/api/sources",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/sources"
+    "/{portal}/api/sources"
 })
 @Tag(name = "sources",
     description = "Source catalogue operations")
@@ -119,7 +117,7 @@ public class SourcesApi {
         sources.stream().map(GeonetEntity::asXml).forEach(sourcesList::addContent);
         response.setContentType(MediaType.TEXT_HTML_VALUE);
         response.getWriter().write(
-            new XsltResponseWriter(null)
+            new XsltResponseWriter(null, "portal")
                 .withJson("catalog/locales/en-core.json")
                 .withJson("catalog/locales/en-search.json")
                 .withXml(sourcesList)

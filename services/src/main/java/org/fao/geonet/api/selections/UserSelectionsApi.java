@@ -52,9 +52,7 @@ import java.util.Map;
  * Select a list of elements stored in session.
  */
 @RequestMapping(value = {
-    "/{portal}/api/userselections",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/userselections"
+    "/{portal}/api/userselections"
 })
 @Tag(name = "userselections",
     description = "User selections related operations")

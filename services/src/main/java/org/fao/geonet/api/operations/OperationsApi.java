@@ -39,9 +39,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.List;
 
 @RequestMapping(value = {
-    "/{portal}/api/operations",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/operations"
+    "/{portal}/api/operations"
 })
 @Tag(name = "operations",
     description = "Privileges operations")

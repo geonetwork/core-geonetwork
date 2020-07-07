@@ -60,9 +60,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequestMapping(value = {
-    "/{portal}/api/logos",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/logos"
+    "/{portal}/api/logos"
 })
 @Tag(name = "logos",
     description = "Logos operations")

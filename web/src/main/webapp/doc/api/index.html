@@ -41,14 +41,22 @@
     <script src="./swagger-ui-standalone-preset.js"> </script>
     <script>
     window.onload = function() {
+      var csrf = null;
+      var cookiearray = document.cookie.split(';');
+      for(var i = 0 ; i < cookiearray.length ; ++i){
+        if(cookiearray[i].trim().match('^XSRF-TOKEN=')){
+          csrf = cookiearray[i].replace(`XSRF-TOKEN=`,'').trim();
+        }
+      }
+
       // Begin Swagger UI call region
       const ui = SwaggerUIBundle({
         url: "../../srv/api/doc",
         dom_id: '#swagger-ui',
         deepLinking: true,
         requestInterceptor: function(requestObj) {
-          // var headers = requestObj.headers || {};
-          // headers["X-XSRF-TOKEN"] = csrf;
+          var headers = requestObj.headers || {};
+          headers["X-XSRF-TOKEN"] = csrf;
           requestObj.url = requestObj.url.replace('{portal}', 'srv');
           return requestObj;
         },

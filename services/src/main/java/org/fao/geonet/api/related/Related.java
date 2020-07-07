@@ -58,9 +58,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @RequestMapping(value = {
-    "/{portal}/api/related",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/related"
+    "/{portal}/api/related"
 })
 @Tag(name = "related",
     description = "Related records")

@@ -47,9 +47,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 @RequestMapping(value = {
-    "/{portal}/api/me",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/me"
+    "/{portal}/api/me"
 })
 @Tag(name = "me",
     description = "Me operations")

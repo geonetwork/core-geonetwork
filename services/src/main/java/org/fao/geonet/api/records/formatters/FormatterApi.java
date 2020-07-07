@@ -166,9 +166,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     }
 
     @RequestMapping(value = {
-        "/{portal}/api/records/{metadataUuid}/formatters/{formatterId}",
-        "/{portal}/api/" + API.VERSION_0_1 +
-            "/records/{metadataUuid}/formatters/{formatterId}"
+        "/{portal}/api/records/{metadataUuid}/formatters/{formatterId}"
     },
         method = RequestMethod.GET,
         produces = {
@@ -327,6 +325,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     @RequestMapping(value = "/{portal}/{lang}/xml.format.{type}")
     @ResponseBody
     @Deprecated
+    @io.swagger.v3.oas.annotations.Operation(hidden = true)
     public void execXml(
         @PathVariable final String lang,
         @PathVariable final String type,
@@ -414,6 +413,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      */
     @RequestMapping(value = "/{portal}/{lang}/md.format.{type}")
     @ResponseBody
+    @io.swagger.v3.oas.annotations.Operation(hidden = true)
     public void exec(
         @PathVariable final String lang,
         @PathVariable final String type,

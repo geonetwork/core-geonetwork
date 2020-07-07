@@ -35,6 +35,7 @@ import org.fao.geonet.domain.SchematronRequirement;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.repository.SchematronRepositoryTest;
 import org.jdom.Element;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.fao.geonet.domain.Pair.read;
@@ -43,6 +44,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Test SchematronCriteriaGroupServiceIntegration. Created by Jesse on 2/12/14.
  */
+// TODOES
 public class SchematronCriteriaGroupServiceIntegrationTest extends AbstractSchematronServiceIntegrationTest {
 
     @Test

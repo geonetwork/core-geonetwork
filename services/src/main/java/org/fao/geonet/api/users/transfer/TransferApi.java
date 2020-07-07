@@ -57,9 +57,7 @@ import java.util.stream.Collectors;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
 
 @RequestMapping(value = {
-    "/{portal}/api/users",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/users"
+    "/{portal}/api/users"
 })
 @Tag(name = "users",
     description = "User operations")

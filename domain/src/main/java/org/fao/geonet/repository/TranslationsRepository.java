@@ -24,9 +24,6 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.Translations;
-import org.fao.geonet.domain.userfeedback.RatingCriteria;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 

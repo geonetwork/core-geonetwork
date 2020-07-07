@@ -56,15 +56,15 @@ public class TranslationsRepositoryTest extends AbstractSpringDataTest {
     }
 
     @Test
-    public void testFindById() {
+    public void testFindOne() {
         Translations info1 = newTranslations();
         info1 = _repo.save(info1);
 
         Translations info2 = newTranslations();
         info2 = _repo.save(info2);
 
-        assertEquals(info2, _repo.findById(info2.getId()).get());
-        assertEquals(info1, _repo.findById(info1.getId()).get());
+        assertEquals(info2, _repo.findById(info2.getId()));
+        assertEquals(info1, _repo.findById(info1.getId()));
     }
 
     @Test

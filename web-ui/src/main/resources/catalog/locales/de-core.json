@@ -43,6 +43,7 @@
     "_groupOwner": "Gruppe",
     "_groupPublished": "In dieser Gruppe publiziert",
     "_indexingError": "Indizierungsfehler",
+    "indexRecords": "Index records",
     "_source": "Katalog",
     "previousKeywords": "Vorherige",
     "previousPage": "Vorherige Seite",
@@ -88,7 +89,10 @@
     "moreInfoOnRecord": "mehr ...",
     "comments": "Kommentar",
     "country": "Land",
+    "validateLinks": "Validate record links",
+    "metadataLinksValidated": "Link validation started.",
     "validateSelectedRecordConfirm": "Wollen Sie wirklich den/die {{selectedCount}} ausgewählten Datensatz(-sätze) validieren?",
+    "validateLinksSelectedRecordConfirm": "Do you really want to validate links of the {{selectedCount}} selected record(s)?",
     "validateSelectedRecordINSPIREConfirm": "Do you really want to validate in INSPIRE validator the {{selectedCount}} selected record(s)?",
     "regions": "Regionen",
     "gemetKeywords": "GEMET Schlagwörter",
@@ -509,5 +513,6 @@
     "cancelWorkingCopy": "Arbeitskopie abbrechen",
     "deleteWorkingCopyRecordConfirm": "Möchten Sie die Arbeitskopie '{{title}}' wirklich entfernen?",
     "workingCopy": "Arbeitskopie",
-    "metadataValidated": "Metadata validated."
+    "metadataValidated": "Metadata validated.",
+    "wmtsLayerNoUsableMatrixSet": "The WMTS layer could not be added. This may be because none of the projections advertised in the service matches any of the known projections of the application."
 }

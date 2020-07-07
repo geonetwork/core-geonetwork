@@ -111,7 +111,7 @@
                 <gmd:MD_Identifier>
                   <gmd:code>
                     <gmx:Anchor
-                      xlink:href="http://localhost:8080/geonetwork/srv/en/thesaurus.download?ref=external.place.regions">
+                      xlink:href="http://localhost:8080/geonetwork/srv/api/registries/vocabularies/external.place.regions">
                       geonetwork.thesaurus.external.place.regions
                     </gmx:Anchor>
                   </gmd:code>

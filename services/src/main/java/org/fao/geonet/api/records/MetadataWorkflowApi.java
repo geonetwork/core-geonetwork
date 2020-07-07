@@ -23,7 +23,6 @@
 
 package org.fao.geonet.api.records;
 
-import com.sun.istack.NotNull;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,7 +31,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.FeatureNotEnabledException;
@@ -47,6 +45,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -71,7 +70,8 @@ import java.util.*;
 import static org.fao.geonet.api.ApiParams.*;
 
 
-@RequestMapping(value = {"/{portal}/api/records", "/{portal}/api/" + API.VERSION_0_1 + "/records"})
+
+@RequestMapping(value = {"/{portal}/api/records"})
 @Tag(name = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
 @Controller("recordWorkflow")
 @ReadWriteController
@@ -106,6 +106,9 @@ public class MetadataWorkflowApi {
 
     @Autowired
     StatusActionsFactory statusActionFactory;
+
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get record status history", description = "")
     @RequestMapping(value = "/{metadataUuid}/status", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
@@ -425,7 +428,6 @@ public class MetadataWorkflowApi {
      * Build a list of status with additional information about users
      * (author and owner of the status change).
      */
-    @NotNull
     private List<MetadataStatusResponse> buildMetadataStatusResponses(List<MetadataStatus> listOfStatus,
                                                                       boolean details, String language) {
         List<MetadataStatusResponse> response = new ArrayList<>();
@@ -444,6 +446,7 @@ public class MetadataWorkflowApi {
         }
 
         Map<Integer, String> titles = new HashMap<>();
+        Map<Integer, String> uuids = new HashMap<>();
 
         // Add all user info and record title to response
         for (MetadataStatus s : listOfStatus) {
@@ -479,6 +482,17 @@ public class MetadataWorkflowApi {
                 }
             }
             status.setTitle(title);
+
+            String uuid = uuids.get(s.getId().getMetadataId());
+            if (uuid == null) {
+                try {
+                    // Collect metadata uuid.
+                    uuid=metadataUtils.getMetadataUuid(Integer.toString(s.getId().getMetadataId()));
+                    uuids.put(s.getId().getMetadataId(), uuid);
+                } catch (Exception e1) {
+                }
+            }
+            status.setUuid(uuid);
 
             response.add(status);
         }

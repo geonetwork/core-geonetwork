@@ -71,7 +71,7 @@ import java.util.*;
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.api.records.formatters.XsltFormatter.getSchemaLocalization;
 
-@RequestMapping(value = {"/{portal}/api/records", "/{portal}/api/" + API.VERSION_0_1 + "/records"})
+@RequestMapping(value = {"/{portal}/api/records"})
 @Tag(name = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
 @Controller("recordValidate")
 @PreAuthorize("hasAuthority('Editor')")

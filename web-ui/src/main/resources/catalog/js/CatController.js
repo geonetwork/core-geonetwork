@@ -110,23 +110,23 @@ goog.require('gn_alert');
           'showSocialBarInFooter': true,
           'fluidLayout': true,
           'facetConfig': {
-            'codelist_hierarchyLevel_text': {
-              'terms': {
-                'field': 'codelist_hierarchyLevel_text',
-                'size': 10
-              }
-            },
-            'topic': {
-              'terms': {
-                'field': 'topic_text',
-                'size': 20
-              }
-            },
             'inspireThemeUri': {
               'terms': {
                 'field': 'inspireThemeUri',
                 'size': 34
                 // "order" : { "_key" : "asc" }
+              }
+            },
+            'topic_text': {
+              'terms': {
+                'field': 'topic_text',
+                'size': 20
+              }
+            },
+            'codelist_hierarchyLevel_text': {
+              'terms': {
+                'field': 'codelist_hierarchyLevel_text',
+                'size': 10
               }
             }
           },
@@ -621,6 +621,7 @@ goog.require('gn_alert');
         var copy = angular.copy(defaultConfig);
         copy.mods.header.languages = {};
         copy.mods.search.grid.related = [];
+        copy.mods.home.facetConfig = {};
         copy.mods.search.facetConfig = {};
         copy.mods.search.scoreConfig = {};
         copy.mods.map["map-editor"].layers = [];
@@ -1047,7 +1048,19 @@ goog.require('gn_alert');
                     aggs: gnGlobalSettings.gnCfg.mods.home.facetConfig}).
               then(function(r) {
                 $scope.searchInfo = r.data;
-                $scope.browse = $scope.searchInfo.aggregations.inspireThemeUri ? 'inspire' : 'topics';
+                var keys = Object.keys(gnGlobalSettings.gnCfg.mods.home.facetConfig);
+                    selectedFacet = keys[0];
+                for (var i = 0; i < keys.length; i ++) {
+                  if ($scope.searchInfo.aggregations[keys[i]].buckets.length > 0) {
+                    selectedFacet = keys[i];
+                    break;
+                  }
+                }
+                $scope.homeFacet = {
+                  list: keys,
+                  key: selectedFacet,
+                  lastKey: keys[keys.length - 1]
+                };
               });
             }
           });

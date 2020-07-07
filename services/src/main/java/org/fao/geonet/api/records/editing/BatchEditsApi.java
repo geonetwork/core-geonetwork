@@ -64,9 +64,7 @@ import java.util.List;
 import java.util.Set;
 
 @RequestMapping(value = {
-    "/{portal}/api/records",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/records"
+    "/{portal}/api/records"
 })
 @Tag(name = "records",
     description = "Metadata record editing operations")

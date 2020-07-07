@@ -1213,7 +1213,7 @@
                           <gmd:MD_Identifier>
                             <gmd:code>
                               <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                                          xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-service-taxonomy">
+                                          xlink:href="http://localhost:8080/geonetwork/srv/api/registries/vocabularies/external.theme.inspire-service-taxonomy">
                                 geonetwork.thesaurus.external.theme.inspire-service-taxonomy</gmx:Anchor>
                             </gmd:code>
                           </gmd:MD_Identifier>
@@ -1275,7 +1275,7 @@
                           <gmd:MD_Identifier>
                             <gmd:code>
                               <gmx:Anchor
-                                xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.httpinspireeceuropaeutheme-theme">
+                                xlink:href="http://localhost:8080/geonetwork/srv/api/registries/vocabularies/external.theme.httpinspireeceuropaeutheme-theme">
                                 geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme
                               </gmx:Anchor>
                             </gmd:code>

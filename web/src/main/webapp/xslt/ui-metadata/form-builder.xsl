@@ -1172,10 +1172,8 @@
             <xsl:attribute name="id"
                            select="concat('gn-field-', $editInfo/@ref)"/>
 
-            <xsl:if test="not($isDirective)">
-              <xsl:attribute name="name"
-                             select="concat('_', $name)"/>
-            </xsl:if>
+            <xsl:attribute name="name"
+                           select="concat('_', $name)"/>
 
             <xsl:if test="$isDirective">
              <xsl:attribute name="data-element-ref"

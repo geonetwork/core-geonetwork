@@ -191,13 +191,6 @@
       $scope.saveSettings = function(formId) {
         saveSettings(formId, 'admin.config.save');
       };
-      /**
-       * Save the form containing all capabilities properties. When saved,
-       * broadcast success or failure status.
-       */
-      $scope.saveProperties = function(formId) {
-        saveSettings(formId, 'admin.config.csw.save');
-      };
       var saveSettings = function(formId, service) {
 
         $http({
