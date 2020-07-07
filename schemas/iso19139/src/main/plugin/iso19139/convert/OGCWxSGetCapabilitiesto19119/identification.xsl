@@ -33,6 +33,7 @@
                 xmlns:ows2="http://www.opengis.net/ows/2.0"
                 xmlns:wcs="http://www.opengis.net/wcs"
                 xmlns:wms="http://www.opengis.net/wms"
+                xmlns:wmts="http://www.opengis.net/wmts/1.0"
                 xmlns:wps="http://www.opengeospatial.net/wps"
                 xmlns:wps1="http://www.opengis.net/wps/1.0.0"
                 xmlns:wps2="http://www.opengis.net/wps/2.0"
@@ -42,9 +43,8 @@
                 xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
                 version="2.0"
                 xmlns="http://www.isotc211.org/2005/gmd"
-                extension-element-prefixes="math exslt wcs ows wps wps1 wps2 ows11 wfs gml">
-
-  <!-- ============================================================================= -->
+                extension-element-prefixes="math exslt"
+                exclude-result-prefixes="#all">
 
   <xsl:template match="*" mode="SrvDataIdentification">
     <xsl:param name="topic"/>
@@ -107,8 +107,6 @@
       </CI_Citation>
     </citation>
 
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
     <abstract>
       <gco:CharacterString>
         <xsl:choose>
@@ -134,14 +132,11 @@
       </gco:CharacterString>
     </abstract>
 
-    <!--idPurp-->
 
     <status>
       <MD_ProgressCode codeList="./resources/codeList.xml#MD_ProgressCode"
                        codeListValue="completed"/>
     </status>
-
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
     <xsl:for-each
       select="//ContactInformation|//wcs:responsibleParty|//wms:responsibleParty|wms:Service/wms:ContactInformation">
@@ -159,9 +154,6 @@
       </pointOfContact>
     </xsl:for-each>
 
-    <!-- resMaint -->
-    <!-- graphOver -->
-    <!-- dsFormat-->
     <xsl:for-each
       select="$s/KeywordList|$s/wfs:keywords|$s/wcs:keywords|$s/ows:Keywords|$s/ows11:Keywords|$s/ows2:Keywords">
       <descriptiveKeywords>
@@ -336,6 +328,8 @@
           </xsl:when>
           <xsl:when test="name(.)='WMT_MS_Capabilities' or name(.)='WMS_Capabilities'">OGC:WMS
           </xsl:when>
+          <xsl:when test="local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wmts/1.0'">OGC:WMTS
+          </xsl:when>
           <xsl:when test="name(.)='WCS_Capabilities'">OGC:WCS</xsl:when>
           <xsl:when test="name(.)='wps:Capabilities'">OGC:WPS</xsl:when>
           <xsl:otherwise>OGC:WFS</xsl:otherwise>
@@ -347,8 +341,6 @@
         <xsl:value-of select='@version'/>
       </gco:CharacterString>
     </srv:serviceTypeVersion>
-
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
     <srv:accessProperties>
       <MD_StandardOrderProcess>
@@ -403,7 +395,8 @@
                   <xsl:variable name="boxes">
                     <xsl:choose>
                       <xsl:when test="$ows='true'">
-                        <xsl:for-each select="//ows:WGS84BoundingBox/ows:LowerCorner">
+                        <xsl:for-each select="//ows:WGS84BoundingBox/ows:LowerCorner|
+                                              //ows11:WGS84BoundingBox/ows11:LowerCorner">
                           <xmin>
                             <xsl:value-of select="substring-before(., ' ')"/>
                           </xmin>
@@ -411,7 +404,8 @@
                             <xsl:value-of select="substring-after(., ' ')"/>
                           </ymin>
                         </xsl:for-each>
-                        <xsl:for-each select="//ows:WGS84BoundingBox/ows:UpperCorner">
+                        <xsl:for-each select="//ows:WGS84BoundingBox/ows:UpperCorner|
+                                              //ows11:WGS84BoundingBox/ows11:UpperCorner">
                           <xmax>
                             <xsl:value-of select="substring-before(., ' ')"/>
                           </xmax>
@@ -688,6 +682,9 @@
               <xsl:when test="name(.)='WMT_MS_Capabilities'">
                 <xsl:value-of select="//Layer[Name=$Name]/Title"/>
               </xsl:when>
+              <xsl:when test="local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wmts/1.0'">
+                <xsl:value-of select="//wmts:Layer[ows11:Identifier=$Name]/ows11:Title"/>
+              </xsl:when>
               <xsl:otherwise>
                 <xsl:value-of select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:label"/>
               </xsl:otherwise>
@@ -724,6 +721,9 @@
           </xsl:when>
           <xsl:when test="name(.)='WMT_MS_Capabilities'">
             <xsl:value-of select="//Layer[Name=$Name]/Abstract"/>
+          </xsl:when>
+          <xsl:when test="local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wmts/1.0'">
+            <xsl:value-of select="//wmts:Layer[ows11:Identifier=$Name]/ows11:Abstract"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:description"/>
@@ -958,7 +958,8 @@
                   <xsl:choose>
                     <xsl:when test="$ows='true'">
                       <xsl:for-each
-                        select="//wfs:FeatureType[wfs:Name=$Name]/ows:WGS84BoundingBox/ows:LowerCorner">
+                        select="//wfs:FeatureType[wfs:Name=$Name]/ows:WGS84BoundingBox/ows:LowerCorner|
+                                //wmts:Layer[ows11:Identifier=$Name]/ows11:WGS84BoundingBox/ows11:LowerCorner">
                         <xmin>
                           <xsl:value-of select="substring-before(., ' ')"/>
                         </xmin>
@@ -967,7 +968,8 @@
                         </ymin>
                       </xsl:for-each>
                       <xsl:for-each
-                        select="//wfs:FeatureType[wfs:Name=$Name]/ows:WGS84BoundingBox/ows:UpperCorner">
+                        select="//wfs:FeatureType[wfs:Name=$Name]/ows:WGS84BoundingBox/ows:UpperCorner|
+                                //wmts:Layer[ows11:Identifier=$Name]/ows11:WGS84BoundingBox/ows11:UpperCorner">
                         <xmax>
                           <xsl:value-of select="substring-before(., ' ')"/>
                         </xmax>
