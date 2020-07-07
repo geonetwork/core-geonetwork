@@ -446,6 +446,32 @@ public class ThesaurusManager implements ThesaurusFinder {
                 elMultilingualTitles.addContent(elMultilingualTitle);
             }
 
+            //add dublin core items to the response
+            // "dublinCoreMultilingual": [
+            //    { "lang": "fr","tag":"title","value": "ECCC Data Usage Scope FR"},
+            //    {"lang": "en","tag":"title","value": "ECCC Data Usage Scope EN"}
+            //]
+            Element elDublinCoreMultilingual = new Element("dublinCoreMultilinguals");
+            for (Map.Entry<String, Map<String,String>> entryLang : currentTh.getDublinCoreMultilingual().entrySet()) {
+                String lang = entryLang.getKey();
+                for (Map.Entry<String, String> entryItem : entryLang.getValue().entrySet()) {
+                    Element elItem = new Element("dublinCoreMultilingual");
+                    Element elLang = new Element("lang");
+                    elLang.setText(lang);
+                    Element elTag = new Element("tag");
+                    elTag.setText(entryItem.getKey());
+                    Element elValue = new Element("value");
+                    elValue.setText(entryItem.getValue());
+
+                    elItem.addContent(elLang);
+                    elItem.addContent(elTag);
+                    elItem.addContent(elValue);
+
+
+                    elDublinCoreMultilingual.addContent(elItem);
+                }
+            }
+
             Element elType = new Element("type");
             String type = currentTh.getType();
             elType.addContent(type);
@@ -479,6 +505,7 @@ public class ThesaurusManager implements ThesaurusFinder {
             elLoop.addContent(elFname);
             elLoop.addContent(elTitle);
             elLoop.addContent(elMultilingualTitles);
+            elLoop.addContent(elDublinCoreMultilingual);
             elLoop.addContent(elDate);
             elLoop.addContent(elUrl);
             elLoop.addContent(elDefaultURI);

@@ -100,6 +100,11 @@ public class Thesaurus {
 
     private Map<String, String> multilingualTitles = new Hashtable<String,String>();
 
+    // map of lang -> dictionary of values
+    //                 key is a dublinCore element (i.e. https://guides.library.ucsc.edu/c.php?g=618773&p=4306386)
+    // see #retrieveDublinCore() for example
+    private Map<String, Map<String,String>> dublinCoreMultilingual =   new Hashtable<String,Map<String,String>>();
+
 /*    @SuppressWarnings("unused")
     private String version;
 
@@ -172,6 +177,10 @@ public class Thesaurus {
 
     public Map<String, String> getMultilingualTitles() {
         return Collections.unmodifiableMap(this.multilingualTitles);
+    }
+
+    public Map<String,Map<String, String>> getDublinCoreMultilingual() {
+        return Collections.unmodifiableMap(this.dublinCoreMultilingual);
     }
 
     /**
@@ -692,6 +701,57 @@ public class Thesaurus {
 
         repository.addGraph(myGraph);
     }
+    //   <skos:ConceptScheme rdf:about="http://www.thesaurus.gc.ca/#CoreSubjectThesaurus">
+    //      <dc:title>main title</dc:title>
+    //      <dc:title xml:lang="en">title en</dc:title>
+    //      <dc:title xml:lang="fr">title fr</dc:title>
+    //      <dc:publisher xml:lang="en">publisher en</dc:publisher>
+    //      <dc:publisher xml:lang="fr">publisher fr</dc:publisher>
+    //    <dc:description></dc:description>
+    //  </skos:ConceptScheme>
+    //
+    // This will setup the dublinCoreMultilingual like so;
+    //
+    //dublinCoreMultilingual := {
+    //     "en" ->  {
+    //                  "title" -> "title en",
+    //                  "publisher" -> "publisher en"
+    //              }
+    //     "fr" ->  {
+    //                  "title" -> "title fr",
+    //                  "publisher" -> "publisher fr"
+    //              }
+    //  }
+    //
+    // note - only looks at language-specified elements
+    //
+    private void retrieveDublinCore(Element thesaurusEl) {
+        List<Namespace> theNSs = new ArrayList<Namespace>();
+        theNSs.add(Namespace.getNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"));
+        theNSs.add(Namespace.getNamespace("skos", "http://www.w3.org/2004/02/skos/core#"));
+        theNSs.add(Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/"));
+        theNSs.add(Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/"));
+
+        Namespace xmlNS = Namespace.getNamespace("xml","http://www.w3.org/XML/1998/namespace");
+        try {
+            List<Element> multiLingualTitles = (List<Element>) Xml.selectNodes(thesaurusEl,
+                "skos:ConceptScheme/dc:*[@xml:lang]|skos:ConceptScheme/dcterms:*[@xml:lang]", theNSs);
+            dublinCoreMultilingual.clear();
+            for (Element el: multiLingualTitles) {
+                String lang = isoLanguageMapper.iso639_2_to_iso639_1(el.getAttribute("lang", xmlNS).getValue());
+                String value = el.getTextTrim();
+                String name = el.getName();
+                if (!dublinCoreMultilingual.containsKey(lang)) {
+                    dublinCoreMultilingual.put(lang,new HashMap<String,String>());
+                }
+                dublinCoreMultilingual.get(lang).put(name,value);
+
+                int t=0;
+            }
+        } catch (Exception e) {
+            Log.warning(Geonet.THESAURUS,"error extracting multilingual dublin core items from thesaurus",e);
+        }
+    }
 
     //    <rdf:RDF>
     //    <skos:ConceptScheme rdf:about="http://www.thesaurus.gc.ca/#CoreSubjectThesaurus">
@@ -720,7 +780,6 @@ public class Thesaurus {
                 "skos:ConceptScheme/dc:title[@xml:lang]|skos:ConceptScheme/dcterms:title[@xml:lang]", theNSs);
             multilingualTitles.clear();
             for (Element el: multiLingualTitles) {
-                    //use both forms of the lang name
                      String lang = isoLanguageMapper.iso639_2_to_iso639_1(el.getAttribute("lang", xmlNS).getValue());
                      String title = el.getTextTrim();
                      multilingualTitles.put(lang,title);
@@ -752,6 +811,7 @@ public class Thesaurus {
 
             this.defaultNamespace = null;
             retrieveMultiLingualTitles(thesaurusEl);
+            retrieveDublinCore(thesaurusEl);
 
             Element title = Xml.selectElement(thesaurusEl,
                 "skos:ConceptScheme/dc:title|skos:ConceptScheme/dcterms:title|" +
