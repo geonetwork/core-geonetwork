@@ -54,6 +54,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @RequestMapping(value = {
@@ -161,15 +162,15 @@ public class SourcesApi {
             Source source,
         @Parameter(hidden = true)
             HttpServletRequest request) {
-        Source existing = sourceRepository.findById(source.getUuid()).get();
-        if (existing != null) {
+        Optional<Source> existing = sourceRepository.findById(source.getUuid());
+        if (existing.isPresent()) {
             throw new IllegalArgumentException(String.format(
                 "A source with uuid '%s' already exist", source.getUuid()
             ));
         }
 
-        existing = sourceRepository.findOneByName(source.getName());
-        if (existing != null) {
+        Source existingWithSameName = sourceRepository.findOneByName(source.getName());
+        if (existingWithSameName != null) {
             throw new IllegalArgumentException(String.format(
                 "A source with name '%s' already exist", source.getName()
             ));
