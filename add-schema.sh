@@ -94,7 +94,6 @@ SED_SCRIPT
   insertLine=$(($line - 1))
   sed $sedopt -f /dev/stdin web/pom.xml << SED_SCRIPT
   ${insertLine} a\\
-\
 \    <profile>\\
 \      <id>schema-${schema}</id>\\
 \      <activation>\\
@@ -103,7 +102,7 @@ SED_SCRIPT
 \      </activation>\\
 \      <dependencies>\\
 \        <dependency>\\
-\          <groupId>org.geonetwork-opensource.schemas</groupId>
+\          <groupId>org.geonetwork-opensource.schemas</groupId>\\
 \          <artifactId>schema-${schema}</artifactId>\\
 \          <version>${gnSchemasVersion}</version>\\
 \        </dependency>\\
@@ -120,13 +119,13 @@ SED_SCRIPT
 \                <goals><goal>unpack</goal></goals>\\
 \                <configuration>\\
 \                  <artifactItems>\\
-\                    <artifactItem>
-\                      <groupId>org.geonetwork-opensource.schemas</groupId>
+\                    <artifactItem>\\
+\                      <groupId>org.geonetwork-opensource.schemas</groupId>\\
 \                      <artifactId>schema-${schema}</artifactId>\\
-\                      <type>zip</type>
-\                      <overWrite>false</overWrite>
-\                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
-\                    </artifactItem>
+\                      <type>zip</type>\\
+\                      <overWrite>false</overWrite>\\
+\                      <outputDirectory>${schema-plugins.dir}</outputDirectory>\\
+\                    </artifactItem>\\
 \                  </artifactItems>\\
 \                </configuration>\\
 \              </execution>\\
