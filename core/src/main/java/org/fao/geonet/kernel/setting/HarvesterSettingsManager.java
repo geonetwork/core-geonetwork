@@ -253,6 +253,7 @@ public class HarvesterSettingsManager {
         removeChildren(s.getId());
 
         settingsRepo.delete(s);
+        settingsRepo.flush();
         return true;
     }
 
