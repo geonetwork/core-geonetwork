@@ -73,6 +73,7 @@ public class SchematronCriteriaRepositoryTest extends AbstractSpringDataTest {
         final SchematronCriteria criteria = criteriaGroup.getCriteria().get(0);
 
         assertTrue(_repo.existsById(criteria.getId()));
+        criteriaGroup.getCriteria().remove(criteria);
         _repo.deleteById(criteria.getId());
         assertFalse(_repo.existsById(criteria.getId()));
     }
@@ -82,6 +83,7 @@ public class SchematronCriteriaRepositoryTest extends AbstractSpringDataTest {
         final SchematronCriteriaGroup criteriaGroup = criteriaGroupRepository.save(newGroup(_inc, _schematronRepo));
         final SchematronCriteria criteria = criteriaGroup.getCriteria().get(0);
         assertTrue(_repo.existsById(criteria.getId()));
+        criteriaGroup.getCriteria().remove(criteria);
         _repo.delete(criteria);
         assertFalse(_repo.existsById(criteria.getId()));
     }
@@ -126,6 +128,8 @@ public class SchematronCriteriaRepositoryTest extends AbstractSpringDataTest {
         final SchematronCriteria criteria2 = criteriaGroup2.getCriteria().get(0);
         assertTrue(_repo.existsById(criteria1.getId()));
         assertTrue(_repo.existsById(criteria2.getId()));
+        criteriaGroup1.getCriteria().remove(criteria1);
+        criteriaGroup2.getCriteria().remove(criteria2);
         _repo.deleteAll(Arrays.asList(criteria1, criteria2));
         assertFalse(_repo.existsById(criteria1.getId()));
         assertFalse(_repo.existsById(criteria2.getId()));
