@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:gpi="http://standards.iso.org/19155/iso/gpi/1.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:sch="http://www.ascc.net/xml/schematron" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://standards.iso.org/19155/iso/gpi/1.0" elementFormDefault="qualified" version="1.0">
+    <!-- Schema Reference -->
+    <xsd:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19136_Schemas/gml.xsd"/>
+    <xsd:element name="ReferenceSystem" type="gpi:ReferenceSystemType" substitutionGroup="gml:Definition"/>
+    <xsd:complexType name="ReferenceSystemType">
+        <xsd:complexContent>
+            <xsd:annotation>
+                <xsd:documentation>the attribute "name" is mapped to "gml:identifier".</xsd:documentation>		
+            </xsd:annotation>
+            <xsd:extension base="gml:DefinitionType">
+                <xsd:sequence maxOccurs="unbounded">
+                    <xsd:element name="definition" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="domainOfValidity" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element ref="gpi:PI"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element name="PI" type="gpi:PIType" substitutionGroup="gml:AbstractGML"/>
+    <xsd:complexType name="PIType">
+        <xsd:complexContent>
+            <xsd:extension base="gml:AbstractGMLType">
+                <xsd:sequence>
+                    <xsd:element name="rs" type="xsd:anyURI" minOccurs="0"/>
+                    <xsd:element name="value" type="xsd:string"/>
+                    <xsd:element name="validPeriod" type="gml:TimePeriodType" minOccurs="0"/>
+                    <xsd:element name="linkedPI" type="gml:ReferenceType" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <gml:targetElement>gpi:PI</gml:targetElement>
+                                <gml:reversePropertyName>gpi:linkedPI</gml:reversePropertyName>
+                            </xsd:appinfo>
+                            <xsd:documentation>This element is the extension in part2</xsd:documentation>
+                        </xsd:annotation>	
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element name="MatchingTable" type="gpi:MatchingTableType" substitutionGroup="gml:AbstractGML"/>
+    <xsd:complexType name="MatchingTableType">
+        <xsd:complexContent>
+            <xsd:extension base="gml:AbstractGMLType">
+                <xsd:sequence>
+                    <xsd:element name="rs" type="xsd:anyURI" minOccurs="2" maxOccurs="unbounded"/>
+                    <xsd:element ref="gpi:PISet" minOccurs="1" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element name="PISet" type="gpi:PISetType" substitutionGroup="gml:AbstractGML"/>
+    <xsd:complexType name="PISetType">
+        <xsd:complexContent>
+            <xsd:extension base="gml:AbstractGMLType">
+                <xsd:sequence>
+                    <xsd:element name="equivalent" type="gml:ReferenceType" minOccurs="2" maxOccurs="2">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <gml:targetElement>gpi:PI</gml:targetElement>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+</xsd:schema>
+

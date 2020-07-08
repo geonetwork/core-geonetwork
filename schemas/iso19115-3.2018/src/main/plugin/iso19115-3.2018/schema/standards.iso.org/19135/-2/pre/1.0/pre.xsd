@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:pre="http://standards.iso.org/iso/19135/-2/pre/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19135/-2/pre/1.0" version="1.0">
+  <include schemaLocation="abstract.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

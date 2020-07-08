@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0"
+	xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+	targetNamespace="http://standards.iso.org/iso/19115/-3/gmw/1.0" elementFormDefault="qualified"
+	version="2014-12-25">
+
+	<!-- smr 2014-12-27 refactor gco, gsr, gts, gss to put all gml dependencies in this namespace for base data types -->
+	<!-- ================================= Annotation ================================ -->
+	<xs:annotation>
+		<xs:documentation>Geographic COmmon (GCO) extensible markup language is a component of the XML Schema Implementation of Geographic
+Information Metadata documented in ISO/TS 19139:2007. GCO includes all the definitions of http://standards.iso.org/iso/19115/-3/gco/1.0" namespace. The root document of this namespace is the file gco.xsd. This basicTypes.xsd schema implements concepts from the "basic types" package of ISO/TS 19103.</xs:documentation>
+	</xs:annotation>
+	<!-- ================================== Imports ================================== -->
+	<xs:import namespace="http://www.opengis.net/gml/3.2"
+		schemaLocation="../../../../../others/ISO19136/gml.xsd"/>
+	<xs:import namespace="http://www.w3.org/1999/xlink"
+		schemaLocation="../../../../../others/xlink/xlink.xsd"/>
+	<!--	<xs:include schemaLocation="gco.xsd"/>-->
+	<xs:import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0"
+		schemaLocation="../../gco/1.0/baseTypes2014.xsd"/>
+
+
+	<!-- ============================= Units of Measure ============================ -->
+	<!-- ........................................................................ -->
+	<xs:complexType name="UnitOfMeasure_PropertyType">
+		<!-- used by content.xsd, mrc:MD_SampleDimenstion.units -->
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gml:UnitDefinition"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<!--<xs:complexType name="UomAngle_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gml:UnitDefinition"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>-->
+
+	<!-- ........................................................................ -->
+	<xs:complexType name="UomLength_PropertyType">
+		<!-- used by content.xsd mrc:MD_Band.boundUnits -->
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gml:UnitDefinition"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+
+	<!-- .............................not used.................................... -->
+	<!--	<xs:complexType name="UomScale_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gml:UnitDefinition"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>-->
+
+	<!-- .........................not used ..................................... -->
+	<!--<xs:complexType name="UomArea_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gml:UnitDefinition"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>-->
+
+	<!-- ............................not used.................................... -->
+	<!--<xs:complexType name="UomVelocity_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gml:UnitDefinition"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>-->
+
+	<!-- ........................not used........................................ -->
+	<!--	<xs:complexType name="UomTime_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gml:UnitDefinition"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>-->
+
+	<!-- ...............................not used.................................. -->
+	<!--	<xs:complexType name="UomVolume_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gml:UnitDefinition"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>-->
+	<!-- ........................................................................ -->
+	<!-- ........................................................................ -->
+	<!-- ========================================================================== -->
+
+	<!-- ###  from gts temporalObjects.xsd ######################################### -->
+	<!-- ########################################################################### -->
+	<!-- ================================== Classes ================================= -->
+	<!-- ........................................................................ -->
+	<!--==XCGE: gml:AbstractTimePrimitive==-->
+	<!-- ........................................................................ -->
+	<xs:complexType name="TM_Primitive_PropertyType">
+		<!-- used in gex, mri, mrl -->
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gml:AbstractTimePrimitive"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+
+	<!--================================================-->
+
+	<!-- ### from gss  geometry.xsd ################################################ -->
+	<!-- ########################################################################### -->
+	<!-- ================================== Classes ================================= -->
+	<!-- ........................................................................ -->
+	<!--==XCGE: gml:Point==-->
+	<!-- ........................................................................ -->
+	<xs:complexType name="GM_Point_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gml:Point"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<!--==XCGE: gml:AbstractGeometry==-->
+	<!-- ........................................................................ -->
+	<xs:complexType name="GM_Object_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gml:AbstractGeometry"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+
+	<!-- ######  from gsr spatialrepresentation.xsd  ############################### -->
+	<!-- ########################################################################### -->
+	<!-- ================================== Classes ================================ -->
+	<!-- ........................................................................... -->
+	<!--==XCGE: gml:AbstractCRS==-->
+	<!-- ........................................................................... -->
+	<xs:complexType name="SC_CRS_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gml:AbstractCRS"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+
+</xs:schema>

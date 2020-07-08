@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/cat/1.0" version="1.0">
+  <include schemaLocation="cat.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="CT_Codelist" substitutionGroup="cat:AbstractCT_Item" type="cat:CT_Codelist_Type"/>
+  <complexType name="CT_Codelist_Type">
+    <complexContent>
+      <extension base="cat:AbstractCT_Item_Type">
+        <sequence>
+          <element maxOccurs="unbounded" name="codeEntry" type="cat:CT_CodelistValue_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_Codelist_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_Codelist"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CT_CodelistCatalogue" substitutionGroup="cat:AbstractCT_Catalogue" type="cat:CT_CodelistCatalogue_Type"/>
+  <complexType name="CT_CodelistCatalogue_Type">
+    <complexContent>
+      <extension base="cat:AbstractCT_Catalogue_Type">
+        <sequence>
+          <element maxOccurs="unbounded" name="codelistItem" type="cat:CT_Codelist_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_CodelistCatalogue_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_CodelistCatalogue"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CT_CodelistValue" substitutionGroup="cat:AbstractCT_Item" type="cat:CT_CodelistValue_Type"/>
+  <complexType name="CT_CodelistValue_Type">
+    <complexContent>
+      <extension base="cat:AbstractCT_Item_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_CodelistValue_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_CodelistValue"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

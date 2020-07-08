@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+  xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0" 
+  xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" 
+  xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+  elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mac/2.0" version="1.0">
+  <annotation>
+    <documentation>event.xsd Version 1.0 thabermann@hdfgroup.org</documentation>
+    <documentation>Created 2017-01-18 </documentation>
+  </annotation>
+  <!-- ================================== Imports ================================== -->
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gmw/1.0" schemaLocation="../../../../19115/-3/gmw/1.0/gmw.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/lan/1.0" schemaLocation="../../../../19115/-3/lan/1.0/lan.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!-- ########################################################################### -->
+  <!-- ================================== Classes ================================= -->
+  <!-- =========================================================================== -->
+  <complexType name="MI_InstrumentationEventList_Type">
+    <annotation>
+      <documentation>Instrumentation EventList Description</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="citation" type="mcc:Abstract_Citation_PropertyType"/>
+          <element name="description" type="gco:CharacterString_PropertyType"/>
+          <element maxOccurs="1" minOccurs="0" name="locale" type="lan:PT_Locale_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="metadataConstraints" type="mcc:Abstract_Constraints_PropertyType"/>
+          <element name="instrumentationEvent" type="mac:MI_InstrumentationEvent_PropertyType" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <element name="MI_InstrumentationEventList" type="mac:MI_InstrumentationEventList_Type"/>
+  <!-- ........................................................................ -->
+  <complexType name="MI_InstrumentationEventList_PropertyType">
+    <sequence>
+      <element ref="mac:MI_InstrumentationEventList" minOccurs="0"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <complexType name="MI_InstrumentationEvent_Type">
+    <annotation>
+      <documentation>Instrumentation Event Description</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="citation" type="mcc:Abstract_Citation_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+          <element name="description" type="gco:CharacterString_PropertyType"/>
+          <element name="extent" type="mcc:Abstract_Extent_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+          <element name="type" type="mac:MI_InstrumentationEventTypeCode_PropertyType" minOccurs="1" maxOccurs="unbounded"/>
+          <element name="revisionHistory" type="mac:MI_Revision_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <element name="MI_InstrumentationEvent" type="mac:MI_InstrumentationEvent_Type"/>
+  <!-- ........................................................................ -->
+  <complexType name="MI_InstrumentationEvent_PropertyType">
+    <sequence>
+      <element ref="mac:MI_InstrumentationEvent" minOccurs="0"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <complexType name="MI_Revision_Type">
+    <annotation>
+      <documentation>Description: NASA Revision Description</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="description" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="1"/>
+          <element name="author" type="mcc:Abstract_Responsibility_PropertyType"/>
+          <element name="dateInfo" type="mcc:Abstract_TypedDate_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <element name="MI_Revision" type="mac:MI_Revision_Type"/>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Revision_PropertyType">
+    <sequence>
+      <element ref="mac:MI_Revision" minOccurs="0"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <!-- ........................................................................ -->
+  <element name="MI_InstrumentationEventTypeCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+  <!-- ........................................................................ -->
+  <complexType name="MI_InstrumentationEventTypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_InstrumentationEventTypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+</schema>

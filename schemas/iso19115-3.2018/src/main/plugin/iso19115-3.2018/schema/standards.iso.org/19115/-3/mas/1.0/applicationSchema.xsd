@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mas/1.0" version="1.0">
+  <include schemaLocation="mas.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="MD_ApplicationSchemaInformation" substitutionGroup="mcc:Abstract_ApplicationSchemaInformation" type="mas:MD_ApplicationSchemaInformation_Type">
+    <annotation>
+      <documentation>information about the application schema used to build the dataset</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_ApplicationSchemaInformation_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_ApplicationSchemaInformation_Type">
+        <sequence>
+          <element name="name" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>name of the application schema used</documentation>
+            </annotation>
+          </element>
+          <element name="schemaLanguage" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>identification of the schema language used</documentation>
+            </annotation>
+          </element>
+          <element name="constraintLanguage" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>formal language used in Application Schema</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="schemaAscii" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>full application schema given as an ASCII file</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="graphicsFile" type="mcc:Abstract_OnlineResource_PropertyType">
+            <annotation>
+              <documentation>full application schema given as a graphics file</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="softwareDevelopmentFile" type="mcc:Abstract_OnlineResource_PropertyType">
+            <annotation>
+              <documentation>full application schema given as a software development file</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="softwareDevelopmentFileFormat" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>software dependent format used for the application schema software dependent file</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_ApplicationSchemaInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mas:MD_ApplicationSchemaInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>
