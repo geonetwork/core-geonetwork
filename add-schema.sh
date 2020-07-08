@@ -124,7 +124,7 @@ SED_SCRIPT
 \                      <artifactId>schema-${schema}</artifactId>\\
 \                      <type>zip</type>\\
 \                      <overWrite>false</overWrite>\\
-\                      <outputDirectory>${schema-plugins.dir}</outputDirectory>\\
+\                      <outputDirectory>\$\{schema-plugins.dir\}</outputDirectory>\\
 \                    </artifactItem>\\
 \                  </artifactItems>\\
 \                </configuration>\\
