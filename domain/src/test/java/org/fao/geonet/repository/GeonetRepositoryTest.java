@@ -28,7 +28,7 @@ import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataI
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 import javax.annotation.Nullable;
 import javax.persistence.criteria.Path;
@@ -44,7 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 /**
@@ -82,7 +82,7 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
         });
 
         assertEquals(updatedUUID1, md.getUuid());
-        assertEquals(updatedUUID1, _repo.findOne(md.getId()).getUuid());
+        assertEquals(updatedUUID1, _repo.findById(md.getId()).get().getUuid());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
         Metadata md3 = _repo.save(MetadataRepositoryTest.newMetadata(_inc));
 
 
-        final Specifications<Metadata> spec = where((Specification<Metadata>)hasMetadataId(md2.getId())).or((Specification<Metadata>)hasMetadataId(md3.getId()));
+        final Specification<Metadata> spec = where((Specification<Metadata>)hasMetadataId(md2.getId())).or((Specification<Metadata>)hasMetadataId(md3.getId()));
         PathSpec<Metadata, String> dataPathSpec = new PathSpec<Metadata, String>() {
             @Override
             public Path<String> getPath(Root<Metadata> root) {
@@ -117,15 +117,15 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
         int updated = updateQuery.execute();
 
         assertEquals(2, updated);
-        Metadata reloadedMd1 = _repo.findOne(md.getId());
+        Metadata reloadedMd1 = _repo.findById(md.getId()).get();
         assertEquals(md.getData(), reloadedMd1.getData());
         assertFalse(newGroupId == reloadedMd1.getSourceInfo().getGroupOwner());
 
-        Metadata reloadedMd2 = _repo.findOne(md2.getId());
+        Metadata reloadedMd2 = _repo.findById(md2.getId()).get();
         assertEquals(newData, reloadedMd2.getData());
         assertEquals(newGroupId, reloadedMd2.getSourceInfo().getGroupOwner());
 
-        Metadata reloadedMd3 = _repo.findOne(md3.getId());
+        Metadata reloadedMd3 = _repo.findById(md3.getId()).get();
         assertEquals(newData, reloadedMd3.getData());
         assertEquals(newGroupId, reloadedMd3.getSourceInfo().getGroupOwner());
     }
@@ -137,16 +137,16 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
         Metadata md3 = _repo.save(MetadataRepositoryTest.newMetadata(_inc));
 
 
-        final Specifications<Metadata> spec = where((Specification<Metadata>)hasMetadataId(md2.getId())).or((Specification<Metadata>)hasMetadataId(md3.getId()));
+        final Specification<Metadata> spec = where((Specification<Metadata>)hasMetadataId(md2.getId())).or((Specification<Metadata>)hasMetadataId(md3.getId()));
 
         final int deleted = _repo.deleteAll(spec);
 
         assertEquals(2, deleted);
         assertEquals(1, _repo.count());
 
-        assertNotNull(_repo.findOne(md.getId()));
-        assertNull(_repo.findOne(md2.getId()));
-        assertNull(_repo.findOne(md3.getId()));
+        assertNotNull(_repo.findById(md.getId()).get());
+        assertFalse(_repo.findById(md2.getId()).isPresent());
+        assertFalse(_repo.findById(md3.getId()).isPresent());
 
         assertEquals(md.getId(), _repo.findAll().get(0).getId());
     }
@@ -158,7 +158,7 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
         Metadata md3 = _repo.save(MetadataRepositoryTest.newMetadata(_inc));
 
 
-        final Specifications<Metadata> spec = where((Specification<Metadata>)hasMetadataId(md2.getId())).or((Specification<Metadata>)hasMetadataId(md3.getId()));
+        final Specification<Metadata> spec = where((Specification<Metadata>)hasMetadataId(md2.getId())).or((Specification<Metadata>)hasMetadataId(md3.getId()));
 
         Element xmlResponse = _repo.findAllAsXml();
         assertEquals(3, Xml.selectNodes(xmlResponse, "record").size());
@@ -168,7 +168,7 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
         assertNotNull(Xml.selectElement(xmlResponse, "record[id='" + md2.getId() + "']"));
         assertNotNull(Xml.selectElement(xmlResponse, "record[id='" + md3.getId() + "']"));
 
-        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, SortUtils.createPath(Metadata_.id)));
+        Sort sort = Sort.by(Sort.Direction.DESC, SortUtils.createPath(Metadata_.id));
         xmlResponse = _repo.findAllAsXml(sort);
         assertEquals(3, Xml.selectNodes(xmlResponse, "record").size());
         assertEquals("" + md3.getId(), Xml.selectElement(xmlResponse, "record[1]/id").getText());
@@ -180,7 +180,7 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
         assertEquals("" + md3.getId(), Xml.selectElement(xmlResponse, "record[1]/id").getText());
         assertEquals("" + md2.getId(), Xml.selectElement(xmlResponse, "record[2]/id").getText());
 
-        final PageRequest pageRequest = new PageRequest(0, 2, sort);
+        final PageRequest pageRequest = PageRequest.of(0, 2, sort);
         xmlResponse = _repo.findAllAsXml(pageRequest);
         assertEquals(2, Xml.selectNodes(xmlResponse, "record").size());
         assertEquals("" + md3.getId(), Xml.selectElement(xmlResponse, "record[1]/id").getText());

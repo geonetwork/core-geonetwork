@@ -56,7 +56,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -76,7 +76,7 @@ import java.nio.file.attribute.FileTime;
 import java.sql.SQLException;
 import java.util.*;
 
-import static org.springframework.data.jpa.domain.Specifications.where;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @RequestMapping(value = {
     "/{portal}/api/groups"
@@ -185,16 +185,16 @@ public class GroupsApi {
             throw new RuntimeException("ServiceContext not available");
         }
 
-        Group group = groupRepository.findOne(groupId);
-        if (group == null) {
+        Optional<Group> group = groupRepository.findById(groupId);
+        if (!group.isPresent()) {
             throw new ResourceNotFoundException(messages.getMessage("api.groups.group_not_found", new
                 Object[]{groupId}, locale));
         }
         try {
             final Resources resources = context.getBean(Resources.class);
-            final String logoUUID = group.getLogo();
+            final String logoUUID = group.get().getLogo();
             if (StringUtils.isNotBlank(logoUUID) && !logoUUID.startsWith("http://") && !logoUUID.startsWith("https//")) {
-                try (Resources.ResourceHolder image = getImage(resources, serviceContext, group)) {
+                try (Resources.ResourceHolder image = getImage(resources, serviceContext, group.get())) {
                     if (image != null) {
                         FileTime lastModifiedTime = image.getLastModifiedTime();
                         response.setDateHeader("Expires", System.currentTimeMillis() + SIX_HOURS * 1000L);
@@ -303,10 +303,7 @@ public class GroupsApi {
         @RequestBody
             Group group
     ) throws Exception {
-        final Group existingId = groupRepository
-            .findOne(group.getId());
-
-        if (existingId != null) {
+        if (groupRepository.findById(group.getId()).isPresent()) {
             throw new IllegalArgumentException(String.format(
                 "A group with id '%d' already exist.",
                 group.getId()
@@ -360,14 +357,14 @@ public class GroupsApi {
         @PathVariable
             Integer groupIdentifier
     ) throws Exception {
-        final Group group = groupRepository.findOne(groupIdentifier);
+        final Optional<Group> group = groupRepository.findById(groupIdentifier);
 
-        if (group == null) {
+        if (!group.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
             ));
         }
-        return group;
+        return group.get();
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -396,9 +393,9 @@ public class GroupsApi {
         @PathVariable
             Integer groupIdentifier
     ) throws Exception {
-        final Group group = groupRepository.findOne(groupIdentifier);
+        final Optional<Group> group = groupRepository.findById(groupIdentifier);
 
-        if (group == null) {
+        if (!group.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
             ));
@@ -439,8 +436,8 @@ public class GroupsApi {
         @RequestBody
             Group group
     ) throws Exception {
-        final Group existing = groupRepository.findOne(groupIdentifier);
-        if (existing == null) {
+        final Optional<Group> existing = groupRepository.findById(groupIdentifier);
+        if (!existing.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
             ));
@@ -487,9 +484,9 @@ public class GroupsApi {
         @Parameter(hidden = true)
             ServletRequest request
     ) throws Exception {
-        Group group = groupRepository.findOne(groupIdentifier);
+        Optional<Group> group = groupRepository.findById(groupIdentifier);
 
-        if (group != null) {
+        if (group.isPresent()) {
             List<Integer> reindex = operationAllowedRepo.findAllIds(OperationAllowedSpecs.hasGroupId(groupIdentifier),
                 OperationAllowedId_.metadataId);
 
@@ -501,21 +498,21 @@ public class GroupsApi {
             } else if (reindex.size() > 0 && !force) {
                 throw new NotAllowedException(String.format(
                     "Group %s has privileges associated with %d record(s). Add 'force' parameter to remove it or remove privileges associated with that group first.",
-                    group.getName(), reindex.size()
+                    group.get().getName(), reindex.size()
                 ));
             }
 
-            final List<Integer> users = userGroupRepository.findUserIds(where(UserGroupSpecs.hasGroupId(group.getId())));
+            final List<Integer> users = userGroupRepository.findUserIds(where(UserGroupSpecs.hasGroupId(group.get().getId())));
             if (users.size() > 0 && force) {
                 userGroupRepository.deleteAllByIdAttribute(UserGroupId_.groupId, Arrays.asList(groupIdentifier));
             } else if (users.size() > 0 && !force) {
                 throw new NotAllowedException(String.format(
                     "Group %s is associated with %d user(s). Add 'force' parameter to remove it or remove users associated with that group first.",
-                    group.getName(), users.size()
+                    group.get().getName(), users.size()
                 ));
             }
 
-            groupRepository.delete(groupIdentifier);
+            groupRepository.deleteById(groupIdentifier);
 
         } else {
             throw new ResourceNotFoundException(String.format(
@@ -544,10 +541,10 @@ public class GroupsApi {
             if (includingSystemGroups) {
                 return groupRepository.findAll(sort);
             } else {
-                return groupRepository.findAll(Specifications.not(GroupSpecs.isReserved()), sort);
+                return groupRepository.findAll(Specification.not(GroupSpecs.isReserved()), sort);
             }
         } else {
-            Specifications<UserGroup> spec = Specifications.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
+            Specification<UserGroup> spec = Specification.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
             // you're no Administrator
             // retrieve your groups
             if (profile != null) {

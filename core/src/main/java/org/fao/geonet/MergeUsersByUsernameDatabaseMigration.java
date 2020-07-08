@@ -70,7 +70,7 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
 
         duplicatedUserList.sort(Comparator.comparing(User::getProfile));
         User greatestProfileUser = duplicatedUserList.get(0);
-        User userToKeep = userRepository.findOne(greatestProfileUser.getId());
+        User userToKeep = userRepository.findById(greatestProfileUser.getId()).get();
         Set<String> emails = new HashSet<>();
         Set<Address> addresses = new HashSet<>();
 
@@ -88,7 +88,7 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
 
         mergeUser(userToKeep, tempUser);
         duplicatedUserList.remove(greatestProfileUser);
-        userRepository.delete(duplicatedUserList);
+        userRepository.deleteAll(duplicatedUserList);
         userRepository.flush();
         userToKeep.setUsername(userToKeep.getUsername().toLowerCase());
         userRepository.save(userToKeep);
@@ -146,7 +146,7 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
                 metadataStatusRepository.save(newMetadataStatus);
             }
             metadataStatusRepository.deleteAllById_UserId(oldOwner.getId());
-            metadataStatusRepository.save(metadataStatusList);
+            metadataStatusRepository.saveAll(metadataStatusList);
 
             dataManager.indexMetadata(Lists.transform(metadataList, new Function<Metadata, String>() {
                 @Nonnull
@@ -197,7 +197,7 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
             String profileName = splitKey[0];
             Integer groupId = Integer.valueOf(splitKey[1]);
 
-            Group group = groupRepository.findOne(groupId);
+            Group group = groupRepository.findById(groupId).get();
             Profile profile = Profile.findProfileIgnoreCase(profileName);
             UserGroup userGroup = new UserGroup().setGroup(group).setProfile(profile).setUser(userToKeep);
             mergedUserGroups.add(userGroup);
@@ -205,7 +205,7 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
 
         userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId,
             userIdList);
-        userGroupRepository.save(mergedUserGroups);
+        userGroupRepository.saveAll(mergedUserGroups);
     }
 
     public User mergeUser(User toOverwrite, User toKeep) {

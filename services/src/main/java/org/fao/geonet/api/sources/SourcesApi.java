@@ -54,6 +54,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @RequestMapping(value = {
@@ -161,15 +162,15 @@ public class SourcesApi {
             Source source,
         @Parameter(hidden = true)
             HttpServletRequest request) {
-        Source existing = sourceRepository.findOne(source.getUuid());
-        if (existing != null) {
+        Optional<Source> existing = sourceRepository.findById(source.getUuid());
+        if (existing.isPresent()) {
             throw new IllegalArgumentException(String.format(
                 "A source with uuid '%s' already exist", source.getUuid()
             ));
         }
 
-        existing = sourceRepository.findOneByName(source.getName());
-        if (existing != null) {
+        Source existingWithSameName = sourceRepository.findOneByName(source.getName());
+        if (existingWithSameName != null) {
             throw new IllegalArgumentException(String.format(
                 "A source with name '%s' already exist", source.getName()
             ));
@@ -224,8 +225,8 @@ public class SourcesApi {
             Source source,
         @Parameter(hidden = true)
             HttpServletRequest request) throws Exception {
-        Source existingSource = sourceRepository.findOne(sourceIdentifier);
-        if (existingSource != null) {
+        Optional<Source> existingSource = sourceRepository.findById(sourceIdentifier);
+        if (existingSource.isPresent()) {
             updateSource(sourceIdentifier, source, sourceRepository);
             copySourceLogo(source, request);
         } else {
@@ -261,20 +262,20 @@ public class SourcesApi {
         @Parameter(hidden = true)
             HttpServletRequest request
     ) throws ResourceNotFoundException {
-        Source existingSource = sourceRepository.findOne(sourceIdentifier);
-        if (existingSource != null) {
-            if (existingSource.getLogo() != null) {
+        Optional<Source> existingSource = sourceRepository.findById(sourceIdentifier);
+        if (existingSource.isPresent()) {
+            if (existingSource.get().getLogo() != null) {
                 ServiceContext context = ApiUtils.createServiceContext(request);
                 final Resources resources = context.getBean(Resources.class);
                 final Path logoDir = resources.locateLogosDir(context);
                 try {
-                    resources.deleteImageIfExists(existingSource.getUuid() + "." +
-                            FilenameUtils.getExtension(existingSource.getLogo()),
+                    resources.deleteImageIfExists(existingSource.get().getUuid() + "." +
+                            FilenameUtils.getExtension(existingSource.get().getLogo()),
                         logoDir);
                 } catch (IOException ignored) {
                 }
             }
-            sourceRepository.delete(existingSource);
+            sourceRepository.delete(existingSource.get());
         } else {
             throw new ResourceNotFoundException(String.format(
                 "Source with uuid '%s' does not exist.",

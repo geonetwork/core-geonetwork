@@ -29,6 +29,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 /**
  * Data Access object for the {@link MetadataLink} entities.
  */
-public interface MetadataLinkRepository extends GeonetRepository<MetadataLink, Integer>, MetadataLinkRepositoryCustom, JpaSpecificationExecutor<MetadataLink> {
+public interface MetadataLinkRepository extends GeonetRepository<MetadataLink, Integer>, JpaSpecificationExecutor<MetadataLink> {
 
 }

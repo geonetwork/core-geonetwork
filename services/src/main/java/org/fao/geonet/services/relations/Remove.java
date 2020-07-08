@@ -62,7 +62,7 @@ public class Remove extends NotInReadOnlyModeService {
             params, context, Params.CHILD_UUID, Params.CHILD_ID));
 
         final MetadataRelationRepository relationRepository = context.getBean(MetadataRelationRepository.class);
-        relationRepository.delete(new MetadataRelationId(parentId, childId));
+        relationRepository.deleteById(new MetadataRelationId(parentId, childId));
 
         return new Element(Jeeves.Elem.RESPONSE);
     }

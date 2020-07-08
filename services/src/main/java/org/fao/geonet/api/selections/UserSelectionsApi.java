@@ -47,6 +47,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Select a list of elements stored in session.
@@ -111,15 +112,15 @@ public class UserSelectionsApi {
             Selection selection
     )
         throws Exception {
-        Selection existingSelection = selectionRepository.findOne(selection.getId());
-        if (existingSelection != null) {
+        Optional<Selection> existingSelectionById = selectionRepository.findById(selection.getId());
+        if (existingSelectionById.isPresent()) {
             throw new IllegalArgumentException(String.format(
                 "A selection with id '%d' already exist. Choose another id or unset it.",
                 selection.getId()
             ));
         }
 
-        existingSelection = selectionRepository.findOneByName(selection.getName());
+        Selection existingSelection = selectionRepository.findOneByName(selection.getName());
         if (existingSelection != null) {
             throw new IllegalArgumentException(String.format(
                 "A selection with name '%s' already exist. Choose another name.", selection.getName()
@@ -164,8 +165,8 @@ public class UserSelectionsApi {
         @RequestBody
             Selection selection
     ) throws Exception {
-        Selection existingSelection = selectionRepository.findOne(selectionIdentifier);
-        if (existingSelection != null) {
+        Optional<Selection> existingSelection = selectionRepository.findById(selectionIdentifier);
+        if (existingSelection.isPresent()) {
             selection.setId(selectionIdentifier);
             selectionRepository.save(selection);
 //            selectionRepository.update(selectionIdentifier, entity -> {
@@ -208,10 +209,10 @@ public class UserSelectionsApi {
         @PathVariable
             Integer selectionIdentifier
     ) throws Exception {
-        Selection selection = selectionRepository.findOne(selectionIdentifier);
-        if (selection != null) {
+        Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
+        if (selection.isPresent()) {
             umsRepository.deleteAllBySelection(selectionIdentifier);
-            selectionRepository.delete(selectionIdentifier);
+            selectionRepository.deleteById(selectionIdentifier);
         } else {
             throw new ResourceNotFoundException(String.format(
                 "Selection with id '%d' does not exist.",
@@ -246,23 +247,23 @@ public class UserSelectionsApi {
             HttpSession httpSession
     )
         throws Exception {
-        Selection selection = selectionRepository.findOne(selectionIdentifier);
-        if (selection == null) {
+        Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
+        if (!selection.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "Selection with id '%d' does not exist.",
                 selectionIdentifier
             ));
         }
 
-        User user = userRepository.findOne(userIdentifier);
-        if (user == null) {
+        Optional<User> user = userRepository.findById(userIdentifier);
+        if (!user.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "User with id '%d' does not exist.",
                 selectionIdentifier
             ));
         }
 
-        if (selection != null) {
+        if (selection.isPresent()) {
             return umsRepository.findMetadata(selectionIdentifier, userIdentifier);
         }
         return null;
@@ -301,16 +302,16 @@ public class UserSelectionsApi {
             HttpSession httpSession
     )
         throws Exception {
-        Selection selection = selectionRepository.findOne(selectionIdentifier);
-        if (selection == null) {
+        Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
+        if (!selection.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "Selection with id '%d' does not exist.",
                 selectionIdentifier
             ));
         }
 
-        User user = userRepository.findOne(userIdentifier);
-        if (user == null) {
+        Optional<User> user = userRepository.findById(userIdentifier);
+        if (!user.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "User with id '%d' does not exist.",
                 selectionIdentifier
@@ -320,7 +321,7 @@ public class UserSelectionsApi {
         for (String u : uuid) {
             // Check record exist
             if (metadataRepository.existsMetadataUuid(u)) {
-                UserSavedSelection e = new UserSavedSelection(selection, user, u);
+                UserSavedSelection e = new UserSavedSelection(selection.get(), user.get(), u);
                 try {
                     umsRepository.save(e);
                 } catch (Exception e1) {
@@ -366,16 +367,16 @@ public class UserSelectionsApi {
             HttpSession httpSession
     )
         throws Exception {
-        Selection selection = selectionRepository.findOne(selectionIdentifier);
-        if (selection == null) {
+        Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
+        if (!selection.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "Selection with id '%d' does not exist.",
                 selectionIdentifier
             ));
         }
 
-        User user = userRepository.findOne(userIdentifier);
-        if (user == null) {
+        Optional<User> user = userRepository.findById(userIdentifier);
+        if (!user.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "User with id '%d' does not exist.",
                 selectionIdentifier
@@ -390,7 +391,7 @@ public class UserSelectionsApi {
                     .setSelectionId(selectionIdentifier)
                     .setUserId(userIdentifier)
                     .setMetadataUuid(u);
-                umsRepository.delete(e);
+                umsRepository.deleteById(e);
             }
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -144,12 +144,12 @@ public class LocalizedEntityRepositoryTest extends AbstractSpringDataTest {
         language2.getLabelTranslations().put("fra", "fra2");
         language2 = _repository.save(language2);
 
-        Element xml = _repository.findAllAsXml(null, new Sort(Sort.Direction.DESC, IsoLanguage_.id.getName()));
+        Element xml = _repository.findAllAsXml(null, Sort.by(Sort.Direction.DESC, IsoLanguage_.id.getName()));
 
         assertEquals(String.valueOf(language2.getId()), ((Element) xml.getChildren().get(0)).getChildText("id"));
         assertEquals(String.valueOf(language.getId()), ((Element) xml.getChildren().get(1)).getChildText("id"));
 
-        xml = _repository.findAllAsXml(null, new Sort(Sort.Direction.ASC, IsoLanguage_.id.getName()));
+        xml = _repository.findAllAsXml(null, Sort.by(Sort.Direction.ASC, IsoLanguage_.id.getName()));
 
         assertEquals(String.valueOf(language.getId()), ((Element) xml.getChildren().get(0)).getChildText("id"));
         assertEquals(String.valueOf(language2.getId()), ((Element) xml.getChildren().get(1)).getChildText("id"));

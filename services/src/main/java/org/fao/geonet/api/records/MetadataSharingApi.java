@@ -60,7 +60,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -74,7 +74,7 @@ import java.util.*;
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @RequestMapping(value = {
     "/{portal}/api/records"
@@ -143,7 +143,7 @@ public class MetadataSharingApi {
         OperationAllowedRepository opAllowRepo = context.getBean(OperationAllowedRepository.class);
 
         int iMetadataId = Integer.parseInt(id);
-        Specifications<OperationAllowed> spec =
+        Specification<OperationAllowed> spec =
             where(hasMetadataId(iMetadataId));
         if (groupId != null) {
             spec = spec.and(hasGroupId(groupId));
@@ -502,7 +502,7 @@ public class MetadataSharingApi {
                 // TODO: Collecting all those info is probably a bit slow when having lots of groups
                 final Specification<UserGroup> hasGroupId = UserGroupSpecs.hasGroupId(g.getId());
                 final Specification<UserGroup> hasUserId = UserGroupSpecs.hasUserId(userSession.getUserIdAsInt());
-                final Specifications<UserGroup> hasUserIdAndGroupId = where(hasGroupId).and(hasUserId);
+                final Specification<UserGroup> hasUserIdAndGroupId = where(hasGroupId).and(hasUserId);
                 List<UserGroup> userGroupEntities = userGroupRepository.findAll(hasUserIdAndGroupId);
                 List<Profile> userGroupProfile = new ArrayList<>();
                 for (UserGroup ug : userGroupEntities) {
@@ -512,7 +512,7 @@ public class MetadataSharingApi {
 
 
                 //--- get all operations that this group can do on given metadata
-                Specifications<OperationAllowed> hasGroupIdAndMetadataId =
+                Specification<OperationAllowed> hasGroupIdAndMetadataId =
                     where(hasGroupId(g.getId()))
                         .and(hasMetadataId(metadata.getId()));
                 List<OperationAllowed> operationAllowedForGroup =
@@ -573,7 +573,7 @@ public class MetadataSharingApi {
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        Group group = groupRepository.findOne(groupIdentifier);
+        Group group = groupRepository.findById(groupIdentifier).get();
         if (group == null) {
             throw new ResourceNotFoundException(String.format(
                 "Group with identifier '%s' not found.", groupIdentifier
@@ -583,7 +583,7 @@ public class MetadataSharingApi {
         Integer previousGroup = metadata.getSourceInfo().getGroupOwner();
         Group oldGroup = null;
         if (previousGroup != null) {
-            oldGroup = groupRepository.findOne(previousGroup);
+            oldGroup = groupRepository.findById(previousGroup).get();
         }
 
         metadata.getSourceInfo().setGroupOwner(groupIdentifier);
@@ -850,16 +850,16 @@ public class MetadataSharingApi {
             Long metadataId = Long.parseLong(ApiUtils.getInternalId(uuid, approved));
             ApplicationContext context = ApplicationContextHolder.get();
             if (!Objects.equals(groupIdentifier, sourceGrp)) {
-                Group newGroup = groupRepository.findOne(groupIdentifier);
-                Group oldGroup = sourceGrp == null ? null : groupRepository.findOne(sourceGrp);
+                Group newGroup = groupRepository.findById(groupIdentifier).get();
+                Group oldGroup = sourceGrp == null ? null : groupRepository.findById(sourceGrp).get();
                 new RecordGroupOwnerChangeEvent(metadataId,
                     ApiUtils.getUserSession(session).getUserIdAsInt(),
                     sourceGrp == null ? null : ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD),
                     ObjectJSONUtils.convertObjectInJsonObject(newGroup, RecordGroupOwnerChangeEvent.FIELD)).publish(context);
             }
             if (!Objects.equals(userIdentifier, sourceUsr)) {
-                User newOwner = userRepository.findOne(userIdentifier);
-                User oldOwner = userRepository.findOne(sourceUsr);
+                User newOwner = userRepository.findById(userIdentifier).get();
+                User oldOwner = userRepository.findById(sourceUsr).get();
                 new RecordOwnerChangeEvent(metadataId, ApiUtils.getUserSession(session).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldOwner, RecordOwnerChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(newOwner, RecordOwnerChangeEvent.FIELD)).publish(context);
             }
             // -- set the new owner into the metadata record

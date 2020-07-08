@@ -51,7 +51,7 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @ContextConfiguration(inheritLocations = true, locations = "classpath:formatter-cache-test-context.xml")
 public class FormatterCacheIntegrationTest extends AbstractServiceIntegrationTest {
@@ -95,7 +95,7 @@ public class FormatterCacheIntegrationTest extends AbstractServiceIntegrationTes
     public void testUpdatesAfterMetadataUnpublished() throws Exception {
         final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
         final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(metadataId);
-        final OperationAllowed one = operationAllowedRepository.findOne(where(hasMdId).and(isPublished));
+        final OperationAllowed one = operationAllowedRepository.findOne(where(hasMdId).and(isPublished)).get();
         final long changeDate = new Date().getTime();
         final Key key = new Key(Integer.parseInt(metadataId), "eng", FormatType.html, "full_view", true, FormatterWidth._100);
         formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, one != null), true);

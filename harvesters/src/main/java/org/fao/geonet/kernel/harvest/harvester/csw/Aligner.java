@@ -410,7 +410,7 @@ public class Aligner extends BaseAligner<CswParams> {
         }
     }
     @Transactional(value = TxType.REQUIRES_NEW)
-    private boolean updatingLocalMetadata(RecordInfo ri, String id, Boolean force) throws Exception {
+    boolean updatingLocalMetadata(RecordInfo ri, String id, Boolean force) throws Exception {
         Element md = retrieveMetadata(ri.uuid);
 
         if (md == null) {

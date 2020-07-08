@@ -125,7 +125,7 @@ public class MetadataWorkflowApi {
         String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
 
         List<MetadataStatus> listOfStatus = metadataStatusRepository.findAllById_MetadataId(metadata.getId(),
-            new Sort(sortOrder, sortField));
+            Sort.by(sortOrder, sortField));
 
         List<MetadataStatusResponse> response = buildMetadataStatusResponses(listOfStatus, details,
             context.getLanguage());
@@ -150,7 +150,7 @@ public class MetadataWorkflowApi {
         String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
 
         List<MetadataStatus> listOfStatus = metadataStatusRepository.findAllByIdAndByType(metadata.getId(), type,
-            new Sort(sortOrder, sortField));
+            Sort.by(sortOrder, sortField));
 
         List<MetadataStatusResponse> response = buildMetadataStatusResponses(listOfStatus, details,
             context.getLanguage());
@@ -275,8 +275,8 @@ public class MetadataWorkflowApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         MetadataStatus metadataStatus = metadataStatusRepository
-            .findOne(new MetadataStatusId().setMetadataId(metadata.getId()).setStatusId(statusId).setUserId(userId)
-                .setChangeDate(new ISODate(changeDate)));
+            .findById(new MetadataStatusId().setMetadataId(metadata.getId()).setStatusId(statusId).setUserId(userId)
+                .setChangeDate(new ISODate(changeDate))).get();
         if (metadataStatus != null) {
             metadataStatusRepository.update(metadataStatus.getId(),
                 entity -> entity.setCloseDate(new ISODate(closeDate)));
@@ -302,11 +302,11 @@ public class MetadataWorkflowApi {
         HttpServletRequest request) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
-        MetadataStatus metadataStatus = metadataStatusRepository
-            .findOne(new MetadataStatusId().setMetadataId(metadata.getId()).setStatusId(statusId).setUserId(userId)
+        Optional<MetadataStatus> metadataStatus = metadataStatusRepository
+            .findById(new MetadataStatusId().setMetadataId(metadata.getId()).setStatusId(statusId).setUserId(userId)
                 .setChangeDate(new ISODate(changeDate)));
-        if (metadataStatus != null) {
-            metadataStatusRepository.delete(metadataStatus);
+        if (metadataStatus.isPresent()) {
+            metadataStatusRepository.delete(metadataStatus.get());
             // TODO: Reindex record ?
         } else {
             throw new ResourceNotFoundException(
@@ -375,7 +375,7 @@ public class MetadataWorkflowApi {
 
         Sort sortByStatusChangeDate = SortUtils.createSort(Sort.Direction.DESC, MetadataStatus_.id,
             MetadataStatusId_.changeDate);
-        final PageRequest pageRequest = new PageRequest(from, size, sortByStatusChangeDate);
+        final PageRequest pageRequest = PageRequest.of(from, size, sortByStatusChangeDate);
 
         List<MetadataStatus> metadataStatuses;
         if ((type != null && type.length > 0) || (author != null && author.length > 0)
@@ -399,7 +399,7 @@ public class MetadataWorkflowApi {
      * Convert request parameter to a metadata status.
      */
     public MetadataStatus convertParameter(int id, MetadataStatusParameter parameter, int author) throws Exception {
-        StatusValue statusValue = statusValueRepository.findOne(parameter.getStatus());
+        StatusValue statusValue = statusValueRepository.findById(parameter.getStatus()).get();
 
         MetadataStatus metadataStatus = new MetadataStatus();
 
@@ -438,10 +438,10 @@ public class MetadataWorkflowApi {
         // Collect all user info
         for (MetadataStatus s : listOfStatus) {
             if (listOfUsers.get(s.getId().getUserId()) == null) {
-                listOfUsers.put(s.getId().getUserId(), userRepository.findOne(s.getId().getUserId()));
+                listOfUsers.put(s.getId().getUserId(), userRepository.findById(s.getId().getUserId()).get());
             }
             if (s.getOwner() != null && listOfUsers.get(s.getOwner()) == null) {
-                listOfUsers.put(s.getOwner(), userRepository.findOne(s.getOwner()));
+                listOfUsers.put(s.getOwner(), userRepository.findById(s.getOwner()).get());
             }
         }
 

@@ -67,7 +67,7 @@ public class Utils {
                 String uuid = Util.getParam(params, uuidParamName);
                 // lookup ID by UUID
                 id = dm.getMetadataId(uuid);
-                
+
                 //Do we want the draft version?
                 Boolean approved = Util.getParam(params, "approved", true);
                 if(!approved) {
@@ -80,8 +80,8 @@ public class Utils {
                         }
                     }
                 }
-                
-                
+
+
             } catch (MissingParameterEx x) {
                 // request does not contain UUID; use ID from request
                 try {

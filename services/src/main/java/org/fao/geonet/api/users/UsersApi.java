@@ -46,7 +46,7 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +60,7 @@ import java.util.*;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @RequestMapping(value = {
     "/{portal}/api/users"
@@ -153,9 +153,9 @@ public class UsersApi {
 
         if (myProfile.equals(Profile.Administrator) || myProfile.equals(Profile.UserAdmin) ||
             myUserId.equals(Integer.toString(userIdentifier))) {
-            User user = userRepository.findOne(userIdentifier);
+            Optional<User> user = userRepository.findById(userIdentifier);
 
-            if (user == null) {
+            if (!user.isPresent()) {
                 throw new UserNotFoundEx(Integer.toString(userIdentifier));
             }
 
@@ -170,7 +170,7 @@ public class UsersApi {
                 }
             }
 
-            return user;
+            return user.get();
         } else {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
@@ -244,7 +244,7 @@ public class UsersApi {
         userSavedSelectionRepository.deleteAllByUser(userIdentifier);
 
         try {
-            userRepository.delete(userIdentifier);
+            userRepository.deleteById(userIdentifier);
         } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
             throw new UserNotFoundEx(Integer.toString(userIdentifier));
         }
@@ -406,7 +406,7 @@ public class UsersApi {
 
         // TODO: CheckAccessRights
 
-        User user = userRepository.findOne(userIdentifier);
+        User user = userRepository.findById(userIdentifier).get();
         if (user == null) {
             throw new IllegalArgumentException("No user found with id: "
                 + userDto.getId());
@@ -440,11 +440,11 @@ public class UsersApi {
         //If it is a useradmin updating,
         //maybe we don't know all the groups the user is part of
         if (!myProfile.equals(Profile.Administrator)) {
-            List<Integer> myUserAdminGroups = userGroupRepository.findGroupIds(Specifications.where(
+            List<Integer> myUserAdminGroups = userGroupRepository.findGroupIds(Specification.where(
                 hasProfile(myProfile)).and(hasUserId(Integer.parseInt(myUserId))));
 
             List<UserGroup> usergroups =
-                userGroupRepository.findAll(Specifications.where(
+                userGroupRepository.findAll(Specification.where(
                     hasUserId(Integer.parseInt(userDto.getId()))));
 
             //keep unknown groups as is
@@ -505,16 +505,16 @@ public class UsersApi {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
 
-        User user = userRepository.findOne(userIdentifier);
-        if (user == null) {
+        Optional<User> user = userRepository.findById(userIdentifier);
+        if (!user.isPresent()) {
             throw new UserNotFoundEx(Integer.toString(userIdentifier));
         }
 
         String passwordHash = PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
             password);
-        user.getSecurity().setPassword(passwordHash);
-        user.getSecurity().getSecurityNotifications().remove(UserSecurityNotification.UPDATE_HASH_REQUIRED);
-        userRepository.save(user);
+        user.get().getSecurity().setPassword(passwordHash);
+        user.get().getSecurity().getSecurityNotifications().remove(UserSecurityNotification.UPDATE_HASH_REQUIRED);
+        userRepository.save(user.get());
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -546,7 +546,7 @@ public class UsersApi {
 
         if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin || myUserId.equals(Integer.toString(userIdentifier))) {
             // -- get the profile of the user id supplied
-            User user = userRepository.findOne(userIdentifier);
+            User user = userRepository.findById(userIdentifier).get();
             if (user == null) {
                 throw new IllegalArgumentException("user " + userIdentifier + " doesn't exist");
             }
@@ -628,7 +628,7 @@ public class UsersApi {
         // updated.
         for (GroupElem element : userGroups) {
             Integer groupId = element.getId();
-            Group group = groupRepository.findOne(groupId);
+            Group group = groupRepository.findById(groupId).get();
             String profile = element.getProfile();
             // The user has a new group and profile
 
@@ -673,10 +673,10 @@ public class UsersApi {
         }
 
         // Remove deprecated usergroups (if any)
-        userGroupRepository.delete(toRemove);
+        userGroupRepository.deleteAll(toRemove);
 
         // Add only new usergroups (if any)
-        userGroupRepository.save(toAdd);
+        userGroupRepository.saveAll(toAdd);
 
     }
 
@@ -754,7 +754,7 @@ public class UsersApi {
         // Check at least 1 administrator is enabled
         if (StringUtils.isNotEmpty(userDto.getId()) && (!userDto.isEnabled())) {
             List<User> adminEnabledList = userRepository.findAll(
-                Specifications.where(UserSpecs.hasProfile(Profile.Administrator)).and(UserSpecs.hasEnabled(true)));
+                Specification.where(UserSpecs.hasProfile(Profile.Administrator)).and(UserSpecs.hasEnabled(true)));
             if (adminEnabledList.size() == 1) {
                 User adminUser = adminEnabledList.get(0);
                 if (adminUser.getId() == Integer.parseInt(userDto.getId())) {

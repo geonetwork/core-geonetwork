@@ -41,6 +41,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping(value = {
     "/{portal}/api/identifiers"
@@ -122,10 +123,10 @@ public class IdentifiersApi {
         @RequestBody
             MetadataIdentifierTemplate metadataIdentifierTemplate
     ) throws Exception {
-        final MetadataIdentifierTemplate existingId = metadataIdentifierTemplateRepository
-            .findOne(metadataIdentifierTemplate.getId());
+        final Optional<MetadataIdentifierTemplate> existingId = metadataIdentifierTemplateRepository
+            .findById(metadataIdentifierTemplate.getId());
 
-        if (existingId != null) {
+        if (existingId.isPresent()) {
             throw new IllegalArgumentException(String.format(
                 "A metadata identifier template with id '%d' already exist.",
                 metadataIdentifierTemplate.getId()
@@ -170,9 +171,9 @@ public class IdentifiersApi {
         @RequestBody
             MetadataIdentifierTemplate metadataIdentifierTemplate
     ) throws Exception {
-        MetadataIdentifierTemplate existing =
-            metadataIdentifierTemplateRepository.findOne(identifier);
-        if (existing == null) {
+        Optional<MetadataIdentifierTemplate> existing =
+            metadataIdentifierTemplateRepository.findById(identifier);
+        if (!existing.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 MSG_NO_METADATA_IDENTIFIER_FOUND_WITH_ID,
                 identifier
@@ -210,15 +211,15 @@ public class IdentifiersApi {
         @PathVariable
             int identifier
     ) throws Exception {
-        MetadataIdentifierTemplate existing =
-            metadataIdentifierTemplateRepository.findOne(identifier);
-        if (existing == null) {
+        Optional<MetadataIdentifierTemplate> existing =
+            metadataIdentifierTemplateRepository.findById(identifier);
+        if (!existing.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 MSG_NO_METADATA_IDENTIFIER_FOUND_WITH_ID,
                 identifier
             ));
         } else {
-            metadataIdentifierTemplateRepository.delete(identifier);
+            metadataIdentifierTemplateRepository.deleteById(identifier);
         }
     }
 }

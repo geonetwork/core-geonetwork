@@ -99,7 +99,7 @@ public class PagesAPI {
 
         checkCorrectFormat(data, link, format);
 
-        if (pageRepository.findOne(new PageIdentity(language, pageId)) == null) {
+        if (pageRepository.findById(new PageIdentity(language, pageId)).get() == null) {
 
             Page page = getEmptyHiddenDraftPage(language, pageId, format);
 
@@ -155,7 +155,7 @@ public class PagesAPI {
         @RequestParam(value = "newPageId", required = false) final String newPageId,
         @Parameter(hidden = true) final HttpServletResponse response) throws ResourceNotFoundException, ResourceAlreadyExistException {
 
-        final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
+        final Page page = pageRepository.findById(new PageIdentity(language, pageId)).get();
 
         if (page == null) {
             throw new ResourceNotFoundException("Page " + pageId + " not found.");
@@ -165,7 +165,7 @@ public class PagesAPI {
             String updatedLanguage = StringUtils.isBlank(newLanguage) ? language : newLanguage;
             String updatedPageId = StringUtils.isBlank(newPageId) ? pageId : newPageId;
 
-            Page newPage = pageRepository.findOne(new PageIdentity(updatedLanguage, updatedPageId));
+            Page newPage = pageRepository.findById(new PageIdentity(updatedLanguage, updatedPageId)).get();
             if (newPage != null) {
                 throw new ResourceAlreadyExistException();
             }
@@ -198,7 +198,7 @@ public class PagesAPI {
 
         searchPage(language, pageId, pageRepository);
 
-        pageRepository.delete(new PageIdentity(language, pageId));
+        pageRepository.deleteById(new PageIdentity(language, pageId));
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Return the page object details except the content", description = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
@@ -214,7 +214,7 @@ public class PagesAPI {
         @Parameter(hidden = true) final HttpSession session) {
 
 
-        final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
+        final Page page = pageRepository.findById(new PageIdentity(language, pageId)).get();
 
         return checkPermissionsOnSinglePageAndReturn(session, page);
     }
@@ -232,7 +232,7 @@ public class PagesAPI {
         @Parameter(hidden = true) final HttpSession session) {
 
 
-        final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
+        final Page page = pageRepository.findById(new PageIdentity(language, pageId)).get();
 
         if (page == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -267,7 +267,7 @@ public class PagesAPI {
         @PathVariable(value = "section") final Page.PageSection section,
         @Parameter(hidden = true) final HttpServletResponse response) throws ResourceNotFoundException {
 
-        final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
+        final Page page = pageRepository.findById(new PageIdentity(language, pageId)).get();
 
         if (page == null) {
             throw new ResourceNotFoundException("Page " + pageId + " not found.");
@@ -297,7 +297,7 @@ public class PagesAPI {
         @PathVariable(value = "section") final Page.PageSection section,
         @Parameter(hidden = true) final HttpServletResponse response) throws ResourceNotFoundException {
 
-        final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
+        final Page page = pageRepository.findById(new PageIdentity(language, pageId)).get();
 
         if (page == null) {
             throw new ResourceNotFoundException("Page " + pageId + " not found.");
@@ -325,7 +325,7 @@ public class PagesAPI {
         @PathVariable(value = "status") final Page.PageStatus status,
         @Parameter(hidden = true) final HttpServletResponse response) throws ResourceNotFoundException {
 
-        final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
+        final Page page = pageRepository.findById(new PageIdentity(language, pageId)).get();
 
         if (page == null) {
             throw new ResourceNotFoundException("Page " + pageId + " not found.");
@@ -475,7 +475,7 @@ public class PagesAPI {
      */
     private Page searchPage(final String language, final String pageId, final PageRepository pageRepository)
         throws ResourceNotFoundException {
-        final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
+        final Page page = pageRepository.findById(new PageIdentity(language, pageId)).get();
 
         if (page == null) {
             throw new ResourceNotFoundException("Page " + pageId + " not found");

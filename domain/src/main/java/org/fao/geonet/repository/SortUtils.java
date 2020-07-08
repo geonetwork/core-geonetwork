@@ -121,10 +121,10 @@ public class SortUtils {
      * @return a sort object from the path objects
      */
     public static Sort createSort(SingularAttribute<?, ?>... attributes) {
-        return new Sort(createPath(attributes));
+        return Sort.by(createPath(attributes));
     }
 
     public static Sort createSort(Sort.Direction direction, SingularAttribute<?, ?>... attributes) {
-        return new Sort(direction, createPath(attributes));
+        return Sort.by(direction, createPath(attributes));
     }
 }

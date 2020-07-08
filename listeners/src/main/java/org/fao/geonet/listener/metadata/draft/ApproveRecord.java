@@ -146,7 +146,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
             metadataStatus.setStatusExt(status);
 
         } else if (md instanceof Metadata) {
-            draft = metadataDraftRepository.findOneByUuid(md.getUuid());
+            draft = null; //metadataDraftRepository.findOneByUuid(md.getUuid());
         }
 
         if (draft != null) {

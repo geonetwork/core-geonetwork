@@ -35,7 +35,7 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.jdom.Element;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
 import java.sql.SQLException;
@@ -61,7 +61,7 @@ public class OwnershipUtils {
         if (!us.isAuthenticated())
             return new ArrayList<Element>();
 
-        List<User> users = context.getBean(UserRepository.class).findAll(Specifications.not(UserSpecs.hasProfile(Profile.RegisteredUser)));
+        List<User> users = context.getBean(UserRepository.class).findAll(Specification.not(UserSpecs.hasProfile(Profile.RegisteredUser)));
         return getUsers(context, us, users);
     }
 

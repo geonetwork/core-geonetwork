@@ -44,7 +44,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -150,7 +149,7 @@ public class SitemapApi {
 
         Integer allgroup = 1;
 
-        Specifications<OperationAllowed> spec = Specifications.where(
+        Specification<OperationAllowed> spec = Specification.where(
             OperationAllowedSpecs.hasOperation(ReservedOperation.view));
         spec = spec.and(OperationAllowedSpecs.hasGroupId(allgroup));
 
@@ -158,7 +157,7 @@ public class SitemapApi {
             spec,
             OperationAllowedId_.metadataId);
 
-        Sort sortByChangeDateDesc = new Sort(
+        Sort sortByChangeDateDesc = Sort.by(
             Sort.Direction.DESC,
             Metadata_.dataInfo.getName() + "." + MetadataDataInfo_.changeDate.getName());
 
@@ -170,8 +169,8 @@ public class SitemapApi {
         if (doc > 0) {
             // Requesting a sitemap specific document
             if (doc <= pages) {
-                final PageRequest pageRequest = new PageRequest(doc - 1, MAX_ITEMS_PER_PAGE, sortByChangeDateDesc);
-                result = metadataRepository.findAllUuidsAndChangeDatesAndSchemaId(list, pageRequest);
+                final PageRequest pageRequest = PageRequest.of(doc - 1, MAX_ITEMS_PER_PAGE, sortByChangeDateDesc);
+                result = metadataRepository.findUuidsAndChangeDatesAndSchemaId(list, pageRequest);
 
                 Element formatEl = new Element("format");
                 formatEl.setText(format.toLowerCase());
@@ -183,7 +182,7 @@ public class SitemapApi {
             // Request the sitemap (no specific document)
             if (metadatataCount <= MAX_ITEMS_PER_PAGE) {
                 // Request the full sitemap
-                result = metadataRepository.findAllUuidsAndChangeDatesAndSchemaId(list);
+                result = metadataRepository.findUuidsAndChangeDatesAndSchemaId(list);
 
                 Element formatEl = new Element("format");
                 formatEl.setText(format.toLowerCase());

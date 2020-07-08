@@ -60,7 +60,7 @@ public class UserGroupSpecsTest extends AbstractSpringDataTest {
         _repo.save(newUserGroup());
         _repo.save(newUserGroup());
 
-        UserGroup found = _repo.findOne(hasGroupId(ug1.getId().getGroupId()));
+        UserGroup found = _repo.findOne(hasGroupId(ug1.getId().getGroupId())).get();
         assertEquals(ug1.getId(), found.getId());
     }
 
@@ -71,7 +71,7 @@ public class UserGroupSpecsTest extends AbstractSpringDataTest {
         _repo.save(newUserGroup());
         _repo.save(newUserGroup());
 
-        UserGroup found = _repo.findOne(hasUserId(ug1.getId().getUserId()));
+        UserGroup found = _repo.findOne(hasUserId(ug1.getId().getUserId())).get();
         assertEquals(ug1.getId(), found.getId());
     }
 

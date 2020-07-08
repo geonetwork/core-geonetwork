@@ -274,7 +274,7 @@ public class DirectoryUtils {
                         parameters.put(searchIndexField, identifier);
                         String id = search(context, parameters);
                         if (id != null) {
-                            AbstractMetadata subTemplate = metadataRepository.findOne(id);
+                            AbstractMetadata subTemplate = metadataRepository.findOneById(Integer.valueOf(id));
                             if (subTemplate != null) {
                                 uuid = subTemplate.getUuid();
                                 subTemplateElement = subTemplate.getXmlData(false);

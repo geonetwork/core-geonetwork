@@ -42,6 +42,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -130,8 +132,8 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getGroupUsersNonExistingGroup() throws Exception {
-        Group nonExistingGroup = _groupRepo.findOne(222);
-        Assert.assertNull(nonExistingGroup);
+        Optional<Group> nonExistingGroup = _groupRepo.findById(222);
+        Assert.assertFalse(nonExistingGroup.isPresent());
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
@@ -176,8 +178,8 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
     public void deleteNonExistingGroup() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        Group groupToDelete = _groupRepo.findOne(222);
-        Assert.assertNull(groupToDelete);
+        Optional<Group> groupToDelete = _groupRepo.findById(222);
+        Assert.assertFalse(groupToDelete.isPresent());
 
         this.mockHttpSession = loginAsAdmin();
 
@@ -218,10 +220,10 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void updateNonExistingGroup() throws Exception {
-        Group groupToUpdate = _groupRepo.findOne(222);
-        Assert.assertNull(groupToUpdate);
+        Optional<Group> groupToUpdateOptional = _groupRepo.findById(222);
+        Assert.assertFalse(groupToUpdateOptional.isPresent());
 
-        groupToUpdate = new Group();
+        Group groupToUpdate = new Group();
         groupToUpdate.setId(222);
         groupToUpdate.setEmail("group@mail.com");
         groupToUpdate.setDescription("A test group");

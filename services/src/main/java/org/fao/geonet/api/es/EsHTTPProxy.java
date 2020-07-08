@@ -337,6 +337,7 @@ public class EsHTTPProxy {
         } else if (type.equalsIgnoreCase("subtemplate")) {
             query.append(" AND (isTemplate:s)");
         }
+        query.append(" AND (draft:n OR draft:e)");
 
         final String portalFilter = buildPortalFilter();
         if (!"".equals(portalFilter)) {
@@ -350,7 +351,7 @@ public class EsHTTPProxy {
         // If the requested portal define a filter
         // Add it to the request.
         if (node != null && !NodeInfo.DEFAULT_NODE.equals(node.getId())) {
-            final Source portal = sourceRepository.findOne(node.getId());
+            final Source portal = sourceRepository.findById(node.getId()).get();
             if (portal == null) {
                 LOGGER.warn("Null portal " + node);
             } else if (StringUtils.isNotEmpty(portal.getFilter())) {
@@ -609,7 +610,8 @@ public class EsHTTPProxy {
 
             // copy every header except host
             if (!"host".equalsIgnoreCase(headerName) &&
-                !"X-XSRF-TOKEN".equalsIgnoreCase(headerName)) {
+                !"X-XSRF-TOKEN".equalsIgnoreCase(headerName) &&
+                !"Cookie".equalsIgnoreCase(headerName)) {
                 uc.setRequestProperty(headerName, headerValue);
             }
         }

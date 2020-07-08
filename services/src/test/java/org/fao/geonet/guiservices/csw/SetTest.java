@@ -51,8 +51,8 @@ public class SetTest extends AbstractServiceIntegrationTest {
         final ServiceContext context = createServiceContext();
         loginAsAdmin(context);
 
-        assertEquals("true", _settingsRepository.findOne(Settings.SYSTEM_CSW_ENABLE).getValue());
-        assertEquals("-1", _settingsRepository.findOne(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID).getValue());
+        assertEquals("true", _settingsRepository.findById(Settings.SYSTEM_CSW_ENABLE).get().getValue());
+        assertEquals("-1", _settingsRepository.findById(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID).get().getValue());
 
         final Element params = createParams(read("csw.enable", "off"),
             read("csw.capabilityRecordId", "2"));
@@ -61,7 +61,7 @@ public class SetTest extends AbstractServiceIntegrationTest {
 
         assertEquals("ok", results.getText());
 
-        assertEquals("false", _settingsRepository.findOne(Settings.SYSTEM_CSW_ENABLE).getValue());
-        assertEquals("2", _settingsRepository.findOne(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID).getValue());
+        assertEquals("false", _settingsRepository.findById(Settings.SYSTEM_CSW_ENABLE).get().getValue());
+        assertEquals("2", _settingsRepository.findById(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID).get().getValue());
     }
 }

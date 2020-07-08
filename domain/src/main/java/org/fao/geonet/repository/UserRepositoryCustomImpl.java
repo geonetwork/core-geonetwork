@@ -45,7 +45,7 @@ import java.util.List;
  *
  * @author Jesse
  */
-public class UserRepositoryImpl implements UserRepositoryCustom {
+public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
     @PersistenceContext
     private EntityManager _entityManager;

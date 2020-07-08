@@ -41,10 +41,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static org.fao.geonet.kernel.metadata.DefaultStatusActions.compileMessageWithIndexFields;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USER_LASTNOTIFICATIONDATE;
@@ -190,8 +187,8 @@ public class WatchListNotifier extends QuartzJobBean {
         if (updatedRecords.size() > 0) {
             // Check if user exists and has an email
             // TODO: We should send email depending on user language
-            User user = userRepository.findOne(userId);
-            if (StringUtils.isNotEmpty(user.getEmail())) {
+            Optional<User> user = userRepository.findById(userId);
+            if (user.isPresent() && StringUtils.isNotEmpty(user.get().getEmail())) {
 
                 // Build message
                 StringBuffer listOfUpdateMessage = new StringBuffer();
@@ -223,7 +220,7 @@ public class WatchListNotifier extends QuartzJobBean {
 
                 // Send email
                 MailUtil.sendHtmlMail(
-                    Arrays.asList(new String[]{user.getEmail()}),
+                    Arrays.asList(new String[]{user.get().getEmail()}),
                     mailSubject, htmlMessage, settingManager);
             }
         } else {

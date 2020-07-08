@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.datamanager.base;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -62,17 +63,21 @@ public class BaseMetadataCategory implements IMetadataCategory {
     @Override
     public boolean setCategory(ServiceContext context, String mdId, String categId) throws Exception {
 
-        if (!getMetadataRepository().exists(Integer.valueOf(mdId))) {
+        if (!getMetadataRepository().existsById(Integer.valueOf(mdId))) {
             return false;
         }
 
-        final MetadataCategory newCategory = metadataCategoryRepository.findOne(Integer.valueOf(categId));
+        final Optional<MetadataCategory> newCategory = metadataCategoryRepository.findById(Integer.valueOf(categId));
+        if (!newCategory.isPresent()) {
+            return false;
+        }
+
         final boolean[] changed = new boolean[1];
         getMetadataRepository().update(Integer.valueOf(mdId), new Updater<Metadata>() {
             @Override
             public void apply(@Nonnull Metadata entity) {
-                changed[0] = !entity.getMetadataCategories().contains(newCategory);
-                entity.getMetadataCategories().add(newCategory);
+                changed[0] = !entity.getMetadataCategories().contains(newCategory.get());
+                entity.getMetadataCategories().add(newCategory.get());
             }
         });
 

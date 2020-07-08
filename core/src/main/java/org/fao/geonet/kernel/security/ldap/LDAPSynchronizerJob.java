@@ -56,7 +56,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 
@@ -172,10 +172,10 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
         final UserRepository userRepository = applicationContext.getBean(UserRepository.class);
         final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
         final IMetadataUtils metadataRepository = applicationContext.getBean(IMetadataUtils.class);
-        final Specifications<User> spec = Specifications.where(
+        final Specification<User> spec = Specification.where(
             UserSpecs.hasAuthType(LDAPConstants.LDAP_FLAG)
         ).and(
-            Specifications.not(UserSpecs.userIsNameNotOneOf(usernames))
+            Specification.not(UserSpecs.userIsNameNotOneOf(usernames))
         );
 
         final List<User> usersFound = userRepository.findAll(spec);
@@ -197,7 +197,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                     String.format("Cannot delete user '%s' who is owner of %d metadata record(s).",
                         u.getUsername(), nbOfUserRecord));
             } else {
-                userRepository.delete(u.getId());
+                userRepository.deleteById(u.getId());
             }
         }
     }

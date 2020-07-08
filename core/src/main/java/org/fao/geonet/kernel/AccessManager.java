@@ -25,15 +25,10 @@ package org.fao.geonet.kernel;
 
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -68,7 +63,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -152,7 +147,7 @@ public class AccessManager {
             ip, false);
         for (OperationAllowed opAllow : operationAllowedRepository.findByMetadataId(mdId)) {
             if (groups.contains(opAllow.getId().getGroupId())) {
-                operations.add(operationRepository.findOne(opAllow.getId().getOperationId()));
+                operations.add(operationRepository.findById(opAllow.getId().getOperationId()).get());
             }
         }
         return operations;
@@ -186,7 +181,7 @@ public class AccessManager {
             } else {
                 Specification<UserGroup> spec = UserGroupSpecs.hasUserId(usrSess.getUserIdAsInt());
                 if (editingGroupsOnly) {
-                    spec = Specifications.where(spec).and(UserGroupSpecs.hasProfile(Profile.Editor));
+                    spec = Specification.where(spec).and(UserGroupSpecs.hasProfile(Profile.Editor));
                 }
 
                 hs.addAll(userGroupRepository.findGroupIds(spec));
@@ -206,7 +201,7 @@ public class AccessManager {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
 
-        Specifications<UserGroup> spec = Specifications.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
+        Specification<UserGroup> spec = Specification.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
         spec = spec.and(UserGroupSpecs.hasProfile(profile));
 
         return userGroupRepository.findGroupIds(spec);
@@ -219,7 +214,7 @@ public class AccessManager {
         if (usrSess.isAuthenticated()) {
             Specification<UserGroup> spec =
                 UserGroupSpecs.hasUserId(usrSess.getUserIdAsInt());
-            spec = Specifications
+            spec = Specification
                 .where(spec)
                 .and(UserGroupSpecs.hasProfile(Profile.Reviewer));
 
@@ -236,19 +231,19 @@ public class AccessManager {
     public Set<Integer> getVisibleGroups(final int userId) throws Exception {
         Set<Integer> hs = new HashSet<Integer>();
 
-        User user = userRepository.findOne(userId);
+        Optional<User> user = userRepository.findById(userId);
 
-        if (user == null) {
+        if (!user.isPresent()) {
             return hs;
         }
 
-        Profile profile = user.getProfile();
+        Profile profile = user.get().getProfile();
 
         List<Integer> groupIds;
         if (profile == Profile.Administrator) {
             groupIds = groupRepository.findIds();
         } else {
-            groupIds = userGroupRepository.findGroupIds(UserGroupSpecs.hasUserId(user.getId()));
+            groupIds = userGroupRepository.findGroupIds(UserGroupSpecs.hasUserId(user.get().getId()));
         }
 
         hs.addAll(groupIds);
@@ -530,7 +525,7 @@ public class AccessManager {
             return false;
         }
 
-        Specifications spec = where(UserGroupSpecs.hasProfile(profile)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
+        Specification spec = where(UserGroupSpecs.hasProfile(profile)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
 
         List<Integer> opAlloweds = new ArrayList<Integer>();
         for (OperationAllowed opAllowed : allOpAlloweds) {
@@ -556,7 +551,7 @@ public class AccessManager {
         UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
         IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
 
-        Specifications spec = where(UserGroupSpecs.hasProfile(Profile.Reviewer)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
+        Specification spec = where(UserGroupSpecs.hasProfile(Profile.Reviewer)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
 
         List<Integer> opAlloweds = new ArrayList<Integer>();
         opAlloweds.add(metadataUtils.findOne(id).getSourceInfo().getGroupOwner());
@@ -575,7 +570,9 @@ public class AccessManager {
     }
 
     public String getPrivilegeName(int id) {
-        return operationRepository.findOne(id).getName();
+        Optional<Operation> operation =  operationRepository.findById(id);
+
+        return operation.isPresent()?operation.get().getName():"";
     }
 
     public boolean isIntranet(String ip) {
@@ -595,14 +592,14 @@ public class AccessManager {
         }
 
         // IPv4
-        Setting network = settingRepository.findOne(Settings.SYSTEM_INTRANET_NETWORK);
-        Setting netmask = settingRepository.findOne(Settings.SYSTEM_INTRANET_NETMASK);
+        Optional<Setting> network = settingRepository.findById(Settings.SYSTEM_INTRANET_NETWORK);
+        Optional<Setting> netmask = settingRepository.findById(Settings.SYSTEM_INTRANET_NETMASK);
 
         try {
-            if (network != null && netmask != null &&
-                StringUtils.isNotEmpty(network.getValue()) && StringUtils.isNotEmpty(netmask.getValue())) {
-                long lIntranetNet = getAddress(network.getValue());
-                long lIntranetMask = getAddress(netmask.getValue());
+            if (network.isPresent() && netmask.isPresent() &&
+                StringUtils.isNotEmpty(network.get().getValue()) && StringUtils.isNotEmpty(netmask.get().getValue())) {
+                long lIntranetNet = getAddress(network.get().getValue());
+                long lIntranetMask = getAddress(netmask.get().getValue());
                 long lAddress = getAddress(ip.split(",")[0]);
                 return (lAddress & lIntranetMask) == (lIntranetNet & lIntranetMask);
             }

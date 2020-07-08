@@ -12,6 +12,7 @@ import org.fao.geonet.repository.SourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -78,12 +79,12 @@ public class EsFilterBuilder {
         // If the requested portal define a filter
         // Add it to the request.
         if (node != null && !NodeInfo.DEFAULT_NODE.equals(node.getId())) {
-            final Source portal = sourceRepository.findOne(node.getId());
-            if (portal == null) {
+            final Optional<Source> portal = sourceRepository.findById(node.getId());
+            if (portal.isPresent()) {
                 //LOGGER.warn("Null portal " + node);
-            } else if (StringUtils.isNotEmpty(portal.getFilter())) {
+            } else if (StringUtils.isNotEmpty(portal.get().getFilter())) {
                 //LOGGER.debug("Applying portal filter: {}", portal.getFilter());
-                return portal.getFilter();
+                return portal.get().getFilter();
             }
         }
         return "";

@@ -49,7 +49,7 @@ import java.util.List;
  *
  * @author Jesse
  */
-public class UserGroupRepositoryImpl implements UserGroupRepositoryCustom {
+public class UserGroupRepositoryCustomImpl implements UserGroupRepositoryCustom {
 
     @PersistenceContext
     private EntityManager _entityManager;

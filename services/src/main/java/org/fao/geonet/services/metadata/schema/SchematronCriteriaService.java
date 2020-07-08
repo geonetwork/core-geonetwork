@@ -35,11 +35,12 @@ import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.specification.SchematronCriteriaSpecs;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Load, edit, delete {@link org.fao.geonet.domain.SchematronCriteria} entities.
@@ -70,11 +71,14 @@ public class SchematronCriteriaService extends AbstractSchematronService {
         final String uivalue = Util.getParam(params, PARAM_UI_VALUE, "");
 
         final SchematronCriteriaGroupId id = new SchematronCriteriaGroupId(groupName, schematronId);
-        SchematronCriteriaGroup group = criteriaGroupRepository.findOne(id);
-        if (group == null) {
-            group = new SchematronCriteriaGroup();
-            group.setId(id);
-            group.setRequirement(SchematronRequirement.REQUIRED);
+        Optional<SchematronCriteriaGroup> group = criteriaGroupRepository.findById(id);
+        SchematronCriteriaGroup schematronCriteriaGroup = null;
+        if (!group.isPresent()) {
+            schematronCriteriaGroup = new SchematronCriteriaGroup();
+            schematronCriteriaGroup.setId(id);
+            schematronCriteriaGroup.setRequirement(SchematronRequirement.REQUIRED);
+        } else {
+            schematronCriteriaGroup =group.get();
         }
 
         SchematronCriteria criteria = new SchematronCriteria();
@@ -82,16 +86,16 @@ public class SchematronCriteriaService extends AbstractSchematronService {
         criteria.setValue(value);
         criteria.setUiType(uitype);
         criteria.setUiValue(uivalue);
-        group.addCriteria(criteria);
+        schematronCriteriaGroup.addCriteria(criteria);
 
-        group = criteriaGroupRepository.saveAndFlush(group);
-        SchematronCriteria savedCriteria = group.getCriteria().get(group.getCriteria().size() - 1);
+        schematronCriteriaGroup = criteriaGroupRepository.saveAndFlush(schematronCriteriaGroup);
+        SchematronCriteria savedCriteria = schematronCriteriaGroup.getCriteria().get(schematronCriteriaGroup.getCriteria().size() - 1);
 
         Element result = new Element(Jeeves.Elem.RESPONSE);
         result.addContent(new Element("status").setText("success"));
         result.addContent(new Element("id").setText("" + savedCriteria.getId()));
-        result.addContent(new Element("groupname").setText(group.getId().getName()));
-        result.addContent(new Element("schematronid").setText("" + group.getId().getSchematronId()));
+        result.addContent(new Element("groupname").setText(schematronCriteriaGroup.getId().getName()));
+        result.addContent(new Element("schematronid").setText("" + schematronCriteriaGroup.getId().getSchematronId()));
 
         return result;
     }
@@ -111,22 +115,22 @@ public class SchematronCriteriaService extends AbstractSchematronService {
         final Element element;
 
         if (id == null) {
-            Specifications spec = null;
+            Specification spec = null;
             if (schematronId != null) {
-                spec = Specifications.where(SchematronCriteriaSpecs.hasSchematronId(Integer.parseInt(schematronId)));
+                spec = Specification.where(SchematronCriteriaSpecs.hasSchematronId(Integer.parseInt(schematronId)));
             }
 
             if (groupName != null) {
                 final Specification<SchematronCriteria> hasGroupSpec = SchematronCriteriaSpecs.hasGroupName(groupName);
                 if (spec == null) {
-                    spec = Specifications.where(hasGroupSpec);
+                    spec = Specification.where(hasGroupSpec);
                 } else {
                     spec = spec.and(hasGroupSpec);
                 }
             }
             element = criteriaRepository.findAllAsXml(spec);
         } else {
-            final SchematronCriteria criteria = criteriaRepository.findOne(Integer.parseInt(id));
+            final SchematronCriteria criteria = criteriaRepository.findById(Integer.parseInt(id)).get();
 
             if (criteria == null) {
                 throw new BadParameterEx(Params.ID, id);
@@ -159,7 +163,7 @@ public class SchematronCriteriaService extends AbstractSchematronService {
     @Override
     protected boolean exists(Element params, ServiceContext context) throws Exception {
         final Integer id = Integer.valueOf(Util.getParam(params, Params.ID));
-        return context.getBean(SchematronCriteriaRepository.class).exists(id);
+        return context.getBean(SchematronCriteriaRepository.class).existsById(id);
     }
 
     @Override
@@ -201,10 +205,11 @@ public class SchematronCriteriaService extends AbstractSchematronService {
         final Integer id = Integer.valueOf(Util.getParam(params, Params.ID));
 
         final SchematronCriteriaRepository criteriaRepository = context.getBean(SchematronCriteriaRepository.class);
-
-        if (criteriaRepository.exists(id)) {
-            criteriaRepository.delete(id);
-            if (!criteriaRepository.exists(id)) {
+        Optional<SchematronCriteria> criteria = criteriaRepository.findById(id);
+        if (criteria.isPresent()) {
+            criteria.get().getGroup().getCriteria().remove(criteria.get());
+            criteriaRepository.deleteById(id);
+            if (!criteriaRepository.existsById(id)) {
                 return new Element("ok");
             } else {
                 throw new IOException("Error deleting criteria object");

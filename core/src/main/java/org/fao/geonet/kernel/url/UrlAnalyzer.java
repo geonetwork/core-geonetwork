@@ -22,12 +22,7 @@
 //==============================================================================
 package org.fao.geonet.kernel.url;
 
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Link;
-import org.fao.geonet.domain.LinkStatus;
-import org.fao.geonet.domain.Link_;
-import org.fao.geonet.domain.MetadataLink;
-import org.fao.geonet.domain.MetadataLink_;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.LinkAwareSchemaPlugin;
 import org.fao.geonet.kernel.schema.LinkPatternStreamer.ILinkBuilder;
@@ -47,7 +42,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import static java.util.Objects.isNull;
+import java.util.Optional;
+
 
 public class UrlAnalyzer {
 
@@ -153,7 +149,9 @@ public class UrlAnalyzer {
     }
 
     private boolean isReferencingAnUnknownMetadata(MetadataLink metadatalink) {
-        return isNull(metadataRepository.findOne(metadatalink.getMetadataId()));
+        Optional<Metadata> metadata = metadataRepository.findById(metadatalink.getMetadataId());
+
+        return !metadata.isPresent();
     }
 
 

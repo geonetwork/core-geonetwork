@@ -46,7 +46,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
@@ -60,13 +59,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -141,8 +134,9 @@ public class DefaultStatusActions implements StatusActions {
             Log.trace(Geonet.DATA_MANAGER, "DefaultStatusActions.onEdit(" + id + ", " + minorEdit + ") with status "
                     + dm.getCurrentStatus(id));
         }
-        if (!minorEdit && dm.getCurrentStatus(id).equals(StatusValue.Status.APPROVED)
-                && (context.getBean(IMetadataManager.class) instanceof DraftMetadataManager)) {
+        if (!minorEdit && dm.getCurrentStatus(id).equals(StatusValue.Status.APPROVED)) {
+        //if (!minorEdit && dm.getCurrentStatus(id).equals(StatusValue.Status.APPROVED)
+            //        && (context.getBean(IMetadataManager.class) instanceof DraftMetadataManager)) {
             ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages",
                     new Locale(this.language));
             String changeMessage = String.format(messages.getString("status_email_text"), replyToDescr, replyTo, id);
@@ -277,7 +271,7 @@ public class DefaultStatusActions implements StatusActions {
         }
 
         UserRepository userRepository = context.getBean(UserRepository.class);
-        User owner = userRepository.findOne(status.getOwner());
+        User owner = userRepository.findById(status.getOwner()).get();
 
         String message = MessageFormat.format(textTemplate, replyToDescr, // Author of the change
                 status.getChangeMessage(), translatedStatusName, status.getId().getChangeDate(), status.getDueDate(),
@@ -314,21 +308,26 @@ public class DefaultStatusActions implements StatusActions {
 
         if (notificationLevel != null) {
             if (notificationLevel == StatusValueNotificationLevel.statusUserOwner) {
-                User owner = userRepository.findOne(status.getOwner());
-                users.add(owner);
+                Optional<User> owner = userRepository.findById(status.getOwner());
+
+                if (owner.isPresent()) {
+                    users.add(owner.get());
+                }
             } else if (notificationLevel == StatusValueNotificationLevel.recordProfileReviewer) {
                 List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(listOfId,
                         Profile.Reviewer, SortUtils.createSort(User_.name));
                 for (Pair<Integer, User> p : results) {
                     users.add(p.two());
                 }
-                ;
             } else if (notificationLevel == StatusValueNotificationLevel.recordUserAuthor) {
-                Iterable<Metadata> records = this.context.getBean(MetadataRepository.class).findAll(listOfId);
+                Iterable<Metadata> records = this.context.getBean(MetadataRepository.class).findAllById(listOfId);
                 for (Metadata r : records) {
-                    users.add(userRepository.findOne(r.getSourceInfo().getOwner()));
+                    Optional<User> owner = userRepository.findById(r.getSourceInfo().getOwner());
+
+                    if (owner.isPresent()) {
+                        users.add(owner.get());
+                    }
                 }
-                ;
             } else if (notificationLevel.name().startsWith("catalogueProfile")) {
                 String profileId = notificationLevel.name().replace("catalogueProfile", "");
                 Profile profile = Profile.findProfileIgnoreCase(profileId);

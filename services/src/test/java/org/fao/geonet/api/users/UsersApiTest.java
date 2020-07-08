@@ -45,6 +45,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 import static org.hamcrest.Matchers.*;
@@ -153,8 +154,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void deleteNonExistingUser() throws Exception {
-        User userToDelete = _userRepo.findOne(222);
-        Assert.assertNull(userToDelete);
+        Optional<User> userToDelete = _userRepo.findById(222);
+        Assert.assertFalse(userToDelete.isPresent());
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 

@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -63,13 +64,13 @@ public class DbDescTranslatorIntegrationTest extends AbstractCoreIntegrationTest
         JpaRepository<Object, T> repo = mock(JpaRepository.class);
         ValueObject value = new ValueObject();
 
-        when(repo.findOne(key)).thenReturn(value);
+        when(repo.findById(key)).thenReturn(Optional.of(value));
         final String beanName = "testRepo";
         StaticApplicationContext appContext = new StaticApplicationContext(_appContext);
         appContext.getBeanFactory().registerSingleton(beanName, repo);
 
         if ("int".equals(type)) {
-            DbDescTranslator translator3 = new DbDescTranslator(appContext, "eng", repo.getClass().getName() + ":findOne:int");
+            DbDescTranslator translator3 = new DbDescTranslator(appContext, "eng", repo.getClass().getName() + ":findById:int");
             final String translation3 = translator3.translate("" + key);
             assertEquals(value.getLabel("eng"), translation3);
         } else {
@@ -81,7 +82,7 @@ public class DbDescTranslatorIntegrationTest extends AbstractCoreIntegrationTest
             final String translation2 = translator2.translate("" + key);
             assertEquals(value.getLabel("eng"), translation2);
 
-            DbDescTranslator translator3 = new DbDescTranslator(appContext, "eng", repo.getClass().getName() + ":findOne");
+            DbDescTranslator translator3 = new DbDescTranslator(appContext, "eng", repo.getClass().getName() + ":findById");
             final String translation3 = translator3.translate("" + key);
             assertEquals(value.getLabel("eng"), translation3);
         }

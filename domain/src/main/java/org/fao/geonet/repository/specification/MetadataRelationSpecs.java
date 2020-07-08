@@ -31,7 +31,7 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.persistence.criteria.*;
 
 /**
- * Specifications for querying {@link org.fao.geonet.repository.UserRepository}.
+ * Specification for querying {@link org.fao.geonet.repository.UserRepository}.
  *
  * @author Jesse
  */

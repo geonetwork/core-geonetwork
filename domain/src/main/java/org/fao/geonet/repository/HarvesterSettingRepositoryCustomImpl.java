@@ -68,7 +68,7 @@ import com.google.common.collect.Lists;
  * <p/>
  * User: Jesse Date: 10/25/13 Time: 7:53 AM
  */
-public class HarvesterSettingRepositoryImpl
+public class HarvesterSettingRepositoryCustomImpl
 //    extends GeonetRepositoryImpl<HarvesterSetting, Integer>
     implements HarvesterSettingRepositoryCustom {
 

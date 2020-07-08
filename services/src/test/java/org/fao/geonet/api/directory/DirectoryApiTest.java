@@ -70,7 +70,7 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
             ReservedGroup.all.getId(),
             Params.GENERATE_UUID);
 
-        final Metadata record = _metadataRepo.findOne(id);
+        final Metadata record = _metadataRepo.findById(id).get();
         CollectResults collectResults =
             DirectoryUtils.collectEntries(context, record, xpath, null);
 
@@ -92,7 +92,7 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
             MetadataType.METADATA,
             ReservedGroup.all.getId(),
             Params.GENERATE_UUID);
-        final Metadata record = _metadataRepo.findOne(id);
+        final Metadata record = _metadataRepo.findById(id).get();
         final String uuidXpath = ".//gmd:electronicMailAddress/gco:CharacterString/text()";
         CollectResults collectResults =
             DirectoryUtils.collectEntries(context, record, xpath, uuidXpath);
@@ -117,7 +117,7 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
             ReservedGroup.all.getId(),
             Params.GENERATE_UUID);
 
-        final Metadata record = _metadataRepo.findOne(id);
+        final Metadata record = _metadataRepo.findById(id).get();
         CollectResults collectResults =
             DirectoryUtils.collectEntries(context, record, xpath, null);
 
@@ -150,8 +150,8 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
             ReservedGroup.all.getId(),
             Params.GENERATE_UUID);
 
-        final Metadata record = _metadataRepo.findOne(id);
-        final Metadata contact1record = _metadataRepo.findOne(contact1id);
+        final Metadata record = _metadataRepo.findById(id).get();
+        final Metadata contact1record = _metadataRepo.findById(contact1id).get();
         final String uuidXpath = ".//gmd:electronicMailAddress/gco:CharacterString/text()";
         final String contactCityFieldXpath = ".//gmd:city/gco:CharacterString/text()";
         final String contactRoleFieldXpath = "./gmd:role/*/@codeListValue";
@@ -230,9 +230,9 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
             MetadataType.SUB_TEMPLATE,
             ReservedGroup.all.getId(),
             Params.GENERATE_UUID);
-        String contact1uuid = _metadataRepo.findOne(contact1id).getUuid();
+        String contact1uuid = _metadataRepo.findById(contact1id).get().getUuid();
 
-        final Metadata record = _metadataRepo.findOne(id);
+        final Metadata record = _metadataRepo.findById(id).get();
         final String uuidXpath = ".//gmd:electronicMailAddress/gco:CharacterString/text()";
 
 

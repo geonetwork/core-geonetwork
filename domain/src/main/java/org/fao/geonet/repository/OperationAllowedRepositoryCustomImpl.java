@@ -54,7 +54,7 @@ import com.google.common.base.Optional;
  *
  * @author Jesse
  */
-public class OperationAllowedRepositoryImpl implements OperationAllowedRepositoryCustom {
+public class OperationAllowedRepositoryCustomImpl implements OperationAllowedRepositoryCustom {
 
     @PersistenceContext
     EntityManager _entityManager;

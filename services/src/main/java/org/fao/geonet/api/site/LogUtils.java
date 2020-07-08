@@ -31,6 +31,7 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SettingRepository;
 
 import java.net.URL;
+import java.util.Optional;
 
 /**
  * Logger utilities
@@ -47,7 +48,12 @@ public class LogUtils {
     public static void refreshLogConfiguration() {
         SettingRepository repository =
             ApplicationContextHolder.get().getBean(SettingRepository.class);
-        Setting setting = repository.findOne(Settings.SYSTEM_SERVER_LOG);
+        Optional<Setting> settingOpt = repository.findById(Settings.SYSTEM_SERVER_LOG);
+        Setting setting = null;
+
+        if (settingOpt.isPresent()) {
+            setting = settingOpt.get();
+        }
 
         // get log config from db settings
         String log4jProp = setting != null ? setting.getValue() : DEFAULT_LOG_FILE;

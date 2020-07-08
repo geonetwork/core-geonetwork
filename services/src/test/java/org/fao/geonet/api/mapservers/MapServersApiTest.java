@@ -39,6 +39,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -160,10 +162,10 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void updateNonExistingMapServer() throws Exception {
-        MapServer mapServerToUpdate = mapServerRepo.findOne(222);
-        Assert.assertNull(mapServerToUpdate);
+        Optional<MapServer> mapServerToUpdateOptional = mapServerRepo.findById(222);
+        Assert.assertFalse(mapServerToUpdateOptional.isPresent());
 
-        mapServerToUpdate = new MapServer();
+        MapServer mapServerToUpdate = new MapServer();
         mapServerToUpdate.setId(222);
         mapServerToUpdate.setName(mapServerToUpdate.getName() + "-update");
 
@@ -201,14 +203,14 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
 
-        mapServerToDelete = mapServerRepo.findOne(mapServerId);
-        Assert.assertNull(mapServerToDelete);
+        Optional<MapServer> mapServerToDeleteOptional = mapServerRepo.findById(mapServerId);
+        Assert.assertFalse(mapServerToDeleteOptional.isPresent());
     }
 
     @Test
     public void deleteNonExistingMapserver() throws Exception {
-        MapServer mapServerToDelete = mapServerRepo.findOne(222);
-        Assert.assertNull(mapServerToDelete);
+        Optional<MapServer> mapServerToUpdateOptional = mapServerRepo.findById(222);
+        Assert.assertFalse(mapServerToUpdateOptional.isPresent());
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 

@@ -41,6 +41,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Date;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -108,8 +109,8 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
 
-        userSearchToDelete = userSearchRepository.findOne(userSearchToDelete.getId());
-        Assert.assertNull(userSearchToDelete);
+        Optional<UserSearch> userSearchDeleted = userSearchRepository.findById(userSearchToDelete.getId());
+        Assert.assertFalse(userSearchDeleted.isPresent());
     }
 
 
@@ -139,7 +140,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
             .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        UserSearch userSearchCreated = userSearchRepository.findOne(Integer.parseInt(content));
+        UserSearch userSearchCreated = userSearchRepository.findById(Integer.parseInt(content)).get();
         Assert.assertNotNull(userSearchCreated);
         Assert.assertEquals(true, userSearchCreated.isFeatured());
     }
@@ -169,7 +170,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
 
-        UserSearch userSearchUpdated = userSearchRepository.findOne(userSearchId);
+        UserSearch userSearchUpdated = userSearchRepository.findById(userSearchId).get();
         Assert.assertNotNull(userSearchUpdated);
 
         Assert.assertEquals("http://urlupdated", userSearchUpdated.getUrl());

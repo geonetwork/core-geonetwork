@@ -110,7 +110,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
     @Override
     public void setTemplateExt(final int id, final MetadataType metadataType) throws Exception {
-        if (metadataDraftRepository.exists(id)) {
+        if (metadataDraftRepository.existsById(id)) {
             metadataDraftRepository.update(id, new Updater<MetadataDraft>() {
                 @Override
                 public void apply(@Nonnull MetadataDraft metadata) {
@@ -133,7 +133,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
      */
     @Override
     public void setSubtemplateTypeAndTitleExt(final int id, String title) throws Exception {
-        if (metadataDraftRepository.exists(id)) {
+        if (metadataDraftRepository.existsById(id)) {
             metadataDraftRepository.update(id, new Updater<MetadataDraft>() {
                 @Override
                 public void apply(@Nonnull MetadataDraft metadata) {
@@ -153,7 +153,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     @Override
     public void setHarvestedExt(final int id, final String harvestUuid, final Optional<String> harvestUri)
         throws Exception {
-        if (metadataDraftRepository.exists(id)) {
+        if (metadataDraftRepository.existsById(id)) {
             metadataDraftRepository.update(id, new Updater<MetadataDraft>() {
                 @Override
                 public void apply(MetadataDraft metadata) {
@@ -176,7 +176,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     @Override
     public void updateDisplayOrder(final String idString, final String displayOrder) throws Exception {
         Integer id = Integer.valueOf(idString);
-        if (metadataDraftRepository.exists(id)) {
+        if (metadataDraftRepository.existsById(id)) {
             metadataDraftRepository.update(id, new Updater<MetadataDraft>() {
                 @Override
                 public void apply(MetadataDraft entity) {
@@ -206,7 +206,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
         final int newRating = ratingByIpRepository.averageRating(metadataId);
 
-        if (metadataDraftRepository.exists(metadataId)) {
+        if (metadataDraftRepository.existsById(metadataId)) {
             metadataDraftRepository.update(metadataId, new Updater<MetadataDraft>() {
                 @Override
                 public void apply(MetadataDraft entity) {
@@ -246,7 +246,10 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         if (super.exists(id)) {
             return super.findOne(id);
         }
-        return metadataDraftRepository.findOne(id);
+
+        java.util.Optional<MetadataDraft> md = metadataDraftRepository.findById(id);
+
+        return md.isPresent()?md.get():null;
     }
 
     @Override
@@ -299,7 +302,11 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
         if (md == null) {
             try {
-                md = metadataDraftRepository.findOne((Specification<MetadataDraft>) spec);
+                java.util.Optional<MetadataDraft> mdDraft = metadataDraftRepository.findOne((Specification<MetadataDraft>) spec);
+
+                if (mdDraft.isPresent()) {
+                    md = mdDraft.get();
+                }
             } catch (ClassCastException t) {
                 throw new ClassCastException("Unknown AbstractMetadata subtype: " + spec.getClass().getName());
             }
@@ -312,7 +319,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     public AbstractMetadata findOne(String id) {
         AbstractMetadata md = super.findOne(id);
         if (md == null) {
-            md = metadataDraftRepository.findOne(id);
+            java.util.Optional<MetadataDraft> draft = metadataDraftRepository.findById(Integer.parseInt(id));
+            return draft.isPresent() ? draft.get() : null;
         }
         return md;
     }
@@ -331,7 +339,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         for (AbstractMetadata md : super.findAll(keySet)) {
             list.add(md);
         }
-        list.addAll(metadataDraftRepository.findAll(keySet));
+        list.addAll(metadataDraftRepository.findAllById(keySet));
         return list;
     }
 
@@ -354,13 +362,13 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     @Override
     public List<SimpleMetadata> findAllSimple(String harvestUuid) {
         List<SimpleMetadata> list = super.findAllSimple(harvestUuid);
-        list.addAll(metadataDraftRepository.findAllSimple(harvestUuid));
+        list.addAll(metadataDraftRepository.findSimple(harvestUuid));
         return list;
     }
 
     @Override
     public boolean exists(Integer iId) {
-        return super.exists(iId) || metadataDraftRepository.exists(iId);
+        return super.exists(iId) || metadataDraftRepository.existsById(iId);
     }
 
     @Override
@@ -368,7 +376,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         List<Pair<Integer, ISODate>> list = new LinkedList<Pair<Integer, ISODate>>();
 
         list.addAll(super.findAllIdsAndChangeDates(pageable).getContent());
-        list.addAll(metadataDraftRepository.findAllIdsAndChangeDates(pageable).getContent());
+        list.addAll(metadataDraftRepository.findIdsAndChangeDates(pageable).getContent());
 
         Page<Pair<Integer, ISODate>> res = new PageImpl<Pair<Integer, ISODate>>(list, pageable, list.size());
         return res;
@@ -384,7 +392,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         }
 
         try {
-            map.putAll(metadataDraftRepository.findAllSourceInfo((Specification<MetadataDraft>) spec));
+            map.putAll(metadataDraftRepository.findSourceInfo((Specification<MetadataDraft>) spec));
         } catch (ClassCastException t) {
             // Maybe it is not a Specification<MetadataDraft>
         }
@@ -402,7 +410,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         }
 
         try {
-            res.addAll(metadataDraftRepository.findAllIdsBy((Specification<MetadataDraft>) specs));
+            res.addAll(metadataDraftRepository.findIdsBy((Specification<MetadataDraft>) specs));
         } catch (ClassCastException t) {
             // Maybe it is not a Specification<MetadataDraft>
         }
@@ -482,10 +490,11 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         Log.trace(Geonet.DATA_MANAGER, "createDraft(" + templateId + "," + groupOwner + "," + source + "," + owner + ","
             + parentUuid + "," + isTemplate + "," + uuid + ")");
 
-        Metadata templateMetadata = getMetadataRepository().findOne(templateId);
-        if (templateMetadata == null) {
+        java.util.Optional<Metadata> templateMetadataOpt = getMetadataRepository().findById(Integer.valueOf(templateId));
+        if (!templateMetadataOpt.isPresent()) {
             throw new IllegalArgumentException("Template id not found : " + templateId);
         }
+        Metadata templateMetadata = templateMetadataOpt.get();
 
         String schema = templateMetadata.getDataInfo().getSchemaId();
         String data = templateMetadata.getData();
@@ -509,9 +518,10 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         }
         // If there is a default category for the group, use it:
         if (groupOwner != null) {
-            Group group = groupRepository.findOne(Integer.valueOf(groupOwner));
-            if (group.getDefaultCategory() != null) {
-                newMetadata.getCategories().add(group.getDefaultCategory());
+            java.util.Optional<Group> group = groupRepository.findById(Integer.valueOf(groupOwner));
+
+            if (group.isPresent() && (group.get().getDefaultCategory() != null)) {
+                newMetadata.getCategories().add(group.get().getDefaultCategory());
             }
         }
 
@@ -556,22 +566,25 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
             int author = context.getUserSession().getUserIdAsInt();
             Integer status = Integer.valueOf(StatusValue.Status.DRAFT);
-            StatusValue statusValue = statusValueRepository.findOne(status);
+            java.util.Optional<StatusValue> statusValue = statusValueRepository.findById(status);
 
-            for (Integer mdId : metadataIds) {
-                MetadataStatus metadataStatus = new MetadataStatus();
+            if (statusValue.isPresent()) {
+                for (Integer mdId : metadataIds) {
+                    MetadataStatus metadataStatus = new MetadataStatus();
 
-                MetadataStatusId mdStatusId = new MetadataStatusId().setStatusId(status).setMetadataId(mdId)
-                    .setChangeDate(new ISODate()).setUserId(author);
+                    MetadataStatusId mdStatusId = new MetadataStatusId().setStatusId(status).setMetadataId(mdId)
+                        .setChangeDate(new ISODate()).setUserId(author);
 
-                metadataStatus.setId(mdStatusId);
-                metadataStatus.setStatusValue(statusValue);
-                metadataStatus.setChangeMessage("Editing instance created");
+                    metadataStatus.setId(mdStatusId);
+                    metadataStatus.setStatusValue(statusValue.get());
+                    metadataStatus.setChangeMessage("Editing instance created");
 
-                List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
-                listOfStatusChange.add(metadataStatus);
-                sa.onStatusChange(listOfStatusChange);
+                    List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
+                    listOfStatusChange.add(metadataStatus);
+                    sa.onStatusChange(listOfStatusChange);
+                }
             }
+
             return String.valueOf(finalId);
         } catch (Throwable t) {
             Log.error(Geonet.DATA_MANAGER, "Editing instance creation failed", t);

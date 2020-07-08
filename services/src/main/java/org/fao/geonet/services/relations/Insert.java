@@ -33,13 +33,13 @@ import org.fao.geonet.repository.MetadataRelationRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.nio.file.Path;
 
 import static org.fao.geonet.repository.specification.MetadataRelationSpecs.hasMetadataId;
 import static org.fao.geonet.repository.specification.MetadataRelationSpecs.hasRelatedId;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 //=============================================================================
 
@@ -70,7 +70,7 @@ public class Insert extends NotInReadOnlyModeService {
         int childId = Integer.parseInt(Utils.getIdentifierFromParameters(
             params, context, Params.CHILD_UUID, Params.CHILD_ID));
 
-        final Specifications<MetadataRelation> spec = where(hasMetadataId(parentId)).and(hasRelatedId(childId));
+        final Specification<MetadataRelation> spec = where(hasMetadataId(parentId)).and(hasRelatedId(childId));
         final MetadataRelationRepository metadataRelationRepository = context.getBean(MetadataRelationRepository.class);
         final long count = metadataRelationRepository.count(spec);
 

@@ -258,12 +258,12 @@ public class LDAPUtils {
         }
 
         // Remove deprecated usergroups (if any)
-        userGroupRepo.delete(toRemove);
+        userGroupRepo.deleteAll(toRemove);
         entityManager.flush();
         entityManager.clear();
 
         // Add only new usergroups (if any)
-        userGroupRepo.save(toAdd);
+        userGroupRepo.saveAll(toAdd);
         entityManager.flush();
 
     }

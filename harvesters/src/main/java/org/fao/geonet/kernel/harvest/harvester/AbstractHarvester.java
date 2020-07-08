@@ -81,7 +81,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.io.File;
 import java.io.IOException;
@@ -249,7 +249,8 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
     private void initInfo(ServiceContext context) {
         final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
         Specification<HarvestHistory> spec = HarvestHistorySpecs.hasHarvesterUuid(getParams().getUuid());
-        Pageable pageRequest = new PageRequest(0, 1, new Sort(Sort.Direction.DESC, SortUtils.createPath(HarvestHistory_.harvestDate)));
+        Pageable pageRequest = PageRequest.of(0, 1,
+            Sort.by(Sort.Direction.DESC, SortUtils.createPath(HarvestHistory_.harvestDate)));
         final Page<HarvestHistory> page = historyRepository.findAll(spec, pageRequest);
         if (page.hasContent()) {
             final HarvestHistory history = page.getContent().get(0);
@@ -324,7 +325,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                 final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
                 final Resources resources = context.getBean(Resources.class);
 
-                final Specifications<? extends AbstractMetadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
+                final Specification<? extends AbstractMetadata> ownedByHarvester = Specification.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
                 Set<String> sources = new HashSet<>();
                 for (Integer id : metadataRepository.findAllIdsBy(ownedByHarvester)) {
                     sources.add(metadataUtils.findOne(id).getSourceInfo().getSourceId());
@@ -334,10 +335,12 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                 // Remove all sources related to the harvestUuid if they are not linked to any record anymore
                 for (String sourceUuid : sources) {
                     Long ownedBySource =
-                        metadataRepository.count(Specifications.where(MetadataSpecs.hasSource(sourceUuid)));
-                    if (ownedBySource == 0 && !sourceUuid.equals(params.getUuid()) && sourceRepository.exists(sourceUuid)) {
+                        metadataRepository.count(Specification.where(MetadataSpecs.hasSource(sourceUuid)));
+                    if (ownedBySource == 0
+                        && !sourceUuid.equals(params.getUuid())
+                        && sourceRepository.existsById(sourceUuid)) {
                         removeIcon(resources, sourceUuid);
-                        sourceRepository.delete(sourceUuid);
+                        sourceRepository.deleteById(sourceUuid);
                     }
                 }
 
@@ -611,7 +614,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         UserRepository repository = this.context.getBean(UserRepository.class);
         User user = null;
         if (StringUtils.isNotEmpty(ownerId)) {
-            user = repository.findOne(ownerId);
+            user = repository.findById(Integer.parseInt(ownerId)).get();
         }
 
         // for harvesters created before owner was added to the harvester code,
@@ -831,7 +834,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
     private void doDestroy(final Resources resources) {
         removeIcon(resources, getParams().getUuid());
 
-        context.getBean(SourceRepository.class).delete(getParams().getUuid());
+        context.getBean(SourceRepository.class).deleteById(getParams().getUuid());
         // FIXME: Should also delete the categories we have created for servers
     }
 
@@ -1103,7 +1106,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
     public String getOwnerEmail() {
         String ownerId = getParams().getOwnerIdGroup();
 
-        final Group group = context.getBean(GroupRepository.class).findOne(Integer.parseInt(ownerId));
+        final Group group = context.getBean(GroupRepository.class).findById(Integer.parseInt(ownerId)).get();
         return group.getEmail();
     }
 

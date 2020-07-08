@@ -58,7 +58,7 @@ public class ReportUploads implements IReport {
             // Retrieve metadata file uploads
             final MetadataFileUploadRepository uploadRepository =
                 context.getBean(MetadataFileUploadRepository.class);
-            final Sort sort = new Sort(Sort.Direction.ASC,
+            final Sort sort = Sort.by(Sort.Direction.ASC,
                 SortUtils.createPath(MetadataFileUpload_.uploadDate));
             final List<MetadataFileUpload> records = uploadRepository.findAll(
                 MetadataFileUploadSpecs.uploadDateBetweenAndByGroups(

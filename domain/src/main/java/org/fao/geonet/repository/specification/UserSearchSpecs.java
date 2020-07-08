@@ -30,7 +30,7 @@ import javax.persistence.criteria.*;
 
 
 /**
- * Specifications for querying {@link org.fao.geonet.repository.UserSearchRepository}.
+ * Specification for querying {@link org.fao.geonet.repository.UserSearchRepository}.
  *
  */
 public final class UserSearchSpecs {

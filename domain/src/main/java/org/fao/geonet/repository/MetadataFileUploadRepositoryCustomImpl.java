@@ -34,7 +34,7 @@ import javax.persistence.criteria.*;
  *
  * @author Jose García
  */
-public class MetadataFileUploadRepositoryImpl implements MetadataFileUploadRepositoryCustom {
+public class MetadataFileUploadRepositoryCustomImpl implements MetadataFileUploadRepositoryCustom {
     @PersistenceContext
     EntityManager _entityManager;
 

@@ -30,10 +30,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -450,8 +447,8 @@ public class ThesaurusManager implements ThesaurusFinder {
             // By default thesaurus are enabled (if nothing defined in db)
             char activated = Constants.YN_TRUE;
             final ThesaurusActivationRepository activationRepository = context.getBean(ThesaurusActivationRepository.class);
-            final ThesaurusActivation activation = activationRepository.findOne(currentTh.getKey());
-            if (activation != null && !activation.isActivated()) {
+            final Optional<ThesaurusActivation> activation = activationRepository.findById(currentTh.getKey());
+            if (activation.isPresent() && !activation.get().isActivated()) {
                 activated = Constants.YN_FALSE;
             }
             elActivated.setText("" + activated);

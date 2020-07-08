@@ -58,10 +58,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @EnableWebMvc
 @Service
@@ -192,7 +189,7 @@ public class UserSearchesApi {
             UserSearch_.creationDate);
 
         int page = (offset / limit);
-        final PageRequest pageRequest = new PageRequest(page, limit, sortBy);
+        final PageRequest pageRequest = PageRequest.of(page, limit, sortBy);
 
         Specification<UserSearch> searchSpec = null;
         if (StringUtils.isNotEmpty(search)) {
@@ -374,8 +371,8 @@ public class UserSearchesApi {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
 
-        final UserSearch existing = userSearchRepository.findOne(searchIdentifier);
-        if (existing == null) {
+        final Optional<UserSearch> existing = userSearchRepository.findById(searchIdentifier);
+        if (!existing.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 MSG_USERSEARCH_WITH_IDENTIFIER_NOT_FOUND, searchIdentifier
             ));
@@ -423,10 +420,10 @@ public class UserSearchesApi {
         UserSearch userSearch = retrieveUserSearch(userSearchRepository, searchIdentifier);
 
         if (myProfile.equals(Profile.Administrator)) {
-            userSearchRepository.delete(searchIdentifier);
+            userSearchRepository.deleteById(searchIdentifier);
         } else {
             if (userSearch.getCreator().getId() == session.getUserIdAsInt()) {
-                userSearchRepository.delete(searchIdentifier);
+                userSearchRepository.deleteById(searchIdentifier);
             } else {
                 throw new IllegalArgumentException("You don't have rights to delete the user search");
             }
@@ -446,12 +443,12 @@ public class UserSearchesApi {
      */
     private UserSearch retrieveUserSearch(UserSearchRepository userSearchRepository, Integer searchIdentifier)
         throws ResourceNotFoundEx {
-        UserSearch userSearch = userSearchRepository.findOne(searchIdentifier);
+        Optional<UserSearch> userSearch = userSearchRepository.findById(searchIdentifier);
 
-        if (userSearch == null) {
+        if (!userSearch.isPresent()) {
             throw new ResourceNotFoundEx("User search not found");
         }
 
-        return userSearch;
+        return userSearch.get();
     }
 }

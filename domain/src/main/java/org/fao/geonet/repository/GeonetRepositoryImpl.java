@@ -101,7 +101,7 @@ public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializabl
 
         final TypedQuery<T> typedQuery = entityManager.createQuery(query);
         if (pageable != null) {
-            typedQuery.setFirstResult(pageable.getOffset());
+            typedQuery.setFirstResult(Math.toIntExact(pageable.getOffset()));
             typedQuery.setMaxResults(pageable.getPageSize());
         }
         for (T t : typedQuery.getResultList()) {
@@ -186,7 +186,7 @@ public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializabl
     @Nonnull
     @Override
     public Element findAllAsXml(final Specification<T> specification, final Sort sort) {
-        PageRequest request = new PageRequest(0, Integer.MAX_VALUE, sort);
+        PageRequest request = PageRequest.of(0, Integer.MAX_VALUE, sort);
         return findAllAsXml(_entityManager, _entityClass, specification, request);
     }
 }

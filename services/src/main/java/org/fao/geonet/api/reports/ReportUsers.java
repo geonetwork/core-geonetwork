@@ -62,7 +62,7 @@ public class ReportUsers implements IReport {
             // Retrieve users
             final UserRepository userRepository =
                 context.getBean(UserRepository.class);
-            final Sort sort = new Sort(Sort.Direction.ASC,
+            final Sort sort = Sort.by(Sort.Direction.ASC,
                 SortUtils.createPath(User_.lastLoginDate));
             final List<User> records = userRepository.findAll(
                 UserSpecs.loginDateBetweenAndByGroups(

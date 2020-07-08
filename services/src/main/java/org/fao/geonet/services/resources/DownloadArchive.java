@@ -371,7 +371,7 @@ public class DownloadArchive implements Service {
                 final GroupRepository groupRepository = context.getBean(GroupRepository.class);
 
                 for (OperationAllowed opAllowed : opsAllowed) {
-                    Group group = groupRepository.findOne(opAllowed.getId().getGroupId());
+                    Group group = groupRepository.findById(opAllowed.getId().getGroupId()).get();
                     String name = group.getName();
                     String email = group.getEmail();
 

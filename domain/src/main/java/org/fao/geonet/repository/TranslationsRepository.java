@@ -33,7 +33,7 @@ import java.util.List;
  *
  * @author Jesse
  */
-public interface TranslationsRepository extends GeonetRepository<Translations, Integer>{
+public interface TranslationsRepository extends GeonetRepository<Translations, Integer> {
     /**
      * Find all the Capabilities Info objects for the given field.
      *

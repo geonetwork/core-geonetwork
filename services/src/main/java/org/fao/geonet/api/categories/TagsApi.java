@@ -48,6 +48,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RequestMapping(value = {
     "/{portal}/api/tags"
@@ -106,8 +107,8 @@ public class TagsApi {
         @RequestBody
             MetadataCategory category
     ) throws Exception {
-        MetadataCategory existingCategory = categoryRepository.findOne(category.getId());
-        if (existingCategory != null) {
+        Optional<MetadataCategory> existingCategory = categoryRepository.findById(category.getId());
+        if (existingCategory.isPresent()) {
             throw new IllegalArgumentException(String.format(
                 "A tag with id '%d' already exist", category.getId()
             ));
@@ -148,11 +149,11 @@ public class TagsApi {
         @PathVariable
             Integer tagIdentifier
     ) throws Exception {
-        org.fao.geonet.domain.MetadataCategory category = categoryRepository.findOne(tagIdentifier);
-        if (category == null) {
+        Optional<MetadataCategory> category = categoryRepository.findById(tagIdentifier);
+        if (!category.isPresent()) {
             throw new ResourceNotFoundException("Category not found");
         }
-        return category;
+        return category.get();
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -181,8 +182,8 @@ public class TagsApi {
         @RequestBody
             MetadataCategory category
     ) throws Exception {
-        MetadataCategory existingCategory = categoryRepository.findOne(tagIdentifier);
-        if (existingCategory != null) {
+        Optional<MetadataCategory> existingCategory = categoryRepository.findById(tagIdentifier);
+        if (existingCategory.isPresent()) {
             updateCategory(tagIdentifier, category);
         } else {
             throw new ResourceNotFoundException(String.format(
@@ -227,17 +228,17 @@ public class TagsApi {
         @PathVariable
             Integer tagIdentifier
     ) throws Exception {
-        MetadataCategory category = categoryRepository.findOne(tagIdentifier);
-        if (category != null) {
-            long recordsCount = metadataRepository.count((Specification<Metadata>) MetadataSpecs.hasCategory(category));
+        Optional<MetadataCategory> category = categoryRepository.findById(tagIdentifier);
+        if (category.isPresent()) {
+            long recordsCount = metadataRepository.count((Specification<Metadata>) MetadataSpecs.hasCategory(category.get()));
             if (recordsCount > 0l) {
                 throw new IllegalArgumentException(String.format(
                     "Tag '%s' is assigned to %d records. Update records first in order to remove that tag.",
-                    category.getName(), // TODO: Return in user language
+                    category.get().getName(), // TODO: Return in user language
                     recordsCount
                 ));
             } else {
-                categoryRepository.delete(tagIdentifier);
+                categoryRepository.deleteById(tagIdentifier);
             }
         } else {
             throw new ResourceNotFoundException(String.format(

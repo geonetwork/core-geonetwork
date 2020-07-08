@@ -113,7 +113,7 @@ public class TranslationApi implements ApplicationContextAware {
         ServletRequest request
     ) throws Exception {
         if (replace) {
-            translationsRepository.delete(
+            translationsRepository.deleteAll(
                 translationsRepository.findAllByFieldName(key)
             );
         }
@@ -132,7 +132,7 @@ public class TranslationApi implements ApplicationContextAware {
                     e.setValue(values.get(e.getLangId()));
                 }
             });
-            translationsRepository.save(translations);
+            translationsRepository.saveAll(translations);
         }
         return new ResponseEntity(HttpStatus.CREATED);
     }

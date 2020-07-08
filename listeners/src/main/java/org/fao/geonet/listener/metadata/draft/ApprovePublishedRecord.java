@@ -93,7 +93,7 @@ public class ApprovePublishedRecord implements ApplicationListener<MetadataPubli
         MetadataStatus status = new MetadataStatus();
         status.setChangeMessage("Record published.");
         status.setPreviousState(previousStatus.getCurrentState());
-        status.setStatusValue(statusValueRepository.findOne(Integer.valueOf(StatusValue.Status.APPROVED)));
+        status.setStatusValue(statusValueRepository.findById(Integer.valueOf(StatusValue.Status.APPROVED)).get());
 
         MetadataStatusId mdStatusId = new MetadataStatusId();
         mdStatusId.setStatusId(Integer.valueOf(StatusValue.Status.APPROVED));

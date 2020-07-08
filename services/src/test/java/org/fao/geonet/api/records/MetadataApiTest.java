@@ -148,7 +148,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
 
         dataManager.indexMetadata(Lists.newArrayList("" + this.id));
-        this.md = metadataRepository.findOne(this.id);
+        this.md = metadataRepository.findById(this.id).get();
     }
 
 

@@ -100,7 +100,7 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
     public synchronized void updateMetadataOwner(final int id, final String owner, final String groupOwner)
         throws Exception {
 
-        if (metadataDraftRepository.exists(id)) {
+        if (metadataDraftRepository.existsById(id)) {
             metadataDraftRepository.update(id, new Updater<MetadataDraft>() {
                 @Override
                 public void apply(@Nonnull MetadataDraft entity) {
@@ -164,8 +164,8 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
     @Override
     public void delete(Integer id) {
         super.delete(id);
-        if (metadataDraftRepository.exists(id)) {
-            metadataDraftRepository.delete(id);
+        if (metadataDraftRepository.existsById(id)) {
+            metadataDraftRepository.deleteById(id);
         }
     }
 
@@ -194,7 +194,7 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
             // That's fine, maybe we are on the draft side
         }
         try {
-            res.putAll(metadataDraftRepository.findAllSourceInfo((Specification<MetadataDraft>) specs));
+            res.putAll(metadataDraftRepository.findSourceInfo((Specification<MetadataDraft>) specs));
         } catch (ClassCastException t) {
             // That's fine, maybe we are on the metadata side
         }

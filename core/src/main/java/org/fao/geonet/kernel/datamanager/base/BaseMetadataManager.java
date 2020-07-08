@@ -138,7 +138,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.springframework.data.jpa.domain.Specifications.where;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 public class BaseMetadataManager implements IMetadataManager {
 
@@ -244,7 +244,7 @@ public class BaseMetadataManager implements IMetadataManager {
         Sort sortByMetadataChangeDate = SortUtils.createSort(Metadata_.dataInfo, MetadataDataInfo_.changeDate);
         int currentPage = 0;
         Page<Pair<Integer, ISODate>> results = metadataUtils.findAllIdsAndChangeDates(
-            new PageRequest(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
+            PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
 
         // index all metadata in DBMS if needed
         while (results.getNumberOfElements() > 0) {
@@ -280,8 +280,8 @@ public class BaseMetadataManager implements IMetadataManager {
             }
 
             currentPage++;
-            results = metadataRepository.findAllIdsAndChangeDates(
-                new PageRequest(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
+            results = metadataRepository.findIdsAndChangeDates(
+                PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
         }
 
         // if anything to index then schedule it to be done after servlet is
@@ -478,9 +478,9 @@ public class BaseMetadataManager implements IMetadataManager {
         newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner)).setOwner(owner).setSourceId(source);
 
         // If there is a default category for the group, use it:
-        Group group = groupRepository.findOne(Integer.valueOf(groupOwner));
-        if (group.getDefaultCategory() != null) {
-            newMetadata.getMetadataCategories().add(group.getDefaultCategory());
+        java.util.Optional<Group> group = groupRepository.findById(Integer.valueOf(groupOwner));
+        if (group.isPresent() && (group.get().getDefaultCategory() != null)) {
+            newMetadata.getMetadataCategories().add(group.get().getDefaultCategory());
         }
         Collection<MetadataCategory> filteredCategories = Collections2.filter(templateMetadata.getCategories(),
             new Predicate<MetadataCategory>() {
@@ -590,9 +590,9 @@ public class BaseMetadataManager implements IMetadataManager {
             newMetadata.getMetadataCategories().add(metadataCategory);
         } else if (StringUtils.isNotEmpty(groupOwner)) {
             // If the group has a default category, use it
-            Group group = groupRepository.findOne(Integer.valueOf(groupOwner));
-            if (group.getDefaultCategory() != null) {
-                newMetadata.getMetadataCategories().add(group.getDefaultCategory());
+            java.util.Optional<Group> group = groupRepository.findById(Integer.valueOf(groupOwner));
+            if (group.isPresent() && (group.get().getDefaultCategory() != null)) {
+                newMetadata.getMetadataCategories().add(group.get().getDefaultCategory());
             }
         }
 
@@ -886,9 +886,9 @@ public class BaseMetadataManager implements IMetadataManager {
         buildPrivilegesMetadataInfo(context, map);
 
         // add owner name
-        User user = userRepository.findOne(owner);
-        if (user != null) {
-            String ownerName = user.getName();
+        java.util.Optional<User> user = userRepository.findById(Integer.parseInt(owner));
+        if (user.isPresent()) {
+            String ownerName = user.get().getName();
             addElement(info, Edit.Info.Elem.OWNERNAME, ownerName);
         }
 
@@ -1278,8 +1278,8 @@ public class BaseMetadataManager implements IMetadataManager {
     @Transactional
     public void delete(Integer id) {
         Log.trace(Geonet.DATA_MANAGER, "Deleting record with id " + id);
-        if (metadataRepository.exists(id)) {
-            metadataRepository.delete(id);
+        if (metadataRepository.existsById(id)) {
+            metadataRepository.deleteById(id);
         }
     }
 
@@ -1298,7 +1298,7 @@ public class BaseMetadataManager implements IMetadataManager {
     @Override
     public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> specs) {
         try {
-            return metadataRepository.findAllSourceInfo((Specification<Metadata>) specs);
+            return metadataRepository.findSourceInfo((Specification<Metadata>) specs);
         } catch (ClassCastException t) {
             throw new ClassCastException("Unknown AbstractMetadata subtype: " + specs.getClass().getName());
         }

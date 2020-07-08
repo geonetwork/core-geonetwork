@@ -34,7 +34,7 @@ import javax.persistence.Query;
 import javax.persistence.criteria.*;
 
 
-public class InspireAtomFeedRepositoryImpl implements InspireAtomFeedRepositoryCustom {
+public class InspireAtomFeedRepositoryCustomImpl implements InspireAtomFeedRepositoryCustom {
     @PersistenceContext
     private EntityManager _entityManager;
 

@@ -60,8 +60,8 @@ public class HarvestHistoryRepositoryTest extends AbstractSpringDataTest {
         history2 = _repo.save(history2);
 
 
-        assertEquals(history2, _repo.findOne(history2.getId()));
-        assertEquals(history1, _repo.findOne(history1.getId()));
+        assertEquals(history2, _repo.findById(history2.getId()).get());
+        assertEquals(history1, _repo.findById(history1.getId()).get());
     }
 
     @Test
@@ -120,12 +120,12 @@ public class HarvestHistoryRepositoryTest extends AbstractSpringDataTest {
 
         _repo.markAllAsDeleted(history1.getHarvesterUuid());
 
-        List<HarvestHistory> found = _repo.findAll(Collections.singleton(history1.getId()));
+        List<HarvestHistory> found = _repo.findAllById(Collections.singleton(history1.getId()));
         assertTrue(found.get(0).isDeleted());
-        List<HarvestHistory> found2 = _repo.findAll(Collections.singleton(history2.getId()));
+        List<HarvestHistory> found2 = _repo.findAllById(Collections.singleton(history2.getId()));
         assertFalse(found2.get(0).isDeleted());
-        assertTrue(_repo.findOne(history1.getId()).isDeleted());
-        assertFalse(_repo.findOne(history2.getId()).isDeleted());
+        assertTrue(_repo.findById(history1.getId()).get().isDeleted());
+        assertFalse(_repo.findById(history2.getId()).get().isDeleted());
     }
 
     @Test
@@ -144,7 +144,7 @@ public class HarvestHistoryRepositoryTest extends AbstractSpringDataTest {
         assertEquals(1, found.size());
         assertEquals(history2.getId(), found.get(0).getId());
 
-        assertNull(_repo.findOne(history1.getId()));
+        assertFalse(_repo.findById(history1.getId()).isPresent());
     }
 
     private HarvestHistory newHarvestHistory() {

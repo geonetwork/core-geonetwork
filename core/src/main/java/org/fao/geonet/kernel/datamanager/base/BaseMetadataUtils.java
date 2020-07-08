@@ -358,7 +358,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public List<Integer> findAllIdsBy(Specification<? extends AbstractMetadata> specs) {
         try {
-            return metadataRepository.findAllIdsBy((Specification<Metadata>) specs);
+            return metadataRepository.findIdsBy((Specification<Metadata>) specs);
         } catch (ClassCastException t) {
             // Maybe it is not a Specification<Metadata>
         }
@@ -472,11 +472,15 @@ public class BaseMetadataUtils implements IMetadataUtils {
         if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
             int iId = Integer.parseInt(id);
             metadataRepository.incrementPopularity(iId);
-            final Metadata metadata = metadataRepository.findOne(iId);
-            searchManager.updateFieldAsynch(
-                metadata.getUuid(),
-                Geonet.IndexFieldNames.POPULARITY,
-                metadata.getDataInfo().getPopularity());
+            final java.util.Optional<Metadata> metadata = metadataRepository.findById(iId);
+
+            if (metadata.isPresent()) {
+                searchManager.updateFieldAsynch(
+                    metadata.get().getUuid(),
+                    Geonet.IndexFieldNames.POPULARITY,
+                    metadata.get().getDataInfo().getPopularity());
+
+            }
 //            // And register the metadata to be indexed in the near future
 //            final IndexingList list = srvContext.getBean(IndexingList.class);
 //            list.add(iId);
@@ -734,7 +738,9 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Override
     public AbstractMetadata findOne(int id) {
-        return metadataRepository.findOne(id);
+        java.util.Optional<Metadata> metadata = metadataRepository.findById(id);
+
+        return metadata.isPresent()?metadata.get():null;
     }
 
     @Override
@@ -758,7 +764,9 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public AbstractMetadata findOne(Specification<? extends AbstractMetadata> spec) {
         try {
-            return metadataRepository.findOne((Specification<Metadata>) spec);
+            java.util.Optional<Metadata> metadata = metadataRepository.findOne((Specification<Metadata>) spec);
+
+            return metadata.isPresent()?metadata.get():null;
         } catch (ClassCastException t) {
             throw new ClassCastException("Unknown AbstractMetadata subtype: " + spec.getClass().getName());
         }
@@ -766,7 +774,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Override
     public AbstractMetadata findOne(String id) {
-        return metadataRepository.findOne(id);
+        java.util.Optional<Metadata> metadata = metadataRepository.findById(Integer.parseInt(id));
+        return metadata.isPresent() ? metadata.get() : null;
     }
 
     @Override
@@ -776,7 +785,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Override
     public Iterable<? extends AbstractMetadata> findAll(Set<Integer> keySet) {
-        return metadataRepository.findAll(keySet);
+        return metadataRepository.findAllById(keySet);
     }
 
     @Override
@@ -796,12 +805,12 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Override
     public List<SimpleMetadata> findAllSimple(String harvestUuid) {
-        return metadataRepository.findAllSimple(harvestUuid);
+        return metadataRepository.findSimple(harvestUuid);
     }
 
     @Override
     public boolean exists(Integer iId) {
-        return metadataRepository.exists(iId);
+        return metadataRepository.existsById(iId);
     }
 
     @Override
@@ -854,13 +863,13 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Override
     public Page<Pair<Integer, ISODate>> findAllIdsAndChangeDates(Pageable pageable) {
-        return metadataRepository.findAllIdsAndChangeDates(pageable);
+        return metadataRepository.findIdsAndChangeDates(pageable);
     }
 
     @Override
     public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> spec) {
         try {
-            return metadataRepository.findAllSourceInfo((Specification<Metadata>) spec);
+            return metadataRepository.findSourceInfo((Specification<Metadata>) spec);
         } catch (Throwable t) {
             // Maybe it is not a Specification<Metadata>
         }

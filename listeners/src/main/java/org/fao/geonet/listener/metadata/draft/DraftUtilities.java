@@ -14,14 +14,8 @@ import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.repository.MetadataDraftRepository;
-import org.fao.geonet.repository.MetadataFileUploadRepository;
-import org.fao.geonet.repository.MetadataRatingByIpRepository;
-import org.fao.geonet.repository.MetadataStatusRepository;
-import org.fao.geonet.repository.MetadataValidationRepository;
-import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
@@ -153,7 +147,7 @@ public class DraftUtilities {
     public void removeDraft(MetadataDraft draft) {
 
         Integer id = draft.getId();
-        if (!metadataDraftRepository.exists(id)) {
+        if (!metadataDraftRepository.existsById(id)) {
             // We are being called after removing everything related to this record.
             // Nothing to do here
             return;

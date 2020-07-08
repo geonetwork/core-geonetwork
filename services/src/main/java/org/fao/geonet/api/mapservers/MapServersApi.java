@@ -141,7 +141,7 @@ public class MapServersApi {
             example = "")
         @PathVariable String mapserverId
     ) throws Exception {
-        MapServer mapserver = mapServerRepository.findOneById(mapserverId);
+        MapServer mapserver = mapServerRepository.findOneById(Integer.valueOf(mapserverId));
         if (mapserver == null) {
             throw new ResourceNotFoundException(String.format(
                 MSG_MAPSERVER_WITH_ID_NOT_FOUND,
@@ -519,7 +519,7 @@ public class MapServersApi {
         metadataAbstract = metadataAbstract.replace("\\n", "");
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        MapServer m = mapServerRepository.findOneById(mapserverId);
+        MapServer m = mapServerRepository.findOneById(Integer.valueOf(mapserverId));
         GeoServerNode g = new GeoServerNode(m);
 
 

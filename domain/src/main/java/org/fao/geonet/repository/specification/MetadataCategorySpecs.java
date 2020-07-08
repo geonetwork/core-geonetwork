@@ -35,7 +35,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 /**
- * Specifications for selecting the MetadataCategories.
+ * Specification for selecting the MetadataCategories.
  *
  * @author Jesse on 11/25/2014.
  */

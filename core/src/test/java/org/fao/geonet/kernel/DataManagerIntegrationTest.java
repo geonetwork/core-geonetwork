@@ -58,7 +58,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTest {
 
@@ -153,7 +153,7 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
         String newMetadataId = dataManager.createMetadata(serviceContext, "" + metadata.getId(), "" + group.getId(), source.getUuid(),
             principal.getId(), templateMd.getUuid(), MetadataType.METADATA.codeString, true);
 
-        AbstractMetadata newMetadata = metadataRepository.findOne(newMetadataId);
+        AbstractMetadata newMetadata = metadataRepository.findById(Integer.parseInt(newMetadataId)).get();
         assertEquals(1, newMetadata.getCategories().size());
         assertEquals(category, newMetadata.getCategories().iterator().next());
         assertEqualsText(metadata.getUuid(), newMetadata.getXmlData(false), "gmd:parentIdentifier/gco:CharacterString");

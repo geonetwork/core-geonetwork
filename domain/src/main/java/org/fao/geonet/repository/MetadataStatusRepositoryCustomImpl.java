@@ -53,7 +53,7 @@ import org.springframework.data.domain.Sort;
  *
  * @author Jesse
  */
-public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCustom {
+public class MetadataStatusRepositoryCustomImpl implements MetadataStatusRepositoryCustom {
 
     @PersistenceContext
     EntityManager _entityManager;
@@ -177,7 +177,7 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
 
         TypedQuery<MetadataStatus> query = _entityManager.createQuery(cbQuery);
         if (pageable != null) {
-            query.setFirstResult(pageable.getOffset());
+            query.setFirstResult(Math.toIntExact(pageable.getOffset()));
             query.setMaxResults(pageable.getPageSize());
         }
 
