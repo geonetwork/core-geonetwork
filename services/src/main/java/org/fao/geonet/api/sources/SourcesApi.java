@@ -225,8 +225,8 @@ public class SourcesApi {
             Source source,
         @Parameter(hidden = true)
             HttpServletRequest request) throws Exception {
-        Source existingSource = sourceRepository.findById(sourceIdentifier).get();
-        if (existingSource != null) {
+        Optional<Source> existingSource = sourceRepository.findById(sourceIdentifier);
+        if (existingSource.isPresent()) {
             updateSource(sourceIdentifier, source, sourceRepository);
             copySourceLogo(source, request);
         } else {
@@ -262,20 +262,20 @@ public class SourcesApi {
         @Parameter(hidden = true)
             HttpServletRequest request
     ) throws ResourceNotFoundException {
-        Source existingSource = sourceRepository.findById(sourceIdentifier).get();
-        if (existingSource != null) {
-            if (existingSource.getLogo() != null) {
+        Optional<Source> existingSource = sourceRepository.findById(sourceIdentifier);
+        if (existingSource.isPresent()) {
+            if (existingSource.get().getLogo() != null) {
                 ServiceContext context = ApiUtils.createServiceContext(request);
                 final Resources resources = context.getBean(Resources.class);
                 final Path logoDir = resources.locateLogosDir(context);
                 try {
-                    resources.deleteImageIfExists(existingSource.getUuid() + "." +
-                            FilenameUtils.getExtension(existingSource.getLogo()),
+                    resources.deleteImageIfExists(existingSource.get().getUuid() + "." +
+                            FilenameUtils.getExtension(existingSource.get().getLogo()),
                         logoDir);
                 } catch (IOException ignored) {
                 }
             }
-            sourceRepository.delete(existingSource);
+            sourceRepository.delete(existingSource.get());
         } else {
             throw new ResourceNotFoundException(String.format(
                 "Source with uuid '%s' does not exist.",
