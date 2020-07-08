@@ -27,6 +27,7 @@ package org.fao.geonet.repository;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -88,8 +89,8 @@ public class MetadataStatusRepositoryTest extends AbstractSpringDataTest {
         assertEquals(3, _repo.count());
         _repo.deleteAllById_MetadataId(status1.getId().getMetadataId());
         assertEquals(1, _repo.count());
-        assertNull(_repo.findById(status1.getId()).get());
-        assertNull(_repo.findById(status2.getId()).get());
+        assertFalse(_repo.findById(status1.getId()).isPresent());
+        assertFalse(_repo.findById(status2.getId()).isPresent());
 
         final List<MetadataStatus> all = _repo.findAll();
         assertEquals(1, all.size());

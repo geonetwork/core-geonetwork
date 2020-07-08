@@ -135,7 +135,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
         assertSameContents(metadata, _repo.findById(metadata.getId()).get());
 
-        assertNull(_repo.findById(213213215).get());
+        assertFalse(_repo.findById(213213215).isPresent());
     }
 
     @Test

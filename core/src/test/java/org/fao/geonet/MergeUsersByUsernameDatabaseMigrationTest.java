@@ -120,9 +120,9 @@ public class MergeUsersByUsernameDatabaseMigrationTest extends AbstractCoreInteg
         userTmp.setUsername(greatestProfileUser.getUsername().toLowerCase());
 
         migration.run(_applicationContext);
-        assertNull(_userRepo.findById(user1.getId()).get());
-        assertNull(_userRepo.findById(user2.getId()).get());
-        assertNull(_userRepo.findById(user3.getId()).get());
+        assertFalse(_userRepo.findById(user1.getId()).isPresent());
+        assertFalse(_userRepo.findById(user2.getId()).isPresent());
+        assertFalse(_userRepo.findById(user3.getId()).isPresent());
         User mergedUser = _userRepo.findById(greatestProfileUser.getId()).get();
         assertNotNull(mergedUser);
         assertEquals(userTmp.getUsername(), mergedUser.getUsername());

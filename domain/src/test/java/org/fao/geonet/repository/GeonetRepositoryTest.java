@@ -145,8 +145,8 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
         assertEquals(1, _repo.count());
 
         assertNotNull(_repo.findById(md.getId()).get());
-        assertNull(_repo.findById(md2.getId()).get());
-        assertNull(_repo.findById(md3.getId()).get());
+        assertFalse(_repo.findById(md2.getId()).isPresent());
+        assertFalse(_repo.findById(md3.getId()).isPresent());
 
         assertEquals(md.getId(), _repo.findAll().get(0).getId());
     }
