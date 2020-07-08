@@ -42,8 +42,17 @@
             scope: {},
             link: function(scope, element, attrs) {
               scope.showErrors = attrs.initialShowErrors == 'true';
+              if (attrs.initialShowErrors === undefined) {
+                  scope.showErrors = true; //default
+              }
               scope.showSuccess = attrs.initialShowSuccesses == 'true';
+              if (attrs.initialShowSuccesses === undefined) {
+                  scope.showSuccess = true; //default
+              }
               scope.initialSectionsClosed = (attrs.initialSectionStates == "closed") ? "true":"false";
+              if (attrs.initialSectionStates === undefined) {
+                  scope.initialSectionsClosed = "true"; //default
+              }
               scope.alwaysOnTop = false;
               scope.gnCurrentEdit = gnCurrentEdit;
               scope.loading = false;
