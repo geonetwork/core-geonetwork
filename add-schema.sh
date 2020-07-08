@@ -7,7 +7,7 @@ function showUsage
   echo -e "Usage: ./`basename $0 $1` schema_name git_schema_repository git_schema_branch"
   echo
   echo -e "Example:"
-  echo -e "\t./`basename $0 $1` iso19115-3 https://github.com/metadata101/iso19115-3 3.11.x"
+  echo -e "\t./`basename $0 $1` iso19139.ca.HNAP https://github.com/metadata101/iso19139.ca.HNAP 3.11.x"
   echo
 }
 
@@ -77,8 +77,8 @@ then
 
   echo "Adding schema ${schema} dependency to web/pom.xml for schemaCopy"
 
-  line=$(grep -n 'schema-iso19115-3.2018</artifactId>' web/pom.xml | cut -d: -f1 | tail -1)
-  insertLine=$(($line + 2))
+  line=$(grep -n '<!-- add schema_plugins -->' web/pom.xml | cut -d: -f1 | tail -1)
+  insertLine=$(($line))
   sed $sedopt -f /dev/stdin web/pom.xml << SED_SCRIPT
   ${insertLine} a\\
 \        <dependency>\\
@@ -94,7 +94,7 @@ SED_SCRIPT
   insertLine=$(($line - 1))
   sed $sedopt -f /dev/stdin web/pom.xml << SED_SCRIPT
   ${insertLine} a\\
-\\
+\
 \    <profile>\\
 \      <id>schema-${schema}</id>\\
 \      <activation>\\

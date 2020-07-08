@@ -50,27 +50,10 @@
     <module>dublin-core</module>
     <module>iso19110</module>
     <module>iso19139</module>
+    <module>iso19115-3.2018</module>
   </modules>
 
   <profiles>
-    <profile>
-      <id>schema-iso19115-3-2018</id>
-      <activation>
-        <file><exists>iso19115-3.2018</exists></file>
-      </activation>
-      <modules>
-        <module>iso19115-3.2018</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>hnap</id>
-      <activation>
-        <file><exists>iso19139.ca.HNAP</exists></file>
-      </activation>
-      <modules>
-        <module>iso19139.ca.HNAP</module>
-      </modules>
-    </profile>
   </profiles>
 
   <properties>
