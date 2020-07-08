@@ -54,6 +54,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RequestMapping(value = {
@@ -121,8 +122,8 @@ public class UiSettingApi {
             ));
         }
 
-        UiSetting one = uiSettingsRepository.findById(uiConfiguration.getId()).get();
-        if (one != null) {
+        Optional<UiSetting> one = uiSettingsRepository.findById(uiConfiguration.getId());
+        if (one.isPresent()) {
             throw new IllegalArgumentException(String.format(
                 "A UI configuration with id '%d' already exist", uiConfiguration.getId()
             ));
@@ -157,14 +158,14 @@ public class UiSettingApi {
         @PathVariable
             String uiIdentifier
     ) throws Exception {
-        UiSetting uiConfiguration = uiSettingsRepository.findById(uiIdentifier).get();
-        if (uiConfiguration == null) {
+        Optional<UiSetting> uiConfiguration = uiSettingsRepository.findById(uiIdentifier);
+        if (!uiConfiguration.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "UI configuration with id '%s' does not exist.",
                 uiIdentifier
             ));
         }
-        return uiConfiguration;
+        return uiConfiguration.get();
     }
 
 
