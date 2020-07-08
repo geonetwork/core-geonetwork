@@ -58,10 +58,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @EnableWebMvc
 @Service
@@ -374,8 +371,8 @@ public class UserSearchesApi {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
 
-        final UserSearch existing = userSearchRepository.findById(searchIdentifier).get();
-        if (existing == null) {
+        final Optional<UserSearch> existing = userSearchRepository.findById(searchIdentifier);
+        if (!existing.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 MSG_USERSEARCH_WITH_IDENTIFIER_NOT_FOUND, searchIdentifier
             ));
@@ -446,12 +443,12 @@ public class UserSearchesApi {
      */
     private UserSearch retrieveUserSearch(UserSearchRepository userSearchRepository, Integer searchIdentifier)
         throws ResourceNotFoundEx {
-        UserSearch userSearch = userSearchRepository.findById(searchIdentifier).get();
+        Optional<UserSearch> userSearch = userSearchRepository.findById(searchIdentifier);
 
-        if (userSearch == null) {
+        if (!userSearch.isPresent()) {
             throw new ResourceNotFoundEx("User search not found");
         }
 
-        return userSearch;
+        return userSearch.get();
     }
 }

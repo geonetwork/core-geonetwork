@@ -153,9 +153,9 @@ public class UsersApi {
 
         if (myProfile.equals(Profile.Administrator) || myProfile.equals(Profile.UserAdmin) ||
             myUserId.equals(Integer.toString(userIdentifier))) {
-            User user = userRepository.findById(userIdentifier).get();
+            Optional<User> user = userRepository.findById(userIdentifier);
 
-            if (user == null) {
+            if (!user.isPresent()) {
                 throw new UserNotFoundEx(Integer.toString(userIdentifier));
             }
 
@@ -170,7 +170,7 @@ public class UsersApi {
                 }
             }
 
-            return user;
+            return user.get();
         } else {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
@@ -505,16 +505,16 @@ public class UsersApi {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
 
-        User user = userRepository.findById(userIdentifier).get();
-        if (user == null) {
+        Optional<User> user = userRepository.findById(userIdentifier);
+        if (!user.isPresent()) {
             throw new UserNotFoundEx(Integer.toString(userIdentifier));
         }
 
         String passwordHash = PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
             password);
-        user.getSecurity().setPassword(passwordHash);
-        user.getSecurity().getSecurityNotifications().remove(UserSecurityNotification.UPDATE_HASH_REQUIRED);
-        userRepository.save(user);
+        user.get().getSecurity().setPassword(passwordHash);
+        user.get().getSecurity().getSecurityNotifications().remove(UserSecurityNotification.UPDATE_HASH_REQUIRED);
+        userRepository.save(user.get());
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

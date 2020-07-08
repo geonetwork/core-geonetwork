@@ -41,6 +41,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Date;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -108,8 +109,8 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
 
-        userSearchToDelete = userSearchRepository.findById(userSearchToDelete.getId()).get();
-        Assert.assertNull(userSearchToDelete);
+        Optional<UserSearch> userSearchDeleted = userSearchRepository.findById(userSearchToDelete.getId());
+        Assert.assertFalse(userSearchDeleted.isPresent());
     }
 
 

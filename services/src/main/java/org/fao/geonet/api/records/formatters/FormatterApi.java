@@ -792,8 +792,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             long changeDate = fparams.metadataInfo.getDataInfo().getChangeDate().toDate().getTime();
             final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
             final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(key.mdId);
-            final OperationAllowed one = serviceContext.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished)).get();
-            final boolean isPublishedMd = one != null;
+            final Optional<OperationAllowed> one = serviceContext.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished));
+            final boolean isPublishedMd = one.isPresent();
 
             Key withheldKey = null;
             FormatMetadata loadWithheld = null;
