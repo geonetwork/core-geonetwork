@@ -13,9 +13,13 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu">
-      <li role="menuitem">
+      <li role="menuitem"
+          data-ng-if="user.canEditRecord(md) && user.isEditorOrMore() && md.draft != 'y'"
+          data-ng-class="
+            (md.isPublished() || (allowPublishInvalidMd() === true) ||
+            (!md.isPublished() && (allowPublishInvalidMd() === false) &&
+            (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'">
         <a data-ng-href=""
-             data-ng-if="user.canEditRecord(md) && user.isEditorOrMore() && md.draft != 'y'"
              data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())">
           <i class="fa fa-fw fa-key"></i>&nbsp;
           <span data-translate="">privileges</span>
