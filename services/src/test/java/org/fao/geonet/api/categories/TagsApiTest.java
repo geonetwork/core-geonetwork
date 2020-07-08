@@ -40,6 +40,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -91,8 +92,8 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getNonExistingTag() throws Exception {
-        MetadataCategory category = _categoriesRepo.findById(222).get();
-        Assert.assertNull(category);
+        Optional<MetadataCategory> category = _categoriesRepo.findById(222);
+        Assert.assertFalse(category.isPresent());
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
@@ -116,8 +117,8 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void deleteNonExistingTag() throws Exception {
-        MetadataCategory category = _categoriesRepo.findById(222).get();
-        Assert.assertNull(category);
+        Optional<MetadataCategory> category = _categoriesRepo.findById(222);
+        Assert.assertFalse(category.isPresent());
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
@@ -183,8 +184,8 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void updateNonExistingTag() throws Exception {
-        MetadataCategory category = _categoriesRepo.findById(222).get();
-        Assert.assertNull(category);
+        Optional<MetadataCategory> category = _categoriesRepo.findById(222);
+        Assert.assertFalse(category.isPresent());
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
