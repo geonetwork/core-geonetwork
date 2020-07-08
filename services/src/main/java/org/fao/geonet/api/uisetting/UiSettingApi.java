@@ -196,8 +196,8 @@ public class UiSettingApi {
             UiSetting uiConfiguration,
         @Parameter(hidden = true) HttpSession httpSession
     ) throws Exception {
-        UiSetting one = uiSettingsRepository.findById(uiIdentifier).get();
-        if (one != null) {
+        Optional<UiSetting> one = uiSettingsRepository.findById(uiIdentifier);
+        if (one.isPresent()) {
             // For user admin, check that the UI is used by a portal managed by the user.
             UserSession session = ApiUtils.getUserSession(httpSession);
             boolean isUserAdmin = session.getProfile().equals(Profile.UserAdmin);
@@ -254,8 +254,8 @@ public class UiSettingApi {
         @PathVariable
             String uiIdentifier
     ) throws Exception {
-        UiSetting one = uiSettingsRepository.findById(uiIdentifier).get();
-        if (one != null) {
+        Optional<UiSetting> one = uiSettingsRepository.findById(uiIdentifier);
+        if (one.isPresent()) {
             uiSettingsRepository.deleteById(uiIdentifier);
         } else {
             throw new ResourceNotFoundException(String.format(

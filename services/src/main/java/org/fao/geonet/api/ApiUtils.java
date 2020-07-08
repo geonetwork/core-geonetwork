@@ -152,6 +152,7 @@ public class ApiUtils {
                 Log.trace(Geonet.DATA_MANAGER, "ApiUtils.getRecord(" + uuidOrInternalId + ") -> " + metadata);
                 return metadata;
             }
+        } catch (NumberFormatException e) {
         } catch (InvalidDataAccessApiUsageException e) {
         }
 
