@@ -140,8 +140,8 @@
       });
 
       $scope.updateSource = function() {
-        var url = '../api/sources/' + (
-          $scope.isNew ? '' : $scope.source.uuid);
+        var url = '../api/sources' + (
+          $scope.isNew ? '' : '/' + $scope.source.uuid);
         $http.put(url,
                   $scope.source)
             .success(function(data) {
