@@ -128,7 +128,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
         int threadCount = ThreadUtils.getNumberOfThreads();
 
         if (runInCurrentThread) {
-            executor = MoreExecutors.sameThreadExecutor();
+            executor = MoreExecutors.newDirectExecutorService();
         } else {
             executor = Executors.newFixedThreadPool(threadCount);
         }
