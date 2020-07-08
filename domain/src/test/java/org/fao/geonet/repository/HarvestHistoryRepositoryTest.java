@@ -144,7 +144,7 @@ public class HarvestHistoryRepositoryTest extends AbstractSpringDataTest {
         assertEquals(1, found.size());
         assertEquals(history2.getId(), found.get(0).getId());
 
-        assertNull(_repo.findById(history1.getId()).get());
+        assertFalse(_repo.findById(history1.getId()).isPresent());
     }
 
     private HarvestHistory newHarvestHistory() {

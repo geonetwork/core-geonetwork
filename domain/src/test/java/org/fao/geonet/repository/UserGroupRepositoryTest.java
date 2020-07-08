@@ -198,7 +198,7 @@ public class UserGroupRepositoryTest extends AbstractSpringDataTest {
         assertTrue(_repo.existsById(ug3.getId()));
         assertTrue(_repo.existsById(ug4.getId()));
 
-        assertNull(_repo.findById(ug1.getId()).get());
+        assertFalse(_repo.findById(ug1.getId()).isPresent());
     }
 
     private UserGroup newUserGroup() {
