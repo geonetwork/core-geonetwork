@@ -397,10 +397,14 @@ public class Importer {
                 }
 
 
-                importRecord(uuid, uuidAction, md, schema, index,
-                    source, sourceName, sourceTranslations,
-                    context, metadataIdMap, createDate,
-                    changeDate, groupId, isTemplate);
+                try {
+                    importRecord(uuid, uuidAction, md, schema, index,
+                       source, sourceName, sourceTranslations,
+                       context, metadataIdMap, createDate,
+                       changeDate, groupId, isTemplate);
+                } catch (Exception e) {
+                        throw new Exception("Failed to import metadata with uuid '" + uuid + "'. " + e.getLocalizedMessage(), e);
+                }
 
                 if (fc.size() != 0 && fc.get(index) != null) {
                     // UUID is set as @uuid in root element
