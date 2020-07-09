@@ -10,7 +10,7 @@
 
     <p data-ng-show="a.error['class']"><i>{{a.error['class'] | translate}}</i></p>
     <!-- alert has msg or error, error sometimes is a direct string, or has message, description & stack properties -->
-    <p>{{a.msg||a.error.message||a.error}}</p>
+    <p  ng-bind-html="a.msg||a.error.message||a.error"></p>
     <p data-ng-show="a.error.description">{{a.error.description}}</p>
     <code data-ng-show="a.error.stack" class="gn-stack">{{a.error.stack}}</code>
 
