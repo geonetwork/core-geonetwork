@@ -180,7 +180,8 @@
       $scope.finalParams = finalParams;
 
       var esParams = gnESService.generateEsRequest(finalParams, $scope.searchObj.state, $scope.searchObj.configId);
-      gnESClient.search(esParams, $scope.searchResults.selectionBucket || 'metadata').then(function(data) {
+      gnESClient.search(esParams, $scope.searchResults.selectionBucket || 'metadata', $scope.searchObj.configId)
+        .then(function(data) {
         // data is not an object: this is an error
         if (typeof data !== 'object') {
           gnAlertService.addAlert({

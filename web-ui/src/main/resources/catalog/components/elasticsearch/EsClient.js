@@ -40,10 +40,10 @@
       return ES_API_URL + service;
     };
 
-    this.search = function(params, selectionBucket) {
+    this.search = function(params, selectionBucket, configId) {
       return callApi('_search', params, selectionBucket).then(
         function(response) {
-          return gnESFacet.getUIModel(response, params);
+          return gnESFacet.getUIModel(response, params, configId);
         }
       );
     };

@@ -28,7 +28,8 @@
 
   var DEFAULT_SIZE = 10;
 
-  module.service('gnESFacet', ['gnGlobalSettings', 'gnTreeFromSlash', function(gnGlobalSettings, gnTreeFromSlash) {
+  module.service('gnESFacet', ['gnGlobalSettings', 'gnTreeFromSlash',
+    function(gnGlobalSettings, gnTreeFromSlash) {
 
     var defaultSource = {
       includes: [
@@ -144,7 +145,12 @@
     };
 
     this.addFacets = function(esParams, type) {
-      var aggs = typeof type === 'string' ? this.configs[type].facets : type;
+      var aggs = typeof type === 'string' ?
+        angular.copy(this.configs[type].facets, {}) :
+        type;
+      angular.forEach(aggs, function(facet) {
+        delete facet.userHasRole;
+      });
       esParams.aggregations = aggs;
     };
 
@@ -161,14 +167,14 @@
       }
     };
 
-    this.getUIModel = function(response, request) {
+    this.getUIModel = function(response, request, configId) {
       var listModel;
-      listModel = createFacetModel(request.aggregations, response.data.aggregations)
+      listModel = this.createFacetModel(request.aggregations, response.data.aggregations, undefined, undefined, configId)
       response.data.facets = listModel;
       return response.data;
     };
 
-    function createFacetModel(reqAggs, respAggs, isNested, path) {
+    this.createFacetModel = function(reqAggs, respAggs, isNested, path, configId) {
       var listModel = [];
       if (respAggs == undefined) {
         return;
@@ -179,6 +185,9 @@
 
         var facetModel = {
           key: fieldId,
+          userHasRole: configId && this.configs[configId].facets
+            && this.configs[configId].facets[fieldId]
+            && this.configs[configId].facets[fieldId].userHasRole,
           items: [],
           path: (path || []).concat([fieldId])
         };
