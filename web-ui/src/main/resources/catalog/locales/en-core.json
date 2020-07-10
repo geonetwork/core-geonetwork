@@ -524,5 +524,6 @@
     "workingCopy": "Working copy",
     "onTheWeb": "More online information",
     "pdfReportTocTitle": "Contents",
-    "metadataValidated": "Metadata validated."
+    "metadataValidated": "Metadata validated.",
+    "wmtsLayerNoUsableMatrixSet": "The WMTS layer could not be added. This may be because none of the projections advertised in the service matches any of the known projections of the application."
 }

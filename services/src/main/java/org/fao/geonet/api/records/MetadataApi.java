@@ -303,7 +303,6 @@ public class MetadataApi {
             isJson ? "json" : "xml"
         ));
         return isJson ? Xml.getJSON(xml) : xml;
-        //return xml;
     }
 
     @io.swagger.v3.oas.annotations.Operation(

@@ -31,6 +31,7 @@
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
                 xmlns:java="java:org.fao.geonet.util.XslUtil"
                 version="2.0"
                 exclude-result-prefixes="#all">
@@ -159,8 +160,15 @@
     <xsl:variable name="thesaurusIdentifier"
                   select="normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text())"/>
 
-    <xsl:variable name="thesaurusTitle"
-                  select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString|gmx:Anchor)"/>
+    <xsl:variable name="langId" select="gn-fn-iso19139:getLangId(., $lang)"/>
+
+    <xsl:variable name="thesaurusTitle">
+      <xsl:for-each select="gmd:thesaurusName/gmd:CI_Citation/gmd:title">
+        <xsl:call-template name="localised">
+          <xsl:with-param name="langId" select="$langId"/>
+        </xsl:call-template>
+      </xsl:for-each>
+    </xsl:variable>
 
 
     <xsl:variable name="thesaurusConfig"
