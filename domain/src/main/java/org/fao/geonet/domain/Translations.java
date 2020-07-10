@@ -56,7 +56,7 @@ public class Translations extends GeonetEntity implements Serializable {
     private static final long serialVersionUID = -2893765878557173596L;
     private static final int ID_COLUMN_LENGTH = 10;
     private static final int LANG_ID_COLUMN_LENGTH = 5;
-    private static final int FIELD_NAME_COLUMN_LENGTH = 32;
+    private static final int FIELD_NAME_COLUMN_LENGTH = 255;
     private int _id = 0;
     private String _langId;
     private String _fieldName;
