@@ -530,8 +530,7 @@
                   data-ng-if="mdView.current.record.creationDateForResource ||
                               mdView.current.record.publicationDateForResource ||
                               mdView.current.record.revisionDateForResource ||
-                              mdView.current.record.tempExtentBegin ||
-                              mdView.current.record.tempExtentEnd">
+                              mdView.current.record.resourceTemporalDateRange">
             <h2>
               <i class="fa fa-fw fa-clock-o"></i>
               <span data-translate="">tempExtent</span>
@@ -557,13 +556,14 @@
                   data-format="YYYY-MM-DD"/>
             </dl>
             <dl
-              data-ng-show="mdView.current.record.tempExtentBegin ||
-                                mdView.current.record.tempExtentEnd">
+              data-ng-show="mdView.current.record.resourceTemporalExtentDateRange">
               <dt data-translate>tempExtentBegin</dt>
-              <dd>
-                <span data-gn-humanize-time="{{mdView.current.record.tempExtentBegin}}"/>
+              <dd data-ng-repeat="range in mdView.current.record.resourceTemporalExtentDateRange">
+                <span data-gn-humanize-time="{{range.gte}}"
+                      data-format="YYYY-MM-DD"/>
                 &nbsp;<i class="fa fa-fw fa-forward"></i>
-                <span data-gn-humanize-time="{{mdView.current.record.tempExtentEnd}}"/>
+                <span data-gn-humanize-time="{{range.lte}}"
+                      data-format="YYYY-MM-DD"/>
               </dd>
             </dl>
             </p>
