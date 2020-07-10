@@ -49,15 +49,20 @@ def _replace_urls(html, site_url, sextant_live_host, sextant_test_host):
 
     soup = BeautifulSoup(html, features="html5lib")
     for base in soup.findAll("base"):
-        base.unwrap()
+        base_parts = urlsplit(base["href"])
+        base["href"] = base_parts.path
     for a in soup.findAll("a"):
-        if a["href"].startswith("//"):
+        try:
+            if a["href"].startswith("//"):
+                continue
+            if a["href"].startswith(".."):
+                a["href"] = _to_absolute_url(a["href"], site_url)
+            if a["href"].startswith(tuple(base_site_url_lookup)):
+                for i in base_site_url_lookup:
+                    a["href"] = a["href"].replace(i, site_host, 1)
+        except KeyError as err:
+            print("  Warning: expected key {} not found, skipping element".format(err))
             continue
-        if a["href"].startswith(".."):
-            a["href"] = _to_absolute_url(a["href"], site_url)
-        if a["href"].startswith(tuple(base_site_url_lookup)):
-            for i in base_site_url_lookup:
-                a["href"] = a["href"].replace(i, site_host, 1)
     for img in soup.findAll("img"):
         if img["src"].startswith("//"):
             continue
