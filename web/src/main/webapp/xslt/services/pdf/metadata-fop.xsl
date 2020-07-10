@@ -260,7 +260,7 @@
                                           select="concat($nodeUrl, 'api/records/', uuid, '/extents.png')"/>
 
                             <fo:basic-link text-decoration="underline"
-                                           color="$link-color"
+                                           color="{$link-color}"
                                            external-destination="{$url}">
                               <fo:external-graphic padding-left="4pt"
                                                    content-width="100%">
@@ -344,18 +344,18 @@
                           <fo:inline>
                             <xsl:value-of select="$translations/show"/>
                             <xsl:text> </xsl:text>
-                            <fo:basic-link text-decoration="underline" color="$link-color">
+                            <fo:basic-link text-decoration="underline" color="{$link-color}">
                               <xsl:attribute name="external-destination">url('<xsl:value-of
                                 select="concat($nodeUrl, 'api/records/', uuid)"
                               />')
                               </xsl:attribute>HTML
                             </fo:basic-link>
-                            <fo:basic-link text-decoration="underline" color="$link-color">
+                            <fo:basic-link text-decoration="underline" color="{$link-color}">
                               <xsl:attribute name="external-destination">url('<xsl:value-of
                                 select="concat($nodeUrl, 'api/records/', uuid, '/formatters/xsl-view?view=advanced&amp;output=pdf')"/>')
                               </xsl:attribute>PDF
                             </fo:basic-link>
-                            <fo:basic-link text-decoration="underline" color="$link-color">
+                            <fo:basic-link text-decoration="underline" color="{$link-color}">
                               <xsl:attribute name="external-destination">url('<xsl:value-of
                                 select="concat($nodeUrl, 'api/records/', uuid, '/formatters/xml')"
                               />')
@@ -423,7 +423,7 @@
           <xsl:for-each select="link">
             <xsl:variable name="link" select="tokenize(., '\|')"/>
 
-            <fo:basic-link text-decoration="underline" color="$link-color">
+            <fo:basic-link text-decoration="underline" color="{$link-color}">
               <xsl:attribute name="external-destination">url('<xsl:value-of select="$link[3]"/>')
               </xsl:attribute>
               <xsl:value-of select="$link[1]"/>
@@ -441,7 +441,7 @@
     <xsl:param name="value"/>
     <xsl:param name="content"/>
     <fo:table-row>
-      <fo:table-cell background-color="{if ($label != '') then $background-color else ''}"
+      <fo:table-cell background-color="{if ($label != '') then $background-color else '#DDDDDD'}"
                      border-top-style="solid"
                      border-top-color="{$title-color}" border-top-width=".1pt"
                      color="{$font-color}"
