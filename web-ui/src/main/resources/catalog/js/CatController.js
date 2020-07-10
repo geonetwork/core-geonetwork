@@ -307,6 +307,7 @@ goog.require('gn_alert');
               }
             },
             "dateStamp" : {
+              'userHasRole': 'isReviewerOrMore',
               "auto_date_histogram" : {
                 "field" : "dateStamp",
                 "buckets": 50

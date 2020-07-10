@@ -66,11 +66,22 @@
       this.fLvlCollapse[this.list[i].key] = true;
     }
   }
+
   FacetsController.prototype.expandAll = function () {
     for (var i = 0; i < this.list.length; i++) {
       this.fLvlCollapse[this.list[i].key] = false;
     }
   }
+
+  FacetsController.prototype.isVisibleForUser = function (facet) {
+    var user = this.$scope.$parent.user;
+    if (user && facet.userHasRole && user[facet.userHasRole]) {
+      return user[facet.userHasRole]();
+    } else {
+      return facet.userHasRole ? false : true;
+    }
+  }
+
   FacetsController.prototype.loadMoreTerms = function (facet) {
     this.searchCtrl.loadMoreTerms(facet).then(function (terms) {
       angular.merge(facet, terms);
