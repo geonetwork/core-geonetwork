@@ -7,6 +7,7 @@
           <input type="text"
                 class="form-control input-lg"
                 autofocus=""
+                autocomplete="off"
                 data-ng-model="homeAnyField"
                 data-ng-model-options="modelOptions"
                 placeholder="{{'anyPlaceHolder' | translate}}"
@@ -157,7 +158,7 @@
     </div>
   </div>
   <!-- /.gn-row-topics -->
-  
+
   <div class="row gn-row-info"
        data-ng-show="searchInfo.count > 0"
        data-ng-class="{'gn-info-list-blocks': type === 'blocks' || type === undefined, 'gn-info-list-large': type === 'large', 'gn-info-list-small': type === 'small'}">
