@@ -362,7 +362,7 @@ public class EsHTTPProxy {
         return "";
     }
 
-    private String buildPermissionsFilter(ServiceContext context) throws Exception {
+    public String buildPermissionsFilter(ServiceContext context) throws Exception {
         final UserSession userSession = context.getUserSession();
 
         // If admin you can see all

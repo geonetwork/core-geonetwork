@@ -39,20 +39,23 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.es.EsHTTPProxy;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.records.rdf.RdfOutputManager;
 import org.fao.geonet.api.records.rdf.RdfSearcher;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.guiapi.search.XsltResponseWriter;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,9 +130,15 @@ public class CatalogApi {
     @Autowired
     EsSearchManager searchManager;
     @Autowired
+    AccessManager accessManage;
+    @Autowired
     SettingInfo settingInfo;
     @Autowired
     private ServletContext servletContext;
+    @Autowired
+    EsHTTPProxy esHTTPProxy;
+    @Autowired
+    LanguageUtils languageUtils;
 
     /*
      * <p>Retrieve all parameters (except paging parameters) as a string.</p>
@@ -240,27 +249,41 @@ public class CatalogApi {
         SelectionManager selectionManger = SelectionManager.getManager(session);
         Log.info(Geonet.MEF, "Current record(s) in selection: " + uuidList.size());
 
-        // If provided uuid, export the metadata record only
-        selectionManger.close(SelectionManager.SELECTION_METADATA);
-        selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA, uuidList);
-
         ServiceContext context = ApiUtils.createServiceContext(request);
         MEFLib.Version version = MEFLib.Version.find(acceptHeader);
         if (version == MEFLib.Version.V1) {
             throw new IllegalArgumentException("MEF version 1 only support one record. Use the /records/{uuid}/formatters/zip to retrieve that format");
         } else {
+            Set<String> allowedUuid = new HashSet<String>();
+            for (Iterator<String> iter = uuidList.iterator(); iter.hasNext(); ) {
+                String uuid = iter.next();
+                try {
+                    ApiUtils.canViewRecord(uuid, request);
+                    allowedUuid.add(uuid);
+                } catch (Exception e) {
+                    Log.debug(API.LOG_MODULE_NAME, String.format(
+                        "Not allowed to export record '%s'.", uuid));
+                }
+            }
+
+            // If provided uuid, export the metadata record only
+            selectionManger.close(SelectionManager.SELECTION_METADATA);
+            selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA,
+                allowedUuid);
+
             // MEF version 2 support multiple metadata record by file.
             if (withRelated) {
                 int maxhits = Integer.parseInt(settingInfo.getSelectionMaxRecords());
 
                 Set<String> tmpUuid = new HashSet<String>();
-                for (Iterator<String> iter = uuidList.iterator(); iter.hasNext(); ) {
+                for (Iterator<String> iter = allowedUuid.iterator(); iter.hasNext(); ) {
                     String uuid = iter.next();
 
                     // Search for children records
                     // and service record. At some point this might be extended to all type of relations.
                     final SearchResponse searchResponse = searchManager.query(
-                        String.format("parentUuid:\"%s\" recordOperateOn:\"%s\"", uuid, uuid), null,
+                        String.format("parentUuid:\"%s\" recordOperateOn:\"%s\"", uuid, uuid),
+                        esHTTPProxy.buildPermissionsFilter(ApiUtils.createServiceContext(request)),
                         FIELDLIST_UUID, 0, maxhits);
 
                     Arrays.asList(searchResponse.getHits().getHits()).forEach(h ->
@@ -270,13 +293,13 @@ public class CatalogApi {
                 if (selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA, tmpUuid)) {
                     Log.info(Geonet.MEF, "Child and services added into the selection");
                 }
-                uuidList = selectionManger.getSelection(SelectionManager.SELECTION_METADATA);
+                allowedUuid = selectionManger.getSelection(SelectionManager.SELECTION_METADATA);
             }
 
             Log.info(Geonet.MEF, "Building MEF2 file with " + uuidList.size()
                 + " records.");
             try {
-                file = MEFLib.doMEF2Export(context, uuidList, format.toString(),
+                file = MEFLib.doMEF2Export(context, allowedUuid, format.toString(),
                     false, stylePath,
                     withXLinksResolved, withXLinkAttribute,
                     false, addSchemaLocation, approved);
@@ -348,8 +371,11 @@ public class CatalogApi {
         int maxhits = Integer.parseInt(settingInfo.getSelectionMaxRecords());
 
         final SearchResponse searchResponse = searchManager.query(
-            String.format("uuid:(\"%s\")", String.join("\" or \"", uuidList)),
-            "*:*", FIELDLIST_PDF, 0, maxhits);
+            String.format(
+                "uuid:(\"%s\")",
+                String.join("\" or \"", uuidList)),
+            esHTTPProxy.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
+            FIELDLIST_PDF, 0, maxhits);
 
 
         Map<String, Object> params = new HashMap<>();
@@ -410,9 +436,13 @@ public class CatalogApi {
             response.addContent(r);
         });
 
+        Locale locale = languageUtils.parseAcceptLanguage(httpRequest.getLocales());
+        String language = LanguageUtils.locale2gnCode(locale.getISO3Language());
+        language = XslUtil.twoCharLangCode(language, "eng").toLowerCase();
+
         new XsltResponseWriter("env", "search")
-            .withJson("catalog/locales/en-core.json")
-            .withJson("catalog/locales/en-search.json")
+            .withJson(String.format("catalog/locales/%s-core.json", language))
+            .withJson(String.format("catalog/locales/%s-search.json", language))
             .withXml(response)
             .withParams(params)
             .withXsl("xslt/services/pdf/portal-present-fop.xsl")
@@ -467,7 +497,8 @@ public class CatalogApi {
 
         final SearchResponse searchResponse = searchManager.query(
             String.format("uuid:(\"%s\")", String.join("\" or \"", uuidList)),
-            "*:*", FIELDLIST_CORE, 0, maxhits);
+            esHTTPProxy.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
+            FIELDLIST_CORE, 0, maxhits);
 
         Element response = new Element("response");
         Arrays.asList(searchResponse.getHits().getHits()).forEach(h -> {
