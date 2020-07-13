@@ -432,8 +432,8 @@
           if (config.isDateTime) {
             if (values.from && values.to) {
               where = where.concat([
-                '(' + paramName + ' > ' + transformDate(values.from) + ')',
-                '(' + paramName + ' < ' + transformDate(values.to) + ')'
+                '(' + config.maxField + ' >= ' + transformDate(values.from) + ')',
+                '(' + config.minField + ' <= ' + transformDate(values.to) + ')'
               ]);
             }
             return;
