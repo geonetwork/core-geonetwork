@@ -157,6 +157,12 @@
 
           //result.contents.Layer = result.contents.layers;
           result.Contents.operationsMetadata = result.OperationsMetadata;
+
+          var capUrlMatch = data.match(/<ServiceMetadataURL xlink:href="(.+)"/);
+          if (capUrlMatch) {
+            result.Contents.serviceMetadataURL = capUrlMatch[1];
+          }
+
           return result.Contents;
         };
 
