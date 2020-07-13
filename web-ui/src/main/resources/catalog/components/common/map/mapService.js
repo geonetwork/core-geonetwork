@@ -1724,9 +1724,11 @@
 
               //Asking WMTS service about capabilities
               var cap = {
-                  Contents: capabilities,
-                  OperationsMetadata: capabilities.operationsMetadata
+                  Contents: capabilities
               };
+              if (capabilities.operationsMetadata) {
+                cap.OperationsMetadata = capabilities.operationsMetadata;
+              }
 
               //OpenLayers expects an array of style objects having isDefault property
               angular.forEach(cap.Contents.Layer,function(l){
@@ -1751,25 +1753,35 @@
               }
 
               //Configuring url for service
-              var url = capabilities.operationsMetadata.GetCapabilities.DCP.HTTP.Get[0].href;
+              var url = capabilities.operationsMetadata ?
+                capabilities.operationsMetadata.GetCapabilities.DCP.HTTP.Get[0].href :
+                options.urls[0];
 
               //Configuring url for capabilities
-              var urlCap = capabilities.operationsMetadata.GetCapabilities.DCP.HTTP.Get[0].href;
-              var urlCapType = capabilities.operationsMetadata.GetCapabilities.
-              DCP.HTTP.Get[0].Constraint[0].AllowedValues.Value[0].toLowerCase();
+              var urlCap = ''
 
-              if (urlCapType == 'restful') {
-                if (urlCap.indexOf('/1.0.0/WMTSCapabilities.xml') == -1) {
-                  urlCap = urlCap + '/1.0.0/WMTSCapabilities.xml';
-                }
-              } else {
-                var parts = urlCap.split('?');
+              if (capabilities.serviceMetadataURL) {
+                urlCap = capabilities.serviceMetadataURL;
+              } else if(capabilities.operationsMetadata) {
+                urlCap = capabilities.operationsMetadata
+                  .GetCapabilities.DCP.HTTP.Get[0].href;
+                var urlCapType = capabilities.operationsMetadata
+                  .GetCapabilities.DCP.HTTP.Get[0].Constraint[0].AllowedValues.Value[0].toLowerCase();
 
-                urlCap = gnUrlUtils.append(parts[0],
+                if (urlCapType === 'restful') {
+                  if (urlCap.indexOf('/1.0.0/WMTSCapabilities.xml') === -1) {
+                    urlCap = urlCap + '/1.0.0/WMTSCapabilities.xml';
+                  }
+                } else {
+                  var parts = urlCap.split('?');
+
+                  urlCap = gnUrlUtils.append(parts[0],
                     gnUrlUtils.toKeyValue({
                       service: 'WMTS',
                       request: 'GetCapabilities',
-                      version: '1.0.0'}));
+                      version: '1.0.0'
+                    }));
+                }
               }
 
               //Create layer
