@@ -291,7 +291,7 @@
     aggs[field.name] = agg;
 
     var params = angular.copy(this.requestParams.qParams);
-    delete params[field.name];
+    if (params) delete params[field.name];
 
     return this.search_({
       any: this.requestParams.any,
