@@ -1752,7 +1752,7 @@
 
               //Asking WMTS service about capabilities
               var cap = {
-                  Contents: capabilities,
+                  Contents: capabilities
               };
               if (capabilities.operationsMetadata) {
                 cap.OperationsMetadata = capabilities.operationsMetadata;
