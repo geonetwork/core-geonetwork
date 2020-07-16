@@ -50,9 +50,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.validation.constraints.Null;
-
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
 
 /**
@@ -138,9 +135,6 @@ public class AtomServiceDescription implements Service {
             inspireAtomFeed = service.findByMetadataId(Integer.parseInt(id));
         } else {
             datasetIdentifiers = InspireAtomUtil.extractRelatedDatasetsIdentifiers(schema, md, dm);
-            if (datasetIdentifiers == Null){
-                Log.info(Geonet.ATOM, "No datasets in service");
-            }
         }
 
         // Get information from the the service atom feed.
