@@ -40,7 +40,7 @@ public class IndexedMetadataFetcher {
             Optional<String> optAppProfile = reader.document(tdocs.scoreDocs[0].doc).getFields().stream()
                 .filter(xIndexableField -> xIndexableField.name().equalsIgnoreCase("link"))
                 .map(x -> x.stringValue().split("\\|"))
-                .filter(x -> x.length >= 6)
+                .filter(x -> x.length >= 7)
                 .filter(x -> x[0].equals(typeName))
                 .filter(x -> x[3].equals("OGC:WFS"))
                 .map(x -> x[6]) // will contain the applicationProfile if it is defined.
