@@ -541,12 +541,12 @@
     <xsl:copy>
       <xsl:copy-of select="@uuidref"/>
       <xsl:choose>
-
         <!-- Do not expand operatesOn sub-elements when using uuidref
              to link service metadata to datasets or datasets to iso19110.
          -->
-        <xsl:when test="@uuidref">
+        <xsl:when test="@uuidref or @xlink:href">
           <xsl:choose>
+            <!-- Build xlink for internal records -->
             <xsl:when test="not(string(@xlink:href)) or starts-with(@xlink:href, $serviceUrl)">
               <xsl:attribute name="xlink:href">
                 <xsl:value-of
@@ -554,6 +554,7 @@
               </xsl:attribute>
             </xsl:when>
             <xsl:otherwise>
+              <!-- Preserve existing -->
               <xsl:copy-of select="@xlink:href"/>
             </xsl:otherwise>
           </xsl:choose>
