@@ -241,7 +241,7 @@ public class MetadataUtils {
                 }
 
                 if (!listOfUUIDs.isEmpty()) {
-                    String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
+                    String joinedUUIDs = "\"" + Joiner.on("\" or \"").join(listOfUUIDs) + "\"";
                     relatedRecords.addContent(calculateResults(joinedUUIDs, "datasets", context, from, to, fast, null, null, portalFilter));
                 }
 
@@ -378,7 +378,7 @@ public class MetadataUtils {
         final SearchResponse result = searchMan.query(
             String.format("+%s:(%s)%s", relatedIndexFields.get(type), uuid, excludeQuery), portalFilter, FIELDLIST_CORE, fromValue, (toValue - fromValue));
 
-        Element typeResponse = new Element(type);
+        Element typeResponse = new Element(type.equals("brothersAndSisters") ? "siblings" : type);
         if (result.getHits().getTotalHits().value > 0) {
             // Build the old search service response format
             Element response = new Element("response");
@@ -390,6 +390,7 @@ public class MetadataUtils {
 
                 setFieldFromIndexDocument(record, source, Geonet.IndexFieldNames.RESOURCETITLE, "title");
                 setFieldFromIndexDocument(record, source, Geonet.IndexFieldNames.RESOURCEABSTRACT, "abstract");
+                setFieldFromIndexDocument(record, source, "operatesOn", "operatesOn");
                 response.addContent(record);
             });
             typeResponse.addContent(response);
@@ -399,16 +400,18 @@ public class MetadataUtils {
 
     private static void setFieldFromIndexDocument(Element record, Map<String, Object> source, String fieldName, String elementName) {
         // TODOES : multilingual records
-        Object titleNode = source.get(fieldName + "Object");
-        if (titleNode instanceof Map) {
-            record.addContent(new Element(elementName).setText((String) ((Map) titleNode).get("default")));
-        } else if (titleNode instanceof String) {
-            record.addContent(new Element(elementName).setText((String) titleNode));
-        } else {
-            titleNode = source.get(fieldName);
-            if (titleNode != null) {
-                record.addContent(new Element(elementName).setText((String) titleNode));
-            }
+        Object fields = source.get(fieldName + "Object");
+        if (fields == null) {
+            fields = source.get(fieldName);
+        }
+        if (fields instanceof ArrayList) {
+            ((ArrayList) fields).forEach(field -> {
+                record.addContent(new Element(elementName).setText((String) field));
+            });
+        } else if (fields instanceof Map) {
+            record.addContent(new Element(elementName).setText((String) ((Map) fields).get("default")));
+        } else if (fields instanceof String) {
+            record.addContent(new Element(elementName).setText((String) fields));
         }
     }
 

@@ -122,9 +122,10 @@ public class EsSearchManager implements ISearchManager {
 
         relatedIndexFields = ImmutableMap.<String, String>builder()
             .put("children", "parentUuid")
+            .put("brothersAndSisters", "parentUuid")
             .put("services", "recordOperateOn")
             .put("hasfeaturecats", "hasfeaturecat")
-            .put("hassources", "hassources")
+            .put("hassources", "hassource")
             .put("associated", "agg_associated")
             .put("datasets", "uuid")
             .put("fcats", "uuid")
@@ -140,6 +141,7 @@ public class EsSearchManager implements ISearchManager {
             .add(Geonet.IndexFieldNames.RESOURCETITLE + "Object")
             .add(Geonet.IndexFieldNames.RESOURCEABSTRACT)
             .add(Geonet.IndexFieldNames.RESOURCEABSTRACT + "Object")
+            .add("operatesOn")
             .build();
     }
 

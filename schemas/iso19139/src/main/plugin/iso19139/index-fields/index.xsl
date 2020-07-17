@@ -64,6 +64,8 @@
   -->
   <xsl:variable name="operatesOnSetByProtocol" select="false()"/>
 
+  <xsl:variable name="processRemoteDocs" select="true()" />
+
   <!-- List of keywords to search for to flag a record as opendata.
    Do not put accents or upper case letters here as comparison will not
    take them in account. -->
@@ -905,7 +907,9 @@
 
 
       <xsl:for-each select="gmd:dataQualityInfo/*">
-
+        <xsl:for-each select="gmd:lineage//gmd:source[@uuidref]">
+          <hassource><xsl:value-of select="@uuidref"/></hassource>
+        </xsl:for-each>
         <xsl:for-each select="gmd:lineage/gmd:LI_Lineage/
                                 gmd:statement/gco:CharacterString[. != '']">
           <lineage>
@@ -987,48 +991,8 @@
         </xsl:for-each>
       </xsl:for-each>
 
-      <!-- Service/dataset relation. Create document for the association.
-      Note: not used for indicators anymore
-       This could be used to retrieve :
-      {!child of=documentType:metadata}+documentType:metadata +id:9940c446-6fd4-4ab3-a4de-7d0ee028a8d1
-      {!child of=documentType:metadata}+documentType:metadata +resourceType:service +serviceType:view
-      {!child of=documentType:metadata}+documentType:metadata +resourceType:service +serviceType:download
-       -->
-      <xsl:for-each
-        select="gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn">
-        <xsl:variable name="associationType" select="'operatesOn'"/>
-        <xsl:variable name="serviceType"
-                      select="../srv:serviceType/gco:LocalName"/>
-        <!--<xsl:variable name="relatedTo" select="@uuidref"/>-->
-        <xsl:variable name="getRecordByIdId">
-          <xsl:if test="@xlink:href != ''">
-            <xsl:analyze-string select="@xlink:href"
-                                regex=".*[i|I][d|D]=([\w\-\.\{{\}}]*).*">
-              <xsl:matching-substring>
-                <xsl:value-of select="regex-group(1)"/>
-              </xsl:matching-substring>
-            </xsl:analyze-string>
-          </xsl:if>
-        </xsl:variable>
 
-        <xsl:variable name="datasetId">
-          <xsl:choose>
-            <xsl:when test="$getRecordByIdId != ''">
-              <xsl:value-of select="$getRecordByIdId"/>
-            </xsl:when>
-            <xsl:when test="@uuidref != ''">
-              <xsl:value-of select="@uuidref"/>
-            </xsl:when>
-          </xsl:choose>
-        </xsl:variable>
-
-        <xsl:if test="$datasetId != ''">
-          <recordOperateOn><xsl:value-of select="$datasetId"/></recordOperateOn>
-          <!--
-            TODOES - Need more work with routing -->
-<!--          <recordLink type="object">{"name": "dataset", "parent": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"}</recordLink>-->
-        </xsl:if>
-      </xsl:for-each>
+      <xsl:call-template name="index-operatesOn"/>
 
       <xsl:variable name="recordLinks"
                     select="gmd:parentIdentifier/gco:CharacterString[. != '']"/>
@@ -1037,9 +1001,14 @@
           <xsl:for-each select="$recordLinks">
             <parentUuid><xsl:value-of select="."/></parentUuid>
             <recordGroup><xsl:value-of select="."/></recordGroup>
+            <recordLink type="object">{
+              "type": "parent",
+              "origin": "local",
+              "to": "<xsl:value-of select="."/>"
+              }</recordLink>
             <!--
             TODOES - Need more work with routing -->
-<!--            <recordLink type="object">{"name": "children", "parent": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"}</recordLink>-->
+<!--            <recordJoin type="object">{"name": "children", "parent": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"}</recordLink>-->
           </xsl:for-each>
         </xsl:when>
         <xsl:otherwise>
@@ -1107,5 +1076,165 @@
       "address":"<xsl:value-of select="gn-fn-index:json-escape($address)"/>"
       }
     </xsl:element>
+  </xsl:template>
+
+
+
+
+  <xsl:template name="index-operatesOn">
+    <xsl:for-each
+      select="gmd:identificationInfo/srv:SV_ServiceIdentification">
+      <xsl:for-each select="srv:operatesOn">
+        <xsl:variable name="associationType" select="'operatesOn'"/>
+        <xsl:variable name="serviceType"
+                      select="../srv:serviceType/gco:LocalName"/>
+        <!--<xsl:variable name="relatedTo" select="@uuidref"/>-->
+        <xsl:variable name="getRecordByIdId">
+          <xsl:if test="@xlink:href != ''">
+            <xsl:analyze-string select="@xlink:href"
+                                regex=".*[i|I][d|D]=([\w\-\.\{{\}}]*).*">
+              <xsl:matching-substring>
+                <xsl:value-of select="regex-group(1)"/>
+              </xsl:matching-substring>
+            </xsl:analyze-string>
+          </xsl:if>
+        </xsl:variable>
+
+        <xsl:variable name="datasetId">
+          <xsl:choose>
+            <xsl:when test="$getRecordByIdId != ''">
+              <xsl:value-of select="$getRecordByIdId"/>
+            </xsl:when>
+            <xsl:when test="@uuidref != ''">
+              <xsl:value-of select="@uuidref"/>
+            </xsl:when>
+          </xsl:choose>
+        </xsl:variable>
+
+        <xsl:if test="$datasetId != ''">
+          <recordOperateOn><xsl:value-of select="$datasetId"/></recordOperateOn>
+          <recordLink type="object">{
+            "type": "dataset",
+            "origin": "local",
+            "to": "<xsl:value-of select="$datasetId"/>"
+            <xsl:if test="@xlink:href">,
+              "link": "<xsl:value-of select="@xlink:href"/>"
+            </xsl:if>
+            }</recordLink>
+          <!--
+            TODOES - Need more work with routing -->
+          <!--          <recordLink type="object">{"name": "dataset", "parent": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"}</recordLink>-->
+        </xsl:if>
+      </xsl:for-each>
+
+
+      <xsl:choose>
+        <!-- Default to index the @uuidref value for operatesOn:
+             assumes a local metadata with that uuid exists -->
+        <xsl:when test="not($processRemoteDocs)">
+          <xsl:for-each select="srv:operatesOn/@uuidref">
+            <operatesOn><xsl:value-of select="."/></operatesOn>
+          </xsl:for-each>
+          <xsl:for-each select="srv:operatesOn/@xlink:href">
+            <operatesOn><xsl:value-of select="."/></operatesOn>
+          </xsl:for-each>
+        </xsl:when>
+
+        <!-- Process remote docs:
+                - uses @xlink:href to retrieve the remote metadata and index the relevant information for related service.
+                - if the metadata is found in the catalogue, it's used that information.
+                Index field format (Metadata in local catalogue):  uuid|L|uuid||link
+                Index field format (Metadata in remote catalogue): uuid|R|title|abstract|link
+        -->
+        <xsl:otherwise>
+          <xsl:for-each select="srv:operatesOn">
+            <!-- The xlink: href attribute can contain a URI to the MD_DataIdentification part of the metadata record of the dataset.
+                Example:
+                   <srv:operatesOn uuidref="c9c62f4f-a8da-438e-a514-5963fb1b047b"
+                       xlink:href="https://server/geonetwork/srv/dut/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;
+                       id=c9c62f4f-a8da-438e-a514-5963fb1b047b#MD_DataIdentification"/>
+                Ignore it for indexing.
+           -->
+
+            <xsl:variable name="siteUrl" select="util:getSiteUrl()" />
+            <xsl:variable name="xlinkHref" select="tokenize(@xlink:href, '#')[1]" />
+
+            <xsl:choose>
+              <!-- 1) Is the link referencing an external metadata? -->
+              <xsl:when test="string(normalize-space($xlinkHref))
+                              and not(starts-with(replace($xlinkHref, 'http://', 'https://'), replace($siteUrl, 'http://', 'https://')))">
+
+                <!-- remote url: request the document to index data -->
+                <xsl:variable name="remoteDoc" select="util:getUrlContent(@xlink:href)" />
+
+                <!-- Remote url that uuid is stored also locally: Use local -->
+                <xsl:variable name="datasetUuid" select="$remoteDoc//gmd:fileIdentifier/gco:CharacterString" />
+
+                <xsl:choose>
+                  <xsl:when test="count($datasetUuid) = 1
+                                  and string($datasetUuid)">
+                    <xsl:variable name="existsLocally"
+                                  select="not(normalize-space(util:getRecord($datasetUuid)) = '')" />
+
+                    <xsl:choose>
+                      <xsl:when test="not($existsLocally)">
+                        <xsl:variable name="datasetTitle"
+                                      select="$remoteDoc//*[gmd:MD_DataIdentification or @gco:isoType='gmd:MD_DataIdentification']//gmd:citation//gmd:title/gco:CharacterString" />
+
+                        <xsl:variable name="datasetAbstract" select="$remoteDoc//*[gmd:MD_DataIdentification or @gco:isoType='gmd:MD_DataIdentification']//gmd:abstract/gco:CharacterString" />
+
+                        <operatesOn><xsl:value-of select="concat($datasetUuid, '|R|', normalize-space($datasetTitle), '|', normalize-space($datasetAbstract), '|', $xlinkHref)"/></operatesOn>
+                      </xsl:when>
+                      <!-- Do we need this check? maybe in this case use operatesOn instead of operatesOnRemote to use local info? -->
+                      <xsl:otherwise>
+
+                        <xsl:variable name="datasetTitle" select="$remoteDoc//*[gmd:MD_DataIdentification or @gco:isoType='gmd:MD_DataIdentification']//gmd:citation//gmd:title/gco:CharacterString" />
+                        <xsl:variable name="datasetAbstract" select="$remoteDoc//*[gmd:MD_DataIdentification or @gco:isoType='gmd:MD_DataIdentification']//gmd:abstract/gco:CharacterString" />
+
+                        <operatesOn><xsl:value-of select="concat($datasetUuid, '|R|', normalize-space($datasetTitle), '|', normalize-space($datasetAbstract), '|', $xlinkHref)"/></operatesOn>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:when>
+
+                  <xsl:otherwise>
+                    <xsl:variable name="uuidFromCsw"  select="tokenize(tokenize(string($xlinkHref),'&amp;id=')[2],'&amp;')[1]" />
+
+                    <xsl:choose>
+                      <!-- Assume is a CSW request and extract the uuid from csw request and add as operatesOnRemote -->
+                      <xsl:when test="string($uuidFromCsw)">
+                        <operatesOn><xsl:value-of select="concat($uuidFromCsw, '|R|', $uuidFromCsw,'|', '|', $xlinkHref)"/></operatesOn>
+                      </xsl:when>
+
+                      <!-- If no CSW request, store the link -->
+                      <xsl:otherwise>
+                        <operatesOn><xsl:value-of select="concat($xlinkHref, '|R|', $xlinkHref, '|', '|', $xlinkHref)"/></operatesOn>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:when>
+
+              <!-- 2) Is the link referencing to a metadata in the catalogue? -->
+              <xsl:otherwise>
+                <!-- Extract the uuid from the link, assuming it's a CSW url -->
+                <xsl:variable name="uuidFromCsw"  select="tokenize(tokenize(string($xlinkHref),'&amp;id=')[2],'&amp;')[1]" />
+
+                <xsl:choose>
+                  <!-- The uuid could be extracted from the url (CSW url)-->
+                  <xsl:when test="string($uuidFromCsw)">
+                    <operatesOn><xsl:value-of select="concat($uuidFromCsw, '|L|', $uuidFromCsw,'|', '|', $xlinkHref)"/></operatesOn>
+                  </xsl:when>
+
+                  <!-- If no CSW url, store the link  with the uuid from uuidref attribute-->
+                  <xsl:otherwise>
+                    <operatesOn><xsl:value-of select="concat(@uuidref, '|L|', @uuidref, '|', '|', $xlinkHref)"/></operatesOn>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:for-each>
   </xsl:template>
 </xsl:stylesheet>
