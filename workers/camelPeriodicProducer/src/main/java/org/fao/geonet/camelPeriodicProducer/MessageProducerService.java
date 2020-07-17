@@ -91,7 +91,7 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
             wfsHarvesterParam.setTreeFields(indexedMetadataFetcher.getTreeField()); //optional
             wfsHarvesterParam.setTokenizedFields(indexedMetadataFetcher.getTokenizedField()); //optional
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.info("could not fetch tree field and tokenized field for metadata uuid {} and typename {}", metadataUuid, typeName);
         }
 
         return (MessageProducer<WFSHarvesterExchangeState>) new MessageProducer()
