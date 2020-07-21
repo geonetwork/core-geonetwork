@@ -194,8 +194,10 @@
                   <linkage>
                     <URL>
                       <xsl:choose>
-                        <xsl:when test="wmts:ServiceMetadataURL">
-                          <xsl:value-of select="wmts:ServiceMetadataURL/@xlink:href"/>
+                        <xsl:when test="local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wmts/1.0'">
+                          <xsl:value-of select="if (//ows11:Operation[@name='GetTile']/ows11:DCP/ows11:HTTP/ows11:Get/@xlink:href)
+                          then //ows11:Operation[@name='GetTile']/ows11:DCP/ows11:HTTP/ows11:Get/@xlink:href
+                          else wmts:ServiceMetadataURL/@xlink:href"/>
                         </xsl:when>
                         <xsl:when test="$ows='true'">
                           <xsl:value-of
@@ -231,6 +233,7 @@
                           <gco:CharacterString>OGC:WMS-1.3.0-http-get-map
                           </gco:CharacterString>
                         </xsl:when>
+                        <xsl:when test="local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wmts/1.0'">OGC:WMTS</xsl:when>
                         <xsl:when test="$ows='true'">
                           <gco:CharacterString>OGC:WFS-1.1.0-http-get-feature
                           </gco:CharacterString>
@@ -239,7 +242,6 @@
                           <gco:CharacterString>OGC:WFS-1.0.0-http-get-feature
                           </gco:CharacterString>
                         </xsl:when>
-                        <xsl:when test="wmts:ServiceMetadataURL">OGC:WMTS</xsl:when>
                         <xsl:otherwise>
                           <gco:CharacterString>OGC:WCS-1.0.0-http-get-coverage
                           </gco:CharacterString>

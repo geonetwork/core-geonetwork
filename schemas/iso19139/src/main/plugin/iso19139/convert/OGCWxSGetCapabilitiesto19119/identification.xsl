@@ -155,7 +155,8 @@
     </xsl:for-each>
 
     <xsl:for-each
-      select="$s/KeywordList|$s/wfs:keywords|$s/wcs:keywords|$s/ows:Keywords|$s/ows11:Keywords|$s/ows2:Keywords">
+      select="$s/KeywordList|$s/wfs:keywords|$s/wcs:keywords|$s/ows:Keywords|
+              $s/ows11:Keywords|$s/ows11:KeywordList|$s/ows2:Keywords">
       <descriptiveKeywords>
         <MD_Keywords>
           <xsl:apply-templates select="." mode="Keywords"/>
@@ -672,6 +673,9 @@
         <title>
           <gco:CharacterString>
             <xsl:choose>
+              <xsl:when test="local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wmts/1.0'">
+                <xsl:value-of select="//wmts:Layer[ows11:Identifier=$Name]/ows11:Title"/>
+              </xsl:when>
               <xsl:when
                 test="name(.)='WFS_Capabilities' or name(.)='wfs:WFS_Capabilities' or $ows='true'">
                 <xsl:value-of select="//wfs:FeatureType[wfs:Name=$Name]/wfs:Title"/>
@@ -681,9 +685,6 @@
               </xsl:when>
               <xsl:when test="name(.)='WMT_MS_Capabilities'">
                 <xsl:value-of select="//Layer[Name=$Name]/Title"/>
-              </xsl:when>
-              <xsl:when test="local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wmts/1.0'">
-                <xsl:value-of select="//wmts:Layer[ows11:Identifier=$Name]/ows11:Title"/>
               </xsl:when>
               <xsl:otherwise>
                 <xsl:value-of select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:label"/>
@@ -707,8 +708,6 @@
         </date>
       </CI_Citation>
     </citation>
-
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
     <abstract>
       <gco:CharacterString>
@@ -738,8 +737,6 @@
       <MD_ProgressCode codeList="./resources/codeList.xml#MD_ProgressCode"
                        codeListValue="completed"/>
     </status>
-
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
     <xsl:for-each select="Service/ContactInformation|wms:Service/wms:ContactInformation">
       <pointOfContact>
@@ -1089,12 +1086,8 @@
         </xsl:for-each>
 
           - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
   </xsl:template>
 
-  <!-- ============================================================================= -->
-  <!-- === Keywords === -->
-  <!-- ============================================================================= -->
 
   <xsl:template match="*" mode="Keywords">
     <!-- TODO : tokenize WFS 100 keywords list -->
