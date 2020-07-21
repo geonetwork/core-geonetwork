@@ -180,7 +180,7 @@ angular.module('ui.bootstrap.tabs', [])
         restrict: 'EA',
         replace: true,
         template: '<li ng-class="{active: active, disabled: disabled}">' +
-            '<a ng-click="select()" tab-heading-transclude>{{heading}}</a>' +
+            '<a href="" ng-click="select()" tab-heading-transclude>{{heading}}</a>' +
         '</li>',
         transclude: true,
         scope: {
