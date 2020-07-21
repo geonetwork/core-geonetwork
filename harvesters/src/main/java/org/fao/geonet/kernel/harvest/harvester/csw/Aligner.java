@@ -341,7 +341,9 @@ public class Aligner extends BaseAligner<CswParams> {
                     boolean applyEdit = true;
                     if (StringUtils.isNotEmpty(batchEditParameter.getCondition())) {
                         final Object node = Xml.selectSingle(md, batchEditParameter.getCondition(), metadataSchema.getNamespaces());
-                        applyEdit = (node != null) || (node instanceof Boolean && (Boolean)node != false);
+                        if (node != null && node instanceof Boolean && (Boolean)node != true) {
+                            applyEdit = false;
+                        }
                     }
                     if (applyEdit) {
                         metadataChanged = editLib.addElementOrFragmentFromXpath(
