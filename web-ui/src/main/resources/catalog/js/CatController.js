@@ -520,9 +520,9 @@ goog.require('gn_alert');
                 'size': 10
               }
             },
-            'schema': {
+            'documentStandard': {
               'terms': {
-                'field': 'schema.keyword',
+                'field': 'documentStandard',
                 'size': 10
               }
             },
