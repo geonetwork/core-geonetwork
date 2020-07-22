@@ -245,6 +245,13 @@
       <xsl:variable name="element" select="."/>
       <xsl:variable name="textObject">
         <xsl:choose>
+          <!-- Not ISO but multilingual eg. DC or DCAT -->
+          <xsl:when test="$languages and count($element//(*:CharacterString|*:Anchor|*:LocalisedCharacterString)) = 0">
+            <xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
+                                           $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote, ', ')"/>
+            <xsl:value-of select="concat($doubleQuote, 'lang', $mainLanguage, $doubleQuote, ':',
+                                           $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+          </xsl:when>
           <xsl:when test="$languages">
             <!-- The default language -->
             <xsl:for-each select="$element//(*:CharacterString|*:Anchor)[. != '']">
