@@ -1438,8 +1438,14 @@
     <xsl:variable name="attributeValue" select="."/>
     <xsl:variable name="attributeSpec" select="../gn:attribute[@name = $attributeName]"/>
 
+    <xsl:variable name="attributeKey"
+                  select="concat(name(..), '/@', name())"/>
     <xsl:variable name="directive"
-                  select="gn-fn-metadata:getAttributeFieldType($editorConfig, concat(name(..), '/@', name()))"/>
+                  select="gn-fn-metadata:getAttributeFieldType($editorConfig, $attributeKey)"/>
+    <xsl:variable name="directiveAttributes"
+                  select="$editorConfig/editor/fields/for[
+                            @name = $attributeKey and @use = $directive]
+                              /directiveAttributes/@*"/>
 
     <!-- Form field name escaping ":" which will be invalid character for
     Jeeves request parameters. -->
@@ -1454,8 +1460,11 @@
         <xsl:value-of select="gn-fn-metadata:getLabel($schema, $attributeName, $labels)/label"/>
       </label>
       <div class="col-sm-7">
-        <xsl:if test="$directive">
+        <xsl:variable name="isDivLevelDirective"
+                      select="$directive = 'data-gn-logo-picker'"/>
+        <xsl:if test="$directive and $isDivLevelDirective">
           <xsl:attribute name="{$directive}"/>
+          <xsl:copy-of select="$directiveAttributes"/>
         </xsl:if>
 
         <xsl:choose>
@@ -1464,6 +1473,11 @@
                           select="gn-fn-metadata:getCodeListValues($schema, $attributeName, $codelists)"/>
 
             <select class="" name="{$fieldName}">
+              <xsl:if test="$directive and not($isDivLevelDirective)">
+                <xsl:attribute name="{$directive}"/>
+                <xsl:copy-of select="$directiveAttributes"/>
+              </xsl:if>
+
               <xsl:for-each select="$attributeSpec/gn:text">
                 <xsl:variable name="optionValue" select="@value"/>
 
@@ -1490,6 +1504,10 @@
           </xsl:when>
           <xsl:otherwise>
             <input type="text" class="" name="{$fieldName}" value="{$attributeValue}">
+              <xsl:if test="$directive and not($isDivLevelDirective)">
+                <xsl:attribute name="{$directive}"/>
+                <xsl:copy-of select="$directiveAttributes"/>
+              </xsl:if>
             </input>
           </xsl:otherwise>
         </xsl:choose>
