@@ -748,6 +748,11 @@
                   <filtering>true</filtering>
                   <targetPath>${build.webapp.resources}</targetPath>
                 </resource>
+                <resource>
+                  <directory>${geonetwork.webapp.dir}/WEB-INF/data/data/resources/images</directory>
+                  <filtering>true</filtering>
+                  <targetPath>${project.build.directory}/geonetwork/images</targetPath>
+                </resource>
               </resources>
               <filters>
                 <filter>${basedir}/src/main/filters/${env}.properties</filter>
