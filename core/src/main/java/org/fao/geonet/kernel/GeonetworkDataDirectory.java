@@ -350,12 +350,38 @@ public class GeonetworkDataDirectory {
             }
         }
 
-        // Copy default logo to the harvesting folder
-        Path logoDir = this.resourcesDir.resolve("images").resolve("harvesting");
+        // Copy default logo to the images and harvesting folder
+        Path imagesDir = this.resourcesDir.resolve("images");
+        if (!Files.exists(imagesDir)) {
+            try {
+                final Path srcFile = getDefaultDataDir(webappDir).resolve("data").resolve("resources").resolve("images");
+                IO.copyDirectoryOrFile(srcFile, imagesDir, false);
+            } catch (IOException e) {
+                Log.info(
+                    Geonet.DATA_DIRECTORY,
+                    "      - Error copying images folder: "
+                        + e.getMessage());
+            }
+        }
+
+        Path logoDir = this.resourcesDir.resolve("images").resolve("logos");
+        if (!Files.exists(logoDir)) {
+            try {
+                Files.createDirectories(logoDir);
+            } catch (IOException e) {
+                Log.info(
+                    Geonet.DATA_DIRECTORY,
+                    "      - Error creating images/logos folder: "
+                        + e.getMessage());
+            }
+        }
+
+        logoDir = this.resourcesDir.resolve("images").resolve("harvesting");
         if (!Files.exists(logoDir) || IO.isEmptyDir(logoDir)) {
             Log.info(Geonet.DATA_DIRECTORY, "     - Copying logos ...");
             try {
-                final Path srcLogo = this.webappDir.resolve("images").resolve("harvesting");
+                Files.createDirectories(logoDir);
+                final Path srcLogo = getDefaultDataDir(webappDir).resolve("data").resolve("resources").resolve("images").resolve("harvesting");
 
                 if (Files.exists(srcLogo)) {
                     try (DirectoryStream<Path> paths = Files.newDirectoryStream(srcLogo)) {
@@ -368,7 +394,6 @@ public class GeonetworkDataDirectory {
                         }
                     }
                 }
-
             } catch (IOException e) {
                 Log.error(Geonet.DATA_DIRECTORY, "     - Logo copy failed: " + e.getMessage(), e);
             }
