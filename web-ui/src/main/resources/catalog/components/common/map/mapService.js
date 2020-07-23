@@ -1716,11 +1716,22 @@
                 if (!angular.isArray(l.Style)){ l.Style=[{Identifier:l.Style,isDefault:true}] };
               });
 
-              var options = ol.source.WMTS.optionsFromCapabilities(cap, {
-                layer: getCapLayer.Identifier,
-                matrixSet: map.getView().getProjection().getCode(),
-                projection: map.getView().getProjection().getCode()
-              });
+              var options;
+
+              try {
+                options = ol.source.WMTS.optionsFromCapabilities(cap, {
+                  layer: getCapLayer.Identifier,
+                  matrixSet: map.getView().getProjection().getCode(),
+                  projection: map.getView().getProjection().getCode()
+                });
+              } catch (e) {
+                gnAlertService.addAlert({
+                  msg: $translate.instant('wmtsLayerNoUsableMatrixSet'),
+                  delay: 5000,
+                  type: 'danger'
+                });
+                return;
+              }
 
               //Configuring url for service
               var url = capabilities.operationsMetadata.GetCapabilities.DCP.HTTP.Get[0].href;
