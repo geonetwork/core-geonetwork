@@ -31,6 +31,7 @@ import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -83,6 +84,7 @@ public class ResourceFilter implements Filter {
         private final Path resourcesDir;
         private final Path appPath;
         private final String nodeId;
+        private final String siteId;
         private final Resources resources;
         private Pair<byte[], Long> favicon;
 
@@ -91,14 +93,15 @@ public class ResourceFilter implements Filter {
                     .getApplicationContextFromServletContext(servletContext);
             this.appPath = applicationContext.getBean(GeonetworkDataDirectory.class).getWebappDir();
             this.resources = applicationContext.getBean(Resources.class);
+            this.siteId = applicationContext.getBean(SettingManager.class).getSiteId();
             this.resourcesDir = resources.locateResourcesDir(servletContext, applicationContext);
             if (defaultImage == null) {
-                defaultImage = resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/GN3.png", new byte[0], -1);
+                defaultImage = resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/" + siteId + ".png", new byte[0], -1);
             }
             this.nodeId = applicationContext.getBean(NodeInfo.class).getId();
             if (!faviconMap.containsKey(nodeId)) {
                 final byte[] defaultImageBytes = defaultImage.one();
-                AddFavIcon(nodeId, resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/GN3.ico",
+                AddFavIcon(nodeId, resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/" + siteId + ".ico",
                                                           defaultImageBytes, -1));
             }
 
@@ -132,8 +135,8 @@ public class ResourceFilter implements Filter {
                 // TODO : other type of resources html
                 httpServletResponse.setContentType("image/" + ext);
                 httpServletResponse.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
-                if (filename.equals("images/logos/GN3.ico")) {
-                    favicon = resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/GN3.ico", favicon.one(),
+                if (filename.equals("images/logos/" + siteId + ".ico")) {
+                    favicon = resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/" + siteId + ".ico", favicon.one(),
                                                      favicon.two());
                     AddFavIcon(nodeId, favicon);
 
@@ -147,7 +150,7 @@ public class ResourceFilter implements Filter {
 
                         synchronized (this) {
                             defaultImage = resources.loadResource(resourcesDir,
-                                config.getServletContext(), appPath, "images/logos/GN3.ico",
+                                config.getServletContext(), appPath, "images/logos/" + siteId + ".ico",
                                 defaultImage.one(), defaultImage.two());
                         }
 
