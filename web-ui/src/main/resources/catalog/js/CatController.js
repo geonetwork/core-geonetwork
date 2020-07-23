@@ -381,7 +381,7 @@ goog.require('gn_alert');
             'layers': ['OGC', 'ESRI:REST'],
             'maps': ['ows']
           },
-          'isFilterTagsDisplayedInSearch': false,
+          'isFilterTagsDisplayedInSearch': true,
           'usersearches': {
             'enabled': false,
             'displayFeaturedSearchesPanel': false
