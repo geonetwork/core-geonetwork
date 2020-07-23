@@ -202,6 +202,7 @@
             facetModel.type = 'terms';
             facetModel.size = reqAgg.terms.size;
             facetModel.more = respAgg.sum_other_doc_count > 0;
+            var esFacet = this;
             respAgg.buckets.forEach(function (bucket) {
               if (bucket.key) {
                 var itemPath = facetModel.path.concat([bucket.key + '']);
@@ -219,7 +220,7 @@
                   for (var indexKey in reqAgg.aggs) {
                     nestAggs[indexKey] = bucket[indexKey]
                   }
-                  facet.aggs = createFacetModel(reqAgg.aggs, nestAggs, true, itemPath)
+                  facet.aggs = esFacet.createFacetModel(reqAgg.aggs, nestAggs, true, itemPath)
                 }
                 facetModel.items.push(facet);
               }
