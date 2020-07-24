@@ -18,9 +18,14 @@
         <span ng-if="filter.key === 'any'">{{filter.key}}</span>
       </strong>
       <div class="flex-spacer"></div>
-      <span ng-repeat="(key, value) in filter.value"
+      <span ng-if="filter.key === 'any'">
+        {{filter.value}}
+      </span>
+      <span ng-if="filter.key !== 'any'"
+            ng-repeat="(key, value) in filter.value"
             ng-class="{'gn-filter-negative': isNegative(value)}"
             translate>{{key | facetTranslator: filter.key | capitalize}}</span>
+      <!-- TODO: Nested aggs support -->
     </a>
   </div>
 </div>

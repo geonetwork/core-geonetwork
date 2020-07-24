@@ -202,6 +202,8 @@
             facetModel.type = 'terms';
             facetModel.size = reqAgg.terms.size;
             facetModel.more = respAgg.sum_other_doc_count > 0;
+            facetModel.includeFilter = reqAgg.terms.include !== undefined;
+            facetModel.excludeFilter = reqAgg.terms.exclude !== undefined;
             var esFacet = this;
             respAgg.buckets.forEach(function (bucket) {
               if (bucket.key) {

@@ -497,12 +497,32 @@
         var key = facet.path[i];
         facetConfigs[key] = $scope.facetConfig[key];
       }
-      return gnESClient.loadMoreTerms(
-        $scope.searchObj.params.query,
+      var request = gnESService.generateEsRequest($scope.finalParams, $scope.searchObj.state, $scope.searchObj.configId);
+      return gnESClient.getTermsParamsWithNewSizeOrFilter(
+        request.query,
         facet.path,
         facet.items.length + (moreItemsNumber || 20),
+        undefined, undefined,
         facetConfigs
         );
+    }
+
+    this.filterTerms = function(facet) {
+      var facetConfigs = {};
+      for (var i = 0; i < facet.path.length; i++) {
+        if ((i + 1) % 2 === 0) continue;
+        var key = facet.path[i];
+        facetConfigs[key] = $scope.facetConfig[key];
+      }
+      var request = gnESService.generateEsRequest($scope.finalParams, $scope.searchObj.state, $scope.searchObj.configId)
+      return gnESClient.getTermsParamsWithNewSizeOrFilter(
+        request.query,
+        facet.path,
+        undefined,
+        facet.include,
+        facet.exclude,
+        facetConfigs
+      );
     }
   };
 
