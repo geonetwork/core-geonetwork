@@ -173,8 +173,8 @@
                 filter_type: 'PropertyIsLike',
                 params: [k]
               }
-              
-              
+
+
               );
             }
             else {
@@ -183,8 +183,8 @@
                   params: [k]
                 });
             }
-            
-            
+
+
           });
 
           filterFields.push({
@@ -432,8 +432,8 @@
           if (config.isDateTime) {
             if (values.from && values.to) {
               where = where.concat([
-                '(' + config.maxField + ' >= ' + transformDate(values.from) + ')',
-                '(' + config.minField + ' <= ' + transformDate(values.to) + ')'
+                '(' + config.maxField + ' >= \'' + transformDate(values.from) + '\')',
+                '(' + config.minField + ' <= \'' + transformDate(values.to) + '\')'
               ]);
             }
             return;
