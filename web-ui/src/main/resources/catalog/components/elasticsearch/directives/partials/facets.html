@@ -29,6 +29,18 @@
     </a>
     <div class="gn-facet-root-container"
          ng-class="{'collapse': ctrl.fLvlCollapse[facet.key]}">
+
+      <div>
+        <input title="{{'facetIncludeFilter' | translate}}"
+               ng-if="facet.type === 'terms' && facet.includeFilter"
+               ng-model="facet.include"
+               ng-model-options="{debounce: 200}"
+               ng-change="ctrl.filterTerms(facet)"
+               class="form-control input-sm"
+               type="text"
+               />
+      </div>
+
       <div class="gn-facet-container"
            es-facet="::facet"
            es-facet-item="::item"

@@ -376,7 +376,11 @@
         return mapping[name] || name;
       }
 
-      this.getMoreTermsParams = function(query, facetPath, newSize, facetConfig) {
+      this.getTermsParamsWithNewSizeOrFilter = function(query, facetPath,
+                                         newSize,
+                                         include,
+                                         exclude,
+                                         facetConfig) {
         var params = {
           query: query || {bool: {must: []}},
           size: 0
@@ -384,11 +388,30 @@
         var aggregations = params;
         for (var i = 0; i < facetPath.length; i++) {
           if ((i + 1) % 2 === 0) continue;
-          var key = facetPath[i];
+          var key = facetPath[i],
+              isFilter = angular.isDefined(include) || angular.isDefined(exclude);
           aggregations.aggregations = {};
-          aggregations.aggregations[key] = facetConfig[key];
+          // Work on a copy of facetConfig to not alter main search
+          // aggregations.aggregations[key] = facetConfig[key];
+          aggregations.aggregations[key] = isFilter ?
+            angular.copy(facetConfig[key], {}) :
+            facetConfig[key];
           if (aggregations.aggregations[key].terms) {
-            aggregations.aggregations[key].terms.size = newSize;
+            if (Number.isInteger(newSize)) {
+              aggregations.aggregations[key].terms.size = newSize;
+            }
+            if (angular.isDefined(include)){
+              var isARegex = include.match(/^\/.*\/$/) != null;
+              aggregations.aggregations[key].terms.include =
+                isARegex ?
+                  include.substr(1, include.length - 2) :
+                  '.*' + include + '.*';
+              // Note that ES filter on terms can not be case insensitive
+              // See https://discuss.elastic.co/t/terms-aggregation-with-include-filter/50976/10
+            }
+            if (angular.isDefined(exclude)){
+              aggregations.aggregations[key].terms.exclude = exclude;
+            }
           } else {
             console.warn(
               'Loading more results of a none terms directive is not supported',
@@ -398,6 +421,5 @@
         }
         return params;
       };
-
   }]);
 })();

@@ -257,6 +257,7 @@ goog.require('gn_alert');
             'tag': {
               'terms': {
                 'field': 'tag',
+                'include': '.*',
                 'size': 10
               }
             },
