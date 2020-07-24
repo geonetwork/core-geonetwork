@@ -203,9 +203,10 @@ public class BatchEditsApi implements ApplicationContextAware {
 
                         boolean applyEdit = true;
                         if (StringUtils.isNotEmpty(batchEditParameter.getCondition())) {
+                            applyEdit = false;
                             final Object node = Xml.selectSingle(metadata, batchEditParameter.getCondition(), metadataSchema.getNamespaces());
-                            if (node != null && node instanceof Boolean && (Boolean)node != true) {
-                                applyEdit = false;
+                            if (node != null && node instanceof Boolean && (Boolean)node == true) {
+                                applyEdit = true;
                             }
                         }
                         if (applyEdit) {
