@@ -287,6 +287,13 @@ goog.require('gn_alert');
                 // Limit to 2 levels
               }
             },
+            // 'thesaurus_geonetworkthesaurusexternalthemehttpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree': {
+            //   'terms': {
+            //     'field': 'thesaurus_geonetworkthesaurusexternalthemehttpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree',
+            //     'size': 100,
+            //     "order" : { "_key" : "asc" }
+            //   }
+            // },
             'tag': {
               'terms': {
                 'field': 'tag',

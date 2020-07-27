@@ -28,8 +28,8 @@
 
   var DEFAULT_SIZE = 10;
 
-  module.service('gnESFacet', ['gnGlobalSettings', 'gnTreeFromSlash',
-    function(gnGlobalSettings, gnTreeFromSlash) {
+  module.service('gnESFacet', ['gnGlobalSettings', 'gnFacetTree',
+    function(gnGlobalSettings, gnFacetTree) {
 
     var defaultSource = {
       includes: [
@@ -99,7 +99,7 @@
             'isHarvested',
             'dateStamp',
             'documentStandard',
-            '*inspire*',
+            '*inspire*'
           ]
         },
         track_total_hits: true
@@ -197,7 +197,7 @@
 
           if(fieldId.endsWith('_tree')) {
             facetModel.type = 'tree';
-            var tree = gnTreeFromSlash.getTree(respAgg.buckets);
+            var tree = gnFacetTree.getTree(respAgg.buckets);
             facetModel.items = tree.items;
           } else {
             facetModel.type = 'terms';
