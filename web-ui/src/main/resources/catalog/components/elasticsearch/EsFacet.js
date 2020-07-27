@@ -98,7 +98,8 @@
             'valid',
             'isHarvested',
             'dateStamp',
-            'documentStandard'
+            'documentStandard',
+            '*inspire*',
           ]
         },
         track_total_hits: true
