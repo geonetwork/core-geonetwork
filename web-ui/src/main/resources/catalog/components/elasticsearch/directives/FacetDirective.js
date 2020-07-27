@@ -88,6 +88,13 @@
     });
   }
 
+  FacetsController.prototype.filterTerms = function (facet) {
+    this.searchCtrl.filterTerms(facet).then(function (terms) {
+      angular.merge(facet, terms);
+      facet.items = terms.items;
+    });
+  }
+
   FacetsController.prototype.onUpdateDateRange = function (facet, from, to) {
     var query_string =  '+' + facet.key + ':[' + moment(from, 'DD-MM-YYYY').toISOString() + ' TO ' +
       moment(to, 'DD-MM-YYYY').toISOString() + ']';
@@ -169,6 +176,7 @@
   FacetController.prototype.filter = function (facet, item) {
     var value = !item.inverted;
     if (facet.type === 'terms') {
+      facet.include = '';
       if (!item.isNested) {
         this.facetsCtrl.lastUpdatedFacet = facet;
       }

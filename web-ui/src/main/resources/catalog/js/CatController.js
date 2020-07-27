@@ -257,6 +257,7 @@ goog.require('gn_alert');
             'tag': {
               'terms': {
                 'field': 'tag',
+                'include': '.*',
                 'size': 10
               }
             },
@@ -381,7 +382,7 @@ goog.require('gn_alert');
             'layers': ['OGC', 'ESRI:REST'],
             'maps': ['ows']
           },
-          'isFilterTagsDisplayedInSearch': false,
+          'isFilterTagsDisplayedInSearch': true,
           'usersearches': {
             'enabled': false,
             'displayFeaturedSearchesPanel': false

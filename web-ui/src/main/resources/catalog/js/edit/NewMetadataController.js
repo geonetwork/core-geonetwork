@@ -113,7 +113,7 @@
               "bool" : {
                 "must": query
               }
-            }}).then(function(r) {
+            }, "from": 0, "size": 1000}).then(function(r) {
               if (r.data.hits.total.value > 0) {
                 for (var i = 0; i < r.data.hits.hits.length; i ++) {
                   r.data.hits.hits[i] = new Metadata(r.data.hits.hits[i]);

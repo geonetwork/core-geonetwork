@@ -7,17 +7,25 @@
        translate>removeAllFilters</a>
   </div>
   <div class="panel-body">
-    <a href class="filter-group flex-row flex-wrap"
+    <a href
+       class="filter-group flex-row flex-wrap"
        title="{{'removeThisFilter' | translate}}"
        ng-repeat="filter in currentFilters"
        ng-click="removeFilter(filter)">
       <span class="fa fa-times text-danger delete-icon"></span>
       <strong class="text-no-wrap text-uppercase">
-        <span ng-if="filter.key!='any'" translate>{{('facet-' + filter.key)}}</span>
-        <span ng-if="filter.key==='any'">{{filter.key}}</span>
+        <span ng-if="filter.key != 'any'" translate>{{('facet-' + filter.key)}}</span>
+        <span ng-if="filter.key === 'any'">{{filter.key}}</span>
       </strong>
       <div class="flex-spacer"></div>
-      <span translate>{{filter.value | translatearray}}</span>
+      <span ng-if="filter.key === 'any'">
+        {{filter.value}}
+      </span>
+      <span ng-if="filter.key !== 'any'"
+            ng-repeat="(key, value) in filter.value"
+            ng-class="{'gn-filter-negative': isNegative(value)}"
+            translate>{{key | facetTranslator: filter.key | capitalize}}</span>
+      <!-- TODO: Nested aggs support -->
     </a>
   </div>
 </div>

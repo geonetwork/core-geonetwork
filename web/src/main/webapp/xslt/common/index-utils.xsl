@@ -240,11 +240,23 @@
    }
     -->
     <xsl:variable name="isArray"
-                  select="count($elements) > 1"/>
+                  select="count($elements[not(@xml:lang)]) > 1"/>
     <xsl:for-each select="$elements">
       <xsl:variable name="element" select="."/>
       <xsl:variable name="textObject">
         <xsl:choose>
+          <!-- Not ISO but multilingual eg. DC or DCAT -->
+          <xsl:when test="$languages and count($element//(*:CharacterString|*:Anchor|*:LocalisedCharacterString)) = 0">
+
+            <xsl:if test="position() = 1">
+              <xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
+                                             $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+              <xsl:for-each select="$elements">
+                <xsl:value-of select="concat(',', $doubleQuote, 'lang', @xml:lang, $doubleQuote, ':',
+                                             $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+              </xsl:for-each>
+            </xsl:if>
+          </xsl:when>
           <xsl:when test="$languages">
             <!-- The default language -->
             <xsl:for-each select="$element//(*:CharacterString|*:Anchor)[. != '']">

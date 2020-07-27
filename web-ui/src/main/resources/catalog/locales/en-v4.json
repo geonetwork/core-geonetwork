@@ -1,5 +1,6 @@
 {
   "accessManager": "Access rights",
+  "facetIncludeFilter": "Filter values. Regular expression can be used using '/Land.*/'",
   "allValuesExcept": "All values except",
   "filterWithValue": "Filter with this value",
   "indexNotAvailable": "No search service available currently!",

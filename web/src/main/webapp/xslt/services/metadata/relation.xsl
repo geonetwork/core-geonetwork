@@ -42,7 +42,7 @@
   <xsl:template match="/">
     <related>
       <!-- online and thumbnail are extracted from schema extract-relations.xsl -->
-      <!--<xsl:message><xsl:copy-of select="."/></xsl:message> -->
+<!--      <xsl:message><xsl:copy-of select="."/></xsl:message>-->
       <xsl:apply-templates mode="relation" select="/root/relations/*"/>
     </related>
   </xsl:template>

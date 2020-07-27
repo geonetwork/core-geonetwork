@@ -208,19 +208,27 @@
               }
             }, true);
 
+            scope.isNegative = function(value) {
+              return value === false
+                     || (value && value.match && value.match(/^-\(.*\)$/) != null);
+            };
+
             scope.removeFilter = function(filter) {
-              removeFacetElement=[]
-              removeFacetElement.push(filter.key)
-              if (Object.keys(filter.value)[0] != 0)
-                removeFacetElement.push(Object.keys(filter.value)[0])
-              else
+              removeFacetElement=[];
+              removeFacetElement.push(filter.key);
+              var keys = Object.keys(filter.value);
+              if (keys[0] != 0) {
+                removeFacetElement.push(keys[0])
+                ngSearchFormCtrl.updateState(removeFacetElement, filter.value[keys[0]]);
+              } else {
                 removeFacetElement.push(filter.value)
-              ngSearchFormCtrl.updateState(removeFacetElement, true);
+                ngSearchFormCtrl.updateState(removeFacetElement, true);
+              }
             };
 
             scope.removeAll = function() {
               removeAllFilters();
-            }
+            };
           }
         };
 
@@ -235,11 +243,11 @@
         result = input.split(/\[(.*?)\]/)[1]
       }
       else if (angular.isString(input)){
-        result=input;
+        result = input;
       }
       else {
         angular.forEach(input, function(value, key) {
-          result=key
+          result = key
         })
       }
       return result;
