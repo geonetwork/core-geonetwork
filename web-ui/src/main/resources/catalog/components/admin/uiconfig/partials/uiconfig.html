@@ -1008,8 +1008,11 @@
                class="form-control"
                data-ng-model="mCfg[key]"/>
         <p class="help-block"
-           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-          {{('ui-' + key + '-help') | translate}} </p>
+           data-ng-init="helpKey = 'ui-' + key + '-help'"
+           data-ng-show="(helpKey | translate) != helpKey"
+           translate="">
+          {{helpKey}}
+        </p>
       </div>
     </div>
   </fieldset>

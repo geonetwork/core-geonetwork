@@ -139,6 +139,10 @@ goog.require('gn_alert');
           'paginationInfo': {
             'hitsPerPage': 20
           },
+          // Full text on all fields
+          // 'queryBase': '${any}',
+          // Full text but more boost on title match
+          'queryBase': '${any} resourceTitleObject.default:(${any})^2',
           // Score query may depend on where we are in the app?
           'scoreConfig': {
             // Score experiments:
@@ -167,12 +171,35 @@ goog.require('gn_alert');
             // "score_mode": "max",
             // "boost_mode": "multiply",
             // "min_score" : 42
-            "script_score" : {
-              "script" : {
-                "source": "_score"
-                // "source": "Math.log(2 + doc['rating'].value)"
+            // "script_score" : {
+            //   "script" : {
+            //     "source": "_score"
+            //     // "source": "Math.log(2 + doc['rating'].value)"
+            //   }
+            // }
+            "boost": "5",
+            "functions": [
+              // Boost down member of a series
+              {
+                "filter": { "exists": { "field": "parentUuid" } },
+                "weight": 0.3
+              },
+              // {
+              //   "filter": { "match": { "codelist_resourceScope": "service" } },
+              //   "weight": 0.8
+              // },
+              // Start boosting down records more than 3 months old
+              {
+                "gauss": {
+                  "dateStamp": {
+                    "scale":  "365d",
+                    "offset": "90d",
+                    "decay": 0.5
+                  }
+                }
               }
-            }
+            ],
+            "score_mode": "multiply"
           },
           'autocompleteConfig': {
             'query': {
