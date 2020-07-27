@@ -155,8 +155,9 @@
             keys = Object.keys(urlParams),
             params = {};
         keys.map(function(k) {
-          if (k != 'query_string') {
+          if (k != 'query_string' && k != 'any') {
             try {
+              // Search params may be object eg. range
               params[k] = angular.fromJson(urlParams[k]);
             } catch(ex) {
               params[k] = urlParams[k];
