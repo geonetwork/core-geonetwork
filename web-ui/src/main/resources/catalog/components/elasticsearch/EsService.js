@@ -58,7 +58,6 @@
        * @param p
        */
       this.buildQueryClauses = function(queryHook, p, luceneQueryString) {
-
         var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',
           'sortBy', 'sortOrder', 'resultType', 'facet.q', 'any', 'geometry', 'query_string',
           'creationDateFrom', 'creationDateTo', 'dateFrom', 'dateTo', 'geom', 'relation',
@@ -69,7 +68,20 @@
             p.any = p.any.toString();
             var queryExpression = p.any.match(/^q\((.*)\)$/);
             if (queryExpression == null) {
-              queryStringParams.push(escapeSpecialCharacters(p.any));
+              // var queryBase = '${any} resourceTitleObject.default:(${any})^2',
+              var queryBase = gnGlobalSettings.gnCfg.mods.search.queryBase,
+                  defaultQuery = '${any}';
+              if (queryBase.indexOf(defaultQuery) === -1) {
+                console.warn('Check your configuration. Query base \'' +
+                  queryBase + '\' MUST contains a \'${any}\' token ' +
+                  'to be replaced by the search text. ' +
+                  'See mods.search.queryBase property. ' +
+                  'Using default value \'${any}\'.');
+                queryBase = defaultQuery;
+              }
+              var q = queryBase.replace(/\$\{any\}/g,
+                                        escapeSpecialCharacters(p.any));
+              queryStringParams.push(q);
             } else {
               queryStringParams.push(queryExpression[1]);
             }
