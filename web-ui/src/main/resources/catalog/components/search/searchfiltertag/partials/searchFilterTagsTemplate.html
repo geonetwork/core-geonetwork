@@ -22,7 +22,7 @@
         {{filter.value}}
       </span>
       <span ng-if="filter.key !== 'any'"
-            ng-repeat="(key, value) in filter.value"
+            ng-repeat="(key, value) in filter.value track by $index"
             ng-class="{'gn-filter-negative': isNegative(value)}"
             translate>{{key | facetTranslator: filter.key | capitalize}}</span>
       <!-- TODO: Nested aggs support -->

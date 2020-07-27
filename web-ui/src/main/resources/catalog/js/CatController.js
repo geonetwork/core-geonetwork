@@ -182,15 +182,19 @@ goog.require('gn_alert');
                     "query": "",
                     "type": "bool_prefix",
                     "fields": [
-                      "anytext",
-                      "anytext._2gram",
-                      "anytext._3gram"
+                      "resourceTitleObject.*",
+                      "resourceAbstractObject.*",
+                      "tag",
+                      "resourceIdentifier"
+                      // "anytext",
+                      // "anytext._2gram",
+                      // "anytext._3gram"
                     ]
                   }
                 }]
               }
             },
-            '_source': ['resourceTitleObject']
+            '_source': ['resourceTitleObject'],
             // Fuzzy autocomplete
             // {
             //   query: {
@@ -203,6 +207,8 @@ goog.require('gn_alert');
             //   },
             //   _source: [field]
             // }
+            "from": 0,
+            "size": 20
           },
           'moreLikeThisConfig': {
             "more_like_this" : {

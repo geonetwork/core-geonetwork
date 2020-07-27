@@ -1,4 +1,5 @@
 {
+  "anyFieldTitle": "Search. Type in to get suggestions. Use \" to search for phrases and exact match eg. \"reference grid\". Use q() for advanced querying eg. q(-codelist_status_text:obsolete)",
   "accessManager": "Access rights",
   "facetIncludeFilter": "Filter values. Regular expression can be used using '/Land.*/'",
   "allValuesExcept": "All values except",
