@@ -39,13 +39,12 @@
                       select="util:getKeywordHierarchy(normalize-space(.), $thesaurus, $language)"/>
 
         <xsl:if test="count($keywordsWithHierarchy) > 0">
-
           <xsl:for-each select="$keywordsWithHierarchy">
-            <xsl:variable name="path" select="tokenize(., '/')"/>
+            <xsl:variable name="path" select="tokenize(., '\^')"/>
             <xsl:for-each select="$path">
               <xsl:variable name="position"
                             select="position()"/>
-              <value><xsl:value-of select="string-join($path[position() &lt;= $position], '/')"/></value>
+              <value><xsl:value-of select="string-join($path[position() &lt;= $position], '^')"/></value>
             </xsl:for-each>
           </xsl:for-each>
         </xsl:if>

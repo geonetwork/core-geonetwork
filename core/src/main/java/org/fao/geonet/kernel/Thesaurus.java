@@ -1204,7 +1204,7 @@ public class Thesaurus {
 
         List <String> hierarchies = new ArrayList <String>();
         for ( List <String> hierachy : result) {
-            hierarchies.add(String.join("/", hierachy));
+            hierarchies.add(String.join("^", hierachy));
         }
         return hierarchies;
     }
