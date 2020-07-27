@@ -1,4 +1,5 @@
 {
+  "accessManager": "Access rights",
   "allValuesExcept": "All values except",
   "filterWithValue": "Filter with this value",
   "indexNotAvailable": "No search service available currently!",
