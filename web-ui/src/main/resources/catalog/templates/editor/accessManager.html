@@ -21,7 +21,6 @@
                      data-ng-model-options="{debounce: 300}"
                      placeholder="{{'anyPlaceHolder' | translate}}"
                      aria-label="{{'anyPlaceHolder' | translate}}">
-
               <br/>
               <label class="control-label"
                      data-translate>_groupPublished</label>
@@ -69,13 +68,13 @@
               </th>
             </tr>
             <tr>
-              <th>{{size > results.hits.total ? results.hits.total : size}}/{{results.hits.total}}&nbsp;<span data-translate>records</span></th>
+              <th>{{size > results.hits.total.value ? results.hits.total.value : size}}/{{results.hits.total.value}}&nbsp;<span data-translate>records</span></th>
               <th data-ng-repeat="c in columns">
                 {{c.operation.label[lang]|empty:c.operation.name}}
               </th>
             </tr>
             <tr data-ng-repeat="r in results.hits.hits">
-              <td><a data-ng-href="catalog.search#/metadata/{{r._source.uuid}}">{{r._source.resourceTitle}}</a></td>
+              <td><a data-ng-href="catalog.search#/metadata/{{r._source.uuid}}">{{r._source.resourceTitleObject.default}}</a></td>
               <td data-ng-repeat="c in columns"
                   class="{{r.fields[c.fieldName][0] == false ? 'danger' : 'success'}}">
                 &nbsp;
@@ -85,7 +84,7 @@
               <td>
                 <button class="btn btn-link"
                         data-ng-click="more()"
-                        data-ng-if="results.hits.total > size"
+                        data-ng-if="results.hits.total.value > size"
                         data-translate>
                   more
                 </button>

@@ -109,7 +109,7 @@
               scriptFields.push(
                 '"' + fieldName +'": {' +
                 '      "script": {' +
-                '        "inline": "doc[\'op' + o.id + '\'].value == \'' + g.id + '\'"' +
+                '        "inline": "doc[\'op' + o.id + '\'].size() > 0 && doc[\'op' + o.id + '\'].value == \'' + g.id + '\'"' +
                 '      }' +
                 '    }');
               $scope.columns.push({
@@ -133,13 +133,13 @@
             '  },' +
             '  "from": 0,' +
             '  "size": ' + $scope.size + ',' +
-            '  "_source": ["resourceTitle", "uuid"], ' +
+            '  "_source": ["resourceTitleObject.default", "uuid"], ' +
             '  "script_fields": {' +
             scriptFields.join(',') +
             '  }' +
             '}';
 
-        $http.post('../../index/records?_=_search', query, {
+        $http.post('../api/search/records/_search', query, {
           headers: {'Content-type': 'application/json'}
         }).
         then(function(r) {
