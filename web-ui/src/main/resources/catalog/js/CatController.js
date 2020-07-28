@@ -347,11 +347,12 @@ goog.require('gn_alert');
                 'size': 15
               }
             },
-            "dateStamp" : {
+            'dateStamp' : {
               'userHasRole': 'isReviewerOrMore',
-              "auto_date_histogram" : {
-                "field" : "dateStamp",
-                "buckets": 50
+              // 'collapsed': true,
+              'auto_date_histogram' : {
+                'field' : 'dateStamp',
+                'buckets': 50
               }
             }
           },
