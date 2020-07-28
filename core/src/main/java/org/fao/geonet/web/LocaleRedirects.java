@@ -45,6 +45,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -111,6 +112,9 @@ public class LocaleRedirects {
                                       @RequestParam(value = NODE_PARAMETER, required = false) String portal
                              ) throws ResourceNotFoundException {
         String lang = lang(langParam, langCookie, langHeader);
+
+        HttpSession session = request.getSession();
+        if (session != null) session.invalidate();
 
         if (checkPortalExist(portal, !accept.startsWith(ACCEPT_VALUE))) {
             return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, portal));
