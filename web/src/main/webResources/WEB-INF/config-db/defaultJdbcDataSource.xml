@@ -31,7 +31,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 	">
   <context:property-placeholder location="${db.properties}" file-encoding="UTF-8"
-                                ignore-unresolvable="true" order="1"/>
+                                ignore-unresolvable="true" order="-1"/>
 
 
   <bean id="jdbcDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
