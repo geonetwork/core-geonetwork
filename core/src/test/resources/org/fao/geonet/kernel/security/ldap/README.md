@@ -13,7 +13,8 @@ Setup LDAP
 5. choose "data_for_Apache_Directory_Studio.ldif" 
     * This is the same a data.ldif but it doesn't define the dc=example,dc=com folder (its pre-created)
 6. Feel free to explore the LDAP tree in Apache Directory Studio    
-    
+  
+NOTE: use port 3333  
 
 Setup GeoNetwork
 ---------------- 

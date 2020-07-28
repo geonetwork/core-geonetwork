@@ -14,6 +14,18 @@
 
 <!--  <ctx:property-placeholder location="classpath:org/fao/geonet/kernel/security/ldap/LDAP-test-properties.properties"/>-->
 
+  <bean id="ldapRoleConverterGroupNameParser"
+        class="org.fao.geonet.kernel.security.ldap.LDAPRoleConverterGroupNameParser">
+    <property name="ldapMembershipQueryParser" value="GCAT_(.*)_(.*)"/>
+    <property name="groupIndexInPattern" value="1"/>
+    <property name="profileIndexInPattern" value="2"/>
+    <property name="profileMapping">
+      <map>
+        <entry key="ADMIN" value="Administrator"/>
+        <entry key="EDITOR" value="Editor"/>
+      </map>
+    </property>
+  </bean>
 
   <!-- Add ldap authentication to authentication manager -->
   <bean id="ldapAuthenticationProviderPostProcessor"
@@ -90,10 +102,7 @@
       </map>
     </property>
     <property name="profileMapping">
-      <map>
-        <entry key="ADMIN" value="Administrator"/>
-        <entry key="EDITOR" value="Editor"/>
-      </map>
+      <map/>
     </property>
     <property name="ldapUtils" ref="ldapUtils"/>
     <property name="importPrivilegesFromLdap" value="true"/>
@@ -103,12 +112,14 @@
 
     <property name="ldapManager" ref="ldapUserDetailsService" />
 
-    <property name="ldapMembershipQuery" value="(&amp;(objectClass=*)(member=cn={2})(cn=GCAT_*))"/>
-    <property name="ldapMembershipQueryParser" value="GCAT_(.*)_(.*)"/>
-    <property name="groupIndexInPattern" value="1"/>
-    <property name="profileIndexInPattern" value="2"/>
-
     <property name="membershipSearchStartObject" value=""/>
+    <property name="ldapMembershipQuery" value="(&amp;(objectClass=*)(member=cn={2})(cn=GCAT_*))"/>
+
+   <property name="ldapRoleConverters">
+     <util:list>
+       <ref bean="ldapRoleConverterGroupNameParser"/>
+     </util:list>
+   </property>
 
 
     <property name="contextSource" ref="contextSource" />

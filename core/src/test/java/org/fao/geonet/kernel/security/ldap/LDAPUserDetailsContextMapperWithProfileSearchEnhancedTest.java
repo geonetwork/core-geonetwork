@@ -132,6 +132,9 @@ public class LDAPUserDetailsContextMapperWithProfileSearchEnhancedTest extends A
     @Autowired
     FilterBasedLdapUserSearch ldapUserSearch;
 
+    @Autowired
+    LDAPRoleConverterGroupNameParser ldapRoleConverterGroupNameParser;
+
     //very simple test
     // this will find the DN by searching by username
     @Test

@@ -49,19 +49,7 @@ import java.util.regex.Pattern;
  * {1} = cn for the ldap user object (short version)  i.e. "blasby, david"
  * {2} = cn for the ldap user object (full version)   i.e. "blasby, david,ou=GIS Department,ou=Corporate Users,dc=example,dc=com"
  * ** typically you'll be using {2}
- * <p>
- * The found ldap groups will be parsed by `ldapMembershipQueryParser` (i.e. GCAT_(.*)_(.*))
- * groupIndexInPattern, profileIndexInPattern are group numbers in the `ldapMembershipQueryParser`
- * <p>
- * For example,
- * ldapMembershipQueryParser = GCAT_(.*)_(.*))
- * groupIndexInPattern=1
- * profileIndexInPattern=2
- * <p>
- * For a group called "GCAT_GENERAL_EDITOR", then;
- * GN-Group = "GENERAL"
- * GN-PROFILE = "EDITOR" (which is converted to "Editor" via the `profileMapping`
- *
+
  * @author dblasby/francois
  */
 public class LDAPUserDetailsContextMapperWithProfileSearchEnhanced extends AbstractLDAPUserDetailsContextMapper {
@@ -69,22 +57,18 @@ public class LDAPUserDetailsContextMapperWithProfileSearchEnhanced extends Abstr
     //Query used to find group membership
     private String ldapMembershipQuery;
 
-    //How to parse the groups into GN-GROUP and GN-PROFILE
-    //i.e. GCAT_(.*)_(.*) to parse GCAT_GENERAL_EDITOR
-    private Pattern ldapMembershipQueryParser;
 
-    //these go with the ldapMembershipQueryParser
-    // they correspond to the groups returned by the parser
-    // i.e. GCAT_(.*)_(.*) to parse GCAT_GENERAL_EDITOR
-    //        1=> GENERAL
-    //        2=> EDITOR
-    private int groupIndexInPattern;
-    private int profileIndexInPattern;
 
     //where to start searching in the LDAP
     // typically this will be "" (search entire directory)
     private String membershipSearchStartObject;
 
+    //Strategy objects to convert a LDAPRole to GN-role (GN-group and GN-profile)
+    private List<LDAPRoleConverter> ldapRoleConverters;
+
+    public void setLdapRoleConverters(List<LDAPRoleConverter> vals) {
+        this.ldapRoleConverters = vals;
+    }
 
     public void setMembershipSearchStartObject(String membershipSearchStartObject) {
         this.membershipSearchStartObject = membershipSearchStartObject;
@@ -94,9 +78,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearchEnhanced extends Abstr
         this.ldapMembershipQuery = ldapMembershipQuery;
     }
 
-    public void setLdapMembershipQueryParser(String ldapMembershipQueryParser) {
-        this.ldapMembershipQueryParser = Pattern.compile(ldapMembershipQueryParser);
-    }
+
 
     //This will find the shortest "cn" attribute given in the object
     // typically, there are >1 of these.  I.e. "blasby, david" and "blasby, david,ou=GIS Department,ou=Corporate Users,dc=example,dc=com"
@@ -159,9 +141,6 @@ public class LDAPUserDetailsContextMapperWithProfileSearchEnhanced extends Abstr
             if (Log.isDebugEnabled(Geonet.LDAP)) {
                 StringBuffer sb = new StringBuffer("Group and profile search:");
                 sb.append("\nLDAP Membership Query query: \t" + ldapMembershipQuery);
-                sb.append("\nldapMembershipQueryParser: \t" + ldapMembershipQueryParser.toString());
-                sb.append("\ngroupIndexInPattern: \t" + groupIndexInPattern);
-                sb.append("\nprofileIndexInPattern: \t" + profileIndexInPattern);
                 sb.append("\nmembershipSearchStartObject: \t" + membershipSearchStartObject);
 
                 Log.debug(Geonet.LDAP, sb.toString());
@@ -183,32 +162,30 @@ public class LDAPUserDetailsContextMapperWithProfileSearchEnhanced extends Abstr
                 searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE); //recursive
 
                 ldapInfoList = dc.search(membershipSearchStartObject, groupsQuery, searchControls);
+
+                Set<LDAPRole> allRoles = new HashSet<>();
+
+                //for each found LDAP-Group
                 while (ldapInfoList.hasMore()) {
                     SearchResult sr = (SearchResult) ldapInfoList.next();
                     String ldapGroupName = cn_short(sr.getAttributes());
 
-                    Matcher matcher = ldapMembershipQueryParser.matcher(ldapGroupName); // does this match the parser?
+                    //have the converters process the LDAP-Group
+                    //NOTE: they will return an empty list if they don't know what the role means
+                    //      allRoles is a set, you can add duplicates to it with no problem...
+                    for(LDAPRoleConverter converter : this.ldapRoleConverters){
+                        List<LDAPRole> newRoles = converter.convert(userInfo,userDetails,ldapGroupName,sr.getAttributes());
+                        if (newRoles != null)
+                            allRoles.addAll(newRoles);
+                    }
+                }
 
-                    if (!matcher.matches())  //LDAP group name not in correct format...
-                        continue;
-
-                    String group = matcher.group(this.groupIndexInPattern);
-                    String profile_str = matcher.group(this.getProfileIndexInPattern());
-
-                    Profile profile = getProfile(profile_str); //convert to a GN `Profile` object (simple and with conversion)
-
-                    if (profile == null)
-                        continue;
-
-                    Log.debug(Geonet.LDAP, "for ldap user " + username + " for LDAP group " + ldapGroupName +
-                        " gives group= " + group + " with profile= " + profile.name());
-
-                    userDetails.addPrivilege(group, profile); //add the profile info
-
+                //we have a set of GN-Role, now add them to the user object
+                for(LDAPRole role: allRoles) {
+                    userDetails.addPrivilege(role.getGroupName(), role.getProfile()); //add the profile info
                 }
 
                 //highest access is the "generic" access for the user
-                // TODO: what are the impacts of this?
                 Profile highestUserProfile = ProfileManager.getHighestProfile(userDetails.getPrivileges().values().toArray(new Profile[0]));
                 if (highestUserProfile != null) {
                     if (Log.isDebugEnabled(Geonet.LDAP)) {
@@ -232,19 +209,4 @@ public class LDAPUserDetailsContextMapperWithProfileSearchEnhanced extends Abstr
     }
 
 
-    public int getGroupIndexInPattern() {
-        return groupIndexInPattern;
-    }
-
-    public void setGroupIndexInPattern(int groupIndexInPattern) {
-        this.groupIndexInPattern = groupIndexInPattern;
-    }
-
-    public int getProfileIndexInPattern() {
-        return profileIndexInPattern;
-    }
-
-    public void setProfileIndexInPattern(int profileIndexInPattern) {
-        this.profileIndexInPattern = profileIndexInPattern;
-    }
 }
