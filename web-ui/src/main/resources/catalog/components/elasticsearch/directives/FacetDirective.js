@@ -44,6 +44,14 @@
       }.bind(this),
       function (newValue) {
         if (!newValue) return
+
+        for (var i = 0; i < this.list.length; i++) {
+          this.fLvlCollapse[this.list[i].key] =
+            angular.isDefined(this.fLvlCollapse[this.list[i].key]) ?
+              this.fLvlCollapse[this.list[i].key] :
+              this.list[i].collapsed === true;
+        }
+
         var lastFacet = this.lastUpdatedFacet
 
         if (this._isFlatTermsFacet(lastFacet) && this.searchCtrl.hasFiltersForKey(lastFacet.key)) {
@@ -169,7 +177,7 @@
       this.item.path = [this.facet.key, this.item.key];
       this.item.collapsed = !this.searchCtrl.hasChildInSearch(this.item.path);
     } else if (this.facet.type === 'filters'|| this.facet.type === 'histogram') {
-      this.item.inverted= this.searchCtrl.isNegativeSearch(this.item.path);
+      this.item.inverted = this.searchCtrl.isNegativeSearch(this.item.path);
     }
   }
 

@@ -151,6 +151,7 @@
         type;
       angular.forEach(aggs, function(facet) {
         delete facet.userHasRole;
+        delete facet.collapsed;
       });
       esParams.aggregations = aggs;
     };
@@ -184,11 +185,19 @@
         var respAgg = respAggs[fieldId];
         var reqAgg = reqAggs[fieldId];
 
+        function facetHasProperty(configId, fieldId, propertyKey) {
+          return configId && this.configs[configId].facets
+            && this.configs[configId].facets[fieldId]
+            && this.configs[configId].facets[fieldId][propertyKey];
+        }
         var facetModel = {
           key: fieldId,
           userHasRole: configId && this.configs[configId].facets
             && this.configs[configId].facets[fieldId]
             && this.configs[configId].facets[fieldId].userHasRole,
+          collapsed: configId && this.configs[configId].facets
+            && this.configs[configId].facets[fieldId]
+            && this.configs[configId].facets[fieldId].collapsed,
           items: [],
           path: (path || []).concat([fieldId])
         };
