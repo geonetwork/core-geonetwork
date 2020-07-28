@@ -184,6 +184,11 @@ goog.require('gn_alert');
                 "filter": { "exists": { "field": "parentUuid" } },
                 "weight": 0.3
               },
+              // Boost down obsolete records
+              {
+                "filter": { "match": { "codelist_status": "obsolete" } },
+                "weight": 0.3
+              },
               // {
               //   "filter": { "match": { "codelist_resourceScope": "service" } },
               //   "weight": 0.8
@@ -260,6 +265,12 @@ goog.require('gn_alert');
                 }
               }
             },
+            'codelist_spatialRepresentationType': {
+              'terms': {
+                'field': 'codelist_spatialRepresentationType',
+                'size': 10
+              }
+            },
             'availableInServices': {
               'filters': {
                 //"other_bucket_key": "others",
@@ -309,32 +320,16 @@ goog.require('gn_alert');
                 //"include": "EEA.*"
               }
             },
-            'codelist_spatialRepresentationType': {
-              'terms': {
-                'field': 'codelist_spatialRepresentationType',
-                'size': 10
-              }
-            },
             'resolutionScaleDenominator': {
+              'collapsed': true,
               'terms': {
                 'field': 'resolutionScaleDenominator',
                 'size': 10,
                 'order': {'_key': "asc"}
               }
             },
-            'codelist_maintenanceAndUpdateFrequency_text': {
-              'terms': {
-                'field': 'codelist_maintenanceAndUpdateFrequency_text',
-                'size': 10
-              }
-            },
-            'codelist_status_text': {
-              'terms': {
-                'field': 'codelist_status_text',
-                'size': 10
-              }
-            },
             'creationYearForResource': {
+              'collapsed': true,
               'terms': {
                 'field': 'creationYearForResource',
                 'size': 10,
@@ -345,6 +340,19 @@ goog.require('gn_alert');
               'terms': {
                 'field': 'OrgForResource',
                 'size': 15
+              }
+            },
+            'codelist_maintenanceAndUpdateFrequency_text': {
+              'collapsed': true,
+              'terms': {
+                'field': 'codelist_maintenanceAndUpdateFrequency_text',
+                'size': 10
+              }
+            },
+            'codelist_status_text': {
+              'terms': {
+                'field': 'codelist_status_text',
+                'size': 10
               }
             },
             'dateStamp' : {
@@ -425,8 +433,8 @@ goog.require('gn_alert');
           },
           'isFilterTagsDisplayedInSearch': true,
           'usersearches': {
-            'enabled': false,
-            'displayFeaturedSearchesPanel': false
+            'enabled': true,
+            'displayFeaturedSearchesPanel': true
           },
           'savedSelection': {
             'enabled': false

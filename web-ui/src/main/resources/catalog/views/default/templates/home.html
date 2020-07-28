@@ -21,7 +21,7 @@
                 placeholder="{{'anyPlaceHolder' | translate}}"
                 aria-label="{{'anyPlaceHolder' | translate}}"
                 data-ng-keyup="$event.keyCode == 13 && goToSearch(homeAnyField)"
-                data-typeahead="address for address in getAnySuggestions($viewValue)"
+                data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
                 data-typeahead-loading="anyLoading"
                 data-typeahead-min-length="1"/>
           <span class="input-group-btn">
