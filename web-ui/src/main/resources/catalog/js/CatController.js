@@ -433,7 +433,7 @@ goog.require('gn_alert');
           },
           'isFilterTagsDisplayedInSearch': true,
           'usersearches': {
-            'enabled': true,
+            'enabled': false,
             'displayFeaturedSearchesPanel': true
           },
           'savedSelection': {
