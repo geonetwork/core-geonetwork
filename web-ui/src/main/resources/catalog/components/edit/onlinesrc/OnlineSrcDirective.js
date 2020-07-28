@@ -342,6 +342,7 @@
                 scope.ctrl = {};
               },
               post: function(scope, element, attrs) {
+                scope.clearFormOnProtocolChange = !(attrs.clearFormOnProtocolChange == "false"); //default to true (old behavior)
                 scope.popupid = attrs['gnPopupid'];
 
                 scope.config = null;
@@ -723,7 +724,7 @@
                 var resetProtocol = function() {
                   scope.layers = [];
                   scope.OGCProtocol = false;
-                  if (scope.params && !scope.isEditing) {
+                  if (scope.params && !scope.isEditing && scope.clearFormOnProtocolChange) {
                     scope.params.name = '';
                     scope.params.desc = '';
                     initMultilingualFields();
@@ -947,7 +948,7 @@
                   if (!angular.isUndefined(scope.params.protocol) && o !== n) {
                     resetProtocol();
                     scope.OGCProtocol = checkIsOgc(scope.params.protocol);
-                    if (scope.OGCProtocol != null && !scope.isEditing) {
+                    if (scope.OGCProtocol != null && !scope.isEditing && scope.clearFormOnProtocolChange) {
                       // Reset parameter in case of multilingual metadata
                       // Those parameters are object.
                       scope.params.name = '';
