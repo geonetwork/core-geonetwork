@@ -48,7 +48,7 @@
   <xsl:variable name="i18n" select="/root/gui/i18n"/>
   <!-- Used by SearchApi loading translation from JSON locale files. -->
   <xsl:variable name="t" select="/root/translations"/>
-  <xsl:variable name="lang" select="/root/gui/language"/>
+  <xsl:variable name="lang" select="if (/root/gui/language) then /root/gui/language else 'eng'"/>
   <xsl:variable name="lang2chars" select="/root/gui/lang2chars"/>
   <xsl:variable name="requestParameters" select="/root/request"/>
 
@@ -95,7 +95,9 @@
   <!-- Catalog settings -->
   <xsl:variable name="env">
     <system>
-      <xsl:copy-of select="/root/gui/env/*"/>
+      <xsl:copy-of select="if (/root/gui/systemConfig)
+                            then /root/gui/systemConfig
+                            else /root/gui/env/*"/>
     </system>
   </xsl:variable>
 
