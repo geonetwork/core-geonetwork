@@ -572,7 +572,7 @@
         'MD_ConstraintsUseLimitation', 'resourceType',
         'type', 'link', 'crsDetails', 'format', 'otherLanguage',
         'creationDateForResource', 'publicationDateForResource', 'revisionDateForResource',
-        'contact', 'contactForResource', 'resourceTemporalDateRange', 'resourceTemporalExtentDateRange'];
+        'contact', 'contactForResource', 'Org', 'OrgForResource', 'resourceTemporalDateRange', 'resourceTemporalExtentDateRange'];
 
 
 
