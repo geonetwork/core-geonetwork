@@ -1,4 +1,9 @@
 {
+  "ui-queryBase": "Base query",
+  "ui-queryBase-help": "For a simple full text search on all fields use '${any}'. To give more importante to the title, use '${any} resourceTitleObject.default:(${any})^2'. See <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html\">the documentation</a> for more details.",
+  "anyFieldTitle": "Search. Type in to get suggestions. Use \" to search for phrases and exact match eg. \"reference grid\". Use q() for advanced querying eg. q(-codelist_status_text:obsolete)",
+  "accessManager": "Access rights",
+  "facetIncludeFilter": "Filter values. Regular expression can be used using '/Land.*/'",
   "allValuesExcept": "All values except",
   "filterWithValue": "Filter with this value",
   "indexNotAvailable": "No search service available currently!",
@@ -61,6 +66,7 @@
   "facet-isTemplate": "Record types",
   "facet-schema": "Standardit",
   "facet-isPublishedToAll": "Access",
+  "facet-thesaurus_geonetworkthesaurusexternalthemehttpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree": "Priority dataset",
   "isPublishedToAll-true": "Public records",
   "isPublishedToAll-false": "Restricted records",
   "indexRecordsWithErrors": "Index records with errors",
@@ -75,5 +81,5 @@
   "ui-autocompleteConfig": "Autocompletion configuration",
   "ui-autocompleteConfig-help": "Configuration must have a query.multi_match.query which will be set on autocompletion.",
   "ui-facetConfig": "Facets configuration",
-  "ui-facetConfig-help": "This configuration is used to display facets, using either terms aggregations or filters. See <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html\">the official documentation</a> for more information."
+  "ui-facetConfig-help": "This configuration is used to display facets, using either terms aggregations or filters. See <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html\">the documentation</a> for more information."
 }
