@@ -44,14 +44,7 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
@@ -159,12 +152,22 @@ public class ISO19139SchemaPlugin
 
     @Override
     public Set<String> getAssociatedParentUUIDs(Element metadata) {
-        ElementFilter elementFilter = new ElementFilter("parentIdentifier", GMD);
-        return Xml.filterElementValues(
-            metadata,
-            elementFilter,
-            "CharacterString", GCO,
-            null);
+        Element parentIdentifier = metadata.getChild("parentIdentifier", GMD);
+        if (parentIdentifier != null) {
+            Element characterString = parentIdentifier.getChild("CharacterString", GCO);
+            if (characterString != null) {
+                HashSet<String> uuids = new HashSet<>();
+                uuids.add(characterString.getText());
+                return uuids;
+            }
+            Element anchor = parentIdentifier.getChild("Anchor", GMX);
+            if (anchor != null) {
+                HashSet<String> uuids = new HashSet<>();
+                uuids.add(anchor.getText());
+                return uuids;
+            }
+        }
+        return new HashSet<String>();
     }
 
     public Set<String> getAssociatedDatasetUUIDs(Element metadata) {

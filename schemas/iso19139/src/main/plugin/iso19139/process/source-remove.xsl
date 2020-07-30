@@ -25,9 +25,11 @@
 <!--
 Stylesheet used to remove a reference to a source record.
 -->
-<xsl:stylesheet xmlns:geonet="http://www.fao.org/geonetwork" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+<xsl:stylesheet xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="2.0">
+                version="2.0"
+                exclude-result-prefixes="#all">
 
   <!-- Source metadata record UUID -->
   <xsl:param name="sourceUuid"/>
@@ -40,5 +42,5 @@ Stylesheet used to remove a reference to a source record.
   </xsl:template>
 
   <!-- Remove geonet:* elements and the target source. -->
-  <xsl:template match="geonet:*|gmd:source[@uuidref=$sourceUuid]" priority="2"/>
+  <xsl:template match="geonet:*|gmd:source[@uuidref = $sourceUuid]" priority="2"/>
 </xsl:stylesheet>
