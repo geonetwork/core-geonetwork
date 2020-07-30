@@ -22,18 +22,22 @@
  */
 package org.fao.geonet.api.links;
 
-import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.LinkRepository;
-import org.fao.geonet.repository.MetadataLinkRepository;
 import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -41,18 +45,17 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.UUID;
 
+import static org.fao.geonet.kernel.UpdateDatestamp.NO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.hamcrest.Matchers.equalTo;
@@ -73,9 +76,6 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
     private LinkRepository linkRepository;
 
     @Autowired
-    private MetadataLinkRepository metadataLinkRepository;
-
-    @Autowired
     private SchemaManager schemaManager;
 
     @Autowired
@@ -84,36 +84,38 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
     @Autowired
     private SourceRepository sourceRepository;
 
-    @PersistenceContext
-    private EntityManager _entityManager;
-
     @Autowired
     private IMetadataUtils metadataRepository;
 
-    private String uuid;
-    private int id;
-    private AbstractMetadata md;
+    @Autowired
+    private UserGroupRepository userGroupRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private GroupRepository groupRepository;
+
     private MockMvc mockMvc;
     private ServiceContext context;
-
 
     @Before
     public void setUp() throws Exception {
         this.context = createServiceContext();
-        createTestData();
     }
 
     @Test
-    public void getLinks() throws Exception {
-        Long operationsCount = linkRepository.count();
-        final MockHttpSession httpSession = this.loginAsAdmin();
+    public void getLinksAsAdmin() throws Exception {
+        Group group = createGroupWithOneEditor(createEditor());
+        AbstractMetadata md = createMd(group.getId());
+
+        MockHttpSession httpSession = this.loginAsAdmin();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(post("/srv/api/records/links?uuid=" + this.uuid)
+        this.mockMvc.perform(post("/srv/api/records/links?uuid=" + md.getUuid())
             .session(httpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isCreated());
-
         Assert.assertEquals(1, linkRepository.count());
 
         this.mockMvc.perform(get("/srv/api/records/links")
@@ -124,40 +126,193 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$.content", hasSize(1)))
             .andExpect(jsonPath("$.content[0].url").value(equalTo("http://services.sandre.eaufrance.fr/geo/ouvrage")))
             .andExpect(jsonPath("$.content[0].records", hasSize(1)))
-            .andExpect(jsonPath("$.content[0].records[0].metadataId").value(equalTo(this.id)))
+            .andExpect(jsonPath("$.content[0].records[0].metadataId").value(equalTo(md.getId())))
             .andExpect(jsonPath("$.content[0].records[0].metadataUuid").value(equalTo(md.getUuid())));;
 
         this.mockMvc.perform(delete("/srv/api/records/links")
             .session(httpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNoContent());
-
         Assert.assertEquals(0, linkRepository.count());
     }
 
-    private void createTestData() throws Exception {
-        loginAsAdmin(context);
+    @Test
+    public void getLinksAsEditor() throws Exception {
+        User editor = createEditor();
+        Group group = createGroupWithOneEditor(editor);
+        AbstractMetadata md = createMd(group.getId());
 
-        final Element sampleMetadataXml = getSampleMetadataXml();
-        this.uuid = UUID.randomUUID().toString();
-        Xml.selectElement(sampleMetadataXml, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).setText(this.uuid);
+        MockHttpSession httpSession = this.loginAsAdmin();
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(post("/srv/api/records/links?uuid=" + md.getUuid())
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isCreated());
+        Assert.assertEquals(1, linkRepository.count());
 
-        String source = sourceRepository.findAll().get(0).getUuid();
-        String schema = schemaManager.autodetectSchema(sampleMetadataXml);
-        final Metadata metadata = new Metadata();
-        metadata.setDataAndFixCR(sampleMetadataXml).setUuid(uuid);
-        metadata.getDataInfo().setRoot(sampleMetadataXml.getQualifiedName()).setSchemaId(schema).setType(MetadataType.METADATA);
-        metadata.getDataInfo().setPopularity(1000);
-        metadata.getSourceInfo().setOwner(1).setSourceId(source);
-        metadata.getHarvestInfo().setHarvested(false);
+        httpSession = this.loginAs(editor);
+        this.mockMvc.perform(get("/srv/api/records/links")
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].url").value(equalTo("http://services.sandre.eaufrance.fr/geo/ouvrage")))
+                .andExpect(jsonPath("$.content[0].records", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].records[0].metadataId").value(equalTo(md.getId())))
+                .andExpect(jsonPath("$.content[0].records[0].metadataUuid").value(equalTo(md.getUuid())));;
 
-
-        this.id = dataManager.insertMetadata(context, metadata, sampleMetadataXml, false, false, false, UpdateDatestamp.NO,
-                false, false).getId();
-
-
-        dataManager.indexMetadata(Lists.newArrayList("" + this.id));
-        this.md = metadataRepository.findOne(this.id);
+        httpSession = this.loginAsAdmin();
+        this.mockMvc.perform(delete("/srv/api/records/links")
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isNoContent());
+        Assert.assertEquals(0, linkRepository.count());
     }
 
+
+    @Test
+    public void getLinksAsEditorFromAnotherGroup() throws Exception {
+        User editor = createEditor();
+        createGroupWithOneEditor(editor);
+        AbstractMetadata md = createMd(createGroupWithOneEditor(createEditor()).getId());
+
+        MockHttpSession httpSession = this.loginAsAdmin();
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(post("/srv/api/records/links?uuid=" + md.getUuid())
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isCreated());
+        Assert.assertEquals(1, linkRepository.count());
+
+        httpSession = this.loginAs(editor);
+        this.mockMvc.perform(get("/srv/api/records/links")
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+                .andExpect(jsonPath("$.content", hasSize(0)));
+
+        httpSession = this.loginAsAdmin();
+        this.mockMvc.perform(delete("/srv/api/records/links")
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isNoContent());
+        Assert.assertEquals(0, linkRepository.count());
+    }
+
+    @Test
+    public void getLinksAsEditorFromNoGroup() throws Exception {
+        User editor = createEditor();
+        AbstractMetadata md = createMd(createGroupWithOneEditor(createEditor()).getId());
+
+        MockHttpSession httpSession = this.loginAsAdmin();
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(post("/srv/api/records/links?uuid=" + md.getUuid())
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isCreated());
+        Assert.assertEquals(1, linkRepository.count());
+
+        httpSession = this.loginAs(editor);
+        this.mockMvc.perform(get("/srv/api/records/links")
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+                .andExpect(jsonPath("$.content", hasSize(0)));
+
+        httpSession = this.loginAsAdmin();
+        this.mockMvc.perform(delete("/srv/api/records/links")
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isNoContent());
+        Assert.assertEquals(0, linkRepository.count());
+    }
+
+    @Test
+    public void getLinksAsAdminWithATwiceUsedLink() throws Exception {
+        Group group = createGroupWithOneEditor(createEditor());
+        AbstractMetadata md = createMd(group.getId());
+        Group group1 = createGroupWithOneEditor(createEditor());
+        AbstractMetadata md1 = createMd(group1.getId());
+
+        MockHttpSession httpSession = this.loginAsAdmin();
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(post("/srv/api/records/links?uuid=" + md.getUuid())
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isCreated());
+        this.mockMvc.perform(post("/srv/api/records/links?uuid=" + md1.getUuid())
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isCreated());
+        Assert.assertEquals(1, linkRepository.count());
+
+        this.mockMvc.perform(get("/srv/api/records/links")
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].url").value(equalTo("http://services.sandre.eaufrance.fr/geo/ouvrage")))
+                .andExpect(jsonPath("$.content[0].records", hasSize(2)))
+                .andExpect(jsonPath("$.content[0].records[0].metadataId").value(equalTo(md.getId())))
+                .andExpect(jsonPath("$.content[0].records[0].metadataUuid").value(equalTo(md.getUuid())))
+                .andExpect(jsonPath("$.content[0].records[1].metadataId").value(equalTo(md1.getId())))
+                .andExpect(jsonPath("$.content[0].records[1].metadataUuid").value(equalTo(md1.getUuid())));
+
+        this.mockMvc.perform(delete("/srv/api/records/links")
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isNoContent());
+        Assert.assertEquals(0, linkRepository.count());
+    }
+
+    private AbstractMetadata createMd(Integer groupOwner) throws Exception {
+        loginAsAdmin(context);
+
+        Element sampleMetadataXml = getSampleMetadataXml();
+        String uuid = UUID.randomUUID().toString();
+        Xml.selectElement(sampleMetadataXml, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).setText(uuid);
+
+        Metadata metadata = new Metadata();
+        metadata.setDataAndFixCR(sampleMetadataXml)
+                .setUuid(uuid);
+        metadata.getDataInfo()
+                .setRoot(sampleMetadataXml.getQualifiedName())
+                .setSchemaId(schemaManager.autodetectSchema(sampleMetadataXml))
+                .setType(MetadataType.METADATA)
+                .setPopularity(1000);
+        metadata.getSourceInfo()
+                .setOwner(1)
+                .setSourceId(sourceRepository.findAll().get(0).getUuid())
+                .setGroupOwner(groupOwner);
+        metadata.getHarvestInfo().setHarvested(false);
+
+        return dataManager.insertMetadata(context, metadata, sampleMetadataXml, false, true, false, NO,false, false);
+    }
+
+    private Group createGroupWithOneEditor(User editor) throws IOException {
+        Group group = new Group()
+                .setName(UUID.randomUUID().toString().replace("-", ""));
+        group = groupRepository.save(group);
+
+        UserGroup userGroup = new UserGroup()
+                .setGroup(group)
+                .setUser(editor)
+                .setProfile(Profile.Editor);
+        userGroupRepository.save(userGroup);
+
+        return group;
+    }
+
+    private User createEditor() {
+        User editor = new User()
+                .setUsername(UUID.randomUUID().toString())
+                .setProfile(Profile.Reviewer).setName(UUID.randomUUID().toString())
+                .setEnabled(true);
+        return userRepository.save(editor);
+    }
 }
