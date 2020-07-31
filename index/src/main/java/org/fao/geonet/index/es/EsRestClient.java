@@ -41,6 +41,7 @@ import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -390,6 +391,20 @@ public class EsRestClient implements InitializingBean {
                 "Error during removal. Errors is '%s'.", deleteByQueryResponse.getStatus().getReasonCancelled()
             ));
         }
+    }
+
+    /**
+     * Get the complete document from the index.
+     * @param id For record index, use UUID.
+     * @return the source as Map
+     */
+    public Map<String, Object> getDocument(String index, String id) throws Exception {
+        if (!activated) {
+            return null;
+        }
+        GetRequest request = new GetRequest().index(index).id(id);
+        return client.get(request, RequestOptions.DEFAULT).getSourceAsMap();
+
     }
 
     /**

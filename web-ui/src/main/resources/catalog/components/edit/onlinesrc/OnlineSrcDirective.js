@@ -105,6 +105,8 @@
                   null);
                 if (uuid.stringValue) {
                   scope.remoteRecord.uuid = uuid.stringValue;
+                } else {
+                  scope.remoteRecord.uuid = scope.remoteRecord.remoteUrl;
                 }
 
               } catch (e) {
@@ -118,7 +120,7 @@
               try {
                 scope.remoteRecord.title =
                   doc.replace(/(.|[\r\n])*<title>(.*)<\/title>(.|[\r\n])*/, '$2');
-                scope.remoteRecord.uuid = scope.remoteRecord.url;
+                scope.remoteRecord.uuid = scope.remoteRecord.remoteUrl;
                 // Looking for schema.org tags or json+ld format could also be an option.
               } catch (e) {
                 console.warn(e);
@@ -167,11 +169,8 @@
           }
 
           scope.resetLink = function(allProperties) {
-            // Depends on the type of links
-            if (scope.selectionList) {
-              scope.selectionList = angular.isDefined(scope.stateObj) ?
+            scope.selectionList = angular.isDefined(scope.stateObj) ?
                 scope.stateObj.selectRecords : scope.selectRecords;
-            }
             scope.isRemoteRecordUrlOk = true;
             scope.remoteRecord.title = '';
             scope.remoteRecord.uuid = '';
@@ -384,7 +383,7 @@
                   resource.url['eng'];
 
                 if (resourceUrl.indexOf(baseUrl) == 0) {
-                  return '../metadata/' + resource.id;
+                  return '../api/records/' + resource.id;
                 } else {
                   return resource.url[scope.lang];
                 }
@@ -1449,7 +1448,7 @@
                         scope.srcParams.name = isRemote ? md.title : gnCurrentEdit.mdTitle;
                         scope.srcParams.desc = gnCurrentEdit.mdTitle;
                         scope.srcParams.protocol = "WWW:LINK-1.0-http--link";
-                        scope.srcParams.url = scope.onlineSrcLink;
+                        scope.srcParams.url = isRemote ? md.remoteUrl : scope.onlineSrcLink;
                         scope.srcParams.identifier = (md.identifier && md.identifier[0]) ? md.identifier[0] : '';
                         scope.srcParams.source = md.source;
                       }

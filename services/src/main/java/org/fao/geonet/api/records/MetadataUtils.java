@@ -101,6 +101,8 @@ public class MetadataUtils {
         final String fast = "" + fast_;
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
+        EsSearchManager searchMan = gc.getBean(EsSearchManager.class);
+
         Element relatedRecords = new Element("relations");
 
 
@@ -123,6 +125,7 @@ public class MetadataUtils {
         List<RelatedItemType> listOfTypes = new ArrayList<RelatedItemType>(Arrays.asList(type));
 
         Element md = dm.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+        Map<String, Object> mdIndexFields = searchMan.getDocument(uuid);
 
         String schemaIdentifier = dm.getMetadataSchema(id);
         SchemaPlugin instance = SchemaManager.getSchemaPlugin(schemaIdentifier);
@@ -142,9 +145,13 @@ public class MetadataUtils {
             listOfTypes.contains(RelatedItemType.parent))) {
             Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md);
             if (listOfUUIDs.size() > 0) {
+                // Collect local record info (taking into account privileges)
                 String joinedUUIDs = "\"" + Joiner.on("\" or \"").join(listOfUUIDs) + "\"";
                 relatedRecords.addContent(calculateResults(joinedUUIDs, "parent", context, from, to, fast, null, null, portalFilter));
+            } else {
+                relatedRecords.addContent(new Element("parent"));
             }
+            appendRemoteRecord("parent", mdIndexFields, relatedRecords.getChild("parent"));
         }
 
         // Brothers and sisters are not returned by default
@@ -188,6 +195,7 @@ public class MetadataUtils {
                 }
             }
             relatedRecords.addContent(new Element("siblings").addContent(response));
+            appendRemoteRecord("siblings", mdIndexFields, relatedRecords.getChild("siblings"));
         }
 
         // Search for records where an aggregate point to this record
@@ -212,62 +220,15 @@ public class MetadataUtils {
             // Get datasets related to service search
             if (listOfTypes.size() == 0 ||
                 listOfTypes.contains(RelatedItemType.datasets)) {
-                /*Set<String> listOfUUIDs = schemaPlugin.getAssociatedDatasetUUIDs(md);
+                Set<String> listOfUUIDs = schemaPlugin.getAssociatedDatasetUUIDs(md);
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
                     String joinedUUIDs = "\"" + Joiner.on("\" or \"").join(listOfUUIDs) + "\"";
-                    relatedRecords.addContent(search(joinedUUIDs, "datasets", context, from, to, fast, null));
-                }*/
-
-                Set<String> listOfUUIDs = new HashSet<>();
-                Set<String> listOfRemoteDatasets = new HashSet<>();
-
-                Element result = search(uuid, "uuid", context, from, to, fast, null, true);
-                Element response = ((Element) (result.getChildren().get(0)));
-                Element mdResult = ((Element) (response.getChildren().get(0)));
-                List<Element> datasets = mdResult.getChildren("operatesOn");
-
-                for(Element dataset : datasets) {
-                    if (StringUtils.isNotEmpty(dataset.getValue())) {
-                        String[] datasetInfo = dataset.getValue().split("\\|");
-                        String datasetUuid = datasetInfo[0];
-                        String refType = (datasetInfo.length > 1)?datasetInfo[1]:"L";
-
-                        if (!refType.equals("R")) {
-                            listOfUUIDs.add(datasetUuid);
-                        } else {
-                            listOfRemoteDatasets.add(dataset.getValue());
-                        }
-                    }
-                }
-
-                if (!listOfUUIDs.isEmpty()) {
-                    String joinedUUIDs = "\"" + Joiner.on("\" or \"").join(listOfUUIDs) + "\"";
                     relatedRecords.addContent(calculateResults(joinedUUIDs, "datasets", context, from, to, fast, null, null, portalFilter));
+                } else {
+                    relatedRecords.addContent(new Element("datasets"));
                 }
+                appendRemoteRecord("datasets", mdIndexFields, relatedRecords.getChild("datasets"));
 
-                if (!listOfRemoteDatasets.isEmpty()) {
-
-                    if (relatedRecords.getChild("datasets") == null) {
-                        relatedRecords.addContent(new Element("datasets").addContent(new Element("response")));
-                    }
-
-                    for(String remoteDataset : listOfRemoteDatasets) {
-                        String[] remoteDatasetInfo = remoteDataset.split("\\|");
-
-                        if(remoteDatasetInfo.length > 4) {
-                            Element metadata = new Element("metadata");
-                            metadata.setAttribute("origin", ORIGIN_REMOTE);
-                            metadata.addContent(new Element("uuid").setText(remoteDatasetInfo[0]));
-                            metadata.addContent(new Element("title").setText(remoteDatasetInfo[2]));
-                            metadata.addContent(new Element("abstract").setText(remoteDatasetInfo[3]));
-                            metadata.addContent(new Element("url").setText(remoteDatasetInfo[4]));
-
-                            relatedRecords.getChild("datasets").getChild("response").addContent(metadata);
-                        } else {
-                            Log.warning(Geonet.SEARCH_ENGINE, "Remote dataset incomplete for uuid : " + uuid + " " + remoteDataset);
-                        }
-                    }
-                }
             }
             // if source, return source datasets defined in the current record
             if (listOfTypes.size() == 0 ||
@@ -276,18 +237,18 @@ public class MetadataUtils {
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
                     String joinedUUIDs = "\"" + Joiner.on("\" or \"").join(listOfUUIDs) + "\"";
                     relatedRecords.addContent(calculateResults(joinedUUIDs, "sources", context, from, to, fast, null, null, portalFilter));
+                } else {
+                    relatedRecords.addContent(new Element("sources"));
                 }
+                appendRemoteRecord("sources", mdIndexFields, relatedRecords.getChild("sources"));
             }
             // if fcat
             if (listOfTypes.size() == 0 ||
                 listOfTypes.contains(RelatedItemType.fcats)) {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedFeatureCatalogueUUIDs(md);
-                Element fcat = null;
+                Element fcat = new Element("fcats");
 
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
-
-                    fcat = new Element("fcats");
-
                     for (String fcat_uuid : listOfUUIDs) {
                         String origin;
                         // Search in the index to use the portal filter and verify the metadata is available for the portal
@@ -312,10 +273,9 @@ public class MetadataUtils {
                         fcat.addContent(response);
                     }
                 }
+                relatedRecords.addContent(fcat);
+                appendRemoteRecord("fcats", mdIndexFields, fcat);
 
-                if (fcat != null) {
-                    relatedRecords.addContent(fcat);
-                }
             }
         }
 
@@ -345,6 +305,7 @@ public class MetadataUtils {
 
         return relatedRecords;
     }
+
 
     private static Element search(String uuid, String type, ServiceContext context, String from, String to,
                                   String fast, String exclude, boolean ignorePortalFilter) throws Exception {
@@ -611,5 +572,55 @@ public class MetadataUtils {
         }
 
         return results;
+    }
+
+
+    private static void appendRemoteRecord(String type,
+                                           Map<String, Object> mdIndexFields,
+                                           Element typeRoot) {
+        Object values = mdIndexFields.get(Geonet.IndexFieldNames.RECORDLINK);
+
+        if (values != null && values instanceof ArrayList) {
+            Element responseRoot = null;
+            if (typeRoot.getChild("response") != null) {
+                responseRoot = typeRoot.getChild("response");
+            } else {
+                responseRoot = new Element("response");
+                typeRoot.addContent(responseRoot);
+            }
+
+            Element finalResponseRoot = responseRoot;
+            ((ArrayList) values).forEach(recordLink -> {
+                if (recordLink instanceof HashMap) {
+                    HashMap<String, String> linkProperties = (HashMap) recordLink;
+                    if (type.equals(linkProperties.get(Geonet.IndexFieldNames.RecordLink.TYPE))
+                        && "remote".equals(linkProperties.get("origin"))) {
+                        Element record = new Element("metadata");
+                        record.setAttribute("origin", ORIGIN_REMOTE);
+
+                        if (type.equals(RelatedItemType.siblings.value())) {
+                            if (linkProperties.get("associationType") != null) {
+                                record.setAttribute("association", linkProperties.get("associationType"));
+                            }
+                            if (linkProperties.get("initiativeType") != null) {
+                                record.setAttribute("initiative", linkProperties.get("initiativeType"));
+                            }
+                        }
+
+                        record.addContent(new Element("id")
+                            .setText(linkProperties.get(Geonet.IndexFieldNames.RecordLink.TO)));
+                        record.addContent(new Element("uuid")
+                            .setText(linkProperties.get(Geonet.IndexFieldNames.RecordLink.TO)));
+                        record.addContent(new Element("title")
+                            .setText(linkProperties.get(Geonet.IndexFieldNames.RecordLink.TITLE)));
+                        record.addContent(new Element("url")
+                            .setText(linkProperties.get(Geonet.IndexFieldNames.RecordLink.URL)));
+
+
+                        finalResponseRoot.addContent(record);
+                    }
+                }
+            });
+        }
     }
 }

@@ -505,8 +505,8 @@
                 (params.name === qParams.name ? '' : qParams.name),
               uuidref: qParams.uuidDS,
               uuid: qParams.uuidSrv,
-              url: qParams.url,
-              title: qParams.name,
+              url: qParams.remote ? qParams.url : '',
+              title: qParams.remote ? qParams.name : '',
               source: qParams.identifier || '',
               process: qParams.process
             }).then(function() {

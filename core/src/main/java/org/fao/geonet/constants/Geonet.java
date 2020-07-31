@@ -656,7 +656,15 @@ public final class Geonet {
         public static final String PARENTUUID = "parentUuid";
         public static final String RECORDOPERATESON = "recordOperateOn";
         public static final String FEATUREOFRECORD = "featureOfRecord";
-        public static final String RECORDLINK = "record";
+        public static final String RECORDLINKFLAG = "record";
+        public static final String RECORDLINK = "recordLink";
+        public static class RecordLink {
+            public static final String ORIGIN = "origin";
+            public static final String TO = "to";
+            public static final String TYPE = "type";
+            public static final String TITLE = "title";
+            public static final String URL = "url";
+        }
         public static final String INSPIRE_REPORT_URL = "_inspireReportUrl";
         public static final String INSPIRE_VALIDATION_DATE = "_inspireValidationDate";
     }

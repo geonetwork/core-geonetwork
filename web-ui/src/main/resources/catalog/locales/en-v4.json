@@ -1,4 +1,5 @@
 {
+  "remoteRecord": "Record from external catalog",
   "chooseACatalogRecord": "Choose a catalog record",
   "siblingListToAdd": "List of record links to add",
   "orUseRemoteRecordUrl": "or link to a remote record",

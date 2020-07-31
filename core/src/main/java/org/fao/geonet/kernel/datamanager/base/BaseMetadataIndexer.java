@@ -408,7 +408,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
             fields.put(Geonet.IndexFieldNames.ROOT, root);
             fields.put(Geonet.IndexFieldNames.SCHEMA, schema);
-            fields.put(Geonet.IndexFieldNames.RECORDLINK, "record");
+            fields.put(Geonet.IndexFieldNames.RECORDLINKFLAG, "record");
             fields.put(Geonet.IndexFieldNames.DATABASE_CREATE_DATE, createDate);
             fields.put(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE, changeDate);
             fields.put(Geonet.IndexFieldNames.SOURCE, source);

@@ -118,8 +118,12 @@ public class ISO19139SchemaPlugin
                         Element sib = (Element) o;
                         Element agId = (Element) sib.getChild("aggregateDataSetIdentifier", GMD)
                             .getChildren().get(0);
-                        String sibUuid = getChild(agId, "code", GMD)
-                            .getChildText("CharacterString", GCO);
+                        List children = getChild(agId, "code", GMD)
+                            .getChildren();
+                        String sibUuid = "";
+                        if (children.size() == 1) {
+                            sibUuid = ((Element) children.get(0)).getText();
+                        }
                         final Element associationTypeEl = getChild(sib, "associationType", GMD);
                         String associationType = getChild(associationTypeEl, "DS_AssociationTypeCode", GMD)
                             .getAttributeValue("codeListValue");
