@@ -70,6 +70,14 @@
           scope.isRemoteRecordPropertiesExtracted = false;
           scope.selectionList = undefined;
 
+          scope.$on('resetSearch', function(event, args) {
+            scope.remoteRecord = {
+              remoteUrl: '',
+              title: '',
+              uuid: ''
+            };
+          });
+          
           function clearSelection() {
             if (scope.selectionList) {
               scope.selectionList.length = 0;
