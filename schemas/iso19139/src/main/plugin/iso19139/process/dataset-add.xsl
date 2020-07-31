@@ -172,20 +172,18 @@ attached it to the metadata for data.
               // the service metadata record.
               -->
               <srv:operatesOn uuidref="{$uuidref}">
-                <!-- Linking to a remote dataset -->
+                <xsl:if test="$title != ''">
+                  <xsl:attribute name="xlink:title" select="$title"/>
+                </xsl:if>
                 <xsl:choose>
-                  <xsl:when test="$title != ''">
-                    <xsl:attribute name="xlink:title" select="$title"/>
-                    <xsl:if test="$url != ''">
-                      <xsl:attribute name="xlink:href" select="$url"/>
-                    </xsl:if>
+                  <xsl:when test="$url != ''">
+                    <xsl:attribute name="xlink:href" select="$url"/>
                   </xsl:when>
                   <xsl:otherwise>
                     <xsl:attribute name="xlink:href"
                                    select="concat($siteUrl, 'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=', $uuidref)"/>
                   </xsl:otherwise>
                 </xsl:choose>
-
               </srv:operatesOn>
 
               <xsl:apply-templates select="*[namespace-uri()!='http://www.isotc211.org/2005/gmd' and

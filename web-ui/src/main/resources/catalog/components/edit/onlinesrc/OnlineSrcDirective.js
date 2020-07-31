@@ -67,6 +67,7 @@
             uuid: ''
           };
           scope.isRemoteRecordUrlOk = true;
+          scope.isRemoteRecordPropertiesExtracted = false;
           scope.selectionList = undefined;
 
           function clearSelection() {
@@ -81,6 +82,7 @@
           }
 
           function getProperties(doc) {
+            scope.isRemoteRecordPropertiesExtracted = true;
             if (angular.isObject(doc)) {
               // JSON doc
             } else if (doc.startsWith('<?xml')) {
@@ -127,6 +129,10 @@
                 scope.remoteRecord.title =
                   doc.replace(/(.|[\r\n])*<title>(.*)<\/title>(.|[\r\n])*/, '$2');
                 scope.remoteRecord.uuid = scope.remoteRecord.remoteUrl;
+
+                if (scope.remoteRecord.title === '') {
+                  return false;
+                }
                 // Looking for schema.org tags or json+ld format could also be an option.
               } catch (e) {
                 console.warn(e);
@@ -147,10 +153,9 @@
                   scope.isRemoteRecordUrlOk = response.status === 200;
                   if (scope.isRemoteRecordUrlOk) {
                     // Check we can retrieve title
-                    if (getProperties(response.data)) {
+                    scope.isRemoteRecordPropertiesExtracted = getProperties(response.data);
+                    if (scope.isRemoteRecordPropertiesExtracted) {
                       scope.updateSelection();
-                    } else {
-                      // Can't extract properties ?
                     }
                   }
                 },
@@ -1416,6 +1421,7 @@
 
                         links = links.concat(md.getLinksByType('ogc', 'atom'));
                         scope.srcParams.uuidSrv = md.uuid;
+                        scope.srcParams.datasetTitle = gnCurrentEdit.mdTitle;
                         scope.srcParams.identifier =
                           (gnCurrentEdit.metadata.identifier && gnCurrentEdit.metadata.identifier[0]) ?
                             gnCurrentEdit.metadata.identifier[0] : '';

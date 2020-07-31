@@ -47,4 +47,14 @@
       {{remoteRecord.remoteUrl}}
     </a>
   </div>
+  <div id="gn-addonlinesrc-add-alert"
+       class="alert alert-warning"
+       data-ng-show="remoteRecord.remoteUrl != '' && isRemoteRecordUrlOk && !isRemoteRecordPropertiesExtracted">
+    <span data-translate="">remoteRecordPropertiesError</span>
+    <a class="btn btn-link"
+       target="_blank"
+       data-ng-href="remoteRecord.remoteUrl">
+      {{remoteRecord.remoteUrl}}
+    </a>
+  </div>
 </div>

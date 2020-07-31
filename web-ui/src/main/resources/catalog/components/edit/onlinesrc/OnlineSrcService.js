@@ -372,7 +372,7 @@
             params[mode + 'Uuid'] = md.uuid;
           }
           params[mode + 'Url'] = md.remoteUrl || '';
-          params[mode + 'Title'] = md.title || '';
+          params[mode + 'Title'] = md.title || md.resourceTitleObject.default;
           return runProcess(this, params).then(function() {
             closePopup(popupid);
           });
@@ -458,6 +458,7 @@
             return gnBatchProcessing.runProcessMd({
               scopedName: qParams.remote ? '' : (qParams.name || ''),
               uuidref: qParams.uuidDS,
+              title: qParams.datasetTitle,
               uuid: qParams.uuidSrv,
               source: qParams.identifier || '',
               process: qParams.process
