@@ -76,8 +76,8 @@
           <tbody>
             <tr data-ng-repeat="obj in selection">
               <td>{{obj.md.resourceTitle}}</td>
-              <td>{{obj.associationType}}</td>
-              <td>{{obj.initiativeType}}</td>
+              <td>{{obj.associationType | translate}}</td>
+              <td>{{obj.initiativeType | translate}}</td>
               <td>
                 <a title="{{'removeFromSelection' | translate}}"
                    data-ng-click="removeFromSelection(obj)" href="">

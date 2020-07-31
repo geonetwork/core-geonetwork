@@ -48,13 +48,19 @@
     'blueimp.fileupload',
     'ga_print_directive'
   ])
-    .directive('gnRemoteRecordSelector', ['$http',
-      function($http) {
+    .directive('gnRemoteRecordSelector', ['$http', 'gnGlobalSettings',
+      function($http, gnGlobalSettings) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/edit/onlinesrc/' +
           'partials/remote-record-selector.html',
         link: function (scope, element, attrs) {
+          scope.allowRemoteRecordLink = false;
+          if (gnGlobalSettings.gnCfg.mods.editor.allowRemoteRecordLink === false) {
+            return;
+          } else {
+            scope.allowRemoteRecordLink = true;
+          }
           scope.remoteRecord = {
             remoteUrl: '',
             title: '',
