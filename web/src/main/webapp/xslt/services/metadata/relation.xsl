@@ -62,7 +62,7 @@
 
 
   <xsl:template mode="relation" match="fcats">
-    <xsl:if test="count(response) > 0">
+    <xsl:if test="count(response/*) > 0">
       <fcats>
         <xsl:for-each select="response/metadata[@origin]">
           <item>
