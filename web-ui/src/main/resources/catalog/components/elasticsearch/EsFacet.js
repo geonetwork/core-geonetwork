@@ -58,7 +58,8 @@
       'valid',
       'isHarvested',
       'dateStamp',
-      'documentStandard'
+      'documentStandard',
+      'recordLink'
     ]};
     this.configs = {
       search: {
