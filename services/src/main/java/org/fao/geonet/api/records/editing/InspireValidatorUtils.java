@@ -49,107 +49,106 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.ClientHttpResponse;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 // Utility class to access methods in Inspire Service.
 // Based on ETF Web API v.2 BETA
 public class InspireValidatorUtils {
 
-    /**
-     * Test status PASSED.
-     */
-    public final static String TEST_STATUS_PASSED = "PASSED";
-    /**
-     * Test status FAILED.
-     */
-    public final static String TEST_STATUS_FAILED = "FAILED";
-    /**
-     * Test status PASSED_MANUAL.
-     */
-    public final static String TEST_STATUS_PASSED_MANUAL = "PASSED_MANUAL";
-    /**
-     * Test status UNDEFINED.
-     */
-    public final static String TEST_STATUS_UNDEFINED = "UNDEFINED";
-    /**
-     * Test status NOT_APPLICABLE.
-     */
-    public final static String TEST_STATUS_NOT_APPLICABLE = "NOT_APPLICABLE";
-    /**
-     * Test status INTERNAL_ERROR.
-     */
-    public final static String TEST_STATUS_INTERNAL_ERROR = "INTERNAL_ERROR";
+    @Autowired
+    private GeonetHttpRequestFactory requestFactory;
+
     /**
      * The Constant USER_AGENT.
      */
     private final static String USER_AGENT = "Mozilla/5.0";
+
     /**
      * The Constant ACCEPT.
      */
     private final static String ACCEPT = "application/json";
+
     /**
      * The Constant CheckStatus_URL.
      */
     private final static String CheckStatus_URL = "/v2/status";
+
     /**
      * The Constant ExecutableTestSuites_URL.
      */
     private final static String ExecutableTestSuites_URL = "/v2/ExecutableTestSuites";
+
     /**
      * The Constant TestObjects_URL.
      */
     private final static String TestObjects_URL = "/v2/TestObjects";
+
     /**
      * The Constant TestRuns_URL.
      */
     private final static String TestRuns_URL = "/v2/TestRuns";
+
+    /**
+     * Test status PASSED.
+     */
+    public final static String TEST_STATUS_PASSED = "PASSED";
+
+    /**
+     * Test status FAILED.
+     */
+    public final static String TEST_STATUS_FAILED = "FAILED";
+
+    /**
+     * Test status PASSED_MANUAL.
+     */
+    public final static String TEST_STATUS_PASSED_MANUAL = "PASSED_MANUAL";
+
+    /**
+     * Test status UNDEFINED.
+     */
+    public final static String TEST_STATUS_UNDEFINED = "UNDEFINED";
+
+    /**
+     * Test status NOT_APPLICABLE.
+     */
+    public final static String TEST_STATUS_NOT_APPLICABLE = "NOT_APPLICABLE";
+
+    /**
+     * Test status INTERNAL_ERROR.
+     */
+    public final static String TEST_STATUS_INTERNAL_ERROR = "INTERNAL_ERROR";
+
+    @Value("#{validatorAdditionalConfig['defaultTestSuite']}")
     public String defaultTestSuite;
-    @Autowired
-    private GeonetHttpRequestFactory requestFactory;
+
+    // Using @Resource instead of @Autowired+@Qualifier for injecting java.util.Map instances
+    // Check https://stackoverflow.com/a/13914052/1140558
+    @Resource(name = "inspireEtfValidatorTestsuites")
     private Map<String, String[]> testsuites;
 
+    @Resource(name = "inspireEtfValidatorTestsuitesConditions")
     private Map<String, String> testsuitesConditions;
 
+    @Value("#{validatorAdditionalConfig['maxNumberOfEtfChecks']}")
     private Integer maxNumberOfEtfChecks;
 
+    @Value("#{validatorAdditionalConfig['intervalBetweenEtfChecks']}")
     private Long intervalBetweenEtfChecks;
-
-
-    public InspireValidatorUtils() {
-    }
-
-    /**
-     * Gets the report url in JSON format.
-     *
-     * @param endPoint the end point
-     * @param testId   the test id
-     * @return the report url
-     */
-    public static String getReportUrlJSON(String endPoint, String testId) {
-
-        return endPoint + TestRuns_URL + "/" + testId + ".json";
-    }
-
-    /**
-     * Gets the report url in XML format.
-     *
-     * @param endPoint the end point
-     * @param testId   the test id
-     * @return the report url
-     */
-    public static String getReportUrlXML(String endPoint, String testId) {
-
-        return endPoint + TestRuns_URL + "/" + testId + ".xml";
-    }
 
     public String getDefaultTestSuite() {
         return defaultTestSuite;
@@ -159,20 +158,20 @@ public class InspireValidatorUtils {
         this.defaultTestSuite = defaultTestSuite;
     }
 
-    public Map getTestsuites() {
-        return testsuites;
-    }
-
     public void setTestsuites(Map<String, String[]> testsuites) {
         this.testsuites = testsuites;
     }
 
-    public Map getTestsuitesConditions() {
-        return testsuitesConditions;
+    public Map getTestsuites() {
+        return testsuites;
     }
 
     public void setTestsuitesConditions(Map<String, String> testsuitesConditions) {
         this.testsuitesConditions = testsuitesConditions;
+    }
+
+    public Map getTestsuitesConditions() {
+        return testsuitesConditions;
     }
 
     public Integer getMaxNumberOfEtfChecks() {
@@ -189,6 +188,9 @@ public class InspireValidatorUtils {
 
     public void setIntervalBetweenEtfChecks(Long intervalBetweenEtfChecks) {
         this.intervalBetweenEtfChecks = intervalBetweenEtfChecks;
+    }
+
+    public InspireValidatorUtils() {
     }
 
     /**
@@ -428,8 +430,9 @@ public class InspireValidatorUtils {
                 throw new ResourceNotFoundException("Test not found");
 
             } else {
-                Log.warning(Log.SERVICE, "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for "
-                    + TestRuns_URL + "?view=progress");
+                Log.warning(Log.SERVICE,
+                    "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for " + TestRuns_URL
+                        + "?view=progress");
             }
         } catch (ResourceNotFoundException e) {
             throw e;
@@ -480,8 +483,9 @@ public class InspireValidatorUtils {
                 throw new ResourceNotFoundException("Test not found");
 
             } else {
-                Log.warning(Log.SERVICE, "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for "
-                    + TestRuns_URL + "?view=progress");
+                Log.warning(Log.SERVICE,
+                    "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for " + TestRuns_URL
+                        + "?view=progress");
             }
         } catch (Exception e) {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
@@ -504,7 +508,31 @@ public class InspireValidatorUtils {
     }
 
     /**
-     * Submit file.
+     * Gets the report url in JSON format.
+     *
+     * @param endPoint the end point
+     * @param testId   the test id
+     * @return the report url
+     */
+    public static String getReportUrlJSON(String endPoint, String testId) {
+
+        return endPoint + TestRuns_URL + "/" + testId + ".json";
+    }
+
+    /**
+     * Gets the report url in XML format.
+     *
+     * @param endPoint the end point
+     * @param testId   the test id
+     * @return the report url
+     */
+    public static String getReportUrlXML(String endPoint, String testId) {
+
+        return endPoint + TestRuns_URL + "/" + testId + ".xml";
+    }
+
+    /**
+     * Submit file to the external ETF validator.
      *
      * @param record    the record
      * @param testsuite
@@ -513,7 +541,7 @@ public class InspireValidatorUtils {
      * @throws JSONException the JSON exception
      */
     public String submitFile(ServiceContext context, String serviceEndpoint, InputStream record, String testsuite, String testTitle)
-        throws IOException, JSONException {
+        throws IOException {
 
         try {
             if (checkServiceStatus(context, serviceEndpoint)) {
@@ -553,7 +581,6 @@ public class InspireValidatorUtils {
         // add request header
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
-
 
         try (ClientHttpResponse response = this.execute(context, request)) {
             return IOUtils.toString(response.getBody(), StandardCharsets.UTF_8.name());
@@ -598,11 +625,10 @@ public class InspireValidatorUtils {
         if (isNotApplicable) {
             metadataValidationStatus = MetadataValidationStatus.DOES_NOT_APPLY;
         } else if (!isUndefined && executed) {
-            boolean isValid = validationStatus.equalsIgnoreCase(TEST_STATUS_PASSED) ||
-                validationStatus.equalsIgnoreCase(TEST_STATUS_PASSED_MANUAL);
+            boolean isValid =
+                validationStatus.equalsIgnoreCase(TEST_STATUS_PASSED) || validationStatus.equalsIgnoreCase(TEST_STATUS_PASSED_MANUAL);
 
-            metadataValidationStatus =
-                (isValid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID);
+            metadataValidationStatus = (isValid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID);
         } else {
             metadataValidationStatus = MetadataValidationStatus.NEVER_CALCULATED;
         }
@@ -619,8 +645,7 @@ public class InspireValidatorUtils {
      * @param metadataSchemaUtils
      * @return
      */
-    public Map<String, String> calculateTestsuitesToApply(String schemaid,
-                                                          IMetadataSchemaUtils metadataSchemaUtils) {
+    public Map<String, String> calculateTestsuitesToApply(String schemaid, IMetadataSchemaUtils metadataSchemaUtils) {
         Map<String, String> testsuitesConditions = getTestsuitesConditions();
 
         // Check for rules for the schema
@@ -638,9 +663,7 @@ public class InspireValidatorUtils {
 
             boolean conditionsFound = false;
 
-            while (StringUtils.isNotEmpty(schemaDependsOn) &&
-                !schemasProcessed.contains(schemaDependsOn) &&
-                !conditionsFound) {
+            while (StringUtils.isNotEmpty(schemaDependsOn) && !schemasProcessed.contains(schemaDependsOn) && !conditionsFound) {
 
                 schemasProcessed.add(schemaDependsOn);
 
@@ -662,7 +685,6 @@ public class InspireValidatorUtils {
         return testsuitesConditionsForSchema;
     }
 
-
     /**
      * Executes the HttpUriRequest
      *
@@ -673,9 +695,7 @@ public class InspireValidatorUtils {
     private ClientHttpResponse execute(ServiceContext context, HttpUriRequest request) throws IOException {
 
         final Function<HttpClientBuilder, Void> proxyConfiguration = new Function<HttpClientBuilder, Void>() {
-            @Nullable
-            @Override
-            public Void apply(@Nonnull HttpClientBuilder input) {
+            @Nullable @Override public Void apply(@Nonnull HttpClientBuilder input) {
                 Lib.net.setupProxy(context, input, request.getURI().getHost());
                 return null;
             }

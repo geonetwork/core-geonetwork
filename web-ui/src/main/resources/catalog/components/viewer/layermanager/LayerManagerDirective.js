@@ -71,7 +71,13 @@
          * @param {ol.layer} layer
          * @param {float} delta
          */
-          this.moveLayer = function(layer, delta) {
+          this.moveLayer = function(layer, delta, last) {
+
+            // do not move the last layer down (last parameter only there when moving down)
+            if (last) {
+              return false;
+            }
+
             var index = $scope.layers.indexOf(layer);
             var layersCollection = $scope.map.getLayers();
             layersCollection.removeAt(index);
