@@ -51,6 +51,8 @@
       'rating',
       'tag*',
       'geom',
+      'contact*',
+      '*Org*',
       'hasBoundingPolygon',
       'isTemplate',
       'valid',

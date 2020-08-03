@@ -1,4 +1,9 @@
 {
+  "ui-queryBase": "Structure de la requête",
+  "ui-queryBase-help": "Pour une recherche simple sur tous les champs, utilisez '${any}'. Pour donner plus d'importance to the title, utilisez '${any} resourceTitleObject.default:(${any})^2'. Voir <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html\">la documentation</a> pour plus d'informations.",
+  "anyFieldTitle": "Rechercher. Saisir quelquechose pour obtenir des suggestions. Utiliser \" pour des recherches exactes eg. \"reference grid\". Utiliser q() pour des recherches avancées eg. q(-codelist_status_text:obsolete)",
+  "accessManager": "Droits d'accès",
+  "facetIncludeFilter": "Filtrer les valeurs. Des expressions régulières peuvent être utilisées '/Land.*/'",
   "allValuesExcept": "Toutes les valeurs à l'exception de",
   "filterWithValue": "Ajouter ce filtre",
   "indexNotAvailable": "Aucun service de recherche n'est disponible pour le moment !",
@@ -61,6 +66,7 @@
   "facet-isTemplate": "Type de fiches",
   "facet-schema": "Standards",
   "facet-isPublishedToAll": "Fiches publiées",
+  "facet-thesaurus_geonetworkthesaurusexternalthemehttpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree": "Substances prioritaires",
   "isPublishedToAll-true": "Oui",
   "isPublishedToAll-false": "Non",
   "indexRecordsWithErrors": "Fiches avec des erreurs d'indexation",
@@ -75,5 +81,5 @@
   "ui-autocompleteConfig": "Configuration pour l'auto-completion",
   "ui-autocompleteConfig-help": "La configuration doit avoir un élément query.multi_match.query qui sera défini lors de la récupération des suggestions.",
   "ui-facetConfig": "Configuration des facettes",
-  "ui-facetConfig-help": "Cette configuration permet de définir les aggrégations à afficher. Voir <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html\">la documentation officielle  </a> pour plus d'information."
+  "ui-facetConfig-help": "This configuration is used to display facets, using either terms aggregations or filters. See <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html\">the documentation</a> for more information."
 }

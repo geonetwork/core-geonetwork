@@ -97,13 +97,18 @@
         </div>
 
         <div class="row gn-md-details">
-          <p ng-if="::!md.getAllContacts().resource">&nbsp;</p>
+          <p ng-if="::!md.OrgForResource">&nbsp;</p>
+          <!--<p ng-if="::!md.getAllContacts().resource">&nbsp;</p>
           <p data-ng-repeat="c in ::md.getAllContacts().resource track by $index">
             <img data-ng-if="::c.logo"
                  data-ng-src="{{::c.logo}}"
                  class="gn-source-logo"
-                 title="{{::c.name}} ({{::c.role}})"/>
-            {{::c.name}}
+                 title="{{::c.organisation}} ({{::c.role}})"/>
+            {{::c.organisation}}
+          </p>-->
+          <p data-ng-repeat="o in ::md.OrgForResource | unique"
+             title="{{::o}}">
+            {{::o}}
           </p>
         </div>
       </div>
