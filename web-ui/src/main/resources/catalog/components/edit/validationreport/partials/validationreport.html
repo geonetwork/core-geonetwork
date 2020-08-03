@@ -77,7 +77,8 @@
                 data-ng-show="(showErrors && rule.type === 'error') || (showSuccess && rule.type === 'success')"
                 data-ng-class="rule.type !== 'error' ? '' : (type.requirement === 'REQUIRED' ? 'text-danger' : 'text-info')">
               <p data-ng-class="rule.msg ? 'text-bold' : ''">{{pattern.title}}</p>
-              <p data-ng-show="rule.msg">{{rule.msg}}</p>
+              <p data-ng-show="rule.msg"
+                 ng-bind-html="rule.msg | linky"></p>
             </li>
           </ul>
         </div>
