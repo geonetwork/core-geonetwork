@@ -25,13 +25,18 @@
 <!--
 Stylesheet used to update metadata adding a reference to a parent record.
 -->
-<xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+<xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:geonet="http://www.fao.org/geonetwork"
-                version="2.0">
+                version="2.0"
+                exclude-result-prefixes="#all">
 
-  <!-- Parent metadata record UUID -->
   <xsl:param name="parentUuid"/>
+  <xsl:param name="parentUrl" select="''"/>
+  <xsl:param name="parentTitle" select="''"/>
 
   <xsl:template match="/gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
     <xsl:copy>
@@ -44,10 +49,24 @@ Stylesheet used to update metadata adding a reference to a parent record.
       <!-- Only one parent identifier allowed
             - overwriting existing one. -->
       <gmd:parentIdentifier>
-        <gco:CharacterString>
-          <xsl:value-of select="$parentUuid"/>
-        </gco:CharacterString>
+        <xsl:choose>
+          <xsl:when test="$parentUrl != ''">
+            <gmx:Anchor>
+              <xsl:attribute name="xlink:href" select="$parentUrl"/>
+              <xsl:if test="$parentTitle != ''">
+                <xsl:attribute name="xlink:title" select="$parentTitle"/>
+              </xsl:if>
+              <xsl:value-of select="$parentUuid"/>
+            </gmx:Anchor>
+          </xsl:when>
+          <xsl:otherwise>
+            <gco:CharacterString>
+              <xsl:value-of select="$parentUuid"/>
+            </gco:CharacterString>
+          </xsl:otherwise>
+        </xsl:choose>
       </gmd:parentIdentifier>
+
       <xsl:copy-of
         select="
       gmd:hierarchyLevel|

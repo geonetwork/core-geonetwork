@@ -72,6 +72,10 @@
   <xsl:variable name="openDataKeywords"
                 select="'opendata|open data|donnees ouvertes'"/>
 
+  <!-- Parent may be encoded using an associatedResource.
+  Define which association type should be considered as parent. -->
+  <xsl:variable name="parentAssociatedResourceType" select="'partOfSeamlessDatabase'"/>
+
   <xsl:template match="/">
     <xsl:apply-templates mode="index"/>
   </xsl:template>
@@ -81,6 +85,7 @@
     <xsl:value-of select="gmd:fileIdentifier/gco:CharacterString"/>
   </xsl:template>
 
+  <xsl:variable name="siteUrl" select="util:getSiteUrl()" />
 
   <xsl:template mode="index-extra-fields" match="*"/>
 
@@ -905,10 +910,44 @@
         </xsl:if>
       </xsl:for-each-group>
 
+      <xsl:for-each select="gmd:contentInfo/*/gmd:featureCatalogueCitation[@uuidref != '']">
+        <xsl:variable name="xlink"
+                      select="@xlink:href"/>
+        <recordLink type="object">{
+          "type": "fcats",
+          "origin": "<xsl:value-of
+            select="if ($xlink = '')
+                        then 'catalog'
+                        else if ($xlink != '' and
+                                 not(starts-with($xlink, $siteUrl)))
+                          then 'remote'
+                        else 'catalog'"/>",
+          "to": "<xsl:value-of select="@uuidref"/>",
+          "title": "<xsl:value-of select="gn-fn-index:json-escape(@xlink:title)"/>",
+          "url": "<xsl:value-of select="$xlink"/>"
+          }</recordLink>
+      </xsl:for-each>
+
 
       <xsl:for-each select="gmd:dataQualityInfo/*">
-        <xsl:for-each select="gmd:lineage//gmd:source[@uuidref]">
+        <xsl:for-each select="gmd:lineage//gmd:source[@uuidref != '']">
+          <xsl:variable name="xlink"
+                        select="@xlink:href"/>
+
           <hassource><xsl:value-of select="@uuidref"/></hassource>
+          <recordLink type="object">{
+            "type": "sources",
+            "origin": "<xsl:value-of
+              select="if ($xlink = '')
+                        then 'catalog'
+                        else if ($xlink != '' and
+                                 not(starts-with($xlink, $siteUrl)))
+                          then 'remote'
+                        else 'catalog'"/>",
+            "to": "<xsl:value-of select="@uuidref"/>",
+            "title": "<xsl:value-of select="gn-fn-index:json-escape(@xlink:title)"/>",
+            "url": "<xsl:value-of select="$xlink"/>"
+            }</recordLink>
         </xsl:for-each>
         <xsl:for-each select="gmd:lineage/gmd:LI_Lineage/
                                 gmd:statement/gco:CharacterString[. != '']">
@@ -995,7 +1034,7 @@
       <xsl:call-template name="index-operatesOn"/>
 
       <xsl:variable name="recordLinks"
-                    select="gmd:parentIdentifier/gco:CharacterString[. != '']"/>
+                    select="gmd:parentIdentifier/*[text() != '']"/>
       <xsl:choose>
         <xsl:when test="count($recordLinks) > 0">
           <xsl:for-each select="$recordLinks">
@@ -1003,8 +1042,16 @@
             <recordGroup><xsl:value-of select="."/></recordGroup>
             <recordLink type="object">{
               "type": "parent",
-              "origin": "local",
-              "to": "<xsl:value-of select="."/>"
+              "to": "<xsl:value-of select="."/>",
+              "url": "<xsl:value-of select="@xlink:href"/>",
+              "title": "<xsl:value-of select="@xlink:title"/>",
+              "origin": "<xsl:value-of
+                select="if (@xlink:href = '')
+                        then 'catalog'
+                        else if (@xlink:href != '' and
+                                 not(starts-with(@xlink:href, $siteUrl)))
+                          then 'remote'
+                        else 'catalog'"/>"
               }</recordLink>
             <!--
             TODOES - Need more work with routing -->
@@ -1015,6 +1062,53 @@
           <recordGroup><xsl:value-of select="$identifier"/></recordGroup>
         </xsl:otherwise>
       </xsl:choose>
+
+
+      <xsl:for-each select=".//gmd:aggregationInfo/*">
+        <xsl:variable name="code"
+                      select="gmd:aggregateDataSetIdentifier/*/gmd:code/*/text()"/>
+        <xsl:if test="$code != ''">
+          <xsl:variable name="xlink"
+                        select="gmd:aggregateDataSetIdentifier/*/gmd:code/*/@xlink:href"/>
+          <xsl:variable name="associationType"
+                        select="gmd:associationType/*/@codeListValue"/>
+          <xsl:if test="$associationType = $parentAssociatedResourceType">
+            <parentUuid><xsl:value-of select="$code"/></parentUuid>
+            <recordLink type="object">{
+              "type": "parent",
+              "to": "<xsl:value-of select="$code"/>",
+              "url": "<xsl:value-of select="$xlink"/>",
+              "title": "<xsl:value-of select="gn-fn-index:json-escape(gmd:aggregateDataSetIdentifier/*/gmd:code/*/@xlink:title)"/>",
+              "origin": "<xsl:value-of
+                select="if ($xlink = '')
+                        then 'catalog'
+                        else if ($xlink != '' and
+                                 not(starts-with($xlink, $siteUrl)))
+                          then 'remote'
+                        else 'catalog'"/>"
+              }</recordLink>
+          </xsl:if>
+
+          <xsl:variable name="initiativeType"
+                        select="gmd:initiativeType/*/@codeListValue"/>
+          <recordLink type="object">{
+            "type": "siblings",
+            "associationType": "<xsl:value-of select="$associationType"/>",
+            "initiativeType": "<xsl:value-of select="$initiativeType"/>",
+            "to": "<xsl:value-of select="$code"/>",
+            "url": "<xsl:value-of select="$xlink"/>",
+            "title": "<xsl:value-of select="gn-fn-index:json-escape(gmd:aggregateDataSetIdentifier/*/gmd:code/*/@xlink:title)"/>",
+            "origin": "<xsl:value-of
+              select="if ($xlink = '')
+                        then 'catalog'
+                        else if ($xlink != '' and
+                                 not(starts-with($xlink, $siteUrl)))
+                          then 'remote'
+                        else 'catalog'"/>"
+            }</recordLink>
+        </xsl:if>
+      </xsl:for-each>
+
 
       <!-- Index more fields in this element -->
       <xsl:apply-templates mode="index-extra-fields" select="."/>
@@ -1113,128 +1207,83 @@
 
         <xsl:if test="$datasetId != ''">
           <recordOperateOn><xsl:value-of select="$datasetId"/></recordOperateOn>
-          <recordLink type="object">{
-            "type": "dataset",
-            "origin": "local",
-            "to": "<xsl:value-of select="$datasetId"/>"
-            <xsl:if test="@xlink:href">,
-              "link": "<xsl:value-of select="@xlink:href"/>"
+          <xsl:variable name="xlink"
+                        select="@xlink:href"/>
+
+          <xsl:variable name="resolvedDoc">
+            <xsl:if test="$processRemoteDocs
+                          and $xlink != ''
+                          and not(@xlink:title)
+                          and not(starts-with($xlink, $siteUrl))">
+              <!-- Process remote docs only if it was not encoded with a title and is not a local one.
+              - uses @xlink:href to retrieve the remote metadata and index the relevant information for related service.
+              - if the metadata is found in the catalogue, it's used that information.
+
+              The xlink: href attribute can contain a URI to the MD_DataIdentification part of the metadata record of the dataset.
+              Example:
+                   <srv:operatesOn uuidref="c9c62f4f-a8da-438e-a514-5963fb1b047b"
+                       xlink:href="https://server/geonetwork/srv/dut/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;
+                       id=c9c62f4f-a8da-438e-a514-5963fb1b047b#MD_DataIdentification"/>
+              Ignore it for indexing.
+           -->
+              <xsl:variable name="xlinkHref" select="tokenize(@xlink:href, '#')[1]" />
+
+              <!-- remote url: request the document to index data -->
+              <xsl:variable name="remoteDoc" select="util:getUrlContent(@xlink:href)" />
+
+              <!-- Remote url that uuid is stored also locally: Use local.
+               Remote is supposed to be ISO19139. -->
+              <xsl:variable name="datasetUuid"
+                            select="$remoteDoc//(*[local-name(.) = 'fileIdentifier']/*/text()|
+                                                 *[local-name(.) = 'metadataIdentifier']/*/*[local-name(.) = 'code']/*/text())" />
+
+              <xsl:if test="count($datasetUuid) = 1
+                            and string($datasetUuid)">
+                <xsl:variable name="existsLocally"
+                              select="not(normalize-space(util:getRecord($datasetUuid)) = '')" />
+                <xsl:if test="not($existsLocally)">
+                  <xsl:variable name="datasetTitle"
+                                select="$remoteDoc//*[local-name(.) = 'identificationInfo']/*
+                                                    /*[local-name(.) = 'citation']/*
+                                                    /*[local-name(.) = 'title']/*/text()" />
+                  <recordLink type="object">{
+                    "type": "datasets",
+                    "origin": "remote",
+                    "to": "<xsl:value-of select="$datasetUuid"/>",
+                    "title": "<xsl:value-of select="gn-fn-index:json-escape($datasetTitle)"/>",
+                    "url": "<xsl:value-of select="$xlinkHref"/>"
+                    }</recordLink>
+                </xsl:if>
+              </xsl:if>
             </xsl:if>
-            }</recordLink>
+          </xsl:variable>
+
+          <xsl:choose>
+            <xsl:when test="$resolvedDoc != ''">
+              <xsl:copy-of select="$resolvedDoc"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <recordLink type="object">{
+                "type": "datasets",
+                "origin": "<xsl:value-of
+                  select="if ($xlink = '')
+                        then 'catalog'
+                        else if ($xlink != '' and
+                                 not(starts-with($xlink, $siteUrl)))
+                          then 'remote'
+                        else 'catalog'"/>",
+                "to": "<xsl:value-of select="$datasetId"/>",
+                "title": "<xsl:value-of select="gn-fn-index:json-escape(@xlink:title)"/>",
+                "url": "<xsl:value-of select="$xlink"/>"
+                }</recordLink>
+            </xsl:otherwise>
+          </xsl:choose>
+
           <!--
             TODOES - Need more work with routing -->
           <!--          <recordLink type="object">{"name": "dataset", "parent": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"}</recordLink>-->
         </xsl:if>
       </xsl:for-each>
-
-
-      <xsl:choose>
-        <!-- Default to index the @uuidref value for operatesOn:
-             assumes a local metadata with that uuid exists -->
-        <xsl:when test="not($processRemoteDocs)">
-          <xsl:for-each select="srv:operatesOn/@uuidref">
-            <operatesOn><xsl:value-of select="."/></operatesOn>
-          </xsl:for-each>
-          <xsl:for-each select="srv:operatesOn/@xlink:href">
-            <operatesOn><xsl:value-of select="."/></operatesOn>
-          </xsl:for-each>
-        </xsl:when>
-
-        <!-- Process remote docs:
-                - uses @xlink:href to retrieve the remote metadata and index the relevant information for related service.
-                - if the metadata is found in the catalogue, it's used that information.
-                Index field format (Metadata in local catalogue):  uuid|L|uuid||link
-                Index field format (Metadata in remote catalogue): uuid|R|title|abstract|link
-        -->
-        <xsl:otherwise>
-          <xsl:for-each select="srv:operatesOn">
-            <!-- The xlink: href attribute can contain a URI to the MD_DataIdentification part of the metadata record of the dataset.
-                Example:
-                   <srv:operatesOn uuidref="c9c62f4f-a8da-438e-a514-5963fb1b047b"
-                       xlink:href="https://server/geonetwork/srv/dut/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;
-                       id=c9c62f4f-a8da-438e-a514-5963fb1b047b#MD_DataIdentification"/>
-                Ignore it for indexing.
-           -->
-
-            <xsl:variable name="siteUrl" select="util:getSiteUrl()" />
-            <xsl:variable name="xlinkHref" select="tokenize(@xlink:href, '#')[1]" />
-
-            <xsl:choose>
-              <!-- 1) Is the link referencing an external metadata? -->
-              <xsl:when test="string(normalize-space($xlinkHref))
-                              and not(starts-with(replace($xlinkHref, 'http://', 'https://'), replace($siteUrl, 'http://', 'https://')))">
-
-                <!-- remote url: request the document to index data -->
-                <xsl:variable name="remoteDoc" select="util:getUrlContent(@xlink:href)" />
-
-                <!-- Remote url that uuid is stored also locally: Use local -->
-                <xsl:variable name="datasetUuid" select="$remoteDoc//gmd:fileIdentifier/gco:CharacterString" />
-
-                <xsl:choose>
-                  <xsl:when test="count($datasetUuid) = 1
-                                  and string($datasetUuid)">
-                    <xsl:variable name="existsLocally"
-                                  select="not(normalize-space(util:getRecord($datasetUuid)) = '')" />
-
-                    <xsl:choose>
-                      <xsl:when test="not($existsLocally)">
-                        <xsl:variable name="datasetTitle"
-                                      select="$remoteDoc//*[gmd:MD_DataIdentification or @gco:isoType='gmd:MD_DataIdentification']//gmd:citation//gmd:title/gco:CharacterString" />
-
-                        <xsl:variable name="datasetAbstract" select="$remoteDoc//*[gmd:MD_DataIdentification or @gco:isoType='gmd:MD_DataIdentification']//gmd:abstract/gco:CharacterString" />
-
-                        <operatesOn><xsl:value-of select="concat($datasetUuid, '|R|', normalize-space($datasetTitle), '|', normalize-space($datasetAbstract), '|', $xlinkHref)"/></operatesOn>
-                      </xsl:when>
-                      <!-- Do we need this check? maybe in this case use operatesOn instead of operatesOnRemote to use local info? -->
-                      <xsl:otherwise>
-
-                        <xsl:variable name="datasetTitle" select="$remoteDoc//*[gmd:MD_DataIdentification or @gco:isoType='gmd:MD_DataIdentification']//gmd:citation//gmd:title/gco:CharacterString" />
-                        <xsl:variable name="datasetAbstract" select="$remoteDoc//*[gmd:MD_DataIdentification or @gco:isoType='gmd:MD_DataIdentification']//gmd:abstract/gco:CharacterString" />
-
-                        <operatesOn><xsl:value-of select="concat($datasetUuid, '|R|', normalize-space($datasetTitle), '|', normalize-space($datasetAbstract), '|', $xlinkHref)"/></operatesOn>
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </xsl:when>
-
-                  <xsl:otherwise>
-                    <xsl:variable name="uuidFromCsw"  select="tokenize(tokenize(string($xlinkHref),'&amp;id=')[2],'&amp;')[1]" />
-
-                    <xsl:choose>
-                      <!-- Assume is a CSW request and extract the uuid from csw request and add as operatesOnRemote -->
-                      <xsl:when test="string($uuidFromCsw)">
-                        <operatesOn><xsl:value-of select="concat($uuidFromCsw, '|R|', $uuidFromCsw,'|', '|', $xlinkHref)"/></operatesOn>
-                      </xsl:when>
-
-                      <!-- If no CSW request, store the link -->
-                      <xsl:otherwise>
-                        <operatesOn><xsl:value-of select="concat($xlinkHref, '|R|', $xlinkHref, '|', '|', $xlinkHref)"/></operatesOn>
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </xsl:when>
-
-              <!-- 2) Is the link referencing to a metadata in the catalogue? -->
-              <xsl:otherwise>
-                <!-- Extract the uuid from the link, assuming it's a CSW url -->
-                <xsl:variable name="uuidFromCsw"  select="tokenize(tokenize(string($xlinkHref),'&amp;id=')[2],'&amp;')[1]" />
-
-                <xsl:choose>
-                  <!-- The uuid could be extracted from the url (CSW url)-->
-                  <xsl:when test="string($uuidFromCsw)">
-                    <operatesOn><xsl:value-of select="concat($uuidFromCsw, '|L|', $uuidFromCsw,'|', '|', $xlinkHref)"/></operatesOn>
-                  </xsl:when>
-
-                  <!-- If no CSW url, store the link  with the uuid from uuidref attribute-->
-                  <xsl:otherwise>
-                    <operatesOn><xsl:value-of select="concat(@uuidref, '|L|', @uuidref, '|', '|', $xlinkHref)"/></operatesOn>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:for-each>
-        </xsl:otherwise>
-      </xsl:choose>
     </xsl:for-each>
   </xsl:template>
 </xsl:stylesheet>

@@ -1,7 +1,8 @@
 <div class="gn-facet-list">
 
   <!--Collapse all button for first panel-->
-  <div class="btn-group pull-right" ng-hide="isTabMode">
+  <div class="btn-group pull-right"
+       ng-hide="isTabMode || ctrl.searchCtrl.getSearchResults().count === 0">
     <button type="button" class="btn btn-link btn-sm gn-facet-toggle-btn"
       ng-click="ctrl.expandAll()" title="{{'expandAllFacet' | translate}}">
       <i class="fa fa-plus-circle"/>

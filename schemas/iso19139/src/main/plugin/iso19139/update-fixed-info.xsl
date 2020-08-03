@@ -539,7 +539,7 @@
 
   <xsl:template match="srv:operatesOn|gmd:featureCatalogueCitation">
     <xsl:copy>
-      <xsl:copy-of select="@uuidref"/>
+      <xsl:copy-of select="@*[name() != 'xlink:href']"/>
       <xsl:choose>
         <!-- Do not expand operatesOn sub-elements when using uuidref
              to link service metadata to datasets or datasets to iso19110.

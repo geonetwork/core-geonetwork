@@ -29,8 +29,11 @@ Stylesheet used to add a reference to a related record using aggregation info.
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="2.0">
+                version="2.0"
+                exclude-result-prefixes="#all">
 
   <!-- The uuid of the target record -->
   <xsl:param name="uuidref"/>
@@ -101,6 +104,8 @@ Stylesheet used to add a reference to a related record using aggregation info.
               <xsl:with-param name="context" select="$context"/>
               <xsl:with-param name="associationType" select="$tokens[2]"/>
               <xsl:with-param name="initiativeType" select="$tokens[3]"/>
+              <xsl:with-param name="title" select="$tokens[4]"/>
+              <xsl:with-param name="remoteUrl" select="$tokens[5]"/>
             </xsl:call-template>
           </xsl:when>
           <xsl:otherwise>
@@ -122,6 +127,8 @@ Stylesheet used to add a reference to a related record using aggregation info.
     <xsl:param name="context"/>
     <xsl:param name="initiativeType" select="$initiativeType" required="no"/>
     <xsl:param name="associationType" select="$associationType" required="no"/>
+    <xsl:param name="title" select="''" required="no"/>
+    <xsl:param name="remoteUrl" select="''" required="no"/>
 
     <xsl:variable name="notExist" select="count($context/gmd:aggregationInfo/gmd:MD_AggregateInformation[
       gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString = $uuid
@@ -134,9 +141,23 @@ Stylesheet used to add a reference to a related record using aggregation info.
           <gmd:aggregateDataSetIdentifier>
             <gmd:MD_Identifier>
               <gmd:code>
-                <gco:CharacterString>
-                  <xsl:value-of select="$uuid"/>
-                </gco:CharacterString>
+                <xsl:choose>
+                  <xsl:when test="$remoteUrl != ''">
+                    <gmx:Anchor>
+                      <xsl:if test="$remoteUrl">
+                        <xsl:attribute name="xlink:href" select="$remoteUrl"/>
+                      </xsl:if>
+                      <xsl:if test="$title != ''">
+                        <xsl:attribute name="xlink:title" select="$title"/>
+                      </xsl:if>
+                      <xsl:value-of select="$uuid"/>
+                    </gmx:Anchor>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <gco:CharacterString><xsl:value-of select="$uuid"/></gco:CharacterString>
+                  </xsl:otherwise>
+                </xsl:choose>
+
               </gmd:code>
             </gmd:MD_Identifier>
           </gmd:aggregateDataSetIdentifier>

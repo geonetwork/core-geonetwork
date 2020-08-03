@@ -551,46 +551,21 @@
    * on the metadata.
    */
   module.factory('Metadata', ['gnLangs', function(gnLangs) {
-    var langSuffix = "_lang";
-
     function Metadata(k) {
       // Move _source properties to the root.
       var source = k._source;
       delete k._source;
       $.extend(true, this, k, source);
 
-
-      // TODOES Check if we can define in ES which fields
-      // to always return as an array.
-      var listOfArrayFields = ['topic', 'cat', 'keyword', 'resourceCredit',
-        'resolutionScaleDenominator', 'resolutionDistance', 'extentDescription', 'geom',
-        'inspireTheme', 'inspireTheme_syn', 'inspireAnnex',
-        'status', 'status_text', 'coordinateSystem', 'identifier', 'responsibleParty',
-        'mdLanguage', 'resourceLanguage', 'resourceIdentifier',
-        'MD_LegalConstraintsOtherConstraints', 'MD_LegalConstraintsUseLimitation',
-        'MD_SecurityConstraintsUseLimitation', 'overview',
-        'MD_ConstraintsUseLimitation', 'resourceType',
-        'type', 'link', 'crsDetails', 'format', 'otherLanguage',
-        'creationDateForResource', 'publicationDateForResource', 'revisionDateForResource',
-        'contact', 'contactForResource', 'resourceTemporalDateRange', 'resourceTemporalExtentDateRange'];
-
-
-
-      // Multilingual mode: one field per language
-      // Populate translation for all multilingual fields.
-      // // Multilingual fields are composed of one field without _lang suffix
-      // // and one field for each translation.
-      // // Set the default field value to the UI language if exist.
-      var listOfTranslatedField = {};
       var record = this;
-      // $.each(this, function(key, value) {
-      //   var fieldName = key.split(langSuffix)[0];
-      //   if (key.indexOf(langSuffix) !== -1 &&
-      //     angular.isUndefined(listOfTranslatedField[fieldName])) {
-      //     record[fieldName] = record.translate(fieldName);
-      //     listOfTranslatedField[fieldName] = true;
-      //   }
-      // });
+
+      // See EsSearchManager#documentToJson to define fields as array.
+      // var listOfArrayFields = ; // Except for geom
+      if (angular.isDefined(record.geom) &&
+        !angular.isArray(record.geom)) {
+        record.geom = [record.geom];
+      }
+
       // Multilingual mode: object
       $.each(this, function(key, value) {
         var fieldName = key;
@@ -599,82 +574,15 @@
         }
       });
 
-
       // See below; probably not necessary
       this.linksCache = [];
 
-      // Codelist as array
-      $.each(this, function(key, value) {
-        // All codelist are an array
-        if (key.indexOf('codelist_') === 0 && !angular.isArray(record[key])) {
-          record[key] = [record[key]];
-        }
-      });
-
-      // Convert all fields declared as array
-      // as an array even if only one value.
-      $.each(listOfArrayFields, function(idx) {
-        var field = listOfArrayFields[idx];
-        if ((angular.isDefined(record[field])) &&
-            !angular.isArray(record[field])) {
-          record[field] = [record[field]];
-        }
-      });
-
-
-
-      // TODOES This should be defined as object in ES
-      var listOfJsonFields = ['crsDetails'];
-
-      // Note: this step does not seem to be necessary; TODO: remove or refactor
-      $.each(listOfJsonFields, function(idx) {
-        var fieldName = listOfJsonFields[idx];
-        if (angular.isDefined(record[fieldName])) {
-          try {
-            record[fieldName] = angular.fromJson(record[fieldName]);
-            var field = record[fieldName];
-
-            // Combine all document keywordGroup fields
-            // in one object. Applies to multilingual records
-            // which may have multiple values after combining
-            // documents from all index
-            // fixme: not sure how to precess this, take first array as main
-            // object or take last arrays when they appear (what is done here)
-            if (fieldName === 'keywordGroup' && angular.isArray(field)) {
-              var thesaurusList = {};
-              for (var i = 0; i < field.length; i++) {
-                var thesauri = field[i];
-                $.each(thesauri, function(key) {
-                  if (!thesaurusList[key] && thesauri[key].length)
-                    thesaurusList[key] = thesauri[key];
-                });
-              }
-              record[fieldName] = thesaurusList;
-            }
-          } catch (e) {}
-        }
-      }.bind(this));
-
       this.getAllContacts();
-      // Create a structure that reflects the transferOption/onlinesrc tree
-      // var links = [];
-      // angular.forEach(this.link, function(link) {
-      //   var linkInfo = formatLink(link);
-      //   var idx = linkInfo.group - 1;
-      //   if (!links[idx]) {
-      //     links[idx] = [linkInfo];
-      //   }
-      //   else if (angular.isArray(links[idx])) {
-      //     links[idx].push(linkInfo);
-      //   }
-      // });
-      // this.linksTree = links;
     };
 
 
     Metadata.prototype = {
       translate: function(fieldName) {
-        // var translation = this[fieldName + '_lang' + gnLangs.current];
         var translation = this[fieldName]['lang' + gnLangs.current];
 
         if (translation) {
@@ -685,12 +593,6 @@
           console.warn(fieldName + ' is not defined in this record.');
         }
       },
-      // getUuid: function() {
-      //   return this.uuid || this._source.uuid;
-      // },
-      // getId: function() {
-      //   return this.id;
-      // },
       isPublished: function() {
         return this.isPublishedToAll === 'true';
       },
