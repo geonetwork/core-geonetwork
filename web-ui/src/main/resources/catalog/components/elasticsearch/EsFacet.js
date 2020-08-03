@@ -127,6 +127,17 @@
         },
         track_total_hits: true
       },
+      simplelist: {
+        facets: {},
+        source: {
+          includes: [
+            'id',
+            'uuid',
+            'overview.*',
+            'resource*'
+          ]
+        }
+      },
       recordsWithErrors: {
         facets: {
           "indexingErrorMsg": {
@@ -159,6 +170,9 @@
     };
 
     this.addSourceConfiguration = function(esParams, type) {
+      if (type === undefined) {
+        type = 'simplelist';
+      }
       var source = typeof type === 'string' ? this.configs[type].source : type;
       esParams._source = source;
 

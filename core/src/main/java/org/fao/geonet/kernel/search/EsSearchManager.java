@@ -47,10 +47,8 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.client.security.RefreshPolicy;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.script.ScriptType;
@@ -65,10 +63,6 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.MetadataDraftRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
@@ -79,7 +73,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -87,17 +80,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 
 
@@ -475,9 +458,49 @@ public class EsSearchManager implements ISearchManager {
     }
 
     private static ImmutableSet<String> booleanFields;
+    private static ImmutableSet<String> arrayFields;
     private static ImmutableSet<String> booleanValues;
 
     static {
+        arrayFields = ImmutableSet.<String>builder()
+                .add(Geonet.IndexFieldNames.RECORDLINK)
+                .add("topic")
+                .add("cat")
+                .add("keyword")
+                .add("resourceCredit")
+                .add("resolutionScaleDenominator")
+                .add("resolutionDistance")
+                .add("extentDescription")
+                .add("inspireTheme")
+                .add("inspireTheme_syn")
+                .add("inspireAnnex")
+                .add("status")
+                .add("status_text")
+                .add("coordinateSystem")
+                .add("identifier")
+                .add("responsibleParty")
+                .add("mdLanguage")
+                .add("resourceLanguage")
+                .add("resourceIdentifier")
+                .add("MD_LegalConstraintsOtherConstraints")
+                .add("MD_LegalConstraintsUseLimitation")
+                .add("MD_SecurityConstraintsUseLimitation")
+                .add("overview")
+                .add("MD_ConstraintsUseLimitation")
+                .add("resourceType")
+                .add("type")
+                .add("link")
+                .add("crsDetails")
+                .add("format")
+                .add("otherLanguage")
+                .add("creationDateForResource")
+                .add("publicationDateForResource")
+                .add("revisionDateForResource")
+                .add("contact")
+                .add("contactForResource")
+                .add("resourceTemporalDateRange")
+                .add("resourceTemporalExtentDateRange")
+            .build();
         booleanFields = ImmutableSet.<String>builder()
             .add("hasxlinks")
             .add("hasInspireTheme")
@@ -531,7 +554,9 @@ public class EsSearchManager implements ISearchManager {
             String propertyName = name.startsWith("_") ? name.substring(1) : name;
             List<Element> nodeElements = xml.getChildren(name);
 
-            boolean isArray = nodeElements.size() > 1;
+            boolean isArray = nodeElements.size() > 1
+                || arrayFields.contains(propertyName)
+                || propertyName.startsWith("codelist_");
             if (isArray) {
                 ArrayNode arrayNode = doc.putArray(propertyName);
                 for (Element node : nodeElements) {
@@ -649,6 +674,10 @@ public class EsSearchManager implements ISearchManager {
         }
         sendDocumentsToIndex();
         return true;
+    }
+
+    public Map<String, Object> getDocument(String uuid) throws Exception {
+        return client.getDocument(defaultIndex, uuid);
     }
 
     public SearchResponse query(String luceneQuery, String filterQuery, int startPosition, int maxRecords) throws Exception {

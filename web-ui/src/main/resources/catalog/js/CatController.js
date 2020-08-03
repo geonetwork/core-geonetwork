@@ -521,6 +521,7 @@ goog.require('gn_alert');
           'createPageTpl':
               '../../catalog/templates/editor/new-metadata-horizontal.html',
           'editorIndentType': '',
+          'allowRemoteRecordLink': true,
           'facetConfig': {
             'resourceType': {
               'terms': {

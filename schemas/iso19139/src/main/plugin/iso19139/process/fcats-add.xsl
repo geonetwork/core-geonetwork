@@ -34,8 +34,10 @@ attached it to the metadata for data.
                 version="2.0"
                 exclude-result-prefixes="#all">
 
-  <xsl:param name="uuidref"></xsl:param>
-  <xsl:param name="siteUrl"></xsl:param>
+  <xsl:param name="uuidref"/>
+  <xsl:param name="siteUrl"/>
+  <xsl:param name="fcatsUrl" select="''"/>
+  <xsl:param name="fcatsTitle" select="''"/>
 
   <xsl:template match="/gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
     <xsl:copy>
@@ -59,23 +61,20 @@ attached it to the metadata for data.
                 gmd:identificationInfo"/>
 
 
+      <xsl:variable name="citationWithRef"
+                    select="gmd:contentInfo/*/gmd:featureCatalogueCitation[@uuidref = $uuidref]"/>
       <xsl:choose>
         <!-- Check if featureCatalogueCitation for uuidref -->
         <xsl:when
-          test="gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation[@uuidref = $uuidref]">
+          test="$citationWithRef">
           <gmd:contentInfo>
             <gmd:MD_FeatureCatalogueDescription>
-              <xsl:copy-of select="gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation[@uuidref = $uuidref]/../gmd:complianceCode|
-                                   gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation[@uuidref = $uuidref]/../gmd:language|
-                                   gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation[@uuidref = $uuidref]/../gmd:includedWithDataset|
-                                   gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation[@uuidref = $uuidref]/../gmd:featureTypes"/>
+              <xsl:copy-of select="$citationWithRef/../gmd:complianceCode|
+                                   $citationWithRef/../gmd:language|
+                                   $citationWithRef/../gmd:includedWithDataset|
+                                   $citationWithRef/../gmd:featureTypes"/>
 
-              <!-- Add xlink:href featureCatalogueCitation -->
-              <gmd:featureCatalogueCitation uuidref="{$uuidref}"
-                                            xlink:href="{$siteUrl}csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id={$uuidref}">
-                <xsl:copy-of
-                  select="gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation[@uuidref = $uuidref]/gmd:CI_Citation"/>
-              </gmd:featureCatalogueCitation>
+              <xsl:call-template name="make-fcats-link"/>
 
             </gmd:MD_FeatureCatalogueDescription>
           </gmd:contentInfo>
@@ -85,8 +84,7 @@ attached it to the metadata for data.
           <gmd:contentInfo>
             <gmd:MD_FeatureCatalogueDescription>
               <gmd:includedWithDataset/>
-              <gmd:featureCatalogueCitation uuidref="{$uuidref}"
-                                            xlink:href="{$siteUrl}csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id={$uuidref}"/>
+              <xsl:call-template name="make-fcats-link"/>
             </gmd:MD_FeatureCatalogueDescription>
           </gmd:contentInfo>
         </xsl:otherwise>
@@ -110,6 +108,22 @@ attached it to the metadata for data.
     </xsl:copy>
   </xsl:template>
 
+  <xsl:template name="make-fcats-link">
+    <gmd:featureCatalogueCitation uuidref="{$uuidref}">
+      <xsl:if test="$fcatsTitle != ''">
+        <xsl:attribute name="xlink:title" select="$fcatsTitle"/>
+      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="$fcatsUrl != ''">
+          <xsl:attribute name="xlink:href" select="$fcatsUrl"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="xlink:href"
+                         select="concat($siteUrl, 'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=', $uuidref)"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </gmd:featureCatalogueCitation>
+  </xsl:template>
 
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">

@@ -25,13 +25,18 @@
 <!--
 Stylesheet used to update metadata adding a reference to a source record.
 -->
-<xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+<xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:geonet="http://www.fao.org/geonetwork"
-                version="2.0">
+                version="2.0"
+                exclude-result-prefixes="#all">
 
-  <!-- Source metadata record UUID -->
+  <xsl:param name="siteUrl"/>
   <xsl:param name="sourceUuid"/>
+  <xsl:param name="sourceUrl" select="''"/>
+  <xsl:param name="sourceTitle" select="''"/>
 
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">
@@ -76,7 +81,7 @@ Stylesheet used to update metadata adding a reference to a source record.
       <xsl:apply-templates select="*[name() != 'gmd:lineage']"/>
       <gmd:lineage>
         <gmd:LI_Lineage>
-          <gmd:source uuidref="{$sourceUuid}"/>
+          <xsl:call-template name="make-source-link"/>
         </gmd:LI_Lineage>
       </gmd:lineage>
     </xsl:copy>
@@ -87,10 +92,25 @@ Stylesheet used to update metadata adding a reference to a source record.
       <xsl:copy-of select="@*"/>
       <xsl:copy-of select="gmd:statement|gmd:processStep|gmd:source"/>
 
-      <!-- Only one parent identifier allowed
-      - overwriting existing one. -->
-      <gmd:source uuidref="{$sourceUuid}"/>
+      <xsl:call-template name="make-source-link"/>
     </xsl:copy>
+  </xsl:template>
+
+  <xsl:template name="make-source-link">
+    <gmd:source uuidref="{$sourceUuid}">
+      <xsl:if test="$sourceTitle != ''">
+        <xsl:attribute name="xlink:title" select="$sourceTitle"/>
+      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="$sourceUrl != ''">
+          <xsl:attribute name="xlink:href" select="$sourceUrl"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="xlink:href"
+                         select="concat($siteUrl, 'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=', $sourceUuid)"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </gmd:source>
   </xsl:template>
 
   <!-- Remove geonet:* elements. -->

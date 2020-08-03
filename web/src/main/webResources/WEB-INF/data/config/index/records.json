@@ -1341,6 +1341,15 @@
           },
           "to": {
             "type": "keyword"
+          },
+          "url": {
+            "type": "keyword"
+          },
+          "title": {
+            "type": "keyword"
+          },
+          "origin": {
+            "type": "keyword"
           }
         }
       },

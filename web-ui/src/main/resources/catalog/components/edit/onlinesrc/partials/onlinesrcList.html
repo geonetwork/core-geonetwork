@@ -215,6 +215,9 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
+              <i class="fa fa-fw"
+                 title="{{resource.origin === 'remote' ? ('remoteRecord' | translate) : ''}}"
+                 data-ng-class="{'fa-external-link': resource.origin === 'remote'}"></i>
               <a target="_blank"
                  data-ng-href="{{buildMetadataLink(resource)}}">
                 {{resource.title | gnLocalized: lang}}
@@ -253,8 +256,11 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
+              <i class="fa fa-fw"
+                 title="{{resource.origin === 'remote' ? ('remoteRecord' | translate) : ''}}"
+                 data-ng-class="{'fa-external-link': resource.origin === 'remote'}"></i>
               <a target="_blank"
-                 data-ng-href="{{'../metadata/' + resource.id}}">
+                 data-ng-href="{{buildMetadataLink(resource)}}">
                 {{resource.title | gnLocalized: lang}}
               </a>
             </div>
@@ -291,8 +297,11 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
+              <i class="fa fa-fw"
+                 title="{{resource.origin === 'remote' ? ('remoteRecord' | translate) : ''}}"
+                 data-ng-class="{'fa-external-link': resource.origin === 'remote'}"></i>
               <a target="_blank"
-                 data-ng-href="{{'../metadata/' + resource.id}}">
+                 data-ng-href="{{buildMetadataLink(resource)}}">
                 {{resource.title | gnLocalized: lang}}
               </a>
             </div>
@@ -330,8 +339,11 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
+              <i class="fa fa-fw"
+                 title="{{resource.origin === 'remote' ? ('remoteRecord' | translate) : ''}}"
+                 data-ng-class="{'fa-external-link': resource.origin === 'remote'}"></i>
               <a target="_blank"
-                 data-ng-href="{{'../metadata/' + resource.id}}">
+                 data-ng-href="{{buildMetadataLink(resource)}}">
                 {{resource.title | gnLocalized: lang}}
               </a>
             </div>
@@ -369,8 +381,11 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
+              <i class="fa fa-fw"
+                 title="{{resource.origin === 'remote' ? ('remoteRecord' | translate) : ''}}"
+                 data-ng-class="{'fa-external-link': resource.origin === 'remote'}"></i>
               <a target="_blank"
-                 data-ng-href="{{resource['@subtype'] ? resource.url : ('../metadata/' + resource.id)}}">
+                 data-ng-href="{{buildMetadataLink(resource)}}">
                 {{resource.title | gnLocalized: lang}}
               </a>
             </div>
@@ -401,8 +416,11 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
+              <i class="fa fa-fw"
+                 title="{{resource.origin === 'remote' ? ('remoteRecord' | translate) : ''}}"
+                 data-ng-class="{'fa-external-link': resource.origin === 'remote'}"></i>
               <a target="_blank"
-                 data-ng-href="{{'../metadata/' + resource.id}}">
+                 data-ng-href="{{buildMetadataLink(resource)}}">
                 {{resource.title | gnLocalized: lang}}
               </a>
             </div>
@@ -432,10 +450,13 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
+              <i class="fa fa-fw"
+                 title="{{resource.origin === 'remote' ? ('remoteRecord' | translate) : ''}}"
+                 data-ng-class="{'fa-external-link': resource.origin === 'remote'}"></i>
               <a target="_blank"
-                 data-ng-href="{{'../metadata/' + resource.id}}">
+                 data-ng-href="{{buildMetadataLink(resource)}}">
                 {{resource.title | gnLocalized: lang}}
-                <span>{{'(' + resource.associationType.toUpperCase() + ')'}}</span>
+                <span>{{'(' + resource.associationType + ')'}}</span>
               </a>
             </div>
             <div class="col-md-1 text-right">
@@ -465,15 +486,17 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
+              <i class="fa fa-fw"
+                 title="{{resource.origin === 'remote' ? ('remoteRecord' | translate) : ''}}"
+                 data-ng-class="{'fa-external-link': resource.origin === 'remote'}"></i>
               <a target="_blank"
-                 data-ng-href="{{'../metadata/' + resource.id}}">
+                 data-ng-href="{{buildMetadataLink(resource)}}">
                 {{resource.title | gnLocalized: lang}}
               </a>
             </div>
           </div>
         </li>
       </ul>
-
     </div>
   </div>
 </div>
