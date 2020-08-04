@@ -575,7 +575,7 @@
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
         'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails',
         'creationDate', 'publicationDate', 'revisionDate', 'spatialRepresentationType_text'];
-      var listOfJsonFields = ['keywordGroup', 'crsDetails'];
+      var listOfJsonFields = ['keywordGroup', 'crsDetails', 'featureTypes'];
       // See below; probably not necessary
       var record = this;
       this.linksCache = [];
