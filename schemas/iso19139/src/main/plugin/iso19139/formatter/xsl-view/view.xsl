@@ -885,8 +885,9 @@
           <ul>
             <xsl:for-each select="parent::node()/*[name() = $nodeName]">
               <li>
-                <a href="{$nodeUrl}api/records/{@uuidref}">
-                  <i class="fa fa-link"><xsl:comment select="'link'"/></i>
+                <a data-gn-api-link=""
+                   href="{$nodeUrl}api/records/{@uuidref}">
+                  <i class="fa fa-fw fa-link"><xsl:comment select="'link'"/></i>
                   <span><xsl:comment select="'dataset'"/>
                     <xsl:value-of select="gn-fn-render:getMetadataTitle(@uuidref, $langId)"/>
                   </span>
