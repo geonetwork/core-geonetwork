@@ -380,7 +380,7 @@
     "transfertPrivilegesFinished": "{{metadata}} fiche(s) transférée(s).",
     "valueName": "Nom",
     "xmlView": "Vue XML",
-    "downloadRecord": "Télécharger la fiche",
+    "downloadRecord": "Consulter la fiche (XML)",
     "manageRecord": "Gérer la fiche",
     "valueDefinition": "Définition",
     "toggleNavigation": "Afficher/cacher la navigation",
