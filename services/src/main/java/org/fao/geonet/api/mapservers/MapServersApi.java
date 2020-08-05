@@ -92,7 +92,7 @@ public class MapServersApi {
 
     @ApiOperation(
         value = "Get mapservers",
-        notes = "Mapservers are used by the catalog to publish record attachements " +
+        notes = "Mapservers are used by the catalog to publish record attachments " +
             "(eg. ZIP file with shape) or record associated resources (eg. " +
             "database table, file on the local network) in a remote mapserver like " +
             "GeoServer or MapServer. The catalog communicate with the mapserver using " +
