@@ -7,7 +7,7 @@
 
   module.service('sxtService', [ function() {
 
-    var panierEnabled = typeof sxtSettings != 'undefined' && !angular.isUndefined(sxtSettings.tabOverflow.panier);
+    var panierEnabled = typeof sxtSettings === 'undefined' || !angular.isUndefined(sxtSettings.tabOverflow.panier);
 
     var directDownloadTypes = [
       '#WWW:DOWNLOAD-1.0-link--download',
