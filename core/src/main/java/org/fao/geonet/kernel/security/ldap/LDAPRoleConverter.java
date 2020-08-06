@@ -34,16 +34,22 @@ import java.util.Map;
 public interface LDAPRoleConverter {
 
     /**
+     * Convert LDAP information (person info as well as info about a group they are a memember of) to a list of
+     * roles.
      *
-     * @param userInfo      -- information about the user
-     * @param userDetails   -- information about the user
-     * @param ldapGroupName  -- name of the ldap group the user is a member of
-     * @param ldapGroupAttributes -- attributes of the group the user is a member of
+     * In general, the person info (userInfo, userDetails) are not used - they're included for future special cases.
+     *     eg. an LDAP attribute inside the person that gives a role.
+     *
+     *
+     * @param userInfo       information about the user (all attributes from LDAP person object)
+     * @param userDetails    information about the user (constructed/paresed from LDAP person object by GN)
+     * @param ldapGroupName  name of the ldap group the user is a member of
+     * @param ldapGroupAttributes  attributes of the group the user is a member of
      * @return List of ldap roles (GN-group name and GN-Profile)
      */
     List<LDAPRole> convert(Map<String, ArrayList<String>> userInfo,
                            LDAPUser userDetails,
                            String ldapGroupName,
-                           Attributes ldapGroupAttributes);
+                           Attributes ldapGroupAttributes) throws Exception;
 
 }

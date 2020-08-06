@@ -1,7 +1,7 @@
 Using LDAPUserDetailsContextMapperWithProfileSearchEnhanced
 ===========================================================
 
-I've modified `LDAPUserDetailsContextMapperWithProfileSearch` so it works in more situations, is much simpler, uses strategy objects, and has a good set of test cases.
+`LDAPUserDetailsContextMapperWithProfileSearch` was modified so it works in more situations, is much simpler, uses strategy objects, and has a good set of test cases.
 
 The original `LDAPUserDetailsContextMapperWithProfileSearch` was extremely difficult to understand.
 

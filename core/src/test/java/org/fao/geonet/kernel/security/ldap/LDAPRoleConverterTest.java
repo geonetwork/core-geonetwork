@@ -1,3 +1,6 @@
+//=============================================================================
+//===	Copyright (C) 2001-2012 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
 //===	This program is free software; you can redistribute it and/or modify
@@ -33,7 +36,7 @@ public class LDAPRoleConverterTest {
 
     //simple test for parsing "GCAT_GENERAL_Administrator"
     @Test
-    public void test_LDAPRoleConverter1() {
+    public void test_parse_GCAT_GENERAL_Administrator() throws Exception{
         LDAPRoleConverterGroupNameParser out = new LDAPRoleConverterGroupNameParser();
 
         LDAPUser userDetails = new LDAPUser("dblasby@example.com");
@@ -44,14 +47,14 @@ public class LDAPRoleConverterTest {
         out.setProfileMapping(null);
 
         List<LDAPRole> result = out.convert(null,userDetails,"GCAT_GENERAL_Administrator",null);
-        assertEquals(1,result.size());
+        assertEquals(1, result.size());
         assertEquals("GENERAL", result.get(0).getGroupName());
         assertEquals(Profile.Administrator, result.get(0).getProfile());
     }
 
     //tests profile mapping (admin -> Administrator)
     @Test
-    public void test_LDAPRoleConverter2() {
+    public void test_profile_mapping() throws Exception {
         LDAPRoleConverterGroupNameParser out = new LDAPRoleConverterGroupNameParser();
 
         LDAPUser userDetails = new LDAPUser("dblasby@example.com");
@@ -67,14 +70,14 @@ public class LDAPRoleConverterTest {
         out.setProfileMapping(profileMap);
 
         List<LDAPRole> result = out.convert(null,userDetails,"GCAT_GENERAL_admin",null);
-        assertEquals(1,result.size());
+        assertEquals(1, result.size());
         assertEquals("GENERAL", result.get(0).getGroupName());
         assertEquals(Profile.Administrator, result.get(0).getProfile());
     }
 
     //testswhen the LDAP role doesn't match the pattern (shouldn't return anything)
     @Test
-    public void test_LDAPRoleConverter3() {
+    public void test_no_matching_roles() throws Exception {
         LDAPRoleConverterGroupNameParser out = new LDAPRoleConverterGroupNameParser();
 
         LDAPUser userDetails = new LDAPUser("dblasby@example.com");
@@ -84,8 +87,8 @@ public class LDAPRoleConverterTest {
         out.setProfileIndexInPattern(2);
 
         Map<String,Profile> profileMap = new HashMap<>();
-        profileMap.put("admin",Profile.Administrator);
-        profileMap.put("editor",Profile.Editor);
+        profileMap.put("admin", Profile.Administrator);
+        profileMap.put("editor", Profile.Editor);
 
         out.setProfileMapping(profileMap);
 
@@ -96,7 +99,7 @@ public class LDAPRoleConverterTest {
     //sets up a direct link between an LDAP group and a list of GN-Roles (gn-group and gn-profile)
     //also tests when the LDAP role doesn't match, LDAPRoleConverterGroupNameConverter doesn't return anything
     @Test
-    public void test_LDAPRoleConverterGroupNameConverter1(){
+    public void test_LDAPRoleConverterGroupNameConverter_direct_match() throws Exception {
         LDAPRoleConverterGroupNameConverter out = new LDAPRoleConverterGroupNameConverter();
 
         Map<String,List<LDAPRole>> map = new HashMap<>();
@@ -111,7 +114,7 @@ public class LDAPRoleConverterTest {
         LDAPUser userDetails = new LDAPUser("dblasby@example.com");
 
         List<LDAPRole> result = out.convert(null,userDetails,"ldap_abc",null);
-        assertEquals(2,result.size());
+        assertEquals(2, result.size());
         assertEquals("group1", result.get(0).getGroupName());
         assertEquals(Profile.Administrator, result.get(0).getProfile());
 
@@ -120,7 +123,7 @@ public class LDAPRoleConverterTest {
 
 
         result = out.convert(null,userDetails,"BAD_GROUP_NAME",null);
-        assertEquals(0,result.size());
+        assertEquals(0, result.size());
     }
 
 

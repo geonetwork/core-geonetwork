@@ -39,9 +39,7 @@ import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -134,6 +132,29 @@ public class LDAPUserDetailsContextMapperWithProfileSearchEnhancedTest extends A
 
     @Autowired
     LDAPRoleConverterGroupNameParser ldapRoleConverterGroupNameParser;
+
+
+    //=------------------------------------------------------------------
+
+    @AfterClass
+    public static void afterClass() throws Exception {
+        shutdownLDAP();
+    }
+
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        setupLDAP();
+    }
+
+    //gets the spring context
+    @Before
+    public void before() throws Exception {
+        ApplicationContextHolder.set(this._appContext); // this is for code using antipattern - ApplicationContextHolder.get().getBean(...)
+
+        userRepository.deleteAll();
+        groupRepository.deleteAll();
+        userGroupRepository.deleteAll();
+    }
 
     //very simple test
     // this will find the DN by searching by username
@@ -301,42 +322,27 @@ public class LDAPUserDetailsContextMapperWithProfileSearchEnhancedTest extends A
     public final static String ldapSearchBase = "dc=example,dc=com";
 
 
-    DirectoryService LDAPservice = null;
-    LdapServer ldapServer = null;
+    static DirectoryService LDAPservice = null;
+    static LdapServer ldapServer = null;
 
-    public void setupLDAP() throws Exception {
-        CreateLdapServer classLdapServerBuilder = this.getClass().getAnnotation(CreateLdapServer.class);
-        CreateDS dsBuilder = this.getClass().getAnnotation(CreateDS.class);
+    public static void setupLDAP() throws Exception {
+        CreateLdapServer classLdapServerBuilder = LDAPUserDetailsContextMapperWithProfileSearchEnhancedTest.class.getAnnotation(CreateLdapServer.class);
+        CreateDS dsBuilder = LDAPUserDetailsContextMapperWithProfileSearchEnhancedTest.class.getAnnotation(CreateDS.class);
         LDAPservice = DSAnnotationProcessor.createDS(dsBuilder);
-        ApplyLdifFiles applyLdifFiles = this.getClass().getAnnotation(ApplyLdifFiles.class);
+        ApplyLdifFiles applyLdifFiles = LDAPUserDetailsContextMapperWithProfileSearchEnhancedTest.class.getAnnotation(ApplyLdifFiles.class);
         DSAnnotationProcessor.injectLdifFiles(applyLdifFiles.clazz(), LDAPservice, applyLdifFiles.value());
 
-        CreateLdapServer createLdapServer = getClass().getAnnotation(CreateLdapServer.class);
+        CreateLdapServer createLdapServer = LDAPUserDetailsContextMapperWithProfileSearchEnhancedTest.class.getAnnotation(CreateLdapServer.class);
         ldapServer = ServerAnnotationProcessor.instantiateLdapServer(createLdapServer, LDAPservice);
         ldapServer.start();
     }
 
-    public void shutdownLDAP() throws Exception {
+    public static void shutdownLDAP() throws Exception {
         ldapServer.stop();
         LDAPservice.shutdown();
         FileUtils.deleteDirectory(LDAPservice.getInstanceLayout().getInstanceDirectory());
     }
 
-    @After
-    public void after() throws Exception {
-        shutdownLDAP();
-    }
-
-    //gets the spring context
-    @Before
-    public void before() throws Exception {
-        setupLDAP();
-        ApplicationContextHolder.set(this._appContext); // this is for code using antipattern - ApplicationContextHolder.get().getBean(...)
-
-        userRepository.deleteAll();
-        groupRepository.deleteAll();
-        userGroupRepository.deleteAll();
-    }
 
 
     //very basic test - using LDAPTemplate

@@ -1,3 +1,6 @@
+//=============================================================================
+//===	Copyright (C) 2001-2012 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
 //===	This program is free software; you can redistribute it and/or modify
@@ -34,14 +37,15 @@ import java.util.Map;
  */
 public class LDAPRoleConverterGroupNameConverter implements LDAPRoleConverter {
     //groupName (from LDAP) to a list of LDAPRoles (GN-Group and GN-Profile)
-    Map<String,List<LDAPRole>> convertMap;
+    Map<String, List<LDAPRole>> convertMap;
 
 
     //given an LDAP role name, find the list of LDAPRoles that are assigned to them.
     @Override
     public List<LDAPRole> convert(Map<String, ArrayList<String>> userInfo, LDAPUser userDetails, String ldapGroupName, Attributes ldapGroupAttributes) {
-        if ( (convertMap == null) || (!convertMap.containsKey(ldapGroupName)))
+        if ((convertMap == null) || (!convertMap.containsKey(ldapGroupName))) {
             return new ArrayList<LDAPRole>();
+        }
         return convertMap.get(ldapGroupName);
     }
 

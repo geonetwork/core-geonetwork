@@ -174,7 +174,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearchEnhanced extends Abstr
                     //NOTE: they will return an empty list if they don't know what the role means
                     //      allRoles is a set, you can add duplicates to it with no problem...
                     for(LDAPRoleConverter converter : this.ldapRoleConverters){
-                        List<LDAPRole> newRoles = converter.convert(userInfo,userDetails,ldapGroupName,sr.getAttributes());
+                        List<LDAPRole> newRoles = converter.convert(userInfo, userDetails, ldapGroupName, sr.getAttributes());
                         if (newRoles != null)
                             allRoles.addAll(newRoles);
                     }
@@ -202,8 +202,9 @@ public class LDAPUserDetailsContextMapperWithProfileSearchEnhanced extends Abstr
                     userDetails.getUser().setProfile(defaultProfile);
                 }
 
-            } catch (NamingException e) {
+            } catch (Exception e) {
                 Log.error(Geonet.LDAP, "Failed to extract profiles and groups. Error is: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
     }

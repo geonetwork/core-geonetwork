@@ -29,7 +29,6 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.security.WritableUserDetailsContextMapper;
 import org.fao.geonet.utils.Log;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -42,7 +41,10 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Map LDAP user information to GeoNetworkUser information.
@@ -96,15 +98,14 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
                                           String username, Collection<? extends GrantedAuthority> authorities) {
 
         Profile defaultProfile;
-        if ( (mapping.get("profile") != null) && (mapping.get("profile")[1] != null)) {
+        if ((mapping.get("profile") != null) && (mapping.get("profile")[1] != null)) {
             defaultProfile = Profile.valueOf(mapping.get("profile")[1]);
         } else {
             defaultProfile = Profile.RegisteredUser;
         }
         String defaultGroup = mapping.get("privilege")[1];
         //allow proper injection
-        LDAPUtils ldapUtils = this.ldapUtils != null? this.ldapUtils :
-            ApplicationContextHolder.get().getBean(LDAPUtils.class);
+        LDAPUtils ldapUtils = ApplicationContextHolder.get().getBean(LDAPUtils.class);
 
         Map<String, ArrayList<String>> userInfo = ldapUtils
             .convertAttributes(userCtx.getAttributes().getAll());
@@ -238,12 +239,12 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 
     //returns null if not available
     private String getValue(Map<String, ArrayList<String>> userInfo,String ldapAttributeName) {
-        if ( (ldapAttributeName == null) || (userInfo == null)) //bad args
+        if ((ldapAttributeName == null) || (userInfo == null)) //bad args
             return null;
         ArrayList<String> info = userInfo.get(ldapAttributeName);
-        if ( (info == null) || (info.size() ==0)) //no value supplied
+        if ((info == null) || (info.size() ==0)) //no value supplied
             return null;
-        if (info.size()==1) // only one value -- that's it
+        if (info.size() == 1) // only one value -- that's it
             return info.get(0);
         // we sometime get > 1 value here, especially for CN containing the full DN
         if (info.get(1) == null) //no value there

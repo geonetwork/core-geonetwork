@@ -34,14 +34,18 @@ public class LDAPRole {
     Profile profile;
 
 
-    public LDAPRole(String groupName, Profile profile) {
+    public LDAPRole(String groupName, Profile profile) throws Exception {
+        if ((groupName == null) || (profile == null))
+            throw new Exception("groupName and profile must not be null");
         this.groupName = groupName;
         this.profile = profile;
     }
 
-    public LDAPRole(String groupName, String profileName) {
+    public LDAPRole(String groupName, String profileName) throws Exception {
         this.groupName = groupName;
         this.profile = Profile.findProfileIgnoreCase(profileName);
+        if ((groupName == null) || (profile == null))
+            throw new Exception("groupName and profile must not be null");
     }
 
 
@@ -49,7 +53,9 @@ public class LDAPRole {
         return groupName;
     }
 
-    public void setGroupName(String groupName) {
+    public void setGroupName(String groupName) throws Exception {
+        if (groupName == null)
+            throw new Exception("groupName must not be null");
         this.groupName = groupName;
     }
 
@@ -57,7 +63,9 @@ public class LDAPRole {
         return profile;
     }
 
-    public void setProfile(Profile profile) {
+    public void setProfile(Profile profile) throws Exception {
+        if (profile == null)
+            throw new Exception("profile must not be null");
         this.profile = profile;
     }
 
@@ -66,8 +74,11 @@ public class LDAPRole {
         if (!(obj instanceof LDAPRole))
             return false;
 
-        return this.getGroupName() == ((LDAPRole) obj).getGroupName() &&
-            this.getProfile().name() == ((LDAPRole) obj).getProfile().name();
+        boolean groupNameEqual =  this.getGroupName().equals(((LDAPRole) obj).getGroupName());
+        boolean profileNameEqual =  this.getProfile().name().equals(((LDAPRole) obj).getProfile().name());
+
+
+        return groupNameEqual && profileNameEqual;
     }
 
     @Override

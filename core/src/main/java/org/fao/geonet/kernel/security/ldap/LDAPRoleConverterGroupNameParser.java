@@ -1,3 +1,6 @@
+//=============================================================================
+//===	Copyright (C) 2001-2012 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
 //===	This program is free software; you can redistribute it and/or modify
@@ -71,7 +74,8 @@ public class LDAPRoleConverterGroupNameParser implements LDAPRoleConverter{
 
     //This will take a role like "GCAT_general_admin" and convert it GN-Group=general and GN-Profile=admin
     @Override
-    public List<LDAPRole> convert(Map<String, ArrayList<String>> userInfo, LDAPUser userDetails, String ldapGroupName, Attributes LdapGroupAttributes) {
+    public List<LDAPRole> convert(Map<String, ArrayList<String>> userInfo, LDAPUser userDetails, String ldapGroupName, Attributes LdapGroupAttributes)
+        throws Exception {
         if (ldapMembershipQueryParser == null)
             return new ArrayList<LDAPRole>(); // nothing to do
 
