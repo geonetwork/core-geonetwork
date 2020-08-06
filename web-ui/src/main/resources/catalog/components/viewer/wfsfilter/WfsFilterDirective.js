@@ -909,13 +909,28 @@
             scope.lastClickedField = null;
 
             if (geom !== '') {
-              extentFilter = geom.split(',').map(function(val) {
-                return parseFloat(val);
-              });
+              extentFilter = geom.split(',')
+                .map(parseFloat)
+                .map(function (val, i) {
+                  // clamping on X and Y otherwise ES throws an error
+                  if (i === 0) return Math.max(-180, val)
+                  if (i === 1) return Math.max(-90, val)
+                  if (i === 2) return Math.min(180, val)
+                  if (i === 3) return Math.min(90, val)
+                });
+
               scope.filterGeometry = [
                 [extentFilter[0], extentFilter[3]],
                 [extentFilter[2], extentFilter[1]]
               ];
+
+              // update geom filter after clamping
+              scope.ctrl.searchGeometry =
+                scope.filterGeometry[0][0] + ',' +
+                scope.filterGeometry[1][1] + ',' +
+                scope.filterGeometry[1][0] + ',' +
+                scope.filterGeometry[0][1];
+
               scope.filterFacets();
             }
             // when reset from gnBbox directive
