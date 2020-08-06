@@ -409,7 +409,7 @@
                 });
 
             if (bboxProp) {
-              extent = ol.extent.containsExtent(proj.getWorldExtent(),
+              extent = proj.getWorldExtent() && ol.extent.containsExtent(proj.getWorldExtent(),
                       bboxProp) ?
                       ol.proj.transformExtent(bboxProp, 'EPSG:4326', proj) :
                       proj.getExtent();

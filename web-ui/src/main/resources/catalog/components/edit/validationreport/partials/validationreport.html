@@ -35,7 +35,7 @@
       <div class="panel panel-default"
            data-ng-repeat="type in ruleTypes"
            data-ng-class="'schematron-result-list-' + labelImportanceClass(type)">
-        <div data-gn-slide-toggle="" class="panel-heading clearfix">
+        <div data-gn-slide-toggle="{{initialSectionsClosed}}" class="panel-heading clearfix">
           <div class="col-md-9">
             <h2 class="gn-schematron-title"><span data-ng-if="type.schematronVerificationError">
               <i class="fa fa-exclamation-triangle fa-fw text-danger"></i>&nbsp;</span>{{(type.label || type.id) | translate}}</h2>
@@ -77,7 +77,8 @@
                 data-ng-show="(showErrors && rule.type === 'error') || (showSuccess && rule.type === 'success')"
                 data-ng-class="rule.type !== 'error' ? '' : (type.requirement === 'REQUIRED' ? 'text-danger' : 'text-info')">
               <p data-ng-class="rule.msg ? 'text-bold' : ''">{{pattern.title}}</p>
-              <p data-ng-show="rule.msg">{{rule.msg}}</p>
+              <p data-ng-show="rule.msg"
+                 ng-bind-html="rule.msg | linky"></p>
             </li>
           </ul>
         </div>

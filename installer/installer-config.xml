@@ -32,7 +32,7 @@
     <appversion>@version@ @subVersion@</appversion>
     <authors>
       <author name="OSGeo" email="geonetwork@osgeo.org"/>
-      <author name="FAO GeoNetwork Team" email="GeoNetwork@fao.org"/>
+      <author name="FAO GeoNetwork Team" email="geonetwork@osgeo.org"/>
       <author name="VAM WFP" email="vamsie@wfp.org"/>
       <author name="UNEP.net" email="info@unep.net"/>
       <author name="OCHA" email="ochageodata@un.org"/>
