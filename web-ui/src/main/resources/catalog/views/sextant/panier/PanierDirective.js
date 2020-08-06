@@ -232,11 +232,11 @@
 
                 // Set initial extent to draw the BBOX
                 var extents = gnMap.getBboxFromMd(scope.element.md);
-                var extent = extents.length > 0 && extents[0];
-                if (extent) {
-
+                if (extents.length > 0) {
                   // Fixed feature overlay to show extent of the md
-                  var feature = new ol.Feature();
+                  var feature = gnMap.getBboxFeatureFromMd(scope.element.md,
+                    scope.map.getView().getProjection());
+
                   var featureOverlay = new ol.layer.Vector({
                     source: new ol.source.Vector({
                       useSpatialIndex: false
@@ -247,15 +247,11 @@
 
                   featureOverlay.getSource().addFeature(feature);
 
-                  var proj = scope.map.getView().getProjection();
-                  extent = ol.extent.containsExtent(proj.getWorldExtent(),
-                      extent) ?
-                      ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
-                      proj.getExtent();
-
                   // Set coords in the scope to pass it to the mapField directive
-                  scope.extentCoords = gnMap.getPolygonFromExtent(extent);
-                  feature.setGeometry(new ol.geom.Polygon(scope.extentCoords));
+                  // (only if raster format to avoid excluding data by mistake: https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/199)
+                  if (dataType === 'raster') {
+                    scope.extentCoords = gnMap.getPolygonFromExtent(extent);
+                  }
                 }
 
                 // To update size on first maps render
