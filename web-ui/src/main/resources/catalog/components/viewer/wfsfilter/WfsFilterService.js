@@ -425,7 +425,7 @@
           var paramName = fName;
 
           if (useActualParamName) {
-            var fieldInfo = paramName.match(/ft_(.*)_([a-z]{1})?([a-z]{1})?$/);
+            var fieldInfo = paramName.match(/ft_(.*?)_([a-z]+)(?:_(tree))?$/);
             paramName = fieldInfo ? fieldInfo[1] : paramName;
           }
 
