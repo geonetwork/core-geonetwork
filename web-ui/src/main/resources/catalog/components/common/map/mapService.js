@@ -1320,7 +1320,7 @@
             var defer = $q.defer();
             var $this = this;
 
-            if (!isLayerInMap(map, name, url, style)) {
+            if (!isLayerInMap(map, name, url, style || '')) { // if style is not specified, use empty string
               gnWmsQueue.add(url, name, style ? style.Name : '');
               gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
                 var capL = gnOwsCapabilities.getLayerInfoFromCap(
