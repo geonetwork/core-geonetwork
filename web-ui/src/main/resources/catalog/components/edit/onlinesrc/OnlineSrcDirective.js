@@ -724,19 +724,28 @@
                 var resetProtocol = function() {
                   scope.layers = [];
                   scope.OGCProtocol = false;
-                  if (scope.params && !scope.isEditing && scope.clearFormOnProtocolChange) {
-                    scope.params.name = '';
-                    scope.params.desc = '';
-                    initMultilingualFields();
+                  if (scope.params && !scope.isEditing) {
+                    if (scope.clearFormOnProtocolChange) {
+                      scope.params.name = '';
+                      scope.params.desc = '';
+                      initMultilingualFields();
+                    }
+                    else {
+                      initMultilingualFields(['name','desc']);
+                    }
                     scope.params.selectedLayers = [];
                     scope.params.layers = [];
                   }
                 };
 
-                var initMultilingualFields = function() {
+                //doNotmodifyFields - list of field names
+                //   this will NOT update fields in this list.
+                var initMultilingualFields = function(doNotModifyFields) {
                   scope.config.multilingualFields.forEach(function(f) {
-                    scope.params[f] = {};
-                    setParameterValue(f, '');
+                    if ( (!doNotModifyFields) || (!_.contains(doNotModifyFields,f)) ) {
+                      scope.params[f] = {};
+                      setParameterValue(f, '');
+                    }
                   });
                 };
 
