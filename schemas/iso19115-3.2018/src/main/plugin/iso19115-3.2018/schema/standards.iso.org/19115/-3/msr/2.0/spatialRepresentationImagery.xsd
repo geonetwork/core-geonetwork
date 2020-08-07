@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+  xmlns:dqc="http://standards.iso.org/iso/19157/-2/dqc/1.0" 
+  xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" 
+  xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0" 
+  xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" 
+  xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/2.0" elementFormDefault="qualified" 
+  targetNamespace="http://standards.iso.org/iso/19115/-3/msr/2.0" version="1.0">
+  <annotation>
+    <documentation>Name: SpatialRepresentation
+Position: 3</documentation>
+  </annotation>
+<!--  <include schemaLocation="msr.xsd"/>-->
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gmw/1.0" schemaLocation="../../../../19115/-3/gmw/1.0/gmw.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19157/-2/dqc/1.0" schemaLocation="../../../../19157/-2/dqc/1.0/dqc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="MI_GCP" substitutionGroup="gco:AbstractObject" type="msr:MI_GCP_Type"/>
+  <complexType name="MI_GCP_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="geographicCoordinates" type="gmw:GM_Point_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="accuracyReport" type="dqc:Abstract_QualityElement_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MI_GCP_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="msr:MI_GCP"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MI_GCPCollection" substitutionGroup="msr:AbstractMI_GeolocationInformation" type="msr:MI_GCPCollection_Type"/>
+  <complexType name="MI_GCPCollection_Type">
+    <complexContent>
+      <extension base="msr:AbstractMI_GeolocationInformation_Type">
+        <sequence>
+          <element maxOccurs="unbounded" name="gcp" type="msr:MI_GCP_PropertyType"/>
+          <element name="collectionIdentification" type="gco:Integer_PropertyType"/>
+          <element name="collectionName" type="gco:CharacterString_PropertyType"/>
+          <element name="coordinateReferenceSystem" type="mcc:Abstract_ReferenceSystem_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MI_GCPCollection_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="msr:MI_GCPCollection"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractMI_GeolocationInformation" substitutionGroup="gco:AbstractObject" type="msr:AbstractMI_GeolocationInformation_Type"/>
+  <complexType abstract="true" name="AbstractMI_GeolocationInformation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="qualityInfo" type="dqc:Abstract_DataQuality_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractMI_GeolocationInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="msr:AbstractMI_GeolocationInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MI_Georectified" substitutionGroup="msr:MD_Georectified" type="msr:MI_Georectified_Type">
+    <annotation>
+      <documentation>Description: extends georectified grid description to include associated checkpoints
+shortName: IGeorect</documentation>
+    </annotation>
+  </element>
+  <complexType name="MI_Georectified_Type">
+    <complexContent>
+      <extension base="msr:MD_Georectified_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="checkPoint" type="msr:MI_GCP_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MI_Georectified_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="msr:MI_Georectified"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MI_Georeferenceable" substitutionGroup="msr:MD_Georeferenceable" type="msr:MI_Georeferenceable_Type">
+    <annotation>
+      <documentation>Description: Description of information provided in metadata that allows the geographic or map location raster points to be located
+FGDC: Georeferencing_Description
+shortName: IGeoref</documentation>
+    </annotation>
+  </element>
+  <complexType name="MI_Georeferenceable_Type">
+    <complexContent>
+      <extension base="msr:MD_Georeferenceable_Type">
+        <sequence>
+          <element minOccurs="0" name="platformParameters" type="mcc:Abstract_Platform_PropertyType"/>
+          <element maxOccurs="unbounded" name="geolocationInformation" type="msr:AbstractMI_GeolocationInformation_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MI_Georeferenceable_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="msr:MI_Georeferenceable"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

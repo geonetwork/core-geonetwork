@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mrl/1.0" version="1.0">
+  <include schemaLocation="mrl.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="LE_Algorithm" substitutionGroup="gco:AbstractObject" type="mrl:LE_Algorithm_Type">
+    <annotation>
+      <documentation>Description: Details of the methodology by which geographic information was derived from the instrument readings
+FGDC: Algorithm_Information
+shortName: Algorithm</documentation>
+    </annotation>
+  </element>
+  <complexType name="LE_Algorithm_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="citation" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>Description: information identifying the algorithm and version or date
+FGDC: Algorithm_Identifiers
+Position: 1
+shortName: algId</documentation>
+            </annotation>
+          </element>
+          <element name="description" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Description: information describing the algorithm used to generate the data
+FGDC: Algorithm_Description
+Position: 2
+shortName: algDesc</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="LE_Algorithm_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrl:LE_Algorithm"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="LE_NominalResolution" substitutionGroup="gco:AbstractObject" type="mrl:LE_NominalResolution_Type">
+    <annotation>
+      <documentation>Description: Distance between adjacent pixels
+shortName: nomRes</documentation>
+    </annotation>
+  </element>
+  <complexType name="LE_NominalResolution_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <choice>
+          <element name="scanningResolution" type="gco:Distance_PropertyType">
+            <annotation>
+              <documentation>Description: Distance between adjacent pixels in the scan plane
+shortName: scanRes</documentation>
+            </annotation>
+          </element>
+          <element name="groundResolution" type="gco:Distance_PropertyType">
+            <annotation>
+              <documentation>Description: Distance between adjacent pixels in the object space
+shortName: groundRes</documentation>
+            </annotation>
+          </element>
+        </choice>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="LE_NominalResolution_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrl:LE_NominalResolution"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="LE_ProcessStep" substitutionGroup="mrl:LI_ProcessStep" type="mrl:LE_ProcessStep_Type">
+    <annotation>
+      <documentation>Description: Information about an event or transformation in the life of the dataset including details of the algorithm and software used for processing
+FGDC: 
+shortName: DetailProcStep</documentation>
+    </annotation>
+  </element>
+  <complexType name="LE_ProcessStep_Type">
+    <complexContent>
+      <extension base="mrl:LI_ProcessStep_Type">
+        <sequence>
+          <element minOccurs="0" name="processingInformation" type="mrl:LE_Processing_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="report" type="mrl:LE_ProcessStepReport_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="output" type="mrl:LE_Source_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="LE_ProcessStep_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrl:LE_ProcessStep"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="LE_ProcessStepReport" substitutionGroup="gco:AbstractObject" type="mrl:LE_ProcessStepReport_Type">
+    <annotation>
+      <documentation>Description: Report of what occured during the process step
+shortName: ProcStepRep</documentation>
+    </annotation>
+  </element>
+  <complexType name="LE_ProcessStepReport_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="name" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Description: Name of the processing report
+shortName: procRepName</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="description" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Description: Textual description of what occurred during the process step
+shortName: procRepDesc</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="fileType" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Description: Type of file that contains that processing report
+shortName: procRepFilTyp</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="LE_ProcessStepReport_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrl:LE_ProcessStepReport"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="LE_Processing" substitutionGroup="gco:AbstractObject" type="mrl:LE_Processing_Type">
+    <annotation>
+      <documentation>Description: Comprehensive information about the procedure(s), process(es) and algorithm(s) applied in the process step
+shortName: Procsg</documentation>
+    </annotation>
+  </element>
+  <complexType name="LE_Processing_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="algorithm" type="mrl:LE_Algorithm_PropertyType"/>
+          <element name="identifier" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>Description: Information to identify the processing package that produced the data
+FGDC: Processing_Identifiers
+Position: 1
+shortName: procInfoId</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="softwareReference" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>Description: Reference to document describing processing software
+FGDC: Processing_Software_Reference
+Position: 2
+shortName: procInfoSwRef</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="procedureDescription" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Description: Additional details about the processing procedures
+FGDC: Processing_Procedure_Description
+Position: 3
+shortName: procInfoDesc</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="documentation" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>Description: Reference to documentation describing the processing
+FGDC: Processing_Documentation
+Position: 4
+shortName: procInfoDoc</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="runTimeParameters" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Description: Parameters to control the processing operations, entered at run time
+FGDC: Command_Line_Processing_Parameter
+Position: 5
+shortName: procInfoParam</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="LE_Processing_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrl:LE_Processing"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="LE_Source" substitutionGroup="mrl:LI_Source" type="mrl:LE_Source_Type">
+    <annotation>
+      <documentation>Description: information on source of data sets for processing step
+shortName: SrcDataset</documentation>
+    </annotation>
+  </element>
+  <complexType name="LE_Source_Type">
+    <complexContent>
+      <extension base="mrl:LI_Source_Type">
+        <sequence>
+          <element minOccurs="0" name="processedLevel" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>Description: Processing level of the source data
+shortName: procLevel</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="resolution" type="mrl:LE_NominalResolution_PropertyType">
+            <annotation>
+              <documentation>Description: Distance between two adjacent pixels
+shortName: procResol</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="LE_Source_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrl:LE_Source"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

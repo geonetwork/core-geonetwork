@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" 
+  xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" 
+  xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0"
+  xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" 
+  xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" 
+  xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mri/1.0" version="1.0">
+<!--  <include schemaLocation="mri.xsd"/>-->
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gmw/1.0" schemaLocation="../../../../19115/-3/gmw/1.0/gmw.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/lan/1.0" schemaLocation="../../../../19115/-3/lan/1.0/lan.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="DS_AssociationTypeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>justification for the correlation of two resources</documentation>
+    </annotation>
+  </element>
+  <complexType name="DS_AssociationTypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mri:DS_AssociationTypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DS_InitiativeTypeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>type of aggregation activity in which resources are related</documentation>
+    </annotation>
+  </element>
+  <complexType name="DS_InitiativeTypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mri:DS_InitiativeTypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_AssociatedResource" substitutionGroup="gco:AbstractObject" type="mri:MD_AssociatedResource_Type">
+    <annotation>
+      <documentation>associated resource information NOTE: An associated resource is a dataset composed of a collection of datasets</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_AssociatedResource_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" name="name" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>citation information about the associated resource</documentation>
+            </annotation>
+          </element>
+          <element name="associationType" type="mri:DS_AssociationTypeCode_PropertyType">
+            <annotation>
+              <documentation>type of relation between the resources</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="initiativeType" type="mri:DS_InitiativeTypeCode_PropertyType">
+            <annotation>
+              <documentation>type of initiative under which the associated resource was produced NOTE: the activity that resulted in the associated resource</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="metadataReference" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>reference to the metadata of the associated resource</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_AssociatedResource_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mri:MD_AssociatedResource"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_DataIdentification" substitutionGroup="mri:AbstractMD_Identification" type="mri:MD_DataIdentification_Type">
+    <annotation>
+      <documentation>information required to identify a resource</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_DataIdentification_Type">
+    <complexContent>
+      <extension base="mri:AbstractMD_Identification_Type">
+        <sequence>
+          <element minOccurs="0" name="defaultLocale" type="lan:PT_Locale_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="otherLocale" type="lan:PT_Locale_PropertyType"/>
+          <element minOccurs="0" name="environmentDescription" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>description of the resource in the producer's processing environment, including items such as the software, the computer operating system, file name, and the dataset size</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="supplementalInformation" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>any other descriptive information about the resource</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_DataIdentification_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mri:MD_DataIdentification"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractMD_Identification" substitutionGroup="mcc:Abstract_ResourceDescription" type="mri:AbstractMD_Identification_Type">
+    <annotation>
+      <documentation>basic information required to uniquely identify a resource or resources</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractMD_Identification_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_ResourceDescription_Type">
+        <sequence>
+          <element name="citation" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>citation for the resource(s)</documentation>
+            </annotation>
+          </element>
+          <element name="abstract" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>brief narrative summary of the content of the resource(s)</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="purpose" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>summary of the intentions with which the resource(s) was developed</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="credit" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>recognition of those who contributed to the resource(s)</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="status" type="mcc:MD_ProgressCode_PropertyType">
+            <annotation>
+              <documentation>status of the resource(s)</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="pointOfContact" type="mcc:Abstract_Responsibility_PropertyType">
+            <annotation>
+              <documentation>identification of, and means of communication with, person(s) and organisation(s) associated with the resource(s)</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="spatialRepresentationType" type="mcc:MD_SpatialRepresentationTypeCode_PropertyType">
+            <annotation>
+              <documentation>method used to spatially represent geographic information</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="spatialResolution" type="mri:MD_Resolution_PropertyType">
+            <annotation>
+              <documentation>factor which provides a general understanding of the density of spatial data in the resource</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="temporalResolution" type="gco:TM_PeriodDuration_PropertyType">
+            <annotation>
+              <documentation>resolution of the resource with respect to time</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="topicCategory" type="mri:MD_TopicCategoryCode_PropertyType">
+            <annotation>
+              <documentation>main theme(s) of the resource</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="extent" type="mcc:Abstract_Extent_PropertyType">
+            <annotation>
+              <documentation>spatial and temporal extent of the resource</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="additionalDocumentation" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>other documentation associated with the resource</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="processingLevel" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>code that identifies the level of processing in the producers coding system of a resource eg. NOAA level 1B</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="resourceMaintenance" type="mcc:Abstract_MaintenanceInformation_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="graphicOverview" type="mcc:MD_BrowseGraphic_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="resourceFormat" type="mcc:Abstract_Format_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="descriptiveKeywords" type="mri:MD_Keywords_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="resourceSpecificUsage" type="mri:MD_Usage_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="resourceConstraints" type="mcc:Abstract_Constraints_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="associatedResource" type="mri:MD_AssociatedResource_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractMD_Identification_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mri:AbstractMD_Identification"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_KeywordClass" substitutionGroup="gco:AbstractObject" type="mri:MD_KeywordClass_Type">
+    <annotation>
+      <documentation>specification of a class to categorize keywords in a domain-specific vocabulary that has a binding to a formal ontology</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_KeywordClass_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="className" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>character string to label the keyword category in natural language</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="conceptIdentifier" type="mcc:URI_PropertyType">
+            <annotation>
+              <documentation>URI of concept in ontology specified by the ontology attribute; this concept is labeled by the className: CharacterString.</documentation>
+            </annotation>
+          </element>
+          <element name="ontology" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>a reference that binds the keyword class to a formal conceptualization of a knowledge domain for use in semantic processingNOTE: Keywords in the associated MD_Keywords keyword list must be within the scope of this ontology</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_KeywordClass_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mri:MD_KeywordClass"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_KeywordTypeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>methods used to group similar keywords</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_KeywordTypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mri:MD_KeywordTypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_Keywords" substitutionGroup="gco:AbstractObject" type="mri:MD_Keywords_Type">
+    <annotation>
+      <documentation>keywords, their type and reference source NOTE: When the resource described is a service, one instance of MD_Keyword shall refer to the service taxonomy defined in ISO 19119, 8.3)</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_Keywords_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element maxOccurs="unbounded" name="keyword" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>commonly used word(s) or formalised word(s) or phrase(s) used to describe the subject</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="type" type="mri:MD_KeywordTypeCode_PropertyType">
+            <annotation>
+              <documentation>subject matter used to group similar keywords</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="thesaurusName" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>name of the formally registered thesaurus or a similar authoritative source of keywords</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="keywordClass" type="mri:MD_KeywordClass_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_Keywords_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mri:MD_Keywords"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_RepresentativeFraction" substitutionGroup="gco:AbstractObject" type="mri:MD_RepresentativeFraction_Type">
+    <annotation>
+      <documentation>derived from ISO 19103 Scale where MD_RepresentativeFraction.denominator = 1 / Scale.measure And Scale.targetUnits = Scale.sourceUnits</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_RepresentativeFraction_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="denominator" type="gco:Integer_PropertyType">
+            <annotation>
+              <documentation>the number below the line in a vulgar fraction</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_RepresentativeFraction_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mri:MD_RepresentativeFraction"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_Resolution" substitutionGroup="mcc:Abstract_SpatialResolution" type="mri:MD_Resolution_Type">
+    <annotation>
+      <documentation>level of detail expressed as a scale factor, a distance or an angle</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_Resolution_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_SpatialResolution_Type">
+        <choice>
+          <element name="equivalentScale" type="mri:MD_RepresentativeFraction_PropertyType">
+            <annotation>
+              <documentation>level of detail expressed as the scale of a comparable hardcopy map or chart</documentation>
+            </annotation>
+          </element>
+          <element name="distance" type="gco:Distance_PropertyType">
+            <annotation>
+              <documentation>horizontal ground sample distance</documentation>
+            </annotation>
+          </element>
+          <element name="vertical" type="gco:Distance_PropertyType">
+            <annotation>
+              <documentation>Vertical sampling distance</documentation>
+            </annotation>
+          </element>
+          <element name="angularDistance" type="gco:Angle_PropertyType">
+            <annotation>
+              <documentation>Angular sampling measure</documentation>
+            </annotation>
+          </element>
+          <element name="levelOfDetail" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>brief textual description of the spatial resolution of the resource</documentation>
+            </annotation>
+          </element>
+        </choice>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_Resolution_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mri:MD_Resolution"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_TopicCategoryCode" substitutionGroup="gco:CharacterString" type="mri:MD_TopicCategoryCode_Type">
+    <annotation>
+      <documentation>high-level geographic data thematic classification to assist in the grouping and search of available geographic data sets. Can be used to group keywords as well. Listed examples are not exhaustive. NOTE: It is understood there are overlaps between general categories and the user is encouraged to select the one most appropriate.</documentation>
+    </annotation>
+  </element>
+  <simpleType name="MD_TopicCategoryCode_Type">
+    <annotation>
+      <documentation>high-level geographic data thematic classification to assist in the grouping and search of available geographic data sets. Can be used to group keywords as well. Listed examples are not exhaustive. NOTE: It is understood there are overlaps between general categories and the user is encouraged to select the one most appropriate.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="farming">
+        <annotation>
+          <documentation>rearing of animals and/or cultivation of plantsExamples: agriculture, irrigation, aquaculture, plantations, herding, pests and diseases affecting crops and livestock</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="biota">
+        <annotation>
+          <documentation>flora and/or fauna in natural environment Examples: wildlife, vegetation, biological sciences, ecology, wilderness, sealife, wetlands, habitat</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="boundaries">
+        <annotation>
+          <documentation>legal land descriptions Examples: political and administrative boundaries</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="climatologyMeteorologyAtmosphere">
+        <annotation>
+          <documentation>processes and phenomena of the atmosphere Examples: cloud cover, weather, climate, atmospheric conditions, climate change, precipitation</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="economy">
+        <annotation>
+          <documentation>economic activities, conditions and employment Examples: production, labour, revenue, commerce, industry, tourism and ecotourism, forestry, fisheries, commercial or subsistence hunting, exploration and exploitation of resources such as minerals, oil and gas</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="elevation">
+        <annotation>
+          <documentation>height above or below a vertical datumExamples: altitude, bathymetry, digital elevation models, slope, derived products</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="environment">
+        <annotation>
+          <documentation>environmental resources, protection and conservation Examples: environmental pollution, waste storage and treatment, environmental impact assessment, monitoring environmental risk, nature reserves, landscape</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="geoscientificInformation">
+        <annotation>
+          <documentation>information pertaining to earth sciences Examples: geophysical features and processes, geology, minerals, sciences dealing with the composition, structure and origin of the earth's rocks, risks of earthquakes, volcanic activity, landslides, gravity information, soils, permafrost, hydrogeology, erosion</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="health">
+        <annotation>
+          <documentation>health, health services, human ecology, and safety Examples: disease and illness, factors affecting health, hygiene, substance abuse, mental and physical health, health services</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="imageryBaseMapsEarthCover">
+        <annotation>
+          <documentation>base maps Examples: land cover, topographic maps, imagery, unclassified images, annotations</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="intelligenceMilitary">
+        <annotation>
+          <documentation>military bases, structures, activities Examples: barracks, training grounds, military transportation, information collection</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="inlandWaters">
+        <annotation>
+          <documentation>inland water features, drainage systems and their characteristics Examples: rivers and glaciers, salt lakes, water utilization plans, dams, currents, floods, water quality, hydrographic charts</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="location">
+        <annotation>
+          <documentation>positional information and services Examples: addresses, geodetic networks, control points, postal zones and services, place names</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="oceans">
+        <annotation>
+          <documentation>features and characteristics of salt water bodies (excluding inland waters) Examples: tides, tidal waves, coastal information, reefs</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="planningCadastre">
+        <annotation>
+          <documentation>information used for appropriate actions for future use of the land Examples: land use maps, zoning maps, cadastral surveys, land ownership</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="society">
+        <annotation>
+          <documentation>characteristics of society and cultures Examples: settlements, anthropology, archaeology, education, traditional beliefs, manners and customs, demographic data, recreational areas and activities, social impact assessments, crime and justice, census information</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="structure">
+        <annotation>
+          <documentation>man-made construction Examples: buildings, museums, churches, factories, housing, monuments, shops, towers</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="transportation">
+        <annotation>
+          <documentation>means and aids for conveying persons and/or goods Examples: roads, airports/airstrips, shipping routes, tunnels, nautical charts, vehicle or vessel location, aeronautical charts, railways</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="utilitiesCommunication">
+        <annotation>
+          <documentation>energy, water and waste systems and communications infrastructure and servicesExamples: hydroelectricity, geothermal, solar and nuclear sources of energy, water purification and distribution, sewage collection and disposal, electricity and gas distribution, data communication, telecommunication, radio, communication networks</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="extraTerrestrial">
+        <annotation>
+          <documentation>region more than 100 km above the surface of the Earth</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="disaster"/>
+    </restriction>
+  </simpleType>
+  <complexType name="MD_TopicCategoryCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mri:MD_TopicCategoryCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_Usage" substitutionGroup="gco:AbstractObject" type="mri:MD_Usage_Type">
+    <annotation>
+      <documentation>brief description of ways in which the resource(s) is/are currently or has been used</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_Usage_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="specificUsage" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>brief description of the resource and/or resource series usage</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="usageDateTime" type="gmw:TM_Primitive_PropertyType">
+            <annotation>
+              <documentation>date and time of the first use or range of uses of the resource and/or resource series</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="userDeterminedLimitations" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>applications, determined by the user for which the resource and/or resource series is not suitable</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="userContactInfo" type="mcc:Abstract_Responsibility_PropertyType">
+            <annotation>
+              <documentation>identification of and means of communicating with person(s) and organisation(s) using the resource(s)</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="response" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>response to the user-determined limitationsE.G.. 'this has been fixed in version x'</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="additionalDocumentation" type="mcc:Abstract_Citation_PropertyType"/>
+          <element minOccurs="0" name="identifiedIssues" type="mcc:Abstract_Citation_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_Usage_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mri:MD_Usage"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

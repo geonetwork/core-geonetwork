@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" 
+xmlns:fcc="http://standards.iso.org/iso/19110/fcc/1.0" 
+xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" 
+xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0"  
+xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" 
+xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mrc/1.0" version="1.0">
+<!--  <include schemaLocation="mrc.xsd"/>-->
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gmw/1.0" schemaLocation="../../../../19115/-3/gmw/1.0/gmw.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19110/fcc/1.0" schemaLocation="../../../../19110/fcc/1.0/fcc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/lan/1.0" schemaLocation="../../../../19115/-3/lan/1.0/lan.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="MD_AttributeGroup" substitutionGroup="gco:AbstractObject" type="mrc:MD_AttributeGroup_Type"/>
+  <complexType name="MD_AttributeGroup_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element maxOccurs="unbounded" name="contentType" type="mrc:MD_CoverageContentTypeCode_PropertyType">
+            <annotation>
+              <documentation>type of information represented by the value</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="attribute" type="mrc:MD_RangeDimension_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_AttributeGroup_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MD_AttributeGroup"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_Band" substitutionGroup="mrc:MD_SampleDimension" type="mrc:MD_Band_Type">
+    <annotation>
+      <documentation>range of wavelengths in the electromagnetic spectrum</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_Band_Type">
+    <complexContent>
+      <extension base="mrc:MD_SampleDimension_Type">
+        <sequence>
+          <element minOccurs="0" name="boundMax" type="gco:Real_PropertyType"/>
+          <element minOccurs="0" name="boundMin" type="gco:Real_PropertyType"/>
+          <element minOccurs="0" name="boundUnits" type="gmw:UomLength_PropertyType"/>
+          <element minOccurs="0" name="peakResponse" type="gco:Real_PropertyType">
+            <annotation>
+              <documentation>wavelength at which the response is the highest</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="toneGradation" type="gco:Integer_PropertyType">
+            <annotation>
+              <documentation>number of discrete numerical values in the grid data</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_Band_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MD_Band"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractMD_ContentInformation" substitutionGroup="gco:AbstractObject" type="mrc:AbstractMD_ContentInformation_Type">
+    <annotation>
+      <documentation>description of the content of a resource.
+
+Note in 19115-3 implementation, this class is implemented by abstract class _ContentInformation in the Abstract Common Classes package</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractMD_ContentInformation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractMD_ContentInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:AbstractMD_ContentInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_CoverageContentTypeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>specific type of information represented in the cell</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_CoverageContentTypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MD_CoverageContentTypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_CoverageDescription" substitutionGroup="mcc:Abstract_ContentInformation" type="mrc:MD_CoverageDescription_Type">
+    <annotation>
+      <documentation>details about the content of a resource</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_CoverageDescription_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_ContentInformation_Type">
+        <sequence>
+          <element name="attributeDescription" type="gco:RecordType_PropertyType">
+            <annotation>
+              <documentation>description of the attribute described by the measurement value</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="processingLevelCode" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>Code and codespace that identifies the level of processing that has been applied to the resource</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="attributeGroup" type="mrc:MD_AttributeGroup_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_CoverageDescription_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MD_CoverageDescription"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_FeatureCatalogue" substitutionGroup="mcc:Abstract_ContentInformation" type="mrc:MD_FeatureCatalogue_Type">
+    <annotation>
+      <documentation>a catalogue of feature types</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_FeatureCatalogue_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_ContentInformation_Type">
+        <sequence>
+          <element maxOccurs="unbounded" name="featureCatalogue" type="fcc:Abstract_FeatureCatalogue_PropertyType">
+            <annotation>
+              <documentation>the catalogue of feature types, attribution, operations, and relationships used by the resource</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_FeatureCatalogue_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MD_FeatureCatalogue"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_FeatureCatalogueDescription" substitutionGroup="mcc:Abstract_ContentInformation" type="mrc:MD_FeatureCatalogueDescription_Type">
+    <annotation>
+      <documentation>information identifying the feature catalogue or the conceptual schema</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_FeatureCatalogueDescription_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_ContentInformation_Type">
+        <sequence>
+          <element minOccurs="0" name="complianceCode" type="gco:Boolean_PropertyType">
+            <annotation>
+              <documentation>indication of whether or not the cited feature catalogue complies with ISO 19110</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="locale" type="lan:PT_Locale_PropertyType">
+            <annotation>
+              <documentation>language(s) used within the catalogue</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="includedWithDataset" type="gco:Boolean_PropertyType">
+            <annotation>
+              <documentation>indication of whether or not the feature catalogue is included with the resource</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="featureTypes" type="mrc:MD_FeatureTypeInfo_PropertyType">
+            <annotation>
+              <documentation>subset of feature types from cited feature catalogue occurring in dataset</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="featureCatalogueCitation" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>complete bibliographic reference to one or more external feature catalogues</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_FeatureCatalogueDescription_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MD_FeatureCatalogueDescription"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_FeatureTypeInfo" substitutionGroup="gco:AbstractObject" type="mrc:MD_FeatureTypeInfo_Type"/>
+  <complexType name="MD_FeatureTypeInfo_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="featureTypeName" type="gco:GenericName_PropertyType"/>
+          <element minOccurs="0" name="featureInstanceCount" type="gco:Integer_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_FeatureTypeInfo_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MD_FeatureTypeInfo"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_ImageDescription" substitutionGroup="mrc:MD_CoverageDescription" type="mrc:MD_ImageDescription_Type">
+    <annotation>
+      <documentation>information about an image's suitability for use</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_ImageDescription_Type">
+    <complexContent>
+      <extension base="mrc:MD_CoverageDescription_Type">
+        <sequence>
+          <element minOccurs="0" name="illuminationElevationAngle" type="gco:Real_PropertyType">
+            <annotation>
+              <documentation>illumination elevation measured in degrees clockwise from the target plane at intersection of the optical line of sight with the Earth's surface. For images from a scanning device, refer to the centre pixel of the image</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="illuminationAzimuthAngle" type="gco:Real_PropertyType">
+            <annotation>
+              <documentation>illumination azimuth measured in degrees clockwise from true north at the time the image is taken. For images from a scanning device, refer to the centre pixel of the image</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="imagingCondition" type="mrc:MD_ImagingConditionCode_PropertyType">
+            <annotation>
+              <documentation>conditions affected the image</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="imageQualityCode" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>code in producers code space that specifies the image quality</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="cloudCoverPercentage" type="gco:Real_PropertyType">
+            <annotation>
+              <documentation>area of the dataset obscured by clouds, expressed as a percentage of the spatial extent</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="compressionGenerationQuantity" type="gco:Integer_PropertyType">
+            <annotation>
+              <documentation>count of the number of lossy compression cycles performed on the image</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="triangulationIndicator" type="gco:Boolean_PropertyType">
+            <annotation>
+              <documentation>indication of whether or not triangulation has been performed upon the image</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="radiometricCalibrationDataAvailability" type="gco:Boolean_PropertyType">
+            <annotation>
+              <documentation>indication of whether or not the radiometric calibration information for generating the radiometrically calibrated standard data product is available</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="cameraCalibrationInformationAvailability" type="gco:Boolean_PropertyType">
+            <annotation>
+              <documentation>indication of whether or not constants are available which allow for camera calibration corrections</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="filmDistortionInformationAvailability" type="gco:Boolean_PropertyType">
+            <annotation>
+              <documentation>indication of whether or not Calibration Reseau information is available</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="lensDistortionInformationAvailability" type="gco:Boolean_PropertyType">
+            <annotation>
+              <documentation>indication of whether or not lens aberration correction information is available</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_ImageDescription_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MD_ImageDescription"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_ImagingConditionCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>code which indicates conditions which may affect the image</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_ImagingConditionCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MD_ImagingConditionCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_RangeDimension" substitutionGroup="gco:AbstractObject" type="mrc:MD_RangeDimension_Type">
+    <annotation>
+      <documentation>information on the range of attribute values</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_RangeDimension_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" name="sequenceIdentifier" type="gco:MemberName_PropertyType">
+            <annotation>
+              <documentation>number that uniquely identifies instances of bands of wavelengths on which a sensor operates</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="description" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>description of the range of a cell measurement value</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="name" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>identifiers for each attribute included in the resource. These identifiers can be used to provide names for the resource's attribute from a standard set of names</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_RangeDimension_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MD_RangeDimension"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_SampleDimension" substitutionGroup="mrc:MD_RangeDimension" type="mrc:MD_SampleDimension_Type">
+    <annotation>
+      <documentation>the characteristics of each dimension (layer) included in the resource</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_SampleDimension_Type">
+    <complexContent>
+      <extension base="mrc:MD_RangeDimension_Type">
+        <sequence>
+          <element minOccurs="0" name="maxValue" type="gco:Real_PropertyType">
+            <annotation>
+              <documentation>maximum value of data values in each dimension included in the resource. Restricted to UomLength in the MD_Band class.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="minValue" type="gco:Real_PropertyType">
+            <annotation>
+              <documentation>minimum value of data values in each dimension included in the resource. Restricted to UomLength in the MD_Band class.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="units" type="gmw:UnitOfMeasure_PropertyType">
+            <annotation>
+              <documentation>units of data in each dimension included in the resource. Note that the type of this is UnitOfMeasure and that it is restricted to UomLength in the MD_Band class.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="scaleFactor" type="gco:Real_PropertyType">
+            <annotation>
+              <documentation>scale factor which has been applied to the cell value</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="offset" type="gco:Real_PropertyType">
+            <annotation>
+              <documentation>the physical value corresponding to a cell value of zero</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="meanValue" type="gco:Real_PropertyType">
+            <annotation>
+              <documentation>mean value of data values in each dimension included in the resource</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="numberOfValues" type="gco:Integer_PropertyType">
+            <annotation>
+              <documentation>this gives the number of values used in a thematicClassification resource EX:. the number of classes in a Land Cover Type coverage or the number of cells with data in other types of coverages</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="standardDeviation" type="gco:Real_PropertyType">
+            <annotation>
+              <documentation>standard deviation of data values in each dimension included in the resource</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="otherPropertyType" type="gco:RecordType_PropertyType">
+            <annotation>
+              <documentation>type of other attribute description (i.e. netcdf/variable in ncml.xsd)</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="otherProperty" type="gco:Record_PropertyType">
+            <annotation>
+              <documentation>instance of otherAttributeType that defines attributes not explicitly included in MD_CoverageType</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="bitsPerValue" type="gco:Integer_PropertyType">
+            <annotation>
+              <documentation>maximum number of significant bits in the uncompressed representation for the value in each band of each pixel</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_SampleDimension_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MD_SampleDimension"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

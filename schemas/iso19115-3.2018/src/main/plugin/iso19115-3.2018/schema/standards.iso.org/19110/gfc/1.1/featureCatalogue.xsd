@@ -1,0 +1,666 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:fcc="http://standards.iso.org/iso/19110/fcc/1.0" 
+  xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1" 
+  xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0"
+  xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" 
+  xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19110/gfc/1.1" version="1.1">
+  <include schemaLocation="gfc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19110/fcc/1.0" schemaLocation="../../../19110/fcc/1.0/fcc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/lan/1.0" schemaLocation="../../../19115/-3/lan/1.0/lan.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../19115/-3/mcc/1.0/mcc.xsd"/>
+<!--  <import namespace="http://standards.iso.org/iso/19115/-3/gmw/1.0" schemaLocation="../../../19115/-3/gmw/1.0/gmw.xsd"/> -->
+  <!--  <import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19136_Schemas/gml.xsd"/>-->
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <!-- SMR 2015-02-07 change gml:CodeType to gco:CodeType for 2014-12-25 build; UnitOfMeasure is in gmw, not gco so change that too -->
+  <!-- SMR 2015-06-14 hand craft to put featureType association before inheritanceRelation on FC_FeatureCatalogue -->
+  
+  <element name="FC_AssociationRole" substitutionGroup="gfc:AbstractFC_PropertyType" type="gfc:FC_AssociationRole_Type">
+    <annotation>
+      <documentation>A role of the association FC_AssociationRole::relation. &lt;ocl&gt; roleName = FC_Member::memberName; FC_PropertyType::cardinality realizes GF_AssociationRole::cardinality &lt;/ocl&gt;</documentation>
+    </annotation>
+  </element>
+  <complexType name="FC_AssociationRole_Type">
+    <complexContent>
+      <extension base="gfc:AbstractFC_PropertyType_Type">
+        <sequence>
+          <element name="type" type="gfc:FC_RoleType_PropertyType">
+            <annotation>
+              <documentation>Type of association role, indicating whether this role acts as a "is part of" or "is a member of" semantics.</documentation>
+            </annotation>
+          </element>
+          <element name="isOrdered" type="gco:Boolean_PropertyType">
+            <annotation>
+              <documentation>Indicates if the instances of this association role within the containing feature instance are ordered or not, with FALSE = "not ordered" and TRUE = "ordered". If TRUE, the the FC_PropertyType::definition shall contain an explanation of the meaning of the order.</documentation>
+            </annotation>
+          </element>
+          <element name="isNavigable" type="gco:Boolean_PropertyType">
+            <annotation>
+              <documentation>Indicates whether this role is navigable from the source feature to the target feature of the association.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="rolePlayer" type="gfc:FC_FeatureType_PropertyType">
+            <annotation>
+              <documentation>type of the target value of this association role</documentation>
+            </annotation>
+          </element>
+          <element name="relation" type="gfc:FC_FeatureAssociation_PropertyType">
+            <annotation>
+              <documentation>Relation of which this association role is a part.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FC_AssociationRole_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:FC_AssociationRole"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="FC_Binding" substitutionGroup="gfc:AbstractFC_CarrierOfCharacteristics" type="gfc:FC_Binding_Type">
+    <annotation>
+      <documentation>Class that is used to describe the specifics of how a property type is bound to a particular feature type. Used as an association class for the association MemberOf between feature type and property type.</documentation>
+    </annotation>
+  </element>
+  <complexType name="FC_Binding_Type">
+    <complexContent>
+      <extension base="gfc:AbstractFC_CarrierOfCharacteristics_Type">
+        <sequence>
+          <element minOccurs="0" name="description" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>The description of how a property type is bound to a particular feature type.</documentation>
+            </annotation>
+          </element>
+          <element name="globalProperty" type="gfc:AbstractFC_PropertyType_PropertyType">
+            <annotation>
+              <documentation>Role that links to the bound global property</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FC_Binding_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:FC_Binding"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="FC_BoundAssociationRole" substitutionGroup="gfc:FC_Binding" type="gfc:FC_BoundAssociationRole_Type">
+    <annotation>
+      <documentation>Class that is used to describe the specifics of how a global association role is bound to a particular feature type.</documentation>
+    </annotation>
+  </element>
+  <complexType name="FC_BoundAssociationRole_Type">
+    <complexContent>
+      <extension base="gfc:FC_Binding_Type">
+        <sequence>
+          <element name="rolePlayer" type="gfc:FC_FeatureType_PropertyType">
+            <annotation>
+              <documentation>target feature type of this association role</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FC_BoundAssociationRole_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:FC_BoundAssociationRole"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="FC_BoundFeatureAttribute" substitutionGroup="gfc:FC_Binding" type="gfc:FC_BoundFeatureAttribute_Type">
+    <annotation>
+      <documentation>Class that is used to describe the specifics of how a global feature attribute is bound to a particular feature type.</documentation>
+    </annotation>
+  </element>
+  <complexType name="FC_BoundFeatureAttribute_Type">
+    <complexContent>
+      <extension base="gfc:FC_Binding_Type">
+        <sequence>
+          <element minOccurs="0" name="valueType" type="gco:TypeName_PropertyType">
+            <annotation>
+              <documentation>type of the value of this feature attribute; a name from some namespace &lt;c&gt; Mandatory if the value type of the feature attribute is not defined globally &lt;/c&gt;</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FC_BoundFeatureAttribute_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:FC_BoundFeatureAttribute"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractFC_CarrierOfCharacteristics" substitutionGroup="gco:AbstractObject" type="gfc:AbstractFC_CarrierOfCharacteristics_Type">
+    <annotation>
+      <documentation>Abstract class for local feature properties and bound global properties of a feature type</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractFC_CarrierOfCharacteristics_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" name="featureType" type="gfc:FC_FeatureType_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="constrainedBy" type="gfc:FC_Constraint_PropertyType">
+            <annotation>
+              <documentation>Role that links this property type to the constraints placed upon it.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractFC_CarrierOfCharacteristics_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:AbstractFC_CarrierOfCharacteristics"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="FC_Constraint" substitutionGroup="gco:AbstractObject" type="gfc:FC_Constraint_Type">
+    <annotation>
+      <documentation>A class for defining constraints for types.</documentation>
+    </annotation>
+  </element>
+  <complexType name="FC_Constraint_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="description" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>A description of the constraint that is being applied.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FC_Constraint_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:FC_Constraint"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="FC_DefinitionReference" substitutionGroup="gco:AbstractObject" type="gfc:FC_DefinitionReference_Type">
+    <annotation>
+      <documentation>Class that links a data instance to the source of its definition.</documentation>
+    </annotation>
+  </element>
+  <complexType name="FC_DefinitionReference_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" name="sourceIdentifier" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Additional information to help locate the definition in the source document. The format of this information is specific to the structure of the source document.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="translation" type="gfc:FC_LocalisedDefinitionReference_PropertyType"/>
+          <element name="definitionSource" type="gfc:FC_DefinitionSource_PropertyType">
+            <annotation>
+              <documentation>Role that links this definition reference to the citation for the source document.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FC_DefinitionReference_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:FC_DefinitionReference"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="FC_DefinitionSource" substitutionGroup="gco:AbstractObject" type="gfc:FC_DefinitionSource_Type">
+    <annotation>
+      <documentation>Class that specifies the source of a definition.</documentation>
+    </annotation>
+  </element>
+  <complexType name="FC_DefinitionSource_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="source" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>The actual citation of the source, sufficient to identify the document and how to obtain it.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FC_DefinitionSource_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:FC_DefinitionSource"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="FC_FeatureAssociation" substitutionGroup="gfc:FC_FeatureType" type="gfc:FC_FeatureAssociation_Type">
+    <annotation>
+      <documentation>Relationship that links instances of this feature type with instances of the same or of a different feature type. The memberOf-linkBetween association in the General Feature Model is not directly implemented here since it can be easily derived from combining the Role and MemberOf associations.</documentation>
+    </annotation>
+  </element>
+  <complexType name="FC_FeatureAssociation_Type">
+    <complexContent>
+      <extension base="gfc:FC_FeatureType_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="2" name="roleName" type="gfc:FC_AssociationRole_PropertyType">
+            <annotation>
+              <documentation>Roles that are a part of this association.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FC_FeatureAssociation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:FC_FeatureAssociation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="FC_FeatureAttribute" substitutionGroup="gfc:AbstractFC_PropertyType" type="gfc:FC_FeatureAttribute_Type">
+    <annotation>
+      <documentation>Characteristic of a feature type.</documentation>
+    </annotation>
+  </element>
+  <complexType name="FC_FeatureAttribute_Type">
+    <complexContent>
+      <extension base="gfc:AbstractFC_PropertyType_Type">
+        <sequence>
+          <element minOccurs="0" name="code" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>The numeric or alphanumeric code that uniquely identifies the feature attribute within the feature catalogue.</documentation>
+            </annotation>
+          </element>
+<!--          <element minOccurs="0" name="valueMeasurementUnit" type="gmw:UnitOfMeasure_PropertyType">-->
+          <element minOccurs="0" name="valueMeasurementUnit" type="gco:UomIdentifier_PropertyType">
+              <annotation>
+              <documentation>Unit of measure used for this feature attribute.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="valueType" type="gco:TypeName_PropertyType">
+            <annotation>
+              <documentation>The type of the value of this feature attribute; a name from some namespace. Implementations of this International Standard shall specify which namespace implementation is to be used. One possibility is the URI (RFC2396). &lt;c&gt;Mandatory for local feature attribute&lt;/c&gt;</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="listedValue" type="gfc:FC_ListedValue_PropertyType">
+            <annotation>
+              <documentation>If present, it defines the permissible values of this feature attribute as a restriction of the attribute valueType. If not present, there is no restriction on the valueType</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FC_FeatureAttribute_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:FC_FeatureAttribute"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="FC_FeatureCatalogue" substitutionGroup="fcc:Abstract_FeatureCatalogue" type="gfc:FC_FeatureCatalogue_Type">
+    <annotation>
+      <documentation>A feature catalogue contains the definition of some number feature types with other information necessary for those definitions.</documentation>
+    </annotation>
+  </element>
+  <complexType name="FC_FeatureCatalogue_Type">
+    <complexContent>
+      <extension base="fcc:Abstract_FeatureCatalogue_Type">
+        <sequence>
+          <element name="producer" type="mcc:Abstract_Responsibility_PropertyType">
+            <annotation>
+              <documentation>Name, address, country, and telecommunications address of person or organization having primary responsibility for the intellectual content of this feature catalogue.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="functionalLanguage" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>The formal functional language in which the feature operation formal definition occurs in this feature catalogue. &lt;c&gt; Mandatory if feature operation formal definition occurs in feature catalogue. &lt;/c&gt;</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="identifier" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>identifier of the feature catalogue</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="featureType" type="gfc:FC_FeatureType_PropertyType">
+            <annotation>
+              <documentation>The role that links this feature catalogue to the feature types that it contains.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="inheritanceRelation" type="gfc:FC_InheritanceRelation_PropertyType">
+            <annotation>
+              <documentation>role that links this feature catalogue to the inheritance relationships that it contains</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="globalProperty" type="gfc:AbstractFC_PropertyType_PropertyType">
+            <annotation>
+              <documentation>Role that links this feature catalogue to the global feature properties, i.e. the feature properties which may bound to many feature types.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="definitionSource" type="gfc:FC_DefinitionSource_PropertyType">
+            <annotation>
+              <documentation>The role that links this feature catalogue to the sources of definitions of feature types, property types, and listed values that it contains.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FC_FeatureCatalogue_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:FC_FeatureCatalogue"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="FC_FeatureOperation" substitutionGroup="gfc:AbstractFC_PropertyType" type="gfc:FC_FeatureOperation_Type">
+    <annotation>
+      <documentation>Operation that every instance of an associated feature type must implement. &lt;ocl&gt; triggeredByValuesOf realizes GF_Operation::triggeredByValuesOf; observesValuesOf realizes GF_Operation::observesValuesOf; affectsValuesOf realizes GF_Operation::affectsValuesOf &lt;/ocl&gt;</documentation>
+    </annotation>
+  </element>
+  <complexType name="FC_FeatureOperation_Type">
+    <complexContent>
+      <extension base="gfc:AbstractFC_PropertyType_Type">
+        <sequence>
+          <element name="signature" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>The name and parameters for this operation. It may contain optional returned parameters. This signature is usually derived from the formalDefinition. The signature of an operation must be unique. This is the equivalent of the UML signature.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="formalDefinition" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Formal description of the behaviour of the member, expressed in the symbol set defined by FC_FeatureCatalogue::functionalLanguage. Involves operational parameters, and interactions with other members of the feature type.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="observesValuesOf" type="gfc:AbstractFC_CarrierOfCharacteristics_PropertyType">
+            <annotation>
+              <documentation>specifies attribute that may be used as input to perform an operation</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="affectsValuesOf" type="gfc:AbstractFC_CarrierOfCharacteristics_PropertyType">
+            <annotation>
+              <documentation>specifies attribute that will be affected by an operation</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="triggeredByValuesOf" type="gfc:AbstractFC_CarrierOfCharacteristics_PropertyType">
+            <annotation>
+              <documentation>specifies attribute which may trigger an operation</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FC_FeatureOperation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:FC_FeatureOperation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="FC_FeatureType" substitutionGroup="fcc:Abstract_FeatureType" type="gfc:FC_FeatureType_Type">
+    <annotation>
+      <documentation>Class of real world phenomena with common properties &lt;ocl&gt; typeName realizes GF_FeatureType::typeName; isAbstract realizes GF_FeatureType::isAbstract; constrainedBy realizes GF_FeatureType::constrainedBy &lt;/ocl&gt;</documentation>
+    </annotation>
+  </element>
+  <complexType name="FC_FeatureType_Type">
+    <complexContent>
+      <extension base="fcc:Abstract_FeatureType_Type">
+        <sequence>
+          <element name="typeName" type="gco:CodeType">
+            <annotation>
+              <documentation>Text string that uniquely identifies this feature type within the feature catalogue that contains this feature type.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="definition" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Definition of the feature type in a natural language. This attribute is required if the definition is not provided by FC_FeatureCatalogue::definitionSource. If not provided, the definitionReference should specify a citation where the definition may be found, and any additional information as to which definition is to be used. &lt;c&gt;Mandatory if definition not provided by definition source.&lt;/c&gt;</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="code" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Code that uniquely identifies this feature type within the feature catalogue that contains this feature type.</documentation>
+            </annotation>
+          </element>
+          <element name="isAbstract" type="gco:Boolean_PropertyType">
+            <annotation>
+              <documentation>Indicates if the feature type is abstract or not.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="aliases" type="gco:CodeType">
+            <annotation>
+              <documentation>Equivalent name(s) of this feature type.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="designation" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>designation of the feature type in a natural language</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="carrierOfCharacteristics" type="gfc:AbstractFC_CarrierOfCharacteristics_PropertyType">
+            <annotation>
+              <documentation>Role that links this feature type to the property types that it contains.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="inheritsFrom" type="gfc:FC_InheritanceRelation_PropertyType">
+            <annotation>
+              <documentation>The role that links this feature type to a set of superclasses from which it inherits operations, associations and properties.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="inheritsTo" type="gfc:FC_InheritanceRelation_PropertyType">
+            <annotation>
+              <documentation>The role that links this feature type to a set of subclasses which inherit its operations, associations and properties.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="constrainedBy" type="gfc:FC_Constraint_PropertyType">
+            <annotation>
+              <documentation>Role that links this feature type to the constraints placed upon it.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="definitionReference" type="gfc:FC_DefinitionReference_PropertyType">
+            <annotation>
+              <documentation>Role that links this feature type to the source of its definition.</documentation>
+            </annotation>
+          </element>
+          <element name="featureCatalogue" type="gco:ObjectReference_PropertyType">
+            <annotation>
+              <documentation>The role that links this feature type to the feature catalogue that contains it.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FC_FeatureType_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:FC_FeatureType"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="FC_InheritanceRelation" substitutionGroup="gco:AbstractObject" type="gfc:FC_InheritanceRelation_Type">
+    <annotation>
+      <documentation>FC_InheritanceRelation realizes GF_InheritanceRelation. &lt;ocl&gt; FC_InheritanceRelation always assumes that its GF_InheritanceRelation::uniqueInstance is TRUE. &lt;/ocl&gt;</documentation>
+    </annotation>
+  </element>
+  <complexType name="FC_InheritanceRelation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" name="name" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Text string that uniquely identifies this inheritance relation within the feature catalogue that contains this inheritance relation.</documentation>
+            </annotation>
+          </element>
+          <element name="description" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>A natural language description of this inheritance relation.</documentation>
+            </annotation>
+          </element>
+          <element name="uniqueInstance" type="gco:Boolean_PropertyType">
+            <annotation>
+              <documentation>Indicates if an instance of the supertype can be an instance of at most one of its subtypes.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="designation" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>designation of the inheritance relation in a natural language</documentation>
+            </annotation>
+          </element>
+          <element name="subtype" type="gfc:FC_FeatureType_PropertyType">
+            <annotation>
+              <documentation>Identifies one feature type to which the associated superclass feature type supplies inherited properties, associations and operations.</documentation>
+            </annotation>
+          </element>
+          <element name="supertype" type="gfc:FC_FeatureType_PropertyType">
+            <annotation>
+              <documentation>Identifies one feature type from which the associated subtype class inherits properties, associations and operations.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FC_InheritanceRelation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:FC_InheritanceRelation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="FC_ListedValue" substitutionGroup="gco:AbstractObject" type="gfc:FC_ListedValue_Type">
+    <annotation>
+      <documentation>Value for an enumerated feature attribute domain, including its codes and interpretation.</documentation>
+    </annotation>
+  </element>
+  <complexType name="FC_ListedValue_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="label" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Descriptive label that uniquely identifies one value of the feature attribute.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="code" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Numeric or alphanumeric code (such as a country code) that uniquely identifies this value of the feature attribute.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="definition" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Definition of the attribute value in a natural language. If not provided, the definitionReference may specify a citation where the definition may be found, and any additional information as to which definition is to be used.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="designation" type="gco:CharacterString_PropertyType"/>
+          <element minOccurs="0" name="definitionReference" type="gfc:FC_DefinitionReference_PropertyType">
+            <annotation>
+              <documentation>Role that links this instance to the source of its definition.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FC_ListedValue_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:FC_ListedValue"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="FC_LocalisedDefinitionReference" substitutionGroup="gco:AbstractObject" type="gfc:FC_LocalisedDefinitionReference_Type"/>
+  <complexType name="FC_LocalisedDefinitionReference_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" name="sourceIdentifier" type="lan:LocalisedCharacterString_PropertyType"/>
+          <element name="definitionSource" type="gfc:FC_DefinitionSource_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FC_LocalisedDefinitionReference_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:FC_LocalisedDefinitionReference"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractFC_PropertyType" substitutionGroup="gfc:AbstractFC_CarrierOfCharacteristics" type="gfc:AbstractFC_PropertyType_Type">
+    <annotation>
+      <documentation>Abstract class for local and global feature properties.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractFC_PropertyType_Type">
+    <complexContent>
+      <extension base="gfc:AbstractFC_CarrierOfCharacteristics_Type">
+        <sequence>
+          <element name="memberName" type="gco:CodeType">
+            <annotation>
+              <documentation>member name that locates this member within a feature type for a local property or within the feature catalogue for a global property</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="definition" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Definition of the member in a natural language. This attribute is required if the definition is not provided by FC_FeatureCatalogue::definitionSource. If not provided, the definitionReference should specify a citation where the definition may be found, and any additional information as to which definition is to be used. &lt;c&gt;Mandatory if definition not provided by definition source.&lt;/c&gt;</documentation>
+            </annotation>
+          </element>
+          <element name="cardinality" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Cardinality of the member in the feature class. If this is an attribute or operation, the default cardinality is 1. If this is an association role, then the default cardinality is 0..*. For operations, this is the number of return values possible. This is an elaboration of the GFM to allow for complete specifications for various programming and data defintion languages.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="designation" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>designation of the feature property in a natural language</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="definitionReference" type="gfc:FC_DefinitionReference_PropertyType">
+            <annotation>
+              <documentation>Role that links this instance to the source of its definition.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="featureCatalogue" type="gco:ObjectReference_PropertyType">
+            <annotation>
+              <documentation>feature catalogue to which a global property pertains</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractFC_PropertyType_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:AbstractFC_PropertyType"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="FC_RoleType" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>Code list for the classifications of roles.</documentation>
+    </annotation>
+  </element>
+  <complexType name="FC_RoleType_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gfc:FC_RoleType"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>
