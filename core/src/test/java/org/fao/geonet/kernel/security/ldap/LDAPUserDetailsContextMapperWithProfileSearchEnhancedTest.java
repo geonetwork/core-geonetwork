@@ -22,6 +22,7 @@
  */
 package org.fao.geonet.kernel.security.ldap;
 
+import net.sf.ehcache.CacheManager;
 import org.apache.directory.api.util.FileUtils;
 import org.apache.directory.server.annotations.CreateLdapServer;
 import org.apache.directory.server.annotations.CreateTransport;
@@ -136,19 +137,23 @@ public class LDAPUserDetailsContextMapperWithProfileSearchEnhancedTest extends A
 
     //=------------------------------------------------------------------
 
-    @AfterClass
-    public static void afterClass() throws Exception {
+    @After
+    public void after() throws Exception {
         shutdownLDAP();
     }
 
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        setupLDAP();
+    @AfterClass
+    public static void afterClass() {
+        CacheManager.getInstance().shutdown(); //we need to make sure this is gone or we'll conflict with hibernate
     }
+
+
 
     //gets the spring context
     @Before
     public void before() throws Exception {
+        setupLDAP();
+
         ApplicationContextHolder.set(this._appContext); // this is for code using antipattern - ApplicationContextHolder.get().getBean(...)
 
         userRepository.deleteAll();
@@ -322,10 +327,10 @@ public class LDAPUserDetailsContextMapperWithProfileSearchEnhancedTest extends A
     public final static String ldapSearchBase = "dc=example,dc=com";
 
 
-    static DirectoryService LDAPservice = null;
-    static LdapServer ldapServer = null;
+    DirectoryService LDAPservice = null;
+    LdapServer ldapServer = null;
 
-    public static void setupLDAP() throws Exception {
+    public  void setupLDAP() throws Exception {
         CreateLdapServer classLdapServerBuilder = LDAPUserDetailsContextMapperWithProfileSearchEnhancedTest.class.getAnnotation(CreateLdapServer.class);
         CreateDS dsBuilder = LDAPUserDetailsContextMapperWithProfileSearchEnhancedTest.class.getAnnotation(CreateDS.class);
         LDAPservice = DSAnnotationProcessor.createDS(dsBuilder);
@@ -337,7 +342,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearchEnhancedTest extends A
         ldapServer.start();
     }
 
-    public static void shutdownLDAP() throws Exception {
+    public   void shutdownLDAP() throws Exception {
         ldapServer.stop();
         LDAPservice.shutdown();
         FileUtils.deleteDirectory(LDAPservice.getInstanceLayout().getInstanceDirectory());
