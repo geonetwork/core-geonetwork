@@ -28,7 +28,7 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -59,7 +59,7 @@ public class MetadataStatusRepositoryTest extends AbstractSpringDataTest {
         metadataStatus.setChangeMessage("change message " + val);
         metadataStatus.setOwner(1);
         metadataStatus.setUuid(UUID.randomUUID().toString());
-        metadataStatus.setTitles(new HashMap<String, String>() {{
+        metadataStatus.setTitles(new LinkedHashMap<String, String>(){{
             put("eng", "SampleTitle");
         }});
         final StatusValue statusValue = statusRepo.save(StatusValueRepositoryTest.newStatusValue(inc));

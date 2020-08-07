@@ -33,8 +33,6 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -381,7 +379,9 @@ public class MetadataWorkflowApi {
             @ApiParam(value = "All event details including XML changes. Responses are bigger. Default is false", required = false) @RequestParam(required = false) boolean details,
             @ApiParam(value = "One or more event author. Default is all.", required = false) @RequestParam(required = false) Integer[] author,
             @ApiParam(value = "One or more event owners. Default is all.", required = false) @RequestParam(required = false) Integer[] owner,
-            @ApiParam(value = "One or more record identifier. Default is all.", required = false) @RequestParam(required = false) Integer[] record,
+            @ApiParam(value = "One or more record identifier. Default is all.", required = false) @RequestParam(required = false) Integer[] id,
+            @ApiParam(value = "One or more metadata record identifier. Default is all.", required = false) @RequestParam(required = false) Integer[] record,
+            @ApiParam(value = "One or more metadata uuid. Default is all.", required = false) @RequestParam(required = false) String[] uuid,
             @ApiParam(value = "Start date", required = false) @RequestParam(required = false) String dateFrom,
             @ApiParam(value = "End date", required = false) @RequestParam(required = false) String dateTo,
             @ApiParam(value = "From page", required = false) @RequestParam(required = false, defaultValue = "0") Integer from,
@@ -393,9 +393,15 @@ public class MetadataWorkflowApi {
         final PageRequest pageRequest = new PageRequest(from, size, sortByStatusChangeDate);
 
         List<MetadataStatus> metadataStatuses;
-        if ((type != null && type.length > 0) || (author != null && author.length > 0)
-                || (owner != null && owner.length > 0) || (record != null && record.length > 0)) {
+        if ((id != null && id.length > 0) ||
+                (uuid != null && uuid.length > 0) ||
+                (type != null && type.length > 0) ||
+                (author != null && author.length > 0) ||
+                (owner != null && owner.length > 0) ||
+                (record != null && record.length > 0)) {
             metadataStatuses = metadataStatusRepository.searchStatus(
+                    id != null && id.length > 0 ? Arrays.asList(id) : null,
+                    uuid != null && uuid.length > 0 ? Arrays.asList(uuid) : null,
                     type != null && type.length > 0 ? Arrays.asList(type) : null,
                     author != null && author.length > 0 ? Arrays.asList(author) : null,
                     owner != null && owner.length > 0 ? Arrays.asList(owner) : null,
@@ -730,22 +736,13 @@ public class MetadataWorkflowApi {
             }
 
 
-            if (s.getTitles() != null && s.getTitles().length() > 0) {
-                LinkedHashMap<String, String> titlesMap = null;
-                ObjectMapper mapper = new ObjectMapper();
-                try {
-                    titlesMap = mapper.readValue(s.getTitles(), LinkedHashMap.class);
-                } catch (JsonProcessingException e) {
-                    titlesMap = null;
-                }
-                if (titlesMap != null && titlesMap.size() > 0) {
+            if (s.getTitles() != null && s.getTitles().size() > 0) {
                     // Locate language title based on language which is a 3 char code
                     // First look for exact match. otherwise look for 2 char code and if still not found then default to first occurrence
                     status.setTitle(
-                            titlesMap.getOrDefault(language,
-                                    titlesMap.getOrDefault(language.substring(0,2),
-                                    titlesMap.entrySet().iterator().next().getValue())));
-                }
+                            s.getTitles().getOrDefault(language,
+                                    s.getTitles().getOrDefault(language.substring(0,2),
+                                            s.getTitles().entrySet().iterator().next().getValue())));
             }
             // If title was not stored in database then try to get it from the index.
             // Titles may be missing in database if it is older data or if the extract-titles.xsl does not exists/fails for schema plugin

@@ -297,11 +297,11 @@ public class BaseMetadataUtils implements IMetadataUtils {
      * Extract metadata default language from the metadata record using the schema XSL for default language extraction)
      */
     @Override
-    public Map<String, String> extractTitles(String schema, Element md) throws Exception {
+    public LinkedHashMap<String, String> extractTitles(String schema, Element md) throws Exception {
         Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.EXTRACT_TITLES);
         Element root = Xml.transform(md, styleSheet);
 
-        HashMap<String, String> titles = new HashMap<>();
+        LinkedHashMap<String, String> titles = new LinkedHashMap<>();
         root.getChildren("title").forEach(o -> {
             if (o instanceof Element) {
                 Element e = (Element) o;
@@ -326,7 +326,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
      * Extract metadata default language from the metadata record using the schema XSL for default language extraction)
      */
     @Override
-    public Map<String, String> extractTitles(@Nonnull String id) throws Exception {
+    public LinkedHashMap<String, String> extractTitles(@Nonnull String id) throws Exception {
         AbstractMetadata metadata = findOne(id);
 
         if (metadata == null)

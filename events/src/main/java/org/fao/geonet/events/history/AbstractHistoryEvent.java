@@ -27,6 +27,7 @@ import org.fao.geonet.domain.MetadataStatus;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class AbstractHistoryEvent extends ApplicationEvent {
@@ -111,7 +112,7 @@ public abstract class AbstractHistoryEvent extends ApplicationEvent {
      *
      * @return
      */
-    public Map<String, String> getTitles() {
+    public LinkedHashMap<String, String> getTitles() {
         return null;
     }
 

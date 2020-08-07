@@ -23,34 +23,44 @@
 
 package org.fao.geonet.api.records.model;
 
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.StatusValue;
 
 public class MetadataStatusResponse extends MetadataStatus {
 
-    MetadataStatus metadataStatusObject;
 
-    String authorName;
-    String authorEmail;
-    String authorProfile;
+    private String authorName;
+    private String authorEmail;
+    private String authorProfile;
 
-    String ownerName;
-    String ownerEmail;
-    String ownerProfile;
+    private String ownerName;
+    private String ownerEmail;
+    private String ownerProfile;
 
-    String title;
-    String currentStatus;
-    String previousStatus;
+    private String title;
+    private String currentStatus;
+    private String previousStatus;
 
-    boolean loadFull;
+    private boolean loadFull = false;
 
-    public MetadataStatusResponse(MetadataStatus s) {
-        this.metadataStatusObject = s;
+    public MetadataStatusResponse(MetadataStatus metadataStatus) {
+        setUuid(metadataStatus.getUuid());
+        setId(metadataStatus.getId());
+        setUserId(metadataStatus.getUserId());
+        setChangeDate(metadataStatus.getChangeDate());
+        setChangeMessage(metadataStatus.getChangeMessage());
+        setOwner(metadataStatus.getOwner());
+        setDueDate(metadataStatus.getDueDate());
+        setCloseDate(metadataStatus.getCloseDate());
+        setStatusValue(metadataStatus.getStatusValue());
+        setTitles(metadataStatus.getTitles());
+        setRelatedMetadataStatus(metadataStatus.getRelatedMetadataStatus());
+        setMetadataId(metadataStatus.getMetadataId());
+        setCurrentState(metadataStatus.getCurrentState());
+        setPreviousState(metadataStatus.getPreviousState());
     }
 
-    public MetadataStatusResponse(MetadataStatus s, boolean loadFull) {
-        this.metadataStatusObject = s;
+    public MetadataStatusResponse(MetadataStatus metadataStatus, boolean loadFull) {
+        this(metadataStatus);
         this.loadFull = loadFull;
     }
 
@@ -112,26 +122,26 @@ public class MetadataStatusResponse extends MetadataStatus {
         return currentStatus;
     }
 
-    public boolean isCurrentStatusEmpty() {
-        if (this.metadataStatusObject.getCurrentState() == null || this.metadataStatusObject.getCurrentState().length() == 0) {
+    public boolean isCurrentStateEmpty() {
+        if (super.getCurrentState() == null || super.getCurrentState().length() == 0) {
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean isPreviousStatusEmpty() {
-        if (this.metadataStatusObject.getPreviousState() == null || this.metadataStatusObject.getPreviousState().length() == 0) {
+    public boolean isPreviousStateEmpty() {
+        if (super.getPreviousState() == null || super.getPreviousState().length() == 0) {
             return true;
         } else {
             return false;
         }
     }
 
-
-    public String getCurrentStatusDetails() {
+    @Override
+    public String getCurrentState() {
         if(loadFull) {
-            return metadataStatusObject.getCurrentState();
+            return super.getCurrentState();
         } else {
             return "";
         }
@@ -141,9 +151,10 @@ public class MetadataStatusResponse extends MetadataStatus {
         return previousStatus;
     }
 
-    public String getPreviousStatusDetails() {
+    @Override
+    public String getPreviousState() {
         if(loadFull) {
-            return metadataStatusObject.getPreviousState();
+            return super.getPreviousState();
         } else {
             return "";
         }
@@ -162,49 +173,12 @@ public class MetadataStatusResponse extends MetadataStatus {
         return title;
     }
 
-    public String getUuid() {
-        return metadataStatusObject.getUuid();
-    }
-
     public MetadataStatusResponse setTitle(String title) {
         this.title = title;
         return this;
     }
 
-    public int getMetadataId() {
-        return metadataStatusObject.getMetadataId();
-    }
-
     public int getStatusId() {
-        return metadataStatusObject.getStatusValue().getId();
+        return getStatusValue().getId();
     }
-
-    public int getUserId() {
-        return metadataStatusObject.getUserId();
-    }
-
-    public ISODate getChangeDate() {
-        return metadataStatusObject.getChangeDate();
-    }
-
-    public String getChangeMessage() {
-        return metadataStatusObject.getChangeMessage();
-    }
-
-    public Integer getOwner() {
-        return metadataStatusObject.getOwner();
-    }
-
-    public ISODate getDueDate() {
-        return metadataStatusObject.getDueDate();
-    }
-
-    public ISODate getCloseDate() {
-        return metadataStatusObject.getCloseDate();
-    }
-
-    public StatusValue getStatusValue() {
-        return metadataStatusObject.getStatusValue();
-    }
-
 }

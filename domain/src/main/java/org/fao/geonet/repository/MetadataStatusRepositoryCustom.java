@@ -54,7 +54,9 @@ public interface MetadataStatusRepositoryCustom {
      * Find all the MetadataStatus objects corresponding to a search
      */
     @Nonnull
-    List<MetadataStatus> searchStatus(List<StatusValueType> types,
+    List<MetadataStatus> searchStatus(List<Integer> ids,
+                                      List<String> uuids,
+                                      List<StatusValueType> types,
                                       List<Integer> authorIds, List<Integer> ownerIds,
                                       List<Integer> recordIds,
                                       String dateFrom, String dateTo,

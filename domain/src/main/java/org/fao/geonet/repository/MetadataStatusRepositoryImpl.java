@@ -98,7 +98,9 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
      * @param dateTo
      * @return
      */
-    public List<MetadataStatus> searchStatus(List<StatusValueType> types,
+    public List<MetadataStatus> searchStatus(List<Integer> ids,
+                                             List<String> uuids,
+                                             List<StatusValueType> types,
                                              List<Integer> ownerIds,
                                              List<Integer> authorIds,
                                              List<Integer> recordIds,
@@ -116,10 +118,22 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
 
         Predicate statusIdJoin = cb.equal(statusIdInMetadataPath, statusIdPath);
 
+        Predicate idPredicate = null;
+        Predicate uuidPredicate = null;
         Predicate typeFilter = null;
         Predicate authorPredicate = null;
         Predicate ownerPredicate = null;
         Predicate recordPredicate = null;
+        if (ids != null) {
+            final Path<Integer> idPath = metadataStatusRoot.get(MetadataStatus_.id);
+            idPredicate = idPath.in(ids);
+        }
+
+        if (uuids != null) {
+            final Path<String> uuidPath = metadataStatusRoot.get(MetadataStatus_.uuid);
+            uuidPredicate = uuidPath.in(uuids);
+        }
+
         if (types != null) {
             Predicate typePredicate = statusTypePath.in(types);
             typeFilter = cb.and(statusIdJoin, typePredicate);
@@ -140,6 +154,12 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
         }
 
         Predicate whereClause = cb.and(statusIdJoin);
+        if (idPredicate != null) {
+            whereClause.getExpressions().add(idPredicate);
+        }
+        if (uuidPredicate != null) {
+            whereClause.getExpressions().add(uuidPredicate);
+        }
         if (typeFilter != null) {
             whereClause.getExpressions().add(typeFilter);
         }

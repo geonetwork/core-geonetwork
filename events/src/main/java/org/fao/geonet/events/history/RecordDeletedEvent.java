@@ -25,7 +25,7 @@ package org.fao.geonet.events.history;
 
 import org.springframework.context.ApplicationContext;
 
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 public class RecordDeletedEvent extends AbstractHistoryEvent {
 
@@ -33,16 +33,16 @@ public class RecordDeletedEvent extends AbstractHistoryEvent {
 
     private String xmlRecord;
     private String uuid;
-    private Map<String, String> titles;
+    private LinkedHashMap<String, String> titles;
 
-    public RecordDeletedEvent(Integer mdId, String uuid, Map<String, String> titles, Integer userId, String xmlRecord) {
+    public RecordDeletedEvent(Integer mdId, String uuid, LinkedHashMap<String, String> titles, Integer userId, String xmlRecord) {
         super(mdId, userId);
         this.xmlRecord = xmlRecord;
         this.uuid=uuid;
         this.titles=titles;
     }
 
-    public RecordDeletedEvent(Long mdId, String uuid, Map<String, String> titles, Integer userId) {
+    public RecordDeletedEvent(Long mdId, String uuid, LinkedHashMap<String, String> titles, Integer userId) {
         super(mdId, userId);
         this.uuid=uuid;
         this.titles=titles;
@@ -59,7 +59,7 @@ public class RecordDeletedEvent extends AbstractHistoryEvent {
     }
 
     @Override
-    public Map<String, String> getTitles() {
+    public LinkedHashMap<String, String> getTitles() {
         return titles;
     }
 

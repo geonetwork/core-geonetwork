@@ -59,7 +59,7 @@
           <a class="btn btn-default"
              target="_blank"
              data-ng-href="../api/records/{{h.uuid}}/status/{{h.statusId}}.{{h.userId}}.{{h.changeDate.dateAndTime}}/before"
-             data-ng-if="!h.previousStatusEmpty"
+             data-ng-if="!h.previousStateEmpty"
              data-ng-hide="noSourceViewOption">
             <i class="fa fa-fw fa-search"
                title="{{'View' | translate}}"></i>
@@ -69,7 +69,7 @@
           <a class="btn btn-default"
              target="_blank"
              data-ng-href="../api/records/{{h.uuid}}/status/{{h.statusId}}.{{h.userId}}.{{h.changeDate.dateAndTime}}/after"
-             data-ng-if="!h.currentStatusEmpty"
+             data-ng-if="!h.currentStateEmpty"
              data-ng-hide="noSourceViewOption">
             <i class="fa fa-fw fa-search"
                title="{{'View' | translate}}"></i>
@@ -78,7 +78,7 @@
 
           <span class="btn btn-default"
                 data-gn-click-and-spin="restoreHistoryElement(h)"
-                data-ng-if="!h.previousStatusEmpty"
+                data-ng-if="!h.previousStateEmpty"
                 data-ng-hide="noRecoverOption">
           <i class="fa fa-fw fa-magic"
              title="{{'restore' | translate}}"></i>

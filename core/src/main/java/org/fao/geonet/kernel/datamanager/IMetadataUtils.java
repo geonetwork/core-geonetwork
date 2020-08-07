@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.datamanager;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -122,9 +123,9 @@ public interface IMetadataUtils {
     /**
      * Extract Multilinugal titles from the metadata record using the schema XSL for title extraction)
      */
-    Map<String, String> extractTitles(String schema, Element md) throws Exception;
+    LinkedHashMap<String, String> extractTitles(String schema, Element md) throws Exception;
 
-    Map<String, String> extractTitles(@Nonnull String id) throws Exception;
+    LinkedHashMap<String, String> extractTitles(@Nonnull String id) throws Exception;
 
     /**
      * Extract the last editing date from the record

@@ -53,12 +53,11 @@ import java.util.Map;
  * some missing JPA settings that would initially fail due to these NOT NULL columns.
  *
  * It is recommended that after the initial startup and migration execution that the system be stopped and
- * restarted to ensure that all JPA settings are applied correclty.
+ * restarted to ensure that all JPA settings are applied correctly.
  */
 public class UpdateMetadataStatus extends DatabaseMigrationTask {
 
     private MetadataStatusRepository metadataStatusRepository;
-    //private LanguageRepository languageRepository;
     private IMetadataUtils metadataUtils;
 
     /**
@@ -70,7 +69,6 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
         super.setContext(applicationContext);
         metadataUtils = applicationContext.getBean(IMetadataUtils.class);
         metadataStatusRepository = applicationContext.getBean(MetadataStatusRepository.class);
-        //languageRepository = applicationContext.getBean(LanguageRepository.class);
     }
 
     /**
@@ -98,11 +96,14 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
             updateOtherNewFields();
             // commit the changes
             connection.commit();
+
+            // finallize the change
+            finalizeChanges(connection, dialect);
     }
 
     /**
      *  JPA will not be able to create the ID and UUID because they are not null
-     *  So we need to add them as nullable initialy until we update all the data in the tables.
+     *  So we need to add them as nullable initially until we update all the data in the tables.
      *
      * @param connection
      * @param dialect - specific to each database - i.e. oracke, h2, postgresl...
@@ -112,7 +113,7 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
         try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " " + dialect.getAddColumnString() + "  " + MetadataStatus_.id.getName() + " INTEGER NULL");
         } catch (Exception e) {
-            // If there was an erro then we will log the error and continue.
+            // If there was an error then we will log the error and continue.
             // Most likely cause is that the column already exists which should be fine.
             Log.error(Geonet.DB, "  Exception while adding new ID column to metadataStatus. " +
                     "Error is: " + e.getMessage());
@@ -168,7 +169,7 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
         int updateRowCount = 0;
         int uuidRowCount = 0;
         int titleRowCount = 0;
-        Map<Integer, Map<String, String>> titlesMap = new HashMap<>();
+        Map<Integer, LinkedHashMap<String, String>> titlesMap = new HashMap<>();
         Map<Integer, String> uuidMap = new HashMap<>();
         //List<Language> languages = languageRepository.findAll();
         Page<MetadataStatus> page;
@@ -178,7 +179,7 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
                 for (MetadataStatus metadataStatus : page.getContent()) {
                     totalRowCount++;
                     if (metadataStatus.getUuid() == null || metadataStatus.getUuid().length() == 0 ||
-                            metadataStatus.getTitles() == null || metadataStatus.getTitles().length() == 0) {
+                            metadataStatus.getTitles() == null || metadataStatus.getTitles().size() == 0) {
 
                         boolean changeflag = false;
                         if (metadataStatus.getUuid() == null || metadataStatus.getUuid().length() == 0) {
@@ -204,8 +205,8 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
                                 changeflag = true;
                             }
                         }
-                        if (metadataStatus.getTitles() == null || metadataStatus.getTitles().length() == 0) {
-                            Map<String, String> titles = titlesMap.get(metadataStatus.getMetadataId());
+                        if (metadataStatus.getTitles() == null || metadataStatus.getTitles().size() == 0) {
+                            LinkedHashMap<String, String> titles = titlesMap.get(metadataStatus.getMetadataId());
                             // Try to get the titles from the schema.
                             // Note: Schemas are not registered at this point so this is not possible.
                             //      Generated errors similar to the following
@@ -261,7 +262,7 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
                             // Last option - just use the metadata title field
                             // but I believe this is being depreciated as they all seem to be null
                             if (titles == null) {
-                                Map<String, String> indexTitles = new LinkedHashMap<>();
+                                LinkedHashMap<String, String> indexTitles = new LinkedHashMap<>();
                                 try {
                                     String title = metadataUtils.getMetadataTitle(Integer.toString(metadataStatus.getMetadataId()));
                                     if (title != null) {
@@ -291,5 +292,38 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
         } while (pageRequest != null && page.hasContent());
         Log.info(Geonet.DB, "Migration: Updated " + updateRowCount + " records from a total of " + totalRowCount + " for talbe '" + MetadataStatus.TABLE_NAME +
                 "'. (uuid:" + uuidRowCount + ", Titles:" + titleRowCount + ")");
+    }
+
+    /**
+     * ANow that the data should be populated alter ID and UUID fields and make them not null.
+     * @param connection
+     * @param dialect - specific to each database - i.e. oracle, h2, postgresl...
+     */
+
+    private void finalizeChanges(final Connection connection, Dialect dialect ) throws SQLException {
+
+        // lets drop the old primary key on the table
+        try (Statement statement = connection.createStatement()) {
+            DatabaseMetaData databaseMetaData  = connection.getMetaData();
+            ResultSet PK  = databaseMetaData.getPrimaryKeys(connection.getCatalog(), connection.getSchema(), MetadataStatus.TABLE_NAME);
+            //-- https://stackoverflow.com/questions/35871077/org-h2-jdbc-jdbcsqlexception-general-error-java-lang-stackoverflowerror-500?rq=1
+
+            String pkName = PK.getString("PK_NAME");
+            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " DROP CONSTRAINT " + pkName + ";");
+            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " DROP PRIMARY KEY;");
+        } catch (Exception e) {
+            Log.error(Geonet.DB, "  Exception while dropping old primary key on table " + MetadataStatus.TABLE_NAME + ". " +
+                    "Error is: " + e.getMessage());
+            Log.debug(Geonet.DB, e, e);
+        }
+
+        // lets add the new primary key
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " " + dialect.getAddPrimaryKeyConstraintString("MetadataStatusPk") + ";");
+        } catch (Exception e) {
+            Log.error(Geonet.DB, "  Exception while adding priimary key on ID column for " + MetadataStatus.TABLE_NAME + "." +
+                    "Error is: " + e.getMessage());
+            Log.debug(Geonet.DB, e, e);
+        }
     }
 }

@@ -23,14 +23,14 @@
 
 package org.fao.geonet.domain;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.*;
+import org.fao.geonet.domain.converter.JpaConverterJson;
 import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.persistence.*;
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 /**
  * An entity that represents a status change of a metadata.
@@ -103,7 +103,7 @@ public class MetadataStatus extends GeonetEntity {
     private String currentState;
     private MetadataStatus relatedMetadataStatus;
     private String uuid;
-    private String titles;
+    private LinkedHashMap<String, String> titles;
 
     /**
      * The id of the metadata status. This is a generated value and not controlled by the developer.
@@ -300,6 +300,9 @@ public class MetadataStatus extends GeonetEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "relatedMetadataStatusId", columnDefinition="integer", nullable = true, referencedColumnName = "id")
+    @JsonProperty(value = "relatedMetadataStatusId")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     public MetadataStatus getRelatedMetadataStatus() {
         return relatedMetadataStatus;
     }
@@ -332,11 +335,32 @@ public class MetadataStatus extends GeonetEntity {
      *
      * @return the multilingual titles of the metadata.
      */
-    @Column
+    // Todo apply this once jpa is upgraded - cannot be applied due to the following bug.
+    //      Also remove getTitlesString and setTitlesString - they were only created for JPA
+    // https://hibernate.atlassian.net/browse/HHH-10818
+    //@Column
+    //@Lob
+    //@Basic(fetch = FetchType.LAZY)
+    //@Convert(converter = JpaConverterJson.class)
+    @Transient
+    public LinkedHashMap<String, String> getTitles() {
+        return titles;
+    }
+
+    @Column(name = "titles")
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    public String getTitles() {
-        return titles;
+    @JsonProperty(value = "titles")
+    @JsonRawValue
+    @Deprecated // Use getTitles() when possible as this will be depreciated once jpa is upgraded
+    public String getTitlesString() {
+        JpaConverterJson jpaConverterJson = new JpaConverterJson();
+        return jpaConverterJson.convertToDatabaseColumn(getTitles());
+    }
+
+    @Deprecated // Use setTitles() when possible as this will be depreciated once jpa is upgraded
+    public void setTitlesString(String titles) {
+        setTitles(titles);
     }
 
     /**
@@ -344,7 +368,7 @@ public class MetadataStatus extends GeonetEntity {
      *
      * @param titles the new titles related to the metadata record at the time the status was created.
      */
-    public void setTitles(@Nonnull String titles) {
+    public void setTitles(@Nonnull LinkedHashMap<String, String> titles) {
         this.titles = titles;
     }
 
@@ -353,13 +377,9 @@ public class MetadataStatus extends GeonetEntity {
      *
      * @param titles the new titles related to the metadata record at the time the status was created.
      */
-    public void setTitles(@Nonnull Map<String, String> titles) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            this.titles = objectMapper.writeValueAsString(titles);
-        } catch (JsonProcessingException e) {
-            this.titles = titles.toString();
-        }
+    public void setTitles(@Nonnull String titles) {
+        JpaConverterJson jpaConverterJson = new JpaConverterJson();
+        this.titles = (LinkedHashMap<String, String>) jpaConverterJson.convertToEntityAttribute(titles);
     }
 
     @Column
