@@ -612,9 +612,9 @@ public class BaseMetadataManager implements IMetadataManager {
         if (mdImportSetting != null && !mdImportSetting.equals("")) {
             if (!newMetadata.getHarvestInfo().isHarvested()
                 && !Arrays.asList(mdImportSetting.split(",")).contains(schema)) {
-                throw new IllegalArgumentException(
-                    schema + " is not permitted in the database as a non-harvested metadata.  "
-                        + "Apply a import stylesheet to convert file to allowed schemas");
+                throw new IllegalArgumentException("The system setting 'metadata/import/restrict' doesn't allow to import "
+                    + schema + " metadata records (they can still be harvested). "
+                    + "Apply an import stylesheet to convert file to one of the allowed schemas: " + mdImportSetting);
             }
         }
 
