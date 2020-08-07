@@ -146,7 +146,7 @@ then
   finalLine=$(($line - 1))
 
   projectGroupId='${project.groupId}'
-  gnSchemasVersion='${gn.schemas.version}'
+  gnSchemasVersion='${project.version}'
 
   echo "Adding schema ${schema} resources to service/pom.xml"
 
