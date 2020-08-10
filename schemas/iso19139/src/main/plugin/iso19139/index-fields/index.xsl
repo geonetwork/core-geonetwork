@@ -32,6 +32,7 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:index="java:org.fao.geonet.kernel.search.EsSearchManager"
+                xmlns:related="java:org.fao.geonet.api.records.MetadataUtils"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:daobs="http://daobs.org"
                 xmlns:saxon="http://saxon.sf.net/"
@@ -1040,19 +1041,7 @@
           <xsl:for-each select="$recordLinks">
             <parentUuid><xsl:value-of select="."/></parentUuid>
             <recordGroup><xsl:value-of select="."/></recordGroup>
-            <recordLink type="object">{
-              "type": "parent",
-              "to": "<xsl:value-of select="."/>",
-              "url": "<xsl:value-of select="@xlink:href"/>",
-              "title": "<xsl:value-of select="@xlink:title"/>",
-              "origin": "<xsl:value-of
-                select="if (@xlink:href = '')
-                        then 'catalog'
-                        else if (@xlink:href != '' and
-                                 not(starts-with(@xlink:href, $siteUrl)))
-                          then 'remote'
-                        else 'catalog'"/>"
-              }</recordLink>
+            <xsl:copy-of select="gn-fn-index:build-record-link(., @xlink:href, @xlink:title, 'parent')"/>
             <!--
             TODOES - Need more work with routing -->
 <!--            <recordJoin type="object">{"name": "children", "parent": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"}</recordLink>-->
@@ -1074,41 +1063,31 @@
                         select="gmd:associationType/*/@codeListValue"/>
           <xsl:if test="$associationType = $parentAssociatedResourceType">
             <parentUuid><xsl:value-of select="$code"/></parentUuid>
-            <recordLink type="object">{
-              "type": "parent",
-              "to": "<xsl:value-of select="$code"/>",
-              "url": "<xsl:value-of select="$xlink"/>",
-              "title": "<xsl:value-of select="gn-fn-index:json-escape(gmd:aggregateDataSetIdentifier/*/gmd:code/*/@xlink:title)"/>",
-              "origin": "<xsl:value-of
-                select="if ($xlink = '')
-                        then 'catalog'
-                        else if ($xlink != '' and
-                                 not(starts-with($xlink, $siteUrl)))
-                          then 'remote'
-                        else 'catalog'"/>"
-              }</recordLink>
+            <xsl:copy-of select="gn-fn-index:build-record-link($code, $xlink, gmd:aggregateDataSetIdentifier/*/gmd:code/*/@xlink:title, 'parent')"/>
           </xsl:if>
 
           <xsl:variable name="initiativeType"
                         select="gmd:initiativeType/*/@codeListValue"/>
-          <recordLink type="object">{
-            "type": "siblings",
-            "associationType": "<xsl:value-of select="$associationType"/>",
-            "initiativeType": "<xsl:value-of select="$initiativeType"/>",
-            "to": "<xsl:value-of select="$code"/>",
-            "url": "<xsl:value-of select="$xlink"/>",
-            "title": "<xsl:value-of select="gn-fn-index:json-escape(gmd:aggregateDataSetIdentifier/*/gmd:code/*/@xlink:title)"/>",
-            "origin": "<xsl:value-of
-              select="if ($xlink = '')
-                        then 'catalog'
-                        else if ($xlink != '' and
-                                 not(starts-with($xlink, $siteUrl)))
-                          then 'remote'
-                        else 'catalog'"/>"
-            }</recordLink>
+          <xsl:variable name="properties">
+            <properties>
+              <p name="associationType" value="{$associationType}"/>
+              <p name="initiativeType" value="{$initiativeType}"/>
+            </properties>
+          </xsl:variable>
+          <xsl:copy-of select="gn-fn-index:build-record-link($code, $xlink, gmd:aggregateDataSetIdentifier/*/gmd:code/*/@xlink:title, 'siblings', $properties)"/>
         </xsl:if>
       </xsl:for-each>
 
+
+      <xsl:variable name="indexingTimeRecordLink"
+                    select="util:getSettingValue('system/index/indexingTimeRecordLink')" />
+      <xsl:if test="$indexingTimeRecordLink = 'true'">
+        <xsl:variable name="recordsLinks"
+                      select="related:getTargetAssociatedResourcesAsNode(
+                                        $identifier,
+                                        gmd:parentIdentifier/*[text() != '']/text())"/>
+        <xsl:copy-of select="$recordsLinks//recordLink"/>
+      </xsl:if>
 
       <!-- Index more fields in this element -->
       <xsl:apply-templates mode="index-extra-fields" select="."/>
@@ -1246,13 +1225,7 @@
                                 select="$remoteDoc//*[local-name(.) = 'identificationInfo']/*
                                                     /*[local-name(.) = 'citation']/*
                                                     /*[local-name(.) = 'title']/*/text()" />
-                  <recordLink type="object">{
-                    "type": "datasets",
-                    "origin": "remote",
-                    "to": "<xsl:value-of select="$datasetUuid"/>",
-                    "title": "<xsl:value-of select="gn-fn-index:json-escape($datasetTitle)"/>",
-                    "url": "<xsl:value-of select="$xlinkHref"/>"
-                    }</recordLink>
+                  <xsl:copy-of select="gn-fn-index:build-record-link($datasetUuid, $xlinkHref, $datasetTitle, 'datasets')"/>
                 </xsl:if>
               </xsl:if>
             </xsl:if>
@@ -1263,19 +1236,7 @@
               <xsl:copy-of select="$resolvedDoc"/>
             </xsl:when>
             <xsl:otherwise>
-              <recordLink type="object">{
-                "type": "datasets",
-                "origin": "<xsl:value-of
-                  select="if ($xlink = '')
-                        then 'catalog'
-                        else if ($xlink != '' and
-                                 not(starts-with($xlink, $siteUrl)))
-                          then 'remote'
-                        else 'catalog'"/>",
-                "to": "<xsl:value-of select="$datasetId"/>",
-                "title": "<xsl:value-of select="gn-fn-index:json-escape(@xlink:title)"/>",
-                "url": "<xsl:value-of select="$xlink"/>"
-                }</recordLink>
+              <xsl:copy-of select="gn-fn-index:build-record-link($datasetId, $xlink, @xlink:title, 'datasets')"/>
             </xsl:otherwise>
           </xsl:choose>
 

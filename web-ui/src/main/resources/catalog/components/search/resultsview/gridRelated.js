@@ -62,11 +62,13 @@
 
   module.directive('gnGridRelated', [
     'gnGlobalSettings', 'gnRelatedService', 'gnGridRelatedList',
-    function(gnGlobalSettings, gnRelatedService, gnGridRelatedList) {
-
+    'gnConfigService', 'gnConfig',
+    function(gnGlobalSettings, gnRelatedService, gnGridRelatedList,
+             gnConfigService, gnConfig) {
       return {
         restrict: 'A',
         scope: {
+          recordLink: '=gnGridRelated',
           uuid: '<gnGridRelatedUuid'
         },
         templateUrl: function(elem, attrs) {
@@ -77,19 +79,25 @@
           scope.location = window.location;
           scope.max = attrs['max'] || 5;
           scope.displayState = {};
-          gnGridRelatedList.promise.then(function() {
-            var related = gnGridRelatedList.list[scope.uuid];
-            if (related) {
-              scope.types = gnGridRelatedList.types;
-              var hasProp = false;
-              for (var p in related) {
-                if (related[p]) {
-                  hasProp = true;
+
+          gnConfigService.load().then(function(c) {
+            scope.indexingTimeRecordLink = gnConfig['system.index.indexingTimeRecordLink'];
+            if (scope.indexingTimeRecordLink !== true) {
+              gnGridRelatedList.promise.then(function() {
+                var related = gnGridRelatedList.list[scope.uuid];
+                if (related) {
+                  scope.types = gnGridRelatedList.types;
+                  var hasProp = false;
+                  for (var p in related) {
+                    if (related[p]) {
+                      hasProp = true;
+                    }
+                  }
+                  if (hasProp) {
+                    scope.relations = related;
+                  }
                 }
-              }
-              if (hasProp) {
-                scope.relations = related;
-              }
+              });
             }
           });
         }

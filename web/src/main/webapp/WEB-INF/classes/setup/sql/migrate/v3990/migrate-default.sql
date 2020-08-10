@@ -6,6 +6,8 @@ DELETE FROM Settings WHERE name LIKE 'system/requestedLanguage%';
 DELETE FROM Settings WHERE name = 'system/inspire/enableSearchPanel';
 DELETE FROM Settings WHERE name = 'system/autodetect/enable';
 
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/index/indexingTimeRecordLink', 'false', 2, 9209, 'n');
+
 UPDATE metadata
     SET data = REGEXP_REPLACE(data, '[a-z]{3}\/thesaurus\.download\?ref=', 'api/registries/vocabularies/', 'g')
     WHERE data LIKE '%thesaurus.download?ref=%';

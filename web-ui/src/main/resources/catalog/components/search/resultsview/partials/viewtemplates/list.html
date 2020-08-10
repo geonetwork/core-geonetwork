@@ -91,16 +91,13 @@
                 {{::c.name}}
               </p>
             </div>
-            <div gn-grid-related
-                 gn-grid-related-uuid="::md.uuid"
-                 template="../../catalog/views/default/templates/gridRelatedList.html"></div>
           </div>
           <!-- /.gn-card-body -->
 
           <div class="gn-card-footer">
             <div class="gn-toolbar">
               <gn-links-btn></gn-links-btn>
-              <div gn-grid-related gn-grid-related-uuid="::md.uuid"
+              <div gn-grid-related="md.recordLink" gn-grid-related-uuid="::md.uuid"
                    template="../../catalog/views/default/templates/gridRelated.html"></div>
               <div data-ng-if="md.draft == 'e'"
                    title="{{'workingCopy' | translate}}"

@@ -1339,6 +1339,9 @@
           "subtype": {
             "type": "keyword"
           },
+          "created": {
+            "type": "keyword"
+          },
           "to": {
             "type": "keyword"
           },

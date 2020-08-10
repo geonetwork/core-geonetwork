@@ -417,17 +417,22 @@ public class EsRestClient implements InitializingBean {
 
         Map<String, String> fieldValues = new HashMap<>(fields.size());
         try {
-            String query = String.format("_id:%s uuid:%s", id, id);
+            String query = String.format("_id:\"%s\"", id);
             // TODO: Check maxRecords
-            final SearchResponse searchResponse = this.query(index, query, null, fields, 0, 1000, null);
+            // TODO: Use _doc API?
+            final SearchResponse searchResponse = this.query(index, query, null, fields, 0, 1, null);
             if (searchResponse.status().getStatus() == 200) {
-                if (searchResponse.getHits().getTotalHits().value == 1) {
+                if (searchResponse.getHits().getTotalHits().value == 0) {
+                    return fieldValues;
+                } else if (searchResponse.getHits().getTotalHits().value == 1) {
                     final SearchHit[] hits = searchResponse.getHits().getHits();
 
                     fields.forEach(f -> {
                         final Object o = hits[0].getSourceAsMap().get(f);
                         if (o instanceof String) {
                             fieldValues.put(f, (String) o);
+                        } else if (o instanceof HashMap && f.endsWith("Object")) {
+                            fieldValues.put(f, (String) ((HashMap) o).get("default"));
                         }
                     });
                 } else {
@@ -439,12 +444,12 @@ public class EsRestClient implements InitializingBean {
                 }
             } else {
                 throw new IOException(String.format(
-                    "Error during fields value retrival. Status is '%s'.", searchResponse.status().getStatus()
+                    "Error during fields value retrieval. Status is '%s'.", searchResponse.status().getStatus()
                 ));
             }
         } catch (Exception e) {
             throw new IOException(String.format(
-                "Error during fields value retrival. Errors is '%s'.", e.getMessage()
+                "Error during fields value retrieval. Errors is '%s'.", e.getMessage()
             ));
         }
         return fieldValues;
