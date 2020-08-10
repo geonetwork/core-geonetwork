@@ -219,7 +219,7 @@
                 </td>
               </tr>
               <tr data-ng-repeat="(key, t) in mdView.current.record.allKeywords">
-                <th>{{t.title | translate}}</th>
+                <th>{{(t.title || key) | translate}}</th>
                 <td>
                   <ul>
                     <li data-ng-repeat="k in t.keywords track by $index"
