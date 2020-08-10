@@ -5,7 +5,13 @@
   goog.require('gn_search_sextant');
 
   var appRoot = document.currentScript.parentElement;
-  var catalogId = document.currentScript.getAttribute('catalog');
+  var scriptEl = document.currentScript;
+
+  var catalogId = scriptEl.hasAttribute('catalog') ? scriptEl.getAttribute('catalog') : null;
+  var sxtSize = scriptEl.hasAttribute('size') ? scriptEl.getAttribute('size') : null;
+  var sxtSizeDiff = scriptEl.hasAttribute('size-diff') ? scriptEl.getAttribute('size-diff') : null;
+  var sizeClass = scriptEl.hasAttribute('max-sm') ? 'sxt-max-sm' :
+    scriptEl.hasAttribute('max-md') ? 'sxt-max-md' : '';
 
   // modify the API url to use the correct catalog
   // TODO: use a token in sxtGnUrl instead of the hardcoded 'srv'
@@ -61,10 +67,11 @@
 
         // include sextant API
         var templateInclude = document.createElement("div");
-        templateInclude.className = "gn"; // TODO: allow forcing a layout (md, sm...)
+        templateInclude.className = "gn " + sizeClass;
         templateInclude.setAttribute("ng-include", "'../../catalog/views/sextant/templates/index.html'");
         templateInclude.setAttribute("ng-controller", "GnCatController");
-        templateInclude.setAttribute("sxt-size", "auto"); // TODO: allow modifying the sizing (auto or manual)
+        templateInclude.setAttribute("sxt-size", sxtSize !== null ? sxtSize : "auto");
+        if (sxtSizeDiff !== null) templateInclude.setAttribute("sxt-size-diff", sxtSizeDiff);
         appRoot.appendChild(templateInclude);
 
         // bootstrap app

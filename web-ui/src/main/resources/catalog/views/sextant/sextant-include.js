@@ -2,9 +2,16 @@
 
   goog.provide('sextant_include');
 
-  var selector = document.currentScript.getAttribute('selector');
-  var catalogName = document.currentScript.getAttribute('catalog');
-  var staticUrl = document.currentScript.getAttribute('src').replace('sextant_include.js', '');
+  var scriptEl = document.currentScript;
+
+  function copyScriptAttribute(targetEl, attrName) {
+    if (scriptEl.hasAttribute(attrName)) {
+      targetEl.setAttribute(attrName, scriptEl.getAttribute(attrName))
+    }
+  }
+
+  var selector = scriptEl.getAttribute('selector');
+  var staticUrl = scriptEl.getAttribute('src').replace('sextant_include.js', '');
 
   var root = document.querySelector(selector);
 
@@ -19,6 +26,13 @@
 
   var sextant = document.createElement('script');
   sextant.src = staticUrl + 'sextant_api.js';
-  sextant.setAttribute('catalog', catalogName);
+
+  // copy input attributes to the script which loads Sextant
+  copyScriptAttribute(sextant, 'catalog')
+  copyScriptAttribute(sextant, 'max-sm')
+  copyScriptAttribute(sextant, 'max-md')
+  copyScriptAttribute(sextant, 'size')
+  copyScriptAttribute(sextant, 'size-diff')
+
   root.appendChild(sextant);
 })();
