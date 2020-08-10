@@ -29,7 +29,7 @@
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:gml320="http://www.opengis.net/gml"
                 version="1.0"
-                exclude-result-prefixes="gn exslt">
+                exclude-result-prefixes="#all">
 
 
   <xsl:include href="../../common/profiles-loader-tpl-brief.xsl"/>
