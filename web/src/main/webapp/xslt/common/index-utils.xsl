@@ -27,6 +27,7 @@
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 exclude-result-prefixes="#all"
                 version="2.0">
@@ -98,7 +99,52 @@
     </xsl:element>
   </xsl:function>
 
+  <xsl:function name="gn-fn-index:build-record-link" as="node()?">
+    <xsl:param name="uuid" as="xs:string"/>
+    <xsl:param name="url" as="xs:string?"/>
+    <xsl:param name="title" as="xs:string?"/>
+    <xsl:param name="type" as="xs:string"/>
+    <xsl:variable name="properties" as="node()">
+      <properties/>
+    </xsl:variable>
+    <xsl:copy-of select="gn-fn-index:build-record-link($uuid, $url, $title, $type, $properties)"/>
+  </xsl:function>
 
+  <xsl:function name="gn-fn-index:build-record-link" as="node()?">
+    <xsl:param name="uuid" as="xs:string"/>
+    <xsl:param name="url" as="xs:string?"/>
+    <xsl:param name="title" as="xs:string?"/>
+    <xsl:param name="type" as="xs:string"/>
+    <xsl:param name="otherProperties" as="node()?"/>
+
+    <xsl:variable name="siteUrl" select="util:getSiteUrl()" />
+
+    <xsl:variable name="origin"
+                  select="if ($url = '')
+                          then 'catalog'
+                          else if ($url != '' and
+                                   not(starts-with($url, $siteUrl)))
+                            then 'remote'
+                          else 'catalog'"/>
+
+    <xsl:variable name="recordTitle"
+                  select="if ($title != '' ) then $title
+                          else util:getIndexField(
+                                '',
+                                $uuid,
+                                'resourceTitleObject',
+                                '')"/>
+    <recordLink type="object">{
+      "type": "<xsl:value-of select="$type"/>",
+      <xsl:for-each select="$otherProperties">
+        "<xsl:value-of select="@name"/>": "<xsl:value-of select="@value"/>",
+      </xsl:for-each>
+      "to": "<xsl:value-of select="$uuid"/>",
+      "url": "<xsl:value-of select="$url"/>",
+      "title": "<xsl:value-of select="gn-fn-index:json-escape($recordTitle)"/>",
+      "origin": "<xsl:value-of select="$origin"/>"
+      }</recordLink>
+  </xsl:function>
 
   <!-- Add a multilingual field to the index.
    A multilingual field is composed of one root field

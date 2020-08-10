@@ -95,8 +95,7 @@
       // type:children > Is a children: If record.parentUuid then uuid: record.parentUuid
       // Is a service: If record.operatesOn then uuid: record.operatesOn
       // Is a sibling?: agg_associated: record.uuid
-      //
-      //
+
       var promise = $q.defer();
       var body = '';
       var searchFields = {
