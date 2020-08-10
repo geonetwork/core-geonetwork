@@ -7,7 +7,6 @@
   background-color: @gn-results-background-color;
 }
 .gn-row-tools {
-  border-bottom: 1px solid @panel-default-border;
   .btn-default {
     border: 0;
     border-radius: 0;
@@ -16,6 +15,24 @@
       background: 0;
       box-shadow: none;
       border-color: #ddd;
+    }
+    &:focus {
+      outline: @gn-outline;
+    }
+  }
+  .pagination {
+    > li > a, .pagination > li > span {
+      border: 0;
+      color: @btn-default-color;
+      &:hover {
+        color: @brand-primary;
+        background: none;
+      }
+      &:focus {
+        box-shadow: none;
+        background: none;
+        outline: @gn-outline;
+      }
     }
   }
 }
