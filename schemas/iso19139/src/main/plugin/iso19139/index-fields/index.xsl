@@ -619,6 +619,42 @@
               <xsl:if test="position() != last()">,</xsl:if>
             </xsl:if>
           </xsl:for-each-group>
+
+
+          <xsl:variable name="keywordWithNoThesaurus"
+                        select="//gmd:MD_Keywords[
+                                not(gmd:thesaurusName)
+                                or gmd:thesaurusName/*/gmd:title/*/text() = '']"/>
+          <xsl:variable name="hasKeywordWithThesaurus"
+                        select="count(*/gmd:MD_Keywords[
+                                  gmd:thesaurusName/*/gmd:title/*/text() != '']) > 0"/>
+
+          <xsl:if test="$hasKeywordWithThesaurus and $keywordWithNoThesaurus">,</xsl:if>
+
+          <xsl:for-each-group select="$keywordWithNoThesaurus"
+                              group-by="gmd:type/*/@codeListValue">
+            <xsl:variable name="thesaurusType"
+                          select="current-grouping-key()"/>
+
+            <xsl:variable name="thesaurusField"
+                          select="concat('otherKeywords-', $thesaurusType)"/>
+            "<xsl:value-of select="$thesaurusField"/>": {
+            "keywords": [
+            <xsl:for-each select="../../*/gmd:MD_Keywords[gmd:type/*/@codeListValue = $thesaurusType]
+                                      /gmd:keyword/(*[normalize-space() != '']|
+                                  ../../*/gmd:MD_Keywords[gmd:type/*/@codeListValue = $thesaurusType]
+                                      /gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space() != ''])">
+              <!-- TODOES: Index translations -->
+              {"value": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"
+              <xsl:if test="@xlink:href">,
+                "link": "<xsl:value-of select="gn-fn-index:json-escape(@xlink:href)"/>"
+              </xsl:if>
+              }
+              <xsl:if test="position() != last()">,</xsl:if>
+            </xsl:for-each>
+            ]}
+            <xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each-group>
         }</allKeywords>
 
 
