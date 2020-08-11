@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--  
-Stylesheet used to update metadata for a service and 
-attached it to the metadata for data.
--->
 <xsl:stylesheet version="2.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
@@ -13,7 +9,9 @@ attached it to the metadata for data.
                 xmlns:xlink="http://www.w3.org/1999/xlink">
 
   <xsl:param name="uuidref"/>
-  <xsl:param name="siteUrl"/>
+  <xsl:param name="nodeUrl"/>
+  <xsl:param name="fcatsUrl" select="''"/>
+  <xsl:param name="fcatsTitle" select="''"/>
 
   <xsl:template match="/mdb:MD_Metadata|*[@gco:isoType='mdb:MD_Metadata']">
     <xsl:copy>
@@ -39,8 +37,20 @@ attached it to the metadata for data.
       <mdb:contentInfo>
         <mrc:MD_FeatureCatalogueDescription>
           <mrc:includedWithDataset/>
-          <mrc:featureCatalogueCitation uuidref="{$uuidref}"
-                                        xlink:href="{$siteUrl}csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gfc&amp;elementSetName=full&amp;id={$uuidref}"/>
+          <mrc:featureCatalogueCitation uuidref="{$uuidref}">
+            <xsl:if test="$fcatsTitle != ''">
+              <xsl:attribute name="xlink:title" select="$fcatsTitle"/>
+            </xsl:if>
+            <xsl:choose>
+              <xsl:when test="$fcatsUrl != ''">
+                <xsl:attribute name="xlink:href" select="$fcatsUrl"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:attribute name="xlink:href"
+                               select="concat($nodeUrl, 'api/records/', $uuidref)"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </mrc:featureCatalogueCitation>
         </mrc:MD_FeatureCatalogueDescription>
       </mdb:contentInfo>
 

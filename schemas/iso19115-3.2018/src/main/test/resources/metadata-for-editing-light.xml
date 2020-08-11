@@ -2544,7 +2544,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
           <element name="gmd:DQ_CompletenessCommission" id="109.0">
             <label>Données excédentaires</label>
             <description>Classe pour la description des données excédentaires présentes dans le jeu de donnée définit par le domaine d'applicabilité</description>
-            <help>Classe destinée à la description des données surabondantes présentes dans le jeu de données, conformément au champ d'application défini. 
+            <help>Classe destinée à la description des données surabondantes présentes dans le jeu de données, conformément au champ d'application défini.
       Exemple : Un bâtiment a été reporté deux fois, Un cours d’eau a été représenté alors qu’il n’aurait pas dû être pris en compte.</help>
             <condition />
           </element>
@@ -2572,7 +2572,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <label>Qualité des données</label>
             <description>Classe avec l'information sur la qualité pour les données spécifiées par un domaine de qualité des données</description>
             <help>
-              Classe comportant des informations relatives à la qualité du jeu de données. La qualité des données est exprimée par les éléments de métadonnées des classes DQ_DataQuality, LI_Lineage et DQ_Legislation. l'étendue des indications de qualité est définie et décrite dans la classe du champ d'application (DQ_Scope). La filiation ou la provenance des données est décrite dans la classe LI_Lineage qui est une agrégation des deux classes LI_Source (indications concernant les données source) et LI_ProcessStep (informations relatives aux étapes de traitement). Les différentes étapes de traitement peuvent à leur tour présenter une relation avec les données source. "+lineage" est obligatoire si "scope.DQ_Scope.level" = "Jeu de données". 
+              Classe comportant des informations relatives à la qualité du jeu de données. La qualité des données est exprimée par les éléments de métadonnées des classes DQ_DataQuality, LI_Lineage et DQ_Legislation. l'étendue des indications de qualité est définie et décrite dans la classe du champ d'application (DQ_Scope). La filiation ou la provenance des données est décrite dans la classe LI_Lineage qui est une agrégation des deux classes LI_Source (indications concernant les données source) et LI_ProcessStep (informations relatives aux étapes de traitement). Les différentes étapes de traitement peuvent à leur tour présenter une relation avec les données source. "+lineage" est obligatoire si "scope.DQ_Scope.level" = "Jeu de données".
       Les prescriptions de qualité applicables au jeu de données à décrire figurent dans la classe DQ_Legislation.
               <!-- Réglement 1205-2008-->
               La totalité des caractéristiques d’un produit qui lui confèrent l’aptitude à satisfaire des besoins exprimés ou
@@ -2662,8 +2662,8 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
     Cet élément n'est obligatoire que si la série de données comprend des types issus du modèle générique de réseau («Generic Network Model») et
     n’assure pas la topologie du réseau (c'est-à-dire à la connectivité des lignes centrales).]]></help>
             <help for="france"><![CDATA[<b>Commentaire :</b>
-    En pratique, ne sont concernées que les données respectant les spécifications de données INSPIRE et rentrant 
-    dans un cas de modèle de réseau (hydrographie, transport, services d’utilité publique). 
+    En pratique, ne sont concernées que les données respectant les spécifications de données INSPIRE et rentrant
+    dans un cas de modèle de réseau (hydrographie, transport, services d’utilité publique).
     Les guides accompagnant les spécifications des données INSPIRE proposent quelques exemples :
     <ul>
     <li>nombre de superpositions invalides,</li>
@@ -2690,13 +2690,13 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <label>Emprise géographique</label>
             <description>Type de données pour la description de la position géographique du jeu de données. Il s'agit ici d'une référence approximative de telle sorte qu''il n''est pas nécessaire de spécifier le système de coordonnées</description>
             <help>Type de données destiné à la description de la position géographique du jeu de données. Il s'agit ici de la définition d'une enveloppe sommaire (délimitation en latitude et en longitude). Des informations supplémentaires peuvent être trouvées sous EX_Extent et EX_GeographicExtent.</help>
-            <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b> Étendue de la ressource dans l’espace 
+            <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b> Étendue de la ressource dans l’espace
       géographique, exprimée sous la forme d’un rectangle de délimitation
     <ul>
-      <li>Ce rectangle de délimitation est défini par les longitudes est et ouest et les 
-      latitudes sud et nord en degrés décimaux, avec une précision d’au moins deux chiffres 
+      <li>Ce rectangle de délimitation est défini par les longitudes est et ouest et les
+      latitudes sud et nord en degrés décimaux, avec une précision d’au moins deux chiffres
       après la virgule.</li>
-      <li>Les coordonnées du rectangle de délimitation sont exprimées dans un système de 
+      <li>Les coordonnées du rectangle de délimitation sont exprimées dans un système de
       coordonnées géodésique de référence définissant le méridien de Greenwich comme méridien
       d’origine.</li>
       <li>Cet élément répétable est obligatoire.</li>
@@ -2714,8 +2714,8 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
 responsable du service.</li>
     </ul>
     <b>Commentaire :</b>
-    Attention, certaines cartes IGN comportent deux systèmes de coordonnées géographiques, basés, 
-    l’un sur le méridien de Paris, l’autre sur le méridien de Greenwich. Ne pas se tromper de système. 
+    Attention, certaines cartes IGN comportent deux systèmes de coordonnées géographiques, basés,
+    l’un sur le méridien de Paris, l’autre sur le méridien de Greenwich. Ne pas se tromper de système.
     L’ordre dans lequel sont fournies les coordonnées n’est pas signifiant.]]></help>
             <help><![CDATA[Exemple :
     <ul>
@@ -2766,8 +2766,8 @@ responsable du service.</li>
             <label>Généalogie, provenance</label>
             <description>Classe contenant l'information sur les événements ou les données sources utilisées pour la construction des données</description>
             <help>
-              Classe contenant des informations relatives à la provenance et au processus de génération du jeu de données. 
-      Ces indications font partie intégrante des informations sur la qualité. 
+              Classe contenant des informations relatives à la provenance et au processus de génération du jeu de données.
+      Ces indications font partie intégrante des informations sur la qualité.
       Des informations complémentaires peuvent être trouvées sous DQ_Dataquality.
               <!-- Réglement 1205-2008-->
               L’historique d’une série de données et son cycle de vie, depuis sa collecte et son acquisition jusqu’à sa
@@ -3068,7 +3068,7 @@ responsable du service.</li>
     <ul>
       <li>Au moins un des liens doit être public (et non pointer vers un intranet).</li>
       <li>Il est recommandé de renseigner cet élément avec un lien sur un enregistrement de métadonnées décrivant plus complètement
-      la ressource ou à défaut avec un lien sur le site institutionnel d’un organisme responsable de la ressource. Les 
+      la ressource ou à défaut avec un lien sur le site institutionnel d’un organisme responsable de la ressource. Les
       deux types de lien peuvent être fournis en profitant du caractère répétable de l’élément.</li>
       <li>La forme de cette information sera de préférence une URL.</li>
       <li>Pour les services, le localisateur de la ressource devra être :</li>
@@ -3325,13 +3325,13 @@ de métadonnées de données « BD Carthage métropole »]]></help>
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
     Est l’encodage de caractères utilisé dans la série de données.
     Cet élément n’est obligatoire (pour les données de l’Annexe 1) que si l’encodage utilisé n’est pas basé sur UTF-8. Il ne peut pas être répété.
-    
+
     <p>
     Dans le cadre de données ne suivant pas les spécifications de données INSPIRE, l’encodage des jeux de caractères utilisé dans les données est rarement UTF-8.
     Le jeu de caractères utilisé dans les données peut dépendre notamment du poste de travail du producteur (logiciel, système d’exploitation et du gestionnaire de la base de données). </help>
     </p>]]></help>
             <help for="france"><![CDATA[<b>Recommandations :</b>
-    Même si le jeu de caractère de la donnée est UTF-8, le préciser. 
+    Même si le jeu de caractère de la donnée est UTF-8, le préciser.
     Cette information, purement technique, est disponible auprès de votre administrateur de données.]]></help>
             <condition>Par défaut UTF-8</condition>
           </element>
@@ -3667,8 +3667,8 @@ date de mise en ligne du service, en tant que date de publication.
     </ul>
     <b>Commentaire :</b>
     Une date de référence de la ressource est une information représentative de la vie de la ressource (création, publication, révision), tandis que l’étendue temporelle fournit une indication de la  période de temps couverte par la ressource, ce qui est un indicateur de l’actualité de la ressource.
-    La date de dernière révision n’a de sens que si elle se distingue de la date de création. Cet élément de métadonnées n'est obligatoire actuellement que pour les 
-    données INSPIRE de l’Annexe 1. Toutefois, il est de bonne pratique 
+    La date de dernière révision n’a de sens que si elle se distingue de la date de création. Cet élément de métadonnées n'est obligatoire actuellement que pour les
+    données INSPIRE de l’Annexe 1. Toutefois, il est de bonne pratique
     de le noter autant que possible.]]></help>
             <help><![CDATA[Exemples :
     <ul>
@@ -3706,7 +3706,7 @@ date de mise en ligne du service, en tant que date de publication.
     <description>Date et heure, ou période, à laquelle l'étape de processus s'est réalisée</description>
     <help>Date à laquelle ou période au sein de laquelle le processus de traitement a été effectué. Indication en format horaire jj.mm.aaaa/ hh.mm.ss</help>
     <condition/>
-    
+
   </element>-->
           <element name="gmd:dateTime" id="89.0" context="gmd:LI_ProcessStep">
             <label>Période du processus</label>
@@ -3802,7 +3802,7 @@ date de mise en ligne du service, en tant que date de publication.
             <description>Catégorie, type et source de référence des mots clés</description>
             <help>
               En Europe, si la ressource est une série de données géographiques ou un ensemble de séries de données géographiques, il
-      convient de fournir au moins un mot clé du thésaurus multilingue de l’environnement (GEMET, General Environ­mental Multi-lingual Thesaurus) 
+      convient de fournir au moins un mot clé du thésaurus multilingue de l’environnement (GEMET, General Environ­mental Multi-lingual Thesaurus)
       décrivant le thème dont relèvent les données géographiques, conformément aux
       définitions des annexes I, II ou III de la directive 2007/2/CE.
               <!-- [2] -->
@@ -3810,14 +3810,14 @@ date de mise en ligne du service, en tant que date de publication.
             </help>
             <condition />
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
-    La catégorie thématique étant trop imprécise pour des recherches détaillées, 
+    La catégorie thématique étant trop imprécise pour des recherches détaillées,
     les mots clés permettent d’affiner la recherche en texte intégral et permettent
     une recherche structurée par mot clé.
     <ul>
       <li>Si le mot clé provient d’un vocabulaire contrôlé (thésaurus), le nom et la
       date de publication de celui-ci doivent être précisés.</li>
-      <li>Il est obligatoire pour les données (séries et ensembles de séries) dans 
-      le champ d’INSPIRE de fournir au moins un mot clé précisant le thème INSPIRE 
+      <li>Il est obligatoire pour les données (séries et ensembles de séries) dans
+      le champ d’INSPIRE de fournir au moins un mot clé précisant le thème INSPIRE
       concerné par la donnée, comme défini dans le thésaurus GEMET des thèmes INSPIRE
       (« GEMET – INSPIRE themes, version 1.0 », du 2008-06-01, cf. http://www.eionet.europa.eu/gemet/inspire_themes?langcode=fr).</li>
       <li>Il est obligatoire pour les services dans le champ d’INSPIRE de fournir au moins un
@@ -3827,7 +3827,7 @@ métadonnées INSPIRE.</li>
     </ul>
     Pour plus d’information, voir le texte exact en partie D2.3 du règlement.
     <p>
-    En résumé, il est donc demandé un jeu de mots-clés obligatoire : le ou les thèmes INSPIRE, 
+    En résumé, il est donc demandé un jeu de mots-clés obligatoire : le ou les thèmes INSPIRE,
     et il est possible de fournir des mots complémentaires.
     <br/>
     Pour les métadonnées de service, il est donc demandé un jeu de mots-clés obligatoire : la classification du service
@@ -3835,47 +3835,47 @@ dans la taxonomie des services de la partie D.4 du règlement INSPIRE, et il est
 fournir des mots complémentaires.
     </p>
     <p>
-    Attention, c’est la présence du thème INSPIRE, associé au thésaurus GEMET-INSPIRE themes, 
-    qui est prise en compte pour distinguer des métadonnées relevant de la Directive INSPIRE 
-    de métadonnées décrivant des ressources hors du champ d’INSPIRE. Dans le cas de données 
-    sortant du cadre d’INSPIRE il est donc indispensable de ne pas renseigner le thème INSPIRE, 
-    et donc de ne pas utiliser le thésaurus « GEMET – INSPIRE themes, version 1.0 » du, 
+    Attention, c’est la présence du thème INSPIRE, associé au thésaurus GEMET-INSPIRE themes,
+    qui est prise en compte pour distinguer des métadonnées relevant de la Directive INSPIRE
+    de métadonnées décrivant des ressources hors du champ d’INSPIRE. Dans le cas de données
+    sortant du cadre d’INSPIRE il est donc indispensable de ne pas renseigner le thème INSPIRE,
+    et donc de ne pas utiliser le thésaurus « GEMET – INSPIRE themes, version 1.0 » du,
     2008-06-01 ».
-    Comme montré dans l’exemple ci-dessus, les valeurs des thèmes INSPIRE peuvent être 
-    utilisées si nécessaire pour des données non INSPIRE, à condition de ne pas fournir 
+    Comme montré dans l’exemple ci-dessus, les valeurs des thèmes INSPIRE peuvent être
+    utilisées si nécessaire pour des données non INSPIRE, à condition de ne pas fournir
     le thésaurus « GEMET – INSPIRE themes, version 1.0 » du, 2008-06-01.
     </p>
     <p>
-    Le thésaurus GEMET des thèmes INSPIRE est multilingue. Le langage dans lequel les 
+    Le thésaurus GEMET des thèmes INSPIRE est multilingue. Le langage dans lequel les
     thèmes INSPIRE sont exprimés doit donc concorder avec le ou les langages des métadonnées.
     Cet élément est répétable
     </p>
     <p>
-    Les séries de données peuvent correspondre à plusieurs thèmes, et le règlement autorise 
-    les rattachements multiples. Toutefois, la conformité aux spécifications INSPIRE est 
+    Les séries de données peuvent correspondre à plusieurs thèmes, et le règlement autorise
+    les rattachements multiples. Toutefois, la conformité aux spécifications INSPIRE est
     établie thème par thème. Cela incite à un rattachement à un thème unique.
     </p>
     <p>
-    Il est possible de fournir des mots-clés complémentaires en associant une valeur 
-    de mot-clé ou un ensemble de valeurs de mots-clés à des vocabulaires contrôlés 
+    Il est possible de fournir des mots-clés complémentaires en associant une valeur
+    de mot-clé ou un ensemble de valeurs de mots-clés à des vocabulaires contrôlés
     définissant ces mots-clés.</help>
     <ul>
       <li>Les valeurs des mots clés sont du texte libre.</li>
-      <li>Chaque vocabulaire contrôlé est défini par au moins un titre sous forme d’une 
-      chaîne de caractères et une date de publication, révision ou 
+      <li>Chaque vocabulaire contrôlé est défini par au moins un titre sous forme d’une
+      chaîne de caractères et une date de publication, révision ou
       de création du vocabulaire.</li>
     </ul>
     </p>]]></help>
             <help for="france"><![CDATA[<b>Recommandations :</b>
     <ul>
     <li>Il est recommandé de ne rattacher une ressource qu’à un seul thème INSPIRE.</li>
-    <li>INSPIRE n’identifie pas explicitement d’élément de métadonnées « Thème INSPIRE » 
-    mais induit son existence de part les exigences formulées de manière générale sur 
-    la présence de mots-clés. La recommandation est donc de considérer le thème INSPIRE 
+    <li>INSPIRE n’identifie pas explicitement d’élément de métadonnées « Thème INSPIRE »
+    mais induit son existence de part les exigences formulées de manière générale sur
+    la présence de mots-clés. La recommandation est donc de considérer le thème INSPIRE
     comme un élément à part entière.</li>
-    <li>Il est recommandé de ne pas fournir cet élément de métadonnées pour les ressources 
-    qui ne sont pas dans le champ d’INSPIRE (exemple des cartes scannées, données 
-    d’accidentologie , par exemple) étant entendu que pour les ressources dans le 
+    <li>Il est recommandé de ne pas fournir cet élément de métadonnées pour les ressources
+    qui ne sont pas dans le champ d’INSPIRE (exemple des cartes scannées, données
+    d’accidentologie , par exemple) étant entendu que pour les ressources dans le
     champ d’INSPIRE, cet élément est obligatoire.
     </li>
     <li>Dans le cadre d’un service de téléchargement, il est recommandé de préciser en
@@ -4038,8 +4038,8 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
           <element name="gmd:equivalentScale" id="60.0">
             <label>Echelle comparative</label>
             <description>Degré de détail exprimé avec l'échelle d'un graphique ou carte papier comparable</description>
-            <help>Degré de spécification exprimé au moyen de l'échelle d'une carte ou d'un graphique analogique comparable. 
-      Cette échelle peut également indiquer la précision de la saisie dans le cas d'un jeu de données vectorielles. 
+            <help>Degré de spécification exprimé au moyen de l'échelle d'une carte ou d'un graphique analogique comparable.
+      Cette échelle peut également indiquer la précision de la saisie dans le cas d'un jeu de données vectorielles.
       Cette information est du type MD_RepresentativeFraction et est gérée dans la classe du même nom où de plus amples renseignements peuvent être obtenus.</help>
             <condition>Condition</condition>
           </element>
@@ -4109,7 +4109,7 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
     <li>un intervalle de dates exprimé par la date de début et la date de fin de l’intervalle,</li>
     <li>un mélange de dates et d’intervalles.</li>
     </ul>
-    
+
     Une date de référence du service est une information représentative de la vie du service
 (création, publication, révision), tandis que l’étendue temporelle fournit une indication de la
 période de temps couverte par le service.]]></help>
@@ -4272,7 +4272,7 @@ période de temps couverte par le service.]]></help>
             <help>Domaine auquel les métadonnées se rapportent. La catégorie d'informations à laquelle l'entité se réfère peut être indiquée dans la liste des codes (exemple : attributs, objets géométriques, jeu de données, etc.). "Jeu de données" est le paramètre par défaut.</help>
             <condition>Par défaut: "jeu de données"</condition>
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
-    Cet élément de métadonnées renseigne le type de ressource décrit par la métadonnée. 
+    Cet élément de métadonnées renseigne le type de ressource décrit par la métadonnée.
     Seuls trois types de ressources sont dans le champ de la directive INSPIRE :
     <ul>
       <li>Les séries de données géographiques,</li>
@@ -4281,13 +4281,13 @@ période de temps couverte par le service.]]></help>
     </ul>
     Cet élément est obligatoire et non répétable.
     <p>
-    Dans le cas de métadonnées de données, seuls les deux premiers cas sont applicables. 
-    La conformité des métadonnées à INSPIRE 
+    Dans le cas de métadonnées de données, seuls les deux premiers cas sont applicables.
+    La conformité des métadonnées à INSPIRE
     implique que chaque organisation concernée par la directive ait une réflexion en amont sur les
      ressources à documenter, et notamment sur le type de chaque ressource à documenter. Il n’est
-      pas interdit d’étendre cette liste de types de ressources pour les ressources qui sortiraient 
-      du cadre d’INSPIRE. Dans tous les cas, le type de ressource est une information qui doit être 
-      déterminée par l’organisation 
+      pas interdit d’étendre cette liste de types de ressources pour les ressources qui sortiraient
+      du cadre d’INSPIRE. Dans tous les cas, le type de ressource est une information qui doit être
+      déterminée par l’organisation
     responsable de la ressource avant d’initier la saisie de la fiche de métadonnées.
     </p>
    ]]></help>
@@ -4330,21 +4330,21 @@ période de temps couverte par le service.]]></help>
       <li>Il est constitué d’un {code} obligatoire (chaîne de caractères libre), éventuellement associé à un {espace de noms} (chaîne de caractères libre).</li>
     </ul>
     <p>
-    Il s’agit d’un identifiant créé pour identifier de manière unique la série de données décrite. 
-    Il n’y a qu’une seule ressource liée à cet identifiant. Aucun organisme dans la Communauté 
-    européenne ne peut utiliser créer un identifiant défini par un autre organisme pour une 
-    ressource différente. 
-    Il peut y avoir plusieurs identificateurs de ressource unique pour une série de données particulière. 
-    Exemple : évolutions (liées à une fusion) dans le nom de l’organisme. 
+    Il s’agit d’un identifiant créé pour identifier de manière unique la série de données décrite.
+    Il n’y a qu’une seule ressource liée à cet identifiant. Aucun organisme dans la Communauté
+    européenne ne peut utiliser créer un identifiant défini par un autre organisme pour une
+    ressource différente.
+    Il peut y avoir plusieurs identificateurs de ressource unique pour une série de données particulière.
+    Exemple : évolutions (liées à une fusion) dans le nom de l’organisme.
     Quels sont les usages de l’identifiant ? Dans INSPIRE, il sert à la traçabilité de la série
-    de données (l’objet conserve le même identifiant tout le long de son cycle de vie et cet identifiant 
-    ne peut jamais être repris pour une autre ressource)  et à la mise en place des services. 
+    de données (l’objet conserve le même identifiant tout le long de son cycle de vie et cet identifiant
+    ne peut jamais être repris pour une autre ressource)  et à la mise en place des services.
     Les gestionnaires de données doivent concevoir et créer cet identifiant dès la création de
      toute nouvelle ressource.</p>
     <p>L’importance de ce point est qu’il permet la liaison entre les métadonnées de service
      et celles de la série de données couplée. A terme, la solution sera la solution en A
-     des recommandations nationales. Si vous êtes en capacité de la mettre en oeuvre 
-     dès maintenant, c’est la meilleure solution. Sinon, nous vous proposons une solution intermédiaire qui 
+     des recommandations nationales. Si vous êtes en capacité de la mettre en oeuvre
+     dès maintenant, c’est la meilleure solution. Sinon, nous vous proposons une solution intermédiaire qui
      garantit néanmoins l’unicité. Ultérieurement, elle pourra permettre la mise en oeuvre
       de la première solution.</p>
       <p>
@@ -4359,10 +4359,10 @@ période de temps couverte par le service.]]></help>
             <help for="france"><![CDATA[<b>Recommandations :</b>
     <p>
       <b>Une adresse Internet : </b>
-      
+
       L’{espace de noms} permet de s’assurer de l’unicité du {code} en précisant le contexte dans lequel
        il est donné. (Par exemple : la donnée X de l’organisation Y. « Organisation Y » fait ici
-        office d’{espace de noms}.) Il existe des {code} construits ou calculés de manière 
+        office d’{espace de noms}.) Il existe des {code} construits ou calculés de manière
         à être uniques et qui ne nécessitent pas d’{espace de noms}.
      Il est recommandé que :
     <ul>
@@ -4370,19 +4370,19 @@ période de temps couverte par le service.]]></help>
        <li>cet URI soit également une URL (adresse internet) permettant d’accéder à la ressource (ou à ses métadonnées).</li>
     </ul>
     <b>Exemple : </b>http://www.ign.fr/bloc_identifiant_le_jeu_de_données
-    <p>Commentaire à la recommandation française nationale : 
-     Il s’agit de la fourniture d’une URI au format http, même si le but de l’identificateur n’est pas de localiser la ressource mais de l’identifier. 
+    <p>Commentaire à la recommandation française nationale :
+     Il s’agit de la fourniture d’une URI au format http, même si le but de l’identificateur n’est pas de localiser la ressource mais de l’identifier.
      Les gestionnaires de noms de domaine sur l’internet garantissent l’unicité du bloc organisme.
      Il est de la responsabilité du producteur de veiller à la permanence de cette URL.
     </p>
     </p>
     <p>
       <b>Une solution avec un identifiant non Internet : </b>
-      Mise en oeuvre d’un identifiant basé sur le numéro SIREN de l’INSEE, précédé par le code pays. 
+      Mise en oeuvre d’un identifiant basé sur le numéro SIREN de l’INSEE, précédé par le code pays.
       Le bloc identifiant l’organisme producteur sera constitué du code du pays et du code SIREN de l’organisme. Exemple : FRfr-243500139.
       Le bloc identifiant le jeu de données pourrait être issu d’une nomenclature, porter une date ou une version. Exemples : orthophoto2004, 35206plu20100612.
       Au final, par exemple : FRfr-243500139-35206plu20100612.
-      Il est reconnu qu‘il faut éviter les noms de services dans le bloc identifiant le jeu de données. Plus généralement, toutes les chaînes de caractères signifiantes (nom d’organismes...) sont à éviter car trop susceptibles de changer. De plus, il est recommandé de fournir l’identifiant en minuscule, et d’utiliser le tiret (-) en guise de séparateur. 
+      Il est reconnu qu‘il faut éviter les noms de services dans le bloc identifiant le jeu de données. Plus généralement, toutes les chaînes de caractères signifiantes (nom d’organismes...) sont à éviter car trop susceptibles de changer. De plus, il est recommandé de fournir l’identifiant en minuscule, et d’utiliser le tiret (-) en guise de séparateur.
       En cas d’d’absence de SIREN, une solution parallèle consiste à prendre le nom de domaine (celui de son site internet).
     </p>
    ]]></help>
@@ -4905,23 +4905,23 @@ période de temps couverte par le service.]]></help>
       Only relevant for France
       <helper editorMode="radio_withdesc">
       <option value="Pas de restriction d’accès public selon INSPIRE" title="Aucun des articles de la loi ne peut être invoqué pour justifier d’une restriction d’accès public.">Pas de restriction d’accès public selon INSPIRE</option>
-      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.a)" 
+      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.a)"
         title="La confidentialité des travaux des autorités publiques, lorsque cette confidentialité est prévue par la loi.">Confidentialité des travaux des autorités publiques</option>
-      <option value="L124-5-II-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.b)" 
+      <option value="L124-5-II-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.b)"
         title="Les relations internationales, la sécurité publique ou la défense nationale.">Relations internationales</option>
-      <option value="L124-5-II-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.c)" 
+      <option value="L124-5-II-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.c)"
         title="La bonne marche de la justice, la possibilité pour toute personne d’être jugée équitablement ou la capacité d’une autorité publique d’effectuer une enquête d’ordre pénal ou disciplinaire.">Bonne marche de la justice</option>
-      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.d)" 
+      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.d)"
         title="La confidentialité des informations commerciales ou industrielles, lorsque cette confidentialité est prévue par la législation nationale ou communautaire afin de protéger un intérêt économique légitime, notamment l’intérêt public lié à la préservation de la confidentialité des statistiques et du secret fiscal.">Confidentialité des informations commerciales ou industrielles</option>
-      <option value="L124-5-II-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.e)" 
+      <option value="L124-5-II-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.e)"
         title="Les droits de propriété intellectuelle.">Propriété intellectuelle</option>
-      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.f)" 
+      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.f)"
         title="La confidentialité des données à caractère personnel et/ou des fichiers concernant une personne physique lorsque cette personne n’a pas consenti à la divulgation de ces informations au public, lorsque la confidentialité de ce type d’information est prévue par la législation nationale ou communautaire.">Protection de la vie privée</option>
-      <option value="L124-4-I-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.g)" 
+      <option value="L124-4-I-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.g)"
         title="Les intérêts ou la protection de toute personne qui a fourni les informations demandées sur une base volontaire sans y être contrainte par la loi ou sans que la loi puisse l’y contraindre, à moins que cette personne n’ait consenti à la divulgation de ces données.">Protection des personnes</option>
-      <option value="L124-4-I-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.h)" 
+      <option value="L124-4-I-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.h)"
         title="La protection de l’environnement auquel ces informations ont trait, comme par exemple la localisation d’espèces rares.">Protection de l'environnement</option>
-      <option value="L127-8-IV du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 17.7)" 
+      <option value="L127-8-IV du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 17.7)"
         title="">L127-8-IV du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 17.7)</option>
     </helper>-->
           </element>
@@ -4958,8 +4958,8 @@ période de temps couverte par le service.]]></help>
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
     Degré de conformité de la ressource par rapport à la spécification citée ci-dessus.]]></help>
             <help for="france"><![CDATA[<b>Commentaire :</b>
-    Pour chaque spécification visée, le degré de conformité (conforme/non conforme/non évalué) 
-    doit être indiqué. Pour les autres spécifications, la valeur ne pourra être que 
+    Pour chaque spécification visée, le degré de conformité (conforme/non conforme/non évalué)
+    doit être indiqué. Pour les autres spécifications, la valeur ne pourra être que
     (conforme/ non conforme).
     <br/>
     En pratique, la valeur « non évaluée » n’est pas stockée dans les métadonnées.
@@ -4997,19 +4997,19 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE]]></help>
             <help>Identification de la personne (voire des personnes) ou de l'organisation (voire des organisations) responsable du jeu de données décrit et mode de communication avec elle. Cette personne ou ce service endosse un rôle (propriétaire, prestataire, gestionnaire, etc.) bien spécifique pouvant être sélectionné dans la liste proposée. Les données correspondantes de la personne ou du service sont gérées dans la classe CI_ResponsibleParty. Ce rôle peut également servir à l'affectation d'un jeu de données à une commune. Exemple : le rôle de "propriétaire" permet ici d'affecter un lot de la MO à la commune correspondante.</help>
             <help><![CDATA[<b>Organisation responsable</b>]]></help>
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
-    C’est la description de l’organisation responsable. Plusieurs 
-    organisations responsables peuvent être identifiées pour une ressource. 
-    Pour chacune d’entre elles, les deux éléments de métadonnées suivants 
+    C’est la description de l’organisation responsable. Plusieurs
+    organisations responsables peuvent être identifiées pour une ressource.
+    Pour chacune d’entre elles, les deux éléments de métadonnées suivants
     doivent être renseignés.
-    Il est obligatoire de fournir au moins le nom de l’organisation 
-    (chaîne de caractères) et une adresse de messagerie électronique 
+    Il est obligatoire de fournir au moins le nom de l’organisation
+    (chaîne de caractères) et une adresse de messagerie électronique
     (chaîne de caractères).]]></help>
             <help for="france"><![CDATA[<b>Recommandations :</b>
     <ul>
-    <li>Il est déconseillé de fournir une adresse de messagerie électronique 
-    nominative, ceci afin de pouvoir plus facilement gérer les changements 
+    <li>Il est déconseillé de fournir une adresse de messagerie électronique
+    nominative, ceci afin de pouvoir plus facilement gérer les changements
     de fonctions des personnes impliquées.</li>
-    <li>Les adresses trop générique (de type « accueil@macomcom.fr » 
+    <li>Les adresses trop générique (de type « accueil@macomcom.fr »
     ou « contact@macomcom.fr »  sont également à éviter.</li>
     </ul>
     <b>Commentaire :</b>
@@ -5182,31 +5182,31 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE]]></help>
     ou les deux :
     <ul>
     <li>Les conditions d’accès et d’utilisation décrivant les conditions applicables à l’accès
-    et à l’utilisation des séries et des services de données géographiques, et, le cas échéant, 
-    les frais correspondants. Si aucune condition ne s’applique à l’accès à la ressource et à 
-    son utilisation, on utilisera la mention «aucune condition ne s’applique». Si les conditions 
+    et à l’utilisation des séries et des services de données géographiques, et, le cas échéant,
+    les frais correspondants. Si aucune condition ne s’applique à l’accès à la ressource et à
+    son utilisation, on utilisera la mention «aucune condition ne s’applique». Si les conditions
     sont inconnues, on utilisera la mention «conditions inconnues».</li>
-    <li>Les limitations d’accès public c’est-à-dire les informations sur les restrictions à l’accès 
-    public et les raisons de ces restrictions lorsque les États membres restreignent l’accès public 
-    aux séries et aux services de données géographiques au titre de l'article L127-6 du code 
-    de l’environnement. S’il n’y a pas de restrictions concernant l’accès public, cet élément 
+    <li>Les limitations d’accès public c’est-à-dire les informations sur les restrictions à l’accès
+    public et les raisons de ces restrictions lorsque les États membres restreignent l’accès public
+    aux séries et aux services de données géographiques au titre de l'article L127-6 du code
+    de l’environnement. S’il n’y a pas de restrictions concernant l’accès public, cet élément
     de métadonnées l’indiquera.</li>
     </ul>
-    
+
     S’il n’y a pas de restrictions concernant l’accès public, cet élément de métadonnées
 l’indiquera.
     <ul>
-    <li>Il doit y avoir au moins une condition contrainte en matière d’accès et d’utilisation 
+    <li>Il doit y avoir au moins une condition contrainte en matière d’accès et d’utilisation
     exprimée pour chaque ressource.</li>
-    <li>Au travers des différentes contraintes exprimées, il doit y avoir au moins l’expression 
-    d’une condition d’accès et d’utilisation et d’une indication sur les limitations 
+    <li>Au travers des différentes contraintes exprimées, il doit y avoir au moins l’expression
+    d’une condition d’accès et d’utilisation et d’une indication sur les limitations
     d’accès public.</li>
     </ul>]]></help>
             <help for="france"><![CDATA[<b>Commentaire :</b>
-    Il faut tout d’abord remarquer que ces deux éléments sont sémantiquement liés. En effet, 
-    dans le cas où une restriction est applicable à l’accès public, le champ définissant les 
-    conditions applicables à l’accès et à l’utilisation de la ressource sera fortement 
-    influencé par la restriction et définira dans quel cadre il est possible ou non d’obtenir 
+    Il faut tout d’abord remarquer que ces deux éléments sont sémantiquement liés. En effet,
+    dans le cas où une restriction est applicable à l’accès public, le champ définissant les
+    conditions applicables à l’accès et à l’utilisation de la ressource sera fortement
+    influencé par la restriction et définira dans quel cadre il est possible ou non d’obtenir
     la ressource.
     <br/>
     Les conditions d’accès et d’utilisation servent, par exemple, dans le cas de services payants
@@ -5295,8 +5295,8 @@ diffusion restreinte.]]></help>
           <element name="gmd:series" id="369.0">
             <label>Séries</label>
             <description>Information sur la série (ou sur le jeu de données global) de laquelle le jeu de données est une partie</description>
-            <help>Information relative à la série ou au jeu de données composé dont le jeu de données est issu. 
-      Exemple : la série de toutes les cartes nationales au 1:25'000. 
+            <help>Information relative à la série ou au jeu de données composé dont le jeu de données est issu.
+      Exemple : la série de toutes les cartes nationales au 1:25'000.
       Ces informations sont du type CI_Series et sont gérées dans la classe du même nom.</help>
             <condition />
           </element>
@@ -5486,7 +5486,7 @@ diffusion restreinte.]]></help>
             <help>
               <!-- [2] -->
               Nom caractéristique et souvent unique sous lequel la ressource est connue.
-      
+
       Titre/nom. Ces informations sont du type PT_FreeText et sont gérées dans la classe du même nom.
             </help>
             <helper editorMode="radio_linebreak" displayIf="ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/*[name() = 'gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']">
@@ -5513,18 +5513,18 @@ diffusion restreinte.]]></help>
               <option value="Technical Guidance for the implementation of INSPIRE Download Services – level3 - v3.0">Guide INSPIRE sur les services de téléchargement – classe de conformité 3 (WFS direct)</option>
             </helper>
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE sur la conformité:</b>
-    Les exigences de conformité seront remplies au moyen des éléments 
+    Les exigences de conformité seront remplies au moyen des éléments
     de métadonnées « spécification » et « degré ».]]></help>
             <help for="france"><![CDATA[<b>Recommandations pour les séries de données:</b>
     <ul>
-    <li>Les règlements Interopérabilité INSPIRE doivent obligatoirement 
+    <li>Les règlements Interopérabilité INSPIRE doivent obligatoirement
     faire partie des spécifications visées.</li>
-    <li>Il est recommandé d’exprimer la conformité vis-à-vis du guide technique du 
-    thème considéré (voir Annexe B). La spécification référencée ici doit correspondre au 
+    <li>Il est recommandé d’exprimer la conformité vis-à-vis du guide technique du
+    thème considéré (voir Annexe B). La spécification référencée ici doit correspondre au
     thème INSPIRE indiqué dans les mots-clés.</li>
     <li>En règle générale, il est conseillé de découper sa ressource en thèmes, afin de ne devoir se conformer qu’à un modèle de données INSPIRE à la fois (Par exemple, la BD Carto de l’IGN a été découpé en plusieurs ensembles de séries : BD Carto – Hydrographie, BD Carto – Réseau routier, BD Carto – Parcelles cadastrales, etc.).</li>
     </ul>
-    
+
     <b>Recommandations pour les services:</b>
     <ul>
     <li>Un des règlements Services en Réseau INSPIRE doit
@@ -5533,17 +5533,17 @@ obligatoirement faire partie des spécifications visées.</li>
 classe de conformité définie par le guide technique INSPIRE correspondant au
 service considéré</li>
     </ul>
-    
+
     <b>Commentaire :</b>
-    La conformité est une déclaration de la seule responsabilité du producteur et il n’est pas 
+    La conformité est une déclaration de la seule responsabilité du producteur et il n’est pas
     prévu de contrôler, en France, cette déclaration.
     <br/>
     Une série de données conforme remplit toutes les conditions posées par la spécification visée (voir 1 Spécification).
     Ces deux éléments de métadonnées (spécification et degré) expriment la conformité des données (et non des métadonnées !) à une spécification.
-    La première exigence de conformité vise la mise en œuvre des règlements européens dits 
-    d’interopérabilité. La référence à des spécifications différentes comme celles du CNIG (PLU...) 
-    ou de la COVADIS est possible en complément. Concrètement, cela revient à créer une série de 
-    données à partir du gabarit de série de données fourni, par exemple, par la COVADIS, ou à 
+    La première exigence de conformité vise la mise en œuvre des règlements européens dits
+    d’interopérabilité. La référence à des spécifications différentes comme celles du CNIG (PLU...)
+    ou de la COVADIS est possible en complément. Concrètement, cela revient à créer une série de
+    données à partir du gabarit de série de données fourni, par exemple, par la COVADIS, ou à
     comparer une série de données particulière au dit gabarit.
     <br/>
     Pour les services, la première exigence de conformité vise la mise en œuvre du Règlement (CE) no 976/2009
@@ -5557,14 +5557,14 @@ celles des scénarios d’échange du Sandre est possible en complément.
     Cet élément donne la référence des règles de mise en œuvre adoptées en vertu de l’article 7, paragraphe 1, de la directive 2007/2/CE ou des autres spécifications auxquelles la ressource est conforme.
     <ul>
     <li>Il est possible de renseigner la conformité à plusieurs spécifications de données. </li>
-    <li>Cette indication inclut au moins le titre et une date de référence (date de 
-    publication, date de dernière révision ou de création) des spécifications auxquelles la 
+    <li>Cette indication inclut au moins le titre et une date de référence (date de
+    publication, date de dernière révision ou de création) des spécifications auxquelles la
     ressource est conforme. </li>
     </ul>]]></help>
             <help for="france"><![CDATA[<b>Commentaire :</b>
-    L’article 7, paragraphe 1, de la directive 2007/2/CE correspond aux modalités 
-    techniques de l’interopérabilité : il s’agit des règlements relatifs à l’interopérabilité 
-    dont un seul a été publié à ce jour : règlement n°1089/2010 du 23 novembre 2010, 
+    L’article 7, paragraphe 1, de la directive 2007/2/CE correspond aux modalités
+    techniques de l’interopérabilité : il s’agit des règlements relatifs à l’interopérabilité
+    dont un seul a été publié à ce jour : règlement n°1089/2010 du 23 novembre 2010,
     modifié et complété par le règlement n 102/2011 du 4 février 2011.]]></help>
             <help><![CDATA[Exemple :
     <ul>
@@ -5609,14 +5609,14 @@ de partage avec les utilisateurs ;</li>
 </ul>
    ]]></help>
                
-            <help><![CDATA[<b>Exemple pour un service de visualisation:</b> 
+            <help><![CDATA[<b>Exemple pour un service de visualisation:</b>
       Service de visualisation cartographique (WMS) du référentiel hydrographique (BDCarTHAgE ®) Métropole, Service de visualisation cartographique (WMS) de Plan de Prévention du Risque
 Inondation de la vallée de l'Epte aval, Service d'accès à la carte Les sites Natura 2000 du Tarn.
 <br/>
-<b>Exemple pour un service de téléchargement:</b> 
+<b>Exemple pour un service de téléchargement:</b>
 Service de téléchargement simple des référentiels du Sandre, Service de téléchargement direct (WFS) du référentiel hydrographique (BD CarTHAgE®) national
 <br/>
-<b>Exemple pour un service de données géographiques:</b> 
+<b>Exemple pour un service de données géographiques:</b>
 Service de chaînage des éléments du référentiel hydrographique (BD CarTHAgE®) national (WPS)
 <br/>
 <b>Exemple pour un service de transformation:</b> Service de transformation de coordonnées de
@@ -5624,13 +5624,13 @@ l’IGN (WPS)
 
    ]]></help>
                
-            <help><![CDATA[<b>Contre-exemple :</b> 
+            <help><![CDATA[<b>Contre-exemple :</b>
       <ul>
       <li>Intitulé non compréhensible : Service d'accès à la carte N_APPB_ZINF_S_R74</li>
       <li>Acronyme : Service d'accès à la carte ZICO en Limousin</li>
       <li>Intitulé de la ressource servie, et non du service : Les sites Natura 2000 du Tarn</li>
       </ul>
-      
+
    ]]></help>
             <condition>Obligatoire</condition>
           </element>
@@ -5640,17 +5640,17 @@ l’IGN (WPS)
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
     L’intitulé (ou le titre) de la ressource doit être un nom caractéristique
      et souvent unique sous lequel la ressource est connue.
-    Cet élément est une chaîne de caractères obligatoire (texte libre) 
+    Cet élément est une chaîne de caractères obligatoire (texte libre)
     et ne peut pas être répété.
     Ceci signifie que le titre doit être suffisamment précis pour décrire
-     le contenu des données. Il ne faut pas oublier que des milliers de 
-     métadonnées provenant d’organisations différentes apparaissent sur 
+     le contenu des données. Il ne faut pas oublier que des milliers de
+     métadonnées provenant d’organisations différentes apparaissent sur
      le Géocatalogue national  (et plus globalement à l’échelle européenne).
-      Par exemple, il est recommandé de préciser le territoire concerné par 
-      la ressource. En effet, le titre Plan Local d’Urbanisme tout seul ne 
-      permettra pas à l’internaute de trouver facilement la ressource qu’il 
-      recherche. Autre exemple, on trouve sur le Géocatalogue une métadonnée 
-      intitulée Cartes utiles. Ce titre n’est ni caractéristique ni unique 
+      Par exemple, il est recommandé de préciser le territoire concerné par
+      la ressource. En effet, le titre Plan Local d’Urbanisme tout seul ne
+      permettra pas à l’internaute de trouver facilement la ressource qu’il
+      recherche. Autre exemple, on trouve sur le Géocatalogue une métadonnée
+      intitulée Cartes utiles. Ce titre n’est ni caractéristique ni unique
       et ne permet pas à l’utilisateur de comprendre ce dont traite la donnée.
    ]]></help>
                
@@ -5660,7 +5660,7 @@ l’IGN (WPS)
     <li>Le recours à une indication de version ou millésime est justifié lorsqu’il existe (ou existera) plusieurs versions qui cohabitent (ou cohabiteront) dans le catalogue.</li>
     <li>Il est recommandé de ne pas faire figurer les parties responsables c’est-à-dire les organisations exerçant une quelconque responsabilité (gestionnaire, distributeur, …).</li>
     <li>Il est attendu un texte significatif désignant la ressource. Tout texte vide (ensemble de caractères d’espacement) ou de type Rédaction réservée, Non renseigné, … ne permet pas de satisfaire l’obligation INSPIRE.</li>
-    <li>Il est recommandé de ne pas indiquer uniquement l’acronyme de la ressource (àa moins de l’expliciter dans le résumé). Deux approches sont conseillées et sont potentiellement complémentaires : 
+    <li>Il est recommandé de ne pas indiquer uniquement l’acronyme de la ressource (àa moins de l’expliciter dans le résumé). Deux approches sont conseillées et sont potentiellement complémentaires :
     <ul>
       <li>L’acronyme peut être indiqué entre parenthèses dans le titre avec un objectif de partage avec les utilisateurs ; </li>
       <li>L’acronyme peut être exprimé dans le résumé.</li>
@@ -5689,10 +5689,10 @@ l’IGN (WPS)
           <element name="gmd:topicCategory" id="41.0">
             <label>Catégorie ISO</label>
             <description>Thème(s) principal(aux) du jeu de données</description>
-            <help>Thème principal (ou thèmes principaux) du jeu de données. 
-      Ce thème ou groupe de thèmes permet de trouver un jeu de données. 
-      Cet attribut se fondant sur une liste de codes de la norme ISO (MD_TopicCategoryCode), une recherche standardisée 
-      par thèmes est possible au plan international. 
+            <help>Thème principal (ou thèmes principaux) du jeu de données.
+      Ce thème ou groupe de thèmes permet de trouver un jeu de données.
+      Cet attribut se fondant sur une liste de codes de la norme ISO (MD_TopicCategoryCode), une recherche standardisée
+      par thèmes est possible au plan international.
       Les thèmes suivants sont répertoriés : agriculture, biologie, limites, climatologie et météorologie, économie, indications altimétriques, environnement, sciences de la Terre, santé, images et cartes de base, armée et renseignement, cours d'eau intérieurs, indications de lieux, mers et océans, aménagement du territoire et cadastre, société, subdivisions, transport, infrastructures de transport.</help>
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
     La catégorie thématique est un système de classification de haut niveau qui permet de regrouper et de chercher par thème les ressources de données géographiques disponibles.
@@ -6570,9 +6570,9 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
           <element name="gts:TM_PeriodDuration">
             <label>Période</label>
             <description>Le type durée permet de définir un interval de temps.
-      
+
       Le format est le suivant "PnYnMnDTnHnMnS" :
-      
+
       * P Période (Obligatoire)
       * nY : nombre d'années
       * nM : nombre de mois
@@ -9598,7 +9598,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
           <element name="gmd:DQ_CompletenessCommission" id="109.0">
             <label>Données excédentaires</label>
             <description>Classe pour la description des données excédentaires présentes dans le jeu de donnée définit par le domaine d'applicabilité</description>
-            <help>Classe destinée à la description des données surabondantes présentes dans le jeu de données, conformément au champ d'application défini. 
+            <help>Classe destinée à la description des données surabondantes présentes dans le jeu de données, conformément au champ d'application défini.
       Exemple : Un bâtiment a été reporté deux fois, Un cours d’eau a été représenté alors qu’il n’aurait pas dû être pris en compte.</help>
             <condition />
           </element>
@@ -9626,7 +9626,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <label>Qualité des données</label>
             <description>Classe avec l'information sur la qualité pour les données spécifiées par un domaine de qualité des données</description>
             <help>
-              Classe comportant des informations relatives à la qualité du jeu de données. La qualité des données est exprimée par les éléments de métadonnées des classes DQ_DataQuality, LI_Lineage et DQ_Legislation. l'étendue des indications de qualité est définie et décrite dans la classe du champ d'application (DQ_Scope). La filiation ou la provenance des données est décrite dans la classe LI_Lineage qui est une agrégation des deux classes LI_Source (indications concernant les données source) et LI_ProcessStep (informations relatives aux étapes de traitement). Les différentes étapes de traitement peuvent à leur tour présenter une relation avec les données source. "+lineage" est obligatoire si "scope.DQ_Scope.level" = "Jeu de données". 
+              Classe comportant des informations relatives à la qualité du jeu de données. La qualité des données est exprimée par les éléments de métadonnées des classes DQ_DataQuality, LI_Lineage et DQ_Legislation. l'étendue des indications de qualité est définie et décrite dans la classe du champ d'application (DQ_Scope). La filiation ou la provenance des données est décrite dans la classe LI_Lineage qui est une agrégation des deux classes LI_Source (indications concernant les données source) et LI_ProcessStep (informations relatives aux étapes de traitement). Les différentes étapes de traitement peuvent à leur tour présenter une relation avec les données source. "+lineage" est obligatoire si "scope.DQ_Scope.level" = "Jeu de données".
       Les prescriptions de qualité applicables au jeu de données à décrire figurent dans la classe DQ_Legislation.
               <!-- Réglement 1205-2008-->
               La totalité des caractéristiques d’un produit qui lui confèrent l’aptitude à satisfaire des besoins exprimés ou
@@ -9716,8 +9716,8 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
     Cet élément n'est obligatoire que si la série de données comprend des types issus du modèle générique de réseau («Generic Network Model») et
     n’assure pas la topologie du réseau (c'est-à-dire à la connectivité des lignes centrales).]]></help>
             <help for="france"><![CDATA[<b>Commentaire :</b>
-    En pratique, ne sont concernées que les données respectant les spécifications de données INSPIRE et rentrant 
-    dans un cas de modèle de réseau (hydrographie, transport, services d’utilité publique). 
+    En pratique, ne sont concernées que les données respectant les spécifications de données INSPIRE et rentrant
+    dans un cas de modèle de réseau (hydrographie, transport, services d’utilité publique).
     Les guides accompagnant les spécifications des données INSPIRE proposent quelques exemples :
     <ul>
     <li>nombre de superpositions invalides,</li>
@@ -9744,13 +9744,13 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <label>Emprise géographique</label>
             <description>Type de données pour la description de la position géographique du jeu de données. Il s'agit ici d'une référence approximative de telle sorte qu''il n''est pas nécessaire de spécifier le système de coordonnées</description>
             <help>Type de données destiné à la description de la position géographique du jeu de données. Il s'agit ici de la définition d'une enveloppe sommaire (délimitation en latitude et en longitude). Des informations supplémentaires peuvent être trouvées sous EX_Extent et EX_GeographicExtent.</help>
-            <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b> Étendue de la ressource dans l’espace 
+            <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b> Étendue de la ressource dans l’espace
       géographique, exprimée sous la forme d’un rectangle de délimitation
     <ul>
-      <li>Ce rectangle de délimitation est défini par les longitudes est et ouest et les 
-      latitudes sud et nord en degrés décimaux, avec une précision d’au moins deux chiffres 
+      <li>Ce rectangle de délimitation est défini par les longitudes est et ouest et les
+      latitudes sud et nord en degrés décimaux, avec une précision d’au moins deux chiffres
       après la virgule.</li>
-      <li>Les coordonnées du rectangle de délimitation sont exprimées dans un système de 
+      <li>Les coordonnées du rectangle de délimitation sont exprimées dans un système de
       coordonnées géodésique de référence définissant le méridien de Greenwich comme méridien
       d’origine.</li>
       <li>Cet élément répétable est obligatoire.</li>
@@ -9768,8 +9768,8 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
 responsable du service.</li>
     </ul>
     <b>Commentaire :</b>
-    Attention, certaines cartes IGN comportent deux systèmes de coordonnées géographiques, basés, 
-    l’un sur le méridien de Paris, l’autre sur le méridien de Greenwich. Ne pas se tromper de système. 
+    Attention, certaines cartes IGN comportent deux systèmes de coordonnées géographiques, basés,
+    l’un sur le méridien de Paris, l’autre sur le méridien de Greenwich. Ne pas se tromper de système.
     L’ordre dans lequel sont fournies les coordonnées n’est pas signifiant.]]></help>
             <help><![CDATA[Exemple :
     <ul>
@@ -9820,8 +9820,8 @@ responsable du service.</li>
             <label>Généalogie, provenance</label>
             <description>Classe contenant l'information sur les événements ou les données sources utilisées pour la construction des données</description>
             <help>
-              Classe contenant des informations relatives à la provenance et au processus de génération du jeu de données. 
-      Ces indications font partie intégrante des informations sur la qualité. 
+              Classe contenant des informations relatives à la provenance et au processus de génération du jeu de données.
+      Ces indications font partie intégrante des informations sur la qualité.
       Des informations complémentaires peuvent être trouvées sous DQ_Dataquality.
               <!-- Réglement 1205-2008-->
               L’historique d’une série de données et son cycle de vie, depuis sa collecte et son acquisition jusqu’à sa
@@ -10122,7 +10122,7 @@ responsable du service.</li>
     <ul>
       <li>Au moins un des liens doit être public (et non pointer vers un intranet).</li>
       <li>Il est recommandé de renseigner cet élément avec un lien sur un enregistrement de métadonnées décrivant plus complètement
-      la ressource ou à défaut avec un lien sur le site institutionnel d’un organisme responsable de la ressource. Les 
+      la ressource ou à défaut avec un lien sur le site institutionnel d’un organisme responsable de la ressource. Les
       deux types de lien peuvent être fournis en profitant du caractère répétable de l’élément.</li>
       <li>La forme de cette information sera de préférence une URL.</li>
       <li>Pour les services, le localisateur de la ressource devra être :</li>
@@ -10375,13 +10375,13 @@ de métadonnées de données « BD Carthage métropole »]]></help>
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
     Est l’encodage de caractères utilisé dans la série de données.
     Cet élément n’est obligatoire (pour les données de l’Annexe 1) que si l’encodage utilisé n’est pas basé sur UTF-8. Il ne peut pas être répété.
-    
+
     <p>
     Dans le cadre de données ne suivant pas les spécifications de données INSPIRE, l’encodage des jeux de caractères utilisé dans les données est rarement UTF-8.
     Le jeu de caractères utilisé dans les données peut dépendre notamment du poste de travail du producteur (logiciel, système d’exploitation et du gestionnaire de la base de données). </help>
     </p>]]></help>
             <help for="france"><![CDATA[<b>Recommandations :</b>
-    Même si le jeu de caractère de la donnée est UTF-8, le préciser. 
+    Même si le jeu de caractère de la donnée est UTF-8, le préciser.
     Cette information, purement technique, est disponible auprès de votre administrateur de données.]]></help>
             <condition>Par défaut UTF-8</condition>
           </element>
@@ -10727,8 +10727,8 @@ date de mise en ligne du service, en tant que date de publication.
     </ul>
     <b>Commentaire :</b>
     Une date de référence de la ressource est une information représentative de la vie de la ressource (création, publication, révision), tandis que l’étendue temporelle fournit une indication de la  période de temps couverte par la ressource, ce qui est un indicateur de l’actualité de la ressource.
-    La date de dernière révision n’a de sens que si elle se distingue de la date de création. Cet élément de métadonnées n'est obligatoire actuellement que pour les 
-    données INSPIRE de l’Annexe 1. Toutefois, il est de bonne pratique 
+    La date de dernière révision n’a de sens que si elle se distingue de la date de création. Cet élément de métadonnées n'est obligatoire actuellement que pour les
+    données INSPIRE de l’Annexe 1. Toutefois, il est de bonne pratique
     de le noter autant que possible.]]></help>
             <help><![CDATA[Exemples :
     <ul>
@@ -10766,7 +10766,7 @@ date de mise en ligne du service, en tant que date de publication.
     <description>Date et heure, ou période, à laquelle l'étape de processus s'est réalisée</description>
     <help>Date à laquelle ou période au sein de laquelle le processus de traitement a été effectué. Indication en format horaire jj.mm.aaaa/ hh.mm.ss</help>
     <condition/>
-    
+
   </element>-->
           <element name="gmd:dateTime" id="89.0" context="gmd:LI_ProcessStep">
             <label>Période du processus</label>
@@ -10862,7 +10862,7 @@ date de mise en ligne du service, en tant que date de publication.
             <description>Catégorie, type et source de référence des mots clés</description>
             <help>
               En Europe, si la ressource est une série de données géographiques ou un ensemble de séries de données géographiques, il
-      convient de fournir au moins un mot clé du thésaurus multilingue de l’environnement (GEMET, General Environ­mental Multi-lingual Thesaurus) 
+      convient de fournir au moins un mot clé du thésaurus multilingue de l’environnement (GEMET, General Environ­mental Multi-lingual Thesaurus)
       décrivant le thème dont relèvent les données géographiques, conformément aux
       définitions des annexes I, II ou III de la directive 2007/2/CE.
               <!-- [2] -->
@@ -10870,14 +10870,14 @@ date de mise en ligne du service, en tant que date de publication.
             </help>
             <condition />
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
-    La catégorie thématique étant trop imprécise pour des recherches détaillées, 
+    La catégorie thématique étant trop imprécise pour des recherches détaillées,
     les mots clés permettent d’affiner la recherche en texte intégral et permettent
     une recherche structurée par mot clé.
     <ul>
       <li>Si le mot clé provient d’un vocabulaire contrôlé (thésaurus), le nom et la
       date de publication de celui-ci doivent être précisés.</li>
-      <li>Il est obligatoire pour les données (séries et ensembles de séries) dans 
-      le champ d’INSPIRE de fournir au moins un mot clé précisant le thème INSPIRE 
+      <li>Il est obligatoire pour les données (séries et ensembles de séries) dans
+      le champ d’INSPIRE de fournir au moins un mot clé précisant le thème INSPIRE
       concerné par la donnée, comme défini dans le thésaurus GEMET des thèmes INSPIRE
       (« GEMET – INSPIRE themes, version 1.0 », du 2008-06-01, cf. http://www.eionet.europa.eu/gemet/inspire_themes?langcode=fr).</li>
       <li>Il est obligatoire pour les services dans le champ d’INSPIRE de fournir au moins un
@@ -10887,7 +10887,7 @@ métadonnées INSPIRE.</li>
     </ul>
     Pour plus d’information, voir le texte exact en partie D2.3 du règlement.
     <p>
-    En résumé, il est donc demandé un jeu de mots-clés obligatoire : le ou les thèmes INSPIRE, 
+    En résumé, il est donc demandé un jeu de mots-clés obligatoire : le ou les thèmes INSPIRE,
     et il est possible de fournir des mots complémentaires.
     <br/>
     Pour les métadonnées de service, il est donc demandé un jeu de mots-clés obligatoire : la classification du service
@@ -10895,47 +10895,47 @@ dans la taxonomie des services de la partie D.4 du règlement INSPIRE, et il est
 fournir des mots complémentaires.
     </p>
     <p>
-    Attention, c’est la présence du thème INSPIRE, associé au thésaurus GEMET-INSPIRE themes, 
-    qui est prise en compte pour distinguer des métadonnées relevant de la Directive INSPIRE 
-    de métadonnées décrivant des ressources hors du champ d’INSPIRE. Dans le cas de données 
-    sortant du cadre d’INSPIRE il est donc indispensable de ne pas renseigner le thème INSPIRE, 
-    et donc de ne pas utiliser le thésaurus « GEMET – INSPIRE themes, version 1.0 » du, 
+    Attention, c’est la présence du thème INSPIRE, associé au thésaurus GEMET-INSPIRE themes,
+    qui est prise en compte pour distinguer des métadonnées relevant de la Directive INSPIRE
+    de métadonnées décrivant des ressources hors du champ d’INSPIRE. Dans le cas de données
+    sortant du cadre d’INSPIRE il est donc indispensable de ne pas renseigner le thème INSPIRE,
+    et donc de ne pas utiliser le thésaurus « GEMET – INSPIRE themes, version 1.0 » du,
     2008-06-01 ».
-    Comme montré dans l’exemple ci-dessus, les valeurs des thèmes INSPIRE peuvent être 
-    utilisées si nécessaire pour des données non INSPIRE, à condition de ne pas fournir 
+    Comme montré dans l’exemple ci-dessus, les valeurs des thèmes INSPIRE peuvent être
+    utilisées si nécessaire pour des données non INSPIRE, à condition de ne pas fournir
     le thésaurus « GEMET – INSPIRE themes, version 1.0 » du, 2008-06-01.
     </p>
     <p>
-    Le thésaurus GEMET des thèmes INSPIRE est multilingue. Le langage dans lequel les 
+    Le thésaurus GEMET des thèmes INSPIRE est multilingue. Le langage dans lequel les
     thèmes INSPIRE sont exprimés doit donc concorder avec le ou les langages des métadonnées.
     Cet élément est répétable
     </p>
     <p>
-    Les séries de données peuvent correspondre à plusieurs thèmes, et le règlement autorise 
-    les rattachements multiples. Toutefois, la conformité aux spécifications INSPIRE est 
+    Les séries de données peuvent correspondre à plusieurs thèmes, et le règlement autorise
+    les rattachements multiples. Toutefois, la conformité aux spécifications INSPIRE est
     établie thème par thème. Cela incite à un rattachement à un thème unique.
     </p>
     <p>
-    Il est possible de fournir des mots-clés complémentaires en associant une valeur 
-    de mot-clé ou un ensemble de valeurs de mots-clés à des vocabulaires contrôlés 
+    Il est possible de fournir des mots-clés complémentaires en associant une valeur
+    de mot-clé ou un ensemble de valeurs de mots-clés à des vocabulaires contrôlés
     définissant ces mots-clés.</help>
     <ul>
       <li>Les valeurs des mots clés sont du texte libre.</li>
-      <li>Chaque vocabulaire contrôlé est défini par au moins un titre sous forme d’une 
-      chaîne de caractères et une date de publication, révision ou 
+      <li>Chaque vocabulaire contrôlé est défini par au moins un titre sous forme d’une
+      chaîne de caractères et une date de publication, révision ou
       de création du vocabulaire.</li>
     </ul>
     </p>]]></help>
             <help for="france"><![CDATA[<b>Recommandations :</b>
     <ul>
     <li>Il est recommandé de ne rattacher une ressource qu’à un seul thème INSPIRE.</li>
-    <li>INSPIRE n’identifie pas explicitement d’élément de métadonnées « Thème INSPIRE » 
-    mais induit son existence de part les exigences formulées de manière générale sur 
-    la présence de mots-clés. La recommandation est donc de considérer le thème INSPIRE 
+    <li>INSPIRE n’identifie pas explicitement d’élément de métadonnées « Thème INSPIRE »
+    mais induit son existence de part les exigences formulées de manière générale sur
+    la présence de mots-clés. La recommandation est donc de considérer le thème INSPIRE
     comme un élément à part entière.</li>
-    <li>Il est recommandé de ne pas fournir cet élément de métadonnées pour les ressources 
-    qui ne sont pas dans le champ d’INSPIRE (exemple des cartes scannées, données 
-    d’accidentologie , par exemple) étant entendu que pour les ressources dans le 
+    <li>Il est recommandé de ne pas fournir cet élément de métadonnées pour les ressources
+    qui ne sont pas dans le champ d’INSPIRE (exemple des cartes scannées, données
+    d’accidentologie , par exemple) étant entendu que pour les ressources dans le
     champ d’INSPIRE, cet élément est obligatoire.
     </li>
     <li>Dans le cadre d’un service de téléchargement, il est recommandé de préciser en
@@ -11098,8 +11098,8 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
           <element name="gmd:equivalentScale" id="60.0">
             <label>Echelle comparative</label>
             <description>Degré de détail exprimé avec l'échelle d'un graphique ou carte papier comparable</description>
-            <help>Degré de spécification exprimé au moyen de l'échelle d'une carte ou d'un graphique analogique comparable. 
-      Cette échelle peut également indiquer la précision de la saisie dans le cas d'un jeu de données vectorielles. 
+            <help>Degré de spécification exprimé au moyen de l'échelle d'une carte ou d'un graphique analogique comparable.
+      Cette échelle peut également indiquer la précision de la saisie dans le cas d'un jeu de données vectorielles.
       Cette information est du type MD_RepresentativeFraction et est gérée dans la classe du même nom où de plus amples renseignements peuvent être obtenus.</help>
             <condition>Condition</condition>
           </element>
@@ -11169,7 +11169,7 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
     <li>un intervalle de dates exprimé par la date de début et la date de fin de l’intervalle,</li>
     <li>un mélange de dates et d’intervalles.</li>
     </ul>
-    
+
     Une date de référence du service est une information représentative de la vie du service
 (création, publication, révision), tandis que l’étendue temporelle fournit une indication de la
 période de temps couverte par le service.]]></help>
@@ -11332,7 +11332,7 @@ période de temps couverte par le service.]]></help>
             <help>Domaine auquel les métadonnées se rapportent. La catégorie d'informations à laquelle l'entité se réfère peut être indiquée dans la liste des codes (exemple : attributs, objets géométriques, jeu de données, etc.). "Jeu de données" est le paramètre par défaut.</help>
             <condition>Par défaut: "jeu de données"</condition>
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
-    Cet élément de métadonnées renseigne le type de ressource décrit par la métadonnée. 
+    Cet élément de métadonnées renseigne le type de ressource décrit par la métadonnée.
     Seuls trois types de ressources sont dans le champ de la directive INSPIRE :
     <ul>
       <li>Les séries de données géographiques,</li>
@@ -11341,13 +11341,13 @@ période de temps couverte par le service.]]></help>
     </ul>
     Cet élément est obligatoire et non répétable.
     <p>
-    Dans le cas de métadonnées de données, seuls les deux premiers cas sont applicables. 
-    La conformité des métadonnées à INSPIRE 
+    Dans le cas de métadonnées de données, seuls les deux premiers cas sont applicables.
+    La conformité des métadonnées à INSPIRE
     implique que chaque organisation concernée par la directive ait une réflexion en amont sur les
      ressources à documenter, et notamment sur le type de chaque ressource à documenter. Il n’est
-      pas interdit d’étendre cette liste de types de ressources pour les ressources qui sortiraient 
-      du cadre d’INSPIRE. Dans tous les cas, le type de ressource est une information qui doit être 
-      déterminée par l’organisation 
+      pas interdit d’étendre cette liste de types de ressources pour les ressources qui sortiraient
+      du cadre d’INSPIRE. Dans tous les cas, le type de ressource est une information qui doit être
+      déterminée par l’organisation
     responsable de la ressource avant d’initier la saisie de la fiche de métadonnées.
     </p>
    ]]></help>
@@ -11390,21 +11390,21 @@ période de temps couverte par le service.]]></help>
       <li>Il est constitué d’un {code} obligatoire (chaîne de caractères libre), éventuellement associé à un {espace de noms} (chaîne de caractères libre).</li>
     </ul>
     <p>
-    Il s’agit d’un identifiant créé pour identifier de manière unique la série de données décrite. 
-    Il n’y a qu’une seule ressource liée à cet identifiant. Aucun organisme dans la Communauté 
-    européenne ne peut utiliser créer un identifiant défini par un autre organisme pour une 
-    ressource différente. 
-    Il peut y avoir plusieurs identificateurs de ressource unique pour une série de données particulière. 
-    Exemple : évolutions (liées à une fusion) dans le nom de l’organisme. 
+    Il s’agit d’un identifiant créé pour identifier de manière unique la série de données décrite.
+    Il n’y a qu’une seule ressource liée à cet identifiant. Aucun organisme dans la Communauté
+    européenne ne peut utiliser créer un identifiant défini par un autre organisme pour une
+    ressource différente.
+    Il peut y avoir plusieurs identificateurs de ressource unique pour une série de données particulière.
+    Exemple : évolutions (liées à une fusion) dans le nom de l’organisme.
     Quels sont les usages de l’identifiant ? Dans INSPIRE, il sert à la traçabilité de la série
-    de données (l’objet conserve le même identifiant tout le long de son cycle de vie et cet identifiant 
-    ne peut jamais être repris pour une autre ressource)  et à la mise en place des services. 
+    de données (l’objet conserve le même identifiant tout le long de son cycle de vie et cet identifiant
+    ne peut jamais être repris pour une autre ressource)  et à la mise en place des services.
     Les gestionnaires de données doivent concevoir et créer cet identifiant dès la création de
      toute nouvelle ressource.</p>
     <p>L’importance de ce point est qu’il permet la liaison entre les métadonnées de service
      et celles de la série de données couplée. A terme, la solution sera la solution en A
-     des recommandations nationales. Si vous êtes en capacité de la mettre en oeuvre 
-     dès maintenant, c’est la meilleure solution. Sinon, nous vous proposons une solution intermédiaire qui 
+     des recommandations nationales. Si vous êtes en capacité de la mettre en oeuvre
+     dès maintenant, c’est la meilleure solution. Sinon, nous vous proposons une solution intermédiaire qui
      garantit néanmoins l’unicité. Ultérieurement, elle pourra permettre la mise en oeuvre
       de la première solution.</p>
       <p>
@@ -11419,10 +11419,10 @@ période de temps couverte par le service.]]></help>
             <help for="france"><![CDATA[<b>Recommandations :</b>
     <p>
       <b>Une adresse Internet : </b>
-      
+
       L’{espace de noms} permet de s’assurer de l’unicité du {code} en précisant le contexte dans lequel
        il est donné. (Par exemple : la donnée X de l’organisation Y. « Organisation Y » fait ici
-        office d’{espace de noms}.) Il existe des {code} construits ou calculés de manière 
+        office d’{espace de noms}.) Il existe des {code} construits ou calculés de manière
         à être uniques et qui ne nécessitent pas d’{espace de noms}.
      Il est recommandé que :
     <ul>
@@ -11430,19 +11430,19 @@ période de temps couverte par le service.]]></help>
        <li>cet URI soit également une URL (adresse internet) permettant d’accéder à la ressource (ou à ses métadonnées).</li>
     </ul>
     <b>Exemple : </b>http://www.ign.fr/bloc_identifiant_le_jeu_de_données
-    <p>Commentaire à la recommandation française nationale : 
-     Il s’agit de la fourniture d’une URI au format http, même si le but de l’identificateur n’est pas de localiser la ressource mais de l’identifier. 
+    <p>Commentaire à la recommandation française nationale :
+     Il s’agit de la fourniture d’une URI au format http, même si le but de l’identificateur n’est pas de localiser la ressource mais de l’identifier.
      Les gestionnaires de noms de domaine sur l’internet garantissent l’unicité du bloc organisme.
      Il est de la responsabilité du producteur de veiller à la permanence de cette URL.
     </p>
     </p>
     <p>
       <b>Une solution avec un identifiant non Internet : </b>
-      Mise en oeuvre d’un identifiant basé sur le numéro SIREN de l’INSEE, précédé par le code pays. 
+      Mise en oeuvre d’un identifiant basé sur le numéro SIREN de l’INSEE, précédé par le code pays.
       Le bloc identifiant l’organisme producteur sera constitué du code du pays et du code SIREN de l’organisme. Exemple : FRfr-243500139.
       Le bloc identifiant le jeu de données pourrait être issu d’une nomenclature, porter une date ou une version. Exemples : orthophoto2004, 35206plu20100612.
       Au final, par exemple : FRfr-243500139-35206plu20100612.
-      Il est reconnu qu‘il faut éviter les noms de services dans le bloc identifiant le jeu de données. Plus généralement, toutes les chaînes de caractères signifiantes (nom d’organismes...) sont à éviter car trop susceptibles de changer. De plus, il est recommandé de fournir l’identifiant en minuscule, et d’utiliser le tiret (-) en guise de séparateur. 
+      Il est reconnu qu‘il faut éviter les noms de services dans le bloc identifiant le jeu de données. Plus généralement, toutes les chaînes de caractères signifiantes (nom d’organismes...) sont à éviter car trop susceptibles de changer. De plus, il est recommandé de fournir l’identifiant en minuscule, et d’utiliser le tiret (-) en guise de séparateur.
       En cas d’d’absence de SIREN, une solution parallèle consiste à prendre le nom de domaine (celui de son site internet).
     </p>
    ]]></help>
@@ -11962,23 +11962,23 @@ période de temps couverte par le service.]]></help>
       Only relevant for France
       <helper editorMode="radio_withdesc">
       <option value="Pas de restriction d’accès public selon INSPIRE" title="Aucun des articles de la loi ne peut être invoqué pour justifier d’une restriction d’accès public.">Pas de restriction d’accès public selon INSPIRE</option>
-      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.a)" 
+      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.a)"
         title="La confidentialité des travaux des autorités publiques, lorsque cette confidentialité est prévue par la loi.">L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.a)</option>
-      <option value="L124-5-II-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.b)" 
+      <option value="L124-5-II-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.b)"
         title="Les relations internationales, la sécurité publique ou la défense nationale.">L124-5-II-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.b)</option>
-      <option value="L124-5-II-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.c)" 
+      <option value="L124-5-II-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.c)"
         title="La bonne marche de la justice, la possibilité pour toute personne d’être jugée équitablement ou la capacité d’une autorité publique d’effectuer une enquête d’ordre pénal ou disciplinaire.">L124-5-II-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.c)</option>
-      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.d)" 
+      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.d)"
         title="La confidentialité des informations commerciales ou industrielles, lorsque cette confidentialité est prévue par la législation nationale ou communautaire afin de protéger un intérêt économique légitime, notamment l’intérêt public lié à la préservation de la confidentialité des statistiques et du secret fiscal.">L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.d)</option>
-      <option value="L124-5-II-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.e)" 
+      <option value="L124-5-II-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.e)"
         title="Les droits de propriété intellectuelle.">L124-5-II-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.e)</option>
-      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.f)" 
+      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.f)"
         title="La confidentialité des données à caractère personnel et/ou des fichiers concernant une personne physique lorsque cette personne n’a pas consenti à la divulgation de ces informations au public, lorsque la confidentialité de ce type d’information est prévue par la législation nationale ou communautaire.">L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.f)</option>
-      <option value="L124-4-I-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.g)" 
+      <option value="L124-4-I-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.g)"
         title="Les intérêts ou la protection de toute personne qui a fourni les informations demandées sur une base volontaire sans y être contrainte par la loi ou sans que la loi puisse l’y contraindre, à moins que cette personne n’ait consenti à la divulgation de ces données.">L124-4-I-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.g)</option>
-      <option value="L124-4-I-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.h)" 
+      <option value="L124-4-I-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.h)"
         title="La protection de l’environnement auquel ces informations ont trait, comme par exemple la localisation d’espèces rares.">L124-4-I-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.h)</option>
-      <option value="L127-8-IV du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 17.7)" 
+      <option value="L127-8-IV du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 17.7)"
         title="">L127-8-IV du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 17.7)</option>
     </helper>-->
           </element>
@@ -12015,8 +12015,8 @@ période de temps couverte par le service.]]></help>
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
     Degré de conformité de la ressource par rapport à la spécification citée ci-dessus.]]></help>
             <help for="france"><![CDATA[<b>Commentaire :</b>
-    Pour chaque spécification visée, le degré de conformité (conforme/non conforme/non évalué) 
-    doit être indiqué. Pour les autres spécifications, la valeur ne pourra être que 
+    Pour chaque spécification visée, le degré de conformité (conforme/non conforme/non évalué)
+    doit être indiqué. Pour les autres spécifications, la valeur ne pourra être que
     (conforme/ non conforme).
     <br/>
     En pratique, la valeur « non évaluée » n’est pas stockée dans les métadonnées.
@@ -12054,19 +12054,19 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE]]></help>
             <help>Identification de la personne (voire des personnes) ou de l'organisation (voire des organisations) responsable du jeu de données décrit et mode de communication avec elle. Cette personne ou ce service endosse un rôle (propriétaire, prestataire, gestionnaire, etc.) bien spécifique pouvant être sélectionné dans la liste proposée. Les données correspondantes de la personne ou du service sont gérées dans la classe CI_ResponsibleParty. Ce rôle peut également servir à l'affectation d'un jeu de données à une commune. Exemple : le rôle de "propriétaire" permet ici d'affecter un lot de la MO à la commune correspondante.</help>
             <help><![CDATA[<b>Organisation responsable</b>]]></help>
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
-    C’est la description de l’organisation responsable. Plusieurs 
-    organisations responsables peuvent être identifiées pour une ressource. 
-    Pour chacune d’entre elles, les deux éléments de métadonnées suivants 
+    C’est la description de l’organisation responsable. Plusieurs
+    organisations responsables peuvent être identifiées pour une ressource.
+    Pour chacune d’entre elles, les deux éléments de métadonnées suivants
     doivent être renseignés.
-    Il est obligatoire de fournir au moins le nom de l’organisation 
-    (chaîne de caractères) et une adresse de messagerie électronique 
+    Il est obligatoire de fournir au moins le nom de l’organisation
+    (chaîne de caractères) et une adresse de messagerie électronique
     (chaîne de caractères).]]></help>
             <help for="france"><![CDATA[<b>Recommandations :</b>
     <ul>
-    <li>Il est déconseillé de fournir une adresse de messagerie électronique 
-    nominative, ceci afin de pouvoir plus facilement gérer les changements 
+    <li>Il est déconseillé de fournir une adresse de messagerie électronique
+    nominative, ceci afin de pouvoir plus facilement gérer les changements
     de fonctions des personnes impliquées.</li>
-    <li>Les adresses trop générique (de type « accueil@macomcom.fr » 
+    <li>Les adresses trop générique (de type « accueil@macomcom.fr »
     ou « contact@macomcom.fr »  sont également à éviter.</li>
     </ul>
     <b>Commentaire :</b>
@@ -12238,31 +12238,31 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE]]></help>
     ou les deux :
     <ul>
     <li>Les conditions d’accès et d’utilisation décrivant les conditions applicables à l’accès
-    et à l’utilisation des séries et des services de données géographiques, et, le cas échéant, 
-    les frais correspondants. Si aucune condition ne s’applique à l’accès à la ressource et à 
-    son utilisation, on utilisera la mention «aucune condition ne s’applique». Si les conditions 
+    et à l’utilisation des séries et des services de données géographiques, et, le cas échéant,
+    les frais correspondants. Si aucune condition ne s’applique à l’accès à la ressource et à
+    son utilisation, on utilisera la mention «aucune condition ne s’applique». Si les conditions
     sont inconnues, on utilisera la mention «conditions inconnues».</li>
-    <li>Les limitations d’accès public c’est-à-dire les informations sur les restrictions à l’accès 
-    public et les raisons de ces restrictions lorsque les États membres restreignent l’accès public 
-    aux séries et aux services de données géographiques au titre de l'article L127-6 du code 
-    de l’environnement. S’il n’y a pas de restrictions concernant l’accès public, cet élément 
+    <li>Les limitations d’accès public c’est-à-dire les informations sur les restrictions à l’accès
+    public et les raisons de ces restrictions lorsque les États membres restreignent l’accès public
+    aux séries et aux services de données géographiques au titre de l'article L127-6 du code
+    de l’environnement. S’il n’y a pas de restrictions concernant l’accès public, cet élément
     de métadonnées l’indiquera.</li>
     </ul>
-    
+
     S’il n’y a pas de restrictions concernant l’accès public, cet élément de métadonnées
 l’indiquera.
     <ul>
-    <li>Il doit y avoir au moins une condition contrainte en matière d’accès et d’utilisation 
+    <li>Il doit y avoir au moins une condition contrainte en matière d’accès et d’utilisation
     exprimée pour chaque ressource.</li>
-    <li>Au travers des différentes contraintes exprimées, il doit y avoir au moins l’expression 
-    d’une condition d’accès et d’utilisation et d’une indication sur les limitations 
+    <li>Au travers des différentes contraintes exprimées, il doit y avoir au moins l’expression
+    d’une condition d’accès et d’utilisation et d’une indication sur les limitations
     d’accès public.</li>
     </ul>]]></help>
             <help for="france"><![CDATA[<b>Commentaire :</b>
-    Il faut tout d’abord remarquer que ces deux éléments sont sémantiquement liés. En effet, 
-    dans le cas où une restriction est applicable à l’accès public, le champ définissant les 
-    conditions applicables à l’accès et à l’utilisation de la ressource sera fortement 
-    influencé par la restriction et définira dans quel cadre il est possible ou non d’obtenir 
+    Il faut tout d’abord remarquer que ces deux éléments sont sémantiquement liés. En effet,
+    dans le cas où une restriction est applicable à l’accès public, le champ définissant les
+    conditions applicables à l’accès et à l’utilisation de la ressource sera fortement
+    influencé par la restriction et définira dans quel cadre il est possible ou non d’obtenir
     la ressource.
     <br/>
     Les conditions d’accès et d’utilisation servent, par exemple, dans le cas de services payants
@@ -12351,8 +12351,8 @@ diffusion restreinte.]]></help>
           <element name="gmd:series" id="369.0">
             <label>Séries</label>
             <description>Information sur la série (ou sur le jeu de données global) de laquelle le jeu de données est une partie</description>
-            <help>Information relative à la série ou au jeu de données composé dont le jeu de données est issu. 
-      Exemple : la série de toutes les cartes nationales au 1:25'000. 
+            <help>Information relative à la série ou au jeu de données composé dont le jeu de données est issu.
+      Exemple : la série de toutes les cartes nationales au 1:25'000.
       Ces informations sont du type CI_Series et sont gérées dans la classe du même nom.</help>
             <condition />
           </element>
@@ -12542,7 +12542,7 @@ diffusion restreinte.]]></help>
             <help>
               <!-- [2] -->
               Nom caractéristique et souvent unique sous lequel la ressource est connue.
-      
+
       Titre/nom. Ces informations sont du type PT_FreeText et sont gérées dans la classe du même nom.
             </help>
             <helper editorMode="radio_linebreak" displayIf="$p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/gmd:MD_DataIdentification or          $p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']">
@@ -12569,18 +12569,18 @@ diffusion restreinte.]]></help>
               <option value="Technical Guidance for the implementation of INSPIRE Download Services – level3 - v3.0">Guide INSPIRE sur les services de téléchargement – classe de conformité 3 (WFS direct)</option>
             </helper>
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE sur la conformité:</b>
-    Les exigences de conformité seront remplies au moyen des éléments 
+    Les exigences de conformité seront remplies au moyen des éléments
     de métadonnées « spécification » et « degré ».]]></help>
             <help for="france"><![CDATA[<b>Recommandations pour les séries de données:</b>
     <ul>
-    <li>Les règlements Interopérabilité INSPIRE doivent obligatoirement 
+    <li>Les règlements Interopérabilité INSPIRE doivent obligatoirement
     faire partie des spécifications visées.</li>
-    <li>Il est recommandé d’exprimer la conformité vis-à-vis du guide technique du 
-    thème considéré (voir Annexe B). La spécification référencée ici doit correspondre au 
+    <li>Il est recommandé d’exprimer la conformité vis-à-vis du guide technique du
+    thème considéré (voir Annexe B). La spécification référencée ici doit correspondre au
     thème INSPIRE indiqué dans les mots-clés.</li>
     <li>En règle générale, il est conseillé de découper sa ressource en thèmes, afin de ne devoir se conformer qu’à un modèle de données INSPIRE à la fois (Par exemple, la BD Carto de l’IGN a été découpé en plusieurs ensembles de séries : BD Carto – Hydrographie, BD Carto – Réseau routier, BD Carto – Parcelles cadastrales, etc.).</li>
     </ul>
-    
+
     <b>Recommandations pour les services:</b>
     <ul>
     <li>Un des règlements Services en Réseau INSPIRE doit
@@ -12589,17 +12589,17 @@ obligatoirement faire partie des spécifications visées.</li>
 classe de conformité définie par le guide technique INSPIRE correspondant au
 service considéré</li>
     </ul>
-    
+
     <b>Commentaire :</b>
-    La conformité est une déclaration de la seule responsabilité du producteur et il n’est pas 
+    La conformité est une déclaration de la seule responsabilité du producteur et il n’est pas
     prévu de contrôler, en France, cette déclaration.
     <br/>
     Une série de données conforme remplit toutes les conditions posées par la spécification visée (voir 1 Spécification).
     Ces deux éléments de métadonnées (spécification et degré) expriment la conformité des données (et non des métadonnées !) à une spécification.
-    La première exigence de conformité vise la mise en œuvre des règlements européens dits 
-    d’interopérabilité. La référence à des spécifications différentes comme celles du CNIG (PLU...) 
-    ou de la COVADIS est possible en complément. Concrètement, cela revient à créer une série de 
-    données à partir du gabarit de série de données fourni, par exemple, par la COVADIS, ou à 
+    La première exigence de conformité vise la mise en œuvre des règlements européens dits
+    d’interopérabilité. La référence à des spécifications différentes comme celles du CNIG (PLU...)
+    ou de la COVADIS est possible en complément. Concrètement, cela revient à créer une série de
+    données à partir du gabarit de série de données fourni, par exemple, par la COVADIS, ou à
     comparer une série de données particulière au dit gabarit.
     <br/>
     Pour les services, la première exigence de conformité vise la mise en œuvre du Règlement (CE) no 976/2009
@@ -12613,14 +12613,14 @@ celles des scénarios d’échange du Sandre est possible en complément.
     Cet élément donne la référence des règles de mise en œuvre adoptées en vertu de l’article 7, paragraphe 1, de la directive 2007/2/CE ou des autres spécifications auxquelles la ressource est conforme.
     <ul>
     <li>Il est possible de renseigner la conformité à plusieurs spécifications de données. </li>
-    <li>Cette indication inclut au moins le titre et une date de référence (date de 
-    publication, date de dernière révision ou de création) des spécifications auxquelles la 
+    <li>Cette indication inclut au moins le titre et une date de référence (date de
+    publication, date de dernière révision ou de création) des spécifications auxquelles la
     ressource est conforme. </li>
     </ul>]]></help>
             <help for="france"><![CDATA[<b>Commentaire :</b>
-    L’article 7, paragraphe 1, de la directive 2007/2/CE correspond aux modalités 
-    techniques de l’interopérabilité : il s’agit des règlements relatifs à l’interopérabilité 
-    dont un seul a été publié à ce jour : règlement n°1089/2010 du 23 novembre 2010, 
+    L’article 7, paragraphe 1, de la directive 2007/2/CE correspond aux modalités
+    techniques de l’interopérabilité : il s’agit des règlements relatifs à l’interopérabilité
+    dont un seul a été publié à ce jour : règlement n°1089/2010 du 23 novembre 2010,
     modifié et complété par le règlement n 102/2011 du 4 février 2011.]]></help>
             <help><![CDATA[Exemple :
     <ul>
@@ -12665,14 +12665,14 @@ de partage avec les utilisateurs ;</li>
 </ul>
    ]]></help>
                
-            <help><![CDATA[<b>Exemple pour un service de visualisation:</b> 
+            <help><![CDATA[<b>Exemple pour un service de visualisation:</b>
       Service de visualisation cartographique (WMS) du référentiel hydrographique (BDCarTHAgE ®) Métropole, Service de visualisation cartographique (WMS) de Plan de Prévention du Risque
 Inondation de la vallée de l'Epte aval, Service d'accès à la carte Les sites Natura 2000 du Tarn.
 <br/>
-<b>Exemple pour un service de téléchargement:</b> 
+<b>Exemple pour un service de téléchargement:</b>
 Service de téléchargement simple des référentiels du Sandre, Service de téléchargement direct (WFS) du référentiel hydrographique (BD CarTHAgE®) national
 <br/>
-<b>Exemple pour un service de données géographiques:</b> 
+<b>Exemple pour un service de données géographiques:</b>
 Service de chaînage des éléments du référentiel hydrographique (BD CarTHAgE®) national (WPS)
 <br/>
 <b>Exemple pour un service de transformation:</b> Service de transformation de coordonnées de
@@ -12680,13 +12680,13 @@ l’IGN (WPS)
 
    ]]></help>
                
-            <help><![CDATA[<b>Contre-exemple :</b> 
+            <help><![CDATA[<b>Contre-exemple :</b>
       <ul>
       <li>Intitulé non compréhensible : Service d'accès à la carte N_APPB_ZINF_S_R74</li>
       <li>Acronyme : Service d'accès à la carte ZICO en Limousin</li>
       <li>Intitulé de la ressource servie, et non du service : Les sites Natura 2000 du Tarn</li>
       </ul>
-      
+
    ]]></help>
             <condition>Obligatoire</condition>
           </element>
@@ -12696,17 +12696,17 @@ l’IGN (WPS)
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
     L’intitulé (ou le titre) de la ressource doit être un nom caractéristique
      et souvent unique sous lequel la ressource est connue.
-    Cet élément est une chaîne de caractères obligatoire (texte libre) 
+    Cet élément est une chaîne de caractères obligatoire (texte libre)
     et ne peut pas être répété.
     Ceci signifie que le titre doit être suffisamment précis pour décrire
-     le contenu des données. Il ne faut pas oublier que des milliers de 
-     métadonnées provenant d’organisations différentes apparaissent sur 
+     le contenu des données. Il ne faut pas oublier que des milliers de
+     métadonnées provenant d’organisations différentes apparaissent sur
      le Géocatalogue national  (et plus globalement à l’échelle européenne).
-      Par exemple, il est recommandé de préciser le territoire concerné par 
-      la ressource. En effet, le titre Plan Local d’Urbanisme tout seul ne 
-      permettra pas à l’internaute de trouver facilement la ressource qu’il 
-      recherche. Autre exemple, on trouve sur le Géocatalogue une métadonnée 
-      intitulée Cartes utiles. Ce titre n’est ni caractéristique ni unique 
+      Par exemple, il est recommandé de préciser le territoire concerné par
+      la ressource. En effet, le titre Plan Local d’Urbanisme tout seul ne
+      permettra pas à l’internaute de trouver facilement la ressource qu’il
+      recherche. Autre exemple, on trouve sur le Géocatalogue une métadonnée
+      intitulée Cartes utiles. Ce titre n’est ni caractéristique ni unique
       et ne permet pas à l’utilisateur de comprendre ce dont traite la donnée.
    ]]></help>
                
@@ -12716,7 +12716,7 @@ l’IGN (WPS)
     <li>Le recours à une indication de version ou millésime est justifié lorsqu’il existe (ou existera) plusieurs versions qui cohabitent (ou cohabiteront) dans le catalogue.</li>
     <li>Il est recommandé de ne pas faire figurer les parties responsables c’est-à-dire les organisations exerçant une quelconque responsabilité (gestionnaire, distributeur, …).</li>
     <li>Il est attendu un texte significatif désignant la ressource. Tout texte vide (ensemble de caractères d’espacement) ou de type Rédaction réservée, Non renseigné, … ne permet pas de satisfaire l’obligation INSPIRE.</li>
-    <li>Il est recommandé de ne pas indiquer uniquement l’acronyme de la ressource (àa moins de l’expliciter dans le résumé). Deux approches sont conseillées et sont potentiellement complémentaires : 
+    <li>Il est recommandé de ne pas indiquer uniquement l’acronyme de la ressource (àa moins de l’expliciter dans le résumé). Deux approches sont conseillées et sont potentiellement complémentaires :
     <ul>
       <li>L’acronyme peut être indiqué entre parenthèses dans le titre avec un objectif de partage avec les utilisateurs ; </li>
       <li>L’acronyme peut être exprimé dans le résumé.</li>
@@ -12741,10 +12741,10 @@ l’IGN (WPS)
           <element name="gmd:topicCategory" id="41.0">
             <label>Catégorie ISO</label>
             <description>Thème(s) principal(aux) du jeu de données</description>
-            <help>Thème principal (ou thèmes principaux) du jeu de données. 
-      Ce thème ou groupe de thèmes permet de trouver un jeu de données. 
-      Cet attribut se fondant sur une liste de codes de la norme ISO (MD_TopicCategoryCode), une recherche standardisée 
-      par thèmes est possible au plan international. 
+            <help>Thème principal (ou thèmes principaux) du jeu de données.
+      Ce thème ou groupe de thèmes permet de trouver un jeu de données.
+      Cet attribut se fondant sur une liste de codes de la norme ISO (MD_TopicCategoryCode), une recherche standardisée
+      par thèmes est possible au plan international.
       Les thèmes suivants sont répertoriés : agriculture, biologie, limites, climatologie et météorologie, économie, indications altimétriques, environnement, sciences de la Terre, santé, images et cartes de base, armée et renseignement, cours d'eau intérieurs, indications de lieux, mers et océans, aménagement du territoire et cadastre, société, subdivisions, transport, infrastructures de transport.</help>
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
     La catégorie thématique est un système de classification de haut niveau qui permet de regrouper et de chercher par thème les ressources de données géographiques disponibles.
@@ -13621,9 +13621,9 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
           <element name="gts:TM_PeriodDuration">
             <label>Période</label>
             <description>Le type durée permet de définir un interval de temps.
-      
+
       Le format est le suivant "PnYnMnDTnHnMnS" :
-      
+
       * P Période (Obligatoire)
       * nY : nombre d'années
       * nM : nombre de mois
@@ -13773,9 +13773,9 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
       </iso19115-3>
     </schemas>
     <config>
-      <!-- Client configuration in order to redirect to default UI 
+      <!-- Client configuration in order to redirect to default UI
   (ie. main.home service) or to another custom client.
-  
+
   For widget mode:
   * parameters attribute is appended to URL. Use it to define a default map extent for example or change default language.
   * createParameter attribute is appended to URL when the application is called from the administration > New metadata menu.
@@ -13820,10 +13820,10 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
           <!-- List all needed projections for view and editing maps.
     If more than one projection is available, bounding box
     coordinates will be displayed in the list of available projection.
-    
+
     Default attribute define the default projection to use. Do
     not define more than one default projection.
-    
+
    -->
           <crs code="EPSG:4326" default="1" edit="1" />
           <!-- WGS84 is mandatory because ISO store it by default in LatLong-->
@@ -13842,10 +13842,10 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
   -->
         <osm_map>true</osm_map>
       </map>
-      <!-- Configuration for small map search 
-    mapSearch/@options:     OpenLayers options hash as expected in new OpenLayers.Map(div, options) 
-       
-    layers/layer: 
+      <!-- Configuration for small map search
+    mapSearch/@options:     OpenLayers options hash as expected in new OpenLayers.Map(div, options)
+
+    layers/layer:
         server      url of the server
         tocName     layer name in map
         params      OpenLayers params hash as expected in new OpenLayers.Layer.WMS(name, url, params, options)
@@ -13863,8 +13863,8 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     proj/crs:       Projections used in mapViewer
         code        CSR code
         default     Indicates the default CRS (values: 0, 1)
-        
-    layers/layer: 
+
+    layers/layer:
         server      url of the server
         tocName     layer name in map
         params      OpenLayers params hash as expected in new OpenLayers.Layer.WMS(name, url, params, options)
@@ -13887,32 +13887,32 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
           <server name="Geoserver" url="http://localhost:8080/geoserver/wms?" />
         </servers>
       </mapViewer>
-      <!-- 
+      <!--
     Google translation service (http://code.google.com/apis/language/translate/overview.html):
     Set this parameter to "1" to activate google translation service.
     Google AJAX API Terms of Use http://code.google.com/apis/ajaxlanguage/terms.html
-    
+
     WARNING: "The Google Translate API has been officially deprecated as of May 26, 2011...
-    the number of requests you may make per day will be limited and 
+    the number of requests you may make per day will be limited and
     the API will be shut off completely on December 1, 2011".
   -->
       <editor-google-translate>0</editor-google-translate>
       <!-- Metadata relation information
  Comment out this element to turn off metadata relation display in metadata
- edit and view mode. 
+ edit and view mode.
  -->
       <editor-metadata-relation />
-      <!-- Display error only when loading validation report 
+      <!-- Display error only when loading validation report
   <editor-validation-errors-only-on-load/>-->
       <!-- Display the geopublisher option for all updloaded files-->
       <editor-geopublisher />
-      <!-- Display metadata tabs in edit and view mode. 
+      <!-- Display metadata tabs in edit and view mode.
   ISO and INSPIRE view only available for ISO19139 records.
   Default view is always visible.
-  
-  Use the flat attribute in order to display elements in simple mode 
+
+  Use the flat attribute in order to display elements in simple mode
   (ie. could not access to all elements defined in the schema)
-  
+
   Use the default attribute in order to use this view in search result panel.
   It is recommended to use the simple or inspire view because user will not
   have access to section tab switcher.
@@ -13924,8 +13924,8 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
  -->
       <metadata-tab>
         <!--   In flat mode, define custom configuration for a view:
-     * ancestorException: define which non existing children of the exception must be displayed (eg. use spatialResolution 
-     in order to be able to add spatialResolution in this view mode. spatialResolution is a complex element which provide a 
+     * ancestorException: define which non existing children of the exception must be displayed (eg. use spatialResolution
+     in order to be able to add spatialResolution in this view mode. spatialResolution is a complex element which provide a
      selection)
      * exception: define which non existing element must be displayed (eg. pointOfContact)
      * flatException: define which element to not display using flat mode (eg. topicCategory will allow to remove
@@ -13962,10 +13962,10 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
         <compute-extent-from-keyword />
       </editor-actions>
       <!-- Subtemplate configuration.
-  
+
   Subtemplate only works with the GUI widget client interface.
   The configuration allows to define the types of supported subtemplate
-  and their parent (where they can be inserted). 
+  and their parent (where they can be inserted).
   Subtemplate are only supported for iso19139 or profile records.
   -->
       <editor-subtemplate>
@@ -13996,7 +13996,7 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
           </subtemplate>
         </mapping>
       </editor-subtemplate>
-      <!-- Proxy URL to use for XHR. 
+      <!-- Proxy URL to use for XHR.
  Check that the proxy could query allowed hosts.
  <proxy-url>/cgi-bin/proxy.cgi</proxy-url>
  -->
@@ -14004,16 +14004,16 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
       <!-- Display or not category information : Categories are stored in the database and a metadata
  record could be linked to one or more categories. -->
       <category>
-        <!-- 
+        <!--
    To disable that feature
-   comment this out. This will hide categories in search criteria, search results, 
+   comment this out. This will hide categories in search criteria, search results,
    metadata editing and administration interface.
   -->
         <admin />
         <!-- Display category as icon in search results. Categories could be :
     * define from category table or
     * define based on schema : iso19139 could be service or dataset and iso19110 is feature catalogue (internal category)
-  
+
   mode attribute could be:
    * all : all categories
    * db : only from category table
@@ -14024,27 +14024,27 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
       <!-- Display rating feature in search results panel. -->
       <rating />
       <search>
-        <!-- Display or not keyword selection panel in advanced search panel 
-   <keyword-selection-panel/> 
+        <!-- Display or not keyword selection panel in advanced search panel
+   <keyword-selection-panel/>
   -->
         <!-- Optional user interface mechanism for editor - not ready yet
 		<use-separate-window-for-editor-viewer/>
 	-->
         <!-- Optional user interface mechanism - displays banner functions using
-	     drop down modal box which overlays the current web page instead of 
+	     drop down modal box which overlays the current web page instead of
 			 replacing it.
 			 Banner functions are 'Administration', 'Feedback', 'Links' etc
-			 The idea here is that displaying these light-weight functions in a 
+			 The idea here is that displaying these light-weight functions in a
 			 modal box means that the main page is not disturbed
 		<use-modal-box-for-banner-functions/>
 	-->
         <!-- Show Remote/Distributed search tab - enables distributed/remote search
-	     using Z3950 - note that if you query the Australian Z3950 sites, you 
-			 will need to add the anzmeta plugin schema to GeoNetwork using the 
+	     using Z3950 - note that if you query the Australian Z3950 sites, you
+			 will need to add the anzmeta plugin schema to GeoNetwork using the
 			 add schema/profile function on the administration page. If you want to
 			 do this, you should add the schema from a URL as follows:
 			 http://geonetwork.globaldial.com/testdownloads/anzmeta.zip
-		<show-remote-search/> 
+		<show-remote-search/>
 	-->
       </search>
       <repository>
@@ -14059,7 +14059,7 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
           <filename>regions.rdf</filename>
           <title>Region</title>
           <date>2006-09-22</date>
-          <url>http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.place.regions</url>
+          <url>http://localhost:8080/geonetwork/srv/api/registries/vocabularies/external.place.regions</url>
           <defaultNamespace>http://geonetwork-opensource.org/regions#</defaultNamespace>
           <type>external</type>
           <activated>n</activated>
@@ -14070,7 +14070,7 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
           <filename>geopicardie-epci.rdf</filename>
           <title>EPCI</title>
           <date>2013-03-11</date>
-          <url>http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.place.geopicardie-epci</url>
+          <url>http://localhost:8080/geonetwork/srv/api/registries/vocabularies/external.place.geopicardie-epci</url>
           <defaultNamespace>http://www.picardie.fr/thesaurus/epci#</defaultNamespace>
           <type>external</type>
           <activated>y</activated>
@@ -14081,7 +14081,7 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
           <filename>inspire-theme.rdf</filename>
           <title>GEMET - INSPIRE themes, version 1.0</title>
           <date>2008-06-01</date>
-          <url>http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-theme</url>
+          <url>http://localhost:8080/geonetwork/srv/api/registries/vocabularies/external.theme.inspire-theme</url>
           <defaultNamespace>http://geonetwork-opensource.org/inspire-theme#</defaultNamespace>
           <type>external</type>
           <activated>y</activated>

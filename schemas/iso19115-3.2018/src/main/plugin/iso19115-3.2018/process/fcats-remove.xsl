@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--  
-Stylesheet used to update metadata for a service and 
-detach a dataset metadata
--->
 <xsl:stylesheet version="2.0"
                 xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"

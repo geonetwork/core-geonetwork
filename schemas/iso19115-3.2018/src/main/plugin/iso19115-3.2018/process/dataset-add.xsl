@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--  
-Stylesheet used to link a dataset to a service 
-metadata record by adding a operatesOn and 
+<!--
+Stylesheet used to link a dataset to a service
+metadata record by adding a operatesOn and
 a coupledResource reference.
 -->
 <xsl:stylesheet version="2.0"
@@ -23,13 +23,15 @@ a coupledResource reference.
 
   <!-- UUID of the dataset metadata -->
   <xsl:param name="uuidref"/>
-  
+
   <!-- List of layers -->
   <xsl:param name="scopedName" select="''"/>
   <xsl:param name="protocol" select="'OGC:WMS'"/>
   <xsl:param name="url"/>
   <xsl:param name="desc"/>
-  <xsl:param name="siteUrl"/>
+  <xsl:param name="nodeUrl"/>
+  <!-- Remote record title -->
+  <xsl:param name="title" select="''"/>
 
 
   <xsl:variable name="mainLang"
@@ -43,7 +45,7 @@ a coupledResource reference.
   <xsl:template match="/mdb:MD_Metadata">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
-      
+
       <xsl:apply-templates select="mdb:metadataIdentifier"/>
       <xsl:apply-templates select="mdb:defaultLocale"/>
       <xsl:apply-templates select="mdb:parentMetadata"/>
@@ -58,8 +60,8 @@ a coupledResource reference.
       <xsl:apply-templates select="mdb:spatialRepresentationInfo"/>
       <xsl:apply-templates select="mdb:referenceSystemInfo"/>
       <xsl:apply-templates select="mdb:metadataExtensionInfo"/>
-      
-      
+
+
       <!-- Check current metadata is a service metadata record
         And add the link to the dataset -->
       <xsl:choose>
@@ -69,15 +71,15 @@ a coupledResource reference.
             <srv:SV_ServiceIdentification>
               <xsl:copy-of
                 select="mdb:identificationInfo/*/mri:*"/>
-              
+
               <xsl:copy-of
                 select="mdb:identificationInfo/*/srv:serviceType|
                 mdb:identificationInfo/*/srv:serviceTypeVersion|
                 mdb:identificationInfo/*/srv:accessProperties|
                 mdb:identificationInfo/*/srv:couplingType|
                 mdb:identificationInfo/*/srv:coupledResource[*/srv:resourceReference/@uuidref != $uuidref]"/>
-              
-              
+
+
               <!-- Handle SV_CoupledResource -->
               <xsl:variable name="coupledResource">
                 <xsl:for-each select="tokenize($scopedName, ',')">
@@ -93,23 +95,35 @@ a coupledResource reference.
                   </srv:coupledResource>
                 </xsl:for-each>
               </xsl:variable>
-              
-              <xsl:if test="$uuidref">
-                <xsl:copy-of select="$coupledResource"/>  
+
+              <xsl:if test="$uuidref and $title = ''">
+                <xsl:copy-of select="$coupledResource"/>
               </xsl:if>
-              
+
               <xsl:copy-of
                 select="mdb:identificationInfo/*/srv:operatedDataset|
                 mdb:identificationInfo/*/srv:profile|
                 mdb:identificationInfo/*/srv:serviceStandard|
                 mdb:identificationInfo/*/srv:containsOperations|
                 mdb:identificationInfo/*/srv:operatesOn[@uuidref != $uuidref]"/>
-              
+
               <xsl:if test="$uuidref">
-                <srv:operatesOn uuidref="{$uuidref}"
-                  xlink:href="{$siteUrl}/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id={$uuidref}"/>
+                <srv:operatesOn uuidref="{$uuidref}">
+                  <xsl:if test="$title != ''">
+                    <xsl:attribute name="xlink:title" select="$title"/>
+                  </xsl:if>
+                  <xsl:choose>
+                    <xsl:when test="$url != ''">
+                      <xsl:attribute name="xlink:href" select="$url"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:attribute name="xlink:href"
+                                     select="concat($nodeUrl, 'api/records/', $uuidref)"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </srv:operatesOn>
               </xsl:if>
-              
+
               <xsl:copy-of
                 select="mdb:identificationInfo/*/srv:containsChain"/>
             </srv:SV_ServiceIdentification>
@@ -120,7 +134,7 @@ a coupledResource reference.
           <xsl:copy-of select="mdb:identificationInfo"/>
         </xsl:otherwise>
       </xsl:choose>
-      
+
       <xsl:apply-templates select="mdb:contentInfo"/>
 
 
@@ -153,13 +167,13 @@ a coupledResource reference.
               <mdb:distributionInfo>
                 <mrd:MD_Distribution>
                   <xsl:copy-of
-                    select="mdb:distributionInfo[1]/mrd:MD_Distribution/mrd:description"/>
+                    select="mdb:distributionInfo[1]/*/mrd:description"/>
                   <xsl:copy-of
-                    select="mdb:distributionInfo[1]/mrd:MD_Distribution/mrd:distributionFormat"/>
+                    select="mdb:distributionInfo[1]/*/mrd:distributionFormat"/>
                   <xsl:copy-of
-                    select="mdb:distributionInfo[1]/mrd:MD_Distribution/mrd:distributor"/>
+                    select="mdb:distributionInfo[1]/*/mrd:distributor"/>
                   <xsl:copy-of
-                    select="mdb:distributionInfo[1]/mrd:MD_Distribution/mrd:transferOptions"/>
+                    select="mdb:distributionInfo[1]/*/mrd:transferOptions"/>
 
                   <mrd:transferOptions>
                     <mrd:MD_DigitalTransferOptions>
@@ -193,26 +207,51 @@ a coupledResource reference.
 
 
   <xsl:template name="create-online">
-    <xsl:for-each select="tokenize($scopedName, ',')">
-      <mrd:onLine>
-        <cit:CI_OnlineResource>
-          <cit:linkage>
-            <xsl:copy-of
-              select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLang, $useOnlyPTFreeText)"/>
-          </cit:linkage>
-          <cit:protocol>
-            <gco:CharacterString>
-              <xsl:value-of select="$protocol"/>
-            </gco:CharacterString>
-          </cit:protocol>
-          <cit:name>
-            <gco:CharacterString>
-              <xsl:value-of select="."/>
-            </gco:CharacterString>
-          </cit:name>
-        </cit:CI_OnlineResource>
-      </mrd:onLine>
-    </xsl:for-each>
+    <xsl:choose>
+      <!-- Remote record -->
+      <xsl:when test="$title != ''">
+        <mrd:onLine>
+          <cit:CI_OnlineResource>
+            <cit:linkage>
+              <xsl:copy-of
+                select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLang, $useOnlyPTFreeText)"/>
+            </cit:linkage>
+            <cit:protocol>
+              <gco:CharacterString>
+                <xsl:value-of select="$protocol"/>
+              </gco:CharacterString>
+            </cit:protocol>
+            <cit:name>
+              <gco:CharacterString>
+                <xsl:value-of select="$title"/>
+              </gco:CharacterString>
+            </cit:name>
+          </cit:CI_OnlineResource>
+        </mrd:onLine>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:for-each select="tokenize($scopedName, ',')">
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <xsl:copy-of
+                  select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLang, $useOnlyPTFreeText)"/>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>
+                  <xsl:value-of select="$protocol"/>
+                </gco:CharacterString>
+              </cit:protocol>
+              <cit:name>
+                <gco:CharacterString>
+                  <xsl:value-of select="."/>
+                </gco:CharacterString>
+              </cit:name>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
+        </xsl:for-each>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- Do a copy of every nodes and attributes -->
@@ -221,7 +260,7 @@ a coupledResource reference.
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
-  
+
   <!-- Remove geonet:* elements. -->
   <xsl:template match="gn:*"
     priority="2"/>

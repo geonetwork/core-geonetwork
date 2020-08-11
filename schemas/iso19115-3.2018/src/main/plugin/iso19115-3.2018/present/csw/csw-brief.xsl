@@ -16,12 +16,14 @@
   xmlns:ows="http://www.opengis.net/ows"
   xmlns:geonet="http://www.fao.org/geonetwork"
   exclude-result-prefixes="#all">
-  
-  <xsl:param name="displayInfo"/>
+
   <xsl:param name="lang"/>
-  
-  <xsl:include href="../metadata-utils.xsl"/>
-  
+
+  <xsl:variable name="metadata"
+                select="mdb:MD_Metadata|*[contains(@gco:isoType,'MD_Metadata')]"/>
+
+  <xsl:include href="../../layout/utility-tpl-multilingual.xsl"/>
+
   <xsl:template match="mdb:MD_Metadata|*[contains(@gco:isoType,'MD_Metadata')]">
     <xsl:variable name="info" select="geonet:info"/>
     <xsl:variable name="langId">
@@ -30,18 +32,18 @@
         <xsl:with-param name="md" select="."/>
       </xsl:call-template>
     </xsl:variable>
-    
+
     <xsl:variable name="identification"
       select="mdb:identificationInfo/mri:MD_DataIdentification|
               mdb:identificationInfo/*[contains(@gco:isoType, 'MD_DataIdentification')]|
               mdb:identificationInfo/srv:SV_ServiceIdentification"
     />
-    
+
     <csw:BriefRecord>
       <xsl:for-each select="mdb:metadataIdentifier">
         <dc:identifier><xsl:value-of select="mcc:MD_Identifier/mcc:code/gco:CharacterString"/></dc:identifier>
       </xsl:for-each>
-      
+
       <!-- DataIdentification -->
       <xsl:for-each select="$identification/mri:citation/cit:CI_Citation">
         <xsl:for-each select="cit:title">
@@ -52,14 +54,14 @@
           </dc:title>
         </xsl:for-each>
       </xsl:for-each>
-      
-      
+
+
       <!-- Type -->
       <xsl:for-each select="mdb:metadataScope/mdb:MD_MetadataScope/
         mdb:resourceScope/mcc:MD_ScopeCode/@codeListValue">
         <dc:type><xsl:value-of select="."/></dc:type>
       </xsl:for-each>
-      
+
       <!-- bounding box -->
       <xsl:for-each
         select="$identification/mri:extent/gex:EX_Extent/gex:geographicElement/gex:EX_GeographicBoundingBox|
@@ -70,14 +72,14 @@
           *[contains(@gco:isoType, 'MD_ReferenceSystem')]/mrs:referenceSystemIdentifier/mcc:MD_Identifier"/>
         <xsl:variable name="auth" select="$rsi/mcc:codeSpace/gco:CharacterString"/>
         <xsl:variable name="id" select="$rsi/mcc:code/gco:CharacterString"/>
-        
+
         <ows:BoundingBox crs="{$auth}::{$id}">
           <ows:LowerCorner>
             <xsl:value-of
               select="concat(gex:eastBoundLongitude/gco:Decimal, ' ', gex:southBoundLatitude/gco:Decimal)"
             />
           </ows:LowerCorner>
-          
+
           <ows:UpperCorner>
             <xsl:value-of
               select="concat(gex:westBoundLongitude/gco:Decimal, ' ', gex:northBoundLatitude/gco:Decimal)"
@@ -85,15 +87,9 @@
           </ows:UpperCorner>
         </ows:BoundingBox>
       </xsl:for-each>
-      
-      <!-- GeoNetwork elements added when resultType is equal to results_with_summary -->
-      <xsl:if test="$displayInfo = 'true'">
-        <xsl:copy-of select="$info"/>
-      </xsl:if>
-      
     </csw:BriefRecord>
   </xsl:template>
-  
+
   <xsl:template match="*">
     <xsl:apply-templates select="*"/>
   </xsl:template>

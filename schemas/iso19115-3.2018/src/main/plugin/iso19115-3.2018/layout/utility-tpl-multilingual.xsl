@@ -53,7 +53,7 @@
     <xsl:variable name="mainLanguage">
       <xsl:call-template name="get-iso19115-3.2018-language"/>
     </xsl:variable>
-    
+
     <xsl:choose>
       <xsl:when test="$metadata/gn:info[position() = last()]/isTemplate = 's'">
         <xsl:for-each select="distinct-values($metadata//lan:LocalisedCharacterString/@locale)">
@@ -71,8 +71,8 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- Template used to return a translation if one found, 
-       or the text in default metadata language 
+  <!-- Template used to return a translation if one found,
+       or the text in default metadata language
        or the first non empty text element.
     -->
   <xsl:template name="get-iso19115-3.2018-localised"
@@ -95,6 +95,39 @@
                                 then $mainValue
                                 else $firstNonEmptyValue)"/>
   </xsl:template>
+
+
+  <!-- Map GUI language to iso3code -->
+  <xsl:template name="getLangId19115-3.2018">
+    <xsl:param name="langGui"/>
+    <xsl:param name="md"/>
+
+    <xsl:call-template name="getLangIdFromMetadata19115-3.2018">
+      <xsl:with-param name="lang" select="$langGui"/>
+      <xsl:with-param name="md" select="$md"/>
+    </xsl:call-template>
+  </xsl:template>
+
+  <!-- Get lang #id in metadata PT_Locale section,  deprecated: if not return the 2 first letters
+      of the lang iso3code in uper case.
+
+       if not return the lang iso3code in uper case.
+      -->
+  <xsl:template name="getLangIdFromMetadata19115-3.2018">
+    <xsl:param name="md"/>
+    <xsl:param name="lang"/>
+
+    <xsl:choose>
+      <xsl:when
+        test="$md/mdb:defaultLocale/lan:PT_Locale[lan:language/lan:LanguageCode/@codeListValue = $lang]/@id"
+      >#<xsl:value-of
+        select="$md/mdb:defaultLocale/lan:PT_Locale[lan:language/lan:LanguageCode/@codeListValue = $lang]/@id"
+      />
+      </xsl:when>
+      <xsl:otherwise>#<xsl:value-of select="upper-case($lang)"/></xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 
   <xsl:template mode="localised" match="*">
     <!-- Nothing to do, is not a text content field. -->
