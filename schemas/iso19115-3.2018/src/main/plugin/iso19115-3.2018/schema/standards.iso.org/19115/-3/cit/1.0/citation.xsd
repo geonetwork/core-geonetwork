@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/cit/1.0" version="1.0">
+  <include schemaLocation="cit.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="CI_Address" substitutionGroup="gco:AbstractObject" type="cit:CI_Address_Type">
+    <annotation>
+      <documentation>location of the responsible individual or organisation</documentation>
+    </annotation>
+  </element>
+  <complexType name="CI_Address_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="deliveryPoint" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>address line for the location (as described in ISO 11180, Annex A)</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="city" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>city of the location</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="administrativeArea" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>state, province of the location</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="postalCode" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>ZIP or other postal code</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="country" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>country of the physical address</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="electronicMailAddress" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>address of the electronic mailbox of the responsible organisation or individual</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CI_Address_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cit:CI_Address"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CI_Citation" substitutionGroup="mcc:Abstract_Citation" type="cit:CI_Citation_Type">
+    <annotation>
+      <documentation>standardized resource reference</documentation>
+    </annotation>
+  </element>
+  <complexType name="CI_Citation_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_Citation_Type">
+        <sequence>
+          <element name="title" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>name by which the cited resource is known</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="alternateTitle" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>short name or other language name by which the cited information is known. Example: DCW as an alternative title for Digital Chart of the World</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="date" type="cit:CI_Date_PropertyType">
+            <annotation>
+              <documentation>reference date for the cited resource</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="edition" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>version of the cited resource</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="editionDate" type="gco:DateTime_PropertyType">
+            <annotation>
+              <documentation>date of the edition</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="identifier" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>value uniquely identifying an object within a namespace</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="citedResponsibleParty" type="cit:CI_Responsibility_PropertyType">
+            <annotation>
+              <documentation>name and position information for an individual or organisation that is responsible for the resource</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="presentationForm" type="cit:CI_PresentationFormCode_PropertyType">
+            <annotation>
+              <documentation>mode in which the resource is represented</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="series" type="cit:CI_Series_PropertyType">
+            <annotation>
+              <documentation>information about the series, or aggregate resource, of which the resource is a part</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="otherCitationDetails" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>other information required to complete the citation that is not recorded elsewhere</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="ISBN" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>international Standard Book Number</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="ISSN" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>international Standard Serial Number</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="onlineResource" type="cit:CI_OnlineResource_PropertyType">
+            <annotation>
+              <documentation>online reference to the cited resource</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="graphic" type="mcc:MD_BrowseGraphic_PropertyType">
+            <annotation>
+              <documentation>citation graphic or logo for cited party</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CI_Citation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cit:CI_Citation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CI_Contact" substitutionGroup="gco:AbstractObject" type="cit:CI_Contact_Type">
+    <annotation>
+      <documentation>information required to enable contact with the responsible person and/or organisation</documentation>
+    </annotation>
+  </element>
+  <complexType name="CI_Contact_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="phone" type="cit:CI_Telephone_PropertyType">
+            <annotation>
+              <documentation>telephone numbers at which the organisation or individual may be contacted</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="address" type="cit:CI_Address_PropertyType">
+            <annotation>
+              <documentation>physical and email address at which the organisation or individual may be contacted</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="onlineResource" type="cit:CI_OnlineResource_PropertyType">
+            <annotation>
+              <documentation>on-line information that can be used to contact the individual or organisation</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="hoursOfService" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>time period (including time zone) when individuals can contact the organisation or individual</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="contactInstructions" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>supplemental instructions on how or when to contact the individual or organisation</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="contactType" type="gco:CharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CI_Contact_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cit:CI_Contact"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CI_Date" substitutionGroup="mcc:Abstract_TypedDate" type="cit:CI_Date_Type">
+    <annotation>
+      <documentation>reference date and event used to describe it</documentation>
+    </annotation>
+  </element>
+  <complexType name="CI_Date_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_TypedDate_Type">
+        <sequence>
+<!--          <element name="date" type="gco:DateTime_PropertyType">-->
+          <!-- use of gco:DateTime property did not implement the intention of the 19115-1 committee, the desire was
+          for the more general representation allowing date, datetime, yy, yymm, etc. 
+          See discussion on github https://github.com/ISO-TC211/XML/issues/117https://github.com/ISO-TC211/XML/issues/117
+          SMR 2015-09-01 -->
+          <element name="date" type="gco:Date_PropertyType">
+            <annotation>
+              <documentation>reference date for the cited resource</documentation>
+            </annotation>
+          </element>
+          <element name="dateType" type="cit:CI_DateTypeCode_PropertyType">
+            <annotation>
+              <documentation>event used for reference date</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CI_Date_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cit:CI_Date"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CI_DateTypeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>identification of when a given event occurred</documentation>
+    </annotation>
+  </element>
+  <complexType name="CI_DateTypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cit:CI_DateTypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CI_Individual" substitutionGroup="cit:AbstractCI_Party" type="cit:CI_Individual_Type">
+    <annotation>
+      <documentation>information about the party if the party is an individual</documentation>
+    </annotation>
+  </element>
+  <complexType name="CI_Individual_Type">
+    <complexContent>
+      <extension base="cit:AbstractCI_Party_Type">
+        <sequence>
+          <element minOccurs="0" name="positionName" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>position of the individual in an organisation</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CI_Individual_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cit:CI_Individual"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CI_OnLineFunctionCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>function performed by the resource</documentation>
+    </annotation>
+  </element>
+  <complexType name="CI_OnLineFunctionCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cit:CI_OnLineFunctionCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CI_OnlineResource" substitutionGroup="mcc:Abstract_OnlineResource" type="cit:CI_OnlineResource_Type">
+    <annotation>
+      <documentation>information about on-line sources from which the resource, specification, or community profile name and extended metadata elements can be obtained</documentation>
+    </annotation>
+  </element>
+  <complexType name="CI_OnlineResource_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_OnlineResource_Type">
+        <sequence>
+          <element name="linkage" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>location (address) for on-line access using a Uniform Resource Locator/Uniform Resource Identifier address or similar addressing scheme such as http://www.statkart.no/isotc211</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="protocol" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>connection protocol to be used e.g. http, ftp, file</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="applicationProfile" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>name of an application profile that can be used with the online resource</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="name" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>name of the online resource</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="description" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>detailed text description of what the online resource is/does</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="function" type="cit:CI_OnLineFunctionCode_PropertyType">
+            <annotation>
+              <documentation>code for function performed by the online resource</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="protocolRequest" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>protocol used by the accessed resource</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CI_OnlineResource_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cit:CI_OnlineResource"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CI_Organisation" substitutionGroup="cit:AbstractCI_Party" type="cit:CI_Organisation_Type">
+    <annotation>
+      <documentation>information about the party if the party is an organisation</documentation>
+    </annotation>
+  </element>
+  <complexType name="CI_Organisation_Type">
+    <complexContent>
+      <extension base="cit:AbstractCI_Party_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="logo" type="mcc:MD_BrowseGraphic_PropertyType">
+            <annotation>
+              <documentation>Graphic identifying organization</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="individual" type="cit:CI_Individual_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CI_Organisation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cit:CI_Organisation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractCI_Party" substitutionGroup="gco:AbstractObject" type="cit:AbstractCI_Party_Type">
+    <annotation>
+      <documentation>information about the individual and/or organisation of the party</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractCI_Party_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" name="name" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>name of the party</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="contactInfo" type="cit:CI_Contact_PropertyType">
+            <annotation>
+              <documentation>contact information for the party</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractCI_Party_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cit:AbstractCI_Party"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CI_PresentationFormCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>mode in which the data is represented</documentation>
+    </annotation>
+  </element>
+  <complexType name="CI_PresentationFormCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cit:CI_PresentationFormCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CI_Responsibility" substitutionGroup="mcc:Abstract_Responsibility" type="cit:CI_Responsibility_Type">
+    <annotation>
+      <documentation>information about the party and their role</documentation>
+    </annotation>
+  </element>
+  <complexType name="CI_Responsibility_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_Responsibility_Type">
+        <sequence>
+          <element name="role" type="cit:CI_RoleCode_PropertyType">
+            <annotation>
+              <documentation>function performed by the responsible party</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="extent" type="mcc:Abstract_Extent_PropertyType">
+            <annotation>
+              <documentation>spatial or temporal extent of the role</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="party" type="cit:AbstractCI_Party_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CI_Responsibility_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cit:CI_Responsibility"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CI_RoleCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>function performed by the responsible party</documentation>
+    </annotation>
+  </element>
+  <complexType name="CI_RoleCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cit:CI_RoleCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CI_Series" substitutionGroup="gco:AbstractObject" type="cit:CI_Series_Type">
+    <annotation>
+      <documentation>information about the series, or aggregate resource, to which a resource belongs</documentation>
+    </annotation>
+  </element>
+  <complexType name="CI_Series_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" name="name" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>name of the series, or aggregate resource, of which the resource is a part</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="issueIdentification" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>information identifying the issue of the series</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="page" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>details on which pages of the publication the article was published</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CI_Series_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cit:CI_Series"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CI_Telephone" substitutionGroup="gco:AbstractObject" type="cit:CI_Telephone_Type">
+    <annotation>
+      <documentation>telephone numbers for contacting the responsible individual or organisation</documentation>
+    </annotation>
+  </element>
+  <complexType name="CI_Telephone_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="number" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>telephone number by which individuals can contact responsible organisation or individual</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="numberType" type="cit:CI_TelephoneTypeCode_PropertyType">
+            <annotation>
+              <documentation>type of telephone responsible organisation or individual</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CI_Telephone_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cit:CI_Telephone"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CI_TelephoneTypeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>type of telephone</documentation>
+    </annotation>
+  </element>
+  <complexType name="CI_TelephoneTypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cit:CI_TelephoneTypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

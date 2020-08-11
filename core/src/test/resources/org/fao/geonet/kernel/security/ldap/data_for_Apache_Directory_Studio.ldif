@@ -1,0 +1,117 @@
+# LDAP
+#  /com
+#     /example
+#         /Corporate Users
+#               /GIS Department
+#                   * david blasby (blasby\, david,ou=GIS Department,ou=Corporate Users,dc=example,dc=com)
+#                   * admin (admin,ou=GIS Department,ou=Corporate Users,dc=example,dc=com)
+#               /Project Admin
+#                   * jody gee (gee\, jody,ou=Project Admin,ou=Corporate Users,dc=example,dc=com)
+#
+#         /Org Groups
+#               /Geoserver Admin
+#                    * member: david blasby (blasby\, david,ou=GIS Department,ou=Corporate Users,dc=example,dc=com)
+#               /Geonetwork Developer
+#                    * member: david blasby (blasby\, david,ou=GIS Department,ou=Corporate Users,dc=example,dc=com)
+#                    * member: jody gee (gee\, jody,ou=Project Admin,ou=Corporate Users,dc=example,dc=com)
+#               /PostGIS Developer
+#                    * member: admin (admin,ou=GIS Department,ou=Corporate Users,dc=example,dc=com)
+#
+#               /GCAT_GENERAL_EDITOR
+#                    * member: david blasby (blasby\, david,ou=GIS Department,ou=Corporate Users,dc=example,dc=com)
+#               /GCAT_GENERAL_ADMIN
+#                    * member: admin (admin,ou=GIS Department,ou=Corporate Users,dc=example,dc=com)
+#
+#   david blasby -> EDITOR
+#   admin -> ADMIN
+#   jody gee -> RegisteredUser
+
+version: 1
+
+
+dn: ou=Corporate Users,dc=example,dc=com
+objectClass: top
+objectClass: organizationalUnit
+ou: Corporate Users
+
+dn: ou=GIS Department,ou=Corporate Users,dc=example,dc=com
+objectClass: top
+objectClass: organizationalUnit
+ou: GIS Department
+
+dn: ou=Project Admin,ou=Corporate Users,dc=example,dc=com
+objectClass: top
+objectClass: organizationalUnit
+ou: Project Admin
+
+
+dn: cn=admin,ou=GIS Department,ou=Corporate Users,dc=example,dc=com
+objectClass: top
+objectClass: inetOrgPerson
+givenName: admin
+sn: admin
+cn: admin,ou=GIS Department,ou=Corporate Users,dc=example,dc=com
+userPassword: admin1
+telephoneNumber: 1
+mail: admin@example.com
+
+dn: cn=blasby\, david,ou=GIS Department,ou=Corporate Users,dc=example,dc=com
+objectClass: top
+objectClass: inetOrgPerson
+givenName: david
+sn: blasby
+cn: blasby\, david,ou=GIS Department,ou=Corporate Users,dc=example,dc=com
+userPassword: blasby1
+telephoneNumber: 2
+mail: dblasby@example.com
+
+
+dn: cn=gee\, jody,ou=Project Admin,ou=Corporate Users,dc=example,dc=com
+objectClass: top
+objectClass: inetOrgPerson
+givenName: jody
+sn: gee
+cn: jody gee,ou=Project Admin,ou=Corporate Users,dc=example,dc=com
+userPassword: jody1
+telephoneNumber: 3
+mail: jgee@example.com
+
+dn: ou=Org Groups,dc=example,dc=com
+objectClass: top
+objectClass: organizationalUnit
+ou: Org Groups
+
+dn: cn=Geoserver Admin,ou=Org Groups,dc=example,dc=com
+objectClass: top
+objectClass: groupOfNames
+cn: Geoserver Admin
+member: cn=blasby\, david,ou=GIS Department,ou=Corporate Users,dc=example,dc=com
+
+
+dn: cn=Geonetwork Developer,ou=Org Groups,dc=example,dc=com
+objectClass: top
+objectClass: groupOfNames
+cn: Geonetwork Developer
+member: cn=blasby\, david,ou=GIS Department,ou=Corporate Users,dc=example,dc=com
+member: cn=gee\, jody,ou=Project Admin,ou=Corporate Users,dc=example,dc=com
+
+dn: cn=PostGIS Developer,ou=Org Groups,dc=example,dc=com
+objectClass: top
+objectClass: groupOfNames
+cn: PostGIS Developer
+member: cn=admin,ou=GIS Department,ou=Corporate Users,dc=example,dc=com
+
+
+dn: cn=GCAT_GENERAL_ADMIN,ou=Org Groups,dc=example,dc=com
+objectClass: top
+objectClass: groupOfNames
+cn: GCAT_GENERAL_ADMIN
+member: cn=admin,ou=GIS Department,ou=Corporate Users,dc=example,dc=com
+
+
+dn: cn=GCAT_GENERAL_EDITOR,ou=Org Groups,dc=example,dc=com
+objectClass: top
+objectClass: groupOfNames
+cn: GCAT_GENERAL_EDITOR
+member: cn=blasby\, david,ou=GIS Department,ou=Corporate Users,dc=example,dc=com
+

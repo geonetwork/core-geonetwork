@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0" 
+  targetNamespace="http://standards.iso.org/iso/19115/-3/gmw/1.0" elementFormDefault="qualified">
+	<!-- ================================= Annotation ================================ -->
+	<xs:annotation>
+		<xs:documentation>This is the root document of the The GMl Wrapper type (GMW) http://standards.iso.org/iso/19115/-3/gmw/1.0 namespace, a component of the XML Schema Implementation of Geographic Information Metadata (ISO19115-1). Original implementation documented in ISO/TS 19139:2007 is refactored in this implementation for ISO19115-3 to put type definitions that wrap GML elements in property types with optional gco:ObjectProperties and gco:nilReason attributes as originally specified in ISO19139 in the gco, gss, gsr and gts namespaces. Elements from the ISO19139 gco namespace that do not have dependencies on gml are specified in the http://standards.iso.org/iso/19115/-3/gco/1.0 namespace in the ISO19115-3 implementation </xs:documentation>
+	</xs:annotation>
+	<!-- ================================== Imports ================================== -->
+	<xs:include schemaLocation="gmlWrapperTypes2014.xsd"/>
+	<!-- ########################################################################### -->
+	<!-- ########################################################################### -->
+	<!-- ================================== Classes ================================= -->
+</xs:schema>

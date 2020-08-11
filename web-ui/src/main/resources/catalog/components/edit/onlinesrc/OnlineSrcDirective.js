@@ -495,6 +495,7 @@
                 scope.ctrl = {};
               },
               post: function(scope, element, attrs) {
+                scope.clearFormOnProtocolChange = !(attrs.clearFormOnProtocolChange == "false"); //default to true (old behavior)
                 scope.popupid = attrs['gnPopupid'];
 
                 scope.config = null;
@@ -877,18 +878,27 @@
                   scope.layers = [];
                   scope.OGCProtocol = false;
                   if (scope.params && !scope.isEditing) {
-                    scope.params.name = '';
-                    scope.params.desc = '';
-                    initMultilingualFields();
+                    if (scope.clearFormOnProtocolChange) {
+                      scope.params.name = '';
+                      scope.params.desc = '';
+                      initMultilingualFields();
+                    }
+                    else {
+                      initMultilingualFields(['name','desc']);
+                    }
                     scope.params.selectedLayers = [];
                     scope.params.layers = [];
                   }
                 };
 
-                var initMultilingualFields = function() {
+                //doNotmodifyFields - list of field names
+                //   this will NOT update fields in this list.
+                var initMultilingualFields = function(doNotModifyFields) {
                   scope.config.multilingualFields.forEach(function(f) {
-                    scope.params[f] = {};
-                    setParameterValue(f, '');
+                    if ( (!doNotModifyFields) || (!_.contains(doNotModifyFields,f)) ) {
+                      scope.params[f] = {};
+                      setParameterValue(f, '');
+                    }
                   });
                 };
 
@@ -1100,7 +1110,7 @@
                   if (!angular.isUndefined(scope.params.protocol) && o !== n) {
                     resetProtocol();
                     scope.OGCProtocol = checkIsOgc(scope.params.protocol);
-                    if (scope.OGCProtocol != null && !scope.isEditing) {
+                    if (scope.OGCProtocol != null && !scope.isEditing && scope.clearFormOnProtocolChange) {
                       // Reset parameter in case of multilingual metadata
                       // Those parameters are object.
                       scope.params.name = '';

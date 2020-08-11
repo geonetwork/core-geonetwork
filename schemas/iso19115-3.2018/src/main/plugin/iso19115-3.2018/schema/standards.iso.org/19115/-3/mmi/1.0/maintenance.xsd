@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" 
+  xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"  
+  xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0"
+  xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" 
+  xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0" 
+  elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mmi/1.0" version="1.0">
+  <annotation>
+    <documentation>Status of the dataset or progress of a review</documentation>
+  </annotation>
+<!--  <include schemaLocation="mmi.xsd"/>-->
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+ <!-- <import namespace="http://standards.iso.org/iso/19115/-3/gmw/1.0" schemaLocation="../../../../19115/-3/gmw/1.0/gmw.xsd"/>-->
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="MD_MaintenanceFrequencyCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>frequency with which modifications and deletions are made to the data after it is first produced</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_MaintenanceFrequencyCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mmi:MD_MaintenanceFrequencyCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_MaintenanceInformation" substitutionGroup="mcc:Abstract_MaintenanceInformation" type="mmi:MD_MaintenanceInformation_Type">
+    <annotation>
+      <documentation>information about the scope and frequency of updating</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_MaintenanceInformation_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_MaintenanceInformation_Type">
+        <sequence>
+          <element minOccurs="0" name="maintenanceAndUpdateFrequency" type="mmi:MD_MaintenanceFrequencyCode_PropertyType">
+            <annotation>
+              <documentation>frequency with which changes and additions are made to the resource after the initial resource is completed</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="maintenanceDate" type="mcc:Abstract_TypedDate_PropertyType">
+            <annotation>
+              <documentation>date information associated with maintenance of resource</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="userDefinedMaintenanceFrequency" type="gco:TM_PeriodDuration_PropertyType">
+            <annotation>
+              <documentation>maintenance period other than those defined</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="maintenanceScope" type="mcc:MD_Scope_PropertyType">
+            <annotation>
+              <documentation>information about the scope and extent of maintenance</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="maintenanceNote" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>information regarding specific requirements for maintaining the resource</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="contact" type="mcc:Abstract_Responsibility_PropertyType">
+            <annotation>
+              <documentation>identification of, and means of communicating with, person(s) and organisation(s) with responsibility for maintaining the metadata</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_MaintenanceInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mmi:MD_MaintenanceInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

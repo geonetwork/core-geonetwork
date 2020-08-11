@@ -90,7 +90,7 @@ public class MapServersApi {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get mapservers",
-        description = "Mapservers are used by the catalog to publish record attachements " +
+        description = "Mapservers are used by the catalog to publish record attachments " +
             "(eg. ZIP file with shape) or record associated resources (eg. " +
             "database table, file on the local network) in a remote mapserver like " +
             "GeoServer or MapServer. The catalog communicate with the mapserver using " +

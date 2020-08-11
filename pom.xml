@@ -129,6 +129,11 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.1.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
           <version>3.1.0</version>
         </plugin>
@@ -227,12 +232,12 @@
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.8</version>
+          <version>3.0.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
@@ -299,7 +304,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <excludedGroups>org.fao.geonet.repository.AbstractSpringDataTest</excludedGroups>
-          <argLine>-Dfile.encoding=UTF-8 -Xmx1G</argLine>
+          <argLine>-Dfile.encoding=UTF-8 -Xmx1G -Djava.awt.headless=true</argLine>
           <!--<rerunFailingTestsCount>5</rerunFailingTestsCount>-->
           <runOrder>alphabetical</runOrder>
           <forkCount>${system.numCores}</forkCount>
@@ -1480,7 +1485,7 @@
     <xbean.version>3.18</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.5.9</httpcomponents.version>
-    <gn.schemas.version>4.0</gn.schemas.version>
+
     <skipIT>true</skipIT> <!-- disable integration tests by default, use the "it" profile to run them which enables them -->
   </properties>
 </project>

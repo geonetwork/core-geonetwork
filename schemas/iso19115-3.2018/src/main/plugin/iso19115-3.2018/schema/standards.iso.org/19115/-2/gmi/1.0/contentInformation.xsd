@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-2/gmi/1.0" 
+xmlns:gmi="http://standards.iso.org/iso/19115/-2/gmi/1.0"
+xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" version="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- ================================= Annotation ================================ -->
+	<xs:annotation>
+		<xs:documentation>This file was created by Ted Habermann during May 2015 to correct omissions (gmx, MI_EnvironmentalRecord) in existing gmi schema ====== </xs:documentation>
+	</xs:annotation>
+	<!-- ================================== Imports ================================== -->
+	<xs:import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/gmd.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd"/>
+	<!-- ########################################################################### -->
+	<!-- ########################################################################### -->
+	<!-- ================================== Classes ================================= -->
+	<xs:complexType name="MI_Band_Type">
+		<xs:annotation>
+			<xs:documentation>Description: extensions to electromagnetic spectrum wavelength description - shortName: BandExt</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gmd:MD_Band_Type">
+				<xs:sequence>
+					<xs:element name="bandBoundaryDefinition" type="gmi:MI_BandDefinition_PropertyType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="nominalSpatialResolution" type="gco:Real_PropertyType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="transferFunctionType" type="gmi:MI_TransferFunctionTypeCode_PropertyType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="transmittedPolarisation" type="gmi:MI_PolarisationOrientationCode_PropertyType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="detectedPolarisation" type="gmi:MI_PolarisationOrientationCode_PropertyType" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="MI_Band" type="gmi:MI_Band_Type" substitutionGroup="gmd:MD_Band"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="MI_Band_PropertyType">
+		<xs:sequence>
+			<xs:element ref="gmi:MI_Band" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="MI_CoverageDescription_Type">
+		<xs:annotation>
+			<xs:documentation>Description: information about the content of a coverage, including the description of specific range elements - shortName: CCovDesc</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gmd:MD_CoverageDescription_Type">
+				<xs:sequence>
+					<xs:element name="rangeElementDescription" type="gmi:MI_RangeElementDescription_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="MI_CoverageDescription" type="gmi:MI_CoverageDescription_Type" substitutionGroup="gmd:MD_CoverageDescription"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="MI_CoverageDescription_PropertyType">
+		<xs:sequence>
+			<xs:element ref="gmi:MI_CoverageDescription" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="MI_ImageDescription_Type">
+		<xs:annotation>
+			<xs:documentation>Description: information about the content of an image, including the description of specific range elements - shortName: ICovDesc</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gmd:MD_ImageDescription_Type">
+				<xs:sequence>
+					<xs:element name="rangeElementDescription" type="gmi:MI_RangeElementDescription_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="MI_ImageDescription" type="gmi:MI_ImageDescription_Type" substitutionGroup="gmd:MD_ImageDescription"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="MI_ImageDescription_PropertyType">
+		<xs:sequence>
+			<xs:element ref="gmi:MI_ImageDescription" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="MI_RangeElementDescription_Type">
+		<xs:annotation>
+			<xs:documentation>Description: description of specific range elements - shortName: RgEltDesc</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="name" type="gco:CharacterString_PropertyType"/>
+					<xs:element name="definition" type="gco:CharacterString_PropertyType"/>
+					<xs:element name="rangeElement" type="gco:Record_PropertyType" minOccurs="1" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="MI_RangeElementDescription" type="gmi:MI_RangeElementDescription_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="MI_RangeElementDescription_PropertyType">
+		<xs:sequence>
+			<xs:element ref="gmi:MI_RangeElementDescription" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="MI_BandDefinition" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="MI_BandDefinition_PropertyType">
+		<xs:sequence>
+			<xs:element ref="gmi:MI_BandDefinition" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="MI_PolarisationOrientationCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="MI_PolarisationOrientationCode_PropertyType">
+		<xs:sequence>
+			<xs:element ref="gmi:MI_PolarisationOrientationCode" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="MI_TransferFunctionTypeCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="MI_TransferFunctionTypeCode_PropertyType">
+		<xs:sequence>
+			<xs:element ref="gmi:MI_TransferFunctionTypeCode" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+</xs:schema>
