@@ -24,6 +24,7 @@
 package org.fao.geonet.api.records.extent;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
@@ -51,6 +52,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
@@ -100,12 +104,46 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
         assertEquals("b02baec6d92832ecd5653db78093a427", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
+    @Test
+    public void lastModifiedNotModified() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+        String uuid = createTestData();
+
+        mockMvc.perform(get(String.format("/srv/api/records/%s/extents.png", uuid))
+            .header("If-Modified-Since", "Wed, 21 Oct 2015 07:29:00 UTC")
+            .session(mockHttpSession)
+            .accept(MediaType.IMAGE_PNG_VALUE))
+            .andExpect(status().isNotModified());
+    }
+
+    @Test
+    public void lastModifiedModified() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+        String uuid = createTestData();
+
+        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents.png", uuid))
+            .header("If-Modified-Since", "Wed, 21 Oct 2015 07:27:00 UTC")
+            .session(mockHttpSession)
+            .accept(MediaType.IMAGE_PNG_VALUE))
+            .andExpect(status().is2xxSuccessful())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
+            .andReturn().getResponse().getContentAsByteArray();
+
+        assertEquals("b02baec6d92832ecd5653db78093a427", DigestUtils.md5DigestAsHex(reponseBuffer));
+    }
+
     private String createTestData() throws Exception {
         loginAsAdmin(context);
 
         Element sampleMetadataXml = getSampleMetadataXml();
         String uuid = UUID.randomUUID().toString();
         Xml.selectElement(sampleMetadataXml, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).setText(uuid);
+
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.set(2015, Calendar.OCTOBER, 21, 07, 28, 0);
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         String source = sourceRepository.findAll().get(0).getUuid();
         String schema = schemaManager.autodetectSchema(sampleMetadataXml);
@@ -116,7 +154,8 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .setRoot(sampleMetadataXml.getQualifiedName())
             .setSchemaId(schema)
             .setType(MetadataType.METADATA)
-            .setPopularity(1000);
+            .setPopularity(1000)
+            .setChangeDate(new ISODate(calendar.getTimeInMillis()));
         metadata.getSourceInfo()
             .setOwner(1)
             .setSourceId(source);
