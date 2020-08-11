@@ -51,6 +51,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -134,10 +135,37 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
         assertEquals("b02baec6d92832ecd5653db78093a427", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
-    private String createTestData() throws Exception {
-        loginAsAdmin(context);
+    @Test
+    public void aggregatedWithTwoExtent() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+        String uuid = createTestDataTwoExtent();
 
-        Element sampleMetadataXml = getSampleMetadataXml();
+        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents.png", uuid))
+            .session(mockHttpSession)
+            .accept(MediaType.IMAGE_PNG_VALUE))
+            .andExpect(status().is2xxSuccessful())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
+            .andReturn().getResponse().getContentAsByteArray();
+
+        //BufferedImage imag=ImageIO.read(new ByteArrayInputStream(reponseBuffer));
+        //ImageIO.write(imag, "png", new File("/tmp", String.format("%s.png", name.getMethodName())));
+        assertEquals("6918277f1b32eb69ff81da6ef434c27f", DigestUtils.md5DigestAsHex(reponseBuffer));
+    }
+
+    private String createTestData() throws Exception {
+        return createMdFromXmlRessources(getSampleMetadataXml());
+    }
+
+    private String createTestDataTwoExtent() throws Exception {
+        URL resource = MetadataExtentApiTest.class.getResource("valid-metadata.iso19139_with_two_extent.xml");
+        Element sampleMetadataXml = Xml.loadStream(resource.openStream());
+
+        return createMdFromXmlRessources(sampleMetadataXml);
+    }
+
+    private String createMdFromXmlRessources(Element sampleMetadataXml) throws Exception {
+        loginAsAdmin(context);
         String uuid = UUID.randomUUID().toString();
         Xml.selectElement(sampleMetadataXml, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).setText(uuid);
 
