@@ -447,9 +447,20 @@
   .gn-md-no-thumbnail {
     width: 140px;
     height: 140px;
-    background-size: 140px 140px;
-    background-image: url(../catalog/views/default/images/no-thumbnail.png);
-    height: 140px;
+    &:after {
+      content: "\f03e";
+      font-family: FontAwesome;
+      font-style: normal;
+      font-weight: normal;
+      text-decoration: inherit;
+      position: absolute;
+      font-size: 46px;
+      color: #eeeeee;
+      top: 50%;
+      left: 50%;
+      margin: -32px 0 0 -23px;
+      z-index: 1;
+    }
   }
 }
 

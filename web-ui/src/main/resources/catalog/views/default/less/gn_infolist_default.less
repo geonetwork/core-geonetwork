@@ -20,13 +20,22 @@
           .title {
             background: @gn-resultcard-title-background-color;
             border: @gn-resultcard-title-border;
+            border-bottom: 0;
             h4 {
               color: @gn-resultcard-title-color;
+              font-weight: normal;
             }
           }
         }
         .resultcard.hasThumbnail {
           &:hover {
+            .title {
+              background: @gn-resultcard-title-background-color-hover;
+            }
+          }
+        }
+        &:hover {
+          .resultcard {
             .title {
               background: @gn-resultcard-title-background-color-hover;
             }
