@@ -136,7 +136,7 @@
 
 
   <jpa:repositories base-package="org.fao.geonet.repository"
-                    factory-class="org.fao.geonet.repository.GeonetRepositoryFactoryBean"
+                    base-class="org.fao.geonet.repository.GeonetRepositoryImpl"
                     entity-manager-factory-ref="entityManagerFactory"
                     transaction-manager-ref="transactionManager"/>
 

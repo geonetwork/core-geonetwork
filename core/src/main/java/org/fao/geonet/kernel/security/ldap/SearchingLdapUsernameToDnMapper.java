@@ -62,7 +62,7 @@ public class SearchingLdapUsernameToDnMapper implements LdapUsernameToDnMapper {
         username = username; // might need to escape characters here - like "blasby\, david", but not required by AD
         DirContextOperations result = ldapUserSearch.searchForUser(username);
 
-        return (DistinguishedName) result.getDn();
+        return new DistinguishedName(result.getDn());
     }
 
 }
