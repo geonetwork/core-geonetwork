@@ -1,131 +1,64 @@
 <ul class="list-group gn-resultview gn-resultview-sumup">
-  <li class="list-group-item gn-grid"
+  <li class="list-group-item gn-grid panel panel-default gn-card"
       data-ng-repeat="md in searchResults.records"
       data-gn-fix-mdlinks=""
       data-gn-displayextent-onhover=""
       data-gn-zoomto-onclick="">
 
-    <!--start top row-->
-    <div class="row">
-      <input data-gn-selection-md type="checkbox"
-             data-ng-model="md.selected"
-             aria-label="{{'clickToSelect' | translate}}"
-             data-ng-change="change()"/>
-
-      <small class="gn-score">score:{{md._score}}</small>
-      <!--Source catalog Logo-->
-      <a data-ng-if="md.groupWebsite"
-         href="{{md.groupWebsite}}"
-         target="_blank">
-        <img data-ng-src="{{gnUrl}}..{{md.logo}}"
-             alt="{{'siteLogo' | translate}}"
-             class="gn-source-logo"/>
-      </a>
-      <img data-ng-if="!md.groupWebsite && md.logo"
-           data-ng-src="{{gnUrl}}..{{md.logo}}"
-           alt="{{'siteLogo' | translate}}"
-           class="gn-source-logo"/>
-
-      <div class="gn-md-category"
-           data-ng-class="md.category.length > 0 ||
-                            md.topicCat.length > 0 ||
-                            md.inspirethemewithac.length > 0 ? '' : 'invisible'">
-        <span data-translate="">listOfCategories</span>
-        <a data-ng-repeat="cat in ::md.category"
-           title="{{('cat-' + cat) | translate}}"
-           aria-label="{{('cat-' + cat) | translate}}"
-           data-ng-href="#/search?_cat={{cat}}">
-          <i class="fa">
-            <span class="fa gn-icon-{{cat}}"></span>
-          </i>
-        </a>
-        <a data-ng-repeat="t in md.inspirethemewithac"
-           data-ng-href="#/search?inspiretheme={{t.split('|')[1]}}">
-          <i class="fa" title="{{t.split('|')[1]}}">
-            <span class="fa iti-{{t.split('|')[0]}}"></span>
-          </i>
-        </a>
-        <a data-ng-repeat="t in md.topicCat"
-           data-ng-href="#/search?topicCat={{t}}"
-           title="{{t | translate}}"
-           aria-label="{{t | translate}}">
-          <i class="fa">
-            <span class="fa gn-icon-{{t}}"></span>
-          </i>
-        </a>
+    <div class="panel-heading gn-card-heading">
+      <div class="gn-md-title">
+        <div class="gn-md-select">
+          <input data-gn-selection-md 
+                 type="checkbox"
+                 data-ng-model="md.selected"
+                 aria-label="{{'clickToSelect' | translate}}"
+                 data-ng-change="change()"/>
+        </div>
+        <span class="fa gn-icon-{{md.resourceType[0]}}" title="{{md.resourceType[0] | translate}}"></span>
+        <h1>
+          <a href=""
+             gn-metadata-open="md"
+             gn-records="searchResults.records"
+             gn-formatter="formatter.defaultUrl"
+             title="{{md.resourceTitle}}">
+            {{(md.resourceTitle) | characters:50}}
+          </a>
+        </h1>
       </div>
-      <div data-gn-metadata-rate="md"
-           data-readonly="true"
-           class="pull-right"/>
     </div>
-    <!--end top row-->
-    <div class="row gn-md-title">
-      <h3>
-        <a href=""
+    <!-- /.gn-card-heading -->
+
+    <div class="panel-body gn-card-body">
+      <div title="{{(md.resourceAbstract) | striptags}}"
+           class="gn-md-contents"
            gn-metadata-open="md"
            gn-records="searchResults.records"
-           gn-formatter="formatter.defaultUrl"
-           title="{{md.resourceTitle}}">
-
-          <i class="fa gn-icon-{{md.resourceType[0]}}" title="{{md.resourceType[0] | translate}}"/>
-          {{(md.resourceTitle) | characters:80}}</a>
-      </h3>
-    </div>
-
-    <!--start middle row-->
-    <div title="{{(md.resourceAbstract) | striptags}}"
-         gn-metadata-open="md"
-         gn-records="searchResults.records"
-         gn-formatter="formatter.defaultUrl">
-      <!-- Thumbnail -->
-      <div class="gn-md-thumbnail">
+           gn-formatter="formatter.defaultUrl">
+        <!-- Thumbnail -->
         <div class="gn-md-thumbnail"
-             data-ng-class="{'gn-md-no-thumbnail': !md.overview[0]}"></div>
-        <img class="gn-img-thumbnail"
-             alt="{{md.resourceTitle}}"
-             data-ng-src="{{md.overview[0].url}}?size=140"
-             data-ng-if="md.overview[0]"/>
-      </div>
+             data-ng-class="{'gn-md-no-thumbnail': !md.overview[0]}">
+          <img class="gn-img-thumbnail"
+               alt="{{md.resourceTitle}}"
+               data-ng-src="{{md.overview[0].url}}?size=140"
+               data-ng-if="md.overview[0]"/>
+        </div>
 
-
-      <div style="float:left; display:block; width: calc(100% - 162px)">
-
-        <div class="text-justify gn-md-abstract ellipsis">
-          <div>
-            <p>{{md.resourceAbstract  | striptags}}</p>
+        <div class="gn-md-details">
+          <div class="gn-md-abstract ">
+            <div class="ellipsis">
+              <p>{{md.resourceAbstract | striptags}}</p>
+            </div>
+            <p class="text-muted">
+              {{md.OrgForResource[0]}}
+            </p>
           </div>
         </div>
 
-        <div class="row gn-md-details">
-          <p ng-if="::!md.OrgForResource">&nbsp;</p>
-          <!--<p ng-if="::!md.getAllContacts().resource">&nbsp;</p>
-          <p data-ng-repeat="c in ::md.getAllContacts().resource track by $index">
-            <img data-ng-if="::c.logo"
-                 data-ng-src="{{::c.logo}}"
-                 class="gn-source-logo"
-                 title="{{::c.organisation}} ({{::c.role}})"/>
-            {{::c.organisation}}
-          </p>-->
-          <p data-ng-repeat="o in ::md.OrgForResource | unique"
-             title="{{::o}}">
-            {{::o}}
-          </p>
-        </div>
       </div>
-
-
-      <!--<div>
-        <span data-ng-repeat="h in md.inner_hits.others.hits.hits">
-          <i class="fa fa-fw {{h._source.docType === 'feature' ? 'fa-map-pin' : 'gn-icon-' + h._source.resourceType}}"></i> {{h._source.resourceTitle}},
-        </span>
-      </div>-->
-
     </div>
-    <!--end middle row-->
+    <!-- /.gn-card-body -->
 
-    <!--start bottom row-->
-    <div>
-      <!-- Display the first metadata status (apply to ISO19139 record) -->
+    <div class="panel-footer gn-card-footer clearfix">
       <div data-ng-if="md.status_text.length > 0"
            title="{{md.status_text[0]}}"
            class="gn-status gn-status-{{md.status[0]}}">{{md.status_text[0]}}
@@ -143,8 +76,7 @@
         </div>
       </div>
     </div>
-
-    <!--end bottom row-->
-    <div style="clear: both;"></div>
+    <!-- /.gn-card-footer -->
   </li>
+  <!-- /.gn-card -->
 </ul>
