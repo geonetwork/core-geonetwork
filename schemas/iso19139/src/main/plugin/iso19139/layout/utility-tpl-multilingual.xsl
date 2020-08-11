@@ -123,24 +123,46 @@
   <!-- Template used to return a translation if one found,
        or the text in default metadata language
        or the first non empty text element.
+
+       If language id used is "#ALL", then all translations
+       are reported with an xml:lang attribute indicating
+       the language of the text.
     -->
   <xsl:template name="localised" mode="localised" match="*[gco:CharacterString or gmx:Anchor or gmd:PT_FreeText]">
     <xsl:param name="langId"/>
 
-    <xsl:variable name="translation"
-                  select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId]"/>
 
     <xsl:variable name="mainValue"
                   select="(gco:CharacterString|gmx:Anchor)[1]"/>
+    <xsl:choose>
+      <xsl:when test="$langId = '#ALL' and gmd:PT_FreeText">
+        <xsl:choose>
+          <xsl:when test="gmd:PT_FreeText">
+            <xsl:for-each select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[. != '']">
+              <xsl:variable name="id"
+                            select="replace(@locale, '#', '')"/>
+              <div xml:lang="{$metadata//gmd:locale/*[@id = $id]/gmd:languageCode/*/@codeListValue}"><xsl:value-of select="."/></div>
+            </xsl:for-each>
+          </xsl:when>
+          <xsl:otherwise>
+            <div xml:lang="{$metadata//gmd:MD_Metadata/gmd:language/*/@codeListValue}"><xsl:value-of select="$mainValue"/></div>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="translation"
+                      select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId]"/>
 
-    <xsl:variable name="firstNonEmptyValue"
-                  select="((gco:CharacterString|gmx:Anchor|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString)[. != ''])[1]"/>
+        <xsl:variable name="firstNonEmptyValue"
+                      select="((gco:CharacterString|gmx:Anchor|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString)[. != ''])[1]"/>
 
-    <xsl:value-of select="if($translation != '')
+        <xsl:value-of select="if($translation != '')
                           then $translation
                           else (if($mainValue != '')
                                 then $mainValue
                                 else $firstNonEmptyValue)"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 
