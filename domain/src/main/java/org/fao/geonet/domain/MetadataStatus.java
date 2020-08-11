@@ -26,6 +26,7 @@ package org.fao.geonet.domain;
 import com.fasterxml.jackson.annotation.*;
 import org.fao.geonet.domain.converter.JpaConverterJson;
 import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
+import org.hibernate.annotations.Type;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -338,8 +339,8 @@ public class MetadataStatus extends GeonetEntity {
     // Todo apply this once jpa is upgraded - cannot be applied due to the following bug.
     //      Also remove getTitlesString and setTitlesString - they were only created for JPA
     // https://hibernate.atlassian.net/browse/HHH-10818
-    //@Column
     //@Lob
+    //@Type(type = "org.hibernate.type.StringClobType")
     //@Basic(fetch = FetchType.LAZY)
     //@Convert(converter = JpaConverterJson.class)
     @Transient
@@ -349,6 +350,7 @@ public class MetadataStatus extends GeonetEntity {
 
     @Column(name = "titles")
     @Lob
+    @Type(type = "org.hibernate.type.StringClobType")
     @Basic(fetch = FetchType.LAZY)
     @JsonProperty(value = "titles")
     @JsonRawValue
@@ -382,8 +384,8 @@ public class MetadataStatus extends GeonetEntity {
         this.titles = (LinkedHashMap<String, String>) jpaConverterJson.convertToEntityAttribute(titles);
     }
 
-    @Column
     @Lob
+    @Type(type = "org.hibernate.type.StringClobType")
     @Basic(fetch = FetchType.LAZY)
     public String getPreviousState() {
         return previousState;
@@ -393,8 +395,8 @@ public class MetadataStatus extends GeonetEntity {
         this.previousState = previousState;
     }
 
-    @Column
     @Lob
+    @Type(type = "org.hibernate.type.StringClobType")
     @Basic(fetch = FetchType.LAZY)
     public String getCurrentState() {
         return currentState;
