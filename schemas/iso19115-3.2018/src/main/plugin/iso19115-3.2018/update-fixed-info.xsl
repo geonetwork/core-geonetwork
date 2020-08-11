@@ -607,6 +607,36 @@
   </xsl:template>
 
 
+  <xsl:template match="mri:descriptiveKeywords[not(*/mri:thesaurusName)]" priority="10">
+    <xsl:variable name="name" select="name()"/>
+    <xsl:variable name="freeTextKeywordBlockType"
+                  select="*/mri:type/*/@codeListValue"/>
+    <xsl:variable name="isFirstFreeTextKeywordBlockOfThisType"
+                  select="count(preceding-sibling::*[
+                          name() = $name
+                          and not(*/mri:thesaurusName)
+                          and */mri:type/*/@codeListValue = $freeTextKeywordBlockType]) = 0"/>
+
+    <xsl:if test="$isFirstFreeTextKeywordBlockOfThisType">
+      <xsl:copy>
+        <xsl:apply-templates select="@*"/>
+        <mri:MD_Keywords>
+          <xsl:apply-templates select="*/mri:keyword"/>
+
+          <!-- Combine all free text keyword of same type -->
+          <xsl:apply-templates select="following-sibling::*[
+                      name() = $name
+                      and not(*/mri:thesaurusName)
+                      and */mri:type/*/@codeListValue = $freeTextKeywordBlockType]/*/mri:keyword"/>
+
+          <xsl:apply-templates select="*/mri:type"/>
+        </mri:MD_Keywords>
+      </xsl:copy>
+    </xsl:if>
+  </xsl:template>
+
+
+
   <!-- Remove empty DQ elements, empty transfer options. -->
   <xsl:template match="mdb:dataQualityInfo[count(*) = 0]"/>
   <xsl:template match="mrd:transferOptions[mrd:MD_DigitalTransferOptions/count(*) = 0]"/>
