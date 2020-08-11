@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mpc="http://standards.iso.org/iso/19115/-3/mpc/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mpc/1.0" version="1.0">
+  <include schemaLocation="mpc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="MD_PortrayalCatalogueReference" substitutionGroup="mcc:Abstract_PortrayalCatalogueInformation" type="mpc:MD_PortrayalCatalogueReference_Type">
+    <annotation>
+      <documentation>information identifying the portrayal catalogue used</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_PortrayalCatalogueReference_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_PortrayalCatalogueInformation_Type">
+        <sequence>
+          <element maxOccurs="unbounded" name="portrayalCatalogueCitation" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>bibliographic reference to the portrayal catalogue cited</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_PortrayalCatalogueReference_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mpc:MD_PortrayalCatalogueReference"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

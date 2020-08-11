@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" version="1.0">
+  <include schemaLocation="mcc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element abstract="true" name="Abstract_AcquisitionInformation" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_AcquisitionInformation_Type"/>
+  <complexType abstract="true" name="Abstract_AcquisitionInformation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_AcquisitionInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_AcquisitionInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_ApplicationSchemaInformation" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_ApplicationSchemaInformation_Type"/>
+  <complexType abstract="true" name="Abstract_ApplicationSchemaInformation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_ApplicationSchemaInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_ApplicationSchemaInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_Citation" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_Citation_Type"/>
+  <complexType abstract="true" name="Abstract_Citation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_Citation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_Citation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_Constraints" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_Constraints_Type"/>
+  <complexType abstract="true" name="Abstract_Constraints_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_Constraints_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_Constraints"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_ContentInformation" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_ContentInformation_Type"/>
+  <complexType abstract="true" name="Abstract_ContentInformation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_ContentInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_ContentInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_Distribution" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_Distribution_Type"/>
+  <complexType abstract="true" name="Abstract_Distribution_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_Distribution_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_Distribution"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_Extent" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_Extent_Type"/>
+  <complexType abstract="true" name="Abstract_Extent_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_Extent_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_Extent"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_Format" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_Format_Type">
+    <annotation>
+      <documentation>&lt;ul&gt; &lt;li&gt;&lt;/li&gt; &lt;/ul&gt;</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="Abstract_Format_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_Format_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_Format"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_LineageInformation" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_LineageInformation_Type"/>
+  <complexType abstract="true" name="Abstract_LineageInformation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_LineageInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_LineageInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_MaintenanceInformation" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_MaintenanceInformation_Type"/>
+  <complexType abstract="true" name="Abstract_MaintenanceInformation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_MaintenanceInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_MaintenanceInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_Metadata" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_Metadata_Type"/>
+  <complexType abstract="true" name="Abstract_Metadata_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_Metadata_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_Metadata"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_MetadataExtension" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_MetadataExtension_Type"/>
+  <complexType abstract="true" name="Abstract_MetadataExtension_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_MetadataExtension_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_MetadataExtension"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_OnlineResource" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_OnlineResource_Type"/>
+  <complexType abstract="true" name="Abstract_OnlineResource_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_OnlineResource_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_OnlineResource"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_Platform" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_Platform_Type"/>
+  <complexType abstract="true" name="Abstract_Platform_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_Platform_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_Platform"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_PortrayalCatalogueInformation" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_PortrayalCatalogueInformation_Type"/>
+  <complexType abstract="true" name="Abstract_PortrayalCatalogueInformation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_PortrayalCatalogueInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_PortrayalCatalogueInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_ReferenceSystem" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_ReferenceSystem_Type"/>
+  <complexType abstract="true" name="Abstract_ReferenceSystem_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_ReferenceSystem_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_ReferenceSystem"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_ResourceDescription" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_ResourceDescription_Type"/>
+  <complexType abstract="true" name="Abstract_ResourceDescription_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_ResourceDescription_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_ResourceDescription"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_Responsibility" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_Responsibility_Type"/>
+  <complexType abstract="true" name="Abstract_Responsibility_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_Responsibility_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_Responsibility"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_SpatialRepresentation" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_SpatialRepresentation_Type"/>
+  <complexType abstract="true" name="Abstract_SpatialRepresentation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_SpatialRepresentation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_SpatialRepresentation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_SpatialResolution" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_SpatialResolution_Type"/>
+  <complexType abstract="true" name="Abstract_SpatialResolution_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_SpatialResolution_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_SpatialResolution"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_StandardOrderProcess" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_StandardOrderProcess_Type"/>
+  <complexType abstract="true" name="Abstract_StandardOrderProcess_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_StandardOrderProcess_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_StandardOrderProcess"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_TypedDate" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_TypedDate_Type"/>
+  <complexType abstract="true" name="Abstract_TypedDate_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_TypedDate_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_TypedDate"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!--
+    Abstract SV_ServiceParameter added as part of ISO 19115-2 Revision 2017-01 
+  -->
+  <element abstract="true" name="Abstract_Parameter" substitutionGroup="gco:AbstractObject" type="mcc:Abstract_Parameter_Type"/>
+  <complexType abstract="true" name="Abstract_Parameter_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_Parameter_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:Abstract_Parameter"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

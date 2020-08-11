@@ -31,9 +31,8 @@
     <version>4.0.0-alpha.2</version>
   </parent>
 
-  <version>4.0</version>
-
   <modelVersion>4.0.0</modelVersion>
+  <groupId>org.geonetwork-opensource.schemas</groupId>
   <artifactId>gn-schemas</artifactId>
   <name>GeoNetwork schema plugins</name>
   <packaging>pom</packaging>
@@ -53,9 +52,12 @@
     <module>iso19139</module>
     <module>iso19115-3.2018</module>
   </modules>
+
+  <profiles>
+  </profiles>
+
   <properties>
     <rootProjectDir>../..</rootProjectDir>
-    <gn.project.version>4.0.0-alpha.2</gn.project.version>
   </properties>
 
 </project>

@@ -365,7 +365,7 @@ public class MetadataInsertDeleteApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Create a new record", description ="Create a record from a template or by copying an existing record."
         + "Return the UUID of the newly created record. Existing links in the "
         + "source record are preserved, this means that the new record may "
-        + "contains link to the source attachements. They need to be manually "
+        + "contains link to the source attachments. They need to be manually "
         + "updated after creation.")
     @RequestMapping(value = "/duplicate", method = {RequestMethod.PUT}, produces = {
         MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -576,7 +576,7 @@ public class MetadataInsertDeleteApi {
             throw new IllegalArgumentException(String.format("A context as XML or a remote URL MUST be provided."));
         }
         if (StringUtils.isEmpty(xml) && StringUtils.isEmpty(filename)) {
-            throw new IllegalArgumentException(String.format("A context as XML will be saved as a record attachement. "
+            throw new IllegalArgumentException(String.format("A context as XML will be saved as a record attachment. "
                 + "You MUST provide a filename in this case."));
         }
 

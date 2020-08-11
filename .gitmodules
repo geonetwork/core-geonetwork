@@ -10,6 +10,3 @@
 [submodule "docs/manuals"]
 	path = docs/manuals
 	url = https://github.com/geonetwork/doc.git
-[submodule "schemas/iso19115-3.2018"]
-	path = schemas/iso19115-3.2018
-	url = https://github.com/metadata101/iso19115-3.2018

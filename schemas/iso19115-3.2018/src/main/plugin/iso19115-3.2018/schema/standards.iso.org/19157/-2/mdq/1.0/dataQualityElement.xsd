@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:dqc="http://standards.iso.org/iso/19157/-2/dqc/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19157/-2/mdq/1.0" version="1.0">
+  <include schemaLocation="mdq.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19157/-2/dqc/1.0" schemaLocation="../../../../19157/-2/dqc/1.0/dqc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="DQ_AbsoluteExternalPositionalAccuracy" substitutionGroup="mdq:AbstractDQ_PositionalAccuracy" type="mdq:DQ_AbsoluteExternalPositionalAccuracy_Type">
+    <annotation>
+      <documentation>closeness of reported coordinate values to values accepted as or being true</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_AbsoluteExternalPositionalAccuracy_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_PositionalAccuracy_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_AbsoluteExternalPositionalAccuracy_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_AbsoluteExternalPositionalAccuracy"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_AccuracyOfATimeMeasurement" substitutionGroup="mdq:AbstractDQ_TemporalQuality" type="mdq:DQ_AccuracyOfATimeMeasurement_Type">
+    <annotation>
+      <documentation>correctness of the temporal references of an item (reporting of error in time measurement)</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_AccuracyOfATimeMeasurement_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_TemporalQuality_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_AccuracyOfATimeMeasurement_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_AccuracyOfATimeMeasurement"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractDQ_Completeness" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:AbstractDQ_Completeness_Type">
+    <annotation>
+      <documentation>presence and absence of features, their attributes and their relationships</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractDQ_Completeness_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_Element_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractDQ_Completeness_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:AbstractDQ_Completeness"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_CompletenessCommission" substitutionGroup="mdq:AbstractDQ_Completeness" type="mdq:DQ_CompletenessCommission_Type">
+    <annotation>
+      <documentation>excess data present in the dataset, as described by the scope</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_CompletenessCommission_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_Completeness_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_CompletenessCommission_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_CompletenessCommission"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_CompletenessOmission" substitutionGroup="mdq:AbstractDQ_Completeness" type="mdq:DQ_CompletenessOmission_Type">
+    <annotation>
+      <documentation>data absent from the dataset, as described by the scope</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_CompletenessOmission_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_Completeness_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_CompletenessOmission_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_CompletenessOmission"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_ConceptualConsistency" substitutionGroup="mdq:AbstractDQ_LogicalConsistency" type="mdq:DQ_ConceptualConsistency_Type">
+    <annotation>
+      <documentation>adherence to rules of the conceptual schema</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_ConceptualConsistency_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_LogicalConsistency_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_ConceptualConsistency_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_ConceptualConsistency"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_DataInspection" substitutionGroup="mdq:DQ_EvaluationMethod" type="mdq:DQ_DataInspection_Type"/>
+  <complexType name="DQ_DataInspection_Type">
+    <complexContent>
+      <extension base="mdq:DQ_EvaluationMethod_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_DataInspection_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_DataInspection"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_DataQuality" substitutionGroup="dqc:Abstract_DataQuality" type="mdq:DQ_DataQuality_Type">
+    <annotation>
+      <documentation>quality information for the data specified by a data quality scope</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_DataQuality_Type">
+    <complexContent>
+      <extension base="dqc:Abstract_DataQuality_Type">
+        <sequence>
+          <element name="scope" type="mcc:MD_Scope_PropertyType">
+            <annotation>
+              <documentation>the specific data to which the data quality information applies</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="standaloneQualityReport" type="mdq:DQ_StandaloneQualityReportInformation_PropertyType"/>
+          <element maxOccurs="unbounded" name="report" type="mdq:AbstractDQ_Element_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_DataQuality_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_DataQuality"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_DomainConsistency" substitutionGroup="mdq:AbstractDQ_LogicalConsistency" type="mdq:DQ_DomainConsistency_Type">
+    <annotation>
+      <documentation>adherence of values to the value domains</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_DomainConsistency_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_LogicalConsistency_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_DomainConsistency_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_DomainConsistency"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractDQ_Element" substitutionGroup="dqc:Abstract_QualityElement" type="mdq:AbstractDQ_Element_Type">
+    <annotation>
+      <documentation>aspect of quantitative quality information</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractDQ_Element_Type">
+    <complexContent>
+      <extension base="dqc:Abstract_QualityElement_Type">
+        <sequence>
+          <element minOccurs="0" name="standaloneQualityReportDetails" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Clause in the standaloneQualityReport where this data quality element or any related data quality element (original results in case of derivation or aggregation) is described</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="measure" type="mdq:DQ_MeasureReference_PropertyType"/>
+          <element minOccurs="0" name="evaluationMethod" type="mdq:DQ_EvaluationMethod_PropertyType"/>
+          <!-- result element moved to after evaluationMethod by Ted Habermann 2014-07-29 -->
+          <element maxOccurs="unbounded" name="result" type="mdq:AbstractDQ_Result_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="derivedElement" type="mdq:AbstractDQ_Element_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractDQ_Element_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:AbstractDQ_Element"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_FormatConsistency" substitutionGroup="mdq:AbstractDQ_LogicalConsistency" type="mdq:DQ_FormatConsistency_Type">
+    <annotation>
+      <documentation>degree to which data is stored in accordance with the physical structure of the dataset, as described by the scope</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_FormatConsistency_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_LogicalConsistency_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_FormatConsistency_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_FormatConsistency"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_GriddedDataPositionalAccuracy" substitutionGroup="mdq:AbstractDQ_PositionalAccuracy" type="mdq:DQ_GriddedDataPositionalAccuracy_Type">
+    <annotation>
+      <documentation>closeness of gridded data position values to values accepted as or being true</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_GriddedDataPositionalAccuracy_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_PositionalAccuracy_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_GriddedDataPositionalAccuracy_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_GriddedDataPositionalAccuracy"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractDQ_LogicalConsistency" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:AbstractDQ_LogicalConsistency_Type">
+    <annotation>
+      <documentation>degree of adherence to logical rules of data structure, attribution and relationships (data structure can be conceptual, logical or physical)</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractDQ_LogicalConsistency_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_Element_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractDQ_LogicalConsistency_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:AbstractDQ_LogicalConsistency"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_MeasureReference" substitutionGroup="gco:AbstractObject" type="mdq:DQ_MeasureReference_Type">
+    <annotation>
+      <documentation>reference to the measure used</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_MeasureReference_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" name="measureIdentification" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>Identifier of the measure, value uniquely identifying the measure within a namespace</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="nameOfMeasure" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>name of the test applied to the data</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="measureDescription" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>description of the measure</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_MeasureReference_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_MeasureReference"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_NonQuantitativeAttributeCorrectness" substitutionGroup="mdq:AbstractDQ_ThematicAccuracy" type="mdq:DQ_NonQuantitativeAttributeCorrectness_Type">
+    <annotation>
+      <documentation>correctness of non-quantitative attributes</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_NonQuantitativeAttributeCorrectness_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_ThematicAccuracy_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_NonQuantitativeAttributeCorrectness_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_NonQuantitativeAttributeCorrectness"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractDQ_PositionalAccuracy" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:AbstractDQ_PositionalAccuracy_Type">
+    <annotation>
+      <documentation>accuracy of the position of features</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractDQ_PositionalAccuracy_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_Element_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractDQ_PositionalAccuracy_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:AbstractDQ_PositionalAccuracy"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_QuantitativeAttributeAccuracy" substitutionGroup="mdq:AbstractDQ_ThematicAccuracy" type="mdq:DQ_QuantitativeAttributeAccuracy_Type">
+    <annotation>
+      <documentation>accuracy of quantitative attributes</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_QuantitativeAttributeAccuracy_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_ThematicAccuracy_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_QuantitativeAttributeAccuracy_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_QuantitativeAttributeAccuracy"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_RelativeInternalPositionalAccuracy" substitutionGroup="mdq:AbstractDQ_PositionalAccuracy" type="mdq:DQ_RelativeInternalPositionalAccuracy_Type">
+    <annotation>
+      <documentation>closeness of the relative positions of features in the scope to their respective relative positions accepted as or being true</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_RelativeInternalPositionalAccuracy_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_PositionalAccuracy_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_RelativeInternalPositionalAccuracy_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_RelativeInternalPositionalAccuracy"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_StandaloneQualityReportInformation" substitutionGroup="gco:AbstractObject" type="mdq:DQ_StandaloneQualityReportInformation_Type">
+    <annotation>
+      <documentation>reference to an external standalone quality report</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_StandaloneQualityReportInformation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="reportReference" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>reference to the associated standalone quality report</documentation>
+            </annotation>
+          </element>
+          <element name="abstract" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>abstract for the associated standalone quality report</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="elementReport" type="mdq:AbstractDQ_Element_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_StandaloneQualityReportInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_StandaloneQualityReportInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_TemporalConsistency" substitutionGroup="mdq:AbstractDQ_TemporalQuality" type="mdq:DQ_TemporalConsistency_Type">
+    <annotation>
+      <documentation>correctness of ordered events or sequences, if reported</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_TemporalConsistency_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_TemporalQuality_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_TemporalConsistency_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_TemporalConsistency"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractDQ_TemporalQuality" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:AbstractDQ_TemporalQuality_Type">
+    <annotation>
+      <documentation>accuracy of the temporal attributes and temporal relationships of features</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractDQ_TemporalQuality_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_Element_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractDQ_TemporalQuality_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:AbstractDQ_TemporalQuality"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_TemporalValidity" substitutionGroup="mdq:AbstractDQ_TemporalQuality" type="mdq:DQ_TemporalValidity_Type">
+    <annotation>
+      <documentation>validity of data specified by the scope with respect to time</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_TemporalValidity_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_TemporalQuality_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_TemporalValidity_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_TemporalValidity"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractDQ_ThematicAccuracy" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:AbstractDQ_ThematicAccuracy_Type">
+    <annotation>
+      <documentation>accuracy of quantitative attributes and the correctness of non-quantitative attributes and of the classifications of features and their relationships</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractDQ_ThematicAccuracy_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_Element_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractDQ_ThematicAccuracy_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:AbstractDQ_ThematicAccuracy"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_ThematicClassificationCorrectness" substitutionGroup="mdq:AbstractDQ_ThematicAccuracy" type="mdq:DQ_ThematicClassificationCorrectness_Type">
+    <annotation>
+      <documentation>comparison of the classes assigned to features or their attributes to a universe of discourse</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_ThematicClassificationCorrectness_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_ThematicAccuracy_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_ThematicClassificationCorrectness_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_ThematicClassificationCorrectness"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_TopologicalConsistency" substitutionGroup="mdq:AbstractDQ_LogicalConsistency" type="mdq:DQ_TopologicalConsistency_Type">
+    <annotation>
+      <documentation>correctness of the explicitly encoded topological characteristics of the dataset as described by the scope</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_TopologicalConsistency_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_LogicalConsistency_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_TopologicalConsistency_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_TopologicalConsistency"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_UsabilityElement" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_UsabilityElement_Type">
+    <annotation>
+      <documentation>degree of adherence of a dataset to a specific set of requirements</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_UsabilityElement_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_Element_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_UsabilityElement_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_UsabilityElement"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

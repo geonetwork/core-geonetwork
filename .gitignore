@@ -28,6 +28,7 @@ schematrons/.build
 docs/*/users/build
 docs/schema-loc-*.rst
 web/src/main/webapp/WEB-INF/server.prop
+*.bak
 *.iml
 .*/
 */.*

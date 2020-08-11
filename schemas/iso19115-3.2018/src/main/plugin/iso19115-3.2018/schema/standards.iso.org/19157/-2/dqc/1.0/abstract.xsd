@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:dqc="http://standards.iso.org/iso/19157/-2/dqc/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19157/-2/dqc/1.0" version="1.0">
+  <include schemaLocation="dqc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0"
+          schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element abstract="true" name="Abstract_DataQuality" substitutionGroup="gco:AbstractObject" type="dqc:Abstract_DataQuality_Type"/>
+  <complexType abstract="true" name="Abstract_DataQuality_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_DataQuality_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="dqc:Abstract_DataQuality"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_QualityElement" substitutionGroup="gco:AbstractObject" type="dqc:Abstract_QualityElement_Type"/>
+  <complexType abstract="true" name="Abstract_QualityElement_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="dateTime" type="gco:DateTime_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_QualityElement_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="dqc:Abstract_QualityElement"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

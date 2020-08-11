@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2020 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -26,11 +26,9 @@ package org.fao.geonet.kernel.datamanager.base;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
+import com.google.common.collect.*;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.transaction.TransactionManager;
@@ -42,39 +40,9 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Constants;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataDataInfo;
-import org.fao.geonet.domain.MetadataDataInfo_;
-import org.fao.geonet.domain.MetadataFileUpload;
-import org.fao.geonet.domain.MetadataFileUpload_;
-import org.fao.geonet.domain.MetadataSourceInfo;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.MetadataValidation;
-import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.EditLib;
-import org.fao.geonet.kernel.HarvestInfoProvider;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.ThesaurusManager;
-import org.fao.geonet.kernel.UpdateDatestamp;
-import org.fao.geonet.kernel.XmlSerializer;
-import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
-import org.fao.geonet.kernel.datamanager.IMetadataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataOperations;
-import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.datamanager.IMetadataValidator;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
@@ -82,19 +50,7 @@ import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataFileUploadRepository;
-import org.fao.geonet.repository.MetadataRatingByIpRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.MetadataStatusRepository;
-import org.fao.geonet.repository.MetadataValidationRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.PathSpec;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.Updater;
-import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.UserSavedSelectionRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
@@ -125,18 +81,7 @@ import javax.transaction.Transactional;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -313,8 +258,8 @@ public class BaseMetadataManager implements IMetadataManager {
     @Deprecated
     public void flush() {
         TransactionManager.runInTransaction("DataManager flush()", getApplicationContext(),
-            TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED,
-            TransactionManager.CommitBehavior.ALWAYS_COMMIT, false, new TransactionTask<Object>() {
+            TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED, TransactionManager.CommitBehavior.ALWAYS_COMMIT, false,
+            new TransactionTask<Object>() {
                 @Override
                 public Object doInTransaction(TransactionStatus transaction) throws Throwable {
                     _entityManager.flush();
@@ -360,8 +305,8 @@ public class BaseMetadataManager implements IMetadataManager {
             }
         };
 
-        metadataFileUploadRepository.createBatchUpdateQuery(deletedDatePathSpec, new ISODate().toString(),
-            MetadataFileUploadSpecs.isNotDeletedForMetadata(intId));
+        metadataFileUploadRepository
+            .createBatchUpdateQuery(deletedDatePathSpec, new ISODate().toString(), MetadataFileUploadSpecs.isNotDeletedForMetadata(intId));
 
         // --- remove metadata
         getXmlSerializer().delete(id, context);
@@ -431,10 +376,10 @@ public class BaseMetadataManager implements IMetadataManager {
      */
     @Override
     public String createMetadata(ServiceContext context, String templateId, String groupOwner, String source, int owner,
-                                 String parentUuid, String isTemplate, boolean fullRightsForGroup) throws Exception {
+        String parentUuid, String isTemplate, boolean fullRightsForGroup) throws Exception {
 
-        return createMetadata(context, templateId, groupOwner, source, owner, parentUuid, isTemplate,
-            fullRightsForGroup, UUID.randomUUID().toString());
+        return createMetadata(context, templateId, groupOwner, source, owner, parentUuid, isTemplate, fullRightsForGroup,
+            UUID.randomUUID().toString());
     }
 
     /**
@@ -446,7 +391,7 @@ public class BaseMetadataManager implements IMetadataManager {
      */
     @Override
     public String createMetadata(ServiceContext context, String templateId, String groupOwner, String source, int owner,
-                                 String parentUuid, String isTemplate, boolean fullRightsForGroup, String uuid) throws Exception {
+        String parentUuid, String isTemplate, boolean fullRightsForGroup, String uuid) throws Exception {
         AbstractMetadata templateMetadata = metadataUtils.findOne(templateId);
         if (templateMetadata == null) {
             throw new IllegalArgumentException("Template id not found : " + templateId);
@@ -461,8 +406,7 @@ public class BaseMetadataManager implements IMetadataManager {
         boolean isMetadata = templateMetadata.getDataInfo().getType() == MetadataType.METADATA;
         setMetadataTitle(schema, xml, context.getLanguage(), !isMetadata);
         if (isMetadata) {
-            xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO,
-                context);
+            xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO, context);
         }
 
         final Metadata newMetadata = new Metadata();
@@ -481,8 +425,8 @@ public class BaseMetadataManager implements IMetadataManager {
         if (group.isPresent() && (group.get().getDefaultCategory() != null)) {
             newMetadata.getMetadataCategories().add(group.get().getDefaultCategory());
         }
-        Collection<MetadataCategory> filteredCategories = Collections2.filter(templateMetadata.getCategories(),
-            new Predicate<MetadataCategory>() {
+        Collection<MetadataCategory> filteredCategories = Collections2
+            .filter(templateMetadata.getCategories(), new Predicate<MetadataCategory>() {
                 @Override
                 public boolean apply(@Nullable MetadataCategory input) {
                     return input != null;
@@ -524,16 +468,14 @@ public class BaseMetadataManager implements IMetadataManager {
                     for (Object o : titleNodes) {
                         if (o instanceof Element) {
                             Element title = (Element) o;
-                            title.setText(String.format(
-                                messages.getString(
-                                    "metadata.title.createdFrom" + (fromTemplate ? "Template" : "Record")),
-                                title.getTextTrim(),
-                                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+                            title.setText(String
+                                .format(messages.getString("metadata.title.createdFrom" + (fromTemplate ? "Template" : "Record")),
+                                    title.getTextTrim(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
                         }
                     }
                 } catch (JDOMException e) {
-                    LOGGER_DATA_MANAGER.debug("Check xpath '{}' for schema plugin '{}'. Error is '{}'.",
-                        new Object[]{path, schema, e.getMessage()});
+                    LOGGER_DATA_MANAGER
+                        .debug("Check xpath '{}' for schema plugin '{}'. Error is '{}'.", new Object[] { path, schema, e.getMessage() });
                 }
             });
         }
@@ -575,8 +517,8 @@ public class BaseMetadataManager implements IMetadataManager {
         newMetadata.setUuid(uuid);
         final ISODate isoChangeDate = changeDate != null ? new ISODate(changeDate) : new ISODate();
         final ISODate isoCreateDate = createDate != null ? new ISODate(createDate) : new ISODate();
-        newMetadata.getDataInfo().setChangeDate(isoChangeDate).setCreateDate(isoCreateDate).setSchemaId(schema)
-            .setDoctype(docType).setRoot(metadataXml.getQualifiedName()).setType(MetadataType.lookup(metadataType));
+        newMetadata.getDataInfo().setChangeDate(isoChangeDate).setCreateDate(isoCreateDate).setSchemaId(schema).setDoctype(docType)
+            .setRoot(metadataXml.getQualifiedName()).setType(MetadataType.lookup(metadataType));
         newMetadata.getSourceInfo().setOwner(owner).setSourceId(source);
         if (StringUtils.isNotEmpty(groupOwner)) {
             newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner));
@@ -612,11 +554,11 @@ public class BaseMetadataManager implements IMetadataManager {
         // Check if the schema is allowed by settings
         String mdImportSetting = settingManager.getValue(Settings.METADATA_IMPORT_RESTRICT);
         if (mdImportSetting != null && !mdImportSetting.equals("")) {
-            if (!newMetadata.getHarvestInfo().isHarvested()
-                && !Arrays.asList(mdImportSetting.split(",")).contains(schema)) {
-                throw new IllegalArgumentException(
-                    schema + " is not permitted in the database as a non-harvested metadata.  "
-                        + "Apply a import stylesheet to convert file to allowed schemas");
+            if (!newMetadata.getHarvestInfo().isHarvested() && !Arrays.asList(mdImportSetting.split(",")).contains(schema)) {
+                throw new IllegalArgumentException("The system setting '" + Settings.METADATA_IMPORT_RESTRICT
+                    + "' doesn't allow to import " + schema
+                    + " metadata records (they can still be harvested). "
+                    + "Apply an import stylesheet to convert file to one of the allowed schemas: " + mdImportSetting);
             }
         }
 
@@ -625,8 +567,8 @@ public class BaseMetadataManager implements IMetadataManager {
 
         if (updateFixedInfo && newMetadata.getDataInfo().getType() == MetadataType.METADATA) {
             String parentUuid = null;
-            metadataXml = updateFixedInfo(schema, Optional.<Integer>absent(), newMetadata.getUuid(), metadataXml,
-                parentUuid, updateDatestamp, context);
+            metadataXml = updateFixedInfo(schema, Optional.absent(), newMetadata.getUuid(), metadataXml, parentUuid,
+                updateDatestamp, context);
         }
 
         // --- store metadata
@@ -648,19 +590,18 @@ public class BaseMetadataManager implements IMetadataManager {
      * Retrieves a metadata (in xml) given its id; adds editing information if
      * requested and validation errors if requested.
      *
-     * @param forEditing          Add extra element to build metadocument
-     *                            {@link EditLib#expandElements(String, Element)}
+     * @param forEditing             Add extra element to build metadocument
+     *                               {@link EditLib#expandElements(String, Element)}
      * @param applyOperationsFilters Filter elements based on operation filters
-     *                              eg. Remove WMS if not dynamic. For example, when processing
-     *                              a record, the complete records need to be processed and saved (not a filtered version). If editing, set it to false.
-     *                            {@link EditLib#expandElements(String, Element)}
-     * @param keepXlinkAttributes When XLinks are resolved in non edit mode, do not remove XLink
-     *                            attributes.
+     *                               eg. Remove WMS if not dynamic. For example, when processing
+     *                               a record, the complete records need to be processed and saved (not a filtered version). If editing, set it to false.
+     *                               {@link EditLib#expandElements(String, Element)}
+     * @param keepXlinkAttributes    When XLinks are resolved in non edit mode, do not remove XLink
+     *                               attributes.
      */
     @Override
-    public Element getMetadata(ServiceContext srvContext, String id,
-                               boolean forEditing, boolean applyOperationsFilters,
-                               boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
+    public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean applyOperationsFilters,
+        boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
         boolean doXLinks = getXmlSerializer().resolveXLinks();
         Element metadataXml = getXmlSerializer().selectNoXLinkResolver(id, false, applyOperationsFilters);
         if (metadataXml == null)
@@ -689,8 +630,8 @@ public class BaseMetadataManager implements IMetadataManager {
             }
 
             if (withEditorValidationErrors) {
-                final Pair<Element, String> versionAndReport = metadataValidator.doValidate(srvContext.getUserSession(), schema, id, metadataXml,
-                    srvContext.getLanguage(), forEditing);
+                final Pair<Element, String> versionAndReport = metadataValidator
+                    .doValidate(srvContext.getUserSession(), schema, id, metadataXml, srvContext.getLanguage(), forEditing);
                 version = versionAndReport.two();
                 // Add the validation report to the record
                 // under a geonet:report element. The report
@@ -737,8 +678,7 @@ public class BaseMetadataManager implements IMetadataManager {
      * For update of owner info.
      */
     @Override
-    public synchronized void updateMetadataOwner(final int id, final String owner, final String groupOwner)
-        throws Exception {
+    public synchronized void updateMetadataOwner(final int id, final String owner, final String groupOwner) throws Exception {
         metadataRepository.update(id, new Updater<Metadata>() {
             @Override
             public void apply(@Nonnull Metadata entity) {
@@ -756,9 +696,9 @@ public class BaseMetadataManager implements IMetadataManager {
      * @return metadata if the that was updated
      */
     @Override
-    public synchronized AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId,
-                                                        final Element md, final boolean validate, final boolean ufo, final boolean index, final String lang,
-                                                        final String changeDate, final boolean updateDateStamp) throws Exception {
+    public synchronized AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
+        final boolean validate, final boolean ufo, final boolean index, final String lang, final String changeDate,
+        final boolean updateDateStamp) throws Exception {
         Log.trace(Geonet.DATA_MANAGER, "Update record with id " + metadataId);
 
         Element metadataXml = md;
@@ -827,8 +767,7 @@ public class BaseMetadataManager implements IMetadataManager {
     private String findUuid(Element metadataXml, String schema, AbstractMetadata metadata) throws Exception {
         String uuid = null;
 
-        if (schemaManager.getSchema(schema).isReadwriteUUID()
-            && metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
+        if (schemaManager.getSchema(schema).isReadwriteUUID() && metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
             && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
             uuid = metadataUtils.extractUUID(schema, metadataXml);
         }
@@ -904,8 +843,7 @@ public class BaseMetadataManager implements IMetadataManager {
          */
 
         // Add validity information
-        List<MetadataValidation> validationInfo = metadataValidationRepository
-            .findAllById_MetadataId(Integer.parseInt(id));
+        List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(Integer.parseInt(id));
         if (validationInfo == null || validationInfo.size() == 0) {
             addElement(info, Edit.Info.Elem.VALID, "-1");
         } else {
@@ -919,9 +857,8 @@ public class BaseMetadataManager implements IMetadataManager {
 
                 String ratio = "xsd".equals(type) ? "" : vi.getNumFailures() + "/" + vi.getNumTests();
 
-                info.addContent(new Element(Edit.Info.Elem.VALID + "_details")
-                    .addContent(new Element("type").setText(type)).addContent(new Element("status")
-                        .setText(vi.isValid() ? "1" : "0").addContent(new Element("ratio").setText(ratio))));
+                info.addContent(new Element(Edit.Info.Elem.VALID + "_details").addContent(new Element("type").setText(type))
+                    .addContent(new Element("status").setText(vi.isValid() ? "1" : "0").addContent(new Element("ratio").setText(ratio))));
             }
             addElement(info, Edit.Info.Elem.VALID, isValid);
         }
@@ -948,12 +885,11 @@ public class BaseMetadataManager implements IMetadataManager {
      * @param updateDatestamp updateDatestamp is not used when running XSL transformation
      */
     @Override
-    public Element updateFixedInfo(String schema, Optional<Integer> metadataId, String uuid, Element md,
-                                   String parentUuid, UpdateDatestamp updateDatestamp, ServiceContext context) throws Exception {
+    public Element updateFixedInfo(String schema, Optional<Integer> metadataId, String uuid, Element md, String parentUuid,
+        UpdateDatestamp updateDatestamp, ServiceContext context) throws Exception {
         boolean autoFixing = settingManager.getValueAsBool(Settings.SYSTEM_AUTOFIXING_ENABLE, true);
         if (autoFixing) {
-            LOGGER_DATA_MANAGER.debug("Autofixing is enabled, trying update-fixed-info (updateDatestamp: {})",
-                updateDatestamp.name());
+            LOGGER_DATA_MANAGER.debug("Autofixing is enabled, trying update-fixed-info (updateDatestamp: {})", updateDatestamp.name());
 
             AbstractMetadata metadata = null;
             if (metadataId.isPresent()) {
@@ -1024,10 +960,10 @@ public class BaseMetadataManager implements IMetadataManager {
 
             result.addContent(env);
             // apply update-fixed-info.xsl
-            Path styleSheet = metadataSchemaUtils.getSchemaDir(schema)
-                .resolve(metadata != null && metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE
-                    ? Geonet.File.UPDATE_FIXED_INFO_SUBTEMPLATE
-                    : Geonet.File.UPDATE_FIXED_INFO);
+            Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(
+                metadata != null && metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE ?
+                    Geonet.File.UPDATE_FIXED_INFO_SUBTEMPLATE :
+                    Geonet.File.UPDATE_FIXED_INFO);
             result = Xml.transform(result, styleSheet);
             return result;
         } else {
@@ -1050,8 +986,8 @@ public class BaseMetadataManager implements IMetadataManager {
      * @param params     parameters
      */
     @Override
-    public Set<String> updateChildren(ServiceContext srvContext, String parentUuid, String[] children,
-                                      Map<String, Object> params) throws Exception {
+    public Set<String> updateChildren(ServiceContext srvContext, String parentUuid, String[] children, Map<String, Object> params)
+        throws Exception {
         String parentId = (String) params.get(Params.ID);
         String parentSchema = (String) params.get(Params.SCHEMA);
 
@@ -1079,16 +1015,14 @@ public class BaseMetadataManager implements IMetadataManager {
 
             Element child = getMetadata(srvContext, childId, forEditing, false, withValidationErrors, keepXlinkAttributes);
 
-            String childSchema = child.getChild(Edit.RootChild.INFO, Edit.NAMESPACE)
-                .getChildText(Edit.Info.Elem.SCHEMA);
+            String childSchema = child.getChild(Edit.RootChild.INFO, Edit.NAMESPACE).getChildText(Edit.Info.Elem.SCHEMA);
 
             // Check schema matching. CHECKME : this suppose that parent and
             // child are in the same schema (even not profil different)
             if (!childSchema.equals(parentSchema)) {
                 untreatedChildSet.add(childId);
-                LOGGER_DATA_MANAGER.debug(
-                    "Could not update child ({}) because schema ({}) is different from the parent one ({}).",
-                    new Object[]{childId, childSchema, parentSchema});
+                LOGGER_DATA_MANAGER.debug("Could not update child ({}) because schema ({}) is different from the parent one ({}).",
+                    new Object[] { childId, childSchema, parentSchema });
                 continue;
             }
             LOGGER_DATA_MANAGER.debug("Updating child ({}) ...", childId);
@@ -1102,8 +1036,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
             // --- do an XSL transformation
 
-            Path styleSheet = metadataSchemaUtils.getSchemaDir(parentSchema)
-                .resolve(Geonet.File.UPDATE_CHILD_FROM_PARENT_INFO);
+            Path styleSheet = metadataSchemaUtils.getSchemaDir(parentSchema).resolve(Geonet.File.UPDATE_CHILD_FROM_PARENT_INFO);
             Element childForUpdate = Xml.transform(rootEl, styleSheet, params);
 
             getXmlSerializer().update(childId, childForUpdate, new ISODate().toString(), true, null, srvContext);
@@ -1130,20 +1063,17 @@ public class BaseMetadataManager implements IMetadataManager {
      *                      privilege information should be added.
      */
     @Override
-    public void buildPrivilegesMetadataInfo(ServiceContext context, Map<String, Element> mdIdToInfoMap)
-        throws Exception {
-        Collection<Integer> metadataIds = Collections2.transform(mdIdToInfoMap.keySet(),
-            new Function<String, Integer>() {
-                @Nullable
-                @Override
-                public Integer apply(String input) {
-                    return Integer.valueOf(input);
-                }
-            });
+    public void buildPrivilegesMetadataInfo(ServiceContext context, Map<String, Element> mdIdToInfoMap) throws Exception {
+        Collection<Integer> metadataIds = Collections2.transform(mdIdToInfoMap.keySet(), new Function<String, Integer>() {
+            @Nullable
+            @Override
+            public Integer apply(String input) {
+                return Integer.valueOf(input);
+            }
+        });
         Specification<OperationAllowed> operationAllowedSpec = OperationAllowedSpecs.hasMetadataIdIn(metadataIds);
 
-        final Collection<Integer> allUserGroups = accessManager.getUserGroups(context.getUserSession(),
-            context.getIpAddress(), false);
+        final Collection<Integer> allUserGroups = accessManager.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
         final SetMultimap<Integer, ReservedOperation> operationsPerMetadata = loadOperationsAllowed(context,
             where(operationAllowedSpec).and(OperationAllowedSpecs.hasGroupIdIn(allUserGroups)));
         final Set<Integer> visibleToAll = loadOperationsAllowed(context,
@@ -1151,7 +1081,8 @@ public class BaseMetadataManager implements IMetadataManager {
         final Set<Integer> downloadableByGuest = loadOperationsAllowed(context,
             where(operationAllowedSpec).and(OperationAllowedSpecs.hasGroupId(ReservedGroup.guest.getId()))
                 .and(OperationAllowedSpecs.hasOperation(ReservedOperation.download))).keySet();
-        final Map<Integer, MetadataSourceInfo> allSourceInfo = findAllSourceInfo((Specification<Metadata>) MetadataSpecs.hasMetadataIdIn(metadataIds));
+        final Map<Integer, MetadataSourceInfo> allSourceInfo = findAllSourceInfo(
+            (Specification<Metadata>) MetadataSpecs.hasMetadataIdIn(metadataIds));
 
         for (Map.Entry<String, Element> entry : mdIdToInfoMap.entrySet()) {
             Element infoEl = entry.getValue();
@@ -1190,7 +1121,7 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     protected SetMultimap<Integer, ReservedOperation> loadOperationsAllowed(ServiceContext context,
-                                                                            Specification<OperationAllowed> operationAllowedSpec) {
+        Specification<OperationAllowed> operationAllowedSpec) {
         final OperationAllowedRepository operationAllowedRepo = context.getBean(OperationAllowedRepository.class);
         List<OperationAllowed> operationsAllowed = operationAllowedRepo.findAll(operationAllowedSpec);
         SetMultimap<Integer, ReservedOperation> operationsPerMetadata = HashMultimap.create();
@@ -1287,15 +1218,14 @@ public class BaseMetadataManager implements IMetadataManager {
 
     @Override
     public void createBatchUpdateQuery(PathSpec<? extends AbstractMetadata, String> servicesPath, String newUuid,
-                                       Specification<? extends AbstractMetadata> harvested) {
+        Specification<? extends AbstractMetadata> harvested) {
         try {
-            metadataRepository.createBatchUpdateQuery((PathSpec<Metadata, String>) servicesPath, newUuid,
-                (Specification<Metadata>) harvested);
+            metadataRepository
+                .createBatchUpdateQuery((PathSpec<Metadata, String>) servicesPath, newUuid, (Specification<Metadata>) harvested);
         } catch (ClassCastException t) {
             throw new ClassCastException("Unknown AbstractMetadata subtype: " + servicesPath.getClass().getName());
         }
     }
-
 
     @Override
     public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> specs) {
