@@ -210,10 +210,11 @@ public class MetadataRegionSearchRequest extends Request {
         Geometry geometry = null;
         if ("polygon".equals(extentObj.getName())) {
             String gml = Xml.getString(extentObj);
-            geometry = SpatialIndexWriter.parseGml(parsers[0], gml);
+            geometry = SpatialIndexWriter.parseGml(getParser(extentObj), gml);
         } else if ("EX_BoundingPolygon".equals(extentObj.getName())) {
-            String gml = Xml.getString(extentObj.getChild("polygon", Geonet.Namespaces.GMD));
-            geometry = SpatialIndexWriter.parseGml(parsers[0], gml);
+            Element polygon = extentObj.getChild("polygon", Geonet.Namespaces.GMD);
+            String gml = Xml.getString(polygon);
+            geometry = SpatialIndexWriter.parseGml(getParser(polygon), gml);
         } else if ("EX_GeographicBoundingBox".equals(extentObj.getName())) {
             double minx = Double.parseDouble(extentObj.getChild("westBoundLongitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
             double maxx = Double.parseDouble(extentObj.getChild("eastBoundLongitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
@@ -231,6 +232,16 @@ public class MetadataRegionSearchRequest extends Request {
         } else {
             return null;
         }
+    }
+
+    private Parser getParser(Element polygon) {
+        Parser parser = parsers[0];
+        try {
+            if (((Element) polygon.getChildren().get(0)).getNamespace().equals(Geonet.Namespaces.GML32)) {
+                parser = parsers[1]; // geotools gml3.2 parser
+            }
+        } catch (Exception e) {}
+        return parser;
     }
 
     private Element findMetadata(Id id, boolean includeEditData) throws Exception {
