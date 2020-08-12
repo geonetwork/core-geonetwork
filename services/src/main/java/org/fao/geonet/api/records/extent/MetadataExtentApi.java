@@ -123,6 +123,9 @@ public class MetadataExtentApi {
         @ApiParam(value = "(optional) Stroke color with format RED,GREEN,BLUE,ALPHA")
         @RequestParam(value = "", required = false, defaultValue = "0,0,0,255")
         String strokeColor,
+        @ApiParam(value = "(optional) restrict display to one extent given its order of appearence")
+        @RequestParam(value = "", required = false)
+        Integer extentOrderOfAppearence,
         @ApiIgnore
             NativeWebRequest nativeWebRequest,
         @ApiIgnore
@@ -139,7 +142,12 @@ public class MetadataExtentApi {
             throw new BadParameterEx(WIDTH_PARAM, WIDTH_AND_HEIGHT_BOTH_MISSING_MESSAGE);
         }
 
-        String regionId = "metadata:@id" + metadata.getId();
+        String regionId;
+        if (extentOrderOfAppearence == null) {
+            regionId = String.format("metadata:@id%s", metadata.getId());
+        } else {
+            regionId = String.format("metadata:@id%s:@xpath*//gmd:extent[%d]//*/gmd:EX_BoundingPolygon", metadata.getId(), extentOrderOfAppearence);
+        }
 
         Request searchRequest = metadataRegionDAO.createSearchRequest(context).id(regionId);
         if (searchRequest.getLastModified().isPresent() && nativeWebRequest.checkNotModified(searchRequest.getLastModified().get())) {
