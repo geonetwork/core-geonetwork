@@ -453,7 +453,7 @@
       font-style: normal;
       font-weight: normal;
       text-decoration: inherit;
-      position: absolute;
+      position: relative;
       font-size: 46px;
       color: #eeeeee;
       top: 50%;
@@ -744,15 +744,14 @@ button.active [role=tooltip] {
 
 .search-filter-tags {
   .panel-body {
-    background-color: fade(@panel-success-heading-bg, 50%);
-    font-size: 0.9em;
+    font-size: 14px;
+    padding-left: 0px;
   }
   .gn-filter-negative {
     color: @brand-danger;
     text-decoration: line-through;
   }
   a.filter-group, .remove-all-link > a {
-    color: @panel-success-text;
     font-weight: initial;
     &:hover, &:focus {
       text-decoration: underline;
@@ -766,9 +765,6 @@ button.active [role=tooltip] {
       margin-bottom: 0.8em;
     }
     .delete-icon {
-      position: absolute;
-      right: calc(~"100% + 3px");
-      top: 0;
       line-height: 1em;
       opacity: 0;
     }

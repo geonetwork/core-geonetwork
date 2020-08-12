@@ -5,6 +5,8 @@
   "otherKeywords-temporal": "Temporal",
   "otherKeywords-theme": "Theme",
   "otherKeywords-": "Keywords",
+  "link-datasets": "Service",
+  "link-services": "Service",
   "remoteRecord": "Record from external catalog",
   "chooseACatalogRecord": "Choose a catalog record",
   "siblingListToAdd": "List of record links to add",

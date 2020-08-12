@@ -130,15 +130,19 @@
 }
 // user search panel
 .gn-search-user {
+  .panel-body {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
   .list-group {
-    margin-bottom: 10px;
+    margin-bottom: 2px;
+    max-height: 80px;
+    overflow: auto;
     .list-group-item {
       margin-top: 1px;
-      padding-left: 0;
-      padding-right: 0;
+      padding: 0;
       border-radius: 0;
       border: 0;
-      border-bottom: 1px solid @list-group-border;
     }
   }
 }

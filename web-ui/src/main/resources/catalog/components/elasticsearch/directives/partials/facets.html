@@ -1,15 +1,16 @@
 <div class="gn-facet-list">
 
   <!--Collapse all button for first panel-->
-  <div class="btn-group pull-right"
-       ng-hide="isTabMode || ctrl.searchCtrl.getSearchResults().count === 0">
-    <button type="button" class="btn btn-link btn-sm gn-facet-toggle-btn"
-      ng-click="ctrl.expandAll()" title="{{'expandAllFacet' | translate}}">
-      <i class="fa fa-plus-circle"/>
-    </button>
-    <button type="button" class="btn btn-link btn-sm gn-facet-toggle-btn"
+  <div class="gn-facet-toggle"
+      ng-hide="isTabMode || ctrl.searchCtrl.getSearchResults().count === 0">
+    <button type="button" class="btn btn-default btn-xs gn-facet-toggle-btn"
       ng-click="ctrl.collapseAll()" title="{{'collapseAllFacet' | translate}}">
-      <i class="fa fa-minus-circle"/>
+      <i class="fa fa-fw fa-caret-right"/>
+    </button>
+    <br/>
+    <button type="button" class="btn btn-default btn-xs gn-facet-toggle-btn"
+            ng-click="ctrl.expandAll()" title="{{'expandAllFacet' | translate}}">
+      <i class="fa fa-fw fa-caret-down"/>
     </button>
   </div>
 

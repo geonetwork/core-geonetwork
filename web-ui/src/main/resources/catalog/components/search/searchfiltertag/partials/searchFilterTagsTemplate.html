@@ -1,10 +1,13 @@
-<div class="search-filter-tags panel panel-success" ng-if="currentFilters.length">
+<div class="search-filter-tags panel panel-default"
+     ng-if="currentFilters.length">
   <div class="panel-heading flex-row">
     <span translate>activeFilters</span>
     <div class="flex-spacer flex-grow"></div>
     <a href ng-click="removeAll()"
-       class="btn btn-default btn-xs remove-all"
-       translate>removeAllFilters</a>
+       title="{{'ClearTitle' | translate}}"
+       class="btn btn-link">
+      <i class="fa fa-fw fa-times text-danger delete-icon"></i>
+    </a>
   </div>
   <div class="panel-body">
     <a href
@@ -12,8 +15,7 @@
        title="{{'removeThisFilter' | translate}}"
        ng-repeat="filter in currentFilters"
        ng-click="removeFilter(filter)">
-      <span class="fa fa-times text-danger delete-icon"></span>
-      <strong class="text-no-wrap text-uppercase">
+      <strong class="text-no-wrap">
         <span ng-if="filter.key != 'any'" translate>{{('facet-' + filter.key)}}</span>
         <span ng-if="filter.key === 'any'">{{filter.key}}</span>
       </strong>
@@ -26,6 +28,8 @@
             ng-class="{'gn-filter-negative': isNegative(value)}"
             translate>{{key | facetTranslator: filter.key | capitalize}}</span>
       <!-- TODO: Nested aggs support -->
+      <div class="flex-grow"></div>
+      <span class="fa fa-times text-danger delete-icon pull-right"></span>
     </a>
   </div>
 </div>

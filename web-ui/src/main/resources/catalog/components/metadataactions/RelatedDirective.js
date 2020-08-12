@@ -78,6 +78,18 @@
     };
 
     this.getMdsRelated = function(mds, types) {
+      var uuids = mds.map(function (md) {
+        return md.uuid;
+      });
+      var url = '../api/related';
+      return $http.get(url, {
+        params: {
+          type: types,
+          uuid: uuids
+        }
+      });
+    };
+    this.getMdsRelatedWithMultipleSearch = function(mds, types) {
       var uuids = mds.map(function(md) {
         return md.uuid;
       });
@@ -151,13 +163,6 @@
       });
 
       return promise.promise;
-      // var url = '../api/related';
-      // return $http.get(url, {
-      //   params: {
-      //     type: types,
-      //     uuid: uuids
-      //   }
-      // });
     };
   }]);
   module
