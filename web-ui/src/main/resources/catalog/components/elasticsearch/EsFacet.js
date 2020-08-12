@@ -59,6 +59,7 @@
       'isHarvested',
       'dateStamp',
       'documentStandard',
+      'codelist_status*',
       'recordLink'
     ]};
     this.configs = {
@@ -152,6 +153,7 @@
           includes: [
             'id',
             'uuid',
+            'resource*',
             'index*'
           ]
         },

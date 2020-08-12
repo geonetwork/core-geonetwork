@@ -48,7 +48,7 @@
                   {{info.name}} </h4>
 
                 <div ng-hide="info.status === 'OK'" class="dropdown">
-                  <a data-target="#" href="http://example.com" data-toggle="dropdown"
+                  <a data-target="#" href="" data-toggle="dropdown"
                      aria-haspopup="true" role="button"
                      aria-expanded="false">
                     <h4 class="list-group-item-heading" translate> {{info.name}} </h4>
@@ -97,7 +97,7 @@
                        data-toggle="dropdown"
                        aria-haspopup="true"
                        role="button" aria-expanded="false">
-                      {{::(md.resourceTitleObject.default || ('recordWithNoTitle' | translate))}}
+                      {{::(md.resourceTitle || ('recordWithNoTitle' | translate))}}
                     </a>
 
                     <div class="pull-right">
