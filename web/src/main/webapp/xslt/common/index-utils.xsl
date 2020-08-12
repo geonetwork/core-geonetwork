@@ -136,7 +136,7 @@
                                 '')"/>
     <recordLink type="object">{
       "type": "<xsl:value-of select="$type"/>",
-      <xsl:for-each select="$otherProperties">
+      <xsl:for-each select="$otherProperties//p[@name != '']">
         "<xsl:value-of select="@name"/>": "<xsl:value-of select="@value"/>",
       </xsl:for-each>
       "to": "<xsl:value-of select="$uuid"/>",
