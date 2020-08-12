@@ -261,8 +261,7 @@
       $scope.searchObj = {
         configId: 'recordsWithErrors',
         params: {
-          indexingError: 1,
-          isTemplate: ['y', 'n'],
+          'indexingError': true,
           sortBy: 'changeDate',
           sortOrder: 'desc'
         }
