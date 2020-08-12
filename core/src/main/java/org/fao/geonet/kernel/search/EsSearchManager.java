@@ -402,9 +402,7 @@ public class EsSearchManager implements ISearchManager {
                 try {
                     final BulkResponse bulkItemResponses = client.bulkRequest(defaultIndex, listOfDocumentsToIndex);
                     int responseStatus = bulkItemResponses.status().getStatus();
-                    if ((responseStatus == 201) || (responseStatus == 200)) {
-                        // TODOES: inform about time ellapsed ?
-                    } else {
+                    if (bulkItemResponses.hasFailures()) {
                         Map<String, String> listErrorOfDocumentsToIndex = new HashMap<>(bulkItemResponses.getItems().length);
                         List<String> errorDocumentIds = new ArrayList<>();
                         // Add information in index that some items were not properly indexed

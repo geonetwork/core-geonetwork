@@ -33,11 +33,13 @@ import jeeves.server.JeevesProxyInfo;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.core.CountRequest;
+import org.elasticsearch.client.core.CountResponse;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.site.model.SettingSet;
@@ -48,6 +50,7 @@ import org.fao.geonet.doi.client.DoiManager;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.index.Status;
+import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.index.es.EsServerStatusChecker;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -58,6 +61,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -110,10 +114,17 @@ public class SiteApi {
     NodeInfo node;
 
     @Autowired
+    MetadataRepository metadataRepository;
+
+    @Autowired
+    EsRestClient esRestClient;
+
+    @Autowired
     SourceRepository sourceRepository;
 
     @Autowired
     LanguageUtils languageUtils;
+
     @Autowired
     private SystemInfo info;
 
@@ -565,6 +576,29 @@ public class SiteApi {
     ) throws Exception {
         EsServerStatusChecker serverStatusChecker = ApplicationContextHolder.get().getBean(EsServerStatusChecker.class);
         return serverStatusChecker.getStatus();
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Index synchronized with database",
+        description = "")
+    @RequestMapping(
+        path = "/index/synchronized",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> indexAndDbSynchronizationStatus(
+        HttpServletRequest request
+    ) throws Exception {
+        Map<String, Object> info = new HashMap<>();
+        long dbCount = metadataRepository.count();
+        info.put("db.count", dbCount);
+
+        EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
+        CountResponse countResponse = esRestClient.getClient().count(
+            new CountRequest(searchMan.getDefaultIndex()),
+            RequestOptions.DEFAULT);
+        info.put("index.count", countResponse.getCount());
+        return info;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
