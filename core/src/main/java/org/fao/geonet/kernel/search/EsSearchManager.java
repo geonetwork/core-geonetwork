@@ -417,11 +417,11 @@ public class EsSearchManager implements ISearchManager {
                                 String failureDoc = listOfDocumentsToIndex.get(e.getId());
                                 try {
                                     JsonNode node = mapper.readTree(failureDoc);
-                                    resourceTitle = node.get(IndexFields.RESOURCE_TITLE).asText();
+                                    resourceTitle = node.get("resourceTitleObject").get("default").asText();
                                 } catch (Exception ignoredException) {
                                 }
                                 docWithErrorInfo.put(IndexFields.RESOURCE_TITLE, resourceTitle);
-                                docWithErrorInfo.put(IndexFields.INDEXING_ERROR_FIELD, e.getFailure().isAborted());
+                                docWithErrorInfo.put(IndexFields.INDEXING_ERROR_FIELD, true);
                                 docWithErrorInfo.put(IndexFields.INDEXING_ERROR_MSG, e.getFailureMessage());
                                 // TODO: Report the JSON which was causing the error ?
 
