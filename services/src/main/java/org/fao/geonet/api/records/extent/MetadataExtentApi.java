@@ -146,7 +146,9 @@ public class MetadataExtentApi {
         if (extentOrderOfAppearence == null) {
             regionId = String.format("metadata:@id%s", metadata.getId());
         } else {
-            regionId = String.format("metadata:@id%s:@xpath*//gmd:extent[%d]//*/gmd:EX_BoundingPolygon", metadata.getId(), extentOrderOfAppearence);
+            regionId = String.format(
+                "metadata:@id%s:@xpath*//gmd:extent[%d]//*/gmd:EX_BoundingPolygon | *//gmd:extent[%d]//*/gmd:EX_GeographicBoundingBox",
+                metadata.getId(), extentOrderOfAppearence, extentOrderOfAppearence);
         }
 
         Request searchRequest = metadataRegionDAO.createSearchRequest(context).id(regionId);
