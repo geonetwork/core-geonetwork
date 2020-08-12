@@ -147,7 +147,7 @@ public class MetadataExtentApi {
             regionId = String.format("metadata:@id%s", metadata.getId());
         } else {
             regionId = String.format(
-                "metadata:@id%s:@xpath*//gmd:extent[%d]//*/gmd:EX_BoundingPolygon | *//gmd:extent[%d]//*/gmd:EX_GeographicBoundingBox",
+                "metadata:@id%s:@xpath*//gmd:extent[%d]//*/gmd:EX_BoundingPolygon | *//gmd:extent[%d][not(descendant::*[name() = 'gmd:EX_BoundingPolygon'])]//*/gmd:EX_GeographicBoundingBox",
                 metadata.getId(), extentOrderOfAppearence, extentOrderOfAppearence);
         }
 

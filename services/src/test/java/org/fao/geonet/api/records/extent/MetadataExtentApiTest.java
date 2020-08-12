@@ -191,6 +191,24 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
         assertEquals("eb15c89eddb74808c169edfd15f54285", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
+    @Test
+    public void threeExtentPolygonPreferredOverBoundingBox() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+        String uuid = createTestDataThreeExtent();
+
+        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents.png", uuid))
+            .param("extentOrderOfAppearence", "1")
+            .session(mockHttpSession)
+            .accept(MediaType.IMAGE_PNG_VALUE))
+            .andExpect(status().is2xxSuccessful())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
+            .andReturn().getResponse().getContentAsByteArray();
+
+        //BufferedImage imag=ImageIO.read(new ByteArrayInputStream(reponseBuffer));
+        //ImageIO.write(imag, "png", new File("/tmp", String.format("%s.png", name.getMethodName())));
+        assertEquals("3db77b177b47f9dfbd52265b15a77443", DigestUtils.md5DigestAsHex(reponseBuffer));
+    }
 
     private String createTestData() throws Exception {
         return createMdFromXmlRessources(getSampleMetadataXml());
