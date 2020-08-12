@@ -51,6 +51,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -67,6 +68,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ContextConfiguration(inheritLocations = true, locations = "classpath:extents-test-context.xml")
 public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
+    private static boolean DO_NOT_SAVE_IMAGE_TO_DISK = true;
 
     @Autowired
     private DataManager dataManager;
@@ -100,8 +102,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
             .andReturn().getResponse().getContentAsByteArray();
 
-        //BufferedImage imag=ImageIO.read(new ByteArrayInputStream(reponseBuffer));
-        //ImageIO.write(imag, "png", new File("/tmp", String.format("%s.png", name.getMethodName())));
+        saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
         assertEquals("b02baec6d92832ecd5653db78093a427", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
@@ -148,8 +149,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
             .andReturn().getResponse().getContentAsByteArray();
 
-        //BufferedImage imag=ImageIO.read(new ByteArrayInputStream(reponseBuffer));
-        //ImageIO.write(imag, "png", new File("/tmp", String.format("%s.png", name.getMethodName())));
+        saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
         assertEquals("6918277f1b32eb69ff81da6ef434c27f", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
@@ -167,8 +167,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
             .andReturn().getResponse().getContentAsByteArray();
 
-        //BufferedImage imag=ImageIO.read(new ByteArrayInputStream(reponseBuffer));
-        //ImageIO.write(imag, "png", new File("/tmp", String.format("%s.png", name.getMethodName())));
+        saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
         assertEquals("3f40d26c831050e3bf75b90ba803b4e6", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
@@ -186,8 +185,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
             .andReturn().getResponse().getContentAsByteArray();
 
-        //BufferedImage imag=ImageIO.read(new ByteArrayInputStream(reponseBuffer));
-        //ImageIO.write(imag, "png", new File("/tmp", String.format("%s.png", name.getMethodName())));
+        saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
         assertEquals("eb15c89eddb74808c169edfd15f54285", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
@@ -205,8 +203,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
             .andReturn().getResponse().getContentAsByteArray();
 
-        //BufferedImage imag=ImageIO.read(new ByteArrayInputStream(reponseBuffer));
-        //ImageIO.write(imag, "png", new File("/tmp", String.format("%s.png", name.getMethodName())));
+        saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
         assertEquals("3db77b177b47f9dfbd52265b15a77443", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
@@ -259,5 +256,13 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             false, false).getId();
 
         return uuid;
+    }
+
+    private void saveImageToDiskIfConfiguredToDoSo(byte[] reponseBuffer, String methodName) throws IOException {
+        if (DO_NOT_SAVE_IMAGE_TO_DISK) {
+            return;
+        }
+        BufferedImage imag= ImageIO.read(new ByteArrayInputStream(reponseBuffer));
+        ImageIO.write(imag, "png", new File("/tmp", String.format("%s.png", methodName)));
     }
 }
