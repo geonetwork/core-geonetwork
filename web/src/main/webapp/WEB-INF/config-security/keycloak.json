@@ -1,0 +1,12 @@
+{
+  "realm": "${env.KEYCLOAK_REALM}",
+  "auth-server-url": "${env.KEYCLOAK_AUTH_SERVER_URL}",
+  "ssl-required": "${env.KEYCLOAK_SSL_REQUIRED:external}",
+  "resource": "${env.KEYCLOAK_RESOURCE}",
+  "credentials": {
+    "secret": "${env.KEYCLOAK_SECRET}"
+  },
+  "confidential-port": "${env.KEYCLOAK_CONFIDENTIAL_PORT:8443}",
+  "disable-trust-manager": "${env.KEYCLOAK_DISABLE_TRUST_MANAGER:false}"
+}
+

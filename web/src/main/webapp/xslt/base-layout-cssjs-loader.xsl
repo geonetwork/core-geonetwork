@@ -230,8 +230,9 @@
         var module = angular.module('gn_search');
         module.config(['gnGlobalSettings',
         function(gnGlobalSettings) {
-        gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
-        gnGlobalSettings.shibbolethHideLogin = <xsl:value-of select="$shibbolethHideLogin and $shibbolethOn"/>;
+        gnGlobalSettings.isSSO = <xsl:value-of select="$isSSO"/>;
+        gnGlobalSettings.isDisableLoginForm = <xsl:value-of select="$isDisableLoginForm and $isSSO"/>;
+        gnGlobalSettings.isShowLoginAsLink = <xsl:value-of select="$isShowLoginAsLink and $isSSO"/>;
         }]);
       </script>
     </xsl:if>
@@ -241,7 +242,9 @@
         var module = angular.module('gn_login');
         module.config(['gnGlobalSettings',
         function(gnGlobalSettings) {
-        gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
+        gnGlobalSettings.isSSO = <xsl:value-of select="$isSSO"/>;
+        gnGlobalSettings.isDisableLoginForm = <xsl:value-of select="$isDisableLoginForm and $isSSO"/>;
+        gnGlobalSettings.isShowLoginAsLink = <xsl:value-of select="$isShowLoginAsLink and $isSSO"/>;
         }]);
       </script>
     </xsl:if>

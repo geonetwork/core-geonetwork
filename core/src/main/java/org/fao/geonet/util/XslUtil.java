@@ -56,8 +56,7 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
-import org.fao.geonet.kernel.security.shibboleth.ShibbolethUserConfiguration;
-import org.fao.geonet.kernel.security.shibboleth.ShibbolethUserUtils;
+import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.url.UrlChecker;
@@ -357,24 +356,53 @@ public final class XslUtil {
      *
      * @param beanId id of the bean to look up
      */
+    // Was using util:existsBean('shibbolethConfiguration') but should use use util:isSSO()
+    // Not sure if this is being used anywhere else so depreciating it for now.
+    @Deprecated
     public static boolean existsBean(String beanId) {
         return ProfileManager.existsBean(beanId);
     }
 
+    /**
+     * Check if security provider is sso enabled
+     */
+    public static boolean isSSO() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            return securityProviderConfiguration.getSSO();
+        }
+        // If we cannot find SecurityProviderConfiguration then default to false.
+        return false;
+    }
+
 	/**
-	 * Check if Shibboleth should show login
-	 *
-	 * @param beanId
-	 *            id of the bean to look up
+	 * Check if security provider require login form
 	 */
-	public static boolean shibbolethHideLogin() {
-		if (existsBean("shibbolethConfiguration")) {
-			ServiceContext serviceContext = ServiceContext.get();
-			ShibbolethUserConfiguration shib = serviceContext.getBean(ShibbolethUserConfiguration.class);
-			return shib.getHideLogin();
-		}
-		return false;
+	public static boolean isDisableLoginForm() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            // No login form if providing a link or noform 
+            return securityProviderConfiguration.getLoginType().equals(SecurityProviderConfiguration.LoginType.NOFORM.toString().toLowerCase())
+                || securityProviderConfiguration.getLoginType().equals(SecurityProviderConfiguration.LoginType.LINK.toString().toLowerCase());
+        }
+        // If we cannot find SecurityProviderConfiguration then default to false.
+        return false;
 	}
+
+    /**
+     * Check if security provider require login link
+     */
+    public static boolean isShowLoginAsLink() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            return securityProviderConfiguration.getLoginType().equals(SecurityProviderConfiguration.LoginType.LINK.toString().toLowerCase());
+        }
+        // If we cannot find SecurityProviderConfiguration then default to false.
+        return false;
+    }
 
     /**
      * Optimistically check if user can access a given url.  If not possible to determine then the

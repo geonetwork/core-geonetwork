@@ -20,6 +20,7 @@
 
 package org.fao.geonet.kernel.security.shibboleth;
 
+import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.springframework.util.StringUtils;
 
 /**
@@ -30,7 +31,7 @@ import org.springframework.util.StringUtils;
  * @author ETj (etj at geo-solutions.it)
  * @author María Arias de Reyna (delawen)
  */
-public class ShibbolethUserConfiguration {
+public class ShibbolethUserConfiguration implements SecurityProviderConfiguration {
     private String usernameKey;
     private String surnameKey;
     private String firstnameKey;
@@ -190,6 +191,20 @@ public class ShibbolethUserConfiguration {
 			arraySeparator = ",";
 		}
 		this.roleGroupSeparator = roleGroupSeparator;
+	}
+
+	@Override
+	public String getLoginType() {
+		if (this.hideLogin) {
+			return LoginType.NOFORM.toString();
+		} else {
+		return LoginType.FORM.toString();
+		}
+	}
+
+	@Override
+	public boolean getSSO() {
+		return true;
 	}
 }
 
