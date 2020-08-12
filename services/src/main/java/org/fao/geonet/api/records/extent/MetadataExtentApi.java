@@ -76,6 +76,10 @@ public class MetadataExtentApi {
     public static final String HEIGHT_PARAM = "height";
     public static final String BACKGROUND_PARAM = "background";
     public static final String SETTING_BACKGROUND = "settings";
+    public static final String WIDTH_AND_HEIGHT_BOTH_DEFINED_MESSAGE =
+        String.format("Only one of %s and %s can be defined currently.  Future versions may support this but it is not supported at the moment", WIDTH_PARAM, HEIGHT_PARAM);
+    public static final String WIDTH_AND_HEIGHT_BOTH_MISSING_MESSAGE =
+        String.format("One of $s or $s parameters must be included in the request", WIDTH_PARAM, HEIGHT_PARAM);
 
     @Autowired
     private MetadataRegionDAO metadataRegionDAO;
@@ -128,26 +132,16 @@ public class MetadataExtentApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         if (width != null && height != null) {
-            throw new BadParameterEx(
-                WIDTH_PARAM,
-                "Only one of "
-                    + WIDTH_PARAM
-                    + " and "
-                    + HEIGHT_PARAM
-                    + " can be defined currently.  Future versions may support this but it is not supported at the moment");
+            throw new BadParameterEx(WIDTH_PARAM, WIDTH_AND_HEIGHT_BOTH_DEFINED_MESSAGE);
         }
 
         if (width == null && height == null) {
-            throw new BadParameterEx(WIDTH_PARAM, "One of " + WIDTH_PARAM + " or " + HEIGHT_PARAM
-                + " parameters must be included in the request");
-
+            throw new BadParameterEx(WIDTH_PARAM, WIDTH_AND_HEIGHT_BOTH_MISSING_MESSAGE);
         }
 
-        String outputFileName = metadataUuid + "-extent.png";
         String regionId = "metadata:@id" + metadata.getId();
 
-        final Request searchRequest = metadataRegionDAO.createSearchRequest(context)
-        .id(regionId);
+        Request searchRequest = metadataRegionDAO.createSearchRequest(context).id(regionId);
         if (searchRequest.getLastModified().isPresent() && nativeWebRequest.checkNotModified(searchRequest.getLastModified().get())) {
             return null;
         }
@@ -159,12 +153,14 @@ public class MetadataExtentApi {
             fillColor,
             strokeColor);
 
-        if (image == null) return null;
+        if (image == null) {
+            return null;
+        }
 
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             ImageIO.write(image, "png", out);
             MultiValueMap<String, String> headers = new HttpHeaders();
-            headers.add("Content-Disposition", "inline; filename=\"" + outputFileName + "\"");
+            headers.add("Content-Disposition", String.format("inline; filename=\"%s-extent.png\"", metadataUuid));
             headers.add("Cache-Control", "no-cache");
             headers.add("Content-Type", "image/png");
             return new HttpEntity<>(out.toByteArray(), headers);
