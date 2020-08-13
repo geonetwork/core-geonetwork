@@ -29,7 +29,7 @@
       </div>
       <div class="panel-body gn-card-body">
         <div class="row">
-          <div class="col-md-2">
+          <div class="col-lg-2 col-md-3 col-sm-3">
             <div class="gn-md-thumbnail">
               <div class="gn-md-no-thumbnail"
                    data-ng-if="!md.overview[0].url"></div>
@@ -39,19 +39,16 @@
                    data-ng-if="md.overview[0].url"/>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-lg-6 col-md-6 col-sm-6">
             <div class="gn-md-abstract text-muted">
-              <p class="text-justify"
-                 dd-text-collapse dd-text-collapse-max-length="350"
+              <p dd-text-collapse dd-text-collapse-max-length="350"
                  dd-text-collapse-text="{{md.resourceAbstract}}"></p>
-
-<!--              <div gn-grid-related="md.recordLink"-->
               <div gn-grid-related=""
                    gn-grid-related-uuid="::md.uuid"
                    template="../../catalog/views/default/templates/gridRelatedList.html"></div>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-lg-4 col-md-3 col-sm-3">
             <div class="gn-md-contact">
               <p data-ng-repeat="c in ::md.getAllContacts().resource | limitTo: 4 track by $index">
                 <img data-ng-if="::c.logo"
@@ -86,11 +83,9 @@
           <i data-ng-repeat="t in md.topic"
              title="{{t | translate}}"
              aria-label="{{t | translate}}"
-             class="fa">
-            <span class="fa gn-icon-{{t}}"></span>
+             class="fa gn-icon-{{t}}">
           </i>
         </div>
-
 
         <gn-links-btn class="pull-right"></gn-links-btn>
         <div data-ng-if="md.draft == 'e'"

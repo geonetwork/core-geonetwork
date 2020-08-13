@@ -10,12 +10,11 @@
     background-color: darken(@panel-default-heading-bg, 15%);
   }
   .gn-md-select {
-    position: absolute;
-    top: -8px;
-    padding: 0px 3px;
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0px 5px;
     background: none;
-    border-right: none;
-    border-bottom: none;
+    border-right: 1px solid @panel-default-border;
   }
   .list-group {
     margin-bottom: 0px;
@@ -24,26 +23,16 @@
   .gn-md-category {
     display: block;
     margin-left: 12px;
-    font-size: 24px;
-  }
-}
-
-.gn-search-facet {
-  .panel-default {
-    border: none;
-    .panel-heading {
-      background: none;
+    font-size: 22px;
+    i {
+      margin-right: 5px;
     }
-  }
-  .gn-facet-toggle {
-    position: absolute;
-    left: -5px;
   }
 }
 
 .gn-row-tools {
   border-bottom: 1px solid #ddd;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
 
   .btn-default {
     border: 0;
@@ -103,8 +92,9 @@ ul.gn-resultview {
     width: @thumbnail-width;
     border-radius: 0;
     background-color: #fff;
+    margin-bottom: 10px;
     .gn-img-thumbnail {
-      border: 0;
+      border: 1px solid transparent;
       max-width: 100%;
       max-height: 140px;
       min-height: 40px;
@@ -188,6 +178,7 @@ ul.gn-resultview {
       overflow: auto;
       .gn-md-thumbnail {
         float: left;
+        max-width: 100%;
       }
       .gn-md-details {
         width: calc(~"100% - @{thumbnail-width} - 15px");
@@ -195,10 +186,8 @@ ul.gn-resultview {
       }
       .gn-md-contact {
         clear: both;
-        font-size: 11px;
       }
       .gn-md-abstract {
-        font-size: 11px;
         p {
           margin-bottom: 0;
           &:empty {
@@ -218,18 +207,20 @@ ul.gn-resultview {
             top: -19px;
           }
         }
+        .collapse-text-toggle {
+          color: @brand-primary;
+        }
       }
     }
     .gn-card-footer {
       &.panel-footer {
         background: none;
-        border-top: 1px solid #FFFFFF;
+        border-color: transparent;
       }
-      padding: 2px 2px 2px 2px;
+      padding: 4px 8px;
       height: calc(~"@{gn-card-footer-height} - 2px");
       .gn-toolbar {
         .gn-md-links {
-          //background: none;
           .dropdown-menu {
             li {
               a {
@@ -246,7 +237,15 @@ ul.gn-resultview {
       }
     }
     &:hover {
-      background-color: #eee;
+      background-color: @panel-footer-bg;
+      .gn-card-heading {
+        background-color: darken(@panel-footer-bg, 5%);
+      }
+      .gn-card-body {
+        .gn-img-thumbnail {
+          border: 1px solid @panel-default-border;
+        }
+      }
     }
   }
 
@@ -258,17 +257,15 @@ ul.gn-resultview {
 
   li.gn-list {
     &.panel {
-      margin-bottom: 4px;
+      margin-bottom: 10px;
       height: 250px;
-      .gn-md-select {
-        top: 0px;
-      }
     }
     &:hover {
       background-color: #eee;
     }
     .gn-md-title {
-      padding-left: 20px;
+      display: table-cell;
+      padding-left: 10px;
       height: 40px;
       line-height: 1.2em;
     }
@@ -281,6 +278,16 @@ ul.gn-resultview {
       padding-bottom: 2px;
       .col-md-2 {
         padding: 0px
+      }
+      .col-md-6 {
+        padding-left: 0;
+      }
+      .gn-md-abstract {
+        margin-top: 15px;
+        line-height: 1.5em;
+      }
+      .gn-md-contact {
+        margin-top: 15px;
       }
     }
     padding: 0 0 5px 0;

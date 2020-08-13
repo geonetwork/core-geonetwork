@@ -28,17 +28,31 @@
     }
     .facet-invert {
       display: none;
+      position: absolute;
+      right: 0;
+      background-color: #fff;
+      padding-left: 5px;
     }
     &:hover .facet-invert {
       display: block;
     }
   }
+  .gn-facet-root-container {
+    input {
+      margin-left: 18px;
+      width: calc(~"100% - 18px");
+      border-color: @panel-default-border;
+    }
+  }
   .gn-facet-container {
     margin-left: 15px;
-    margin-top: 3px;
-    margin-bottom: 3px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     a {
       text-decoration: none;
+      .fa {
+        margin-right: 3px;
+      }
       * {
         color: lighten(@gray-light, 10%);
         transition: color 0.1s;
@@ -75,7 +89,7 @@
       color: @gray-dark;
     }
     .gn-facet-count {
-      font-size: 0.9em;
+      margin-left: 3px;
     }
   }
   .gn-facet-header {
@@ -413,9 +427,6 @@
   }
   h4 {
     font-size: 14px;
-  }
-  p {
-    // font-size: .9em;
   }
   blockquote {
     padding: 6px 20px;
@@ -755,12 +766,14 @@ button.active [role=tooltip] {
     font-weight: initial;
     &:hover, &:focus {
       text-decoration: underline;
+      .fa {
+        text-decoration: none;
+      }
     }
   }
   .filter-group {
     position: relative;
     line-height: 1.1em;
-    margin-left: 1em;
     &:not(:last-child) {
       margin-bottom: 0.8em;
     }

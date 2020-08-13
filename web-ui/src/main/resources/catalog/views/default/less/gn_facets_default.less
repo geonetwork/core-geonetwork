@@ -8,17 +8,34 @@ facetsConfigService ? */
 }
 
 .gn-facet-toggle {
-  padding: 2px;
-  margin-top: -4px;
-  left: -5px;
-  margin-left: -7px;
-  margin-right: 4px;
-  font-size: 14px;
+  margin-top: -2px;
 }
 
-.gn-facet-toggle-btn {
-  line-height: 1em;
-  margin: -4px 0px 4px 0px;
+.gn-search-facet {
+  .panel {
+    border: 0;
+    box-shadow: none;
+    .panel-heading {
+      border-width: 0 0 1px 0;
+      background: none;
+      padding-left: 0;
+      padding-right: 0;
+      font-weight: bold;
+      &[data-gn-slide-toggle] {
+        padding-left: 15px;
+      }
+      .btn-default {
+        border-color: @panel-default-border;
+        &:hover {
+          background-color: @panel-default-heading-bg;
+        }
+      }
+    }
+    .panel-body {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
 }
 
 // nojs styles

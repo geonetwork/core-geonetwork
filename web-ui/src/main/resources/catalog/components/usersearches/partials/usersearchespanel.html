@@ -6,18 +6,20 @@
     <span data-translate="">userSearches</span>
 
     <div class="pull-right">
-      <button type="button" class="btn btn-link btn-xs"
-              title="{{'createUserSearch' | translate}}"
-              data-ng-click="openSaveUserSearchPanel()">
-        <span class="fa fa-fw fa-plus"></span>
-      </button>
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-default btn-xs"
+                title="{{'createUserSearch' | translate}}"
+                data-ng-click="openSaveUserSearchPanel()">
+          <span class="fa fa-fw fa-plus"></span>
+        </button>
 
-      <button type="button" class="btn btn-link btn-xs"
-              title="{{'manageUserSearches' | translate}}"
-              data-ng-click="openAdminUserSearchPanel()"
-              data-ng-show="canManageUserSearches()">
-        <span class="fa fa-fw fa-cog"></span>
-      </button>
+        <button type="button" class="btn btn-default btn-xs"
+                title="{{'manageUserSearches' | translate}}"
+                data-ng-click="openAdminUserSearchPanel()"
+                data-ng-show="canManageUserSearches()">
+          <span class="fa fa-fw fa-cog"></span>
+        </button>
+      </div>
     </div>
   </div>
   <div class="panel-body">
@@ -28,41 +30,39 @@
 
     <ul class="list-group">
       <li class="list-group-item clearfix" data-ng-repeat="search in userSearchesPageItems()">
-        <!-- <div class="clearfix"> -->
-          <div class="pull-left">
-            <span class="fa fa-star fa-fw"
-                  data-ng-show="canManageUserSearches() && search.featuredType !== ''"
-                  title="{{ 'featuredsearch' | translate }}"></span>
-            <span class="fa fa-fw"
-                  data-ng-hide="canManageUserSearches() && search.featuredType !== ''"/>
+        <div class="pull-left">
+          <span class="fa fa-star fa-fw"
+                data-ng-show="canManageUserSearches() && search.featuredType !== ''"
+                title="{{ 'featuredsearch' | translate }}"></span>
+          <span class="fa fa-fw"
+                data-ng-hide="canManageUserSearches() && search.featuredType !== ''"/>
 
-            <a data-ng-href="#/search?{{search.url}}">
-              {{search.names[lang] || search.names['eng'] || ('userSearchNameMissing' | translate)}}
+          <a data-ng-href="#/search?{{search.url}}">
+            {{search.names[lang] || search.names['eng'] || ('userSearchNameMissing' | translate)}}
 
-              <img data-ng-if="search.logo"
-                   data-ng-src="{{search.logo}}"
-                   class="gn-source-logo"/>
-            </a>
-          </div>
+            <img data-ng-if="search.logo"
+                  data-ng-src="{{search.logo}}"
+                  class="gn-source-logo"/>
+          </a>
+        </div>
 
-          <div class="btn-group pull-right" role="group" data-ng-if="canEditUserSearch(search)">
-            <a href=""
-               class="btn btn-link btn-xs"
-               data-ng-click="editUserSearch(search)"
-               title="{{'edit' | translate}}"
-               aria-label="{{'edit' | translate}}">
-              <span class="fa fa-pencil"></span>
-            </a>
-            <a href=""
-               class="btn btn-link btn-xs"
-               data-gn-click-and-spin="removeUserSearch(search)"
-               data-gn-confirm-click="{{'deleteUserSearchConfirm' | translate}}"
-               title="{{'delete' | translate}}"
-               aria-label="{{'delete' | translate}}">
-              <span class="fa fa-remove text-danger"></span>
-            </a>
-          </div>
-        <!-- </div> -->
+        <div class="btn-group pull-right" role="group" data-ng-if="canEditUserSearch(search)">
+          <a href=""
+              class="btn btn-link btn-xs"
+              data-ng-click="editUserSearch(search)"
+              title="{{'edit' | translate}}"
+              aria-label="{{'edit' | translate}}">
+            <span class="fa fa-pencil"></span>
+          </a>
+          <a href=""
+              class="btn btn-link btn-xs"
+              data-gn-click-and-spin="removeUserSearch(search)"
+              data-gn-confirm-click="{{'deleteUserSearchConfirm' | translate}}"
+              title="{{'delete' | translate}}"
+              aria-label="{{'delete' | translate}}">
+            <span class="fa fa-remove text-danger"></span>
+          </a>
+        </div>
       </li>
     </ul>
 

@@ -11,12 +11,10 @@
              ng-if="isFilterTagsDisplayedInSearch && searchResults.facets">
         </div>
 
-        <div class="panel panel-default"
-           data-ng-show="searchResults.records.length > 0">
-          <div class="panel-body">
-            <div data-es-facets="searchResults.facets"/>
-          </div>
-        </div>
+
+            <div data-ng-show="searchResults.records.length > 0"
+                 data-es-facets="searchResults.facets"></div>
+
 
         <div data-ng-show="searchResults.records.length > 0"
              data-gn-saved-selections-panel="user"></div>

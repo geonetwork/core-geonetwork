@@ -30,6 +30,9 @@
   display: none;
 }
 
+.btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
+  outline-offset: 0px;
+}
 .popover {
   max-width: 350px;
 }
@@ -149,6 +152,9 @@
 
 // advanced search
 .gn-search-filter {
+  .col-md-2 {
+    padding-left: 0;
+  }
   .nav-pills li {
     display: block;
   }
