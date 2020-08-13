@@ -239,6 +239,7 @@
                 var itemPath = facetModel.path.concat([bucket.key + '']);
                 var facet = {
                   value: bucket.key,
+                  meta: bucket.meta,
                   count: bucket.doc_count,
                   path: itemPath
                 };
