@@ -15,6 +15,9 @@
     padding: 0px 5px;
     background: none;
     border-right: 1px solid @panel-default-border;
+    input {
+      margin: 0px;
+    }
   }
   .list-group {
     margin-bottom: 0px;
@@ -238,12 +241,15 @@ ul.gn-resultview {
     }
     &:hover {
       background-color: @panel-footer-bg;
+      transition: background-color ease 0.5s;
       .gn-card-heading {
         background-color: darken(@panel-footer-bg, 5%);
+        transition: background-color ease 0.5s;
       }
       .gn-card-body {
         .gn-img-thumbnail {
           border: 1px solid @panel-default-border;
+          transition: background-color ease 0.5s;
         }
       }
     }
