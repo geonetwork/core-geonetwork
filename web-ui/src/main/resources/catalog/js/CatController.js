@@ -282,7 +282,7 @@ goog.require('gn_alert');
           'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/catalog.edit',
           'isUserRecordsOnly': false,
-          'minUserProfileToCreateTemplate': 'reviewer',
+          'minUserProfileToCreateTemplate': '',
           'isFilterTagsDisplayed': false,
           'fluidEditorLayout': true,
           'createPageTpl':
@@ -691,9 +691,11 @@ goog.require('gn_alert');
           },
           canCreateTemplate: function() {
             var profile = gnGlobalSettings.gnCfg.mods.editor.minUserProfileToCreateTemplate
-              || 'reviewer',
-              fnName = 'is' + profile[0].toUpperCase() + profile.substring(1) + 'OrMore';
-            return angular.isFunction(this[fnName]) ? this[fnName]() : this.isReviewerOrMore();
+              || '',
+              fnName = (profile !== '' ?
+                ('is' + profile[0].toUpperCase() + profile.substring(1) + 'OrMore') :
+                '');
+            return angular.isFunction(this[fnName]) ? this[fnName]() : this.isConnected();
           },
           canEditRecord: function(md) {
             if (!md || this.isAnonymous()) {
