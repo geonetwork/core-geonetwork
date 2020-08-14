@@ -16,3 +16,5 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 DROP INDEX idx_metadatafiledownloads_metadataid;
 DROP INDEX idx_metadatafileuploads_metadataid;
 DROP INDEX idx_operationallowed_metadataid;
+
+ALTER TABLE usersearch ALTER COLUMN url TYPE text;
