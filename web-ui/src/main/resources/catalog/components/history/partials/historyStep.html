@@ -49,6 +49,7 @@
       </p>
 
       <img class="img-circle"
+           data-ng-show="{{gnCfg.mods.user.displayGravatarLogo}}"
            data-ng-src="//gravatar.com/avatar/{{h.authorEmail | md5}}?s=18"/>
       {{h.authorName}}
     </div>

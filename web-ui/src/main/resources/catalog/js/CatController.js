@@ -70,6 +70,9 @@ goog.require('gn_alert');
         'global': {
           'humanizeDates': true
         },
+        'user': {
+          'displayGravatarLogo': true
+        },
         'footer':{
           'enabled': true,
           'showSocialBarInFooter': true
