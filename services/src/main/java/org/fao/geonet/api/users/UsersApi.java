@@ -23,14 +23,8 @@
 
 package org.fao.geonet.api.users;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Authorization;
+import io.swagger.annotations.*;
 import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -42,32 +36,33 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.UserSavedSelectionRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.util.PasswordUtil;
-import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.bind.DatatypeConverter;
+import java.awt.image.BufferedImage;
+import java.net.URL;
+import java.security.MessageDigest;
 import java.util.*;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
@@ -192,6 +187,66 @@ public class UsersApi {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
 
+    }
+
+
+    @Value("${user.identicon}")
+    String userIdenticon;
+
+    private static final String userIconRedirect = "redirect:/images/harvesting/user.png";
+
+    @ApiOperation(
+        value = "Get user identicon",
+        notes = "",
+        nickname = "getUserIdentIcon")
+    @RequestMapping(
+        value = "/{userIdentifier}.png",
+        produces = MediaType.IMAGE_PNG_VALUE,
+        method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView getUser(
+        @ApiParam(
+            value = "User identifier."
+        )
+        @PathVariable
+            Integer userIdentifier,
+        @ApiParam(
+            value = "Size."
+        )
+        @RequestParam(defaultValue = "18")
+            Integer size,
+        @ApiIgnore
+            HttpServletResponse response,
+        @ApiIgnore
+            ModelMap model
+    ) {
+        if ("gravatar".equals(userIdenticon)) {
+            try {
+                User user = userRepository.findOne(userIdentifier);
+
+                if (user == null) {
+                    throw new UserNotFoundEx(Integer.toString(userIdentifier));
+                }
+
+                String email = user.getEmail() != null ? user.getEmail() : "";
+                MessageDigest md = MessageDigest.getInstance("MD5");
+                byte[] hash = md.digest(email.getBytes());
+                URL url = new URL("https://gravatar.com/avatar/" +
+                    DatatypeConverter.printHexBinary(hash).toLowerCase() +
+                    "?d=blank&s=" + size);
+                BufferedImage image = ImageIO.read(url);
+                response.setStatus(HttpStatus.OK.value());
+                ImageIO.write(image, "PNG", response.getOutputStream());
+                return null;
+            } catch (Exception e) {
+                response.setStatus(HttpStatus.TEMPORARY_REDIRECT.value());
+                return new ModelAndView(userIconRedirect, model);
+            }
+        } else {
+            response.setStatus(HttpStatus.PERMANENT_REDIRECT.value());
+            return new ModelAndView(userIconRedirect, model);
+        }
+        // TODO: Add https://github.com/gabrie-allaigre/avatar-generator ?
     }
 
     @ApiOperation(
