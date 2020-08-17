@@ -4,11 +4,11 @@
   color: #333;
   .modal-header {
     padding: 10px 15px;
-    h3 {
+    h1 {
       font-size: 20px;
     }
   }
-	h4 {
+	h2 {
 		border-bottom: 1px solid #ccc;
     padding-bottom: 10px;
     margin-bottom: 15px;
@@ -49,7 +49,7 @@ q, blockquote {
 .gn-userfeedback-title {
   border-bottom: 1px solid #ddd;
   margin-bottom: 10px;
-  h3 {
+  h2 {
     border-bottom: 3px solid #ddd;
     margin-bottom: 0;
     padding-bottom: 8px;
@@ -86,14 +86,12 @@ q, blockquote {
   padding: 10px;
   border: 1px solid #eee;
   border-radius: 3px;
-  h4 {
+  a {
     font-size: 15px;
-    a {
-      cursor: pointer;
-      color: #333;
-      &:hover {
-        color: #000;
-      }
+    cursor: pointer;
+    color: #333;
+    &:hover {
+      color: #000;
     }
   }
   q, blockquote {
@@ -182,8 +180,8 @@ q, blockquote {
       width: 70%;
     }
     .gn-userfeedback-comment {
-      border: 1px solid #ccc;
-      background-color: #efefef;
+      border: 1px solid @navbar-default-border;
+      background-color: @navbar-default-bg;
       padding: 10px;
       q {
         display: block;
@@ -203,8 +201,8 @@ q, blockquote {
     // arrows
     .gn-arrow-bottom {
       position: relative;
-      background: #efefef;
-      border: 1px solid #cccccc;
+      background: @navbar-default-bg;
+      border: 1px solid @navbar-default-border;
     }
     .gn-arrow-bottom:after, .gn-arrow-bottom:before {
       top: 100%;
@@ -218,13 +216,13 @@ q, blockquote {
     }
     .gn-arrow-bottom:after {
       border-color: rgba(239, 239, 239, 0);
-      border-top-color: #efefef;
+      border-top-color: @navbar-default-bg;
       border-width: 15px;
       margin-left: -15px;
     }
     .gn-arrow-bottom:before {
       border-color: rgba(204, 204, 204, 0);
-      border-top-color: #cccccc;
+      border-top-color: @navbar-default-border;
       border-width: 16px;
       margin-left: -16px;
     }
@@ -236,6 +234,12 @@ q, blockquote {
   .modal-dialog {
     width: 80%;
     max-width: 1000px;
+    .modal-header {
+      h1 {
+        margin: 0;
+        font-size: 16px;
+      }
+    }
     .modal-footer {
       // dropdown in the footer (dropup)
       .dropdown {
@@ -265,34 +269,13 @@ q, blockquote {
   // panels
   .panel {
     border: 0;
-  }
-  // heading
-  .panel-heading {
-    padding: 10px 0px;
-    height: auto;
-    background-color: #fff;
-    border: 0;
-    .btn-round {
-      padding: 7px 14px;
-      margin-right: 5px;
-      margin-left: -45px;
-    }
-    a {
-      color: #555;
-      padding-left: 45px;
-      display: block;
-      line-height: 8px;
-      &:hover {
-        text-decoration: none;
-        color: #000;
-        cursor: pointer;
-      }
-    }
+    box-shadow: none;
   }
   // body
   .panel-body {
     border: 0;
-    h3 {
+    padding: 5px 0;
+    h2 {
       .fa {
         color: #999;
         margin-left: 5px;
@@ -310,9 +293,6 @@ q, blockquote {
         font-size: 14px;
       }
     }
-  }
-  .panel-group .panel-heading + .panel-collapse .panel-body {
-    border-top-color: #f5f5f5;
   }
 }
 
