@@ -17,7 +17,7 @@
              data-ng-class="u.id === userSelected.id ? 'active' : ''"
              data-ng-click="selectUser(u)">
             <img class="img-circle"
-                 data-ng-show="{{gnCfg.mods.user.displayGravatarLogo}}"
+                 data-ng-show="{{gnCfg.mods.user.displayUserIdentIcon}}"
                  ng-src="//gravatar.com/avatar/{{(u.emailAddresses[0] | md5) || ''}}?s=18&d=blank"/>
             <span class='badge' data-ng-show="u.enabled === false"
                   data-translate="">disabled</span> {{u.name}} {{u.surname}}

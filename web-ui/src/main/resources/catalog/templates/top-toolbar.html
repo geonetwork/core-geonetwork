@@ -160,7 +160,7 @@
           role="button" aria-expanded="false">
           <img class="img-circle"
             alt="{{'avatar' | translate}}"
-            data-ng-show="{{gnCfg.mods.user.displayGravatarLogo}}"
+            data-ng-show="{{gnCfg.mods.user.displayUserIdentIcon}}"
             data-ng-src="//gravatar.com/avatar/{{user.email | md5}}?s=18"/>
           <div class="gn-user-info hidden-sm hidden-md">
             <span class="gn-user-name">{{user.name}} {{user.surname}}</span><br>
@@ -178,7 +178,7 @@
           <li class="text-center hidden-xs" role="menuitem">
             <img class="img-circle"
                  alt="{{'avatar' | translate}}"
-                 data-ng-show="{{gnCfg.mods.user.displayGravatarLogo}}"
+                 data-ng-show="{{gnCfg.mods.user.displayUserIdentIcon}}"
                  data-ng-src="//gravatar.com/avatar/{{user.email | md5}}?s=56"/>
           </li>
           <li role="separator" class="divider hidden-xs"></li>

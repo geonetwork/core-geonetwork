@@ -71,7 +71,7 @@ goog.require('gn_alert');
           'humanizeDates': true
         },
         'user': {
-          'displayGravatarLogo': true
+          'displayUserIdentIcon': true
         },
         'footer':{
           'enabled': true,
