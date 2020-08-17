@@ -414,6 +414,7 @@
   "fbCatHarvesting": "Harvesting",
   "fbCatValidator": "Validator",
   "fbCatOthers": "Others",
+  "fbSendTo": "Send to",
   "syncAllLayers": "Synchronize all layers (or only background layers) between map viewer and search overview map",
   "mdvalid": "Metadata is valid",
   "mdinvalid": "Metadata is invalid",
@@ -462,11 +463,11 @@
   "GUFaddKeywords": "Add keywords",
   "GUFcurrentScore": "Current score",
   "GUFuserInformation": "User information",
-  "GUFgiveYourOpinionOnDifferentCategories": "<span class=\"btn btn-primary btn-round\">1</span> Share your experience related to different aspects of this dataset",
-  "GUFgiveYourOpinionAboutTheDataset": "<span class=\"btn btn-primary btn-round\">2</span> Share your experience with, ask a question about or state a comment about this dataset",
-  "GUFhelpUsImproveDataset": "<span class=\"btn btn-primary btn-round\">3</span> Help us improve the dataset even more...",
+  "GUFgiveYourOpinionOnDifferentCategories": "Share your experience related to different aspects of this dataset",
+  "GUFgiveYourOpinionAboutTheDataset": "Share your experience with, ask a question about or state a comment about this dataset",
+  "GUFhelpUsImproveDataset": "Help us improve the dataset even more...",
   "GUFcategories": "Categories",
-  "GUFyouAreLoggedInAs": "You are currently logged in as <a>{{authorNameValue}}</a>",
+  "GUFyouAreLoggedInAs": "You are currently logged in as <b>{{authorNameValue}}</b>",
   "GUFyouAreNotLoggedInPleaseFillIn": "You are not logged in, please fill in your name, email and organization",
   "GUFshowUserNameInComments": "Show my username in reviews and ratings",
   "GUFhideUserNameInPublic": "Hide my name on public reviews (email will never be displayed)",
@@ -520,5 +521,8 @@
   "dateFrom": "Records updated after",
   "dateTo": "Records updated before",
   "activeFilters": "Active filters",
-  "geometryFilter": "Bounding Box"
+  "geometryFilter": "Bounding Box",
+  "GUFname": "Your Name",
+  "GUFemail": "Your Email address",
+  "GUForganization": "Your Organization"
 }
