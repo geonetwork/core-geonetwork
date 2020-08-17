@@ -651,6 +651,7 @@ goog.require('gn_alert');
 
           this.gnCfg.mods.search.scoreConfig = config.mods.search.scoreConfig;
           this.gnCfg.mods.search.facetConfig = config.mods.search.facetConfig;
+          this.gnCfg.mods.home.facetConfig = config.mods.home.facetConfig;
         }
 
         this.gnUrl = gnUrl || '../';
