@@ -473,6 +473,7 @@ public class EsSearchManager implements ISearchManager {
                 .add("resolutionDistance")
                 .add("extentDescription")
                 .add("inspireTheme")
+                .add("inspireThemeUri")
                 .add("inspireTheme_syn")
                 .add("inspireAnnex")
                 .add("status")

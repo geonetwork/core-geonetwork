@@ -109,9 +109,10 @@ public class Wro4jJsCssCompilationTest {
     public void testCssCompilation() throws Exception {
         createModel();
         testResourcesOfType(ResourceType.CSS, Predicates.not(Predicates.or(
-            Predicates.equalTo("gn_viewer") // currently broken
+            Predicates.equalTo("gn_viewer"), // currently broken
+            Predicates.equalTo("gn_facets_default") // tested in gn_search group.
+            // Exclude because using variables not imported by it.
         )));
-        testResourcesOfType(ResourceType.CSS, Predicates.<String>alwaysTrue());
     }
 
     @Test

@@ -28,17 +28,31 @@
     }
     .facet-invert {
       display: none;
+      position: absolute;
+      right: 0;
+      background-color: #fff;
+      padding-left: 5px;
     }
     &:hover .facet-invert {
       display: block;
     }
   }
+  .gn-facet-root-container {
+    input {
+      margin-left: 18px;
+      width: calc(~"100% - 18px");
+      border-color: @panel-default-border;
+    }
+  }
   .gn-facet-container {
     margin-left: 15px;
-    margin-top: 3px;
-    margin-bottom: 3px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     a {
       text-decoration: none;
+      .fa {
+        margin-right: 3px;
+      }
       * {
         color: lighten(@gray-light, 10%);
         transition: color 0.1s;
@@ -75,7 +89,7 @@
       color: @gray-dark;
     }
     .gn-facet-count {
-      font-size: 0.9em;
+      margin-left: 3px;
     }
   }
   .gn-facet-header {
@@ -414,9 +428,6 @@
   h4 {
     font-size: 14px;
   }
-  p {
-    // font-size: .9em;
-  }
   blockquote {
     padding: 6px 20px;
     margin:0;
@@ -453,7 +464,7 @@
       font-style: normal;
       font-weight: normal;
       text-decoration: inherit;
-      position: absolute;
+      position: relative;
       font-size: 46px;
       color: #eeeeee;
       top: 50%;
@@ -744,31 +755,29 @@ button.active [role=tooltip] {
 
 .search-filter-tags {
   .panel-body {
-    background-color: fade(@panel-success-heading-bg, 50%);
-    font-size: 0.9em;
+    font-size: 14px;
+    padding-left: 0px;
   }
   .gn-filter-negative {
     color: @brand-danger;
     text-decoration: line-through;
   }
   a.filter-group, .remove-all-link > a {
-    color: @panel-success-text;
     font-weight: initial;
     &:hover, &:focus {
       text-decoration: underline;
+      .fa {
+        text-decoration: none;
+      }
     }
   }
   .filter-group {
     position: relative;
     line-height: 1.1em;
-    margin-left: 1em;
     &:not(:last-child) {
       margin-bottom: 0.8em;
     }
     .delete-icon {
-      position: absolute;
-      right: calc(~"100% + 3px");
-      top: 0;
       line-height: 1em;
       opacity: 0;
     }

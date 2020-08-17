@@ -40,15 +40,16 @@
       return {
         restrict: 'A',
         scope: {
-          records: '<gnGridRelatedQuery'
+          records: '<gnGridRelatedQuery',
+          validatorFn: '&'
         },
         link: function(scope, element, attrs) {
 
           var types = gnGlobalSettings.gnCfg.mods.search.grid.related;
           gnGridRelatedList.types = types;
 
-          scope.$watch('records', function(mds) {
-            if (mds.length) {
+          scope.$watch('records', function(mds, o) {
+            if (mds !== o && mds.length) {
               gnGridRelatedList.promise =
                   gnRelatedService.getMdsRelated(mds, types).then(
                   function(response) {

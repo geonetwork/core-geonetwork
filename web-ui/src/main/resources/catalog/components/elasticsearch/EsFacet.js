@@ -39,7 +39,7 @@
       'group*',
       'logo',
       'category',
-      'topicCat',
+      'topic*',
       'inspire*',
       'resource*',
       'draft',
