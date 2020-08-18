@@ -162,7 +162,7 @@ public class GeonetworkDataDirectory {
                     if (jeevesServlet != null) {
                         value = jeevesServlet.getInitParameter(keyToUse);
                     }
-                    if ( (value == null) && (jeevesServlet.getServletContext() != null) ){
+                    if ( (value == null) && (jeevesServlet != null) && (jeevesServlet.getServletContext() != null) ){
                         value = jeevesServlet.getServletContext().getInitParameter(keyToUse);
                     }
                     break;
