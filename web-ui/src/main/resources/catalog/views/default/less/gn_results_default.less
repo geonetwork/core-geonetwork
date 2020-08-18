@@ -136,6 +136,7 @@ ul.gn-resultview {
   }
 
   @gn-card-height: 24em;
+  @gn-card-list-height: 300px;
   @gn-card-header-height: 60px;
   @gn-card-footer-height: 52px;
 
@@ -236,6 +237,12 @@ ul.gn-resultview {
                 }
               }
             }
+            .dropdown-header {
+              &:hover {
+                background: none;
+                cursor: auto;
+              }
+            }
           }
         }
       }
@@ -263,9 +270,10 @@ ul.gn-resultview {
   }
 
   li.gn-list {
-    &.panel {
-      margin-bottom: 10px;
-      height: 250px;
+    padding: 0;
+    margin-right: 15px;
+    &:first-child {
+      margin-top: 15px;
     }
     &:hover {
       background-color: #eee;
@@ -275,12 +283,15 @@ ul.gn-resultview {
       padding-left: 10px;
       height: 40px;
       line-height: 1.2em;
+      .fa {
+        padding-left: 0 !important;
+      }
     }
-    .panel-heading, h1 {
+    .gn-card-heading, h1 {
       height: 40px !important;
       line-height: 1.2em;
     }
-    .panel-body {
+    .gn-card-body {
       padding-top: 2px;
       padding-bottom: 2px;
       .col-md-2 {
@@ -296,39 +307,19 @@ ul.gn-resultview {
       .gn-md-contact {
         margin-top: 15px;
       }
-    }
-    padding: 0 0 5px 0;
-    margin-right: 15px;
-    &:first-child {
-      margin-top: 15px;
-    }
-    .gn-md-title {
-      .fa {
-        padding-left: 0 !important;
+      .gn-md-thumbnail {
+        margin-top: 15px;
+        margin-bottom: 15px;
       }
     }
-    .gn-md-thumbnail {
-      margin-top: 15px;
-      margin-bottom: 15px;
-    }
-    .gn-card {
-      // recalculate the height for list items
-      @gn-card-height: 100%;
-
-      height: @gn-card-height;
-      .gn-card-body {
-        height: calc(~"@{gn-card-height} - @{gn-card-header-height} - @{gn-card-footer-height}");
-        .gn-md-abstract {
-          .ellipsis, .ellipsis:before {
-            height: calc(~"@{gn-card-height} - @{gn-card-header-height} - @{gn-card-footer-height} - 25px");
-          }
+    // recalculate the height for list items
+    .gn-card-body {
+      height: calc(~"@{gn-card-list-height} - @{gn-card-header-height} - @{gn-card-footer-height}");
+      .gn-md-abstract {
+        .ellipsis, .ellipsis:before {
+          height: calc(~"@{gn-card-list-height} - @{gn-card-header-height} - @{gn-card-footer-height} - 25px");
         }
       }
-    }
-    .panel-footer {
-      position: absolute;
-      bottom: 0px;
-      width: 100%;
     }
   }
 }
