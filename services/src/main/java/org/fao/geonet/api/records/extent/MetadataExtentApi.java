@@ -181,7 +181,8 @@ public class MetadataExtentApi {
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        MetadataSchema schema = schemaManager.getSchema(metadata.getDataInfo().getSchemaId());
+        String schemaId = metadata.getDataInfo().getSchemaId();
+        MetadataSchema schema = schemaManager.getSchema(schemaId);
 
         Element xmlData = metadata.getXmlData(false);
         List<?> extentList = Xml.selectNodes(
@@ -189,12 +190,14 @@ public class MetadataExtentApi {
             EXTENT_XPATH, schema.getNamespaces());
 
         List<ExtentDto> response = new ArrayList<>(extentList.size() + 1);
-        response.add(new ExtentDto(
-            String.format("%sapi/records/%s/extents.png",
-                settingManager.getNodeURL(), metadataUuid),
-            "ALL",
-            "",
-            ""));
+        if (!"iso19110".equals(schemaId)) {
+            response.add(new ExtentDto(
+                String.format("%sapi/records/%s/extents.png",
+                    settingManager.getNodeURL(), metadataUuid),
+                "ALL",
+                "",
+                ""));
+        }
 
         int index = 1;
 
