@@ -197,7 +197,7 @@
                 if (target) {
                   $timeout(function () {
                     gnUtilityService.scrollTo(target);
-                  }, 300);
+                  }, 900);
                 }
               }
             }).error(function(data) {
