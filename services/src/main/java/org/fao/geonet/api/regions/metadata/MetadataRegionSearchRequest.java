@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jdom.Namespace;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Polygon;
@@ -201,24 +202,36 @@ public class MetadataRegionSearchRequest extends Request {
         return extents;
     }
 
+    private double getCoordinateValue(String coord, Element bbox) {
+        Element coordElement = bbox.getChild(coord, bbox.getNamespace());
+        if (coordElement != null) {
+            List children = coordElement.getChildren();
+            if (children.size() == 1 && children.get(0) instanceof Element) {
+                return Double.parseDouble(((Element) children.get(0)).getText());
+            }
+        }
+        return 0;
+    };
+
     Region parseRegion(Id mdId, Element extentObj) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         gc.getBean(DataManager.class).getEditLib().removeEditingInfo(extentObj);
 
         String id = null;
         Geometry geometry = null;
+        Namespace objNamespace = extentObj.getNamespace();
         if ("polygon".equals(extentObj.getName())) {
             String gml = Xml.getString(extentObj);
             geometry = SpatialIndexWriter.parseGml(getParser(extentObj), gml);
         } else if ("EX_BoundingPolygon".equals(extentObj.getName())) {
-            Element polygon = extentObj.getChild("polygon", Geonet.Namespaces.GMD);
+            Element polygon = extentObj.getChild("polygon", objNamespace);
             String gml = Xml.getString(polygon);
             geometry = SpatialIndexWriter.parseGml(getParser(polygon), gml);
         } else if ("EX_GeographicBoundingBox".equals(extentObj.getName())) {
-            double minx = Double.parseDouble(extentObj.getChild("westBoundLongitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
-            double maxx = Double.parseDouble(extentObj.getChild("eastBoundLongitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
-            double miny = Double.parseDouble(extentObj.getChild("southBoundLatitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
-            double maxy = Double.parseDouble(extentObj.getChild("northBoundLatitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
+            double minx = getCoordinateValue("westBoundLongitude", extentObj);
+            double maxx = getCoordinateValue("eastBoundLongitude", extentObj);
+            double miny = getCoordinateValue("southBoundLatitude", extentObj);
+            double maxy = getCoordinateValue("northBoundLatitude", extentObj);
             geometry = factory.toGeometry(new Envelope(minx, maxx, miny, maxy));
         }
 

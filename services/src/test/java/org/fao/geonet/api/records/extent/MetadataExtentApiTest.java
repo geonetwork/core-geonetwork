@@ -61,10 +61,11 @@ import java.util.UUID;
 
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ContextConfiguration(inheritLocations = true, locations = "classpath:extents-test-context.xml")
 public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
@@ -104,6 +105,26 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
 
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
         assertEquals("b02baec6d92832ecd5653db78093a427", DigestUtils.md5DigestAsHex(reponseBuffer));
+    }
+
+    @Test
+    public void nominalAsJson() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+        String uuid = createTestData();
+
+        mockMvc.perform(get(String.format("/srv/api/records/%s/extents.json", uuid))
+            .session(mockHttpSession)
+            .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().is2xxSuccessful())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(jsonPath("$", hasSize(3)))
+            .andExpect(jsonPath("$[0].href", is(String.format("http://localhost:8080/srv/api/records/%s/extents.png", uuid))))
+            .andExpect(jsonPath("$[0].type", is("ALL")))
+            .andExpect(jsonPath("$[1].href", is(String.format("http://localhost:8080/srv/api/records/%s/extents/1.png", uuid))))
+            .andExpect(jsonPath("$[1].type", is("EX_BoundingPolygon")))
+            .andExpect(jsonPath("$[1].description", is("")))
+            .andExpect(jsonPath("$[2].type", is("EX_GeographicBoundingBox")));
     }
 
     @Test
@@ -159,8 +180,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
         MockHttpSession mockHttpSession = loginAsAdmin();
         String uuid = createTestDataThreeExtent();
 
-        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents.png", uuid))
-            .param("extentOrderOfAppearence", "3")
+        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/4.png", uuid))
             .session(mockHttpSession)
             .accept(MediaType.IMAGE_PNG_VALUE))
             .andExpect(status().is2xxSuccessful())
@@ -172,13 +192,29 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
-    public void threeExtentSecondOneIsABoundingBox() throws Exception {
+    public void threeExtentThirdOne115_3() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+        String uuid = createTestDataIso191153ThreeExtent();
+
+        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/3.png", uuid))
+            .session(mockHttpSession)
+            .accept(MediaType.IMAGE_PNG_VALUE))
+            .andExpect(status().is2xxSuccessful())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
+            .andReturn().getResponse().getContentAsByteArray();
+
+        saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
+        assertEquals("ea89d29e84cb3f1f7f1102ffda06708b", DigestUtils.md5DigestAsHex(reponseBuffer));
+    }
+
+    @Test
+    public void threeExtentThirdOneIsABoundingBox() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
         String uuid = createTestDataThreeExtent();
 
-        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents.png", uuid))
-            .param("extentOrderOfAppearence", "2")
+        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/3.png", uuid))
             .session(mockHttpSession)
             .accept(MediaType.IMAGE_PNG_VALUE))
             .andExpect(status().is2xxSuccessful())
@@ -187,24 +223,6 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
 
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
         assertEquals("eb15c89eddb74808c169edfd15f54285", DigestUtils.md5DigestAsHex(reponseBuffer));
-    }
-
-    @Test
-    public void threeExtentPolygonPreferredOverBoundingBox() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-        MockHttpSession mockHttpSession = loginAsAdmin();
-        String uuid = createTestDataThreeExtent();
-
-        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents.png", uuid))
-            .param("extentOrderOfAppearence", "1")
-            .session(mockHttpSession)
-            .accept(MediaType.IMAGE_PNG_VALUE))
-            .andExpect(status().is2xxSuccessful())
-            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
-            .andReturn().getResponse().getContentAsByteArray();
-
-        saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
-        assertEquals("3db77b177b47f9dfbd52265b15a77443", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
     private String createTestData() throws Exception {
@@ -225,12 +243,16 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
         return createMdFromXmlRessources(sampleMetadataXml);
     }
 
+    private String createTestDataIso191153ThreeExtent() throws Exception {
+        URL resource = MetadataExtentApiTest.class.getResource("metadata.iso19115-3_with_three_extent.xml");
+        Element sampleMetadataXml = Xml.loadStream(resource.openStream());
+
+        return createMdFromXmlRessources(sampleMetadataXml);
+    }
 
     private String createMdFromXmlRessources(Element sampleMetadataXml) throws Exception {
         loginAsAdmin(context);
         String uuid = UUID.randomUUID().toString();
-        Xml.selectElement(sampleMetadataXml, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).setText(uuid);
-
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.set(2015, Calendar.OCTOBER, 21, 07, 28, 0);
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
