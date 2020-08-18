@@ -65,6 +65,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USERS_IDENTICON;
@@ -235,7 +236,7 @@ public class UsersApi {
                 }
 
                 String[] config = identiconType.split(":");
-                String dParameter = config.length > 1 ? config[1] : "mp";
+                String dParameter = config.length > 1 ? config[1] : null;
                 String fParameter = config.length == 3 ? config[2] : null;
 
                 String email = user.getEmail() != null ? user.getEmail() : "";
@@ -243,14 +244,14 @@ public class UsersApi {
                 byte[] hash = md.digest(email.getBytes());
                 URL url = new URL("https://gravatar.com/avatar/" +
                     DatatypeConverter.printHexBinary(hash).toLowerCase() +
-                    "?d=" + dParameter +
-                    "&s=" + size +
+                    "?s=" + size +
+                    (dParameter ==  null ? "" : "&d=" + dParameter) +
                     (fParameter ==  null ? "" : "&f=" + fParameter)
                 );
                 BufferedImage image = ImageIO.read(url);
                 response.setStatus(HttpStatus.OK.value());
                 ImageIO.write(image, "PNG", response.getOutputStream());
-            } catch (Exception e) {
+            } catch (NoSuchAlgorithmException e) {
                 ImageIO.write(pixel, "PNG", response.getOutputStream());
             }
         } else {
