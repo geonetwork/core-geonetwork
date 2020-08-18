@@ -37,6 +37,7 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -61,10 +62,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.util.*;
 
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USERS_IDENTICON;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -81,6 +84,9 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class UsersApi {
 
     @Autowired
+    SettingManager settingManager;
+
+    @Autowired
     UserRepository userRepository;
 
     @Autowired
@@ -94,6 +100,13 @@ public class UsersApi {
 
     @Autowired
     DataManager dataManager;
+
+    private BufferedImage pixel;
+
+    public UsersApi() {
+        pixel = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        pixel.setRGB(0, 0, (0xFF));
+    }
 
 
     @ApiOperation(
@@ -190,11 +203,6 @@ public class UsersApi {
     }
 
 
-    @Value("${user.identicon}")
-    String userIdenticon;
-
-    private static final String userIconRedirect = "redirect:/images/harvesting/user.png";
-
     @ApiOperation(
         value = "Get user identicon",
         notes = "",
@@ -204,7 +212,7 @@ public class UsersApi {
         produces = MediaType.IMAGE_PNG_VALUE,
         method = RequestMethod.GET)
     @ResponseBody
-    public ModelAndView getUser(
+    public void getUser(
         @ApiParam(
             value = "User identifier."
         )
@@ -216,37 +224,38 @@ public class UsersApi {
         @RequestParam(defaultValue = "18")
             Integer size,
         @ApiIgnore
-            HttpServletResponse response,
-        @ApiIgnore
-            ModelMap model
-    ) {
-        if ("gravatar".equals(userIdenticon)) {
+            HttpServletResponse response
+    ) throws IOException {
+        String identiconType = settingManager.getValue(SYSTEM_USERS_IDENTICON);
+        if (identiconType != null && identiconType.startsWith("gravatar")) {
             try {
                 User user = userRepository.findOne(userIdentifier);
-
                 if (user == null) {
                     throw new UserNotFoundEx(Integer.toString(userIdentifier));
                 }
+
+                String[] config = identiconType.split(":");
+                String dParameter = config.length > 1 ? config[1] : "mp";
+                String fParameter = config.length == 3 ? config[2] : null;
 
                 String email = user.getEmail() != null ? user.getEmail() : "";
                 MessageDigest md = MessageDigest.getInstance("MD5");
                 byte[] hash = md.digest(email.getBytes());
                 URL url = new URL("https://gravatar.com/avatar/" +
                     DatatypeConverter.printHexBinary(hash).toLowerCase() +
-                    "?d=blank&s=" + size);
+                    "?d=" + dParameter +
+                    "&s=" + size +
+                    (fParameter ==  null ? "" : "&f=" + fParameter)
+                );
                 BufferedImage image = ImageIO.read(url);
                 response.setStatus(HttpStatus.OK.value());
                 ImageIO.write(image, "PNG", response.getOutputStream());
-                return null;
             } catch (Exception e) {
-                response.setStatus(HttpStatus.TEMPORARY_REDIRECT.value());
-                return new ModelAndView(userIconRedirect, model);
+                ImageIO.write(pixel, "PNG", response.getOutputStream());
             }
         } else {
-            response.setStatus(HttpStatus.PERMANENT_REDIRECT.value());
-            return new ModelAndView(userIconRedirect, model);
+            ImageIO.write(pixel, "PNG", response.getOutputStream());
         }
-        // TODO: Add https://github.com/gabrie-allaigre/avatar-generator ?
     }
 
     @ApiOperation(
