@@ -31,6 +31,7 @@ import org.springframework.util.StringUtils;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.PartialResultException;
 import javax.naming.directory.*;
 import java.text.MessageFormat;
 import java.util.*;
@@ -103,10 +104,17 @@ public class LDAPUserDetailsContextMapperWithProfileSearchEnhanced extends Abstr
 
     //This will find the longest "cn" value given in the map
     // typically, there are >1 of these.  I.e. "blasby, david" and "blasby, david,ou=GIS Department,ou=Corporate Users,dc=example,dc=com"
+    // alternatively,  use userInfo.get("dn") list.
     public String cn_long(Map<String, ArrayList<String>> userInfo) {
         ArrayList<String> cn = userInfo.get("cn");
         if ((cn == null) || (cn.size() == 0))  // bad user!
             return null;
+
+        for(String dn: userInfo.get("dn")) {
+            dn = dn.replaceFirst("^cn=",""); // dn will start with "cn="
+            cn.add(dn);
+        }
+
         Comparator<String> comparator = (str1, str2) -> str1.length() > str2.length() ? -1 : 1;
         String longest = cn.stream().sorted(comparator).findFirst().get();
         return longest;
@@ -165,19 +173,25 @@ public class LDAPUserDetailsContextMapperWithProfileSearchEnhanced extends Abstr
 
                 Set<LDAPRole> allRoles = new HashSet<>();
 
-                //for each found LDAP-Group
-                while (ldapInfoList.hasMore()) {
-                    SearchResult sr = (SearchResult) ldapInfoList.next();
-                    String ldapGroupName = cn_short(sr.getAttributes());
+                try {
+                    //for each found LDAP-Group
+                    while (ldapInfoList.hasMore()) {
+                        SearchResult sr = (SearchResult) ldapInfoList.next();
+                        String ldapGroupName = cn_short(sr.getAttributes());
 
-                    //have the converters process the LDAP-Group
-                    //NOTE: they will return an empty list if they don't know what the role means
-                    //      allRoles is a set, you can add duplicates to it with no problem...
-                    for(LDAPRoleConverter converter : this.ldapRoleConverters){
-                        List<LDAPRole> newRoles = converter.convert(userInfo, userDetails, ldapGroupName, sr.getAttributes());
-                        if (newRoles != null)
-                            allRoles.addAll(newRoles);
+                        //have the converters process the LDAP-Group
+                        //NOTE: they will return an empty list if they don't know what the role means
+                        //      allRoles is a set, you can add duplicates to it with no problem...
+                        for (LDAPRoleConverter converter : this.ldapRoleConverters) {
+                            List<LDAPRole> newRoles = converter.convert(userInfo, userDetails, ldapGroupName, sr.getAttributes());
+                            if (newRoles != null)
+                                allRoles.addAll(newRoles);
+                        }
                     }
+                }
+                catch (PartialResultException ee) {
+                    // do nothing - this occurs when you are searching from the very top of the LDAP.
+                    // its not really a problem.  Usually you would use template.setIgnorePartialResultException
                 }
 
                 //we have a set of GN-Role, now add them to the user object
