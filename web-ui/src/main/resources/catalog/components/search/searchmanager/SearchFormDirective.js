@@ -433,8 +433,8 @@
     }
 
     this.updateState = function(path, value, doNotRemove) {
-      if(path[0] === 'any') {
-        delete $scope.searchObj.params.any;
+      if(path[0] === 'any' || path[0] === 'uuid') {
+        delete $scope.searchObj.params[path[0]];
       } else {
         var filters = $scope.searchObj.state.filters;
         var getter = parse(path.join('^^^'));
