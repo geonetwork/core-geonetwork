@@ -83,7 +83,6 @@
                           src="{nodeUrl}../images/logos/{$parameterValue}.png"/>
                   </xsl:when>
                   <xsl:when test="$parameterName = 'responsiblePartyEmail'">
-                    <img src="//gravatar.com/avatar/{util:md5Hex($parameterValue)}?s=200"/>
                     <h2>
                       <xsl:value-of select="$parameterValue"/>
                     </h2>
@@ -141,13 +140,13 @@
                 </xsl:for-each>
               </ul></details>
             </xsl:for-each>
-            
+
           </xsl:for-each>
         </xsl:if>
       </div>
       <xsl:if test="$count > 0">
         <div class="col-md-9">
-        
+
           <xsl:for-each select="/root/search/response[@from]">
 
             <div class="row gn-pages">
