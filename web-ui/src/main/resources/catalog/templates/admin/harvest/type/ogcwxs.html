@@ -22,7 +22,7 @@
       <label id="gn-harvest-settings-ogc-basic-type-label" class="control-label" data-translate="">serviceType</label>
       <select id="gn-harvest-settings-ogc-basic-type-list" class="form-control" data-ng-model="harvesterSelected.site.ogctype">
         <option
-          data-ng-repeat="t in ['WMS1.0.0', 'WMS1.1.1', 'WMS1.3.0', '-', 'WFS1.0.0', 'WFS1.1.0', '-', 'WCS1.0.0', '-', 'CSW2.0.2', '-', 'WPS0.4.0', 'WPS1.0.0', 'WPS2.0.0','-', 'SOS1.0.0'] track by $index"
+          data-ng-repeat="t in ['WMS1.0.0', 'WMS1.1.1', 'WMS1.3.0', '-', 'WMTS1.1.0', '-', 'WFS1.0.0', 'WFS1.1.0', '-', 'WCS1.0.0', '-', 'CSW2.0.2', '-', 'WPS0.4.0', 'WPS1.0.0', 'WPS2.0.0','-', 'SOS1.0.0'] track by $index"
           value="{{t}}"
           data-ng-selected="t == harvesterSelected.site.ogctype">
           {{t | translate}}
@@ -40,7 +40,8 @@
     <div id="gn-harvest-settings-ogc-advanced-remote-row" data-gn-harvester-account="harvesterSelected"/>
 
     <!-- Service metadata record -->
-    <div id="gn-harvest-settings-ogc-advanced-template-row">
+    <div id="gn-harvest-settings-ogc-advanced-template-row"
+         data-ng-show="harvesterSelected.site.ogctype.match('^(WMS|WFS|WCS|CSW|SOS|WPS)') != null">
       <label id="gn-harvest-settings-ogc-advanced-template-label" class="control-label">
         <span data-translate="">ogcwxs-serviceTemplateUuid</span>
       </label>
@@ -61,7 +62,7 @@
       <label class="control-label">
         <input id="gn-harvest-settings-ogc-advanced-record-checkbox"
                type="checkbox"
-               data-ng-disabled="harvesterSelected.site.ogctype.match('^(WMS|WFS|WCS|SOS|WPS2)') == null"
+               data-ng-disabled="harvesterSelected.site.ogctype.match('^(WMS|WMTS|WFS|WCS|SOS|WPS2)') == null"
                data-ng-model="harvesterSelected.options.useLayer"/>
         <span id="gn-harvest-settings-ogc-advanced-record-label" data-translate="" translate-values="{metadataTemplateType: metadataTemplateType}">ogcwxs-createMetadataForEachLayer</span>
       </label>
@@ -72,7 +73,8 @@
     <div id="gn-harvest-settings-ogc-advanced-records-row"
          class="well"
          data-ng-show="harvesterSelected.options.useLayer">
-      <div id="gn-harvest-settings-ogc-advanced-records-imports-row">
+      <div id="gn-harvest-settings-ogc-advanced-records-imports-row"
+           data-ng-hide="harvesterSelected.site.ogctype.indexOf('WMTS') === 0">
         <label class="control-label">
           <input id="gn-harvest-settings-ogc-advanced-records-imports-checkbox" type="checkbox" data-ng-model="harvesterSelected.options.useLayerMd"/>
           <span id="gn-harvest-settings-ogc-advanced-records-imports-label" data-translate="" translate-values="{metadataTemplateType: metadataTemplateType}">ogcwxs-createMetadataForEachLayerUsingMetadataURL</span>
@@ -81,12 +83,12 @@
         >ogcwxs-createMetadataForEachLayerUsingMetadataURLHelp</p>
       </div>
 
-      <div id="gn-harvest-settings-ogc-advanced-records-template-row">
+      <div id="gn-harvest-settings-ogc-advanced-records-template-row"
+           data-ng-show="harvesterSelected.site.ogctype.match('^(WMS|WFS|WCS|SOS|WPS)') != null">
         <label id="gn-harvest-settings-ogc-advanced-records-template-label" class="control-label">
           <span data-translate="">ogcwxs-datasetTemplateUuid</span>
         </label>
         <select id="gn-harvest-settings-ogc-advanced-records-template-list"
-                data-ng-show="harvesterSelected.site.ogctype.match('^(WMS|WFS|WCS|SOS|WPS)') != null"
                 class="form-control"
                 data-ng-model="harvesterSelected.options.datasetTemplateUuid"
                 data-ng-options="t['geonet:info'].uuid as t.getTitle() for t in ogcwxsDatasetTemplates">
@@ -103,7 +105,8 @@
         <p class="help-block" data-translate="">ogcwxs-datasetTemplateUuidHelp</p>
       </div>
 
-      <div id="gn-harvest-settings-ogc-advanced-records-thumbnail-row">
+      <div id="gn-harvest-settings-ogc-advanced-records-thumbnail-row"
+           data-ng-hide="harvesterSelected.site.ogctype.indexOf('WMS') !== 0">
         <label class="control-label">
           <input id="gn-harvest-settings-ogc-advanced-records-thumbnail-checkbox"
                  type="checkbox"
