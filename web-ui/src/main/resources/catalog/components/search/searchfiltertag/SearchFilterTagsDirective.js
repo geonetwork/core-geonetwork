@@ -199,7 +199,7 @@
                     }
                   })
                 }
-                if (filterKey==="any") {
+                if (scope.isSpecificParameter(filterKey)) {
                   scope.currentFilters.push({
                     key: filterKey,
                     value: value
@@ -207,6 +207,12 @@
                 }
               }
             }, true);
+
+            scope.isSpecificParameter = function(key) {
+              // full text search and uuid on selection only
+              // are not like facet.
+              return key === 'any' || key === 'uuid';
+            }
 
             scope.isNegative = function(value) {
               return value === false
@@ -217,7 +223,7 @@
               removeFacetElement=[];
               removeFacetElement.push(filter.key);
               var keys = Object.keys(filter.value);
-              if (keys[0] != 0) {
+              if (angular.isObject(filter.value) && keys[0] != 0) {
                 removeFacetElement.push(keys[0])
                 ngSearchFormCtrl.updateState(removeFacetElement, filter.value[keys[0]]);
               } else {

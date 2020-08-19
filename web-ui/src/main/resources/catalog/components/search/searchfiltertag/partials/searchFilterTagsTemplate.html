@@ -14,19 +14,20 @@
        class="filter-group flex-row flex-wrap"
        title="{{'removeThisFilter' | translate}}"
        ng-repeat="filter in currentFilters"
+       ng-init="specific = isSpecificParameter(filter.key)"
        ng-click="removeFilter(filter)">
       <strong class="text-no-wrap">
-        <span ng-if="filter.key != 'any'" translate>{{('facet-' + filter.key)}}</span>
-        <span ng-if="filter.key === 'any'">{{filter.key}}</span>
+        <span ng-if="::!specific" translate>{{('facet-' + filter.key)}}</span>
+        <span ng-if="::specific">{{filter.key}}</span>
       </strong>
       <div class="flex-spacer"></div>
-      <span ng-if="filter.key === 'any'">
-        {{filter.value}}
+      <span ng-if="::specific">
+        {{filter.value | characters:180}}
       </span>
-      <span ng-if="filter.key !== 'any'"
+      <span ng-if="::!specific"
             ng-repeat="(key, value) in filter.value track by $index"
             ng-class="{'gn-filter-negative': isNegative(value)}"
-            translate>{{key | facetTranslator: filter.key | capitalize}}</span>
+            translate>{{::key | facetTranslator: filter.key | capitalize}}</span>
       <!-- TODO: Nested aggs support -->
       <div class="flex-grow"></div>
       <span class="fa fa-times text-danger delete-icon pull-right"></span>
