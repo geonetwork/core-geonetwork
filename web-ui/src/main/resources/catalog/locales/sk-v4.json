@@ -1,4 +1,12 @@
 {
+  "otherKeywords-place": "Place",
+  "otherKeywords-discipline": "Discipline",
+  "otherKeywords-stratum": "Stratum",
+  "otherKeywords-temporal": "Temporal",
+  "otherKeywords-theme": "Theme",
+  "otherKeywords-": "Kľúčové slová",
+  "link-datasets": "Služba",
+  "link-services": "Služba",
   "remoteRecord": "Record from external catalog",
   "chooseACatalogRecord": "Choose a catalog record",
   "siblingListToAdd": "List of record links to add",

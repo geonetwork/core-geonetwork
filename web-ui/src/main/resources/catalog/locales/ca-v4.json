@@ -1,4 +1,12 @@
 {
+  "otherKeywords-place": "Lloc",
+  "otherKeywords-discipline": "Disciplina",
+  "otherKeywords-stratum": "Estrat",
+  "otherKeywords-temporal": "Temporal",
+  "otherKeywords-theme": "Tema",
+  "otherKeywords-": "Paraules clau",
+  "link-datasets": "Servei",
+  "link-services": "Servei",
   "remoteRecord": "Record from external catalog",
   "chooseACatalogRecord": "Choose a catalog record",
   "siblingListToAdd": "List of record links to add",

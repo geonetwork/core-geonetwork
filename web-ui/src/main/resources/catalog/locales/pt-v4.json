@@ -1,4 +1,12 @@
 {
+  "otherKeywords-place": "Lugar",
+  "otherKeywords-discipline": "Discipline",
+  "otherKeywords-stratum": "Stratum",
+  "otherKeywords-temporal": "Temporal",
+  "otherKeywords-theme": "Tema",
+  "otherKeywords-": "Palavras-chave",
+  "link-datasets": "Serviço",
+  "link-services": "Serviço",
   "remoteRecord": "Record from external catalog",
   "chooseACatalogRecord": "Choose a catalog record",
   "siblingListToAdd": "List of record links to add",
