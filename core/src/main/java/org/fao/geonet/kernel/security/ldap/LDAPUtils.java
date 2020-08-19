@@ -120,6 +120,7 @@ public class LDAPUtils {
             toSave = user.getUser();
         }
         toSave.getSecurity().setAuthType(LDAPConstants.LDAP_FLAG);
+        toSave.getSecurity().setPassword("NULL"); //Oracle doesn't allow a password as '' (interpreted as null)
         toSave = userRepo.save(toSave);
         user.setUser(toSave);
         return toSave;
