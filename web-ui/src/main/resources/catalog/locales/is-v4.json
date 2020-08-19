@@ -1,4 +1,12 @@
 {
+  "otherKeywords-place": "Staður",
+  "otherKeywords-discipline": "Discipline",
+  "otherKeywords-stratum": "Stratum",
+  "otherKeywords-temporal": "Tímabundinn",
+  "otherKeywords-theme": "Þema",
+  "otherKeywords-": "Lykilorð",
+  "link-datasets": "Þjónusta",
+  "link-services": "Þjónusta",
   "remoteRecord": "Record from external catalog",
   "chooseACatalogRecord": "Choose a catalog record",
   "siblingListToAdd": "List of record links to add",

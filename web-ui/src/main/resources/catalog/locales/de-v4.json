@@ -1,4 +1,12 @@
 {
+  "otherKeywords-place": "Ort",
+  "otherKeywords-discipline": "Fachdisziplin",
+  "otherKeywords-stratum": "Schichtungsebene",
+  "otherKeywords-temporal": "Zeitraum",
+  "otherKeywords-theme": "Thema",
+  "otherKeywords-": "Schlagwörter",
+  "link-datasets": "Dienst",
+  "link-services": "Dienst",
   "remoteRecord": "Record from external catalog",
   "chooseACatalogRecord": "Choose a catalog record",
   "siblingListToAdd": "List of record links to add",

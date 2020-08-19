@@ -1,4 +1,12 @@
 {
+  "otherKeywords-place": "장소",
+  "otherKeywords-discipline": "훈련",
+  "otherKeywords-stratum": "지층",
+  "otherKeywords-temporal": "시간적인",
+  "otherKeywords-theme": "테마",
+  "otherKeywords-": "핵심어",
+  "link-datasets": "서비스",
+  "link-services": "서비스",
   "remoteRecord": "Record from external catalog",
   "chooseACatalogRecord": "Choose a catalog record",
   "siblingListToAdd": "List of record links to add",

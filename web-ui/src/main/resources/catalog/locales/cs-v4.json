@@ -1,4 +1,12 @@
 {
+  "otherKeywords-place": "Místo",
+  "otherKeywords-discipline": "Obor",
+  "otherKeywords-stratum": "Vrstva",
+  "otherKeywords-temporal": "Dočasný",
+  "otherKeywords-theme": "Theme",
+  "otherKeywords-": "Klíčová slova",
+  "link-datasets": "Služba",
+  "link-services": "Služba",
   "remoteRecord": "Záznam z externího katalogu",
   "chooseACatalogRecord": "Vyberte katalogový záznam",
   "siblingListToAdd": "Seznam odkazů na záznamy, které chcete přidat",

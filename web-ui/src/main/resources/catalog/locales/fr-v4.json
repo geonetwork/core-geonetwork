@@ -1,4 +1,12 @@
 {
+  "otherKeywords-place": "Localisation",
+  "otherKeywords-discipline": "Discipline",
+  "otherKeywords-stratum": "Strate",
+  "otherKeywords-temporal": "Temps",
+  "otherKeywords-theme": "Thème",
+  "otherKeywords-": "Mots-clés",
+  "link-datasets": "Service",
+  "link-services": "Service",
   "remoteRecord": "Fiche d'un autre catalogue",
   "chooseACatalogRecord": "Sélectionner une fiche",
   "siblingListToAdd": "Liste des fiches à associer",

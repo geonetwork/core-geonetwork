@@ -519,6 +519,6 @@
     "changeDateTo": "Ressources modifiées avant",
     "dateFrom": "Fiches mises à jour après",
     "dateTo": "Fiches mises à jour avant",
-    "activeFilters": "Filtres",
+    "activeFilters": "Filtres actifs",
     "geometryFilter": "Emprise"
 }
