@@ -279,9 +279,7 @@ public class MetadataExtentApi {
         if (extentOrderOfAppearence == null) {
             regionId = String.format("metadata:@id%s", metadata.getId());
         } else {
-            regionId = String.format(
-                "metadata:@id%s:" +
-                    "@xpath(%s)[%d]",
+            regionId = String.format("metadata:@id%s:@xpath(%s)[%d]",
                 metadata.getId(), EXTENT_XPATH, extentOrderOfAppearence);
         }
 
