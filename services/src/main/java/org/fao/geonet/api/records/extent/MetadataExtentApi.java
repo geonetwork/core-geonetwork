@@ -175,11 +175,8 @@ public class MetadataExtentApi {
         @PathVariable(value = "metadataUuid")
             String metadataUuid,
         @ApiIgnore
-            NativeWebRequest nativeWebRequest,
-        @ApiIgnore
             HttpServletRequest request) throws Exception {
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
-        ServiceContext context = ApiUtils.createServiceContext(request);
 
         String schemaId = metadata.getDataInfo().getSchemaId();
         MetadataSchema schema = schemaManager.getSchema(schemaId);

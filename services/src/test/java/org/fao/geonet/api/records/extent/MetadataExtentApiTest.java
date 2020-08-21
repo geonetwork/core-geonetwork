@@ -91,24 +91,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
-    public void nominal() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-        MockHttpSession mockHttpSession = loginAsAdmin();
-        String uuid = createTestData();
-
-        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents.png", uuid))
-            .session(mockHttpSession)
-            .accept(MediaType.IMAGE_PNG_VALUE))
-            .andExpect(status().is2xxSuccessful())
-            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
-            .andReturn().getResponse().getContentAsByteArray();
-
-        saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
-        assertEquals("b02baec6d92832ecd5653db78093a427", DigestUtils.md5DigestAsHex(reponseBuffer));
-    }
-
-    @Test
-    public void nominalAsJson() throws Exception {
+    public void getAllRecordExtentAsJson() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
         String uuid = createTestData();
@@ -125,6 +108,23 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$[1].type", is("EX_BoundingPolygon")))
             .andExpect(jsonPath("$[1].description", is("")))
             .andExpect(jsonPath("$[2].type", is("EX_GeographicBoundingBox")));
+    }
+
+    @Test
+    public void getOneRecordExtentAsImage() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+        String uuid = createTestData();
+
+        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents.png", uuid))
+            .session(mockHttpSession)
+            .accept(MediaType.IMAGE_PNG_VALUE))
+            .andExpect(status().is2xxSuccessful())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
+            .andReturn().getResponse().getContentAsByteArray();
+
+        saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
+        assertEquals("b02baec6d92832ecd5653db78093a427", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
     @Test
