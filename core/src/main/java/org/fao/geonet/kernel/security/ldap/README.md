@@ -3,9 +3,7 @@ Using LDAPUserDetailsContextMapperWithProfileSearchEnhanced
 
 `LDAPUserDetailsContextMapperWithProfileSearch` was modified so it works in more situations, is much simpler, uses strategy objects, and has a good set of test cases.
 
-This extends the original `LDAPUserDetailsContextMapperWithProfileSearch` so it can support more LDAP configurations.
-
-The old `LDAPUserDetailsContextMapperWithProfileSearch` should work as before - existing configurations should not need any changes.
+The original `LDAPUserDetailsContextMapperWithProfileSearch` was extremely difficult to understand.
 
 Please see the test cases (and the corresponding README.md).  This contains;
 
