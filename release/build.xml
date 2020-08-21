@@ -57,18 +57,6 @@
   <property name="thesaurusUrl"
             value="https://raw.githubusercontent.com/geonetwork/util-gemet/master/thesauri"/>
 
-  <!-- =================================================================================== -->
-
-  <taskdef name="izpack"
-           classpath="lib/standalone-compiler.jar"
-           classname="com.izforge.izpack.ant.IzPackTask"/>
-
-  <taskdef name="launch4j"
-           classname="net.sf.launch4j.ant.Launch4jTask"
-           classpath="launch4j/${osys}/launch4j.jar:launch4j/${osys}/lib/xstream.jar"/>
-
-  <!-- =================================================================================== -->
-
   <target name="thesaurusDownload">
     <mkdir dir="../web/target/thesauri"/>
 
@@ -91,13 +79,12 @@
     </replace>
   </target>
 
-  <target name="inspireTarget" depends="thesaurusDownload,inspireDbSettings"/>
-
   <target name="setProperties">
 
     <delete dir="${propsdir}"/>
     <mkdir dir="${propsdir}"/>
 
+    <!-- Extract Git properties -->
     <exec executable="git" dir=".." output="git.properties">
       <arg value="remote"/>
       <arg value="-v"/>
@@ -138,18 +125,6 @@
 
     <!-- make sure all files that need have version numbers etc updated -->
 
-    <!-- Windows installer build -->
-    <copy file="../installer/installer-config.xml"
-          tofile="${propsdir}/installer-config.xml"
-          filtering="on" overwrite="yes"/>
-
-    <replace file="${propsdir}/installer-config.xml"
-             propertyFile="../web/src/main/webapp/WEB-INF/server.prop">
-      <replacefilter token="@version@" property="version"/>
-      <replacefilter token="@subVersion@" property="subVersion"/>
-      <replacefilter token="@javaVersion@" property="javaVersion"/>
-    </replace>
-
     <!-- help file -->
     <copy file="readme.html"
           tofile="${propsdir}/readme.html"
@@ -161,6 +136,7 @@
           tofile="${propsdir}/readme_spa.html"
           filtering="on" overwrite="yes"/>
 
+    <echo message="Replacing template variables in readme files..."/>
     <replace file="${propsdir}/readme.html"
              propertyFile="../web/src/main/webapp/WEB-INF/server.prop">
       <replacefilter token="@version@" property="version"/>
@@ -185,29 +161,66 @@
       <replacefilter token="@javaVersion@" property="javaVersion"/>
       <replacefilter token="@jre_url@" property="jre_url"/>
     </replace>
+    <echo message="Done"/>
   </target>
 
 
-  <target name="installer" depends="setProperties,inspireTarget">
-    <ant dir="." target="jarinstall"/>
+  <target name="installer" depends="setProperties,thesaurusDownload,inspireDbSettings">
+    <echo message="All conditions met: ready to create ZIP files"/>
+    <ant dir="." target="zipinstallInspire"/>
   </target>
 
 
-  <target name="jarinstall" depends="setProperties,inspireTarget">
+  <target name="zipinstall">
     <property file="../web/src/main/webapp/WEB-INF/server.prop"/>
 
     <delete dir="../${appName}-${release}"/>
     <mkdir dir="../${appName}-${release}"/>
 
-    <echo message="Building platform independent installer on ${osys} using IzPack"/>
+    <echo message="Creating ZIP file for ${appName} ${release}..."/>
 
-    <izpack input="${propsdir}/installer-config.xml"
-            output="../${appName}-${release}/${appName}-install-${release}-${subVersion}.jar"
-            installerType="standard"
-            basedir="${basedir}"/>
+    <zip destfile="../${appName}-${release}/${appName}-install-${release}-${subVersion}.zip">
+      <zipfileset dir="./bin" prefix="bin" />
+      <zipfileset dir="./jetty" prefix="jetty" excludes="logs/*.log, logs/archive/*.log" />
+      <zipfileset dir="../web/target/geonetwork" prefix="web/geonetwork" />
+      <zipfileset dir="./data" prefix="web/geonetwork/data" />
+      <zipfileset dir="./schemaPlugins" prefix="web/geonetwork/WEB-INF/data/config/schema_plugins" />
+    </zip>
 
     <checksum
-      file="../${appName}-${release}/${appName}-install-${release}-${subVersion}.jar"
+      file="../${appName}-${release}/${appName}-install-${release}-${subVersion}.zip"
       forceOverwrite="yes"/>
+
   </target>
+
+  <target name="zipinstallInspire" depends="zipinstall">
+
+    <echo message="Creating ZIP file for ${appName} ${release} with INSPIRE configuration..."/>
+
+    <copy file="../${appName}-${release}/${appName}-install-${release}-${subVersion}.zip" 
+          tofile="../${appName}-${release}/${appName}-install-${release}-${subVersion}-INSPIRE.zip" />
+
+    <zip destfile="../${appName}-${release}/${appName}-install-${release}-${subVersion}-INSPIRE.zip" update="true">
+      <!-- Add schematron rules (should already be there) -->
+      <zipfileset dir="../web/target/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron"
+                  prefix="web/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron" 
+                  includes="schematron-rules-inspire*.sch" />
+      
+      <!-- GEMET thesaurus files. For INSPIRE, user will use the admin and load them from INSPIRE Registry -->
+      <zipfileset dir="../web/target/thesauri"
+                  prefix="web/geonetwork/WEB-INF/data/config/codelist/external/thesauri/theme" 
+                  includes="gemet.rdf" />
+      
+      <!-- SQL script with INSPIRE Settings enabled -->
+      <zipfileset dir="../web/target/inspire"
+                  prefix="web/geonetwork/WEB-INF/classes/setup/sql/data" 
+                  includes="data-db-default.sql" />
+    </zip>
+
+    <checksum
+      file="../${appName}-${release}/${appName}-install-${release}-${subVersion}-INSPIRE.zip"
+      forceOverwrite="yes"/>  
+
+  </target>
+
 </project>
