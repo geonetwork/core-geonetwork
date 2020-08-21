@@ -175,6 +175,34 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void twoExtentFirstOneWithBothBoundingBoxAndPolygon() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+        String uuid = createTestDataTwoExtent();
+
+        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/2.png", uuid))
+            .session(mockHttpSession)
+            .accept(MediaType.IMAGE_PNG_VALUE))
+            .andExpect(status().is2xxSuccessful())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
+            .andReturn().getResponse().getContentAsByteArray();
+        saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName() + "-2");
+
+        assertEquals("b1e730b01f6efd164a736a09935976fc", DigestUtils.md5DigestAsHex(reponseBuffer));
+
+        reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/3.png", uuid))
+            .session(mockHttpSession)
+            .accept(MediaType.IMAGE_PNG_VALUE))
+            .andExpect(status().is2xxSuccessful())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
+            .andReturn().getResponse().getContentAsByteArray();
+        saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName() + "-3");
+
+        assertEquals("eb15c89eddb74808c169edfd15f54285", DigestUtils.md5DigestAsHex(reponseBuffer));
+    }
+
+
+    @Test
     public void threeExtentThirdOne() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
