@@ -403,7 +403,6 @@
         <xsl:if test="@name">
           <xsl:variable name="title"
                         select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
-
           <xsl:element name="h{1 + count(ancestor-or-self::*[name(.) = 'section'])}">
             <xsl:value-of select="$title"/>
           </xsl:element>
