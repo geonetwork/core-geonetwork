@@ -40,7 +40,7 @@ public class GMLParserLearnTest {
 
     @Test
     public void geotoolsGmlParserNotThreadSafe() throws IOException, JDOMException, ParserConfigurationException, SAXException, InterruptedException {
-        final Parser parser = GMLParsers.create()[0];
+        final Parser parser = GMLParsers.createGML();
         parser.parse(new StringReader(TO_PARSE));
 
         IntStream range = IntStream.rangeClosed(1, 20);
@@ -54,7 +54,7 @@ public class GMLParserLearnTest {
     }
 
     static private Object parseCreateNewParser(int inc)  {
-        Parser parser = GMLParsers.create()[0];
+        Parser parser = GMLParsers.createGML();
         try {
             return parser.parse(new StringReader(TO_PARSE));
         } catch (Exception e) {
@@ -64,7 +64,7 @@ public class GMLParserLearnTest {
 
     }
 
-    static private Parser parserToReuse = GMLParsers.create()[0];
+    static private Parser parserToReuse = GMLParsers.createGML();
 
     static private Object parseResuseParser(int inc)  {
         try {

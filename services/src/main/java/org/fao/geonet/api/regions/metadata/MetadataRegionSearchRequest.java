@@ -173,8 +173,7 @@ public class MetadataRegionSearchRequest extends Request {
         Element metadata = findMetadata(id, false);
         if (metadata != null) {
             Path schemaDir = getSchemaDir(id);
-            MultiPolygon geom = SpatialIndexWriter.getSpatialExtent(schemaDir, metadata, GMLParsers.create(),
-                new SpatialExtentErrorHandler());
+            MultiPolygon geom = SpatialIndexWriter.getSpatialExtent(schemaDir, metadata, new SpatialExtentErrorHandler());
             MetadataRegion region = new MetadataRegion(id, null, geom);
             regions.add(region);
         }
@@ -247,14 +246,11 @@ public class MetadataRegionSearchRequest extends Request {
     }
 
     private Parser getParser(Element polygon) {
-        Parser[] parsers_ = GMLParsers.create();
-        Parser parser = parsers_[0];
         try {
-            if (((Element) polygon.getChildren().get(0)).getNamespace().equals(Geonet.Namespaces.GML32)) {
-                parser = parsers_[1]; // geotools gml3.2 parser
-            }
-        } catch (Exception e) {}
-        return parser;
+            return GMLParsers.create(((Element) polygon.getChildren().get(0)));
+        } catch (Exception e) {
+            return GMLParsers.createGML();
+        }
     }
 
     private Element findMetadata(Id id, boolean includeEditData) throws Exception {
