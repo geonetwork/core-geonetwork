@@ -137,6 +137,11 @@
     <copy file="readme.html"
           tofile="${propsdir}/readme.html"
           filtering="on" overwrite="yes"/>
+    
+    <!-- license file -->
+    <copy file="license.html"
+          tofile="${propsdir}/license.html"
+          filtering="on" overwrite="yes"/>    
 
     <echo message="Replacing template variables in readme files..."/>
     <replace file="${propsdir}/readme.html"
@@ -172,6 +177,7 @@
 
     <zip destfile="../${appName}-${release}/${appName}-install-${release}-${subVersion}.zip">
       <zipfileset dir="./bin" prefix="bin" />
+      <zipfileset dir="../.props" includes="readme.html, license.html" />
       <zipfileset dir="./jetty" prefix="jetty" excludes="logs/*.log, logs/archive/*.log" />
       <zipfileset dir="../web/target/geonetwork" prefix="web/geonetwork" />
       <zipfileset dir="./data" prefix="web/geonetwork/data" />
