@@ -43,19 +43,27 @@
     <os family="unix"/>
   </condition>
 
-  <property name="appName" value="geonetwork"/>
+  <!-- Project build properties -->
+  <property name="appName" value="GeoNetwork"/>
+  <property name="displayName" value="GeoNetwork opensource"/>
+  <property name="homepage" value="https://geonetwork-opensource.org"/>
   <property name="version" value="3.10.4"/>
   <property name="subVersion" value="SNAPSHOT"/>
   <property name="javaVersion" value="1.8.0"/>
-  <!-- Minimum version required -->
-  <property name="jre_url" value="http://openjdk.java.net/"/>
+  <property name="jreUrl" value="http://openjdk.java.net/"/>
   <property name="OS" value="Compiled on ${os.name} (${osys})"/>
   <property name="propsdir" value="../.props"/>
   <property name="ant.build.javac.target" value="1.8"/>
   <property name="debugOn" value="on"/>
-  <!-- on off true false yes no -->
   <property name="thesaurusUrl"
             value="https://raw.githubusercontent.com/geonetwork/util-gemet/master/thesauri"/>
+
+  <!-- Used for copyright year -->
+  <tstamp>
+    <format property="year" pattern="yyyy"/>
+  </tstamp>
+
+  <!-- =================================================================================== -->
 
   <target name="thesaurusDownload">
     <mkdir dir="../web/target/thesauri"/>
@@ -102,13 +110,13 @@
       file="../web/src/main/webapp/WEB-INF/server.prop"
       comment="GeoNetwork opensource properties. These are also used by geonetwork at runtime">
       <!-- These are used by geonetwork at runtime -->
-      <!-- Do not remove !! -->
+      <!-- DO NOT REMOVE!! -->
       <entry key="version" value="${version}"/>
       <entry key="subVersion" value="${subVersion}"/>
       <entry key="release" value="${version}"/>
 
       <entry key="javaVersion" value="${javaVersion}"/>
-      <entry key="jre_url" value="${jre_url}"/>
+      <entry key="jre_url" value="${jreUrl}"/>
       <entry key="ant.build.javac.target" value="1.8"/>
       <entry key="buildDate" type="date" value="now"
              pattern="yyyy-MM-dd'T'HH:mm:ssZ"/>
@@ -136,9 +144,14 @@
       <replacefilter token="@version@" property="version"/>
       <replacefilter token="@subVersion@" property="subVersion"/>
       <replacefilter token="@day@" property="day"/>
+      <replacefilter token="@jreUrl@" property="jre_url"/>
       <replacefilter token="@javaVersion@" property="javaVersion"/>
-      <replacefilter token="@jre_url@" property="jre_url"/>
     </replace>
+    <!-- Replace variables in ReadMe file that are not in server.prop -->
+    <replace file="${propsdir}/readme.html" token="@appName@" value="${appName}"/>
+    <replace file="${propsdir}/readme.html" token="@displayName@" value="${displayName}"/>
+    <replace file="${propsdir}/readme.html" token="@homepage@" value="${homepage}"/>
+    <replace file="${propsdir}/readme.html" token="@year@" value="${year}"/> 
     <echo message="Done"/>
   </target>
 
