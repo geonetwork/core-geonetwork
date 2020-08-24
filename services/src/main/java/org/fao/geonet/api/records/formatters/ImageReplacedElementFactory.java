@@ -97,9 +97,17 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
         }
 
         String nodeName = element.getNodeName();
+        if (!"img".equals(nodeName)) {
+            try {
+                return superFactory.createReplacedElement(layoutContext, box, userAgentCallback, cssWidth, cssHeight);
+            } catch (Throwable e) {
+                return new EmptyReplacedElement(cssWidth, cssHeight);
+            }
+        }
+
+
         String src = element.getAttribute("src");
-        if ("img".equals(nodeName)
-            && (src.startsWith(baseURL + "region.getmap.png") || src.contains("/extents.png") || src.endsWith("/geom.png"))
+        if (src.startsWith(baseURL + "region.getmap.png") || src.endsWith("/extents.png") || src.endsWith("/geom.png")
             && mapRenderer != null) {
             BufferedImage image = null;
             try {
@@ -121,8 +129,7 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
             }
             float factor = layoutContext.getDotsPerPixel();
             return loadImage(layoutContext, box, userAgentCallback, cssWidth, cssHeight, new BufferedImageLoader(image), factor);
-        } else if ("img".equals(nodeName)
-            && (src.startsWith(baseURL + "region.getmap.png") || src.contains("/extents.png") || src.endsWith("/geom.png"))) {
+        } else if (src.startsWith(baseURL + "region.getmap.png") || src.endsWith("/extents.png") || src.endsWith("/geom.png")) {
             StringBuilder builder = new StringBuilder(baseURL);
             try {
                 if (StringUtils.startsWith(src, "http")) {
@@ -145,7 +152,7 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
             }
             float factor = layoutContext.getDotsPerPixel();
             return loadImage(layoutContext, box, userAgentCallback, cssWidth, cssHeight, new UrlImageLoader(builder.toString()), factor);
-        } else if ("img".equals(nodeName) && isSupportedImageFormat(src)) {
+        } else if (isSupportedImageFormat(src)) {
             float factor = layoutContext.getDotsPerPixel();
             return loadImage(layoutContext, box, userAgentCallback, cssWidth, cssHeight, new UrlImageLoader(src), factor);
         }
