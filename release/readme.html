@@ -1,103 +1,160 @@
-<!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
-  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
-  ~ and United Nations Environment Programme (UNEP)
-  ~
-  ~ This program is free software; you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation; either version 2 of the License, or (at
-  ~ your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful, but
-  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  ~ General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program; if not, write to the Free Software
-  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-  ~
-  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-  ~ Rome - Italy. email: geonetwork@osgeo.org
-  -->
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
 
-<html>
 <head>
-  <title>GeoNetwork opensource readme</title>
-  <style type="text/css">
-    <!--
-    .style1 {
-      font-size: 9px
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+  <title>ReadMe &mdash; @displayName@</title>
+  <link rel="stylesheet" href="@homepage@/_static/blueprint/screen.css" type="text/css"
+    media="screen, projection" />
+  <link rel="stylesheet" href="@homepage@/_static/blueprint/print.css" type="text/css"
+    media="print" />
+  <!--[if IE]>
+  <link rel="stylesheet" href="@homepage@/_static/blueprint/ie.css" type="text/css" media="screen, projection" />
+  <![endif]-->
+  <link rel="stylesheet" href="@homepage@/_static/default.css" type="text/css" />
+  <link rel="stylesheet" href="@homepage@/_static/pygments.css" type="text/css" />
+  <style>
+    /* Use .index #acknowledgements for doc */
+    .doc #acknowledgements {
+      background-color: #efefef;
     }
 
-    -->
+    .important {
+      background: #efefef;
+      padding: 10px;
+      margin-top: 1.5em;
+      margin-bottom: 1.5em;
+    }
   </style>
+
 </head>
 
-<body>
-<div align="right"><span class="style1">
-    GeoNetwork opensource V@version@ @subVersion@ Date: @day@</span></div>
-<h1>GeoNetwork opensource - Getting started</h1>
+<body class="doc">
+  <div id="header" class="selfclear">
+    <div class="wrap selfclear">
+      <div id="logo"><a href="@homepage@">@appName@</a></div>
 
-<h2>Running the application</h2>
+      <ul id="top-nav">
+        <li>@displayName@ v@version@-@subVersion@ &mdash; install date: @day@ &mdash; <a href="license.html">license</a></li>
+      </ul>
 
-<p>
-  GeoNetwork opensource is a web based Spatial Data Catalog.
-  To use it you first have to start the embedded web server.</p>
+      <div id="osgeo"><a href="https://osgeo.org" target="_blank"><img
+            src="@homepage@/_static/OSGeo_project.svg"></a></div>
+    </div>
+  </div>
 
-<p><strong>On Windows</strong>, navigate to the <em>GeoNetwork opensource</em>
-  folder in the <em>start-menu</em> that was created during installation and
-  <strong>launch "Start server"</strong>. You can then open the GeoNetwork
-  application in your browser.
-</p>
+  <div id="main">
+    <div class="wrap selfclear">
+      <div id="content">
+        <h1>Getting Started</h1>
+        <h2>Running the application</h2>
+        <p>
+          @displayName@ is a web based Spatial Data Catalog written in Java.
+          To use it, you first have to start the included servlet container (Jetty).
+          However, you can also download the @appName@ WAR file and run that on your own container. 
+        </p>
+        <p>
+          You can start the @appName@ webserver using the shell scripts located in the @installPath@ directory.     
+          These require administrative privileges and have been named:
+          <ul>
+            <li><code>startup.sh</code> (use <code>startup.bat</code> on Windows)</li>
+            <li><code>shutdown.sh</code> (use <code>shutdown.bat</code> on Windows)</li>
+          </ul>
+          <b>Please note: for Windows users, an easy installer is available from <a href="https://my.geocat.net/download">here</a>. This allows users to quickly set up @appName@ as a service.</b>
+        </p>
+        <p>
+          By default, the @appName@ web interface should be available at <a href="http://localhost:8080/geonetwork">http://localhost:8080/geonetwork</a>. 
+          If you wish to run the application on a different port, please edit the startup shell script.
+          For example, if you are using the provided Jetty server and you wish to run @appName@ on port 1234, you can add the following Java configuration option:
+          <code>-Djetty.port=1234</code>
+        </p>
+        <div class="important">
+          <p><strong>IMPORTANT</strong></p>
+          <p>
+            After opening the @appName@ web interface, log on as Administrator.
+            By default, you should use the username <code>admin</code> and password <code>admin</code>.
+            Please modify the password for this account in the Administration section.
+          </p>
+        </div>
+        <h2>Notes</h2>
+        <ul>
+          <li>
+            When @appName@ runs for the first time, it could take a little longer to start. 
+            By default, @appName@ will use a local database (H2), which takes a while to set up if it doesn't exist yet. 
+          </li>
+          <li>
+            By default, H2 will create 3 <code>gn.*.db</code> files in the Jetty folder. 
+            You can change the location of the database by setting the <code>-Djdbc.database="path\to\gn"</code> 
+            Java option (do <b>not</b> include the <code>.db</code> extension) in the startup shell script.
+            Alternatively, you can also set up @appName@ to work with a remote database (e.g. Oracle).
+          </li>
+          <li>
+            If you plan to remove @appName@ but wish to keep the database, please backup the <code>gn.*.db</code> files. 
+            When you (re-)install @appName@ again and put the database files back at the original location, @appName@ should pick it up.
+           </li>
+        </ul>
+        <p><strong>Enjoy!</strong></p>
+        <div class="section" id="support">
+          <h1>Support</h1>
+          <h2>Documentation</h2>
+            <p>For more information and advanced setup instructions, please refer to the online <a href="@homepage@/docs.html">@appName@ documentation</a>.</p>
+          <div class="section" id="community-and-osgeo">
+            <h2>Community and OSGeo</h2>
+            <p>The @appName@ community has been expanding quickly over the last years.
+              The current release has been possible because of all those that contributed
+              to the project through code contributions, testing, bug reports and fixes as
+              well as many suggestions.</p>
+            <p>@appName@ is part of the <em>Open Source Geospatial Foundation</em>
+              (OSGeo, <a class="reference external" href="https://www.osgeo.org">https://www.osgeo.org</a>) software
+              stack, providing software you can trust to be free, open and sustainable. Voluntary support is provided through
+              <a class="reference internal" href="@homepage@/community.html">mailing lists, websites and online forums</a>.
+            </p>
+          </div>
+          <div class="section" id="professional-support">
+            <h2>Professional Support</h2>
+            <p>Several companies also provide commercial support to help organizations
+              to implement, integrate and maintain the software. You can find them
+              in the <a class="reference external" href="https://www.osgeo.org/search_profile">
+              Service Provider directory</a> on the OSGeo website.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<p>
-  By default this should be at
-  <a href="http://localhost:8080/geonetwork">http://localhost:8080/geonetwork</a>
-</p>
+  <div id="acknowledgements">
+    <div class="wrap selfclear">
+      <div id="ack-content" class="selfclear">
+        <h2>
+          <a href="@homepage@/acknowledgements/acknowledgements.html">Acknowledgements</a>
+        </h2>
+        <div class="section">
+          <a href="http://camptocamp.com" alt="Camptocamp - Innovative Solutions by Open Source Experts"
+            target="_blank">
+            <img src="@homepage@/_static/camptocamp.svg" height="60" />
+          </a>
+        </div>
+        <div class="section">
+          <a href="http://geocat.net" alt="GeoCat BV - Government Geographic Data Publishing" target="_blank">
+            <img src="@homepage@/_static/geocat-logo.png" height="60" />
+          </a>
+        </div>
+        <div class="section">
+          <a href="http://titellus.net" alt="titellus" target="_blank">
+            <img src="@homepage@/_static/titellus.png" height="80" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<p>
-  <font color="#FF0000"><strong>IMPORTANT!!</strong></font> After opening
-  the GeoNetwork homepage, log on as Administrator.
-  You should use the username <font
-  color="#FF0000"><code><b>admin</b></code></font> and
-  password <font color="#FF0000"><code><b>admin</b></code></font>.
-  In the Administration section you can then <strong>modify your
-  account</strong>.
-</p>
+  <div id="bottombar">
+    <div class="wrap">
+      &copy; Copyright @year@, Open Source Geospatial Foundation.
+    </div>
+  </div>
 
-<p>Online documentation is available
-  <a href="http://geonetwork-opensource.org/docs.html">here</a>.
-
-<p>You can also start the Jetty webserver of GeoNetwork using the scripts
-  located into the $INSTALL_PATH/bin directory.</p>
-
-<p>On a Windows platform they are:
-  <br>
-<ul>
-  <li><code>startup.bat</code></li>
-  <li><code>shutdown.bat</code></li>
-</ul>
-On a Linux or OSX platform they are:
-<br>
-<ul>
-  <li><code>startup.sh</code></li>
-  <li><code>shutdown.sh</code></li>
-</ul>
-</p>
-<p>
-  <cite>Note: A Java Runtime Environment (JRE)
-    <em>@javaVersion@ Standard Edition</em>
-    (download from <a href="@jre_url@">here</a>
-    is required to run GeoNetwork opensource.
-    See the Troubleshooting sections if normal
-    installation or start up fails.</cite>
-</p>
-
-<h2>More information at <a
-  href="http://geonetwork-opensource.org">http://geonetwork-opensource.org</a>
-</h2>
-
-<strong>Enjoy!</strong>
 </body>
 </html>
