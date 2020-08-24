@@ -1,18 +1,19 @@
-release
+RELEASE
 =======
 
 The release module for Geonetwork
 
-* Download Jetty
+* Build release and download Jetty
 
 `
+cd ..
 mvn clean install -Djetty-download
 `
 
-* Build installer
+* Create ZIP distributions
 
 `
-cd ../installer
+cd release
 ant
 `
 
