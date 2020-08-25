@@ -24,14 +24,14 @@
 
 <!--
 ==============================================================================
-=== This Ant build file is used to build the GeoNetwork opensource installers
+=== This Ant build file is used to create the GeoNetwork opensource distro's
 ===
 === Authors : Jeroen Ticheler <ticheler@users.sourceforge.net>
 ===           Andrea Carboni <acarboni@users.sourceforge.net>
 ==============================================================================
 -->
 
-<project name="geonetwork" default="installer" basedir=".">
+<project name="geonetwork" default="distributions" basedir=".">
 
   <condition property="osys" value="macosx">
     <os family="mac"/>
@@ -160,14 +160,14 @@
     <echo message="Done"/>
   </target>
 
-
-  <target name="installer" depends="setProperties,thesaurusDownload,inspireDbSettings">
-    <echo message="All conditions met: ready to create ZIP files"/>
-    <ant dir="." target="zipinstallInspire"/>
+  <target name="distributions" depends="setProperties,thesaurusDownload,inspireDbSettings">
+    <echo message="Preconditions OK: ready to create ZIP distributions"/>
+    <ant dir="." target="zipInspire"/>
+    <ant dir="." target="war"/>
   </target>
 
-
-  <target name="zipinstall">
+  <!-- Create ZIP distribution for GeoNetwork + Jetty + shell scripts -->
+  <target name="zip">
     <property file="../web/src/main/webapp/WEB-INF/server.prop"/>
 
     <delete dir="../${appName}-${release}"/>
@@ -175,7 +175,7 @@
 
     <echo message="Creating ZIP file for ${appName} ${release}..."/>
 
-    <zip destfile="../${appName}-${release}/${appName}-install-${release}-${subVersion}.zip">
+    <zip destfile="../${appName}-${release}/${appName}-${release}-${subVersion}-Jetty.zip">
       <zipfileset dir="./bin" prefix="bin" />
       <zipfileset dir="../.props" includes="readme.html, license.html" />
       <zipfileset dir="./jetty" prefix="jetty" excludes="logs/*.log, logs/archive/*.log" />
@@ -185,19 +185,20 @@
     </zip>
 
     <checksum
-      file="../${appName}-${release}/${appName}-install-${release}-${subVersion}.zip"
+      file="../${appName}-${release}/${appName}-${release}-${subVersion}-Jetty.zip"
       forceOverwrite="yes"/>
 
   </target>
 
-  <target name="zipinstallInspire" depends="zipinstall">
+  <!-- Create ZIP distribution for GeoNetwork + Jetty + shell scripts + INSPIRE configuration -->
+  <target name="zipInspire" depends="zip">
 
     <echo message="Creating ZIP file for ${appName} ${release} with INSPIRE configuration..."/>
 
-    <copy file="../${appName}-${release}/${appName}-install-${release}-${subVersion}.zip" 
-          tofile="../${appName}-${release}/${appName}-install-${release}-${subVersion}-INSPIRE.zip" />
+    <copy file="../${appName}-${release}/${appName}-${release}-${subVersion}-Jetty.zip" 
+          tofile="../${appName}-${release}/${appName}-${release}-${subVersion}-Jetty-INSPIRE.zip" />
 
-    <zip destfile="../${appName}-${release}/${appName}-install-${release}-${subVersion}-INSPIRE.zip" update="true">
+    <zip destfile="../${appName}-${release}/${appName}-${release}-${subVersion}-Jetty-INSPIRE.zip" update="true">
       <!-- Add schematron rules (should already be there) -->
       <zipfileset dir="../web/target/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron"
                   prefix="web/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron" 
@@ -215,8 +216,19 @@
     </zip>
 
     <checksum
-      file="../${appName}-${release}/${appName}-install-${release}-${subVersion}-INSPIRE.zip"
+      file="../${appName}-${release}/${appName}-${release}-${subVersion}-Jetty-INSPIRE.zip"
       forceOverwrite="yes"/>  
+
+  </target>
+
+  <!-- Copy and rename WAR file and calculate checksum -->
+  <target name="war">
+
+    <copy file="../web/target/geonetwork.war" 
+          tofile="../${appName}-${version}/${appName}-${version}-${subVersion}.war" />    
+
+    <checksum file="../${appName}-${version}/${appName}-${version}-${subVersion}.war"
+              forceOverwrite="yes"/> 
 
   </target>
 
