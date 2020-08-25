@@ -402,6 +402,7 @@
     "link-hassources": "Is source dataset of",
     "link-sources": "Source datasets",
     "link-siblings": "Siblings",
+    "link-fcats": "Feature catalog",
     "indexAccessError": "Error during index access.",
     "applyFilter": "Apply Filter",
     "confirm": "OK",
