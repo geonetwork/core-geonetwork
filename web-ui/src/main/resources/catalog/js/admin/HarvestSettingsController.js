@@ -515,34 +515,64 @@
       // OGCWxS
       var ogcwxsGet = function() {
         $scope.ogcwxsTemplates = [];
-        gnSearchManagerService.search('qi?_content_type=json&' +
-          'fast=index&from=1&to=200&_isTemplate=y&type=service').
-        then(function(data) {
+        var query = {
+          "size": "200",
+          "query": {
+            "bool": {
+              "must": [{
+                "terms": {
+                  "isTemplate": ["y"]
+                }
+              },
+              {
+                "terms": {
+                  "codelist_hierarchyLevel": ["service"]
+                }
+              }]
+            }
+          },
+          "_source": ["resourceTitleObject.default"]
+        };
+        $http.post('../api/search/records/_search', query).then(function(r) {
           // List of template including an empty one if user
           // wants to build the service metadata record
           // from the GetCapabilities only
-          $scope.ogcwxsTemplates = [{
-            getTitle:function (){return ''},
-            'uuid': ''}];
-          for (var i = 0; i < data.metadata.length; i++) {
-            $scope.ogcwxsTemplates.push(new Metadata(data.metadata[i]));
-          }
+          var ogcwxsTemplates = [{
+          '_source': {resourceTitleObject: {default: ''}},
+            '_id': ''}];
+          $scope.ogcwxsTemplates =
+            ogcwxsTemplates.concat(r.data.hits.hits);
         }, function(data) {
         });
 
         $scope.ogcwxsDatasetTemplates = [];
-        gnSearchManagerService.search('qi?_content_type=json&' +
-          'fast=index&from=1&to=200&_isTemplate=y&type=dataset').
-        then(function(data) {
+        var query = {
+          "size": "200",
+          "query": {
+            "bool": {
+              "must": [{
+                "terms": {
+                  "isTemplate": ["y"]
+                }
+              },
+                {
+                  "terms": {
+                    "codelist_hierarchyLevel": ["dataset"]
+                  }
+                }]
+            }
+          },
+          "_source": ["resourceTitleObject.default"]
+        };
+        $http.post('../api/search/records/_search', query).then(function(r) {
           // List of template including an empty one if user
           // wants to build the service metadata record
           // from the GetCapabilities only
-          $scope.ogcwxsDatasetTemplates = [{
-            getTitle:function (){return ''},
-            'uuid': ''}];
-          for (var i = 0; i < data.metadata.length; i++) {
-            $scope.ogcwxsDatasetTemplates.push(new Metadata(data.metadata[i]));
-          }
+          var ogcwxsDatasetTemplates = [{
+            '_source': {resourceTitleObject: {default: ''}},
+            '_id': ''}];
+          $scope.ogcwxsDatasetTemplates =
+            ogcwxsDatasetTemplates.concat(r.data.hits.hits);
         }, function(data) {
         });
       };
